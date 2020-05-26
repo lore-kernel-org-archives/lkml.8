@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30815C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 735F32071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 048FE2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521415;
-	bh=nm1ATIczXGIiGta7zDSAVmr6SdgBJxCdqlek2HZTNcw=;
+	s=default; t=1590521418;
+	bh=sEH7FlcbtULD/jnI/XwLJzHyZ9OSJdBrQc3iYDd0vrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G+aNZD7B1PWX9ugd4kII5IIFF5ggMkwYOwMd4ayHkS2rvhmimBhhzTOr08nHkDGYY
-	 EUqnsS19h+ThZD1fV/thP3OGyDcBu9vb8xJwv0xQ0Q/MWknF6pxxjI6jwiyVVp0XYj
-	 KAiJy9Ha66Kgw1k4wbDUGCqhvTa6uoeW6JehYGxE=
+	b=SLVP7/zKD5LyqyrZD4DIvq08m/a30NtUl2G7jisZ2MvQQgOi2Ej/x+a8ZZwf11xil
+	 SSa7Iakof0me0QzdQ11BWzq/m0cbDH5lfD4ujcPkiYS4AoGMKTFNqDeQm+y9Ec//1I
+	 uXA8BE9xL1IBJ6wkRP3LQt9bMLOEVYITYngMxdbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbgEZTaN (ORCPT
+        id S2390774AbgEZTAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54820 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:00:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390789AbgEZTAj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:39 -0400
+        id S2390758AbgEZTAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7687120849;
-        Tue, 26 May 2020 19:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28EA620849;
+        Tue, 26 May 2020 19:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519638;
-        bh=nm1ATIczXGIiGta7zDSAVmr6SdgBJxCdqlek2HZTNcw=;
+        s=default; t=1590519633;
+        bh=sEH7FlcbtULD/jnI/XwLJzHyZ9OSJdBrQc3iYDd0vrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbi7E0Lpmmc3MMztNwIG7D+Nk8+/vAu7yvU+aS/T5UQWciejQdUJhhfLUB3SNbvaw
-         LTbd3QV0iMQttdQZbtL83kuxBz4HIhgvpK5YCmue0z84yaYWg5mBsJ6QXK1A8bkLk2
-         AXXO+RVvAkH873I7pKahotN9lBudrnNa6bGBSy5g=
+        b=OpNdns1dkuoV4ftudsmSA3u7kHIFXw6swCmtet0LkR1YAHnluNzbNXm0meAcNITYI
+         plMPnhtZbTAnDA4pDHgcKQ0ykobj3niR6QVh/1FIXVgBQI7+DB98C3H/226x4IgVky
+         mhc83LoOaHp4J41SwieHitbiRDM0rZMGTqV21L/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Hilliard <james.hilliard1@gmail.com>,
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>, Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 18/59] component: Silence bind error on -EPROBE_DEFER
-Date:   Tue, 26 May 2020 20:53:03 +0200
-Message-Id: <20200526183914.169556459@linuxfoundation.org>
+Subject: [PATCH 4.14 16/59] configfs: fix config_item refcnt leak in configfs_rmdir()
+Date:   Tue, 26 May 2020 20:53:01 +0200
+Message-Id: <20200526183913.423965027@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -59,51 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hilliard <james.hilliard1@gmail.com>
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-[ Upstream commit 7706b0a76a9697021e2bf395f3f065c18f51043d ]
+[ Upstream commit 8aebfffacfa379ba400da573a5bf9e49634e38cb ]
 
-If a component fails to bind due to -EPROBE_DEFER we should not log an
-error as this is not a real failure.
+configfs_rmdir() invokes configfs_get_config_item(), which returns a
+reference of the specified config_item object to "parent_item" with
+increased refcnt.
 
-Fixes messages like:
-vc4-drm soc:gpu: failed to bind 3f902000.hdmi (ops vc4_hdmi_ops): -517
-vc4-drm soc:gpu: master bind failed: -517
+When configfs_rmdir() returns, local variable "parent_item" becomes
+invalid, so the refcount should be decreased to keep refcount balanced.
 
-Signed-off-by: James Hilliard <james.hilliard1@gmail.com>
-Link: https://lore.kernel.org/r/20200411190241.89404-1-james.hilliard1@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The reference counting issue happens in one exception handling path of
+configfs_rmdir(). When down_write_killable() fails, the function forgets
+to decrease the refcnt increased by configfs_get_config_item(), causing
+a refcnt leak.
+
+Fix this issue by calling config_item_put() when down_write_killable()
+fails.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/component.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ fs/configfs/dir.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/component.c b/drivers/base/component.c
-index 08da6160e94d..55f0856bd9b5 100644
---- a/drivers/base/component.c
-+++ b/drivers/base/component.c
-@@ -162,7 +162,8 @@ static int try_to_bring_up_master(struct master *master,
- 	ret = master->ops->bind(master->dev);
- 	if (ret < 0) {
- 		devres_release_group(master->dev, NULL);
--		dev_info(master->dev, "master bind failed: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_info(master->dev, "master bind failed: %d\n", ret);
- 		return ret;
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index c2ef617d2f97..c875f246cb0e 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1537,6 +1537,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
+ 		spin_lock(&configfs_dirent_lock);
+ 		configfs_detach_rollback(dentry);
+ 		spin_unlock(&configfs_dirent_lock);
++		config_item_put(parent_item);
+ 		return -EINTR;
  	}
- 
-@@ -431,8 +432,9 @@ static int component_bind(struct component *component, struct master *master,
- 		devres_release_group(component->dev, NULL);
- 		devres_release_group(master->dev, NULL);
- 
--		dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
--			dev_name(component->dev), component->ops, ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(master->dev, "failed to bind %s (ops %ps): %d\n",
-+				dev_name(component->dev), component->ops, ret);
- 	}
- 
- 	return ret;
+ 	frag->frag_dead = true;
 -- 
 2.25.1
 
