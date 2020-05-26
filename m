@@ -2,94 +2,184 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62956C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD106C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D282086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5B6207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgEZNdG (ORCPT
+        id S1729118AbgEZNfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:33:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:57902 "EHLO mga03.intel.com"
+        Tue, 26 May 2020 09:35:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:50816 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726437AbgEZNdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:33:05 -0400
-IronPort-SDR: 2n4cEgzIrKD/tRQdzkPQyXUsonBWUj0HbfBOpfXNFMzBZKGQAotUOP/Le4A7x8bZHTy7mnOEgY
- OBKwcDP3CNYA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 06:33:04 -0700
-IronPort-SDR: zaMEbV0489KP+M6dd6VhdAyfyz8b7DBMVGuds/ebfJytRH1kWPI/zXLSawIKTODnr5y+SDuU6V
- 8iBtSShzgBow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="310256423"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2020 06:33:04 -0700
-Date:   Tue, 26 May 2020 06:33:18 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Andreas Rammhold <andi@notmuch.email>
-Cc:     Brendan Shanks <bshanks@codeweavers.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT
- instruction
-Message-ID: <20200526133318.GA3796@ranerica-svr.sc.intel.com>
-References: <20200519143815.cpsd2xfx2kl3khsq@wrt>
- <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
- <20200519194320.GA25138@ranerica-svr.sc.intel.com>
- <20200523021739.bbq5m6ze63ctouh6@wrt>
+        id S1726437AbgEZNe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 09:34:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C24351FB;
+        Tue, 26 May 2020 06:34:58 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DF703F6C4;
+        Tue, 26 May 2020 06:34:57 -0700 (PDT)
+Date:   Tue, 26 May 2020 14:34:50 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        robh+dt@kernel.org
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: Add UniPhier PCIe endpoint
+ controller description
+Message-ID: <20200526133450.GA24169@e121166-lin.cambridge.arm.com>
+References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1589457801-12796-2-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200523021739.bbq5m6ze63ctouh6@wrt>
+In-Reply-To: <1589457801-12796-2-git-send-email-hayashi.kunihiko@socionext.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 04:17:39AM +0200, Andreas Rammhold wrote:
-> On 12:43 19.05.20, Ricardo Neri wrote:
-> > I have a patch for this already that I wrote for testing purposes:
-> > https://github.com/ricardon/tip/commit/1692889cb3f8accb523d44b682458e234b93be50
-> > Perhaps it can be used as a starting point? Not sure what the spoofing
-> > value should be, though. Perhaps 0?
+On Thu, May 14, 2020 at 09:03:20PM +0900, Kunihiko Hayashi wrote:
+> Add DT bindings for PCIe controller implemented in UniPhier SoCs
+> when configured in endpoint mode. This controller is based on
+> the DesignWare PCIe core.
 > 
-> I tried the above patch (in modified/rebased version; hope that didn't
-> kill it [0]). The results are negative, as without the patch.
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../bindings/pci/socionext,uniphier-pcie-ep.yaml   | 92 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  2 +-
+>  2 files changed, 93 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
 
-Ah. My patch above is based on a rather old kernel. There is a check in
-fixup_umip_exception() for SLDT and STR. I think this causes the
-exception you see. Perhaps you can try by removing such check:
+Hi Rob,
 
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-@@ -383,10 +389,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	umip_pr_warn(regs, "%s instruction cannot be used by applications.\n",
- 			umip_insns[umip_inst]);
+are you OK with this patch ? Please let me know, I'd like to pull
+the series, thanks.
 
--	/* Do not emulate (spoof) SLDT or STR. */
--	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT)
--		return false;
--
-	umip_pr_warn(regs, "For now, expensive software emulation returns the result.\n");
+Lorenzo
 
-	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size,
-
-You would still need my old patch.
-
-Thanks and BR,
-Ricardo
+> diff --git a/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
+> new file mode 100644
+> index 0000000..f0558b9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
+> @@ -0,0 +1,92 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/socionext,uniphier-pcie-ep.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Socionext UniPhier PCIe endpoint controller
+> +
+> +description: |
+> +  UniPhier PCIe endpoint controller is based on the Synopsys DesignWare
+> +  PCI core. It shares common features with the PCIe DesignWare core and
+> +  inherits common properties defined in
+> +  Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +
+> +maintainers:
+> +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> +
+> +allOf:
+> +  - $ref: "pci-ep.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    const: socionext,uniphier-pro5-pcie-ep
+> +
+> +  reg:
+> +    maxItems: 4
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: dbi2
+> +      - const: link
+> +      - const: addr_space
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: gio
+> +      - const: link
+> +
+> +  resets:
+> +    maxItems: 2
+> +
+> +  reset-names:
+> +    items:
+> +      - const: gio
+> +      - const: link
+> +
+> +  num-ib-windows:
+> +    const: 16
+> +
+> +  num-ob-windows:
+> +    const: 16
+> +
+> +  num-lanes: true
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pcie-phy
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie_ep: pcie-ep@66000000 {
+> +        compatible = "socionext,uniphier-pro5-pcie-ep";
+> +        reg-names = "dbi", "dbi2", "link", "addr_space";
+> +        reg = <0x66000000 0x1000>, <0x66001000 0x1000>,
+> +              <0x66010000 0x10000>, <0x67000000 0x400000>;
+> +        clock-names = "gio", "link";
+> +        clocks = <&sys_clk 12>, <&sys_clk 24>;
+> +        reset-names = "gio", "link";
+> +        resets = <&sys_rst 12>, <&sys_rst 24>;
+> +        num-ib-windows = <16>;
+> +        num-ob-windows = <16>;
+> +        num-lanes = <4>;
+> +        phy-names = "pcie-phy";
+> +        phys = <&pcie_phy>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 92657a1..7f26748 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13211,7 +13211,7 @@ PCIE DRIVER FOR SOCIONEXT UNIPHIER
+>  M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>  L:	linux-pci@vger.kernel.org
+>  S:	Maintained
+> -F:	Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> +F:	Documentation/devicetree/bindings/pci/uniphier-pcie*
+>  F:	drivers/pci/controller/dwc/pcie-uniphier.c
+>  
+>  PCIE DRIVER FOR ST SPEAR13XX
+> -- 
+> 2.7.4
+> 
