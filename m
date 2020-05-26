@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1480BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C469C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6CDA207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CDF0207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:18:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390949AbgEZXSy (ORCPT
+        id S2390679AbgEZXSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:18:54 -0400
+        Tue, 26 May 2020 19:18:48 -0400
 Received: from mga02.intel.com ([134.134.136.20]:56936 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389971AbgEZXSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:18:43 -0400
-IronPort-SDR: w4+hfCeKI2n2LRCjMmVdCLFVgQ2PnRYKE9pgl9hWwgYwriYJcI9dTzB8/D8v+1vFRHlnz1vqGO
- Na69BJ45xXNA==
+        id S2389413AbgEZXSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 19:18:42 -0400
+IronPort-SDR: +jcjAoObwYdDZGbKCjAvavZFRNHWVod61lN7TssOJQcQZ84jkks7xaJsMfPZ197C42lXpEjrR1
+ du48DEBv09Ew==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 16:18:43 -0700
-IronPort-SDR: sGE4RSjPhO/OScXkA5AOzoo4Rsqmpb3GQXMS2gyDavRHu6/lpx+gNA0YTOw7Htg2W7X8r6l6n6
- ghITOqgGr6ZA==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 16:18:42 -0700
+IronPort-SDR: mxGvSFyMo67arEAcStGqpHx8ZXKYa6tWg7y27Vl63nQ7RU2KKmYqKgHW7RJ26EnMYhvqYT85B+
+ w/Z1BQ2E1eHQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="291378687"
+   d="scan'208";a="291378680"
 Received: from zalvear-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.67.58])
-  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 16:18:42 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 26 May 2020 16:18:41 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v4 3/5] ACPI/PCI: Ignore _OSC negotiation result if pcie_ports_native is set.
-Date:   Tue, 26 May 2020 16:18:27 -0700
-Message-Id: <969d4f083f445532bd1cdd98e3ce110574a461b0.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v4 1/5] PCI/AER: Remove redundant pci_is_pcie() checks.
+Date:   Tue, 26 May 2020 16:18:25 -0700
+Message-Id: <361c622eabe5b845b8092e0bec04a3a2c262cb38.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1590534843.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -49,54 +49,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-pcie_ports_native is set only if user requests native handling
-of PCIe capabilities via pcie_port_setup command line option.
-User input takes precedence over _OSC based control negotiation
-result. So consider the _OSC negotiated result only if
-pcie_ports_native is unset.
+AER is a PCIe Extended Capability. So checking for dev->aer_cap
+will implicitly include check for PCIe device. So remove redundant
+pci_is_pcie() checks.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/acpi/pci_root.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+ drivers/pci/pcie/aer.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 9e235c1a75ff..e0039ad3480a 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -914,18 +914,20 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		goto out_release_info;
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index efc26773cc6d..7c4294454df0 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -139,9 +139,6 @@ static int enable_ecrc_checking(struct pci_dev *dev)
+ 	int pos;
+ 	u32 reg32;
  
- 	host_bridge = to_pci_host_bridge(bus->bridge);
--	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
--		host_bridge->native_pcie_hotplug = 0;
--	if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
--		host_bridge->native_shpc_hotplug = 0;
--	if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
--		host_bridge->native_aer = 0;
--	if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
--		host_bridge->native_pme = 0;
--	if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
--		host_bridge->native_ltr = 0;
--	if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
--		host_bridge->native_dpc = 0;
-+	if (!pcie_ports_native) {
-+		if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
-+			host_bridge->native_pcie_hotplug = 0;
-+		if (!(root->osc_control_set & OSC_PCI_SHPC_NATIVE_HP_CONTROL))
-+			host_bridge->native_shpc_hotplug = 0;
-+		if (!(root->osc_control_set & OSC_PCI_EXPRESS_AER_CONTROL))
-+			host_bridge->native_aer = 0;
-+		if (!(root->osc_control_set & OSC_PCI_EXPRESS_PME_CONTROL))
-+			host_bridge->native_pme = 0;
-+		if (!(root->osc_control_set & OSC_PCI_EXPRESS_LTR_CONTROL))
-+			host_bridge->native_ltr = 0;
-+		if (!(root->osc_control_set & OSC_PCI_EXPRESS_DPC_CONTROL))
-+			host_bridge->native_dpc = 0;
-+	}
+-	if (!pci_is_pcie(dev))
+-		return -ENODEV;
+-
+ 	pos = dev->aer_cap;
+ 	if (!pos)
+ 		return -ENODEV;
+@@ -167,9 +164,6 @@ static int disable_ecrc_checking(struct pci_dev *dev)
+ 	int pos;
+ 	u32 reg32;
  
- 	/*
- 	 * Evaluate the "PCI Boot Configuration" _DSM Function.  If it
+-	if (!pci_is_pcie(dev))
+-		return -ENODEV;
+-
+ 	pos = dev->aer_cap;
+ 	if (!pos)
+ 		return -ENODEV;
+@@ -308,7 +302,7 @@ static void aer_set_firmware_first(struct pci_dev *pci_dev)
+ 
+ int pcie_aer_get_firmware_first(struct pci_dev *dev)
+ {
+-	if (!pci_is_pcie(dev))
++	if (!dev->aer_cap)
+ 		return 0;
+ 
+ 	if (pcie_ports_native)
+@@ -411,9 +405,6 @@ int pci_aer_raw_clear_status(struct pci_dev *dev)
+ 	u32 status;
+ 	int port_type;
+ 
+-	if (!pci_is_pcie(dev))
+-		return -ENODEV;
+-
+ 	pos = dev->aer_cap;
+ 	if (!pos)
+ 		return -EIO;
 -- 
 2.17.1
 
