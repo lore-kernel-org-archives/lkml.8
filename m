@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB78C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24B0B208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AA1208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520057;
-	bh=oD6QkaIiaB6T+NAYwiJNPKDUYhK9EsRqwVgi97qBXfM=;
+	s=default; t=1590520059;
+	bh=iwxMfXo9WDABrpDQWQ8rVLlMKFfN+bAWTFoLos0w2GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K+l+nmDRvRQcO3RcZPDzcs5o5OaFU3GfQYYkj2Qjpym/GRsBrsFyV1HQZH+YfGmPq
-	 Hp8DtpWl7b7phYUv0ONxwqWYXYgiV6AwdC1I9QfBH47h7wuqKxg1G/7UirTw9JeJni
-	 t4/Fyt5N4MAhChLZErQ05NfHzEz8CAciQK0+3LDE=
+	b=wql/rDYFwZI8UHNG+0uoWjrK2R4gW1JxZ1scwL04x1DxG3MeiXmSBY37R639PUfjd
+	 yvJbzzA/yjJU9DkAsnPKPR1Ye2qDnnEpv6YR2bwslWg/CmbjrYr/SaYtwG2C7YYjyi
+	 ZVG2JpiTou9XNvSJrZTKsvQLaQCTLnS1m5aS+X7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391702AbgEZTHg (ORCPT
+        id S2391335AbgEZTHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:07:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391604AbgEZTHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:31 -0400
+        id S2391703AbgEZTHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:07:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6579A208A7;
-        Tue, 26 May 2020 19:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B2720873;
+        Tue, 26 May 2020 19:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520050;
-        bh=oD6QkaIiaB6T+NAYwiJNPKDUYhK9EsRqwVgi97qBXfM=;
+        s=default; t=1590520055;
+        bh=iwxMfXo9WDABrpDQWQ8rVLlMKFfN+bAWTFoLos0w2GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qb/o+04Dw7kGmgwvbeawwp7+5AcLoXWLAGQjUg2VKtJmyeEjEDyWnyj7RCHdYo0uS
-         N0nBE+0KAQHIjqXsGs3euU+9X+fPb0HE97UsykTl4Slks1P3RmL/6qurFlnWLRuNHp
-         w8JAvMzvHsI0z8rnWUxz0MFdXm33LfhqUzgeO760=
+        b=K5BDGd1wRVxqlv/i3J5RpVlsKYS/Z+nFYy28talsIFRsq6oKO4t7k/dVYNzHW0XIh
+         8ko2HeFwniHlyBFGTHFB1yAxQSe52jAk/DUarcUQZ58yPkq9GmKtEAwhncN21bx7h/
+         MxNLGGbCSKeZAMVq83LDyPMfga2PQDIBj8M9F47Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Petrov <mmrmaximuzz@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 040/111] stmmac: fix pointer check after utilization in stmmac_interrupt
-Date:   Tue, 26 May 2020 20:52:58 +0200
-Message-Id: <20200526183936.724509476@linuxfoundation.org>
+Subject: [PATCH 5.4 042/111] platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+Date:   Tue, 26 May 2020 20:53:00 +0200
+Message-Id: <20200526183936.927147603@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,49 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Petrov <mmrmaximuzz@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit f42234ffd531ca6b13d9da02faa60b72eccf8334 ]
+[ Upstream commit 3bd12da7f50b8bc191fcb3bab1f55c582234df59 ]
 
-The paranoidal pointer check in IRQ handler looks very strange - it
-really protects us only against bogus drivers which request IRQ line
-with null pointer dev_id. However, the code fragment is incorrect
-because the dev pointer is used before the actual check which leads
-to undefined behavior. Remove the check to avoid confusing people
-with incorrect code.
+asus-nb-wmi does not add any extra functionality on these Asus
+Transformer books. They have detachable keyboards, so the hotkeys are
+send through a HID device (and handled by the hid-asus driver) and also
+the rfkill functionality is not used on these devices.
 
-Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Besides not adding any extra functionality, initializing the WMI interface
+on these devices actually has a negative side-effect. For some reason
+the \_SB.ATKD.INIT() function which asus_wmi_platform_init() calls drives
+GPO2 (INT33FC:02) pin 8, which is connected to the front facing webcam LED,
+high and there is no (WMI or other) interface to drive this low again
+causing the LED to be permanently on, even during suspend.
+
+This commit adds a blacklist of DMI system_ids on which not to load the
+asus-nb-wmi and adds these Transformer books to this list. This fixes
+the webcam LED being permanently on under Linux.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/platform/x86/asus-nb-wmi.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 89a6ae2b17e3..1623516efb17 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3832,7 +3832,7 @@ static int stmmac_set_features(struct net_device *netdev,
- /**
-  *  stmmac_interrupt - main ISR
-  *  @irq: interrupt number.
-- *  @dev_id: to pass the net device pointer.
-+ *  @dev_id: to pass the net device pointer (must be valid).
-  *  Description: this is the main driver interrupt service routine.
-  *  It can call:
-  *  o DMA service routine (to manage incoming frame reception and transmission
-@@ -3856,11 +3856,6 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
- 	if (priv->irq_wake)
- 		pm_wakeup_event(priv->device, 0);
+diff --git a/drivers/platform/x86/asus-nb-wmi.c b/drivers/platform/x86/asus-nb-wmi.c
+index b361c73636a4..0d42477946f3 100644
+--- a/drivers/platform/x86/asus-nb-wmi.c
++++ b/drivers/platform/x86/asus-nb-wmi.c
+@@ -514,9 +514,33 @@ static struct asus_wmi_driver asus_nb_wmi_driver = {
+ 	.detect_quirks = asus_nb_wmi_quirks,
+ };
  
--	if (unlikely(!dev)) {
--		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
--		return IRQ_NONE;
--	}
--
- 	/* Check if adapter is up */
- 	if (test_bit(STMMAC_DOWN, &priv->state))
- 		return IRQ_HANDLED;
++static const struct dmi_system_id asus_nb_wmi_blacklist[] __initconst = {
++	{
++		/*
++		 * asus-nb-wm adds no functionality. The T100TA has a detachable
++		 * USB kbd, so no hotkeys and it has no WMI rfkill; and loading
++		 * asus-nb-wm causes the camera LED to turn and _stay_ on.
++		 */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T100TA"),
++		},
++	},
++	{
++		/* The Asus T200TA has the same issue as the T100TA */
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T200TA"),
++		},
++	},
++	{} /* Terminating entry */
++};
+ 
+ static int __init asus_nb_wmi_init(void)
+ {
++	if (dmi_check_system(asus_nb_wmi_blacklist))
++		return -ENODEV;
++
+ 	return asus_wmi_register_driver(&asus_nb_wmi_driver);
+ }
+ 
 -- 
 2.25.1
 
