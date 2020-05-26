@@ -2,130 +2,158 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4EDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0840C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78407208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590501865;
-	bh=er1ViqgVwJ24ihRfhaLTKTZlbDupuxjf/x6qnwIhkAQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OQMTc2N204q05n6T5LbIoUNDQqNXuiNC8QgkanrhjYzrcAEJRV1PuY4m9Ue/oCioE
-	 x8mFb3YgdQFpnn87l03To1hdK/Au7lIALMQ5zwu1+DJ+zyxarEqv8y6023cKddP4qK
-	 hg/EOJKgeinFeQGJbnnTzFsnf3toQH73NeQUdBZQ=
+	by mail.kernel.org (Postfix) with ESMTP id B339B208A9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbgEZOEZ (ORCPT
+        id S1732015AbgEZOEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:04:25 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41114 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgEZOEY (ORCPT
+        Tue, 26 May 2020 10:04:50 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:46256 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbgEZOEu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:04:24 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 63so16341701oto.8;
-        Tue, 26 May 2020 07:04:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Ierdu4jhjBArg4KAhxK2ET/zYux67GkijyWUlcmSlg=;
-        b=t8bBqFbmYQ/VnfvQ16TPgsta/UMd6BjOJxfiQrsjr3GJRIWknMTExOA/9FcNxwwyi2
-         dSFJdQUgRzyqK2hbe2Br6lXNql3X+ZUkGsQFv5SLN0yTRF6QOcK26If3t7JE9BQRuQSz
-         VbslbKXA6aNYer+m9wQmF+sygHMIt/y15Orl1RuNMMs8Jlr78evQq2bzJK73hNuQhlYr
-         oRc3KfFRowe2MPP1yAhy3QIRbRpyFnY+5E3AklSlfR6/cIHbQRU9KshMsOY8A7VufOVY
-         VPMRImQ8FelqfWBQDg2Flujq/+ro/9bHEA1rh9GS0c2jwfqvVuC+Odf41zb1waz59CO5
-         9Wlw==
-X-Gm-Message-State: AOAM5310RoIOchT3Ga7eOFlxXmV5vEkyyz4MMTVmZgeBwE+o11Kpmejc
-        k6tuYWBUDaWLkIks4areqxk44OHRjd6dMCbcnCU=
-X-Google-Smtp-Source: ABdhPJyUNtHDNcsWTXkodpXr8omxt8fKKmdXPMuKjXr10pz49QCMDOCfVptyEHRHzvYaFzWQrAougJhfu1ijiVuoj4E=
-X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr934672otq.118.1590501863497;
- Tue, 26 May 2020 07:04:23 -0700 (PDT)
+        Tue, 26 May 2020 10:04:50 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jdaC5-0003Ev-6o; Tue, 26 May 2020 08:04:37 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jdaAo-0000EQ-TA; Tue, 26 May 2020 08:04:36 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>
+References: <20200522055350.806609-1-areber@redhat.com>
+        <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
+        <20200525080541.GF104922@dcbz.redhat.com>
+Date:   Tue, 26 May 2020 08:59:29 -0500
+In-Reply-To: <20200525080541.GF104922@dcbz.redhat.com> (Adrian Reber's message
+        of "Mon, 25 May 2020 10:05:41 +0200")
+Message-ID: <877dwybxvi.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200515093613.18691-1-ardb@kernel.org> <CAJZ5v0guHdbZTsU5e7KDAHDy9Gnh67JwtSSCeDaK8mUwAk1d3g@mail.gmail.com>
- <CAMj1kXFVYOoX=pe9uVY-j_o8YhhE_Fef6q6jc8S9nzBLYSBb=g@mail.gmail.com>
-In-Reply-To: <CAMj1kXFVYOoX=pe9uVY-j_o8YhhE_Fef6q6jc8S9nzBLYSBb=g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 May 2020 16:04:10 +0200
-Message-ID: <CAJZ5v0i0LbDjATGGN-+Xu_ztyrkCL5EXqwjdYDLwpnALiOoBtA@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: GED: add support for _Exx / _Lxx handler methods
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-XM-SPF: eid=1jdaAo-0000EQ-TA;;;mid=<877dwybxvi.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX184zXKTFqE/g2hdbG7ONqk2DTs8REhARQ8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 1:12 PM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> Hello Rafael,
->
-> I spotted an issue with this patch. Please see below.
->
->
-> On Fri, 15 May 2020 at 18:32, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Fri, May 15, 2020 at 11:37 AM Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > Per the ACPI spec, interrupts in the range [0, 255] may be handled
-> > > in AML using individual methods whose naming is based on the format
-> > > _Exx or _Lxx, where xx is the hex representation of the interrupt
-> > > index.
-> > >
-> > > Add support for this missing feature to our ACPI GED driver.
-> > >
-> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > > Cc: Len Brown <lenb@kernel.org>
-> > > Cc: linux-acpi@vger.kernel.org
-> > > Cc: <stable@vger.kernel.org> # v4.9+
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  drivers/acpi/evged.c | 22 +++++++++++++++++---
-> > >  1 file changed, 19 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
-> > > index aba0d0027586..6d7a522952bf 100644
-> > > --- a/drivers/acpi/evged.c
-> > > +++ b/drivers/acpi/evged.c
-> > > @@ -79,6 +79,8 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
-> > >         struct resource r;
-> > >         struct acpi_resource_irq *p = &ares->data.irq;
-> > >         struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
-> > > +       char ev_name[5];
-> > > +       u8 trigger;
-> > >
-> > >         if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
-> > >                 return AE_OK;
-> > > @@ -87,14 +89,28 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
-> > >                 dev_err(dev, "unable to parse IRQ resource\n");
-> > >                 return AE_ERROR;
-> > >         }
-> > > -       if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
-> > > +       if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
-> > >                 gsi = p->interrupts[0];
-> > > -       else
-> > > +               trigger = p->triggering;
-> > > +       } else {
-> > >                 gsi = pext->interrupts[0];
-> > > +               trigger = p->triggering;
->
-> This should be 'pext->triggering' instead.
->
-> In practice, it doesn't matter, since p and pext point to the same
-> union, and the 'triggering' field happens to be at the same offset.
-> But it should still be fixed, of course.
->
-> Would you prefer a followup patch? Or can you fix it locally?
+Adrian Reber <areber@redhat.com> writes:
 
-A followup, please.
+> On Fri, May 22, 2020 at 09:40:37AM -0700, Casey Schaufler wrote:
+
+>> What are the other blockers? Are you going to suggest additional new
+>> capabilities to clear them?
+>
+> As mentioned somewhere else access to /proc/<pid>/map_files/ would be
+> helpful. Right now I am testing with a JVM and it works without root
+> just with the attached patch. Without access to /proc/<pid>/map_files/
+> not everything CRIU can do will actually work, but we are a lot closer
+> to what our users have been asking for.
+
+The current permission checks on /proc/<pid>/map_files/ are simply
+someone being over-cautious.
+
+Someone needs to think through the threat landscape and figure out what
+permission checks are actually needed.
+
+Making the permission check ns_capable instead of capable is a
+no-brainer.  Figuring out which user_ns to test against might be a
+we bit harder.
+
+We could probably even allow the owner of the process to open the files
+but that requires someone doing the work of thinking through how
+being able to opening files that you have mmaped might be a problem.
+
+>> > There are probably a few more things guarded by CAP_SYS_ADMIN required
+>> > to run checkpoint/restore as non-root,
+>> 
+>> If you need CAP_SYS_ADMIN anyway you're not gaining anything by
+>> separating out CAP_RESTORE.
+>
+> No, as described we can checkpoint and restore a JVM with this patch and
+> it also solves the problem the set_ns_last_pid fork() loop daemon tries
+> to solve. It is not enough to support the full functionality of CRIU as
+> map_files is also important, but we do not need CAP_SYS_ADMIN and
+> CAP_RESTORE. Only CAP_RESTORE would be necessary.
+>
+> With a new capability users can enable checkpoint/restore as non-root
+> without giving CRIU access to any of the other possibilities offered by
+> CAP_SYS_ADMIN. Setting a PID and map_files have been introduced for CRIU
+> and used to live behind CONFIG_CHECKPOINT_RESTORE. Having a capability
+> for checkpoint/restore would make it easier for CRIU users to run it as
+> non-root and make it very clear what is possible when giving CRIU the
+> new capability. No other things would be allowed than necessary for
+> checkpoint/restore. Setting a PID is most important for the restore part
+> and reading map_files would be helpful during checkpoint. So it actually
+> should be called CAP_CHECKPOINT_RESTORE as Christian mentioned in
+> another email.
+
+Please if one is for checkpoint and one is for restore asking for a pair
+of capabilities is probably more appropriate.
+
+>> >  but by applying this patch I can
+>> > already checkpoint and restore processes as non-root. As there are
+>> > already multiple workarounds I would prefer to do it correctly in the
+>> > kernel to avoid that CRIU users are starting to invent more workarounds.
+>> 
+>> You've presented a couple of really inappropriate implementations
+>> that would qualify as workarounds. But the other two are completely
+>> appropriate within the system security policy. They don't "get around"
+>> the problem, they use existing mechanisms as they are intended.
+>
+> I agree with the user namespace approach to be appropriate, but not the
+> CAP_SYS_ADMIN approach as CRIU only needs a tiny subset (2 things) of
+> what CAP_SYS_ADMIN allows.
+
+
+If we are only talking 2 things can you please include in your patchset
+a patch enabling those 2 things?
+
+But even more than this we need a request that asks not for the least
+you can possibly ask for but asks for what you need to do a good job.
+
+I am having visions of a recurring discussion that says can we add one
+more permission check to CAP_RESTORE or CAP_CHECKPOINT when they are
+things we could know today.
+
+Eric
