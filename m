@@ -2,135 +2,77 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B2FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6807207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZbleg6y"
+	by mail.kernel.org (Postfix) with ESMTP id BE349207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590486467;
+	bh=GcqVqLDZT31D78fCyoIuaygnsuaS0GrFTXjSL8Zx6/M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hHlKNTiUUEE5ZazyE2vH1hc3ezpG5BGuygGFBjMPGXY7Yszk8d96XgGFRUw8WkRSN
+	 Gnbprer7ijR0z2cWmBnCGus71lO9LM4hXJr4ts5EqLLtUZDkTynfJeqDSpKPljDVUV
+	 qRqL2Ut+g32o51z0XqtCcKYIuNpKxYjX2AGz1fNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731834AbgEZJrI (ORCPT
+        id S1731846AbgEZJrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731827AbgEZJrG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:47:06 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005EEC08C5C2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:47:05 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id l11so19791654wru.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 02:47:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=jV12W3UygClgnjI8OwJfqrVttfZE3ZiDDLZ9k2Y3cMg=;
-        b=yZbleg6y3zSWwvAUhkU/8+05EwmWvvWWXpuA8kcTb+7i0zK3z42rIIMG2yiWyxc/Fd
-         WonT3lYNUAZ68HyBLBai/O4qjOy2xXRby3N1OAxntnnlkM6NfEzNuq0gHAa2rV/cEWWp
-         TKhWL+JVHx81ursRB6Ah7OtS7IG1mc9qj3oouGXMdyrIee1CPOLVDGX5C0eU5d4NGLd2
-         wdI7diUX58sJjcRuKCjsINY3QrBcI+00CX77afoGFe+aOa/BUV0lqzB5Gj6NkKazPRyY
-         y6zesexjQfrqDWCPI1AQnqbGVqavcv1BsJvi7BmOwSr6A9Y8dQTYO4InNaeE/eKYZ5ke
-         y+5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=jV12W3UygClgnjI8OwJfqrVttfZE3ZiDDLZ9k2Y3cMg=;
-        b=cocHjKcHnnC43C9Z/BzSb2wrP8geWAYlX/DI4yNa7US3HodhDzsCYqcPhg5JtxklBh
-         U8B5n5+4GWrhBYPlhsh/JHAXZGAtDBdk1Kw3ICwRR92ncid4BEaXzLuuW1haO2aELOMs
-         cmHLzHQfJZ5NCAN0ExienvzaG2lEqWvxY7UWVsnncdH+SnAsZieX3uwcnskQYJs0PT8U
-         8Snre939HmwccPaRH5pxWn2okzOXQRAhiFAWnoFG2kp/uwnx8/Gm7BshbZ60kAxeGIdU
-         cH4wVDdiVEXGRvzhl4YZRbmtZG9/cHW0SDk6fUl7mojYtjH884+AuelPFGdNwu4pwDd3
-         eq5A==
-X-Gm-Message-State: AOAM532blT/L9EdshqYeXEvaJRkCe8KT6p7TREtHdDkIPNMndaY9Dd9x
-        9L9bMT1jHvk6IZBIWPcDtKHzUg==
-X-Google-Smtp-Source: ABdhPJwPPB4HSrbD5tV/YFMBUSyZ3AoSeTkgGu3q0At6aP5K3uE37QavYsRcBe8x711cYSRumx26uQ==
-X-Received: by 2002:adf:e90b:: with SMTP id f11mr5973359wrm.248.1590486424573;
-        Tue, 26 May 2020 02:47:04 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id b9sm1721101wrt.39.2020.05.26.02.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 02:47:04 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:47:02 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     andy.shevchenko@gmail.com, robh+dt@kernel.org, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        sre@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [GIT PULL] Immutable branch between MFD, IIO and Power due for the
- v5.8 merge window
-Message-ID: <20200526094702.GN3628@dell>
-References: <20200526090646.25827-1-sravanhome@gmail.com>
+        Tue, 26 May 2020 05:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728782AbgEZJrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 05:47:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07B572070A;
+        Tue, 26 May 2020 09:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590486466;
+        bh=GcqVqLDZT31D78fCyoIuaygnsuaS0GrFTXjSL8Zx6/M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sWLUOtgHh9rJeVEMMqEirHnR90qAmSFnMZH9X6wJ7ap02vgog7iv9+m8EYPi8u4DB
+         hxIUYkjK6poeI58Y05K3zrhk3GpdmjlQSywgT+WASky5zY6DEm958D+1AHfQlwAk06
+         zM6MV/C24ekohBTpxu3rGdU3QfZcCOlmGHj8lbzA=
+Date:   Tue, 26 May 2020 11:47:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial: 8250: Enable 16550A variants by default on
+ non-x86
+Message-ID: <20200526094744.GB2735879@kroah.com>
+References: <d32bdbf9fed2719c1180228464ba84dfcdeb5aa5.1590482037.git.josh@joshtriplett.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526090646.25827-1-sravanhome@gmail.com>
+In-Reply-To: <d32bdbf9fed2719c1180228464ba84dfcdeb5aa5.1590482037.git.josh@joshtriplett.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
+On Tue, May 26, 2020 at 01:40:06AM -0700, Josh Triplett wrote:
+> Some embedded devices still use these serial ports; make sure they're
+> still enabled by default on architectures more likely to have them, to
+> avoid rendering someone's console unavailable.
+> 
+> Fixes: dc56ecb81a0a ("serial: 8250: Support disabling mdelay-filled probes of 16550A variants")
+> Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+> ---
+> 
+> Based on user reports from embedded devices that need these variants.
 
-The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+No "reported-by:" lines for these people?  Not even the author of the
+other competing patch for this issue?
 
-  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+Please fix up and resend.
 
-are available in the Git repository at:
+thanks,
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-iio-power-v5.8
-
-for you to fetch changes up to 904ac71f4b0c1c26ec47ff597cb3d3c7d36e618d:
-
-  MAINTAINERS: Add entry for mp2629 Battery Charger driver (2020-05-26 10:42:02 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, IIO and Power due for the v5.8 merge window
-
-----------------------------------------------------------------
-Saravanan Sekar (6):
-      dt-bindings: mfd: Add document bindings for mp2629
-      mfd: mp2629: Add support for mps battery charger
-      iio: adc: mp2629: Add support for mp2629 ADC driver
-      power: supply: Add support for mps mp2629 battery charger
-      power: supply: mp2629: Add impedance compensation config
-      MAINTAINERS: Add entry for mp2629 Battery Charger driver
-
- Documentation/ABI/testing/sysfs-class-power-mp2629 |   8 +
- .../devicetree/bindings/mfd/mps,mp2629.yaml        |  62 ++
- MAINTAINERS                                        |   5 +
- drivers/iio/adc/Kconfig                            |  10 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/mp2629_adc.c                       | 208 +++++++
- drivers/mfd/Kconfig                                |   9 +
- drivers/mfd/Makefile                               |   2 +
- drivers/mfd/mp2629.c                               |  79 +++
- drivers/power/supply/Kconfig                       |  10 +
- drivers/power/supply/Makefile                      |   1 +
- drivers/power/supply/mp2629_charger.c              | 669 +++++++++++++++++++++
- include/linux/mfd/mp2629.h                         |  26 +
- 13 files changed, 1090 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-power-mp2629
- create mode 100644 Documentation/devicetree/bindings/mfd/mps,mp2629.yaml
- create mode 100644 drivers/iio/adc/mp2629_adc.c
- create mode 100644 drivers/mfd/mp2629.c
- create mode 100644 drivers/power/supply/mp2629_charger.c
- create mode 100644 include/linux/mfd/mp2629.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
