@@ -2,157 +2,196 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75028C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45F322071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0DA2071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:05:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X3CG+oVN"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LIIz5E6p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731619AbgEZIFN (ORCPT
+        id S1731628AbgEZIFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:05:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbgEZIFL (ORCPT
+        Tue, 26 May 2020 04:05:36 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:4796 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZIFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:05:11 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17AB3C03E97E;
-        Tue, 26 May 2020 01:05:11 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id w20so4606147pga.6;
-        Tue, 26 May 2020 01:05:11 -0700 (PDT)
+        Tue, 26 May 2020 04:05:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ctzNEK9ct3Xheefnk+QOHIxDO7kXYLYdjrWKg/OFEKg=;
-        b=X3CG+oVNVMX0lnR1bi1OH2EBx9kaknDBst0b0ZXlD1lfVkqB9xV21QY6KlTOXvqitn
-         0smFZVRkdfWyhtq61P49oHA0xGA6wXQ1JLgF1/G4YuiyR7NlsJEKkw158Nc37bGnGIBn
-         0uAFuFDVBWHSzmJgM2SnNAEhX4pyBRHMNWuZOz9wy8n2/lQUX843A7Q/oSAjs4x22kyB
-         0Ho+PzQcqCnkDcrqqboUJFsG04pfnotwisLoJSeGqAzOrk/klA/a/N6LPb8zyyz5vcaV
-         tNpFvwffBFksgUI1WpGWYtkKwHoCUYfl0Yg0zdapn/RkupzOuLVN37cuQ62oKt4Fvl7k
-         jd+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ctzNEK9ct3Xheefnk+QOHIxDO7kXYLYdjrWKg/OFEKg=;
-        b=DTsHeU6LKEBpGCYahHGgQWMUbw9F0x+EBjxhdKX84FOuL8+97XVFgBr4OojlCyLa3K
-         A591Lx/JYKjZsUJMgjQ2O6da3DmJOmVR2w3gfHMRGGUzA+XDGVifSH8PK/LT1UFbLGAD
-         g4yLAswRZtovhg/oloSt+ZLN8MgnJukB870/IokCikuy/isLheciClS6mLneaelujTPE
-         uZb+R7x/cQjt3cFJaP9Y/MGSsZv++asZ/mrqKVr/AkQdiDftmb8QhwUkGIyRpbkX0ub6
-         JLgRRIkvqfecJFT0BrWqOQW4fdmmKn0B1t3wPlAz3Qj7Z1wWhC14zaJ8iRiiIZJMmzSF
-         /HpQ==
-X-Gm-Message-State: AOAM533IknjMEyvGYv3TIpd5N0SOzZezk65YprMw2Vqy2QcBk/a6wWDQ
-        3bmCww8CDhRUzpqKVJNZesI=
-X-Google-Smtp-Source: ABdhPJztp+CYa62M7C0UA8/be7wZZ+tfVKlbQCJ9G2m7H6/p2rSXV64EhYvePkYTV3VRwa2BU5ITWA==
-X-Received: by 2002:a05:6a00:a:: with SMTP id h10mr21383389pfk.310.1590480310570;
-        Tue, 26 May 2020 01:05:10 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.209])
-        by smtp.gmail.com with ESMTPSA id fa19sm8614477pjb.18.2020.05.26.01.05.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 01:05:10 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Don Fry <pcnet32@frontier.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [RFC PATCH v1 3/3] amd-xgbe: Convert to generic power management
-Date:   Tue, 26 May 2020 13:33:24 +0530
-Message-Id: <20200526080324.69828-4-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526080324.69828-1-vaibhavgupta40@gmail.com>
-References: <20200526080324.69828-1-vaibhavgupta40@gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590480335; x=1622016335;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=JXM1R4MFsT0/swEnZNJnxRQcq0AlVFcVTjDvXhuYgGU=;
+  b=LIIz5E6pQuodhlPWKC547pJcJmuXaCYprgM7Bmdn8hh5fVXM5dZFJfrh
+   g7OdtOfl+dmYEDXRz6cCiDSRPVLzeaEHnMMyL3GHhdijEiRuh7+dPUF5I
+   oUSUgm8ytCfmp7n54UlT+DHtkwWoBEyPWo+nn7gsRrANmOoiLVADVpNDe
+   M=;
+IronPort-SDR: xAQcjIgJ8n0lqSq2iAdzMqExhAkFSXdEiCSuI+rVxh7lSPftLHWOGhH41teOhS5CTMuxxwPBf8
+ 9jFnaU1FQb0w==
+X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
+   d="scan'208";a="45915247"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 May 2020 08:05:32 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id CB616A2130;
+        Tue, 26 May 2020 08:05:20 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 08:05:17 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.193) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 26 May 2020 08:05:01 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v9 5/8] mm/damon/schemes: Implement statistics feature
+Date:   Tue, 26 May 2020 09:56:59 +0200
+Message-ID: <20200526075702.27339-6-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526075702.27339-1-sjpark@amazon.com>
+References: <20200526075702.27339-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.193]
+X-ClientProxiedBy: EX13D08UWB004.ant.amazon.com (10.43.161.232) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-compile-tested only
+From: SeongJae Park <sjpark@amazon.de>
 
-Use dev_pm_ops structure to call generic suspend() and resume() callbacks.
+To tune the DAMON-based operation schemes, knowing how many and how
+large regions are affected by each of the schemes will be helful.  Those
+stats could be used for not only the tuning, but also monitoring of the
+working set size and the number of regions, if the scheme does not
+change the program behavior too much.
 
-Drivers should avoid saving device register and/or change power states
-using PCI helper functions. With generic approach, all these are handled by
-PCI core.
+For the reason, this commit implements the statistics for the schemes.
+The total number and size of the regions that each scheme is applied are
+exported to users via '->stat_count' and '->stat_sz' of 'struct damos'.
+Admins can also check the number by reading 'schemes' debugfs file.  The
+last two integers now represents the stats.  To allow collecting the
+stats without changing the program behavior, this commit also adds new
+scheme action, 'DAMOS_STAT'.  Note that 'DAMOS_STAT' is not only making
+no memory operation actions, but also does not reset the age of regions.
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-pci.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ include/linux/damon.h |  6 ++++++
+ mm/damon.c            | 13 ++++++++++---
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-pci.c b/drivers/net/ethernet/amd/xgbe/xgbe-pci.c
-index 7b86240ecd5f..014cee31a1d4 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-pci.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-pci.c
-@@ -421,9 +421,9 @@ static void xgbe_pci_remove(struct pci_dev *pdev)
- 	xgbe_free_pdata(pdata);
- }
- 
--#ifdef CONFIG_PM
--static int xgbe_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused xgbe_pci_suspend(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct xgbe_prv_data *pdata = pci_get_drvdata(pdev);
- 	struct net_device *netdev = pdata->netdev;
- 	int ret = 0;
-@@ -438,8 +438,9 @@ static int xgbe_pci_suspend(struct pci_dev *pdev, pm_message_t state)
- 	return ret;
- }
- 
--static int xgbe_pci_resume(struct pci_dev *pdev)
-+static int __maybe_unused xgbe_pci_resume(struct device *dev)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct xgbe_prv_data *pdata = pci_get_drvdata(pdev);
- 	struct net_device *netdev = pdata->netdev;
- 	int ret = 0;
-@@ -460,7 +461,6 @@ static int xgbe_pci_resume(struct pci_dev *pdev)
- 
- 	return ret;
- }
--#endif /* CONFIG_PM */
- 
- static const struct xgbe_version_data xgbe_v2a = {
- 	.init_function_ptrs_phy_impl	= xgbe_init_function_ptrs_phy_v2,
-@@ -502,15 +502,16 @@ static const struct pci_device_id xgbe_pci_table[] = {
- };
- MODULE_DEVICE_TABLE(pci, xgbe_pci_table);
- 
-+static SIMPLE_DEV_PM_OPS(xgbe_pci_pm_ops, xgbe_pci_suspend, xgbe_pci_resume);
-+
- static struct pci_driver xgbe_driver = {
- 	.name = XGBE_DRV_NAME,
- 	.id_table = xgbe_pci_table,
- 	.probe = xgbe_pci_probe,
- 	.remove = xgbe_pci_remove,
--#ifdef CONFIG_PM
--	.suspend = xgbe_pci_suspend,
--	.resume = xgbe_pci_resume,
--#endif
-+	.driver = {
-+		.pm = &xgbe_pci_pm_ops,
-+	}
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index d5a3e4dc5f9a..0c7f0d629648 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -64,6 +64,7 @@ struct damon_task {
+  * @DAMOS_PAGEOUT:	Call ``madvise()`` for the region with MADV_PAGEOUT.
+  * @DAMOS_HUGEPAGE:	Call ``madvise()`` for the region with MADV_HUGEPAGE.
+  * @DAMOS_NOHUGEPAGE:	Call ``madvise()`` for the region with MADV_NOHUGEPAGE.
++ * @DAMOS_STAT:		Do nothing but count the stat.
+  * @DAMOS_ACTION_LEN:	Number of supported actions.
+  */
+ enum damos_action {
+@@ -72,6 +73,7 @@ enum damos_action {
+ 	DAMOS_PAGEOUT,
+ 	DAMOS_HUGEPAGE,
+ 	DAMOS_NOHUGEPAGE,
++	DAMOS_STAT,		/* Do nothing but only record the stat */
+ 	DAMOS_ACTION_LEN,
  };
  
- int xgbe_pci_init(void)
+@@ -84,6 +86,8 @@ enum damos_action {
+  * @min_age_region:	Minimum age of target regions.
+  * @max_age_region:	Maximum age of target regions.
+  * @action:		&damo_action to be applied to the target regions.
++ * @stat_count:		Total number of regions that this scheme is applied.
++ * @stat_sz:		Total size of regions that this scheme is applied.
+  * @list:		List head for siblings.
+  *
+  * For each aggregation interval, DAMON applies @action to monitoring target
+@@ -97,6 +101,8 @@ struct damos {
+ 	unsigned int min_age_region;
+ 	unsigned int max_age_region;
+ 	enum damos_action action;
++	unsigned long stat_count;
++	unsigned long stat_sz;
+ 	struct list_head list;
+ };
+ 
+diff --git a/mm/damon.c b/mm/damon.c
+index bcc732e8735c..092e300a00eb 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -191,6 +191,8 @@ static struct damos *damon_new_scheme(
+ 	scheme->min_age_region = min_age_region;
+ 	scheme->max_age_region = max_age_region;
+ 	scheme->action = action;
++	scheme->stat_count = 0;
++	scheme->stat_sz = 0;
+ 	INIT_LIST_HEAD(&scheme->list);
+ 
+ 	return scheme;
+@@ -771,6 +773,8 @@ static int damos_do_action(struct damon_task *task, struct damon_region *r,
+ 	case DAMOS_NOHUGEPAGE:
+ 		madv_action = MADV_NOHUGEPAGE;
+ 		break;
++	case DAMOS_STAT:
++		return 0;
+ 	default:
+ 		pr_warn("Wrong action %d\n", action);
+ 		return -EINVAL;
+@@ -798,8 +802,11 @@ static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
+ 				(s->max_age_region &&
+ 				 s->max_age_region < r->age))
+ 			continue;
++		s->stat_count++;
++		s->stat_sz += sz;
+ 		damos_do_action(t, r, s->action);
+-		r->age = 0;
++		if (s->action != DAMOS_STAT)
++			r->age = 0;
+ 	}
+ }
+ 
+@@ -1385,11 +1392,11 @@ static ssize_t sprint_schemes(struct damon_ctx *c, char *buf, ssize_t len)
+ 
+ 	damon_for_each_scheme(s, c) {
+ 		rc = snprintf(&buf[written], len - written,
+-				"%u %u %u %u %u %u %d\n",
++				"%u %u %u %u %u %u %d %lu %lu\n",
+ 				s->min_sz_region, s->max_sz_region,
+ 				s->min_nr_accesses, s->max_nr_accesses,
+ 				s->min_age_region, s->max_age_region,
+-				s->action);
++				s->action, s->stat_count, s->stat_sz);
+ 		if (!rc)
+ 			return -ENOMEM;
+ 
 -- 
-2.26.2
+2.17.1
 
