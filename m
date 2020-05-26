@@ -2,52 +2,58 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FABC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80023C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D74DC20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5598F20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520954;
-	bh=z+fk0Pv+x94C2kIS/ampQZxF3sACccTi42Enl/SnzGo=;
+	s=default; t=1590520958;
+	bh=SbiT9tShyeJeTrafTHaX26vSwjPfBaUpDXmf1AKE84s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ILwF47EWXyaEyQspiM+K3X/+9duGJeR5h0AbjwzBATJu3DregDlze7Z0bWUbtbMuD
-	 q5CBTBKZhM2BfQwCHDgjyEBG6d5fvFfpPq930Y+2mXi1wDNB1hi1E8aTkxd2GGMUad
-	 9vV7P9Wi1m0DlXRGuMjflBbNCFr2SVr9L/+xSm9o=
+	b=MClYfkHRLpnLZAUbIepXd2Ko4ede8CrR9FVvQahXPmWu5h73ENZUJ8Fi73VAHueW3
+	 IuR7qjOZsgRgFJztPlGjl4gVbMaKKCkk+kNyatrvrD6Lb5/Lk1TJkwsZvLZv1I10VC
+	 Smb1d9HbhEIykRkof7lDkVdep7Ot3NiDXL6gQgNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392399AbgEZTWe (ORCPT
+        id S2390895AbgEZTKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39276 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390905AbgEZTKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:08 -0400
+        id S2403989AbgEZTJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC5FA208A7;
-        Tue, 26 May 2020 19:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC5E720873;
+        Tue, 26 May 2020 19:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520207;
-        bh=z+fk0Pv+x94C2kIS/ampQZxF3sACccTi42Enl/SnzGo=;
+        s=default; t=1590520197;
+        bh=SbiT9tShyeJeTrafTHaX26vSwjPfBaUpDXmf1AKE84s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDP/pM63BbVaW+mHgz1uASa6qFy0C7/EGrmimMSdx2iMT4MMvz4qFlydaAIKpHGFu
-         TH3Rj2aSIN/e6OvXCbj43pyb/+5Bz3QTpn4PzhQUyr91/I4BgDe14cx3t6FO02pvXh
-         3C1DR2eq3FmJgP8JXKbu5Y/rAEZHN7DVETvYUths=
+        b=zfaUG+JjtHxf0EpzqiNj4ItmoMeNVDuY4/eaWbRdg5bI60D6M+pZ26rJMabtOQtdn
+         ywb6WypMK0jCQreOJqSJrYUrkVwcZzhLgxhUSfaExxl//qRcwQp3+oPIHjLTvyPDlp
+         wtD6/WFEHGMekYVr0wSZkWTK4ETbcmSCeNeVKMAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Sitnicki <jakub@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>
-Subject: [PATCH 5.4 100/111] flow_dissector: Drop BPF flow dissector prog ref on netns cleanup
-Date:   Tue, 26 May 2020 20:53:58 +0200
-Message-Id: <20200526183942.375473256@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Qian Cai <cai@lca.pw>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 096/111] kasan: disable branch tracing for core runtime
+Date:   Tue, 26 May 2020 20:53:54 +0200
+Message-Id: <20200526183942.024415645@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,93 +66,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: Marco Elver <elver@google.com>
 
-commit 5cf65922bb15279402e1e19b5ee8c51d618fa51f upstream.
+commit 33cd65e73abd693c00c4156cf23677c453b41b3b upstream.
 
-When attaching a flow dissector program to a network namespace with
-bpf(BPF_PROG_ATTACH, ...) we grab a reference to bpf_prog.
+During early boot, while KASAN is not yet initialized, it is possible to
+enter reporting code-path and end up in kasan_report().
 
-If netns gets destroyed while a flow dissector is still attached, and there
-are no other references to the prog, we leak the reference and the program
-remains loaded.
+While uninitialized, the branch there prevents generating any reports,
+however, under certain circumstances when branches are being traced
+(TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
+reboots without warning.
 
-Leak can be reproduced by running flow dissector tests from selftests/bpf:
+To prevent similar issues in future, we should disable branch tracing
+for the core runtime.
 
-  # bpftool prog list
-  # ./test_flow_dissector.sh
-  ...
-  selftests: test_flow_dissector [PASS]
-  # bpftool prog list
-  4: flow_dissector  name _dissect  tag e314084d332a5338  gpl
-          loaded_at 2020-05-20T18:50:53+0200  uid 0
-          xlated 552B  jited 355B  memlock 4096B  map_ids 3,4
-          btf_id 4
-  #
-
-Fix it by detaching the flow dissector program when netns is going away.
-
-Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Stanislav Fomichev <sdf@google.com>
-Link: https://lore.kernel.org/bpf/20200521083435.560256-1-jakub@cloudflare.com
+[elver@google.com: remove duplicate DISABLE_BRANCH_PROFILING, per Qian Cai]
+  Link: https://lore.kernel.org/lkml/20200517011732.GE24705@shao2-debian/
+  Link: http://lkml.kernel.org/r/20200522075207.157349-1-elver@google.com
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r//20200517011732.GE24705@shao2-debian/
+Link: http://lkml.kernel.org/r/20200519182459.87166-1-elver@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/flow_dissector.c |   26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+ mm/kasan/Makefile  |    8 ++++----
+ mm/kasan/generic.c |    1 -
+ mm/kasan/tags.c    |    1 -
+ 3 files changed, 4 insertions(+), 6 deletions(-)
 
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -129,12 +129,10 @@ int skb_flow_dissector_bpf_prog_attach(c
- 	return 0;
- }
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -14,10 +14,10 @@ CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+ # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
  
--int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
-+static int flow_dissector_bpf_prog_detach(struct net *net)
- {
- 	struct bpf_prog *attached;
--	struct net *net;
+-CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+-CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
++CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
  
--	net = current->nsproxy->net_ns;
- 	mutex_lock(&flow_dissector_mutex);
- 	attached = rcu_dereference_protected(net->flow_dissector_prog,
- 					     lockdep_is_held(&flow_dissector_mutex));
-@@ -169,6 +167,24 @@ static __be16 skb_flow_get_be16(const st
- 	return 0;
- }
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+ obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -15,7 +15,6 @@
+  */
  
-+int skb_flow_dissector_bpf_prog_detach(const union bpf_attr *attr)
-+{
-+	return flow_dissector_bpf_prog_detach(current->nsproxy->net_ns);
-+}
-+
-+static void __net_exit flow_dissector_pernet_pre_exit(struct net *net)
-+{
-+	/* We're not racing with attach/detach because there are no
-+	 * references to netns left when pre_exit gets called.
-+	 */
-+	if (rcu_access_pointer(net->flow_dissector_prog))
-+		flow_dissector_bpf_prog_detach(net);
-+}
-+
-+static struct pernet_operations flow_dissector_pernet_ops __net_initdata = {
-+	.pre_exit = flow_dissector_pernet_pre_exit,
-+};
-+
- /**
-  * __skb_flow_get_ports - extract the upper layer ports and return them
-  * @skb: sk_buff to extract the ports from
-@@ -1759,7 +1775,7 @@ static int __init init_default_flow_diss
- 	skb_flow_dissector_init(&flow_keys_basic_dissector,
- 				flow_keys_basic_dissector_keys,
- 				ARRAY_SIZE(flow_keys_basic_dissector_keys));
--	return 0;
--}
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define DISABLE_BRANCH_PROFILING
  
-+	return register_pernet_subsys(&flow_dissector_pernet_ops);
-+}
- core_initcall(init_default_flow_dissectors);
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
+--- a/mm/kasan/tags.c
++++ b/mm/kasan/tags.c
+@@ -12,7 +12,6 @@
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-#define DISABLE_BRANCH_PROFILING
+ 
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
 
 
