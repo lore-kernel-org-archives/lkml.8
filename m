@@ -2,91 +2,134 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F34F4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E9A20704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3376E20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:48:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xERL7lEO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l5g1bYIT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389108AbgEZRre (ORCPT
+        id S2389132AbgEZRsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:47:34 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38176 "EHLO
+        Tue, 26 May 2020 13:48:18 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38200 "EHLO
         lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388654AbgEZRrd (ORCPT
+        with ESMTP id S1726821AbgEZRsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:47:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlQ2o033068;
-        Tue, 26 May 2020 12:47:26 -0500
+        Tue, 26 May 2020 13:48:18 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmCBk033300;
+        Tue, 26 May 2020 12:48:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590515246;
-        bh=iSQV5HysmgZxxM+A2iVQvD9rooBBNm9bWlMSdggWHNk=;
-        h=From:To:CC:Subject:Date;
-        b=xERL7lEORdCCEkqE+rRq4k5zFVoAv3VZLB8GsaNIOVQZrPlfL71BuvDQbX2MVlnWD
-         Y5C5JXGqVZrmXudWnapwaIfbO9Y46iocMrJcYk4JeVohHEi+esHW1oh0i63hDa2q2p
-         b4qdcDXabJjHIuBCHaWLR5M3Iyst2qRxDEnRI0d8=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHlQk4020259
+        s=ti-com-17Q1; t=1590515292;
+        bh=2WPRrdT9w8zDCVHBZqeCHpQW4EnwADnt8oLLDTr2XxI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=l5g1bYITzSyPQnkWcHhX1xrW0MdQ2UjtYwF3K2LD5MfsRmvMQCTAHadJhL64eDWau
+         J9otJ50cYlH0eiCBiVnOC+nmwNA80GacjxMmggUvVzgK5Y1rS7s+WFSj6mB69f8m66
+         atoj7/YW9UgaTtbCrygmw1AjHbfwdJMJtjYSTU1Q=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QHmCeq124373
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 12:47:26 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 26 May 2020 12:48:12 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 12:47:18 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ May 2020 12:48:12 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 12:47:17 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHlHOr107880;
-        Tue, 26 May 2020 12:47:17 -0500
+ Frontend Transport; Tue, 26 May 2020 12:48:12 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QHmCkL088235;
+        Tue, 26 May 2020 12:48:12 -0500
+Subject: Re: [PATCH net-next v2 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200522122534.3353-1-dmurphy@ti.com>
+ <20200522122534.3353-5-dmurphy@ti.com>
+ <a1ec8ef0-1536-267b-e8f7-9902ed06c883@gmail.com>
+ <948bfa24-97ad-ba35-f06c-25846432e506@ti.com>
+ <20200523150951.GK610998@lunn.ch>
+ <a59412a5-7cc6-dc70-b851-c7d65c1635b7@ti.com>
+ <20200523220741.GO610998@lunn.ch>
 From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-next v3 0/4] RGMII Internal delay common property
-Date:   Tue, 26 May 2020 12:47:12 -0500
-Message-ID: <20200526174716.14116-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
+Message-ID: <b8648d0d-6064-f481-6ecf-6151736f1899@ti.com>
+Date:   Tue, 26 May 2020 12:48:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <20200523220741.GO610998@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Language: en-US
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Andrew
 
-The RGMII internal delay is a common setting found in most RGMII capable PHY
-devices.  It was found that many vendor specific device tree properties exist
-to do the same function. This creates a common property to be used for PHY's
-that have tunable internal delays for the Rx and Tx paths.
+On 5/23/20 5:07 PM, Andrew Lunn wrote:
+>>> Any why is your PHY special, in that is does care about out of range
+>>> delays, when others using new the new core helper don't?
+>> We are not rounding to nearest here.  Basically the helper works to find the
+>> best match
+>>
+>> If the delay passed in is less than or equal to the smallest delay then
+>> return the smallest delay index
+>>
+>> If the delay passed in is greater then the largest delay then return the max
+>> delay index
+> +               /* Find an approximate index by looking up the table */
+> +               if (delay > delay_values[i - 1] &&
+> +                   delay < delay_values[i]) {
+> +                       if (delay - delay_values[i - 1] < delay_values[i] - delay)
+> +                               return i - 1;
+> +                       else
+> +                               return i;
+>
+> This appears to round to the nearest value when it is not an exact
+> match.
+>
+> The documentation is a hint to the DT developer what value to put in
+> DT. By saying it rounders, the developer does not need to go digging
+> through the source code to find an exact value, otherwise -EINVAL will
+> be returned. They can just use the value the HW engineer suggested,
+> and the PHY will pick whatever is nearest.
+>
+>> Not sure what you mean about this PHY being special.  This helper is
+>> not PHY specific.
+> As you said, if out of range, the helper returns the top/bottom
+> value. Your PHY is special, the top/bottom value is not good enough,
+> you throw an error.
+>
+> The point of helpers is to give uniform behaviour. We have one line
+> helpers, simply because they give uniform behaviour, rather than have
+> each driver do it subtlety different. But it also means drivers should
+> try to not add additional constraints over what the helper already
+> has, unless it is actually required by the hardware.
+>
+>> After I think about this more I am thinking a helper may be over kill here
+>> and the delay to setting should be done within the PHY driver itself
+> The helper is useful, it will result in uniform handling of rounding
+> between DT values and what the PHY can actually do. But please also
+> move your range check and error message inside the helper.
 
 
-Dan Murphy (4):
-  dt-bindings: net: Add tx and rx internal delays
-  net: phy: Add a helper to return the index for of the internal delay
-  dt-bindings: net: Add RGMII internal delay for DP83869
-  net: dp83869: Add RGMII internal delay configuration
+I re-worked v3 to be a bit more of a helper and incorporated Florian's 
+and you comments
 
- .../bindings/net/ethernet-controller.yaml     | 14 +++
- .../devicetree/bindings/net/ti,dp83869.yaml   | 16 ++++
- drivers/net/phy/dp83869.c                     | 91 +++++++++++++++++-
- drivers/net/phy/phy_device.c                  | 94 +++++++++++++++++++
- include/linux/phy.h                           |  2 +
- 5 files changed, 214 insertions(+), 3 deletions(-)
+Dan
 
--- 
-2.26.2
 
+>       Andrew
