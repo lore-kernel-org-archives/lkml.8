@@ -2,404 +2,424 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 003F720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C023207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:04:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AnwtyDTC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8tI9qBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgEZIDk (ORCPT
+        id S1728888AbgEZIEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:03:40 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:46940 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIDk (ORCPT
+        Tue, 26 May 2020 04:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgEZIEj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:03:40 -0400
+        Tue, 26 May 2020 04:04:39 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2FCC03E97E;
+        Tue, 26 May 2020 01:04:38 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id v63so9762060pfb.10;
+        Tue, 26 May 2020 01:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590480218; x=1622016218;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=sEu+fmjknPrvuEnwmhvuUjCoHjDnAJSdyXgDTd3rzmk=;
-  b=AnwtyDTCxCNDK6XF2a0DUweJRmnl/8axTpi1Wm3ovPI5EBod5Rks5PXv
-   xUDnqkS6zoPOUzv3H/PgqwM1OM45tmozqxWshGasA92iKZv1qQWoMZWj5
-   Rmiltm7a3EPe5+HY5ggwbSXdumOERxLmKd70pyTohJjRMhtv+OcZKluSW
-   A=;
-IronPort-SDR: +fH8Hg0Iw8N5mr2Pi3N4nufBdHiSMgckv9nGjNgjvWv2psu+TWQso0YCrpUQkEQVlVP5fGh71F
- xBkiWhuVPeXQ==
-X-IronPort-AV: E=Sophos;i="5.73,436,1583193600"; 
-   d="scan'208";a="32213855"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 26 May 2020 08:03:23 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 1B629A16FB;
-        Tue, 26 May 2020 08:03:11 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 08:03:11 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.193) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 08:02:54 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v9 3/8] mm/damon: Implement data access monitoring-based operation schemes
-Date:   Tue, 26 May 2020 09:56:57 +0200
-Message-ID: <20200526075702.27339-4-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526075702.27339-1-sjpark@amazon.com>
-References: <20200526075702.27339-1-sjpark@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lYe4GaXltdMTh9IF7b5ALW2n1tYeh93a257hHK2nt7Y=;
+        b=o8tI9qBOd6jX3nhG1PoRU25m6oGDb8BKwtuKOtilM7Ht/SEXJPjOFeT4HR21YAG0A/
+         qbQCAIk1DjWunhJdpOGECMzD979vJXe1IHP83Dcf62ra2dZUJcZJWTiRnDKy8lk2RjE0
+         vUGSq9oVXAfV7sYZF5HqZnfbN+xiS6/c+KkfBfnA7l/IOVbxOKVH7uQcT5TQ6VmVG01n
+         O5Q5NFwnsHc/WU1ueleQPap8v45ClbH8Qa0Mhqlc58jgUXGltPtQC45n7d1xD6noHadG
+         CQYjWfN55gLke2NX2xOr27zMAmdVBNcFIMddEqZn4NQkvHglu3qyQM8HIPubqdlneEsP
+         qA8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lYe4GaXltdMTh9IF7b5ALW2n1tYeh93a257hHK2nt7Y=;
+        b=i5Go26SOurcRNpWftmgEx2w38WNJsNA9d8d17nRjSMlXj14KLTCkaR8+g/fyUnbJXT
+         JsjNq+o4ak0WPooxwG1II1jAWFfGSnikC4H2aZ46Xt3JxdjUum3cwnI32njwIie2aqB4
+         kN/qsUG84ceFtBQic9Azh4pB0XAHc8jUYf4B8+dF7Ts/DeaUECNP686pFg9iKjxqhWjO
+         WdpbPWNh8qrJ1iAglOoHzpzAENlgLfpcX80SdYKYi8k7T1B4mrZNkeLc4cLXml97Qc+M
+         FYyF7oPuFYKOEQXJa7xWQzOClfnyiraKZjRvwQxtq2ECO8Q3PetBz5XQmuzUIY1oA8jK
+         pJqw==
+X-Gm-Message-State: AOAM5321+u3ebdvySJcQC/9OrCKMveHNrRsX1b/evrAbWCJqDz37h0nN
+        beKi7p4ek65SsHDiTSg1AaqqMekDflobR3y8rhsV8t4mvIW/8w==
+X-Google-Smtp-Source: ABdhPJyoxrzMAGiipMAlnWMhSUuEFmq8OSI+JfjM3k2ePG3qG4u14xU9aUhaSvP+MW2xwPpzlfYxxb90fi/Pf+y7A+o=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr31047219pgb.203.1590480277741;
+ Tue, 26 May 2020 01:04:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.193]
-X-ClientProxiedBy: EX13D08UWB004.ant.amazon.com (10.43.161.232) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+References: <20200516064507.19058-1-warthog618@gmail.com>
+In-Reply-To: <20200516064507.19058-1-warthog618@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 26 May 2020 11:04:25 +0300
+Message-ID: <CAHp75Vc9Js7keBnk5P0Skm4sBkxZdQPLTpqLm4sqzbNmuyjEMA@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpio: uapi: v2 proposal
+To:     Kent Gibson <warthog618@gmail.com>, ville.syrjala@linux.intel.com
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
++Cc: Ville
 
-In many cases, users might use DAMON for simple data access aware
-memory management optimizations such as applying an operation scheme to
-a memory region of a specific size having a specific access frequency
-for a specific time.  For example, "page out a memory region larger than
-100 MiB but having a low access frequency more than 10 minutes", or "Use
-THP for a memory region larger than 2 MiB having a high access frequency
-for more than 2 seconds".
+Ville, this is a v2 of the GPIO ABI we discussed with some time ago.
+If you have time to briefly look at it and perhaps comment if it's
+right way to go.
 
-To minimize users from spending their time for implementation of such
-simple data access monitoring-based operation schemes, this commit makes
-DAMON to handle such schemes directly.  With this commit, users can
-simply specify their desired schemes to DAMON.
+On Sat, May 16, 2020 at 9:50 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Add a new version of the uAPI to address existing 32/64bit alignment
+> issues, add support for debounce, and provide some future proofing by
+> adding padding reserved for future use.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+>
+> ---
+>
+> This patch is a proposal to replace the majority of the uAPI, so some
+> background and justification is in order.
+>
+> The alignment issue relates to the gpioevent_data, which packs to different
+> sizes on 32bit and 64bit platforms. That creates problems for 32bit apps
+> running on 64bit kernels.  The patch addresses that particular issue, and
+> the problem more generally, by adding pad fields that explicitly pad
+> structs out to 64bit boundaries, so they will pack to the same size now,
+> and even if some of the reserved padding is used for __u64 fields in the
+> future.
+>
+> The lack of future proofing in v1 makes it impossible to, for example,
+> add the debounce feature that is included in v2.
+> The future proofing is addressed by providing reserved padding in all
+> structs for future features.  Specifically, the line request,
+> config and info structs get updated versions and ioctls.
+>
+> I haven't added any padding to gpiochip_info, as I haven't seen any calls
+> for new features for the corresponding ioctl, but I'm open to updating that
+> as well.
+>
+> As the majority of the structs and ioctls were being replaced, it seemed
+> opportune to rework some of the other aspects of the uAPI.
+>
+> Firstly, I've reworked the flags field throughout.  v1 has three different
+> flags fields, each with their own separate bit definitions.  In v2 that is
+> collapsed to one.  Further, the bits of the v2 flags field are used
+> as feature enable flags, with any other necessary configuration fields encoded
+> separately.  This is simpler and clearer, while also providing a foundation
+> for adding features in the future.
+>
+> I've also merged the handle and event requests into a single request, the
+> line request, as the two requests where mostly the same, other than the
+> edge detection provided by event requests.  As a byproduct, the v2 uAPI
+> allows for multiple lines producing edge events on the same line handle.
+> This is a new capability as v1 only supports a single line in an event request.
+>
+> This means there are now only two types of file handle to be concerned with,
+> the chip and the line, and it is clearer which ioctls apply to which type
+> of handle.
+>
+> There is also some minor renaming of fields for consistency compared to their
+> v1 counterparts, e.g. offset rather than lineoffset or line_offset, and
+> consumer rather than consumer_label.
 
-Each of the schemes is composed with conditions for filtering of the
-target memory regions and desired memory management action for the
-target.  Specifically, the format is::
+> And v1 GPIOHANDLES_MAX and gpiohandle_data become GPIOLINES_MAX and
+> gpioline_values for v2 - the only change being the renaming for clarity.
 
-    <min/max size> <min/max access frequency> <min/max age> <action>
+Hmm... I think it makes sense if you fully replace uAPI, otherwise in
+my opinion it adds to the confusion.
+My point is that we may try to be less invasive, perhaps?
 
-The filtering conditions are size of memory region, number of accesses
-to the region monitored by DAMON, and the age of the region.  The age of
-region is incremented periodically but reset when its addresses or
-access frequency has significantly changed or the action of a scheme was
-applied.  For the action, current implementation supports only a few of
-madvise() hints, ``MADV_WILLNEED``, ``MADV_COLD``, ``MADV_PAGEOUT``,
-``MADV_HUGEPAGE``, and ``MADV_NOHUGEPAGE``.
+> The v2 uAPI is mostly just a reorganisation of v1, so userspace code,
+> particularly libgpiod, should easily port to it.
+>
+> This patch is obviously only one patch in a much bigger series that
+> will actually implement it, but I would appreciate a review and any feedback,
+> as it is foundational to the rest of that series.
+>
+> Thanks,
+> Kent.
+>
+>  include/uapi/linux/gpio.h | 204 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 197 insertions(+), 7 deletions(-)
+>
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 0206383c0383..3db7e0bc1312 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -14,6 +14,9 @@
+>  #include <linux/ioctl.h>
+>  #include <linux/types.h>
+>
+> +/* The maximum size of name and label arrays */
+> +#define GPIO_MAX_NAME_SIZE 32
+> +
+>  /**
+>   * struct gpiochip_info - Information about a certain GPIO chip
+>   * @name: the Linux kernel name of this GPIO chip
+> @@ -27,6 +30,184 @@ struct gpiochip_info {
+>         __u32 lines;
+>  };
+>
+> +/* Maximum number of requested lines */
+> +#define GPIOLINES_MAX 64
+> +
+> +enum gpioline_direction {
+> +       GPIOLINE_DIRECTION_INPUT        = 1,
+> +       GPIOLINE_DIRECTION_OUTPUT       = 2,
+> +};
+> +
+> +enum gpioline_drive {
+> +       GPIOLINE_DRIVE_PUSH_PULL        = 0,
+> +       GPIOLINE_DRIVE_OPEN_DRAIN       = 1,
+> +       GPIOLINE_DRIVE_OPEN_SOURCE      = 2,
+> +};
+> +
+> +enum gpioline_bias {
+> +       GPIOLINE_BIAS_DISABLE           = 0,
+> +       GPIOLINE_BIAS_PULL_UP           = 1,
+> +       GPIOLINE_BIAS_PULL_DOWN         = 2,
+> +};
+> +
+> +enum gpioline_edge {
+> +       GPIOLINE_EDGE_NONE              = 0,
+> +       GPIOLINE_EDGE_RISING            = 1,
+> +       GPIOLINE_EDGE_FALLING           = 2,
+> +       GPIOLINE_EDGE_BOTH              = 3,
+> +};
+> +
+> +/* Line flags - V2 */
+> +#define GPIOLINE_FLAG_V2_KERNEL                (1UL << 0) /* Line used by the kernel */
+> +#define GPIOLINE_FLAG_V2_ACTIVE_LOW    (1UL << 1)
+> +#define GPIOLINE_FLAG_V2_DIRECTION     (1UL << 2)
+> +#define GPIOLINE_FLAG_V2_DRIVE         (1UL << 3)
+> +#define GPIOLINE_FLAG_V2_BIAS          (1UL << 4)
+> +#define GPIOLINE_FLAG_V2_EDGE_DETECTION        (1UL << 5)
+> +#define GPIOLINE_FLAG_V2_DEBOUNCE      (1UL << 6)
+> +
+> +/**
+> + * struct gpioline_config - Configuration for GPIO lines
+> + * @default_values: if the direction is GPIOLINE_DIRECTION_OUTPUT, this
+> + * specifies the default output value, should be 0 (low) or 1 (high),
+> + * anything else than 0 or 1 will be interpreted as 1 (high)
+> + * @flags: flags for the GPIO lines, such as GPIOLINE_FLAG_V2_ACTIVE_LOW,
+> + * GPIOLINE_FLAG_V2_DIRECTION etc, OR:ed together
+> + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the desired
+> + * direction for the requested lines, with a value from enum
+> + * gpioline_direction
+> + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the desired drive for
+> + * the requested lines, with a value from enum gpioline_drive
+> + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the desired bias for
+> + * the requested lines, with a value from enum gpioline_bias
+> + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, the
+> + * desired edge_detection for the requested lines, with a value from enum
+> + * gpioline_edge
+> + * @debounce: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the desired
+> + * debounce period for the requested lines, in microseconds
+> + * @padding: reserved for future use and should be zero filled
+> + */
+> +struct gpioline_config {
+> +       __u8 default_values[GPIOLINES_MAX];
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- include/linux/damon.h |  49 ++++++++++++++
- mm/damon.c            | 149 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 198 insertions(+)
+This basically means that whatever in square brackets must be aligned
+to 8. So, BUILD_BUG_ON() here and in similar places where it makes
+sense.
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 7dafbcf86795..d5a3e4dc5f9a 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -55,6 +55,51 @@ struct damon_task {
- 	struct list_head list;
- };
- 
-+/**
-+ * enum damos_action - Represents an action of a Data Access Monitoring-based
-+ * Operation Scheme.
-+ *
-+ * @DAMOS_WILLNEED:	Call ``madvise()`` for the region with MADV_WILLNEED.
-+ * @DAMOS_COLD:		Call ``madvise()`` for the region with MADV_COLD.
-+ * @DAMOS_PAGEOUT:	Call ``madvise()`` for the region with MADV_PAGEOUT.
-+ * @DAMOS_HUGEPAGE:	Call ``madvise()`` for the region with MADV_HUGEPAGE.
-+ * @DAMOS_NOHUGEPAGE:	Call ``madvise()`` for the region with MADV_NOHUGEPAGE.
-+ * @DAMOS_ACTION_LEN:	Number of supported actions.
-+ */
-+enum damos_action {
-+	DAMOS_WILLNEED,
-+	DAMOS_COLD,
-+	DAMOS_PAGEOUT,
-+	DAMOS_HUGEPAGE,
-+	DAMOS_NOHUGEPAGE,
-+	DAMOS_ACTION_LEN,
-+};
-+
-+/**
-+ * struct damos - Represents a Data Access Monitoring-based Operation Scheme.
-+ * @min_sz_region:	Minimum size of target regions.
-+ * @max_sz_region:	Maximum size of target regions.
-+ * @min_nr_accesses:	Minimum ``->nr_accesses`` of target regions.
-+ * @max_nr_accesses:	Maximum ``->nr_accesses`` of target regions.
-+ * @min_age_region:	Minimum age of target regions.
-+ * @max_age_region:	Maximum age of target regions.
-+ * @action:		&damo_action to be applied to the target regions.
-+ * @list:		List head for siblings.
-+ *
-+ * For each aggregation interval, DAMON applies @action to monitoring target
-+ * regions fit in the condition and updates the statistics.
-+ */
-+struct damos {
-+	unsigned int min_sz_region;
-+	unsigned int max_sz_region;
-+	unsigned int min_nr_accesses;
-+	unsigned int max_nr_accesses;
-+	unsigned int min_age_region;
-+	unsigned int max_age_region;
-+	enum damos_action action;
-+	struct list_head list;
-+};
-+
- /**
-  * struct damon_ctx - Represents a context for each monitoring.  This is the
-  * main interface that allows users to set the attributes and get the results
-@@ -98,6 +143,7 @@ struct damon_task {
-  * @kdamond_lock.  Accesses to other fields must be protected by themselves.
-  *
-  * @tasks_list:		Head of monitring target tasks (&damon_task) list.
-+ * @schemes_list:	Head of schemes (&damos) list.
-  *
-  * @sample_cb:			Called for each sampling interval.
-  * @aggregate_cb:		Called for each aggregation interval.
-@@ -128,6 +174,7 @@ struct damon_ctx {
- 	struct mutex kdamond_lock;
- 
- 	struct list_head tasks_list;	/* 'damon_task' objects */
-+	struct list_head schemes_list;	/* 'damos' objects */
- 
- 	/* callbacks */
- 	void (*sample_cb)(struct damon_ctx *context);
-@@ -138,6 +185,8 @@ int damon_set_pids(struct damon_ctx *ctx, int *pids, ssize_t nr_pids);
- int damon_set_attrs(struct damon_ctx *ctx, unsigned long sample_int,
- 		unsigned long aggr_int, unsigned long regions_update_int,
- 		unsigned long min_nr_reg, unsigned long max_nr_reg);
-+int damon_set_schemes(struct damon_ctx *ctx,
-+			struct damos **schemes, ssize_t nr_schemes);
- int damon_set_recording(struct damon_ctx *ctx,
- 				unsigned int rbuf_len, char *rfile_path);
- int damon_start(struct damon_ctx *ctx);
-diff --git a/mm/damon.c b/mm/damon.c
-index 25d4ad98dc3b..6a07649d1f5d 100644
---- a/mm/damon.c
-+++ b/mm/damon.c
-@@ -11,6 +11,7 @@
- 
- #define CREATE_TRACE_POINTS
- 
-+#include <asm-generic/mman-common.h>
- #include <linux/damon.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
-@@ -52,6 +53,12 @@
- #define damon_for_each_task_safe(t, next, ctx) \
- 	list_for_each_entry_safe(t, next, &(ctx)->tasks_list, list)
- 
-+#define damon_for_each_scheme(s, ctx) \
-+	list_for_each_entry(s, &(ctx)->schemes_list, list)
-+
-+#define damon_for_each_scheme_safe(s, next, ctx) \
-+	list_for_each_entry_safe(s, next, &(ctx)->schemes_list, list)
-+
- #define MAX_RECORD_BUFFER_LEN	(4 * 1024 * 1024)
- #define MAX_RFILE_PATH_LEN	256
- 
-@@ -166,6 +173,27 @@ static void damon_destroy_task(struct damon_task *t)
- 	damon_free_task(t);
- }
- 
-+static void damon_add_scheme(struct damon_ctx *ctx, struct damos *s)
-+{
-+	list_add_tail(&s->list, &ctx->schemes_list);
-+}
-+
-+static void damon_del_scheme(struct damos *s)
-+{
-+	list_del(&s->list);
-+}
-+
-+static void damon_free_scheme(struct damos *s)
-+{
-+	kfree(s);
-+}
-+
-+static void damon_destroy_scheme(struct damos *s)
-+{
-+	damon_del_scheme(s);
-+	damon_free_scheme(s);
-+}
-+
- static unsigned int nr_damon_tasks(struct damon_ctx *ctx)
- {
- 	struct damon_task *t;
-@@ -668,6 +696,101 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
- 	}
- }
- 
-+#ifndef CONFIG_ADVISE_SYSCALLS
-+static int damos_madvise(struct damon_task *task, struct damon_region *r,
-+			int behavior)
-+{
-+	return -EINVAL;
-+}
-+#else
-+static int damos_madvise(struct damon_task *task, struct damon_region *r,
-+			int behavior)
-+{
-+	struct task_struct *t;
-+	struct mm_struct *mm;
-+	int ret = -ENOMEM;
-+
-+	t = damon_get_task_struct(task);
-+	if (!t)
-+		goto out;
-+	mm = damon_get_mm(task);
-+	if (!mm)
-+		goto put_task_out;
-+
-+	ret = do_madvise(t, mm, PAGE_ALIGN(r->vm_start),
-+			PAGE_ALIGN(r->vm_end - r->vm_start), behavior);
-+	mmput(mm);
-+put_task_out:
-+	put_task_struct(t);
-+out:
-+	return ret;
-+}
-+#endif	/* CONFIG_ADVISE_SYSCALLS */
-+
-+static int damos_do_action(struct damon_task *task, struct damon_region *r,
-+			enum damos_action action)
-+{
-+	int madv_action;
-+
-+	switch (action) {
-+	case DAMOS_WILLNEED:
-+		madv_action = MADV_WILLNEED;
-+		break;
-+	case DAMOS_COLD:
-+		madv_action = MADV_COLD;
-+		break;
-+	case DAMOS_PAGEOUT:
-+		madv_action = MADV_PAGEOUT;
-+		break;
-+	case DAMOS_HUGEPAGE:
-+		madv_action = MADV_HUGEPAGE;
-+		break;
-+	case DAMOS_NOHUGEPAGE:
-+		madv_action = MADV_NOHUGEPAGE;
-+		break;
-+	default:
-+		pr_warn("Wrong action %d\n", action);
-+		return -EINVAL;
-+	}
-+
-+	return damos_madvise(task, r, madv_action);
-+}
-+
-+static void damon_do_apply_schemes(struct damon_ctx *c, struct damon_task *t,
-+				struct damon_region *r)
-+{
-+	struct damos *s;
-+	unsigned long sz;
-+
-+	damon_for_each_scheme(s, c) {
-+		sz = r->vm_end - r->vm_start;
-+		if ((s->min_sz_region && sz < s->min_sz_region) ||
-+				(s->max_sz_region && s->max_sz_region < sz))
-+			continue;
-+		if ((s->min_nr_accesses && r->nr_accesses < s->min_nr_accesses)
-+				|| (s->max_nr_accesses &&
-+					s->max_nr_accesses < r->nr_accesses))
-+			continue;
-+		if ((s->min_age_region && r->age < s->min_age_region) ||
-+				(s->max_age_region &&
-+				 s->max_age_region < r->age))
-+			continue;
-+		damos_do_action(t, r, s->action);
-+		r->age = 0;
-+	}
-+}
-+
-+static void kdamond_apply_schemes(struct damon_ctx *c)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r;
-+
-+	damon_for_each_task(t, c) {
-+		damon_for_each_region(r, t)
-+			damon_do_apply_schemes(c, t, r);
-+	}
-+}
-+
- #define sz_damon_region(r) (r->vm_end - r->vm_start)
- 
- /*
-@@ -972,6 +1095,7 @@ static int kdamond_fn(void *data)
- 			kdamond_merge_regions(ctx, max_nr_accesses / 10);
- 			if (ctx->aggregate_cb)
- 				ctx->aggregate_cb(ctx);
-+			kdamond_apply_schemes(ctx);
- 			kdamond_reset_aggregated(ctx);
- 			kdamond_split_regions(ctx);
- 		}
-@@ -1052,6 +1176,30 @@ int damon_stop(struct damon_ctx *ctx)
- 	return -EPERM;
- }
- 
-+/**
-+ * damon_set_schemes() - Set data access monitoring based operation schemes.
-+ * @ctx:	monitoring context
-+ * @schemes:	array of the schemes
-+ * @nr_schemes:	number of entries in @schemes
-+ *
-+ * This function should not be called while the kdamond of the context is
-+ * running.
-+ *
-+ * Return: 0 if success, or negative error code otherwise.
-+ */
-+int damon_set_schemes(struct damon_ctx *ctx, struct damos **schemes,
-+			ssize_t nr_schemes)
-+{
-+	struct damos *s, *next;
-+	ssize_t i;
-+
-+	damon_for_each_scheme_safe(s, next, ctx)
-+		damon_destroy_scheme(s);
-+	for (i = 0; i < nr_schemes; i++)
-+		damon_add_scheme(ctx, schemes[i]);
-+	return 0;
-+}
-+
- /**
-  * damon_set_pids() - Set monitoring target processes.
-  * @ctx:	monitoring context
-@@ -1492,6 +1640,7 @@ static int __init damon_init_user_ctx(void)
- 	mutex_init(&ctx->kdamond_lock);
- 
- 	INIT_LIST_HEAD(&ctx->tasks_list);
-+	INIT_LIST_HEAD(&ctx->schemes_list);
- 
- 	return 0;
- }
+> +       __u32 flags;
+> +       __u8 direction;
+> +       __u8 drive;
+> +       __u8 bias;
+> +       __u8 edge_detection;
+> +       __u32 debounce;
+
+> +       __u32 padding[7]; /* for future use */
+
+Why 7 and not 5 or even 1?
+Can we use size of struct as a versioning?
+Or maybe explicit version field?
+
+Same questions to all big paddings.
+
+> +};
+> +
+> +/**
+> + * struct gpioline_request - Information about a request for GPIO lines
+> + * @offsets: an array of desired lines, specified by offset index for the
+> + * associated GPIO device
+> + * @consumer: a desired consumer label for the selected GPIO lines such
+> + * as "my-bitbanged-relay"
+> + * @config: Requested configuration for the requested lines. Note that
+> + * even if multiple lines are requested, the same configuration must be
+> + * applicable to all of them. If you want lines with individual
+> + * configuration, request them one by one. It is possible to select a
+> + * batch of input or output lines, but they must all have the same
+> + * configuration, i.e. all inputs or all outputs, all active low etc
+> + * @lines: number of lines requested in this request, i.e. the number of
+> + * valid fields in the GPIOLINES_MAX sized arrays, set to 1 to request a
+> + * single line
+> + * @padding: reserved for future use and should be zero filled
+> + * @fd: if successful this field will contain a valid anonymous file handle
+> + * after a GPIO_GET_LINE_IOCTL operation, zero or negative value means
+> + * error
+> + */
+> +struct gpioline_request {
+> +       __u32 offsets[GPIOLINES_MAX];
+> +       char consumer[GPIO_MAX_NAME_SIZE];
+> +       struct gpioline_config config;
+> +       __u32 lines;
+> +       __u32 padding[4]; /* for future use */
+> +       __s32 fd;
+> +};
+> +
+> +/**
+> + * struct gpioline_values - Values of GPIO lines
+> + * @values: when getting the state of lines this contains the current
+> + * state of a line, when setting the state of lines these should contain
+> + * the desired target state
+> + */
+> +struct gpioline_values {
+> +       __u8 values[GPIOLINES_MAX];
+> +};
+> +
+> +/**
+> + * struct gpioline_info_v2 - Information about a certain GPIO line
+> + * @name: the name of this GPIO line, such as the output pin of the line on
+> + * the chip, a rail or a pin header name on a board, as specified by the
+> + * gpio chip, may be empty
+> + * @consumer: a functional name for the consumer of this GPIO line as set
+> + * by whatever is using it, will be empty if there is no current user but
+> + * may also be empty if the consumer doesn't set this up
+> + * @offset: the local offset on this GPIO device, fill this in when
+> + * requesting the line information from the kernel
+> + * @flags: various flags for this line
+> + * @direction: if GPIOLINE_FLAG_V2_DIRECTION is set in flags, the direction
+> + * of the line, with a value from enum gpioline_direction
+> + * @drive: if GPIOLINE_FLAG_V2_DRIVE is set in flags, the drive for the
+> + * line, with a value from enum gpioline_drive
+> + * @bias: if GPIOLINE_FLAG_V2_BIAS is set in flags, the bias for the line,
+> + * with a value from enum gpioline_bias
+> + * @edge_detection: if GPIOLINE_FLAG_V2_EDGE_DETECTION is set in flags, the
+> + * edge_detection for the line, with a value from enum gpioline_edge
+> + * @debounce: if GPIOLINE_FLAG_V2_DEBOUNCE is set in flags, the debounce
+> + * period for the line, in microseconds
+> + * @padding: reserved for future use
+> + */
+
+> +struct gpioline_info_v2 {
+> +       char name[GPIO_MAX_NAME_SIZE];
+> +       char consumer[GPIO_MAX_NAME_SIZE];
+> +       __u32 offset;
+> +       __u32 flags;
+> +       __u8 direction;
+> +       __u8 drive;
+> +       __u8 bias;
+> +       __u8 edge_detection;
+> +       __u32 debounce;
+> +       __u32 padding[12]; /* for future use */
+> +};
+> +
+> +/**
+> + * struct gpioline_info_changed_v2 - Information about a change in status
+> + * of a GPIO line
+> + * @info: updated line information
+> + * @timestamp: estimate of time of status change occurrence, in nanoseconds
+> + * and GPIOLINE_CHANGED_CONFIG
+> + * @event_type: one of GPIOLINE_CHANGED_REQUESTED, GPIOLINE_CHANGED_RELEASED
+> + * @padding: reserved for future use
+> + */
+> +struct gpioline_info_changed_v2 {
+> +       struct gpioline_info_v2 info;
+> +       __u64 timestamp;
+> +       __u32 event_type;
+> +       __u32 padding[5]; /* for future use */
+> +};
+> +
+> +enum gpioline_event_id {
+> +       GPIOLINE_EVENT_RISING_EDGE      = 1,
+> +       GPIOLINE_EVENT_FALLING_EDGE     = 2,
+> +};
+> +
+> +/**
+> + * struct gpioline_event - The actual event being pushed to userspace
+> + * @timestamp: best estimate of time of event occurrence, in nanoseconds
+> + * @id: event identifier with value from enum gpioline_event_id
+> + * @offset: the offset of the line that triggered the event
+> + * @padding: reserved for future use
+> + */
+> +struct gpioline_event {
+> +       __u64 timestamp;
+> +       __u32 id;
+> +       __u32 offset;
+> +       __u32 padding[2]; /* for future use */
+> +};
+> +
+>  /* Informational flags */
+>  #define GPIOLINE_FLAG_KERNEL           (1UL << 0) /* Line used by the kernel */
+>  #define GPIOLINE_FLAG_IS_OUT           (1UL << 1)
+> @@ -144,8 +325,6 @@ struct gpiohandle_config {
+>         __u32 padding[4]; /* padding for future use */
+>  };
+>
+> -#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0a, struct gpiohandle_config)
+> -
+>  /**
+>   * struct gpiohandle_data - Information of values on a GPIO handle
+>   * @values: when getting the state of lines this contains the current
+> @@ -156,9 +335,6 @@ struct gpiohandle_data {
+>         __u8 values[GPIOHANDLES_MAX];
+>  };
+>
+> -#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpiohandle_data)
+> -#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpiohandle_data)
+> -
+>  /* Eventrequest flags */
+>  #define GPIOEVENT_REQUEST_RISING_EDGE  (1UL << 0)
+>  #define GPIOEVENT_REQUEST_FALLING_EDGE (1UL << 1)
+> @@ -202,11 +378,25 @@ struct gpioevent_data {
+>         __u32 id;
+>  };
+>
+> +/* V1 and V2 */
+>  #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
+> +#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0C, __u32)
+> +
+> +/* V1 */
+>  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+> -#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_info)
+> -#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
+>  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
+>  #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
+> +#define GPIOHANDLE_GET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x08, struct gpiohandle_data)
+> +#define GPIOHANDLE_SET_LINE_VALUES_IOCTL _IOWR(0xB4, 0x09, struct gpiohandle_data)
+> +#define GPIOHANDLE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x0A, struct gpiohandle_config)
+> +#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0B, struct gpioline_info)
+> +
+> +/* V2 */
+> +#define GPIO_GET_LINEINFO_V2_IOCTL _IOWR(0xB4, 0x0D, struct gpioline_info_v2)
+> +#define GPIO_GET_LINEINFO_WATCH_V2_IOCTL _IOWR(0xB4, 0x0E, struct gpioline_info_v2)
+> +#define GPIO_GET_LINE_IOCTL _IOWR(0xB4, 0x0F, struct gpioline_request)
+> +#define GPIOLINE_SET_CONFIG_IOCTL _IOWR(0xB4, 0x10, struct gpioline_config)
+> +#define GPIOLINE_GET_VALUES_IOCTL _IOWR(0xB4, 0x11, struct gpioline_values)
+> +#define GPIOLINE_SET_VALUES_IOCTL _IOWR(0xB4, 0x12, struct gpioline_values)
+
+Can't we use existing flags (field) to distinguish versions at least
+between v1 and v2?
+The IOCTL namespace is not big and adding such a group of new calls
+perhaps too much.
+
+>  #endif /* _UAPI_GPIO_H_ */
+
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
