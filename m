@@ -2,145 +2,196 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E944EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A87AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C867920899
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF33A2088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JXYQSpLX"
+	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="Tf85u/C9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wAS94y4Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390886AbgEZUJg (ORCPT
+        id S2390909AbgEZUKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 16:09:36 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48224 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390817AbgEZUJf (ORCPT
+        Tue, 26 May 2020 16:10:07 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:43335 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390075AbgEZUKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 16:09:35 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QK9JVH011528;
-        Tue, 26 May 2020 15:09:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590523759;
-        bh=2bYRzoNasXrxZwvU3HuFMNtsN7HZlqtuvjscLs28zcU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=JXYQSpLX1SkGipR5mxFS03Cv6i2j4W2RdAlM2ic2JxSb5p+3NfZg/9i2E7vWw/Nar
-         zhLHpFy4vNHN/JkQ60Z1Y/v1dkQNBg6gDG3lDR6oRE0G7cA7jmTWfvkfnLhq4z1Nzs
-         xF/tXoWt4tFv+AvgrIUIMS0YRzVwWQQ2hpk64QPc=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QK9JF0014651;
-        Tue, 26 May 2020 15:09:19 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 15:09:18 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 15:09:18 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QK9IgK107585;
-        Tue, 26 May 2020 15:09:18 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/2] ASoC: tlv320adcx140: Add support for configuring GPI pins
-Date:   Tue, 26 May 2020 15:09:17 -0500
-Message-ID: <20200526200917.10385-2-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526200917.10385-1-dmurphy@ti.com>
-References: <20200526200917.10385-1-dmurphy@ti.com>
+        Tue, 26 May 2020 16:10:06 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 61EE1582186;
+        Tue, 26 May 2020 16:10:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 26 May 2020 16:10:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
+        :to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm1; bh=LHN0JqCZjAhlY7hB0/Y3fto1Fs
+        QcamBNWhl7bqCCYFQ=; b=Tf85u/C9df53lBvUWR+YDqK8pTkDrlYwLiHV44qbkS
+        mnHeugttyrDec7o60NcUtnABRLdccSQKc7t59jSSHpVbVIAJrtb9dFc/tI/VCFik
+        ZmenzZbrOUgnS/E5bPrTAnCfY2QUl2V5PbiPLZ6nLYZR3eKjZUKpp9FCkaJb30yO
+        xHPJ/DJA2342C4+6ldrjdpka0rNkcWmswGMP/nbsL8819nj+hYgfqCBTdhVTldJq
+        ZE556X5zBI1eSwczYvHj0naUQeMjaUmhbdB4D/ZL+psVh7Pz15JWuFIRB//rpR0r
+        2AIZr2SY0irzoSvvg65uX40vdxoYuEbvGN3spSfXJEug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=LHN0JqCZjAhlY7hB0
+        /Y3fto1FsQcamBNWhl7bqCCYFQ=; b=wAS94y4Q5SKaY0h7NxjaHI5iBN210i57D
+        RMFJcWHfxHh4bN4m9zPx+8tecS3ekBMEiCwemkO5TjYMCd7bknJVCfTtp2A6Wr6o
+        TIAbO0h/HNHYhSlcdKB/c5NuXReBNeMfDL5B+uAz/G0R/84JOwTj4keSLoe7nT4n
+        0QWEJS7F/+XmhW8SAZjxGkxgHr8TUORJZsw7QuJscdG8dSLaJAv1JoutVw9numCH
+        WnY8Q6xN3xtlFgw3Dia2CU7YIiCCRAcZVfh5WoLmyyg0d3nExliI4pMUPGipDn5T
+        eFk9/hflNNQBnrXsfAA1IWt+S/KtY7yCCB0VMBe1DR+aLxSumqazA==
+X-ME-Sender: <xms:nHfNXvzvgJWk2x4WlFsZz-UClafeoFkQkptLBMsFIKSFBqMXIcFcNQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvvddgudegudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepuehorhhishcu
+    uehurhhkohhvuceosghorhhishessghurhdrihhoqeenucggtffrrghtthgvrhhnpeduie
+    dtleeuieejfeelffevleeifefgjeejieegkeduudetfeekffeftefhvdejveenucfkphep
+    udeifedruddugedrudefvddrfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsohhrihhssegsuhhrrdhioh
+X-ME-Proxy: <xmx:nHfNXnSyyIsZBlxSCMNbdkEG1E3tQqTXJTVONmF8030q1O0ZXj-ydQ>
+    <xmx:nHfNXpWLGOd-pMCdyDaaxXz9nJRXOvhse5SyYxQrIL7nnShk2AC5Og>
+    <xmx:nHfNXpi4Gpu-We6KpAe9ni5ySGUOw17NCUsTrr3NZT5M22clv9tYqg>
+    <xmx:nXfNXrDBU16_PYsN6sR67J4sQ25VoMHjDPQ_poglN5Woy4lEo9dJvfYuU4YLPnSS>
+Received: from localhost (unknown [163.114.132.3])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7FB2E3280068;
+        Tue, 26 May 2020 16:10:03 -0400 (EDT)
+From:   Boris Burkov <boris@bur.io>
+To:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Boris Burkov <boris@bur.io>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH cgroup/for-5.8] cgroup: add cpu.stat file to root cgroup
+Date:   Tue, 26 May 2020 13:08:00 -0700
+Message-Id: <20200526200800.3969430-1-boris@bur.io>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to configure the GPI pins to the specific configuration.
-The pins can be disabled or be configured as data input for any of the
-digital mic channels.  In addition the GPI can be used a a general
-purpose input, a Master clock input or an ASI input for daisy chaining
-devices.
+Currently, the root cgroup does not have a cpu.stat file. Add one which
+is consistent with /proc/stat to capture global cpu statistics that
+might not fall under cgroup accounting.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+We haven't done this in the past because the data are already presented
+in /proc/stat and we didn't want to add overhead from collecting root
+cgroup stats when cgroups are configured, but no cgroups have been
+created.
+
+By keeping the data consistent with /proc/stat, I think we avoid the
+first problem, while improving the usability of cgroups stats.
+We avoid the second problem by computing the contents of cpu.stat from
+existing data collected for /proc/stat anyway.
+
+Signed-off-by: Boris Burkov <boris@bur.io>
+Suggested-by: Tejun Heo <tj@kernel.org>
 ---
- sound/soc/codecs/tlv320adcx140.c | 28 ++++++++++++++++++++++++++++
- sound/soc/codecs/tlv320adcx140.h |  7 +++++++
- 2 files changed, 35 insertions(+)
+ kernel/cgroup/cgroup.c |  1 -
+ kernel/cgroup/rstat.c  | 60 ++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 2fe0df3b7550..35fe8ee5bce9 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -764,6 +764,9 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 	int pdm_count;
- 	u32 pdm_edges[ADCX140_NUM_PDM_EDGES];
- 	u32 pdm_edge_val = 0;
-+	int gpi_count;
-+	u32 gpi_inputs[ADCX140_NUM_GPI_PINS];
-+	u32 gpi_input_val = 0;
- 	int i;
- 	int ret;
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 557a9b9d2244..b8a75169c3e4 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4881,7 +4881,6 @@ static struct cftype cgroup_base_files[] = {
+ 	},
+ 	{
+ 		.name = "cpu.stat",
+-		.flags = CFTYPE_NOT_ON_ROOT,
+ 		.seq_show = cpu_stat_show,
+ 	},
+ #ifdef CONFIG_PSI
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 41ca996568df..b6397a186ce9 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -389,18 +389,62 @@ void __cgroup_account_cputime_field(struct cgroup *cgrp,
+ 	cgroup_base_stat_cputime_account_end(cgrp, rstatc);
+ }
  
-@@ -807,6 +810,31 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
- 			return ret;
- 	}
- 
-+	gpi_count = device_property_count_u32(adcx140->dev, "ti,gpi-config");
-+	if (gpi_count <= ADCX140_NUM_GPI_PINS && gpi_count > 0) {
-+		ret = device_property_read_u32_array(adcx140->dev,
-+						     "ti,gpi-config",
-+						     gpi_inputs, gpi_count);
-+		if (ret)
-+			return ret;
++/*
++ * compute the cputime for the root cgroup by getting the per cpu data
++ * at a global level, then categorizing the fields in a manner consistent
++ * with how it is done by __cgroup_account_cputime_field for each bit of
++ * cpu time attributed to a cgroup.
++ */
++static void root_cgroup_cputime(struct task_cputime *cputime)
++{
++	int i;
 +
-+		gpi_input_val = gpi_inputs[ADCX140_GPI1_INDEX] << ADCX140_GPI_SHIFT |
-+				gpi_inputs[ADCX140_GPI2_INDEX];
++	cputime->stime = 0;
++	cputime->utime = 0;
++	cputime->sum_exec_runtime = 0;
++	for_each_possible_cpu(i) {
++		struct kernel_cpustat kcpustat;
++		u64 *cpustat = kcpustat.cpustat;
++		u64 user = 0;
++		u64 sys = 0;
 +
-+		ret = regmap_write(adcx140->regmap, ADCX140_GPI_CFG0,
-+				   gpi_input_val);
-+		if (ret)
-+			return ret;
++		kcpustat_cpu_fetch(&kcpustat, i);
 +
-+		gpi_input_val = gpi_inputs[ADCX140_GPI3_INDEX] << ADCX140_GPI_SHIFT |
-+				gpi_inputs[ADCX140_GPI4_INDEX];
++		user += cpustat[CPUTIME_USER];
++		user += cpustat[CPUTIME_NICE];
++		cputime->utime += user;
 +
-+		ret = regmap_write(adcx140->regmap, ADCX140_GPI_CFG1,
-+				   gpi_input_val);
-+		if (ret)
-+			return ret;
++		sys += cpustat[CPUTIME_SYSTEM];
++		sys += cpustat[CPUTIME_IRQ];
++		sys += cpustat[CPUTIME_SOFTIRQ];
++		cputime->stime += sys;
++
++		cputime->sum_exec_runtime += user;
++		cputime->sum_exec_runtime += sys;
++		cputime->sum_exec_runtime += cpustat[CPUTIME_STEAL];
++		cputime->sum_exec_runtime += cpustat[CPUTIME_GUEST];
++		cputime->sum_exec_runtime += cpustat[CPUTIME_GUEST_NICE];
 +	}
++}
 +
- 	ret = adcx140_reset(adcx140);
- 	if (ret)
- 		goto out;
-diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
-index 247827f315f1..39206bf1af12 100644
---- a/sound/soc/codecs/tlv320adcx140.h
-+++ b/sound/soc/codecs/tlv320adcx140.h
-@@ -132,4 +132,11 @@
- #define ADCX140_NUM_PDM_EDGES		4
- #define ADCX140_PDM_EDGE_SHIFT		7
+ void cgroup_base_stat_cputime_show(struct seq_file *seq)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+ 	u64 usage, utime, stime;
+-
+-	if (!cgroup_parent(cgrp))
+-		return;
+-
+-	cgroup_rstat_flush_hold(cgrp);
+-	usage = cgrp->bstat.cputime.sum_exec_runtime;
+-	cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime, &utime, &stime);
+-	cgroup_rstat_flush_release();
++	struct task_cputime cputime;
++
++	if (cgroup_parent(cgrp)) {
++		cgroup_rstat_flush_hold(cgrp);
++		usage = cgrp->bstat.cputime.sum_exec_runtime;
++		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
++			       &utime, &stime);
++		cgroup_rstat_flush_release();
++	} else {
++		root_cgroup_cputime(&cputime);
++		usage = cputime.sum_exec_runtime;
++		utime = cputime.utime;
++		stime = cputime.stime;
++	}
  
-+#define ADCX140_NUM_GPI_PINS		4
-+#define ADCX140_GPI_SHIFT		4
-+#define ADCX140_GPI1_INDEX		0
-+#define ADCX140_GPI2_INDEX		1
-+#define ADCX140_GPI3_INDEX		2
-+#define ADCX140_GPI4_INDEX		3
-+
- #endif /* _TLV320ADCX140_ */
+ 	do_div(usage, NSEC_PER_USEC);
+ 	do_div(utime, NSEC_PER_USEC);
 -- 
-2.26.2
+2.24.1
 
