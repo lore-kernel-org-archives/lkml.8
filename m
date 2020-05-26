@@ -2,64 +2,86 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 418FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A352084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2440E2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgEZNHQ (ORCPT
+        id S1731353AbgEZNIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:07:16 -0400
-Received: from elvis.franken.de ([193.175.24.41]:39897 "EHLO elvis.franken.de"
+        Tue, 26 May 2020 09:08:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:50516 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbgEZNHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:07:15 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jdZIW-00088o-02; Tue, 26 May 2020 15:07:12 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id DA835C041A; Tue, 26 May 2020 15:05:25 +0200 (CEST)
-Date:   Tue, 26 May 2020 15:05:25 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Lichao Liu <liulichao@loongson.cn>
-Cc:     YuanJunQing <yuanjunqing66@163.com>, paulburton@kernel.org,
-        chenhc@lemote.com, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: Fix IRQ tracing when call handle_fpe()
-Message-ID: <20200526130525.GC8487@alpha.franken.de>
-References: <20200525033123.13114-1-yuanjunqing66@163.com>
+        id S1727821AbgEZNIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 09:08:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B87671FB;
+        Tue, 26 May 2020 06:08:03 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20CD43F6C4;
+        Tue, 26 May 2020 06:08:02 -0700 (PDT)
+Date:   Tue, 26 May 2020 14:07:52 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Zenghui Yu <yuzenghui@huawei.com>, will@kernel.org
+Cc:     guohanjun@huawei.com, sudeep.holla@arm.com, rjw@rjwysocki.net,
+        lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        wanghaibin.wang@huawei.com
+Subject: Re: [PATCH] ACPI/IORT: Remove the unused __get_pci_rid()
+Message-ID: <20200526130752.GA23951@e121166-lin.cambridge.arm.com>
+References: <20200509093430.1983-1-yuzenghui@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525033123.13114-1-yuanjunqing66@163.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200509093430.1983-1-yuzenghui@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 02:03:14PM +0800, Lichao Liu wrote:
-> From: YuanJunQing <yuanjunqing66@163.com>
+On Sat, May 09, 2020 at 05:34:30PM +0800, Zenghui Yu wrote:
+> Since commit bc8648d49a95 ("ACPI/IORT: Handle PCI aliases properly for
+> IOMMUs"), __get_pci_rid() has become actually unused and can be removed.
 > 
-> Register "a1" is unsaved in this function,
->  when CONFIG_TRACE_IRQFLAGS is enabled,
->  the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
->  and this may change register "a1".
->  The variment of register "a1" may send SIGFPE signal
->  to task when call do_fpe(),and this may kill the task.
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+> ---
+>  drivers/acpi/arm64/iort.c | 9 ---------
+>  1 file changed, 9 deletions(-)
+
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+If we miss v5.8 (which I think it is likely, even though this patch is
+just removing dead code so it is safe at this stage) I will resend it
+for v5.9 - not a problem.
+
+Lorenzo
+
+> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+> index 7d04424189df..ec94dbb60c7a 100644
+> --- a/drivers/acpi/arm64/iort.c
+> +++ b/drivers/acpi/arm64/iort.c
+> @@ -789,15 +789,6 @@ void acpi_configure_pmsi_domain(struct device *dev)
+>  		dev_set_msi_domain(dev, msi_domain);
+>  }
+>  
+> -static int __maybe_unused __get_pci_rid(struct pci_dev *pdev, u16 alias,
+> -					void *data)
+> -{
+> -	u32 *rid = data;
+> -
+> -	*rid = alias;
+> -	return 0;
+> -}
+> -
+>  #ifdef CONFIG_IOMMU_API
+>  static struct acpi_iort_node *iort_get_msi_resv_iommu(struct device *dev)
+>  {
+> -- 
+> 2.19.1
 > 
-> Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
-
-if you send patches from other people, please add your
-Signed-off-by.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
