@@ -7,58 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 055312086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCB5208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519776;
-	bh=k35D95v8qmSYVPExxFNvXGV1WmuOz8fXUT0Z2szsg3g=;
+	s=default; t=1590519781;
+	bh=zLWuKfdOMv5Vm2wkPGbl40+ScNFyWiRzHsIAtytfIco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZyWLEAXzPZIGwcddvtJycnLh/vu4sAwSHxCzJPFNt4LokvXiub8oys4MiKxDgXik
-	 /cVotQZwm8rAv7BF21Yukq+JcVaXhHCMyYrnfwfjUSabkWcrwgR9KtSkrZGW9P2G8x
-	 ufxEB+vA3HwObW3oHiubvdMGalAmVtNwX9fWqBUU=
+	b=iE+PImxJI01vBurrowItOadKgDoc59rMVGQS/lwntvloxryIopwHJoCYuQ3Yw239T
+	 i+LpIbL7CUoyxkSXYbMFtTZp1KbRY8HEBwQa+UgGwLePI5BKV1aigoo74lwhK2rFbp
+	 ZLFf2BVnZEWcoWnaYdiiBLDAX2IijK5e3gXzTysM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403844AbgEZTCz (ORCPT
+        id S2403845AbgEZTDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390512AbgEZTCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:02:50 -0400
+        id S2403842AbgEZTCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8DAD208B3;
-        Tue, 26 May 2020 19:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD68D208A7;
+        Tue, 26 May 2020 19:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519769;
-        bh=k35D95v8qmSYVPExxFNvXGV1WmuOz8fXUT0Z2szsg3g=;
+        s=default; t=1590519774;
+        bh=zLWuKfdOMv5Vm2wkPGbl40+ScNFyWiRzHsIAtytfIco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qfWnK8EM4PLgBxJalnwuVPHVte/tV4ktmB2ICDogyGGJKKYdxkscOO3oFgUi8tJhS
-         o+YW1J+naXRVUWM7za0IuxJOv95d5SIjbG62mpYvzL9UcQmt17JzbRCCtYTNBCunqp
-         jip/9eXagpkttS5rG+UHJhch34xd4o1f4VESIVVw=
+        b=mlf5DkK9G/uIOPUCiI2kjx0jOOlzwCAtP1HTv3Rb1TbSAnZ368ieycgzZ1rXaDoEr
+         oGz+yaAdlUrjvuU2k/nF9GJqAhvubl0/dBE36bvQYslJ5+1GIMCy4nndQJB0yPurIR
+         mfo4TFJRC+jnPY1Eh2iK1s90EAxvZLyUl1Q6CUiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 02/81] ubsan: build ubsan.c more conservatively
-Date:   Tue, 26 May 2020 20:52:37 +0200
-Message-Id: <20200526183923.677631870@linuxfoundation.org>
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH 4.19 04/81] KVM: SVM: Fix potential memory leak in svm_cpu_init()
+Date:   Tue, 26 May 2020 20:52:39 +0200
+Message-Id: <20200526183924.272896961@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -71,69 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit af700eaed0564d5d3963a7a51cb0843629d7fe3d upstream.
+commit d80b64ff297e40c2b6f7d7abc1b3eba70d22a068 upstream.
 
-objtool points out several conditions that it does not like, depending
-on the combination with other configuration options and compiler
-variants:
+When kmalloc memory for sd->sev_vmcbs failed, we forget to free the page
+held by sd->save_area. Also get rid of the var r as '-ENOMEM' is actually
+the only possible outcome here.
 
-stack protector:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0xbf: call to __stack_chk_fail() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0xbe: call to __stack_chk_fail() with UACCESS enabled
-
-stackleak plugin:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-
-kasan:
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x25: call to memcpy() with UACCESS enabled
-  lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x25: call to memcpy() with UACCESS enabled
-
-The stackleak and kasan options just need to be disabled for this file
-as we do for other files already.  For the stack protector, we already
-attempt to disable it, but this fails on clang because the check is
-mixed with the gcc specific -fno-conserve-stack option.  According to
-Andrey Ryabinin, that option is not even needed, dropping it here fixes
-the stackprotector issue.
-
-Link: http://lkml.kernel.org/r/20190722125139.1335385-1-arnd@arndb.de
-Link: https://lore.kernel.org/lkml/20190617123109.667090-1-arnd@arndb.de/t/
-Link: https://lore.kernel.org/lkml/20190722091050.2188664-1-arnd@arndb.de/t/
-Fixes: d08965a27e84 ("x86/uaccess, ubsan: Fix UBSAN vs. SMAP")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- lib/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -269,7 +269,8 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string
- obj-$(CONFIG_UBSAN) += ubsan.o
+---
+ arch/x86/kvm/svm.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -998,33 +998,32 @@ static void svm_cpu_uninit(int cpu)
+ static int svm_cpu_init(int cpu)
+ {
+ 	struct svm_cpu_data *sd;
+-	int r;
  
- UBSAN_SANITIZE_ubsan.o := n
--CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-+KASAN_SANITIZE_ubsan.o := n
-+CFLAGS_ubsan.o := $(call cc-option, -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
+ 	sd = kzalloc(sizeof(struct svm_cpu_data), GFP_KERNEL);
+ 	if (!sd)
+ 		return -ENOMEM;
+ 	sd->cpu = cpu;
+-	r = -ENOMEM;
+ 	sd->save_area = alloc_page(GFP_KERNEL);
+ 	if (!sd->save_area)
+-		goto err_1;
++		goto free_cpu_data;
  
- obj-$(CONFIG_SBITMAP) += sbitmap.o
+ 	if (svm_sev_enabled()) {
+-		r = -ENOMEM;
+ 		sd->sev_vmcbs = kmalloc_array(max_sev_asid + 1,
+ 					      sizeof(void *),
+ 					      GFP_KERNEL);
+ 		if (!sd->sev_vmcbs)
+-			goto err_1;
++			goto free_save_area;
+ 	}
+ 
+ 	per_cpu(svm_data, cpu) = sd;
+ 
+ 	return 0;
+ 
+-err_1:
++free_save_area:
++	__free_page(sd->save_area);
++free_cpu_data:
+ 	kfree(sd);
+-	return r;
++	return -ENOMEM;
+ 
+ }
  
 
 
