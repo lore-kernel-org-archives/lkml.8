@@ -2,104 +2,104 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA3F20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A2320870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nbd8L+Wg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PyQ1E+UC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391281AbgEZVYH (ORCPT
+        id S2391379AbgEZVY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55216 "EHLO
+        Tue, 26 May 2020 17:24:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389914AbgEZVYH (ORCPT
+        with ESMTP id S2389572AbgEZVY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:24:07 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F34BC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:24:06 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x12so17461373qts.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:24:06 -0700 (PDT)
+        Tue, 26 May 2020 17:24:26 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3434C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:24:25 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q8so5847825qkm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:24:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TeV4Ee0rJbTsY7d9AFmITz3Jb7JZiolk7a5WrjoAzbk=;
-        b=nbd8L+WgUcdz7k1REuKHKpHXR3rF9nc4a8g25dlTLgIeJAIwAG7dedgCu0mWsKv1CI
-         +UEfuGSTs/3U5TgfvK/pZH1kY806eHNfFcWvSYHAcCGpLDQSRkmxnUILpQyP50c8uXeo
-         ppdnnu9QPBdjsMqh3WTWkWFBJ7OkXsBzLjonDqeYFJB92nMXXuy4B7qq//j9YZ9TTCHr
-         oU7OgYctIdtg40TxdB+vyx3CVzG3dMVCLXrYoQUc0IpSMkLl99G/SaHnZ/12N9eBdslz
-         viVMJB1rh3wSU3OJalsh2sGpe4Uj8CI1YBQmAJLIwW/TaUhwUO4XW/mqZs21fnCSnQJa
-         RH0A==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QBRz1+/7+0iGsXWNeTLr3q8/FFn5AWhnRzIa/vyWa3g=;
+        b=PyQ1E+UC6flPY4IF4ASkvmgiPe+bGnoyS++a9wtIGNDVbdA7CwVxC8NNFVLNVVPt9Q
+         ea+JqFHSMi3JjRYt0NQKFmcHNjXkwAOF/DnMKltFIE1DtyVMMJqyPO2Mnp5lwv5Xk08I
+         A/6Rd6CumqigVLzvQ6UmSRzBq3gvNL/otLrm04ys17lEA3Rn1Q3vv/86ASUXh8Gy5obA
+         zcbz8Ri/xz39piuOOCIS9j67ZL60C/+/JyQ7rniOKLJkkeyYYfq5qv0VKhmOMyUfciS3
+         ULoHxlbPbKYIO4NY7A6Rfyth4PfgS6thGgpIPbM5y45JZHHuylXM9FK3rgdnwvYiSQ4B
+         ngAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TeV4Ee0rJbTsY7d9AFmITz3Jb7JZiolk7a5WrjoAzbk=;
-        b=WGG+DJDx8fg71M11tnPEO83BEcAvG/jhYi2Ut1a7mL3Gr3OiU5+hnQ9yA5e0nrrt4i
-         TyGK+ftxFVK63w+TMRxC6KgtR3gZmn0b/PcACuQPXxRGwY3K5zhhI3xDQtbifQMYdCye
-         nlREUcJ1oj+x4+9dlWhlro0sGiUUD6gEw/eu6E7bTOVWhynVHO545L6slDEhxfbNgJ2X
-         7I5JYY0lsgfAvfs2l85grSusnES16dWi/he4kxn3V1zIIwQSLYzCNdPLRxrU5tytR/fV
-         bxXWaP3Wf3CD2ujx84SOBUWo90/HNzRKdE4XvyFddWBbQt+P/KR9yeEu63MBqIMmDZYa
-         9cQQ==
-X-Gm-Message-State: AOAM532OR+rK6pTuldZ7blJe4g3ygzbADedzmCU4CzAidseAJXIPz+9x
-        xmKMJvoMz9IH1gmqJhSoqPWQBQ==
-X-Google-Smtp-Source: ABdhPJyLt9Rebj7UujAonnAzzNJnNr43WIRcy0A1ROWCNy5yqE7jYiG9nWC4BQO342nxhcF5AbB3ig==
-X-Received: by 2002:ac8:6d11:: with SMTP id o17mr928314qtt.266.1590528245300;
-        Tue, 26 May 2020 14:24:05 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h77sm748154qke.37.2020.05.26.14.24.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QBRz1+/7+0iGsXWNeTLr3q8/FFn5AWhnRzIa/vyWa3g=;
+        b=pao3XHHFz0t4tT+zfbJa7qm+VZb0TeqdZeBWOurdE3Pe04NTYqwhA8/yUcaZP/Tpyn
+         ulaZhAt8beW02of/71dCK3KXjtFAVncTvQ4MzlgkvUlGrvjVoPqK5jjFlhKxI+q6Ore/
+         aB5YGdAaiK6Lbt3CbUIinVEtkNXK6sBPH1dZqHV6H6krNgeiwPSqgsKrVmfQoiGBaq+G
+         WOCkx5lKeu1DFg+ga6bn6rYt7oEKoWWWka43BE8dir99QigoyYOGAPZIWSJHjG6Xjo9W
+         YWJj3mR31Zxd0KJG+HJx4dKvbJE74k/7ws1s3yuhxXGiTWkUSTnw6sTdLrhNeCpmmDJf
+         eMCg==
+X-Gm-Message-State: AOAM533Q4vrGY63EgFDaMXxzUVbVt6AXv7PDxMFzQ/DS3ipcu5wehrzJ
+        WGqdLkK3LhN51uMhW3BXEeCZuA==
+X-Google-Smtp-Source: ABdhPJzQhvUqUjxcMGfDJg9Cd3DUf3NBupqjurT0pomIH1kEQijK3lmaExCaJ84plMXhxS+sIx0YDA==
+X-Received: by 2002:a37:2710:: with SMTP id n16mr897806qkn.149.1590528264459;
+        Tue, 26 May 2020 14:24:24 -0700 (PDT)
+Received: from pop-os.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id r14sm698678qke.62.2020.05.26.14.24.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 14:24:04 -0700 (PDT)
-Date:   Tue, 26 May 2020 17:24:02 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/lockdep: Increase MAX_LOCKDEP_ENTRIES by half
-Message-ID: <20200526212402.GH991@lca.pw>
-References: <20200526174349.8312-1-longman@redhat.com>
- <20200526185850.GE991@lca.pw>
- <20200526195630.GF325280@hirez.programming.kicks-ass.net>
- <b88d5379-687d-8c14-40ae-221c79500996@redhat.com>
+        Tue, 26 May 2020 14:24:24 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: sm8250: Fix device name for ufs controller
+Date:   Tue, 26 May 2020 17:24:23 -0400
+Message-Id: <20200526212423.24452-1-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b88d5379-687d-8c14-40ae-221c79500996@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 04:30:58PM -0400, Waiman Long wrote:
-> On 5/26/20 3:56 PM, Peter Zijlstra wrote:
-> > On Tue, May 26, 2020 at 02:58:50PM -0400, Qian Cai wrote:
-> > 
-> > > I still don't understand why reading all sysfs files on this system
-> > > could increase that much, but here is the lockdep file after
-> > > running sysfs read to see if you could spot anything obviously,
-> > > 
-> > > https://cailca.github.io/files/lockdep.txt
-> > 00000000f011a2a5 OPS:      20 FD:   45 BD:    1 .+.+: kn->active#834
-> > 
-> > is that somewhere near the number of CPUs you have?
-> > 
-> > Anyway, there's very long "kn->active#..." chains in there, which seems
-> > to suggest some annotation is all sorts of buggered.
-> > 
-> It is actually one active lock per instance of the kerfs_node structures.
-> That means more than 800 sysfs files are accessed in some way. As we could
-> have much more than 800 sysfs files in the system, we could easily overwhelm
-> the lockdep tables if we really try to access all of them.
+Change ufs controller dev name from ufs@1d84000 to ufshc@1d84000. Without
+this change when ufs controller is built in as part of kernel, the driver
+code fails to initialize the device  due to a check against
+android.bootdevice.(The validity and reason for this check in the driver
+code needs to be revisited. But the change in device name allows ufs
+controller to be registered during boot). This change also makes the dev
+name compatible with how it is defined for other Qualcomm SoCs.
 
-Yes, there are a lot of those on large systems, NUMA, percpu, slab etc.
-Isn't it better to extend MAX_LOCKDEP_ENTRIES dynamically? There are
-plenty of memory over there.
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8250.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+index 7050adba7995..0ef72c839ed8 100644
+--- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
+@@ -306,7 +306,7 @@
+ 			};
+ 		};
+ 
+-		ufs_mem_hc: ufs@1d84000 {
++		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sm8250-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+ 			reg = <0 0x01d84000 0 0x3000>;
+-- 
+2.20.1
+
