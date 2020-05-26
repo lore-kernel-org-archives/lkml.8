@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B8BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78087C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD64620849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E7F720849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521005;
-	bh=QugstcFABO9RP4budpXl3RxOzu6yYgeWrzluexp1PQc=;
+	s=default; t=1590521011;
+	bh=WSzkrlDsgyHyUqYsjlT2GuY6nmqpoJAM07KjStN4fTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulZuPLSlHcFmsWLLIsZoJBE+tJsQglIM4+Jj5d6wzrEtoqpJm4/A5jldnrLBXRDTs
-	 8d3w9AFVECfoQvfX1lPP0sv3meTvm+U5phlot6UfR6tk7gRkgoDs30+d4r2I6VfO3m
-	 vEo2UmdSrtAZKGIVsnm1oaJAXorjkOH5ATxgkMyU=
+	b=cwjfFoNQczULU2vjK9IQbw+vnmT4WruG0LdxycXwyn+lhV1J+EsmcFKatpxB74RoN
+	 kNk/5gdXQ+QpSh58TF8SROIKixHJ2s5tUFlj+GO58Q/jeJfmIE76LMk0eTUfwmqENd
+	 z9JYdxZfaz/jB0NelR3JCKXfjyOGeURX3rjHMAO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392492AbgEZTXZ (ORCPT
+        id S2404351AbgEZTXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38402 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391839AbgEZTJR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:17 -0400
+        id S2390768AbgEZTJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C752020776;
-        Tue, 26 May 2020 19:09:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ECED208A7;
+        Tue, 26 May 2020 19:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520157;
-        bh=QugstcFABO9RP4budpXl3RxOzu6yYgeWrzluexp1PQc=;
+        s=default; t=1590520151;
+        bh=WSzkrlDsgyHyUqYsjlT2GuY6nmqpoJAM07KjStN4fTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJ17AbRkcWsnnPAp9XPa65sSX+xvBz2T/TD+nwb/CRN53pAPJVw4ITzHZ4cgoZI3T
-         v6nsXeVp4ih9Jh/9eV56zGk6gbK+/qPC0IrX+O/+nsY/M2r1cEq/XZ49oYFUPxx/17
-         JqMzyBil6P4yWJqXqkdq8ZST/4CCY6oPMEOGpWck=
+        b=hbbmluy+4YJY88bwyCN+UV7HgB73fnt8VmnepJg3RFJF2HxJkV2gmkIeuFgd2BX/a
+         jo7KJjb/qKJjFnZ3NfawRL12+2YZlPb65fzAaJjaoPIW8ggdWzP8Ajdiygw3U9wGYC
+         9eG2hUFQSRuE2t8qFuZ34odB/KhMIAMbs006A7is=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Clark <richard.xnu.clark@gmail.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 081/111] media: fdp1: Fix R-Car M3-N naming in debug message
-Date:   Tue, 26 May 2020 20:53:39 +0200
-Message-Id: <20200526183940.584206407@linuxfoundation.org>
+Subject: [PATCH 5.4 028/111] aquantia: Fix the media type of AQC100 ethernet controller in the driver
+Date:   Tue, 26 May 2020 20:52:46 +0200
+Message-Id: <20200526183935.420426970@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -63,35 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Richard Clark <richard.xnu.clark@gmail.com>
 
-[ Upstream commit c05b9d7b9f3ece2831e4e4829f10e904df296df8 ]
+[ Upstream commit 6de556c31061e3b9c36546ffaaac5fdb679a2f14 ]
 
-The official name is "R-Car M3-N", not "R-Car M3N".
+The Aquantia AQC100 controller enables a SFP+ port, so the driver should
+configure the media type as '_TYPE_FIBRE' instead of '_TYPE_TP'.
 
-Fixes: 4e8c120de9268fc2 ("media: fdp1: Support M3N and E3 platforms")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
+Cc: Igor Russkikh <irusskikh@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rcar_fdp1.c | 2 +-
+ drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/rcar_fdp1.c b/drivers/media/platform/rcar_fdp1.c
-index cb93a13e1777..97bed45360f0 100644
---- a/drivers/media/platform/rcar_fdp1.c
-+++ b/drivers/media/platform/rcar_fdp1.c
-@@ -2369,7 +2369,7 @@ static int fdp1_probe(struct platform_device *pdev)
- 		dprintk(fdp1, "FDP1 Version R-Car H3\n");
- 		break;
- 	case FD1_IP_M3N:
--		dprintk(fdp1, "FDP1 Version R-Car M3N\n");
-+		dprintk(fdp1, "FDP1 Version R-Car M3-N\n");
- 		break;
- 	case FD1_IP_E3:
- 		dprintk(fdp1, "FDP1 Version R-Car E3\n");
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+index 74b9f3f1da81..0e8264c0b308 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+@@ -56,7 +56,7 @@ static const struct aq_board_revision_s hw_atl_boards[] = {
+ 	{ AQ_DEVICE_ID_D108,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_D109,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc109, },
+ 
+-	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
++	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc100, },
+ 	{ AQ_DEVICE_ID_AQC107,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
+ 	{ AQ_DEVICE_ID_AQC108,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_AQC109,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc109, },
 -- 
 2.25.1
 
