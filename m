@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C921C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21CEC2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A2A208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519612;
-	bh=KM+T7rK8LxTAusvClFFwqtI7Ma/8JjMwgBpdJRCQE5k=;
+	s=default; t=1590519616;
+	bh=604pv/P1CxLz+KFT5nkJZQWGW6l8CZCsjlrFeAwmbmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWTNiBH8F8LVWmMNzVFpS1YziddirIFMWVABXmYa+EWrBu9UG46E0KOnO+LX+ZznB
-	 n20Wr1Ulp8skL4bzeBNTlGDZ9UtsiKlHQTLivmNBDSGhHP+mAQq0GwnMG1I1zhB/gZ
-	 ajZIdzzewOESALznBaeJ1YI78tKp1t0khUz4R4/0=
+	b=OjJ3mYHv4XrewQ155jDWzgnMpduN6TQxxkx4b3CoQ74w6zsij5MUK/mqQejTbKj3X
+	 EcfRmLY27o/ASa30A9MoWwzwcRqNztH+5Zh/VbN0vlcg8FSSJkAidq03M6RfBI4Hwu
+	 bRjHgJ5YNhq6ll0lCJLqOg97n9ClQLOAQmNrLbJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390650AbgEZTAL (ORCPT
+        id S2390683AbgEZTAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54020 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:00:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389977AbgEZTAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:01 -0400
+        id S2390649AbgEZTAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9293620849;
-        Tue, 26 May 2020 19:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E86720849;
+        Tue, 26 May 2020 19:00:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519601;
-        bh=KM+T7rK8LxTAusvClFFwqtI7Ma/8JjMwgBpdJRCQE5k=;
+        s=default; t=1590519610;
+        bh=604pv/P1CxLz+KFT5nkJZQWGW6l8CZCsjlrFeAwmbmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIqQuH+h1FMp+Bm7tf9ST2Zme3C+XlxCf3EflTvZ2RKB30cIfszf+90JCG0L8kVn7
-         iHZR+XMnME5Yif+I11B/4j4wRNjMBcYZYLmgT9+Og2OvZzudHPqW2lz+GhfACyu64H
-         FPDTEjyX0KW4DbjpZMCYBj5eUW3+DWBhLIYuKk98=
+        b=2kK3TJEpSD01Ue0Shu+kbiT69/sAp7VjtfpQ/SO8sl85Fy9sFAgMTM9Yjb/jhNEsU
+         ZC+mpsGuIcHMqUbgx7AYo/+TU3ngdgS1SGVuqhhXUnqyZOuisC/ixVIVoIGVRPsGmX
+         3wlAF9gzVZ0Hp45wbuUQnZ4O1aUxHAxNvx6DE7H4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
         "David S. Miller" <davem@davemloft.net>,
         Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.9 39/64] l2tp: hold tunnel while handling genl tunnel updates
-Date:   Tue, 26 May 2020 20:53:08 +0200
-Message-Id: <20200526183926.219021493@linuxfoundation.org>
+Subject: [PATCH 4.9 43/64] l2tp: pass tunnel pointer to ->session_create()
+Date:   Tue, 26 May 2020 20:53:12 +0200
+Message-Id: <20200526183928.058472735@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -62,41 +62,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guillaume Nault <g.nault@alphalink.fr>
 
-commit 8c0e421525c9eb50d68e8f633f703ca31680b746 upstream.
+commit f026bc29a8e093edfbb2a77700454b285c97e8ad upstream.
 
-We need to make sure the tunnel is not going to be destroyed by
-l2tp_tunnel_destruct() concurrently.
+Using l2tp_tunnel_find() in pppol2tp_session_create() and
+l2tp_eth_create() is racy, because no reference is held on the
+returned session. These functions are only used to implement the
+->session_create callback which is run by l2tp_nl_cmd_session_create().
+Therefore searching for the parent tunnel isn't necessary because
+l2tp_nl_cmd_session_create() already has a pointer to it and holds a
+reference.
+
+This patch modifies ->session_create()'s prototype to directly pass the
+the parent tunnel as parameter, thus avoiding searching for it in
+pppol2tp_session_create() and l2tp_eth_create().
+
+Since we have to touch the ->session_create() call in
+l2tp_nl_cmd_session_create(), let's also remove the useless conditional:
+we know that ->session_create isn't NULL at this point because it's
+already been checked earlier in this same function.
+
+Finally, one might be tempted to think that the removed
+l2tp_tunnel_find() calls were harmless because they would return the
+same tunnel as the one held by l2tp_nl_cmd_session_create() anyway.
+But that tunnel might be removed and a new one created with same tunnel
+Id before the l2tp_tunnel_find() call. In this case l2tp_tunnel_find()
+would return the new tunnel which wouldn't be protected by the
+reference held by l2tp_nl_cmd_session_create().
 
 Fixes: 309795f4bec2 ("l2tp: Add netlink control API for L2TP")
+Fixes: d9e31d17ceba ("l2tp: Add L2TP ethernet pseudowire support")
 Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Giuliano Procida <gprocida@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_netlink.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_core.h    |    4 +++-
+ net/l2tp/l2tp_eth.c     |   11 +++--------
+ net/l2tp/l2tp_netlink.c |    8 ++++----
+ net/l2tp/l2tp_ppp.c     |   19 +++++++------------
+ 4 files changed, 17 insertions(+), 25 deletions(-)
 
---- a/net/l2tp/l2tp_netlink.c
-+++ b/net/l2tp/l2tp_netlink.c
-@@ -310,8 +310,8 @@ static int l2tp_nl_cmd_tunnel_modify(str
- 	}
- 	tunnel_id = nla_get_u32(info->attrs[L2TP_ATTR_CONN_ID]);
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -201,7 +201,9 @@ struct l2tp_tunnel {
+ };
+ 
+ struct l2tp_nl_cmd_ops {
+-	int (*session_create)(struct net *net, u32 tunnel_id, u32 session_id, u32 peer_session_id, struct l2tp_session_cfg *cfg);
++	int (*session_create)(struct net *net, struct l2tp_tunnel *tunnel,
++			      u32 session_id, u32 peer_session_id,
++			      struct l2tp_session_cfg *cfg);
+ 	int (*session_delete)(struct l2tp_session *session);
+ };
+ 
+--- a/net/l2tp/l2tp_eth.c
++++ b/net/l2tp/l2tp_eth.c
+@@ -256,23 +256,18 @@ static void l2tp_eth_adjust_mtu(struct l
+ 	dev->needed_headroom += session->hdr_len;
+ }
+ 
+-static int l2tp_eth_create(struct net *net, u32 tunnel_id, u32 session_id, u32 peer_session_id, struct l2tp_session_cfg *cfg)
++static int l2tp_eth_create(struct net *net, struct l2tp_tunnel *tunnel,
++			   u32 session_id, u32 peer_session_id,
++			   struct l2tp_session_cfg *cfg)
+ {
+ 	struct net_device *dev;
+ 	char name[IFNAMSIZ];
+-	struct l2tp_tunnel *tunnel;
+ 	struct l2tp_session *session;
+ 	struct l2tp_eth *priv;
+ 	struct l2tp_eth_sess *spriv;
+ 	int rc;
+ 	struct l2tp_eth_net *pn;
  
 -	tunnel = l2tp_tunnel_find(net, tunnel_id);
--	if (tunnel == NULL) {
-+	tunnel = l2tp_tunnel_get(net, tunnel_id);
-+	if (!tunnel) {
- 		ret = -ENODEV;
- 		goto out;
+-	if (!tunnel) {
+-		rc = -ENODEV;
+-		goto out;
+-	}
+-
+ 	if (cfg->ifname) {
+ 		dev = dev_get_by_name(net, cfg->ifname);
+ 		if (dev) {
+--- a/net/l2tp/l2tp_netlink.c
++++ b/net/l2tp/l2tp_netlink.c
+@@ -632,10 +632,10 @@ static int l2tp_nl_cmd_session_create(st
+ 		break;
  	}
-@@ -322,6 +322,8 @@ static int l2tp_nl_cmd_tunnel_modify(str
- 	ret = l2tp_tunnel_notify(&l2tp_nl_family, info,
- 				 tunnel, L2TP_CMD_TUNNEL_MODIFY);
  
-+	l2tp_tunnel_dec_refcount(tunnel);
-+
- out:
- 	return ret;
- }
+-	ret = -EPROTONOSUPPORT;
+-	if (l2tp_nl_cmd_ops[cfg.pw_type]->session_create)
+-		ret = (*l2tp_nl_cmd_ops[cfg.pw_type]->session_create)(net, tunnel_id,
+-			session_id, peer_session_id, &cfg);
++	ret = l2tp_nl_cmd_ops[cfg.pw_type]->session_create(net, tunnel,
++							   session_id,
++							   peer_session_id,
++							   &cfg);
+ 
+ 	if (ret >= 0) {
+ 		session = l2tp_session_get(net, tunnel, session_id, false);
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -795,25 +795,20 @@ end:
+ 
+ #ifdef CONFIG_L2TP_V3
+ 
+-/* Called when creating sessions via the netlink interface.
+- */
+-static int pppol2tp_session_create(struct net *net, u32 tunnel_id, u32 session_id, u32 peer_session_id, struct l2tp_session_cfg *cfg)
++/* Called when creating sessions via the netlink interface. */
++static int pppol2tp_session_create(struct net *net, struct l2tp_tunnel *tunnel,
++				   u32 session_id, u32 peer_session_id,
++				   struct l2tp_session_cfg *cfg)
+ {
+ 	int error;
+-	struct l2tp_tunnel *tunnel;
+ 	struct l2tp_session *session;
+ 	struct pppol2tp_session *ps;
+ 
+-	tunnel = l2tp_tunnel_find(net, tunnel_id);
+-
+-	/* Error if we can't find the tunnel */
+-	error = -ENOENT;
+-	if (tunnel == NULL)
+-		goto out;
+-
+ 	/* Error if tunnel socket is not prepped */
+-	if (tunnel->sock == NULL)
++	if (!tunnel->sock) {
++		error = -ENOENT;
+ 		goto out;
++	}
+ 
+ 	/* Default MTU values. */
+ 	if (cfg->mtu == 0)
 
 
