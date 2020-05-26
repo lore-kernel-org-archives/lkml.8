@@ -2,99 +2,157 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE48C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF7A20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aQdEXYgW"
+	by mail.kernel.org (Postfix) with ESMTP id E1F64208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590521552;
+	bh=E5gepei49UVhAh6Fb77bky09GX64a6eEvd/goBsZUV4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=B6Vjag6F1vuUCLBwgBpFYdPBEsaM2HtdrMwpgDZNVSLJbL5X34rvlwoziuxGRmaLQ
+	 Gli5E3noJHCI1nBlzxrGAnw9lvQ416BuK0mrslnwxu9Iv8L7SXCP9FGQDqcJPUUzKo
+	 WDIiDWt3U2TuzbzquLCvy0Ei58fDySZKKuuhsEuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391125AbgEZTc2 (ORCPT
+        id S2390116AbgEZS5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391003AbgEZTcY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:32:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3451C03E96E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:32:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y11so805918plt.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=mPMBSEoFG86rRhFkn52ippvpiiEp7k8qBw0SEV6Hwgk=;
-        b=aQdEXYgWnpFMIdZ08nHk9kPfqgbCMAss4Khem6x2kPel3ySPuXs9salp24OuZ41WyQ
-         fy/vR17C00aDRAvoC8WucIRTchIRjt7yZ/j+f5o+LiQk+tNp5DOVzt9sM/YwzzbURIQz
-         FE8lN9TD6Brz+iwZI0XWn1ZkXBxnucTstQIZbHOfrRN2V8TwjG4xlb8gmLBBl5haz63R
-         5W3HqOfzUVxq7AV+rYEW+fYlmVYEqFGioKV5WSDgoUICH5TPlCMLiL17N6sB6gCcKBiu
-         TAEN1opbo0YbMqX6l7DjDw8BlsZdfjE8dji6pvKUeMJncgplbIsETcJLCMa11ct3Iawv
-         7EUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mPMBSEoFG86rRhFkn52ippvpiiEp7k8qBw0SEV6Hwgk=;
-        b=dgi9VuIu3IrytKJKZ0pMU6dXq477y3ApO+pX3Q6dzu178BljhYyXC/0LT/6zaZQj/a
-         fwga2Xp7NuEbRbIcV+agqcFuXIOZas6T6J6wHXea6Wl1Sp9yJr8ooQpYKWasUeIY5oiS
-         a7LB7MCR3y8C+lS70bVASE6x3iwddjsk2MY8lU/Iu7qG0CGNPvSRVBtVuq9FS13pvLLw
-         VaTR6EmWT8vgVLE9n+LjPmtNEx96Sj8KFrVyWvMxs6KKrXVy+h+vGgICeoyvD7t4MGsh
-         2zZtmOivq+Tp9lrS7WQg8BpGaevZdhNp386CQh3dsIMybRE+8XeYL4keOMblmsDyKx8q
-         E/YA==
-X-Gm-Message-State: AOAM533ziUnvtJ5eZ5/OlzrWF4O00q/wgC57NvfvreT+Ag9HxajLyG8f
-        jyCcRKzjZ3Hh5kvzHW4NpAkJ+ioXAD7e7A==
-X-Google-Smtp-Source: ABdhPJz1+9mdYhlnOaOdqKsnmVPgb0+czO05jZqAokJjqgkvwtR2WA5G3WY3OLtL0JaaXWVfZ60U6g==
-X-Received: by 2002:a17:902:8d87:: with SMTP id v7mr2444717plo.153.1590521543229;
-        Tue, 26 May 2020 12:32:23 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:94bb:59d2:caf6:70e1? ([2605:e000:100e:8c61:94bb:59d2:caf6:70e1])
-        by smtp.gmail.com with ESMTPSA id y138sm310164pfb.33.2020.05.26.12.32.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 12:32:22 -0700 (PDT)
-Subject: Re: [PATCH 0/6] random patches for 5.8
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1590513806.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ff8f6fa6-e05a-5ac9-1d77-a8a96ca823db@kernel.dk>
-Date:   Tue, 26 May 2020 13:32:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 26 May 2020 14:57:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389284AbgEZS5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A327420849;
+        Tue, 26 May 2020 18:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519449;
+        bh=E5gepei49UVhAh6Fb77bky09GX64a6eEvd/goBsZUV4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TaPqnscfH9joBP5uPjRlXOKCTN2ySoi9C21k2i7I90QBCwHAhxDtJg2kBGQZAgPci
+         jm8ghD3ofcq4h0tipp7TAdpAsV6aPDNelVDLPFXArB3y6LZYEiHgh6IVWvwvrpXsp+
+         TROHYMGz6zY1asCCY+d6TG5H3WhDKEpmI3QRuUJg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.4 45/65] l2tp: remove l2tp_session_find()
+Date:   Tue, 26 May 2020 20:53:04 +0200
+Message-Id: <20200526183921.591461247@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
+References: <20200526183905.988782958@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <cover.1590513806.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 11:34 AM, Pavel Begunkov wrote:
-> Nothing insteresting in particular, just start flushing stashed patches.
-> Ones in this series are pretty easy and short.
-> 
-> Pavel Begunkov (6):
->   io_uring: fix flush req->refs underflow
->   io_uring: simplify io_timeout locking
->   io_uring: don't re-read sqe->off in timeout_prep()
->   io_uring: separate DRAIN flushing into a cold path
->   io_uring: get rid of manual punting in io_close
->   io_uring: let io_req_aux_free() handle fixed files
-> 
->  fs/io_uring.c | 64 ++++++++++++++++++++-------------------------------
->  1 file changed, 25 insertions(+), 39 deletions(-)
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-Applied 1-5, thanks.
+commit 55a3ce3b9d98f752df9e2cfb1cba7e715522428a upstream.
 
--- 
-Jens Axboe
+This function isn't used anymore.
+
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/l2tp/l2tp_core.c |   51 +--------------------------------------------------
+ net/l2tp/l2tp_core.h |    3 ---
+ 2 files changed, 1 insertion(+), 53 deletions(-)
+
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -216,27 +216,6 @@ static void l2tp_tunnel_sock_put(struct
+ 	sock_put(sk);
+ }
+ 
+-/* Lookup a session by id in the global session list
+- */
+-static struct l2tp_session *l2tp_session_find_2(struct net *net, u32 session_id)
+-{
+-	struct l2tp_net *pn = l2tp_pernet(net);
+-	struct hlist_head *session_list =
+-		l2tp_session_id_hash_2(pn, session_id);
+-	struct l2tp_session *session;
+-
+-	rcu_read_lock_bh();
+-	hlist_for_each_entry_rcu(session, session_list, global_hlist) {
+-		if (session->session_id == session_id) {
+-			rcu_read_unlock_bh();
+-			return session;
+-		}
+-	}
+-	rcu_read_unlock_bh();
+-
+-	return NULL;
+-}
+-
+ /* Session hash list.
+  * The session_id SHOULD be random according to RFC2661, but several
+  * L2TP implementations (Cisco and Microsoft) use incrementing
+@@ -249,35 +228,7 @@ l2tp_session_id_hash(struct l2tp_tunnel
+ 	return &tunnel->session_hlist[hash_32(session_id, L2TP_HASH_BITS)];
+ }
+ 
+-/* Lookup a session by id
+- */
+-struct l2tp_session *l2tp_session_find(struct net *net, struct l2tp_tunnel *tunnel, u32 session_id)
+-{
+-	struct hlist_head *session_list;
+-	struct l2tp_session *session;
+-
+-	/* In L2TPv3, session_ids are unique over all tunnels and we
+-	 * sometimes need to look them up before we know the
+-	 * tunnel.
+-	 */
+-	if (tunnel == NULL)
+-		return l2tp_session_find_2(net, session_id);
+-
+-	session_list = l2tp_session_id_hash(tunnel, session_id);
+-	read_lock_bh(&tunnel->hlist_lock);
+-	hlist_for_each_entry(session, session_list, hlist) {
+-		if (session->session_id == session_id) {
+-			read_unlock_bh(&tunnel->hlist_lock);
+-			return session;
+-		}
+-	}
+-	read_unlock_bh(&tunnel->hlist_lock);
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL_GPL(l2tp_session_find);
+-
+-/* Like l2tp_session_find() but takes a reference on the returned session.
++/* Lookup a session. A new reference is held on the returned session.
+  * Optionally calls session->ref() too if do_ref is true.
+  */
+ struct l2tp_session *l2tp_session_get(struct net *net,
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -237,9 +237,6 @@ out:
+ struct l2tp_session *l2tp_session_get(struct net *net,
+ 				      struct l2tp_tunnel *tunnel,
+ 				      u32 session_id, bool do_ref);
+-struct l2tp_session *l2tp_session_find(struct net *net,
+-				       struct l2tp_tunnel *tunnel,
+-				       u32 session_id);
+ struct l2tp_session *l2tp_session_get_nth(struct l2tp_tunnel *tunnel, int nth,
+ 					  bool do_ref);
+ struct l2tp_session *l2tp_session_get_by_ifname(struct net *net, char *ifname,
+
 
