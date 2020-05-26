@@ -2,140 +2,187 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33439C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C3D20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EBDA20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="ga2vFClR"
+	dkim=pass (2048-bit key) header.d=omnibond-com.20150623.gappssmtp.com header.i=@omnibond-com.20150623.gappssmtp.com header.b="VJFY+sE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389739AbgEZVxg (ORCPT
+        id S2389847AbgEZVyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:53:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59842 "EHLO
+        Tue, 26 May 2020 17:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389025AbgEZVxg (ORCPT
+        with ESMTP id S2389025AbgEZVyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:53:36 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1C9C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:53:36 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 066682304C;
-        Tue, 26 May 2020 23:53:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590530014;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J94mq7YaQchypeS8DqKys5TI5cDZkg0C76Q0ICpsLgM=;
-        b=ga2vFClR52fg1Z0aEIYcI5FkqrgK8eNiQq/FW3kozrzEq4FCpvW65AsogXjiJbbRFfsbS/
-        W84b3qsp3I+DfAL9fSMduwQMjUG/2Y+TV8YqeY6Ht4wZ+y5NPPU+thDUlNcF8jHyqjLigQ
-        LgxFEBI/v8aLZVWKlI2RflQihSPgXQA=
+        Tue, 26 May 2020 17:54:18 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40213C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:54:17 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id 62so12702741vsi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=omnibond-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0jK21EhVqfBvbPITLkn+96MTGZW6Bo0ptE3mNnDRD3A=;
+        b=VJFY+sE6R0lEkr2FcepjY3oBdZps0iISn6dQY5y2gFvrCz2MSn+lg0Aw+uDaS/9/K0
+         +fZwAZx9BypRwHJ5b5N2BEeEZyeipRgosXa0XlUo9pjdLYPG1fSAaMdUk96eMjNpibvN
+         sDrOL4pEyDyi4h6gTIgKVUwNpMNz18HQr7oWqcjlAzA/rZPn1wFrocCdJe7W0BrPJnJK
+         oEgCcRj6+GWXgVuL8ADPu1yXjAz7mj+yFngENH/Jcq0haWcO11IshEC4nog2VKbuUApP
+         6D8BcyICqXQJE8snuXfTXHHUKWTlc3Ac3y1G2MKe2ow4emUmUJRcYUjMrC973SHCcKXr
+         QCAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0jK21EhVqfBvbPITLkn+96MTGZW6Bo0ptE3mNnDRD3A=;
+        b=T+RXYlPk27W6AkFDrpIKAs/JIBzaW8cGhdomQMy5Ktr8eAG3C4896VjA/NAb21rXbq
+         obKor6w7rXBQipJx7RR4tb4cU+sSVs3uMEAK1lWpHBQK34irRycBjvknInrAjKm/17I4
+         JnqufsU7NIQAYzvELPt8ki/8wUgujKvXnLLUE5KJ2a3H/9l2klZhJJHSSr/KpA2/+cIv
+         MJCmqKJeQ7JGWSDK1+7voqporXb0I38fiIz/wU9mRl52UmksSsuYZdgZzJnBEmTJx/7O
+         r0BNGP5QODdKIvzqS1xJ0mhln0bEgLzgrq4fqDr9Yq2rR16BRRtBqRx2z84ipRDhRS50
+         j2DQ==
+X-Gm-Message-State: AOAM533QFUiU+m5Fw79UMj+6bTrO12RSwA3DocA2PyQi1ghrT2+xTrYa
+        UWADZujxEkfeF3leJ+CG0Bl4GLtP9GjVnvqUrORfGw==
+X-Google-Smtp-Source: ABdhPJzzaoMzy16lHwO6Cit4whNo24TT0SRB502FPqok9VsYLq5zk1Uuoxa+iC0FlPfnq33B0P3WZwccZGYkEDw15oU=
+X-Received: by 2002:a05:6102:20cb:: with SMTP id i11mr2618905vsr.137.1590530055726;
+ Tue, 26 May 2020 14:54:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 26 May 2020 23:53:33 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] driver core: Update device link status correctly for
- SYNC_STATE_ONLY links
-In-Reply-To: <CAGETcx_jyE2UyP4ovT3KXhjOenRhpUPQAqDtTcgfgenW5NGQgA@mail.gmail.com>
-References: <20200526194328.258722-1-saravanak@google.com>
- <66f871c4c457d908ea86545c1aa871bf@walle.cc>
- <CAGETcx_jyE2UyP4ovT3KXhjOenRhpUPQAqDtTcgfgenW5NGQgA@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <0b68cbd8169d1c88a850b0fda3b1cf3f@walle.cc>
-X-Sender: michael@walle.cc
+References: <20200517214718.468-1-guoqing.jiang@cloud.ionos.com> <20200517214718.468-9-guoqing.jiang@cloud.ionos.com>
+In-Reply-To: <20200517214718.468-9-guoqing.jiang@cloud.ionos.com>
+From:   Mike Marshall <hubcap@omnibond.com>
+Date:   Tue, 26 May 2020 17:54:04 -0400
+Message-ID: <CAOg9mSQ+nGCD-k2OwWWd6Ze_PAh3mhSOwYcLugD-SQHCb0ymWw@mail.gmail.com>
+Subject: Re: [PATCH 08/10] orangefs: use attach/detach_page_private
+To:     Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-26 23:45, schrieb Saravana Kannan:
-> On Tue, May 26, 2020 at 2:13 PM Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-05-26 21:43, schrieb Saravana Kannan:
->> > When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
->> > core: Add device link support for SYNC_STATE_ONLY flag"),
->> > SYNC_STATE_ONLY links were treated similar to STATELESS links in terms
->> > of not blocking consumer probe if the supplier hasn't probed yet.
->> >
->> > That caused a SYNC_STATE_ONLY device link's status to not get updated.
->> > Since SYNC_STATE_ONLY device link is no longer useful once the
->> > consumer probes, commit 21c27f06587d ("driver core: Fix
->> > SYNC_STATE_ONLY device link implementation") addresses the status
->> > update issue by deleting the SYNC_STATE_ONLY device link instead of
->> > complicating the status update code.
->> >
->> > However, there are still some cases where we need to update the status
->> > of a SYNC_STATE_ONLY device link. This is because a SYNC_STATE_ONLY
->> > device link can later get converted into a normal MANAGED device link
->> > when a normal MANAGED device link is created between a supplier and
->> > consumer that already have a SYNC_STATE_ONLY device link between them.
->> >
->> > If a SYNC_STATE_ONLY device link's status isn't maintained correctly
->> > till it's converted to a normal MANAGED device link, then the normal
->> > MANAGED device link will end up with a wrong link status. This can
->> > cause
->> > a warning stack trace[1] when the consumer device probes successfully.
->> >
->> > This commit fixes the SYNC_STATE_ONLY device link status update issue
->> > where it wouldn't transition correctly from DL_STATE_DORMANT or
->> > DL_STATE_AVAILABLE to DL_STATE_CONSUMER_PROBE. It also resets the
->> > status
->> > back to DL_STATE_DORMANT or DL_STATE_AVAILABLE if the consumer probe
->> > fails.
->> >
->> > [1] - https://lore.kernel.org/lkml/20200522204120.3b3c9ed6@apollo/
->> > Fixes: 05ef983e0d65 ("driver core: Add device link support for
->> > SYNC_STATE_ONLY flag")
->> > Fixes: 21c27f06587d ("driver core: Fix SYNC_STATE_ONLY device link
->> > implementation")
->> > Reported-by: Michael Walle <michael@walle.cc>
->> > Signed-off-by: Saravana Kannan <saravanak@google.com>
->> > ---
->> >
->> > v1->v2:
->> > - Added code to "revert" the link status if consumer probe fails
->> >
->> > Greg,
->> >
->> > I think this is the issue Michael ran into. I'd like him to test the
->> > fix
->> > before it's pulled in.
->> >
->> > Michael,
->> >
->> > If you can test this on the branch you saw the issue in and give a
->> > Tested-by if it works, that'd be great.
->> 
->> with v2 I'm triggering the
->>    WARN_ON(!(link->status & DL_FLAG_SYNC_STATE_ONLY));
->> in __device_links_no_driver().
-> 
-> Thanks for the logs! The WARNING is due to a dump typo in this line. I
-> should be checking link->flags, not link->status here. I'll send out a
-> v3, but you can test with this change too.
+I apologize for not mentioning that I ran this patch set
+through orangefs xfstests at 5.7 rc5 with no problems
+or regressions.
 
-Ahh, right. With that fix you can add:
+-Mike
 
-Tested-by: Michael Walle <michael@walle.cc>
 
-Thanks,
--michael
+On Sun, May 17, 2020 at 5:47 PM Guoqing Jiang
+<guoqing.jiang@cloud.ionos.com> wrote:
+>
+> Since the new pair function is introduced, we can call them to clean the
+> code in orangefs.
+>
+> Cc: Mike Marshall <hubcap@omnibond.com>
+> Cc: Martin Brandenburg <martin@omnibond.com>
+> Cc: devel@lists.orangefs.org
+> Signed-off-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+> ---
+> No change since RFC V3.
+>
+> RFC V2 -> RFC V3
+> 1. rename clear_page_private to detach_page_private.
+>
+> RFC -> RFC V2
+> 1. change the name of new functions to attach/clear_page_private.
+> 2. avoid potential use-after-free as suggested by Dave Chinner.
+>
+>  fs/orangefs/inode.c | 32 ++++++--------------------------
+>  1 file changed, 6 insertions(+), 26 deletions(-)
+>
+> diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
+> index 12ae630fbed7..48f0547d4850 100644
+> --- a/fs/orangefs/inode.c
+> +++ b/fs/orangefs/inode.c
+> @@ -62,12 +62,7 @@ static int orangefs_writepage_locked(struct page *page,
+>         } else {
+>                 ret = 0;
+>         }
+> -       if (wr) {
+> -               kfree(wr);
+> -               set_page_private(page, 0);
+> -               ClearPagePrivate(page);
+> -               put_page(page);
+> -       }
+> +       kfree(detach_page_private(page));
+>         return ret;
+>  }
+>
+> @@ -409,9 +404,7 @@ static int orangefs_write_begin(struct file *file,
+>         wr->len = len;
+>         wr->uid = current_fsuid();
+>         wr->gid = current_fsgid();
+> -       SetPagePrivate(page);
+> -       set_page_private(page, (unsigned long)wr);
+> -       get_page(page);
+> +       attach_page_private(page, wr);
+>  okay:
+>         return 0;
+>  }
+> @@ -459,18 +452,12 @@ static void orangefs_invalidatepage(struct page *page,
+>         wr = (struct orangefs_write_range *)page_private(page);
+>
+>         if (offset == 0 && length == PAGE_SIZE) {
+> -               kfree((struct orangefs_write_range *)page_private(page));
+> -               set_page_private(page, 0);
+> -               ClearPagePrivate(page);
+> -               put_page(page);
+> +               kfree(detach_page_private(page));
+>                 return;
+>         /* write range entirely within invalidate range (or equal) */
+>         } else if (page_offset(page) + offset <= wr->pos &&
+>             wr->pos + wr->len <= page_offset(page) + offset + length) {
+> -               kfree((struct orangefs_write_range *)page_private(page));
+> -               set_page_private(page, 0);
+> -               ClearPagePrivate(page);
+> -               put_page(page);
+> +               kfree(detach_page_private(page));
+>                 /* XXX is this right? only caller in fs */
+>                 cancel_dirty_page(page);
+>                 return;
+> @@ -535,12 +522,7 @@ static int orangefs_releasepage(struct page *page, gfp_t foo)
+>
+>  static void orangefs_freepage(struct page *page)
+>  {
+> -       if (PagePrivate(page)) {
+> -               kfree((struct orangefs_write_range *)page_private(page));
+> -               set_page_private(page, 0);
+> -               ClearPagePrivate(page);
+> -               put_page(page);
+> -       }
+> +       kfree(detach_page_private(page));
+>  }
+>
+>  static int orangefs_launder_page(struct page *page)
+> @@ -740,9 +722,7 @@ vm_fault_t orangefs_page_mkwrite(struct vm_fault *vmf)
+>         wr->len = PAGE_SIZE;
+>         wr->uid = current_fsuid();
+>         wr->gid = current_fsgid();
+> -       SetPagePrivate(page);
+> -       set_page_private(page, (unsigned long)wr);
+> -       get_page(page);
+> +       attach_page_private(page, wr);
+>  okay:
+>
+>         file_update_time(vmf->vma->vm_file);
+> --
+> 2.17.1
+>
