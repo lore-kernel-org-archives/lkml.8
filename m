@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C67C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A13208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B0B208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520054;
-	bh=p/kD97CnOeMeRL3Fn5Ilb8Pd8geHH2/wtSlHkM34lzs=;
+	s=default; t=1590520057;
+	bh=oD6QkaIiaB6T+NAYwiJNPKDUYhK9EsRqwVgi97qBXfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T1KHMhienDKcnmkuS+NfzYwfWXakT9smKGDgU24kIBFiFTp74zDNcu0c+qVQBS27x
-	 XJ7TFcMgRMa10PlhEBalV1hKKEEQj4DHV+h/ho97irsPvxSW/EslkxzzVgmwJLU1hV
-	 oQnj2EkSQeQpT7KL4nTr01fCkiMBAw6iVNH9vHUo=
+	b=K+l+nmDRvRQcO3RcZPDzcs5o5OaFU3GfQYYkj2Qjpym/GRsBrsFyV1HQZH+YfGmPq
+	 Hp8DtpWl7b7phYUv0ONxwqWYXYgiV6AwdC1I9QfBH47h7wuqKxg1G/7UirTw9JeJni
+	 t4/Fyt5N4MAhChLZErQ05NfHzEz8CAciQK0+3LDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391621AbgEZTHc (ORCPT
+        id S2391702AbgEZTHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:07:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36144 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391595AbgEZTH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:07:26 -0400
+        id S2391604AbgEZTHb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:07:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B140208A7;
-        Tue, 26 May 2020 19:07:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6579A208A7;
+        Tue, 26 May 2020 19:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520046;
-        bh=p/kD97CnOeMeRL3Fn5Ilb8Pd8geHH2/wtSlHkM34lzs=;
+        s=default; t=1590520050;
+        bh=oD6QkaIiaB6T+NAYwiJNPKDUYhK9EsRqwVgi97qBXfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vamclqLnQjkUoHxtskVPq6oXzq6mIcC00kRIDoAnuc1zq3J9oa1/0PQZqjqm9lxCG
-         6TbQgHsHznuWxKmg12mGgyvmzeNjyQVp+QC/fzFdIz7Wzw271kQBbid4BXJDQ7UkKE
-         ZnhZ49Ri4WgJ3XN4TILXIXJxEz//nK2a/OEltYLk=
+        b=Qb/o+04Dw7kGmgwvbeawwp7+5AcLoXWLAGQjUg2VKtJmyeEjEDyWnyj7RCHdYo0uS
+         N0nBE+0KAQHIjqXsGs3euU+9X+fPb0HE97UsykTl4Slks1P3RmL/6qurFlnWLRuNHp
+         w8JAvMzvHsI0z8rnWUxz0MFdXm33LfhqUzgeO760=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 038/111] HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
-Date:   Tue, 26 May 2020 20:52:56 +0200
-Message-Id: <20200526183936.519942191@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Petrov <mmrmaximuzz@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/111] stmmac: fix pointer check after utilization in stmmac_interrupt
+Date:   Tue, 26 May 2020 20:52:58 +0200
+Message-Id: <20200526183936.724509476@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,50 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Maxim Petrov <mmrmaximuzz@gmail.com>
 
-[ Upstream commit 1e189f267015a098bdcb82cc652d13fbf2203fa0 ]
+[ Upstream commit f42234ffd531ca6b13d9da02faa60b72eccf8334 ]
 
-Add a HID_QUIRK_NO_INIT_REPORTS quirk for the Dell K12A keyboard-dock,
-which can be used with various Dell Venue 11 models.
+The paranoidal pointer check in IRQ handler looks very strange - it
+really protects us only against bogus drivers which request IRQ line
+with null pointer dev_id. However, the code fragment is incorrect
+because the dev pointer is used before the actual check which leads
+to undefined behavior. Remove the check to avoid confusing people
+with incorrect code.
 
-Without this quirk the keyboard/touchpad combo works fine when connected
-at boot, but when hotplugged 9 out of 10 times it will not work properly.
-Adding the quirk fixes this.
-
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 3341133df3a8..13b7222ef2c9 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1106,6 +1106,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_DELL_K12A	0x2819
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index ae64a286a68f..90ec2390ef68 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -163,6 +163,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_LTS2), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_QUAD_HD), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP_V103), HID_QUIRK_NO_INIT_REPORTS },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_DELL_K12A), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOPMAX, USB_DEVICE_ID_TOPMAX_COBRAPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 89a6ae2b17e3..1623516efb17 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3832,7 +3832,7 @@ static int stmmac_set_features(struct net_device *netdev,
+ /**
+  *  stmmac_interrupt - main ISR
+  *  @irq: interrupt number.
+- *  @dev_id: to pass the net device pointer.
++ *  @dev_id: to pass the net device pointer (must be valid).
+  *  Description: this is the main driver interrupt service routine.
+  *  It can call:
+  *  o DMA service routine (to manage incoming frame reception and transmission
+@@ -3856,11 +3856,6 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
+ 	if (priv->irq_wake)
+ 		pm_wakeup_event(priv->device, 0);
+ 
+-	if (unlikely(!dev)) {
+-		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+-		return IRQ_NONE;
+-	}
+-
+ 	/* Check if adapter is up */
+ 	if (test_bit(STMMAC_DOWN, &priv->state))
+ 		return IRQ_HANDLED;
 -- 
 2.25.1
 
