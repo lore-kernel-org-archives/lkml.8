@@ -2,51 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AE8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E430CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5A6620870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27B120849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519420;
-	bh=DYY57umynyFAZK/twDxMmZVr1Hq81x9GD9DqV30xJ0g=;
+	s=default; t=1590519426;
+	bh=bTdwv1vyZUg+549OUWqfF6B+jLil2PTqgnQIUtA4yM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z5Q6+g83n3XI+ABBFfiUMMBCdt4ZxXvhqQi8TRvYxG5I75gN20h9zGO6m/5AD12jw
-	 rUPBOIQuz3jwvPzkFyO9fEZDBSM5SzevyfA1qqm3vH7MtoHlhTccZPnUZV+gB+AzNH
-	 gs/Gx6GyfI26SpAaPQ/+K1KRKE4FRLRZ8mBqknjw=
+	b=2lBFLfLPcZgK2dkYft7qgYuEHwuMVHKNCLMGNsDgkK3iHfIVxASxokz4doPpBEMHj
+	 20LUgc11wUXkHtECQD4l+VrdIeVaH93CnWRkoPO9SAXEXbRnIkIyUQ3sEuBmDMas8v
+	 8/0n/0OYTcl2r1XWEkZTzSK6oWLvlaoC4LVbN4qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389998AbgEZS5A (ORCPT
+        id S2390020AbgEZS5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:57:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:57:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389982AbgEZS44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:56 -0400
+        id S2390001AbgEZS5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:57:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DB4A20870;
-        Tue, 26 May 2020 18:56:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 874C32084C;
+        Tue, 26 May 2020 18:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519416;
-        bh=DYY57umynyFAZK/twDxMmZVr1Hq81x9GD9DqV30xJ0g=;
+        s=default; t=1590519421;
+        bh=bTdwv1vyZUg+549OUWqfF6B+jLil2PTqgnQIUtA4yM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K98ZDr4/O4fbhbBB9CNtMYtY8VCQPlMO8+BmhcRCLsnjvVXtusegq3y7km+FelGRI
-         v+emOVPGKocSxm5GLzi5cfqR+Rrx9YdfnL4Bjp2cQhoV2Q7/yJP8kK0FQXekuG35j1
-         K4k5rHdbLNCE4iw0iSZFZxJrW9VN5FzIwASZHxa4=
+        b=yI4IbcRutwznCKhL6XyfKPUfQbAGh3/WfkfjeLoouRXTL+E9n3eGHOT+FfwAceVtb
+         zM2NXxeW0+smVCqFcf59zKEY6/wvbbE2FLtNIsHEFQrGXax9GQs9Ow41nIC3oyW8y+
+         kEcAyHwF/jAhTZEEMeJwdSM/CwqTb32ygCbUE/rU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 61/65] Revert "gfs2: Dont demote a glock until its revokes are written"
-Date:   Tue, 26 May 2020 20:53:20 +0200
-Message-Id: <20200526183928.499403894@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.4 63/65] mei: release me_cl object reference
+Date:   Tue, 26 May 2020 20:53:22 +0200
+Message-Id: <20200526183928.818851812@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -59,48 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
+commit fc9c03ce30f79b71807961bfcb42be191af79873 upstream.
 
-This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
+Allow me_cl object to be freed by releasing the reference
+that was acquired  by one of the search functions:
+__mei_me_cl_by_uuid_id() or __mei_me_cl_by_uuid()
 
-This patch fixes a regression: patch df5db5f9ee112 allowed function
-run_queue() to bypass its call to do_xmote() if revokes were queued for
-the glock. That's wrong because its call to do_xmote() is what is
-responsible for calling the go_sync() glops functions to sync both
-the ail list and any revokes queued for it. By bypassing the call,
-gfs2 could get into a stand-off where the glock could not be demoted
-until its revokes are written back, but the revokes would not be
-written back because do_xmote() was never called.
+Cc: <stable@vger.kernel.org>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200512223140.32186-1-tomas.winkler@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-It "sort of" works, however, because there are other mechanisms like
-the log flush daemon (logd) that can sync the ail items and revokes,
-if it deems it necessary. The problem is: without file system pressure,
-it might never deem it necessary.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/misc/mei/client.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index f80ffccb0316..1eb737c466dd 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -541,9 +541,6 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
--		smp_mb();
--		if (atomic_read(&gl->gl_revokes) != 0)
--			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
--- 
-2.25.1
-
+--- a/drivers/misc/mei/client.c
++++ b/drivers/misc/mei/client.c
+@@ -276,6 +276,7 @@ void mei_me_cl_rm_by_uuid(struct mei_dev
+ 	down_write(&dev->me_clients_rwsem);
+ 	me_cl = __mei_me_cl_by_uuid(dev, uuid);
+ 	__mei_me_cl_del(dev, me_cl);
++	mei_me_cl_put(me_cl);
+ 	up_write(&dev->me_clients_rwsem);
+ }
+ 
+@@ -297,6 +298,7 @@ void mei_me_cl_rm_by_uuid_id(struct mei_
+ 	down_write(&dev->me_clients_rwsem);
+ 	me_cl = __mei_me_cl_by_uuid_id(dev, uuid, id);
+ 	__mei_me_cl_del(dev, me_cl);
++	mei_me_cl_put(me_cl);
+ 	up_write(&dev->me_clients_rwsem);
+ }
+ 
 
 
