@@ -2,264 +2,129 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE89C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5122520787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EE32084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:07:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bMMogdC0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+ir68ua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgEZMF6 (ORCPT
+        id S1731453AbgEZMHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:05:58 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3097 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729015AbgEZMF6 (ORCPT
+        Tue, 26 May 2020 08:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgEZMHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:05:58 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecd06190001>; Tue, 26 May 2020 05:05:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 26 May 2020 05:05:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 26 May 2020 05:05:57 -0700
-Received: from [10.26.75.251] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 12:05:55 +0000
-Subject: Re: [PATCH V3] pwm: tegra: dynamic clk freq configuration by PWM
- driver
-To:     Sandipan Patra <spatra@nvidia.com>, <treding@nvidia.com>,
-        <u.kleine-koenig@pengutronix.de>
-CC:     <bbasu@nvidia.com>, <ldewangan@nvidia.com>,
-        <kyarlagadda@nvidia.com>, <linux-pwm@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1590492335-25857-1-git-send-email-spatra@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <81646862-8cbd-95f1-506d-ea375e365d69@nvidia.com>
-Date:   Tue, 26 May 2020 13:05:53 +0100
+        Tue, 26 May 2020 08:07:32 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C7A0C03E96F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:07:32 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so7624404plv.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=fpsA7Nq2nxropNth7zUzBAVP9PJ+/EXl3l54pU3n9ZM=;
+        b=J+ir68uaqgnC0bpUtYh7gEhKg91ecOFPaqozofq5uKsLc7Q5y3iFeqMqCZAJviMx+s
+         5ig+pjzGqwz+mFaduqg65bildjvb3DkPZio13iXEBv0mAnfqdngUZrwP8cIh8JeTUCVJ
+         gmFnjjcFBD8aNXil24SDu+Jkirv39gmumTTyj55+HgtSDlf8tVbBjh7E552efJG/Wjo8
+         EJDaQDAdQwq7KwVsaMRKey6Y7TjZsMZCOt/LAThI6/92Dp0fkT6otf1CI6seawSCUyPt
+         WoWoRsARBzdoihaCWqPAXG3jCyZxwI+pM2gsZxtGTudpYt/c710Xf3GM28FbeauVBfE6
+         ryPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=fpsA7Nq2nxropNth7zUzBAVP9PJ+/EXl3l54pU3n9ZM=;
+        b=MwxuU3qsoHhyHmyAjtZj4t5TeBYyacVcY9KQow2Kk5rloE8kJKAqHNF4WviDu9tSpr
+         mCJiOy/AfIC1I+NSLQnSjSk2VKVycis9HaGpYZ2x1b1C0D3Z18uug1dKJ6jdORZrgl8U
+         fIIZI8SI9gREe42qUMKPZi0Ju82zAHLhcYf78RockjTZXNA1rtbvElprkCtWQ7TRDyp9
+         oTTSApKHpVgsH6XgNJsjVSuQA7pNyvm+6/eMm3v3MXJtghnE9mDvYjF4ocD02D3iG1Py
+         N3cOtSKbrQr1hzegi+MlZZXgC89SDX2m8PIPzsLNXeTEefAUmA2GKOBYhkr5JFZGhjLD
+         pYCg==
+X-Gm-Message-State: AOAM532zTOLtsppp6/j0ASkkEbBx8yPSgyDo5+Xm5Cm6UG3M8YUzGuVR
+        +Y2P1NZQoNOExzKgxqeyzi/2iA==
+X-Google-Smtp-Source: ABdhPJwJC/VIL8ph3znchjMxyQibr056u3YncVEhb6v6BwGdiIO+FoFmlj/9d7sAY/kJdEg5hx2xFg==
+X-Received: by 2002:a17:902:6b02:: with SMTP id o2mr822931plk.25.1590494851770;
+        Tue, 26 May 2020 05:07:31 -0700 (PDT)
+Received: from [10.74.2.18] ([45.135.186.9])
+        by smtp.gmail.com with ESMTPSA id x132sm15300133pfd.214.2020.05.26.05.07.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 05:07:30 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Let pci_fixup_final access iommu_fwnode
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <1589256511-12446-1-git-send-email-zhangfei.gao@linaro.org>
+ <20200525134318.GB5221@8bytes.org>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <7c6e9389-c34a-4d30-bc8d-572c41572d15@linaro.org>
+Date:   Tue, 26 May 2020 20:07:01 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <1590492335-25857-1-git-send-email-spatra@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200525134318.GB5221@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590494745; bh=Sa5xNTevsVUeHNvVvBgiE3SoxUVV43LqY4oHTnYtW8w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bMMogdC0ijTHehqY6QiOYSv16BhErxVp1FnCB92SIufrDvYxt+vKHcJsWIAX+Lw+s
-         6fhzhygjSmo2lXmE5n6We46GoRWTPagjHYbpKUqdD1GJZOyWC0EJbJfSiK8AvLVnOD
-         2H73q+joYVR3TM/BhJmtbM+IBUnRrpWGC4EEuo7jf+bwMOZCiwmL0yScBIB/wXL4A7
-         5rA7rqo5n1DKD4pGJilMa6S7nUCXwsoTV+wBAdcfIOLz8PoxN/Oi1QLYYoto1XasXF
-         rUrmaJLnUJFRa14y6muDmXs6xJBgjG6MtywHxcScCSKjgtO01EOZgMRNKArvgMexn3
-         jPvX6epbS/pyw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 26/05/2020 12:25, Sandipan Patra wrote:
-> Added support for dynamic clock freq configuration in pwm kernel driver.
-> Earlier the pwm driver used to cache boot time clock rate by pwm clock
-> parent during probe. Hence dynamically changing pwm frequency was not
-> possible for all the possible ranges. With this change, dynamic calculati=
-on
-> is enabled and it is able to set the requested period from sysfs knob
-> provided the value is supported by clock source.
->=20
-> Changes mainly have 2 parts:
->   - T186 and later chips [1]
->   - T210 and prior chips [2]
->=20
-> For [1] - Changes implemented to set pwm period dynamically and
->           also checks added to allow only if requested period(ns) is
->           below or equals to higher range.
->=20
-> For [2] - Only checks if the requested period(ns) is below or equals
->           to higher range defined by max clock limit. The limitation
->           in T210 or prior chips are due to the reason of having only
->           one pwm-controller supporting multiple channels. But later
->           chips have multiple pwm controller instances each having
-> 	  single channel support.
->=20
-> Signed-off-by: Sandipan Patra <spatra@nvidia.com>
-> ---
->=20
-> PATCH V3:
-> 1. Return -EINVAL if requested period does not fall inside limit.
-> 2. Store the new clock rate for further references.
-> 3. Varible name change reverted.
-> 4. Comments corrected and new comments are added.
->=20
->  drivers/pwm/pwm-tegra.c | 85 +++++++++++++++++++++++++++++++++++++++++++=
-+++---
->  1 file changed, 80 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index d26ed8f..c6e5dcf 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -4,8 +4,35 @@
->   *
->   * Tegra pulse-width-modulation controller driver
->   *
-> - * Copyright (c) 2010, NVIDIA Corporation.
-> - * Based on arch/arm/plat-mxc/pwm.c by Sascha Hauer <s.hauer@pengutronix=
-.de>
 
-We should not remove the above line as this is giving credit to the
-above developer.
+On 2020/5/25 下午9:43, Joerg Roedel wrote:
+> On Tue, May 12, 2020 at 12:08:29PM +0800, Zhangfei Gao wrote:
+>> Some platform devices appear as PCI but are
+>> actually on the AMBA bus, and they need fixup in
+>> drivers/pci/quirks.c handling iommu_fwnode.
+>> So calling pci_fixup_final after iommu_fwnode is allocated.
+>>
+>> For example:
+>> Hisilicon platform device need fixup in
+>> drivers/pci/quirks.c
+>>
+>> +static void quirk_huawei_pcie_sva(struct pci_dev *pdev)
+>> +{
+>> +	struct iommu_fwspec *fwspec;
+>> +
+>> +	pdev->eetlp_prefix_path = 1;
+>> +	fwspec = dev_iommu_fwspec_get(&pdev->dev);
+>> +	if (fwspec)
+>> +		fwspec->can_stall = 1;
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa250, quirk_huawei_pcie_sva);
+>> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI, 0xa251, quirk_huawei_pcie_sva);
+> I don't think it is a great idea to hook this into PCI_FIXUP_FINAL. The
+> fixup list needs to be processed for every device, which will slow down
+> probing.
+>
+> So either we introduce something like PCI_FIXUP_IOMMU, if this is
+> entirely PCI specific. If it needs to be generic we need some fixup
+> infrastructure in the IOMMU code itself.
 
-> + * Copyright (c) 2010-2020, NVIDIA Corporation.
-> + *
-> + * Overview of Tegra Pulse Width Modulator Register:
-> + * 1. 13-bit: Frequency division (SCALE)
-> + * 2. 8-bit : Puls division (DUTY)
-> + * 3. 1-bit : Enable bit
-> + *
-> + * The PWM clock frequency is divided by 256 before subdividing it based
-> + * on the programmable frequency division value to generate the required
-> + * frequency for PWM output. The maximum output frequency that can be
-> + * achieved is (max rate of source clock) / 256.
-> + * e.g. if source clock rate is 408 MHz, maximum output frequency can be=
-:
-> + * 408 MHz/256 =3D 1.6 MHz.
-> + * This 1.6 MHz frequency can further be divided using SCALE value in PW=
-M.
-> + *
-> + * PWM pulse width: 8 bits are usable [23:16] for varying pulse width.
-> + * To achieve 100% duty cycle, program Bit [24] of this register to
-> + * 1=E2=80=99b1. In which case the other bits [23:16] are set to don't c=
-are.
-> + *
-> + * Limitations:
-> + * -	When PWM is disabled, the output is driven to inactive.
-> + * -	It does not allow the current PWM period to complete and
-> + *	stops abruptly.
-> + *
-> + * -	If the register is reconfigured while PWM is running,
-> + *	it does not complete the currently running period.
-> + *
-> + * -	If the user input duty is beyond acceptible limits,
-> + *	-EINVAL is returned.
->   */
-> =20
->  #include <linux/clk.h>
-> @@ -41,6 +68,7 @@ struct tegra_pwm_chip {
->  	struct reset_control*rst;
-> =20
->  	unsigned long clk_rate;
-> +	unsigned long min_period_ns;
-> =20
->  	void __iomem *regs;
-> =20
-> @@ -68,7 +96,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, stru=
-ct pwm_device *pwm,
->  {
->  	struct tegra_pwm_chip *pc =3D to_tegra_pwm_chip(chip);
->  	unsigned long long c =3D duty_ns, hz;
-> -	unsigned long rate;
-> +	unsigned long rate, required_clk_rate;
->  	u32 val =3D 0;
->  	int err;
-> =20
-> @@ -83,9 +111,51 @@ static int tegra_pwm_config(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  	val =3D (u32)c << PWM_DUTY_SHIFT;
-> =20
->  	/*
-> +	 *  Period in nano second has to be <=3D highest allowed period
-> +	 *  based on max clock rate of the pwm controller.
-> +	 *
-> +	 *  higher limit =3D max clock limit >> PWM_DUTY_WIDTH
-> +	 *  lower limit =3D min clock limit >> PWM_DUTY_WIDTH >> PWM_SCALE_WIDT=
-H
+Thanks Joerg for the good suggestion.
+I am trying to introduce PCI_FIXUP_IOMMU in
+https://lkml.org/lkml/2020/5/26/366
 
-Not sure why we mention the lower limit if we are not testing this
-condition. Does not appear to be relevant here. Or should we be checking
-this as well?
-
-> +	 */
-> +	if (period_ns < pc->min_period_ns)
-> +		return -EINVAL;
-
-Something does not seem right here. If this is the highest allowed
-period, shouldn't this variable be called 'max_period_ns'?
-
-> +
-> +	/*
->  	 * Compute the prescaler value for which (1 << PWM_DUTY_WIDTH)
->  	 * cycles at the PWM clock rate will take period_ns nanoseconds.
-> +	 *
-> +	 * num_channels: If single instance of PWM controller has multiple
-> +	 * channels (e.g. Tegra210 or older) then it is not applicable to
-
-s/applicable/possible
-
-> +	 * configure separate clock rates to each of the channels, in such
-> +	 * case the value stored during probe will be referred.
-> +	 *
-> +	 * If every PWM controller instance has one channel respectively, i.e.
-> +	 * nums_channels =3D=3D 1 then only the clock rate can be modified
-> +	 * dynamically (e.g. Tegra186 or Tegra194).
->  	 */
-> +	if (pc->soc->num_channels =3D=3D 1) {
-> +		/*
-> +		 * Rate is multiplied with 2^PWM_DUTY_WIDTH so that it matches
-> +		 * with the highest applicable rate that the controller can
-
-s/applicable/possible
-
-> +		 * provide. Any further lower value can be derived by setting
-> +		 * PFM bits[0:12].
-> +		 *
-> +		 * required_clk_rate is a reference rate for source clock and
-> +		 * it is derived based on user requested period. By setting the
-> +		 * source clock rate as required_clk_rate, PWM controller will
-> +		 * be able to configure the requested period.
-> +		 */
-> +		required_clk_rate =3D
-> +			(NSEC_PER_SEC / period_ns) << PWM_DUTY_WIDTH;
-> +
-> +		err =3D clk_set_rate(pc->clk, required_clk_rate);
-> +		if (err < 0)
-> +			return -EINVAL;
-> +
-> +		/* Store the new rate for further references */
-> +		pc->clk_rate =3D clk_get_rate(pc->clk);
-> +	}
-> +
->  	rate =3D pc->clk_rate >> PWM_DUTY_WIDTH;=20
-> =20
->  	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
-> @@ -94,7 +164,7 @@ static int tegra_pwm_config(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
-> =20
->  	/*
->  	 * Since the actual PWM divider is the register's frequency divider
-> -	 * field minus 1, we need to decrement to get the correct value to
-> +	 * field plus 1, we need to decrement to get the correct value to
-
-Technically, this is a comment fix not related to the current change and
-so should be a separate patch. However, I will defer to Thierry on how
-he would prefer to handle this.
-
-Cheers
-Jon
-
---=20
-nvpublic
+Thanks
