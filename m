@@ -2,201 +2,92 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 027EC20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF6F20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESdB2QjD"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="AZvUVlJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgEZQBT (ORCPT
+        id S1730092AbgEZQCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60930 "EHLO
+        Tue, 26 May 2020 12:02:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbgEZQBS (ORCPT
+        with ESMTP id S1727862AbgEZQCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:01:18 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63F6C03E96D;
-        Tue, 26 May 2020 09:01:18 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n15so10376013pfd.0;
-        Tue, 26 May 2020 09:01:18 -0700 (PDT)
+        Tue, 26 May 2020 12:02:05 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C895C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:02:05 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id x13so9668226qvr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:02:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ruQiqAYcuVk1zrfq4RYcU4OqA1YERnQKs2UgedyH13Q=;
-        b=ESdB2QjDZLhzBjCEQRXo80hWPSO3A04P1r2Xsv3qMjkl1YjXSjq257NTPq+Ai2MrsD
-         hydlsB0evnEz+Bsx7F5VIhdJu6s9qYJA6vQ9bhuEZSwuraa9RXaaFQrs2c2Vv+iFkUmQ
-         oIgC3/yGk60NHhHDvgDFZLvmDVOa/vGQGCtp6p4uAZ8KNKHDLj8e5rr5zuXfXVf4Bg/c
-         iPHssd7ky+CL/h8AQSlfK89JtTOXG77NE5T6hnfkgZ9kptUbFVq6W/u3jjM2bt5Vycge
-         +MTOuVZ8igU6NsDAMucQ5yL5XpX58208nXm57LztnaM4mFRzwDH7If5hQVng0YLyjldv
-         Sdsw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RsZ3nQfGjW40v4ckRRp9241TQQ4YCE7GdfX8IPCvDyE=;
+        b=AZvUVlJqEqbAPtDWEcV8xLSKNrSwwqm27o4j1nKpKyNIvP//3xF9TBUmSqeioWu+ox
+         GgUtzLzzkJzvIbm87q0XvHko4QXlFaYxgKgfCZ53z4iBOhQnGqODmLbw626evo9klZtu
+         c7PoTVabRQKKhf5nWGB1E7GcRx+eMZZcPz81NaE8FAVR20U3lqHBNcCpwjcPFS5ErJ+8
+         6XZEtI7fjLtnGewlpV2uHO14tWYN0wa4KnFXX+ibs43sGR8LaHz0R1Bm+9wCm93w5gpq
+         u4epjiy5ZZpl+TZKm6frdFVstFQ04kgG6wE7yggabAskwiesK6ye0FxlnjiklEHIwV5l
+         thfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ruQiqAYcuVk1zrfq4RYcU4OqA1YERnQKs2UgedyH13Q=;
-        b=Z5AcxnJe43j07vOAfs15vyN1G8L3W6k/0ailobUcH2+LT5HvIc0+mHWUAR3aN0YM4c
-         hnFCW2QHIfbI0mJ23a6prjIGfmnBr60e37q7xbgBJfXK5hbOwZwCiCZ+xGDY6oPTflTi
-         pUrNR7qkY12rYVjXNHvUozYNNuXe2jvDz6BqsrWha3EYgYawE1WIT3PNsC6BjS6RHMuU
-         CSxBcEh/6BBG1rMnwsQqTWeKIVUaPhwd4s/BE8OD6NTdjw7ID1QwW4LoZsQAI9w54UYE
-         ChJ8/iSWJmYAr1hKadfcPFQ4OQPmmLNxWLaA61y9NmJWrMVJe0LZWxHZW3EfAI7+S5Ue
-         wYcQ==
-X-Gm-Message-State: AOAM531ktRr22YdtSdEv/hxl8+Mv/uziUBe1nGC6bbcbTTQqYaaE7rK+
-        GomhdMbY8s5FZSBTkFzQR2k=
-X-Google-Smtp-Source: ABdhPJyrGLN4ewwVdIdmAh0vOk3OySO8WwavEIaqzTkgRVKlZskl51K35RlXlFa76bXCEHdPNrafnA==
-X-Received: by 2002:a62:834a:: with SMTP id h71mr22408927pfe.147.1590508878264;
-        Tue, 26 May 2020 09:01:18 -0700 (PDT)
-Received: from localhost ([144.34.194.82])
-        by smtp.gmail.com with ESMTPSA id 202sm10846pfv.155.2020.05.26.09.01.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 09:01:17 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     jingoohan1@gmail.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        bhelgaas@google.com, kgene@kernel.org,
-        thomas.petazzoni@bootlin.com, nsaenzjulienne@suse.de,
-        f.fainelli@gmail.com, jquinlan@broadcom.com, krzk@kernel.org,
-        linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>
-Subject: [PATCH v1] PCI: controller: convert to devm_platform_ioremap_resource()
-Date:   Wed, 27 May 2020 00:01:10 +0800
-Message-Id: <20200526160110.31898-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RsZ3nQfGjW40v4ckRRp9241TQQ4YCE7GdfX8IPCvDyE=;
+        b=gXpwbrVPNr4jirEpv3g0nO+gVXWQUErh2r/p6eoUUE5soNrVtEEHcDMYfe9z45REo2
+         guNN9tbNzw5I6T+ieBlYdTnVWT4ogFMMghdYoWwkkaSrUUQ9JQfyjUG35fddSFWF/oFK
+         NupIo8L/DIf9MPWQncgjDA2EomNJ0gh18FA9o3i/tQgZI4UBWb+mBjvRRicBu+hnmoP3
+         5ZPUnQgiNHGS+LnpERV1+T/qumupYnborcBTerbP4aT9b7BiqAoXVBm+g37uW6+bMwEv
+         ceAmTi7Fwtes0Q0hmkH0Nv1J3mP23DajANOppXu3NAE2n3p/M7lT5mTTMBHp5GwwswMk
+         xYVA==
+X-Gm-Message-State: AOAM531Pk5ZLZ6utjzWK0CbEqcRb+z21FYR9hHxfrSuv2B+84OAz+adA
+        cDWF0fTB1aBWW3YUE+k8JWxyoA==
+X-Google-Smtp-Source: ABdhPJzhXcKDUYQ8+zI3NmJftxHzdTRDdvli5ewQjK6oPrSCn55dFt7LvsFzmcLbWioE/ZJdmqLuIA==
+X-Received: by 2002:a0c:b354:: with SMTP id a20mr20923201qvf.205.1590508924821;
+        Tue, 26 May 2020 09:02:04 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:8152])
+        by smtp.gmail.com with ESMTPSA id q34sm58103qtd.89.2020.05.26.09.02.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 09:02:04 -0700 (PDT)
+Date:   Tue, 26 May 2020 12:01:40 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm,thp: stop leaking unreleased file pages
+Message-ID: <20200526160140.GC850116@cmpxchg.org>
+References: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.11.2005231837500.1766@eggly.anvils>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-use devm_platform_ioremap_resource() to simplify code, it
-contains platform_get_resource() and devm_ioremap_resource().
+On Sat, May 23, 2020 at 06:50:15PM -0700, Hugh Dickins wrote:
+> When collapse_file() calls try_to_release_page(), it has already
+> isolated the page: so if releasing buffers happens to fail (as it
+> sometimes does), remember to putback_lru_page(): otherwise that page is
+> left unreclaimable and unfreeable, and the file extent uncollapsible.
 
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
- drivers/pci/controller/dwc/pci-exynos.c | 4 +---
- drivers/pci/controller/pci-aardvark.c   | 5 ++---
- drivers/pci/controller/pci-ftpci100.c   | 4 +---
- drivers/pci/controller/pci-versatile.c  | 6 ++----
- drivers/pci/controller/pcie-brcmstb.c   | 4 +---
- 5 files changed, 7 insertions(+), 16 deletions(-)
+Oof, I could imagine that was painful to debug (unless you already
+suspected file THP due to a targeted test or similar). Kudos.
 
-diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
-index c5043d951e80..5791039d6a54 100644
---- a/drivers/pci/controller/dwc/pci-exynos.c
-+++ b/drivers/pci/controller/dwc/pci-exynos.c
-@@ -84,14 +84,12 @@ static int exynos5440_pcie_get_mem_resources(struct platform_device *pdev,
- {
- 	struct dw_pcie *pci = ep->pci;
- 	struct device *dev = pci->dev;
--	struct resource *res;
- 
- 	ep->mem_res = devm_kzalloc(dev, sizeof(*ep->mem_res), GFP_KERNEL);
- 	if (!ep->mem_res)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	ep->mem_res->elbi_base = devm_ioremap_resource(dev, res);
-+	ep->mem_res->elbi_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(ep->mem_res->elbi_base))
- 		return PTR_ERR(ep->mem_res->elbi_base);
- 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 90ff291c24f0..0d98f9b04daa 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -1105,7 +1105,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct advk_pcie *pcie;
--	struct resource *res, *bus;
-+	struct resource *bus;
- 	struct pci_host_bridge *bridge;
- 	int ret, irq;
- 
-@@ -1116,8 +1116,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	pcie = pci_host_bridge_priv(bridge);
- 	pcie->pdev = pdev;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pcie->base = devm_ioremap_resource(dev, res);
-+	pcie->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
- 
-diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
-index 1b67564de7af..221dfc9dc81b 100644
---- a/drivers/pci/controller/pci-ftpci100.c
-+++ b/drivers/pci/controller/pci-ftpci100.c
-@@ -422,7 +422,6 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	const struct faraday_pci_variant *variant =
- 		of_device_get_match_data(dev);
--	struct resource *regs;
- 	struct resource_entry *win;
- 	struct faraday_pci *p;
- 	struct resource *io;
-@@ -465,8 +464,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	p->base = devm_ioremap_resource(dev, regs);
-+	p->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(p->base))
- 		return PTR_ERR(p->base);
- 
-diff --git a/drivers/pci/controller/pci-versatile.c b/drivers/pci/controller/pci-versatile.c
-index b911359b6d81..b34bbfe611e7 100644
---- a/drivers/pci/controller/pci-versatile.c
-+++ b/drivers/pci/controller/pci-versatile.c
-@@ -77,13 +77,11 @@ static int versatile_pci_probe(struct platform_device *pdev)
- 	if (!bridge)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	versatile_pci_base = devm_ioremap_resource(dev, res);
-+	versatile_pci_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(versatile_pci_base))
- 		return PTR_ERR(versatile_pci_base);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	versatile_cfg_base[0] = devm_ioremap_resource(dev, res);
-+	versatile_cfg_base[0] = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(versatile_cfg_base[0]))
- 		return PTR_ERR(versatile_cfg_base[0]);
- 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 7730ea845ff2..04bbf9b40193 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -934,7 +934,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
--	struct resource *res;
- 	int ret;
- 
- 	/*
-@@ -959,8 +958,7 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	pcie->dev = &pdev->dev;
- 	pcie->np = np;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pcie->base = devm_ioremap_resource(&pdev->dev, res);
-+	pcie->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pcie->base))
- 		return PTR_ERR(pcie->base);
- 
--- 
-2.25.0
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> Fixes: 99cb0dbd47a1 ("mm,thp: add read-only THP support for (non-shmem) FS")
+> Cc: stable@vger.kernel.org # v5.4+
 
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
