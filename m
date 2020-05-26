@@ -2,142 +2,127 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E15C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA5DE208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wbdKlT5M"
+	by mail.kernel.org (Postfix) with ESMTP id AE59720823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590489191;
+	bh=pq8On3WUlO+xI1ImWpqd/5ofHohCbw1G+yEvp3sHefs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fDnuSxua92tEGHW+A3/ExcDx4u1abUzPbf54nXQw4Xu6ewYkzvivs2iqOK+OW7hjx
+	 Ol+pfA/uBJQ99SMzxIA91ri7CWUvIFBtqyj3fnhbZkHkYTowRrzCQRhqEbtlXz5dtB
+	 ScyK8gHQv6RrxnrfTe6c5s3MboQN47fmCPUPmris=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388682AbgEZKb6 (ORCPT
+        id S1731882AbgEZKdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:31:58 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23584 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388355AbgEZKb5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:31:57 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QARxXv023075;
-        Tue, 26 May 2020 12:31:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=STMicroelectronics;
- bh=CtZEACoRwW0bUVjUWvettuhq5zKMG+xHV8Cj3kMCEBc=;
- b=wbdKlT5MYwBIpCAg7igTwRxAiC190KWXlxxBnfaYC6+FCA1yyRrERmoj6Qe32o13DMaI
- xnG4IrCajpQDG8Tn0nxOcHl+miNgIJZjsGw5cIxp3n6wBbltQea9wAEOzQWFr8PkWW+j
- 6WDIO3DqP6cwjRWem2pl6TV02WfVCy0MxVvXs+gpA3F4GiryS6Fa2X10rYsbYOjGlFq6
- I1eUB8LjvTU47aJQDfwyyZ8On8u0oPerbx1PN1qnu1/RMDj7As6SmnF0LOU8ws5U7R8R
- qQ1Y9pNdMRQXs1kU1XGVhdf7ssaQBZSdRRXCrLQTmIKyU0VnGhpYo3zoyDIX9uO7oK1I pQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316rya76wm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 12:31:44 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 90F8310003B;
-        Tue, 26 May 2020 12:31:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 78DEE21BDAE;
-        Tue, 26 May 2020 12:31:43 +0200 (CEST)
-Received: from gnbcxd0016.gnb.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 26 May
- 2020 12:31:43 +0200
-Date:   Tue, 26 May 2020 12:31:41 +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     "wsa@kernel.org" <wsa@kernel.org>
-CC:     Rob Herring <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 3/4] dt-bindings: i2c-stm32: add SMBus Alert bindings
-Message-ID: <20200526103141.GB14423@gnbcxd0016.gnb.st.com>
-Mail-Followup-To: "wsa@kernel.org" <wsa@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-4-git-send-email-alain.volmat@st.com>
- <20200513021932.GA9172@bogus>
- <20200513054231.GA16558@gnbcxd0016.gnb.st.com>
- <20200523103601.GA3459@ninjato>
+        Tue, 26 May 2020 06:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731745AbgEZKdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:33:10 -0400
+Received: from localhost (unknown [213.57.247.131])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A27020776;
+        Tue, 26 May 2020 10:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590489189;
+        bh=pq8On3WUlO+xI1ImWpqd/5ofHohCbw1G+yEvp3sHefs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qkE3vJD9pAkF3cpL6g/1BJ8bDOux9VE1YndQK4NqxcMh4hT2fmc40ZL5t9TsMrLkG
+         qbQSJclWxYQTHsvHpBI2AXOJrwu3R5UBhsw9393Ad6ubNcE9wVhHthIvjWc46dgnlQ
+         JIsvvXdejMOAtF4xzU3albNtewmk9ma1rOo0IF+Y=
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leonro@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        target-devel@vger.kernel.org
+Subject: [PATCH rdma-next v3 0/6] Add Enhanced Connection Established (ECE)
+Date:   Tue, 26 May 2020 13:32:58 +0300
+Message-Id: <20200526103304.196371-1-leon@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200523103601.GA3459@ninjato>
-X-Disclaimer: ce message est personnel / this message is private
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_01:2020-05-26,2020-05-26 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 10:36:01AM +0000, wsa@kernel.org wrote:
-> 
-> > > > +        st,smbus-alert:
-> > > > +          description: Enable the SMBus Alert feature
-> > > > +          $ref: /schemas/types.yaml#/definitions/flag
-> > > > +
-> > > 
-> > > We already have smbus_alert interrupt. Can't you just check for this in 
-> > > the slave nodes and enable if found?
-> > 
-> > My understanding reading the code (smbalert_probe within i2c-smbus.c, of_i2c_setup_smbus_alert called when
-> > registering an adapter within i2c-core-smbus.c) is that smbus_alert refers to an interrupt on the
-> > adapter side. That is an interrupt that would be triggered when the adapter is receiving an smbus_alert
-> > message.
-> > In our case (stm32f7), we do not have specific interrupt for that purpose. The interrupt triggered when
-> > an SMBUS Alert is received (by the adapter) is the same interrupt as for other reasons and we check
-> > within the irq handler within stm32f7 the reason before calling i2c_handle_smbus_alert if the status
-> > register indicated an SMBUS Alert.
-> > So my understanding is that we cannot rely on the mechanism of naming an interrupt smbus_alert.
-> > Did I misunderstood something ?
-> 
-> I just wonder what is bad about specifying the same interrupt twice in
-> the interrupt properties? You could then check in probe if "smbus_alert"
-> is populated and if it matches the main irq.
-> 
+From: Leon Romanovsky <leonro@mellanox.com>
 
-Here's my understanding of the current implementation.
-During the adapter registration, the function of_i2c_setup_smbus_alert is called
-and if a interrupt is named "smbus_alert" in the adapter node, a new device
-"smbus_alert" will be created. This will leads to smbalert_probe to be called,
-and a request_irq will be done with the irq value read from the adapter node.
-This means that we will have both our handle (the handler of the main irq
-of the stm32 i2c driver) and the smbus_alert handler on the same irq. Leading
-to smbus_alert being called everytime there is a irq (most of the time not
-smbus_alert related) coming from the stm32_i2c. (since this is our main irq).
+Changelog:
+ v3:
+ * Rebased on top of ebd6e96b33a2 RDMA/ipoib: Remove can_sleep parameter from iboib_mcast_alloc
+ * Updated rdma_reject patch to include newly added RTR ulp
+ * Remove empty hunks added by rebase
+ * Changed signature of rdma_reject so kernel users will provide reason by themselves
+ * Squashed UAPI patch to other patches which add functionality
+ * Removed define of the IBTA reason from UAPI
+ v2: https://lore.kernel.org/linux-rdma/20200413141538.935574-1-leon@kernel.org/
+ * Rebased on latest rdma-next and removed already accepted patches.
+ * Updated all rdma_reject in-kernel users to provide reject reason.
+ v1: Dropped field_avail patch in favor of mass conversion to use function
+     which already exists in the kernel code.
+ https://lore.kernel.org/lkml/20200310091438.248429-1-leon@kernel.org
+ v0: https://lore.kernel.org/lkml/20200305150105.207959-1-leon@kernel.org
 
-So to me this approach can't work. I'd understand if the smbus_alert property
-was on the client node in the same way as it is done for host-notify however
-that's not the case.
-This is why I was proposing to have our own st,smbus-alert property to decide
-to enable or not the smbus_alert. In our case, we cannot rely on the mechanism
-done by of_i2c_setup_smbus_alert since for us, smbus_alert irq is just one
-case of all the other stm32 i2c irq. (this is the same irq, and we check after
-by reading the interrupt status register).
+Enhanced Connection Established or ECE is new negotiation scheme
+introduced in IBTA v1.4 to exchange extra information about nodes
+capabilities and later negotiate them at the connection establishment
+phase.
+
+The RDMA-CM messages (REQ, REP, SIDR_REQ and SIDR_REP) were extended
+to carry two fields, one new and another gained new functionality:
+ * VendorID is a new field that indicates that common subset of vendor
+   option bits are supported as indicated by that VendorID.
+ * AttributeModifier already exists, but overloaded to indicate which
+   vendor options are supported by this VendorID.
+
+This is kernel part of such functionality which is responsible to get data
+from librdmacm and properly create and handle RDMA-CM messages.
+
+Thanks
+
+Leon Romanovsky (6):
+  RDMA/cm: Add Enhanced Connection Establishment (ECE) bits
+  RDMA/ucma: Extend ucma_connect to receive ECE parameters
+  RDMA/ucma: Deliver ECE parameters through UCMA events
+  RDMA/cm: Send and receive ECE parameter over the wire
+  RDMA/cma: Connect ECE to rdma_accept
+  RDMA/cma: Provide ECE reject reason
+
+ drivers/infiniband/core/cm.c            | 39 ++++++++++++++---
+ drivers/infiniband/core/cma.c           | 57 ++++++++++++++++++++++---
+ drivers/infiniband/core/cma_priv.h      |  1 +
+ drivers/infiniband/core/ucma.c          | 49 +++++++++++++++++----
+ drivers/infiniband/ulp/isert/ib_isert.c |  4 +-
+ drivers/infiniband/ulp/rtrs/rtrs-srv.c  |  2 +-
+ drivers/infiniband/ulp/srpt/ib_srpt.c   |  3 +-
+ drivers/nvme/target/rdma.c              |  3 +-
+ include/rdma/ib_cm.h                    |  9 +++-
+ include/rdma/ibta_vol1_c12.h            |  6 +++
+ include/rdma/rdma_cm.h                  |  9 +++-
+ include/uapi/rdma/rdma_user_cm.h        | 11 ++++-
+ net/rds/ib_cm.c                         |  4 +-
+ 13 files changed, 170 insertions(+), 27 deletions(-)
+
+--
+2.26.2
+
