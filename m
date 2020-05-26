@@ -2,115 +2,76 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6406AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC221C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7F02065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:07:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SAwBuIkb"
+	by mail.kernel.org (Postfix) with ESMTP id B46C420823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbgEZSHQ (ORCPT
+        id S1729014AbgEZSHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 26 May 2020 14:07:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgEZSHP (ORCPT
+Received: from youngberry.canonical.com ([91.189.89.112]:54013 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbgEZSHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 14:07:15 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 546BBC03E96D;
-        Tue, 26 May 2020 11:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=WWC1kKHrVuEMdArPfAi+QV3k9NA3yhSI+2WZIe2uBMk=; b=SAwBuIkba3TDTbw9zVFFvtz/dV
-        dNQ36jvkyDBS2zQFDXQ6/W4n9iP4mnJ4Ls9dMtnni4Kx4rPwV6nduCEx4tSUsr21b3TU7zkk2gN/7
-        DeJYAR85x2SNaAOJqaha8kU653IRM+X4ixrtlAwg/xtqxkd23Fi81TVvzMTba9dj70sPSYe1hrOEY
-        78yNfsQnzMYwPENxSryuGQRvRd1Dai4sy7ItWz5u3Wfx4pvBEaSm+js24q5KBZVKQpKdJnTmvor9t
-        tMthAs3Dwu3rmZ+nQnm4ZcfaKqF35H0k2qAoA63i4mWQ09tTdqt3rW7iFwRX2LX9EsT1gEe+8fz3L
-        qqUM3qnA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jddyt-0004p4-1v; Tue, 26 May 2020 18:07:15 +0000
-Subject: Re: [PATCH] topology: Fix cpumask_of_node macro for
- CONFIG_NEED_MULTIPLE_NODES=n
-To:     Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tejun Heo <tj@kernel.org>
-References: <20200526174443.207610-1-linux@roeck-us.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <45fda375-3691-e722-000f-188dd13d2e0b@infradead.org>
-Date:   Tue, 26 May 2020 11:07:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jddyl-0007H4-4U; Tue, 26 May 2020 18:07:07 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] netfilter: conntrack: fix an unsigned int comparison to less than zero
+Date:   Tue, 26 May 2020 19:07:06 +0100
+Message-Id: <20200526180706.199338-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200526174443.207610-1-linux@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 10:44 AM, Guenter Roeck wrote:
-> The following compile error is seen in linux-next if
-> NUMA=n and CONFIG_NEED_MULTIPLE_NODES=n.
-> 
->   CC      drivers/hwmon/amd_energy.o
-> In file included from ../arch/x86/include/asm/cpumask.h:5:0,
->                  from ../arch/x86/include/asm/msr.h:11,
->                  from ../arch/x86/include/asm/processor.h:22,
->                  from ../arch/x86/include/asm/cpu_device_id.h:16,
->                  from ../drivers/hwmon/amd_energy.c:6:
-> ../drivers/hwmon/amd_energy.c: In function 'amd_energy_read':
-> ../include/asm-generic/topology.h:51:36: error:
-> 			void value not ignored as it ought to be
->      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
-> ../include/linux/cpumask.h:618:72: note:
-> 			in definition of macro 'cpumask_first_and'
->  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
->                                                                         ^~~~~
-> ../drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro 'cpumask_of_node'
-> 
-> cpumask_of_node() is missing () around the 'node' parameter.
-> 
-> Fixes: b339752d054f ("cpumask: fix spurious cpumask_of_node() on non-NUMA multi-node configs")
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+From: Colin Ian King <colin.king@canonical.com>
 
+The error check to see if protoff is less than zero is always false
+because it is a unsigned int.  The call to ipv6_skip_exthdr can return
+negative values for an error so cast protoff to int to fix this check.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Addresses-Coverity: ("Macro compares unsigned to 0 (no effect)")
+Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/netfilter/nf_conntrack_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks.
-
-> ---
->  include/asm-generic/topology.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-> index 238873739550..5aa8705df87e 100644
-> --- a/include/asm-generic/topology.h
-> +++ b/include/asm-generic/topology.h
-> @@ -48,7 +48,7 @@
->    #ifdef CONFIG_NEED_MULTIPLE_NODES
->      #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
->    #else
-> -    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
-> +    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
->    #endif
->  #endif
->  #ifndef pcibus_to_node
-> 
-
-
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 08e0c19f6b39..2933b96a90c6 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -2114,7 +2114,7 @@ static int nf_confirm_cthelper(struct sk_buff *skb, struct nf_conn *ct,
+ 		pnum = ipv6_hdr(skb)->nexthdr;
+ 		protoff = ipv6_skip_exthdr(skb, sizeof(struct ipv6hdr), &pnum,
+ 					   &frag_off);
+-		if (protoff < 0 || (frag_off & htons(~0x7)) != 0)
++		if ((int)protoff < 0 || (frag_off & htons(~0x7)) != 0)
+ 			return 0;
+ 		break;
+ 	}
 -- 
-~Randy
+2.25.1
+
