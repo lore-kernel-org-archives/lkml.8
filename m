@@ -2,67 +2,116 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA04C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F368208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9132B208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJ/PvOnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391768AbgEZWFi (ORCPT
+        id S2391851AbgEZWFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:05:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389342AbgEZWFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:05:38 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B953E20870;
-        Tue, 26 May 2020 22:05:36 +0000 (UTC)
-Date:   Tue, 26 May 2020 18:05:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [RFC] perf/core: allow ftrace for functions in
- kernel/event/core.c
-Message-ID: <20200526180535.0370eb90@gandalf.local.home>
-In-Reply-To: <20200526180437.45aed950@gandalf.local.home>
-References: <20200526212826.4097888-1-songliubraving@fb.com>
-        <20200526213913.GG2483@worktop.programming.kicks-ass.net>
-        <A9B20D93-748B-4789-801E-91720E2D4F28@fb.com>
-        <20200526215415.GH2483@worktop.programming.kicks-ass.net>
-        <20200526180437.45aed950@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 26 May 2020 18:05:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389342AbgEZWFm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 18:05:42 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FCB2C061A0F;
+        Tue, 26 May 2020 15:05:40 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id x6so8429631wrm.13;
+        Tue, 26 May 2020 15:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9KSc55f/zkiCEVS0YtLw7wKXAVsTgDBRGuAGOZpkkGU=;
+        b=qJ/PvOnS9qTvW0QehUpyUVY9+pDQvopsVf26UZV78f5KwsrtvcuJ3D3N+HVBWVgDiH
+         mZCFbF+TPqK+u09TJRQftm5/NJOonS2Idy0tIh6MLvTQMbJYdAxn+WNKeLbwifwHnsBg
+         +o0DIiDsdNWT4RytcIbcpWgYlIjEdSD4NRqONgDhOuPir8TjNVJembT+G7psOcphSie5
+         qa/GLNNywbKOmg7cCpW6YnZ6ksgJvpMrsjfHJ3ZM3z9ALbp4IDjx4qtRB9d4qWuczv+/
+         AIymEAqGXFVrEHOR6xW/VD5zmPKnrPNY+PkscxvtwB+9dgZKAOqxq35RtbFk/+LowbLx
+         MbpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9KSc55f/zkiCEVS0YtLw7wKXAVsTgDBRGuAGOZpkkGU=;
+        b=PPlkFJhuZ/6mZGEuNUs8rE9UkLRMsRY+IPG594V+1v+oJCx3/xkztiOAfV2COV7xAi
+         FakfqyBajRZuGaCvms/U9h/iNAUX3exoBo/aCqSHEphgOuDjMY3JW7eu00apnn0grqoX
+         hMk+1EcgX7QX/pVVBnfkPkt8cgjeXnxgNCUO2nH1FPybn6zRf3woL6RR2MxBuEuXS8bq
+         4cEvjRZ1j7CP7AqQ8CLLdJlQSjmx/H6NdWVnK5r5J4tr9bjy6CyV296bRCMKbwQnCIBc
+         jEyMF8pGqPvOOH9j05O8VmUVPp7Zoj61ufVpFW8av1C6N8ZKYyfRWlyv9RJpEEOHqFtR
+         plPA==
+X-Gm-Message-State: AOAM530gcBs/xJM41RYfJT8/8Xhoq/occhII47BmaLMXwuJQC+DTfYQV
+        XCScR7voPJVratb14eJ5aXo=
+X-Google-Smtp-Source: ABdhPJz4wbdZAiHmbuZI13yEtvo5FAdcoeZV8lk8028gBC5cWy9sGC0/qxTrnXIybfN2cJzrkNEgFQ==
+X-Received: by 2002:a5d:68c2:: with SMTP id p2mr12364499wrw.253.1590530739087;
+        Tue, 26 May 2020 15:05:39 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id g18sm743554wme.17.2020.05.26.15.05.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 15:05:38 -0700 (PDT)
+Subject: Re: [PATCH net-next 4/4] net: phy: mscc-miim: read poll when high
+ resolution timers are disabled
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
+        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com
+References: <20200526162256.466885-1-antoine.tenart@bootlin.com>
+ <20200526162256.466885-5-antoine.tenart@bootlin.com>
+ <e95bbdb6-a6db-be02-660e-7318b9bb5f01@gmail.com>
+ <20200526220127.GS768009@lunn.ch>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <7c969bd9-e9d9-3768-a258-527257cf1a5f@gmail.com>
+Date:   Tue, 26 May 2020 15:05:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200526220127.GS768009@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 18:04:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+
+
+On 5/26/2020 3:01 PM, Andrew Lunn wrote:
+>>> +/* When high resolution timers aren't built-in: we can't use usleep_range() as
+>>> + * we would sleep way too long. Use udelay() instead.
+>>> + */
+>>> +#define mscc_readl_poll_timeout(addr, val, cond, delay_us, timeout_us)	\
+>>> +({									\
+>>> +	if (!IS_ENABLED(CONFIG_HIGH_RES_TIMERS))			\
+>>> +		readl_poll_timeout_atomic(addr, val, cond, delay_us,	\
+>>> +					  timeout_us);			\
+>>> +	readl_poll_timeout(addr, val, cond, delay_us, timeout_us);	\
+>>> +})
+>>> +
+>>
+>> I would make this a regular function which would not harm the compiler's
+>> ability to optimize it, but would give you type checking. With that fixed:
 > 
-> In the early days there was a lot of issues with recursions, but I added a
-> lot of recursion protection since then. I'll give this patch a spin and see
-> if I can make it crash.
+> Hi Florian
+> 
+> cond makes that difficult, since it is not a parameter in the usual
+> sense, but an expression to evaluate if the polling should terminate.
+> 
+> readl_poll_timeout() and readl_poll_timeout_atomic() themselves are
+> #define's, and there are more levels of macros under them.
 
-I also have some patches that make both perf and the trace directory
-visible by function tracing. I'll see if I can dig them out too.
-
--- Steve
+Oh that's right, thanks for reminding me of this.
+-- 
+Florian
