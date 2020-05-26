@@ -2,52 +2,51 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0257C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3552BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8FB20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091A4208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521462;
-	bh=vIFPGfnOooX503xJ1gdmHM1nbIJtBhMbHWlsuxlq6OY=;
+	s=default; t=1590521467;
+	bh=h26EgQmdrkMUUFsfCMuzV6KRqdC7/qLA91Jzl5Vrlt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cbgG7x7avwqMQr9O9nSFsOmvy9BnTgSlY+guN/uYyDlz6sIi0nVGkekXyTf9KH+5Z
-	 NLaygtVz1YHfCZFiL7qVOVN2YUlIqUSIZebbTRaml4nytQ3ciWQoeXGTBnTH0ncGzi
-	 iE7GMZjkR+M0Ro0fcA/FuCKxJd8kVo7Ll7ddPh5w=
+	b=1r26gIxDTFUmd45PLoMiCHim0g1Ibaw7GzRjtf0bPuauE98qZZ8e9jEXOLX1NA8hw
+	 bcxAOe+RQ/vPspg9jT0n/uiMGVTIALlrdIk1pvkVInthqmx/xBks2FrX0nwQt4zSNf
+	 a3M69jrpw5sVdEuUHTrX2u4kHUz77bJKHhY7A5zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404177AbgEZTbC (ORCPT
+        id S2404471AbgEZTbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390534AbgEZS7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:59:30 -0400
+        id S2389936AbgEZS72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1FA02086A;
-        Tue, 26 May 2020 18:59:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8427F2086A;
+        Tue, 26 May 2020 18:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519570;
-        bh=vIFPGfnOooX503xJ1gdmHM1nbIJtBhMbHWlsuxlq6OY=;
+        s=default; t=1590519568;
+        bh=h26EgQmdrkMUUFsfCMuzV6KRqdC7/qLA91Jzl5Vrlt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CcNvqWGNSJQCuK/9tsN9SaRIq/zFhASmKFFHhKHGcbG0v+8OFOzjObrwTABfxFCfF
-         lJOnc48C8x10eDmct3oUos+i2M+WcSqumXAcTTUaDBSSV38dh4/LPS8em4QvnhPof6
-         TeWh7CFaYRujsa7JdjCyJC5kcfnw4uwtmz+siYe0=
+        b=NyOPpGSP56OMFct1SHC6fTIHcyKFyWv2hfyouWKomURFqGqLKtCmZjQvH7uLBxvoG
+         Rgw949iE0ldGMBaKFmHsNQTU81vz8/cvtyjYJ0unUtL7QCszk1oHZOBBJ1AHGbyC1H
+         aMcq/PFn2f80zb2sNnTAdpRt8UJduM+LwwhdwWQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 55/64] libnvdimm/btt: Remove unnecessary code in btt_freelist_init
-Date:   Tue, 26 May 2020 20:53:24 +0200
-Message-Id: <20200526183930.920098416@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>
+Subject: [PATCH 4.9 54/64] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+Date:   Tue, 26 May 2020 20:53:23 +0200
+Message-Id: <20200526183930.850716036@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -60,51 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Verma <vishal.l.verma@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 2f8c9011151337d0bc106693f272f9bddbccfab2 ]
+commit 98e2630284ab741804bd0713e932e725466f2f84 upstream.
 
-We call btt_log_read() twice, once to get the 'old' log entry, and again
-to get the 'new' entry. However, we have no use for the 'old' entry, so
-remove it.
+Currently the kfree of output.pointer can be potentially freeing
+an uninitalized pointer in the case where out_data is NULL. Fix this
+by reworking the case where out_data is not-null to perform the
+ACPI status check and also the kfree of outpoint.pointer in one block
+and hence ensuring the pointer is only freed when it has been used.
 
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also replace the if (ptr != NULL) idiom with just if (ptr).
+
+Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvdimm/btt.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/platform/x86/alienware-wmi.c |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 0c46ada027cf..e90ecb179622 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -447,9 +447,9 @@ static int btt_log_init(struct arena_info *arena)
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -504,23 +504,22 @@ static acpi_status alienware_wmax_comman
  
- static int btt_freelist_init(struct arena_info *arena)
- {
--	int old, new, ret;
-+	int new, ret;
- 	u32 i, map_entry;
--	struct log_entry log_new, log_old;
-+	struct log_entry log_new;
- 
- 	arena->freelist = kcalloc(arena->nfree, sizeof(struct free_entry),
- 					GFP_KERNEL);
-@@ -457,10 +457,6 @@ static int btt_freelist_init(struct arena_info *arena)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < arena->nfree; i++) {
--		old = btt_log_read(arena, i, &log_old, LOG_OLD_ENT);
--		if (old < 0)
--			return old;
+ 	input.length = (acpi_size) sizeof(*in_args);
+ 	input.pointer = in_args;
+-	if (out_data != NULL) {
++	if (out_data) {
+ 		output.length = ACPI_ALLOCATE_BUFFER;
+ 		output.pointer = NULL;
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
+ 					     command, &input, &output);
+-	} else
++		if (ACPI_SUCCESS(status)) {
++			obj = (union acpi_object *)output.pointer;
++			if (obj && obj->type == ACPI_TYPE_INTEGER)
++				*out_data = (u32)obj->integer.value;
++		}
++		kfree(output.pointer);
++	} else {
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
+ 					     command, &input, NULL);
 -
- 		new = btt_log_read(arena, i, &log_new, LOG_NEW_ENT);
- 		if (new < 0)
- 			return new;
--- 
-2.25.1
-
+-	if (ACPI_SUCCESS(status) && out_data != NULL) {
+-		obj = (union acpi_object *)output.pointer;
+-		if (obj && obj->type == ACPI_TYPE_INTEGER)
+-			*out_data = (u32) obj->integer.value;
+ 	}
+-	kfree(output.pointer);
+ 	return status;
+-
+ }
+ 
+ /*
 
 
