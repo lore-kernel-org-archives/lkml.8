@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D64C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB9720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1595C208C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520883;
-	bh=rFk4ndRXik1qE5fwJ3x+1OM2AUjpwZLqi+jCYlMawr8=;
+	s=default; t=1590520886;
+	bh=OSIyjFeWmXecL53OVI8UGmOLm+YGOusPJaisg9IFerw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RRAEI484vMJFfHSeJtKx+phpUeEhV74xLobJiqLaaSIyZ7TGvmyZHdgF9FwrAX0Ot
-	 0dE6Jff2rIsOfT9zNkE8ygancuEjI6NPhCXujyg08SkhikbE1Vb5Zx1+Uk0xFi0WYK
-	 I0z/8Yi5wAXClPRIFfsWMtsWgdXh46xQ7SKXaPus=
+	b=BurnZQ/z868iP07+qTj4LxXZR0d391X+j53xs4AWKyynefq6lrkTg2hA8pHy3mPMi
+	 Aw2NjVeJBhEqK0ymO2wDmPB/6NDcBC/YzrZaYDRWppK+j8VyI7X2CbRKQzjBD13NWw
+	 RbKlTAVusfbyrIb2rxSmeLxiLMbu1XHFaSErm0vE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392470AbgEZTVS (ORCPT
+        id S2390948AbgEZTLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41604 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391545AbgEZTME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:04 -0400
+        id S2391865AbgEZTLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91EAA208B3;
-        Tue, 26 May 2020 19:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366CF20888;
+        Tue, 26 May 2020 19:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520324;
-        bh=rFk4ndRXik1qE5fwJ3x+1OM2AUjpwZLqi+jCYlMawr8=;
+        s=default; t=1590520303;
+        bh=OSIyjFeWmXecL53OVI8UGmOLm+YGOusPJaisg9IFerw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHeG3Mn51OlqOzLp3W/AQUKD+SA35IKZnnG65NbtAiOkD8HWdAuqCGHKD2RxNuppF
-         Gp2nQW6aAHnWCuqkTnthLt3QR3+dxb2mjC+nLEYuAs3M3g078P4i9IiZMLq5/QDsRo
-         2fbGXOEfTBn7PGt66fIWWQTe7IyfLpZMF7VrYCOw=
+        b=srFI718p7D8riauaplmB8QzQA87A/BXSHicWxw7LVzNDnP3C8ZFZQKqftB5O8XkqH
+         gy4kQEwfdeRXEvZl9LLh8Ux87BL2BnS5UPwWqp4mQvDmAfLDf4e0YGYVX33mGYLC69
+         fQZhDqHSxlacX78KatejMS4zXQD1JEXBNYoYAVUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavin Shan <gshan@redhat.com>,
-        Shay Agroskin <shayagr@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 035/126] net/ena: Fix build warning in ena_xdp_set()
-Date:   Tue, 26 May 2020 20:52:52 +0200
-Message-Id: <20200526183940.822041433@linuxfoundation.org>
+Subject: [PATCH 5.6 006/126] ovl: potential crash in ovl_fid_to_fh()
+Date:   Tue, 26 May 2020 20:52:23 +0200
+Message-Id: <20200526183938.038330922@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,46 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gavin Shan <gshan@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit caec66198d137c26f0d234abc498866a58c64150 ]
+[ Upstream commit 9aafc1b0187322fa4fd4eb905d0903172237206c ]
 
-This fixes the following build warning in ena_xdp_set(), which is
-observed on aarch64 with 64KB page size.
+The "buflen" value comes from the user and there is a potential that it
+could be zero.  In do_handle_to_path() we know that "handle->handle_bytes"
+is non-zero and we do:
 
-   In file included from ./include/net/inet_sock.h:19,
-      from ./include/net/ip.h:27,
-      from drivers/net/ethernet/amazon/ena/ena_netdev.c:46:
-   drivers/net/ethernet/amazon/ena/ena_netdev.c: In function         \
-   ‘ena_xdp_set’:                                                    \
-   drivers/net/ethernet/amazon/ena/ena_netdev.c:557:6: warning:      \
-   format ‘%lu’                                                      \
-   expects argument of type ‘long unsigned int’, but argument 4      \
-   has type ‘int’                                                    \
-   [-Wformat=] "Failed to set xdp program, the current MTU (%d) is   \
-   larger than the maximum allowed MTU (%lu) while xdp is on",
+	handle_dwords = handle->handle_bytes >> 2;
 
-Signed-off-by: Gavin Shan <gshan@redhat.com>
-Acked-by: Shay Agroskin <shayagr@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So values 1-3 become zero.  Then in ovl_fh_to_dentry() we do:
+
+	int len = fh_len << 2;
+
+So now len is in the "0,4-128" range and a multiple of 4.  But if
+"buflen" is zero it will try to copy negative bytes when we do the
+memcpy in ovl_fid_to_fh().
+
+	memcpy(&fh->fb, fid, buflen - OVL_FH_WIRE_OFFSET);
+
+And that will lead to a crash.  Thanks to Amir Goldstein for his help
+with this patch.
+
+Fixes: cbe7fba8edfc ("ovl: make sure that real fid is 32bit aligned in memory")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+Cc: <stable@vger.kernel.org> # v5.5
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/overlayfs/export.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-index 8795e0b1dc3c..8984aa211112 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-@@ -69,7 +69,7 @@
-  * 16kB.
-  */
- #if PAGE_SIZE > SZ_16K
--#define ENA_PAGE_SIZE SZ_16K
-+#define ENA_PAGE_SIZE (_AC(SZ_16K, UL))
- #else
- #define ENA_PAGE_SIZE PAGE_SIZE
- #endif
+diff --git a/fs/overlayfs/export.c b/fs/overlayfs/export.c
+index 6f54d70cef27..e605017031ee 100644
+--- a/fs/overlayfs/export.c
++++ b/fs/overlayfs/export.c
+@@ -777,6 +777,9 @@ static struct ovl_fh *ovl_fid_to_fh(struct fid *fid, int buflen, int fh_type)
+ 	if (fh_type != OVL_FILEID_V0)
+ 		return ERR_PTR(-EINVAL);
+ 
++	if (buflen <= OVL_FH_WIRE_OFFSET)
++		return ERR_PTR(-EINVAL);
++
+ 	fh = kzalloc(buflen, GFP_KERNEL);
+ 	if (!fh)
+ 		return ERR_PTR(-ENOMEM);
 -- 
 2.25.1
 
