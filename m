@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C64C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CA8208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0B2208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520174;
-	bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
+	s=default; t=1590520177;
+	bh=p9OcJyFAMvLDmi1flaOtACr8M52ClYUm0OlUxAf6mzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VbAp9sX9p/fImZafRSyVPTSpncA3cKzRn0h0YQZ591YIo4hjUgaF69SiQiIUlqBCt
-	 fvnFolXzhNKpVIvjOO87eokrGUuc7edSxKwinJ2+iZ5lLcCrf4EZFASWdHIhuhcCke
-	 KsivK7um53hJ4p8TwfkFconTjpjMgj33tPl9YIyA=
+	b=p9M72ZtV8KcCTOEhxyIzqy40/Vj2nSvz9zlxklcBx0ROAKPYXvAjtJbrDICe6WM6j
+	 zs0vF3tCuLgAYtjby6NxiHz2Yy3IjcQKG674/GtNx4lX7PthxK1mbbmPNDR2ioyd+/
+	 wWwgkObsvnNf3SA2XbNo9jIvIwwX9Yn1MIEmsiGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391882AbgEZTJc (ORCPT
+        id S2391891AbgEZTJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391868AbgEZTJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:27 -0400
+        id S2391883AbgEZTJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C689820776;
-        Tue, 26 May 2020 19:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFC8420776;
+        Tue, 26 May 2020 19:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520167;
-        bh=6TK3IWSATAnn3NvTP6YgPeDQIjWNEzJ6PkevqoxNBcI=;
+        s=default; t=1590520172;
+        bh=p9OcJyFAMvLDmi1flaOtACr8M52ClYUm0OlUxAf6mzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G/OxFyUFflEontY/hnTq0brIbaVxdkjEmRvm7DuPkUrvN2FTQOy99Fp7OepVSxYNV
-         Z8SW9hGo+4uu0w0Vr5m3zufXWRtcc6JPBkQrEGBHvaA2hmNMUFEANfo/Fdj750R0ZN
-         nlV1PC3HE1/Ub7Y5gNy/Rf4ht3TJ7gvIEvG+HCbA=
+        b=aApTGsV1YphuczxV4JxSp3lm0VWQIlFBLPD3EAwCOVqC1fiXueMEb+nA6uZotZpBV
+         ulhv/D69fb6TIPZhIqrdURYbV1JhN143vAFdCe8n2cP6joOyet0woZBnyuZRrA7F0V
+         qqzeDuDzh4OVqYPErUDucXVzNhNtGPgxcunJJXGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 085/111] iio: sca3000: Remove an erroneous get_device()
-Date:   Tue, 26 May 2020 20:53:43 +0200
-Message-Id: <20200526183940.972381398@linuxfoundation.org>
+Subject: [PATCH 5.4 087/111] iio: adc: ti-ads8344: Fix channel selection
+Date:   Tue, 26 May 2020 20:53:45 +0200
+Message-Id: <20200526183941.168613269@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,36 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit 928edefbc18cd8433f7df235c6e09a9306e7d580 upstream.
+commit bcfa1e253d2e329e1ebab5c89f3c73f6dd17606c upstream.
 
-This looks really unusual to have a 'get_device()' hidden in a 'dev_err()'
-call.
-Remove it.
+During initial submission the selection of the channel was done using
+the scan_index member of the iio_chan_spec structure. It was an abuse
+because this member is supposed to be used with a buffer so it was
+removed.
 
-While at it add a missing \n at the end of the message.
+However there was still the need to be able to known how to select a
+channel, the correct member to store this information is address.
 
-Fixes: 574fb258d636 ("Staging: IIO: VTI sca3000 series accelerometer driver (spi)")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Thanks to this it is possible to select any other channel than the
+channel 0.
+
+Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/accel/sca3000.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/ti-ads8344.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/accel/sca3000.c
-+++ b/drivers/iio/accel/sca3000.c
-@@ -980,7 +980,7 @@ static int sca3000_read_data(struct sca3
- 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
- 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
- 	if (ret) {
--		dev_err(get_device(&st->us->dev), "problem reading register");
-+		dev_err(&st->us->dev, "problem reading register\n");
- 		return ret;
+--- a/drivers/iio/adc/ti-ads8344.c
++++ b/drivers/iio/adc/ti-ads8344.c
+@@ -32,16 +32,17 @@ struct ads8344 {
+ 	u8 rx_buf[3];
+ };
+ 
+-#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
++#define ADS8344_VOLTAGE_CHANNEL(chan, addr)				\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+ 		.channel = chan,					\
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++		.address = addr,					\
  	}
  
+-#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
++#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, addr)		\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+@@ -50,6 +51,7 @@ struct ads8344 {
+ 		.differential = 1,					\
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++		.address = addr,					\
+ 	}
+ 
+ static const struct iio_chan_spec ads8344_channels[] = {
+@@ -105,7 +107,7 @@ static int ads8344_read_raw(struct iio_d
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		mutex_lock(&adc->lock);
+-		*value = ads8344_adc_conversion(adc, channel->scan_index,
++		*value = ads8344_adc_conversion(adc, channel->address,
+ 						channel->differential);
+ 		mutex_unlock(&adc->lock);
+ 		if (*value < 0)
 
 
