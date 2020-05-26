@@ -2,116 +2,188 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F67C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC26C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3495208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590530893;
-	bh=btXwG+8894ZAUlHjClZLGsQrNaYj/a/EcwRM/kzN5mg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FCsBHskzuYKlv6fvIoHQFcwJe9pwj+DAMi+nxZcpj+xzDNp8GA8BjTUmVirXonLk5
-	 b4hYxCZtttX0/+IE6LfmA+PZCLYYMlDKWASNTtm6GTijk0+TS7WJ3X1Gca54Oq5ixB
-	 Es/6eOs5rdMqcz+aUMhBaA6c4A8OOL3Uwqr5PUH0=
+	by mail.kernel.org (Postfix) with ESMTP id 35DFF208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v4zrrqUC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391808AbgEZWIN (ORCPT
+        id S2391788AbgEZWJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:08:13 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35962 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389342AbgEZWIN (ORCPT
+        Tue, 26 May 2020 18:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389342AbgEZWJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:08:13 -0400
-Received: by mail-io1-f68.google.com with SMTP id y18so3370683iow.3;
-        Tue, 26 May 2020 15:08:12 -0700 (PDT)
+        Tue, 26 May 2020 18:09:34 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15F1C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:09:33 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id e8so2637138qtq.22
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:subject:from:to:cc;
+        bh=76RnCrYuIkxjPD/67W4gWQzeBexPbh4E4FGax1pg7M8=;
+        b=v4zrrqUCHGjAdSRZM8NUPTODZaC9BulTFTPNq4ikigV9FNcXtVQAVGLhc8M36bhvwM
+         X/ShDKCg/PBndpbavZqQCgT/GSTPKKjFedavuiBfn4wg7HZp1o8sPwSCohXErk/nyE62
+         DEI61v5Gepabha43pMC72mKQmQ6vlUKD7JQmpno/x8Y5YxXPlzAEU1PqNlQ6z9jN1ea3
+         izE8HTWlJANcpx8BrsLedFpwNLvMpfGyXhukAsS8HL/oinP+pIm6tfF5KwFatdpkvg8Z
+         pjp3G5NO+/9RtopQxKyEEXeND71MEhLCgg2PT4iKupbLZIKaKn29JJ93YyS1bGrP0/V+
+         Q9cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mXe3eMhOfw8Yi0mzveU2UUdf9WbJiPX68762lf2f3m8=;
-        b=lnGpxnl4Ptsii9Oal3CfKvRrQ6E70G0Es5XwkC6aYwMTShppiSQ48V2buS2xEMJp6n
-         n4foNO7lb0Uc7qLZ0usrc3jicmeTmeeP4PTChZbNlACtK+7zrJiwMYFYL0JaVhRd0yLe
-         R3iA1MagoO3zpwnt2OJrlbNjN0e0Q+9HxnTAN0VCylBabiegqtd7QLTd+zxeAkKByrjE
-         wYmryKC5xRhvPvJBes4T5RW2v2bK9R0hsvC+YNiJR6N88MqISKcW/bWDggbIqV+KXb7Q
-         skAnadg8HoE/Z/iRTVZM+jw1Jqp4vo+7yY5czD10RjY+T9ZXeohDV9kbqS8Bwc0fjGlm
-         52Dg==
-X-Gm-Message-State: AOAM532IsBhhZ2JVWIK7JNQXwfKh0tOtgAKH9tZxtA/80Aacwiz3OXgt
-        zSqSIkDytsg8jsDa/D51nw==
-X-Google-Smtp-Source: ABdhPJxua5/2ASeh+JDi3H6ENvlO5duKzfxD0bd/FxftWvnUVDU7fZZVP6RJWTWfF7tnoEbMyFvyDA==
-X-Received: by 2002:a02:b782:: with SMTP id f2mr3009396jam.91.1590530891856;
-        Tue, 26 May 2020 15:08:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o70sm677282ild.3.2020.05.26.15.08.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:08:10 -0700 (PDT)
-Received: (nullmailer pid 467130 invoked by uid 1000);
-        Tue, 26 May 2020 22:08:08 -0000
-Date:   Tue, 26 May 2020 16:08:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     daniel@ffwll.ch, linux-arm-msm@vger.kernel.org, jonas@kwiboo.se,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, robh+dt@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, a.hajda@samsung.com,
-        narmstrong@baylibre.com,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        robdclark@chromium.org, jeffrey.l.hugo@gmail.com,
-        jernej.skrabec@siol.net, airlied@linux.ie, spanda@codeaurora.org,
-        Laurent.pinchart@ideasonboard.com, swboyd@chromium.org,
-        bgolaszewski@baylibre.com, bjorn.andersson@linaro.org,
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version:subject
+         :from:to:cc;
+        bh=76RnCrYuIkxjPD/67W4gWQzeBexPbh4E4FGax1pg7M8=;
+        b=ThywOYtKFGXf/x8Rcg8JH7UVHsEUC1gSfCjP4SXtnoNWIPBcIpZp24SdalymzH88FR
+         ZLzFP8cMKlCf0i2eiEHuvDDDAsEstnhmKoo6m2BOdi4ijW6dBCaj5GERSvF1ct+emi0B
+         dQy2tV4nyMDgKhW9iT82ySPbSWB2O+5JOLnFb5Avm+tdQksWJS329pJNxhylxm/yaows
+         z3AlyXNE0gZFGu4oqtEEEaXTcaKfEZKKaaHr2Tl+tYgAm6rCNzw030HUQtFBimgnQPcO
+         JSPTk5egJLFn0VUd2SxH4gzBy4ynd0NKS2Jqb9Mn5BPB7jgKn/S2t7Kfm8cx2+ZYCHXS
+         +y9Q==
+X-Gm-Message-State: AOAM533rn8ejZKgJ1HFTNNoBxJgaO+CZoZL++dVbSpWfIa05JM6LDsTE
+        p0lhrckj5FLvFupCF8WI1tFkkCnxjsDLxCU=
+X-Google-Smtp-Source: ABdhPJwd/fhrf0rDUhLOAH8yaPymFMnZy4V2MHeWC/+UdErTwcsr+XenVM4ID8s4+rLSowndXcEYmrAnon+uWW0=
+X-Received: by 2002:a0c:8b99:: with SMTP id r25mr20979191qva.174.1590530972841;
+ Tue, 26 May 2020 15:09:32 -0700 (PDT)
+Date:   Tue, 26 May 2020 15:09:27 -0700
+In-Reply-To: <6144404cb26d1f797fd7e87b124bcaf8@walle.cc>
+Message-Id: <20200526220928.49939-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v3] driver core: Update device link status correctly for
+ SYNC_STATE_ONLY links
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+Cc:     Michael Walle <michael@walle.cc>, kernel-team@android.com,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/3] dt-bindings: drm/bridge: ti-sn65dsi86: Convert to
- yaml
-Message-ID: <20200526220808.GA467074@bogus>
-References: <20200513215902.261547-1-dianders@chromium.org>
- <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513145807.v6.2.Ifcdc4ecb12742a27862744ee1e8753cb95a38a7f@changeid>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 14:59:01 -0700, Douglas Anderson wrote:
-> This moves the bindings over, based a lot on toshiba,tc358768.yaml.
-> Unless there's someone known to be better, I've set the maintainer in
-> the yaml as the first person to submit bindings.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> I removed Stephen's review tag on v5 since I squashed in a bunch of
-> other stuff.
-> 
-> Changes in v6: None
-> Changes in v5:
-> - Squash https://lore.kernel.org/r/20200506140208.v2.2.I0a2bca02b09c1fcb6b09479b489736d600b3e57f@changeid/
-> 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
-> - specification => specifier.
-> - power up => power.
-> - Added back missing suspend-gpios.
-> - data-lanes and lane-polarities are are the right place now.
-> - endpoints don't need to be patternProperties.
-> - Specified more details for data-lanes and lane-polarities.
-> - Added old example back in, fixing bugs in it.
-> - Example i2c bus is just called "i2c", not "i2c1" now.
-> 
->  .../bindings/display/bridge/ti,sn65dsi86.txt  |  87 ------
->  .../bindings/display/bridge/ti,sn65dsi86.yaml | 285 ++++++++++++++++++
->  2 files changed, 285 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.txt
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
-> 
+When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
+core: Add device link support for SYNC_STATE_ONLY flag"),
+SYNC_STATE_ONLY links were treated similar to STATELESS links in terms
+of not blocking consumer probe if the supplier hasn't probed yet.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+That caused a SYNC_STATE_ONLY device link's status to not get updated.
+Since SYNC_STATE_ONLY device link is no longer useful once the
+consumer probes, commit 21c27f06587d ("driver core: Fix
+SYNC_STATE_ONLY device link implementation") addresses the status
+update issue by deleting the SYNC_STATE_ONLY device link instead of
+complicating the status update code.
+
+However, there are still some cases where we need to update the status
+of a SYNC_STATE_ONLY device link. This is because a SYNC_STATE_ONLY
+device link can later get converted into a normal MANAGED device link
+when a normal MANAGED device link is created between a supplier and
+consumer that already have a SYNC_STATE_ONLY device link between them.
+
+If a SYNC_STATE_ONLY device link's status isn't maintained correctly
+till it's converted to a normal MANAGED device link, then the normal
+MANAGED device link will end up with a wrong link status. This can cause
+a warning stack trace[1] when the consumer device probes successfully.
+
+This commit fixes the SYNC_STATE_ONLY device link status update issue
+where it wouldn't transition correctly from DL_STATE_DORMANT or
+DL_STATE_AVAILABLE to DL_STATE_CONSUMER_PROBE. It also resets the status
+back to DL_STATE_DORMANT or DL_STATE_AVAILABLE if the consumer probe
+fails.
+
+[1] - https://lore.kernel.org/lkml/20200522204120.3b3c9ed6@apollo/
+Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
+Fixes: 21c27f06587d ("driver core: Fix SYNC_STATE_ONLY device link implementation")
+Reported-by: Michael Walle <michael@walle.cc>
+Tested-by: Michael Walle <michael@walle.cc>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+v1->v2:
+- Added code to "revert" the link status if consumer probe fails
+
+v2->v3:
+- Fixed copy-pasta where I was checking link->status instead of
+  link->flags.
+
+ drivers/base/core.c | 34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 791b7530599f..9a76dd44cb37 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -646,9 +646,17 @@ static void device_links_missing_supplier(struct device *dev)
+ {
+ 	struct device_link *link;
+ 
+-	list_for_each_entry(link, &dev->links.suppliers, c_node)
+-		if (link->status == DL_STATE_CONSUMER_PROBE)
++	list_for_each_entry(link, &dev->links.suppliers, c_node) {
++		if (link->status != DL_STATE_CONSUMER_PROBE)
++			continue;
++
++		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+ 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
++		} else {
++			WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));
++			WRITE_ONCE(link->status, DL_STATE_DORMANT);
++		}
++	}
+ }
+ 
+ /**
+@@ -687,11 +695,11 @@ int device_links_check_suppliers(struct device *dev)
+ 	device_links_write_lock();
+ 
+ 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+-		if (!(link->flags & DL_FLAG_MANAGED) ||
+-		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
++		if (!(link->flags & DL_FLAG_MANAGED))
+ 			continue;
+ 
+-		if (link->status != DL_STATE_AVAILABLE) {
++		if (link->status != DL_STATE_AVAILABLE &&
++		    !(link->flags & DL_FLAG_SYNC_STATE_ONLY)) {
+ 			device_links_missing_supplier(dev);
+ 			ret = -EPROBE_DEFER;
+ 			break;
+@@ -952,11 +960,21 @@ static void __device_links_no_driver(struct device *dev)
+ 		if (!(link->flags & DL_FLAG_MANAGED))
+ 			continue;
+ 
+-		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
++		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER) {
+ 			device_link_drop_managed(link);
+-		else if (link->status == DL_STATE_CONSUMER_PROBE ||
+-			 link->status == DL_STATE_ACTIVE)
++			continue;
++		}
++
++		if (link->status != DL_STATE_CONSUMER_PROBE &&
++		    link->status != DL_STATE_ACTIVE)
++			continue;
++
++		if (link->supplier->links.status == DL_DEV_DRIVER_BOUND) {
+ 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
++		} else {
++			WARN_ON(!(link->flags & DL_FLAG_SYNC_STATE_ONLY));
++			WRITE_ONCE(link->status, DL_STATE_DORMANT);
++		}
+ 	}
+ 
+ 	dev->links.status = DL_DEV_NO_DRIVER;
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
