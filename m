@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FBFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621A521702
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E83E2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519889;
-	bh=LD/o2ex+Rt0c8iOqqjBxp9ea9Wl/TTj5tKRfuQmvYvg=;
+	s=default; t=1590519891;
+	bh=QUJlVGNioV1dIbnsMinW6SWdcfVxvx0IG1RhC0AISco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJ0jDe91hsmGurgBpl44wVG30VKukg3O5YD7+k10U/ubczdg55WnPral869f4RauN
-	 /QIfunQrbt5ivu3EqXa84xATYq3Wgl+/KEvtgIc7289vjIRH9mE1P+/gpvXz3Ksaj6
-	 SH0xFL7T69qW/N1srhWOJN/I+dP4olcGiIVFF0XU=
+	b=JA8M8FJWNCtMALRDHcmylhICmBmf9j7hhyUnHkBXCBkpUty0GqKu79EoHHHvYDiws
+	 awnFyvO2WuKAYBdS9adryfCOcF07o2uGyizp43MfNlX3zbdthIFKCo0Ag0kdmmJ3/Y
+	 xipHGNd4PqKvh+1QKo+BVzMLdFIhOz+gQwG49bSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391412AbgEZTEr (ORCPT
+        id S2391426AbgEZTEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390954AbgEZTEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:45 -0400
+        id S2391410AbgEZTEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A904C20849;
-        Tue, 26 May 2020 19:04:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26C9B20E65;
+        Tue, 26 May 2020 19:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519885;
-        bh=LD/o2ex+Rt0c8iOqqjBxp9ea9Wl/TTj5tKRfuQmvYvg=;
+        s=default; t=1590519887;
+        bh=QUJlVGNioV1dIbnsMinW6SWdcfVxvx0IG1RhC0AISco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0XwiO10VsfZkG7cGwdrVnVN0WIe6So1MuDx2+iLh+f4oYclnQSp9QL7ucWpjJ8qm
-         Cbi2Ef3+i7ZsnWkWmhByFJXIceExaZHU8Aj4npXc66/Ngi74HXCx0RM2GkWN7mG0Ai
-         7zKqlDDhi+02mtqBFLV/DanZwXKUBGo2pDWiyIYk=
+        b=RhuyXZBYCvTS5km36ddvoTp57d2mnhjukNxQHmDhYhitnEQZNniXUBozfMIC+vdtO
+         ANWWYnLrW7sEVPOirymfvDM2viOYGUZgZnobOGiWmc16X5H2CLTmdL1Fsxq39P/gAC
+         YIa8wTJ7GkbkK+w7q0iSs0ko2gIkuQODzDPN+ygA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Pierret=20 ?= 
+        <frederic.pierret@qubes-os.org>, Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/81] ubi: Fix seq_file usage in detailed_erase_block_info debugfs file
-Date:   Tue, 26 May 2020 20:52:49 +0200
-Message-Id: <20200526183927.892759145@linuxfoundation.org>
+Subject: [PATCH 4.19 15/81] gcc-common.h: Update for GCC 10
+Date:   Tue, 26 May 2020 20:52:50 +0200
+Message-Id: <20200526183928.072339746@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -59,58 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
 
-[ Upstream commit 0e7572cffe442290c347e779bf8bd4306bb0aa7c ]
+[ Upstream commit c7527373fe28f97d8a196ab562db5589be0d34b9 ]
 
-3bfa7e141b0b ("fs/seq_file.c: seq_read(): add info message about buggy .next functions")
-showed that we don't use seq_file correctly.
-So make sure that our ->next function always updates the position.
+Remove "params.h" include, which has been dropped in GCC 10.
 
-Fixes: 7bccd12d27b7 ("ubi: Add debugfs file for tracking PEB state")
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Remove is_a_helper() macro, which is now defined in gimple.h, as seen
+when running './scripts/gcc-plugin.sh g++ g++ gcc':
+
+In file included from <stdin>:1:
+./gcc-plugins/gcc-common.h:852:13: error: redefinition of ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’
+  852 | inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./gcc-plugins/gcc-common.h:125,
+                 from <stdin>:1:
+/usr/lib/gcc/x86_64-redhat-linux/10/plugin/include/gimple.h:1037:1: note: ‘static bool is_a_helper<T>::test(U*) [with U = const gimple; T = const ggoto*]’ previously declared here
+ 1037 | is_a_helper <const ggoto *>::test (const gimple *gs)
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Add -Wno-format-diag to scripts/gcc-plugins/Makefile to avoid
+meaningless warnings from error() formats used by plugins:
+
+scripts/gcc-plugins/structleak_plugin.c: In function ‘int plugin_init(plugin_name_args*, plugin_gcc_version*)’:
+scripts/gcc-plugins/structleak_plugin.c:253:12: warning: unquoted sequence of 2 consecutive punctuation characters ‘'-’ in format [-Wformat-diag]
+  253 |   error(G_("unknown option '-fplugin-arg-%s-%s'"), plugin_name, argv[i].key);
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+Link: https://lore.kernel.org/r/20200407113259.270172-1-frederic.pierret@qubes-os.org
+[kees: include -Wno-format-diag for plugin builds]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/debug.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ scripts/gcc-plugins/Makefile     | 1 +
+ scripts/gcc-plugins/gcc-common.h | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-index 7bc96294ae4d..b108e1f04bf6 100644
---- a/drivers/mtd/ubi/debug.c
-+++ b/drivers/mtd/ubi/debug.c
-@@ -405,9 +405,6 @@ static void *eraseblk_count_seq_start(struct seq_file *s, loff_t *pos)
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index aa0d0ec6936d..9e95862f2788 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -11,6 +11,7 @@ else
+   HOST_EXTRACXXFLAGS += -I$(GCC_PLUGINS_DIR)/include -I$(src) -std=gnu++98 -fno-rtti
+   HOST_EXTRACXXFLAGS += -fno-exceptions -fasynchronous-unwind-tables -ggdb
+   HOST_EXTRACXXFLAGS += -Wno-narrowing -Wno-unused-variable
++  HOST_EXTRACXXFLAGS += -Wno-format-diag
+   export HOST_EXTRACXXFLAGS
+ endif
+ 
+diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
+index 17f06079a712..9ad76b7f3f10 100644
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -35,7 +35,9 @@
+ #include "ggc.h"
+ #include "timevar.h"
+ 
++#if BUILDING_GCC_VERSION < 10000
+ #include "params.h"
++#endif
+ 
+ #if BUILDING_GCC_VERSION <= 4009
+ #include "pointer-set.h"
+@@ -847,6 +849,7 @@ static inline gimple gimple_build_assign_with_ops(enum tree_code subcode, tree l
+ 	return gimple_build_assign(lhs, subcode, op1, op2 PASS_MEM_STAT);
+ }
+ 
++#if BUILDING_GCC_VERSION < 10000
+ template <>
+ template <>
+ inline bool is_a_helper<const ggoto *>::test(const_gimple gs)
+@@ -860,6 +863,7 @@ inline bool is_a_helper<const greturn *>::test(const_gimple gs)
  {
- 	struct ubi_device *ubi = s->private;
+ 	return gs->code == GIMPLE_RETURN;
+ }
++#endif
  
--	if (*pos == 0)
--		return SEQ_START_TOKEN;
--
- 	if (*pos < ubi->peb_count)
- 		return pos;
- 
-@@ -421,8 +418,6 @@ static void *eraseblk_count_seq_next(struct seq_file *s, void *v, loff_t *pos)
+ static inline gasm *as_a_gasm(gimple stmt)
  {
- 	struct ubi_device *ubi = s->private;
- 
--	if (v == SEQ_START_TOKEN)
--		return pos;
- 	(*pos)++;
- 
- 	if (*pos < ubi->peb_count)
-@@ -444,11 +439,8 @@ static int eraseblk_count_seq_show(struct seq_file *s, void *iter)
- 	int err;
- 
- 	/* If this is the start, print a header */
--	if (iter == SEQ_START_TOKEN) {
--		seq_puts(s,
--			 "physical_block_number\terase_count\tblock_status\tread_status\n");
--		return 0;
--	}
-+	if (*block_number == 0)
-+		seq_puts(s, "physical_block_number\terase_count\n");
- 
- 	err = ubi_io_is_bad(ubi, *block_number);
- 	if (err)
 -- 
 2.25.1
 
