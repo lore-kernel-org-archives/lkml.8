@@ -2,51 +2,57 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1539208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95AF620C09
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519704;
-	bh=il/4o51wW092OuGEyB1YyPj7Iaz57uDjzAjl7G8Mr48=;
+	s=default; t=1590519706;
+	bh=tZo9CF7CffjqZc5UBMpkQmJ8D24Jv1Xf2Q1uBYceyek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hkpQ2MxaydAaQk/p854mfSnY5R4r+b3ymF0LPAyMg7Ms/JeNa27lH37V+diN3JtBr
-	 I0sYTbOcb2h6Sw0/SezC1fP1Nu8sA/gK5LWR4o1Fve9ZShOwwtHNbH2XUkAGcfrupt
-	 oxfznT/JeJ5adjyWTv+6RCoo991UXVGpGrd2gbCY=
+	b=C0vYUxDDiS9k5c8asgTKo3hZMRpDgt+TgqwC2I3RdW7jJFERIr0VSd1USYNkw+f1w
+	 aLn+7hIeekirZzthO+4C2aMdaOjRgAHf3QzBL/0orhBunppI9SyJbLYXMNkse9KGtj
+	 CIinRg4kzTv4MSmWpItOevXoxEOO7Tm2eUzsxZYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390120AbgEZTBn (ORCPT
+        id S2390981AbgEZTBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55998 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403769AbgEZTBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:37 -0400
+        id S2403780AbgEZTBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E31FB20849;
-        Tue, 26 May 2020 19:01:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A5DF20849;
+        Tue, 26 May 2020 19:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519696;
-        bh=il/4o51wW092OuGEyB1YyPj7Iaz57uDjzAjl7G8Mr48=;
+        s=default; t=1590519698;
+        bh=tZo9CF7CffjqZc5UBMpkQmJ8D24Jv1Xf2Q1uBYceyek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXloKKSF3Ez7mLaD0jIvkq7VFzJQ2k0yFIoiyWtUgvkkPzG/W049SRA+YOeC9k6qU
-         ZQFEvq2scXMybfB6cPLOPgj7TPpe2xsGm4V+YmyFDihuqV08DfOwA/tnhMjX9gY2/c
-         1XpeeF6Kpjd0fCi3maJ/8S7derfyIIAnwL2nI+h0=
+        b=m0aB4jQEPQr4QkIQaE6fQ0+FtjzAqx+tzkChT6H9i5lB8VWtd/Ia7Tlt9dhKn5Dw/
+         wdiDUC71xLs7oTzKFvlSklgi5BEv0JGfyZSR7ppuX7Scx5AoaDjp2JLwouClIWHv+6
+         xn/3BuE7wdr7FL+79OBjDDEZhgfNne2cuLcr69OI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/59] powerpc/64s: Disable STRICT_KERNEL_RWX
-Date:   Tue, 26 May 2020 20:53:26 +0200
-Message-Id: <20200526183920.506643993@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 42/59] x86/uaccess, ubsan: Fix UBSAN vs. SMAP
+Date:   Tue, 26 May 2020 20:53:27 +0200
+Message-Id: <20200526183920.738279820@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -59,50 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 8659a0e0efdd975c73355dbc033f79ba3b31e82c ]
+commit d08965a27e84ca090b504844d50c24fc98587b11 upstream.
 
-Several strange crashes have been eventually traced back to
-STRICT_KERNEL_RWX and its interaction with code patching.
+UBSAN can insert extra code in random locations; including AC=1
+sections. Typically this code is not safe and needs wrapping.
 
-Various paths in our ftrace, kprobes and other patching code need to
-be hardened against patching failures, otherwise we can end up running
-with partially/incorrectly patched ftrace paths, kprobes or jump
-labels, which can then cause strange crashes.
+So far, only __ubsan_handle_type_mismatch* have been observed in AC=1
+sections and therefore only those are annotated.
 
-Although fixes for those are in development, they're not -rc material.
-
-There also seem to be problems with the underlying strict RWX logic,
-which needs further debugging.
-
-So for now disable STRICT_KERNEL_RWX on 64-bit to prevent people from
-enabling the option and tripping over the bugs.
-
-Fixes: 1e0fc9d1eb2b ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
-Cc: stable@vger.kernel.org # v4.13+
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200520133605.972649-1-mpe@ellerman.id.au
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[stable backport: only take the lib/Makefile change to resolve gcc-10
+ build issues]
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index b74c3a68c0ad..679e1e3c1695 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -141,7 +141,7 @@ config PPC
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
- 	select ARCH_HAS_SG_CHAIN
--	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
-+	select ARCH_HAS_STRICT_KERNEL_RWX	if (PPC32 && !HIBERNATION)
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARCH_HAS_ZONE_DEVICE		if PPC_BOOK3S_64
--- 
-2.25.1
-
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -256,6 +256,7 @@ obj-$(CONFIG_UCS2_STRING) += ucs2_string
+ obj-$(CONFIG_UBSAN) += ubsan.o
+ 
+ UBSAN_SANITIZE_ubsan.o := n
++CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ 
+ obj-$(CONFIG_SBITMAP) += sbitmap.o
+ 
 
 
