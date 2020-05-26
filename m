@@ -2,123 +2,117 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15022C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8226320704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0EB20704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:44:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0s4eSwR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWh9bm1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgEZRoY (ORCPT
+        id S2388953AbgEZRow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:44:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34194 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726930AbgEZRoY (ORCPT
+        Tue, 26 May 2020 13:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbgEZRov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:44:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590515061;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=ikyw/aUF3Qy2tXbuYHy4ZgKqsS/cw/f1Zn/iqfDGVeU=;
-        b=b0s4eSwRc3TmNmSOyq84laT6qWLbzPZWEFUk/lN/CWeoj7GCN9ufSajuOdm1omDtN86IpQ
-        YKzlQ7dbanvhnjtgjyxs79ga1dvHabK2bolt8/nJsVptmOD9p9Mpdx6P/DEkmX5XAHrVlr
-        ClAQJ9XOxOyb0qBxxJ02kTgsqGGYf2o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-333-Ca5Zx3YaMUmWyedi8SHmLg-1; Tue, 26 May 2020 13:44:17 -0400
-X-MC-Unique: Ca5Zx3YaMUmWyedi8SHmLg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FB31100CCCA;
-        Tue, 26 May 2020 17:44:16 +0000 (UTC)
-Received: from llong.com (ovpn-115-53.rdu2.redhat.com [10.10.115.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AAE7919D61;
-        Tue, 26 May 2020 17:44:10 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] locking/lockdep: Increase MAX_LOCKDEP_ENTRIES by half
-Date:   Tue, 26 May 2020 13:43:49 -0400
-Message-Id: <20200526174349.8312-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Tue, 26 May 2020 13:44:51 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BD7C03E96D;
+        Tue, 26 May 2020 10:44:51 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id z15so179969pjb.0;
+        Tue, 26 May 2020 10:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=cljdO69PpR9Yn85c4H83HHV+v26sg/S1OrVInDsaoVw=;
+        b=FWh9bm1YuXT403RedcK+86VXJvsCb0P2MBptBQXYBk1gdGqh5ZRtzLZdBD0RB2QuLX
+         sj5mkppX/ez+KTGqfQS7sW3Canfg+kY6kZQackLhQH7PmdRuZ5lj+lD8QYuXeWGxD/7a
+         DWtr4gNMlD9cG7wwf+FbyhAPHtIIj42I7GK2PVEivppuYX3TsC/j/8YW2y6aob8huntI
+         n6EHBAv7GGXP9gOqQ2k+FeKWKjwiwLHI/oZIih3U8qNWrXKMaOZbIubB5A+uvPqYEYz5
+         7O1p7JQOwYeUx8dVdyQjACUt4G5xDeBOKUxgmaJpdTH45KnX1aBAqyJJjfWKXrDzE5k0
+         T1sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=cljdO69PpR9Yn85c4H83HHV+v26sg/S1OrVInDsaoVw=;
+        b=BdjjlOswayEH3zCHskibiWQRrgpBAy/6obZS1zOl1N7hF5GE0J8U4i0OOALSKd+o5H
+         2xIqslfO30/KJQpVluxpL3yHOPs7F1rYLG2rtVxL6caMLaoWyO3TfQ1X0ao+MTaDdXEQ
+         cS01gEmHOu4s7uOgB8OQwrG2YJ11PJsge45+egG1ng+I/rhGRwxIOF1cKQ3L+qTI8QUx
+         hCLi4FOE2wY56cTnu5XKUd3RrID8qwTArdXZWTpfjTBvd67/R9k7vtQ1IU/NmtFL0TVu
+         TeYx16kHB4ALpsc8WvZPbGV8Y4JKBWftFAS/akPfXmogr0aUJQu+JefVyI4bt4vNwQi9
+         jZjw==
+X-Gm-Message-State: AOAM532IatWUg6jV4rE2InDQGJlWZCSQv5jQp9EFmDhs3wThLkFbJqO6
+        5MiSf1uJJm3mCCK7MQgitio=
+X-Google-Smtp-Source: ABdhPJzuTTSGsv729fFf+ylgFAAzqsB1xWHNricjinAGfuWDAkNrPQbkkEcHeCct8y19F+yZbBYg+A==
+X-Received: by 2002:a17:902:7885:: with SMTP id q5mr2151756pll.320.1590515091291;
+        Tue, 26 May 2020 10:44:51 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u45sm124194pjb.7.2020.05.26.10.44.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 10:44:50 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Guenter Roeck <linux@roeck-us.net>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH] topology: Fix cpumask_of_node macro for CONFIG_NEED_MULTIPLE_NODES=n
+Date:   Tue, 26 May 2020 10:44:43 -0700
+Message-Id: <20200526174443.207610-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was found by Qian Cai that lockdep splat sometimes appears with the
-"BUG: MAX_LOCKDEP_ENTRIES too low" message on linux-next. On a 32-vcpu VM
-guest with a v5.7-rc7 based kernel, I looked at how many of the various
-table entries were being used after bootup and after a parallel kernel
-build (make -j32). The tables below show the usage statistics.
+The following compile error is seen in linux-next if
+NUMA=n and CONFIG_NEED_MULTIPLE_NODES=n.
 
-  After bootup:
+  CC      drivers/hwmon/amd_energy.o
+In file included from ../arch/x86/include/asm/cpumask.h:5:0,
+                 from ../arch/x86/include/asm/msr.h:11,
+                 from ../arch/x86/include/asm/processor.h:22,
+                 from ../arch/x86/include/asm/cpu_device_id.h:16,
+                 from ../drivers/hwmon/amd_energy.c:6:
+../drivers/hwmon/amd_energy.c: In function 'amd_energy_read':
+../include/asm-generic/topology.h:51:36: error:
+			void value not ignored as it ought to be
+     #define cpumask_of_node(node) ((void)node, cpu_online_mask)
+../include/linux/cpumask.h:618:72: note:
+			in definition of macro 'cpumask_first_and'
+ #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
+                                                                        ^~~~~
+../drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro 'cpumask_of_node'
 
-  Table               Used        Max      %age
-  -----               ----        ---      ----
-  lock_classes[]      1834       8192      22.4
-  list_entries[]     15646      32768      47.7
-  lock_chains[]      20873      65536      31.8
-  chain_hlocks[]     83199     327680      25.4
-  stack_trace[]     146177     524288      27.9
+cpumask_of_node() is missing () around the 'node' parameter.
 
-  After parallel kernel build:
-
-  Table               Used        Max      %age
-  -----               ----        ---      ----
-  lock_classes[]      1864       8192      22.8
-  list_entries[]     17134      32768      52.3
-  lock_chains[]      25196      65536      38.4
-  chain_hlocks[]    106321     327680      32.4
-  stack_trace[]     158700     524288      30.3
-
-Percentage-wise, it can be seen that the list_entries for direct
-dependencies are used much more than the other tables. So it is also
-the table that is mostly likely to run out of space when running a
-compex workload.
-
-To reduce the likelihood of running out of table entries, we can increase
-MAX_LOCKDEP_ENTRIES by 50% from 16384/32768 to 24576/49152.  On a 64-bit
-architecture, that represents an increase in memory consumption of
-917504 bytes. With that change, the percentage usage of list_entries[]
-will fall to 31.8% and 34.9% respectively to make them more in line
-with the other tables.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
+Fixes: b339752d054f ("cpumask: fix spurious cpumask_of_node() on non-NUMA multi-node configs")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tejun Heo <tj@kernel.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 ---
- kernel/locking/lockdep_internals.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/asm-generic/topology.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-index baca699b94e9..6108d2fbe775 100644
---- a/kernel/locking/lockdep_internals.h
-+++ b/kernel/locking/lockdep_internals.h
-@@ -89,12 +89,12 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
-  * table (if it's not there yet), and we check it for lock order
-  * conflicts and deadlocks.
-  */
--#define MAX_LOCKDEP_ENTRIES	16384UL
-+#define MAX_LOCKDEP_ENTRIES	24576UL
- #define MAX_LOCKDEP_CHAINS_BITS	15
- #define MAX_STACK_TRACE_ENTRIES	262144UL
- #define STACK_TRACE_HASH_SIZE	8192
- #else
--#define MAX_LOCKDEP_ENTRIES	32768UL
-+#define MAX_LOCKDEP_ENTRIES	49152UL
- 
- #define MAX_LOCKDEP_CHAINS_BITS	16
- 
+diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
+index 238873739550..5aa8705df87e 100644
+--- a/include/asm-generic/topology.h
++++ b/include/asm-generic/topology.h
+@@ -48,7 +48,7 @@
+   #ifdef CONFIG_NEED_MULTIPLE_NODES
+     #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
+   #else
+-    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
++    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
+   #endif
+ #endif
+ #ifndef pcibus_to_node
 -- 
-2.18.1
+2.17.1
 
