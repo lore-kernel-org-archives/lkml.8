@@ -2,88 +2,71 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B14C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 326BC207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E006420787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbgEZJYO (ORCPT
+        id S1731803AbgEZJ0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:24:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56052 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728758AbgEZJYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:24:14 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 03A374E93101BAE2F0CA;
-        Tue, 26 May 2020 17:24:11 +0800 (CST)
-Received: from [10.174.151.115] (10.174.151.115) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 26 May
- 2020 17:24:04 +0800
-Subject: Re: [v2 2/2] crypto: virtio: Fix use-after-free in
- virtio_crypto_skcipher_finalize_req()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        <linux-crypto@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>,
-        Gonglei <arei.gonglei@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Corentin Labbe <clabbe@baylibre.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20200526031956.1897-1-longpeng2@huawei.com>
- <20200526031956.1897-3-longpeng2@huawei.com>
- <0248e0f6-7648-f08d-afa2-170ad2e724b7@web.de>
- <03d3387f-c886-4fb9-e6f2-9ff8dc6bb80a@huawei.com>
- <8aab4c6b-7d41-7767-4945-e8af1dec902b@web.de>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <321c79df-6397-bbf1-0047-b0b10e5af353@huawei.com>
-Date:   Tue, 26 May 2020 17:24:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <8aab4c6b-7d41-7767-4945-e8af1dec902b@web.de>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 26 May 2020 05:26:05 -0400
+Received: from smtp.asem.it ([151.1.184.197]:54018 "EHLO smtp.asem.it"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728767AbgEZJ0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 05:26:04 -0400
+Received: from webmail.asem.it
+        by asem.it (smtp.asem.it)
+        (SecurityGateway 6.5.2)
+        with ESMTP id SG000280371.MSG 
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:26:00 +0200S
+Received: from ASAS044.asem.intra (172.16.16.44) by ASAS044.asem.intra
+ (172.16.16.44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1261.35; Tue, 26
+ May 2020 11:25:58 +0200
+Received: from ASAS044.asem.intra ([::1]) by ASAS044.asem.intra ([::1]) with
+ mapi id 15.01.1261.035; Tue, 26 May 2020 11:25:58 +0200
+From:   Flavio Suligoi <f.suligoi@asem.it>
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] dt-bindings: leds: fix macro names for pca955x
+Thread-Topic: [PATCH] dt-bindings: leds: fix macro names for pca955x
+Thread-Index: AQHWMz70EMXZwJlm5E6wAi2dJ6VX7ai59m4AgAAhzHA=
+Date:   Tue, 26 May 2020 09:25:58 +0000
+Message-ID: <b58a76bed46141a1a7952303ec466f66@asem.it>
+References: <20200526092052.24172-1-f.suligoi@asem.it>
+ <20200526092250.GB12838@amd>
+In-Reply-To: <20200526092250.GB12838@amd>
+Accept-Language: it-IT, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.16.17.208]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SGHeloLookup-Result: pass smtp.helo=webmail.asem.it (ip=172.16.16.44)
+X-SGSPF-Result: none (smtp.asem.it)
+X-SGOP-RefID: str=0001.0A090211.5ECCE0A7.0017,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0 (_st=1 _vt=0 _iwf=0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/5/26 17:01, Markus Elfring wrote:
->>>> … Thus release specific resources before
->>>
->>> Is there a need to improve also this information another bit?
->>>
->> You mean the last two paragraph is redundant ?
-> 
-> No.
-> 
-> I became curious if you would like to choose a more helpful information
-> according to the wording “specific resources”.
-> 
-> Regards,
-> Markus
-> 
-Hi Markus,
-
-I respect your work, but please let us to focus on the code itself. I think
-experts in this area know what these patches want to solve after look at the code.
-
-I hope experts in the thread could review the code when you free, thanks :)
-
----
-Regards,
-Longpeng(Mike)
+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBkdC1iaW5kaW5nczogbGVkczogZml4IG1hY3JvIG5hbWVz
+IGZvciBwY2E5NTV4DQo+IA0KPiBPbiBUdWUgMjAyMC0wNS0yNiAxMToyMDo1MiwgRmxhdmlvIFN1
+bGlnb2kgd3JvdGU6DQo+ID4gVGhlIGRvY3VtZW50YXRpb24gcmVwb3J0cyB0aGUgd3JvbmcgbWFj
+cm8gbmFtZXMNCj4gPiByZWxhdGVkIHRvIHRoZSBwY2E5NTMyIGluc3RlYWQgb2YgdGhlIHBjYTk1
+NXgNCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEZsYXZpbyBTdWxpZ29pIDxmLnN1bGlnb2lAYXNl
+bS5pdD4NCj4gDQo+IE5vdGhpbmcgb2J2aW91c2x5IHdyb25nLCBidXQgd2h5IGRpZCB5b3Ugc2Vu
+ZCBpdCB0d2ljZSB3aXRoaW4gaGFsZiBhbg0KPiBob3VyPw0KPiAJCQkJCQkJCVBhdmVsDQoNClNv
+cnJ5IFBhdmVsLCB3aXRoIHRoZSBmaXJzdCBlbWFpbCBJIGZvcmdvdCB0byBzdWJzY3JpYmUNCnRv
+IHRoZSBsaW51eC1sZWRzIG1haWxpbmcgbGlzdCEg8J+Yig0KDQpGbGF2aW8NCg0K
