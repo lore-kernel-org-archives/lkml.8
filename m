@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91415C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B052208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A06A20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520352;
-	bh=rbi3a+PbdSMbyR8m15t3ysXJq+b6p36K+8o0FGva/1w=;
+	s=default; t=1590520354;
+	bh=XuGZ5Clj0CModmrpSHSGviwvKme1dPJp3GeVxRp3sBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+sH/XRt6Wp/py6Bm2wjNskapFC5v0LwyGW5mF+f5OCG7RNL8bxTB/6vi7aKDuuiM
-	 oEk+WbSJLsx02wZmaCt3nLSVc7EQt4kmLpIqu6e+a5b+ABvQ+VWTBkYNWOH+vhmSl/
-	 x9ACtkYbAfiMDH158uRS0tF4Wgg68MleJ+osTrWA=
+	b=DYf6zagHuJS3dDfEaTC1sP6C+6lCG0GaaGbvT11QoThN+oB7HtQyXpfaDKDQ9pC+5
+	 yMuWkodBq7Mx145VFvUOtEq5Z3TjARFwdxqEmUykL0COV/YUVh/azH9Ge0GCkgAIqQ
+	 hp+TxdlQ+wx9IUHhkaAJ9c5ymvZ4FM+KEKjnZ7Vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392080AbgEZTMb (ORCPT
+        id S2392092AbgEZTMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392081AbgEZTM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:27 -0400
+        id S2403919AbgEZTM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D93C208E4;
-        Tue, 26 May 2020 19:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFA7D20888;
+        Tue, 26 May 2020 19:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520346;
-        bh=rbi3a+PbdSMbyR8m15t3ysXJq+b6p36K+8o0FGva/1w=;
+        s=default; t=1590520349;
+        bh=XuGZ5Clj0CModmrpSHSGviwvKme1dPJp3GeVxRp3sBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LccVjTiUJe2rNVOEX99/4vAWSrZlh0sQ5eYlaiEc9swJAKMpEpemwbqCfepDtPFwq
-         KJWudGhInYuKAqjS4UHSqaeGEb6okoYEM+VwGAok/8rSrMaBS7ik4ELPCZRaNRws0A
-         ZNzl1+pNz97bHqrtfAnvYKBGWjWkgCmyYk7vxato=
+        b=mbvTA4a9gnVKJTLHZN46MP+RdRxY27K67iXEv/Z/IDm+rgEw2yL/0aCvWQUUB1RnF
+         d6OgelJJ4Z3hhUdXBU9jkxR396i/hVob9bf73kPNNA/woBFhd4cfEWaY8tD/2l5K+R
+         YB+w05q5KzQevSMsXKdiKvDa+H4+MBDKKpe9xk+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 043/126] HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
-Date:   Tue, 26 May 2020 20:53:00 +0200
-Message-Id: <20200526183941.590465108@linuxfoundation.org>
+        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 044/126] ceph: fix double unlock in handle_cap_export()
+Date:   Tue, 26 May 2020 20:53:01 +0200
+Message-Id: <20200526183941.683811049@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit 1e189f267015a098bdcb82cc652d13fbf2203fa0 ]
+[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
 
-Add a HID_QUIRK_NO_INIT_REPORTS quirk for the Dell K12A keyboard-dock,
-which can be used with various Dell Venue 11 models.
+If the ceph_mdsc_open_export_target_session() return fails, it will
+do a "goto retry", but the session mutex has already been unlocked.
+Re-lock the mutex in that case to ensure that we don't unlock it
+twice.
 
-Without this quirk the keyboard/touchpad combo works fine when connected
-at boot, but when hotplugged 9 out of 10 times it will not work properly.
-Adding the quirk fixes this.
-
-Cc: Mario Limonciello <mario.limonciello@dell.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ fs/ceph/caps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 55afc089cb25..b1d6156ebf9d 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1111,6 +1111,7 @@
- #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
- #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
- #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
-+#define USB_DEVICE_ID_SYNAPTICS_DELL_K12A	0x2819
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
- #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
- #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 3735546bb524..acc7c14f7fbc 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -163,6 +163,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_LTS2), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_QUAD_HD), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP_V103), HID_QUIRK_NO_INIT_REPORTS },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_DELL_K12A), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOPMAX, USB_DEVICE_ID_TOPMAX_COBRAPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index d050acc1fd5d..f50204380a65 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -3707,6 +3707,7 @@ retry:
+ 		WARN_ON(1);
+ 		tsession = NULL;
+ 		target = -1;
++		mutex_lock(&session->s_mutex);
+ 	}
+ 	goto retry;
+ 
 -- 
 2.25.1
 
