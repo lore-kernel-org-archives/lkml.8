@@ -2,173 +2,194 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA19C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDA0208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA1920787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DRrl3Ns2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730697AbgEZLdE (ORCPT
+        id S1731386AbgEZLeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 07:33:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26842 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726974AbgEZLdE (ORCPT
+        Tue, 26 May 2020 07:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbgEZLeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 07:33:04 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QBWH67110624;
-        Tue, 26 May 2020 07:32:52 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 316yqj1uym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 07:32:51 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04QBWpsP112583;
-        Tue, 26 May 2020 07:32:51 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 316yqj1uxf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 07:32:51 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04QBPEH4020485;
-        Tue, 26 May 2020 11:32:49 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 316uf8wtx3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 11:32:49 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04QBVX3e57934122
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 May 2020 11:31:33 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2D6C4C062;
-        Tue, 26 May 2020 11:32:46 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 185F84C04A;
-        Tue, 26 May 2020 11:32:46 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.200.96])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 26 May 2020 11:32:45 +0000 (GMT)
-Date:   Tue, 26 May 2020 14:32:44 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     mgorman@suse.de, david@redhat.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, cai@lca.pw,
-        mhocko@kernel.org
-Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
- fast_isolate_freepages()
-Message-ID: <20200526113244.GH13212@linux.ibm.com>
-References: <20200521014407.29690-1-bhe@redhat.com>
- <20200521092612.GP1059226@linux.ibm.com>
- <20200521155225.GA20045@MiWiFi-R3L-srv>
- <20200521171836.GU1059226@linux.ibm.com>
- <20200522070114.GE26955@MiWiFi-R3L-srv>
- <20200522072524.GF26955@MiWiFi-R3L-srv>
- <20200522142053.GW1059226@linux.ibm.com>
- <20200526084543.GG26955@MiWiFi-R3L-srv>
+        Tue, 26 May 2020 07:34:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54A8C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:34:16 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id n5so2882534wmd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 04:34:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=GCJy06H1pRSu/Q8++uLNPv3+6vo/2WW9QkHbY0KEiLc=;
+        b=DRrl3Ns2cJtzWcB6n08kFBvUdS852of8mbk4G+JIjPqrWBaJGGvRjWGr0TmeWM1818
+         sCmUgDq0mCooR8UdicwXhfWsEJ71VbOGwp23pWgDG3od3z/eL2boVuZx57QgX5ghLWdX
+         k1XtO2ENMFpPABY4aUMcQisk30Zb8odi0bUp0L2mWZjAYEb3ccFiAHu1ecQMY1YfJhkQ
+         eam1KAlzu1+il+h1EM+PP68zqwWkVV8XJ8gVHJj+XJOroLhBuSHpxRZr/BKigyF6ncwj
+         iNNEYtL94deHmix6HL1DjaNekCiPGsyyvmMZe+SPAcPhi88osltKRE5la1Dr04GUwVLh
+         rqRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GCJy06H1pRSu/Q8++uLNPv3+6vo/2WW9QkHbY0KEiLc=;
+        b=OY3IbiRmpls7feJhdBBuMwH2qUkTKp3Cq1+qVQ9kAMqts0whFU6a011cHx6QISNa93
+         bNeuV40IFVUzvvuZrdAaIfbFqXop70AZ8sBcr0KSJiS/j5iuOp6AGIU68AIsH1cCu1i4
+         xjgHyFcRhVvniViewed3T6s1cvsT4d4g0DK2Ko7c1rVvJJrUWeTQyrW1i0eccLZP1RTm
+         pAPNYRFHWxjegNiOyxbnmixsIoR7kHrX3ur/PjP0Q+he98wFcX38W1DZJ3V69kYndhNs
+         Ehwa0WdfuFmgWaaF6RybkCnFbE9JoQITEa5szQZP9MJo11LAxNr3vQMI6bJWguka2rqD
+         +6lA==
+X-Gm-Message-State: AOAM531uDvFXu3vLBOX+hAbNdQbpz0vErLoWUdxuuwYwqerViFHmkeah
+        6hxH5Qn2wGOtM0DmJ5Kv4ob6yw==
+X-Google-Smtp-Source: ABdhPJwkJGJ0JgpQb5hhrxl7TRVJYpWWhcoo7CTcTp+/TEYBSaxYaqiFNSmXKLwvq5spLYmlIM+sAw==
+X-Received: by 2002:a1c:5408:: with SMTP id i8mr843024wmb.94.1590492855379;
+        Tue, 26 May 2020 04:34:15 -0700 (PDT)
+Received: from macbook.local ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id q128sm951100wma.38.2020.05.26.04.34.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 04:34:14 -0700 (PDT)
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org>
+ <1585718145-29537-3-git-send-email-sanm@codeaurora.org>
+ <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org>
+ <20200514171352.GP4525@google.com>
+ <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org>
+ <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org> <87r1vl3e42.fsf@kernel.org>
+ <20200518183512.GE2165@builder.lan>
+ <b20775ba-7870-b0ca-7c65-d72a08fdacb2@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Message-ID: <0723aee9-9ea4-dab5-e083-3cf3858a8f96@linaro.org>
+Date:   Tue, 26 May 2020 14:34:11 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526084543.GG26955@MiWiFi-R3L-srv>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_01:2020-05-26,2020-05-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 suspectscore=5 clxscore=1015 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 phishscore=0 adultscore=0 mlxscore=0
- spamscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005260083
+In-Reply-To: <b20775ba-7870-b0ca-7c65-d72a08fdacb2@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Baoquan,
+On 26.05.20 14:04, Sandeep Maheswaram (Temp) wrote:
+> Hi Felipe,
+> 
+> Please let me know how to go forward with this patch
+> 
 
-On Tue, May 26, 2020 at 04:45:43PM +0800, Baoquan He wrote:
-> On 05/22/20 at 05:20pm, Mike Rapoport wrote:
-> > Hello Baoquan,
-> > 
-> > On Fri, May 22, 2020 at 03:25:24PM +0800, Baoquan He wrote:
-> > > On 05/22/20 at 03:01pm, Baoquan He wrote:
-> > > > 
-> > > > So let's add these unavailable ranges into memblock and reserve them
-> > > > in init_unavailable_range() instead. With this change, they will be added
-> > > > into appropriate node and zone in memmap_init(), and initialized in
-> > > > reserve_bootmem_region() just like any other memblock reserved regions.
-> > > 
-> > > Seems this is not right. They can't get nid in init_unavailable_range().
-> > > Adding e820 ranges may let them get nid. But the hole range won't be
-> > > added to memblock, and still has the issue.
-> > > 
-> > > Nack this one for now, still considering.
-> > 
-> > Why won't we add  the e820 reserved ranges to memblock.memory during
-> > early boot as I suggested?
-> > 
-> > diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> > index c5399e80c59c..b0940c618ed9 100644
-> > --- a/arch/x86/kernel/e820.c
-> > +++ b/arch/x86/kernel/e820.c
-> > @@ -1301,8 +1301,11 @@ void __init e820__memblock_setup(void)
-> >  		if (end != (resource_size_t)end)
-> >  			continue;
-> >  
-> > -		if (entry->type == E820_TYPE_SOFT_RESERVED)
-> > +		if (entry->type == E820_TYPE_SOFT_RESERVED ||
-> > +		    entry->type == E820_TYPE_RESERVED) {
-> > +			memblock_add(entry->addr, entry->size);
-> >  			memblock_reserve(entry->addr, entry->size);
-> > +		}
-> >  
-> >  		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
-> >  			continue;
-> > 
-> > The setting of node later  in numa_init() will assign the proper node
-> > for these regions as it does for the usable memory.
-> 
-> Yes, if it's only related to e820 reserved region, this truly works.
-> 
-> However, it also has ACPI table regions. That's why I changed to call
-> the problematic area as firmware reserved ranges later.
-> 
-> Bisides, you can see below line, there's another reserved region which only
-> occupies one page in one memory seciton. If adding to memblock.memory, we also
-> will build struct mem_section and the relevant struct pages for the whole
-> section. And then the holes around that page will be added and initialized in
-> init_unavailable_mem(). numa_init() will assign proper node for memblock.memory
-> and memblock.reserved, but won't assign proper node for the holes.
-> 
-> ~~~
-> [    0.000000] BIOS-e820: [mem 0x00000000fed80000-0x00000000fed80fff] reserved
-> ~~~
-> 
-> So I still think we should not add firmware reserved range into
-> memblock for fixing this issue.
-> 
-> And, the fix in the original patch seems necessary. You can see in
-> compaction code, the migration source is chosen from LRU pages or
-> movable pages, the migration target has to be got from Buddy. However,
-> only the min_pfn in fast_isolate_freepages(), it's calculated by
-> distance between cc->free_pfn - cc->migrate_pfn, we can't guarantee it's
-> safe, then use it as the target to handle.
+Hi Sandeep,
 
-I do not object to your original fix with careful check for pfn validity.
+Please just add a patch to fix the allmodconfig error. Felipe has
+suggested to introduce a separate patch which exports the
+device_is_bound() function. This export should precede the addition
+of interconnect support.
 
-But I still think that the memory reserved by the firmware is still
-memory and it should be added to memblock.memory. This way the memory
-map will be properly initialized from the very beginning and we won't
-need init_unavailable_mem() and alike workarounds and. Obviously, the patch
-above is not enough, but it's a small step in this direction.
+Also regarding the "depends on INTERCONNECT || !INTERCONNECT" change,
+no "depends on" would be needed, as we just made the interconnect
+framework bool.
 
-I believe that improving the early memory initialization would make many
-things simpler and more robust, but that's a different story :)
+Thanks,
+Georgi
 
--- 
-Sincerely yours,
-Mike.
+> Regards
+> 
+> Sandeep
+> 
+> On 5/19/2020 12:05 AM, Bjorn Andersson wrote:
+>> On Thu 14 May 23:29 PDT 2020, Felipe Balbi wrote:
+>>
+>>> Hi,
+>>>
+>>> Georgi Djakov <georgi.djakov@linaro.org> writes:
+>>>>>>>>> Sandeep Maheswaram <sanm@codeaurora.org> writes:
+>>>>>>>>>> +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+>>>>>>>>>> +{
+>>>>>>>>>> +    struct device *dev = qcom->dev;
+>>>>>>>>>> +    int ret;
+>>>>>>>>>> +
+>>>>>>>>>> +    if (!device_is_bound(&qcom->dwc3->dev))
+>>>>>>>>>> +        return -EPROBE_DEFER;
+>>>>>>>>> this breaks allmodconfig. I'm dropping this series from my
+>>>>>>>>> queue for
+>>>>>>>>> this merge window.
+>>>>>>>> Sorry, I meant this patch ;-)
+>>>>>>> I guess that's due to INTERCONNECT being a module. There is
+>>>>>>> currently a
+>>>>>> I believe it's because of this:
+>>>>>> ERROR: modpost: "device_is_bound" [drivers/usb/dwc3/dwc3-qcom.ko]
+>>>>>> undefined!
+>>>>>>
+>>>>>>> discussion about this  with Viresh and Georgi in response to another
+>>>>>>> automated build failure. Viresh suggests changing
+>>>>>>> CONFIG_INTERCONNECT
+>>>>>>> from tristate to bool, which seems sensible to me given that
+>>>>>>> interconnect
+>>>>>>> is a core subsystem.
+>>>>>> The problem you are talking about would arise when INTERCONNECT=m and
+>>>>>> USB_DWC3_QCOM=y and it definitely exists here and could be
+>>>>>> triggered with
+>>>>>> randconfig build. So i suggest to squash also the diff below.
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Georgi
+>>>>>>
+>>>>>> ---8<---
+>>>>>> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+>>>>>> index 206caa0ea1c6..6661788b1a76 100644
+>>>>>> --- a/drivers/usb/dwc3/Kconfig
+>>>>>> +++ b/drivers/usb/dwc3/Kconfig
+>>>>>> @@ -129,6 +129,7 @@ config USB_DWC3_QCOM
+>>>>>>       tristate "Qualcomm Platform"
+>>>>>>       depends on ARCH_QCOM || COMPILE_TEST
+>>>>>>       depends on EXTCON || !EXTCON
+>>>>>> +    depends on INTERCONNECT || !INTERCONNECT
+>>>>> I would prefer to see a patch adding EXPORT_SYMBOL_GPL() to
+>>>>> device_is_bound()
+>>>> Agree, but just to clarify, that these are two separate issues that
+>>>> need to
+>>>> be fixed. The device_is_bound() is the first one and USB_DWC3_QCOM=y
+>>>> combined
+>>>> with INTERCONNECT=m is the second one.
+>>> If INTERCONNECT=m, QCOM3 shouldn't be y. I think the following is
+>>> enough:
+>>>
+>>>     depends on INTERCONNECT=y || INTERCONNECT=USB_DWC3_QCOM
+>>>
+>> This misses the case where INTERCONNECT=n and USB_DWC3_QCOM=[ym] which
+>> I don't see a reason for breaking.
+>>
+>> But if only INTERCONNECT where a bool, then we don't need to specify a
+>> depends on, because it will either be there, or the stubs will.
+>> We've come to this conclusion in a lot of different frameworks and I
+>> don't see why we should do this differently with INTERCONNECT.
+>>
+>> Regards,
+>> Bjorn
+> 
+
