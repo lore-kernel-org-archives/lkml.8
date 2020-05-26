@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82477C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58275208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A6320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520168;
-	bh=dw6to2wRQ3SmfWu7X9TKk6vCDa1Vn/DKpM9BwBWsZAc=;
+	s=default; t=1590520170;
+	bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1szQlJYyKqfUUpXb7h5x/GcGEIQrcV14wCDEvnQ4vbTQODCru6h1tv6VVcc+CVXR
-	 YtmWr4l+ofqrd6evHYAP9JzlJvn1HhY/Wk9DL+fv+Kyf/nUJEEVZq5whr/vJtHhs9W
-	 qYzJjkuNQk3k0B3RlpuciDNFGrGwptZaW7KCdEfE=
+	b=eVTxrs1nXksBwrFhk3vNFjtGbpSyqewYdbKpzb2DM7cP745Uw9bn++fOwlo1nrCE9
+	 f/RJ4fIPGj/e1Qs3QTJtqPT9r7SJDbyX1oz+MkyK4/apKFRWUZ5hIClrw0kEayjJMZ
+	 Vi4Ne+bSdQYGBmJ8LmoFRIH9fzVA2S5AAZzbYB/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391870AbgEZTJ1 (ORCPT
+        id S2391861AbgEZTJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:09:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38498 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:09:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391851AbgEZTJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:23 -0400
+        id S2391862AbgEZTJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E29DF20776;
-        Tue, 26 May 2020 19:09:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59102208A7;
+        Tue, 26 May 2020 19:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520162;
-        bh=dw6to2wRQ3SmfWu7X9TKk6vCDa1Vn/DKpM9BwBWsZAc=;
+        s=default; t=1590520164;
+        bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5FNa9mhnqr0pEhBOxet3EO9b/VWMwtzSg67qFUar4gY8n7xyb2DaxoHBEU1Tfo/f
-         k8FfWx+4L9Jz5QaimjgO7h2r8TcBNq6lPeaPm2vD2g6gSp06J9jAhATCQMh9Hc6PKV
-         Rx+yl8YrsqgwbYvAfGhkmPlgcpTk19WC0qNdA28c=
+        b=tVBsWBxnQAfguqmq4rvtVKEF4LhCWddSWuo4dQRdh7fVUJI3xeilj5+FxT4I2IBt4
+         YVahPmvFodLA4ZiT5Vf4LzA5035HcC6RuhBmzgcW1h2bF50fxylJ9QXOKFC9PyJLl0
+         4BYSQgR+/YRsUtcakIYsRMkQUfpITnemZv/f3ei0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.4 083/111] staging: kpc2000: fix error return code in kp2000_pcie_probe()
-Date:   Tue, 26 May 2020 20:53:41 +0200
-Message-Id: <20200526183940.773554433@linuxfoundation.org>
+        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH 5.4 084/111] staging: greybus: Fix uninitialized scalar variable
+Date:   Tue, 26 May 2020 20:53:42 +0200
+Message-Id: <20200526183940.881819668@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,50 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Oscar Carter <oscar.carter@gmx.com>
 
-commit b17884ccf29e127b16bba6aea1438c851c9f5af1 upstream.
+commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function. Also
-removed var 'rv' since we can use 'err' instead.
+In the "gb_tty_set_termios" function the "newline" variable is declared
+but not initialized. So the "flow_control" member is not initialized and
+the OR / AND operations with itself results in an undefined value in
+this member.
 
-Fixes: 7dc7967fc39a ("staging: kpc2000: add initial set of Daktronics drivers")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+The purpose of the code is to set the flow control type, so remove the
+OR / AND self operator and set the value directly.
+
+Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
+Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
 Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200506134735.102041-1-weiyongjun1@huawei.com
+Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/kpc2000/kpc2000/core.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/staging/greybus/uart.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/kpc2000/kpc2000/core.c
-+++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -298,7 +298,6 @@ static int kp2000_pcie_probe(struct pci_
- {
- 	int err = 0;
- 	struct kp2000_device *pcard;
--	int rv;
- 	unsigned long reg_bar_phys_addr;
- 	unsigned long reg_bar_phys_len;
- 	unsigned long dma_bar_phys_addr;
-@@ -445,11 +444,11 @@ static int kp2000_pcie_probe(struct pci_
- 	if (err < 0)
- 		goto err_release_dma;
- 
--	rv = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
--			 pcard->name, pcard);
--	if (rv) {
-+	err = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
-+			  pcard->name, pcard);
-+	if (err) {
- 		dev_err(&pcard->pdev->dev,
--			"%s: failed to request_irq: %d\n", __func__, rv);
-+			"%s: failed to request_irq: %d\n", __func__, err);
- 		goto err_disable_msi;
+--- a/drivers/staging/greybus/uart.c
++++ b/drivers/staging/greybus/uart.c
+@@ -537,9 +537,9 @@ static void gb_tty_set_termios(struct tt
  	}
  
+ 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
+-		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
++		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
+ 	else
+-		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
++		newline.flow_control = 0;
+ 
+ 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
+ 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
 
 
