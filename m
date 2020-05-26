@@ -2,340 +2,180 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC8A207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:48:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T2ZbEmDY"
+	by mail.kernel.org (Postfix) with ESMTP id 758C020776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbgEZQs0 (ORCPT
+        id S1729650AbgEZQ5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:48:26 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50230 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731498AbgEZQsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:48:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QGmCY1069606;
-        Tue, 26 May 2020 11:48:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590511692;
-        bh=l5RB1BFBNGs53h/lFYd+NbwK21SIGQnFwb+EHjWJYqg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=T2ZbEmDYWjLDxYZwA/cqUyvyU13gNbIbjt4IjGOXI12N+oSeJhIKbczdJuiWhLTjX
-         RKW+ohsSC0cvTnFDV5L/DjXK3gWi6YFmKdaP69u08FK+6qWuGiazGArrFZgoUZ8F4Z
-         Gt5uewQEhCSvH5k4gu/zfzGQ/OyJ7F9e1aD5I5AA=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QGmCu3001429
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 11:48:12 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 11:48:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 11:48:12 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QGmCXC014868;
-        Tue, 26 May 2020 11:48:12 -0500
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: [PATCH v25 16/16] dt: bindings: Update lp55xx binding to recommended LED naming
-Date:   Tue, 26 May 2020 11:46:52 -0500
-Message-ID: <20200526164652.2331-17-dmurphy@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526164652.2331-1-dmurphy@ti.com>
-References: <20200526164652.2331-1-dmurphy@ti.com>
+        Tue, 26 May 2020 12:57:03 -0400
+Received: from mga12.intel.com ([192.55.52.136]:58729 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbgEZQ5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:57:02 -0400
+IronPort-SDR: oIHRVtthYxI7JBehFK1KuCLOzFT0WArfgLts5cZ+1vAxwaffI70j2ojBuRXsAZbUpiGZYz/GRP
+ R6opfkIno4GA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 09:57:02 -0700
+IronPort-SDR: Er2zNXmgAzjRa4OAXcIq2b/xKyApj7yAEdoa4+gewOIBv7hNZ1+ASgdTNPQGRDP2fUT7g6IaUD
+ cmfxEw6lq4OA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="301780640"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 26 May 2020 09:56:59 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdcsv-0092P9-QH; Tue, 26 May 2020 19:57:01 +0300
+Date:   Tue, 26 May 2020 19:57:01 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-mips@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] serial: 8250_dw: Fix common clocks usage race
+ condition
+Message-ID: <20200526165701.GX1634618@smile.fi.intel.com>
+References: <20200526160316.26136-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526160316.26136-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526160316.26136-4-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the LP55xx DT binding examples to the recommended node
-naming convention.  There are no changes to the DT properties.
+On Tue, May 26, 2020 at 07:03:16PM +0300, Serge Semin wrote:
+> The race condition may happen if the UART reference clock is shared with
+> some other device (on Baikal-T1 SoC it's another DW UART port). In this
+> case if that device changes the clock rate while serial console is using
+> it the DW 8250 UART port might not only end up with an invalid uartclk
+> value saved, but may also experience a distorted output data since
+> baud-clock could have been changed. In order to fix this lets at least
+> try to adjust the 8250 port setting like UART clock rate in case if the
+> reference clock rate change is discovered. The driver will call the new
+> method to update 8250 UART port clock rate settings. It's done by means of
+> the clock event notifier registered at the port startup and unregistered
+> in the shutdown callback method.
+> 
+> Note 1. In order to avoid deadlocks we had to execute the UART port update
+> method in a dedicated deferred work. This is due to (in my opinion
+> redundant) the clock update implemented in the dw8250_set_termios()
+> method.
+> Note 2. Before the ref clock is manually changed by the custom
+> set_termios() function we swap the port uartclk value with new rate
+> adjusted to be suitable for the requested baud. It is necessary in
+> order to effectively disable a functionality of the ref clock events
+> handler for the current UART port, since uartclk update will be done
+> a bit further in the generic serial8250_do_set_termios() function.
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Tony Lindgren <tony@atomide.com>
-CC: "Benoît Cousson" <bcousson@baylibre.com>
-CC: Linus Walleij <linus.walleij@linaro.org>
-CC: Shawn Guo <shawnguo@kernel.org>
-CC: Sascha Hauer <s.hauer@pengutronix.de>
-CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-CC: Fabio Estevam <festevam@gmail.com>
-CC: NXP Linux Team <linux-imx@nxp.com>
----
- .../devicetree/bindings/leds/leds-lp55xx.txt  | 58 +++++++++----------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+...
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-index 0ccc1efc2499..5475f45ef51f 100644
---- a/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.txt
-@@ -48,7 +48,7 @@ example 1) LP5521
- 'lp5521_pri:channel1' and 'lp5521_pri:channel2', with a heartbeat trigger
- on channel 0.
- 
--lp5521@32 {
-+led-controller@32 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "national,lp5521";
-@@ -56,20 +56,20 @@ lp5521@32 {
- 	label = "lp5521_pri";
- 	clock-mode = /bits/ 8 <2>;
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 		linux,default-trigger = "heartbeat";
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		led-cur = /bits/ 8 <0x2f>;
- 		max-cur = /bits/ 8 <0x5f>;
-@@ -88,70 +88,70 @@ ASEL1    ASEL0    Address
-  VEN      GND       34h
-  VEN      VEN       35h
- 
--lp5523@32 {
-+led-controller@32 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "national,lp5523";
- 	reg = <0x32>;
- 	clock-mode = /bits/ 8 <1>;
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@3 {
-+	led@3 {
- 		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@4 {
-+	led@4 {
- 		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@5 {
-+	led@5 {
- 		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@6 {
-+	led@6 {
- 		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@7 {
-+	led@7 {
- 		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@8 {
-+	led@8 {
- 		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
-@@ -162,35 +162,35 @@ lp5523@32 {
- example 3) LP5562
- 4 channels are defined.
- 
--lp5562@30 {
-+led-controller@30 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "ti,lp5562";
- 	reg = <0x30>;
- 	clock-mode = /bits/8 <2>;
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		chan-name = "R";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		chan-name = "G";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		chan-name = "B";
- 		led-cur = /bits/ 8 <0x20>;
- 		max-cur = /bits/ 8 <0x60>;
- 	};
- 
--	chan@3 {
-+	led@3 {
- 		reg = <3>;
- 		chan-name = "W";
- 		led-cur = /bits/ 8 <0x20>;
-@@ -202,7 +202,7 @@ example 4) LP8501
- 9 channels are defined. The 'pwr-sel' is LP8501 specific property.
- Others are same as LP5523.
- 
--lp8501@32 {
-+led-controller@32 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 	compatible = "ti,lp8501";
-@@ -210,63 +210,63 @@ lp8501@32 {
- 	clock-mode = /bits/ 8 <2>;
- 	pwr-sel = /bits/ 8 <3>;	/* D1~9 connected to VOUT */
- 
--	chan@0 {
-+	led@0 {
- 		reg = <0>;
- 		chan-name = "d1";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@1 {
-+	led@1 {
- 		reg = <1>;
- 		chan-name = "d2";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@2 {
-+	led@2 {
- 		reg = <2>;
- 		chan-name = "d3";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@3 {
-+	led@3 {
- 		reg = <3>;
- 		chan-name = "d4";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@4 {
-+	led@4 {
- 		reg = <4>;
- 		chan-name = "d5";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@5 {
-+	led@5 {
- 		reg = <5>;
- 		chan-name = "d6";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@6 {
-+	led@6 {
- 		reg = <6>;
- 		chan-name = "d7";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@7 {
-+	led@7 {
- 		reg = <7>;
- 		chan-name = "d8";
- 		led-cur = /bits/ 8 <0x14>;
- 		max-cur = /bits/ 8 <0x20>;
- 	};
- 
--	chan@8 {
-+	led@8 {
- 		reg = <8>;
- 		chan-name = "d9";
- 		led-cur = /bits/ 8 <0x14>;
+> +static void dw8250_clk_work_cb(struct work_struct *work)
+> +{
+> +	struct dw8250_data *d = work_to_dw8250_data(work);
+> +	struct uart_8250_port *up;
+> +	unsigned long rate;
+> +
+> +	rate = clk_get_rate(d->clk);
+
+> +	if (rate) {
+
+	if (rate <= 0)
+		return;
+
+?
+
+> +		up = serial8250_get_port(d->data.line);
+> +
+> +		serial8250_update_uartclk(&up->port, rate);
+> +	}
+> +}
+
+...
+
+> +static int dw8250_startup(struct uart_port *p)
+> +{
+> +	struct dw8250_data *d = to_dw8250_data(p->private_data);
+> +	int ret;
+> +
+> +	/*
+> +	 * Some platforms may provide a reference clock shared between several
+> +	 * devices. In this case before using the serial port first we have to
+> +	 * make sure that any clock state change is known to the UART port at
+> +	 * least post factum.
+> +	 */
+
+> +	if (d->clk) {
+
+Do you need this?
+
+> +		ret = clk_notifier_register(d->clk, &d->clk_notifier);
+
+Okay, seems clk_notifier_register() and its counterpart should be fixed for
+optional clocks.
+
+> +		if (ret)
+> +			dev_warn(p->dev, "Failed to set the clock notifier\n");
+
+So, what does this warning mean on the platforms which does not need notifier
+at all (i.o.w. all but baikal)?
+
+> +		/*
+> +		 * Get current reference clock rate to make sure the UART port
+> +		 * is equipped with an up-to-date value before it's started up.
+> +		 */
+
+Why? We call ->set_termios() for it, no?
+
+> +		p->uartclk = clk_get_rate(d->clk);
+> +		if (!p->uartclk) {
+> +			dev_err(p->dev, "Clock rate not defined\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return serial8250_do_startup(p);
+> +}
+> +
+> +static void dw8250_shutdown(struct uart_port *p)
+> +{
+> +	struct dw8250_data *d = to_dw8250_data(p->private_data);
+> +
+> +	serial8250_do_shutdown(p);
+> +
+
+> +	if (d->clk) {
+
+Ditto.
+
+> +		clk_notifier_unregister(d->clk, &d->clk_notifier);
+> +
+> +		flush_work(&d->clk_work);
+> +	}
+> +}
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
