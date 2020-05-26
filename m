@@ -2,121 +2,112 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE549C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A088A208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590485935;
-	bh=asJ1S2B6MCqDowX0hgAW1wGWg3tmcnbvJjmv6zK+dIQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c3iBuXnnf3II3FEv1qAUMnLp3mo1GazfEV33djZrx0uStt88KcA055xtAHSUgEcFa
-	 e7A0hXxd0vtWmAs1NLfADy3lUC6mn0zYdjPKqensuCPPLUnMIM1n8JK73ITVJjynee
-	 nfcjfyFy4FIAYYLi26Cj2CEk+vkNSTb6h6XFaArY=
+	by mail.kernel.org (Postfix) with ESMTP id C05B32070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:42:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZvFKYRsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388670AbgEZJiz (ORCPT
+        id S1731775AbgEZJmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:38:55 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38137 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388460AbgEZJiy (ORCPT
+        Tue, 26 May 2020 05:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgEZJmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:38:54 -0400
-Received: by mail-wr1-f66.google.com with SMTP id e1so19724897wrt.5;
-        Tue, 26 May 2020 02:38:52 -0700 (PDT)
+        Tue, 26 May 2020 05:42:04 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016CFC03E97E;
+        Tue, 26 May 2020 02:42:03 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j16so7284484wrb.7;
+        Tue, 26 May 2020 02:42:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8UhW5rzzft+OEaSoE2TBO2iHGY9SJECQYAYg9UffWAk=;
+        b=ZvFKYRsOzogk0YA/7ew8KXxjxofyeoeLY0htM4L2q0VMu4ZItrbjE1eWiMTRkfeW2l
+         WmvM7xcfE1bCEMak8arcSBV1GrNz1dxoSAAlk2DfgCn6v2MTVQpvlSCWd3soLqwlwvRe
+         7sLp0prQThsEJTXp8SkOxqqhg1VK7upxdyWcKSEuXPUZFn2k0a0ozy5Ndk786cMKBCPN
+         Halmn96kPbJzf1i4zu2r03tmAdYQZOVPF+SWIQPIr18jLSLz0IDlqG9MG85lieKgNwIV
+         cPYtac9Z/wr/JLJE03F6o/tEotPCW46DYcUFKI2OtA50s8r5INYggUIelrymdJcnk3cf
+         6iyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ok53FF3ob85NQ3kaOmkDOVfvfrQyMjF4yDCUjHtVYOU=;
-        b=MVqw4cpdBpWPt3uLAFe87iH4rvDwliMVgA9OKx1x3+ZIuOWXY5rK3X99Mv5Mz/xfBG
-         mC9Sk2axRxKKQb1O85Voc2bT5wZhaSLE0GdXdAlOe+BGgvoPjMlC9H6TWUjy2ZQbgu18
-         9cmEMHc+DxyVcwHjfbOx4ANhanT3AxspWAej9jikvP2tw1QZW0j4yhqnXLX4DIlvZQf2
-         1uvnUyQJnSW6z6YHhdZpQQOm4dpWN6t8ged0/W/yGJUwvXCZL7HiDq6B11AvRiowLYdi
-         1+Im300UugfQn1tjU254KEnT9HnLxiK0noVYDaum589hOKKGIvzNxBoiy2FWXl7pWRGI
-         uTeg==
-X-Gm-Message-State: AOAM530HXBN+o/klPkoqZ0xwDzMytwX4cuyPPJQH9Fmys5Frn9EpexQU
-        ER8PLuAe/EUa9M6+35N2QAjAqqEg
-X-Google-Smtp-Source: ABdhPJyx1bwlQiUXpBhsXKw9pC/WSAdrM9iOef2uVPf7AY+mlydpS0OKd3PhkTqLeC/FiDOn0YvykA==
-X-Received: by 2002:adf:a396:: with SMTP id l22mr18769444wrb.76.1590485932051;
-        Tue, 26 May 2020 02:38:52 -0700 (PDT)
-Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
-        by smtp.gmail.com with ESMTPSA id w15sm142131wmk.30.2020.05.26.02.38.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 02:38:51 -0700 (PDT)
-Date:   Tue, 26 May 2020 10:38:49 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] PCI: hv: Use struct_size() helper
-Message-ID: <20200526093849.keva4hp775m4dzuo@debian>
-References: <20200525164319.GA13596@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200525164319.GA13596@embeddedor>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8UhW5rzzft+OEaSoE2TBO2iHGY9SJECQYAYg9UffWAk=;
+        b=JBmmLLBGNe2Z4K4ebCbj59Z8+ZbCQdyGsSRE3tXghywwwcIG8go9AQzKHQA/m/Olze
+         dVqWY87MXsogE0e4cRN7mbXdPqORY0RipE4gOLW9zDumXTjEs9zAxNE3mmVffeX1AbDu
+         mjH0ajQyFpYNw+xfqGhAnpTfnYh7w+TVyBmo/wflXb7U85NGXVskrfcRRn93T3K3e8yM
+         pdRUNxYUsfBMTcXS1rTx3Wt+fxZCx+PzVMsUajwcGnCi+OhwaHdY5GfHyx9szkIV3pJ+
+         0s+nQsKc1mfsMFrb5uThJVRsoJx6NqCBs0Su2mLUfkQ3gbJFqwtBmwifqhrrNA6FbOtG
+         RbzQ==
+X-Gm-Message-State: AOAM531FjbF00NTJoZUbjY5UzWb3l13s3Q0rTjJEddp6dxWfUxie76pE
+        vHflCf+MVHZDZJw8lSM7tRc=
+X-Google-Smtp-Source: ABdhPJxf7l1rVuIyVqBW1rJlGcbIOpVb4aw2XaHf6b66cVMjhtwY35OTm3FyzL/jWhfRlEgz2h74Tg==
+X-Received: by 2002:adf:ecc5:: with SMTP id s5mr18517057wro.240.1590486121738;
+        Tue, 26 May 2020 02:42:01 -0700 (PDT)
+Received: from ubuntu-g3.micron.com ([165.225.203.62])
+        by smtp.googlemail.com with ESMTPSA id b9sm1708039wrt.39.2020.05.26.02.41.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 02:42:01 -0700 (PDT)
+Message-ID: <229fb4b001341c536f5996151ec6d78e925ecda4.camel@gmail.com>
+Subject: Re: [PATCH] scsi: ufs-qcom: Fix scheduling while atomic issue
+From:   Bean Huo <huobean@gmail.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "subhashj@codeaurora.org" <subhashj@codeaurora.org>,
+        "venkatg@codeaurora.org" <venkatg@codeaurora.org>
+Cc:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Tue, 26 May 2020 11:41:52 +0200
+In-Reply-To: <SN6PR04MB4640A91499223A26A7460738FCB00@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <20200525204125.46171-1-jeffrey.l.hugo@gmail.com>
+         <SN6PR04MB4640A91499223A26A7460738FCB00@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:43:19AM -0500, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
+On Tue, 2020-05-26 at 06:25 +0000, Avri Altman wrote:
+>  
+> > ufs_qcom_dump_dbg_regs() uses usleep_range, a sleeping function,
+> > but can
+> > be called from atomic context in the following flow:
+> > 
+> > ufshcd_intr -> ufshcd_sl_intr -> ufshcd_check_errors ->
+> > ufshcd_print_host_regs -> ufshcd_vops_dbg_register_dump ->
+> > ufs_qcom_dump_dbg_regs
+> > 
+> > This causes a boot crash on the Lenovo Miix 630 when the interrupt
+> > is
+> > handled on the idle thread.
+> > 
+> > Fix the issue by switching to udelay().
+> > 
+> > Fixes: 9c46b8676271 ("scsi: ufs-qcom: dump additional testbus
+> > registers")
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 > 
-> struct hv_dr_state {
-> 	...
->         struct hv_pcidev_description func[];
-> };
-> 
-> struct pci_bus_relations {
-> 	...
->         struct pci_function_description func[];
-> } __packed;
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> So, replace the following forms:
-> 
-> offsetof(struct hv_dr_state, func) +
-> 	(sizeof(struct hv_pcidev_description) *
-> 	(relations->device_count))
-> 
-> offsetof(struct pci_bus_relations, func) +
-> 	(sizeof(struct pci_function_description) *
-> 	(bus_rel->device_count))
-> 
-> with:
-> 
-> struct_size(dr, func, relations->device_count)
-> 
-> and
-> 
-> struct_size(bus_rel, func, bus_rel->device_count)
-> 
-> respectively.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 
-Reviewed-by: Wei Liu <wei.liu@kernel.org>
-
-FAOD I expect this patch to go through pci tree.
