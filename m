@@ -2,105 +2,104 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57594C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8161C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2746E20C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520430;
-	bh=4VPdxXWjr16mx7dly3zIokwM4xa2s8mgnV64LSzfatA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V37HhBlMM3j1vpNX5k1O7mbvM9gcyT7SSuGurRmmwUOGoYphLxsoyPG35jWcFCjl2
-	 p9mzF4j5xZMtN/Tf7ry14XvT4MVBDCd3hOWfqhlP0kSovBnciCJiuRv6vdvHENT8El
-	 IKpKWHqH7asGOI1+TeZuc+XqOwG2d5C7hj9aUaNE=
+	by mail.kernel.org (Postfix) with ESMTP id BCD45208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:13:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="iAQGoOHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404328AbgEZTNt (ORCPT
+        id S2404339AbgEZTNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43970 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391987AbgEZTNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D788C208A7;
-        Tue, 26 May 2020 19:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520419;
-        bh=4VPdxXWjr16mx7dly3zIokwM4xa2s8mgnV64LSzfatA=;
+        Tue, 26 May 2020 15:13:52 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46206 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391173AbgEZTNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:42 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 43D5430D64C;
+        Tue, 26 May 2020 12:13:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 43D5430D64C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520421;
+        bh=AriK1NG87ZP5xbZZLs45I9ity+OqGcVezhDeyT3A91M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oWbYqUJRKRTvLvAyvQ+kRVMqSvvwXapMaVQ4h9g1SxUsKzM41UJWC89StDca50ADu
-         rgpT31ha2q14CC/PcCoJsBXTYVIDW/sUO8ZhLx3bImqyuAodxUkAOXsCt7UpLp9wfj
-         wxjQTLKEKbmXD/ovddAycDd+K/o3jUNJDhhp/fDA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 031/126] configfs: fix config_item refcnt leak in configfs_rmdir()
-Date:   Tue, 26 May 2020 20:52:48 +0200
-Message-Id: <20200526183940.415664108@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=iAQGoOHfVWnQdrqOFiyoMOh6ZwAmNICLhoLV9Io/Vy4j+GREamlBNlyFf9ZtNT4fK
+         c/MYDrOPasRa+Aje2nM3fHOpKsHdU757VFLNnGuObTx8Ibk/nLEMwIEWw6jwELn6yt
+         pYiexCaP0qjxIqm01yifk+r5uootcBD3LZ6s/A6U=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E1083140069;
+        Tue, 26 May 2020 12:13:39 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Julien Grall <julien.grall@arm.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 10/14] arm: dma-mapping: Invoke dma offset func if needed
+Date:   Tue, 26 May 2020 15:12:49 -0400
+Message-Id: <20200526191303.1492-11-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Just like dma_pfn_offset, another offset is added to the dma/phys
+translation if there happen to be multiple regions that have different
+mapping offsets.
 
-[ Upstream commit 8aebfffacfa379ba400da573a5bf9e49634e38cb ]
-
-configfs_rmdir() invokes configfs_get_config_item(), which returns a
-reference of the specified config_item object to "parent_item" with
-increased refcnt.
-
-When configfs_rmdir() returns, local variable "parent_item" becomes
-invalid, so the refcount should be decreased to keep refcount balanced.
-
-The reference counting issue happens in one exception handling path of
-configfs_rmdir(). When down_write_killable() fails, the function forgets
-to decrease the refcnt increased by configfs_get_config_item(), causing
-a refcnt leak.
-
-Fix this issue by calling config_item_put() when down_write_killable()
-fails.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- fs/configfs/dir.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/include/asm/dma-mapping.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index cf7b7e1d5bd7..cb733652ecca 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1519,6 +1519,7 @@ static int configfs_rmdir(struct inode *dir, struct dentry *dentry)
- 		spin_lock(&configfs_dirent_lock);
- 		configfs_detach_rollback(dentry);
- 		spin_unlock(&configfs_dirent_lock);
-+		config_item_put(parent_item);
- 		return -EINTR;
- 	}
- 	frag->frag_dead = true;
+diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+index bdd80ddbca34..811389b4fb29 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -35,8 +35,12 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+ #ifndef __arch_pfn_to_dma
+ static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+ {
+-	if (dev)
++	if (dev) {
++		/* This should compile out if !CONFIG_DMA_PFN_OFFSET_MAP */
++		pfn -= dma_pfn_offset_from_phys_addr(dev, PFN_PHYS(pfn));
++
+ 		pfn -= dev->dma_pfn_offset;
++	}
+ 	return (dma_addr_t)__pfn_to_bus(pfn);
+ }
+ 
+@@ -44,9 +48,12 @@ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+ {
+ 	unsigned long pfn = __bus_to_pfn(addr);
+ 
+-	if (dev)
+-		pfn += dev->dma_pfn_offset;
++	if (dev) {
++		/* This should compile out if !CONFIG_DMA_PFN_OFFSET_MAP */
++		pfn += dma_pfn_offset_from_dma_addr(dev, addr);
+ 
++		pfn += dev->dma_pfn_offset;
++	}
+ 	return pfn;
+ }
+ 
 -- 
-2.25.1
-
-
+2.17.1
 
