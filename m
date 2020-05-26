@@ -2,118 +2,75 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A585DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA812073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6592088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbgEZKK1 (ORCPT
+        id S2388460AbgEZKNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:10:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:48548 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731716AbgEZKK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:10:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F6941FB;
-        Tue, 26 May 2020 03:10:26 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.209])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56E413F52E;
-        Tue, 26 May 2020 03:10:22 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:10:19 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        Justin He <Justin.He@arm.com>, Wei Chen <Wei.Chen@arm.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kaly Xin <Kaly.Xin@arm.com>, nd <nd@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
-Message-ID: <20200526101019.GB11414@bogus>
-References: <20200522083724.38182-1-jianyong.wu@arm.com>
- <20200522083724.38182-4-jianyong.wu@arm.com>
- <20200522131206.GA15171@bogus>
- <HE1PR0802MB255537CD21C5E7F7F4A899A2F4B30@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+        Tue, 26 May 2020 06:13:02 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:55030 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728810AbgEZKNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:13:02 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Tue, 26 May 2020 18:12:46
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.78.173]
+Date:   Tue, 26 May 2020 18:12:46 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Vignesh Raghavendra" <vigneshr@ti.com>
+Cc:     kjlu@umn.edu, "Alim Akhtar" <alim.akhtar@samsung.com>,
+        "Avri Altman" <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] scsi: ufs: Fix runtime PM imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <73cb87f7-52ac-1a18-364e-977080cc149c@ti.com>
+References: <20200522045335.30556-1-dinghao.liu@zju.edu.cn>
+ <73cb87f7-52ac-1a18-364e-977080cc149c@ti.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HE1PR0802MB255537CD21C5E7F7F4A899A2F4B30@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Message-ID: <20dbb267.d17cd.172507864cf.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgCH_0Ke68xesPgJAA--.2822W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgkMBlZdtOUEVwADsL
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_JrI_JrylV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8twCS07vEc2IjII80xcxEwVAKI48JMI
+        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
+        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCS07vEIxAIcVCF04
+        k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAI
+        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 01:37:56AM +0000, Jianyong Wu wrote:
-> Hi Sudeep,
-> 
-> > -----Original Message-----
-> > From: Sudeep Holla <sudeep.holla@arm.com>
-> > Sent: Friday, May 22, 2020 9:12 PM
-> > To: Jianyong Wu <Jianyong.Wu@arm.com>
-> > Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
-> > tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
-> > maz@kernel.org; richardcochran@gmail.com; Mark Rutland
-> > <Mark.Rutland@arm.com>; will@kernel.org; Suzuki Poulose
-> > <Suzuki.Poulose@arm.com>; Steven Price <Steven.Price@arm.com>; Justin
-> > He <Justin.He@arm.com>; Wei Chen <Wei.Chen@arm.com>;
-> > kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; linux-
-> > kernel@vger.kernel.org; Kaly Xin <Kaly.Xin@arm.com>; nd <nd@arm.com>;
-> > Sudeep Holla <Sudeep.Holla@arm.com>; kvmarm@lists.cs.columbia.edu;
-> > linux-arm-kernel@lists.infradead.org
-> > Subject: Re: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
-> > 
-> > On Fri, May 22, 2020 at 04:37:16PM +0800, Jianyong Wu wrote:
-> > > Export arm_smccc_1_1_get_conduit then modules can use smccc helper
-> > > which adopts it.
-> > >
-> > > Acked-by: Mark Rutland <mark.rutland@arm.com>
-> > > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> > > ---
-> > >  drivers/firmware/psci/psci.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/firmware/psci/psci.c
-> > > b/drivers/firmware/psci/psci.c index 2937d44b5df4..fd3c88f21b6a 100644
-> > > --- a/drivers/firmware/psci/psci.c
-> > > +++ b/drivers/firmware/psci/psci.c
-> > > @@ -64,6 +64,7 @@ enum arm_smccc_conduit
-> > > arm_smccc_1_1_get_conduit(void)
-> > >
-> > >  	return psci_ops.conduit;
-> > >  }
-> > > +EXPORT_SYMBOL(arm_smccc_1_1_get_conduit);
-> > >
-> > 
-> > I have moved this into drivers/firmware/smccc/smccc.c [1] Please update
-> > this accordingly.
-> 
-> Ok, I will remove this patch next version.
-
-You may need it still, just that this patch won't apply as the function
-is moved to a new file.
-
--- 
-Regards,
-Sudeep
+PiBIaSwKPiAKPiBPbiAyMi8wNS8yMCAxMDoyMyBhbSwgRGluZ2hhbyBMaXUgd3JvdGU6Cj4gPiBX
+aGVuIGRldm1fY2xrX2dldCgpIHJldHVybnMgYW4gZXJyb3IgY29kZSwgYSBwYWlyaW5nCj4gPiBy
+dW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZGVjcmVtZW50IGlzIG5lZWRlZCB0byBrZWVwCj4gPiB0
+aGUgY291bnRlciBiYWxhbmNlZC4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogRGluZ2hhbyBMaXUg
+PGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Cj4gPiAtLS0KPiAKPiBUaGFua3MgZm9yIHRoZSBwYXRj
+aCEgQnV0IHRoaXMgZml4IGlzIGluY29tcGxldGUsIEkgaGF2ZSBwb3N0ZWQgCj4gYSBtb3JlIGNv
+bXByZWhlbnNpdmUgZml4IGF0IFsxXS4uIFBsZWFzZSB0YWtlIGEgbG9vayEKCgpZb3UgYXJlIHJp
+Z2h0LCB3ZSBzaG91bGQgY2FsbCBwbV9ydW50aW1lX2Rpc2FibGUoKSBvbiBlcnJvciwgdG9vLgpU
+aGFuayB5b3VyIGZvciB5b3VyIHJlbWluZGVyIQoKUmVnYXJkcywKRGluZ2hhbw==
