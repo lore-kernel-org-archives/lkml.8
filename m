@@ -2,131 +2,118 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A585DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D47A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA812073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731858AbgEZKIb (ORCPT
+        id S1731881AbgEZKK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgEZKIb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:08:31 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE55C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:08:31 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jdWVZ-0002iL-3Y; Tue, 26 May 2020 12:08:29 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jdWVU-0000cb-K3; Tue, 26 May 2020 12:08:24 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH net-next v1] net: phy: at803x: add cable diagnostics support for ATH9331 and ATH8032
-Date:   Tue, 26 May 2020 12:08:23 +0200
-Message-Id: <20200526100823.2331-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Tue, 26 May 2020 06:10:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:48548 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731716AbgEZKK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:10:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F6941FB;
+        Tue, 26 May 2020 03:10:26 -0700 (PDT)
+Received: from bogus (unknown [10.37.8.209])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56E413F52E;
+        Tue, 26 May 2020 03:10:22 -0700 (PDT)
+Date:   Tue, 26 May 2020 11:10:19 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        Justin He <Justin.He@arm.com>, Wei Chen <Wei.Chen@arm.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kaly Xin <Kaly.Xin@arm.com>, nd <nd@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
+Message-ID: <20200526101019.GB11414@bogus>
+References: <20200522083724.38182-1-jianyong.wu@arm.com>
+ <20200522083724.38182-4-jianyong.wu@arm.com>
+ <20200522131206.GA15171@bogus>
+ <HE1PR0802MB255537CD21C5E7F7F4A899A2F4B30@HE1PR0802MB2555.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HE1PR0802MB255537CD21C5E7F7F4A899A2F4B30@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Atheros 100Bast-T PHYs. The only difference seems to be
-the ability to test 2 pares instead of 4 and the lack of 1000Bast-T
-specific register.
+On Mon, May 25, 2020 at 01:37:56AM +0000, Jianyong Wu wrote:
+> Hi Sudeep,
+> 
+> > -----Original Message-----
+> > From: Sudeep Holla <sudeep.holla@arm.com>
+> > Sent: Friday, May 22, 2020 9:12 PM
+> > To: Jianyong Wu <Jianyong.Wu@arm.com>
+> > Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
+> > tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
+> > maz@kernel.org; richardcochran@gmail.com; Mark Rutland
+> > <Mark.Rutland@arm.com>; will@kernel.org; Suzuki Poulose
+> > <Suzuki.Poulose@arm.com>; Steven Price <Steven.Price@arm.com>; Justin
+> > He <Justin.He@arm.com>; Wei Chen <Wei.Chen@arm.com>;
+> > kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; linux-
+> > kernel@vger.kernel.org; Kaly Xin <Kaly.Xin@arm.com>; nd <nd@arm.com>;
+> > Sudeep Holla <Sudeep.Holla@arm.com>; kvmarm@lists.cs.columbia.edu;
+> > linux-arm-kernel@lists.infradead.org
+> > Subject: Re: [RFC PATCH v12 03/11] psci: export smccc conduit get helper.
+> > 
+> > On Fri, May 22, 2020 at 04:37:16PM +0800, Jianyong Wu wrote:
+> > > Export arm_smccc_1_1_get_conduit then modules can use smccc helper
+> > > which adopts it.
+> > >
+> > > Acked-by: Mark Rutland <mark.rutland@arm.com>
+> > > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> > > ---
+> > >  drivers/firmware/psci/psci.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/drivers/firmware/psci/psci.c
+> > > b/drivers/firmware/psci/psci.c index 2937d44b5df4..fd3c88f21b6a 100644
+> > > --- a/drivers/firmware/psci/psci.c
+> > > +++ b/drivers/firmware/psci/psci.c
+> > > @@ -64,6 +64,7 @@ enum arm_smccc_conduit
+> > > arm_smccc_1_1_get_conduit(void)
+> > >
+> > >  	return psci_ops.conduit;
+> > >  }
+> > > +EXPORT_SYMBOL(arm_smccc_1_1_get_conduit);
+> > >
+> > 
+> > I have moved this into drivers/firmware/smccc/smccc.c [1] Please update
+> > this accordingly.
+> 
+> Ok, I will remove this patch next version.
 
-Only ATH9331 was tested with this patch.
+You may need it still, just that this patch won't apply as the function
+is moved to a new file.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/phy/at803x.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index acd51b29a476b..4b9dd43b5b5bf 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -920,10 +920,16 @@ static int at803x_cable_test_one_pair(struct phy_device *phydev, int pair)
- static int at803x_cable_test_get_status(struct phy_device *phydev,
- 					bool *finished)
- {
--	unsigned long pair_mask = 0xf;
-+	unsigned long pair_mask;
- 	int retries = 20;
- 	int pair, ret;
- 
-+	if (phydev->phy_id == ATH9331_PHY_ID ||
-+	    phydev->phy_id == ATH8032_PHY_ID)
-+		pair_mask = 0x3;
-+	else
-+		pair_mask = 0xf;
-+
- 	*finished = false;
- 
- 	/* According to the datasheet the CDT can be performed when
-@@ -958,7 +964,9 @@ static int at803x_cable_test_start(struct phy_device *phydev)
- 	 */
- 	phy_write(phydev, MII_BMCR, BMCR_ANENABLE);
- 	phy_write(phydev, MII_ADVERTISE, ADVERTISE_CSMA);
--	phy_write(phydev, MII_CTRL1000, 0);
-+	if (phydev->phy_id != ATH9331_PHY_ID &&
-+	    phydev->phy_id != ATH8032_PHY_ID)
-+		phy_write(phydev, MII_CTRL1000, 0);
- 
- 	/* we do all the (time consuming) work later */
- 	return 0;
-@@ -1032,6 +1040,7 @@ static struct phy_driver at803x_driver[] = {
- 	.name			= "Qualcomm Atheros AR8032",
- 	.probe			= at803x_probe,
- 	.remove			= at803x_remove,
-+	.flags			= PHY_POLL_CABLE_TEST,
- 	.config_init		= at803x_config_init,
- 	.link_change_notify	= at803x_link_change_notify,
- 	.set_wol		= at803x_set_wol,
-@@ -1041,15 +1050,20 @@ static struct phy_driver at803x_driver[] = {
- 	/* PHY_BASIC_FEATURES */
- 	.ack_interrupt		= at803x_ack_interrupt,
- 	.config_intr		= at803x_config_intr,
-+	.cable_test_start	= at803x_cable_test_start,
-+	.cable_test_get_status	= at803x_cable_test_get_status,
- }, {
- 	/* ATHEROS AR9331 */
- 	PHY_ID_MATCH_EXACT(ATH9331_PHY_ID),
- 	.name			= "Qualcomm Atheros AR9331 built-in PHY",
- 	.suspend		= at803x_suspend,
- 	.resume			= at803x_resume,
-+	.flags			= PHY_POLL_CABLE_TEST,
- 	/* PHY_BASIC_FEATURES */
- 	.ack_interrupt		= &at803x_ack_interrupt,
- 	.config_intr		= &at803x_config_intr,
-+	.cable_test_start	= at803x_cable_test_start,
-+	.cable_test_get_status	= at803x_cable_test_get_status,
- } };
- 
- module_phy_driver(at803x_driver);
 -- 
-2.26.2
-
+Regards,
+Sudeep
