@@ -2,208 +2,150 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D027DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D99D020787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590507255;
-	bh=wZsFbXQuM7MjfrRU576qrM/dfqXW3YX4P29Td4olhQc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Ppy//uI0/AfSiQxckB4xZEJXgCkm8ortdY+QU5aypVJ2ca/S3l5RG0Mu+hV4sJsXo
-	 +NHFSS2bIcHvpEjcFdJBy0Q09PO828L6b6zxn3vkLfhik8fMjwbZghYIV6nZAGeucF
-	 ilx2jHIGUzfrM4dHjyVrdl+rdwbueSLCqVNG2+ck=
+	by mail.kernel.org (Postfix) with ESMTP id A29EB207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:34:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kgFR34KB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgEZPeP (ORCPT
+        id S1729950AbgEZPea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:34:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729601AbgEZPeO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:34:14 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3F7F20663;
-        Tue, 26 May 2020 15:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590507253;
-        bh=wZsFbXQuM7MjfrRU576qrM/dfqXW3YX4P29Td4olhQc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YwB5C5xSJAIQS54Syy4KeUn3r6iDmj67x7HBwi9GZu03JQfqUACdY9hw9bWDIEN5v
-         +mJY253DZf2Z/KOYtugdIzPnPTeYg6r60886uyEpWQ0KO5LdekxOVIUcLQuDZtg5IZ
-         6JF4RdXllT47CN/Ud9rp3VTWB9XeikPerKw8y3W8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ABC313522A8B; Tue, 26 May 2020 08:34:13 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:34:13 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: Re: [patch V9 02/39] rcu: Abstract out rcu_irq_enter_check_tick()
- from rcu_nmi_enter()
-Message-ID: <20200526153413.GG2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200521200513.656533920@linutronix.de>
- <20200521202116.996113173@linutronix.de>
- <20200521210339.GC2869@paulmck-ThinkPad-P72>
- <20200526081456.GA35238@gmail.com>
+        Tue, 26 May 2020 11:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgEZPea (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:34:30 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03F83C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:34:29 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id b190so10317219pfg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8W11mCFaZlqqgwjd6pr/5BoHKN+oaQPu3yE26VkZIxk=;
+        b=kgFR34KBsx0oI1+MKKstfa5lW1H5kQ16Y3jO42RlsqGTyZe7QT5tmf1xmKgWNZI6ub
+         XyrEvbKspvwFeI1YqvY+nWDW2SVEsc2mJiHS0OKG0sbHzL+pYMGEGFTVbP8Y9eVmH9Wc
+         o65pnCp6nWc1vf1fxko35nOU3W0XLc3OwdzFU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8W11mCFaZlqqgwjd6pr/5BoHKN+oaQPu3yE26VkZIxk=;
+        b=A1HjMxxMupb9F3l4d3wfXjBrEn8oRl2G4lO1Ctt52MGv6/YtKtvSB0AM4j8Bx8Gu5/
+         y7ERwa9JRdoXt2YkAsFl+AVizRtmefREKlZEkY1xOGklmBqETPDgDoC6aZdeTiQrEjaN
+         sJqwNxwCyzRh06prKDKFsFqfeZYOdW9wfeVS9yzSM80E4N1lURk3DZWUFpM4qKuuoVL0
+         /T5/SER5VqQIHBcZ+DGrOXazpww4Kb84i27ekPY3hEY0iyaMlr4w1Y/pExLvPRmE3376
+         j1DTiz7PzxS13Rx8rqAxybmfTAK7cWcwZGhGT4px0ZxTE2JCWRmsFLdXoozRWaYFmduB
+         Mctw==
+X-Gm-Message-State: AOAM530wRnnA6sf/bXS49D7tfebnO4r30IaJZds9ieS3T097Q6a+71YN
+        REfJkCdOhzZx9+6vie9Rr1GGCA==
+X-Google-Smtp-Source: ABdhPJwvQUuJk+3JmCR8WIBdZSU/GvEbA9MR1r4bCTHrtiDU0sJOoFq1RbVUiRntAYHcL1SgZGUWCA==
+X-Received: by 2002:a63:c34a:: with SMTP id e10mr1608669pgd.412.1590507268516;
+        Tue, 26 May 2020 08:34:28 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id r1sm83636pgb.37.2020.05.26.08.34.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 08:34:27 -0700 (PDT)
+Date:   Tue, 26 May 2020 08:34:25 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Zijun Hu <zijuhu@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
+        rjliao@codeaurora.org
+Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix qca6390 enable failure after
+ warm reboot
+Message-ID: <20200526153425.GD4525@google.com>
+References: <1590461850-9908-1-git-send-email-zijuhu@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200526081456.GA35238@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1590461850-9908-1-git-send-email-zijuhu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:14:56AM +0200, Ingo Molnar wrote:
+On Tue, May 26, 2020 at 10:57:30AM +0800, Zijun Hu wrote:
+> Warm reboot can not restore qca6390 controller baudrate
+> to default due to lack of controllable BT_EN pin or power
+> supply, so fails to download firmware after warm reboot.
 > 
-> * Paul E. McKenney <paulmck@kernel.org> wrote:
+> Fixed by sending EDL_SOC_RESET VSC to reset controller
+> within added device shutdown implementation.
 > 
-> > > +	if (!tick_nohz_full_cpu(rdp->cpu) ||
-> > > +	    !READ_ONCE(rdp->rcu_urgent_qs) ||
-> > > +	    READ_ONCE(rdp->rcu_forced_tick)) {
-> > > +		// RCU doesn't need nohz_full help from this CPU, or it is
-> > > +		// already getting that help.
-> > > +		return;
-> > > +	}
-> > > +
-> > > +	// We get here only when not in an extended quiescent state and
-> > > +	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
-> > > +	// already watching and (2) The fact that we are in an interrupt
-> > > +	// handler and that the rcu_node lock is an irq-disabled lock
-> > > +	// prevents self-deadlock.  So we can safely recheck under the lock.
-> > > +	// Note that the nohz_full state currently cannot change.
-> > > +	raw_spin_lock_rcu_node(rdp->mynode);
-> > > +	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> > > +		// A nohz_full CPU is in the kernel and RCU needs a
-> > > +		// quiescent state.  Turn on the tick!
-> > > +		WRITE_ONCE(rdp->rcu_forced_tick, true);
-> > > +		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> > > +	}
-> > > +	raw_spin_unlock_rcu_node(rdp->mynode);
+> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> BTW., can we please not ever use this weird comment style in the future?
-> 
-> Linus gave an exception to single-line C++ style comments - but I 
-> don't think that should be extrapolated to a license to uglify the 
-> kernel with inconsistent muck like this. :-/
-> 
-> I've sanitized it via the patch below.
-
-The "//" comment style does save vertical space.  Is it really ugly
-or just unfamiliar?  For purposes of comparison, back in the day, the
-"/* */" style seemed quite strange compared to my earlier languages'
-commenting styles.
-
-> ( I also fixed the whitespace damage and a capitalization typo while 
->   at it, and fixed the spelling in the big comment explaining 
->   __rcu_irq_enter_check_tick(). )
-
-Some were stylistic rather than wrong, but I have no objection to
-any of these changes.
-
-							Thanx, Paul
-
-> Thanks,
-> 
-> 	Ingo
-> 
-> --- tip.orig/kernel/rcu/tree.c
-> +++ tip/kernel/rcu/tree.c
-> @@ -850,14 +850,14 @@ void noinstr rcu_user_exit(void)
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index e4a6823..b479e51 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -1975,6 +1975,32 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>  	hci_uart_unregister_device(&qcadev->serdev_hu);
 >  }
 >  
->  /**
-> - * __rcu_irq_enter_check_tick - Enable scheduler tick on CPU if RCU needs it.
-> + * __rcu_irq_enter_check_tick - Enable the scheduler tick on a CPU if RCU needs it.
->   *
->   * The scheduler tick is not normally enabled when CPUs enter the kernel
->   * from nohz_full userspace execution.  After all, nohz_full userspace
->   * execution is an RCU quiescent state and the time executing in the kernel
-> - * is quite short.  Except of course when it isn't.  And it is not hard to
-> + * is quite short.  Except of course when it isn't: it is not hard to
->   * cause a large system to spend tens of seconds or even minutes looping
-> - * in the kernel, which can cause a number of problems, include RCU CPU
-> + * in the kernel, which can cause a number of problems, including RCU CPU
->   * stall warnings.
->   *
->   * Therefore, if a nohz_full CPU fails to report a quiescent state
-> @@ -879,7 +879,7 @@ void __rcu_irq_enter_check_tick(void)
+> +static void qca_serdev_shutdown(struct device *dev)
+> +{
+> +	int res;
+
+nit: 'ret' would be a more standard name
+
+> +	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
+> +	struct serdev_device *serdev = to_serdev_device(dev);
+> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+> +	const u8 ibs_wake_cmd[] = { 0xFD };
+> +	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+> +
+> +	if (qcadev->btsoc_type == QCA_QCA6390) {
+> +		serdev_device_write_flush(serdev);
+> +		res = serdev_device_write_buf(serdev,
+> +				ibs_wake_cmd, sizeof(ibs_wake_cmd));
+> +		BT_DBG("%s: send ibs_wake_cmd res = %d", __func__, res);
+
+Why use BT_DBG regardless of the result, instead of using BT_ERR/WARN only
+in the failure case? And does it actually make sense to continue in case of
+an error?
+
+> +		serdev_device_wait_until_sent(serdev, timeout);
+> +		usleep_range(8000, 10000);
+> +
+> +		serdev_device_write_flush(serdev);
+> +		res = serdev_device_write_buf(serdev,
+> +				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
+> +		BT_DBG("%s: send edl_reset_soc_cmd res = %d", __func__, res);
+
+ditto
+
+> +		serdev_device_wait_until_sent(serdev, timeout);
+> +		usleep_range(8000, 10000);
+> +	}
+> +}
+> +
+>  static int __maybe_unused qca_suspend(struct device *dev)
 >  {
->  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
->  
-> -	 // Enabling the tick is unsafe in NMI handlers.
-> +	/* Enabling the tick is unsafe in NMI handlers. */
->  	if (WARN_ON_ONCE(in_nmi()))
->  		return;
->  
-> @@ -889,21 +889,27 @@ void __rcu_irq_enter_check_tick(void)
->  	if (!tick_nohz_full_cpu(rdp->cpu) ||
->  	    !READ_ONCE(rdp->rcu_urgent_qs) ||
->  	    READ_ONCE(rdp->rcu_forced_tick)) {
-> -		// RCU doesn't need nohz_full help from this CPU, or it is
-> -		// already getting that help.
-> +		/*
-> +		 * RCU doesn't need nohz_full help from this CPU, or it is
-> +		 * already getting that help.
-> +		 */
->  		return;
->  	}
->  
-> -	// We get here only when not in an extended quiescent state and
-> -	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
-> -	// already watching and (2) The fact that we are in an interrupt
-> -	// handler and that the rcu_node lock is an irq-disabled lock
-> -	// prevents self-deadlock.  So we can safely recheck under the lock.
-> -	// Note that the nohz_full state currently cannot change.
-> +	/*
-> +	 * We get here only when not in an extended quiescent state and
-> +	 * from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
-> +	 * already watching and (2) the fact that we are in an interrupt
-> +	 * handler and that the rcu_node lock is an irq-disabled lock
-> +	 * prevents self-deadlock.  So we can safely recheck under the lock.
-> +	 * Note that the nohz_full state currently cannot change.
-> +	 */
->  	raw_spin_lock_rcu_node(rdp->mynode);
->  	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> -		// A nohz_full CPU is in the kernel and RCU needs a
-> -		// quiescent state.  Turn on the tick!
-> +		/*
-> +		 * A nohz_full CPU is in the kernel and RCU needs a
-> +		 * quiescent state.  Turn on the tick!
-> +		 */
->  		WRITE_ONCE(rdp->rcu_forced_tick, true);
->  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
->  	}
+>  	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+> @@ -2100,6 +2126,7 @@ static struct serdev_device_driver qca_serdev_driver = {
+>  		.name = "hci_uart_qca",
+>  		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
+>  		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
+> +		.shutdown = qca_serdev_shutdown,
+>  		.pm = &qca_pm_ops,
+>  	},
+>  };
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> 
