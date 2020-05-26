@@ -2,143 +2,125 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F699C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58626C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 067F7206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37A1B206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389108AbgEZSkS (ORCPT
+        id S1728897AbgEZSmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:40:18 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59486 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387399AbgEZSkS (ORCPT
+        Tue, 26 May 2020 14:42:20 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:37560 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728113AbgEZSmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:40:18 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id F347F8030869;
-        Tue, 26 May 2020 18:40:14 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2o6nlMTIy_Dv; Tue, 26 May 2020 21:40:13 +0300 (MSK)
-Date:   Tue, 26 May 2020 21:40:11 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Max Staudt <max@enpas.org>, Stefan Roese <sr@denx.de>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/12] i2c: designware: Move Baytrail sem config to
- the platform if-clause
-Message-ID: <20200526184011.rjpkpuk6nxuksyct@mobilestation>
-References: <20200306132001.1B875803087C@mail.baikalelectronics.ru>
- <20200510095019.20981-1-Sergey.Semin@baikalelectronics.ru>
- <20200510095019.20981-8-Sergey.Semin@baikalelectronics.ru>
- <da6d8b18-b808-fd86-bbd2-13e7a90b2a5e@linux.intel.com>
- <20200521022215.ubvhuop47aflqkkb@mobilestation>
- <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
+        Tue, 26 May 2020 14:42:19 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jdeWm-0004bd-Ge; Tue, 26 May 2020 12:42:16 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jdeWl-0004ZB-Jd; Tue, 26 May 2020 12:42:16 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>
+Date:   Tue, 26 May 2020 13:38:26 -0500
+Message-ID: <871rn6a6e5.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f01b3082-082c-8ce9-d0f7-f9ff952a37bf@linux.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Type: text/plain
+X-XM-SPF: eid=1jdeWl-0004ZB-Jd;;;mid=<871rn6a6e5.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19LRaZTE99szAlTGkTt2wniDdqgfpvuPi8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [GIT PULL] Please pull exec fix for v5.7
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 04:01:26PM +0300, Jarkko Nikula wrote:
-> On 5/21/20 5:22 AM, Serge Semin wrote:
-> > On Wed, May 20, 2020 at 03:16:14PM +0300, Jarkko Nikula wrote:
-> > > On 5/10/20 12:50 PM, Serge Semin wrote:
-> > > > Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
-> > > > platform driver. It's a bit confusing to see it's config in the menu at
-> > > > some separated place with no reference to the platform code. Lets move the
-> > > > config definition under the if-I2C_DESIGNWARE_PLATFORM clause. By doing so
-> > > > the config menu will display the feature right below the DW I2C platform
-> > > > driver item and will indent it to the right so signifying its belonging.
-> > > > 
-> > > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > > > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > > Cc: Paul Burton <paulburton@kernel.org>
-> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > > > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Cc: Wolfram Sang <wsa@the-dreams.de>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > > Cc: linux-mips@vger.kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > > ---
-> > > >    drivers/i2c/busses/Kconfig | 30 +++++++++++++++++-------------
-> > > >    1 file changed, 17 insertions(+), 13 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> > > > index 368aa64e9266..ed6927c4c540 100644
-> > > > --- a/drivers/i2c/busses/Kconfig
-> > > > +++ b/drivers/i2c/busses/Kconfig
-> > > > @@ -530,8 +530,8 @@ config I2C_DESIGNWARE_CORE
-> > > >    config I2C_DESIGNWARE_PLATFORM
-> > > >    	tristate "Synopsys DesignWare Platform"
-> > > > -	select I2C_DESIGNWARE_CORE
-> > > >    	depends on (ACPI && COMMON_CLK) || !ACPI
-> > > > +	select I2C_DESIGNWARE_CORE
-> > > >    	help
-> > > >    	  If you say yes to this option, support will be included for the
-> > > >    	  Synopsys DesignWare I2C adapter.
-> > > > @@ -539,6 +539,22 @@ config I2C_DESIGNWARE_PLATFORM
-> > > >    	  This driver can also be built as a module.  If so, the module
-> > > >    	  will be called i2c-designware-platform.
-> > > > +if I2C_DESIGNWARE_PLATFORM
-> > > > +
-> > > > +config I2C_DESIGNWARE_BAYTRAIL
-> > > > +	bool "Intel Baytrail I2C semaphore support"
-> > > > +	depends on ACPI
-> > > > +	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
-> > > > +		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
-> > > > +	help
-> > > > +	  This driver enables managed host access to the PMIC I2C bus on select
-> > > > +	  Intel BayTrail platforms using the X-Powers AXP288 PMIC. It allows
-> > > > +	  the host to request uninterrupted access to the PMIC's I2C bus from
-> > > > +	  the platform firmware controlling it. You should say Y if running on
-> > > > +	  a BayTrail system using the AXP288.
-> > > > +
-> > > > +endif # I2C_DESIGNWARE_PLATFORM
-> > > > +
-> > > 
-> > > Is the added "if I2C_DESIGNWARE_PLATFORM" needed here? Should the "depends
-> > > on" be enough?
-> > 
-> > The idea was to add if-endif clause here for features possibly added sometime
-> > in future. But using normal "depends on I2C_DESIGNWARE_PLATFORM" shall make
-> > the config depicted as an indented sub-config as well. Would you like me to
-> > remove the if-clause and use the depends on operator instead?
-> > 
-> Yes, please remove it from this patch. Keeps this patch simpler and if some
-> future feature needs it then that patch(set) is the right place to add it.
 
-Agreed. I'll do this in v3.
+Please pull the exec-linus branch from the git tree:
 
--Sergey
+   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-linus
 
-> 
-> Jarkko
+   HEAD: a4ae32c71fe90794127b32d26d7ad795813b502e exec: Always set cap_ambient in cap_bprm_set_creds
+
+While working on my exec cleanups I found a bug in exec that winds
+up miscomputing the ambient credentials during exec.  Andy appears
+as to credentials are computed for both the script and the interpreter.
+
+From the original patch description:
+
+[3] Linux very confusingly processes both the script and the interpreter
+    if applicable, for reasons that elude me.  The results from thinking
+    about a script's file capabilities and/or setuid bits are mostly
+    discarded.
+
+The only value in struct cred that gets changed in cap_bprm_set_creds
+that I could find that might persist between the script and the
+interpreter was cap_ambient.  Which is fixed with this trivial change.
+
+Eric
+
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+Date: Mon, 25 May 2020 12:56:15 -0500
+Subject: [PATCH] exec: Always set cap_ambient in cap_bprm_set_creds
+
+An invariant of cap_bprm_set_creds is that every field in the new cred
+structure that cap_bprm_set_creds might set, needs to be set every
+time to ensure the fields does not get a stale value.
+
+The field cap_ambient is not set every time cap_bprm_set_creds is
+called, which means that if there is a suid or sgid script with an
+interpreter that has neither the suid nor the sgid bits set the
+interpreter should be able to accept ambient credentials.
+Unfortuantely because cap_ambient is not reset to it's original value
+the interpreter can not accept ambient credentials.
+
+Given that the ambient capability set is expected to be controlled by
+the caller, I don't think this is particularly serious.  But it is
+definitely worth fixing so the code works correctly.
+
+I have tested to verify my reading of the code is correct and the
+interpreter of a sgid can receive ambient capabilities with this
+change and cannot receive ambient capabilities without this change.
+
+Cc: stable@vger.kernel.org
+Cc: Andy Lutomirski <luto@kernel.org>
+Fixes: 58319057b784 ("capabilities: ambient capabilities")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ security/commoncap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/security/commoncap.c b/security/commoncap.c
+index f4ee0ae106b2..0ca31c8bc0b1 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -812,6 +812,7 @@ int cap_bprm_set_creds(struct linux_binprm *bprm)
+ 	int ret;
+ 	kuid_t root_uid;
+ 
++	new->cap_ambient = old->cap_ambient;
+ 	if (WARN_ON(!cap_ambient_invariant_ok(old)))
+ 		return -EPERM;
+ 
+-- 
+2.20.1
