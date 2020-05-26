@@ -2,434 +2,165 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48892C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66365C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1664720823
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="t1Gdk+2C"
+	by mail.kernel.org (Postfix) with ESMTP id 461F020823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:14:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388824AbgEZROV (ORCPT
+        id S2388654AbgEZRO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:14:21 -0400
-Received: from mail-eopbgr80134.outbound.protection.outlook.com ([40.107.8.134]:17829
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729910AbgEZROJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:14:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bnednN1eEKHLEk8HQW2Sk/D5z29ec9Azn1LGYB9qBtyOSwPdhjvsjPaZap1+Qh8jkU/Rn+SOx8McELL74Rk6eX/lBXWG0I8HzJ+aypdrAeq60HgL+R9iiIW7d/OJtYQj2VkA6rUxCaD99gOv29C3zlcQRtKqng44EQFCWz39V1//Mx+nc1MURoO6LBcwcfcqbxHgkXOToy+emQnOem/VnYnBctfUyJ3oMbyuX1ij4izujYBJSPJ8LBQC7IaU9EfXYO6xXHdzrMW8Ry2+NAgbSdOK8jRp8eaB3yS8Xl9yFEkChZc4TLca5Uxa9KnSwyXXWmKLJlllffAvi54HiEkRAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/vKTtp4lM322VTJbeykefSQcvqlj8u/r/R8G0waq4JY=;
- b=UtLLwPQNIpK69OTz6e779N3gjixrhV4/mnMy3eEqbrhqyj5uqYpA1mr0GYTinaRox4cBuKg+ubLPKJ3TVe7EUmdn9PUVtw0tKGHytOtGohlSmcVjYwQvIkOGhxr+njOiq2z0wXUfBGgrnN8y/z9fvUvzIAfaDCGy5rXliNchMAmosV1HuNfqNdGxgn7urBXmU5Xz8MDIgQmJG9wsFv57cYe86QP38Mb4TGFMj72FWmKGXRXdFHDAimqwaoRp5vmxBVZIfTJYEAiJZf8GfksAPkVnuIseNe7zu7oaoYygRjdflL4XoJAM2iqtavaePrMEyC9oaAuSf1AcQv+Jnv5vOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/vKTtp4lM322VTJbeykefSQcvqlj8u/r/R8G0waq4JY=;
- b=t1Gdk+2C9bAq2USNtE0JhK6eIE2FOlSrWb4emfrQeVoCnwO3sEi4LsKY8O5upXN21zRgG7YymwIVf8GecArLag5DBeQZfUyzRkEOHWzQSJywZMdb3VQ7NEg6tuNC62lSFBPRNMFM2YA4KcyUGvyumlqDN5Eha+Wo1om2/nq33+E=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10)
- by VI1P190MB0431.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:2e::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
- 2020 17:13:45 +0000
-Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::8149:8652:3746:574f]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- ([fe80::8149:8652:3746:574f%7]) with mapi id 15.20.3021.029; Tue, 26 May 2020
- 17:13:45 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mickey Rachamim <mickeyr@marvell.com>,
-        Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [net-next RFC v3 3/6] net: marvell: prestera: Add basic devlink support
-Date:   Tue, 26 May 2020 20:12:59 +0300
-Message-Id: <20200526171302.28649-4-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526171302.28649-1-vadym.kochan@plvision.eu>
-References: <20200526171302.28649-1-vadym.kochan@plvision.eu>
-Content-Type: text/plain
-X-ClientProxiedBy: AM6P192CA0061.EURP192.PROD.OUTLOOK.COM
- (2603:10a6:209:82::38) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:802:35::10)
+        Tue, 26 May 2020 13:14:27 -0400
+Received: from mail-il1-f199.google.com ([209.85.166.199]:43339 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388767AbgEZROT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 13:14:19 -0400
+Received: by mail-il1-f199.google.com with SMTP id v14so18161308ilm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 10:14:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=hoPwsjIqSK0KAB7KQ3f3MXEUCtZiAG9yK7r33w+GosI=;
+        b=d4Vfj15Xa6RSxmgc1jsgvp2T3cw4hUfTMcWObU9yQpLrLBEVpB2GvUD0G6C/nb0w8u
+         +6uIUtaGtk3oZA8GwlG10R13hqtWQTlpMdKV/mo97PYjbqcWdLrYkoft3FsMHtpOytzY
+         GUtCvIUQuCz6diHWtOlSo8YjbKjXociXSo/ccfTa89G+zB2BvJccaW3mYvKh9LRiWotw
+         JgJrc+4zw5no8uZjn108FwLg72NQHYmy6Zthv4hNkUEvQUmGXtXYfVaNXMVTkt0P30U/
+         6Yyf6FbeGyUp6VapDu1hkA6JOOoY5dlOnttMSNPyyHKDrsRCsRlslPAwpAKK/qSXMIS1
+         O0Pw==
+X-Gm-Message-State: AOAM53257Bo+eu8sRUpfsNVZQ7JyNWny+SFzHkc5llMYVNImsIkQY5i/
+        odoDhXUTP/2rs4nFY8gFgfivmV8l8CIEVJvsk8GT3LEHQ2+A
+X-Google-Smtp-Source: ABdhPJx6XS3O91EfkGOLsIdQjU7Xl6bSrKSmD8nN3gbbqVb3ZgbvCWh1yrJvuSmZp9e3d8TxhUgNx8Qb8fnDKPSuDAZ/6G37IWSD
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6P192CA0061.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:82::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Tue, 26 May 2020 17:13:43 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c2c48971-04ca-4fd7-deeb-08d8019825c8
-X-MS-TrafficTypeDiagnostic: VI1P190MB0431:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1P190MB043124F6ECA179492F0AA05895B00@VI1P190MB0431.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:428;
-X-Forefront-PRVS: 041517DFAB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Wp8zKlgrXMmBw6u2pOQozf+Bq1/pS+KuybaYf0COC2kwQUCwHqtm/tevywFjBGIJ1caG+pWxr+DqGH/qGJUXiEvHEZH23ZNanbiBINVjWIBL0AJRVQQmDlF0OB4riCKILKUmIfjM1u+WENbTUZ8XfEOEzAcL7zCAcZ/pl1RRiyh7pscoOQDkwVNrMt6CcrOLF6VDivhMzBmnkt0k1OPGQmvrD9fHUv/75uQKw5YoSST508UZbFtq8RFsD1Cw2YL9cDug5UCW20nJzu4y8oMBerGFKn3LyoOnBu9Zq3s2qs+sZE8jMWonKYU+sK9/MxrstrWx1Ds4mPDCp1nZZXBtJJ6zxOs5pq26Ld3+E007moE7/NoKuMjkEuyXJErk70so
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(366004)(396003)(376002)(136003)(346002)(39830400003)(508600001)(16526019)(52116002)(2906002)(4326008)(36756003)(6506007)(186003)(86362001)(26005)(6486002)(8676002)(8936002)(316002)(956004)(54906003)(66476007)(2616005)(6666004)(66946007)(5660300002)(110136005)(107886003)(66556008)(44832011)(1076003)(6512007)(921003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 78+F3N/t7BD/bBjptOm8lgy5uRdxABkxR2VXOFwjP8n234183kv1jZ3z4+TRmaUDPOX/qQsHd7fIhjXvpWjCUXy7e9ejkRv/mEUALv+WU858CsJT361xgpFDuR/tOyNAOagLQauo686OUhL3ZD6RR2hXFRVrzi2k4w0PpYqjnr+13sqQeUp/Vh7OyoxjKZwDtXrjlebruT/2Sx0gvfDomknmyHQzlW0B68asdQqleUGndw2ONQ5nDXuVntibxy3pK1p8nPe/fN7XdEDhz8yjCwoJEZlHqBcZoUxJKCAQ8F0sEhBLciZ7vLnUMLocTYMgFg+7NZyvjTiyHWGsuEt+KiMIcNUa9BMbNRMQWgr4x1LSoRa0NPxyvf/95sLsdKBpGSsKGwUfGuxZbGtsNIr5Nb5Dj9LqL6xS6rC7M1EKPnDiXvASNtt57tgWCmgGi70IVnlmQSysrcLPDHDQTc8CxCdj6UzrR+3iKUw+16ongTc=
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2c48971-04ca-4fd7-deeb-08d8019825c8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 17:13:45.5082
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NFgdXAmdKjLUE26/8EWLXQq2d/HoZbwjFDn5jUChml8B9XGeFQ46zXwBlxvx3rUQ16oNCbEXYRybSBLI49QqJhl2fdZU3ybm6itVuf7nn84=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0431
+X-Received: by 2002:a92:5a4a:: with SMTP id o71mr2063560ilb.217.1590513256308;
+ Tue, 26 May 2020 10:14:16 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:14:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a728b105a69039ce@google.com>
+Subject: WARNING: locking bug in dev_mc_seq_show
+From:   syzbot <syzbot+f3a0e80c34b3fc28ac5e@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, andriin@fb.com, ast@kernel.org,
+        bp@alien8.de, bpf@vger.kernel.org, christian.brauner@ubuntu.com,
+        cyphar@cyphar.com, daniel@iogearbox.net,
+        dave.hansen@linux.intel.com, davem@davemloft.net, hpa@zytor.com,
+        jakub.kicinski@netronome.com, jiri@mellanox.com, kafai@fb.com,
+        keescook@chromium.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org,
+        mhiramat@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
+        peterz@infradead.org, rostedt@goodmis.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        x86@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add very basic support for devlink interface:
+Hello,
 
-    - driver name
-    - fw version
-    - devlink ports
+syzbot found the following crash on:
 
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+HEAD commit:    44456565 Merge tag 'io_uring-5.7-2020-05-22' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1656ef06100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c33c7f7c5471fd39
+dashboard link: https://syzkaller.appspot.com/bug?extid=f3a0e80c34b3fc28ac5e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17123f06100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ac4e72100000
+
+The bug was bisected to:
+
+commit 75a1a607bb7e6d918be3aca11ec2214a275392f4
+Author: Daniel Borkmann <daniel@iogearbox.net>
+Date:   Fri Nov 1 23:17:57 2019 +0000
+
+    uaccess: Add strict non-pagefault kernel-space read function
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14dbf8ce100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16dbf8ce100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12dbf8ce100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f3a0e80c34b3fc28ac5e@syzkaller.appspotmail.com
+Fixes: 75a1a607bb7e ("uaccess: Add strict non-pagefault kernel-space read function")
+
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 0 PID: 7235 at kernel/locking/lockdep.c:183 hlock_class kernel/locking/lockdep.c:183 [inline]
+WARNING: CPU: 0 PID: 7235 at kernel/locking/lockdep.c:183 check_wait_context kernel/locking/lockdep.c:4029 [inline]
+WARNING: CPU: 0 PID: 7235 at kernel/locking/lockdep.c:183 __lock_acquire+0x1aab/0x2c30 kernel/locking/lockdep.c:4305
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 7235 Comm: syz-executor379 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1e9/0x30e lib/dump_stack.c:118
+ panic+0x264/0x7a0 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1ac/0x2d0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:175 [inline]
+ do_error_trap+0xca/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:hlock_class kernel/locking/lockdep.c:183 [inline]
+RIP: 0010:check_wait_context kernel/locking/lockdep.c:4029 [inline]
+RIP: 0010:__lock_acquire+0x1aab/0x2c30 kernel/locking/lockdep.c:4305
+Code: 13 08 00 0f 85 8d ea ff ff 31 db 48 c7 c7 99 82 e5 88 48 c7 c6 d3 4f ea 88 31 c0 e8 7f d6 ec ff 48 ba 00 00 00 00 00 fc ff df <0f> 0b e9 81 ea ff ff 31 db e9 70 ea ff ff 48 c7 c1 30 ed 55 8b 80
+RSP: 0018:ffffc90001ad74f0 EFLAGS: 00010046
+RAX: 43109e3dc9d77000 RBX: 0000000000000000 RCX: ffff888096498280
+RDX: dffffc0000000000 RSI: 0000000000000001 RDI: ffffffff815cd136
+RBP: ffffc90001ad7658 R08: ffffffff817912a6 R09: fffffbfff125cd0b
+R10: fffffbfff125cd0b R11: 0000000000000000 R12: ffff888096498bb8
+R13: 1ffff11012c93177 R14: 0000000000000607 R15: 0000000000000000
+ lock_acquire+0x169/0x480 kernel/locking/lockdep.c:4934
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+ _raw_spin_lock_bh+0x31/0x40 kernel/locking/spinlock.c:175
+ spin_lock_bh include/linux/spinlock.h:358 [inline]
+ netif_addr_lock_bh include/linux/netdevice.h:4172 [inline]
+ dev_mc_seq_show+0x40/0x220 net/core/net-procfs.c:325
+ seq_read+0x950/0xce0 fs/seq_file.c:247
+ pde_read fs/proc/inode.c:292 [inline]
+ proc_reg_read+0x27f/0x3a0 fs/proc/inode.c:304
+ do_loop_readv_writev fs/read_write.c:715 [inline]
+ do_iter_read+0x44b/0x550 fs/read_write.c:936
+ vfs_readv+0xc2/0x120 fs/read_write.c:1054
+ kernel_readv fs/splice.c:365 [inline]
+ default_file_splice_read+0x579/0xa40 fs/splice.c:422
+ do_splice_to fs/splice.c:892 [inline]
+ splice_direct_to_actor+0x3c1/0xb40 fs/splice.c:971
+ do_splice_direct+0x201/0x340 fs/splice.c:1080
+ do_sendfile+0x809/0xfe0 fs/read_write.c:1521
+ __do_sys_sendfile64 fs/read_write.c:1582 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1568 [inline]
+ __x64_sys_sendfile64+0x164/0x1a0 fs/read_write.c:1568
+ do_syscall_64+0xf3/0x1b0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x448b99
+Code: e8 cc 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007feaf3cdbd18 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00000000006dec58 RCX: 0000000000448b99
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: 0000000000000007
+RBP: 00000000006dec50 R08: 65732f636f72702f R09: 65732f636f72702f
+R10: 000000000000edc0 R11: 0000000000000246 R12: 00000000006dec5c
+R13: 00007feaf3cdbd20 R14: 00007feaf3cdbd20 R15: 00000000006dec5c
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- drivers/net/ethernet/marvell/prestera/Kconfig |   1 +
- .../net/ethernet/marvell/prestera/Makefile    |   2 +-
- .../net/ethernet/marvell/prestera/prestera.h  |   4 +
- .../marvell/prestera/prestera_devlink.c       | 110 ++++++++++++++++++
- .../marvell/prestera/prestera_devlink.h       |  25 ++++
- .../ethernet/marvell/prestera/prestera_main.c |  27 ++++-
- 6 files changed, 164 insertions(+), 5 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_devlink.h
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/ethernet/marvell/prestera/Kconfig b/drivers/net/ethernet/marvell/prestera/Kconfig
-index 0848edb272a5..dfd5174d0568 100644
---- a/drivers/net/ethernet/marvell/prestera/Kconfig
-+++ b/drivers/net/ethernet/marvell/prestera/Kconfig
-@@ -6,6 +6,7 @@
- config PRESTERA
- 	tristate "Marvell Prestera Switch ASICs support"
- 	depends on NET_SWITCHDEV && VLAN_8021Q
-+	select NET_DEVLINK
- 	help
- 	  This driver supports Marvell Prestera Switch ASICs family.
- 
-diff --git a/drivers/net/ethernet/marvell/prestera/Makefile b/drivers/net/ethernet/marvell/prestera/Makefile
-index 2146714eab21..babd71fba809 100644
---- a/drivers/net/ethernet/marvell/prestera/Makefile
-+++ b/drivers/net/ethernet/marvell/prestera/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PRESTERA)	+= prestera.o
- prestera-objs		:= prestera_main.o prestera_hw.o prestera_dsa.o \
--			   prestera_rxtx.o
-+			   prestera_rxtx.o prestera_devlink.o
- 
- obj-$(CONFIG_PRESTERA_PCI)	+= prestera_pci.o
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera.h b/drivers/net/ethernet/marvell/prestera/prestera.h
-index 5079d872e18a..f8abaaff5f21 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera.h
-+++ b/drivers/net/ethernet/marvell/prestera/prestera.h
-@@ -11,6 +11,9 @@
- #include <linux/notifier.h>
- #include <uapi/linux/if_ether.h>
- #include <linux/workqueue.h>
-+#include <net/devlink.h>
-+
-+#define PRESTERA_DRV_NAME	"prestera"
- 
- struct prestera_fw_rev {
- 	u16 maj;
-@@ -63,6 +66,7 @@ struct prestera_port_caps {
- struct prestera_port {
- 	struct net_device *dev;
- 	struct prestera_switch *sw;
-+	struct devlink_port dl_port;
- 	u32 id;
- 	u32 hw_id;
- 	u32 dev_id;
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.c b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-new file mode 100644
-index 000000000000..7d1e1b807a0d
---- /dev/null
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.c
-@@ -0,0 +1,110 @@
-+// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
-+/* Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved */
-+
-+#include <net/devlink.h>
-+
-+#include "prestera.h"
-+
-+static int prestera_dl_info_get(struct devlink *dl,
-+				struct devlink_info_req *req,
-+				struct netlink_ext_ack *extack)
-+{
-+	struct prestera_switch *sw = devlink_priv(dl);
-+	char buf[16];
-+	int err = 0;
-+
-+	err = devlink_info_driver_name_put(req, PRESTERA_DRV_NAME);
-+	if (err)
-+		return err;
-+
-+	snprintf(buf, sizeof(buf), "%d.%d.%d",
-+		 sw->dev->fw_rev.maj,
-+		 sw->dev->fw_rev.min,
-+		 sw->dev->fw_rev.sub);
-+
-+	err = devlink_info_version_running_put(req,
-+					       DEVLINK_INFO_VERSION_GENERIC_FW,
-+					       buf);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static const struct devlink_ops prestera_dl_ops = {
-+	.info_get = prestera_dl_info_get,
-+};
-+
-+struct prestera_switch *prestera_devlink_alloc(void)
-+{
-+	struct devlink *dl;
-+
-+	dl = devlink_alloc(&prestera_dl_ops, sizeof(struct prestera_switch));
-+
-+	return devlink_priv(dl);
-+}
-+
-+void prestera_devlink_free(struct prestera_switch *sw)
-+{
-+	struct devlink *dl = priv_to_devlink(sw);
-+
-+	devlink_free(dl);
-+}
-+
-+int prestera_devlink_register(struct prestera_switch *sw)
-+{
-+	struct devlink *dl = priv_to_devlink(sw);
-+	int err;
-+
-+	err = devlink_register(dl, sw->dev->dev);
-+	if (err) {
-+		dev_warn(sw->dev->dev, "devlink_register failed: %d\n", err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+void prestera_devlink_unregister(struct prestera_switch *sw)
-+{
-+	struct devlink *dl = priv_to_devlink(sw);
-+
-+	devlink_unregister(dl);
-+}
-+
-+int prestera_devlink_port_register(struct prestera_port *port)
-+{
-+	struct devlink *dl = priv_to_devlink(port->sw);
-+	struct prestera_switch *sw;
-+	int err;
-+
-+	sw = port->sw;
-+	dl = priv_to_devlink(sw);
-+
-+	devlink_port_attrs_set(&port->dl_port, DEVLINK_PORT_FLAVOUR_PHYSICAL,
-+			       port->fp_id, false, 0,
-+			       &port->sw->id, sizeof(port->sw->id));
-+
-+	err = devlink_port_register(dl, &port->dl_port, port->fp_id);
-+	if (err)
-+		dev_err(sw->dev->dev, "devlink_port_register failed: %d\n", err);
-+
-+	return 0;
-+}
-+
-+void prestera_devlink_port_unregister(struct prestera_port *port)
-+{
-+	devlink_port_unregister(&port->dl_port);
-+}
-+
-+void prestera_devlink_port_type_set(struct prestera_port *port)
-+{
-+	devlink_port_type_eth_set(&port->dl_port, port->dev);
-+}
-+
-+struct devlink_port *prestera_devlink_get_port(struct net_device *dev)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+
-+	return &port->dl_port;
-+}
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_devlink.h b/drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-new file mode 100644
-index 000000000000..b46441d1e758
---- /dev/null
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_devlink.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
-+ *
-+ * Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved.
-+ *
-+ */
-+
-+#ifndef _PRESTERA_DEVLINK_H_
-+#define _PRESTERA_DEVLINK_H_
-+
-+#include "prestera.h"
-+
-+struct prestera_switch *prestera_devlink_alloc(void);
-+void prestera_devlink_free(struct prestera_switch *sw);
-+
-+int prestera_devlink_register(struct prestera_switch *sw);
-+void prestera_devlink_unregister(struct prestera_switch *sw);
-+
-+int prestera_devlink_port_register(struct prestera_port *port);
-+void prestera_devlink_port_unregister(struct prestera_port *port);
-+
-+void prestera_devlink_port_type_set(struct prestera_port *port);
-+
-+struct devlink_port *prestera_devlink_get_port(struct net_device *dev);
-+
-+#endif /* _PRESTERA_DEVLINK_H_ */
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_main.c b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-index b5241e9b784a..ddab9422fe5e 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_main.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-@@ -14,6 +14,7 @@
- #include "prestera.h"
- #include "prestera_hw.h"
- #include "prestera_rxtx.h"
-+#include "prestera_devlink.h"
- 
- #define PRESTERA_MTU_DEFAULT 1536
- 
-@@ -185,6 +186,7 @@ static const struct net_device_ops netdev_ops = {
- 	.ndo_change_mtu = prestera_port_change_mtu,
- 	.ndo_get_stats64 = prestera_port_get_stats64,
- 	.ndo_set_mac_address = prestera_port_set_mac_address,
-+	.ndo_get_devlink_port = prestera_devlink_get_port,
- };
- 
- static int prestera_port_autoneg_set(struct prestera_port *port, bool enable,
-@@ -234,9 +236,13 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
- 					&port->hw_id, &port->dev_id);
- 	if (err) {
- 		dev_err(prestera_dev(sw), "Failed to get port(%u) info\n", id);
--		goto err_port_init;
-+		goto err_port_info_get;
- 	}
- 
-+	err = prestera_devlink_port_register(port);
-+	if (err)
-+		goto err_dl_port_register;
-+
- 	dev->features |= NETIF_F_NETNS_LOCAL;
- 	dev->netdev_ops = &netdev_ops;
- 
-@@ -295,11 +301,16 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
- 	if (err)
- 		goto err_register_netdev;
- 
-+	prestera_devlink_port_type_set(port);
-+
- 	return 0;
- 
- err_register_netdev:
- 	list_del_rcu(&port->list);
- err_port_init:
-+	prestera_devlink_port_unregister(port);
-+err_dl_port_register:
-+err_port_info_get:
- 	free_netdev(dev);
- 	return err;
- }
-@@ -313,6 +324,7 @@ static void prestera_port_destroy(struct prestera_port *port)
- 
- 	list_del_rcu(&port->list);
- 
-+	prestera_devlink_port_unregister(port);
- 	free_netdev(dev);
- }
- 
-@@ -435,6 +447,10 @@ static int prestera_switch_init(struct prestera_switch *sw)
- 	if (err)
- 		return err;
- 
-+	err = prestera_devlink_register(sw);
-+	if (err)
-+		goto err_dl_register;
-+
- 	err = prestera_create_ports(sw);
- 	if (err)
- 		goto err_ports_create;
-@@ -442,6 +458,8 @@ static int prestera_switch_init(struct prestera_switch *sw)
- 	return 0;
- 
- err_ports_create:
-+	prestera_devlink_unregister(sw);
-+err_dl_register:
- 	prestera_event_handlers_unregister(sw);
- 
- 	return err;
-@@ -450,6 +468,7 @@ static int prestera_switch_init(struct prestera_switch *sw)
- static void prestera_switch_fini(struct prestera_switch *sw)
- {
- 	prestera_destroy_ports(sw);
-+	prestera_devlink_unregister(sw);
- 	prestera_event_handlers_unregister(sw);
- 	prestera_rxtx_switch_fini(sw);
- }
-@@ -459,7 +478,7 @@ int prestera_device_register(struct prestera_device *dev)
- 	struct prestera_switch *sw;
- 	int err;
- 
--	sw = kzalloc(sizeof(*sw), GFP_KERNEL);
-+	sw = prestera_devlink_alloc();
- 	if (!sw)
- 		return -ENOMEM;
- 
-@@ -468,7 +487,7 @@ int prestera_device_register(struct prestera_device *dev)
- 
- 	err = prestera_switch_init(sw);
- 	if (err) {
--		kfree(sw);
-+		prestera_devlink_free(sw);
- 		return err;
- 	}
- 
-@@ -481,7 +500,7 @@ void prestera_device_unregister(struct prestera_device *dev)
- 	struct prestera_switch *sw = dev->priv;
- 
- 	prestera_switch_fini(sw);
--	kfree(sw);
-+	prestera_devlink_free(sw);
- }
- EXPORT_SYMBOL(prestera_device_unregister);
- 
--- 
-2.17.1
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
