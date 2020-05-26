@@ -2,112 +2,152 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3056C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3F7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE25B2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC742084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590519645;
+	bh=5aukwFJtbgV12PH0sdBUv7PRVT0Q7aRa7HrPvFzyJEY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IZGJlmouUMeyykhmsuk1Y0KFPBn88DnkHi1OII09ifdLzP6fAzcN1BXqw12UV1vbL
+	 bndT0QJE+/cwAR24NJeCBK7dTNbqQYQ98LS/AyxqioUTfmkh1F4esMnNjchDw/ZuZb
+	 l1zr+hza1rTWlWp7w47VCwej2IRbywKgpqY4lreY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390798AbgEZTAm (ORCPT
+        id S2390811AbgEZTAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:00:42 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:41755 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390758AbgEZTAj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:39 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MHWzP-1jqYz61nhB-00DWzw for <linux-kernel@vger.kernel.org>; Tue, 26 May
- 2020 21:00:37 +0200
-Received: by mail-qt1-f172.google.com with SMTP id z1so4970154qtn.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:00:37 -0700 (PDT)
-X-Gm-Message-State: AOAM533FP+3xy5hEgTc6kzXBQ37uL+tJvBpF1gubijXOwzz56oKi1jfr
-        OAcaKIo+hejGlvUo2is1mtFEMYXWkB+kiLC0Otk=
-X-Google-Smtp-Source: ABdhPJyxFIBjrso5flwbMzskJ0iFERf9bCDL1IHkg8XbIOolDiFbZCM5y+BlNca+wOzMJlz82Rirzft1rGNKPreeS40=
-X-Received: by 2002:ac8:1844:: with SMTP id n4mr300518qtk.142.1590519636182;
- Tue, 26 May 2020 12:00:36 -0700 (PDT)
+        Tue, 26 May 2020 15:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390792AbgEZTAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB7F20849;
+        Tue, 26 May 2020 19:00:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519641;
+        bh=5aukwFJtbgV12PH0sdBUv7PRVT0Q7aRa7HrPvFzyJEY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sytgax1VvFOHH8n7dnLyk/H3ePxhPFHJRS820X+LGwRhzIcI75Ql6D1PxoimVBhJb
+         3Z4Qtrd+gD4PJ+IHV9/5CJWcdUq7TxUgqDNSrrLzOKbd7CuAQLQTOmfVv0HvaV0SMI
+         cDGFnXgVawBu4QLXqfy1kQ7++1gVC7SMvHgi/E6E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 19/59] scsi: ibmvscsi: Fix WARN_ON during event pool release
+Date:   Tue, 26 May 2020 20:53:04 +0200
+Message-Id: <20200526183914.528229791@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
+References: <20200526183907.123822792@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200521142047.169334-1-elver@google.com> <20200521142047.169334-10-elver@google.com>
- <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
- <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
- <20200526120245.GB27166@willie-the-truck> <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
- <CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com> <20200526173312.GA30240@google.com>
-In-Reply-To: <20200526173312.GA30240@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 26 May 2020 21:00:20 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3ZawPnzmzx4q58--M1h=v4X-1GtQLiwL1=G6rDK8=Wpg@mail.gmail.com>
-Message-ID: <CAK8P3a3ZawPnzmzx4q58--M1h=v4X-1GtQLiwL1=G6rDK8=Wpg@mail.gmail.com>
-Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement expression
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:YZvZtYzPL/ad9yexnmdrNznL+6Kj7ZbcdRnrfB6SJ6T3EEGT3S2
- 1eZZL4jOMAVQMUSFSBEq6hpa87+1QwMQ0GGLzBKA/gpyJX3TDL0E0TN0QVzba/RTcJ2/fvG
- 40MgQOmvi5nEEWeQ4yBoYAHqLzEfwOLrWkaHqh8WwPTsOaQbBVn81rOKdEsgrtbClT4NFaW
- chuPy9zVoZmuxh+bwXgdQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:kgXZ+s1WhxA=:j4tArGneAtjwl0yJKAWwBc
- yi3MVuFvE7LnXEgNrHZW3f+eHQaS/ssYpHTnuE3egIWG4ZTScgWkYnigUpl62Kex4A/8hTquW
- JrOHIshNbWkEiF5Xrgy9SGk1CZ5Dd9J8dAQk3tqt+c0Jjw9E8Cw7OnyJWNKV5LeK0XJFrcgtb
- Nx3KYK3q7W71sTh6XbKSDxUng2giWHY0nJq5ErFb0/L89Dv1pNWnZMAcNFoicYPPpJ+XjxGDq
- tRKyHqDnQRBw0LIVP//J7SHqq7S8h2Fm12tBkQVSQXCIxgF6XTtF5VdcUa5ns2R7JBcxhE1LG
- qKolhuXVGyxoGpCEI9+rF4K2GYXhfe4jRoLarZ8V7aTM1kDSfi+kcWsm3P3XVHGLTLZ97bKv/
- bSKHxL76gfRx/VSLfRRzOM5MSBihiOEmf8A/q2XEy6vLNhw/ed0Lun98pFJKqFKALwihrdNyd
- GD/hibBnWWySRJ6C/Rlzn9XbXh3f/D1F78HK5ygtwlmCjnXJDRPJXYECwQ2dALUue9o26sYqL
- GXMrIe+y8ZtSilfYHg4blo7wpQ7HNpWKmwQZ31snQA41u6f+P7GKcTdaDiZZyXbPgf4HfWMfv
- ojePz5MIKUrWTxuJMydE4LGAwRqHks/vryh6il680wuvvbu6EIxmeG2whycUOSs8PGG49SX4c
- hEIGV3rtdLSo1xxu4S4+qHW4AFXjCfL+bcNMFfY0elQH2CjnZTPyVPeGuK2tRwB2EqK0RR1KJ
- ZBRxjKxhF13CH1RqgW8L3x8gilZSbuIx15X4A7TJlj2cDa4NG4ocXx0ikGf8kJOc686uyxdKZ
- 4g5elRdpIp4oEIgspvrJ5D68769mW3UlU5j6zo6N9USY3yV7HA=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 7:33 PM 'Marco Elver' via Clang Built Linux
-<clang-built-linux@googlegroups.com> wrote:
-> On Tue, 26 May 2020, Marco Elver wrote:
-> > On Tue, 26 May 2020 at 14:19, Arnd Bergmann <arnd@arndb.de> wrote:
-> > Note that an 'allyesconfig' selects KASAN and not KCSAN by default.
-> > But I think that's not relevant, since KCSAN-specific code was removed
-> > from ONCEs. In general though, it is entirely expected that we have a
-> > bit longer compile times when we have the instrumentation passes
-> > enabled.
-> >
-> > But as you pointed out, that's irrelevant, and the significant
-> > overhead is from parsing and pre-processing. FWIW, we can probably
-> > optimize Clang itself a bit:
-> > https://github.com/ClangBuiltLinux/linux/issues/1032#issuecomment-633712667
->
-> Found that optimizing __unqual_scalar_typeof makes a noticeable
-> difference. We could use C11's _Generic if the compiler supports it (and
-> all supported versions of Clang certainly do).
->
-> Could you verify if the below patch improves compile-times for you? E.g.
-> on fs/ocfs2/journal.c I was able to get ~40% compile-time speedup.
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-Yes, that brings both the preprocessed size and the time to preprocess it
-with clang-11 back to where it is in mainline, and close to the speed with
-gcc-10 for this particular file.
+[ Upstream commit b36522150e5b85045f868768d46fbaaa034174b2 ]
 
-I also cross-checked with gcc-4.9 and gcc-10 and found that they do see
-the same increase in the preprocessor output, but it makes little difference
-for preprocessing performance on gcc.
+While removing an ibmvscsi client adapter a WARN_ON like the following is
+seen in the kernel log:
 
-       Arnd
+drmgr: drmgr: -r -c slot -s U9080.M9S.783AEC8-V11-C11 -w 5 -d 1
+WARNING: CPU: 9 PID: 24062 at ../kernel/dma/mapping.c:311 dma_free_attrs+0x78/0x110
+Supported: No, Unreleased kernel
+CPU: 9 PID: 24062 Comm: drmgr Kdump: loaded Tainted: G               X 5.3.18-12-default
+NIP:  c0000000001fa758 LR: c0000000001fa744 CTR: c0000000001fa6e0
+REGS: c0000002173375d0 TRAP: 0700   Tainted: G               X (5.3.18-12-default)
+MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28088282  XER: 20000000
+CFAR: c0000000001fbf0c IRQMASK: 1
+GPR00: c0000000001fa744 c000000217337860 c00000000161ab00 0000000000000000
+GPR04: 0000000000000000 c000011e12250000 0000000018010000 0000000000000000
+GPR08: 0000000000000000 0000000000000001 0000000000000001 c0080000190f4fa8
+GPR12: c0000000001fa6e0 c000000007fc2a00 0000000000000000 0000000000000000
+GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+GPR24: 000000011420e310 0000000000000000 0000000000000000 0000000018010000
+GPR28: c00000000159de50 c000011e12250000 0000000000006600 c000011e5c994848
+NIP [c0000000001fa758] dma_free_attrs+0x78/0x110
+LR [c0000000001fa744] dma_free_attrs+0x64/0x110
+Call Trace:
+[c000000217337860] [000000011420e310] 0x11420e310 (unreliable)
+[c0000002173378b0] [c0080000190f0280] release_event_pool+0xd8/0x120 [ibmvscsi]
+[c000000217337930] [c0080000190f3f74] ibmvscsi_remove+0x6c/0x160 [ibmvscsi]
+[c000000217337960] [c0000000000f3cac] vio_bus_remove+0x5c/0x100
+[c0000002173379a0] [c00000000087a0a4] device_release_driver_internal+0x154/0x280
+[c0000002173379e0] [c0000000008777cc] bus_remove_device+0x11c/0x220
+[c000000217337a60] [c000000000870fc4] device_del+0x1c4/0x470
+[c000000217337b10] [c0000000008712a0] device_unregister+0x30/0xa0
+[c000000217337b80] [c0000000000f39ec] vio_unregister_device+0x2c/0x60
+[c000000217337bb0] [c00800001a1d0964] dlpar_remove_slot+0x14c/0x250 [rpadlpar_io]
+[c000000217337c50] [c00800001a1d0bcc] remove_slot_store+0xa4/0x110 [rpadlpar_io]
+[c000000217337cd0] [c000000000c091a0] kobj_attr_store+0x30/0x50
+[c000000217337cf0] [c00000000057c934] sysfs_kf_write+0x64/0x90
+[c000000217337d10] [c00000000057be10] kernfs_fop_write+0x1b0/0x290
+[c000000217337d60] [c000000000488c4c] __vfs_write+0x3c/0x70
+[c000000217337d80] [c00000000048c648] vfs_write+0xd8/0x260
+[c000000217337dd0] [c00000000048ca8c] ksys_write+0xdc/0x130
+[c000000217337e20] [c00000000000b488] system_call+0x5c/0x70
+Instruction dump:
+7c840074 f8010010 f821ffb1 20840040 eb830218 7c8407b4 48002019 60000000
+2fa30000 409e003c 892d0988 792907e0 <0b090000> 2fbd0000 419e0028 2fbc0000
+---[ end trace 5955b3c0cc079942 ]---
+rpadlpar_io: slot U9080.M9S.783AEC8-V11-C11 removed
+
+This is tripped as a result of irqs being disabled during the call to
+dma_free_coherent() by release_event_pool(). At this point in the code path
+we have quiesced the adapter and it is overly paranoid to be holding the
+host lock.
+
+[mkp: fixed build warning reported by sfr]
+
+Link: https://lore.kernel.org/r/1588027793-17952-1-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/ibmvscsi/ibmvscsi.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 07c23bbd968c..83645a1c6f82 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2299,16 +2299,12 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
+ static int ibmvscsi_remove(struct vio_dev *vdev)
+ {
+ 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
+-	unsigned long flags;
+ 
+ 	srp_remove_host(hostdata->host);
+ 	scsi_remove_host(hostdata->host);
+ 
+ 	purge_requests(hostdata, DID_ERROR);
+-
+-	spin_lock_irqsave(hostdata->host->host_lock, flags);
+ 	release_event_pool(&hostdata->pool, hostdata);
+-	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
+ 
+ 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 					max_events);
+-- 
+2.25.1
+
+
+
