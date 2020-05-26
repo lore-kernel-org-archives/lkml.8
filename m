@@ -2,102 +2,163 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9045C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38B3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C5120787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5F920776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:57:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t5FQ5+ta"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDjv/fMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbgEZH50 (ORCPT
+        id S1731693AbgEZH5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:57:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42218 "EHLO
+        Tue, 26 May 2020 03:57:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731406AbgEZH5Z (ORCPT
+        with ESMTP id S1731406AbgEZH5l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:57:25 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 379FCC03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:57:25 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id e1so19428291wrt.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:57:25 -0700 (PDT)
+        Tue, 26 May 2020 03:57:41 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FCFC03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:57:40 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 202so11772838lfe.5
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:57:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=f4CVXpIwbYA1/rSO3By0QAy5Aok5IdKGfU45oFxadek=;
-        b=t5FQ5+tazNQZsu+Wc06IXbeyHxcZj04wOnM1WAOZod74jk0nVN+HvZzxoUv6Dz7tsI
-         EApI6/nxS/j2UONJ+N8D/YNKcNnNSA6Xm5bRC28FTWy46oex7A7mQ6BMELMNQs4wc3Fq
-         9yI0xDi7xVi7P9vfcei2EAKKljYXwHgjtiHk9yeXjLTW0DjfQYLbUiUMYkueG8npr5YO
-         ZN+HNILf+FzKYTZ2Wk/Wkg5PVV6F9ejS/1DWzrGFd4q3EWqxBxUMdXLUSuqsBA2+XJDN
-         VOiJtBaucsQF58wwW0ai/ukJlm72bo7w0CD+ufxxLvroTcQEKIOCU2Sh+yO81YHi3v3G
-         D1jg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hls7pMjgRAEJPr8FkQn95q9jMKxanllQ2tD+H93l8Ao=;
+        b=kDjv/fMk4zgd/uMy9GdPdkzKw0FjIFNyX/DkJ4TIntG9UIvqr1brnF9lwO3ja/jq/6
+         e4PJsah91HXN5L/KlNXp8fdfOHtc8tjtjwf4r26+Wavaw/NVBpFwSmXcilVjDl+HMJD5
+         bNV3kMcbws6HVRsXjDGSB752UfhZFX6DlovpnRRUzCRsSNfJdNoATpsAAZM+8LC9LCbx
+         xNcEzner0LDPChpzlIY2cZzLOC7EdU/hC+GEeSsHVxEdirao42Wpxo+X0V4pqNrOnUbm
+         fgc+Gc5ZvIy2whtYwMU25POFzrlACuxrRehyrXpKGz+RR0BrbBfXyHjyFKVR1xSgtqhb
+         bG3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=f4CVXpIwbYA1/rSO3By0QAy5Aok5IdKGfU45oFxadek=;
-        b=Wnnd8LgQJgOspMmGhy6MKYUttBTsEaNZy3br5JWYv3C+ATM4K7vazWi+dkt9oC/Bnp
-         bOZ/iyLHOwyoVZor0JBko+BaarbtXje0kW4abUi1XHLSD2DbQ0I2ZhV+dwFZH2fW1UWJ
-         gECSxRrYhCP2HPAVbfnYbXq52J/Z+dHEWsWSFgr1K3ah5BpZC6na8mi7QD8qvsktCfbt
-         Ce2jxCG5gFIUFO2VgkrM0QPgElS55diiQzz85t5Z05ObNZe8/wjcWFDKf/Dx26DlUX2l
-         0Bl0IzQ3sOiOF1f+4dtu1+6kOVHnAm++r9/RRClDq7Ldbnx6sdD6IMfc1k7jcJaNU65E
-         awDg==
-X-Gm-Message-State: AOAM533T2o3ZhF2nzlDDIY04FfWxp2SNVUKQQXhUBNR5Y2UiPtSitL0q
-        KouJirOCCzM5NzUDT4eAg8eFucjxfrI=
-X-Google-Smtp-Source: ABdhPJzl4RWw8izusLBGpeBBKAIALyCyKMKS4tx46Usuii5EVZ40Iz2jybqnYKnh8NS7Yl2OGR4tvg==
-X-Received: by 2002:adf:fd49:: with SMTP id h9mr19360150wrs.67.1590479843845;
-        Tue, 26 May 2020 00:57:23 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id j68sm217211wrj.28.2020.05.26.00.57.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:57:22 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:57:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] mfd: stmfx: reset chip on resume as supply was
- disabled
-Message-ID: <20200526075721.GE3628@dell>
-References: <20200422090833.9743-1-amelie.delaunay@st.com>
- <20200422090833.9743-2-amelie.delaunay@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hls7pMjgRAEJPr8FkQn95q9jMKxanllQ2tD+H93l8Ao=;
+        b=MVtXxtqCDn2T1bLLMKE9Ij79wl4LknxkgmvOO3UrIF7K2OAUZ4cNxH6MeOEA0wJNjU
+         1lENQHQH6eKi6ssrWbxv+b5bhmYNu7t4CCJBS9OqAitJn0ITRpbtmGCy3Hf/9o0Y6FX6
+         KP9VTpzk8xJkjnka7VkoVLTFKxKIiaDaRyPd/9op79j6exMju5cwcyZcOq3AoVkCvViK
+         SNAYfMNAqp1DFSNoFMvHekVM42tq3cBB+rTgcB7FZWMXURM79ubobOKuwBj8KQ+9ItcC
+         kqIz5MJQe/6wQHevQ5x3rTa/zXLaucPhV4xMn+t6oeHGLc/xottC/7xT/O7DsTu4kebB
+         hwdg==
+X-Gm-Message-State: AOAM530664DiY5XRXSlq6xMJSIi+ZAOQrE0a77NtrbslE/9yzYR6fsvm
+        WoP8FQb9BPrZIKP6N9iRNpC83F15A+FqF6cj6+7NFw==
+X-Google-Smtp-Source: ABdhPJyComtMgmHneuXnzA8/7vKS/DZQGUDGit10QC5/2EBq1S/xYwm1LkIc+Kz2CI3lMp630d59AlDsbW0jrx4se38=
+X-Received: by 2002:ac2:560f:: with SMTP id v15mr16647030lfd.160.1590479859340;
+ Tue, 26 May 2020 00:57:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200422090833.9743-2-amelie.delaunay@st.com>
+References: <1590158027-15254-1-git-send-email-sumit.garg@linaro.org> <20200522163508.e7476dd2vulntppc@holly.lan>
+In-Reply-To: <20200522163508.e7476dd2vulntppc@holly.lan>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 26 May 2020 13:27:28 +0530
+Message-ID: <CAFA6WYPNqN-rQmymBkEQV0Cf0QWPNEjNkvVhUFFyi68zErCiiw@mail.gmail.com>
+Subject: Re: [PATCH v2] kdb: Make kdb_printf robust to run in NMI context
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Amelie Delaunay wrote:
+On Fri, 22 May 2020 at 22:05, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Fri, May 22, 2020 at 08:03:47PM +0530, Sumit Garg wrote:
+> > While rounding up CPUs via NMIs, its possible that a rounded up CPU
+> > maybe holding a console port lock leading to kgdb master CPU stuck in
+> > a deadlock during invocation of console write operations. So in order
+> > to avoid such a deadlock, invoke bust_spinlocks() prior to invocation
+> > of console handlers.
+> >
+> > Also, add a check for console port to be enabled prior to invocation of
+> > corresponding handler.
+>
+> Perhaps this should have been two patches.
+>
 
-> STMFX supply is disabled during suspend. To avoid a too early access to
-> the STMFX firmware on resume, reset the chip and wait for its firmware to
-> be loaded.
-> 
-> Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  drivers/mfd/stmfx.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+Okay, will split this patch into two.
 
-Applied, thanks.
+> In fact, to be honest, I'd suggest combining all the patches to improve
+> kdb console handling (including a fixed version of the RFC) into a
+> single patch set.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yeah it makes sense to have a combined patch set to improve kdb
+console handling. But I posted the RFC patch separately as I expected
+comments and discussions to come up with an accepted approach.
+
+So let me wait for an agreement on RFC patch after which I can include
+that patch in this patch set.
+
+>
+>
+> > Suggested-by: Petr Mladek <pmladek@suse.com>
+> > Suggested-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > ---
+> >
+> > Changes in v2:
+> > - Use oops_in_progress directly instead of bust_spinlocks().
+> >
+> >  kernel/debug/kdb/kdb_io.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> > index 924bc92..3a5a068 100644
+> > --- a/kernel/debug/kdb/kdb_io.c
+> > +++ b/kernel/debug/kdb/kdb_io.c
+> > @@ -699,7 +699,11 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
+> >                       }
+> >               }
+> >               for_each_console(c) {
+> > +                     if (!(c->flags & CON_ENABLED))
+> > +                             continue;
+> > +                     ++oops_in_progress;
+>
+> Given the subtly of what is going on I think we need some comments in
+> the code on what we are doing and why.
+
+Sure, will add comments.
+
+>
+>
+> >                       c->write(c, cp, retlen - (cp - kdb_buffer));
+> > +                     --oops_in_progress;
+> >                       touch_nmi_watchdog();
+> >               }
+> >       }
+> > @@ -761,7 +765,11 @@ int vkdb_printf(enum kdb_msgsrc src, const char *fmt, va_list ap)
+> >                       }
+> >               }
+> >               for_each_console(c) {
+> > +                     if (!(c->flags & CON_ENABLED))
+> > +                             continue;
+> > +                     ++oops_in_progress;
+> >                       c->write(c, moreprompt, strlen(moreprompt));
+> > +                     --oops_in_progress;
+> >                       touch_nmi_watchdog();
+>
+> As with the other patches maybe the first patch in the set should be
+> factoring out the common code before making changes to it.
+
+Sure, will factor out common code as initial patch.
+
+-Sumit
+
+>
+>
+> Daniel.
