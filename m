@@ -2,126 +2,83 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28242C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1409DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0834420700
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uADltm6w"
+	by mail.kernel.org (Postfix) with ESMTP id D5A582084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:56:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590537398;
+	bh=/DKvn5V5jBjY3r1PoVZmSHTrG73P5YgmTXg6zzEjUPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oqv3qIdBql4cwyOKM/7SQhUDkpVnjLv71PzW9K7LPSWUD2r6XYHRg1POZ2AcUfhaL
+	 lfkY1pHwvY4zFhWUieOi6PwzYNh3nng+aC96BojIdCFJdGChZv+DanusGo8vewrWCa
+	 urbATWlM1vbaT5P+cdythkR3O4xHxowJ6aIleqgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgEZXxN (ORCPT
+        id S1726690AbgEZX4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgEZXxM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:53:12 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE299C061A0F;
-        Tue, 26 May 2020 16:53:12 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id i17so866407pli.13;
-        Tue, 26 May 2020 16:53:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Zn2rot0EJVC/F9TI89vcU1F8o/pKxmCqY4XQMCAo+m4=;
-        b=uADltm6w1G/hYcnF1MHKtRnFgwgv5Xb+punhDnVMashu2D+HjRzJ+OMqecC8RX2TRm
-         qxmh18DzVqCeIdI+cDXDOBhTJcp2DtcILt7iFWcwb9tgDNCzOro6vT6McugFrhlvfzm3
-         6DemceEQS7p4ZG6k6nqZBuci7Qk8ASf/tdb78a5tOCBBJYyGGL+UWyQZlvEGfWRV8pxo
-         d9RuO3ZOSlYjPMiFtuQziIwBoSyOioJgQVbo9rLX7/cSQ7oqt16ZnYqA0AMo7P5W/xc8
-         rQ3ppd/oEVezQ4YatafPZaP2pUCAb+tZMdSyZ0dGnpxFDDNIdqwNJ2VbYfzldwIMPJdf
-         BvbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Zn2rot0EJVC/F9TI89vcU1F8o/pKxmCqY4XQMCAo+m4=;
-        b=qfuYYi2g2V8iQe3lNTUuxeLXNkkYAh+7VnlK/PGhoPWcji8dLOUyLvzccO8jG/c9XV
-         e0PlnhDAJBk/RwULl8ZCRCvdKzLqHZSizHca/0JJiPj0fh1Qr3w1H02P1eGvRtNC0ikY
-         E+fhbsR0yjariQOufB3HD6b4QhPPnfDXoEy4imbre90J5qWXCV37AsQgw1ADjdo1sT1c
-         5lgW5jWHYL8jGwoyt0v0ckS1qL/6EzRzfcrYXx6lFsGY2jHui8220WZhAFLKxJvIw/cO
-         kRJWVKwuaWs5nJcA1Ak2M4JhhcRqcgTCZ6nkWohYKNXbggtq1GBypTrKWc3gq3ciV2sn
-         hfHw==
-X-Gm-Message-State: AOAM530Rd68kYVkMFkOVxkrgTq/u9cbBmaVt41Mp2wa5O53xLxpOVtrS
-        bLtUQnrqot/ExV3tUtmz1jY=
-X-Google-Smtp-Source: ABdhPJxBp1OGT4pycrI1+BFnzgLt3BtXbfG+QglwOXmGSDwmTanTZ9BjZzlOfeU7FZlAmz5To1PenA==
-X-Received: by 2002:a17:902:c40c:: with SMTP id k12mr3229652plk.11.1590537191974;
-        Tue, 26 May 2020 16:53:11 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id y14sm494417pjr.31.2020.05.26.16.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 16:53:11 -0700 (PDT)
-Date:   Tue, 26 May 2020 16:53:08 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH 1/2] clk: bcm2835: Fix return type of
- bcm2835_register_gate
-Message-ID: <20200526235308.GA2330247@ubuntu-s3-xlarge-x86>
-References: <20200516080806.1459784-1-natechancellor@gmail.com>
- <159053652408.88029.5210144839543172586@swboyd.mtv.corp.google.com>
+        Tue, 26 May 2020 19:56:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725891AbgEZX4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 19:56:37 -0400
+Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8705E20700;
+        Tue, 26 May 2020 23:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590537397;
+        bh=/DKvn5V5jBjY3r1PoVZmSHTrG73P5YgmTXg6zzEjUPA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mnHfvHrQGI0quIO/bAjTmnh3ekBzp0xd/cb/YQLlpj18jKTzf+UoTHCYS+zo1oCkr
+         LU7GWxj6KvSiPs5GRX8QKjhiUerC8TC77qz0sNd67JuHLwttYOzlNZvY/EbvqrV9Oj
+         J+/ERs1nRxQ61FkMO8Bc/WiaDps+9LtdZ4sJCRtE=
+Date:   Wed, 27 May 2020 01:56:34 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        cai@lca.pw, mgorman@techsingularity.net
+Subject: Re: [RFC][PATCH 1/7] sched: Fix smp_call_function_single_async()
+ usage for ILB
+Message-ID: <20200526235632.GA8942@lenoir>
+References: <20200526161057.531933155@infradead.org>
+ <20200526161907.778543557@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159053652408.88029.5210144839543172586@swboyd.mtv.corp.google.com>
+In-Reply-To: <20200526161907.778543557@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 04:42:04PM -0700, Stephen Boyd wrote:
-> Quoting Nathan Chancellor (2020-05-16 01:08:06)
-> > bcm2835_register_gate is used as a callback for the clk_register member
-> > of bcm2835_clk_desc, which expects a struct clk_hw * return type but
-> > bcm2835_register_gate returns a struct clk *.
-> > 
-> > This discrepancy is hidden by the fact that bcm2835_register_gate is
-> > cast to the typedef bcm2835_clk_register by the _REGISTER macro. This
-> > turns out to be a control flow integrity violation, which is how this
-> > was noticed.
-> > 
-> > Change the return type of bcm2835_register_gate to be struct clk_hw *
-> > and use clk_hw_register_gate to do so. This should be a non-functional
-> > change as clk_register_gate calls clk_hw_register_gate anyways but this
-> > is needed to avoid issues with further changes.
-> > 
-> > Fixes: b19f009d4510 ("clk: bcm2835: Migrate to clk_hw based registration and OF APIs")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1028
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
+On Tue, May 26, 2020 at 06:10:58PM +0200, Peter Zijlstra wrote:
+> The recent commit: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
+> got smp_call_function_single_async() subtly wrong. Even though it will
+> return -EBUSY when trying to re-use a csd, that condition is not
+> atomic and still requires external serialization.
 > 
-> Thanks. Applied to clk-next.
+> The change in kick_ilb() got this wrong.
 > 
-> > 
-> > base-commit: bdecf38f228bcca73b31ada98b5b7ba1215eb9c9
+> While on first reading kick_ilb() has an atomic test-and-set that
+> appears to serialize the use, the matching 'release' is not in the
+> right place to actually guarantee this serialization.
 > 
-> Please don't base on some random linux-next commit though.
+> Rework the nohz_idle_balance() trigger so that the release is in the
+> IPI callback and thus guarantees the required serialization for the
+> CSD.
+> 
+> Fixes: 90b5363acd47 ("sched: Clean up scheduler_ipi()")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Sorry, should have just used clk-next directly instead of the HEAD of
-linux-next at the time. Just hard to keep track of all of the different
-maintainer trees so it is easier to just use linux-next.
+Looks very good! Thanks!
 
-I do forget to use the output of --scm from
-get_maintainer.pl though, I should use that more often.
-
-Thank you for picking it up!
-
-Nathan
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
