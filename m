@@ -2,87 +2,108 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8529DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C91512078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:05:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590534343;
-	bh=e2QX2PER2r0ACcoealfB5rbpO8NhJ+Emjfw22FjXdyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GZz1GuRuKcGh2zOLhccuAc71m/ynwcIwp3O7YZFXa8YL3BT2WBuO8aOMA1uInxhbQ
-	 b3/9+VFZdCaU92spE/TMs3Qd3Pg6Kpdu9pudQ7hLPW9kXllah/bNdg01JNaK6UMn6W
-	 eQ/9663fNgC8GB9BBFb+Z3cpo3cLXUR2NlAzVzoM=
+	by mail.kernel.org (Postfix) with ESMTP id 61629207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="DiLoaq8f";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="DiLoaq8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392118AbgEZXFn (ORCPT
+        id S2392215AbgEZXGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 19:05:43 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43073 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389565AbgEZXFm (ORCPT
+        Tue, 26 May 2020 19:06:14 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42266 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389802AbgEZXGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 19:05:42 -0400
-Received: by mail-il1-f194.google.com with SMTP id l20so22164998ilj.10;
-        Tue, 26 May 2020 16:05:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2oYPgM1BtR439Mfpid4h6QvwH7miODS6soRM9HPdtmM=;
-        b=VeqJDgrql00O53CQ8fGVzNG/iYrcwCF1W1FS6VkiyYTS+Ry2BSJsVhNsg0CMa/uloJ
-         whNPE2AvQ9u4Lr+CDh0rAk+kq+rWzBa2u9/jg0DGKC76A+IHS7VRjtEfMQzK5lzlwnbR
-         QNXKVWzXZvZ5zXXbL1qHShC8gtxZv/HBOjcVLjEMtTHkWR3Qt+kMDXgItsZ3UtVckpN5
-         TeGAj4+znjxi++5jvkOWcPxWzM3KPJ3J4csu+p9y5GnFCLWgtG/2Mu3OZ95Cg32lNXrh
-         tVwESVhDu0qxJPvMHJbNR49KAH5CeDfrtQkKJE98phFTaDIRwHBBeKjR2tg/OuKAXNLY
-         AQxQ==
-X-Gm-Message-State: AOAM531JCwHaK7XZQQE+MKIr7itlhsiJe+GSyEWnkWnWFcD0aUope0wv
-        +PZHZF8fi6eF7+N/T5DomQ==
-X-Google-Smtp-Source: ABdhPJyBcSvWgTEJyZu7WnBFc0wCdUtMbWcguCU5wrtNSwGUZAEBzYVIN4zA/3rvIXr6KxxEurglbw==
-X-Received: by 2002:a92:c742:: with SMTP id y2mr3207192ilp.126.1590534341592;
-        Tue, 26 May 2020 16:05:41 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id 4sm722115ilc.34.2020.05.26.16.05.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 16:05:41 -0700 (PDT)
-Received: (nullmailer pid 558228 invoked by uid 1000);
-        Tue, 26 May 2020 23:05:40 -0000
-Date:   Tue, 26 May 2020 17:05:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 09/13] dt-bindings: clock: Make marvell,mmp2-clock a
- power controller
-Message-ID: <20200526230540.GA557537@bogus>
-References: <20200519224151.2074597-1-lkundrak@v3.sk>
- <20200519224151.2074597-10-lkundrak@v3.sk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519224151.2074597-10-lkundrak@v3.sk>
+        Tue, 26 May 2020 19:06:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id E73BC8EE181;
+        Tue, 26 May 2020 16:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1590534372;
+        bh=UIJxxdcolMNBV1F2tHlacd/GA5Gqhl4Il9Tm33AYAaQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=DiLoaq8fmnx68F+zW+NvPjpBkda+KC3ETTX4xGdOxk06zVmgscgPQCibtLWnUO0fI
+         TrgPDUtYdszzo7Jzqvc1MyVusz629oB29QWSpsnIlVu6BiWsBV2g5ZFbOs16Q3qcQc
+         +KFR+4/dX92dbBoqbQBi6OxEQQFaLODVUR4cB9N4=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id KLmpmuVFYzlj; Tue, 26 May 2020 16:06:12 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 8D8B18EE0D4;
+        Tue, 26 May 2020 16:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1590534372;
+        bh=UIJxxdcolMNBV1F2tHlacd/GA5Gqhl4Il9Tm33AYAaQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=DiLoaq8fmnx68F+zW+NvPjpBkda+KC3ETTX4xGdOxk06zVmgscgPQCibtLWnUO0fI
+         TrgPDUtYdszzo7Jzqvc1MyVusz629oB29QWSpsnIlVu6BiWsBV2g5ZFbOs16Q3qcQc
+         +KFR+4/dX92dbBoqbQBi6OxEQQFaLODVUR4cB9N4=
+Message-ID: <1590534370.15108.17.camel@HansenPartnership.com>
+Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
+ mode"
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Alex Guzman <alex@guzman.io>, Mario.Limonciello@dell.com,
+        peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jeffrin@rajagiritech.edu.in
+Date:   Tue, 26 May 2020 16:06:10 -0700
+In-Reply-To: <da3027a2aa9d1b7110a65de919e88f42ef2e13bb.camel@guzman.io>
+References: <20200526183213.20720-1-mario.limonciello@dell.com>
+         <1590520454.11810.40.camel@HansenPartnership.com>
+         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
+         <1590521924.15108.1.camel@HansenPartnership.com>
+         <da3027a2aa9d1b7110a65de919e88f42ef2e13bb.camel@guzman.io>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 12:41:47AM +0200, Lubomir Rintel wrote:
-> This is a binding for the MMP2 power management units. As such apart from
-> providing the clocks, they also manage the power islands.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v2:
-> - Added this patch
-> 
->  .../devicetree/bindings/clock/marvell,mmp2-clock.yaml        | 5 +++++
->  1 file changed, 5 insertions(+)
+On Tue, 2020-05-26 at 15:19 -0700, Alex Guzman wrote:
+[...]
+> When using your patch, I get a hang when trying to use tpm2_getcap,
+> and dmesg shows some info.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Are you sure it's all applied?  This
+
+> [  570.913803]  tpm_tcg_write_bytes+0x2f/0x40
+> [  570.913805]  release_locality+0x49/0x220
+> [  570.913807]  tpm_relinquish_locality+0x1f/0x40
+> [  570.913808]  tpm_chip_stop+0x21/0x40
+> [  570.913810]  tpm_put_ops+0x9/0x30
+> [  570.913811]  tpm_common_write+0x179/0x190
+> [  570.913813]  vfs_write+0xb1/0x1a0
+
+Implies an unmatched tpm_put_ops() in the async write path, as though
+this hunk:
+
+> @@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *file,
+> const char __user *buf,
+>         if (file->f_flags & O_NONBLOCK) {
+>                 priv->command_enqueued = true;
+>                 queue_work(tpm_dev_wq, &priv->async_work);
+> -               tpm_put_ops(priv->chip);
+>                 mutex_unlock(&priv->buffer_mutex);
+>                 return size;
+>         }
+
+Is missing.  I actually booted the patch in my TPM based VM and it all
+seems to work OK when I execute tpm2_getcap (I verified it's using
+O_NONBLOCK) and tssgetcapability in sync mode.
+
+James
+
