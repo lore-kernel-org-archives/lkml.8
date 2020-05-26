@@ -2,365 +2,131 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D384C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 816B62073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F3D12073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:43:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JO05icFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388603AbgEZKm5 (ORCPT
+        id S2388673AbgEZKn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:42:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:48942 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731890AbgEZKm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:42:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 151781FB;
-        Tue, 26 May 2020 03:42:56 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D94EF3F52E;
-        Tue, 26 May 2020 03:42:52 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:42:49 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maz@kernel.org, will@kernel.org,
-        catalin.marinas@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
-        aarcange@redhat.com, shan.gavin@gmail.com
-Subject: Re: [PATCH RFCv2 3/9] kvm/arm64: Rename kvm_vcpu_get_hsr() to
- kvm_vcpu_get_esr()
-Message-ID: <20200526104249.GB1363@C02TD0UTHF1T.local>
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-4-gshan@redhat.com>
+        Tue, 26 May 2020 06:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388622AbgEZKn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:43:27 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32979C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:43:27 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id t11so9920052pgg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 03:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8vLgjzSO/LxApXStr6hj3HmlT19nlNPyYTwZYXJ6lsI=;
+        b=JO05icFZ2oOl/2ZydYLDpoc/seP84LVDwFA4hznRqc7Lu0yJLk0v/w6NbHZzhsxjuS
+         gg4jMSyfdmLwLM60OHlDX4Y3MVOV5TzoPG6xd9yxGCw0ja35SqLsoypvbzE31UCzcSqq
+         OcRIb0hIT5TTpShmMiKtTmXK7rs/ssU+M4bDNUVZhCvFWzRlyEcirejoD5UfZKvX9S1D
+         Csq7H849+0mQBVi8tr5j0FQW0W+huh+OIzF9MT9AoRLcmTt9ZGDiGrrZbmZLlhGiqTUe
+         pBl4aglramB7+ZeBDEIXs8Rg3R6u5K6cUYUYIU3VpEHNEvdbbuyaAXJc7R6aQoO0Mlzk
+         vfcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8vLgjzSO/LxApXStr6hj3HmlT19nlNPyYTwZYXJ6lsI=;
+        b=clKzp994yPIRb8+a2rXiFIeUOWjGD+3FPj2JxipBNlr1nBsupc4ta8GVLIrJtU4nXq
+         p1iIXkfDyDKIVsc7BrP4/qL1t8D0XI1krvj3/pi5vSs7+g0lfuudJhI98IA0EtijF5aj
+         XiiO2geKEnXvIp8S4GDkyagA9ghw1mztGPhvRoeOT8MMI/eUFFY9DO7E1r+jMc3HPW8X
+         JdoIBaqFi0bBDIprAPqxGljPA6t37ih5PGyfaZJu2O5Yh9FqNLaKs1oeTfKdvgWp7eLv
+         HtrrLWeKCxoeSy/AMkr+7gCVDGcsY97fquiFBc9sV0RIuBB7wU7+ctSvsBiO5FpkL1Si
+         VSLw==
+X-Gm-Message-State: AOAM533J1WtegY0pmEbqJ7Hw5XtkifEqRlecHF7ATUa7IPeEBj5j/SRt
+        ReDoeVgqO/TNuURw/f8y1+dDHQ==
+X-Google-Smtp-Source: ABdhPJxiGuXC9T8/0vvEp1ide6CNqP2MI7swVISrxEein7BriB8dAwfiHIb1d2IH6djWdEDEo+E4iQ==
+X-Received: by 2002:a65:67d0:: with SMTP id b16mr437917pgs.91.1590489806616;
+        Tue, 26 May 2020 03:43:26 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
+        by smtp.gmail.com with ESMTPSA id s15sm13277931pgv.5.2020.05.26.03.43.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 03:43:26 -0700 (PDT)
+Date:   Tue, 26 May 2020 18:43:37 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Al Grant <al.grant@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v7 0/3] perf arm-spe: Add support for synthetic events
+Message-ID: <20200526104337.GA7154@leoy-ThinkPad-X240s>
+References: <20200504115625.12589-1-leo.yan@linaro.org>
+ <20200522030919.GE32389@leoy-ThinkPad-X240s>
+ <20200526102602.GA27166@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200508032919.52147-4-gshan@redhat.com>
+In-Reply-To: <20200526102602.GA27166@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:29:13PM +1000, Gavin Shan wrote:
-> Since kvm/arm32 was removed, this renames kvm_vcpu_get_hsr() to
-> kvm_vcpu_get_esr() to it a bit more self-explaining because the
-> functions returns ESR instead of HSR on aarch64. This shouldn't
-> cause any functional changes.
-> 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
+Hi Will,
 
-I think that this would be a nice cleanup on its own, and could be taken
-independently of the rest of this series if it were rebased and sent as
-a single patch.
-
-Mark.
-
-> ---
->  arch/arm64/include/asm/kvm_emulate.h | 36 +++++++++++++++-------------
->  arch/arm64/kvm/handle_exit.c         | 12 +++++-----
->  arch/arm64/kvm/hyp/switch.c          |  2 +-
->  arch/arm64/kvm/sys_regs.c            |  6 ++---
->  virt/kvm/arm/hyp/aarch32.c           |  2 +-
->  virt/kvm/arm/hyp/vgic-v3-sr.c        |  4 ++--
->  virt/kvm/arm/mmu.c                   |  6 ++---
->  7 files changed, 35 insertions(+), 33 deletions(-)
+On Tue, May 26, 2020 at 11:26:03AM +0100, Will Deacon wrote:
+> On Fri, May 22, 2020 at 11:09:19AM +0800, Leo Yan wrote:
+> > On Mon, May 04, 2020 at 07:56:22PM +0800, Leo Yan wrote:
+> > > This patch set is to support synthetic events with enabling Arm SPE
+> > > decoder.  Since before Xiaojun Tan (Hisilicon) and James Clark (Arm)
+> > > have contributed much for this task, so this patch set is based on their
+> > > privous work and polish for the version 7.
+> > > 
+> > > The main work in this version is to polished the core patch "perf
+> > > arm-spe: Support synthetic events", e.g. rewrite the code to calculate
+> > > ip, packet generation for multiple types (L1 data cache, Last level
+> > > cache, TLB, remote access, etc).  It also heavily refactors code for
+> > > data structure and program flow, which removed unused fields in
+> > > structure and polished the program flow to achieve neat code as
+> > > possible.
+> > > 
+> > > This patch set has been checked with checkpatch.pl, though it leaves
+> > > several warnings, but these warnings are delibarately kept after
+> > > reviewing.  Some warnings ask to add maintainer (so far it's not
+> > > necessary), and some warnings complaint for patch 02 "perf auxtrace:
+> > > Add four itrace options" for the text format, since need to keep the
+> > > consistency with the same code format in the source code, this is why
+> > > this patch doesn't get rid of checkpatch warnings.
+> > 
+> > Gentle ping ...
+> > 
+> > It would be appreciate if can get some review for this patch set.
 > 
-> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-> index a30b4eec7cb4..bd1a69e7c104 100644
-> --- a/arch/arm64/include/asm/kvm_emulate.h
-> +++ b/arch/arm64/include/asm/kvm_emulate.h
-> @@ -265,14 +265,14 @@ static inline bool vcpu_mode_priv(const struct kvm_vcpu *vcpu)
->  	return mode != PSR_MODE_EL0t;
->  }
->  
-> -static __always_inline u32 kvm_vcpu_get_hsr(const struct kvm_vcpu *vcpu)
-> +static __always_inline u32 kvm_vcpu_get_esr(const struct kvm_vcpu *vcpu)
->  {
->  	return vcpu->arch.fault.esr_el2;
->  }
->  
->  static __always_inline int kvm_vcpu_get_condition(const struct kvm_vcpu *vcpu)
->  {
-> -	u32 esr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
->  
->  	if (esr & ESR_ELx_CV)
->  		return (esr & ESR_ELx_COND_MASK) >> ESR_ELx_COND_SHIFT;
-> @@ -297,64 +297,66 @@ static inline u64 kvm_vcpu_get_disr(const struct kvm_vcpu *vcpu)
->  
->  static inline u32 kvm_vcpu_hvc_get_imm(const struct kvm_vcpu *vcpu)
->  {
-> -	return kvm_vcpu_get_hsr(vcpu) & ESR_ELx_xVC_IMM_MASK;
-> +	return kvm_vcpu_get_esr(vcpu) & ESR_ELx_xVC_IMM_MASK;
->  }
->  
->  static __always_inline bool kvm_vcpu_dabt_isvalid(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_ISV);
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_ISV);
->  }
->  
->  static inline unsigned long kvm_vcpu_dabt_iss_nisv_sanitized(const struct kvm_vcpu *vcpu)
->  {
-> -	return kvm_vcpu_get_hsr(vcpu) & (ESR_ELx_CM | ESR_ELx_WNR | ESR_ELx_FSC);
-> +	return kvm_vcpu_get_esr(vcpu) &
-> +	       (ESR_ELx_CM | ESR_ELx_WNR | ESR_ELx_FSC);
->  }
->  
->  static inline bool kvm_vcpu_dabt_issext(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SSE);
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_SSE);
->  }
->  
->  static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SF);
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_SF);
->  }
->  
->  static __always_inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
->  {
-> -	return (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SRT_MASK) >> ESR_ELx_SRT_SHIFT;
-> +	return (kvm_vcpu_get_esr(vcpu) & ESR_ELx_SRT_MASK) >> ESR_ELx_SRT_SHIFT;
->  }
->  
->  static __always_inline bool kvm_vcpu_dabt_iss1tw(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_S1PTW);
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_S1PTW);
->  }
->  
->  static __always_inline bool kvm_vcpu_dabt_iswrite(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_WNR) ||
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_WNR) ||
->  		kvm_vcpu_dabt_iss1tw(vcpu); /* AF/DBM update */
->  }
->  
->  static inline bool kvm_vcpu_dabt_is_cm(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_CM);
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_CM);
->  }
->  
->  static __always_inline unsigned int kvm_vcpu_dabt_get_as(const struct kvm_vcpu *vcpu)
->  {
-> -	return 1 << ((kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SAS) >> ESR_ELx_SAS_SHIFT);
-> +	return 1 << ((kvm_vcpu_get_esr(vcpu) & ESR_ELx_SAS) >>
-> +		     ESR_ELx_SAS_SHIFT);
->  }
->  
->  /* This one is not specific to Data Abort */
->  static __always_inline bool kvm_vcpu_trap_il_is32bit(const struct kvm_vcpu *vcpu)
->  {
-> -	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_IL);
-> +	return !!(kvm_vcpu_get_esr(vcpu) & ESR_ELx_IL);
->  }
->  
->  static __always_inline u8 kvm_vcpu_trap_get_class(const struct kvm_vcpu *vcpu)
->  {
-> -	return ESR_ELx_EC(kvm_vcpu_get_hsr(vcpu));
-> +	return ESR_ELx_EC(kvm_vcpu_get_esr(vcpu));
->  }
->  
->  static inline bool kvm_vcpu_trap_is_iabt(const struct kvm_vcpu *vcpu)
-> @@ -364,12 +366,12 @@ static inline bool kvm_vcpu_trap_is_iabt(const struct kvm_vcpu *vcpu)
->  
->  static __always_inline u8 kvm_vcpu_trap_get_fault(const struct kvm_vcpu *vcpu)
->  {
-> -	return kvm_vcpu_get_hsr(vcpu) & ESR_ELx_FSC;
-> +	return kvm_vcpu_get_esr(vcpu) & ESR_ELx_FSC;
->  }
->  
->  static __always_inline u8 kvm_vcpu_trap_get_fault_type(const struct kvm_vcpu *vcpu)
->  {
-> -	return kvm_vcpu_get_hsr(vcpu) & ESR_ELx_FSC_TYPE;
-> +	return kvm_vcpu_get_esr(vcpu) & ESR_ELx_FSC_TYPE;
->  }
->  
->  static __always_inline bool kvm_vcpu_dabt_isextabt(const struct kvm_vcpu *vcpu)
-> @@ -393,7 +395,7 @@ static __always_inline bool kvm_vcpu_dabt_isextabt(const struct kvm_vcpu *vcpu)
->  
->  static __always_inline int kvm_vcpu_sys_get_rt(struct kvm_vcpu *vcpu)
->  {
-> -	u32 esr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
->  	return ESR_ELx_SYS64_ISS_RT(esr);
->  }
->  
-> diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-> index aacfc55de44c..c5b75a4d5eda 100644
-> --- a/arch/arm64/kvm/handle_exit.c
-> +++ b/arch/arm64/kvm/handle_exit.c
-> @@ -89,7 +89,7 @@ static int handle_no_fpsimd(struct kvm_vcpu *vcpu, struct kvm_run *run)
->   */
->  static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
-> -	if (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_WFx_ISS_WFE) {
-> +	if (kvm_vcpu_get_esr(vcpu) & ESR_ELx_WFx_ISS_WFE) {
->  		trace_kvm_wfx_arm64(*vcpu_pc(vcpu), true);
->  		vcpu->stat.wfe_exit_stat++;
->  		kvm_vcpu_on_spin(vcpu, vcpu_mode_priv(vcpu));
-> @@ -119,7 +119,7 @@ static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
->   */
->  static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
-> -	u32 hsr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 hsr = kvm_vcpu_get_esr(vcpu);
->  	int ret = 0;
->  
->  	run->exit_reason = KVM_EXIT_DEBUG;
-> @@ -146,7 +146,7 @@ static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  
->  static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
-> -	u32 hsr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 hsr = kvm_vcpu_get_esr(vcpu);
->  
->  	kvm_pr_unimpl("Unknown exception class: hsr: %#08x -- %s\n",
->  		      hsr, esr_get_class_string(hsr));
-> @@ -226,7 +226,7 @@ static exit_handle_fn arm_exit_handlers[] = {
->  
->  static exit_handle_fn kvm_get_exit_handler(struct kvm_vcpu *vcpu)
->  {
-> -	u32 hsr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 hsr = kvm_vcpu_get_esr(vcpu);
->  	u8 hsr_ec = ESR_ELx_EC(hsr);
->  
->  	return arm_exit_handlers[hsr_ec];
-> @@ -267,7 +267,7 @@ int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
->  		       int exception_index)
->  {
->  	if (ARM_SERROR_PENDING(exception_index)) {
-> -		u8 hsr_ec = ESR_ELx_EC(kvm_vcpu_get_hsr(vcpu));
-> +		u8 hsr_ec = ESR_ELx_EC(kvm_vcpu_get_esr(vcpu));
->  
->  		/*
->  		 * HVC/SMC already have an adjusted PC, which we need
-> @@ -333,5 +333,5 @@ void handle_exit_early(struct kvm_vcpu *vcpu, struct kvm_run *run,
->  	exception_index = ARM_EXCEPTION_CODE(exception_index);
->  
->  	if (exception_index == ARM_EXCEPTION_EL1_SERROR)
-> -		kvm_handle_guest_serror(vcpu, kvm_vcpu_get_hsr(vcpu));
-> +		kvm_handle_guest_serror(vcpu, kvm_vcpu_get_esr(vcpu));
->  }
-> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-> index 8a1e81a400e0..2c3242bcfed2 100644
-> --- a/arch/arm64/kvm/hyp/switch.c
-> +++ b/arch/arm64/kvm/hyp/switch.c
-> @@ -437,7 +437,7 @@ static bool __hyp_text __hyp_handle_fpsimd(struct kvm_vcpu *vcpu)
->  
->  static bool __hyp_text handle_tx2_tvm(struct kvm_vcpu *vcpu)
->  {
-> -	u32 sysreg = esr_sys64_to_sysreg(kvm_vcpu_get_hsr(vcpu));
-> +	u32 sysreg = esr_sys64_to_sysreg(kvm_vcpu_get_esr(vcpu));
->  	int rt = kvm_vcpu_sys_get_rt(vcpu);
->  	u64 val = vcpu_get_reg(vcpu, rt);
->  
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 51db934702b6..5b61465927b7 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -2214,7 +2214,7 @@ static int kvm_handle_cp_64(struct kvm_vcpu *vcpu,
->  			    size_t nr_specific)
->  {
->  	struct sys_reg_params params;
-> -	u32 hsr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 hsr = kvm_vcpu_get_esr(vcpu);
->  	int Rt = kvm_vcpu_sys_get_rt(vcpu);
->  	int Rt2 = (hsr >> 10) & 0x1f;
->  
-> @@ -2271,7 +2271,7 @@ static int kvm_handle_cp_32(struct kvm_vcpu *vcpu,
->  			    size_t nr_specific)
->  {
->  	struct sys_reg_params params;
-> -	u32 hsr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 hsr = kvm_vcpu_get_esr(vcpu);
->  	int Rt  = kvm_vcpu_sys_get_rt(vcpu);
->  
->  	params.is_aarch32 = true;
-> @@ -2387,7 +2387,7 @@ static void reset_sys_reg_descs(struct kvm_vcpu *vcpu,
->  int kvm_handle_sys_reg(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
->  	struct sys_reg_params params;
-> -	unsigned long esr = kvm_vcpu_get_hsr(vcpu);
-> +	unsigned long esr = kvm_vcpu_get_esr(vcpu);
->  	int Rt = kvm_vcpu_sys_get_rt(vcpu);
->  	int ret;
->  
-> diff --git a/virt/kvm/arm/hyp/aarch32.c b/virt/kvm/arm/hyp/aarch32.c
-> index d31f267961e7..864b477e660a 100644
-> --- a/virt/kvm/arm/hyp/aarch32.c
-> +++ b/virt/kvm/arm/hyp/aarch32.c
-> @@ -51,7 +51,7 @@ bool __hyp_text kvm_condition_valid32(const struct kvm_vcpu *vcpu)
->  	int cond;
->  
->  	/* Top two bits non-zero?  Unconditional. */
-> -	if (kvm_vcpu_get_hsr(vcpu) >> 30)
-> +	if (kvm_vcpu_get_esr(vcpu) >> 30)
->  		return true;
->  
->  	/* Is condition field valid? */
-> diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
-> index ccf1fde9836c..8a7a14ec9120 100644
-> --- a/virt/kvm/arm/hyp/vgic-v3-sr.c
-> +++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
-> @@ -441,7 +441,7 @@ static int __hyp_text __vgic_v3_bpr_min(void)
->  
->  static int __hyp_text __vgic_v3_get_group(struct kvm_vcpu *vcpu)
->  {
-> -	u32 esr = kvm_vcpu_get_hsr(vcpu);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
->  	u8 crm = (esr & ESR_ELx_SYS64_ISS_CRM_MASK) >> ESR_ELx_SYS64_ISS_CRM_SHIFT;
->  
->  	return crm != 8;
-> @@ -1007,7 +1007,7 @@ int __hyp_text __vgic_v3_perform_cpuif_access(struct kvm_vcpu *vcpu)
->  	bool is_read;
->  	u32 sysreg;
->  
-> -	esr = kvm_vcpu_get_hsr(vcpu);
-> +	esr = kvm_vcpu_get_esr(vcpu);
->  	if (vcpu_mode_is_32bit(vcpu)) {
->  		if (!kvm_condition_valid(vcpu)) {
->  			__kvm_skip_instr(vcpu);
-> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-> index e3b9ee268823..5da0d0e7519b 100644
-> --- a/virt/kvm/arm/mmu.c
-> +++ b/virt/kvm/arm/mmu.c
-> @@ -1922,7 +1922,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		 * For RAS the host kernel may handle this abort.
->  		 * There is no need to pass the error into the guest.
->  		 */
-> -		if (!kvm_handle_guest_sea(fault_ipa, kvm_vcpu_get_hsr(vcpu)))
-> +		if (!kvm_handle_guest_sea(fault_ipa, kvm_vcpu_get_esr(vcpu)))
->  			return 1;
->  
->  		if (unlikely(!is_iabt)) {
-> @@ -1931,7 +1931,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		}
->  	}
->  
-> -	trace_kvm_guest_fault(*vcpu_pc(vcpu), kvm_vcpu_get_hsr(vcpu),
-> +	trace_kvm_guest_fault(*vcpu_pc(vcpu), kvm_vcpu_get_esr(vcpu),
->  			      kvm_vcpu_get_hfar(vcpu), fault_ipa);
->  
->  	/* Check the stage-2 fault is trans. fault or write fault */
-> @@ -1940,7 +1940,7 @@ int kvm_handle_guest_abort(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		kvm_err("Unsupported FSC: EC=%#x xFSC=%#lx ESR_EL2=%#lx\n",
->  			kvm_vcpu_trap_get_class(vcpu),
->  			(unsigned long)kvm_vcpu_trap_get_fault(vcpu),
-> -			(unsigned long)kvm_vcpu_get_hsr(vcpu));
-> +			(unsigned long)kvm_vcpu_get_esr(vcpu));
->  		return -EFAULT;
->  	}
->  
-> -- 
-> 2.23.0
-> 
+> I was hoping that James Clark would have a look, since he was the last
+> person to go near the userspace side of SPE.
+
+Yes, I have offline synced with James and James has verified this
+patch set at his side.
+
+I don't want to rush to ask Arnaldo to merge patches, so just
+want to get wider reviewing if possible; otherwise, I will rebase this
+patch set and resend to ML.
+
+Thanks,
+Leo
