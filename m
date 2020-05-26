@@ -2,112 +2,92 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A420C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B712FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494F120899
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:32:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlSxKeJr"
+	by mail.kernel.org (Postfix) with ESMTP id 9490220899
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590532376;
+	bh=BptyMcp2ndugbc79BcT42nCuMRI6s9+8QNr9sU0XeSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c/NjQFHc00kwEj4cUjXlNCaF3qxQlCwdSHkhHTwgGrahbxnEqortuauh+mZwFdG0m
+	 69Evyec59eYG8cMU7r0vedxMKB0nFWj1nsspMUVfSfxKYrm1tMZpBHSXozMhSFPtTq
+	 KcpnlMovOXokRc3vWs3KumJ5JYtdmOG8O/C9ds+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392176AbgEZWcx (ORCPT
+        id S2392187AbgEZWc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:32:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389482AbgEZWcx (ORCPT
+        Tue, 26 May 2020 18:32:56 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:46103 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390326AbgEZWcy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:32:53 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2A6C061A0F;
-        Tue, 26 May 2020 15:32:52 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id g9so19006841edw.10;
-        Tue, 26 May 2020 15:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJPtXY7rywWNMHGLMQRGuyruXoczA5GNP3pv72cf6Nk=;
-        b=AlSxKeJrUW6CwmH4f/Si/KnQjzte+1B+vdvUIGo4XJ7jg1WnkhqljoJgVS25wo4qXt
-         cxBNrADOX0sEm2TsE+qT4CXXCjpVdzy977lT8bzvvTNTMr5XgHXpUwi255tYUDGGEskf
-         PSGRrPubitMmeWYYBjc+iSC0Fm5SMWo0urv3X9e12nqaBh90FLjMbmvr9YDxdyuj1fzD
-         S2JpYBRhFNi3lfkvPpdlS355iR3cDnoMEZRkvqQcuoUvc/XcKDhKwAjMY5t3foOfgYLQ
-         1gdk7d2QUv3JpOtACdlgpMFmz+KRyKaO/CouJaIQawOwDCFZuDmnF5iohEnvSdvcOsOi
-         O6Ow==
+        Tue, 26 May 2020 18:32:54 -0400
+Received: by mail-il1-f193.google.com with SMTP id w18so22087878ilm.13;
+        Tue, 26 May 2020 15:32:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EJPtXY7rywWNMHGLMQRGuyruXoczA5GNP3pv72cf6Nk=;
-        b=aF0xTi57FxWf+Hvfi8nTI5UOcAzpNZ0NUf7KKsSJPM6mMBbGaRPwsVQ/jc5yTnO8Ei
-         PjYY0esm4KXEyqpNfUoALdOL7XxZw4XC+Oz3IzLxrusy4PHUw+GQ5TcSrGICg2gOMsDI
-         yaF0nUSmEs8ZAUnPkQkQULeRnVDBh3r2Cg0RdvlB4fbVQD0sMLvBstufvfihLiX3Kz70
-         c3Cea27cEk2BFkdkR+RmQcIC24nXgDrXj4wCRUFjqHJUGR6gvb9Tkl3dGNmgM09JGMjy
-         5Iintu0GaY91/60b0m371nSD+LMw+2S+bWPPWhzkfjMRRpLtjSlx0VLfXaYDkoSctmtu
-         Y1rA==
-X-Gm-Message-State: AOAM533r6mxmeq5ekA3Bx09lN0jL9+FKtuJn7+MNnEq44WC1CiPOIs7a
-        /UbDn/CoTPrp3obwq/JBh+Tt0pLUjC2qug==
-X-Google-Smtp-Source: ABdhPJzjQukRhxFb1ZFRbVe0ygSWfCk4R3hqvyETUxX4IzkJtbL/oVoQ9g8bQOVXc2+L5X2P+YDZmg==
-X-Received: by 2002:a05:6402:3cd:: with SMTP id t13mr22714780edw.285.1590532370925;
-        Tue, 26 May 2020 15:32:50 -0700 (PDT)
-Received: from localhost.localdomain (ip-62-245-103-65.net.upcbroadband.cz. [62.245.103.65])
-        by smtp.gmail.com with ESMTPSA id cd17sm68288ejb.115.2020.05.26.15.32.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=928GpvkLEJh+YGMSyYO49uiM+aTF3bi6DMzRK99UBSU=;
+        b=fXHfq4fvZMKDKTdUDV2lBn3ValUW9Tb4tGP1b9KoE51z5we3dX46MAvh4WEIzklKfB
+         3OwV7OHiK61981A2uzDc8eMR2LkImDDji3kZh+OHv7CcoNge1NUTiOybayOmNUvft3WK
+         odm3KRjeNVHQiLRf4aar11rTHl0x9/uPSnbKigCxZVmuxhIYAff07laEYchZKP70BX9B
+         Nugf6ALLraJ1+x4tfVF3wUI/mxfOGiNkRCY2d/uKqdetfZuOHzgZTygne6+70Azu3JDx
+         pSyEzzltj2mF4kvg3k9EmkH3mSEfUSy0uElVZ4fTiy36lwOEVifiEhhWfXkX9fxIucsv
+         jVEg==
+X-Gm-Message-State: AOAM532MTLQVixkYgoa6PrNhkiq9OEeBT4C4DBT70oBS+MvwrKmhVJ+H
+        JVj0OEmMPRHVjviyo0P34Ku0p+U=
+X-Google-Smtp-Source: ABdhPJwUHVDK3hBsS63DM8ukfIZHbC24RoZDf2tPj4rnmICEFfuERSeT0Sf9QQ8cqdWT8nlSDlDqDQ==
+X-Received: by 2002:a05:6e02:68d:: with SMTP id o13mr3406469ils.230.1590532373005;
+        Tue, 26 May 2020 15:32:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id p75sm502306ilb.23.2020.05.26.15.32.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:32:50 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Nuno Das Neves <nuno.das@microsoft.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-Subject: [RFC PATCH 0/2] VMBus channel interrupts re-balancing
-Date:   Wed, 27 May 2020 00:32:16 +0200
-Message-Id: <20200526223218.184057-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 26 May 2020 15:32:52 -0700 (PDT)
+Received: (nullmailer pid 506665 invoked by uid 1000);
+        Tue, 26 May 2020 22:32:51 -0000
+Date:   Tue, 26 May 2020 16:32:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-remoteproc@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: remoteproc: Add Qualcomm PIL info
+ binding
+Message-ID: <20200526223251.GA506612@bogus>
+References: <20200513055641.1413100-1-bjorn.andersson@linaro.org>
+ <20200513055641.1413100-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513055641.1413100-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The RFC introduces constructs to re-balance the channel interrupts at
-CPU hotplug and at device hotplug operations, the latter being indeed
-"closure/opening operations" to enable the re-balancing also in cases
-when the device is just being closed/re-opened (as in "ethtool -L").
+On Tue, 12 May 2020 22:56:37 -0700, Bjorn Andersson wrote:
+> Add a devicetree binding for the Qualcomm peripheral image loader
+> relocation information region found in the IMEM.
+> 
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v4:
+> - Fixed reg in example to make it compile
+> 
+>  .../bindings/remoteproc/qcom,pil-info.yaml    | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> 
 
-These changes originated from (and address /try to resolve) two known
-limitations of the current interrupts-to-CPUs mapping scheme, that is,
-(1) the "static" nature of this mapping scheme (that, e.g., can end up
-preventing the hot removal of certain CPUs) and (2) the lack of global
-visibility in such scheme (where devices/channels are mapped only "one
-at a time"/as they are offered, with the end result that globally the
-various interrupts are not always evenly spread across CPUs).
-
-Andrea Parri (Microsoft) (2):
-  Drivers: hv: vmbus: Re-balance channel interrupts across CPUs at CPU
-    hotplug
-  Drivers: hv: vmbus: Re-balance channel interrupts across CPUs at
-    device hotplug
-
- drivers/hv/channel.c      |  81 ++++++++++++
- drivers/hv/channel_mgmt.c | 263 ++++++++++++++++++++++++++++++++++++++
- drivers/hv/connection.c   |  32 +++--
- drivers/hv/hv.c           |  62 +++++----
- drivers/hv/hyperv_vmbus.h |  78 +++++++++++
- drivers/hv/vmbus_drv.c    |  45 ++-----
- include/linux/hyperv.h    |  26 ++++
- kernel/cpu.c              |   1 +
- 8 files changed, 523 insertions(+), 65 deletions(-)
-
--- 
-2.25.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
