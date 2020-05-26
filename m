@@ -2,52 +2,54 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FACC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FD9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D915D208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972A120849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519527;
-	bh=XJJyoQtDvFZe4chBEWSdTN/XbaT92U3oizYWFpXeESA=;
+	s=default; t=1590519529;
+	bh=iDeY2skZ4/3Sbynoo4JMtZ+fdIMyYtcW3coIfHV83mc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sclImrWASIQMsJOogLWbaOQdJ8j2Whb/s8aGN6CqcYVxDjdGIfEwgH1+1Z4vN+dV0
-	 NlUJbB2jzMsiy7GMLIV+w+TbWdCKx9z+vMSmrkq7jwzZM0XPUNcGeobWwo6R10cden
-	 mki24l6eFC5APzk4g9zAT/ZKkT1dKgUrWojD0yTI=
+	b=jRl3aVlKVkSvC3DyqUOZKItSsN8PGqyTss99LdRjP6KHS3zZQdw0k97UZfQ8AbpNQ
+	 X/qqPbGA7Ax9SFfaRS67KOoy6ErtszIb/fCnG4eQPzNm5SCYgcs2RN0+DZs1QLCEl8
+	 3j0+UrHW3f3lcdtxYT/lL71l50xY14Yl586Wxuc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390394AbgEZS6q (ORCPT
+        id S2389863AbgEZS6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52256 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:58:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389676AbgEZS6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:58:43 -0400
+        id S2390392AbgEZS6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:58:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BACB2084C;
-        Tue, 26 May 2020 18:58:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C641020849;
+        Tue, 26 May 2020 18:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519522;
-        bh=XJJyoQtDvFZe4chBEWSdTN/XbaT92U3oizYWFpXeESA=;
+        s=default; t=1590519525;
+        bh=iDeY2skZ4/3Sbynoo4JMtZ+fdIMyYtcW3coIfHV83mc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYhk37g0FtsyxZxpoRhpbsHM6xBZjyL7FcVoWHBAG9VhDEwSbJz3ywYtCaZtJYMEV
-         hX+CBCwBj9KP6Vdy+L3/JlHI0DDdbNuU/8kbx/0NUxVxaZiY11JEb6AenYjZJFauMM
-         onDPHGUHeP6KHQx2HvkAmAOqsF+Y2hl/gU6gArAU=
+        b=ZRB236cGUcAp+LMzBGZQ/GqHOvmAb0Y18wKZyTx6YGufV1HqDA2P7Z6ZnqgdW2zln
+         oYCvIV+H0YFp4eFPuSd44gZjVPU3z6dAwI3P6LtSBW72OkDjD8waAKrUikxqfTWETg
+         aqQi4ABAwzselq8tXTDfFsemA+mwsaqtBwohf5u4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.9 05/64] padata: ensure padata_do_serial() runs on the correct CPU
-Date:   Tue, 26 May 2020 20:52:34 +0200
-Message-Id: <20200526183914.952284064@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 06/64] evm: Check also if *tfm is an error pointer in init_desc()
+Date:   Tue, 26 May 2020 20:52:35 +0200
+Message-Id: <20200526183915.284720219@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -60,95 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Krause <minipli@googlemail.com>
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-commit 350ef88e7e922354f82a931897ad4a4ce6c686ff upstream.
+[ Upstream commit 53de3b080d5eae31d0de219617155dcc34e7d698 ]
 
-If the algorithm we're parallelizing is asynchronous we might change
-CPUs between padata_do_parallel() and padata_do_serial(). However, we
-don't expect this to happen as we need to enqueue the padata object into
-the per-cpu reorder queue we took it from, i.e. the same-cpu's parallel
-queue.
+This patch avoids a kernel panic due to accessing an error pointer set by
+crypto_alloc_shash(). It occurs especially when there are many files that
+require an unsupported algorithm, as it would increase the likelihood of
+the following race condition:
 
-Ensure we're not switching CPUs for a given padata object by tracking
-the CPU within the padata object. If the serial callback gets called on
-the wrong CPU, defer invoking padata_reorder() via a kernel worker on
-the CPU we're expected to run on.
+Task A: *tfm = crypto_alloc_shash() <= error pointer
+Task B: if (*tfm == NULL) <= *tfm is not NULL, use it
+Task B: rc = crypto_shash_init(desc) <= panic
+Task A: *tfm = NULL
 
-Signed-off-by: Mathias Krause <minipli@googlemail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch uses the IS_ERR_OR_NULL macro to determine whether or not a new
+crypto context must be created.
 
+Cc: stable@vger.kernel.org
+Fixes: d46eb3699502b ("evm: crypto hash replaced by shash")
+Co-developed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/padata.h |    2 ++
- kernel/padata.c        |   20 +++++++++++++++++++-
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ security/integrity/evm/evm_crypto.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -37,6 +37,7 @@
-  * @list: List entry, to attach to the padata lists.
-  * @pd: Pointer to the internal control structure.
-  * @cb_cpu: Callback cpu for serializatioon.
-+ * @cpu: Cpu for parallelization.
-  * @seq_nr: Sequence number of the parallelized data object.
-  * @info: Used to pass information from the parallel to the serial function.
-  * @parallel: Parallel execution function.
-@@ -46,6 +47,7 @@ struct padata_priv {
- 	struct list_head	list;
- 	struct parallel_data	*pd;
- 	int			cb_cpu;
-+	int			cpu;
- 	int			info;
- 	void                    (*parallel)(struct padata_priv *padata);
- 	void                    (*serial)(struct padata_priv *padata);
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -133,6 +133,7 @@ int padata_do_parallel(struct padata_ins
- 	padata->cb_cpu = cb_cpu;
+diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
+index c783fefa558a..e034dc21421e 100644
+--- a/security/integrity/evm/evm_crypto.c
++++ b/security/integrity/evm/evm_crypto.c
+@@ -90,7 +90,7 @@ static struct shash_desc *init_desc(char type)
+ 		algo = evm_hash;
+ 	}
  
- 	target_cpu = padata_cpu_hash(pd);
-+	padata->cpu = target_cpu;
- 	queue = per_cpu_ptr(pd->pqueue, target_cpu);
- 
- 	spin_lock(&queue->parallel.lock);
-@@ -376,10 +377,21 @@ void padata_do_serial(struct padata_priv
- 	int cpu;
- 	struct padata_parallel_queue *pqueue;
- 	struct parallel_data *pd;
-+	int reorder_via_wq = 0;
- 
- 	pd = padata->pd;
- 
- 	cpu = get_cpu();
-+
-+	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
-+	 * was called on -- or, at least, enqueue the padata object into the
-+	 * correct per-cpu queue.
-+	 */
-+	if (cpu != padata->cpu) {
-+		reorder_via_wq = 1;
-+		cpu = padata->cpu;
-+	}
-+
- 	pqueue = per_cpu_ptr(pd->pqueue, cpu);
- 
- 	spin_lock(&pqueue->reorder.lock);
-@@ -396,7 +408,13 @@ void padata_do_serial(struct padata_priv
- 
- 	put_cpu();
- 
--	padata_reorder(pd);
-+	/* If we're running on the wrong CPU, call padata_reorder() via a
-+	 * kernel worker.
-+	 */
-+	if (reorder_via_wq)
-+		queue_work_on(cpu, pd->pinst->wq, &pqueue->reorder_work);
-+	else
-+		padata_reorder(pd);
- }
- EXPORT_SYMBOL(padata_do_serial);
- 
+-	if (*tfm == NULL) {
++	if (IS_ERR_OR_NULL(*tfm)) {
+ 		mutex_lock(&mutex);
+ 		if (*tfm)
+ 			goto out;
+-- 
+2.25.1
+
 
 
