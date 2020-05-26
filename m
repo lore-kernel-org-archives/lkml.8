@@ -2,112 +2,98 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F8EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7CFD20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="pikWQvMJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7678620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590520756;
+	bh=RgtwO8P4ThNDooONmVCNihMiiHEBUmQW2apUetaPoEw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mcK/BD3B3bnFHCCg7mnaMLCCM+3z8yut2Rrbh4LFhzZX5tRRLvphKqzXAbDsiUlo5
+	 23E7qgwIXvf32Ev39XCifvmXGNE6yGfxrJuOS7PmpmnTnMzcWeiF2z54EftnECxPTp
+	 IO/oOxK8igQl3t/uB/5E4EeF30+jLn8ZuGJWL5og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392422AbgEZTTN (ORCPT
+        id S2392415AbgEZTTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:19:13 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:45882 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2403869AbgEZTNW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:19:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404202AbgEZTNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 15:13:22 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 85DF630D74C;
-        Tue, 26 May 2020 12:13:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 85DF630D74C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1590520400;
-        bh=IufzkrNWxifj/z4iOOO9Me24W7Zq/AMCYeh1e0Xhaoc=;
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EACE208B3;
+        Tue, 26 May 2020 19:13:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590520401;
+        bh=RgtwO8P4ThNDooONmVCNihMiiHEBUmQW2apUetaPoEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pikWQvMJwOx6J2n6DpDgU/vBryQdPAdbUO0y7iPpgZBgc2C/cgS9aTscNqQXpG0yR
-         /DPYCerr3vkQooZmUhLmvOkWw9EFlG1lgAH3eObG113dkMDFzr2CJig6YLN41VdgZT
-         0VfP2v0KXeIJNQdi//7729dgs+uZINCmnwlYvUUA=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4293E14008C;
-        Tue, 26 May 2020 12:13:19 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-ide@vger.kernel.org (open list:LIBATA SUBSYSTEM (Serial and
-        Parallel ATA drivers)), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 02/14] ata: ahci_brcm: Fix use of BCM7216 reset controller
-Date:   Tue, 26 May 2020 15:12:41 -0400
-Message-Id: <20200526191303.1492-3-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+        b=VkMzTTWWnBYENAit+Zv2Jf+Ut2C1UMnfbVnbl6VE19s7dscGlt+XYEOeIc1fwZjIl
+         XGgQNhPD/bqEX9DZUUJu5H9SxtKotOgTzvmcBDhs99524M7nfDOjI7hp5QgVlLOpXM
+         74aOxtSaO8pgWrWB71HiCjg2Vr/v4xnskcHicTeE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: [PATCH 5.6 063/126] bpf: Add bpf_probe_read_{user, kernel}_str() to do_refine_retval_range
+Date:   Tue, 26 May 2020 20:53:20 +0200
+Message-Id: <20200526183943.453926113@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
+References: <20200526183937.471379031@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-A reset controller "rescal" is shared between the AHCI driver and the PCIe
-driver for the BrcmSTB 7216 chip.  The code is modified to allow this
-sharing and to deassert() properly.
+commit 47cc0ed574abcbbde0cf143ddb21a0baed1aa2df upstream.
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Given bpf_probe_read{,str}() BPF helpers are now only available under
+CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE, we need to add the drop-in
+replacements of bpf_probe_read_{kernel,user}_str() to do_refine_retval_range()
+as well to avoid hitting the same issue as in 849fa50662fbc ("bpf/verifier:
+refine retval R0 state for bpf_get_stack helper").
+
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200515101118.6508-3-daniel@iogearbox.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/ata/ahci_brcm.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ kernel/bpf/verifier.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-index 6853dbb4131d..c4ea555573dd 100644
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- {
- 	const struct of_device_id *of_id;
- 	struct device *dev = &pdev->dev;
--	const char *reset_name = NULL;
- 	struct brcm_ahci_priv *priv;
- 	struct ahci_host_priv *hpriv;
- 	struct resource *res;
-@@ -452,11 +451,11 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -4113,7 +4113,9 @@ static int do_refine_retval_range(struct
  
- 	/* Reset is optional depending on platform and named differently */
- 	if (priv->version == BRCM_SATA_BCM7216)
--		reset_name = "rescal";
-+		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev,
-+								     "rescal");
- 	else
--		reset_name = "ahci";
--
--	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
-+		priv->rcdev = devm_reset_control_get_optional(&pdev->dev,
-+							      "ahci");
- 	if (IS_ERR(priv->rcdev))
- 		return PTR_ERR(priv->rcdev);
+ 	if (ret_type != RET_INTEGER ||
+ 	    (func_id != BPF_FUNC_get_stack &&
+-	     func_id != BPF_FUNC_probe_read_str))
++	     func_id != BPF_FUNC_probe_read_str &&
++	     func_id != BPF_FUNC_probe_read_kernel_str &&
++	     func_id != BPF_FUNC_probe_read_user_str))
+ 		return 0;
  
-@@ -479,10 +478,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
--	if (priv->version == BRCM_SATA_BCM7216)
--		ret = reset_control_reset(priv->rcdev);
--	else
--		ret = reset_control_deassert(priv->rcdev);
-+	ret = reset_control_deassert(priv->rcdev);
- 	if (ret)
- 		return ret;
- 
--- 
-2.17.1
+ 	/* Error case where ret is in interval [S32MIN, -1]. */
+
 
