@@ -2,146 +2,86 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6551C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C03D206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B08320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:51:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QKFX4CIT"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GKxwNZLx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388400AbgEZPuZ (ORCPT
+        id S1729867AbgEZPvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgEZPuZ (ORCPT
+        Tue, 26 May 2020 11:51:25 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45272 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726420AbgEZPvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:50:25 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3B8C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:50:25 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 185so2031314pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d3s/pLD7nj21hdmawAnqZB1ca29MHptDmSGTKYK3W3E=;
-        b=QKFX4CITtkj0CzudSzbINE+WsFl8jYzCH4/L49e7eTSLDSW8YU3cdeyr64P+uWfTez
-         PzEGwsQydooBPeGb/KC/hNndMrssm5L26f66v3vzOSGwQOv8bs6NvpqhPBv5f5H56vfI
-         dXZD7h5EVQnyoy2zzEjtHR78n1nMa0E97F8yfejzpD2Ytzgpj52QALvPLsSo/oOirLws
-         lNP+bZ94PfDCHM2a6p/5RpobGWXYOdph5VZPC9X1t14NZpeXCvIyZD0wZzKbkzfQU554
-         b1RToMXt+izSjJnSnDh6ODPmI1fCx+P9Lqf3W9+OjrdjydTd2vVMemNqfKzkf38UCm2J
-         V0HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d3s/pLD7nj21hdmawAnqZB1ca29MHptDmSGTKYK3W3E=;
-        b=V7/2KnVqc8/Nlired+IAwuvJLC15q1sbg4Cf1JdUriSM1xddMtxXH3Qd5Kzsxfpkr3
-         9quH+3og/vtcbXD3+NEV1tP/OTqq7Sil0SC/+T0WDomrrctt+iPnJhk+hBI/7zgQDj1A
-         8VEsblHIiWv7md+xEbN84DFJwVk0Kq107h2jJu+pjvBd8PPmFqINsrFWgt7eRmx6bzrP
-         O+9dmGOpZFIVALlaOiNTg4hk8D0Wn8iab8MJZel6khjVngjQAaw+3ZRnKl28T7kedr2k
-         SbaHuh8NLc6qNX++acSqre47QwbtgdAmTpnHxkwdMevsU8j38bd3uQQnp+ohrGAoIzZP
-         vz9Q==
-X-Gm-Message-State: AOAM532VOlwQX3ZnyXq9+Zf9VrQFAypRCajiNpP+ayv5Hcfpod/V4sCj
-        S7nXo8nace7kfJGmFUDt6x9Jcxhs5Gg8Uw==
-X-Google-Smtp-Source: ABdhPJykFr2Mf58LTlQqpfXnm0pnNTayQT7pcse1ruLBQO76W+Fs+bE5UCQNS98JnMdlm+dnJSUHtA==
-X-Received: by 2002:a63:1c1:: with SMTP id 184mr1688258pgb.203.1590508224497;
-        Tue, 26 May 2020 08:50:24 -0700 (PDT)
-Received: from gaurav-pc ([182.70.106.85])
-        by smtp.gmail.com with ESMTPSA id m2sm16671pjk.52.2020.05.26.08.50.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 08:50:23 -0700 (PDT)
-From:   gaurav <gauravpathak129@gmail.com>
-X-Google-Original-From: "gaurav" <gaurav@gaurav-pc>
-Received: by gaurav-pc (sSMTP sendmail emulation); Tue, 26 May 2020 21:20:18 +0530
-To:     dan.carpenter@oracle.com
-Cc:     abbotti@mev.co.uk, gregkh@linuxfoundation.org,
-        hsweeten@visionengravers.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Gaurav Pathak <gauravpathak129@gmail.com>
-Subject: [PATCH v2] Staging: comedi: dt2814: remove unused assignments
-Date:   Tue, 26 May 2020 21:20:16 +0530
-Message-Id: <20200526155016.9146-1-gauravpathak129@gmail.com>
+        Tue, 26 May 2020 11:51:24 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QFlFqb028014;
+        Tue, 26 May 2020 17:51:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=awNzOZtUgwnfFeZ/Tz9VhjThCwN8TwzoQKI0+2aZH60=;
+ b=GKxwNZLxyFZkMA8x/3+/Czi4YCWZDs2yEPTjTAZjydeLI6qJFeG5uz7cap84Ev8fhBKj
+ OZy4VncmxfQl5Ld3Yg4Yz8KuaCq/pOMCNg5DtmBJn4thF5hx+9ezej3+t91OCMMgSfoB
+ 7lE8bHoWa4BOioysdbtnqBGCig9OYt9AkS3MHIbuNf67jxwyK6XIdoO9w5cfTQneT5j8
+ ph02hv58mCV/iE10YCv8cwFxKCuO+wXune2zb5RBucojIiaEQf44sfviF8DhgZlAIaUk
+ TSeHWgKs81sAI2RwBjMrjiy5vJSvl4iUla5P0fgfxgc2xb6mnYgJhR/NaRXE86GmLEMn PA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316tqh09kw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 17:51:12 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AD68B10002A;
+        Tue, 26 May 2020 17:51:11 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 98B582C4B36;
+        Tue, 26 May 2020 17:51:11 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May 2020 17:51:11
+ +0200
+From:   Ludovic Barre <ludovic.barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH 0/2] mmc: mmci_sdmmc: fix dma api warnings
+Date:   Tue, 26 May 2020 17:51:01 +0200
+Message-ID: <20200526155103.12514-1-ludovic.barre@st.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200526150954.GA30374@kadam>
-References: <20200526150954.GA30374@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Silence following compiler warning:
-drivers/staging/comedi/drivers/dt2814.c: In function ‘dt2814_interrupt’:
-drivers/staging/comedi/drivers/dt2814.c:193:6: warning: variable ‘data’ set but not used [-Wunused-but-set-variable]
-  int data;
-      ^~~~
-drivers/staging/comedi/drivers/dt2814.c: In function ‘dt2814_attach’:
-drivers/staging/comedi/drivers/dt2814.c:232:6: warning: variable ‘i’ set but not used [-Wunused-but-set-variable]
-  int i;
-      ^
+This patch series fixes warnings see with DMA_API_DEBUG_SG=y
 
-Signed-off-by: Gaurav Pathak <gauravpathak129@gmail.com>
----
- v2: Update subject and commit message.
- drivers/staging/comedi/drivers/dt2814.c | 10 ----------
- 1 file changed, 10 deletions(-)
+Ludovic Barre (2):
+  mmc: mmci_sdmmc: fix DMA API warning overlapping mappings
+  mmc: mmci_sdmmc: fix DMA API warning max segment size
 
-diff --git a/drivers/staging/comedi/drivers/dt2814.c b/drivers/staging/comedi/drivers/dt2814.c
-index d2c715737361..eea587d63e18 100644
---- a/drivers/staging/comedi/drivers/dt2814.c
-+++ b/drivers/staging/comedi/drivers/dt2814.c
-@@ -186,22 +186,15 @@ static int dt2814_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
- 
- static irqreturn_t dt2814_interrupt(int irq, void *d)
- {
--	int lo, hi;
- 	struct comedi_device *dev = d;
- 	struct dt2814_private *devpriv = dev->private;
- 	struct comedi_subdevice *s = dev->read_subdev;
--	int data;
- 
- 	if (!dev->attached) {
- 		dev_err(dev->class_dev, "spurious interrupt\n");
- 		return IRQ_HANDLED;
- 	}
- 
--	hi = inb(dev->iobase + DT2814_DATA);
--	lo = inb(dev->iobase + DT2814_DATA);
--
--	data = (hi << 4) | (lo >> 4);
--
- 	if (!(--devpriv->ntrig)) {
- 		int i;
- 
-@@ -229,7 +222,6 @@ static int dt2814_attach(struct comedi_device *dev, struct comedi_devconfig *it)
- 	struct dt2814_private *devpriv;
- 	struct comedi_subdevice *s;
- 	int ret;
--	int i;
- 
- 	ret = comedi_request_region(dev, it->options[0], 0x2);
- 	if (ret)
-@@ -241,8 +233,6 @@ static int dt2814_attach(struct comedi_device *dev, struct comedi_devconfig *it)
- 		dev_err(dev->class_dev, "reset error (fatal)\n");
- 		return -EIO;
- 	}
--	i = inb(dev->iobase + DT2814_DATA);
--	i = inb(dev->iobase + DT2814_DATA);
- 
- 	if (it->options[1]) {
- 		ret = request_irq(it->options[1], dt2814_interrupt, 0,
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
 -- 
 2.17.1
 
