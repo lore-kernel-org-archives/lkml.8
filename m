@@ -2,186 +2,197 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7550BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79896C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AB620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PUQDLpq5"
+	by mail.kernel.org (Postfix) with ESMTP id 4EB762084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590517674;
+	bh=rZAtahavtSaGWymq2e+TvSWD9uARc0aK6D7bAI8UBgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D3eJkjVfjxBT1h2MIC9pbq7GBfKOhNxTkk+yjTdE5A18bVMkwJozWNfQP2I691BU3
+	 ZBjcxoNeJtJYpqs65Rh3KyEA7NxXC0+anbRtQlWn2jLdWUq8xNn69RAw/STrhoh4j5
+	 UA0LXn3NjvNAFV0UeIS9NlGva8nsjA5QG2cBU99g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgEZS1L (ORCPT
+        id S1730117AbgEZS1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:27:11 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18853 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729163AbgEZS1L (ORCPT
+        Tue, 26 May 2020 14:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbgEZS1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:27:11 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecd5f720000>; Tue, 26 May 2020 11:26:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 26 May 2020 11:27:10 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 11:27:10 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 18:27:10 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 26 May 2020 18:27:10 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.50.17]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ecd5f7e0000>; Tue, 26 May 2020 11:27:10 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-CC:     Souptick Joarder <jrdr.linux@gmail.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?UTF-8?q?Kai=20M=C3=A4kisara=20=28Kolumbus=29?= 
-        <kai.makisara@kolumbus.fi>, Bart Van Assche <bvanassche@acm.org>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        <linux-scsi@vger.kernel.org>
-Subject: [PATCH v2] scsi: st: convert convert get_user_pages() --> pin_user_pages()
-Date:   Tue, 26 May 2020 11:27:09 -0700
-Message-ID: <20200526182709.99599-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 26 May 2020 14:27:52 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52081C03E96D;
+        Tue, 26 May 2020 11:27:48 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id h4so523430wmb.4;
+        Tue, 26 May 2020 11:27:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=//ycJC/8SpwdLfYq3Nycql5/Hbahas9UZRlYhXfm7+I=;
+        b=FmMvMXFZ9hCNgIHrEYeddrdJW4YW6VbsqWyMQYttoQmKFWJ8SCeBhME+VooCIBsQr2
+         +g9pyMvOVHsQEB9OiB3Api4N0qlnauYSJb/6r3U/DzuLO9ffz5dZ/thZaFo6hL+cOSCL
+         IEnD8F5LPg/nzoFp7B/+N0gIXNCNRbg5+LRm6RyEtsCP4m96TlCpeQOHQSazY5bE3xfg
+         sHRIhz9CWMpztqjaNnN9q8NvCzeAv5zT+HepIhPmHX8NNpq8/csOr3Ag57Vns2oY9OCC
+         VuGk1Ukp/v3qFWyWqxSHug5xdqH/nn5DpZrOZGhl3GuK0ANQJ11jx40SVaQtGELvvtwc
+         kxLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=//ycJC/8SpwdLfYq3Nycql5/Hbahas9UZRlYhXfm7+I=;
+        b=TjOi3MnfqeuEbsB7qSRNDr5HGiOGhTZ91+ScATCKn0+t9DhWtJc3RCvDbZ3mbKDHqS
+         ZGmbTIpscsBehURHZ7uawuke+KS57ON5X2vlm7r6pjoAxoS24FdlpSTVakJufc1Dz+gx
+         B5gLR+SqL/rw9VeuSgDqL/E8/I5ZPNg6nxa/I1ey1Z8hD1tl3uZz5sK4d3R126OzOv0i
+         yWI/8DuSFKsgwp4GVmTj1k12YmwVBm2PBCSttz/wmSBJ3qqVuZZBlG3HsBgUAWdrLhGt
+         cEcPDDGKTR+V/CRmYTOAVVe2mH/5JUPGbgCjuNqQrN7ZatXxJD7zE+NWYjWkdhkJLCu6
+         Yz8Q==
+X-Gm-Message-State: AOAM531Dpo3mzGRWVX4D1phG7ojjVlckDqOkcxL/povxei+odw93C1/k
+        33SQQVTNsUV+dGuOtQBJquzH+VCV
+X-Google-Smtp-Source: ABdhPJysQ9RQd+E56OjTReQIQ7hDeBXSTipHByGD5ZQ9wUJsdjPfti02+7IWEAHJZ/3/NZ+UtM/bsg==
+X-Received: by 2002:a1c:7c0e:: with SMTP id x14mr451742wmc.1.1590517666702;
+        Tue, 26 May 2020 11:27:46 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id o20sm594010wra.29.2020.05.26.11.27.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 11:27:46 -0700 (PDT)
+Date:   Tue, 26 May 2020 20:27:44 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>
+Subject: [PATCH] rcu/performance: Fix kfree_perf_init() build warning on
+ 32-bit kernels
+Message-ID: <20200526182744.GA3722128@gmail.com>
+References: <158923078019.390.12609597570329519463.tip-bot2@tip-bot2>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590517618; bh=+7F/94TzCK/cPi9jWHCOZuja1kFgCeQFGR9DSAN4SLE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=PUQDLpq5QAaAQylmPbkePzO834JX34IxkMzVlwVWLOXzs2DUhn+5mxC3s5mgzIfoA
-         ypaXkrTBFosCl8JiV0dQGNqmHtUgfGbBVMltLOiFuk3UrRR1QVH37WL3I0684VGJYL
-         bGF3oRbcdFUWNCd7BGuXcIHoPxtgiTSLzxKWEjd0PnhN2eA8s8ozzdflZ2KRjagmV/
-         5ilJSQKf7JSqN518XowupBXJhekSVgU0U/9Puqp6EWVf7k7rg7hCrwhoyARYU0OXwY
-         cezrUF5lXc9EFDA/hLqL9zb0YKRivZ2YD3bzLR4PbKlC8T8FnXHICTV+WBdly0MD9N
-         QKD7avnwOq/GA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <158923078019.390.12609597570329519463.tip-bot2@tip-bot2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in a "Case 1" scenario
-(Direct IO), using the categorization from [1]. That means that it's
-time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+* tip-bot2 for Joel Fernandes (Google) <tip-bot2@linutronix.de> wrote:
 
-Note that this effectively changes the code's behavior as well: it now
-ultimately calls set_page_dirty_lock(), instead of SetPageDirty().This
-is probably more accurate.
+> The following commit has been merged into the core/rcu branch of tip:
+> 
+> Commit-ID:     f87dc808009ac86c790031627698ef1a34c31e25
+> Gitweb:        https://git.kernel.org/tip/f87dc808009ac86c790031627698ef1a34c31e25
+> Author:        Joel Fernandes (Google) <joel@joelfernandes.org>
+> AuthorDate:    Mon, 16 Mar 2020 12:32:26 -04:00
+> Committer:     Paul E. McKenney <paulmck@kernel.org>
+> CommitterDate: Mon, 27 Apr 2020 11:02:50 -07:00
+> 
+> rcuperf: Add ability to increase object allocation size
+> 
+> This allows us to increase memory pressure dynamically using a new
+> rcuperf boot command line parameter called 'rcumult'.
+> 
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> ---
+>  kernel/rcu/rcuperf.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index a4a8d09..16dd1e6 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -88,6 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+>  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+>  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+>  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
+> +torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+>  
+>  static char *perf_type = "rcu";
+>  module_param(perf_type, charp, 0444);
+> @@ -635,7 +636,7 @@ kfree_perf_thread(void *arg)
+>  		}
+>  
+>  		for (i = 0; i < kfree_alloc_num; i++) {
+> -			alloc_ptr = kmalloc(sizeof(struct kfree_obj), GFP_KERNEL);
+> +			alloc_ptr = kmalloc(kfree_mult * sizeof(struct kfree_obj), GFP_KERNEL);
+>  			if (!alloc_ptr)
+>  				return -ENOMEM;
+>  
+> @@ -722,6 +723,8 @@ kfree_perf_init(void)
+>  		schedule_timeout_uninterruptible(1);
+>  	}
+>  
+> +	pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
 
-As Christoph Hellwig put it, "set_page_dirty() is only safe if we are
-dealing with a file backed page where we have reference on the inode it
-hangs off." [3]
+There's a new build warning on certain 32-bit kernel builds due to 
+this commit:
 
-Also, this deletes one of the two FIXME comments (about refcounting),
-because there is nothing wrong with the refcounting at this point.
-
-[1] Documentation/core-api/pin_user_pages.rst
-
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
-[3] https://lore.kernel.org/r/20190723153640.GB720@lst.de
-
-Cc: "Kai M=C3=A4kisara (Kolumbus)" <kai.makisara@kolumbus.fi>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Hi,
-
-As mentioned in the v1 review thread, we probably still want/need
-this. Or so I claim. :) Please see what you think...
-
-Changes since v1: changed the commit log, to refer to Direct IO
-(Case 1), instead of DMA/RDMA (Case 2). And added Bart to Cc.
-
-v1:
-https://lore.kernel.org/linux-scsi/20200519045525.2446851-1-jhubbard@nvidia=
-.com/
-
-thanks,
-John Hubbard
-NVIDIA
+In file included from ./include/linux/printk.h:7,
+                 from ./include/linux/kernel.h:15,
+                 from kernel/rcu/rcuperf.c:13:
+kernel/rcu/rcuperf.c: In function ‘kfree_perf_init’:
+./include/linux/kern_levels.h:5:18: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’ [-Wformat=]
+    5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */
+      |                  ^~~~~~
+./include/linux/kern_levels.h:9:20: note: in expansion of macro ‘KERN_SOH’
+    9 | #define KERN_ALERT KERN_SOH "1" /* action must be taken immediately */
+      |                    ^~~~~~~~
+./include/linux/printk.h:295:9: note: in expansion of macro ‘KERN_ALERT’
+  295 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+      |         ^~~~~~~~~~
+kernel/rcu/rcuperf.c:726:2: note: in expansion of macro ‘pr_alert’
+  726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+      |  ^~~~~~~~
+kernel/rcu/rcuperf.c:726:32: note: format string is defined here
+  726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+      |                              ~~^
+      |                                |
+      |                                long unsigned int
+      |                              %u
 
 
- drivers/scsi/st.c | 20 +++++---------------
- 1 file changed, 5 insertions(+), 15 deletions(-)
+The reason for the warning is that both kfree_mult and sizeof() are 
+'int' types on 32-bit kernels, while the format string expects a long.
 
-diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
-index c5f9b348b438..1e3eda9fa231 100644
---- a/drivers/scsi/st.c
-+++ b/drivers/scsi/st.c
-@@ -4922,7 +4922,7 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
- 	unsigned long end =3D (uaddr + count + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 	unsigned long start =3D uaddr >> PAGE_SHIFT;
- 	const int nr_pages =3D end - start;
--	int res, i, j;
-+	int res, i;
- 	struct page **pages;
- 	struct rq_map_data *mdata =3D &STbp->map_data;
-=20
-@@ -4944,7 +4944,7 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
-=20
-         /* Try to fault in all of the necessary pages */
-         /* rw=3D=3DREAD means read from drive, write into memory area */
--	res =3D get_user_pages_fast(uaddr, nr_pages, rw =3D=3D READ ? FOLL_WRITE =
-: 0,
-+	res =3D pin_user_pages_fast(uaddr, nr_pages, rw =3D=3D READ ? FOLL_WRITE =
-: 0,
- 				  pages);
-=20
- 	/* Errors and no page mapped should return here */
-@@ -4964,8 +4964,7 @@ static int sgl_map_user_pages(struct st_buffer *STbp,
- 	return nr_pages;
-  out_unmap:
- 	if (res > 0) {
--		for (j=3D0; j < res; j++)
--			put_page(pages[j]);
-+		unpin_user_pages(pages, res);
- 		res =3D 0;
- 	}
- 	kfree(pages);
-@@ -4977,18 +4976,9 @@ static int sgl_map_user_pages(struct st_buffer *STbp=
-,
- static int sgl_unmap_user_pages(struct st_buffer *STbp,
- 				const unsigned int nr_pages, int dirtied)
- {
--	int i;
--
--	for (i=3D0; i < nr_pages; i++) {
--		struct page *page =3D STbp->mapped_pages[i];
-+	/* FIXME: cache flush missing for rw=3D=3DREAD */
-+	unpin_user_pages_dirty_lock(STbp->mapped_pages, nr_pages, dirtied);
-=20
--		if (dirtied)
--			SetPageDirty(page);
--		/* FIXME: cache flush missing for rw=3D=3DREAD
--		 * FIXME: call the correct reference counting function
--		 */
--		put_page(page);
--	}
- 	kfree(STbp->mapped_pages);
- 	STbp->mapped_pages =3D NULL;
-=20
---=20
-2.26.2
+Instead of casting the type to long or tweaking the format string, the 
+most straightforward solution is to upgrade kfree_mult to a long. 
+Since this depends on CONFIG_RCU_PERF_TEST
 
+BTW., could we please also rename this code from 'PERF_TEST'/'perf test'
+to 'PERFORMANCE_TEST'/'performance test'? At first glance I always
+mistakenly believe that it's somehow related to perf, while it isn't. =B-)
+
+Thanks,
+
+	Ingo
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+
+ kernel/rcu/rcuperf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index 16dd1e6b7c09..221a0a3810e4 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -88,7 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+ torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+ torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+ torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
+-torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
++torture_param(long, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+ 
+ static char *perf_type = "rcu";
+ module_param(perf_type, charp, 0444);
