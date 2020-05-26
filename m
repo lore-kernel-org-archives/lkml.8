@@ -2,97 +2,137 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 388EC20723
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D82520787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:22:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M+Ak9Acf"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="XQ2rqTUy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgEZPWC (ORCPT
+        id S1729965AbgEZPWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:22:02 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20646 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728279AbgEZPWB (ORCPT
+        Tue, 26 May 2020 11:22:08 -0400
+Received: from mail.efficios.com ([167.114.26.124]:33662 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728279AbgEZPWH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:22:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590506520;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R3+ppRcVa8JUx5xospoY4qvA4Dy/RVPkzAWBhYz6jMk=;
-        b=M+Ak9AcfgPiRwAzxxUQ/f5o4Xf2z7T3WMB4M6070LnZ98vRAkt/xskJer6+f5vMyskWbFj
-        Dkr6yvM+t2WeO8OpOqnYBZq4wBBnR2/S4Rxhet+t56yx6FzN9KClrBl5AfIb5TvLzCPqce
-        zJYl6nTA/jXAxS9q2imJdU5cgsvSaEg=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-5t3PSVTrM0iEmrG0PzdkEQ-1; Tue, 26 May 2020 11:21:56 -0400
-X-MC-Unique: 5t3PSVTrM0iEmrG0PzdkEQ-1
-Received: by mail-qv1-f69.google.com with SMTP id i6so19973984qvq.17
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:21:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R3+ppRcVa8JUx5xospoY4qvA4Dy/RVPkzAWBhYz6jMk=;
-        b=owWO4ibNpAc6Xzqzg8F4g15WPWm4mamdIdlML27gwUOmAJG4fyA36XK6pNO2Y9ztdx
-         FIZlUXtJu6blQT6k9dpk5MfNe/urTw6pYLB5/tBc3rDlRgK2N/s2QQg6XxG+XmsUKPw6
-         xre9905V0Jf3tFlS2eKK3/BxyKjaQFpti84h+WXW2QgXyRKmU6HKIehpRLxEXg1czddg
-         3wTgWhd+A5+GTXUoB0kYzhVLju+LwGQ2qY/hNwwYRhoaqix1HCaJOlHOkGccfn6kuE2G
-         WDHEUT35rpbPAiEahVjSGdzdWRWcqG2gytQQZrWZIFMLuLCBjCcE2w7gWq1t+mcbhL1A
-         YBYA==
-X-Gm-Message-State: AOAM531u91V5zW+6APGFzBoo495rOtuAcmlkGY+TalZ2C3ve3NmA8NNT
-        iKFnxxfIOUi9wdgocrFk5gNJuAnIVuVDsn0JOJN76dSVIoUeF5JWU7LkmEmXlyGoEnBMHkADqMy
-        ottWOKxeaIPIqZ1Zb+XcduC6Q
-X-Received: by 2002:a37:8485:: with SMTP id g127mr1722247qkd.119.1590506515948;
-        Tue, 26 May 2020 08:21:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx6I359ATFqenFd4WKNpAxEarPbZQCXQ/leY7dTJyfr+l/Cwhca0PRwy+0p6X3ojbPmmxjSCQ==
-X-Received: by 2002:a37:8485:: with SMTP id g127mr1722213qkd.119.1590506515664;
-        Tue, 26 May 2020 08:21:55 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id w68sm7877836qkc.68.2020.05.26.08.21.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:21:54 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:21:52 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kbuild-all@lists.01.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>
-Subject: Re: [PATCH v9 07/14] KVM: Don't allocate dirty bitmap if dirty ring
- is enabled
-Message-ID: <20200526152152.GA1194141@xz-x1>
-References: <20200523225659.1027044-8-peterx@redhat.com>
- <20200526150547.GC30967@xsang-OptiPlex-9020>
+        Tue, 26 May 2020 11:22:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2A2B32539DC;
+        Tue, 26 May 2020 11:22:06 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id r5CHuBHdRu9w; Tue, 26 May 2020 11:22:05 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CCA652539D9;
+        Tue, 26 May 2020 11:22:05 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com CCA652539D9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1590506525;
+        bh=SKrOEP5pGa9ajAYrExv6tmSsQLUAXbFOGSG0aVKLqZc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=XQ2rqTUy7+LdrVi4/K9Hb9w+gbNDirUXP49Brj19U88DvQyA2NAkRNWhE6gsD0jC1
+         55SbMVeAdoNddOJoNkwLXXVAjuuxTBWSWChELy3/UPfSTQgdgPGc7eLHnoBohHKOwI
+         29E1D5OSTAzvLU5uxBdvsJ181bA1PC1BIWlWm77n6AtQXyy0h8JV35UiP7j2BkDBJP
+         AhR9rhb0ZvOrx6DO/R0HyTroMWXsshno/D9r/LFKm9VtxEgVwiuwghVXtWATyE2xWJ
+         XxXY5NcfV8FIcQ6Fwn6yNv/88tJkRv7svValKDX5kTc+Vnu6H82I2VxFTStwBuOGw6
+         P7G0tdyPBKkvQ==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 15NWPF5usT5q; Tue, 26 May 2020 11:22:05 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id BC77C253D8A;
+        Tue, 26 May 2020 11:22:05 -0400 (EDT)
+Date:   Tue, 26 May 2020 11:22:05 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     libc-alpha <libc-alpha@sourceware.org>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Message-ID: <1940294182.34562.1590506525684.JavaMail.zimbra@efficios.com>
+In-Reply-To: <877dwypwuj.fsf@oldenburg2.str.redhat.com>
+References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com> <87367ovy6k.fsf@oldenburg2.str.redhat.com> <108939265.33525.1590428184533.JavaMail.zimbra@efficios.com> <87lflerhqt.fsf@oldenburg2.str.redhat.com> <1701081361.34159.1590503556923.JavaMail.zimbra@efficios.com> <87ftbmpxqi.fsf@oldenburg2.str.redhat.com> <1931644690.34207.1590504804638.JavaMail.zimbra@efficios.com> <877dwypwuj.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
+ and thread creation (v19)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200526150547.GC30967@xsang-OptiPlex-9020>
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v19)
+Thread-Index: fw53pKjM0pFKmGwjq/cBVSRtxzONcQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:05:47PM +0800, kbuild test robot wrote:
-> >> arch/x86/kvm/mmu/mmu.c:1280:3: warning: Returning an integer in a function with pointer return type is not portable. [CastIntegerToAddressAtReturn]
->      return false;
->      ^
+----- On May 26, 2020, at 10:57 AM, Florian Weimer fweimer@redhat.com wrote=
+:
 
-A rebase accident for quite a few versions...  Fixed.
+> * Mathieu Desnoyers:
+>=20
+>>> Like the attribute, it needs to come right after the struct keyword, I
+>>> think.  (Trailing attributes can be ambiguous, but not in this case.)
+>>
+>> Nope. _Alignas really _is_ special :-(
+>>
+>> struct _Alignas (16) blah {
+>>         int a;
+>> };
+>>
+>> p.c:1:8: error: expected =E2=80=98{=E2=80=99 before =E2=80=98_Alignas=E2=
+=80=99
+>>  struct _Alignas (16) blah {
+>=20
+> Meh, yet another unnecessary C++ incompatibility.  C does not support
+> empty structs, so I assume they didn't see the field requirement as a
+> burden.
 
--- 
-Peter Xu
+Indeed, it's weird.
 
+>=20
+>> One last thing I'm planning to add in sys/rseq.h to cover acessing the
+>> rseq_cs pointers with both the UAPI headers and the glibc struct rseq
+>> declarations:
+>>
+>> /* The rseq_cs_ptr macro can be used to access the pointer to the curren=
+t
+>>    rseq critical section descriptor.  */
+>> #ifdef __LP64__
+>> # define rseq_cs_ptr(rseq) \
+>>            ((const struct rseq_cs *) (rseq)->rseq_cs.ptr)
+>> #else /* __LP64__ */
+>> # define rseq_cs_ptr(rseq) \
+>>            ((const struct rseq_cs *) (rseq)->rseq_cs.ptr.ptr32)
+>> #endif /* __LP64__ */
+>>
+>> Does it make sense ?
+>=20
+> Written this way, it's an aliasing violation.  I don't think it's very
+> useful.
+
+OK, I'll just remove it.
+
+Thanks,
+
+Mathieu
+
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
