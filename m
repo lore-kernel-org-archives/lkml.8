@@ -6,85 +6,192 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E36FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD0B520878
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2EA20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 05:35:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbgEZF2v (ORCPT
+        id S1726618AbgEZFf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 01:28:51 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37666 "EHLO mga05.intel.com"
+        Tue, 26 May 2020 01:35:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20009 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725771AbgEZF2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 01:28:50 -0400
-IronPort-SDR: R2KPo5WOs7BOqmxknrE1BqnD6MeX6wez7QPVTNsYoy4PeRLXOP8RzxKaRRTlZtLqCpUmQ884iA
- mrTxho32bMyw==
+        id S1725773AbgEZFf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 01:35:56 -0400
+IronPort-SDR: 75n97el5uGZTIObyAj1H5ptVwaYdYcv8hOXWx2zz6NKYERpz+GSPgwrYW63A4YoJut68MC1SQg
+ SMwqrYADHwTA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 22:28:50 -0700
-IronPort-SDR: PXyP/aEXuYvGVakR4IXAMHD2zuHe9IytR1+X3zCVrRkeyj65kZoSgTG/yPOHnW3ORzNr76Qq3V
- TYIDCPiYbDwQ==
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2020 22:35:56 -0700
+IronPort-SDR: 8GuUvj2YEZwOCH+zeBzQGzidx1tkcc1NTDlrvncBzRNXwbmzFfOQ4wMAbrOH0d3XjFBsPvnH75
+ aWpwPrG8sZfQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,436,1583222400"; 
-   d="scan'208";a="266334379"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga003.jf.intel.com with ESMTP; 25 May 2020 22:28:50 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id F2932301C5E; Mon, 25 May 2020 22:28:49 -0700 (PDT)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     x86@kernel.org
-Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
-        sashal@kernel.org, Andi Kleen <ak@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v1] x86: Pin cr4 FSGSBASE
-Date:   Mon, 25 May 2020 22:28:48 -0700
-Message-Id: <20200526052848.605423-1-andi@firstfloor.org>
-X-Mailer: git-send-email 2.25.4
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="256368416"
+Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.240.193.54])
+  by fmsmga008.fm.intel.com with ESMTP; 25 May 2020 22:35:53 -0700
+From:   Zhu Lingshan <lingshan.zhu@intel.com>
+To:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        jasowang@redhat.com
+Cc:     lulu@redhat.com, dan.daly@intel.com, cunming.liang@intel.com,
+        Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: [PATCH] vdpa: bypass waking up vhost_woker for vdpa vq kick
+Date:   Tue, 26 May 2020 13:32:25 +0800
+Message-Id: <1590471145-4436-1-git-send-email-lingshan.zhu@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+Standard vhost devices rely on waking up a vhost_worker to kick
+a virtquque. However vdpa devices have hardware backends, so it
+does not need this waking up routin. In this commit, vdpa device
+will kick a virtqueue directly, reduce the performance overhead
+caused by waking up a vhost_woker.
 
-Since there seem to be kernel modules floating around that set
-FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
-CR4 pinning just checks that bits are set, this also checks
-that the FSGSBASE bit is not set, and if it is clears it again.
-
-Note this patch will need to be undone when the full FSGSBASE
-patches are merged. But it's a reasonable solution for v5.2+
-stable at least. Sadly the older kernels don't have the necessary
-infrastructure for this (although a simpler version of this
-could be added there too)
-
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
+Suggested-by: Jason Wang <jasowang@redhat.com>
 ---
- arch/x86/kernel/cpu/common.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/vhost/vdpa.c | 100 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index bed0cb83fe24..1f5b7871ae9a 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -385,6 +385,11 @@ void native_write_cr4(unsigned long val)
- 		/* Warn after we've set the missing bits. */
- 		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
- 			  bits_missing);
-+		if (val & X86_CR4_FSGSBASE) {
-+			WARN_ONCE(1, "CR4 unexpectedly set FSGSBASE!?\n");
-+			val &= ~X86_CR4_FSGSBASE;
-+			goto set_register;
-+		}
- 	}
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index 0968361..d3a2aca 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -287,6 +287,66 @@ static long vhost_vdpa_get_vring_num(struct vhost_vdpa *v, u16 __user *argp)
+ 
+ 	return 0;
  }
- EXPORT_SYMBOL(native_write_cr4);
++void vhost_vdpa_poll_stop(struct vhost_virtqueue *vq)
++{
++	vhost_poll_stop(&vq->poll);
++}
++
++int vhost_vdpa_poll_start(struct vhost_virtqueue *vq)
++{
++	struct vhost_poll *poll = &vq->poll;
++	struct file *file = vq->kick;
++	__poll_t mask;
++
++
++	if (poll->wqh)
++		return 0;
++
++	mask = vfs_poll(file, &poll->table);
++	if (mask)
++		vq->handle_kick(&vq->poll.work);
++	if (mask & EPOLLERR) {
++		vhost_poll_stop(poll);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static long vhost_vdpa_set_vring_kick(struct vhost_virtqueue *vq,
++				      void __user *argp)
++{
++	bool pollstart = false, pollstop = false;
++	struct file *eventfp, *filep = NULL;
++	struct vhost_vring_file f;
++	long r;
++
++	if (copy_from_user(&f, argp, sizeof(f)))
++		return -EFAULT;
++
++	eventfp = f.fd == -1 ? NULL : eventfd_fget(f.fd);
++	if (IS_ERR(eventfp)) {
++		r = PTR_ERR(eventfp);
++		return r;
++	}
++
++	if (eventfp != vq->kick) {
++		pollstop = (filep = vq->kick) != NULL;
++		pollstart = (vq->kick = eventfp) != NULL;
++	} else
++		filep = eventfp;
++
++	if (pollstop && vq->handle_kick)
++		vhost_vdpa_poll_stop(vq);
++
++	if (filep)
++		fput(filep);
++
++	if (pollstart && vq->handle_kick)
++		r = vhost_vdpa_poll_start(vq);
++
++	return r;
++}
+ 
+ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
+ 				   void __user *argp)
+@@ -316,6 +376,11 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
+ 		return 0;
+ 	}
+ 
++	if (cmd == VHOST_SET_VRING_KICK) {
++		r = vhost_vdpa_set_vring_kick(vq, argp);
++		return r;
++	}
++
+ 	if (cmd == VHOST_GET_VRING_BASE)
+ 		vq->last_avail_idx = ops->get_vq_state(v->vdpa, idx);
+ 
+@@ -667,6 +732,39 @@ static void vhost_vdpa_free_domain(struct vhost_vdpa *v)
+ 	v->domain = NULL;
+ }
+ 
++static int vhost_vdpa_poll_worker(wait_queue_entry_t *wait, unsigned int mode,
++				  int sync, void *key)
++{
++	struct vhost_poll *poll = container_of(wait, struct vhost_poll, wait);
++	struct vhost_virtqueue *vq = container_of(poll, struct vhost_virtqueue,
++						  poll);
++
++	if (!(key_to_poll(key) & poll->mask))
++		return 0;
++
++	vq->handle_kick(&vq->poll.work);
++
++	return 0;
++}
++
++void vhost_vdpa_poll_init(struct vhost_dev *dev)
++{
++	struct vhost_virtqueue *vq;
++	struct vhost_poll *poll;
++	int i;
++
++	for (i = 0; i < dev->nvqs; i++) {
++		vq = dev->vqs[i];
++		poll = &vq->poll;
++		if (vq->handle_kick) {
++			init_waitqueue_func_entry(&poll->wait,
++						  vhost_vdpa_poll_worker);
++			poll->work.fn = vq->handle_kick;
++		}
++
++	}
++}
++
+ static int vhost_vdpa_open(struct inode *inode, struct file *filep)
+ {
+ 	struct vhost_vdpa *v;
+@@ -697,6 +795,8 @@ static int vhost_vdpa_open(struct inode *inode, struct file *filep)
+ 	vhost_dev_init(dev, vqs, nvqs, 0, 0, 0,
+ 		       vhost_vdpa_process_iotlb_msg);
+ 
++	vhost_vdpa_poll_init(dev);
++
+ 	dev->iotlb = vhost_iotlb_alloc(0, 0);
+ 	if (!dev->iotlb) {
+ 		r = -ENOMEM;
 -- 
-2.25.4
+1.8.3.1
 
