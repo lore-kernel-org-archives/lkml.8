@@ -2,111 +2,247 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6203C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0FA220674
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F6220674
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="plsjLQU/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aLTQi0a7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgEZSZ7 (ORCPT
+        id S1729650AbgEZS1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728179AbgEZSZ6 (ORCPT
+        Tue, 26 May 2020 14:27:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40364 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729298AbgEZS1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:25:58 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2805BC03E96D;
-        Tue, 26 May 2020 11:25:58 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g9so18449956edr.8;
-        Tue, 26 May 2020 11:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=afKePXV5UqK2ZUvdMymIq9tPCqQ112HpkYrwABU1zys=;
-        b=plsjLQU/KzwWN+TjdGYXz8YVIQm1239ou0S/5f4jCz3we8r1Qke+/ts0DI3PeVuh6q
-         CKByTKnGyQ1iQaedMldR6pNpKsarP9nHRolpXCallJMpZENuq8sI6EN+3Pvo9tyWT8tj
-         JCDwK89P6jFFhPr0WlYTIwva8Vytyq0c8isR9+CHB+4DxJP9d9nYCx1mC5OF8eG3Np2Z
-         lZtfKGvFRkgFBB35MR4lDzVT4S7O4E+iv3Q+FZ2JvUs7+G2iuyN+YhMBaHWiijdumWEt
-         KanGWC1YQLH/IR9t+DoZn3y8NOOFE/OU/vrV1rwZHciT2nPrJ4u3v2prYAbzXBLN3Ky1
-         shSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=afKePXV5UqK2ZUvdMymIq9tPCqQ112HpkYrwABU1zys=;
-        b=gaGKBQnKWGKSqGCjmB8QRDyHyBqOI8cAil5Hb3gq4N8AY2Fm/Q0dSGQLfheFqy3I0L
-         GuQmT6ie1+Lq8PNsq8rBg3G3ZXRfn/ggVZ560xODB39Ngrxy8iu2II+CQ/G4RJUp55hV
-         DeK6yMocgPIH+w0jZyj7yaL0NX4qs0LJ5JM5LkPCUx36uCvJVV3UUyk/f7AAsyKUEhHC
-         rlY8zg7dnyfYYAcIp+OQUDjar62moQM4sJy8ElwotZNXRSkLDYdMKXRGmxz3Pd9BLO2w
-         XDgFFV0v1ElGjLeZCyP5UYF424nnsv1XaiarAacE3rzyd2O1cGBkv+R5hs9r3xR20qhD
-         Krtw==
-X-Gm-Message-State: AOAM531vo1nZDzDT3+ea8d2ZgDZDayrE0ymr5Zo8+9qzJbaag62h06vn
-        ROJXGsUKZFOCA5mrad5hM6BVQB+E4fXbGonDvMM=
-X-Google-Smtp-Source: ABdhPJwsR1pqQeQXVBF9HsfqPyD6Jf+HlQNxH16z4gWGUDFriR0DiCQ9c6m7YstoWMpumx7pSDsBYSFEhAx+d8iNeW0=
-X-Received: by 2002:a05:6402:2213:: with SMTP id cq19mr21276373edb.337.1590517556754;
- Tue, 26 May 2020 11:25:56 -0700 (PDT)
+        Tue, 26 May 2020 14:27:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590517620;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ax77LQGS6LyswNoHPKq4ajIwd1zVpERIFMSwmKnqS4Y=;
+        b=aLTQi0a7aioLTLa1VGv1wlLWHHrH/g+192OAep0JvSyOcdrQmaMwM4izbH1/Bpq7CbGemA
+        4SEiIvO3yJ9dpacEkj3/8QZXofN+W8sZCGWNUTXVRE2LXpZVshWlHz8Ip0+xM32vaD95aA
+        MrlfOhOVh1y237kCIm4XX6iWCZMC0jE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-64-f_e1aYZSMkGGMdw6_HUzVA-1; Tue, 26 May 2020 14:26:57 -0400
+X-MC-Unique: f_e1aYZSMkGGMdw6_HUzVA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 13CF4107ACF5;
+        Tue, 26 May 2020 18:26:56 +0000 (UTC)
+Received: from x1.home (ovpn-114-203.phx2.redhat.com [10.3.114.203])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2C3326FB6E;
+        Tue, 26 May 2020 18:26:55 +0000 (UTC)
+Date:   Tue, 26 May 2020 12:26:54 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     "Raj, Ashok" <ashok.raj@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] iommu: Relax ACS requirement for RCiEP devices.
+Message-ID: <20200526122654.7ac087b3@x1.home>
+In-Reply-To: <20200526180648.GC35892@otc-nc-03>
+References: <1588653736-10835-1-git-send-email-ashok.raj@intel.com>
+        <20200504231936.2bc07fe3@x1.home>
+        <20200505061107.GA22974@araj-mobl1.jf.intel.com>
+        <20200505080514.01153835@x1.home>
+        <20200505145605.GA13690@otc-nc-03>
+        <20200505093414.6bae52e0@x1.home>
+        <20200526180648.GC35892@otc-nc-03>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200506163033.3843-1-m-karicheri2@ti.com> <87r1vdkxes.fsf@intel.com>
- <CA+h21hqiV71wc0v=-KkPbWNyXSY+-oiz+DsQLAe1XEJw7eP=_Q@mail.gmail.com> <a7d1ebef-7161-9ecc-09ca-83f868ff7dac@ti.com>
-In-Reply-To: <a7d1ebef-7161-9ecc-09ca-83f868ff7dac@ti.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 26 May 2020 21:25:45 +0300
-Message-ID: <CA+h21hp+khuj0jV9+keDuzPDe11Xz1Rs8KKkt=n8MeWVHkcmvQ@mail.gmail.com>
-Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Sekhar Nori <nsekhar@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Murali,
+On Tue, 26 May 2020 11:06:48 -0700
+"Raj, Ashok" <ashok.raj@intel.com> wrote:
 
-On Tue, 26 May 2020 at 17:12, Murali Karicheri <m-karicheri2@ti.com> wrote:
->
-> Hi Vladimir,
->
+> Hi Alex,
+>=20
+> I was able to find better language in the IOMMU spec that gaurantees=20
+> the behavior we need. See below.
+>=20
+>=20
+> On Tue, May 05, 2020 at 09:34:14AM -0600, Alex Williamson wrote:
+> > On Tue, 5 May 2020 07:56:06 -0700
+> > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> >  =20
+> > > On Tue, May 05, 2020 at 08:05:14AM -0600, Alex Williamson wrote: =20
+> > > > On Mon, 4 May 2020 23:11:07 -0700
+> > > > "Raj, Ashok" <ashok.raj@intel.com> wrote:
+> > > >    =20
+> > > > > Hi Alex
+> > > > >=20
+> > > > > + Joerg, accidently missed in the Cc.
+> > > > >=20
+> > > > > On Mon, May 04, 2020 at 11:19:36PM -0600, Alex Williamson wrote: =
+  =20
+> > > > > > On Mon,  4 May 2020 21:42:16 -0700
+> > > > > > Ashok Raj <ashok.raj@intel.com> wrote:
+> > > > > >      =20
+> > > > > > > PCIe Spec recommends we can relax ACS requirement for RCIEP d=
+evices.
+> > > > > > >=20
+> > > > > > > PCIe 5.0 Specification.
+> > > > > > > 6.12 Access Control Services (ACS)
+> > > > > > > Implementation of ACS in RCiEPs is permitted but not required=
+. It is
+> > > > > > > explicitly permitted that, within a single Root Complex, some=
+ RCiEPs
+> > > > > > > implement ACS and some do not. It is strongly recommended tha=
+t Root Complex
+> > > > > > > implementations ensure that all accesses originating from RCi=
+EPs
+> > > > > > > (PFs and VFs) without ACS capability are first subjected to p=
+rocessing by
+> > > > > > > the Translation Agent (TA) in the Root Complex before further=
+ decoding and
+> > > > > > > processing. The details of such Root Complex handling are out=
+side the scope
+> > > > > > > of this specification.
+> > > > > > >    =20
+> > > > > >=20
+> > > > > > Is the language here really strong enough to make this change? =
+ ACS is
+> > > > > > an optional feature, so being permitted but not required is rat=
+her
+> > > > > > meaningless.  The spec is also specifically avoiding the words =
+"must"
+> > > > > > or "shall" and even when emphasized with "strongly", we still o=
+nly have
+> > > > > > a recommendation that may or may not be honored.  This seems li=
+ke a
+> > > > > > weak basis for assuming that RCiEPs universally honor this
+> > > > > > recommendation.  Thanks,
+> > > > > >      =20
+> > > > >=20
+> > > > > We are speaking about PCIe spec, where people write it about 5 ye=
+ars ahead
+> > > > > and every vendor tries to massage their product behavior with vag=
+ue
+> > > > > words like this..  :)
+> > > > >=20
+> > > > > But honestly for any any RCiEP, or even integrated endpoints, the=
+re=20
+> > > > > is no way to send them except up north. These aren't behind a RP.=
+   =20
+> > > >=20
+> > > > But they are multi-function devices and the spec doesn't define rou=
+ting
+> > > > within multifunction packages.  A single function RCiEP will alread=
+y be
+> > > > assumed isolated within its own group.   =20
+> > >=20
+> > > That's right. The other two devices only have legacy PCI headers. So=
+=20
+> > > they can't claim to be RCiEP's but just integrated endpoints. The leg=
+acy
+> > > devices don't even have a PCIe header.
+> > >=20
+> > > I honestly don't know why these are groped as MFD's in the first plac=
+e.
+> > >  =20
+> > > >     =20
+> > > > > I did check with couple folks who are part of the SIG, and seem t=
+o agree
+> > > > > that ACS treatment for RCiEP's doesn't mean much.=20
+> > > > >=20
+> > > > > I understand the language isn't strong, but it doesn't seem like =
+ACS should
+> > > > > be a strong requirement for RCiEP's and reasonable to relax.
+> > > > >=20
+> > > > > What are your thoughts?    =20
+> > > >=20
+> > > > I think hardware vendors have ACS at their disposal to clarify when
+> > > > isolation is provided, otherwise vendors can submit quirks, but I d=
+on't
+> > > > see that the "strongly recommended" phrasing is sufficient to assume
+> > > > isolation between multifunction RCiEPs.  Thanks,   =20
+> > >=20
+> > > You point is that integrated MFD endpoints, without ACS, there is no=
+=20
+> > > gaurantee to SW that they are isolated.
+> > >=20
+> > > As far as a quirk, do you think:
+> > > 	- a cmdline optput for integrated endpoints, and RCiEP's suffice?
+> > > 	  along with a compile time default that is strict enforcement
+> > > 	- typical vid/did type exception list?
+> > >=20
+> > > A more generic way to ask for exception would be scalable until we ca=
+n stop
+> > > those type of integrated devices. Or we need to maintain these device=
+ lists
+> > > for eternity.  =20
+> >=20
+> > I don't think the language in the spec is anything sufficient to handle
+> > RCiEP uniquely.  We've previously rejected kernel command line opt-outs
+> > for ACS, and the extent to which those patches still float around the
+> > user community and are blindly used to separate IOMMU groups are a
+> > testament to the failure of this approach.  Users do not have a basis
+> > for enabling this sort of opt-out.  The benefit is obvious in the IOMMU
+> > grouping, but the risk is entirely unknown.  A kconfig option is even
+> > worse as that means if you consume a downstream kernel, the downstream
+> > maintainers might have decided universally that isolation is less
+> > important than functionality. =20
+>=20
+> We discussed this internally, and Intel vt-d spec does spell out clearly=
+=20
+> in Section 3.16 Root-Complex Peer to Peer Considerations. The spec clearly
+> calls out that all p2p must be done on translated addresses and therefore
+> must go through the IOMMU.
+>=20
+> I suppose they should also have some similar platform gauranteed behavior
+> for RCiEP's or MFD's *Must* behave as follows. The language is strict and
+> when IOMMU is enabled in the platform, everything is sent up north to the
+> IOMMU agent.
+>=20
+> 3.16 Root-Complex Peer to Peer Considerations
+> When DMA remapping is enabled, peer-to-peer requests through the
+> Root-Complex must be handled
+> as follows:
+> =E2=80=A2 The input address in the request is translated (through first-l=
+evel,
+>   second-level or nested translation) to a host physical address (HPA).
+>   The address decoding for peer addresses must be done only on the=20
+>   translated HPA. Hardware implementations are free to further limit=20
+>   peer-to-peer accesses to specific host physical address regions=20
+>   (or to completely disallow peer-forwarding of translated requests).
+> =E2=80=A2 Since address translation changes the contents (address field) =
+of the PCI
+>   Express Transaction Layer Packet (TLP), for PCI Express peer-to-peer=20
+>   requests with ECRC, the Root-Complex hardware must use the new ECRC=20
+>   (re-computed with the translated address) if it decides to forward=20
+>   the TLP as a peer request.
+> =E2=80=A2 Root-ports, and multi-function root-complex integrated endpoint=
+s, may
+>   support additional peerto-peer control features by supporting PCI Expre=
+ss
+>   Access Control Services (ACS) capability. Refer to ACS capability in=20
+>   PCI Express specifications for details.
 
-> I haven't looked the spec for 802.1CB. If they re-use HSR/PRP Tag in the
-> L2 protocol it make sense to enhance the driver. Else I don't see any
-> re-use possibility. Do you know the above?
->
-> Thanks
->
-> Murali
+That sounds like it might be a reasonable basis for quirking all RCiEPs
+on VT-d platforms if Intel is willing to stand behind it.  Thanks,
 
-IEEE 802.1CB redundancy tag sits between Source MAC address and
-Ethertype or any VLAN tag, is 6 bytes in length, of which:
-- first 2 bytes are the 0xf1c1 EtherType
-- next 2 bytes are reserved
-- last 2 bytes are the sequence number
-There is also a pre-standard version of the IEEE 802.1CB redundancy
-tag, which is only 4 bytes in length. I assume vendors of pre-standard
-equipment will want to have support for this 4-byte tag as well, as
-well as a mechanism of converting between HSR/PRP/pre-standard 802.1CB
-tag on one set of ports, and 802.1CB on another set of ports.
+Alex
 
->
-> --
-> Murali Karicheri
-> Texas Instruments
-
-Thanks,
--Vladimir
