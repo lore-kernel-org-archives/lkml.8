@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5061F208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51896208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519907;
-	bh=R1Gt4SG3jPJ4a59LjXWWW9Stoq8z0WJPtFjuu69IuNE=;
+	s=default; t=1590519911;
+	bh=KOOqmjkT3/NHkepUVqMyX89PGaVwj5+wi37xbhKpEEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdH3lC7PeuexNzy6DzsFL3utP7YNymTwEgh7s4+mC5dE8yFJPjzt0cijWM9I5iRrG
-	 ZAyAzcgAiyVQPkz8+iBMgsc7wWx2IdZeYDu7iBszcf9Dr/jY2X+O/Fuupq5MI7weFp
-	 FwRhlyOcXmBrLHJ83xSit5/YqkER8OdOlJGaVTug=
+	b=WZeeimCRB5F/2i2SYxGaZ7KlfUihRtXy9St19RyBQDf4y0Rf9wWnoG0IE4U312RI4
+	 9E8RrUufxXN9U3MZc/Kx7i63DgWDRBfgg4vtNl+gZICZSytjJwJuzIZX6Gm0EZhAuI
+	 p47EsyFi/E9KZh/EewVpgXsfqsuqUp9K1pr3C/SE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391463AbgEZTFG (ORCPT
+        id S2391471AbgEZTFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391453AbgEZTFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:03 -0400
+        id S2389967AbgEZTFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F352820776;
-        Tue, 26 May 2020 19:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661B820873;
+        Tue, 26 May 2020 19:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519903;
-        bh=R1Gt4SG3jPJ4a59LjXWWW9Stoq8z0WJPtFjuu69IuNE=;
+        s=default; t=1590519905;
+        bh=KOOqmjkT3/NHkepUVqMyX89PGaVwj5+wi37xbhKpEEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7jS+s+ZbEfgr2w12NTPTrG/DbcnY6UQXgkdvW8VKKkGr0M2aoZEzN6COUXCwyuaf
-         TCCaWB0WjjMPXWeQ0JgyF4gYOfVXKXWcn/QIEX7VkmG4ZKC6ZlhPWZwRx4PxmBqkqF
-         zFBxT9pmwEbadqYD7ahLg2dAbpTWvP/sE5EUTdHA=
+        b=qJsz0WOWI7xhqXZX0E1aNWalmXkZ4sajY0+cBz2jvTGDpYE05SyPyeoHEbkautWTu
+         3BxIh4BN88Gy9rwbOdwGdPq/4fXHbnZYwwArc3Pd5QA7CeUKtb6n+C22V+dKmJP5Eu
+         PKEqIL48nj9Q+/xgA2wWcJjwgNtSqlTWod92O1gE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>, franky.lin@broadcom.com,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 63/81] brcmfmac: abort and release host after error
-Date:   Tue, 26 May 2020 20:53:38 +0200
-Message-Id: <20200526183934.053640655@linuxfoundation.org>
+Subject: [PATCH 4.19 64/81] Revert "gfs2: Dont demote a glock until its revokes are written"
+Date:   Tue, 26 May 2020 20:53:39 +0200
+Message-Id: <20200526183934.175831135@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -64,55 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 863844ee3bd38219c88e82966d1df36a77716f3e ]
+[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
 
-With commit 216b44000ada ("brcmfmac: Fix use after free in
-brcmf_sdio_readframes()") applied, we see locking timeouts in
-brcmf_sdio_watchdog_thread().
+This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
 
-brcmfmac: brcmf_escan_timeout: timer expired
-INFO: task brcmf_wdog/mmc1:621 blocked for more than 120 seconds.
-Not tainted 4.19.94-07984-g24ff99a0f713 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-brcmf_wdog/mmc1 D    0   621      2 0x00000000 last_sleep: 2440793077.  last_runnable: 2440766827
-[<c0aa1e60>] (__schedule) from [<c0aa2100>] (schedule+0x98/0xc4)
-[<c0aa2100>] (schedule) from [<c0853830>] (__mmc_claim_host+0x154/0x274)
-[<c0853830>] (__mmc_claim_host) from [<bf10c5b8>] (brcmf_sdio_watchdog_thread+0x1b0/0x1f8 [brcmfmac])
-[<bf10c5b8>] (brcmf_sdio_watchdog_thread [brcmfmac]) from [<c02570b8>] (kthread+0x178/0x180)
+This patch fixes a regression: patch df5db5f9ee112 allowed function
+run_queue() to bypass its call to do_xmote() if revokes were queued for
+the glock. That's wrong because its call to do_xmote() is what is
+responsible for calling the go_sync() glops functions to sync both
+the ail list and any revokes queued for it. By bypassing the call,
+gfs2 could get into a stand-off where the glock could not be demoted
+until its revokes are written back, but the revokes would not be
+written back because do_xmote() was never called.
 
-In addition to restarting or exiting the loop, it is also necessary to
-abort the command and to release the host.
+It "sort of" works, however, because there are other mechanisms like
+the log flush daemon (logd) that can sync the ail items and revokes,
+if it deems it necessary. The problem is: without file system pressure,
+it might never deem it necessary.
 
-Fixes: 216b44000ada ("brcmfmac: Fix use after free in brcmf_sdio_readframes()")
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Matthias Kaehlcke <mka@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: franky.lin@broadcom.com
-Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/gfs2/glock.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index e0211321fe9e..96870d1b3b73 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -1933,6 +1933,8 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
- 			if (brcmf_sdio_hdparse(bus, bus->rxhdr, &rd_new,
- 					       BRCMF_SDIO_FT_NORMAL)) {
- 				rd->len = 0;
-+				brcmf_sdio_rxfail(bus, true, true);
-+				sdio_release_host(bus->sdiodev->func1);
- 				brcmu_pkt_buf_free_skb(pkt);
- 				continue;
- 			}
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index f8a5eef3d014..ccdd8c821abd 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -636,9 +636,6 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
+-		smp_mb();
+-		if (atomic_read(&gl->gl_revokes) != 0)
+-			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
 -- 
 2.25.1
 
