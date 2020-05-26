@@ -2,112 +2,184 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B48C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C186C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08D520787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58485207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:38:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k8W8Gk5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbgEZQhj (ORCPT
+        id S1729462AbgEZQiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:37:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
+        Tue, 26 May 2020 12:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgEZQhi (ORCPT
+        with ESMTP id S1726930AbgEZQiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:37:38 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81DACC03E96D;
-        Tue, 26 May 2020 09:37:38 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jdca4-0006ac-9Y; Tue, 26 May 2020 18:37:32 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DAEC51C00FA;
-        Tue, 26 May 2020 18:37:31 +0200 (CEST)
-Date:   Tue, 26 May 2020 16:37:31 -0000
-From:   "tip-bot2 for Jens Axboe" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/fair: Don't NUMA balance for kthreads
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
-References: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
+        Tue, 26 May 2020 12:38:16 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AC8C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:38:16 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id n18so10405928pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 09:38:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Bhl2UOIY4OsE6svto3/aMcCQxQAAGmGUt7Z/dDdHwgQ=;
+        b=k8W8Gk5W79jL71x4Db6tC32LoN6tLeF2cWKPofBk6MQZHqZ+DVReHkEgXOdpD8U1+E
+         QishTLwEIZx4P48VIYZGEyBLnP0yv5X4BHP6VUSrP4q/ehBudtDacM2/DZiC7ZTU2F53
+         XkHk5ce+t2gaqjUfdUy1GC1bxmKV2jKmlRhiE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bhl2UOIY4OsE6svto3/aMcCQxQAAGmGUt7Z/dDdHwgQ=;
+        b=Fp6OTsQmsCb+PDZMtW7PnxCDXYA/HQAvj5NMo8nD39ndk+xcD90vf057hFWMfjy/Wk
+         YVgVcqicwmtjLT85j6sbZHJdgnq8425mZqVhZ7rsbWCssP74D0tvsa21ZrQQzL3QvPg5
+         L9sWmWWL1/8deuRvlDVDlvnTAWDPsw9I1iw3M2dfv2l1mWoSK/3+EetnQab30pZ4kQ2p
+         WqUREMPEDT4GPai2Ezkid75wmOoB1ibyyZ5sWiUk0CuFUMzJ0KwrqXmiDwoYUxQl2DFr
+         E6q62zDvCk3JUZnQ/zo6i3tEfKrvqmFmBlBMZXlSZ+fzMqXxjz/iRFUntq3Fu87NZe0s
+         9o0A==
+X-Gm-Message-State: AOAM530/SiEpWA4XlkQVRJaIoLSGM5JM+4FjfT+VsYIHs/ti3pYemUZc
+        zVXQSRvfO7Kz/xsPbYdwmEPVig==
+X-Google-Smtp-Source: ABdhPJySu98Q8YTkcdzj0kW5rhz9kbIzAe19Hvm2Y7yxT0uL5KHG5sOgIN5LUU2lavt8W2YvXm+n4w==
+X-Received: by 2002:a63:f703:: with SMTP id x3mr1867522pgh.11.1590511096425;
+        Tue, 26 May 2020 09:38:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w7sm66767pfu.117.2020.05.26.09.38.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 09:38:15 -0700 (PDT)
+Date:   Tue, 26 May 2020 09:38:14 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Greg KH <gregkh@linuxfoundation.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, sashal@kernel.org,
+        Andi Kleen <ak@linux.intel.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
+Message-ID: <202005260935.EB11D3EB7@keescook>
+References: <20200526052848.605423-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Message-ID: <159051105169.17951.7766343551502727932.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526052848.605423-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
+On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> Since there seem to be kernel modules floating around that set
+> FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+> CR4 pinning just checks that bits are set, this also checks
+> that the FSGSBASE bit is not set, and if it is clears it again.
+> 
+> Note this patch will need to be undone when the full FSGSBASE
+> patches are merged. But it's a reasonable solution for v5.2+
+> stable at least. Sadly the older kernels don't have the necessary
+> infrastructure for this (although a simpler version of this
+> could be added there too)
+> 
+> Cc: stable@vger.kernel.org # v5.2+
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  arch/x86/kernel/cpu/common.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index bed0cb83fe24..1f5b7871ae9a 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -385,6 +385,11 @@ void native_write_cr4(unsigned long val)
+>  		/* Warn after we've set the missing bits. */
+>  		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+>  			  bits_missing);
+> +		if (val & X86_CR4_FSGSBASE) {
+> +			WARN_ONCE(1, "CR4 unexpectedly set FSGSBASE!?\n");
+> +			val &= ~X86_CR4_FSGSBASE;
+> +			goto set_register;
+> +		}
+>  	}
+>  }
+>  EXPORT_SYMBOL(native_write_cr4);
+> -- 
+> 2.25.4
+> 
 
-Commit-ID:     18f855e574d9799a0e7489f8ae6fd8447d0dd74a
-Gitweb:        https://git.kernel.org/tip/18f855e574d9799a0e7489f8ae6fd8447d0dd74a
-Author:        Jens Axboe <axboe@kernel.dk>
-AuthorDate:    Tue, 26 May 2020 09:38:31 -06:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 26 May 2020 18:34:58 +02:00
+And if this is going to be more permanent, we can separate the mask
+(untested):
 
-sched/fair: Don't NUMA balance for kthreads
 
-Stefano reported a crash with using SQPOLL with io_uring:
-
-  BUG: kernel NULL pointer dereference, address: 00000000000003b0
-  CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
-  RIP: 0010:task_numa_work+0x4f/0x2c0
-  Call Trace:
-   task_work_run+0x68/0xa0
-   io_sq_thread+0x252/0x3d0
-   kthread+0xf9/0x130
-   ret_from_fork+0x35/0x40
-
-which is task_numa_work() oopsing on current->mm being NULL.
-
-The task work is queued by task_tick_numa(), which checks if current->mm is
-NULL at the time of the call. But this state isn't necessarily persistent,
-if the kthread is using use_mm() to temporarily adopt the mm of a task.
-
-Change the task_tick_numa() check to exclude kernel threads in general,
-as it doesn't make sense to attempt ot balance for kthreads anyway.
-
-Reported-by: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/865de121-8190-5d30-ece5-3b097dc74431@kernel.dk
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 538ba5d..da3e5b5 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -2908,7 +2908,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
- 	/*
- 	 * We don't care about NUMA placement if we don't have memory.
- 	 */
--	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
-+	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
- 		return;
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index bed0cb83fe24..ead64f7420a5 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -347,6 +347,8 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
+ 	cr4_clear_bits(X86_CR4_UMIP);
+ }
  
- 	/*
++static const unsigned long cr4_pinned_mask =
++	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP | X86_CR4_FSGSBASE;
+ static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+ static unsigned long cr4_pinned_bits __ro_after_init;
+ 
+@@ -371,20 +373,20 @@ EXPORT_SYMBOL(native_write_cr0);
+ 
+ void native_write_cr4(unsigned long val)
+ {
+-	unsigned long bits_missing = 0;
++	unsigned long bits_changed = 0;
+ 
+ set_register:
+ 	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
+ 
+ 	if (static_branch_likely(&cr_pinning)) {
+-		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
+-			bits_missing = ~val & cr4_pinned_bits;
+-			val |= bits_missing;
++		if (unlikely((val & cr4_pinned_mask) != cr4_pinned_bits)) {
++			bits_changed = ~val & cr4_pinned_mask;
++			val = (val & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 			goto set_register;
+ 		}
+ 		/* Warn after we've set the missing bits. */
+-		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+-			  bits_missing);
++		WARN_ONCE(bits_changed, "pinned CR4 bits changed: %lx!?\n",
++			  bits_changed);
+ 	}
+ }
+ EXPORT_SYMBOL(native_write_cr4);
+@@ -396,7 +398,7 @@ void cr4_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_PCID))
+ 		cr4 |= X86_CR4_PCIDE;
+ 	if (static_branch_likely(&cr_pinning))
+-		cr4 |= cr4_pinned_bits;
++		cr4 = (cr4 & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 
+ 	__write_cr4(cr4);
+ 
+@@ -411,10 +413,7 @@ void cr4_init(void)
+  */
+ static void __init setup_cr_pinning(void)
+ {
+-	unsigned long mask;
+-
+-	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
+-	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
++	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & cr4_pinned_mask;
+ 	static_key_enable(&cr_pinning.key);
+ }
+ 
+
+-- 
+Kees Cook
