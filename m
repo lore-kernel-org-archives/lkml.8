@@ -2,118 +2,386 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C559C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A60420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:09:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FCv7xAIG"
+	by mail.kernel.org (Postfix) with ESMTP id 2931B206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:10:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731759AbgEZJJb (ORCPT
+        id S1731720AbgEZJKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:09:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728568AbgEZJJa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:09:30 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8B3C03E97E;
-        Tue, 26 May 2020 02:09:30 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u23so8053913iot.12;
-        Tue, 26 May 2020 02:09:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=65DH7Yx0+fRXnGfTN5n2O+g3E3WvwmCcWicmHyQ3lkw=;
-        b=FCv7xAIGa3GDtpOxxLydbMoT+Iw41+0kjN35MW95QkVD8PAPGZ1TxmVabCgrmY78yz
-         YECjqBhJyS3zolx/8xJBac4XU6h6cR1XZeg4CU6PHNTd2M9LqK+5kG/wEL7WsNC0nwh2
-         gpV6e5BVy/uEF4hB82amE9VWBObm/w9rtxMNYLCy9RJ2jehRXjw+lDnYVC8orvZjHDMT
-         rL1IDBgV7Kaq4tgq+ETv5CEvY8otenJzY1txlxblMAVo2Q6SsJnSDaWGL8pbVwNfm6XY
-         8lo7KDJvjfz2uLhMVx5UTVNw3KpZA0aLli0XNP1vDH7YD/+aT6hJGg+YsCdtPHB995O1
-         j2cA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=65DH7Yx0+fRXnGfTN5n2O+g3E3WvwmCcWicmHyQ3lkw=;
-        b=qKNc1yX1g8245qyiSG5cAnktwmY69g4PjNmk4npfXv01WIdrjJganwbsMVy2gFozTX
-         6aOb9jmg5YigNJCa8qFGrA2YNQaiPqUvPA26Z4AXepOuX2aNf7+UMsqtZhp2OG0vUojZ
-         +u6S1PjLCxsFKunCCuJ13rOa2gp85Ht+PVTz7O3d0abmy+Qdh1bH1Du010OpLWC/j3/2
-         3vbP2vbjTzs619OSaFZo2prp9lIntnp5ULtRUaZmryPUtlqo10Z+vJkEs9Z/N9ZYA4PS
-         ysTrjMb99/1ccL7flc/SFg7mAGgwnonqllHvRpZW+OsVMwNZLkQ/3oiUZTvsl7Va4U5O
-         APwQ==
-X-Gm-Message-State: AOAM533+PN3YntCHmeCKfp2gbixEHmTVKIrmDRqfzRwkyTToNds8WJux
-        xHBb7nh/MR96aAD9uZeyz+jPBgUnQvo9H3ELeNk=
-X-Google-Smtp-Source: ABdhPJx+ZPvWfEF3Pa4JXfWwedh02p2n1SzhlABrsxCC4DunBcpjHogzclvpkhogi3xaE3bp5rzPidO7NY54+A2lD6E=
-X-Received: by 2002:a5e:a80e:: with SMTP id c14mr16354378ioa.3.1590484169175;
- Tue, 26 May 2020 02:09:29 -0700 (PDT)
+        Tue, 26 May 2020 05:10:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:47912 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731548AbgEZJKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 05:10:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAA331FB;
+        Tue, 26 May 2020 02:10:14 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 469253F52E;
+        Tue, 26 May 2020 02:10:13 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:10:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH v10 2/5] PCI: Add Loongson PCI Controller support
+Message-ID: <20200526091007.GA19547@e121166-lin.cambridge.arm.com>
+References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
+ <20200514131650.3587281-2-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com>
- <1590378348-8115-7-git-send-email-dillon.minfei@gmail.com> <CAHp75VebSZa6mwAETnM0t42RQCp4iM6_SNjmy3TB48ixsGKV8g@mail.gmail.com>
-In-Reply-To: <CAHp75VebSZa6mwAETnM0t42RQCp4iM6_SNjmy3TB48ixsGKV8g@mail.gmail.com>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Tue, 26 May 2020 17:08:53 +0800
-Message-ID: <CAL9mu0+jmcivC6zAXxK0-oXy3n44pAU1QGD7BDq=CT2D7twROQ@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] drm/panel: Add ilitek ili9341 panel driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514131650.3587281-2-jiaxun.yang@flygoat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-Thanks for input.
-
-On Tue, May 26, 2020 at 3:46 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, May 25, 2020 at 6:46 AM <dillon.minfei@gmail.com> wrote:
-> >
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> >     This driver combine tiny/ili9341.c mipi_dbi_interface driver
-> >     with mipi_dpi_interface driver, can support ili9341 with serial
-> >     mode or parallel rgb interface mode by register configuration.
->
-> Noralf told once that this driver should be unified with mi0283qt.c.
->
-> So, what should we do here?
->
+On Thu, May 14, 2020 at 09:16:38PM +0800, Jiaxun Yang wrote:
+> This controller can be found on Loongson-2K SoC, Loongson-3
+> systems with RS780E/LS7A PCH.
+> 
+> The RS780E part of code was previously located at
+> arch/mips/pci/ops-loongson3.c and now it can use generic PCI
+> driver implementation.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
 > --
-> With Best Regards,
-> Andy Shevchenko
+> v2:
+> 	- Clean up according to rob's suggestions
+> 	- Claim that it can't work as a module
+> v3:
+> 	- Fix a typo
+> v4:
+> 	- More clean-ups: Drop flag check, use devfn
+> v7:
+> 	- Fix ordering according to huacai's suggestion
+> v8:
+> 	- Style clean and bugfix according to Bjorn's review
+> v9:
+> 	- Confirm with vendor about the details on system_bus BARs
+> 	- Further cleanups
+> 	- I think assume root_bus as 0 simplify our code a lot, as that's
+> 		always valid to the hardware, as we're not ecam or dwc, we can't
+> 		easily get host bus_nr via cfg, adding that will cause unnecessary
+> 		overhead.
+> 
+> v10:
+> 	- Enhance comments about system_bus quirk and host bus quirk.
+> ---
+>  drivers/pci/controller/Kconfig        |  10 ++
+>  drivers/pci/controller/Makefile       |   1 +
+>  drivers/pci/controller/pci-loongson.c | 249 ++++++++++++++++++++++++++
+>  3 files changed, 260 insertions(+)
+>  create mode 100644 drivers/pci/controller/pci-loongson.c
 
-from sam's suggestion, we can't setup two drivers to support one panel
-in the tree. so, i copy the mipi dbi part from tiny/ili9341.c. to this driver
-from register settings and dts binding is keep the same to tiny/ili9341.c.
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-so, in my opinion if tiny/ili9341.c is unified with mi0283qt.c, this
-driver should be
-too.
-
-thanks.
-
-best regards,
-
-Dillon,
+> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> index 91bfdb784829..ae36edb1d7db 100644
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -258,6 +258,16 @@ config PCI_HYPERV_INTERFACE
+>  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+>  	  have a common interface with the Hyper-V PCI frontend driver.
+>  
+> +config PCI_LOONGSON
+> +	bool "LOONGSON PCI Controller"
+> +	depends on MACH_LOONGSON64 || COMPILE_TEST
+> +	depends on OF
+> +	depends on PCI_QUIRKS
+> +	default MACH_LOONGSON64
+> +	help
+> +	  Say Y here if you want to enable PCI controller support on
+> +	  Loongson systems.
+> +
+>  source "drivers/pci/controller/dwc/Kconfig"
+>  source "drivers/pci/controller/mobiveil/Kconfig"
+>  source "drivers/pci/controller/cadence/Kconfig"
+> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> index 158c59771824..fbac4b0190a0 100644
+> --- a/drivers/pci/controller/Makefile
+> +++ b/drivers/pci/controller/Makefile
+> @@ -28,6 +28,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+>  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+>  obj-$(CONFIG_VMD) += vmd.o
+>  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
+> +obj-$(CONFIG_PCI_LOONGSON) += pci-loongson.o
+>  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+>  obj-y				+= dwc/
+>  obj-y				+= mobiveil/
+> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+> new file mode 100644
+> index 000000000000..4879377b86f3
+> --- /dev/null
+> +++ b/drivers/pci/controller/pci-loongson.c
+> @@ -0,0 +1,249 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Loongson PCI Host Controller Driver
+> + *
+> + * Copyright (C) 2020 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + */
+> +
+> +#include <linux/of_device.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_ids.h>
+> +
+> +#include "../pci.h"
+> +
+> +/* Device IDs */
+> +#define DEV_PCIE_PORT_0	0x7a09
+> +#define DEV_PCIE_PORT_1	0x7a19
+> +#define DEV_PCIE_PORT_2	0x7a29
+> +
+> +#define DEV_LS2K_APB	0x7a02
+> +#define DEV_LS7A_CONF	0x7a10
+> +#define DEV_LS7A_LPC	0x7a0c
+> +
+> +#define FLAG_CFG0	BIT(0)
+> +#define FLAG_CFG1	BIT(1)
+> +#define FLAG_DEV_FIX	BIT(2)
+> +
+> +struct loongson_pci {
+> +	void __iomem *cfg0_base;
+> +	void __iomem *cfg1_base;
+> +	struct platform_device *pdev;
+> +	u32 flags;
+> +};
+> +
+> +/* Fixup wrong class code in PCIe bridges */
+> +static void bridge_class_quirk(struct pci_dev *dev)
+> +{
+> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_0, bridge_class_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_1, bridge_class_quirk);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_PCIE_PORT_2, bridge_class_quirk);
+> +
+> +static void system_bus_quirk(struct pci_dev *pdev)
+> +{
+> +	u16 tmp;
+> +
+> +	/* 
+> +	 * The address space consumed by these devices is outside the
+> +	 * resources of the host bridge.
+> +	 */
+> +	pdev->mmio_always_on = 1;
+> +	pdev->non_compliant_bars = 1;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS2K_APB, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_CONF, system_bus_quirk);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+> +			DEV_LS7A_LPC, system_bus_quirk);
+> +
+> +static void loongson_mrrs_quirk(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *bus = dev->bus;
+> +	struct pci_dev *bridge;
+> +	static const struct pci_device_id bridge_devids[] = {
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+> +		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+> +		{ 0, },
+> +	};
+> +
+> +	/* look for the matching bridge */
+> +	while (!pci_is_root_bus(bus)) {
+> +		bridge = bus->self;
+> +		bus = bus->parent;
+> +		/*
+> +		 * Some Loongson PCIe ports have a h/w limitation of
+> +		 * 256 bytes maximum read request size. They can't handle
+> +		 * anything larger than this. So force this limit on
+> +		 * any devices attached under these ports.
+> +		 */
+> +		if (pci_match_id(bridge_devids, bridge)) {
+> +			if (pcie_get_readrq(dev) > 256) {
+> +				pci_info(dev, "limiting MRRS to 256\n");
+> +				pcie_set_readrq(dev, 256);
+> +			}
+> +			break;
+> +		}
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
+> +
+> +static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
+> +				unsigned int devfn, int where)
+> +{
+> +	unsigned long addroff = 0x0;
+> +
+> +	if (bus != 0)
+> +		addroff |= BIT(28); /* Type 1 Access */
+> +	addroff |= (where & 0xff) | ((where & 0xf00) << 16);
+> +	addroff |= (bus << 16) | (devfn << 8);
+> +	return priv->cfg1_base + addroff;
+> +}
+> +
+> +static void __iomem *cfg0_map(struct loongson_pci *priv, int bus,
+> +				unsigned int devfn, int where)
+> +{
+> +	unsigned long addroff = 0x0;
+> +
+> +	if (bus != 0)
+> +		addroff |= BIT(24); /* Type 1 Access */
+> +	addroff |= (bus << 16) | (devfn << 8) | where;
+> +	return priv->cfg0_base + addroff;
+> +}
+> +
+> +void __iomem *pci_loongson_map_bus(struct pci_bus *bus, unsigned int devfn,
+> +			       int where)
+> +{
+> +	unsigned char busnum = bus->number;
+> +	struct pci_host_bridge *bridge = pci_find_host_bridge(bus);
+> +	struct loongson_pci *priv =  pci_host_bridge_priv(bridge);
+> +
+> +	/*
+> +	 * Do not read more than one device on the bus other than
+> +	 * the host bus. For our hardware the root bus is always bus 0.
+> +	 */
+> +	if (priv->flags & FLAG_DEV_FIX && busnum != 0 &&
+> +		PCI_SLOT(devfn) > 0)
+> +		return NULL;
+> +
+> +	/* CFG0 can only access standard space */
+> +	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
+> +		return cfg0_map(priv, busnum, devfn, where);
+> +
+> +	/* CFG1 can access extended space */
+> +	if (where < PCI_CFG_SPACE_EXP_SIZE && priv->cfg1_base)
+> +		return cfg1_map(priv, busnum, devfn, where);
+> +
+> +	return NULL;
+> +}
+> +
+> +static int loongson_map_irq(const struct pci_dev *dev, u8 slot, u8 pin)
+> +{
+> +	int irq;
+> +	u8 val;
+> +
+> +	irq = of_irq_parse_and_map_pci(dev, slot, pin);
+> +	if (irq > 0)
+> +		return irq;
+> +
+> +	/* Care i8259 legacy systems */
+> +	pci_read_config_byte(dev, PCI_INTERRUPT_LINE, &val);
+> +	/* i8259 only have 15 IRQs */
+> +	if (val > 15)
+> +		return 0;
+> +
+> +	return val;
+> +}
+> +
+> +/* H/w only accept 32-bit PCI operations */
+> +static struct pci_ops loongson_pci_ops = {
+> +	.map_bus = pci_loongson_map_bus,
+> +	.read	= pci_generic_config_read32,
+> +	.write	= pci_generic_config_write32,
+> +};
+> +
+> +static const struct of_device_id loongson_pci_of_match[] = {
+> +	{ .compatible = "loongson,ls2k-pci",
+> +		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +	{ .compatible = "loongson,ls7a-pci",
+> +		.data = (void *)(FLAG_CFG0 | FLAG_CFG1 | FLAG_DEV_FIX), },
+> +	{ .compatible = "loongson,rs780e-pci",
+> +		.data = (void *)(FLAG_CFG0), },
+> +	{}
+> +};
+> +
+> +static int loongson_pci_probe(struct platform_device *pdev)
+> +{
+> +	struct loongson_pci *priv;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *node = dev->of_node;
+> +	struct pci_host_bridge *bridge;
+> +	struct resource *regs;
+> +	int err;
+> +
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*priv));
+> +	if (!bridge)
+> +		return -ENODEV;
+> +
+> +	priv = pci_host_bridge_priv(bridge);
+> +	priv->pdev = pdev;
+> +	priv->flags = (unsigned long)of_device_get_match_data(dev);
+> +
+> +	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!regs) {
+> +		dev_err(dev, "missing mem resources for cfg0\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv->cfg0_base = devm_pci_remap_cfg_resource(dev, regs);
+> +	if (IS_ERR(priv->cfg0_base))
+> +		return PTR_ERR(priv->cfg0_base);
+> +
+> +	/* CFG1 is optional */
+> +	if (priv->flags & FLAG_CFG1) {
+> +		regs = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +		if (!regs)
+> +			dev_info(dev, "missing mem resource for cfg1\n");
+> +		else {
+> +			priv->cfg1_base = devm_pci_remap_cfg_resource(dev, regs);
+> +			if (IS_ERR(priv->cfg1_base))
+> +				priv->cfg1_base = NULL;
+> +		}
+> +	}
+> +
+> +	err = pci_parse_request_of_pci_ranges(dev, &bridge->windows,
+> +						&bridge->dma_ranges, NULL);
+> +	if (err) {
+> +		dev_err(dev, "failed to get bridge resources\n");
+> +		return err;
+> +	}
+> +
+> +	bridge->dev.parent = dev;
+> +	bridge->sysdata = priv;
+> +	bridge->ops = &loongson_pci_ops;
+> +	bridge->map_irq = loongson_map_irq;
+> +
+> +	err = pci_host_probe(bridge);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver loongson_pci_driver = {
+> +	.driver = {
+> +		.name = "loongson-pci",
+> +		.of_match_table = loongson_pci_of_match,
+> +	},
+> +	.probe = loongson_pci_probe,
+> +};
+> +builtin_platform_driver(loongson_pci_driver);
+> -- 
+> 2.26.2
+> 
