@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A869FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79804208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27B3208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520306;
-	bh=TjVIzJCh0CEfsQLND/3pcn51jPC8iMMpkKt8EVaLwEw=;
+	s=default; t=1590520311;
+	bh=AOqm3Fgp/+ECFDkKYPL67fC7r9lGY6j3IklwCRudwTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Awkl45J6uwV834pgu92ngRYFpmzaXWlx4naIq9kgH9HKfzZChfsd3qtGe5EilIVhJ
-	 nLWwWHUAn8bzmUa0DB+tNI60gG/hrGE9wFLBlEEaeO/kwmQvkFeyOLSRBllKNDl/SF
-	 M0/nICfJOpToGY45CeYb0vyzjtlrf1WEd+VvChSk=
+	b=wmVwetMqN1ltbzw0FQQ1X2dWgrq+gLyba2h7yhI24xLbZjtGZSmSgtYUAZ+88iRSj
+	 amo2w/YBdnC2JACzpGk/5bhSeg+LQ7FqvVnBKVSYyrAVv/1r9biwIphg7G69ocswcO
+	 UXdg2TV6QhXvD2w7BbeBT+mjBayodEJyOE5ez2zY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390331AbgEZTLp (ORCPT
+        id S2391974AbgEZTLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391739AbgEZTLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:41 -0400
+        id S2391754AbgEZTLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE7AE208A7;
-        Tue, 26 May 2020 19:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B61208A7;
+        Tue, 26 May 2020 19:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520301;
-        bh=TjVIzJCh0CEfsQLND/3pcn51jPC8iMMpkKt8EVaLwEw=;
+        s=default; t=1590520306;
+        bh=AOqm3Fgp/+ECFDkKYPL67fC7r9lGY6j3IklwCRudwTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2LHmyldeqfEwxNx9mrQlCJjACIoWDv/P5C+ZyyocuQZY9dYunTKqBjLMVEosgQBm
-         D33N77zjT8mXkDznHtvZVObrDALu61hRMzF5TdB5AM7ZK0aFz6N4dFJk3NT1dSsRU4
-         CJpWqbk/khfskKsrnhZWd1kutsLmsUtWBgO3Qp6M=
+        b=s0CEQxn5aJZ9Q0zcsBdKHuRAXM1LRWqiULFq1MhT6P87qbMdbUt3Kga/0VhywFMbx
+         KRJzx4FKgU2KulAO7lFwG8rj5LggEVES608RcNafB+X0mrda97vSLhZ4DoMxaYDtUi
+         PphMU200f18SvYmJ0N4F8FV3H2AI+0KPQVFJRYjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Eric Biggers <ebiggers@google.com>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 005/126] ima: Fix return value of ima_write_policy()
-Date:   Tue, 26 May 2020 20:52:22 +0200
-Message-Id: <20200526183937.954242103@linuxfoundation.org>
+Subject: [PATCH 5.6 007/126] ubifs: fix wrong use of crypto_shash_descsize()
+Date:   Tue, 26 May 2020 20:52:24 +0200
+Message-Id: <20200526183938.126106501@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,41 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 2e3a34e9f409ebe83d1af7cd2f49fca7af97dfac ]
+[ Upstream commit 3c3c32f85b6cc05e5db78693457deff03ac0f434 ]
 
-This patch fixes the return value of ima_write_policy() when a new policy
-is directly passed to IMA and the current policy requires appraisal of the
-file containing the policy. Currently, if appraisal is not in ENFORCE mode,
-ima_write_policy() returns 0 and leads user space applications to an
-endless loop. Fix this issue by denying the operation regardless of the
-appraisal mode.
+crypto_shash_descsize() returns the size of the shash_desc context
+needed to compute the hash, not the size of the hash itself.
 
-Cc: stable@vger.kernel.org # 4.10.x
-Fixes: 19f8a84713edc ("ima: measure and appraise the IMA policy itself")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+crypto_shash_digestsize() would be correct, or alternatively using
+c->hash_len and c->hmac_desc_len which already store the correct values.
+But actually it's simpler to just use stack arrays, so do that instead.
+
+Fixes: 49525e5eecca ("ubifs: Add helper functions for authentication support")
+Fixes: da8ef65f9573 ("ubifs: Authenticate replayed journal")
+Cc: <stable@vger.kernel.org> # v4.20+
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_fs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ubifs/auth.c   | 17 ++++-------------
+ fs/ubifs/replay.c | 13 ++-----------
+ 2 files changed, 6 insertions(+), 24 deletions(-)
 
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 2000e8df0301..68571c40d61f 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -340,8 +340,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
- 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
- 				    "policy_update", "signed policy required",
- 				    1, 0);
--		if (ima_appraise & IMA_APPRAISE_ENFORCE)
--			result = -EACCES;
-+		result = -EACCES;
- 	} else {
- 		result = ima_parse_add_rule(data);
+diff --git a/fs/ubifs/auth.c b/fs/ubifs/auth.c
+index 8cdbd53d780c..f985a3fbbb36 100644
+--- a/fs/ubifs/auth.c
++++ b/fs/ubifs/auth.c
+@@ -79,13 +79,9 @@ int ubifs_prepare_auth_node(struct ubifs_info *c, void *node,
+ 			     struct shash_desc *inhash)
+ {
+ 	struct ubifs_auth_node *auth = node;
+-	u8 *hash;
++	u8 hash[UBIFS_HASH_ARR_SZ];
+ 	int err;
+ 
+-	hash = kmalloc(crypto_shash_descsize(c->hash_tfm), GFP_NOFS);
+-	if (!hash)
+-		return -ENOMEM;
+-
+ 	{
+ 		SHASH_DESC_ON_STACK(hash_desc, c->hash_tfm);
+ 
+@@ -94,21 +90,16 @@ int ubifs_prepare_auth_node(struct ubifs_info *c, void *node,
+ 
+ 		err = crypto_shash_final(hash_desc, hash);
+ 		if (err)
+-			goto out;
++			return err;
  	}
+ 
+ 	err = ubifs_hash_calc_hmac(c, hash, auth->hmac);
+ 	if (err)
+-		goto out;
++		return err;
+ 
+ 	auth->ch.node_type = UBIFS_AUTH_NODE;
+ 	ubifs_prepare_node(c, auth, ubifs_auth_node_sz(c), 0);
+-
+-	err = 0;
+-out:
+-	kfree(hash);
+-
+-	return err;
++	return 0;
+ }
+ 
+ static struct shash_desc *ubifs_get_desc(const struct ubifs_info *c,
+diff --git a/fs/ubifs/replay.c b/fs/ubifs/replay.c
+index b28ac4dfb407..01fcf7975047 100644
+--- a/fs/ubifs/replay.c
++++ b/fs/ubifs/replay.c
+@@ -601,18 +601,12 @@ static int authenticate_sleb(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
+ 	struct ubifs_scan_node *snod;
+ 	int n_nodes = 0;
+ 	int err;
+-	u8 *hash, *hmac;
++	u8 hash[UBIFS_HASH_ARR_SZ];
++	u8 hmac[UBIFS_HMAC_ARR_SZ];
+ 
+ 	if (!ubifs_authenticated(c))
+ 		return sleb->nodes_cnt;
+ 
+-	hash = kmalloc(crypto_shash_descsize(c->hash_tfm), GFP_NOFS);
+-	hmac = kmalloc(c->hmac_desc_len, GFP_NOFS);
+-	if (!hash || !hmac) {
+-		err = -ENOMEM;
+-		goto out;
+-	}
+-
+ 	list_for_each_entry(snod, &sleb->nodes, list) {
+ 
+ 		n_nodes++;
+@@ -662,9 +656,6 @@ static int authenticate_sleb(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
+ 		err = 0;
+ 	}
+ out:
+-	kfree(hash);
+-	kfree(hmac);
+-
+ 	return err ? err : n_nodes - n_not_auth;
+ }
+ 
 -- 
 2.25.1
 
