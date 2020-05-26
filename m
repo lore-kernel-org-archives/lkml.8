@@ -2,393 +2,152 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEDDC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A37DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D7920849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520972;
-	bh=1N1uBf/IhHOztDqLXjGe/zTKIQrWHXs1D8LTEPPjGA4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BE51yr5pUV9DLyFo4zXJvv826a+jRCFILpVduHAOWfd75bJ6C0CzTiz5JP6eDro7U
-	 s5vC12qvPwA/6VufOFSQ+SYZYZgsMYyanwU5p9HQDQWPaRNhM9K8F6H05v+hytxrWC
-	 AjtpOA2e7bIsXtAvFZTBh76aJ+0dRaIJHbDQeHs4=
+	by mail.kernel.org (Postfix) with ESMTP id 7852920849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:22:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v/IieG+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391720AbgEZTWu (ORCPT
+        id S2392441AbgEZTWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403939AbgEZTJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D635620873;
-        Tue, 26 May 2020 19:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520187;
-        bh=1N1uBf/IhHOztDqLXjGe/zTKIQrWHXs1D8LTEPPjGA4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x46A22zSz2t5gV3bRpYiidmn+wxURGFsrnuifMDNpG1mtIFYSC7AG+Zi+3Ey0Svg/
-         K1ANCgAqaMPVBA4Io5LMEXvzr7kCxgrzqTla9N0o4jPOhc/U1i94S98+lgEFpluTeK
-         y7gNQFiN8V4TojtKPkWIn7yDoYm+U5naPuKjb3nk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.4 092/111] s390/pci: Fix s390_mmio_read/write with MIO
-Date:   Tue, 26 May 2020 20:53:50 +0200
-Message-Id: <20200526183941.647169985@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
-References: <20200526183932.245016380@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 26 May 2020 15:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392329AbgEZTUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:20:39 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62FE8C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:20:39 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id l15so25605268lje.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Lvb7GwLG3BntWf/QcLDoc033RmPPdE5QMxPQxom4Z0Q=;
+        b=v/IieG+v8K1/6mBF8GZcSAnmAYLch72PLwozLymUhBDLeK34PAwfgESn58GfbEMC7Z
+         gcaFKAorQtsiHvcqwEbI4+Yg8Anlnx6dQ1kJxM4Sk59kmflXQ6vygfLcGRB9ox/N3nKD
+         hEgF5Za1Z2HtCtx9hgDKdcDJQBLDJ9AcnMjZd69+ad8s7d2ZvVQY3yLJ6dSdw9ZgAQ7g
+         3Mj3267zVSd38wNr/AvnwKBWVSw1lbrXRgRFy8wxDOOSd+X9OCMlUecPls3hSEwjo43B
+         KmExpVFq9nI631CZLuF5iQ2r7xSFywtLzkECd3+q9Daoq3iGyL4DLp820jTNST54tTc1
+         0MLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Lvb7GwLG3BntWf/QcLDoc033RmPPdE5QMxPQxom4Z0Q=;
+        b=hffR9ye9ud4MixmQOi+0tlENUEbKjXmeU1E+RJ/934OYkfcU5TW9KSGnQ/Ra3rkoaC
+         TzQ/WMCZMBnmDXbet9i3e6QqB8gFqMSxrQatFz5KTISHpKt08B8wbUBRUXlxEHXR0iQ+
+         UawW4J3YmzWaJLLqBU+T1Klg3KHuJs0kHcdaXwDWMllth+k4iKNPhMMI5Gdh/CxZMkDj
+         H6q/6kW1plSWLSSpBUrSaePst3ZfntR0zO1SHWI3Lg87hXwwMUCmc7uxdC/mZe8sx/xF
+         CK5nQTtg3jRwWABP8aUxV3Ox7HntzzewW0V0UbaNq3O49LyV8ADfeO1mndyn2l3FReEc
+         fzXQ==
+X-Gm-Message-State: AOAM530xXJ+SPoQ94I/BYzyabFU7SCYizLfW4sNNYyA54Kr3pWM3rzaY
+        5fiOQlQ9mayt0eGSn8wfuoaSgWWg5Pk=
+X-Google-Smtp-Source: ABdhPJwIqvK5YGc6xvZbo31+HCxJFzPjnxRYj+tLshYiDKcJL96yG/ZhHlaYkZlk2k3Kkmmzj+k14A==
+X-Received: by 2002:a2e:89d7:: with SMTP id c23mr1230467ljk.169.1590520837478;
+        Tue, 26 May 2020 12:20:37 -0700 (PDT)
+Received: from localhost.localdomain ([176.59.41.83])
+        by smtp.gmail.com with ESMTPSA id i8sm180483lfo.62.2020.05.26.12.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 12:20:37 -0700 (PDT)
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+To:     linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        gregkh@linuxfoundation.org, jens.wiklander@linaro.org,
+        linux-integrity@vger.kernel.org, arnd@linaro.org,
+        sumit.garg@linaro.org, Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv4 2/3] optee: use uuid for sysfs driver entry
+Date:   Tue, 26 May 2020 22:20:28 +0300
+Message-Id: <20200526192029.863-3-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526192029.863-1-maxim.uvarov@linaro.org>
+References: <20200526192029.863-1-maxim.uvarov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+OP-TEE device names for sysfs need to be unique
+and it's better if they will mean something. UUID for name
+looks like good solution:
+/sys/bus/tee/devices/optee-ta-<uuid>
 
-commit f058599e22d59e594e5aae1dc10560568d8f4a8b upstream.
-
-The s390_mmio_read/write syscalls are currently broken when running with
-MIO.
-
-The new pcistb_mio/pcstg_mio/pcilg_mio instructions are executed
-similiarly to normal load/store instructions and do address translation
-in the current address space. That means inside the kernel they are
-aware of mappings into kernel address space while outside the kernel
-they use user space mappings (usually created through mmap'ing a PCI
-device file).
-
-Now when existing user space applications use the s390_pci_mmio_write
-and s390_pci_mmio_read syscalls, they pass I/O addresses that are mapped
-into user space so as to be usable with the new instructions without
-needing a syscall. Accessing these addresses with the old instructions
-as done currently leads to a kernel panic.
-
-Also, for such a user space mapping there may not exist an equivalent
-kernel space mapping which means we can't just use the new instructions
-in kernel space.
-
-Instead of replicating user mappings in the kernel which then might
-collide with other mappings, we can conceptually execute the new
-instructions as if executed by the user space application using the
-secondary address space. This even allows us to directly store to the
-user pointer without the need for copy_to/from_user().
-
-Cc: stable@vger.kernel.org
-Fixes: 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions")
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Reviewed-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
 ---
- arch/s390/include/asm/pci_io.h |   10 +
- arch/s390/pci/pci_mmio.c       |  213 ++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 219 insertions(+), 4 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-optee-devices | 8 ++++++++
+ MAINTAINERS                                       | 2 ++
+ drivers/tee/optee/device.c                        | 6 +++---
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-optee-devices
 
---- a/arch/s390/include/asm/pci_io.h
-+++ b/arch/s390/include/asm/pci_io.h
-@@ -8,6 +8,10 @@
- #include <linux/slab.h>
- #include <asm/pci_insn.h>
+diff --git a/Documentation/ABI/testing/sysfs-bus-optee-devices b/Documentation/ABI/testing/sysfs-bus-optee-devices
+new file mode 100644
+index 000000000000..0ae04ae5374a
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-optee-devices
+@@ -0,0 +1,8 @@
++What:		/sys/bus/tee/devices/optee-ta-<uuid>/
++Date:           May 2020
++KernelVersion   5.7
++Contact:        tee-dev@lists.linaro.org
++Description:
++		OP-TEE bus provides reference to registered drivers under this directory. The <uuid>
++		matches Trusted Application (TA) driver and corresponding TA in secure OS. Drivers
++		are free to create needed API under optee-ta-<uuid> directory.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ecc0749810b0..52717ede29fc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12516,8 +12516,10 @@ OP-TEE DRIVER
+ M:	Jens Wiklander <jens.wiklander@linaro.org>
+ L:	tee-dev@lists.linaro.org
+ S:	Maintained
++F:	Documentation/ABI/testing/sysfs-bus-optee-devices
+ F:	drivers/tee/optee/
  
-+/* I/O size constraints */
-+#define ZPCI_MAX_READ_SIZE	8
-+#define ZPCI_MAX_WRITE_SIZE	128
 +
- /* I/O Map */
- #define ZPCI_IOMAP_SHIFT		48
- #define ZPCI_IOMAP_ADDR_BASE		0x8000000000000000UL
-@@ -140,7 +144,8 @@ static inline int zpci_memcpy_fromio(voi
- 
- 	while (n > 0) {
- 		size = zpci_get_max_write_size((u64 __force) src,
--					       (u64) dst, n, 8);
-+					       (u64) dst, n,
-+					       ZPCI_MAX_READ_SIZE);
- 		rc = zpci_read_single(dst, src, size);
- 		if (rc)
- 			break;
-@@ -161,7 +166,8 @@ static inline int zpci_memcpy_toio(volat
- 
- 	while (n > 0) {
- 		size = zpci_get_max_write_size((u64 __force) dst,
--					       (u64) src, n, 128);
-+					       (u64) src, n,
-+					       ZPCI_MAX_WRITE_SIZE);
- 		if (size > 8) /* main path */
- 			rc = zpci_write_block(dst, src, size);
- 		else
---- a/arch/s390/pci/pci_mmio.c
-+++ b/arch/s390/pci/pci_mmio.c
-@@ -11,6 +11,113 @@
- #include <linux/mm.h>
- #include <linux/errno.h>
- #include <linux/pci.h>
-+#include <asm/pci_io.h>
-+#include <asm/pci_debug.h>
-+
-+static inline void zpci_err_mmio(u8 cc, u8 status, u64 offset)
-+{
-+	struct {
-+		u64 offset;
-+		u8 cc;
-+		u8 status;
-+	} data = {offset, cc, status};
-+
-+	zpci_err_hex(&data, sizeof(data));
-+}
-+
-+static inline int __pcistb_mio_inuser(
-+		void __iomem *ioaddr, const void __user *src,
-+		u64 len, u8 *status)
-+{
-+	int cc = -ENXIO;
-+
-+	asm volatile (
-+		"       sacf 256\n"
-+		"0:     .insn   rsy,0xeb00000000d4,%[len],%[ioaddr],%[src]\n"
-+		"1:     ipm     %[cc]\n"
-+		"       srl     %[cc],28\n"
-+		"2:     sacf 768\n"
-+		EX_TABLE(0b, 2b) EX_TABLE(1b, 2b)
-+		: [cc] "+d" (cc), [len] "+d" (len)
-+		: [ioaddr] "a" (ioaddr), [src] "Q" (*((u8 __force *)src))
-+		: "cc", "memory");
-+	*status = len >> 24 & 0xff;
-+	return cc;
-+}
-+
-+static inline int __pcistg_mio_inuser(
-+		void __iomem *ioaddr, const void __user *src,
-+		u64 ulen, u8 *status)
-+{
-+	register u64 addr asm("2") = (u64 __force) ioaddr;
-+	register u64 len asm("3") = ulen;
-+	int cc = -ENXIO;
-+	u64 val = 0;
-+	u64 cnt = ulen;
-+	u8 tmp;
-+
-+	/*
-+	 * copy 0 < @len <= 8 bytes from @src into the right most bytes of
-+	 * a register, then store it to PCI at @ioaddr while in secondary
-+	 * address space. pcistg then uses the user mappings.
-+	 */
-+	asm volatile (
-+		"       sacf    256\n"
-+		"0:     llgc    %[tmp],0(%[src])\n"
-+		"       sllg    %[val],%[val],8\n"
-+		"       aghi    %[src],1\n"
-+		"       ogr     %[val],%[tmp]\n"
-+		"       brctg   %[cnt],0b\n"
-+		"1:     .insn   rre,0xb9d40000,%[val],%[ioaddr]\n"
-+		"2:     ipm     %[cc]\n"
-+		"       srl     %[cc],28\n"
-+		"3:     sacf    768\n"
-+		EX_TABLE(0b, 3b) EX_TABLE(1b, 3b) EX_TABLE(2b, 3b)
-+		:
-+		[src] "+a" (src), [cnt] "+d" (cnt),
-+		[val] "+d" (val), [tmp] "=d" (tmp),
-+		[len] "+d" (len), [cc] "+d" (cc),
-+		[ioaddr] "+a" (addr)
-+		:: "cc", "memory");
-+	*status = len >> 24 & 0xff;
-+
-+	/* did we read everything from user memory? */
-+	if (!cc && cnt != 0)
-+		cc = -EFAULT;
-+
-+	return cc;
-+}
-+
-+static inline int __memcpy_toio_inuser(void __iomem *dst,
-+				   const void __user *src, size_t n)
-+{
-+	int size, rc = 0;
-+	u8 status = 0;
-+	mm_segment_t old_fs;
-+
-+	if (!src)
-+		return -EINVAL;
-+
-+	old_fs = enable_sacf_uaccess();
-+	while (n > 0) {
-+		size = zpci_get_max_write_size((u64 __force) dst,
-+					       (u64 __force) src, n,
-+					       ZPCI_MAX_WRITE_SIZE);
-+		if (size > 8) /* main path */
-+			rc = __pcistb_mio_inuser(dst, src, size, &status);
-+		else
-+			rc = __pcistg_mio_inuser(dst, src, size, &status);
-+		if (rc)
-+			break;
-+		src += size;
-+		dst += size;
-+		n -= size;
-+	}
-+	disable_sacf_uaccess(old_fs);
-+	if (rc)
-+		zpci_err_mmio(rc, status, (__force u64) dst);
-+	return rc;
-+}
- 
- static long get_pfn(unsigned long user_addr, unsigned long access,
- 		    unsigned long *pfn)
-@@ -46,6 +153,20 @@ SYSCALL_DEFINE3(s390_pci_mmio_write, uns
- 
- 	if (length <= 0 || PAGE_SIZE - (mmio_addr & ~PAGE_MASK) < length)
- 		return -EINVAL;
-+
-+	/*
-+	 * Only support read access to MIO capable devices on a MIO enabled
-+	 * system. Otherwise we would have to check for every address if it is
-+	 * a special ZPCI_ADDR and we would have to do a get_pfn() which we
-+	 * don't need for MIO capable devices.
-+	 */
-+	if (static_branch_likely(&have_mio)) {
-+		ret = __memcpy_toio_inuser((void  __iomem *) mmio_addr,
-+					user_buffer,
-+					length);
-+		return ret;
-+	}
-+
- 	if (length > 64) {
- 		buf = kmalloc(length, GFP_KERNEL);
- 		if (!buf)
-@@ -56,7 +177,8 @@ SYSCALL_DEFINE3(s390_pci_mmio_write, uns
- 	ret = get_pfn(mmio_addr, VM_WRITE, &pfn);
- 	if (ret)
- 		goto out;
--	io_addr = (void __iomem *)((pfn << PAGE_SHIFT) | (mmio_addr & ~PAGE_MASK));
-+	io_addr = (void __iomem *)((pfn << PAGE_SHIFT) |
-+			(mmio_addr & ~PAGE_MASK));
- 
- 	ret = -EFAULT;
- 	if ((unsigned long) io_addr < ZPCI_IOMAP_ADDR_BASE)
-@@ -72,6 +194,78 @@ out:
- 	return ret;
+ OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
+ M:	Sumit Garg <sumit.garg@linaro.org>
+ L:	tee-dev@lists.linaro.org
+diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
+index d4931dad07aa..2eb1c0283aec 100644
+--- a/drivers/tee/optee/device.c
++++ b/drivers/tee/optee/device.c
+@@ -65,7 +65,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
+ 	return 0;
  }
  
-+static inline int __pcilg_mio_inuser(
-+		void __user *dst, const void __iomem *ioaddr,
-+		u64 ulen, u8 *status)
-+{
-+	register u64 addr asm("2") = (u64 __force) ioaddr;
-+	register u64 len asm("3") = ulen;
-+	u64 cnt = ulen;
-+	int shift = ulen * 8;
-+	int cc = -ENXIO;
-+	u64 val, tmp;
-+
-+	/*
-+	 * read 0 < @len <= 8 bytes from the PCI memory mapped at @ioaddr (in
-+	 * user space) into a register using pcilg then store these bytes at
-+	 * user address @dst
-+	 */
-+	asm volatile (
-+		"       sacf    256\n"
-+		"0:     .insn   rre,0xb9d60000,%[val],%[ioaddr]\n"
-+		"1:     ipm     %[cc]\n"
-+		"       srl     %[cc],28\n"
-+		"       ltr     %[cc],%[cc]\n"
-+		"       jne     4f\n"
-+		"2:     ahi     %[shift],-8\n"
-+		"       srlg    %[tmp],%[val],0(%[shift])\n"
-+		"3:     stc     %[tmp],0(%[dst])\n"
-+		"       aghi    %[dst],1\n"
-+		"       brctg   %[cnt],2b\n"
-+		"4:     sacf    768\n"
-+		EX_TABLE(0b, 4b) EX_TABLE(1b, 4b) EX_TABLE(3b, 4b)
-+		:
-+		[cc] "+d" (cc), [val] "=d" (val), [len] "+d" (len),
-+		[dst] "+a" (dst), [cnt] "+d" (cnt), [tmp] "=d" (tmp),
-+		[shift] "+d" (shift)
-+		:
-+		[ioaddr] "a" (addr)
-+		: "cc", "memory");
-+
-+	/* did we write everything to the user space buffer? */
-+	if (!cc && cnt != 0)
-+		cc = -EFAULT;
-+
-+	*status = len >> 24 & 0xff;
-+	return cc;
-+}
-+
-+static inline int __memcpy_fromio_inuser(void __user *dst,
-+				     const void __iomem *src,
-+				     unsigned long n)
-+{
-+	int size, rc = 0;
-+	u8 status;
-+	mm_segment_t old_fs;
-+
-+	old_fs = enable_sacf_uaccess();
-+	while (n > 0) {
-+		size = zpci_get_max_write_size((u64 __force) src,
-+					       (u64 __force) dst, n,
-+					       ZPCI_MAX_READ_SIZE);
-+		rc = __pcilg_mio_inuser(dst, src, size, &status);
-+		if (rc)
-+			break;
-+		src += size;
-+		dst += size;
-+		n -= size;
-+	}
-+	disable_sacf_uaccess(old_fs);
-+	if (rc)
-+		zpci_err_mmio(rc, status, (__force u64) dst);
-+	return rc;
-+}
-+
- SYSCALL_DEFINE3(s390_pci_mmio_read, unsigned long, mmio_addr,
- 		void __user *, user_buffer, size_t, length)
+-static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
++static int optee_register_device(const uuid_t *device_uuid)
  {
-@@ -86,12 +280,27 @@ SYSCALL_DEFINE3(s390_pci_mmio_read, unsi
+ 	struct tee_client_device *optee_device = NULL;
+ 	int rc;
+@@ -75,7 +75,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
+ 		return -ENOMEM;
  
- 	if (length <= 0 || PAGE_SIZE - (mmio_addr & ~PAGE_MASK) < length)
- 		return -EINVAL;
-+
-+	/*
-+	 * Only support write access to MIO capable devices on a MIO enabled
-+	 * system. Otherwise we would have to check for every address if it is
-+	 * a special ZPCI_ADDR and we would have to do a get_pfn() which we
-+	 * don't need for MIO capable devices.
-+	 */
-+	if (static_branch_likely(&have_mio)) {
-+		ret = __memcpy_fromio_inuser(
-+				user_buffer, (const void __iomem *)mmio_addr,
-+				length);
-+		return ret;
-+	}
-+
- 	if (length > 64) {
- 		buf = kmalloc(length, GFP_KERNEL);
- 		if (!buf)
- 			return -ENOMEM;
--	} else
-+	} else {
- 		buf = local_buf;
-+	}
+ 	optee_device->dev.bus = &tee_bus_type;
+-	dev_set_name(&optee_device->dev, "optee-clnt%u", device_id);
++	dev_set_name(&optee_device->dev, "optee-ta-%pUl", device_uuid);
+ 	uuid_copy(&optee_device->id.uuid, device_uuid);
  
- 	ret = get_pfn(mmio_addr, VM_READ, &pfn);
- 	if (ret)
-
+ 	rc = device_register(&optee_device->dev);
+@@ -144,7 +144,7 @@ static int __optee_enumerate_devices(u32 func)
+ 	num_devices = shm_size / sizeof(uuid_t);
+ 
+ 	for (idx = 0; idx < num_devices; idx++) {
+-		rc = optee_register_device(&device_uuid[idx], idx);
++		rc = optee_register_device(&device_uuid[idx]);
+ 		if (rc)
+ 			goto out_shm;
+ 	}
+-- 
+2.17.1
 
