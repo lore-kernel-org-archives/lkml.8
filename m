@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFBEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E62720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A3C20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520242;
-	bh=N9q+hXqobtsfiqZFTrDBSfSXunzw646JgJNaF6n8Mv8=;
+	s=default; t=1590520247;
+	bh=GEzZKEFck/laAHvXNM4F0VHtJ/O2SrpRrI0SkmrRHbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GmYhBLJ6gL+6asVZ2qymja7BBgZ+c2RMvT6xqhxvFNGSDnv1lGEippHFtjA/1+IxV
-	 fAsuMddjhPJN8QR09klY7uIWGBkfDaVoyWp5eJW5SpKybkV3JhLKRLpMyZDVJYyHxL
-	 xheTjdhsucWtzPrtFq5mc/JoNwhQa26Hoh6C6QEA=
+	b=zETXq8FkHvUQpjiH+xs7GqfRwqeRWnzL8jJp7htdb9hR7xdKO7Xf5RCusuWkNUFRH
+	 wsS7uPYj0wMhzMggry7bYmkxc+aL6G47krwatm43riRbG0bt3C7I0WutweCH/u88DK
+	 VVzMPLBqxO02whuDqmmVWenvF3vYCyV7Ru92lnxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391740AbgEZTKl (ORCPT
+        id S2404019AbgEZTKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404013AbgEZTKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:37 -0400
+        id S2391059AbgEZTKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E0C208A7;
-        Tue, 26 May 2020 19:10:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7781E20888;
+        Tue, 26 May 2020 19:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520237;
-        bh=N9q+hXqobtsfiqZFTrDBSfSXunzw646JgJNaF6n8Mv8=;
+        s=default; t=1590520241;
+        bh=GEzZKEFck/laAHvXNM4F0VHtJ/O2SrpRrI0SkmrRHbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kgad6Elgsnp+w8oAXmwgl/Kbg78Y2VYCVd7c6sWLcDpze4A4lIhdm4tnfVzTNYELB
-         kpU6uLW2wX6/SQ7w0C2VVyJ5ARXyJ9m5Ud2u2AVIpTxmWPvurVhDn6x7d4q/LrQaDD
-         tUh9muPYrJ0k55hqXglgni+rsN/fDF2tKdFGfjRg=
+        b=bRJzS1svbeXBctFT1xLnHj+F1RlGkN3EY/9NJbOIOTk4sQdFbvEn9FqopPLcsADnj
+         +LWiKjvQ6PhQssSOwVSIFSsXKb8YDRxmSEGtGYJ6eCqBIbrfuNQZ38njCk7SmTOAP2
+         4z//u0ZES5HWHSUhC5/gugmN2ru4PV5VYLzh2T+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.4 075/111] drm/i915: Propagate error from completed fences
-Date:   Tue, 26 May 2020 20:53:33 +0200
-Message-Id: <20200526183939.984384196@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 076/111] powerpc: Remove STRICT_KERNEL_RWX incompatibility with RELOCATABLE
+Date:   Tue, 26 May 2020 20:53:34 +0200
+Message-Id: <20200526183940.074511261@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,40 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Russell Currey <ruscur@russell.cc>
 
-commit bc850943486887e3859597a266767f95db90aa72 upstream.
+[ Upstream commit c55d7b5e64265fdca45c85b639013e770bde2d0e ]
 
-We need to preserve fatal errors from fences that are being terminated
-as we hook them up.
+I have tested this with the Radix MMU and everything seems to work, and
+the previous patch for Hash seems to fix everything too.
+STRICT_KERNEL_RWX should still be disabled by default for now.
 
-Fixes: ef4688497512 ("drm/i915: Propagate fence errors")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: Matthew Auld <matthew.auld@intel.com>
-Reviewed-by: Matthew Auld <matthew.auld@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200506162136.3325-1-chris@chris-wilson.co.uk
-(cherry picked from commit 24fe5f2ab2478053d50a3bc629ada895903a5cbc)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Please test STRICT_KERNEL_RWX + RELOCATABLE!
 
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191224064126.183670-2-ruscur@russell.cc
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_request.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/i915_request.c
-+++ b/drivers/gpu/drm/i915/i915_request.c
-@@ -894,8 +894,10 @@ i915_request_await_request(struct i915_r
- 	GEM_BUG_ON(to == from);
- 	GEM_BUG_ON(to->timeline == from->timeline);
- 
--	if (i915_request_completed(from))
-+	if (i915_request_completed(from)) {
-+		i915_sw_fence_set_error_once(&to->submit, from->fence.error);
- 		return 0;
-+	}
- 
- 	if (to->engine->schedule) {
- 		ret = i915_sched_node_add_dependency(&to->sched, &from->sched);
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 2b1033f13210..198bbf42e398 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -133,7 +133,7 @@ config PPC
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
+-	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
++	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UACCESS_FLUSHCACHE
+ 	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+-- 
+2.25.1
+
 
 
