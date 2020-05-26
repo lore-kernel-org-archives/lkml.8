@@ -2,271 +2,153 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AABEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBF0208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5901F2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590519374;
+	bh=482FbuVT8uo5gio2dKAXnzKNgKMw3aBVeeXFUSUVQP8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sGkYPq7dbpDgkzPI3/Gaabtt5x1kQTVUaK46P7HL4TOFhP5SxMMRckEp7LQC80dU0
+	 mIb2WZSqLFzVM36+M48tJfrxHcjwxr4y2MyV6d8k6U/Zi91AmL5e2nvFtgGFzD8vQD
+	 DgzXo7LFa2DzkOhrPfXqJH/CfDrbzrG8BQAa5ZU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389752AbgEZS4L (ORCPT
+        id S2389763AbgEZS4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:56:11 -0400
-Received: from mga09.intel.com ([134.134.136.24]:33088 "EHLO mga09.intel.com"
+        Tue, 26 May 2020 14:56:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389716AbgEZS4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:56:05 -0400
-IronPort-SDR: tD8NyE+PbRtH1YSPlpiJ5yDbOvAxj9EZTAaEQN0SwlRZEmZ3ui8x4OFYVwV8UMlJaf8Nb+tW60
- AwT/ywjFHBVA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 11:56:04 -0700
-IronPort-SDR: MzdCeHkdVMgMBimDENZlcd+/zit7KYuu0VESQWkRVNAEnrDpf+FxtWMJmncJUgT+aD1SRPYCAE
- z9zOWDWUPT4g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="468454053"
-Received: from dspatli-mobl.amr.corp.intel.com (HELO ellie) ([10.212.21.42])
-  by fmsmga006.fm.intel.com with ESMTP; 26 May 2020 11:56:03 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>, davem@davemloft.net,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        nsekhar@ti.com, grygorii.strashko@ti.com
-Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
-In-Reply-To: <5feae5ae-af46-f4b6-fe91-91a19036112b@ti.com>
-References: <20200506163033.3843-1-m-karicheri2@ti.com> <87r1vdkxes.fsf@intel.com> <5feae5ae-af46-f4b6-fe91-91a19036112b@ti.com>
-Date:   Tue, 26 May 2020 11:56:03 -0700
-Message-ID: <87a71ule4c.fsf@intel.com>
+        id S2389025AbgEZS4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:56:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1514720870;
+        Tue, 26 May 2020 18:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519370;
+        bh=482FbuVT8uo5gio2dKAXnzKNgKMw3aBVeeXFUSUVQP8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0CF069xn7+wUgN0IzFjri18sf8y+6FsotjSXS/RYnVCpGEh5jLUtyT9vBzjjMUp2w
+         CMACA9+zPEvNeCi99Z04Y7gnNd5I//vk2a6aFZk9EfSZuhn9urpLUVtn3RPe26m3fQ
+         LNhzxQP3g+TaxO+DezpanjptaHEoM2qY05I9dJzA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 05/65] padata: ensure padata_do_serial() runs on the correct CPU
+Date:   Tue, 26 May 2020 20:52:24 +0200
+Message-Id: <20200526183908.131959919@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
+References: <20200526183905.988782958@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Murali Karicheri <m-karicheri2@ti.com> writes:
+From: Mathias Krause <minipli@googlemail.com>
 
-> Hi Vinicius,
->
-> On 5/21/20 1:31 PM, Vinicius Costa Gomes wrote:
->> Murali Karicheri <m-karicheri2@ti.com> writes:
->> 
-> ------------ Snip-------------
->
->>>    - prefix all common code with hsr_prp
->>>    - net/hsr -> renamed to net/hsr-prp
->>>    - All common struct types, constants, functions renamed with
->>>      hsr{HSR}_prp{PRP} prefix.
->> 
->> I don't really like these prefixes, I am thinking of when support for
->> IEEE 802.1CB is added, do we rename this to "hsr_prp_frer"?
->> 
->> And it gets even more complicated, and using 802.1CB you can configure
->> the tagging method and the stream identification function so a system
->> can interoperate in a HSR or PRP network.
->> 
->> So, I see this as different methods of achieving the same result, which
->> makes me think that the different "methods/types" (HSR and PRP in your
->> case) should be basically different implementations of a "struct
->> hsr_ops" interface. With this hsr_ops something like this:
->> 
->>     struct hsr_ops {
->>            int (*handle_frame)()
->>            int (*add_port)()
->>            int (*remove_port)()
->>            int (*setup)()
->>            void (*teardown)()
->>     };
->> 
->
-> Thanks for your response!
->
-> I agree with you that the prefix renaming is ugly. However I wasn't
-> sure if it is okay to use a hsr prefixed code to handle PRP as
-> well as it may not be intuitive to anyone investigating the code. For
-> the same reason, handling 802.1CB specifc functions using the hsr_
-> prefixed code. If that is okay, then patch 1-6 are unnecessary. We could
-> also add some documentation at the top of the file to indicate that
-> both hsr and prp are implemented in the code or something like that.
-> BTW, I need to investigate more into 802.1CB and this was not known
-> when I developed this code few years ago.
+commit 350ef88e7e922354f82a931897ad4a4ce6c686ff upstream.
 
-I think for now it's better to make it clear how similar PRP and HSR
-are.
+If the algorithm we're parallelizing is asynchronous we might change
+CPUs between padata_do_parallel() and padata_do_serial(). However, we
+don't expect this to happen as we need to enqueue the padata object into
+the per-cpu reorder queue we took it from, i.e. the same-cpu's parallel
+queue.
 
-As for the renaming, I am afraid that this boat has sailed, as the
-netlink API already uses HSR_ and it's better to reuse that than create
-a new family for, at least conceptually, the same thing (PRP and
-802.1CB). And this is important bit, the userspace API.
+Ensure we're not switching CPUs for a given padata object by tracking
+the CPU within the padata object. If the serial callback gets called on
+the wrong CPU, defer invoking padata_reorder() via a kernel worker on
+the CPU we're expected to run on.
 
-And even for 802.1CB using name "High-availability Seamless Redudancy"
-is as good as any, if very pompous.
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
->
-> Main difference between HSR and PRP is how they handle the protocol tag
-> or rct and create or handle the protocol specific part in the frame.
-> For that part, we should be able to define ops() like you have
-> suggested, instead of doing if check throughout the code. Hope that
-> is what you meant by hsr_ops() for this. Again shouldn't we use some 
-> generic name like proto_ops or red_ops instead of hsr_ops() and assign
-> protocol specific implementaion to them? i.e hsr_ or prp_
-> or 802.1CB specific functions assigned to the function pointers. For
-> now I see handle_frame(), handle_sv_frame, create_frame(), 
-> create_sv_frame() etc implemented differently (This is currently part of
-> patch 11 & 12). So something like
->
->     struct proto_ops {
-> 	int (*handle_frame)();
-> 	int (*create_frame)();
-> 	int (*handle_sv_frame)();
-> 	int (*create_sv_frame)();
->     };
+---
+ include/linux/padata.h |    2 ++
+ kernel/padata.c        |   20 +++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-That's it. That was the idea I was trying to communicate :-)
-
->
-> and call dev->proto_ops->handle_frame() to process a frame from the
-> main hook. proto_ops gets initialized to of the set if implementation
-> at device or interface creation in hsr_dev_finalize().
->
->>>
->>> Please review this and provide me feedback so that I can work to
->>> incorporate them and send a formal patch series for this. As this
->>> series impacts user space, I am not sure if this is the right
->>> approach to introduce a new definitions and obsolete the old
->>> API definitions for HSR. The current approach is choosen
->>> to avoid redundant code in iproute2 and in the netlink driver
->>> code (hsr_netlink.c). Other approach we discussed internally was
->>> to Keep the HSR prefix in the user space and kernel code, but
->>> live with the redundant code in the iproute2 and hsr netlink
->>> code. Would like to hear from you what is the best way to add
->>> this feature to networking core. If there is any other
->>> alternative approach possible, I would like to hear about the
->>> same.
->> 
->> Why redudant code is needed in the netlink parts and in iproute2 when
->> keeping the hsr prefix?
->
-> May be this is due to the specific implementation that I chose.
-> Currently I have separate netlink socket for HSR and PRP which may
-> be an overkill since bith are similar protocol.
->
-> Currently hsr inteface is created as
->
-> ip link add name hsr0 type hsr slave1 eth0 slave2 eth1 supervision 0
->
-> So I have implemented similar command for prp
->
-> ip link add name prp0 type prp slave1 eth0 slave2 eth1 supervision 0
->
-> In patch 7/13 I renamed existing HSR netlink socket attributes that
-> defines the hsr interface with the assumption that we can obsolete
-> the old definitions in favor of new common definitions with the
-> HSR_PRP prefix. Then I have separate code for creating prp
-> interface and related functions, even though they are similar.
-> So using common definitions, I re-use the code in netlink and
-> iproute2 (see patch 8 and 9 to re-use the code). PRP netlink
-> socket code in patch 10 which register prp_genl_family similar
-> to HSR.
-
-Deprecating an userspace API is hard and takes a long time. So let's
-avoid that if it makes sense.
-
->
-> +static struct genl_family prp_genl_family __ro_after_init = {
-> +	.hdrsize = 0,
-> +	.name = "PRP",
-> +	.version = 1,
-> +	.maxattr = HSR_PRP_A_MAX,
-> +	.policy = prp_genl_policy,
-> +	.module = THIS_MODULE,
-> +	.ops = prp_ops,
-> +	.n_ops = ARRAY_SIZE(prp_ops),
-> +	.mcgrps = prp_mcgrps,
-> +	.n_mcgrps = ARRAY_SIZE(prp_mcgrps),
-> +};
-> +
-> +int __init prp_netlink_init(void)
-> +{
-> +	int rc;
-> +
-> +	rc = rtnl_link_register(&prp_link_ops);
-> +	if (rc)
-> +		goto fail_rtnl_link_register;
-> +
-> +	rc = genl_register_family(&prp_genl_family);
-> +	if (rc)
-> +		goto fail_genl_register_family;
->
->
-> If we choose to re-use the existing HSR_ uapi defines, then should we
-> re-use the hsr netlink socket interface for PRP as well and
-> add additional attribute for differentiating the protocol specific
-> part?
-
-Yes, that seems the way to go.
-
->
-> i.e introduce protocol attribute to existing HSR uapi defines for
-> netlink socket to handle creation of prp interface.
->
-> enum {
-> 	HSR_A_UNSPEC,
-> 	HSR_A_NODE_ADDR,
-> 	HSR_A_IFINDEX,
-> 	HSR_A_IF1_AGE,
-> 	HSR_A_IF2_AGE,
-> 	HSR_A_NODE_ADDR_B,
-> 	HSR_A_IF1_SEQ,
-> 	HSR_A_IF2_SEQ,
-> 	HSR_A_IF1_IFINDEX,
-> 	HSR_A_IF2_IFINDEX,
-> 	HSR_A_ADDR_B_IFINDEX,
-> +       HSR_A_PROTOCOL  <====if missing it is HSR (backward 	
-> 			     compatibility)
->                               defines HSR or PRP or 802.1CB in future.
-> 	__HSR_A_MAX,
-> };
->
-> So if ip link command is
->
-> ip link add name <if name> type <proto> slave1 eth0 slave2 eth1 
-> supervision 0
->
-> Add HSR_A_PROTOCOL attribute with HSR/PRP specific value.
->
-> This way, the iprout2 code mostly remain the same as hsr, but will
-> change a bit to introduced this new attribute if user choose proto as
-> 'prp' vs 'hsr'
-
-Sounds good, I think.
-
->
-> BTW, I have posted the existing iproute2 code also to the mailing list
-> with title 'iproute2: Add PRP support'.
->
-> If re-using hsr code with existing prefix is fine for PRP or any future
-> protocol such as 801.1B, then I will drop patch 1-6 that are essentially
-> doing some renaming and re-use existing hsr netlink code for PRP with
-> added attribute to differentiate the protocol at the driver as described
-> above along with proto_ops and re-spin the series.
-
-If I forget that HSR is also the name of a protocol, what the acronym
-means makes sense for 802.1CB, so it's not too bad, I think.
-
->
-> Let me know.
->
-> Regards,
->
-> Murali
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -37,6 +37,7 @@
+  * @list: List entry, to attach to the padata lists.
+  * @pd: Pointer to the internal control structure.
+  * @cb_cpu: Callback cpu for serializatioon.
++ * @cpu: Cpu for parallelization.
+  * @seq_nr: Sequence number of the parallelized data object.
+  * @info: Used to pass information from the parallel to the serial function.
+  * @parallel: Parallel execution function.
+@@ -46,6 +47,7 @@ struct padata_priv {
+ 	struct list_head	list;
+ 	struct parallel_data	*pd;
+ 	int			cb_cpu;
++	int			cpu;
+ 	int			info;
+ 	void                    (*parallel)(struct padata_priv *padata);
+ 	void                    (*serial)(struct padata_priv *padata);
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -132,6 +132,7 @@ int padata_do_parallel(struct padata_ins
+ 	padata->cb_cpu = cb_cpu;
+ 
+ 	target_cpu = padata_cpu_hash(pd);
++	padata->cpu = target_cpu;
+ 	queue = per_cpu_ptr(pd->pqueue, target_cpu);
+ 
+ 	spin_lock(&queue->parallel.lock);
+@@ -375,10 +376,21 @@ void padata_do_serial(struct padata_priv
+ 	int cpu;
+ 	struct padata_parallel_queue *pqueue;
+ 	struct parallel_data *pd;
++	int reorder_via_wq = 0;
+ 
+ 	pd = padata->pd;
+ 
+ 	cpu = get_cpu();
++
++	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
++	 * was called on -- or, at least, enqueue the padata object into the
++	 * correct per-cpu queue.
++	 */
++	if (cpu != padata->cpu) {
++		reorder_via_wq = 1;
++		cpu = padata->cpu;
++	}
++
+ 	pqueue = per_cpu_ptr(pd->pqueue, cpu);
+ 
+ 	spin_lock(&pqueue->reorder.lock);
+@@ -395,7 +407,13 @@ void padata_do_serial(struct padata_priv
+ 
+ 	put_cpu();
+ 
+-	padata_reorder(pd);
++	/* If we're running on the wrong CPU, call padata_reorder() via a
++	 * kernel worker.
++	 */
++	if (reorder_via_wq)
++		queue_work_on(cpu, pd->pinst->wq, &pqueue->reorder_work);
++	else
++		padata_reorder(pd);
+ }
+ EXPORT_SYMBOL(padata_do_serial);
+ 
 
 
-Cheers,
--- 
-Vinicius
