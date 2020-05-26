@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F97CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3425EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6050120849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E0C20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519822;
-	bh=pk+RbUHryKklL3wHebCtBVLElvjUtmNrFWmuel0RygE=;
+	s=default; t=1590519827;
+	bh=ConqutJgbi4/Qis/DO2822iciViU/8gVeGfHmxkd1Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MEzVj//cweGsS7WUmgIjxUcEMdgFOXMCXkMY/CfvwuPwdx+b2wm9zIeMtwblTLOg6
-	 HJehzMjzaUb+8v1URhFtX1tA9rOJnTH8S8sNNW2e7pXEcJ1XbHZVrhF4xRACDrF8hJ
-	 hgOpenUZSwKwSCYWM6+TvTz1GDS6P0wDUvBLe2gc=
+	b=ahU0jSE6FnINI2IzN3sEZSwNM6lyRXF7kpbPoQ6BDkjMgscF+Un/1CwGVZBsr6G7I
+	 RzglqZnUi5zV9vxrygSPhNWILqctUjVhgWClMXpwneQyaiMao9FjGV31E4DDwpDhZS
+	 URTXaF6aiqkj6ym0D4xzF4Of/vdMxKwqFW4pzoH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391254AbgEZTDl (ORCPT
+        id S2391267AbgEZTDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:03:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391245AbgEZTDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:38 -0400
+        id S2391252AbgEZTDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C6A220873;
-        Tue, 26 May 2020 19:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84C1620873;
+        Tue, 26 May 2020 19:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519817;
-        bh=pk+RbUHryKklL3wHebCtBVLElvjUtmNrFWmuel0RygE=;
+        s=default; t=1590519823;
+        bh=ConqutJgbi4/Qis/DO2822iciViU/8gVeGfHmxkd1Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kW2o/nc/PR7IobC+QL57C3WLEd2NdMExm8CYbF9CXnviWY8290JUUQeCycmeQzO3A
-         rbAta6cVlcMnCYi9ZzFzGZ7pKqS8PVOEwahi6mrKGnPvZhyDwb5V8THl2Rs0LMsj7C
-         4mp/q4A7gyq9X6eQ2gBZrEgpa4TprLhM+oDPgBY0=
+        b=kEq6qboQlgXnww5+i6yAiN82cLZFHYhhqWKo8b1R9ssAembLOJcQhtyQgFMJO1F0G
+         sd/P6k4ghCvG2bY7yMqQJ6GBmraD+IbRrYFGm01Kw1UKiJjoiwOOfdBLl5ykm+zfxg
+         zcB25bRS8iH4sKSlsh2ISWWHq2IM0/oIouWMZBYI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
+        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/81] ubifs: remove broken lazytime support
-Date:   Tue, 26 May 2020 20:52:46 +0200
-Message-Id: <20200526183927.127913799@linuxfoundation.org>
+Subject: [PATCH 4.19 30/81] ceph: fix double unlock in handle_cap_export()
+Date:   Tue, 26 May 2020 20:53:05 +0200
+Message-Id: <20200526183930.831806653@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,51 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Wu Bo <wubo40@huawei.com>
 
-[ Upstream commit ecf84096a526f2632ee85c32a3d05de3fa60ce80 ]
+[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
 
-When "ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs" introduced atime
-support to ubifs, it also added lazytime support.  As far as I can tell
-the lazytime support is terminally broken, as it causes
-mark_inode_dirty_sync to be called from __writeback_single_inode, which
-will then trigger the locking assert in ubifs_dirty_inode.  Just remove
-the broken lazytime support for now, it can be added back later,
-especially as some infrastructure changes should make that easier soon.
+If the ceph_mdsc_open_export_target_session() return fails, it will
+do a "goto retry", but the session mutex has already been unlocked.
+Re-lock the mutex in that case to ensure that we don't unlock it
+twice.
 
-Fixes: 8c1c5f263833 ("ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Wu Bo <wubo40@huawei.com>
+Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/file.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ fs/ceph/caps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-index 65b4f63349c7..d7d2fdda4bbd 100644
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -1391,7 +1391,6 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
- 	struct ubifs_info *c = inode->i_sb->s_fs_info;
- 	struct ubifs_budget_req req = { .dirtied_ino = 1,
- 			.dirtied_ino_d = ALIGN(ui->data_len, 8) };
--	int iflags = I_DIRTY_TIME;
- 	int err, release;
+diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+index 5241102b81a8..a2d4eed27f80 100644
+--- a/fs/ceph/caps.c
++++ b/fs/ceph/caps.c
+@@ -3632,6 +3632,7 @@ retry:
+ 		WARN_ON(1);
+ 		tsession = NULL;
+ 		target = -1;
++		mutex_lock(&session->s_mutex);
+ 	}
+ 	goto retry;
  
- 	err = ubifs_budget_space(c, &req);
-@@ -1406,11 +1405,8 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
- 	if (flags & S_MTIME)
- 		inode->i_mtime = *time;
- 
--	if (!(inode->i_sb->s_flags & SB_LAZYTIME))
--		iflags |= I_DIRTY_SYNC;
--
- 	release = ui->dirty;
--	__mark_inode_dirty(inode, iflags);
-+	__mark_inode_dirty(inode, I_DIRTY_SYNC);
- 	mutex_unlock(&ui->ui_mutex);
- 	if (release)
- 		ubifs_release_budget(c, &req);
 -- 
 2.25.1
 
