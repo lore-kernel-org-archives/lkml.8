@@ -2,53 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B74C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1F520888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E62720776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520239;
-	bh=9acOtv4KC3duxoHSeM86NeKSDTxTvOvBPOBPYuW2Srg=;
+	s=default; t=1590520242;
+	bh=N9q+hXqobtsfiqZFTrDBSfSXunzw646JgJNaF6n8Mv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2JVAYPLq0sA4wWm5RLLfcQpCiUaKrRXeU+jiCk2/uyYoyiDMK2SA3n26IDt4CitHl
-	 fE8+duVRlfMBDLHkjAf+yfMtdz0FZE+hUn/cbIVwE5AEme2UgAm5zbcFyYKqgulk7+
-	 pB+jAw8zh0qYe2po2GJd/YliEXhpql2BomxWhQ0A=
+	b=GmYhBLJ6gL+6asVZ2qymja7BBgZ+c2RMvT6xqhxvFNGSDnv1lGEippHFtjA/1+IxV
+	 fAsuMddjhPJN8QR09klY7uIWGBkfDaVoyWp5eJW5SpKybkV3JhLKRLpMyZDVJYyHxL
+	 xheTjdhsucWtzPrtFq5mc/JoNwhQa26Hoh6C6QEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404018AbgEZTKi (ORCPT
+        id S2391740AbgEZTKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:10:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39832 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403989AbgEZTKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:34 -0400
+        id S2404013AbgEZTKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F7C20776;
-        Tue, 26 May 2020 19:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E0C208A7;
+        Tue, 26 May 2020 19:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520234;
-        bh=9acOtv4KC3duxoHSeM86NeKSDTxTvOvBPOBPYuW2Srg=;
+        s=default; t=1590520237;
+        bh=N9q+hXqobtsfiqZFTrDBSfSXunzw646JgJNaF6n8Mv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wmn/jmaZyLi4UYh+KswzS+rebjGyu3kpg7gVOPuIojAO7hbpLLcOF5UdniRWQh5Pf
-         r9TTEpENZTU1Q6lQrJ1xZLiG+cCVRvioVaGU7Us3mYaq8AdPt1v9gbiRVyq73VgHBH
-         lFKEIuLJzbEtJesiP+W8SYclCksL2a5RZrooyndM=
+        b=Kgad6Elgsnp+w8oAXmwgl/Kbg78Y2VYCVd7c6sWLcDpze4A4lIhdm4tnfVzTNYELB
+         kpU6uLW2wX6/SQ7w0C2VVyJ5ARXyJ9m5Ud2u2AVIpTxmWPvurVhDn6x7d4q/LrQaDD
+         tUh9muPYrJ0k55hqXglgni+rsN/fDF2tKdFGfjRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 110/111] sched/fair: Fix reordering of enqueue/dequeue_task_fair()
-Date:   Tue, 26 May 2020 20:54:08 +0200
-Message-Id: <20200526183943.334089577@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.4 075/111] drm/i915: Propagate error from completed fences
+Date:   Tue, 26 May 2020 20:53:33 +0200
+Message-Id: <20200526183939.984384196@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -61,82 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 5ab297bab984310267734dfbcc8104566658ebef ]
+commit bc850943486887e3859597a266767f95db90aa72 upstream.
 
-Even when a cgroup is throttled, the group se of a child cgroup can still
-be enqueued and its gse->on_rq stays true. When a task is enqueued on such
-child, we still have to update the load_avg and increase
-h_nr_running of the throttled cfs. Nevertheless, the 1st
-for_each_sched_entity() loop is skipped because of gse->on_rq == true and the
-2nd loop because the cfs is throttled whereas we have to update both
-load_avg with the old h_nr_running and increase h_nr_running in such case.
+We need to preserve fatal errors from fences that are being terminated
+as we hook them up.
 
-The same sequence can happen during dequeue when se moves to parent before
-breaking in the 1st loop.
+Fixes: ef4688497512 ("drm/i915: Propagate fence errors")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Reviewed-by: Matthew Auld <matthew.auld@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200506162136.3325-1-chris@chris-wilson.co.uk
+(cherry picked from commit 24fe5f2ab2478053d50a3bc629ada895903a5cbc)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Note that the update of load_avg will effectively happen only once in order
-to sync up to the throttled time. Next call for updating load_avg will stop
-early because the clock stays unchanged.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Fixes: 6d4d22468dae ("sched/fair: Reorder enqueue/dequeue_task_fair path")
-Link: https://lkml.kernel.org/r/20200306084208.12583-1-vincent.guittot@linaro.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/i915/i915_request.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 0e042e847ed3..42cc3de24dcc 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5245,15 +5245,15 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -894,8 +894,10 @@ i915_request_await_request(struct i915_r
+ 	GEM_BUG_ON(to == from);
+ 	GEM_BUG_ON(to->timeline == from->timeline);
  
--		/* end evaluation on encountering a throttled cfs_rq */
--		if (cfs_rq_throttled(cfs_rq))
--			goto enqueue_throttle;
--
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		update_cfs_group(se);
+-	if (i915_request_completed(from))
++	if (i915_request_completed(from)) {
++		i915_sw_fence_set_error_once(&to->submit, from->fence.error);
+ 		return 0;
++	}
  
- 		cfs_rq->h_nr_running++;
- 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
-+
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto enqueue_throttle;
- 	}
- 
- enqueue_throttle:
-@@ -5341,15 +5341,16 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	for_each_sched_entity(se) {
- 		cfs_rq = cfs_rq_of(se);
- 
--		/* end evaluation on encountering a throttled cfs_rq */
--		if (cfs_rq_throttled(cfs_rq))
--			goto dequeue_throttle;
--
- 		update_load_avg(cfs_rq, se, UPDATE_TG);
- 		update_cfs_group(se);
- 
- 		cfs_rq->h_nr_running--;
- 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
-+
-+		/* end evaluation on encountering a throttled cfs_rq */
-+		if (cfs_rq_throttled(cfs_rq))
-+			goto dequeue_throttle;
-+
- 	}
- 
- dequeue_throttle:
--- 
-2.25.1
-
+ 	if (to->engine->schedule) {
+ 		ret = i915_sched_node_add_dependency(&to->sched, &from->sched);
 
 
