@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78832204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202542053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:25:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WHtChx2y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NkzZllmb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389555AbgEZRZY (ORCPT
+        id S2389568AbgEZRZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:25:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49241 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388848AbgEZRXV (ORCPT
+        Tue, 26 May 2020 13:25:35 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24677 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389064AbgEZRXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:23:21 -0400
+        Tue, 26 May 2020 13:23:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590513799;
+        s=mimecast20190719; t=1590513797;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kbtBU1MOelWIUuUVVYfK0gQzdSdxJbp6qK0Ut7yTAY8=;
-        b=WHtChx2yRMbUHm7CDuAnviMmCJbQ2ER0Tg2XJIkIY6h8PkrykQ8KiKybuVXbgxI+/96y+X
-        YfiA+vwFwpLx4aJplY9YWjeHbwQbZ32K/Mrzakij+hzM+QNBl/i2vJ4RkxnfBdoAqUFgDi
-        L2rcp/9RkznJFpZAOX9/aCG/yF+7E9E=
+        bh=sK2BMQtWr0T7kZsZpmxmgtWNh6D1Ig8gl0biRr+IJtQ=;
+        b=NkzZllmb5LsXnh8ZjFDynW77rbpZtVah3QZu0iBqOp4tTihxV7Xj0P2gJSwcduPU3jqcos
+        gVsnmTAXhfzS8z7+++6ZHH13zlsXiuUYgXDVrYw49+Z2ZGyrEng8s5Ns3z7yZSI7m0LrOw
+        5rEPqlxtQANYU+yCeHoQwvPUtPhre5U=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-1CkpBpgGOAunrVF5A7XMYg-1; Tue, 26 May 2020 13:23:16 -0400
-X-MC-Unique: 1CkpBpgGOAunrVF5A7XMYg-1
+ us-mta-128-WDzh-98mN-CAOrZw4m6rKQ-1; Tue, 26 May 2020 13:23:12 -0400
+X-MC-Unique: WDzh-98mN-CAOrZw4m6rKQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A5F1464;
-        Tue, 26 May 2020 17:23:15 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A172E107ACCA;
+        Tue, 26 May 2020 17:23:11 +0000 (UTC)
 Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7652010013DB;
-        Tue, 26 May 2020 17:23:14 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1747310013DB;
+        Tue, 26 May 2020 17:23:11 +0000 (UTC)
 From:   Paolo Bonzini <pbonzini@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     vkuznets@redhat.com, mlevitsk@redhat.com,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>
-Subject: [PATCH 08/28] KVM: nSVM: move map argument out of enter_svm_guest_mode
-Date:   Tue, 26 May 2020 13:22:48 -0400
-Message-Id: <20200526172308.111575-9-pbonzini@redhat.com>
+Subject: [PATCH 03/28] KVM: nSVM: inject exceptions via svm_check_nested_events
+Date:   Tue, 26 May 2020 13:22:43 -0400
+Message-Id: <20200526172308.111575-4-pbonzini@redhat.com>
 In-Reply-To: <20200526172308.111575-1-pbonzini@redhat.com>
 References: <20200526172308.111575-1-pbonzini@redhat.com>
 MIME-Version: 1.0
@@ -63,97 +63,305 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unmapping the nested VMCB in enter_svm_guest_mode is a bit of a wart,
-since the map is not used elsewhere in the function.  There are
-just two calls, so move it there.
+This allows exceptions injected by the emulator to be properly delivered
+as vmexits.  The code also becomes simpler, because we can just let all
+L0-intercepted exceptions go through the usual path.  In particular, our
+emulation of the VMX #DB exit qualification is very much simplified,
+because the vmexit injection path can use kvm_deliver_exception_payload
+to update DR6.
 
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c | 14 ++++++--------
- arch/x86/kvm/svm/svm.c    |  3 ++-
- arch/x86/kvm/svm/svm.h    |  2 +-
- 3 files changed, 9 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/kvm_host.h |   2 +
+ arch/x86/kvm/svm/nested.c       | 136 +++++++++++++-------------------
+ arch/x86/kvm/svm/svm.c          |   9 ---
+ arch/x86/kvm/svm/svm.h          |   1 +
+ arch/x86/kvm/x86.c              |  13 +--
+ 5 files changed, 58 insertions(+), 103 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7707bd4b0593..e6f2e1a2dab6 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1495,6 +1495,8 @@ void kvm_pic_clear_all(struct kvm_pic *pic, int irq_source_id);
+ 
+ void kvm_inject_nmi(struct kvm_vcpu *vcpu);
+ 
++void kvm_update_dr7(struct kvm_vcpu *vcpu);
++
+ int kvm_mmu_unprotect_page(struct kvm *kvm, gfn_t gfn);
+ int kvm_mmu_unprotect_page_virt(struct kvm_vcpu *vcpu, gva_t gva);
+ void __kvm_mmu_free_some_pages(struct kvm_vcpu *vcpu);
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 81e0fbd5e267..d2fc3c4aa00b 100644
+index d544cce4f964..87fc5879dfaa 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -229,7 +229,7 @@ static bool nested_vmcb_checks(struct vmcb *vmcb)
- }
+@@ -111,6 +111,8 @@ void recalc_intercepts(struct vcpu_svm *svm)
+ 	h = &svm->nested.hsave->control;
+ 	g = &svm->nested;
  
- void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
--			  struct vmcb *nested_vmcb, struct kvm_host_map *map)
-+			  struct vmcb *nested_vmcb)
- {
- 	bool evaluate_pending_interrupts =
- 		is_intercept(svm, INTERCEPT_VINTR) ||
-@@ -304,8 +304,6 @@ void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- 	svm->vmcb->control.pause_filter_thresh =
- 		nested_vmcb->control.pause_filter_thresh;
- 
--	kvm_vcpu_unmap(&svm->vcpu, map, true);
--
- 	/* Enter Guest-Mode */
- 	enter_guest_mode(&svm->vcpu);
- 
-@@ -368,10 +366,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
- 		nested_vmcb->control.exit_code_hi = 0;
- 		nested_vmcb->control.exit_info_1  = 0;
- 		nested_vmcb->control.exit_info_2  = 0;
--
--		kvm_vcpu_unmap(&svm->vcpu, &map, true);
--
--		return ret;
-+		goto out;
- 	}
- 
- 	trace_kvm_nested_vmrun(svm->vmcb->save.rip, vmcb_gpa,
-@@ -414,7 +409,7 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
- 	copy_vmcb_control_area(hsave, vmcb);
- 
- 	svm->nested.nested_run_pending = 1;
--	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb, &map);
-+	enter_svm_guest_mode(svm, vmcb_gpa, nested_vmcb);
- 
- 	if (!nested_svm_vmrun_msrpm(svm)) {
- 		svm->vmcb->control.exit_code    = SVM_EXIT_ERR;
-@@ -425,6 +420,9 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
- 		nested_svm_vmexit(svm);
- 	}
- 
-+out:
-+	kvm_vcpu_unmap(&svm->vcpu, &map, true);
++	svm->nested.host_intercept_exceptions = h->intercept_exceptions;
 +
- 	return ret;
+ 	c->intercept_cr = h->intercept_cr;
+ 	c->intercept_dr = h->intercept_dr;
+ 	c->intercept_exceptions = h->intercept_exceptions;
+@@ -616,50 +618,6 @@ static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
+ 	return (value & mask) ? NESTED_EXIT_DONE : NESTED_EXIT_HOST;
  }
  
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index abe277a3216b..3321c402a753 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3814,7 +3814,8 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
- 		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
- 			return 1;
- 		nested_vmcb = map.hva;
--		enter_svm_guest_mode(svm, vmcb, nested_vmcb, &map);
-+		enter_svm_guest_mode(svm, vmcb, nested_vmcb);
-+		kvm_vcpu_unmap(&svm->vcpu, &map, true);
+-/* DB exceptions for our internal use must not cause vmexit */
+-static int nested_svm_intercept_db(struct vcpu_svm *svm)
+-{
+-	unsigned long dr6 = svm->vmcb->save.dr6;
+-
+-	/* Always catch it and pass it to userspace if debugging.  */
+-	if (svm->vcpu.guest_debug &
+-	    (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
+-		return NESTED_EXIT_HOST;
+-
+-	/* if we're not singlestepping, it's not ours */
+-	if (!svm->nmi_singlestep)
+-		goto reflected_db;
+-
+-	/* if it's not a singlestep exception, it's not ours */
+-	if (!(dr6 & DR6_BS))
+-		goto reflected_db;
+-
+-	/* if the guest is singlestepping, it should get the vmexit */
+-	if (svm->nmi_singlestep_guest_rflags & X86_EFLAGS_TF) {
+-		disable_nmi_singlestep(svm);
+-		goto reflected_db;
+-	}
+-
+-	/* it's ours, the nested hypervisor must not see this one */
+-	return NESTED_EXIT_HOST;
+-
+-reflected_db:
+-	/*
+-	 * Synchronize guest DR6 here just like in kvm_deliver_exception_payload;
+-	 * it will be moved into the nested VMCB by nested_svm_vmexit.  Once
+-	 * exceptions will be moved to svm_check_nested_events, all this stuff
+-	 * will just go away and we could just return NESTED_EXIT_HOST
+-	 * unconditionally.  db_interception will queue the exception, which
+-	 * will be processed by svm_check_nested_events if a nested vmexit is
+-	 * required, and we will just use kvm_deliver_exception_payload to copy
+-	 * the payload to DR6 before vmexit.
+-	 */
+-	WARN_ON(svm->vcpu.arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT);
+-	svm->vcpu.arch.dr6 &= ~(DR_TRAP_BITS | DR6_RTM);
+-	svm->vcpu.arch.dr6 |= dr6 & ~DR6_FIXED_1;
+-	return NESTED_EXIT_DONE;
+-}
+-
+ static int nested_svm_intercept_ioio(struct vcpu_svm *svm)
+ {
+ 	unsigned port, size, iopm_len;
+@@ -710,20 +668,12 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
+ 		break;
  	}
+ 	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f: {
+-		u32 excp_bits = 1 << (exit_code - SVM_EXIT_EXCP_BASE);
+-		if (svm->nested.intercept_exceptions & excp_bits) {
+-			if (exit_code == SVM_EXIT_EXCP_BASE + DB_VECTOR)
+-				vmexit = nested_svm_intercept_db(svm);
+-			else if (exit_code == SVM_EXIT_EXCP_BASE + BP_VECTOR &&
+-				 svm->vcpu.guest_debug & KVM_GUESTDBG_USE_SW_BP)
+-				vmexit = NESTED_EXIT_HOST;
+-			else
+-				vmexit = NESTED_EXIT_DONE;
+-		}
+-		/* async page fault always cause vmexit */
+-		else if ((exit_code == SVM_EXIT_EXCP_BASE + PF_VECTOR) &&
+-			 svm->vcpu.arch.exception.nested_apf != 0)
+-			vmexit = NESTED_EXIT_DONE;
++		/*
++		 * Host-intercepted exceptions have been checked already in
++		 * nested_svm_exit_special.  There is nothing to do here,
++		 * the vmexit is injected by svm_check_nested_events.
++		 */
++		vmexit = NESTED_EXIT_DONE;
+ 		break;
+ 	}
+ 	case SVM_EXIT_ERR: {
+@@ -768,35 +718,45 @@ int nested_svm_check_permissions(struct vcpu_svm *svm)
  	return 0;
  }
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 89fab75dd4f5..33e3f09d7a8e 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -395,7 +395,7 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
+ 
+-int nested_svm_check_exception(struct vcpu_svm *svm, unsigned nr,
+-			       bool has_error_code, u32 error_code)
++static bool nested_exit_on_exception(struct vcpu_svm *svm)
+ {
+-	int vmexit;
++	unsigned int nr = svm->vcpu.arch.exception.nr;
+ 
+-	if (!is_guest_mode(&svm->vcpu))
+-		return 0;
++	return (svm->nested.intercept_exceptions & (1 << nr));
++}
+ 
+-	vmexit = nested_svm_intercept(svm);
+-	if (vmexit != NESTED_EXIT_DONE)
+-		return 0;
++static void nested_svm_inject_exception_vmexit(struct vcpu_svm *svm)
++{
++	unsigned int nr = svm->vcpu.arch.exception.nr;
+ 
+ 	svm->vmcb->control.exit_code = SVM_EXIT_EXCP_BASE + nr;
+ 	svm->vmcb->control.exit_code_hi = 0;
+-	svm->vmcb->control.exit_info_1 = error_code;
++
++	if (svm->vcpu.arch.exception.has_error_code)
++		svm->vmcb->control.exit_info_1 = svm->vcpu.arch.exception.error_code;
+ 
+ 	/*
+ 	 * EXITINFO2 is undefined for all exception intercepts other
+ 	 * than #PF.
+ 	 */
+-	if (svm->vcpu.arch.exception.nested_apf)
+-		svm->vmcb->control.exit_info_2 = svm->vcpu.arch.apf.nested_apf_token;
+-	else if (svm->vcpu.arch.exception.has_payload)
+-		svm->vmcb->control.exit_info_2 = svm->vcpu.arch.exception.payload;
+-	else
+-		svm->vmcb->control.exit_info_2 = svm->vcpu.arch.cr2;
++	if (nr == PF_VECTOR) {
++		if (svm->vcpu.arch.exception.nested_apf)
++			svm->vmcb->control.exit_info_2 = svm->vcpu.arch.apf.nested_apf_token;
++		else if (svm->vcpu.arch.exception.has_payload)
++			svm->vmcb->control.exit_info_2 = svm->vcpu.arch.exception.payload;
++		else
++			svm->vmcb->control.exit_info_2 = svm->vcpu.arch.cr2;
++	} else if (nr == DB_VECTOR) {
++		/* See inject_pending_event.  */
++		kvm_deliver_exception_payload(&svm->vcpu);
++		if (svm->vcpu.arch.dr7 & DR7_GD) {
++			svm->vcpu.arch.dr7 &= ~DR7_GD;
++			kvm_update_dr7(&svm->vcpu);
++		}
++	} else
++		WARN_ON(svm->vcpu.arch.exception.has_payload);
+ 
+-	svm->nested.exit_required = true;
+-	return vmexit;
++	nested_svm_vmexit(svm);
  }
  
- void enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
--			  struct vmcb *nested_vmcb, struct kvm_host_map *map);
-+			  struct vmcb *nested_vmcb);
- int nested_svm_vmrun(struct vcpu_svm *svm);
- void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
- int nested_svm_vmexit(struct vcpu_svm *svm);
+ static void nested_svm_smi(struct vcpu_svm *svm)
+@@ -835,6 +795,15 @@ static int svm_check_nested_events(struct kvm_vcpu *vcpu)
+ 		kvm_event_needs_reinjection(vcpu) || svm->nested.exit_required ||
+ 		svm->nested.nested_run_pending;
+ 
++	if (vcpu->arch.exception.pending) {
++		if (block_nested_events)
++                        return -EBUSY;
++		if (!nested_exit_on_exception(svm))
++			return 0;
++		nested_svm_inject_exception_vmexit(svm);
++		return 0;
++	}
++
+ 	if (vcpu->arch.smi_pending && !svm_smi_blocked(vcpu)) {
+ 		if (block_nested_events)
+ 			return -EBUSY;
+@@ -872,18 +841,19 @@ int nested_svm_exit_special(struct vcpu_svm *svm)
+ 	switch (exit_code) {
+ 	case SVM_EXIT_INTR:
+ 	case SVM_EXIT_NMI:
+-	case SVM_EXIT_EXCP_BASE + MC_VECTOR:
+-		return NESTED_EXIT_HOST;
+ 	case SVM_EXIT_NPF:
+-		/* For now we are always handling NPFs when using them */
+-		if (npt_enabled)
++		return NESTED_EXIT_HOST;
++	case SVM_EXIT_EXCP_BASE ... SVM_EXIT_EXCP_BASE + 0x1f: {
++		u32 excp_bits = 1 << (exit_code - SVM_EXIT_EXCP_BASE);
++
++		if (get_host_vmcb(svm)->control.intercept_exceptions & excp_bits)
+ 			return NESTED_EXIT_HOST;
+-		break;
+-	case SVM_EXIT_EXCP_BASE + PF_VECTOR:
+-		/* Trap async PF even if not shadowing */
+-		if (!npt_enabled || svm->vcpu.arch.apf.host_apf_reason)
++		else if (exit_code == SVM_EXIT_EXCP_BASE + PF_VECTOR &&
++			 svm->vcpu.arch.apf.host_apf_reason)
++			/* Trap async PF even if not shadowing */
+ 			return NESTED_EXIT_HOST;
+ 		break;
++	}
+ 	default:
+ 		break;
+ 	}
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 9ac9963405b5..251c457820a1 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -331,17 +331,8 @@ static void svm_queue_exception(struct kvm_vcpu *vcpu)
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	unsigned nr = vcpu->arch.exception.nr;
+ 	bool has_error_code = vcpu->arch.exception.has_error_code;
+-	bool reinject = vcpu->arch.exception.injected;
+ 	u32 error_code = vcpu->arch.exception.error_code;
+ 
+-	/*
+-	 * If we are within a nested VM we'd better #VMEXIT and let the guest
+-	 * handle the exception
+-	 */
+-	if (!reinject &&
+-	    nested_svm_check_exception(svm, nr, has_error_code, error_code))
+-		return;
+-
+ 	kvm_deliver_exception_payload(&svm->vcpu);
+ 
+ 	if (nr == BP_VECTOR && !nrips) {
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 5cc559ab862d..8342032291fc 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -86,6 +86,7 @@ struct nested_state {
+ 	u64 hsave_msr;
+ 	u64 vm_cr_msr;
+ 	u64 vmcb;
++	u32 host_intercept_exceptions;
+ 
+ 	/* These are the merged vectors */
+ 	u32 *msrpm;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 192238841cac..e03543488d37 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1072,7 +1072,7 @@ static void kvm_update_dr0123(struct kvm_vcpu *vcpu)
+ 	}
+ }
+ 
+-static void kvm_update_dr7(struct kvm_vcpu *vcpu)
++void kvm_update_dr7(struct kvm_vcpu *vcpu)
+ {
+ 	unsigned long dr7;
+ 
+@@ -1085,6 +1085,7 @@ static void kvm_update_dr7(struct kvm_vcpu *vcpu)
+ 	if (dr7 & DR7_BP_EN_MASK)
+ 		vcpu->arch.switch_db_regs |= KVM_DEBUGREG_BP_ENABLED;
+ }
++EXPORT_SYMBOL_GPL(kvm_update_dr7);
+ 
+ static u64 kvm_dr6_fixed(struct kvm_vcpu *vcpu)
+ {
+@@ -7774,16 +7775,6 @@ static void inject_pending_event(struct kvm_vcpu *vcpu, bool *req_immediate_exit
+ 					     X86_EFLAGS_RF);
+ 
+ 		if (vcpu->arch.exception.nr == DB_VECTOR) {
+-			/*
+-			 * This code assumes that nSVM doesn't use
+-			 * check_nested_events(). If it does, the
+-			 * DR6/DR7 changes should happen before L1
+-			 * gets a #VMEXIT for an intercepted #DB in
+-			 * L2.  (Under VMX, on the other hand, the
+-			 * DR6/DR7 changes should not happen in the
+-			 * event of a VM-exit to L1 for an intercepted
+-			 * #DB in L2.)
+-			 */
+ 			kvm_deliver_exception_payload(vcpu);
+ 			if (vcpu->arch.dr7 & DR7_GD) {
+ 				vcpu->arch.dr7 &= ~DR7_GD;
 -- 
 2.26.2
 
