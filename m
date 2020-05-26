@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BABA9204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58A0204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbgEZNAB (ORCPT
+        id S2389340AbgEZNAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:00:01 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57316 "EHLO
+        Tue, 26 May 2020 09:00:13 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57302 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731776AbgEZM7k (ORCPT
+        with ESMTP id S1731765AbgEZM7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 08:59:40 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id D6081803086F;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 229A2803086E;
         Tue, 26 May 2020 12:59:36 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9Q_ERQDKo20T; Tue, 26 May 2020 15:59:35 +0300 (MSK)
+        with ESMTP id 6BwnblpFgAFz; Tue, 26 May 2020 15:59:35 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -34,14 +34,15 @@ To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 List-Id: <soc.lore.kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
         Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
         <soc@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 3/6] dt-bindings: memory: Add Baikal-T1 L2-cache Control Block binding
-Date:   Tue, 26 May 2020 15:59:25 +0300
-Message-ID: <20200526125928.17096-4-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 2/6] dt-bindings: bus: Add Baikal-T1 APB-bus binding
+Date:   Tue, 26 May 2020 15:59:24 +0300
+Message-ID: <20200526125928.17096-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,13 +54,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a single register provided by the SoC system controller,
-which can be used to tune the L2-cache RAM up. It only provides a way
-to change the L2-RAM access latencies. So aside from "be,bt1-l2-ctl"
-compatible string the device node can be optionally equipped with the
-properties of Tag/Data/WS latencies.
+Baikal-T1 CPU or DMAC MMIO requests are handled by the AMBA 3 AXI
+Interconnect which routes them to the AXI-APB bridge, which in turn
+serializes accesses and routes them to the corresponding APB slave device.
+This binding describes the AXI-APB bridge considered as the APB-bus. It is
+supposed to be compatible with "be,bt1-apb" and "simple-bus" drivers,
+should be equipped with EHB MMIO region and a region with no slave device
+mapped, interrupts line number, APB reference clock and domain reset line.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Olof Johansson <olof@lixom.net>
@@ -69,92 +73,116 @@ Cc: soc@kernel.org
 ---
 
 Changelog v2:
-- Move driver to the memory subsystem.
+- Move driver to the bus subsystem.
+- Don't use a multi-arg clock phandle reference in the examples dt-bindings
+  property. Thus redundant include statement can be removed.
 - Use dual GPL/BSD license.
 - Use single lined copyright header.
-- Move "allOf" restrictions to the root level of the properties.
-- Discard syscon compatible string and reg property.
-- The DT node is supposed to be a child of the Baikal-T1 system controller
-  node.
-
-Changelog v3:
-- Get the reg property back even though the driver is using the parental
-  syscon regmap.
-- The DT schema will live separately from the system controller, but the
-  corresponding sub-node of the later DT schema will $ref this one.
-- Set non-default latencies in the example.
+- Lowercase the unit-address.
+- Convert a dedicated EHB block binding to the Baikal-T1 APB-bus one.
+- Add APB reference clock and reset support.
+- Replace "additionalProperties: false" property with
+  "unevaluatedProperties: false".
+- Add reg-names property.
 ---
- .../memory-controllers/baikal,bt1-l2-ctl.yaml | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+ .../bindings/bus/baikal,bt1-apb.yaml          | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml b/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
 new file mode 100644
-index 000000000000..1fca282f64a2
+index 000000000000..d6a3b71ea835
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/baikal,bt1-l2-ctl.yaml
-@@ -0,0 +1,63 @@
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-apb.yaml
+@@ -0,0 +1,90 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/memory-controllers/baikal,bt1-l2-ctl.yaml#
++$id: http://devicetree.org/schemas/bus/baikal,bt1-apb.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Baikal-T1 L2-cache Control Block
++title: Baikal-T1 APB-bus
 +
 +maintainers:
 +  - Serge Semin <fancer.lancer@gmail.com>
 +
 +description: |
-+  By means of the System Controller Baikal-T1 SoC exposes a few settings to
-+  tune the MIPS P5600 CM2 L2 cache performance up. In particular it's possible
-+  to change the Tag, Data and Way-select RAM access latencies. Baikal-T1
-+  L2-cache controller block is responsible for the tuning. Its DT node is
-+  supposed to be a child of the system controller.
++  Baikal-T1 CPU or DMAC MMIO requests are handled by the AMBA 3 AXI Interconnect
++  which routes them to the AXI-APB bridge. This interface is a single master
++  multiple slaves bus in turn serializing IO accesses and routing them to the
++  addressed APB slave devices. In case of any APB protocol collisions, slave
++  device not responding on timeout an IRQ is raised with an erroneous address
++  reported to the APB terminator (APB Errors Handler Block).
++
++allOf:
++ - $ref: /schemas/simple-bus.yaml#
 +
 +properties:
 +  compatible:
-+    const: baikal,bt1-l2-ctl
++    contains:
++      const: baikal,bt1-apb
 +
 +  reg:
++    items:
++      - description: APB EHB MMIO registers
++      - description: APB MMIO region with no any device mapped
++
++  reg-names:
++    items:
++      - const: ehb
++      - const: nodev
++
++  interrupts:
 +    maxItems: 1
 +
-+  baikal,l2-ws-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Way-select RAM accesses
-+    default: 0
-+    minimum: 0
-+    maximum: 3
++  clocks:
++    items:
++      - description: APB reference clock
 +
-+  baikal,l2-tag-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Tag RAM accesses
-+    default: 0
-+    minimum: 0
-+    maximum: 3
++  clock-names:
++    items:
++      - const: pclk
 +
-+  baikal,l2-data-latency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Cycles of latency for Data RAM accesses
-+    default: 1
-+    minimum: 0
-+    maximum: 3
++  resets:
++    items:
++      - description: APB domain reset line
 +
-+additionalProperties: false
++  reset-names:
++    items:
++      - const: prst
++
++unevaluatedProperties: false
 +
 +required:
 +  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - clocks
++  - clock-names
 +
 +examples:
 +  - |
-+    l2@1f04d028 {
-+      compatible = "baikal,bt1-l2-ctl";
-+      reg = <0x1f04d028 0x004>;
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
 +
-+      baikal,l2-ws-latency = <1>;
-+      baikal,l2-tag-latency = <1>;
-+      baikal,l2-data-latency = <2>;
++    bus@1f059000 {
++      compatible = "baikal,bt1-apb", "simple-bus";
++      reg = <0 0x1f059000 0 0x1000>,
++            <0 0x1d000000 0 0x2040000>;
++      reg-names = "ehb", "nodev";
++      #address-cells = <1>;
++      #size-cells = <1>;
++
++      ranges;
++
++      interrupts = <GIC_SHARED 16 IRQ_TYPE_LEVEL_HIGH>;
++
++      clocks = <&ccu_sys 1>;
++      clock-names = "pclk";
++
++      resets = <&ccu_sys 1>;
++      reset-names = "prst";
 +    };
 +...
 -- 
