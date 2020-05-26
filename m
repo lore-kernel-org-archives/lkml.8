@@ -2,110 +2,104 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B8AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCC02073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:41:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lOW+HXgz"
+	by mail.kernel.org (Postfix) with ESMTP id 79DB620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbgEZKlN (ORCPT
+        id S1731959AbgEZKls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731859AbgEZKlL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:41:11 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A90EC03E97E;
-        Tue, 26 May 2020 03:41:11 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a25so12222493ljp.3;
-        Tue, 26 May 2020 03:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Ry+3smoc7mCp1uPcR5k/a7m1osHOU0G7CR8vXULZZQ=;
-        b=lOW+HXgzYB42cF/rhFtPrEV1DPp3z0Hcimy87m4EshA1FPzBMHRZg6ifPlxDGpwLaJ
-         t7NhZQD7jdSFRRWTIyGXaX4Btb+hsajfJrvgP9QoRe7M5a+jXAIkXcBIOVET15jEprXK
-         G94dJhAcGm88QDcosU8LybxInn1bd/YqidEIJR14HDh38uR5ntX/2G4oVZsCuoJI0S+o
-         KHsPbh3IgWU23MyKcZFTmovaqJ5PxxaqzbB9nRsPyW5kFTi0b4OtGvpQV+1i8hAjyqeK
-         0FyAdNRsuRZddDzsMTJ/Wo8zXD0RGt7SnppeeWspYbVceFkHJrF+89zayNmzIPXEuePH
-         +wIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Ry+3smoc7mCp1uPcR5k/a7m1osHOU0G7CR8vXULZZQ=;
-        b=NKTHa7gifOETxSdybcBq/yO8qOfT67ce8k45JM6BHb00OuvKeegKouNPtSJYBj+oxk
-         HRBDCA1wbf0DwdmqLkw2rmniwl4FXkwrXpEW213vzNrHqcMnxP9d0dqqafJ8hFUscBtH
-         3w1DrJYWspKRRmRVWXb9lEz3G4bGFapKGngcqFETe17UNH19EfGYgwq4/ALKkWMtiDwj
-         YTySFJFMgqtk86XtiZa+hbUEu68VslB5mlXryu8axrX18ouNo+YXtT/y5kB9OfG4d7mX
-         Fea7PV1HTWFoYSj6jlEz4MI2Z9gnQar0On/vB6E0Diu6VKnM+DyLEVxIJSy0EmFCzWy+
-         40Xg==
-X-Gm-Message-State: AOAM5317byTi+SW2AF8aJY9DlqHu5oEKW17kO8NFzBkp5oKVlHOI06to
-        4BBrYQLvcYYnT1GSrCtrZItB7/MzcEcLc4660JJ7Q1PK4LI=
-X-Google-Smtp-Source: ABdhPJyV5UNPT5wTZ5V1QRzvrkwK25GB+HGrijYwTV+7vkTwPuUSjO+tP4bYBkO+rleoRruyY3jfSDIh+hlPvjCFCSs=
-X-Received: by 2002:a2e:9087:: with SMTP id l7mr318222ljg.430.1590489669805;
- Tue, 26 May 2020 03:41:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590396812-31277-1-git-send-email-jrdr.linux@gmail.com> <20200526075904.GE282305@thinks.paulus.ozlabs.org>
-In-Reply-To: <20200526075904.GE282305@thinks.paulus.ozlabs.org>
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Tue, 26 May 2020 16:10:43 +0530
-Message-ID: <CAFqt6zbC4scJypctv-cWZYyq0TJb0OmB0Fq22-L54KVyoTTruw@mail.gmail.com>
-Subject: Re: [linux-next PATCH] mm/gup.c: Convert to use get_user_{page|pages}_fast_only()
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 26 May 2020 06:41:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:48908 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731882AbgEZKlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:41:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BE771FB;
+        Tue, 26 May 2020 03:41:46 -0700 (PDT)
+Received: from [192.168.1.84] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0C5E3F52E;
+        Tue, 26 May 2020 03:41:43 -0700 (PDT)
+Subject: Re: [PATCH 1/2] x86: mm: ptdump: Calculate effective permissions
+ correctly
+To:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, acme@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        jolsa@redhat.com, namhyung@kernel.org, pbonzini@redhat.com,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, msuchanek@suse.de,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        kvm@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Jan Beulich <jbeulich@suse.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200521152308.33096-1-steven.price@arm.com>
+ <20200521152308.33096-2-steven.price@arm.com>
+ <20200522180741.GB1337@Qians-MacBook-Air.local>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <430c8ab4-e7cd-6933-dde6-087fac6db872@arm.com>
+Date:   Tue, 26 May 2020 11:41:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <20200522180741.GB1337@Qians-MacBook-Air.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 1:29 PM Paul Mackerras <paulus@ozlabs.org> wrote:
->
-> On Mon, May 25, 2020 at 02:23:32PM +0530, Souptick Joarder wrote:
-> > API __get_user_pages_fast() renamed to get_user_pages_fast_only()
-> > to align with pin_user_pages_fast_only().
-> >
-> > As part of this we will get rid of write parameter.
-> > Instead caller will pass FOLL_WRITE to get_user_pages_fast_only().
-> > This will not change any existing functionality of the API.
-> >
-> > All the callers are changed to pass FOLL_WRITE.
-> >
-> > Also introduce get_user_page_fast_only(), and use it in a few
-> > places that hard-code nr_pages to 1.
-> >
-> > Updated the documentation of the API.
-> >
-> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
->
-> The arch/powerpc/kvm bits look reasonable.
->
-> Reviewed-by: Paul Mackerras <paulus@ozlabs.org>
+On 22/05/2020 19:07, Qian Cai wrote:
+> On Thu, May 21, 2020 at 04:23:07PM +0100, Steven Price wrote:
+>> --- a/arch/x86/mm/dump_pagetables.c
+>> +++ b/arch/x86/mm/dump_pagetables.c
+>> @@ -249,10 +249,22 @@ static void note_wx(struct pg_state *st, unsigned long addr)
+>> @@ -270,16 +282,10 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+>>   	struct seq_file *m = st->seq;
+>>   
+>>   	new_prot = val & PTE_FLAGS_MASK;
+>> +	new_eff = st->prot_levels[level];
+> 
+> This will trigger,
+> 
+> .config (if ever matters):
+> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+> 
+> [  104.532621] UBSAN: array-index-out-of-bounds in arch/x86/mm/dump_pagetables.c:284:27
+> [  104.542620] index -1 is out of range for type 'pgprotval_t [5]'
 
-Thanks Paul. This patch is merged through mm-tree.
-https://lore.kernel.org/kvm/1590396812-31277-1-git-send-email-jrdr.linux@gmail.com/
+Doh! In this case the result (new_eff) is never actually used: the -1 is 
+used just to flush the last proper entry out, so in this case val == 0 
+which means the following statement sets new_eff = 0. But obviously an 
+out-of-bounds access isn't great. Thanks for testing!
+
+The following patch should fix it up by making the assignment 
+conditional on val != 0.
+
+Andrew: Would you like me to resend, or can you squash in the below?
+
+Steve
+
+-----8<----
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index 17aa7ac94a34..ea9010113f69 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -282,10 +282,10 @@ static void note_page(struct ptdump_state *pt_st, 
+unsigned long addr, int level,
+  	struct seq_file *m = st->seq;
+
+  	new_prot = val & PTE_FLAGS_MASK;
+-	new_eff = st->prot_levels[level];
+-
+  	if (!val)
+  		new_eff = 0;
++	else
++		new_eff = st->prot_levels[level];
+
+  	/*
+  	 * If we have a "break" in the series, we need to flush the state that
