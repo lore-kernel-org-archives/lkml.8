@@ -2,113 +2,85 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B46D6208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:03:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFvZsvn7"
+	by mail.kernel.org (Postfix) with ESMTP id 45675206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391533AbgEZVDE (ORCPT
+        id S1728694AbgEZVEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391685AbgEZVCz (ORCPT
+        Tue, 26 May 2020 17:04:30 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34869 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726858AbgEZVEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:02:55 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65A9C061A0F;
-        Tue, 26 May 2020 14:02:54 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w10so26356654ljo.0;
-        Tue, 26 May 2020 14:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7szgAjSgR9Dxc5OfQmj2wG81qBzS351Y34fwZU3ACdg=;
-        b=JFvZsvn7M8wwKWkgMnNYUUu8Z0Gg+2qhBAFDcx5roPbQVVlFnODV9dTzIfF5bWyK8r
-         TDOozjhqYP6H+UKRo+M8XDNJAtFngmhEsUuaGPjkwKXrZS7dY9bf0Cky+YJwdumlfUwE
-         +vtuIOnPgCEkcIC3HJXCw/2TD44oK4Q1O4UWmi6Fwf/yDqsiNcZ00WIqYh4ZTDJ4mYgk
-         8tNLnPECaw85TSwLVfM9VzMz1B6XuL0Z8NxahS4E/hETV8LO+g6WKGlG4r0u7kj8qs59
-         OdrbbFcUR83zRxjnJqd/Xu7zbAbDS7sqFP6qFwJX2zd27KYP3oZuKz566Mz9ZLi7G/8f
-         +7wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7szgAjSgR9Dxc5OfQmj2wG81qBzS351Y34fwZU3ACdg=;
-        b=o4bNpQcp0mDRdcjUUlNw4NcR81ejYWUjt1utT4IOPpwIc6kMWtizoVjOicky85LGLv
-         mvBpRTnUmpZcqi5gN06n01qXJe17Gat9ePCcRygu62dS5z+Oyeqi9tSdWIaLp8FAeY/w
-         3w3Y9zttf17W0jK6ALW129vmhYIVkeFLLjTUhht6Vc93zx/bdMSpmtICj18CGX48gwmk
-         rNg9+eu9vZ8vvoDW7htP7QuMALYbmzyVgBla9L0m1SlvJ0J1rZbRMEUj1ysjncRyFEEb
-         pEC4oGE4uBFcCG1Vh6vYfvyduH+G9OGlyivVnpsv0edlCWKaNCTudRFoudlRiescRqBD
-         MrWw==
-X-Gm-Message-State: AOAM530Xae2s+Sa5/pV9gsZZV1kVHYkxSOJmJcrfJ5Xz6Kt/+7JbayUh
-        2CG1slIGbJNmPQ3I+qHUvpI=
-X-Google-Smtp-Source: ABdhPJy6iVIbUisUyaxZ7Wsy0lvp/WF590HWd4bc+DrD8zCO4JFD4s7lOdudWJ/TykwOpoXlaNWYqA==
-X-Received: by 2002:a2e:88d8:: with SMTP id a24mr1594053ljk.62.1590526973327;
-        Tue, 26 May 2020 14:02:53 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-22.NA.cust.bahnhof.se. [158.174.22.22])
-        by smtp.gmail.com with ESMTPSA id z133sm240443lfa.41.2020.05.26.14.02.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 14:02:52 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 6/6] iio: magnetometer: mmc35240: Constify struct reg_default
-Date:   Tue, 26 May 2020 23:02:23 +0200
-Message-Id: <20200526210223.1672-7-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526210223.1672-1-rikard.falkeborn@gmail.com>
-References: <20200526210223.1672-1-rikard.falkeborn@gmail.com>
+        Tue, 26 May 2020 17:04:30 -0400
+X-Originating-IP: 86.202.110.81
+Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 144C3FF805;
+        Tue, 26 May 2020 21:04:26 +0000 (UTC)
+Date:   Tue, 26 May 2020 23:04:26 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        allan.nielsen@microchip.com
+Subject: Re: [PATCH net-next 1/4] net: phy: mscc-miim: use more reasonable
+ delays
+Message-ID: <20200526210426.GG3972@piout.net>
+References: <20200526162256.466885-1-antoine.tenart@bootlin.com>
+ <20200526162256.466885-2-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200526162256.466885-2-antoine.tenart@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mmc35240_reg_defaults is not modified and can be made const to allow the
-compiler to put it in read-only memory.
+On 26/05/2020 18:22:53+0200, Antoine Ténart wrote:
+> The MSCC MIIM MDIO driver uses delays to read poll a status register. I
+> made multiple tests on a Ocelot PCS120 platform which led me to reduce
+> those delays. The delay in between which the polling function is allowed
+> to sleep is reduced from 100us to 50us which in almost all cases is a
+> good value to succeed at the first retry. The overall delay is also
+> lowered as the prior value was really way to high, 10000us is large
+> enough.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Before:
-   text    data     bss     dec     hex filename
-   9759    3288     128   13175    3377 drivers/iio/magnetometer/mmc35240.o
+> ---
+>  drivers/net/phy/mdio-mscc-miim.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/phy/mdio-mscc-miim.c b/drivers/net/phy/mdio-mscc-miim.c
+> index badbc99bedd3..0b7544f593fb 100644
+> --- a/drivers/net/phy/mdio-mscc-miim.c
+> +++ b/drivers/net/phy/mdio-mscc-miim.c
+> @@ -44,7 +44,7 @@ static int mscc_miim_wait_ready(struct mii_bus *bus)
+>  	u32 val;
+>  
+>  	readl_poll_timeout(miim->regs + MSCC_MIIM_REG_STATUS, val,
+> -			   !(val & MSCC_MIIM_STATUS_STAT_BUSY), 100, 250000);
+> +			   !(val & MSCC_MIIM_STATUS_STAT_BUSY), 50, 10000);
+>  	if (val & MSCC_MIIM_STATUS_STAT_BUSY)
+>  		return -ETIMEDOUT;
+>  
+> -- 
+> 2.26.2
+> 
 
-After:
-   text    data     bss     dec     hex filename
-   9823    3224     128   13175    3377 drivers/iio/magnetometer/mmc35240.o
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/iio/magnetometer/mmc35240.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iio/magnetometer/mmc35240.c b/drivers/iio/magnetometer/mmc35240.c
-index 1787d656d009..f27586716b5c 100644
---- a/drivers/iio/magnetometer/mmc35240.c
-+++ b/drivers/iio/magnetometer/mmc35240.c
-@@ -459,7 +459,7 @@ static bool mmc35240_is_volatile_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
--static struct reg_default mmc35240_reg_defaults[] = {
-+static const struct reg_default mmc35240_reg_defaults[] = {
- 	{ MMC35240_REG_CTRL0,  0x00 },
- 	{ MMC35240_REG_CTRL1,  0x00 },
- };
 -- 
-2.26.2
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
