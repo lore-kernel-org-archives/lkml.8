@@ -2,56 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AA8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABB8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA4092053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1CF620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520779;
-	bh=yZ5/rhEe7WUsvfHlT+m3Cv1QiRqZebAQm7LCIRuiu1g=;
+	s=default; t=1590520786;
+	bh=JnivCYcVOZ73WwbFWkQucbsHSKqUdGvKU95EX62tYBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+wQ3hoZ7VA/2fPN1BXks8kRcMMUFs+AuJb0v04eFlvN5EqQ5BHSqJV4xTS/DxLCJ
-	 k8iJkuiy20bANmoA63SJtccB97Ih0t8K6le8cG5yC5PemkbQgLe/c+JGlrRhECikTy
-	 /KVGLa/MhYZYQtePs1RnuTZkThhz0OxqeBHUeZE4=
+	b=LUDP8j/uYH3d/MUGANRNmabtIUQ2vgINZ0oUDl3hKW/3hRBpDUALLaRJUP5h0RRnc
+	 qqBh6uT9Dgelww6aq/IxqOmlekNoWy02J8M6xB59Rah8TsljnR7N2rfbNA64S+z2Nh
+	 AjQw5+rP7Ii/Ci/PriZnBuPf3SiuqV7Z9Qo5+6B8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392437AbgEZTTi (ORCPT
+        id S2392447AbgEZTTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:19:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391767AbgEZTNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:13:17 -0400
+        id S2391105AbgEZTNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55DDE20776;
-        Tue, 26 May 2020 19:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E2A208B3;
+        Tue, 26 May 2020 19:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520396;
-        bh=yZ5/rhEe7WUsvfHlT+m3Cv1QiRqZebAQm7LCIRuiu1g=;
+        s=default; t=1590520391;
+        bh=JnivCYcVOZ73WwbFWkQucbsHSKqUdGvKU95EX62tYBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmOM5XM5cG+aRiWudI4P4F98XHhKE8KbwmdeH+n4A9RdaBpy/+jo1J1ZQUfkwP9pK
-         Hon0KDV8lyELV77wOx0l3V5RNpcrBN8Bi6/bOqsfusYTN4JHfW0E4UPmqI42tByaq4
-         AZazhDeZpB1NyE+NedU+ba3XsvC52NWZZet5zst4=
+        b=V7qir3FY50EPyVp7/ezp5gJtoAMC3PwO8VDwgnVk16rwzP3QKk77iu6GEPd32Odt1
+         8N4/L5MyrfIjgE6EfMTSCZ6xdFXyLUDgzv0D4kY1/pATEWXh1GbAhyAxKEa8gdQCD6
+         sR71T1Xdgx+XsZCf3EA2Qi4BjFhjmaPcmORI/tzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.6 062/126] bpf: Restrict bpf_probe_read{, str}() only to archs where they work
-Date:   Tue, 26 May 2020 20:53:19 +0200
-Message-Id: <20200526183943.372135882@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 060/126] ALSA: hda/realtek - Enable headset mic of ASUS UX550GE with ALC295
+Date:   Tue, 26 May 2020 20:53:17 +0200
+Message-Id: <20200526183943.184664767@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -64,114 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 0ebeea8ca8a4d1d453ad299aef0507dab04f6e8d upstream.
+[ Upstream commit ad97d667854c2fbce05a004e107f358ef4b04cf6 ]
 
-Given the legacy bpf_probe_read{,str}() BPF helpers are broken on archs
-with overlapping address ranges, we should really take the next step to
-disable them from BPF use there.
+The ASUS laptop UX550GE with ALC295 can't detect the headset microphone
+until ALC295_FIXUP_ASUS_MIC_NO_PRESENCE quirk applied.
 
-To generally fix the situation, we've recently added new helper variants
-bpf_probe_read_{user,kernel}() and bpf_probe_read_{user,kernel}_str().
-For details on them, see 6ae08ae3dea2 ("bpf: Add probe_read_{user, kernel}
-and probe_read_{user,kernel}_str helpers").
-
-Given bpf_probe_read{,str}() have been around for ~5 years by now, there
-are plenty of users at least on x86 still relying on them today, so we
-cannot remove them entirely w/o breaking the BPF tracing ecosystem.
-
-However, their use should be restricted to archs with non-overlapping
-address ranges where they are working in their current form. Therefore,
-move this behind a CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE and
-have x86, arm64, arm select it (other archs supporting it can follow-up
-on it as well).
-
-For the remaining archs, they can workaround easily by relying on the
-feature probe from bpftool which spills out defines that can be used out
-of BPF C code to implement the drop-in replacement for old/new kernels
-via: bpftool feature probe macro
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Link: https://lore.kernel.org/bpf/20200515101118.6508-2-daniel@iogearbox.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Link: https://lore.kernel.org/r/20200512061525.133985-2-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig         |    1 +
- arch/arm64/Kconfig       |    1 +
- arch/x86/Kconfig         |    1 +
- init/Kconfig             |    3 +++
- kernel/trace/bpf_trace.c |    6 ++++--
- 5 files changed, 10 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -13,6 +13,7 @@ config ARM
- 	select ARCH_HAS_KEEPINITRD
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-+	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PTE_SPECIAL if ARM_LPAE
- 	select ARCH_HAS_PHYS_TO_DMA
- 	select ARCH_HAS_SETUP_DMA_OPS
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -21,6 +21,7 @@ config ARM64
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_KEEPINITRD
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-+	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PTE_DEVMAP
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_SETUP_DMA_OPS
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -70,6 +70,7 @@ config X86
- 	select ARCH_HAS_KCOV			if X86_64
- 	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_MEMBARRIER_SYNC_CORE
-+	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	select ARCH_HAS_PMEM_API		if X86_64
- 	select ARCH_HAS_PTE_DEVMAP		if X86_64
- 	select ARCH_HAS_PTE_SPECIAL
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -2223,6 +2223,9 @@ config ASN1
- 
- source "kernel/Kconfig.locks"
- 
-+config ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+	bool
-+
- config ARCH_HAS_SYNC_CORE_BEFORE_USERMODE
- 	bool
- 
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -857,14 +857,16 @@ tracing_func_proto(enum bpf_func_id func
- 		return &bpf_probe_read_user_proto;
- 	case BPF_FUNC_probe_read_kernel:
- 		return &bpf_probe_read_kernel_proto;
--	case BPF_FUNC_probe_read:
--		return &bpf_probe_read_compat_proto;
- 	case BPF_FUNC_probe_read_user_str:
- 		return &bpf_probe_read_user_str_proto;
- 	case BPF_FUNC_probe_read_kernel_str:
- 		return &bpf_probe_read_kernel_str_proto;
-+#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-+	case BPF_FUNC_probe_read:
-+		return &bpf_probe_read_compat_proto;
- 	case BPF_FUNC_probe_read_str:
- 		return &bpf_probe_read_compat_str_proto;
-+#endif
- #ifdef CONFIG_CGROUPS
- 	case BPF_FUNC_get_current_cgroup_id:
- 		return &bpf_get_current_cgroup_id_proto;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index f92cd420e98d..ece762d0c714 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8050,6 +8050,10 @@ static const struct snd_hda_pin_quirk alc269_pin_fixup_tbl[] = {
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
+ 		{0x21, 0x03211020}),
++	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
++		{0x12, 0x90a60120},
++		{0x17, 0x90170110},
++		{0x21, 0x04211030}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0295, 0x1043, "ASUS", ALC295_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 		{0x12, 0x90a60130},
+ 		{0x17, 0x90170110},
+-- 
+2.25.1
+
 
 
