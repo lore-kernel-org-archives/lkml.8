@@ -2,52 +2,58 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3576DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEA520776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D03420776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520611;
-	bh=dwPwdG0SK+kS1i7Rh+GeJcYZE0NSE+OYrDVqABO7+H4=;
+	s=default; t=1590520613;
+	bh=ArSUKznHQe9HVtC3B3Rux1wUN+mSMi63toyl8MmeAQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WAdeZ/QduoF57ZFp1Hxj/18DxFcBssS+MWb2NxI2h0cEkKgAD6tZvGh0LdBzjJwzT
-	 kH6WAnJrc/3n+DaoGOWksge6bxnqoutwCHHklRU1/Oa3Roj0BSKORHBbNJ8YmbpiWj
-	 oe3WLkalGbtwRodUgPE0XOGYWcX5S0WakeLTQ2qw=
+	b=SdYRYRcMlfG78XhE+QUVx9Z6lETIPXwILko285nwplOm5kB2wyi+HFS3ONqnNdF29
+	 qMA66kYK5xcdHTufEsPuv8GoYQsv6ubWQumsfTomMo5OGZhjaXwzxv/+lxtb+8UROd
+	 ZLN1M024k2oBLqI7wxWoAmOl71rqz3vMcfGUsfiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392303AbgEZTQu (ORCPT
+        id S2404358AbgEZTQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:16:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:16:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404393AbgEZTPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:21 -0400
+        id S2404493AbgEZTPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D72208B6;
-        Tue, 26 May 2020 19:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BE9D2053B;
+        Tue, 26 May 2020 19:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520520;
-        bh=dwPwdG0SK+kS1i7Rh+GeJcYZE0NSE+OYrDVqABO7+H4=;
+        s=default; t=1590520548;
+        bh=ArSUKznHQe9HVtC3B3Rux1wUN+mSMi63toyl8MmeAQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MUSmbcGbV2NXRP37B5eY8dtH9ODQShc8929s2EaroR5q5198bzMkO79L2duK/l1dr
-         F3m4fX2k8AnBWXQCzqEs2kdZDmjBmMmFM+DpSk+q/3E4VtVGnuHZXHCC+NBtqefvW7
-         zNpkuQmfPb75ucpFQToEcyIotdTZD4cf3RVRst24=
+        b=14ffgYTtZAem+sO+6iAtKObZBl7eZ5ClkLay/Xj13tGKkZSNbw6PuTQkflEoVATft
+         CDhTYCzCFl6jQSdTXXCG0czLf6pAlVkHS+gJtNeEocEMbD8VbcZX3Q+ka99+Pko0XX
+         b1mkHYQFrLN6tzlkYPiax/lKLSsESTEBEpypS+lU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 5.6 072/126] drm/etnaviv: fix perfmon domain interation
-Date:   Tue, 26 May 2020 20:53:29 +0200
-Message-Id: <20200526183944.293494261@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 124/126] sched/fair: Reorder enqueue/dequeue_task_fair path
+Date:   Tue, 26 May 2020 20:54:21 +0200
+Message-Id: <20200526183947.729115870@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -60,55 +66,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
 
-commit 40b697e256ccdb88aaff424b44b4d300eb8460e8 upstream.
+[ Upstream commit 6d4d22468dae3d8757af9f8b81b848a76ef4409d ]
 
-The GC860 has one GPU device which has a 2d and 3d core. In this case
-we want to expose perfmon information for both cores.
+The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+is split in 2 distinct parts for throttled cfs_rq without any added value
+but making code less readable.
 
-The driver has one array which contains all possible perfmon domains
-with some meta data - doms_meta. Here we can see that for the GC860
-two elements of that array are relevant:
+Change the code ordering such that everything related to a cfs_rq
+(throttled or not) will be done in the same loop.
 
-  doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
-  doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
+In addition, the same steps ordering is used when updating a cfs_rq:
 
-The userspace driver wants to get a list of all perfmon domains and
-their perfmon signals. This is done by iterating over all domains and
-their signals. If the userspace driver wants to access the domain with
-id 8 the kernel driver fails and returns invalid data from doms_3d with
-and invalid offset.
+ - update_load_avg
+ - update_cfs_group
+ - update *h_nr_running
 
-This results in:
-  Unable to handle kernel paging request at virtual address 00000000
+This reordering enables the use of h_nr_running in PELT algorithm.
 
-On such a device it is not possible to use the userspace driver at all.
+No functional and performance changes are expected and have been noticed
+during tests.
 
-The fix for this off-by-one error is quite simple.
-
-Reported-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Paul Cercueil <paul@crapouillou.net>
-Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: "Dietmar Eggemann <dietmar.eggemann@arm.com>"
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Phil Auld <pauld@redhat.com>
+Cc: Hillf Danton <hdanton@sina.com>
+Link: https://lore.kernel.org/r/20200224095223.13361-5-mgorman@techsingularity.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c | 42 ++++++++++++++++++++----------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
---- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
-@@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *p
- 		if (!(gpu->identity.features & meta->feature))
- 			continue;
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index c76a20648b72..a486bf3d5078 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5276,32 +5276,31 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		enqueue_entity(cfs_rq, se, flags);
  
--		if (meta->nr_domains < (index - offset)) {
-+		if (index - offset >= meta->nr_domains) {
- 			offset += meta->nr_domains;
- 			continue;
- 		}
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running increment below.
+-		 */
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running++;
+ 		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto enqueue_throttle;
++
+ 		flags = ENQUEUE_WAKEUP;
+ 	}
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running++;
+-		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto enqueue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running++;
++		cfs_rq->idle_h_nr_running += idle_h_nr_running;
+ 	}
+ 
++enqueue_throttle:
+ 	if (!se) {
+ 		add_nr_running(rq, 1);
+ 		/*
+@@ -5362,17 +5361,13 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		cfs_rq = cfs_rq_of(se);
+ 		dequeue_entity(cfs_rq, se, flags);
+ 
+-		/*
+-		 * end evaluation on encountering a throttled cfs_rq
+-		 *
+-		 * note: in the case of encountering a throttled cfs_rq we will
+-		 * post the final h_nr_running decrement below.
+-		*/
+-		if (cfs_rq_throttled(cfs_rq))
+-			break;
+ 		cfs_rq->h_nr_running--;
+ 		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
++		if (cfs_rq_throttled(cfs_rq))
++			goto dequeue_throttle;
++
+ 		/* Don't dequeue parent if it has other entities besides us */
+ 		if (cfs_rq->load.weight) {
+ 			/* Avoid re-evaluating load for this entity: */
+@@ -5390,16 +5385,19 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_nr_running--;
+-		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 
++		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+-			break;
++			goto dequeue_throttle;
+ 
+ 		update_load_avg(cfs_rq, se, UPDATE_TG);
+ 		update_cfs_group(se);
++
++		cfs_rq->h_nr_running--;
++		cfs_rq->idle_h_nr_running -= idle_h_nr_running;
+ 	}
+ 
++dequeue_throttle:
+ 	if (!se)
+ 		sub_nr_running(rq, 1);
+ 
+-- 
+2.25.1
+
 
 
