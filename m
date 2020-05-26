@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C800C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C642C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA8920849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EEB208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521044;
-	bh=VNNTZ+tHJRLYRmbvvddtQu3W8kD7fUtrchDsBp/rkY0=;
+	s=default; t=1590521046;
+	bh=ojTa6PyRzyTqOkqh7CqgyBIbIUw+O6XKOpmVdqSXPtY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7d0tGp4VlKoOXuUvgAdEKZZ/ufA0PSkedLWunS6pkp/PYPpj5tnVg7Hj72uujeJc
-	 yOiwiCUJ9C6BaaHEO8OTE3e5uxzal2QMFTWXMz9HvTMwWh9ocg1/YPgeOBcDNNc7Ev
-	 MdvndGrWvNfzLgIe7F9jAFjx5U4G0j0oFbaI60vU=
+	b=TMOQqvALP5dU6L26th1xZlG1wY9ahnvR9aDeabGPqjd3nUjcSaC6eRzpm6semKLwI
+	 Td7OGb4EuOobgDd0oO6LX/l0sA/63X3fcHqYebrENW9rYZKBbQXsevLdOMNCn793MJ
+	 SxqShBvjtnMSj4+xwi/HV8smcUPxkZ/of7WULGXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391317AbgEZTYD (ORCPT
+        id S2391786AbgEZTI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37420 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:08:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391402AbgEZTI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:08:28 -0400
+        id S2391772AbgEZTIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3516520873;
-        Tue, 26 May 2020 19:08:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2203720873;
+        Tue, 26 May 2020 19:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520107;
-        bh=VNNTZ+tHJRLYRmbvvddtQu3W8kD7fUtrchDsBp/rkY0=;
+        s=default; t=1590520096;
+        bh=ojTa6PyRzyTqOkqh7CqgyBIbIUw+O6XKOpmVdqSXPtY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YF27Pm1zSDXRUw0oq62F2iU+AaRNcN/4Mto4QclUQy9okSTpQagkGCAFk98ifnATr
-         WDPJW9xOecbdfQYhWjEjD+VdQ5eu75KTmI97oL61D2s7jtBnD7CPYfKIPGx1AdrRwH
-         8kDGCpX3Lo4peSFXctr4ziwBR9Pw1iwUZfL/L1GE=
+        b=CUw8/DYHQHdYiaolNJ7WBKtZRAj906aYgYQJX0W39sTpGVlTNV8eCXRn3PI6TzmkK
+         o5nTlAleCQu8rjGVdBx1gssOYv8LrnDUV3GdnIl+pfaTnPjTckAFtuFIUctd+D06IM
+         kDr1M0Zx8Lunc79Z5QLFb7L/MXqMQSC9KsDDRxpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 060/111] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
-Date:   Tue, 26 May 2020 20:53:18 +0200
-Message-Id: <20200526183938.536401093@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Babu Moger <babu.moger@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 057/111] KVM: x86: Fix pkru save/restore when guest CR4.PKE=0, move it to x86.c
+Date:   Tue, 26 May 2020 20:53:15 +0200
+Message-Id: <20200526183938.252763486@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,34 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Lachner <gladiac@gmail.com>
+From: Babu Moger <babu.moger@amd.com>
 
-commit d9e8fe0cffbfdd18de96fa68ee2a8b667a0b046e upstream.
+commit 37486135d3a7b03acc7755b63627a130437f066a upstream.
 
-The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
-requires a similar workaround for Clevo laptops to enforce the
-DAC/mixer connection path. Set up a quirk entry for that.
+Though rdpkru and wrpkru are contingent upon CR4.PKE, the PKRU
+resource isn't. It can be read with XSAVE and written with XRSTOR.
+So, if we don't set the guest PKRU value here(kvm_load_guest_xsave_state),
+the guest can read the host value.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
-Signed-off-by: Christian Lachner <gladiac@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200518053844.42743-2-gladiac@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+In case of kvm_load_host_xsave_state, guest with CR4.PKE clear could
+potentially use XRSTOR to change the host PKRU value.
+
+While at it, move pkru state save/restore to common code and the
+host_pkru field to kvm_vcpu_arch.  This will let SVM support protection keys.
+
+Cc: stable@vger.kernel.org
+Reported-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+Message-Id: <158932794619.44260.14508381096663848853.stgit@naples-babu.amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/include/asm/kvm_host.h |    1 +
+ arch/x86/kvm/vmx/vmx.c          |   18 ------------------
+ arch/x86/kvm/x86.c              |   17 +++++++++++++++++
+ 3 files changed, 18 insertions(+), 18 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2457,6 +2457,7 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -550,6 +550,7 @@ struct kvm_vcpu_arch {
+ 	unsigned long cr4;
+ 	unsigned long cr4_guest_owned_bits;
+ 	unsigned long cr8;
++	u32 host_pkru;
+ 	u32 pkru;
+ 	u32 hflags;
+ 	u64 efer;
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1360,7 +1360,6 @@ void vmx_vcpu_load(struct kvm_vcpu *vcpu
+ 
+ 	vmx_vcpu_pi_load(vcpu, cpu);
+ 
+-	vmx->host_pkru = read_pkru();
+ 	vmx->host_debugctlmsr = get_debugctlmsr();
+ }
+ 
+@@ -6521,11 +6520,6 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 
+ 	kvm_load_guest_xcr0(vcpu);
+ 
+-	if (static_cpu_has(X86_FEATURE_PKU) &&
+-	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
+-	    vcpu->arch.pkru != vmx->host_pkru)
+-		__write_pkru(vcpu->arch.pkru);
+-
+ 	pt_guest_enter(vmx);
+ 
+ 	atomic_switch_perf_msrs(vmx);
+@@ -6614,18 +6608,6 @@ static void vmx_vcpu_run(struct kvm_vcpu
+ 
+ 	pt_guest_exit(vmx);
+ 
+-	/*
+-	 * eager fpu is enabled if PKEY is supported and CR4 is switched
+-	 * back on host, so it is safe to read guest PKRU from current
+-	 * XSAVE.
+-	 */
+-	if (static_cpu_has(X86_FEATURE_PKU) &&
+-	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE)) {
+-		vcpu->arch.pkru = rdpkru();
+-		if (vcpu->arch.pkru != vmx->host_pkru)
+-			__write_pkru(vmx->host_pkru);
+-	}
+-
+ 	kvm_put_guest_xcr0(vcpu);
+ 
+ 	vmx->nested.nested_run_pending = 0;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -832,11 +832,25 @@ void kvm_load_guest_xcr0(struct kvm_vcpu
+ 			xsetbv(XCR_XFEATURE_ENABLED_MASK, vcpu->arch.xcr0);
+ 		vcpu->guest_xcr0_loaded = 1;
+ 	}
++
++	if (static_cpu_has(X86_FEATURE_PKU) &&
++	    (kvm_read_cr4_bits(vcpu, X86_CR4_PKE) ||
++	     (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU)) &&
++	    vcpu->arch.pkru != vcpu->arch.host_pkru)
++		__write_pkru(vcpu->arch.pkru);
+ }
+ EXPORT_SYMBOL_GPL(kvm_load_guest_xcr0);
+ 
+ void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
+ {
++	if (static_cpu_has(X86_FEATURE_PKU) &&
++	    (kvm_read_cr4_bits(vcpu, X86_CR4_PKE) ||
++	     (vcpu->arch.xcr0 & XFEATURE_MASK_PKRU))) {
++		vcpu->arch.pkru = rdpkru();
++		if (vcpu->arch.pkru != vcpu->arch.host_pkru)
++			__write_pkru(vcpu->arch.host_pkru);
++	}
++
+ 	if (vcpu->guest_xcr0_loaded) {
+ 		if (vcpu->arch.xcr0 != host_xcr0)
+ 			xsetbv(XCR_XFEATURE_ENABLED_MASK, host_xcr0);
+@@ -8222,6 +8236,9 @@ static int vcpu_enter_guest(struct kvm_v
+ 	trace_kvm_entry(vcpu->vcpu_id);
+ 	guest_enter_irqoff();
+ 
++	/* Save host pkru register if supported */
++	vcpu->arch.host_pkru = read_pkru();
++
+ 	fpregs_assert_state_consistent();
+ 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+ 		switch_fpu_return();
 
 
