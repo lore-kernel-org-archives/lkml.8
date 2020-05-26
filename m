@@ -2,108 +2,86 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F10C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6490CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61FAF2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30A8C204EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:46:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZkEgKRfr"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="B1BB2ASr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389755AbgEZTpU (ORCPT
+        id S2389929AbgEZTqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:45:20 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9690 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389360AbgEZTpU (ORCPT
+        Tue, 26 May 2020 15:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389798AbgEZTqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:45:20 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecd717c0000>; Tue, 26 May 2020 12:43:56 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 26 May 2020 12:45:19 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 12:45:19 -0700
-Received: from [10.2.50.17] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 19:45:18 +0000
-Subject: Re: [PATCH 1/1] vfio/spapr_tce: convert get_user_pages() -->
- pin_user_pages()
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, <kvm@vger.kernel.org>
-References: <20200523014347.193290-1-jhubbard@nvidia.com>
- <CAFqt6zYmYQ93jbKNAjDpiH7exjyGv8E-2xHW++yV5CiYMyL5ew@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <40a4e26f-b89b-a3db-6936-f94b9bb4fc9d@nvidia.com>
-Date:   Tue, 26 May 2020 12:45:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 26 May 2020 15:46:33 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A9AC03E96D;
+        Tue, 26 May 2020 12:46:32 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0f9100c45766fca55d94fe.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:9100:c457:66fc:a55d:94fe])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2E2FC1EC0300;
+        Tue, 26 May 2020 21:46:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1590522391;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=UwvATQ6Di/6WhS3s7DR0p6YEsaemqMGEuZEXjR9YHqY=;
+        b=B1BB2ASrXS7lkgOCqmceLfGIj7A6UX84rUjvPGTBq+TqA+asHph26yRdF97LOjIO8mlvF+
+        bbys0sk/9zitA+DMuhKC3Yx+u40czSS56uabln/dxffytiuJqkqusv9Lov4wsVFPumgCW8
+        PjEXorTr+ILNIP7ysTrqhyQHlbhdkdQ=
+Date:   Tue, 26 May 2020 21:46:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jue Wang <juew@google.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        x86 <x86@kernel.org>
+Subject: Re: [tip: ras/core] x86/{mce,mm}: Change so poison pages are either
+ unmapped or marked uncacheable
+Message-ID: <20200526194624.GG28228@zn.tnic>
+References: <159040440370.17951.17560303737298768113.tip-bot2@tip-bot2>
+ <20200525204010.GB25598@zn.tnic>
+ <3908561D78D1C84285E8C5FCA982C28F7F64615F@ORSMSX115.amr.corp.intel.com>
+ <CAPcxDJ5arJojbY4pzOvYh=waSPd3X_JJb1_PSuzd+jQ0qbvFsA@mail.gmail.com>
+ <CAPcxDJ54EgX-SaDV=Lm+a2-43O68LhomyYfYdCDz38HGJCkh7g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAFqt6zYmYQ93jbKNAjDpiH7exjyGv8E-2xHW++yV5CiYMyL5ew@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590522236; bh=/XnNrvzb9RLbuq2lH//zFeUnFIDYaIiAnPILKTFB44A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZkEgKRfrAfi9lRHILxBG7yG6OSKh6fkLuxThz66yrmzGY/6rYE2zNqc4TBJJtIwdz
-         lghpnqH4YUsDN/NppuiFUu5Rgqo+2z8ZY/0gOSDjnwFPrMmGtdVgzAgRCsDk/58Y5q
-         LdkVddbL8/CIz47hUA3EWTqnrdiwZOhfys7ris0SpU3jP21kg0ckJY34mOhoER+jP8
-         nlI0NxtieLK3p9p1Q1p7R+XlHR1Ux6wFyCIb8KpSEygIJYyg9PJKGNzu4RCNtrU5kj
-         RnmV5uOG5VnTn9c2I79MRJfAg1g8eSdoONeVfapKgB9gfLt1LjkfjqmQOk1Mu8U+MG
-         I14CdS/mnKs9Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPcxDJ54EgX-SaDV=Lm+a2-43O68LhomyYfYdCDz38HGJCkh7g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-26 12:28, Souptick Joarder wrote:
->> @@ -486,7 +486,7 @@ static int tce_iommu_use_page(unsigned long tce, unsigned long *hpa)
->>          struct page *page = NULL;
->>          enum dma_data_direction direction = iommu_tce_direction(tce);
->>
->> -       if (get_user_pages_fast(tce & PAGE_MASK, 1,
->> +       if (pin_user_pages_fast(tce & PAGE_MASK, 1,
->>                          direction != DMA_TO_DEVICE ? FOLL_WRITE : 0,
->>                          &page) != 1)
->>                  return -EFAULT;
+On Tue, May 26, 2020 at 11:44:18AM -0700, Jue Wang wrote:
+> On Tue, May 26, 2020 at 11:03 AM Jue Wang <juew@google.com> wrote:
 > 
-> There are few places where nr_pages is passed as 1 to get_user_pages_fast().
-> With similar conversion those will be changed to pin_user_pages_fast().
-> 
-> Does it make sense to add an inline like - pin_user_page_fast(), similar to
-> get_user_page_fast_only() ( now merged in linux-next) ?
-> 
+> > I tried to test this but my guest image build setup was not able to build
+> > from kernel/git/bp/bp.git tip-ras-core branch. It appeared there was some
+> > bindeb-pkg issue.
+> >
+> The bindeb-pkg issue is resolved and I tested the following branch in KVM
+> guest and the injected MCE is recovered.
+> https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=tip-ras-core
 
-Perhaps not *just* yet, IMHO. There are only two places so far: here, and
-dax_lock_page(). And we don't expect that many places, either, because
-pin_user_pages*(), unlike get_user_pages(), is more likely to operate on
-a bunch of pages at once. Although, that could change if we look into the
-remaining call sites and find more single-page cases that need a gup-to-pup
-conversion.
+Thanks to both of you!
 
-get_user_pages*() has a few more situations (Case 4, in
-Documentation/core-api/pin_user_pages.rst: struct page manipulation) in
-which it operates on single pages. Those will remain get_user_pages*()
-calls, or perhaps change to get_user_page().
-
-
-thanks,
 -- 
-John Hubbard
-NVIDIA
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
