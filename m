@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49423C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA72C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 269F120B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B6020B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520375;
-	bh=vXYk7JUvoeakSGmPKmqeDoVsAFE/QUqU1NhtnvOHL0I=;
+	s=default; t=1590520378;
+	bh=jfyz9oqs6eHVNMoOj+ndiLbYCz73HTyt7i3ncvxZRBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EpzrJ8phq3HL/TCibIlFCflTMuUDb7aMEnFh/pxu/oP1eBAF9i4wwAYOb8c/pj2wM
-	 B1A5T672esKVDxt1+SShAngiQKnH9yc0LO/USwR2OYCHxLtVlDz6DNzJYfZz251RsS
-	 74uPSgqGtcUtBxwSgnjiElknrOFikUoq0L+gBZ6A=
+	b=rVYA2hCDPsBlAp7X424zoKSKCuUokJUIL5CbAMIIcCBFlrnxqCm598s3VM8boOP9L
+	 tSQIOXAOT0rVQ9qgE53dFYHZ91szEUoL1vz/uO2Q5OWHfwQjxxhaRm39zk1/0gxNWS
+	 QQ0zqPerEtO8VBXwgaDnOX8C4tS9DxV8LvEUGryI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404147AbgEZTMy (ORCPT
+        id S2404171AbgEZTM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42476 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392126AbgEZTMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:50 -0400
+        id S2392133AbgEZTMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D37C20C56;
-        Tue, 26 May 2020 19:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3B62208A7;
+        Tue, 26 May 2020 19:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520369;
-        bh=vXYk7JUvoeakSGmPKmqeDoVsAFE/QUqU1NhtnvOHL0I=;
+        s=default; t=1590520372;
+        bh=jfyz9oqs6eHVNMoOj+ndiLbYCz73HTyt7i3ncvxZRBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WGtk8f0Ybhmygo7L3lFaO08K0az6Wg8sHG4uX53EnGpoG9CGBcYWgNDzAl4inLYSR
-         Y9/ahYPkV3waY0cqqsbHFy4vk3KppeYVRJzdRON7Zh1iRhLbMoMGvLTMQPWck0o0i3
-         v/U2Ja3r41U+MgKXdAaesBHaFoDKAVM/+kVoEggU=
+        b=K8knQnHPPlx91aTgGBYuTouyZFgMwA44QQTBMceAWCeVA9CJEBgWtNrPHvWp5f1h3
+         rAM/qa8SZ7RtZhTrzY31kK6i3JtMpDSYXcZoq8RqKd9N47EDSuSQKDWi9qci6u/qhs
+         sZJyTAM3Q32L14/mps3M5DqURDEWDO+cWgUhR7hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 052/126] KVM: selftests: Fix build for evmcs.h
-Date:   Tue, 26 May 2020 20:53:09 +0200
-Message-Id: <20200526183942.429523625@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Fabian Schindlatz <fabian.schindlatz@fau.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 026/126] HID: logitech: Add support for Logitech G11 extra keys
+Date:   Tue, 26 May 2020 20:52:43 +0200
+Message-Id: <20200526183939.926776792@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,58 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Fabian Schindlatz <fabian.schindlatz@fau.de>
 
-[ Upstream commit 8ffdaf9155ebe517cdec5edbcca19ba6e7ee9c3c ]
+[ Upstream commit b1bd0f75288f60e8d142a1b3e979ed0192c04931 ]
 
-I got this error when building kvm selftests:
+The Logitech G11 keyboard is a cheap variant of the G15 without the LCD
+screen. It uses the same layout for its extra and macro keys (G1 - G18,
+M1-M3, MR) and - from the input subsystem's perspective - behaves just
+like the G15, so we can treat it as such.
 
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: multiple definition of `current_evmcs'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:222: first defined here
-/usr/bin/ld: /home/xz/git/linux/tools/testing/selftests/kvm/libkvm.a(vmx.o):/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: multiple definition of `current_vp_assist'; /tmp/cco1G48P.o:/home/xz/git/linux/tools/testing/selftests/kvm/include/evmcs.h:223: first defined here
+Tested it with my own keyboard.
 
-I think it's because evmcs.h is included both in a test file and a lib file so
-the structs have multiple declarations when linking.  After all it's not a good
-habit to declare structs in the header files.
-
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Message-Id: <20200504220607.99627-1-peterx@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Fabian Schindlatz <fabian.schindlatz@fau.de>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/include/evmcs.h  | 4 ++--
- tools/testing/selftests/kvm/lib/x86_64/vmx.c | 3 +++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-lg-g15.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/include/evmcs.h b/tools/testing/selftests/kvm/include/evmcs.h
-index 4912d23844bc..e31ac9c5ead0 100644
---- a/tools/testing/selftests/kvm/include/evmcs.h
-+++ b/tools/testing/selftests/kvm/include/evmcs.h
-@@ -217,8 +217,8 @@ struct hv_enlightened_vmcs {
- #define HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_MASK	\
- 		(~((1ull << HV_X64_MSR_VP_ASSIST_PAGE_ADDRESS_SHIFT) - 1))
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 309510a72c5e..40697af0ca35 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -756,6 +756,7 @@
+ #define USB_DEVICE_ID_LOGITECH_RUMBLEPAD2	0xc218
+ #define USB_DEVICE_ID_LOGITECH_RUMBLEPAD2_2	0xc219
+ #define USB_DEVICE_ID_LOGITECH_G15_LCD		0xc222
++#define USB_DEVICE_ID_LOGITECH_G11		0xc225
+ #define USB_DEVICE_ID_LOGITECH_G15_V2_LCD	0xc227
+ #define USB_DEVICE_ID_LOGITECH_G510		0xc22d
+ #define USB_DEVICE_ID_LOGITECH_G510_USB_AUDIO	0xc22e
+diff --git a/drivers/hid/hid-lg-g15.c b/drivers/hid/hid-lg-g15.c
+index ad4b5412a9f4..ef0cbcd7540d 100644
+--- a/drivers/hid/hid-lg-g15.c
++++ b/drivers/hid/hid-lg-g15.c
+@@ -872,6 +872,10 @@ error_hw_stop:
+ }
  
--struct hv_enlightened_vmcs *current_evmcs;
--struct hv_vp_assist_page *current_vp_assist;
-+extern struct hv_enlightened_vmcs *current_evmcs;
-+extern struct hv_vp_assist_page *current_vp_assist;
- 
- int vcpu_enable_evmcs(struct kvm_vm *vm, int vcpu_id);
- 
-diff --git a/tools/testing/selftests/kvm/lib/x86_64/vmx.c b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-index 7aaa99ca4dbc..ce528f3cf093 100644
---- a/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-+++ b/tools/testing/selftests/kvm/lib/x86_64/vmx.c
-@@ -17,6 +17,9 @@
- 
- bool enable_evmcs;
- 
-+struct hv_enlightened_vmcs *current_evmcs;
-+struct hv_vp_assist_page *current_vp_assist;
-+
- struct eptPageTableEntry {
- 	uint64_t readable:1;
- 	uint64_t writable:1;
+ static const struct hid_device_id lg_g15_devices[] = {
++	/* The G11 is a G15 without the LCD, treat it as a G15 */
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
++		USB_DEVICE_ID_LOGITECH_G11),
++		.driver_data = LG_G15 },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+ 			 USB_DEVICE_ID_LOGITECH_G15_LCD),
+ 		.driver_data = LG_G15 },
 -- 
 2.25.1
 
