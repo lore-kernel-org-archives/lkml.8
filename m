@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4172C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14784C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C6520721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AA820776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521386;
-	bh=dZoW31aCil0B4MqJw6tHjj0+8uX4noOs8FInupAnexQ=;
+	s=default; t=1590521390;
+	bh=8E0sLew2Jr0zphB0VSQglmqOBcvFzFjkzDJzRHNfIl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ce6UGWTsDieuJSDjPLOju9wzVYO2FTrOVw90ZQ9uF6+hg2YbHWZ4/SgWj+GxWCrpV
-	 R9BN5Aw4X4nwaXWa45h3R4vBMJlE/ln+9BPMANxoBjt4Gam9WwvXM7FoW/x4HG5yrT
-	 Wy2WauPOIx6ew8kZVvGdZgWIFxPKbq7879FxfJn0=
+	b=lHqpnYCyaXCbK/sMiIA6e9mKdHQlxmYIuIbIpAgnwoi/KpTd449nOgu0VFrp70M7Y
+	 Qb3414rJYEyD3f4shk2URXCkeo6t589iu14Gbl/dRqJJ+lM31jpJEnqglkZF7UtDqy
+	 Nw/0efMFJBlKr8ltVy/Yvzs4SiEB86265uLOv800=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390874AbgEZTBJ (ORCPT
+        id S2403921AbgEZT3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55260 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390198AbgEZTBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:02 -0400
+        id S2390211AbgEZTBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 733AD2086A;
-        Tue, 26 May 2020 19:01:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AA9D2086A;
+        Tue, 26 May 2020 19:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519661;
-        bh=dZoW31aCil0B4MqJw6tHjj0+8uX4noOs8FInupAnexQ=;
+        s=default; t=1590519666;
+        bh=8E0sLew2Jr0zphB0VSQglmqOBcvFzFjkzDJzRHNfIl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+iSxQvFpcV6xjDKyzkS85qnhbqW+5Hb1Kew19jAaP9u9Ra6RDwh99A2DCvrl+YbE
-         OsmonUPmTvDYRezpacBUtnzeeUDPfc1X+itsf/h+r8scCh6sTDFhT57KR3PlKPwd5P
-         /CEAG9Xdb/fwsPg9wNhVwjLdNe2mlgk8vFlwrv2Q=
+        b=ezpIp8Re3jvEOuDG3I0krEUOJdZRzZe5IBKh9jGyAst55Y/LPYMeE9ETmovfb6wqF
+         SuloPuCzrw/KjuqJhAhZJbYrCWXTo3Ft6t5nNBWZKMpXiFljGDECGuvw7gFbHIL168
+         jxeo6IELUIfKqOXDlp+/qU0+vZrVoJ+t319wddQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/59] padata: set cpu_index of unused CPUs to -1
-Date:   Tue, 26 May 2020 20:53:11 +0200
-Message-Id: <20200526183916.899810226@linuxfoundation.org>
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.14 04/59] padata: ensure the reorder timer callback runs on the correct CPU
+Date:   Tue, 26 May 2020 20:52:49 +0200
+Message-Id: <20200526183908.427562948@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -63,48 +62,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mathias Krause <minipli@googlemail.com>
 
-[ Upstream commit 1bd845bcb41d5b7f83745e0cb99273eb376f2ec5 ]
+commit cf5868c8a22dc2854b96e9569064bb92365549ca upstream.
 
-The parallel queue per-cpu data structure gets initialized only for CPUs
-in the 'pcpu' CPU mask set. This is not sufficient as the reorder timer
-may run on a different CPU and might wrongly decide it's the target CPU
-for the next reorder item as per-cpu memory gets memset(0) and we might
-be waiting for the first CPU in cpumask.pcpu, i.e. cpu_index 0.
+The reorder timer function runs on the CPU where the timer interrupt was
+handled which is not necessarily one of the CPUs of the 'pcpu' CPU mask
+set.
 
-Make the '__this_cpu_read(pd->pqueue->cpu_index) == next_queue->cpu_index'
-compare in padata_get_next() fail in this case by initializing the
-cpu_index member of all per-cpu parallel queues. Use -1 for unused ones.
+Ensure the padata_reorder() callback runs on the correct CPU, which is
+one in the 'pcpu' CPU mask set and, preferrably, the next expected one.
+Do so by comparing the current CPU with the expected target CPU. If they
+match, call padata_reorder() right away. If they differ, schedule a work
+item on the target CPU that does the padata_reorder() call for us.
 
 Signed-off-by: Mathias Krause <minipli@googlemail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/padata.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 40a0ebb8ea51..858e82179744 100644
+---
+ include/linux/padata.h |    2 ++
+ kernel/padata.c        |   43 ++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -85,6 +85,7 @@ struct padata_serial_queue {
+  * @swork: work struct for serialization.
+  * @pd: Backpointer to the internal control structure.
+  * @work: work struct for parallelization.
++ * @reorder_work: work struct for reordering.
+  * @num_obj: Number of objects that are processed by this cpu.
+  * @cpu_index: Index of the cpu.
+  */
+@@ -93,6 +94,7 @@ struct padata_parallel_queue {
+        struct padata_list    reorder;
+        struct parallel_data *pd;
+        struct work_struct    work;
++       struct work_struct    reorder_work;
+        atomic_t              num_obj;
+        int                   cpu_index;
+ };
 --- a/kernel/padata.c
 +++ b/kernel/padata.c
-@@ -462,8 +462,14 @@ static void padata_init_pqueues(struct parallel_data *pd)
- 	struct padata_parallel_queue *pqueue;
+@@ -282,11 +282,51 @@ static void padata_reorder(struct parall
+ 	return;
+ }
  
- 	cpu_index = 0;
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
-+	for_each_possible_cpu(cpu) {
- 		pqueue = per_cpu_ptr(pd->pqueue, cpu);
++static void invoke_padata_reorder(struct work_struct *work)
++{
++	struct padata_parallel_queue *pqueue;
++	struct parallel_data *pd;
 +
-+		if (!cpumask_test_cpu(cpu, pd->cpumask.pcpu)) {
-+			pqueue->cpu_index = -1;
-+			continue;
-+		}
++	local_bh_disable();
++	pqueue = container_of(work, struct padata_parallel_queue, reorder_work);
++	pd = pqueue->pd;
++	padata_reorder(pd);
++	local_bh_enable();
++}
 +
- 		pqueue->pd = pd;
- 		pqueue->cpu_index = cpu_index;
- 		cpu_index++;
--- 
-2.25.1
-
+ static void padata_reorder_timer(unsigned long arg)
+ {
+ 	struct parallel_data *pd = (struct parallel_data *)arg;
++	unsigned int weight;
++	int target_cpu, cpu;
+ 
+-	padata_reorder(pd);
++	cpu = get_cpu();
++
++	/* We don't lock pd here to not interfere with parallel processing
++	 * padata_reorder() calls on other CPUs. We just need any CPU out of
++	 * the cpumask.pcpu set. It would be nice if it's the right one but
++	 * it doesn't matter if we're off to the next one by using an outdated
++	 * pd->processed value.
++	 */
++	weight = cpumask_weight(pd->cpumask.pcpu);
++	target_cpu = padata_index_to_cpu(pd, pd->processed % weight);
++
++	/* ensure to call the reorder callback on the correct CPU */
++	if (cpu != target_cpu) {
++		struct padata_parallel_queue *pqueue;
++		struct padata_instance *pinst;
++
++		/* The timer function is serialized wrt itself -- no locking
++		 * needed.
++		 */
++		pinst = pd->pinst;
++		pqueue = per_cpu_ptr(pd->pqueue, target_cpu);
++		queue_work_on(target_cpu, pinst->wq, &pqueue->reorder_work);
++	} else {
++		padata_reorder(pd);
++	}
++
++	put_cpu();
+ }
+ 
+ static void padata_serial_worker(struct work_struct *serial_work)
+@@ -413,6 +453,7 @@ static void padata_init_pqueues(struct p
+ 		__padata_list_init(&pqueue->reorder);
+ 		__padata_list_init(&pqueue->parallel);
+ 		INIT_WORK(&pqueue->work, padata_parallel_worker);
++		INIT_WORK(&pqueue->reorder_work, invoke_padata_reorder);
+ 		atomic_set(&pqueue->num_obj, 0);
+ 	}
+ }
 
 
