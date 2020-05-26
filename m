@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3262C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6075C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B11E52084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845752068D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389173AbgEZNlc (ORCPT
+        id S2389143AbgEZNla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:41:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:51050 "EHLO foss.arm.com"
+        Tue, 26 May 2020 09:41:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:51064 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389022AbgEZNl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:41:26 -0400
+        id S2388963AbgEZNl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 09:41:29 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BAB5F1FB;
-        Tue, 26 May 2020 06:41:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27E1E55D;
+        Tue, 26 May 2020 06:41:28 -0700 (PDT)
 Received: from melchizedek.cambridge.arm.com (melchizedek.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4691B3F6C4;
-        Tue, 26 May 2020 06:41:24 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5F673F6C4;
+        Tue, 26 May 2020 06:41:26 -0700 (PDT)
 From:   James Morse <james.morse@arm.com>
 To:     x86@kernel.org, linux-kernel@vger.kernel.org
 Cc:     Fenghua Yu <fenghua.yu@intel.com>,
@@ -34,9 +34,9 @@ Cc:     Fenghua Yu <fenghua.yu@intel.com>,
         H Peter Anvin <hpa@zytor.com>,
         Babu Moger <Babu.Moger@amd.com>,
         James Morse <james.morse@arm.com>
-Subject: [PATCH v4 08/10] x86/resctrl: Merge AMD/Intel parse_bw() calls
-Date:   Tue, 26 May 2020 14:40:57 +0100
-Message-Id: <20200526134059.1690-9-james.morse@arm.com>
+Subject: [PATCH v4 09/10] x86/resctrl: Add arch_has_{sparse,empty}_bitmaps to explain CAT differences
+Date:   Tue, 26 May 2020 14:40:58 +0100
+Message-Id: <20200526134059.1690-10-james.morse@arm.com>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20200526134059.1690-1-james.morse@arm.com>
 References: <20200526134059.1690-1-james.morse@arm.com>
@@ -47,145 +47,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we've explained arch_needs_linear to resctrl, the parse_bw()
-calls are almost the same between AMD and Intel.
+Intel CPUs expect the cache bitmap provided by user-space to have on
+a single span of 1s, whereas AMD can support bitmaps like 0xf00f.
+Arm's MPAM support also allows sparse bitmaps.
 
-The difference is '!is_mba_sc()', which is not checked on AMD. This
-will always be true on AMD CPUs as mba_sc cannot be enabled as
-is_mba_linear() is false.
+Similarly, Intel CPUs check at least one bit set, whereas AMD CPUs
+are quite happy with an empty bitmap. Arm's MPAM allows an empty
+bitmap.
 
-Removing this duplication means user-space visible behaviour and
-error messages are not validated or generated in different places.
+To move resctrl out to /fs/ we need to explain platform differences
+like this. Add two resource properties arch_has_{empty,sparse}_bitmaps.
+Test these around the relevant parts of cbm_validate().
 
+Merging the validate calls causes AMD to gain the min_cbm_bits test
+needed for Haswell, but as it always sets this value to 1, it will
+never match.
+
+CC: Reinette Chatre <reinette.chatre@intel.com>
 Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by : Babu Moger <babu.moger@amd.com>
+Reviewed-by: Babu Moger <babu.moger@amd.com>
 ---
- arch/x86/kernel/cpu/resctrl/core.c        |  3 +-
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 57 +----------------------
- arch/x86/kernel/cpu/resctrl/internal.h    |  6 +--
- 3 files changed, 5 insertions(+), 61 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c        | 14 ++++----
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 39 ++++++-----------------
+ arch/x86/kernel/cpu/resctrl/internal.h    |  8 ++---
+ 3 files changed, 22 insertions(+), 39 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index c6b73b0ee070..223e5b90bcfd 100644
+index 223e5b90bcfd..587f9791d2a6 100644
 --- a/arch/x86/kernel/cpu/resctrl/core.c
 +++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -168,6 +168,7 @@ struct rdt_resource rdt_resources_all[] = {
- 		.name			= "MB",
- 		.domains		= domain_init(RDT_RESOURCE_MBA),
- 		.cache_level		= 3,
-+		.parse_ctrlval		= parse_bw,
- 		.format_str		= "%d=%*u",
- 		.fflags			= RFTYPE_RES_MB,
- 	},
-@@ -926,7 +927,6 @@ static __init void rdt_init_res_defs_intel(void)
- 		else if (r->rid == RDT_RESOURCE_MBA) {
+@@ -922,9 +922,10 @@ static __init void rdt_init_res_defs_intel(void)
+ 		    r->rid == RDT_RESOURCE_L3CODE ||
+ 		    r->rid == RDT_RESOURCE_L2 ||
+ 		    r->rid == RDT_RESOURCE_L2DATA ||
+-		    r->rid == RDT_RESOURCE_L2CODE)
+-			r->cbm_validate = cbm_validate_intel;
+-		else if (r->rid == RDT_RESOURCE_MBA) {
++		    r->rid == RDT_RESOURCE_L2CODE) {
++			r->cache.arch_has_sparse_bitmaps = false;
++			r->cache.arch_has_empty_bitmaps = false;
++		} else if (r->rid == RDT_RESOURCE_MBA) {
  			r->msr_base = MSR_IA32_MBA_THRTL_BASE;
  			r->msr_update = mba_wrmsr_intel;
--			r->parse_ctrlval = parse_bw_intel;
  		}
- 	}
- }
-@@ -946,7 +946,6 @@ static __init void rdt_init_res_defs_amd(void)
- 		else if (r->rid == RDT_RESOURCE_MBA) {
+@@ -941,9 +942,10 @@ static __init void rdt_init_res_defs_amd(void)
+ 		    r->rid == RDT_RESOURCE_L3CODE ||
+ 		    r->rid == RDT_RESOURCE_L2 ||
+ 		    r->rid == RDT_RESOURCE_L2DATA ||
+-		    r->rid == RDT_RESOURCE_L2CODE)
+-			r->cbm_validate = cbm_validate_amd;
+-		else if (r->rid == RDT_RESOURCE_MBA) {
++		    r->rid == RDT_RESOURCE_L2CODE) {
++			r->cache.arch_has_sparse_bitmaps = true;
++			r->cache.arch_has_empty_bitmaps = true;
++		} else if (r->rid == RDT_RESOURCE_MBA) {
  			r->msr_base = MSR_IA32_MBA_BW_BASE;
  			r->msr_update = mba_wrmsr_amd;
--			r->parse_ctrlval = parse_bw_amd;
  		}
- 	}
- }
 diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index e3bcd77add2b..b0e24cb6f85c 100644
+index b0e24cb6f85c..c877642e8a14 100644
 --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
 +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -21,59 +21,6 @@
- #include <linux/slab.h>
- #include "internal.h"
+@@ -76,12 +76,14 @@ int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
+ }
  
--/*
-- * Check whether MBA bandwidth percentage value is correct. The value is
-- * checked against the minimum and maximum bandwidth values specified by
-- * the hardware. The allocated bandwidth percentage is rounded to the next
-- * control step available on the hardware.
-- */
--static bool bw_validate_amd(char *buf, unsigned long *data,
--			    struct rdt_resource *r)
--{
--	unsigned long bw;
--	int ret;
--
--	/* temporary: always false on AMD */
--	if (!r->membw.delay_linear && r->membw.arch_needs_linear) {
--		rdt_last_cmd_puts("No support for non-linear MB domains\n");
--		return false;
--	}
--
--	ret = kstrtoul(buf, 10, &bw);
--	if (ret) {
--		rdt_last_cmd_printf("Non-decimal digit in MB value %s\n", buf);
--		return false;
--	}
--
--	if (bw < r->membw.min_bw || bw > r->default_ctrl) {
--		rdt_last_cmd_printf("MB value %ld out of range [%d,%d]\n", bw,
--				    r->membw.min_bw, r->default_ctrl);
--		return false;
--	}
--
--	*data = roundup(bw, (unsigned long)r->membw.bw_gran);
--	return true;
--}
--
--int parse_bw_amd(struct rdt_parse_data *data, struct rdt_resource *r,
--		 struct rdt_domain *d)
--{
--	unsigned long bw_val;
--
--	if (d->have_new_ctrl) {
--		rdt_last_cmd_printf("Duplicate domain %d\n", d->id);
--		return -EINVAL;
--	}
--
--	if (!bw_validate_amd(data->buf, &bw_val, r))
--		return -EINVAL;
--
--	d->new_ctrl = bw_val;
--	d->have_new_ctrl = true;
--
--	return 0;
--}
--
  /*
-  * Check whether MBA bandwidth percentage value is correct. The value is
-  * checked against the minimum and max bandwidth values specified by the
-@@ -110,8 +57,8 @@ static bool bw_validate(char *buf, unsigned long *data, struct rdt_resource *r)
+- * Check whether a cache bit mask is valid. The SDM says:
++ * Check whether a cache bit mask is valid.
++ * For Intel the SDM says:
+  *	Please note that all (and only) contiguous '1' combinations
+  *	are allowed (e.g. FFFFH, 0FF0H, 003CH, etc.).
+  * Additionally Haswell requires at least two bits set.
++ * AMD allows non-contiguous bitmasks.
+  */
+-bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r)
++static bool cbm_validate(char *buf, u32 *data, struct rdt_resource *r)
+ {
+ 	unsigned long first_bit, zero_bit, val;
+ 	unsigned int cbm_len = r->cache.cbm_len;
+@@ -93,7 +95,8 @@ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r)
+ 		return false;
+ 	}
+ 
+-	if (val == 0 || val > r->default_ctrl) {
++	if ((!r->cache.arch_has_empty_bitmaps && val == 0) ||
++	    val > r->default_ctrl) {
+ 		rdt_last_cmd_puts("Mask out of range\n");
+ 		return false;
+ 	}
+@@ -101,7 +104,9 @@ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r)
+ 	first_bit = find_first_bit(&val, cbm_len);
+ 	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
+ 
+-	if (find_next_bit(&val, cbm_len, zero_bit) < cbm_len) {
++	/* Are non-contiguous bitmaps allowed? */
++	if (!r->cache.arch_has_sparse_bitmaps &&
++	    (find_next_bit(&val, cbm_len, zero_bit) < cbm_len)) {
+ 		rdt_last_cmd_printf("The mask %lx has non-consecutive 1-bits\n", val);
+ 		return false;
+ 	}
+@@ -116,30 +121,6 @@ bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r)
  	return true;
  }
  
--int parse_bw_intel(struct rdt_parse_data *data, struct rdt_resource *r,
--		   struct rdt_domain *d)
-+int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
-+	     struct rdt_domain *d)
- {
- 	unsigned long bw_val;
+-/*
+- * Check whether a cache bit mask is valid. AMD allows non-contiguous
+- * bitmasks
+- */
+-bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r)
+-{
+-	unsigned long val;
+-	int ret;
+-
+-	ret = kstrtoul(buf, 16, &val);
+-	if (ret) {
+-		rdt_last_cmd_printf("Non-hex character in the mask %s\n", buf);
+-		return false;
+-	}
+-
+-	if (val > r->default_ctrl) {
+-		rdt_last_cmd_puts("Mask out of range\n");
+-		return false;
+-	}
+-
+-	*data = val;
+-	return true;
+-}
+-
+ /*
+  * Read one cache bit mask (hex). Check that it is valid for the current
+  * resource type.
+@@ -165,7 +146,7 @@ int parse_cbm(struct rdt_parse_data *data, struct rdt_resource *r,
+ 		return -EINVAL;
+ 	}
  
+-	if (!r->cbm_validate(data->buf, &cbm_val, r))
++	if (!cbm_validate(data->buf, &cbm_val, r))
+ 		return -EINVAL;
+ 
+ 	if ((rdtgrp->mode == RDT_MODE_EXCLUSIVE ||
 diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index cc72ba415c3d..242cbdb8f2df 100644
+index 242cbdb8f2df..169fb5a1d5d7 100644
 --- a/arch/x86/kernel/cpu/resctrl/internal.h
 +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -470,10 +470,8 @@ struct rdt_resource {
+@@ -357,6 +357,8 @@ struct msr_param {
+  *			in a cache bit mask
+  * @shareable_bits:	Bitmask of shareable resource with other
+  *			executing entities
++ * @arch_has_sparse_bitmaps:	True if a bitmap like f00f is valid.
++ * @arch_has_empty_bitmaps:	True if the '0' bitmap is valid.
+  */
+ struct rdt_cache {
+ 	unsigned int	cbm_len;
+@@ -364,6 +366,8 @@ struct rdt_cache {
+ 	unsigned int	cbm_idx_mult;
+ 	unsigned int	cbm_idx_offset;
+ 	unsigned int	shareable_bits;
++	bool		arch_has_sparse_bitmaps;
++	bool		arch_has_empty_bitmaps;
+ };
  
- int parse_cbm(struct rdt_parse_data *data, struct rdt_resource *r,
- 	      struct rdt_domain *d);
--int parse_bw_intel(struct rdt_parse_data *data, struct rdt_resource *r,
--		   struct rdt_domain *d);
--int parse_bw_amd(struct rdt_parse_data *data, struct rdt_resource *r,
--		 struct rdt_domain *d);
-+int parse_bw(struct rdt_parse_data *data, struct rdt_resource *r,
-+	     struct rdt_domain *d);
+ /**
+@@ -433,7 +437,6 @@ struct rdt_parse_data {
+  * @cache:		Cache allocation related data
+  * @format_str:		Per resource format string to show domain value
+  * @parse_ctrlval:	Per resource function pointer to parse control values
+- * @cbm_validate	Cache bitmask validate function
+  * @evt_list:		List of monitoring events
+  * @num_rmid:		Number of RMIDs available
+  * @mon_scale:		cqm counter * mon_scale = occupancy in bytes
+@@ -460,7 +463,6 @@ struct rdt_resource {
+ 	int (*parse_ctrlval)(struct rdt_parse_data *data,
+ 			     struct rdt_resource *r,
+ 			     struct rdt_domain *d);
+-	bool (*cbm_validate)(char *buf, u32 *data, struct rdt_resource *r);
+ 	struct list_head	evt_list;
+ 	int			num_rmid;
+ 	unsigned int		mon_scale;
+@@ -603,8 +605,6 @@ void cqm_setup_limbo_handler(struct rdt_domain *dom, unsigned long delay_ms);
+ void cqm_handle_limbo(struct work_struct *work);
+ bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
+ void __check_limbo(struct rdt_domain *d, bool force_free);
+-bool cbm_validate_intel(char *buf, u32 *data, struct rdt_resource *r);
+-bool cbm_validate_amd(char *buf, u32 *data, struct rdt_resource *r);
+ void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
  
- extern struct mutex rdtgroup_mutex;
- 
+ #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
 -- 
 2.19.1
 
