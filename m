@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C972E208C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E87F20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520982;
-	bh=O9GuyrYBQ8P7jHWBTNTtQT6lMUojNgow4wxmzXQ9/G8=;
+	s=default; t=1590520988;
+	bh=k+YJJ6yOkeJ06tDzGsR90+nsSlSeKWffhRIO39r9/5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXd8XW1VIPXsYmb8yOQf8t3KQZPXwdIvMYOPDpjM72cfZR5psK80ciLQWrZkYUY2j
-	 V17AWvm/LFOQmBqSv5XR6s74ebNqucECkXIeq4sp0/UJr2GCj3crEXFeKgxhw9Ywqw
-	 6STF3zfmjaXokD1yuLa/pfN9mN/zURXHlMSaK0L0=
+	b=qpwgXIwYJBbyHRER39EEIJRb0skcdJUDElhVYOLSOiKlTcDyU1NpLtHVWUkO/nqF0
+	 T7D8T63lmg2KLXAXUwtIoOe4VALIw6Pvs1LIUBks2XfFFqRN4rM0vR6Le0UOdu/cIS
+	 eXKY/O5EGCKZBzxzeLTDleXs1XVfOM2NzJIUnIGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392478AbgEZTXC (ORCPT
+        id S2404240AbgEZTXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:23:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38772 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390783AbgEZTJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:37 -0400
+        id S2391877AbgEZTJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD9F720873;
-        Tue, 26 May 2020 19:09:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E996208A7;
+        Tue, 26 May 2020 19:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520177;
-        bh=O9GuyrYBQ8P7jHWBTNTtQT6lMUojNgow4wxmzXQ9/G8=;
+        s=default; t=1590520169;
+        bh=k+YJJ6yOkeJ06tDzGsR90+nsSlSeKWffhRIO39r9/5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DWP3GkxYE/jGz1iP6psNlkStUieO3h0J2c6XSU/yfzgoxscVv/PgzK3vVS1hLY7iG
-         RQbEMG4PSh2nzagSIezHTodZ1STL4Mcl/bvxHcf0SUpuO2eBXkhj0GyflR8DWaxNeO
-         zFImQo/KqjqJ+50OG8JMm7+wpFmj4xoFfkeqdXvw=
+        b=2CMVgzkTY2AbWEUkKaB5QHCxw3FXodM0yzTH/KFfRMljHPaRclsisVCfITe57xsqW
+         iJURsMovV2MiDPKSRinIu/xQLwCYbUP5fqrQzRBiero7hsVJyTYp3AmqbwfCJ6wqXq
+         I6qicQaiZEFDlge+/0fr9y1uMncTaiQnK7C6YvzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        Sagar Shrikant Kadam <sagar.kadam@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH 5.4 089/111] tty: serial: add missing spin_lock_init for SiFive serial console
-Date:   Tue, 26 May 2020 20:53:47 +0200
-Message-Id: <20200526183941.366715182@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 086/111] iio: dac: vf610: Fix an error handling path in vf610_dac_probe()
+Date:   Tue, 26 May 2020 20:53:44 +0200
+Message-Id: <20200526183941.078900013@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,41 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 17b4efdf4e4867079012a48ca10d965fe9d68822 upstream.
+commit aad4742fbf0a560c25827adb58695a4497ffc204 upstream.
 
-An uninitialised spin lock for sifive serial console raises a bad
-magic spin_lock error as reported and discussed here [1].
-Initialising the spin lock resolves the issue.
+A call to 'vf610_dac_exit()' is missing in an error handling path.
 
-The fix is tested on HiFive Unleashed A00 board with Linux 5.7-rc4
-and OpenSBI v0.7
-
-[1] https://lore.kernel.org/linux-riscv/b9fe49483a903f404e7acc15a6efbef756db28ae.camel@wdc.com
-
-Fixes: 45c054d0815b ("tty: serial: add driver for the SiFive UART")
-Reported-by: Atish Patra <Atish.Patra@wdc.com>
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1589019852-21505-2-git-send-email-sagar.kadam@sifive.com
+Fixes: 1b983bf42fad ("iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/sifive.c |    1 +
+ drivers/iio/dac/vf610_dac.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/sifive.c
-+++ b/drivers/tty/serial/sifive.c
-@@ -840,6 +840,7 @@ console_initcall(sifive_console_init);
+--- a/drivers/iio/dac/vf610_dac.c
++++ b/drivers/iio/dac/vf610_dac.c
+@@ -225,6 +225,7 @@ static int vf610_dac_probe(struct platfo
+ 	return 0;
  
- static void __ssp_add_console_port(struct sifive_serial_port *ssp)
- {
-+	spin_lock_init(&ssp->port.lock);
- 	sifive_serial_console_ports[ssp->port.line] = ssp;
- }
+ error_iio_device_register:
++	vf610_dac_exit(info);
+ 	clk_disable_unprepare(info->clk);
  
+ 	return ret;
 
 
