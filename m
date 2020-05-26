@@ -2,91 +2,134 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2959BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F966207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FE520674
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 20:51:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="SK/j8/sB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADDgO1yJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404089AbgEZUqT (ORCPT
+        id S2404007AbgEZUv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 16:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48928 "EHLO
+        Tue, 26 May 2020 16:51:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403895AbgEZUqS (ORCPT
+        with ESMTP id S2403963AbgEZUv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 16:46:18 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907FEC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 13:46:17 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id f89so10164318qva.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 13:46:17 -0700 (PDT)
+        Tue, 26 May 2020 16:51:57 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5199DC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 13:51:57 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 185so2419958pgb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 13:51:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=grxbOYNpOqxM7JP5izyFEjnzTirkS5+MQpdVDhkVv6s=;
-        b=SK/j8/sBEAECUReC3/26qb5WYBKgJusmM4Bi0ypDM/Zohzcal6XacR3hCU754mhVtt
-         E/5T4evfDsYZZhA9Ukgqn71YcrmQhklo/ouZh7stq4wCar8JR0/8bulocC1KxQxwmqk3
-         DDp4qVL9jeoL9CohXbQhdUV/7gnfjQAqnufAqXJl5p1ZSF5aNK8Xc0r/slhNtqDf96z7
-         RPlr9aVuPCFMtPtrndIWOuD20FaYhurPZLBbVrBcYvb4pSG0il+Tfmct4CaGWVG06Mc8
-         HQMn28HfZJDmqy7v+pNpgsdZwJeG0NcquoKR0QGCX0ZPO54EuyQMmtsgW7QGQr8jRLP1
-         hbNA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=84c4yBEfXJR9rBcq5OPzXonTT8+NleW6lQ5k1QA/SLU=;
+        b=ADDgO1yJRKDfKrGbkZJ9Xr9tGv3Rlpo6s7dhDWnowov+fTczDmRjlZ8m7luMhkwmEv
+         phefTQDM8DcjAtqX+1hjqSLZEFpLEN6zcLXzUGxjhhG1P+QZui7TitfW0z91ggcqO4dm
+         xYuQKIzB2ZPYMkYHDnV5GdRLxeKmbJrHncpFTM1MqLsKzsrd4la/sHAOiI0gV3pDgp/I
+         QPTAuOxTnBbs5Z4j+EdHy7avfJNZ3GsSSGQKcILDa41Idlnau5+NyIP0iZRkFa6OUdWp
+         UAHKpjTDv//bLiUMEM+EYtUsptnVpyeB67qSDBmyF2iY6BS08Xk8OprKXnKCZEP5000A
+         PBFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=grxbOYNpOqxM7JP5izyFEjnzTirkS5+MQpdVDhkVv6s=;
-        b=O2liNjza7n+6xVtU0wUobxJxGVcTBJAeFJaFiY0C/hiUpR0lR0XvEGN9M1F0rg3HGd
-         fm5W3Y4uYSRfQz/av4LhdN1ulN+lmaWAklREKBKwp6x/V8Ov0skzP71yJV7hwQjfnBpG
-         JOD2iHQAckzADFKts/FV2kFmlDTsX308cDx+UsuxGDWFpvmXFFp0ADFu3x17fyAw4IF8
-         bl/uMSikWbggRxZnPBpPBdrdhehbgB2zYK3YWDvarqhVMB1Nflz3RT93xsVikmLV3NNw
-         C+aF8MdVSqwsjJPYLZPyIyEBr3STrt6X7m0Xjgb1PLdv2ANWP8ZwGoHMG73lxe/5cvTE
-         Th7w==
-X-Gm-Message-State: AOAM532xgnHH/xiwY0lpJwoS7PwoQUMcevg1TICjO8JzILJJNVQ3Jo+k
-        3STrhxjRf2iKn3UuDgGSTUU4DwbclqE=
-X-Google-Smtp-Source: ABdhPJw17yp0oF4CQ8J3+E7IWKM6xulkRGgACyehYTnS6SFzVDCaB8Ziav9WNv6ap066m6W/aJRucA==
-X-Received: by 2002:a0c:ffc6:: with SMTP id h6mr8896151qvv.213.1590525976662;
-        Tue, 26 May 2020 13:46:16 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2921])
-        by smtp.gmail.com with ESMTPSA id n184sm658331qkf.0.2020.05.26.13.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 13:46:15 -0700 (PDT)
-Date:   Tue, 26 May 2020 16:45:52 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH 02/12] mm: allow read-ahead with IOCB_NOWAIT set
-Message-ID: <20200526204552.GA6781@cmpxchg.org>
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <20200526195123.29053-3-axboe@kernel.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526195123.29053-3-axboe@kernel.dk>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=84c4yBEfXJR9rBcq5OPzXonTT8+NleW6lQ5k1QA/SLU=;
+        b=WRjWIJuJyh7nBo3W1PRD/UdmuljDqCS2OqXkG879JVaR6sDQNJCkOD6YbYLcwLiiXE
+         LSO6VTk3lnYcrwh/oNpNvAhb9HVTqiJwWt6926xzdlfq1SeZbfo0lZOAXWvXIDcEP6qe
+         r5dgrqEJl10MU//6ZMp7gdP4uUPfC67xDnRwgTrwvI7QZ5+BjpWdY+uGj9ZX4nwI0GOl
+         U+4V3to+PYUgPnqSOfkQWWTwgumrrZDMDEC6RsCuNh8bYQ1b015uo7PtTHIJw2LAPc0T
+         901DVW2rPqEYWQtm/lJ9IHxYoDMRApK8rJOKDwmhTDGebcTKTv0jNjzM1BwSZ8bkKu7m
+         CXzw==
+X-Gm-Message-State: AOAM531Ph9q8YN8+F8nM924omsSUhWxOPiJbCTvNA59GBnZKcD/JTcBC
+        rgQaLBko+HbazfI7cfMFyDo=
+X-Google-Smtp-Source: ABdhPJzgMbTszipak4xmw5QtemttiLGjdNZ+kzvDA9nvx2w0FqIaoOqfVu1/VzcOknAOPsTgO1cTow==
+X-Received: by 2002:a05:6a00:46:: with SMTP id i6mr647621pfk.146.1590526316742;
+        Tue, 26 May 2020 13:51:56 -0700 (PDT)
+Received: from jordon-HP-15-Notebook-PC.domain.name ([171.48.17.249])
+        by smtp.gmail.com with ESMTPSA id v22sm380239pfu.172.2020.05.26.13.51.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 May 2020 13:51:56 -0700 (PDT)
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+To:     alexander.deucher@amd.com, christian.koenig@amd.com,
+        David1.Zhou@amd.com, daniel@ffwll.ch
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH] drm/radeon: Convert get_user_pages() --> pin_user_pages()
+Date:   Wed, 27 May 2020 02:30:02 +0530
+Message-Id: <1590526802-3008-1-git-send-email-jrdr.linux@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:51:13PM -0600, Jens Axboe wrote:
-> The read-ahead shouldn't block, so allow it to be done even if
-> IOCB_NOWAIT is set in the kiocb.
-> 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This code was using get_user_pages(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages() + release_pages() calls to
+pin_user_pages() + unpin_user_pages() calls.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-Looks reasonable. Especially after patch 1 - although it seems that
-even before that, IOCB_NOWAIT could have occasionally ended up in
-page_cache_async_readahead(), which isn't too different from the sync
-variant except for the range calculations, and may have blocked on IO
-submission in the past.
+[1] Documentation/core-api/pin_user_pages.rst
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+
+Hi,
+
+I'm compile tested this, but unable to run-time test, so any testing
+help is much appriciated.
+---
+ drivers/gpu/drm/radeon/radeon_ttm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
+index 5d50c9e..e927de2 100644
+--- a/drivers/gpu/drm/radeon/radeon_ttm.c
++++ b/drivers/gpu/drm/radeon/radeon_ttm.c
+@@ -506,7 +506,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+ 		uint64_t userptr = gtt->userptr + pinned * PAGE_SIZE;
+ 		struct page **pages = ttm->pages + pinned;
+ 
+-		r = get_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
++		r = pin_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
+ 				   pages, NULL);
+ 		if (r < 0)
+ 			goto release_pages;
+@@ -535,7 +535,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+ 	kfree(ttm->sg);
+ 
+ release_pages:
+-	release_pages(ttm->pages, pinned);
++	unpin_user_pages(ttm->pages, pinned);
+ 	return r;
+ }
+ 
+@@ -562,7 +562,7 @@ static void radeon_ttm_tt_unpin_userptr(struct ttm_tt *ttm)
+ 			set_page_dirty(page);
+ 
+ 		mark_page_accessed(page);
+-		put_page(page);
++		unpin_user_page(page);
+ 	}
+ 
+ 	sg_free_table(ttm->sg);
+-- 
+1.9.1
+
