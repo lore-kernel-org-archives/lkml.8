@@ -2,165 +2,145 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6810C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3514AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A87204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:42:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="szIeJgjx"
+	by mail.kernel.org (Postfix) with ESMTP id 052FB204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 11:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590493402;
+	bh=sCpXcTRl3vsWBtClDzeRm+UY+tVeAJjr3BKAo83yXgg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=KSm0OC9fM7mazOyJrFXrnCg469kxcrOApRsfUvLOrDMXBHkgN2Hkc4YJ5nU8id4KN
+	 +Yl3OmTKxQVaXkXGMbAc9E4g5TZhTJId/WjHfkeArh2HXXxOPJYnOWSdTP5AEqssFw
+	 m4Isz2hnS9L8MOjo3zw5WTcZiopl1SG4Hmq9yVOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbgEZLmw (ORCPT
+        id S2388923AbgEZLnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 07:42:52 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:60545 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728148AbgEZLmv (ORCPT
+        Tue, 26 May 2020 07:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388510AbgEZLnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 07:42:51 -0400
+        Tue, 26 May 2020 07:43:20 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60090C03E97E;
+        Tue, 26 May 2020 04:43:20 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id e4so1596125ljn.4;
+        Tue, 26 May 2020 04:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1590493371; x=1622029371;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=KEjAiSa+WOkQ6WGzU97fQPGqxmN27eW/zY/rZIJWqOU=;
-  b=szIeJgjxtNJwpDV+PlThFb5gHtySFVhCxfAV09cGx0twXRpX73n2ZLOq
-   csKcAcp/gJWEd08XeJkd1odx6C2myHrg/0nsRmRvOQ+BSS7KcNIAGUsmL
-   +1Iktqk6M2GTk5mP6zQq3qwbdbDfLr8BaBPlfLctrVCn13EPr2LLbj5sZ
-   U=;
-IronPort-SDR: sGY4wPEFRJdJ3Rx9HVKOkZi7xkWA5BtVegJtZem8fnWVPwzelFMoqaGo4eMS15Vqdsj/0JuW83
- w5PV68vIFxyQ==
-X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
-   d="scan'208";a="37665411"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 26 May 2020 11:42:49 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 92942A1C66;
-        Tue, 26 May 2020 11:42:48 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 11:42:47 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.162.140) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 11:42:43 +0000
-Subject: Re: [PATCH v3 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Andra Paraschiv <andraprs@amazon.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Martin Pohlack" <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-8-andraprs@amazon.com>
- <20200526065133.GD2580530@kroah.com>
-From:   Alexander Graf <graf@amazon.de>
-Message-ID: <72647fa4-79d9-7754-9843-a254487703ea@amazon.de>
-Date:   Tue, 26 May 2020 13:42:41 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=sCpXcTRl3vsWBtClDzeRm+UY+tVeAJjr3BKAo83yXgg=;
+        b=i7JdQYGOxWV80uCxES3u/NXyzKpjHyQZiq4wLGq0wuPOqfrt9TOW4ee6kULNc2yn2F
+         5IZTOmy++lMyYCnZqqMaMotraN7ejj62aidN2STBdBR7wG6rdzwtizyDH6PgnlpTeMf6
+         0Alu0OGTVENkkP/5dkRsJrjxC8QdWG3iQ5XNtHWyPXZQWzTLjv91Io/gQTs9e2GKk87V
+         G60EjY/zxAjAacCKLmuVEOF63Hzk/AuUfXlerRFqoJ//0j12AXwGS6ttCM2vS16VP/MV
+         LHhsmuozrrNTvvkdwFcS/YxUkHJJtBEI2LhzEcGD64qENU8IUNlF0S+kd9zzqQzUkdYJ
+         flpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :date:message-id:mime-version;
+        bh=sCpXcTRl3vsWBtClDzeRm+UY+tVeAJjr3BKAo83yXgg=;
+        b=Kb0oV1qsz0bXfrmzU+gSeywi/locpNDa5SshA6f8CzwnSv4fUoIYRCQ2l3Y34bRA65
+         7fzjzMMg/wmOictaSCQjRsg80cKa2FNEmfZrDKCRXUR6y/dzdIL8Ss6siDTppqYEqNVM
+         3X5UgJe5TsmjesfWo2r+mDpaexFcNI14Xpq8NkKTXyZf1bYRehaquxex5EgcWtLXBl3s
+         iXZ9JAd2AmQ46MKOLX/HmPvTrZqmekoAuKJtciy+4PKoPbhB63nUCVZHqnjxJ4cDIrhY
+         4Zcyf2fCpROh5k8BosFSvfcDXjrSPu0vIfSK7Lr6aVoB2K/xo9JSCyq5oF6mDzYwRslj
+         OYyA==
+X-Gm-Message-State: AOAM532Ev6bWQf+pP5rmvxlFAuu9QadfP8x16zc100s2NAf34/L7V0xP
+        FGNuffqWQHkXGSeJ2xJ+FL21Lz4F5iI=
+X-Google-Smtp-Source: ABdhPJwB6hEoJNRdH7dBEep1lhwCwmRGm9m89aDzlD2NRcwbnA7TRDxS2lA424olfMemXwlDP3eGnw==
+X-Received: by 2002:a05:651c:303:: with SMTP id a3mr440332ljp.414.1590493398773;
+        Tue, 26 May 2020 04:43:18 -0700 (PDT)
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi. [91.155.214.58])
+        by smtp.gmail.com with ESMTPSA id x28sm5544167ljd.53.2020.05.26.04.43.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 26 May 2020 04:43:18 -0700 (PDT)
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        "Sandeep Maheswaram \(Temp\)" <sanm@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v7 2/4] usb: dwc3: qcom: Add interconnect support in dwc3 driver
+In-Reply-To: <0723aee9-9ea4-dab5-e083-3cf3858a8f96@linaro.org>
+References: <1585718145-29537-1-git-send-email-sanm@codeaurora.org> <1585718145-29537-3-git-send-email-sanm@codeaurora.org> <878shu4uwk.fsf@kernel.org> <875zcy4uuj.fsf@kernel.org> <20200514171352.GP4525@google.com> <abbc3f8c-c8c9-c189-735e-f8058dab3e40@linaro.org> <87tv0h3fpv.fsf@kernel.org> <090e48d7-7988-eea1-bf39-f6820578d354@linaro.org> <87r1vl3e42.fsf@kernel.org> <20200518183512.GE2165@builder.lan> <b20775ba-7870-b0ca-7c65-d72a08fdacb2@codeaurora.org> <0723aee9-9ea4-dab5-e083-3cf3858a8f96@linaro.org>
+Date:   Tue, 26 May 2020 14:43:12 +0300
+Message-ID: <871rn63orz.fsf@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200526065133.GD2580530@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.140]
-X-ClientProxiedBy: EX13d09UWC004.ant.amazon.com (10.43.162.114) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-On 26.05.20 08:51, Greg KH wrote:
-> =
+Hi,
 
-> On Tue, May 26, 2020 at 01:13:23AM +0300, Andra Paraschiv wrote:
->> +#define NE "nitro_enclaves: "
-> =
+Georgi Djakov <georgi.djakov@linaro.org> writes:
+> On 26.05.20 14:04, Sandeep Maheswaram (Temp) wrote:
+>> Hi Felipe,
+>>=20
+>> Please let me know how to go forward with this patch
 
-> Again, no need for this.
-> =
+(don't top-post!)
 
->> +#define NE_DEV_NAME "nitro_enclaves"
-> =
+> Please just add a patch to fix the allmodconfig error. Felipe has
+> suggested to introduce a separate patch which exports the
+> device_is_bound() function. This export should precede the addition
+> of interconnect support.
+>
+> Also regarding the "depends on INTERCONNECT || !INTERCONNECT" change,
+> no "depends on" would be needed, as we just made the interconnect
+> framework bool.
 
-> KBUILD_MODNAME?
-> =
+y'all have lost the current merge window, I guess. I'm not sure Greg
+will take last minute changes to drivers base and I have already sent
+him my pull request for v5.8. On the plus side, this gives you the
+chance to run hundreds of randbuilds with your patches.
 
->> +#define NE_IMAGE_LOAD_OFFSET (8 * 1024UL * 1024UL)
->> +
->> +static char *ne_cpus;
->> +module_param(ne_cpus, charp, 0644);
->> +MODULE_PARM_DESC(ne_cpus, "<cpu-list> - CPU pool used for Nitro Enclave=
-s");
-> =
+=2D-=20
+balbi
 
-> Again, please do not do this.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I actually asked her to put this one in specifically.
+-----BEGIN PGP SIGNATURE-----
 
-The concept of this parameter is very similar to isolcpus=3D and maxcpus=3D =
-
-in that it takes CPUs away from Linux and instead donates them to the =
-
-underlying hypervisor, so that it can spawn enclaves using them.
-
- From an admin's point of view, this is a setting I would like to keep =
-
-persisted across reboots. How would this work with sysfs?
-
-> Can you get the other amazon.com developers on the cc: list to review
-> this before you send it out again?  I feel like I am doing basic review
-> of things that should be easily caught by them before you ask the
-> community to review your code.
-
-Again, my fault :). We did a good number of internal review rounds, but =
-
-I guess I didn't catch the bits you pointed out.
-
-So yes, let's give everyone in CC the change to review v3 properly first =
-
-before v4 goes out.
-
-> And get them to sign off on it too, showing they agree with the design
-> decisions here :)
-
-I would expect a Reviewed-by tag as a result from the above would =
-
-satisfy this? :)
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl7NANEACgkQzL64meEa
+mQZVaxAAsCP/6euxWFKWIpRzRkpKGetdAmxpRbOwuu89BRmDwQExLzTdCPRmnR+k
+VSN02V1/5oMVKXrBVCVLtRj2Cd1ug+zu8guQodJ0z9P1u8se+I+MKGRHhjDMjnIE
+U2h47FVxsXrUUJ0M7SJaaIGwSR2eqK3c44d75tiUrYyB/aGdJO8JJJywmP/6nyYN
+ZhSdQV4XICMOJAXDnxcVQ7j24jHA10X6F7hvnBZBdgYMXxdVnXaSWaMxxR+JiziO
+eGXr15rItk8sEGk+Nz0EfB4NThfjo5YmFuCxfk6/rWi+8FgQJLmV+2k12ngbMf6C
+Cly8Z/J+WoJaaxkccMW1wG2h8xoEadLBjceSWDbRa8cBcoICzdoQfMMCDaROfGSB
+7u+0YvsCyw+xIan9qLpOriAVCsKcX5yU6Bx/0ufNzv/7HorpzS3tM6nXbBCC23GB
+XQsy5Da59ajQUhzXPRD7YqHXfY3xYSB1Y0F2G3rxt+aPZD2HJJb2eLjpqxOxkWZo
+7jWEy2PA21dSb7UvXUXGakYAyEF2Q33HcL/V+7eMeWqNkoO7aE2wv1tswcjO18XB
+WLesjA8lScj/MyHB2r/xu5cD8WV2MaByiY/MLTHsgfVX0xydbBQyiiay/fLlHR/1
+1XIKU3j/s/byeXTLE+EwirvTUumKH5apjOgTEoB2S0qXCX6fgAg=
+=dJ4W
+-----END PGP SIGNATURE-----
+--=-=-=--
