@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4401B20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8844420776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521651;
-	bh=x0rczRtZDx6GpDjCL7EqKY/wzEuwvyy6BBmhrYHdAZg=;
+	s=default; t=1590521659;
+	bh=o9X6o0lP6jd6SYFq0q1p083PCWe5KFflEkWAx35edyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8clK+EZN5FxLoaUTMxfEmgCdl2etPeskC0Emffn6Ik9a2CqbeTJOyYIel0zUy+4M
-	 oUr24vCIsWNRgoNDUQHIsNMSt+6M2LGi4gzIc1ZoOpjdS/hZWR8eAYOeZquviJB9qs
-	 au1WYYNpo67JkIdt20v04/8simbY106WgO5wKe0c=
+	b=NxSJspL2+8rEYpPVU9I+LEQ/YZ/XWjZDDJ/6zBJR7iszVQOVuOcpoptlyoVbtG/nc
+	 TlvPgGYiDcOYchnMAfOYCZc3Sd7QoiATvdfXg5YCGzJyDFdkh3w1h5y2GW0GaIiXGa
+	 FgOavX4a4kFuV/isLktLcnMVBMNZywoyP8xvcFlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391635AbgEZTeK (ORCPT
+        id S2389367AbgEZSzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47838 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389488AbgEZSz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:26 -0400
+        id S2389316AbgEZSzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2A59208B3;
-        Tue, 26 May 2020 18:55:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F89208A9;
+        Tue, 26 May 2020 18:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519325;
-        bh=x0rczRtZDx6GpDjCL7EqKY/wzEuwvyy6BBmhrYHdAZg=;
+        s=default; t=1590519308;
+        bh=o9X6o0lP6jd6SYFq0q1p083PCWe5KFflEkWAx35edyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uc8ZwA/pO8L/j1j8hFoNqdoaDpglS0vl2Tv9h54Bej+aHuJUJJ+DVuyp8irKeo+K1
-         S9Wy2ulQQSPAp+0FL2sZC4cmgopR6W3oSqwI1u2zB91f6V0txGptsRG4Jw+M79OJdA
-         ayty2jnhC+JkudhWiUZTCe6IzOSUuo/QXq1wWIQA=
+        b=RYDgEyb1DUXbIF9TcVgbGqr9fRWGbGvVmrXRodCiqQPIWmO7BAcuapEnyaoyV+oIR
+         WrNbdSsAhlivYgVCr4YlOiz6VxQMH/+GHO9D4xCFg+sWXWRAqQuB//DahUz5IJS4Zp
+         WoJEgjKVvwokZNU41Iy4ft/3MZ+nv9cmsxsPI+cI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Shuah Khan <shuahkh@osg.samsung.com>,
+        Mauro Carvalho Chehab <mchehab@osg.samsung.com>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 24/65] i2c: dev: Fix the race between the release of i2c_dev and cdev
-Date:   Tue, 26 May 2020 20:52:43 +0200
-Message-Id: <20200526183915.231430888@linuxfoundation.org>
+Subject: [PATCH 4.4 18/65] media: fix use-after-free in cdev_put() when app exits after driver unbind
+Date:   Tue, 26 May 2020 20:52:37 +0200
+Message-Id: <20200526183912.963855505@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -61,186 +62,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Shuah Khan <shuahkh@osg.samsung.com>
 
-commit 1413ef638abae4ab5621901cf4d8ef08a4a48ba6 upstream.
+commit 5b28dde51d0ccc54cee70756e1800d70bed7114a upstream.
 
-The struct cdev is embedded in the struct i2c_dev. In the current code,
-we would free the i2c_dev struct directly in put_i2c_dev(), but the
-cdev is manged by a kobject, and the release of it is not predictable.
-So it is very possible that the i2c_dev is freed before the cdev is
-entirely released. We can easily get the following call trace with
-CONFIG_DEBUG_KOBJECT_RELEASE and CONFIG_DEBUG_OBJECTS_TIMERS enabled.
-  ODEBUG: free active (active state 0) object type: timer_list hint: delayed_work_timer_fn+0x0/0x38
-  WARNING: CPU: 19 PID: 1 at lib/debugobjects.c:325 debug_print_object+0xb0/0xf0
-  Modules linked in:
-  CPU: 19 PID: 1 Comm: swapper/0 Tainted: G        W         5.2.20-yocto-standard+ #120
-  Hardware name: Marvell OcteonTX CN96XX board (DT)
-  pstate: 80c00089 (Nzcv daIf +PAN +UAO)
-  pc : debug_print_object+0xb0/0xf0
-  lr : debug_print_object+0xb0/0xf0
-  sp : ffff00001292f7d0
-  x29: ffff00001292f7d0 x28: ffff800b82151788
-  x27: 0000000000000001 x26: ffff800b892c0000
-  x25: ffff0000124a2558 x24: 0000000000000000
-  x23: ffff00001107a1d8 x22: ffff0000116b5088
-  x21: ffff800bdc6afca8 x20: ffff000012471ae8
-  x19: ffff00001168f2c8 x18: 0000000000000010
-  x17: 00000000fd6f304b x16: 00000000ee79de43
-  x15: ffff800bc0e80568 x14: 79616c6564203a74
-  x13: 6e6968207473696c x12: 5f72656d6974203a
-  x11: ffff0000113f0018 x10: 0000000000000000
-  x9 : 000000000000001f x8 : 0000000000000000
-  x7 : ffff0000101294cc x6 : 0000000000000000
-  x5 : 0000000000000000 x4 : 0000000000000001
-  x3 : 00000000ffffffff x2 : 0000000000000000
-  x1 : 387fc15c8ec0f200 x0 : 0000000000000000
-  Call trace:
-   debug_print_object+0xb0/0xf0
-   __debug_check_no_obj_freed+0x19c/0x228
-   debug_check_no_obj_freed+0x1c/0x28
-   kfree+0x250/0x440
-   put_i2c_dev+0x68/0x78
-   i2cdev_detach_adapter+0x60/0xc8
-   i2cdev_notifier_call+0x3c/0x70
-   notifier_call_chain+0x8c/0xe8
-   blocking_notifier_call_chain+0x64/0x88
-   device_del+0x74/0x380
-   device_unregister+0x54/0x78
-   i2c_del_adapter+0x278/0x2d0
-   unittest_i2c_bus_remove+0x3c/0x80
-   platform_drv_remove+0x30/0x50
-   device_release_driver_internal+0xf4/0x1c0
-   driver_detach+0x58/0xa0
-   bus_remove_driver+0x84/0xd8
-   driver_unregister+0x34/0x60
-   platform_driver_unregister+0x20/0x30
-   of_unittest_overlay+0x8d4/0xbe0
-   of_unittest+0xae8/0xb3c
-   do_one_initcall+0xac/0x450
-   do_initcall_level+0x208/0x224
-   kernel_init_freeable+0x2d8/0x36c
-   kernel_init+0x18/0x108
-   ret_from_fork+0x10/0x1c
-  irq event stamp: 3934661
-  hardirqs last  enabled at (3934661): [<ffff00001009fa04>] debug_exception_exit+0x4c/0x58
-  hardirqs last disabled at (3934660): [<ffff00001009fb14>] debug_exception_enter+0xa4/0xe0
-  softirqs last  enabled at (3934654): [<ffff000010081d94>] __do_softirq+0x46c/0x628
-  softirqs last disabled at (3934649): [<ffff0000100b4a1c>] irq_exit+0x104/0x118
+When driver unbinds while media_ioctl is in progress, cdev_put() fails with
+when app exits after driver unbinds.
 
-This is a common issue when using cdev embedded in a struct.
-Fortunately, we already have a mechanism to solve this kind of issue.
-Please see commit 233ed09d7fda ("chardev: add helper function to
-register char devs with a struct device") for more detail.
+Add devnode struct device kobj as the cdev parent kobject. cdev_add() gets
+a reference to it and releases it in cdev_del() ensuring that the devnode
+is not deallocated as long as the application has the device file open.
 
-In this patch, we choose to embed the struct device into the i2c_dev,
-and use the API provided by the commit 233ed09d7fda to make sure that
-the release of i2c_dev and cdev are in sequence.
+media_devnode_register() initializes the struct device kobj before calling
+cdev_add(). media_devnode_unregister() does cdev_del() and then deletes the
+device. devnode is released when the last reference to the struct device is
+gone.
 
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This problem is found on uvcvideo, em28xx, and au0828 drivers and fix has
+been tested on all three.
+
+kernel: [  193.599736] BUG: KASAN: use-after-free in cdev_put+0x4e/0x50
+kernel: [  193.599745] Read of size 8 by task media_device_te/1851
+kernel: [  193.599792] INFO: Allocated in __media_device_register+0x54
+kernel: [  193.599951] INFO: Freed in media_devnode_release+0xa4/0xc0
+
+kernel: [  193.601083] Call Trace:
+kernel: [  193.601093]  [<ffffffff81aecac3>] dump_stack+0x67/0x94
+kernel: [  193.601102]  [<ffffffff815359b2>] print_trailer+0x112/0x1a0
+kernel: [  193.601111]  [<ffffffff8153b5e4>] object_err+0x34/0x40
+kernel: [  193.601119]  [<ffffffff8153d9d4>] kasan_report_error+0x224/0x530
+kernel: [  193.601128]  [<ffffffff814a2c3d>] ? kzfree+0x2d/0x40
+kernel: [  193.601137]  [<ffffffff81539d72>] ? kfree+0x1d2/0x1f0
+kernel: [  193.601154]  [<ffffffff8157ca7e>] ? cdev_put+0x4e/0x50
+kernel: [  193.601162]  [<ffffffff8157ca7e>] cdev_put+0x4e/0x50
+kernel: [  193.601170]  [<ffffffff815767eb>] __fput+0x52b/0x6c0
+kernel: [  193.601179]  [<ffffffff8117743a>] ? switch_task_namespaces+0x2a
+kernel: [  193.601188]  [<ffffffff815769ee>] ____fput+0xe/0x10
+kernel: [  193.601196]  [<ffffffff81170023>] task_work_run+0x133/0x1f0
+kernel: [  193.601204]  [<ffffffff8117746e>] ? switch_task_namespaces+0x5e
+kernel: [  193.601213]  [<ffffffff8111b50c>] do_exit+0x72c/0x2c20
+kernel: [  193.601224]  [<ffffffff8111ade0>] ? release_task+0x1250/0x1250
+-
+-
+-
+kernel: [  193.601360]  [<ffffffff81003587>] ? exit_to_usermode_loop+0xe7
+kernel: [  193.601368]  [<ffffffff810035c0>] exit_to_usermode_loop+0x120
+kernel: [  193.601376]  [<ffffffff810061da>] syscall_return_slowpath+0x16a
+kernel: [  193.601386]  [<ffffffff82848b33>] entry_SYSCALL_64_fastpath+0xa6
+
+Signed-off-by: Shuah Khan <shuahkh@osg.samsung.com>
+Tested-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-dev.c | 48 +++++++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 22 deletions(-)
+ drivers/media/media-device.c  |  6 +++--
+ drivers/media/media-devnode.c | 48 +++++++++++++++++++++--------------
+ 2 files changed, 33 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
-index 5543b49e2e05..7584f292e2fd 100644
---- a/drivers/i2c/i2c-dev.c
-+++ b/drivers/i2c/i2c-dev.c
-@@ -47,7 +47,7 @@
- struct i2c_dev {
- 	struct list_head list;
- 	struct i2c_adapter *adap;
--	struct device *dev;
-+	struct device dev;
- 	struct cdev cdev;
- };
- 
-@@ -91,12 +91,14 @@ static struct i2c_dev *get_free_i2c_dev(struct i2c_adapter *adap)
- 	return i2c_dev;
- }
- 
--static void put_i2c_dev(struct i2c_dev *i2c_dev)
-+static void put_i2c_dev(struct i2c_dev *i2c_dev, bool del_cdev)
- {
- 	spin_lock(&i2c_dev_list_lock);
- 	list_del(&i2c_dev->list);
- 	spin_unlock(&i2c_dev_list_lock);
--	kfree(i2c_dev);
-+	if (del_cdev)
-+		cdev_device_del(&i2c_dev->cdev, &i2c_dev->dev);
-+	put_device(&i2c_dev->dev);
- }
- 
- static ssize_t name_show(struct device *dev,
-@@ -542,6 +544,14 @@ static const struct file_operations i2cdev_fops = {
- 
- static struct class *i2c_dev_class;
- 
-+static void i2cdev_dev_release(struct device *dev)
-+{
-+	struct i2c_dev *i2c_dev;
-+
-+	i2c_dev = container_of(dev, struct i2c_dev, dev);
-+	kfree(i2c_dev);
-+}
-+
- static int i2cdev_attach_adapter(struct device *dev, void *dummy)
- {
- 	struct i2c_adapter *adap;
-@@ -558,27 +568,23 @@ static int i2cdev_attach_adapter(struct device *dev, void *dummy)
- 
- 	cdev_init(&i2c_dev->cdev, &i2cdev_fops);
- 	i2c_dev->cdev.owner = THIS_MODULE;
--	res = cdev_add(&i2c_dev->cdev, MKDEV(I2C_MAJOR, adap->nr), 1);
--	if (res)
--		goto error_cdev;
--
--	/* register this i2c device with the driver core */
--	i2c_dev->dev = device_create(i2c_dev_class, &adap->dev,
--				     MKDEV(I2C_MAJOR, adap->nr), NULL,
--				     "i2c-%d", adap->nr);
--	if (IS_ERR(i2c_dev->dev)) {
--		res = PTR_ERR(i2c_dev->dev);
--		goto error;
-+
-+	device_initialize(&i2c_dev->dev);
-+	i2c_dev->dev.devt = MKDEV(I2C_MAJOR, adap->nr);
-+	i2c_dev->dev.class = i2c_dev_class;
-+	i2c_dev->dev.parent = &adap->dev;
-+	i2c_dev->dev.release = i2cdev_dev_release;
-+	dev_set_name(&i2c_dev->dev, "i2c-%d", adap->nr);
-+
-+	res = cdev_device_add(&i2c_dev->cdev, &i2c_dev->dev);
-+	if (res) {
-+		put_i2c_dev(i2c_dev, false);
-+		return res;
+diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
+index fb018fe1a8f7..5d79cd481730 100644
+--- a/drivers/media/media-device.c
++++ b/drivers/media/media-device.c
+@@ -396,16 +396,16 @@ int __must_check __media_device_register(struct media_device *mdev,
+ 	devnode->release = media_device_release;
+ 	ret = media_devnode_register(mdev, devnode, owner);
+ 	if (ret < 0) {
++		/* devnode free is handled in media_devnode_*() */
+ 		mdev->devnode = NULL;
+-		kfree(devnode);
+ 		return ret;
  	}
  
- 	pr_debug("i2c-dev: adapter [%s] registered as minor %d\n",
- 		 adap->name, adap->nr);
- 	return 0;
--error:
--	cdev_del(&i2c_dev->cdev);
--error_cdev:
--	put_i2c_dev(i2c_dev);
--	return res;
+ 	ret = device_create_file(&devnode->dev, &dev_attr_model);
+ 	if (ret < 0) {
++		/* devnode free is handled in media_devnode_*() */
+ 		mdev->devnode = NULL;
+ 		media_devnode_unregister(devnode);
+-		kfree(devnode);
+ 		return ret;
+ 	}
+ 
+@@ -430,6 +430,8 @@ void media_device_unregister(struct media_device *mdev)
+ 	if (media_devnode_is_registered(mdev->devnode)) {
+ 		device_remove_file(&mdev->devnode->dev, &dev_attr_model);
+ 		media_devnode_unregister(mdev->devnode);
++		/* devnode free is handled in media_devnode_*() */
++		mdev->devnode = NULL;
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(media_device_unregister);
+diff --git a/drivers/media/media-devnode.c b/drivers/media/media-devnode.c
+index 000efb17b95b..45bb70d27224 100644
+--- a/drivers/media/media-devnode.c
++++ b/drivers/media/media-devnode.c
+@@ -63,13 +63,8 @@ static void media_devnode_release(struct device *cd)
+ 	struct media_devnode *devnode = to_media_devnode(cd);
+ 
+ 	mutex_lock(&media_devnode_lock);
+-
+-	/* Delete the cdev on this minor as well */
+-	cdev_del(&devnode->cdev);
+-
+ 	/* Mark device node number as free */
+ 	clear_bit(devnode->minor, media_devnode_nums);
+-
+ 	mutex_unlock(&media_devnode_lock);
+ 
+ 	/* Release media_devnode and perform other cleanups as needed. */
+@@ -77,6 +72,7 @@ static void media_devnode_release(struct device *cd)
+ 		devnode->release(devnode);
+ 
+ 	kfree(devnode);
++	pr_debug("%s: Media Devnode Deallocated\n", __func__);
  }
  
- static int i2cdev_detach_adapter(struct device *dev, void *dummy)
-@@ -594,9 +600,7 @@ static int i2cdev_detach_adapter(struct device *dev, void *dummy)
- 	if (!i2c_dev) /* attach_adapter must have failed */
- 		return 0;
- 
--	cdev_del(&i2c_dev->cdev);
--	put_i2c_dev(i2c_dev);
--	device_destroy(i2c_dev_class, MKDEV(I2C_MAJOR, adap->nr));
-+	put_i2c_dev(i2c_dev, true);
- 
- 	pr_debug("i2c-dev: adapter [%s] unregistered\n", adap->name);
+ static struct bus_type media_bus_type = {
+@@ -205,6 +201,8 @@ static int media_release(struct inode *inode, struct file *filp)
+ 	/* decrease the refcount unconditionally since the release()
+ 	   return value is ignored. */
+ 	put_device(&devnode->dev);
++
++	pr_debug("%s: Media Release\n", __func__);
  	return 0;
+ }
+ 
+@@ -250,6 +248,7 @@ int __must_check media_devnode_register(struct media_device *mdev,
+ 	if (minor == MEDIA_NUM_DEVICES) {
+ 		mutex_unlock(&media_devnode_lock);
+ 		pr_err("could not get a free minor\n");
++		kfree(devnode);
+ 		return -ENFILE;
+ 	}
+ 
+@@ -259,27 +258,31 @@ int __must_check media_devnode_register(struct media_device *mdev,
+ 	devnode->minor = minor;
+ 	devnode->media_dev = mdev;
+ 
++	/* Part 1: Initialize dev now to use dev.kobj for cdev.kobj.parent */
++	devnode->dev.bus = &media_bus_type;
++	devnode->dev.devt = MKDEV(MAJOR(media_dev_t), devnode->minor);
++	devnode->dev.release = media_devnode_release;
++	if (devnode->parent)
++		devnode->dev.parent = devnode->parent;
++	dev_set_name(&devnode->dev, "media%d", devnode->minor);
++	device_initialize(&devnode->dev);
++
+ 	/* Part 2: Initialize and register the character device */
+ 	cdev_init(&devnode->cdev, &media_devnode_fops);
+ 	devnode->cdev.owner = owner;
++	devnode->cdev.kobj.parent = &devnode->dev.kobj;
+ 
+ 	ret = cdev_add(&devnode->cdev, MKDEV(MAJOR(media_dev_t), devnode->minor), 1);
+ 	if (ret < 0) {
+ 		pr_err("%s: cdev_add failed\n", __func__);
+-		goto error;
++		goto cdev_add_error;
+ 	}
+ 
+-	/* Part 3: Register the media device */
+-	devnode->dev.bus = &media_bus_type;
+-	devnode->dev.devt = MKDEV(MAJOR(media_dev_t), devnode->minor);
+-	devnode->dev.release = media_devnode_release;
+-	if (devnode->parent)
+-		devnode->dev.parent = devnode->parent;
+-	dev_set_name(&devnode->dev, "media%d", devnode->minor);
+-	ret = device_register(&devnode->dev);
++	/* Part 3: Add the media device */
++	ret = device_add(&devnode->dev);
+ 	if (ret < 0) {
+-		pr_err("%s: device_register failed\n", __func__);
+-		goto error;
++		pr_err("%s: device_add failed\n", __func__);
++		goto device_add_error;
+ 	}
+ 
+ 	/* Part 4: Activate this minor. The char device can now be used. */
+@@ -287,12 +290,15 @@ int __must_check media_devnode_register(struct media_device *mdev,
+ 
+ 	return 0;
+ 
+-error:
+-	mutex_lock(&media_devnode_lock);
++device_add_error:
+ 	cdev_del(&devnode->cdev);
++cdev_add_error:
++	mutex_lock(&media_devnode_lock);
+ 	clear_bit(devnode->minor, media_devnode_nums);
++	devnode->media_dev = NULL;
+ 	mutex_unlock(&media_devnode_lock);
+ 
++	put_device(&devnode->dev);
+ 	return ret;
+ }
+ 
+@@ -314,8 +320,12 @@ void media_devnode_unregister(struct media_devnode *devnode)
+ 
+ 	mutex_lock(&media_devnode_lock);
+ 	clear_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
++	/* Delete the cdev on this minor as well */
++	cdev_del(&devnode->cdev);
+ 	mutex_unlock(&media_devnode_lock);
+-	device_unregister(&devnode->dev);
++	device_del(&devnode->dev);
++	devnode->media_dev = NULL;
++	put_device(&devnode->dev);
+ }
+ 
+ /*
 -- 
 2.25.1
 
