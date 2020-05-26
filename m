@@ -2,120 +2,121 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896F4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD33207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708E020776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731876AbgEZK0Y (ORCPT
+        id S1731889AbgEZK1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:26:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:48738 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbgEZK0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:26:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD43E1FB;
-        Tue, 26 May 2020 03:26:21 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA5113F52E;
-        Tue, 26 May 2020 03:26:19 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:26:11 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Jiping Ma <jiping.ma2@windriver.com>
-Cc:     will.deacon@arm.com, paul.gortmaker@windriver.com,
-        catalin.marinas@arm.com, bruce.ashfield@gmail.com,
-        yue.tao@windriver.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, zhe.he@windriver.com
-Subject: Re: [PATCH][V3] arm64: perf: Get the wrong PC value in REGS_ABI_32
- mode
-Message-ID: <20200526102611.GA1363@C02TD0UTHF1T.local>
-References: <1589165527-188401-1-git-send-email-jiping.ma2@windriver.com>
+        Tue, 26 May 2020 06:27:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31442 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731815AbgEZK1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:27:00 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QA5xxx057571;
+        Tue, 26 May 2020 06:25:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 316wyrpry4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 06:25:20 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04QALbLM089259;
+        Tue, 26 May 2020 06:25:20 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 316wyrprxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 06:25:19 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04QALwVn011238;
+        Tue, 26 May 2020 10:25:18 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04fra.de.ibm.com with ESMTP id 316uf8a9qn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 10:25:17 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04QAPFY2000510
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 26 May 2020 10:25:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FB46A404D;
+        Tue, 26 May 2020 10:25:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2F65A4051;
+        Tue, 26 May 2020 10:25:11 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue, 26 May 2020 10:25:11 +0000 (GMT)
+Date:   Tue, 26 May 2020 15:55:11 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     john mathew <john.mathew@unikie.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@gmail.com, willy@infradead.org,
+        valentin.schneider@arm.com, rdunlap@infradead.org,
+        Mostafa Chamanara <mostafa.chamanara@basemark.com>,
+        Oleg Tsymbal <oleg.tsymbal@unikie.com>
+Subject: Re: [RFC PATCH v5 3/3] docs: scheduler: Add introduction to
+ scheduler context-switch
+Message-ID: <20200526102511.GA5681@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20200514092637.15684-1-John.Mathew@unikie.com>
+ <20200514092637.15684-4-John.Mathew@unikie.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1589165527-188401-1-git-send-email-jiping.ma2@windriver.com>
+In-Reply-To: <20200514092637.15684-4-John.Mathew@unikie.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_01:2020-05-26,2020-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 phishscore=0 adultscore=0 clxscore=1011 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 spamscore=0
+ mlxscore=0 bulkscore=0 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005260073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 10:52:07AM +0800, Jiping Ma wrote:
-> Modified the patch subject and the change description.
-> 
-> PC value is get from regs[15] in REGS_ABI_32 mode, but correct PC
-> is regs->pc(regs[PERF_REG_ARM64_PC]) in arm64 kernel, which caused
-> that perf can not parser the backtrace of app with dwarf mode in the 
-> 32bit system and 64bit kernel.
-> 
-> Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+* john mathew <john.mathew@unikie.com> [2020-05-14 12:26:37]:
 
-Thanks for this.
+> +
+> +Context Switching
+> +-----------------
+> +
+> +Context switching, the switching from a running task to another,
+> +is done by the context_switch() function defined in kernel/sched.c.
 
+context_switch is defined in kernel/sched/core.c 
 
-> ---
->  arch/arm64/kernel/perf_regs.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-> index 0bbac61..0ef2880 100644
-> --- a/arch/arm64/kernel/perf_regs.c
-> +++ b/arch/arm64/kernel/perf_regs.c
-> @@ -32,6 +32,10 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
->  	if ((u32)idx == PERF_REG_ARM64_PC)
->  		return regs->pc;
->  
-> +	if (perf_reg_abi(current) == PERF_SAMPLE_REGS_ABI_32
-> +		&& idx == 15)
-> +		return regs->pc;
+> +It is called by __schedule() when a new process has been selected to run.
+> +The execution flow is as follows:
+> +
+> +
+> +  For a kernel task switching to a user task, switch_mm_irqs_off()
+> +  replaces the address space of prev kernel task with the next from the user
+> +  task. Same as for exiting process in this case, the context_switch()
 
-I think there are some more issues here, and we may need a more
-substantial rework. For a compat thread, we always expose
-PERF_SAMPLE_REGS_ABI_32 via per_reg_abi(), but for some reason
-perf_reg_value() also munges the compat SP/LR into their ARM64
-equivalents, which don't exist in the 32-bit sample ABI. We also don't
-zero the regs that don't exist in 32-bit (including the aliasing PC).
+Did you mean existing instead of exiting?
 
-I reckon what we should do is have seperate functions for the two ABIs,
-to ensure we don't conflate them, e.g.
-
-u64 perf_reg_value_abi32(struct pt_regs *regs, int idx)
-{
-	if ((u32)idx > PERF_REG_ARM32_PC)
-		return 0;
-	if (idx == PERF_REG_ARM32_PC)
-		return regs->pc;
-	
-	/*
-	 * Compat SP and LR already in-place
-	 */
-	return regs->regs[idx];
-}
-
-u64 perf_reg_value_abi64(struct pt_regs *regs, int idx)
-{
-	if ((u32)idx > PERF_REG_ARM64_MAX)
-		return 0;
-	if ((u32)idx == PERF_REG_ARM64_SP)
-		return regs->sp;
-	if ((u32)idx == PERF_REG_ARM64_PC)
-		return regs->pc;
-	
-	reutrn regs->regs[idx];
-}
-
-u64 perf_reg_value(struct pt_regs *regs, int idx)
-{
-	if (compat_user_mode(regs))
-		return perf_reg_value_abi32(regs, idx);
-	else
-		return perf_reg_value_abi64(regs, idx);
-}
-
-Thanks,
-Mark.
+> +  function saves the pointer to the memory descriptor used by prev in the
+> +  runqueue???s prev_mm field and resets prev task active address space.
+> +
+-- 
+Thanks and Regards
+Srikar Dronamraju
