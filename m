@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11403C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A869FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE3D20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79804208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520302;
-	bh=iBUom3UexuJtoL9Ox33IMnAZayXMsAmGh1AfuUlcV8s=;
+	s=default; t=1590520306;
+	bh=TjVIzJCh0CEfsQLND/3pcn51jPC8iMMpkKt8EVaLwEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AhVnu+57ofVsnN4tGbdUyZ0nwNUSGf0VOn37FSqQSvopqSbHbpfNhvJz6EyS4itQh
-	 01apXsqE8Qi9s7CetrG749iM7Q02TWUiZom8DzBR9vEIccQVA9Q4w9HbtyTQ5+KfZ7
-	 rir4BpxK++XD8XZ/JIKfIa21arxn+duaihEfVhrs=
+	b=Awkl45J6uwV834pgu92ngRYFpmzaXWlx4naIq9kgH9HKfzZChfsd3qtGe5EilIVhJ
+	 nLWwWHUAn8bzmUa0DB+tNI60gG/hrGE9wFLBlEEaeO/kwmQvkFeyOLSRBllKNDl/SF
+	 M0/nICfJOpToGY45CeYb0vyzjtlrf1WEd+VvChSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391947AbgEZTLm (ORCPT
+        id S2390331AbgEZTLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391544AbgEZTLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:38 -0400
+        id S2391739AbgEZTLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBAD820888;
-        Tue, 26 May 2020 19:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE7AE208A7;
+        Tue, 26 May 2020 19:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520298;
-        bh=iBUom3UexuJtoL9Ox33IMnAZayXMsAmGh1AfuUlcV8s=;
+        s=default; t=1590520301;
+        bh=TjVIzJCh0CEfsQLND/3pcn51jPC8iMMpkKt8EVaLwEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3Hb/W73i1gCgu1ukd8EdKOixenga+i5bPAvIArA+XsWEcPLY48xEB6ZuYHvFjyzl
-         8QxvgNCBOIZJa/TxdUVF0BA1F4DVjD66vMHYruyRgiwSyE3buk6sOkUDPE3KUFu7zW
-         E/xl69YSLVb8U8067Tve0Nu4ACTPjdUcUImfme4g=
+        b=E2LHmyldeqfEwxNx9mrQlCJjACIoWDv/P5C+ZyyocuQZY9dYunTKqBjLMVEosgQBm
+         D33N77zjT8mXkDznHtvZVObrDALu61hRMzF5TdB5AM7ZK0aFz6N4dFJk3NT1dSsRU4
+         CJpWqbk/khfskKsrnhZWd1kutsLmsUtWBgO3Qp6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
         Mimi Zohar <zohar@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 004/126] evm: Check also if *tfm is an error pointer in init_desc()
-Date:   Tue, 26 May 2020 20:52:21 +0200
-Message-Id: <20200526183937.860467687@linuxfoundation.org>
+Subject: [PATCH 5.6 005/126] ima: Fix return value of ima_write_policy()
+Date:   Tue, 26 May 2020 20:52:22 +0200
+Message-Id: <20200526183937.954242103@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -64,45 +63,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
-[ Upstream commit 53de3b080d5eae31d0de219617155dcc34e7d698 ]
+[ Upstream commit 2e3a34e9f409ebe83d1af7cd2f49fca7af97dfac ]
 
-This patch avoids a kernel panic due to accessing an error pointer set by
-crypto_alloc_shash(). It occurs especially when there are many files that
-require an unsupported algorithm, as it would increase the likelihood of
-the following race condition:
+This patch fixes the return value of ima_write_policy() when a new policy
+is directly passed to IMA and the current policy requires appraisal of the
+file containing the policy. Currently, if appraisal is not in ENFORCE mode,
+ima_write_policy() returns 0 and leads user space applications to an
+endless loop. Fix this issue by denying the operation regardless of the
+appraisal mode.
 
-Task A: *tfm = crypto_alloc_shash() <= error pointer
-Task B: if (*tfm == NULL) <= *tfm is not NULL, use it
-Task B: rc = crypto_shash_init(desc) <= panic
-Task A: *tfm = NULL
-
-This patch uses the IS_ERR_OR_NULL macro to determine whether or not a new
-crypto context must be created.
-
-Cc: stable@vger.kernel.org
-Fixes: d46eb3699502b ("evm: crypto hash replaced by shash")
-Co-developed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+Cc: stable@vger.kernel.org # 4.10.x
+Fixes: 19f8a84713edc ("ima: measure and appraise the IMA policy itself")
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Reviewed-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
 Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/evm/evm_crypto.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/integrity/ima/ima_fs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index d485f6fc908e..302adeb2d37b 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -93,7 +93,7 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
- 		algo = hash_algo_name[hash_algo];
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 2000e8df0301..68571c40d61f 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -340,8 +340,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+ 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+ 				    "policy_update", "signed policy required",
+ 				    1, 0);
+-		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+-			result = -EACCES;
++		result = -EACCES;
+ 	} else {
+ 		result = ima_parse_add_rule(data);
  	}
- 
--	if (*tfm == NULL) {
-+	if (IS_ERR_OR_NULL(*tfm)) {
- 		mutex_lock(&mutex);
- 		if (*tfm)
- 			goto out;
 -- 
 2.25.1
 
