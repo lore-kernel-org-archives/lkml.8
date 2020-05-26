@@ -2,48 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32F6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21711C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E442068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 038992084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbgEZNif (ORCPT
+        id S1731546AbgEZNii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:38:35 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57652 "EHLO
+        Tue, 26 May 2020 09:38:38 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57610 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729433AbgEZNid (ORCPT
+        with ESMTP id S1729117AbgEZNic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:38:33 -0400
+        Tue, 26 May 2020 09:38:32 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 583B38030869;
-        Tue, 26 May 2020 13:38:29 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 71D85803086B;
+        Tue, 26 May 2020 13:38:28 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wjIOnpC2Dxx8; Tue, 26 May 2020 16:38:28 +0300 (MSK)
+        with ESMTP id vb9wVfh2Lywg; Tue, 26 May 2020 16:38:27 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
         Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Arnd Bergmann <arnd@arndb.de>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/3] hwmon: Add notification support
-Date:   Tue, 26 May 2020 16:38:22 +0300
-Message-ID: <20200526133823.20466-3-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
-References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 0/3] hwmon: Add Baikal-T1 SoC Process, Voltage and Temp sensor support
+Date:   Tue, 26 May 2020 16:38:20 +0300
+Message-ID: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -53,201 +57,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+In order to keep track of Baikal-T1 SoC power consumption and make sure
+the chip heating is within the normal temperature limits, there is
+a dedicated hardware monitor sensor embedded into the SoC. It is based
+on the Analog Bits PVT sensor but equipped with a vendor-specific control
+wrapper, which ease an access to the sensors functionality. Fist of all it
+provides an accessed to the sampled Temperature, Voltage and
+Low/Standard/High Voltage thresholds. In addition the wrapper generates
+an interrupt in case if one enabled for alarm thresholds or data ready
+event. All of these functionality is implemented in the Baikal-T1 PVT
+driver submitted within this patchset. Naturally there is also a patch,
+which creates a corresponding yaml-based dt-binding file for the sensor.
 
-For hwmon drivers using the hwmon_device_register_with_info() API, it
-is desirable to have a generic notification mechanism available. This
-mechanism can be used to notify userspace as well as the thermal
-subsystem if the driver experiences any events, such as warning or
-critical alarms.
+This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+tag: v5.7-rc4
 
-Implement hwmon_notify_event() to provide this mechanism. The function
-generates a sysfs event and a udev event. If the device is registered
-with the thermal subsystem and the event is associated with a temperature
-sensor, also notify the thermal subsystem that a thermal event occurred.
+Note new vendor prefix for Baikal-T1 PVT device will be added in the
+framework of the next patchset:
+https://lkml.org/lkml/2020/5/6/1047
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Changelog v2:
+- Don't use a multi-arg clock phandle reference in the examples dt-bindings
+  property. Thus reundant include pre-processor statement can be removed.
+- Rearrange the SoBs with adding Maxim' co-development tag.
+- Lowercase the node-name in the dt-schema example.
+- Add dual license header to the dt-bindings file.
+- Replace "additionalProperties: false" property with
+  "unevaluatedProperties: false".
+- Discard label definition from the binding example.
+- Discard handwritten IO-access wrappers. Use normal readl/writel instead.
+- Use generic FIELD_{GET,PREP} macros instead of handwritten ones.
+- Since the driver depends on the OF config we can remove of_match_ptr()
+  macro utilization.
+- Don't print error-message if no platform IRQ found. Just return an error.
+- Remove probe-status info string printout.
+- Our corporate email server doesn't change Message-Id anymore, so the patchset
+  is resubmitted being in the cover-letter-threaded format.
+
+Link: https://lore.kernel.org/linux-hwmon/20200510103211.27905-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Add bt1-pvt into the Documentation/hwmon/index.rst file.
+- Discard explicit "default n" from the SENSORS_BT1_PVT_ALARMS config.
+- Use "depends on SENSORS_BT1_PVT" statement instead of if-endif kbuild
+  config clause.
+- Alphabetically order the include macro operators.
+- Discard unneeded include macro in the header file.
+- Use new generic interface of the hwmon alarms notifications introduced
+  in the first patch (based on hwmon_notify_event()).
+- Add more descriptive information regarding the temp1_trim attribute.
+- Discard setting the platforms device private data by using
+  platform_set_drvdata(). It's redundant since unused in the driver.
+- Pass "pvt" hwmon name instead of dev_name(dev) to
+  devm_hwmon_device_register_with_info().
+- Add "baikal,pvt-temp-trim-millicelsius" temperature trim DT property
+  support.
+- Discard kernel log warnings printed from the ISR when either min or
+  max threshold levels are crossed.
+- Discard CONFIG_OF dependency since there is non at compile-time.
+
+Co-developed-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
+Signed-off-by: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org
 Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
----
+Guenter Roeck (1):
+  hwmon: Add notification support
 
-Guenter: I have no plan to push this since there are currently no users
-(and thus no means to test the code). However, I want to make sure that
-the patch is available if/when needed.
-Serge: There is a user now. It's Baikal-T1 PVT driver. So the patch can
-be merged in.
+Serge Semin (2):
+  dt-bindings: hwmon: Add Baikal-T1 PVT sensor binding
+  hwmon: Add Baikal-T1 PVT sensor driver
 
-Changelog v2: Skipped
+ .../bindings/hwmon/baikal,bt1-pvt.yaml        |  107 ++
+ Documentation/hwmon/bt1-pvt.rst               |  116 ++
+ Documentation/hwmon/index.rst                 |    1 +
+ drivers/hwmon/Kconfig                         |   25 +
+ drivers/hwmon/Makefile                        |    1 +
+ drivers/hwmon/bt1-pvt.c                       | 1155 +++++++++++++++++
+ drivers/hwmon/bt1-pvt.h                       |  244 ++++
+ drivers/hwmon/hwmon.c                         |   69 +-
+ include/linux/hwmon.h                         |    3 +
+ 9 files changed, 1718 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/baikal,bt1-pvt.yaml
+ create mode 100644 Documentation/hwmon/bt1-pvt.rst
+ create mode 100644 drivers/hwmon/bt1-pvt.c
+ create mode 100644 drivers/hwmon/bt1-pvt.h
 
-Changelog v3:
-- Fix merge conflicts found in struct hwmon_thermal_data and in
-  hwmon_thermal_add_sensors().
-- Use hwmon_attr_base() to get the hwmon attribute base index.
-- Use the base value to get the sysfs-attribute name.
-  hwmon_thermal_notify() is supposed to be called with normal index.
----
- drivers/hwmon/hwmon.c | 69 +++++++++++++++++++++++++++++++++++++++++--
- include/linux/hwmon.h |  3 ++
- 2 files changed, 69 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
-index 6a30fb453f7a..e9bc33c18a33 100644
---- a/drivers/hwmon/hwmon.c
-+++ b/drivers/hwmon/hwmon.c
-@@ -15,6 +15,7 @@
- #include <linux/gfp.h>
- #include <linux/hwmon.h>
- #include <linux/idr.h>
-+#include <linux/list.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
-@@ -31,7 +32,7 @@ struct hwmon_device {
- 	const char *name;
- 	struct device dev;
- 	const struct hwmon_chip_info *chip;
--
-+	struct list_head tzdata;
- 	struct attribute_group group;
- 	const struct attribute_group **groups;
- };
-@@ -55,12 +56,12 @@ struct hwmon_device_attribute {
- 
- /*
-  * Thermal zone information
-- * In addition to the reference to the hwmon device,
-- * also provides the sensor index.
-  */
- struct hwmon_thermal_data {
-+	struct list_head node;		/* hwmon tzdata list entry */
- 	struct device *dev;		/* Reference to hwmon device */
- 	int index;			/* sensor index */
-+	struct thermal_zone_device *tzd;/* thermal zone device */
- };
- 
- static ssize_t
-@@ -156,10 +157,17 @@ static const struct thermal_zone_of_device_ops hwmon_thermal_ops = {
- 	.get_temp = hwmon_thermal_get_temp,
- };
- 
-+static void hwmon_thermal_remove_sensor(void *data)
-+{
-+	list_del(data);
-+}
-+
- static int hwmon_thermal_add_sensor(struct device *dev, int index)
- {
-+	struct hwmon_device *hwdev = to_hwmon_device(dev);
- 	struct hwmon_thermal_data *tdata;
- 	struct thermal_zone_device *tzd;
-+	int err;
- 
- 	tdata = devm_kzalloc(dev, sizeof(*tdata), GFP_KERNEL);
- 	if (!tdata)
-@@ -177,13 +185,37 @@ static int hwmon_thermal_add_sensor(struct device *dev, int index)
- 	if (IS_ERR(tzd) && (PTR_ERR(tzd) != -ENODEV))
- 		return PTR_ERR(tzd);
- 
-+	err = devm_add_action(dev, hwmon_thermal_remove_sensor, &tdata->node);
-+	if (err)
-+		return err;
-+
-+	tdata->tzd = tzd;
-+	list_add(&tdata->node, &hwdev->tzdata);
-+
- 	return 0;
- }
-+
-+static void hwmon_thermal_notify(struct device *dev, int index)
-+{
-+	struct hwmon_device *hwdev = to_hwmon_device(dev);
-+	struct hwmon_thermal_data *tzdata;
-+
-+	list_for_each_entry(tzdata, &hwdev->tzdata, node) {
-+		if (tzdata->index == index) {
-+			thermal_zone_device_update(tzdata->tzd,
-+						   THERMAL_EVENT_UNSPECIFIED);
-+		}
-+	}
-+}
-+
- #else
- static int hwmon_thermal_add_sensor(struct device *dev, int index)
- {
- 	return 0;
- }
-+
-+static void hwmon_thermal_notify(struct device *dev, int index) { }
-+
- #endif /* IS_REACHABLE(CONFIG_THERMAL) && ... */
- 
- static int hwmon_attr_base(enum hwmon_sensor_types type)
-@@ -511,6 +543,35 @@ static const int __templates_size[] = {
- 	[hwmon_intrusion] = ARRAY_SIZE(hwmon_intrusion_attr_templates),
- };
- 
-+int hwmon_notify_event(struct device *dev, enum hwmon_sensor_types type,
-+		       u32 attr, int channel)
-+{
-+	char sattr[MAX_SYSFS_ATTR_NAME_LENGTH];
-+	const char * const *templates;
-+	const char *template;
-+	int base;
-+
-+	if (type >= ARRAY_SIZE(__templates))
-+		return -EINVAL;
-+	if (attr >= __templates_size[type])
-+		return -EINVAL;
-+
-+	templates = __templates[type];
-+	template = templates[attr];
-+
-+	base = hwmon_attr_base(type);
-+
-+	scnprintf(sattr, MAX_SYSFS_ATTR_NAME_LENGTH, template, base + channel);
-+	sysfs_notify(&dev->kobj, NULL, sattr);
-+	kobject_uevent(&dev->kobj, KOBJ_CHANGE);
-+
-+	if (type == hwmon_temp)
-+		hwmon_thermal_notify(dev, channel);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(hwmon_notify_event);
-+
- static int hwmon_num_channel_attrs(const struct hwmon_channel_info *info)
- {
- 	int i, n;
-@@ -661,6 +722,8 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
- 	if (err)
- 		goto free_hwmon;
- 
-+	INIT_LIST_HEAD(&hwdev->tzdata);
-+
- 	if (dev && dev->of_node && chip && chip->ops->read &&
- 	    chip->info[0]->type == hwmon_chip &&
- 	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
-diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
-index 5e609f25878c..363d4a814aa1 100644
---- a/include/linux/hwmon.h
-+++ b/include/linux/hwmon.h
-@@ -436,6 +436,9 @@ devm_hwmon_device_register_with_info(struct device *dev,
- void hwmon_device_unregister(struct device *dev);
- void devm_hwmon_device_unregister(struct device *dev);
- 
-+int hwmon_notify_event(struct device *dev, enum hwmon_sensor_types type,
-+		       u32 attr, int channel);
-+
- /**
-  * hwmon_is_bad_char - Is the char invalid in a hwmon name
-  * @ch: the char to be considered
 -- 
 2.26.2
 
