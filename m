@@ -2,117 +2,130 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4EDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC13208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78407208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590501865;
+	bh=er1ViqgVwJ24ihRfhaLTKTZlbDupuxjf/x6qnwIhkAQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OQMTc2N204q05n6T5LbIoUNDQqNXuiNC8QgkanrhjYzrcAEJRV1PuY4m9Ue/oCioE
+	 x8mFb3YgdQFpnn87l03To1hdK/Au7lIALMQ5zwu1+DJ+zyxarEqv8y6023cKddP4qK
+	 hg/EOJKgeinFeQGJbnnTzFsnf3toQH73NeQUdBZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbgEZOEN (ORCPT
+        id S1732013AbgEZOEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:04:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:51320 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgEZOEN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:04:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 552661FB;
-        Tue, 26 May 2020 07:04:12 -0700 (PDT)
-Received: from [10.163.78.28] (unknown [10.163.78.28])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D8103F6C4;
-        Tue, 26 May 2020 07:04:09 -0700 (PDT)
-Subject: Re: [PATCH V2] arm64/cpufeature: Add get_arm64_ftr_reg_nowarn()
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        broonie@kernel.org, linux-kernel@vger.kernel.org
-References: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
- <0726a5b9-fff6-a15c-e705-db7abd4b1abd@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6886ec2e-c2e4-c2d2-faaa-b46ef69cc226@arm.com>
-Date:   Tue, 26 May 2020 19:33:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 26 May 2020 10:04:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41114 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbgEZOEY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:04:24 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 63so16341701oto.8;
+        Tue, 26 May 2020 07:04:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Ierdu4jhjBArg4KAhxK2ET/zYux67GkijyWUlcmSlg=;
+        b=t8bBqFbmYQ/VnfvQ16TPgsta/UMd6BjOJxfiQrsjr3GJRIWknMTExOA/9FcNxwwyi2
+         dSFJdQUgRzyqK2hbe2Br6lXNql3X+ZUkGsQFv5SLN0yTRF6QOcK26If3t7JE9BQRuQSz
+         VbslbKXA6aNYer+m9wQmF+sygHMIt/y15Orl1RuNMMs8Jlr78evQq2bzJK73hNuQhlYr
+         oRc3KfFRowe2MPP1yAhy3QIRbRpyFnY+5E3AklSlfR6/cIHbQRU9KshMsOY8A7VufOVY
+         VPMRImQ8FelqfWBQDg2Flujq/+ro/9bHEA1rh9GS0c2jwfqvVuC+Odf41zb1waz59CO5
+         9Wlw==
+X-Gm-Message-State: AOAM5310RoIOchT3Ga7eOFlxXmV5vEkyyz4MMTVmZgeBwE+o11Kpmejc
+        k6tuYWBUDaWLkIks4areqxk44OHRjd6dMCbcnCU=
+X-Google-Smtp-Source: ABdhPJyUNtHDNcsWTXkodpXr8omxt8fKKmdXPMuKjXr10pz49QCMDOCfVptyEHRHzvYaFzWQrAougJhfu1ijiVuoj4E=
+X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr934672otq.118.1590501863497;
+ Tue, 26 May 2020 07:04:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0726a5b9-fff6-a15c-e705-db7abd4b1abd@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200515093613.18691-1-ardb@kernel.org> <CAJZ5v0guHdbZTsU5e7KDAHDy9Gnh67JwtSSCeDaK8mUwAk1d3g@mail.gmail.com>
+ <CAMj1kXFVYOoX=pe9uVY-j_o8YhhE_Fef6q6jc8S9nzBLYSBb=g@mail.gmail.com>
+In-Reply-To: <CAMj1kXFVYOoX=pe9uVY-j_o8YhhE_Fef6q6jc8S9nzBLYSBb=g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 May 2020 16:04:10 +0200
+Message-ID: <CAJZ5v0i0LbDjATGGN-+Xu_ztyrkCL5EXqwjdYDLwpnALiOoBtA@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: GED: add support for _Exx / _Lxx handler methods
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 26, 2020 at 1:12 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> Hello Rafael,
+>
+> I spotted an issue with this patch. Please see below.
+>
+>
+> On Fri, 15 May 2020 at 18:32, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Fri, May 15, 2020 at 11:37 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > Per the ACPI spec, interrupts in the range [0, 255] may be handled
+> > > in AML using individual methods whose naming is based on the format
+> > > _Exx or _Lxx, where xx is the hex representation of the interrupt
+> > > index.
+> > >
+> > > Add support for this missing feature to our ACPI GED driver.
+> > >
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Len Brown <lenb@kernel.org>
+> > > Cc: linux-acpi@vger.kernel.org
+> > > Cc: <stable@vger.kernel.org> # v4.9+
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > > ---
+> > >  drivers/acpi/evged.c | 22 +++++++++++++++++---
+> > >  1 file changed, 19 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/acpi/evged.c b/drivers/acpi/evged.c
+> > > index aba0d0027586..6d7a522952bf 100644
+> > > --- a/drivers/acpi/evged.c
+> > > +++ b/drivers/acpi/evged.c
+> > > @@ -79,6 +79,8 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
+> > >         struct resource r;
+> > >         struct acpi_resource_irq *p = &ares->data.irq;
+> > >         struct acpi_resource_extended_irq *pext = &ares->data.extended_irq;
+> > > +       char ev_name[5];
+> > > +       u8 trigger;
+> > >
+> > >         if (ares->type == ACPI_RESOURCE_TYPE_END_TAG)
+> > >                 return AE_OK;
+> > > @@ -87,14 +89,28 @@ static acpi_status acpi_ged_request_interrupt(struct acpi_resource *ares,
+> > >                 dev_err(dev, "unable to parse IRQ resource\n");
+> > >                 return AE_ERROR;
+> > >         }
+> > > -       if (ares->type == ACPI_RESOURCE_TYPE_IRQ)
+> > > +       if (ares->type == ACPI_RESOURCE_TYPE_IRQ) {
+> > >                 gsi = p->interrupts[0];
+> > > -       else
+> > > +               trigger = p->triggering;
+> > > +       } else {
+> > >                 gsi = pext->interrupts[0];
+> > > +               trigger = p->triggering;
+>
+> This should be 'pext->triggering' instead.
+>
+> In practice, it doesn't matter, since p and pext point to the same
+> union, and the 'triggering' field happens to be at the same offset.
+> But it should still be fixed, of course.
+>
+> Would you prefer a followup patch? Or can you fix it locally?
 
-
-On 05/26/2020 07:34 PM, Suzuki K Poulose wrote:
-> On 05/26/2020 02:39 PM, Anshuman Khandual wrote:
->> There is no way to proceed when requested register could not be searched in
->> arm64_ftr_reg[]. Requesting for a non present register would be an error as
->> well. Hence lets just WARN_ON() when search fails in get_arm64_ftr_reg()
->> rather than checking for return value and doing a BUG_ON() instead in some
->> individual callers. But there are also caller instances that dont error out
->> when register search fails. Add a new helper get_arm64_ftr_reg_nowarn() for
->> such cases.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->> Changes in V2:
->>
->> - Added get_arm64_ftr_reg_nowarn() per Will
->> - read_sanitised_ftr_reg() returns 0 when register search fails per Catalin
->>
->> Changes in V1: (https://patchwork.kernel.org/patch/11559083/)
->>
->>   arch/arm64/kernel/cpufeature.c | 42 +++++++++++++++++++++++-----------
->>   1 file changed, 29 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
->> index bc5048f152c1..f4555b9d145c 100644
->> --- a/arch/arm64/kernel/cpufeature.c
->> +++ b/arch/arm64/kernel/cpufeature.c
->> @@ -548,16 +548,16 @@ static int search_cmp_ftr_reg(const void *id, const void *regp)
->>   }
->>   
-> 
-> ...
-> 
->>   static u64 arm64_ftr_set_value(const struct arm64_ftr_bits *ftrp, s64 reg,
->>                      s64 ftr_val)
->>   {
->> @@ -632,8 +654,6 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
->>       const struct arm64_ftr_bits *ftrp;
->>       struct arm64_ftr_reg *reg = get_arm64_ftr_reg(sys_reg);
->>   -    BUG_ON(!reg);
->> -
->>       for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
->>           u64 ftr_mask = arm64_ftr_mask(ftrp);
->>           s64 ftr_new = arm64_ftr_value(ftrp, new);
->> @@ -762,7 +782,6 @@ static int check_update_ftr_reg(u32 sys_id, int cpu, u64 val, u64 boot)
->>   {
->>       struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
->>   -    BUG_ON(!regp);
->>       update_cpu_ftr_reg(regp, val);
->>       if ((boot & regp->strict_mask) == (val & regp->strict_mask))
->>           return 0;
->> @@ -776,9 +795,6 @@ static void relax_cpu_ftr_reg(u32 sys_id, int field)
->>       const struct arm64_ftr_bits *ftrp;
->>       struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
->>   -    if (WARN_ON(!regp))
->> -        return;
->> -
-> 
-> You need to return here, on !regp. Rest looks fine to me.
-
-Catalin had suggested and agreed on for this change in behavior here.
-If the register is not found, there is already some problem.
+A followup, please.
