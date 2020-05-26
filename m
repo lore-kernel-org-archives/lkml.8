@@ -2,124 +2,162 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3635C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13AE120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73B820663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:46:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="sXcb3w0e"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B57VcRK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgEZPpy (ORCPT
+        id S1730293AbgEZPqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:45:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        Tue, 26 May 2020 11:46:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgEZPpx (ORCPT
+        with ESMTP id S1728303AbgEZPqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:45:53 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62DB3C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:45:53 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id fb16so9645816qvb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H9NFd0yHlWGmdk/EMdYVrUqJ2vOLGczXKpbxrO9cBaM=;
-        b=sXcb3w0eQMDKcMmANV3bqeRrIPN376XqoY+mlxj5Ut31RFJurt5tGbdEwZIq3dbD4O
-         4Xc1eosEIel58VXlkkgjWLU6wV7f/ifJVJIY07JVrM+eeQDSfAJ1DRQpeBWK9MAn05CM
-         f65q0wh613K5qqBw7J2PgH74PTHqbY3svEhQF6173TcXPGfhIiy6D76vMl51zT4i5OQH
-         czyiNq+uFO6cGRDKUE2rCPkKOLxAxLqoLRpcQ/uA1g3ZUDLGtqUNp6RFcDu4AbU0e8fY
-         KqkZS1lI+fdy90NvlaVPglUzNlxWIrthSeVPMKt9kLvjdd+hs3o1FdwqWi0WbI2I2VAE
-         p/JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H9NFd0yHlWGmdk/EMdYVrUqJ2vOLGczXKpbxrO9cBaM=;
-        b=IWl7uamd5swqdDMs0kVlgimq50iLQtR/SHK0+xVE+FP+Zx8jIHA6ZVbgmFdG4gJpmA
-         sacs4tKuTt5s1sm0cdLN45Tvx/dyomylUPTlwq061P+b6+ubBSz7cW+sThIaNdRTq144
-         CwR0a3OdHl29IohabX2Q0quU2MBOoIXsD1MQuKgEqzeUQ0O9j4MPZutvdEeGTX9A1QNF
-         F14zY5Gt6f4UrjEp90u+6yKsNBJfrmj96muELdGDfNiq5Lg4PB3J/hCPO0TUP++6EfTu
-         Sy246QGR/2JkeX96pqaPPIyQ9QiY0ObuYqHmxG5HntgBAuFp/vjUNH3URorFLPE1UJrC
-         roxA==
-X-Gm-Message-State: AOAM530wD0wbwl0VlEf7D1aCaOxlQhJFvWJHWlOw4rf9wmlQSeu2jCs6
-        CzE9z5RlVQgnJFBdfSGfGpQlJA==
-X-Google-Smtp-Source: ABdhPJyGbmCuym3Nq9WvLw7q9NvhV/jtJ2jDr9IOuxTqLV6KU5lEVPsyp3uWaVf/cbyx7wDkA7kjDQ==
-X-Received: by 2002:ad4:404b:: with SMTP id r11mr21375700qvp.44.1590507952570;
-        Tue, 26 May 2020 08:45:52 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:8152])
-        by smtp.gmail.com with ESMTPSA id a27sm23969qtc.92.2020.05.26.08.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:45:51 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:45:28 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH mmotm] mm/swap: fix livelock in __read_swap_cache_async()
-Message-ID: <20200526154528.GA850116@cmpxchg.org>
-References: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
+        Tue, 26 May 2020 11:46:51 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8756FC03E96D;
+        Tue, 26 May 2020 08:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=f5trgiJH5V/8C2C/LXnwvUAj6Z8CNkwv12V2Vhc+Pn4=; b=B57VcRK1h7jmKgXnMJAs+RL/9Q
+        HL21I+jvKaM0Z6V3jxHUi2GruRwLyizy9RoGE8/ZCNHtcadJBRc0z/6UcqFgZsEE/Iz1/A3okBmy/
+        dHU9C75GHE2f8cn6DfAioBeoDy2ZVfJtJw1zC5yedsZGJUsjIhiNHLEdbiG6KZ2GF55iy+y+Tq51o
+        KnIj6SndpsBmssq20QfWfVtYhKpedxFz1WZ94oG7k0JLgEjKPhjNqUCHXTb4SjVW0cUnOFyyJqAKy
+        gC+EcvLdWl1C6dgWEQG6v227zmcgmm9ppKvgC7OZ0xTwvUlhtrpYR1SU52icI5aaLX6NMiag2HBN5
+        vQXhQyCQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdbn1-0003Kd-02; Tue, 26 May 2020 15:46:51 +0000
+Subject: Re: linux-next: Tree for May 26 (drivers/crypto/chelsio/chcr_ktls.c)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>
+References: <20200526203932.732df7c6@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ca9f612e-1cd7-d2b8-d1f0-497ffcbd5de5@infradead.org>
+Date:   Tue, 26 May 2020 08:46:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2005212246080.8458@eggly.anvils>
+In-Reply-To: <20200526203932.732df7c6@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 10:56:20PM -0700, Hugh Dickins wrote:
-> I've only seen this livelock on one machine (repeatably, but not to
-> order), and not fully analyzed it - two processes seen looping around
-> getting -EEXIST from swapcache_prepare(), I guess a third (at lower
-> priority? but wanting the same cpu as one of the loopers? preemption
-> or cond_resched() not enough to let it back in?) set SWAP_HAS_CACHE,
-> then went off into direct reclaim, scheduled away, and somehow could
-> not get back to add the page to swap cache and let them all complete.
+On 5/26/20 3:39 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Restore the page allocation in __read_swap_cache_async() to before
-> the swapcache_prepare() call: "mm: memcontrol: charge swapin pages
-> on instantiation" moved it outside the loop, which indeed looks much
-> nicer, but exposed this weakness.  We used to allocate new_page once
-> and then keep it across all iterations of the loop: but I think that
-> just optimizes for a rare case, and complicates the flow, so go with
-> the new simpler structure, with allocate+free each time around (which
-> is more considerate use of the memory too).
+> News: there will be no linux-next release tomorrow.
 > 
-> Fix the comment on the looping case, which has long been inaccurate:
-> it's not a racing get_swap_page() that's the problem here.
+> Changes since 20200525:
 > 
-> Fix the add_to_swap_cache() and mem_cgroup_charge() error recovery:
-> not swap_free(), but put_swap_page() to undo SWAP_HAS_CACHE, as was
-> done before; but delete_from_swap_cache() already includes it.
-> 
-> And one more nit: I don't think it makes any difference in practice,
-> but remove the "& GFP_KERNEL" mask from the mem_cgroup_charge() call:
-> add_to_swap_cache() needs that, to convert gfp_mask from user and page
-> cache allocation (e.g. highmem) to radix node allocation (lowmem), but
-> we don't need or usually apply that mask when charging mem_cgroup.
-> 
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> ---
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+on i386:
 
-> Mostly fixing mm-memcontrol-charge-swapin-pages-on-instantiation.patch
-> but now I see that mm-memcontrol-delete-unused-lrucare-handling.patch
-> made a further change here (took an arg off the mem_cgroup_charge call):
-> as is, this patch is diffed to go on top of both of them, and better
-> that I get it out now for Johannes look at; but could be rediffed for
-> folding into blah-instantiation.patch later.
+when CONFIG_IPV6 is not set/enabled:
 
-IMO it's worth having as a separate change. Joonsoo was concerned
-about the ordering but I didn't see it. Having this sequence of
-changes on record would be good for later reference.
+
+  CC      drivers/crypto/chelsio/chcr_ktls.o
+In file included from ../include/linux/tcp.h:19:0,
+                 from ../include/net/tls.h:41,
+                 from ../drivers/crypto/chelsio/chcr_ktls.h:8,
+                 from ../drivers/crypto/chelsio/chcr_ktls.c:6:
+../drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_ktls_act_open_req6':
+../include/net/sock.h:380:37: error: 'struct sock_common' has no member named 'skc_v6_rcv_saddr'; did you mean 'skc_rcv_saddr'?
+ #define sk_v6_rcv_saddr __sk_common.skc_v6_rcv_saddr
+                                     ^
+../drivers/crypto/chelsio/chcr_ktls.c:257:37: note: in expansion of macro 'sk_v6_rcv_saddr'
+  cpl->local_ip_hi = *(__be64 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8[0];
+                                     ^~~~~~~~~~~~~~~
+../include/net/sock.h:380:37: error: 'struct sock_common' has no member named 'skc_v6_rcv_saddr'; did you mean 'skc_rcv_saddr'?
+ #define sk_v6_rcv_saddr __sk_common.skc_v6_rcv_saddr
+                                     ^
+../drivers/crypto/chelsio/chcr_ktls.c:258:37: note: in expansion of macro 'sk_v6_rcv_saddr'
+  cpl->local_ip_lo = *(__be64 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8[8];
+                                     ^~~~~~~~~~~~~~~
+../include/net/sock.h:379:34: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+ #define sk_v6_daddr  __sk_common.skc_v6_daddr
+                                  ^
+../drivers/crypto/chelsio/chcr_ktls.c:259:36: note: in expansion of macro 'sk_v6_daddr'
+  cpl->peer_ip_hi = *(__be64 *)&sk->sk_v6_daddr.in6_u.u6_addr8[0];
+                                    ^~~~~~~~~~~
+../include/net/sock.h:379:34: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+ #define sk_v6_daddr  __sk_common.skc_v6_daddr
+                                  ^
+../drivers/crypto/chelsio/chcr_ktls.c:260:36: note: in expansion of macro 'sk_v6_daddr'
+  cpl->peer_ip_lo = *(__be64 *)&sk->sk_v6_daddr.in6_u.u6_addr8[8];
+                                    ^~~~~~~~~~~
+../drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_setup_connection':
+../include/net/sock.h:379:34: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+ #define sk_v6_daddr  __sk_common.skc_v6_daddr
+                                  ^
+../drivers/crypto/chelsio/chcr_ktls.c:295:27: note: in expansion of macro 'sk_v6_daddr'
+       ipv6_addr_type(&sk->sk_v6_daddr) == IPV6_ADDR_MAPPED)) {
+                           ^~~~~~~~~~~
+../include/net/sock.h:380:37: error: 'struct sock_common' has no member named 'skc_v6_rcv_saddr'; did you mean 'skc_rcv_saddr'?
+ #define sk_v6_rcv_saddr __sk_common.skc_v6_rcv_saddr
+                                     ^
+../drivers/crypto/chelsio/chcr_ktls.c:302:29: note: in expansion of macro 'sk_v6_rcv_saddr'
+           (const u32 *)&sk->sk_v6_rcv_saddr.in6_u.u6_addr8,
+                             ^~~~~~~~~~~~~~~
+../drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_ktls_dev_del':
+../include/net/sock.h:379:34: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+ #define sk_v6_daddr  __sk_common.skc_v6_daddr
+                                  ^
+../drivers/crypto/chelsio/chcr_ktls.c:400:26: note: in expansion of macro 'sk_v6_daddr'
+        (const u32 *)&sk->sk_v6_daddr.in6_u.u6_addr8,
+                          ^~~~~~~~~~~
+../drivers/crypto/chelsio/chcr_ktls.c: In function 'chcr_ktls_dev_add':
+../include/net/sock.h:379:34: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+ #define sk_v6_daddr  __sk_common.skc_v6_daddr
+                                  ^
+../drivers/crypto/chelsio/chcr_ktls.c:494:27: note: in expansion of macro 'sk_v6_daddr'
+       ipv6_addr_type(&sk->sk_v6_daddr) == IPV6_ADDR_MAPPED)) {
+                           ^~~~~~~~~~~
+In file included from ../arch/x86/include/asm/string.h:3:0,
+                 from ../include/linux/string.h:20,
+                 from ../arch/x86/include/asm/page_32.h:35,
+                 from ../arch/x86/include/asm/page.h:14,
+                 from ../arch/x86/include/asm/thread_info.h:12,
+                 from ../include/linux/thread_info.h:38,
+                 from ../arch/x86/include/asm/preempt.h:7,
+                 from ../include/linux/preempt.h:78,
+                 from ../include/linux/spinlock.h:51,
+                 from ../include/linux/wait.h:9,
+                 from ../include/linux/wait_bit.h:8,
+                 from ../include/linux/fs.h:6,
+                 from ../include/linux/highmem.h:5,
+                 from ../drivers/crypto/chelsio/chcr_ktls.c:5:
+../include/net/sock.h:379:34: error: 'struct sock_common' has no member named 'skc_v6_daddr'; did you mean 'skc_daddr'?
+ #define sk_v6_daddr  __sk_common.skc_v6_daddr
+                                  ^
+../arch/x86/include/asm/string_32.h:182:45: note: in definition of macro 'memcpy'
+ #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+                                             ^
+../drivers/crypto/chelsio/chcr_ktls.c:497:22: note: in expansion of macro 'sk_v6_daddr'
+   memcpy(daaddr, sk->sk_v6_daddr.in6_u.u6_addr8, 16);
+                      ^~~~~~~~~~~
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
