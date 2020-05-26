@@ -2,53 +2,51 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A731520721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB8C20888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521253;
-	bh=iOAwMRBSlHy9XiMQy0/QkkEIEB2ri9V80CPULmrxMVo=;
+	s=default; t=1590521259;
+	bh=oXcHXb6dsSUvMpO8NE2tgJlKh/jHYLMsINJNQtFNX/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YiymtgRuvP+evCvbTVoHEGNDJXUqmoAkjNpxqUbPLyAzdBK/+35pJY0OVY7HM6q+u
-	 WYZoAClXiVQkHRI6VQUHBLgpxZdeSCIa1bmgL6R64/5WFhrjm576CYsQ0bj95Esx/W
-	 nqsCpMcY87G/eXuk9XCPEzWfhAES2QSzMkdb7ROg=
+	b=pBf0zKTWFVUIDbaOU3OhYO7non/FrutZsreZtkKxJx9nb4cY89eYXrB/JCou6BnQw
+	 sj1mMEt9pOD5EYVdN9WnMOoQONAvaECDWDubGiTRMW6hxgoUwLGlSmcfHqotMIYCRY
+	 Ua65RDNAV64j6q6prrTuXQq6CkOrAeT0tu8MMe9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389358AbgEZTEL (ORCPT
+        id S2392488AbgEZT1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:04:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59594 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391321AbgEZTEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:06 -0400
+        id S2391319AbgEZTEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA3C6208B3;
-        Tue, 26 May 2020 19:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C293E20849;
+        Tue, 26 May 2020 19:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519845;
-        bh=iOAwMRBSlHy9XiMQy0/QkkEIEB2ri9V80CPULmrxMVo=;
+        s=default; t=1590519850;
+        bh=oXcHXb6dsSUvMpO8NE2tgJlKh/jHYLMsINJNQtFNX/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uygF6mnmu44+2LXYNRceyW+TN36NBtQTgyvjz0SOBjvv77JxjDDUDg7jDJ9VzW1zQ
-         6118+ll/58SGgEifAKaHw5Jhhx49jrBkeliDy9wkg/PXPVLrieXxfXPfJb0Oni8nFZ
-         Epiap2+T8yvheLW5zodJnSntRk5XEYpO9Lb8rDEU=
+        b=a/do5Po24igzrLrMRgzpLx4wIkC8UUC3rculzuxlYixFyMf7MNIR8wayRDx7UI92b
+         3FEHk13KpA41h7GegkcsYRiv2+Y1CibmblkmOY1dduN3+BZJlO4Kp2xuBlsM6C2HRm
+         bRP7pN0ilXPpdZz+mfQlvVlVg7nggJnABYHs+JxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 12/81] iommu/amd: Fix over-read of ACPI UID from IVRS table
-Date:   Tue, 26 May 2020 20:52:47 +0200
-Message-Id: <20200526183927.467526457@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lachner <gladiac@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 40/81] ALSA: hda/realtek - Fix silent output on Gigabyte X570 Aorus Xtreme
+Date:   Tue, 26 May 2020 20:53:15 +0200
+Message-Id: <20200526183931.653439338@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,82 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Monakov <amonakov@ispras.ru>
+From: Christian Lachner <gladiac@gmail.com>
 
-[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
+commit d9e8fe0cffbfdd18de96fa68ee2a8b667a0b046e upstream.
 
-IVRS parsing code always tries to read 255 bytes from memory when
-retrieving ACPI device path, and makes an assumption that firmware
-provides a zero-terminated string. Both of those are bugs: the entry
-is likely to be shorter than 255 bytes, and zero-termination is not
-guaranteed.
+The Gigabyte X570 Aorus Xtreme motherboard with ALC1220 codec
+requires a similar workaround for Clevo laptops to enforce the
+DAC/mixer connection path. Set up a quirk entry for that.
 
-With Acer SF314-42 firmware these issues manifest visibly in dmesg:
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+Signed-off-by: Christian Lachner <gladiac@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200518053844.42743-2-gladiac@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
-
-The first three lines show how the code over-reads adjacent table
-entries into the UID, and in the last line it even reads garbage data
-beyond the end of the IVRS table itself.
-
-Since each entry has the length of the UID (uidl member of ivhd_entry
-struct), use that for memcpy, and manually add a zero terminator.
-
-Avoid zero-filling hid and uid arrays up front, and instead ensure
-the uid array is always zero-terminated. No change needed for the hid
-array, as it was already properly zero-terminated.
-
-Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
-
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux-foundation.org
-Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 2557ed112bc2..c7d0bb3b4a30 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1334,8 +1334,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 		}
- 		case IVHD_DEV_ACPI_HID: {
- 			u16 devid;
--			u8 hid[ACPIHID_HID_LEN] = {0};
--			u8 uid[ACPIHID_UID_LEN] = {0};
-+			u8 hid[ACPIHID_HID_LEN];
-+			u8 uid[ACPIHID_UID_LEN];
- 			int ret;
- 
- 			if (h->type != 0x40) {
-@@ -1352,6 +1352,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			}
- 
-+			uid[0] = '\0';
- 			switch (e->uidf) {
- 			case UID_NOT_PRESENT:
- 
-@@ -1366,8 +1367,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			case UID_IS_CHARACTER:
- 
--				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
--				uid[ACPIHID_UID_LEN - 1] = '\0';
-+				memcpy(uid, &e->uid, e->uidl);
-+				uid[e->uidl] = '\0';
- 
- 				break;
- 			default:
--- 
-2.25.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2443,6 +2443,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1458, 0xa002, "Gigabyte EP45-DS3/Z87X-UD3H", ALC889_FIXUP_FRONT_HP_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
 
 
