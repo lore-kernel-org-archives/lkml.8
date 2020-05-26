@@ -2,58 +2,55 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60923C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3476720776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 323BB20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520523;
-	bh=SbiT9tShyeJeTrafTHaX26vSwjPfBaUpDXmf1AKE84s=;
+	s=default; t=1590520527;
+	bh=REz7Kk+v4Xq5M2/sBIog3pQekmC3KHv8xVU42CFKSc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8n5mld78fuPm9OFYOXf/dz+kmTB6KbO9l2GT2ncyuqw1gZuEdKno63M/rH5QFT8a
-	 /yYk5FSd/nmXhHgG9X7ldcgpcEeEw5u/NJ1zH/Ny/P2E+WS3+2A82ipIw+LCAy2wop
-	 SKnYygC7brqiQNezz731ESiNks07Mdu+DaoiUIYY=
+	b=Uw4tYcFPlYK1drnqXObv/xvJcySK103DY4ho4ZlkJDxuhvBJJce8XY2vPjmAOEr9u
+	 ItwJUaE4ljrdjDzpybUejbRnMa4J4Smvy+2nM8NIFLw/6WuSsnltjI1KR6r+YfZ0lp
+	 aywStwebp0dSaVuWCvysoBUXyTGXK4gb7FVqW+xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404420AbgEZTPW (ORCPT
+        id S2404428AbgEZTP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46854 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:15:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404399AbgEZTPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:19 -0400
+        id S2404112AbgEZTPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC6F220776;
-        Tue, 26 May 2020 19:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDAFD2053B;
+        Tue, 26 May 2020 19:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520518;
-        bh=SbiT9tShyeJeTrafTHaX26vSwjPfBaUpDXmf1AKE84s=;
+        s=default; t=1590520523;
+        bh=REz7Kk+v4Xq5M2/sBIog3pQekmC3KHv8xVU42CFKSc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imBhyMSYV9z5hTshpA7v4M55aIch34jdmFY4MwzdyWwh4claVc9M7uHqyBEccoLNQ
-         nz7aDfPZ6SoYmbvdfwxNg21bCHrhob+EQAyc3VuCHsvYAdA26kWWrgQjgJ4Jo8JSaR
-         DD2FfpNGGBBWE5YRndS3gdBhV3OZe3JMK/RVOrIE=
+        b=WyH7eTeozeH5ADPsQ7D6xZdZgPjiHvRWmJ0SSP3NNKgEci3kx6OZFG+jz6G3k2Ri2
+         to3GagT4g2rtw/JKv/guWcYzinUj0YZaaQqfwLCgVZUUtceXHjRWFHmvAjyJgv5sRw
+         375VeGIEEOqWWxnvjvYRDjS1bd7bEHX9dFkqbWr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Qian Cai <cai@lca.pw>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 109/126] kasan: disable branch tracing for core runtime
-Date:   Tue, 26 May 2020 20:54:06 +0200
-Message-Id: <20200526183946.749248277@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.6 073/126] pinctrl: qcom: Add affinity callbacks to msmgpio IRQ chip
+Date:   Tue, 26 May 2020 20:53:30 +0200
+Message-Id: <20200526183944.365007908@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -66,80 +63,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Elver <elver@google.com>
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
 
-commit 33cd65e73abd693c00c4156cf23677c453b41b3b upstream.
+commit dca4f40742e09ec5d908a7fc2862498e6cf9d911 upstream.
 
-During early boot, while KASAN is not yet initialized, it is possible to
-enter reporting code-path and end up in kasan_report().
+Wakeup capable GPIO IRQs routed via PDC are not being migrated when a CPU
+is hotplugged. Add affinity callbacks to msmgpio IRQ chip to update the
+affinity of wakeup capable IRQs.
 
-While uninitialized, the branch there prevents generating any reports,
-however, under certain circumstances when branches are being traced
-(TRACE_BRANCH_PROFILING), we may recurse deep enough to cause kernel
-reboots without warning.
-
-To prevent similar issues in future, we should disable branch tracing
-for the core runtime.
-
-[elver@google.com: remove duplicate DISABLE_BRANCH_PROFILING, per Qian Cai]
-  Link: https://lore.kernel.org/lkml/20200517011732.GE24705@shao2-debian/
-  Link: http://lkml.kernel.org/r/20200522075207.157349-1-elver@google.com
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r//20200517011732.GE24705@shao2-debian/
-Link: http://lkml.kernel.org/r/20200519182459.87166-1-elver@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
+Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+[mkshah: updated commit text and minor code fixes]
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/1588314617-4556-1-git-send-email-mkshah@codeaurora.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/kasan/Makefile  |    8 ++++----
- mm/kasan/generic.c |    1 -
- mm/kasan/tags.c    |    1 -
- 3 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-msm.c |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
---- a/mm/kasan/Makefile
-+++ b/mm/kasan/Makefile
-@@ -14,10 +14,10 @@ CFLAGS_REMOVE_tags.o = $(CC_FLAGS_FTRACE
- # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
- # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1010,6 +1010,29 @@ static void msm_gpio_irq_relres(struct i
+ 	module_put(gc->owner);
+ }
  
--CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
--CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
--CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
--CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
-+CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-+CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-+CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
-+CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++static int msm_gpio_irq_set_affinity(struct irq_data *d,
++				const struct cpumask *dest, bool force)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return irq_chip_set_affinity_parent(d, dest, force);
++
++	return 0;
++}
++
++static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
++{
++	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++
++	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
++		return irq_chip_set_vcpu_affinity_parent(d, vcpu_info);
++
++	return 0;
++}
++
+ static void msm_gpio_irq_handler(struct irq_desc *desc)
+ {
+ 	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
+@@ -1108,6 +1131,8 @@ static int msm_gpio_init(struct msm_pinc
+ 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
++	pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
++	pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
  
- obj-$(CONFIG_KASAN) := common.o init.o report.o
- obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
---- a/mm/kasan/generic.c
-+++ b/mm/kasan/generic.c
-@@ -15,7 +15,6 @@
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--#define DISABLE_BRANCH_PROFILING
- 
- #include <linux/export.h>
- #include <linux/interrupt.h>
---- a/mm/kasan/tags.c
-+++ b/mm/kasan/tags.c
-@@ -12,7 +12,6 @@
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--#define DISABLE_BRANCH_PROFILING
- 
- #include <linux/export.h>
- #include <linux/interrupt.h>
+ 	np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+ 	if (np) {
 
 
