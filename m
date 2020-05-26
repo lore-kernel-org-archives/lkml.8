@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A884CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89AAE20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525C9208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519980;
-	bh=H3zYurp4vws08k5KeeuCCQoUZXnK6XFe5PA6kHN1Gm0=;
+	s=default; t=1590519989;
+	bh=OSHTNuMDYwiJAZ2wI7JZM9DIx5A514SQZ3uRMfD+rr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ROn3UyQw0umXUEOvw7io+dJ86FQrcIbire5wEwg3g6VdTs9AXlSqftMLHnIsock69
-	 IIb4lDrRW0Wd5XdUkQKrQszbKOmLOG1XeSs7G4RX7T9QbdQAUOR5Mh1jQObRI6arNr
-	 h0nAnb134MPZQLzVohGcIXuZhAyPUtbEQbWIj/fU=
+	b=OV7IKsMJoKN9uhsGlRv+TR328LDr/6vUPUgc0mqUyY/h3jB8SHQmuc6NBs73MfHqg
+	 uFUZNifwNI16ypOLMoSaeODgieIju/QM01MGUO1rKGynwBVdckvR1aVMyNuA8Ef6pE
+	 Iv8v6WOHpWMYd8/FQWpYwqb+otk+peA+onU5Fsjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391574AbgEZTGT (ORCPT
+        id S2391614AbgEZTG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403867AbgEZTGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:10 -0400
+        id S2391546AbgEZTGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E5A20776;
-        Tue, 26 May 2020 19:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28E520873;
+        Tue, 26 May 2020 19:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519968;
-        bh=H3zYurp4vws08k5KeeuCCQoUZXnK6XFe5PA6kHN1Gm0=;
+        s=default; t=1590519976;
+        bh=OSHTNuMDYwiJAZ2wI7JZM9DIx5A514SQZ3uRMfD+rr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1pkQgGh3cyaKGm99TzyjpviPVa13cHx3170afuQMpyeOmciUVU57Rzp9da1WDNk2
-         ROm4wzUOPyJV7Dx3G1ry4unN5WPXKmS5nVxNoQ5y1xwgiBRpeuSK5dxI5ZAwhWFRES
-         6jVfJqNRuds42JvArtB9EYMx7LKwA9uBhAyMZ8tc=
+        b=vwlauxFD8TO26uN4yaZYHYBUp4PZz0VgR+hmUXqFDUl6i5KxS5vSl74qrMKuyFkPW
+         7QRfU6LaWGIqCmEX7yVoUI0Vt9twhLNsjitKkiNFEM7Mr+PzUYNn+vBwsqYnfGK8VU
+         7NGXaygt9/bNutEaQfSWIATVYbiVwYowCaghqprM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 62/81] tty: serial: qcom_geni_serial: Fix wrap around of TX buffer
-Date:   Tue, 26 May 2020 20:53:37 +0200
-Message-Id: <20200526183933.937416893@linuxfoundation.org>
+Subject: [PATCH 5.4 010/111] ubifs: remove broken lazytime support
+Date:   Tue, 26 May 2020 20:52:28 +0200
+Message-Id: <20200526183933.517031677@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
-References: <20200526183923.108515292@linuxfoundation.org>
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,74 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 3c66eb4ba18dd1cab0d1bde651cde6d8bdb47696 ]
+[ Upstream commit ecf84096a526f2632ee85c32a3d05de3fa60ce80 ]
 
-Before commit a1fee899e5bed ("tty: serial: qcom_geni_serial: Fix
-softlock") the size of TX transfers was limited to the TX FIFO size,
-and wrap arounds of the UART circular buffer were split into two
-transfers. With the commit wrap around are allowed within a transfer.
-The TX FIFO of the geni serial port uses a word size of 4 bytes. In
-case of a circular buffer wrap within a transfer the driver currently
-may write an incomplete word to the FIFO, with some bytes containing
-data from the circular buffer and others being zero. Since the
-transfer isn't completed yet the zero bytes are sent as if they were
-actual data.
+When "ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs" introduced atime
+support to ubifs, it also added lazytime support.  As far as I can tell
+the lazytime support is terminally broken, as it causes
+mark_inode_dirty_sync to be called from __writeback_single_inode, which
+will then trigger the locking assert in ubifs_dirty_inode.  Just remove
+the broken lazytime support for now, it can be added back later,
+especially as some infrastructure changes should make that easier soon.
 
-Handle wrap arounds of the TX buffer properly and ensure that words
-written to the TX FIFO always contain valid data (unless the transfer
-is completed).
-
-Fixes: a1fee899e5bed ("tty: serial: qcom_geni_serial: Fix softlock")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Tested-by: Ryan Case <ryandcase@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 8c1c5f263833 ("ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/qcom_geni_serial.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/ubifs/file.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index 4458419f053b..0d405cc58e72 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -705,7 +705,7 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
- 	avail *= port->tx_bytes_pw;
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index a771273fba7e..8dada89bbe4d 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1375,7 +1375,6 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+ 	struct ubifs_info *c = inode->i_sb->s_fs_info;
+ 	struct ubifs_budget_req req = { .dirtied_ino = 1,
+ 			.dirtied_ino_d = ALIGN(ui->data_len, 8) };
+-	int iflags = I_DIRTY_TIME;
+ 	int err, release;
  
- 	tail = xmit->tail;
--	chunk = min3(avail, pending, (size_t)(UART_XMIT_SIZE - tail));
-+	chunk = min(avail, pending);
- 	if (!chunk)
- 		goto out_write_wakeup;
+ 	if (!IS_ENABLED(CONFIG_UBIFS_ATIME_SUPPORT))
+@@ -1393,11 +1392,8 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+ 	if (flags & S_MTIME)
+ 		inode->i_mtime = *time;
  
-@@ -727,19 +727,21 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
- 
- 		memset(buf, 0, ARRAY_SIZE(buf));
- 		tx_bytes = min_t(size_t, remaining, port->tx_bytes_pw);
--		for (c = 0; c < tx_bytes ; c++)
--			buf[c] = xmit->buf[tail + c];
-+
-+		for (c = 0; c < tx_bytes ; c++) {
-+			buf[c] = xmit->buf[tail++];
-+			tail &= UART_XMIT_SIZE - 1;
-+		}
- 
- 		iowrite32_rep(uport->membase + SE_GENI_TX_FIFOn, buf, 1);
- 
- 		i += tx_bytes;
--		tail += tx_bytes;
- 		uport->icount.tx += tx_bytes;
- 		remaining -= tx_bytes;
- 		port->tx_remaining -= tx_bytes;
- 	}
- 
--	xmit->tail = tail & (UART_XMIT_SIZE - 1);
-+	xmit->tail = tail;
- 
- 	/*
- 	 * The tx fifo watermark is level triggered and latched. Though we had
+-	if (!(inode->i_sb->s_flags & SB_LAZYTIME))
+-		iflags |= I_DIRTY_SYNC;
+-
+ 	release = ui->dirty;
+-	__mark_inode_dirty(inode, iflags);
++	__mark_inode_dirty(inode, I_DIRTY_SYNC);
+ 	mutex_unlock(&ui->ui_mutex);
+ 	if (release)
+ 		ubifs_release_budget(c, &req);
 -- 
 2.25.1
 
