@@ -2,95 +2,103 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C205C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03487C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B4320776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aM0E67Df"
+	by mail.kernel.org (Postfix) with ESMTP id B5AC2208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391654AbgEZTe2 (ORCPT
+        id S2389571AbgEZTiD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:34:28 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:16303 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbgEZSyy (ORCPT
+        Tue, 26 May 2020 15:38:03 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:47009 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389155AbgEZTiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:54:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590519294; x=1622055294;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=sw3GsXgWODA02zmkjx9WwSIRN5Jis0cQ31/Ca05dRdg=;
-  b=aM0E67Dfv2LjUwmz9p2n3lClJnNPSoLBGHuLwzEZtbTDc0a8KOQzuO4E
-   RMLvNnXtaxyjOaE7bmSUNzR7I1TQzNkCoAIGWQoJ4N8UpSTCG+l8m7+MA
-   /KKwH7D/H6avRGDl17i7AFzXkE52p+fQ8uJEUJH4No6XtHX25UXYp5c9e
-   I=;
-IronPort-SDR: ts3ePCm91EG/cd8uz8c4XPtmkZtbHDMPNckvoQ+t9cj6hYusStsbojEFrsJ2/SMRCuc2l9OLqX
- BPI/CEcEHpHg==
-X-IronPort-AV: E=Sophos;i="5.73,437,1583193600"; 
-   d="scan'208";a="33663270"
-Subject: Re: [PATCH v1] PCI: controller: Remove duplicate error message
-Thread-Topic: [PATCH v1] PCI: controller: Remove duplicate error message
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 26 May 2020 18:22:59 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-37fd6b3d.us-east-1.amazon.com (Postfix) with ESMTPS id 96E9C28211C;
-        Tue, 26 May 2020 18:22:57 +0000 (UTC)
-Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 18:22:57 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 26 May 2020 18:22:57 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1497.006;
- Tue, 26 May 2020 18:22:56 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
-        "pratyush.anand@gmail.com" <pratyush.anand@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "zhengdejin5@gmail.com" <zhengdejin5@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "tjoseph@cadence.com" <tjoseph@cadence.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Thread-Index: AQHWM3A7ZXCRFcozsESZq5tPMlXzIai6rncA
-Date:   Tue, 26 May 2020 18:22:56 +0000
-Message-ID: <1d7703d5c29dc9371ace3645377d0ddd9c89be30.camel@amazon.com>
-References: <20200526150954.4729-1-zhengdejin5@gmail.com>
-In-Reply-To: <20200526150954.4729-1-zhengdejin5@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.48]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B772E1B8FC60C34D8AEBA36F4B277AEF@amazon.com>
-Content-Transfer-Encoding: base64
+        Tue, 26 May 2020 15:38:02 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 365B5C0004;
+        Tue, 26 May 2020 19:37:56 +0000 (UTC)
+Date:   Tue, 26 May 2020 21:37:54 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Punnaiah Choudary Kalluri <punnaia@xilinx.com>,
+        Naga Sureshkumar Relli <nagasure@xilinx.com>
+Subject: Re: mmotm 2020-05-25-16-56 uploaded
+ (mtd/nand/raw/arasan-nand-controller)
+Message-ID: <20200526213754.251009fc@xps13>
+In-Reply-To: <8bc47bd8-d504-2c7b-6279-e908cef987c5@infradead.org>
+References: <20200525235712.VqEFGWfKu%akpm@linux-foundation.org>
+        <8bc47bd8-d504-2c7b-6279-e908cef987c5@infradead.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA1LTI2IGF0IDIzOjA5ICswODAwLCBEZWppbiBaaGVuZyB3cm90ZToNCj4g
-Q0FVVElPTjogVGhpcyBlbWFpbCBvcmlnaW5hdGVkIGZyb20gb3V0c2lkZSBvZiB0aGUgb3JnYW5p
-emF0aW9uLiBEbw0KPiBub3QgY2xpY2sgbGlua3Mgb3Igb3BlbiBhdHRhY2htZW50cyB1bmxlc3Mg
-eW91IGNhbiBjb25maXJtIHRoZSBzZW5kZXINCj4gYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2Fm
-ZS4NCj4gDQo+IA0KPiANCj4gSXQgd2lsbCBwcmludCBhbiBlcnJvciBtZXNzYWdlIGJ5IGl0c2Vs
-ZiB3aGVuDQo+IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNvdXJjZSgpIGdvZXMgd3JvbmcuIHNvIHJl
-bW92ZSB0aGUgZHVwbGljYXRlDQo+IGVycm9yIG1lc3NhZ2UuDQo+IA0KDQpJdCBzZWVtcyBsaWtl
-IHRoYXQgaW4gdGhlIGZpcnN0IGVycm9yIGNhc2UgaW4NCmRldm1fcGNpX3JlbWFwX2NmZ19yZXNv
-dXJjZSgpLCB0aGUgcHJpbnQgd2lsbCBiZSBsZXNzIGluZGljYXRpdmUuIENvdWxkDQp5b3UgcGxl
-YXNlIHNoYXJlIGFuIGV4YW1wbGUgcHJpbnQgbG9nIHdpdGggdGhlIGR1cGxpY2F0ZSBwcmludD8N
-Cg0KVGhhbmtzLA0KICAgSm9uYXRoYW4NCg==
+Hi Randy,
+
+Randy Dunlap <rdunlap@infradead.org> wrote on Mon, 25 May 2020 23:56:53
+-0700:
+
+> On 5/25/20 4:57 PM, Andrew Morton wrote:
+> > The mm-of-the-moment snapshot 2020-05-25-16-56 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.  
+> 
+> on i386:
+> 
+> ld: drivers/mtd/nand/raw/arasan-nand-controller.o: in function `anfc_detach_chip':
+> arasan-nand-controller.c:(.text+0x872): undefined reference to `bch_free'
+> ld: drivers/mtd/nand/raw/arasan-nand-controller.o: in function `anfc_read_page_hw_ecc':
+> arasan-nand-controller.c:(.text+0x18ec): undefined reference to `bch_decode'
+> ld: drivers/mtd/nand/raw/arasan-nand-controller.o: in function `anfc_attach_chip':
+> arasan-nand-controller.c:(.text+0x214d): undefined reference to `bch_init'
+> 
+> 
+> Full randconfig file is attached.
+> 
+> Maybe select BCH?
+> 
+> If that doesn't work, sometimes in lib/Makefile, the target has to be
+> in lib- instead of in obj-.
+> 
+> 
+
+It's fixed now, indeed I forgot to select BCH in Kconfig, thanks for
+the warning!
+
+Cheers,
+Miquèl
