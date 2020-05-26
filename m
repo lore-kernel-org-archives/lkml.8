@@ -2,137 +2,139 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D13C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5922D207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590483157;
-	bh=oGPpj4I3FcCpdQx07sSJRfqTAreoAbABjbVK8kbfFPY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qTHQC3bUDLU0xB5dRKxEpUsp+UTrQIRCxBlHx96WPGPQsblOnKh80wwrpSqzgkKeP
-	 A1dNGliOBH2XGqkQzXI/87mViyZatMlOQALoDvXzTAAb5be62nzc4X8ItW02BbeJjJ
-	 8hHuRPgvd9fD1aoQ4JC0NNs2qwvd11oot1gV5p4s=
+	by mail.kernel.org (Postfix) with ESMTP id E6FBA20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:55:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nr8rKuZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731555AbgEZIwg (ORCPT
+        id S1731598AbgEZIzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:52:36 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43275 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZIwg (ORCPT
+        Tue, 26 May 2020 04:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZIzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:52:36 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i22so17997140oik.10;
-        Tue, 26 May 2020 01:52:35 -0700 (PDT)
+        Tue, 26 May 2020 04:55:00 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB8DC03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:55:00 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id z5so22980106ejb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 01:55:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=podEtQJynn8vbkjGNeeC+JbB0UoOH6+FyCUK9sYUJn4=;
+        b=Nr8rKuZkt8KweBOcyHo2g4Ujy7JjKujFluF3VELDXfSs/xdouAXDKFVDjpG0peqBwJ
+         vRjDKWUDCpNHxl0J0bWwUyk4HsD2HNLQ5pEvOzhdI/BEUjSBg3tuYQima0+NTj3thyx+
+         vs04YQ4EKXsymFcN8+4s6v/nACegXCY9qTxHiogWscUrH8BeS0QeJ4Nm2m7+VTUa9mcH
+         HUtMkkCzVi5MH+IT4QuOqO/yKXc0vJpIxx0hQ6/9OwlrUUvrtfcEZpOUlprfKktAe53t
+         1ODusxv6Wa0DkhYtVYcl3yPklUkW5c0Tr1PJsP0qdrmgOSPq8Irfu5KXfYa59ipV1K9C
+         qYoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oGPpj4I3FcCpdQx07sSJRfqTAreoAbABjbVK8kbfFPY=;
-        b=FTV4aHn/webGuehlJulougjjsptJ067ki0VsZmMlUPoSu8EJWnnfEOG53dTYylZpHa
-         +oJ9Nx3S76xl44y57HQdXBQvDmT0RuIfscQibck8fXamz0T/Mq9Lu1tvPOERBlEzgoND
-         PEx2N100d4pKhTi6XGQ3f+aKcPSzYvuMTuw/o1AyS5Vq7hHTE03B1WC2/i5+3Q83iyFG
-         0WRwmAjLf7vOFz+I2gK/FzJAPSPOAS0KHD+5RF2/7mMfxk4FPnpHI0ysFolm5jWFtpFs
-         CAa1HPjzv/yk6fHM6aOv/CjJd0dKiCuGwH8tmy81T2yudk8LrMeeTVXrX4uMHlejGZLW
-         t7ZQ==
-X-Gm-Message-State: AOAM531pvMByO9WO/gxUbT2m/S6+4OIoC8zllqpJxx+JvepUASVvYoUL
-        U1O97rpqAePJgE5ariaPnqVn5ig6JHU+esuwSBg=
-X-Google-Smtp-Source: ABdhPJz7zwRcNIuQPmHebsyHMfO53EzEpIvXe4uMLrW0VmgDRueHlgUdBqcyN4P65CkbTAfxnkqshu83hZrk1jXnKVg=
-X-Received: by 2002:aca:eb56:: with SMTP id j83mr14057671oih.110.1590483155441;
- Tue, 26 May 2020 01:52:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20200521170817eucas1p13d9477a0a5d13d2df876134cf41131d8@eucas1p1.samsung.com>
- <5127441.yGvM1JjtLk@kreacher> <e9130ce8-fd22-c871-c089-585585c7133f@samsung.com>
- <CAJZ5v0j+bsHaQcxK41yph8eRpMZ3DoerqA7uwS2B8De41Jwi7Q@mail.gmail.com> <CAPDyKFrHcvhi+qZk-65+FpDMu6y_ZU-K=nRWQY63qMR21m9yMg@mail.gmail.com>
-In-Reply-To: <CAPDyKFrHcvhi+qZk-65+FpDMu6y_ZU-K=nRWQY63qMR21m9yMg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 26 May 2020 10:52:23 +0200
-Message-ID: <CAJZ5v0jUsPHfo7M3rocR2AFK43LG1p21D_S=t_MhcpGd2wLy6A@mail.gmail.com>
-Subject: Re: [PATCH] PM: runtime: clk: Fix clk_pm_runtime_get() error path
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=podEtQJynn8vbkjGNeeC+JbB0UoOH6+FyCUK9sYUJn4=;
+        b=oJObTGbD6l6VbDQRRRPVjqAXi1TEbKDpOb0IKJjDSupiPD3x36MIouGiNaDqU0ZjEp
+         i1gL+dxECVQnrVrQYbj662KwZtFVsotWqtSmM6tqVZ4seKbhKi1IUjjDVp72KbWVR0m6
+         QDYAyl9mU37YqQ/22BQ/A8t8tCJhQPpMOGBrVkJ1yLy38piQFPdCpR3g4L/r/eS9QLFQ
+         BOyAW0BDPq6I10/bhTSRnyZzmQsB7pnw6V2ZXWJrSHqm5nx8IPaw+ux8sXbyEKFIWxNE
+         cs3rFGxau1SaBSCuVAqnTjcxx90JZxqqJuWFa37sHaDfbiDXqeQV/gABBnjsKVzqrf8/
+         EBXQ==
+X-Gm-Message-State: AOAM530moYIjRtuoBC6W1voWWT6Sstn5+K0Cw/XSo6+9j5CIBOwfCito
+        R20OM+ner32X2NhFZu+/zz9Hag==
+X-Google-Smtp-Source: ABdhPJw171as7mUXt+mmyvz7QjgiCrI+4kYucAVxQA3LbZATkgtSlw8GmSdwvKbT6OmYYNXhjcPA6w==
+X-Received: by 2002:a17:906:1907:: with SMTP id a7mr188846eje.251.1590483298671;
+        Tue, 26 May 2020 01:54:58 -0700 (PDT)
+Received: from localhost.localdomain (212-5-158-184.ip.btc-net.bg. [212.5.158.184])
+        by smtp.gmail.com with ESMTPSA id o21sm18134521edr.68.2020.05.26.01.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 01:54:57 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH] v4l2-ctrl: add control for thumnails
+Date:   Tue, 26 May 2020 11:54:46 +0300
+Message-Id: <20200526085446.30956-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 11:31 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Fri, 22 May 2020 at 20:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Fri, May 22, 2020 at 7:19 AM Marek Szyprowski
-> > <m.szyprowski@samsung.com> wrote:
-> > >
-> > > Hi Rafael,
-> > >
-> > > On 21.05.2020 19:08, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > clk_pm_runtime_get() assumes that the PM-runtime usage counter will
-> > > > be dropped by pm_runtime_get_sync() on errors, which is not the case,
-> > > > so PM-runtime references to devices acquired by the former are leaked
-> > > > on errors returned by the latter.
-> > > >
-> > > > Fix this by modifying clk_pm_runtime_get() to drop the reference if
-> > > > pm_runtime_get_sync() returns an error.
-> > > >
-> > > > Fixes: 9a34b45397e5 clk: Add support for runtime PM
-> > > > Cc: 4.15+ <stable@vger.kernel.org> # 4.15+
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Frankly, I would rather fix the runtime_get_sync() instead of fixing the
-> > > return path everywhere in the kernel. The current behavior of the
-> > > pm_runtime_get_sync() is completely counter-intuitive then. I bet that
-> > > in the 99% of the places where it is being called assume that no special
-> > > fixup is needed in case of failure. This is one of the most common
-> > > runtime PM related function and it is really a common pattern in the
-> > > drivers to call:
-> > >
-> > > pm_runtime_get_sync()
-> > >
-> > > do something with the hardware
-> > >
-> > > pm_runtime_put()
-> > >
-> > > Do you really want to fix the error paths of the all such calls?
-> >
-> > No, I don't, and that's why I'm proposing this patch.
-> >
-> > The caller that does what you said above is OK now and if the behavior
-> > of pm_runtime_get_sync() changed, that caller would need to be
-> > updated.
-> >
-> > OTOH, a caller that fails to drop the reference on an error returned
-> > by pm_runtime_get_sync() is buggy (and has ever been so).
-> >
-> > I'd rather update the buggy callers than the ones that are OK.
->
-> I agree.
->
-> In hindsight we should have dropped the usage count in
-> pm_runtime_get_sync(), when it fails. However, that's too late,
-> especially since there are many cases having no error handling at all
-> - and in those cases, that would mean the subsequent call to
-> pm_runtime_put() can mess up the usage count (if pm_runtime_get_sync()
-> failed and has already dropped the count).
->
-> So, feel free to add:
->
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Add v4l2 control for decoder thumbnail.
 
-Thanks!
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 7 +++++++
+ drivers/media/v4l2-core/v4l2-ctrls.c                      | 2 ++
+ include/uapi/linux/v4l2-controls.h                        | 2 ++
+ 3 files changed, 11 insertions(+)
 
-Given the lack of other comments, I'm applying this patch as 5.8 material.
+diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+index d0d506a444b1..e838e410651b 100644
+--- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
++++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+@@ -3726,6 +3726,13 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
+     disables generating SPS and PPS at every IDR. Setting it to one enables
+     generating SPS and PPS at every IDR.
+ 
++``V4L2_CID_MPEG_VIDEO_DECODER_THUMBNAIL (button)``
++    Instructs the decoder to produce immediate output. The decoder should
++    consume first input buffer for progressive stream (or first two buffers
++    for interlace). Decoder should not allocate more output buffers that it
++    is required to consume one input frame. Usually the decoder input
++    buffers will contain only I/IDR frames but it is not mandatory.
++
+ .. _v4l2-mpeg-hevc:
+ 
+ ``V4L2_CID_MPEG_VIDEO_HEVC_SPS (struct)``
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index b188577db40f..cb2554404c63 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -991,6 +991,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice Parameters";
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode Mode";
+ 	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
++	case V4L2_CID_MPEG_VIDEO_DECODER_THUMBNAIL:		return "Thumbnail generation";
+ 
+ 	/* CAMERA controls */
+ 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+@@ -1234,6 +1235,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_AUTO_FOCUS_START:
+ 	case V4L2_CID_AUTO_FOCUS_STOP:
+ 	case V4L2_CID_DO_WHITE_BALANCE:
++	case V4L2_CID_MPEG_VIDEO_DECODER_THUMBNAIL:
+ 		*type = V4L2_CTRL_TYPE_BUTTON;
+ 		*flags |= V4L2_CTRL_FLAG_WRITE_ONLY |
+ 			  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 62271418c1be..7e44a2779863 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -743,6 +743,8 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
+ #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
+ #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
+ 
++#define V4L2_CID_MPEG_VIDEO_DECODER_THUMBNAIL		(V4L2_CID_MPEG_BASE + 645)
++
+ /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
+ #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
+ #define V4L2_CID_MPEG_CX2341X_VIDEO_SPATIAL_FILTER_MODE		(V4L2_CID_MPEG_CX2341X_BASE+0)
+-- 
+2.17.1
+
