@@ -2,109 +2,118 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4775C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED74C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4A6E2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD12920704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kBXXCBcL"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YT6X8ZnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgEZRcd (ORCPT
+        id S1729784AbgEZRcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:32:33 -0400
-Received: from mout.gmx.net ([212.227.17.22]:34675 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726930AbgEZRcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:32:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1590514331;
-        bh=v+se7q0+LikyF3av6WnzSfglVjV4fMikUz5BHTennYg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=kBXXCBcLWCENwqtr1rZkQ3bzFW/xDjNUS7A9JbQ1ZJs4Vk2SQQW7zH+i3lQu9Ad8F
-         L9giJMSUvY8D4vrRj8Nm+aF8p0ETDoxTg2DIZ0U9VejPNPlDASER2BmllWGI+OUSzX
-         1yOmWjusRjJ5eRxmG3nbnUut6AiEMwK0FyippSxY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MpUUm-1jEVIF1ob6-00pwhH; Tue, 26
- May 2020 19:32:11 +0200
-Date:   Tue, 26 May 2020 19:32:09 +0200
-From:   Oscar Carter <oscar.carter@gmx.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Oscar Carter <oscar.carter@gmx.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/irqchip: Remove function callback casts
-Message-ID: <20200526173209.GB3465@ubuntu>
-References: <20200524080910.13087-1-oscar.carter@gmx.com>
- <20200524124634.113203f6@why>
- <20200524160626.GA30346@ubuntu>
- <b0bd9442c1ba63c38d25ade479885cbd@kernel.org>
+        Tue, 26 May 2020 13:32:50 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1308 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726930AbgEZRct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 13:32:49 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecd52680001>; Tue, 26 May 2020 10:31:20 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 26 May 2020 10:32:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 10:32:49 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
+ 2020 17:32:48 +0000
+Subject: Re: [PATCH 0/6] nouveau/hmm: add support for mapping large pages
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     <nouveau@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@linuxfoundation.org>
+References: <20200508192009.15302-1-rcampbell@nvidia.com>
+ <20200525134118.GA2536@ziepe.ca>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <4743ec6e-a5a0-16ac-a1b8-992f851515f0@nvidia.com>
+Date:   Tue, 26 May 2020 10:32:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b0bd9442c1ba63c38d25ade479885cbd@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Provags-ID: V03:K1:iNdNR4sTDw7qTbU62ih1eX/BUToBxQ2ATmT8kjgx+/N7qFc5rrB
- X+AHZ4uhqjPH/DzJKPNeHAc+w7SLpDWl1pkhxvL2oJlIt2YILfO0AHp5nqlmNTuK8SP4FTP
- ggadpomzk3G5yZ3tOQo3nOer1WIe0Gf9EJJIDi79u6v/rGgfGtfZgBpYdi6dmfTq+hEYh5P
- ltArOCrPprMLQkDc2V5eQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:If9ilkEJEk8=:VYXBYGxO3VBH6Z5GmS2/pT
- 0efZ3fi4jyDmY6hbIqUYjOhl7E9KWyCHoMzSGd/zgRwWXiIdDFf2PpJRiAxAmDS6GDekP2AxQ
- dLrDwYDLSIQ6V87Il6SSIV3w40gMdYlbDFKo5ukMU4+m8Ri5s73YKyqjm3gD6DrKv0/ijamVf
- k7ifhWUaPg/qvdu7t8hSc6R7/rPOPqYfrWiVRU/Bp8rgvkwX7k/Bbn3kGxrQOvwMRemv3dust
- pyD9/Izjt+CjQAVTJleGCcpoKdY1CNB6P3S6S3J2P+2iEN5sycaXZlrjHEgpkYfuXLUDk2CiE
- IyBWvoySxL+LS+9J85M/Ow3s32czrOJhRqb90jmsRRMAJovyAqvJL5ZD9ukfrWoxSo4nMufPQ
- wmNVMgE9SbdWUpR6WwmcMlzP7Er9qpOoCPZE7z1ewgPNbxN7kvid5LBavJs5NyiKZC4RVGmO1
- Ovlqs6TmFXt3sd7gVxOVnmA4ANpcScoJL1my4tLc+qnxqIgNjfZsss5dvJ5VxlzHhiTPSeCiT
- GJecj8AQcJK6giMu4Orn1/AtRnho6+W/Hx83tzxD5lEGR9fZsT1WYOgxevSn1UM6WI7lL2WMF
- fjtrfe27aSD7g2AClD8xTiqCW3BU8C4s1hn1AzDcUKzEBDnRyBxJS/q50tjooH2C56djxVIDn
- uLryDTroI/SPmxg7mf/OP58pnS1iK0DY8u5r2VvsEVoFW+eZ1omls1vyRYdVzqA+IVFaliXZz
- tLStrAuQHp1UtyjeAC0wcuNr3fQHJ0sBU1DwUlS91gFObB22DhaSxCYc6HQMEmodl5lu5KQvA
- D7nLtZWSly+BV26Ykhee2i6ugocyQcxMa1mTc/FdWDXNiLXXuH37JoH9xEtM0rsK05tTzeiES
- T/5SteYf9A+pyCk8Q5q7L4bW18k3Z8GVtlT3s+Q8MKYG00/9kgp+xgF3OT3SdXWgi8x0xm6ub
- a388VT/UElNyQ0/zBpvrNesP3RO2mNXijkiV3mkUyq6OwzzRmoLb3X/YWLD4PWwdjxIb3d1NZ
- PPuOEca1i6ZKvd6d78FmPgcgcV255z+Ab/+u1MH/XiyFPEiMog88dzbGWtPatGREOIYXUeRqB
- cVK+zJJ6iTDvgK73R1Puo/z2ttG9YgEr3JzpFQ1+hXzO0HlMNW0CURNPz7bbipQGuyvYiXKtE
- C+BhOzHLB1rc7Dau0RkRY9qcLke+BwrJSX+FM1zJlQlpfcYjALAgbVSxGa3sy3inoeB5cCWo/
- +G7Pu4G2KP/p/qdQ3
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200525134118.GA2536@ziepe.ca>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590514280; bh=gY1xHSzU0BixoChtgpMiGs26xB1k45JS1OITIdF0cPM=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YT6X8ZnMP3j2H98e/7bMTxvdcizzJii7qVVjHUfEFojmdIyhUbS3YLngjP0oO5mnQ
+         vMVFflzmbMRnAtJAvCGfn27zgKrru6NNKyc6215BVmJQv5P2SlhTOzfdIOtvkLILKd
+         eK8IB+aZBBKf+9QcOz3hHhbFq48EGMdTwSkqFXiaK8tMiGfqpR2y6WIl0vArwJinF8
+         /M/m6VN4l777oH6kgroSbuBL3/KyGVYBbYUEe3EsIObrnVtyX6ZE2IQ8g16O645XNw
+         OzjiUse4raMuhGPim7qMXfvYnXckCIUkzcKfIwBj1rHL5NI2x3jIWhjAqGjyqJWX9L
+         bsa3lTJ9hIpqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On Sun, May 24, 2020 at 05:16:41PM +0100, Marc Zyngier wrote:
-> On 2020-05-24 17:06, Oscar Carter wrote:
->
-> > Ok, I will do the changes you suggested and I will resend a new versio=
-n.
-> > Later, I will also send a series to clean up the checkpatch warnings a=
-nd
-> > errors for the acpi.h header.
->
-> Not necessarily a good idea. Churn for the sake of keeping checkpatch
-> at bay is pretty pointless. Do fix bugs if you spot any, but please
-> exercise judgement.
+On 5/25/20 6:41 AM, Jason Gunthorpe wrote:
+> On Fri, May 08, 2020 at 12:20:03PM -0700, Ralph Campbell wrote:
+>> hmm_range_fault() returns an array of page frame numbers and flags for
+>> how the pages are mapped in the requested process' page tables. The PFN
+>> can be used to get the struct page with hmm_pfn_to_page() and the page size
+>> order can be determined with compound_order(page) but if the page is larger
+>> than order 0 (PAGE_SIZE), there is no indication that the page is mapped
+>> using a larger page size. To be fully general, hmm_range_fault() would need
+>> to return the mapping size to handle cases like a 1GB compound page being
+>> mapped with 2MB PMD entries. However, the most common case is the mapping
+>> size the same as the underlying compound page size.
+>> This series adds a new output flag to indicate this so that callers know it
+>> is safe to use a large device page table mapping if one is available.
+>> Nouveau and the HMM tests are updated to use the new flag.
+>>
+>> Note that this series depends on a patch queued in Ben Skeggs' nouveau
+>> tree ("nouveau/hmm: map pages after migration") and the patches queued
+>> in Jason's HMM tree.
+>> There is also a patch outstanding ("nouveau/hmm: fix nouveau_dmem_chunk
+>> allocations") that is independent of the above and could be applied
+>> before or after.
+> 
+> Did Christoph and Matt's remarks get addressed here?
 
-Ok, thanks for your advise. For now I will only fix the part related to th=
-is
-patch.
+Both questioned the need to add the HMM_PFN_COMPOUND flag to the
+hmm_range_fault() output array saying that the PFN can be used to get the
+struct page pointer and the page can be examined to determine the page size.
+My response is that while is true, it is also important that the device only
+access the same parts of a large page that the process/cpu has access to.
+There are places where a large page is mapped with smaller page table entries
+when a page is shared by multiple processes.
+After I explained this, I haven't seen any further comments from Christoph
+and Matt. I'm still looking for reviews, acks, or suggested changes.
 
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
 
-Thanks,
-Oscar
+> I think ODP could use something like this, currently it checks every
+> page to get back to the huge page size and this flag would optimze
+> that
+> 
+> Jason
