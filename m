@@ -2,105 +2,112 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA7EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E397C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8621D2089D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD35120704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Vqh+9szH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731503AbgEZHVS (ORCPT
+        id S1729958AbgEZHWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:21:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5282 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726768AbgEZHVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:21:17 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2A7C01AD7E6CF8F5A02A;
-        Tue, 26 May 2020 15:21:16 +0800 (CST)
-Received: from [10.174.151.115] (10.174.151.115) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 26 May
- 2020 15:21:06 +0800
-Subject: Re: [PATCH v2 1/2] crypto: virtio: Fix src/dst scatterlist
- calculation in __virtio_crypto_skcipher_do_req()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        <linux-crypto@vger.kernel.org>,
-        <virtualization@lists.linux-foundation.org>
-CC:     Corentin Labbe <clabbe@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Jason Wang" <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Gonglei <arei.gonglei@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20200526031956.1897-1-longpeng2@huawei.com>
- <20200526031956.1897-2-longpeng2@huawei.com>
- <d58a046a-e559-55be-16ba-64db43a06568@web.de>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <e1864c6d-6380-831f-9c2f-85611a78779b@huawei.com>
-Date:   Tue, 26 May 2020 15:21:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 26 May 2020 03:22:51 -0400
+Received: from mail-m972.mail.163.com ([123.126.97.2]:33580 "EHLO
+        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbgEZHWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 03:22:50 -0400
+X-Greylist: delayed 910 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 May 2020 03:22:50 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=bkSJj
+        PRUKYUDwFkyPzThVgbKD1YuAi6I43MZcpH/s8I=; b=Vqh+9szHVRs6SKbD3K4o3
+        O11U5YVtsRU8DxAs4N+AHZvRZvG2y1XxuOnULRU5qi0Hh82c2ESl7Ke/DZHYQZfu
+        FInuwilB9rNwQOy1wgQcSWsRei6YoZcY3V6bEcPcRqEKjUGGy3oKyWO6kapcfqT3
+        Rg4E0uJQYY3VZSNlFFFBoc=
+Received: from [172.20.10.2] (unknown [124.64.17.235])
+        by smtp2 (Coremail) with SMTP id GtxpCgAXauInwMxeX977Bg--.54S2;
+        Tue, 26 May 2020 15:07:28 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Fix IRQ tracing when call handle_fpe()
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     paulburton@kernel.org, chenhc@lemote.com,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        liulichao@loongson.cn
+References: <20200525033123.13114-1-yuanjunqing66@163.com>
+ <20200525084234.GA5057@alpha.franken.de>
+From:   yuanjunqing <yuanjunqing66@163.com>
+Message-ID: <76f2c756-0ae4-83f5-becf-6f1b3319f6fd@163.com>
+Date:   Tue, 26 May 2020 15:07:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <d58a046a-e559-55be-16ba-64db43a06568@web.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20200525084234.GA5057@alpha.franken.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.151.115]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
+X-CM-TRANSID: GtxpCgAXauInwMxeX977Bg--.54S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7KF1ruF4rtw4rJrWkXw4Utwb_yoW8Jw47p3
+        y8C3Z5KF4qgrWjvrW7Cwn5GrW5Kw4kArWY9Fs5tay5X3WrXF4ktF4IqwsIgryq9r1kua1f
+        KFyqg34j9FsxA3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jN739UUUUU=
+X-Originating-IP: [124.64.17.235]
+X-CM-SenderInfo: h1xd0ypxqtx0rjwwqiywtou0bp/xtbBUQowXFaD7O3HBgABsj
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
 
-On 2020/5/26 15:03, Markus Elfring wrote:
->> Fix it by sg_next() on calculation of src/dst scatterlist.
-> 
-> Wording adjustment:
-> … by calling the function “sg_next” …
-> 
-OK, thanks.
+在 2020/5/25 下午4:42, Thomas Bogendoerfer 写道:
+> On Mon, May 25, 2020 at 11:31:23AM +0800, YuanJunQing wrote:
+>>  Register "a1" is unsaved in this function,
+>>  when CONFIG_TRACE_IRQFLAGS is enabled,
+>>  the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
+>>  and this may change register "a1".
+>>  The variment of register "a1" may send SIGFPE signal
+>>  to task when call do_fpe(),and this may kill the task.
+>>
+>> Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
+>> ---
+>>  arch/mips/kernel/genex.S | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
+>> index 8236fb291e3f..956a76429773 100644
+>> --- a/arch/mips/kernel/genex.S
+>> +++ b/arch/mips/kernel/genex.S
+>> @@ -480,16 +480,18 @@ NESTED(nmi_handler, PT_SIZE, sp)
+>>  	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
+>>  	.set	mips1
+>>  	SET_HARDFLOAT
+>> -	cfc1	a1, fcr31
+>> +	cfc1	s0, fcr31
+>>  	.set	pop
+>>  	CLI
+>>  	TRACE_IRQS_OFF
+>> +	move    a1,s0
+>>  	.endm
+> do we realy need to read fcr31 that early ? Wouldn't it work to
+> just move the cfc1 below TRACE_IRQS_OFF ?
+>
+> Thomas.
 
-> 
-> …
->> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
->> @@ -350,13 +350,18 @@ __virtio_crypto_skcipher_do_req(struct virtio_crypto_sym_request *vc_sym_req,
-> …
->>  	src_nents = sg_nents_for_len(req->src, req->cryptlen);
->> +	if (src_nents < 0) {
->> +		pr_err("Invalid number of src SG.\n");
->> +		return src_nents;
->> +	}
->> +
->>  	dst_nents = sg_nents(req->dst);
-> …
-> 
-> I suggest to move the addition of such input parameter validation
-> to a separate update step.
-> 
-Um...The 'src_nents' will be used as a loop condition, so validate it here is
-needed ?
 
-'''
- 	/* Source data */
--	for (i = 0; i < src_nents; i++)
--		sgs[num_out++] = &req->src[i];
-+	for (sg = req->src; src_nents; sg = sg_next(sg), src_nents--)
-+		sgs[num_out++] = sg;
-'''
+ yes, it can work when we just move the cfc1 below TRACE_IRQS_OFF,
+ and the code is written as follows.
 
-> Regards,
-> Markus
-> 
+ 	CLI
+ 	TRACE_IRQS_OFF
+ 	.set	mips1
+ 	SET_HARDFLOAT
+	cfc1	a1, fcr31
+ 	.set	pop
+       .endm
 
--- 
----
-Regards,
-Longpeng(Mike)
+
