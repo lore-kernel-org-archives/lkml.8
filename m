@@ -2,217 +2,287 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F09C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53071C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2BFF207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B80520776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590510570;
-	bh=TbUUgIF6mgLobEp3W6dqdV0WdKcIkW1P4WlfGLG2wJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iMJ15m33rPHrmuLkjrS025xAPM+iyrrgNZ/jbbSk3/YRzSncgYRobzfuegPqYOzlg
-	 bh70v3vbM/qCKa6d0vbaDpNyqxG1oJfYhAZNlUFAa2qiQgYykiZMq4Gtbx5n8ajDwV
-	 fS9JDd+OZfRehN7o4zvfF4RN6LRyf6UegTUOWPKw=
+	s=default; t=1590510589;
+	bh=iIFUslWtwI40OMXT1aeqlbfaOzNfGCbK/LRCf941q+I=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=yksdR4R6M33VROZ8gjbFlOi+MitW+UNgZ2TahariU9wa12K2K93bmGZQ5U+j9whTj
+	 D/bfAvXhQUR4/EXyhLcYHNvzk3z6IQ08eo3PMXHhZeVHZhL7IsXNtPocOFf+Tni5Ep
+	 rdaFJwZRo+xl2adheL9qn+2EFz/whFzsmTAu+OPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbgEZQ3a (ORCPT
+        id S2388568AbgEZQ3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:29:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 12:29:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729597AbgEZQ33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:29:29 -0400
-Received: from kernel.org (unknown [87.70.212.59])
+        id S2388061AbgEZQ3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:29:47 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DB1D20776;
-        Tue, 26 May 2020 16:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409762073B;
+        Tue, 26 May 2020 16:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590510568;
-        bh=TbUUgIF6mgLobEp3W6dqdV0WdKcIkW1P4WlfGLG2wJg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tlu+kUsAUHzzEGHCVBe6r8A+U9cPi/d8OuzGyVspXJH0jMRUeivnTXQ0ZBENZPmUW
-         pvLMvN6Su85rkTax3cDwabYfDCrP+20ybkW2VI4EozEsmdsxqfzyn3Us0/tqnBvV3n
-         KnSEio6fJUe4j9II+vin40X91uV/gwqmPd6WS0ts=
-Date:   Tue, 26 May 2020 19:29:21 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        elver@google.com, tglx@linutronix.de, paulmck@kernel.org,
-        mingo@kernel.org, peterz@infradead.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
- PTE tables
-Message-ID: <20200526162921.GE48741@kernel.org>
-References: <20200517000750.GA157503@roeck-us.net>
- <20200518083715.GA31383@willie-the-truck>
- <20200520170306.GG1118872@kernel.org>
- <6034a1b5-d4f6-c836-142c-9b3b06db3246@roeck-us.net>
- <20200520195110.GH1118872@kernel.org>
- <c80c04a4-75d0-6a47-3813-dea9325b6623@roeck-us.net>
- <20200524123256.GN1118872@kernel.org>
- <20200526132634.GC27166@willie-the-truck>
- <20200526140126.GD27166@willie-the-truck>
- <b75f988a-a132-cf05-cbd6-8b00e4bbcc3c@roeck-us.net>
+        s=default; t=1590510586;
+        bh=iIFUslWtwI40OMXT1aeqlbfaOzNfGCbK/LRCf941q+I=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=o/NHRjqfspPUgK8Wx5pjLVmBUYeJiL/5do0/QfWWFsEiCjGwVMMxINUKWqcbbA2om
+         mQwBIPLZVJ2JKxnl39Ob/dmrkGgrHQei/ACZW2oucn40QEK/vVK0zGEZfr3+NCNX2q
+         u0SiUZps9CCqdvHezZZn4xlsfaeMYw2IW8H45TM8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 117413522A8B; Tue, 26 May 2020 09:29:46 -0700 (PDT)
+Date:   Tue, 26 May 2020 09:29:46 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>
+Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code
+ entrypoints
+Message-ID: <20200526162946.GK2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200513164714.22557-1-frederic@kernel.org>
+ <20200513164714.22557-2-frederic@kernel.org>
+ <20200520122949.GB16672@google.com>
+ <20200522175739.GM2869@paulmck-ThinkPad-P72>
+ <20200526152137.GB76276@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b75f988a-a132-cf05-cbd6-8b00e4bbcc3c@roeck-us.net>
+In-Reply-To: <20200526152137.GB76276@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:18:54AM -0700, Guenter Roeck wrote:
-> On 5/26/20 7:01 AM, Will Deacon wrote:
-> > On Tue, May 26, 2020 at 02:26:35PM +0100, Will Deacon wrote:
-> >> On Sun, May 24, 2020 at 03:32:56PM +0300, Mike Rapoport wrote:
-> >>> On Thu, May 21, 2020 at 04:02:11PM -0700, Guenter Roeck wrote:
-> >>>> On 5/20/20 12:51 PM, Mike Rapoport wrote:
-> >>>>> On Wed, May 20, 2020 at 12:03:31PM -0700, Guenter Roeck wrote:
-> >>>>>> With above patch applied on top of Ira's patch, I get:
-> >>>>>>
-> >>>>>> BUG: spinlock recursion on CPU#0, S01syslogd/139
-> >>>>>>  lock: 0xf5448350, .magic: dead4ead, .owner: S01syslogd/139, .owner_cpu: 0
-> >>>>>> CPU: 0 PID: 139 Comm: S01syslogd Not tainted 5.7.0-rc6-next-20200518-00002-gb178d2d56f29-dirty #1
-> >>>>>> [f0067a64 :
-> >>>>>> do_raw_spin_lock+0xa8/0xd8 ]
-> >>>>>> [f00d5034 :
-> >>>>>> copy_page_range+0x328/0x804 ]
-> >>>>>> [f0025be4 :
-> >>>>>> dup_mm+0x334/0x434 ]
-> >>>>>> [f0027124 :
-> >>>>>> copy_process+0x1224/0x12b0 ]
-> >>>>>> [f0027344 :
-> >>>>>> _do_fork+0x54/0x30c ]
-> >>>>>> [f0027670 :
-> >>>>>> do_fork+0x5c/0x6c ]
-> >>>>>> [f000de44 :
-> >>>>>> sparc_do_fork+0x18/0x38 ]
-> >>>>>> [f000b7f4 :
-> >>>>>> do_syscall+0x34/0x40 ]
-> >>>>>> [5010cd4c :
-> >>>>>> 0x5010cd4c ]
-> >>>>>>
-> >>>>>> Looks like yet another problem.
-> >>>>>
-> >>>>> I've checked the patch above on top of the mmots which already has Ira's
-> >>>>> patches and it booted fine. I've used sparc32_defconfig to build the
-> >>>>> kernel and qemu-system-sparc with default machine and CPU. 
-> >>>>>
-> >>>>
-> >>>> Try sparc32_defconfig+SMP.
-> >>>  
-> >>> I see a differernt problem, but this could be related:
-> >>>
-> >>> INIT: version 2.86 booting
-> >>> rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
-> >>> 	(detected by 0, t=5252 jiffies, g=-935, q=3)
-> >>> rcu: All QSes seen, last rcu_sched kthread activity 5252 (-68674--73926), jiffies_till_next_fqs=1, root ->qsmask 0x0
-> >>> rcu: rcu_sched kthread starved for 5252 jiffies! g-935 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
-> >>> rcu: 	Unless rcu_sched kthread gets sufficient CPU time, OOM is now expected behavior.
-> >>> rcu: RCU grace-period kthread stack dump:
-> >>> rcu_sched       R  running task        0    10      2 0x00000000
-> >>>
-> >>> I'm running a bit old debian [1] with qemu-img-sparc.
-> >>>
-> >>> My bisect pointed at commit 8c8f3156dd40 ("sparc32: mm: Reduce
-> >>> allocation size for PMD and PTE tables"). The commit ID is valid for
-> >>> next-20200522.
-> >>
-> >> Can you try the diff below please?
+On Tue, May 26, 2020 at 11:21:37AM -0400, Joel Fernandes wrote:
+> Hi Paul,
+> 
+> On Fri, May 22, 2020 at 10:57:39AM -0700, Paul E. McKenney wrote:
+> > On Wed, May 20, 2020 at 08:29:49AM -0400, Joel Fernandes wrote:
+> > > On Wed, May 13, 2020 at 06:47:05PM +0200, Frederic Weisbecker wrote:
+> > > > Pure NOCB code entrypoints (nocb_cb kthread, nocb_gp kthread, nocb
+> > > > timers) can unconditionally lock rdp->nocb_lock as they always execute
+> > > > in the context of an offloaded rdp.
+> > > > 
+> > > > This also prepare for toggling CPUs to/from callback's offloaded mode
+> > > > where the offloaded state will possibly change when rdp->nocb_lock
+> > > > isn't taken. We'll still want the entrypoints to lock the rdp in any
+> > > > case.
+> > > 
+> > > Suggested rewrite for change log:
+> > > <wordsmithing>
+> > > Make pure NOCB code entrypoints (nocb_cb kthread, nocb_gp kthread, nocb
+> > > timers) unconditionally lock rdp->nocb_lock as they always execute in the
+> > > context of an offloaded rdp.
+> > > 
+> > > This prepares for future toggling of CPUs to/from callback's offloaded mode
+> > > where the offloaded state can change when rdp->nocb_lock is not held. We'll
+> > > still want the entrypoints to lock the rdp in any case.
+> > > </wordsmithing>
+> > > 
+> > > Also, can we inline rcu_nocb_lock_irqsave() into
+> > > do_nocb_deferred_wakeup_common() since that's the only user, and then delete
+> > > rcu_nocb_lock_irqsave() and the corresponding unlock? That would also remove
+> > > confusion about which API to use for nocb locking (i.e. whether to directly
+> > > acquire lock or call rcu_nocb_lock_irqsave()).
+> > > 
+> > > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > > 
-> > Actually, that's racy. New version below!
+> > Thank you for looking this over, Joel!
 > > 
+> > Is it feasible to make rcu_nocb_lock*() and rcu_nocb_unlock*() "do the
+> > right thing", even when things are changing?
 > 
-> Applied on top of next-20200526, with defconfig+SMP, I still get:
-> 
-> BUG: Bad page state in process swapper/0  pfn:0069f
-> 
-> many times. Did I have to revert something else ? Sorry, I lost track.
- 
-The bad page messages are fixed by [1], but this is not in mmotm or
-linux-next. This is not related to SMP hangs.
+> One way to prevent things from changing could be to employ Steven's
+> poor-man's RCU to mediate the "changing state" itself assuming the switch
+> from the fast-path to the slow-path does not happen often. :) So whichever
+> path is changing the state needs to wait for that poor-man's GP.
 
-[1] https://lore.kernel.org/lkml/20200524165358.27188-1-rppt@kernel.org/
+That should not be needed, given that acquiring ->nocb_lock on the CPU
+corresponding to that lock suffices in both cases.  The trick is making
+sure that the release matches the acquire.
 
-> Note that "-smp 2" on SS-10 works for me (with the same page state
-> messages).
-> 
-> Guenter
-> 
-> 
-> > Will
-> > 
-> > --->8
-> > 
-> > diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-> > index c861c0f0df73..068029471aa4 100644
-> > --- a/arch/sparc/mm/srmmu.c
-> > +++ b/arch/sparc/mm/srmmu.c
-> > @@ -363,11 +363,16 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
-> >  
-> >  	if ((ptep = pte_alloc_one_kernel(mm)) == 0)
-> >  		return NULL;
-> > +
-> >  	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
-> > -	if (!pgtable_pte_page_ctor(page)) {
-> > -		__free_page(page);
-> > -		return NULL;
-> > +
-> > +	spin_lock(&mm->page_table_lock);
-> > +	if (page_ref_inc_return(page) == 2 && !pgtable_pte_page_ctor(page)) {
-> > +		page_ref_dec(page);
-> > +		ptep = NULL;
-> >  	}
-> > +	spin_unlock(&mm->page_table_lock);
-> > +
-> >  	return ptep;
-> >  }
-> >  
-> > @@ -376,7 +381,12 @@ void pte_free(struct mm_struct *mm, pgtable_t ptep)
-> >  	struct page *page;
-> >  
-> >  	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
-> > -	pgtable_pte_page_dtor(page);
-> > +
-> > +	spin_lock(&mm->page_table_lock);
-> > +	if (page_ref_dec_return(page) == 1)
-> > +		pgtable_pte_page_dtor(page);
-> > +	spin_unlock(&mm->page_table_lock);
-> > +
-> >  	srmmu_free_nocache(ptep, SRMMU_PTE_TABLE_SIZE);
-> >  }
-> >  
-> > diff --git a/mm/Kconfig b/mm/Kconfig
-> > index c1acc34c1c35..97458119cce8 100644
-> > --- a/mm/Kconfig
-> > +++ b/mm/Kconfig
-> > @@ -192,6 +192,9 @@ config MEMORY_HOTREMOVE
-> >  # Default to 4 for wider testing, though 8 might be more appropriate.
-> >  # ARM's adjust_pte (unused if VIPT) depends on mm-wide page_table_lock.
-> >  # PA-RISC 7xxx's spinlock_t would enlarge struct page from 32 to 44 bytes.
-> > +# SPARC32 allocates multiple pte tables within a single page, and therefore
-> > +# a per-page lock leads to problems when multiple tables need to be locked
-> > +# at the same time (e.g. copy_page_range()).
-> >  # DEBUG_SPINLOCK and DEBUG_LOCK_ALLOC spinlock_t also enlarge struct page.
-> >  #
-> >  config SPLIT_PTLOCK_CPUS
-> > @@ -199,6 +202,7 @@ config SPLIT_PTLOCK_CPUS
-> >  	default "999999" if !MMU
-> >  	default "999999" if ARM && !CPU_CACHE_VIPT
-> >  	default "999999" if PARISC && !PA20
-> > +	default "999999" if SPARC32
-> >  	default "4"
-> >  
-> >  config ARCH_ENABLE_SPLIT_PMD_PTLOCK
-> > 
-> 
+> Any case, are you concerned with the performance issues with the
+> unconditional locking and that's why you suggest still keeping it conditional?
 
--- 
-Sincerely yours,
-Mike.
+My concerns are more about maintainability.
+
+> Also, coming back to my point of inline the helper into the last caller -
+> do_nocb_deferred_wakeup_common(). I think since we don't need to check if the
+> rdp is offloaded and do any conditional locking. The timer can be called only
+> with offloaded rdp. So we can directly do the unconditional spinlock instead
+> of using the rcu_nocb_lock helper there.
+
+Indeed we can.  But should we?
+
+> > would prevent any number of "interesting" copy-pasta and "just now became
+> > common code" bugs down the road.  And because irqs are disabled while
+> > holding the lock, it should be possible to keep state on a per-CPU basis.
+> 
+> Agreed, that would be nice. Though if we could keep simple, that'd be nice
+> too.
+
+Having one set of functions/macros that are always used to protect
+the ->cblist, no matter what the context, is a very attractive form of
+simple.  ;-)
+
+> > The ugliest scenario is callback adoption, where there are two ->cblist
+> > structures in need of being locked.  In that case, changes are excluded
+> > (because that is in CPU hotplug code), but is it possible to take
+> > advantage of that reasonably?
+> 
+> Could you describe this a bit more? Thanks.
+
+Right now, callbacks are merged directly from the outgoing CPU's ->cblist
+to the surviving CPU's ->cblist.  This means that both ->cblist structures
+must be locked at the same time, which would require additional state.
+After all, if only the one ->cblist were to be locked at a given time,
+a per-CPU variable could be used to track what method should be used to
+unlock the ->cblist.
+
+This could be restructured to use an intermediate private ->cblist,
+but care would be required with the counts, as it is a very bad idea
+for a large group of callbacks to become invisible.  (This is not a
+problem for rcu_barrier(), which excludes CPU hotplug, but it could
+be a serious problem for callback-flood-mitigation mechanisms.  Yes,
+they are heuristic, but...)
+
+> > Maybe these changes are the best we can do, but it would be good to
+> > if the same primitive locked a ->cblist regardless of context.
+> 
+> Here you are comparing 2 primitives. Do you mean that just IRQs being
+> disabled is another primitive, and rcu_nocb_lock is another one?
+
+I am not sure what this question means, but I am advocating looking
+into retaining a single wrapper that decides instead of direct use of
+the underlying primitives.
+
+Or are you instead asking why there are two different methods of
+protecting the ->cblist structures?  (If so, because call_rcu() happens
+often enough that we don't want lock-acquisition overhead unless we
+absolutely need it, which we do on nohz_full CPUs but not otherwise.)
+
+> BTW, I'm really itching to give it a try to make the scheduler more deadlock
+> resilient (that is, if the scheduler wake up path detects a deadlock, then it
+> defers the wake up using timers, or irq_work on its own instead of passing
+> the burden of doing so to the callers). Thoughts?
+
+I have used similar approaches within RCU, but on the other hand the
+scheduler often has tighter latency constraints than RCU does.	So I
+think that is a better question for the scheduler maintainers than it
+is for me.  ;-)
+
+							Thanx, Paul
+
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> > Can that be made to work reasonably?
+> > 
+> > 							Thanx, Paul
+> > 
+> > > thanks,
+> > > 
+> > >  - Joel
+> > > 
+> > > 
+> > > > 
+> > > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > > > Cc: Paul E. McKenney <paulmck@kernel.org>
+> > > > Cc: Josh Triplett <josh@joshtriplett.org>
+> > > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > > Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+> > > > Cc: Joel Fernandes <joel@joelfernandes.org>
+> > > > ---
+> > > >  kernel/rcu/tree_plugin.h | 14 +++++++-------
+> > > >  1 file changed, 7 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > > index 097635c41135..523570469864 100644
+> > > > --- a/kernel/rcu/tree_plugin.h
+> > > > +++ b/kernel/rcu/tree_plugin.h
+> > > > @@ -1909,7 +1909,7 @@ static void do_nocb_bypass_wakeup_timer(struct timer_list *t)
+> > > >  	struct rcu_data *rdp = from_timer(rdp, t, nocb_bypass_timer);
+> > > >  
+> > > >  	trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Timer"));
+> > > > -	rcu_nocb_lock_irqsave(rdp, flags);
+> > > > +	raw_spin_lock_irqsave(&rdp->nocb_lock, flags);
+> > > >  	smp_mb__after_spinlock(); /* Timer expire before wakeup. */
+> > > >  	__call_rcu_nocb_wake(rdp, true, flags);
+> > > >  }
+> > > > @@ -1942,7 +1942,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+> > > >  	 */
+> > > >  	for (rdp = my_rdp; rdp; rdp = rdp->nocb_next_cb_rdp) {
+> > > >  		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Check"));
+> > > > -		rcu_nocb_lock_irqsave(rdp, flags);
+> > > > +		raw_spin_lock_irqsave(&rdp->nocb_lock, flags);
+> > > >  		bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+> > > >  		if (bypass_ncbs &&
+> > > >  		    (time_after(j, READ_ONCE(rdp->nocb_bypass_first) + 1) ||
+> > > > @@ -1951,7 +1951,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+> > > >  			(void)rcu_nocb_try_flush_bypass(rdp, j);
+> > > >  			bypass_ncbs = rcu_cblist_n_cbs(&rdp->nocb_bypass);
+> > > >  		} else if (!bypass_ncbs && rcu_segcblist_empty(&rdp->cblist)) {
+> > > > -			rcu_nocb_unlock_irqrestore(rdp, flags);
+> > > > +			raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
+> > > >  			continue; /* No callbacks here, try next. */
+> > > >  		}
+> > > >  		if (bypass_ncbs) {
+> > > > @@ -1996,7 +1996,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+> > > >  		} else {
+> > > >  			needwake = false;
+> > > >  		}
+> > > > -		rcu_nocb_unlock_irqrestore(rdp, flags);
+> > > > +		raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
+> > > >  		if (needwake) {
+> > > >  			swake_up_one(&rdp->nocb_cb_wq);
+> > > >  			gotcbs = true;
+> > > > @@ -2084,7 +2084,7 @@ static void nocb_cb_wait(struct rcu_data *rdp)
+> > > >  	rcu_do_batch(rdp);
+> > > >  	local_bh_enable();
+> > > >  	lockdep_assert_irqs_enabled();
+> > > > -	rcu_nocb_lock_irqsave(rdp, flags);
+> > > > +	raw_spin_lock_irqsave(&rdp->nocb_lock, flags);
+> > > >  	if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq) &&
+> > > >  	    rcu_seq_done(&rnp->gp_seq, cur_gp_seq) &&
+> > > >  	    raw_spin_trylock_rcu_node(rnp)) { /* irqs already disabled. */
+> > > > @@ -2092,7 +2092,7 @@ static void nocb_cb_wait(struct rcu_data *rdp)
+> > > >  		raw_spin_unlock_rcu_node(rnp); /* irqs remain disabled. */
+> > > >  	}
+> > > >  	if (rcu_segcblist_ready_cbs(&rdp->cblist)) {
+> > > > -		rcu_nocb_unlock_irqrestore(rdp, flags);
+> > > > +		raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
+> > > >  		if (needwake_gp)
+> > > >  			rcu_gp_kthread_wake();
+> > > >  		return;
+> > > > @@ -2100,7 +2100,7 @@ static void nocb_cb_wait(struct rcu_data *rdp)
+> > > >  
+> > > >  	trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("CBSleep"));
+> > > >  	WRITE_ONCE(rdp->nocb_cb_sleep, true);
+> > > > -	rcu_nocb_unlock_irqrestore(rdp, flags);
+> > > > +	raw_spin_unlock_irqrestore(&rdp->nocb_lock, flags);
+> > > >  	if (needwake_gp)
+> > > >  		rcu_gp_kthread_wake();
+> > > >  	swait_event_interruptible_exclusive(rdp->nocb_cb_wq,
+> > > > -- 
+> > > > 2.25.0
+> > > > 
