@@ -2,118 +2,191 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06698C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F006D20787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AAD20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 16:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="akkKBc5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgEZQkK (ORCPT
+        id S2388675AbgEZQlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 12:40:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:53528 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728686AbgEZQkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 12:40:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6337930E;
-        Tue, 26 May 2020 09:40:09 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FFD33F52E;
-        Tue, 26 May 2020 09:40:08 -0700 (PDT)
-References: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefano Garzarella <sgarzare@redhat.com>
-Subject: Re: [PATCH] sched/fair: don't NUMA balance for kthreads
-In-reply-to: <865de121-8190-5d30-ece5-3b097dc74431@kernel.dk>
-Date:   Tue, 26 May 2020 17:40:06 +0100
-Message-ID: <jhjpnaqtztl.mognet@arm.com>
+        Tue, 26 May 2020 12:41:05 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:44068 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730034AbgEZQlD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 12:41:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590511262; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=bxNy9OVVcbUGXRZMeRrO1nMkFefTO00pUgSxEDv45l8=; b=akkKBc5PPLF9QcXbHZ1BxG0xBhGHrAG3DkCHHCcCt1anPlauNvia0q11vTs8Nymaa6oKPtBs
+ UlpIm/iUHkJSEa9BIyNJJ0rMsnyJoYPnIC+r7vkf7i8bQERUbngrQi+79QASit7+x5+qyElr
+ yCPYkLUbInMpQaXpTtIwFVw+0B4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ecd469db4f0a9ae220deb46 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 16:41:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9DB0FC4339C; Tue, 26 May 2020 16:41:01 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C44A4C433C9;
+        Tue, 26 May 2020 16:40:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C44A4C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 26 May 2020 10:40:57 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm/a6xx: set ubwc config for A640 and A650
+Message-ID: <20200526164057.GC20960@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Jonathan Marek <jonathan@marek.ca>,
+        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200526032514.22198-1-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526032514.22198-1-jonathan@marek.ca>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 25, 2020 at 11:25:13PM -0400, Jonathan Marek wrote:
+> This is required for A640 and A650 to be able to share UBWC-compressed
+> images with other HW such as display, which expect this configuration.
 
-On 26/05/20 16:38, Jens Axboe wrote:
-> Stefano reported a crash with using SQPOLL with io_uring:
->
-> BUG: kernel NULL pointer dereference, address: 00000000000003b0
-> #PF: supervisor read access in kernel mode
-> #PF: error_code(0x0000) - not-present page
-> PGD 800000046c042067 P4D 800000046c042067 PUD 461fcf067 PMD 0
-> Oops: 0000 [#1] SMP PTI
-> CPU: 2 PID: 1307 Comm: io_uring-sq Not tainted 5.7.0-rc7 #11
-> Hardware name: Dell Inc. PowerEdge R430/03XKDV, BIOS 1.2.6 06/08/2015
-> RIP: 0010:task_numa_work+0x4f/0x2c0
-> Code: 18 4c 8b 25 e3 f0 8e 01 49 8b 9f 00 08 00 00 4d 8b af c8 00 00 00 49 39 c7 0f 85 e8 01 00 00 48 89 6d 00 41 f6 47 24 04 75 67 <48> 8b ab b0 03 00 00 48 85 ed 75 16 8b 3d 6f 68 94 01 e8 aa fb 04
-> RSP: 0018:ffffaaa98415be10 EFLAGS: 00010246
-> RAX: ffff953ee36b8000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000001 RSI: ffff953ee36b8000 RDI: ffff953ee36b8dc8
-> RBP: ffff953ee36b8dc8 R08: 00000000001200db R09: ffff9542e3ad2e08
-> R10: ffff9542ecd20070 R11: 0000000000000000 R12: 00000000fffca35b
-> R13: 000000012a06a949 R14: ffff9542e3ad2c00 R15: ffff953ee36b8000
-> FS:  0000000000000000(0000) GS:ffff953eefc40000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000000003b0 CR3: 000000046bbd0002 CR4: 00000000001606e0
-> Call Trace:
->  task_work_run+0x68/0xa0
->  io_sq_thread+0x252/0x3d0
->  ? finish_wait+0x80/0x80
->  kthread+0xf9/0x130
->  ? __ia32_sys_io_uring_enter+0x370/0x370
->  ? kthread_park+0x90/0x90
->  ret_from_fork+0x35/0x40
->
-> which is task_numa_work() oopsing on current->mm being NULL. The task
-> work is queued by task_tick_numa(), which checks if current->mm is NULL
-> at the time of the call. But this state isn't necessarily persistent,
-> if the kthread is using use_mm() to temporarily adopt the mm of a task.
->
-> Change the task_tick_numa() check to exclude kernel threads in general,
-> as it doesn't make sense to attempt ot balance for kthreads anyway.
->
-
-Does it? (this isn't a rethorical question)
-
-Suppose a given kthread ends up doing more accesses to some pages
-(via use_mm()) than the other threads that access them, wouldn't it make
-sense to take that into account when it comes to NUMA balancing?
-
-AFAIA that's not something that really happens in the wild, and as you
-say we don't have a (guaranteed) persistent state to work with in those
-cases, so it's more of a pipe dream. With that in mind, I think the
-proposed change is fine.
-
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-
-> Reported-by: Stefano Garzarella <sgarzare@redhat.com>
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 > ---
->
-> This should go into 5.7 imho
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 02f323b85b6d..403556fc16d4 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -2908,7 +2908,7 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
->       /*
->        * We don't care about NUMA placement if we don't have memory.
->        */
-> -	if (!curr->mm || (curr->flags & PF_EXITING) || work->next != work)
-> +	if ((curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
->               return;
->
->       /*
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 38 ++++++++++++++++++++++-----
+>  1 file changed, 32 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> index 6f335ae179c8..aa004a261277 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+> @@ -289,6 +289,37 @@ static void a6xx_set_hwcg(struct msm_gpu *gpu, bool state)
+>  	gpu_write(gpu, REG_A6XX_RBBM_CLOCK_CNTL, state ? 0x8aa8aa02 : 0);
+>  }
+>  
+> +static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+> +{
+> +	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+> +	u32 lower_bit = 2;
+> +	u32 amsbc = 0;
+> +	u32 rgb565_predicator = 0;
+> +	u32 uavflagprd_inv = 0;
+> +
+
+This hardware design has the amazing ability to make me sad every time I see it.
+
+> +	/* a618 is using the hw default values */
+> +	if (adreno_is_a618(adreno_gpu))
+> +		return;
+> +
+I've been a recent convert to the cult of <linux/bitfields.h> and FIELD_PREP()
+could help, maybe?
+
+if (adreno_is_a640(adreno_gpu)) {
+	rb_ncmode = FIELD_PREP(REG_A6XX_RB_NC_MODE_CNTL_AMSBC, 1);
+	rb_ncmode |= FIELD_PREP(REG_A6XX_RB_NC_MODE_CNTL_HBB, 2);
+
+	tpl1_ncmode  = FIELD_PREP(REG_A6XX_TPL1_NC_MODE_HBB, 2);
+
+	sp_ncmode  = FIELD_PREP(REG_A6XX_TPL1_NC_MODE_HBB, 2);
+
+	uchemode  = FIELD_PREP(REG_A6XX_UCHE_MODE_CNTL_HBB, 2);
+} else if adreno_is_a650(adreno_gpu)) {
+	rb_ncmode = FIELD_PREP(REG_A6XX_RB_NC_MODE_CNTL_AMSBC, 1);
+	rb_ncmode |= FIELD_PREP(REG_A6XX_RB_NC_MODE_CNTL_HBB, 3);
+	rb_ncmode |= FIELD_PREP(REG_A6XX_RB_NC_MODE_CNTL_RGB565, 1);
+
+	tpl1_ncmode  = FIELD_PREP(REG_A6XX_TPL1_NC_MODE_HBB, 3);
+
+	sp_ncmode  = FIELD_PREP(REG_A6XX_TPL1_NC_MODE_HBB, 3);
+	sp_ncmode  |= FIELD_PREP(REG_A6XX_TPL1_NC_MODE_UAVFLAGPRD_INV, 2);
+
+	uchemode  = FIELD_PREP(REG_A6XX_UCHE_MODE_CNTL_HBB, 2);
+}
+
+I'm not sure if that is any clearer or not. Perhaps this is a problem for the
+next person to add a new target. Regardless the code is programming the
+hardware correctly so...
+
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+
+
+> +	if (adreno_is_a640(adreno_gpu))
+> +		amsbc = 1;
+> +
+> +	if (adreno_is_a650(adreno_gpu)) {
+> +		/* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+> +		lower_bit = 3;
+> +		amsbc = 1;
+> +		rgb565_predicator = 1;
+> +		uavflagprd_inv = 2;
+> +	}
+> +
+> +	gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL,
+> +		rgb565_predicator << 11 | amsbc << 4 | lower_bit << 1);
+> +	gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL, lower_bit << 1);
+> +	gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL,
+> +		uavflagprd_inv >> 4 | lower_bit << 1);
+> +	gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL, lower_bit << 21);
+> +}
+> +
+>  static int a6xx_cp_init(struct msm_gpu *gpu)
+>  {
+>  	struct msm_ringbuffer *ring = gpu->rb[0];
+> @@ -478,12 +509,7 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+>  	/* Select CP0 to always count cycles */
+>  	gpu_write(gpu, REG_A6XX_CP_PERFCTR_CP_SEL_0, PERF_CP_ALWAYS_COUNT);
+>  
+> -	if (adreno_is_a630(adreno_gpu)) {
+> -		gpu_write(gpu, REG_A6XX_RB_NC_MODE_CNTL, 2 << 1);
+> -		gpu_write(gpu, REG_A6XX_TPL1_NC_MODE_CNTL, 2 << 1);
+> -		gpu_write(gpu, REG_A6XX_SP_NC_MODE_CNTL, 2 << 1);
+> -		gpu_write(gpu, REG_A6XX_UCHE_MODE_CNTL, 2 << 21);
+> -	}
+> +	a6xx_set_ubwc_config(gpu);
+>  
+>  	/* Enable fault detection */
+>  	gpu_write(gpu, REG_A6XX_RBBM_INTERFACE_HANG_INT_CNTL,
+> -- 
+> 2.26.1
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
