@@ -2,109 +2,307 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C99C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16627C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54DC2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590529642;
-	bh=dcIHjHJWdwKnqbdVZczS9+zy7LYQtoAbGPXy80hcZ1o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WQO/MPCNpHhBTFjRtEhR9gViYAbz/iLK8+m8wZRrcOAvees/lGXg4DchIsk2WA+sd
-	 XBiH4Kes4ZPfH7ASGOK1p0K0DeEM52PA12m0CQLBXxCyl0MTdWplz6yLCZFmrj7ZVz
-	 Fux22uVVYb8XtpvCWP327dpcjwOT3lpelz1nu9s8=
+	by mail.kernel.org (Postfix) with ESMTP id E553F20707
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:51:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B7O93FiX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389427AbgEZVrV (ORCPT
+        id S2389725AbgEZVvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgEZVrU (ORCPT
+        Tue, 26 May 2020 17:51:48 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54358 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389257AbgEZVvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:47:20 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB0E4C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:47:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id q2so26392077ljm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:47:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n63YcKhXogkg1d1eZRZGRx0yx0Ihs+RPPuD/yDkZeyw=;
-        b=DLzP5VY2StTVDhhiR3QPdnOJA9EgOERtp0ASCK6J1xhQK0vXV7Su5JZYyGDTalP5oq
-         L6x6Ww1jwzwjfaXLS/9diFskHmL3s2ztkgpvbNREk/veOUYEZJB7Mk9Rk9S8IuyFLzuz
-         lx7ytuWPBXmofG0D0qqt6HHw9h0tliEl9a5gg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n63YcKhXogkg1d1eZRZGRx0yx0Ihs+RPPuD/yDkZeyw=;
-        b=ktEhf3DRtuiPPTZMULAqX1SFHDwN7xn8kETH/ZmhUeuXyIkIse9mQTRwu64iHsBCpy
-         ZlRNX+ufwhctNDtqXHiT1DZ51AHgthfmWuso1VnTBLdCVnqiyLZil8/4KBQ6wOShB/oC
-         rEOocXnth0ajTzDWJhnfCep0F5rlzczf+7wLdWhxb71dLXsYX5+spr5+0goxWzbI12th
-         FNOVH8UinjkH9e7G4CJ9ILP2zShe+aLJSgM2yfx8YJeXNToiJMYVb8IrtSfuIFNd9hb0
-         7HbJLsud2BVy0vC3QSqmYRaXAYfB1+5hnVHikuSlCzeioc0h5CJIKplTABPEtkuCQe8r
-         BqCg==
-X-Gm-Message-State: AOAM533FuJJ8DBR7qFMtF3DAcUcUD7LIZoBv606mkJ9DM8ua6PVGii+P
-        es1jL/zPwXuMuCz3kVWKE47d/xL0nnc=
-X-Google-Smtp-Source: ABdhPJxjItVrchHsJQHGOYAdLIby2qzKBORdeNMJl5n9gg3SFWj+WE05d5OFbXjh9YJcgRpbvf6zGg==
-X-Received: by 2002:a2e:a48d:: with SMTP id h13mr1519097lji.120.1590529636628;
-        Tue, 26 May 2020 14:47:16 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id t15sm263025lfg.57.2020.05.26.14.47.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 14:47:15 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id c12so13223433lfc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:47:15 -0700 (PDT)
-X-Received: by 2002:ac2:5a0a:: with SMTP id q10mr1459830lfn.142.1590529634933;
- Tue, 26 May 2020 14:47:14 -0700 (PDT)
+        Tue, 26 May 2020 17:51:47 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QLpf3S005788;
+        Tue, 26 May 2020 16:51:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590529901;
+        bh=KZTgKofeUP3ViFlXayQntAbve2ERt8ij2ItI5SzJ6mA=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=B7O93FiXTW+l+LdDwUVfigyDkylpuCNnHgcX6fsFbY7QUQknVrW3/o9u0nLVDDW0H
+         Z7NeDldVk7ZiyMr9kAPdZwpDtCVfKMBnhs6vr9Sywt3BejVPFqwUjlkQ0KMja3zYfZ
+         gQbM2/BvUkV11kCFBU1G7aqtyUuIS9R1WVw9jNLE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QLpfWw024741;
+        Tue, 26 May 2020 16:51:41 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 16:51:41 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 16:51:41 -0500
+Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QLpewK026207;
+        Tue, 26 May 2020 16:51:41 -0500
+Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <nsekhar@ti.com>, <grygorii.strashko@ti.com>
+References: <20200506163033.3843-1-m-karicheri2@ti.com>
+ <87r1vdkxes.fsf@intel.com> <5feae5ae-af46-f4b6-fe91-91a19036112b@ti.com>
+ <87a71ule4c.fsf@intel.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <5cfc4fd1-887c-7cb8-4313-24f1c53d566d@ti.com>
+Date:   Tue, 26 May 2020 17:51:40 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200513162732.977489-1-bigeasy@linutronix.de>
- <20200526194641.GF83516@mtj.thefacebook.com> <CAHk-=wjHgkama3SYOcYCYt_F-sxV8h4+kQ5aQSMgK7PtiQ=Nkw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjHgkama3SYOcYCYt_F-sxV8h4+kQ5aQSMgK7PtiQ=Nkw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 26 May 2020 14:46:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgrG--AdCUBF9jR=zMm=cUn+6VaeOmmbbRFxx1YOx3RiA@mail.gmail.com>
-Message-ID: <CAHk-=wgrG--AdCUBF9jR=zMm=cUn+6VaeOmmbbRFxx1YOx3RiA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] workqueue: Make the workqueue code PREEMPT_RT safe
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <87a71ule4c.fsf@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 2:41 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Almost all users of swait have historically been buggy and/or
-> pointless.
+Hi Vinicius,
 
-Yeah, looking at this one, it really seems to fundamentally fall in
-the "pointless" category.
+On 5/26/20 2:56 PM, Vinicius Costa Gomes wrote:
+> Murali Karicheri <m-karicheri2@ti.com> writes:
+> 
+>> Hi Vinicius,
+>>
+>> On 5/21/20 1:31 PM, Vinicius Costa Gomes wrote:
+>>> Murali Karicheri <m-karicheri2@ti.com> writes:
+>>>
+>> ------------ Snip-------------
 
-So yeah - instead of extending swait with a new primitive that nobody
-else wants than this pointless case, just don't use swait at all.
+>>> So, I see this as different methods of achieving the same result, which
+>>> makes me think that the different "methods/types" (HSR and PRP in your
+>>> case) should be basically different implementations of a "struct
+>>> hsr_ops" interface. With this hsr_ops something like this:
+>>>
+>>>      struct hsr_ops {
+>>>             int (*handle_frame)()
+>>>             int (*add_port)()
+>>>             int (*remove_port)()
+>>>             int (*setup)()
+>>>             void (*teardown)()
+>>>      };
+>>>
+>>
+>> Thanks for your response!
+>>
+>> I agree with you that the prefix renaming is ugly. However I wasn't
+>> sure if it is okay to use a hsr prefixed code to handle PRP as
+>> well as it may not be intuitive to anyone investigating the code. For
+>> the same reason, handling 802.1CB specifc functions using the hsr_
+>> prefixed code. If that is okay, then patch 1-6 are unnecessary. We could
+>> also add some documentation at the top of the file to indicate that
+>> both hsr and prp are implemented in the code or something like that.
+>> BTW, I need to investigate more into 802.1CB and this was not known
+>> when I developed this code few years ago.
+> 
+> I think for now it's better to make it clear how similar PRP and HSR
+> are.
+> 
+> As for the renaming, I am afraid that this boat has sailed, as the
+> netlink API already uses HSR_ and it's better to reuse that than create
+> a new family for, at least conceptually, the same thing (PRP and
+> 802.1CB). And this is important bit, the userspace API.
+> 
+> And even for 802.1CB using name "High-availability Seamless Redudancy"
+> is as good as any, if very pompous.
+> I have reviewed the 802.1CB at a high level. The idea of 802.1CB is
+also high availability and redundancy similar to HSR and PRP but at
+stream level. So now I feel more comfortable to re-use the hsr prefix
+until we find a better name. I can document this in all file headers to
+make this explicit when I spin the formal patch for this. I will wait
+for a couple of weeks before start the work on a formal patch
+series so that others have a chance to respond as well.
 
-We have better models. We have "rcuwait", and we have
-"wake_up_process()". Either of which is simpler and more efficient
-than swait, and are actually useful. rcuwait isn't exactly widely
-used, but it has very nice semantics for when that is what you want.
-And wake_up_process() is both simple and straightforward, particularly
-when you already have a spinlock for protecting whatever state it is
-you're waking up on or waiting for.
+>>
+>> Main difference between HSR and PRP is how they handle the protocol tag
+>> or rct and create or handle the protocol specific part in the frame.
+>> For that part, we should be able to define ops() like you have
+>> suggested, instead of doing if check throughout the code. Hope that
+>> is what you meant by hsr_ops() for this. Again shouldn't we use some
+>> generic name like proto_ops or red_ops instead of hsr_ops() and assign
+>> protocol specific implementaion to them? i.e hsr_ or prp_
+>> or 802.1CB specific functions assigned to the function pointers. For
+>> now I see handle_frame(), handle_sv_frame, create_frame(),
+>> create_sv_frame() etc implemented differently (This is currently part of
+>> patch 11 & 12). So something like
+>>
+>>      struct proto_ops {
+>> 	int (*handle_frame)();
+>> 	int (*create_frame)();
+>> 	int (*handle_sv_frame)();
+>> 	int (*create_sv_frame)();
+>>      };
+> 
+> That's it. That was the idea I was trying to communicate :-)
+> 
+Ok
+>>
+>> and call dev->proto_ops->handle_frame() to process a frame from the
+>> main hook. proto_ops gets initialized to of the set if implementation
+>> at device or interface creation in hsr_dev_finalize().
+>>
+>>>>
+>>>> Please review this and provide me feedback so that I can work to
+>>>> incorporate them and send a formal patch series for this. As this
+>>>> series impacts user space, I am not sure if this is the right
+>>>> approach to introduce a new definitions and obsolete the old
+>>>> API definitions for HSR. The current approach is choosen
+>>>> to avoid redundant code in iproute2 and in the netlink driver
+>>>> code (hsr_netlink.c). Other approach we discussed internally was
+>>>> to Keep the HSR prefix in the user space and kernel code, but
+>>>> live with the redundant code in the iproute2 and hsr netlink
+>>>> code. Would like to hear from you what is the best way to add
+>>>> this feature to networking core. If there is any other
+>>>> alternative approach possible, I would like to hear about the
+>>>> same.
+>>>
+>>> Why redudant code is needed in the netlink parts and in iproute2 when
+>>> keeping the hsr prefix?
+>>
+>> May be this is due to the specific implementation that I chose.
+>> Currently I have separate netlink socket for HSR and PRP which may
+>> be an overkill since bith are similar protocol.
+>>
+>> Currently hsr inteface is created as
+>>
+>> ip link add name hsr0 type hsr slave1 eth0 slave2 eth1 supervision 0
+>>
+>> So I have implemented similar command for prp
+>>
+>> ip link add name prp0 type prp slave1 eth0 slave2 eth1 supervision 0
+>>
+>> In patch 7/13 I renamed existing HSR netlink socket attributes that
+>> defines the hsr interface with the assumption that we can obsolete
+>> the old definitions in favor of new common definitions with the
+>> HSR_PRP prefix. Then I have separate code for creating prp
+>> interface and related functions, even though they are similar.
+>> So using common definitions, I re-use the code in netlink and
+>> iproute2 (see patch 8 and 9 to re-use the code). PRP netlink
+>> socket code in patch 10 which register prp_genl_family similar
+>> to HSR.
+> 
+> Deprecating an userspace API is hard and takes a long time. So let's
+> avoid that if it makes sense.
+> 
 
-                 Linus
+Ok, make sense.
+
+>>
+>> +static struct genl_family prp_genl_family __ro_after_init = {
+>> +	.hdrsize = 0,
+>> +	.name = "PRP",
+>> +	.version = 1,
+>> +	.maxattr = HSR_PRP_A_MAX,
+>> +	.policy = prp_genl_policy,
+>> +	.module = THIS_MODULE,
+>> +	.ops = prp_ops,
+>> +	.n_ops = ARRAY_SIZE(prp_ops),
+>> +	.mcgrps = prp_mcgrps,
+>> +	.n_mcgrps = ARRAY_SIZE(prp_mcgrps),
+>> +};
+>> +
+>> +int __init prp_netlink_init(void)
+>> +{
+>> +	int rc;
+>> +
+>> +	rc = rtnl_link_register(&prp_link_ops);
+>> +	if (rc)
+>> +		goto fail_rtnl_link_register;
+>> +
+>> +	rc = genl_register_family(&prp_genl_family);
+>> +	if (rc)
+>> +		goto fail_genl_register_family;
+>>
+>>
+>> If we choose to re-use the existing HSR_ uapi defines, then should we
+>> re-use the hsr netlink socket interface for PRP as well and
+>> add additional attribute for differentiating the protocol specific
+>> part?
+> 
+> Yes, that seems the way to go.
+> 
+Ok.
+
+>>
+>> i.e introduce protocol attribute to existing HSR uapi defines for
+>> netlink socket to handle creation of prp interface.
+>>
+>> enum {
+>> 	HSR_A_UNSPEC,
+>> 	HSR_A_NODE_ADDR,
+>> 	HSR_A_IFINDEX,
+>> 	HSR_A_IF1_AGE,
+>> 	HSR_A_IF2_AGE,
+>> 	HSR_A_NODE_ADDR_B,
+>> 	HSR_A_IF1_SEQ,
+>> 	HSR_A_IF2_SEQ,
+>> 	HSR_A_IF1_IFINDEX,
+>> 	HSR_A_IF2_IFINDEX,
+>> 	HSR_A_ADDR_B_IFINDEX,
+>> +       HSR_A_PROTOCOL  <====if missing it is HSR (backward 	
+>> 			     compatibility)
+>>                                defines HSR or PRP or 802.1CB in future.
+>> 	__HSR_A_MAX,
+>> };
+>>
+>> So if ip link command is
+>>
+>> ip link add name <if name> type <proto> slave1 eth0 slave2 eth1
+>> supervision 0
+>>
+>> Add HSR_A_PROTOCOL attribute with HSR/PRP specific value.
+>>
+>> This way, the iprout2 code mostly remain the same as hsr, but will
+>> change a bit to introduced this new attribute if user choose proto as
+>> 'prp' vs 'hsr'
+> 
+> Sounds good, I think.
+
+Ok. If we want to add 802.1CB later, specific value used can be
+extended to use 802.1CB.
+
+> 
+>>
+>> BTW, I have posted the existing iproute2 code also to the mailing list
+>> with title 'iproute2: Add PRP support'.
+>>
+>> If re-using hsr code with existing prefix is fine for PRP or any future
+>> protocol such as 801.1B, then I will drop patch 1-6 that are essentially
+>> doing some renaming and re-use existing hsr netlink code for PRP with
+>> added attribute to differentiate the protocol at the driver as described
+>> above along with proto_ops and re-spin the series.
+> 
+> If I forget that HSR is also the name of a protocol, what the acronym
+> means makes sense for 802.1CB, so it's not too bad, I think.
+> 
+
+Agree.
+
+>>
+>> Let me know.
+>>
+>> Regards,
+>>
+>> Murali
+> 
+> 
+> Cheers,
+> 
+
+-- 
+Murali Karicheri
+Texas Instruments
