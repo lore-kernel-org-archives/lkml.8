@@ -2,80 +2,113 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE73C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31639C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7642068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0928D20787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:06:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590487605;
+	bh=B4uPhDHjSVrp5Z1BTqTDVVNDXQrB8e6lZd/oVVso0Vc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FN5FJAC+03jqXHFEM/olVw0/qGu5vFjydZYOUy6ZY7IAgs5bTDApT30XnhwaTa8gl
+	 keLiUVXQbTrAStm99eKxWrfb9Mx7Z8JCobXHEEVWZ6q1ZSXevERpBPGJ8rm+CMk2mH
+	 evJvgN85Q0J+qdcyUMoAtMHz1ENxtRSCnSvK/sGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbgEZKGU (ORCPT
+        id S1731844AbgEZKGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:06:20 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:54598 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728048AbgEZKGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:06:19 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Tue, 26 May 2020 18:05:49
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.78.173]
-Date:   Tue, 26 May 2020 18:05:49 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Kangjie Lu" <kjlu@umn.edu>, "Jonathan Cameron" <jic23@kernel.org>,
-        "Hartmut Knaack" <knaack.h@gmx.de>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Re: Re: [PATCH] iio: magnetometer: ak8974: Fix runtime PM
- imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <CACRpkdYr7mprhK9rdWEfuuwb7hxxc5aS5LZqKf4x5OgMrvh4CQ@mail.gmail.com>
-References: <20200524025117.15679-1-dinghao.liu@zju.edu.cn>
- <CACRpkda9ENYMLZVnTzN2rn9UvsMOWpeDnOhh7zs4ttAJqgipKw@mail.gmail.com>
- <58a22985.cfec2.1724f66f322.Coremail.dinghao.liu@zju.edu.cn>
- <CACRpkdYr7mprhK9rdWEfuuwb7hxxc5aS5LZqKf4x5OgMrvh4CQ@mail.gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Tue, 26 May 2020 06:06:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728048AbgEZKGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:06:44 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19D322073B;
+        Tue, 26 May 2020 10:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590487603;
+        bh=B4uPhDHjSVrp5Z1BTqTDVVNDXQrB8e6lZd/oVVso0Vc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DVxmcYvh133LIfkvYu6hpKkcHDal8m+FWme32nz9ggBejva328OorzmHpE1v7Wor8
+         x445J6QxV0qJ7YqJNwwszFbC3aOKhs5EEaQ1AJmS4F4Db11GQD/rlOZsgvSpqdf49e
+         TJR1zhlzCrvkWOqJqnHlC1sMcFXf07k64X4A3qlc=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jdWTp-00FLzx-Fx; Tue, 26 May 2020 11:06:41 +0100
 MIME-Version: 1.0
-Message-ID: <5ad23cba.d1763.172507207bb.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgC3YXj96cxece8JAA--.2665W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgYMBlZdtOUELAABs9
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbX0S07vEb7Iv0x
-        C_Ar1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
-        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
-        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
-        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
-        Gr1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6r4DMIAIbVCY0x0Ix7I2Y4AK64vIr41lV2
-        xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY6xC20s026xCa
-        FVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s026x8GjcxK67
-        AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0I7IYx2IY67AK
-        xVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIAIbVCI42IY6xAIw2
-        0EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1lV2xY6IIF0xvE
-        x4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 26 May 2020 11:06:41 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        catalin.marinas@arm.com, peterz@infradead.org,
+        mark.rutland@arm.com, will@kernel.org, aneesh.kumar@linux.ibm.com,
+        akpm@linux-foundation.org, npiggin@gmail.com, arnd@arndb.de,
+        rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+Subject: Re: [PATCH v3 1/6] arm64: Detect the ARMv8.4 TTL feature
+In-Reply-To: <050b7ee6-c7aa-5d61-4dff-4792a411464e@huawei.com>
+References: <20200525125300.794-1-yezhenyu2@huawei.com>
+ <20200525125300.794-2-yezhenyu2@huawei.com>
+ <c6b6eb07-2606-9fc0-280a-e53b81a6491c@arm.com>
+ <050b7ee6-c7aa-5d61-4dff-4792a411464e@huawei.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <872737c7e0690df3f42103365c651ad4@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, peterz@infradead.org, mark.rutland@arm.com, will@kernel.org, aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org, npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de, yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com, broonie@kernel.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com, prime.zeng@hisilicon.com, zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBXaGF0IGFib3V0IGp1c3QgbW92aW5nIHRoZSBwbV9ydW50aW1lX3B1dCgpIHVudGlsIHRoZSBl
-bmQKPiBvZiB0aGUgaW5pdGlhbGl6YXRpb24/IFJpZ2h0IGJlZm9yZSByZXR1cm4gMDsKPiBUaGVu
-IHdlIGNhbiBrZWVwIHRoaXMgbmljZSBnb3RvIGV4aXRzIGFzIHRoZXkgYXJlLgo+IAo+IE1heWJl
-IG1vdmUgYWxsIHRoZXNlIHRocmVlOgo+IAo+ICAgICAgIHBtX3J1bnRpbWVfc2V0X2F1dG9zdXNw
-ZW5kX2RlbGF5KCZpMmMtPmRldiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIEFLODk3NF9BVVRPU1VTUEVORF9ERUxBWSk7Cj4gICAgICAgICBwbV9ydW50aW1lX3Vz
-ZV9hdXRvc3VzcGVuZCgmaTJjLT5kZXYpOwo+ICAgICAgICAgcG1fcnVudGltZV9wdXQoJmkyYy0+
-ZGV2KTsKPiAKCkdvb2QgaWRlYSEgVGhhbmsgeW91IGZvciB5b3VyIGFkdmljZSBhbmQgSSB3aWxs
-IGZpeCB0aGlzIAppbiB0aGUgbmV4dCB2ZXJzaW9uIG9mIHBhdGNoLiAKClJlZ2FyZHMsCkRpbmdo
-YW8=
+On 2020-05-26 07:40, Zhenyu Ye wrote:
+> Hi Anshuman,
+> 
+> On 2020/5/26 10:39, Anshuman Khandual wrote:
+>> This patch (https://patchwork.kernel.org/patch/11557359/) is adding 
+>> some
+>> more ID_AA64MMFR2 features including the TTL. I am going to respin 
+>> parts
+>> of the V4 series patches along with the above mentioned patch. So 
+>> please
+>> rebase this series accordingly, probably on latest next.
+
+No. Please.
+
+>> 
+> 
+> I noticed that some patches of your series have been merged into arm64
+> tree (for-next/cpufeature), such as TLB range, but this one not. Why?
+> 
+> BTW, this patch is provided by Marc in his NV series [1], maybe you
+> should also let him know.
+> 
+> I will rebase my series after your patch is merged.
+
+Please don't rebase on -next. That's the worse thing to do. Always base
+your series on a well known -rc, and stick to that. Maintainers can
+always do the rebase and resolve conflicts.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
