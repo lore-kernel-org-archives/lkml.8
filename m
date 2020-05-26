@@ -3,170 +3,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E36FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8116DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16E79206F1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529B4206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="p/H6CoBy"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="iuQzFAyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731387AbgEZPyu (ORCPT
+        id S1729889AbgEZP4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:54:50 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:44023 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727862AbgEZPyt (ORCPT
+        Tue, 26 May 2020 11:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727862AbgEZP4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:54:49 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 25A9823E2C;
-        Tue, 26 May 2020 17:54:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590508485;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fea62NxmJK3eV7EnGjkH2PK8+sAxiTRywctVj4jahAw=;
-        b=p/H6CoByMx+/VRkUqo+zYBHQEDnzKf87T6UB5OckeCGd559i5IIHZzp0KffewoWwrz88Ae
-        h4yBFkejNH9BHFDcaRt1kgJ81Y0dFZk9I17TNByb0x/PZd+5Ojh4zOlgnTuQUvHMWc5GBK
-        mSDPNjq9ejnJ/5I3fr34XdPofcyMOs0=
+        Tue, 26 May 2020 11:56:15 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE545C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:56:14 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id l3so9651867qvo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EUf3sFtG1aKZLccPk3csyFRl/L7Fm5S++ouRqjtAd20=;
+        b=iuQzFAyiPd+zAHIv5I+aA5+rNFzp8NkJtKGGlO2/op7F0/4jDCmrAoukvDW5Q+V0cl
+         DDF5Uc/HiTXImROTvF+k/tMuNJPwbQGfu0vbVls6b1U3jD5rdyqNzo3nb0ny/LnDWJcX
+         r0Lb/NCFI5fQTWYyltkP/vBbCcf6LPn5LVPCvAahhXPFV/JNxYYF4LaeaJ0b9zeyvKAc
+         y95veTnYuESyDEYziLtvLjn19pYDq3Fc8QyxfGRr39aoKhh2sZBaI1jn/+0Ls4NU0RL+
+         rpEadtuCarQWv0zPV0frCBqZbQO1cUSawMVdcZImBhe0MMp+QRRRQlLa1yHsxOQ98T9l
+         LUTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EUf3sFtG1aKZLccPk3csyFRl/L7Fm5S++ouRqjtAd20=;
+        b=t9OgKcNkaF4ev2CWpyzpTEVLF4gwnWbfshOE4Xrs9kVid9rv4iQfT3gFxVjlfpICNp
+         gXWgzukv/QaoHoX7UZt8H6sdanMI/VILoMWFTJeprBiOtSpF1XyI+ODZ6Nsjf9nNoKe6
+         jpInIr7097zvZgp4GRo7ZnPu5a9Rt21mNuX+x5l3OeMcGcxnnFOHGw9uwsrFYsZrKITn
+         zPS2JoJF02rOXKe7v9tIvM9sgeV8TB8lRXywa6V9xITIDBdlo/hCOlEMzqCwi9JfTBFx
+         H/GqGkwDA1W26KTOIUtnf17+YxomnZePMv/DY9C9l5uWoC9DatYbiQ0388DtwvYc78RC
+         bNVg==
+X-Gm-Message-State: AOAM532Z53ZBEL265OLfYYFKepuncSRSfSvkEV+fow9Ta+kP7Ls1rWAh
+        D0IeIj8DGJOSRtV+de+WU9smsw==
+X-Google-Smtp-Source: ABdhPJyH3g44emP9MQleoe8D8xSlnvtalmliwpMzvo7t/S/m1eVBgBWUtwsZXZ2ODlvswuL4B8PVIw==
+X-Received: by 2002:ad4:43cc:: with SMTP id o12mr4920294qvs.62.1590508574205;
+        Tue, 26 May 2020 08:56:14 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:8152])
+        by smtp.gmail.com with ESMTPSA id u68sm3894qkf.102.2020.05.26.08.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 08:56:13 -0700 (PDT)
+Date:   Tue, 26 May 2020 11:55:49 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     linux-mm@kvack.org, Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 09/14] mm: deactivations shouldn't bias the LRU balance
+Message-ID: <20200526155549.GB850116@cmpxchg.org>
+References: <20200520232525.798933-1-hannes@cmpxchg.org>
+ <20200520232525.798933-10-hannes@cmpxchg.org>
+ <20200522133335.GA624@Qians-MacBook-Air.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 26 May 2020 17:54:38 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 03/16] mfd: mfd-core: match device tree node against
- reg property
-In-Reply-To: <20200526072427.GC3628@dell>
-References: <20200423174543.17161-1-michael@walle.cc>
- <20200423174543.17161-4-michael@walle.cc>
- <67e90dafd67c285158c2c6f67f92edb7@walle.cc> <20200515102848.GH271301@dell>
- <159e68b4ce53630ef906b2fcbca925bd@walle.cc> <20200526072427.GC3628@dell>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <f5704ce5a3e280f63c81fe35efb08234@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200522133335.GA624@Qians-MacBook-Air.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-26 09:24, schrieb Lee Jones:
-> On Mon, 25 May 2020, Michael Walle wrote:
+On Fri, May 22, 2020 at 09:33:35AM -0400, Qian Cai wrote:
+> On Wed, May 20, 2020 at 07:25:20PM -0400, Johannes Weiner wrote:
+> > Operations like MADV_FREE, FADV_DONTNEED etc. currently move any
+> > affected active pages to the inactive list to accelerate their reclaim
+> > (good) but also steer page reclaim toward that LRU type, or away from
+> > the other (bad).
+> > 
+> > The reason why this is undesirable is that such operations are not
+> > part of the regular page aging cycle, and rather a fluke that doesn't
+> > say much about the remaining pages on that list; they might all be in
+> > heavy use, and once the chunk of easy victims has been purged, the VM
+> > continues to apply elevated pressure on those remaining hot pages. The
+> > other LRU, meanwhile, might have easily reclaimable pages, and there
+> > was never a need to steer away from it in the first place.
+> > 
+> > As the previous patch outlined, we should focus on recording actually
+> > observed cost to steer the balance rather than speculating about the
+> > potential value of one LRU list over the other. In that spirit, leave
+> > explicitely deactivated pages to the LRU algorithm to pick up, and let
+> > rotations decide which list is the easiest to reclaim.
+> > 
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Acked-by: Minchan Kim <minchan@kernel.org>
+> > Acked-by: Michal Hocko <mhocko@suse.com>
+> > ---
+> >  mm/swap.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> > 
+> > diff --git a/mm/swap.c b/mm/swap.c
+> > index 5d62c5a0c651..d7912bfb597f 100644
+> > --- a/mm/swap.c
+> > +++ b/mm/swap.c
+> > @@ -515,14 +515,12 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+> >  
+> >  	if (active)
+> >  		__count_vm_event(PGDEACTIVATE);
+> > -	lru_note_cost(lruvec, !file, hpage_nr_pages(page));
+> >  }
+> >
+> []
 > 
->> Am 2020-05-15 12:28, schrieb Lee Jones:
->> > On Thu, 30 Apr 2020, Michael Walle wrote:
->> >
->> > > Hi Lee,
->> > >
->> > > Am 2020-04-23 19:45, schrieb Michael Walle:
->> > > > There might be multiple children with the device tree compatible, for
->> > > > example if a MFD has multiple instances of the same function. In this
->> > > > case only the first is matched and the other children get a wrong
->> > > > of_node reference.
->> > > > Add a new option to match also against the unit address of the child
->> > > > node. Additonally, a new helper OF_MFD_CELL_REG is added.
->> > >
->> > >
->> > > Do you think this is feasible? I guess this is the biggest uncertainty
->> > > for me at the moment in this patch series.
->> >
->> > I think it sounds fine in principle.  So long as it doesn't change the
->> > existing behaviour when of_reg isn't set.
->> >
->> > > > Signed-off-by: Michael Walle <michael@walle.cc>
->> > > > ---
->> > > >  drivers/mfd/mfd-core.c   | 29 ++++++++++++++++++++---------
->> > > >  include/linux/mfd/core.h | 26 ++++++++++++++++++++------
->> > > >  2 files changed, 40 insertions(+), 15 deletions(-)
+> mm/swap.c: In function 'lru_deactivate_file_fn':
+> mm/swap.c:504:11: warning: variable 'file' set but not used
+> [-Wunused-but-set-variable]
+>   int lru, file;
+>            ^~~~ 
+
+Oops, my gcc doesn't warn about that, but yes, it's clearly dead code.
+
+$ make mm/swap.o
+  GEN     Makefile
+  CALL    /home/hannes/src/linux/linux/scripts/checksyscalls.sh
+  CALL    /home/hannes/src/linux/linux/scripts/atomic/check-atomics.sh
+  DESCEND  objtool
+  CC      mm/swap.o
+$
+ 
+> This?
 > 
-> [...]
-> 
->> > > > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
->> > > > index d01d1299e49d..c2c0ad6b14f3 100644
->> > > > --- a/include/linux/mfd/core.h
->> > > > +++ b/include/linux/mfd/core.h
->> > > > @@ -13,8 +13,11 @@
->> > > >  #include <linux/platform_device.h>
->> > > >
->> > > >  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
->> > > > +#define MFD_OF_REG_VALID	BIT(31)
->> >
->> > What about 64bit platforms?
->> 
->> The idea was to have this as a logical number. I.e. for now you may 
->> only
->> have one subdevice per unique compatible string. In fact, if you have 
->> a
->> look at the ab8500.c, there are multiple "stericsson,ab8500-pwm"
->> subdevices. But there is only one DT node for all three of it. I guess
->> this works as long as you don't use phandles to reference the pwm node
->> in the device tree. Or you don't want to use device tree properties
->> per subdevice (for example the "timeout-sec" of a watchdog device).
->> 
->> So to circumvent this, I thought of having the unit-address (and thus
->> the "reg" property) to differentiate between multiple subdevices. Now
->> there is one special case for me: this board management controller
->> might be upgradable and it might change internally. Thus I came up
->> with that logical numbering of subdevices. Rob doesn't seem to be a
->> fan of that, though. Therefore, having bit 31 as a valid indicator
->> leaves you with 2^31 logical devices, which should be enough ;)
->> 
->> Rob proposed to have the internal offset as the unit-address. But
->> in that case I can also use devm_of_platform_populate() and don't
->> need the OF_MFD_CELL_REG; I'd just parse the reg offset in each
->> individual subdevice driver. But like I said, I wanted to keep the
->> internal offsets out of the device tree.
-> 
-> Oh, I see what you're doing.
-> 
-> So you're adding an arbitrary ID to the device's reg property in DT?
+> diff --git a/mm/swap.c b/mm/swap.c
+> index fedf5847dfdb..9c38c1b545af 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -501,7 +501,7 @@ void lru_cache_add_active_or_unevictable(struct page *page,
+>  static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+>  			      void *arg)
+>  {
+> -	int lru, file;
+> +	int lru;
+>  	bool active;
+>  
+>  	if (!PageLRU(page))
+> @@ -515,7 +515,6 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+>  		return;
+>  
+>  	active = PageActive(page);
+> -	file = page_is_file_lru(page);
+>  	lru = page_lru_base_type(page);
+>  
+>  	del_page_from_lru_list(page, lruvec, lru + active);
 
-Yes.
-
-> How is this not a hack?
-
-Well IMHO this is not more or less a hack as the current of_node
-handling of MFD devices, which happens to work only because there
-is only one device per compatible string (or it doesn't really work,
-like in the stericsson,ab8500-pwm case). The of_node is assigned
-according to the compatible string, just like in my case, only that
-I have two subdevices with the same compatible string.
-
-> Why don't you use the full address for identification?
-
-Like I said, in the long term I would like to have support for
-different versions of the board management controller without having
-to change the device tree and have device tree bindings for the
-subdevices at the same time. But it seems, that this is not possible
-and I guess I have to bite the bullet and may need to provide another
-device tree if the controller might be updated.
-
--michael
+Looks good, and it appears Andrew has already queued it. Would you
+mind providing the Signed-off-by: for it?
