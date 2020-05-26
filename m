@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78087C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF50C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7F720849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7337320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521011;
-	bh=WSzkrlDsgyHyUqYsjlT2GuY6nmqpoJAM07KjStN4fTU=;
+	s=default; t=1590521016;
+	bh=2zQbOFk7UokBnaJoU3QOA1uEDUj2qmeb2ZaGzIM4pvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwjfFoNQczULU2vjK9IQbw+vnmT4WruG0LdxycXwyn+lhV1J+EsmcFKatpxB74RoN
-	 kNk/5gdXQ+QpSh58TF8SROIKixHJ2s5tUFlj+GO58Q/jeJfmIE76LMk0eTUfwmqENd
-	 z9JYdxZfaz/jB0NelR3JCKXfjyOGeURX3rjHMAO4=
+	b=LyZ4f9qxSkcIhl1EVr7kgHjwJxGdXPIaG1jAKpkkjkDv8VwV8jnlSPcgZo22gDOcI
+	 6TX9qeCICRoKkEKY1ytoEgWf5t3eKrMXRj0mmPZj5uO3aXg5oydYHKLuwlc/e0lcoW
+	 JWXUn/q9XkX7nZsuRNug/Qz6izY5YAIyPZy9bzsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404351AbgEZTXa (ORCPT
+        id S2404493AbgEZTXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390768AbgEZTJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:09:12 -0400
+        id S2391818AbgEZTJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:09:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ECED208A7;
-        Tue, 26 May 2020 19:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33C8D20776;
+        Tue, 26 May 2020 19:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520151;
-        bh=WSzkrlDsgyHyUqYsjlT2GuY6nmqpoJAM07KjStN4fTU=;
+        s=default; t=1590520141;
+        bh=2zQbOFk7UokBnaJoU3QOA1uEDUj2qmeb2ZaGzIM4pvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hbbmluy+4YJY88bwyCN+UV7HgB73fnt8VmnepJg3RFJF2HxJkV2gmkIeuFgd2BX/a
-         jo7KJjb/qKJjFnZ3NfawRL12+2YZlPb65fzAaJjaoPIW8ggdWzP8Ajdiygw3U9wGYC
-         9eG2hUFQSRuE2t8qFuZ34odB/KhMIAMbs006A7is=
+        b=cZxOUDHsIs0pd1dXDqk7hWQjjHiEEh8+1HiPE79R4xnVdGiryDgPIhkLg7AF07/14
+         jPslJpCRm546M5ZUNk7VrkY/j5l3f3ottlEu7ZY+iigIb/+4VrfW84RFN07C5O1PyZ
+         sul8lTtYp3gbnbkZ/n8IJQpnveNeiaIDNBaJ0tBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Richard Clark <richard.xnu.clark@gmail.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
+        stable@vger.kernel.org, Juliet Kim <julietk@linux.vnet.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/111] aquantia: Fix the media type of AQC100 ethernet controller in the driver
-Date:   Tue, 26 May 2020 20:52:46 +0200
-Message-Id: <20200526183935.420426970@linuxfoundation.org>
+Subject: [PATCH 5.4 034/111] ibmvnic: Skip fatal error reset after passive init
+Date:   Tue, 26 May 2020 20:52:52 +0200
+Message-Id: <20200526183936.067512660@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -62,36 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Clark <richard.xnu.clark@gmail.com>
+From: Juliet Kim <julietk@linux.vnet.ibm.com>
 
-[ Upstream commit 6de556c31061e3b9c36546ffaaac5fdb679a2f14 ]
+[ Upstream commit f9c6cea0b38518741c8dcf26ac056d26ee2fd61d ]
 
-The Aquantia AQC100 controller enables a SFP+ port, so the driver should
-configure the media type as '_TYPE_FIBRE' instead of '_TYPE_TP'.
+During MTU change, the following events may happen.
+Client-driven CRQ initialization fails due to partner’s CRQ closed,
+causing client to enqueue a reset task for FATAL_ERROR. Then passive
+(server-driven) CRQ initialization succeeds, causing client to
+release CRQ and enqueue a reset task for failover. If the passive
+CRQ initialization occurs before the FATAL reset task is processed,
+the FATAL error reset task would try to access a CRQ message queue
+that was freed, causing an oops. The problem may be most likely to
+occur during DLPAR add vNIC with a non-default MTU, because the DLPAR
+process will automatically issue a change MTU request.
 
-Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
-Cc: Igor Russkikh <irusskikh@marvell.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Acked-by: Igor Russkikh <irusskikh@marvell.com>
+Fix this by not processing fatal error reset if CRQ is passively
+initialized after client-driven CRQ initialization fails.
+
+Signed-off-by: Juliet Kim <julietk@linux.vnet.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-index 74b9f3f1da81..0e8264c0b308 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-@@ -56,7 +56,7 @@ static const struct aq_board_revision_s hw_atl_boards[] = {
- 	{ AQ_DEVICE_ID_D108,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc108, },
- 	{ AQ_DEVICE_ID_D109,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc109, },
- 
--	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
-+	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc100, },
- 	{ AQ_DEVICE_ID_AQC107,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
- 	{ AQ_DEVICE_ID_AQC108,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc108, },
- 	{ AQ_DEVICE_ID_AQC109,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc109, },
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index e1ab2feeae53..aaa03ce5796f 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2086,7 +2086,8 @@ static void __ibmvnic_reset(struct work_struct *work)
+ 				rc = do_hard_reset(adapter, rwi, reset_state);
+ 				rtnl_unlock();
+ 			}
+-		} else {
++		} else if (!(rwi->reset_reason == VNIC_RESET_FATAL &&
++				adapter->from_passive_init)) {
+ 			rc = do_reset(adapter, rwi, reset_state);
+ 		}
+ 		kfree(rwi);
 -- 
 2.25.1
 
