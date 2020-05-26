@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B004C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0297420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1411320776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520913;
-	bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
+	s=default; t=1590520916;
+	bh=L0QoRAgWtQseVlwB82qHXXUrftjn7bHptGI3PhND3X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jyl36OSRK68P3HpKN1mRv0Tk1eyTXMn9KL3ZCX6nm6rzK8GyShD5IbsZiJZtsXdC1
-	 rVYpHiixzLKToZ3KBx1TsQ71Ctq+Q9TrykSjn8eRebn6PGblcweYL7n3pQS3AvKwcf
-	 B5wUl2qAhPN5Iq8Jl5eiGzV+uORyOltfdu4CT/fI=
+	b=T9AowTqDyMsGEyjr+cdt3X8SuZOSYIwv73IjQSeg5QohbnHNL5pUr7ljhtmAAMRZ9
+	 wSmJ2Ma1iwCld1P5DKS9ZhQn+rIycmNTT498nsAuAhwr1PTTNy1vG8dJcnNV6mjpJl
+	 Qg0PbRB2jdl2UG+JaMGZZE57zwfJ0Ymry+o/RZss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404430AbgEZTVw (ORCPT
+        id S2404483AbgEZTVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:21:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40484 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391427AbgEZTLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:11 -0400
+        id S2392034AbgEZTLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1FF520888;
-        Tue, 26 May 2020 19:11:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A367208A7;
+        Tue, 26 May 2020 19:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520270;
-        bh=ECHHm1tjjPiVV5BIUfnlAx1LvvWnDMygf0UXIqwcJhQ=;
+        s=default; t=1590520265;
+        bh=L0QoRAgWtQseVlwB82qHXXUrftjn7bHptGI3PhND3X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TZAVr4eSX95Ris7Vtv2FHOyiZz97dYZgt2LUinVpkQL9WL8FUhq37xy/JPeYkX4T
-         Yt7pItYTB826CIqj7yYOvXlWSqBRzEnAZ0CwVXDWLmz9jaS0du3SnBYN8b+Z/okP+W
-         n5fNgcruqVT7AB353aTAZP0KJL3XyCCb7XdapseY=
+        b=AlB5ZTOxHiD5FL7+6QVddGEz94eUhBZyo7WzpjMHR38Y5IAeT4h6EysNxtmMePSar
+         HzdmScxifGwB/eAeudyCubR1KfMXnY6l6EbY2H4jeUOTSxRS3n2P25h3va0Df/B50G
+         ahTBd16esq3gF+G0QwQbOZiiu7sX4WZcNaOxn+Tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 014/126] iommu/amd: Fix over-read of ACPI UID from IVRS table
-Date:   Tue, 26 May 2020 20:52:31 +0200
-Message-Id: <20200526183938.780946925@linuxfoundation.org>
+Subject: [PATCH 5.6 012/126] ubifs: remove broken lazytime support
+Date:   Tue, 26 May 2020 20:52:29 +0200
+Message-Id: <20200526183938.597411064@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,80 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Monakov <amonakov@ispras.ru>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
+[ Upstream commit ecf84096a526f2632ee85c32a3d05de3fa60ce80 ]
 
-IVRS parsing code always tries to read 255 bytes from memory when
-retrieving ACPI device path, and makes an assumption that firmware
-provides a zero-terminated string. Both of those are bugs: the entry
-is likely to be shorter than 255 bytes, and zero-termination is not
-guaranteed.
+When "ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs" introduced atime
+support to ubifs, it also added lazytime support.  As far as I can tell
+the lazytime support is terminally broken, as it causes
+mark_inode_dirty_sync to be called from __writeback_single_inode, which
+will then trigger the locking assert in ubifs_dirty_inode.  Just remove
+the broken lazytime support for now, it can be added back later,
+especially as some infrastructure changes should make that easier soon.
 
-With Acer SF314-42 firmware these issues manifest visibly in dmesg:
-
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
-
-The first three lines show how the code over-reads adjacent table
-entries into the UID, and in the last line it even reads garbage data
-beyond the end of the IVRS table itself.
-
-Since each entry has the length of the UID (uidl member of ivhd_entry
-struct), use that for memcpy, and manually add a zero terminator.
-
-Avoid zero-filling hid and uid arrays up front, and instead ensure
-the uid array is always zero-terminated. No change needed for the hid
-array, as it was already properly zero-terminated.
-
-Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
-
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux-foundation.org
-Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 8c1c5f263833 ("ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/ubifs/file.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 2b9a67ecc6ac..5b81fd16f5fa 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1329,8 +1329,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 		}
- 		case IVHD_DEV_ACPI_HID: {
- 			u16 devid;
--			u8 hid[ACPIHID_HID_LEN] = {0};
--			u8 uid[ACPIHID_UID_LEN] = {0};
-+			u8 hid[ACPIHID_HID_LEN];
-+			u8 uid[ACPIHID_UID_LEN];
- 			int ret;
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index 743928efffc1..49fe062ce45e 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1375,7 +1375,6 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+ 	struct ubifs_info *c = inode->i_sb->s_fs_info;
+ 	struct ubifs_budget_req req = { .dirtied_ino = 1,
+ 			.dirtied_ino_d = ALIGN(ui->data_len, 8) };
+-	int iflags = I_DIRTY_TIME;
+ 	int err, release;
  
- 			if (h->type != 0x40) {
-@@ -1347,6 +1347,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			}
+ 	if (!IS_ENABLED(CONFIG_UBIFS_ATIME_SUPPORT))
+@@ -1393,11 +1392,8 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+ 	if (flags & S_MTIME)
+ 		inode->i_mtime = *time;
  
-+			uid[0] = '\0';
- 			switch (e->uidf) {
- 			case UID_NOT_PRESENT:
- 
-@@ -1361,8 +1362,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			case UID_IS_CHARACTER:
- 
--				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
--				uid[ACPIHID_UID_LEN - 1] = '\0';
-+				memcpy(uid, &e->uid, e->uidl);
-+				uid[e->uidl] = '\0';
- 
- 				break;
- 			default:
+-	if (!(inode->i_sb->s_flags & SB_LAZYTIME))
+-		iflags |= I_DIRTY_SYNC;
+-
+ 	release = ui->dirty;
+-	__mark_inode_dirty(inode, iflags);
++	__mark_inode_dirty(inode, I_DIRTY_SYNC);
+ 	mutex_unlock(&ui->ui_mutex);
+ 	if (release)
+ 		ubifs_release_budget(c, &req);
 -- 
 2.25.1
 
