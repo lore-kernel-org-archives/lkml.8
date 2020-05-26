@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74277C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B005DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3872084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81BDE20849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519634;
-	bh=1lVDuJ6K2zD8IWha/vejufNCABHrFJ3kMD5mnbUYl8k=;
+	s=default; t=1590519636;
+	bh=2daPSeBpK2D69QgGS2J3i1uLMjBYRlOd3LEOgCryJ7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5z8BY4ALqFxdph2Fxt7Pyu7W52en0LsavleUPuHwDy9JKEoQc/CKUsnOdkFskBnO
-	 1+o/WKs5L5lGFg7bFwSFCxlH09sTS7/rM62XQpBNpQlpCDOToyB/31F3mX/tbz3Nqr
-	 I1dK9W7b5dgf/yhqkye0U1HOUTxkhb+8bxqZbazg=
+	b=iylKc5UBg3Q89r1jvc87iK0UzCuILN6QLHK8Khi7KVb+jJMNOe78Wx+vbleV3JK3F
+	 15b2ypPry6kpjUJDFKYm/esy7tRnYhWgW+ejm5Aa9fXV+M088kUyOzZU5XwgHDiX86
+	 CUdORTpXwm1cWVSIm6ZoQJIbrnFNbMe77Sfeht58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390755AbgEZTAd (ORCPT
+        id S2390764AbgEZTAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390747AbgEZTA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:29 -0400
+        id S2389533AbgEZTAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:00:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A58A2084C;
-        Tue, 26 May 2020 19:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 987F52084C;
+        Tue, 26 May 2020 19:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519628;
-        bh=1lVDuJ6K2zD8IWha/vejufNCABHrFJ3kMD5mnbUYl8k=;
+        s=default; t=1590519631;
+        bh=2daPSeBpK2D69QgGS2J3i1uLMjBYRlOd3LEOgCryJ7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0AIDkF6O4rpTJQvOxYisJuubXQ2dr0Xr6jJj5IhVFXs3ZcyDBsVw41cskfF6Alnn
-         2teHnYv2V1R0vyh6QnLzDlN9ZsSlh3BI++5LLCVGDBTXY/3rZJFhLA3mCN/q0UYR9/
-         mi3LIpMbu7frpp0J9jpKuLWO90GSQcSup1IHKu0w=
+        b=dMHVJ9vCukVA6WRVVHkk/55KVQD3I0QC+sMfNSFdbPAMTCkBFFrdf3uY171ybg4Pm
+         16Eeit+9mn0JsZLTC1a/+gfteGia+B+2y8GDpmDSXsq87yPzRnABijYBtHeBj6nQhE
+         jnU4HixtL7wW/4J4f5RkVjNo4lPDKXV8ZGWLWDII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/59] HID: multitouch: add eGalaxTouch P80H84 support
-Date:   Tue, 26 May 2020 20:52:59 +0200
-Message-Id: <20200526183912.763695754@linuxfoundation.org>
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Arun Easi <aeasi@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 15/59] scsi: qla2xxx: Fix hang when issuing nvme disconnect-all in NPIV
+Date:   Tue, 26 May 2020 20:53:00 +0200
+Message-Id: <20200526183913.080919425@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -60,51 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Arun Easi <aeasi@marvell.com>
 
-[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
+[ Upstream commit 45a76264c26fd8cfd0c9746196892d9b7e2657ee ]
 
-Add support for P80H84 touchscreen from eGalaxy:
+In NPIV environment, a NPIV host may use a queue pair created by base host
+or other NPIVs, so the check for a queue pair created by this NPIV is not
+correct, and can cause an abort to fail, which in turn means the NVME
+command not returned.  This leads to hang in nvme_fc layer in
+nvme_fc_delete_association() which waits for all I/Os to be returned, which
+is seen as hang in the application.
 
-  idVendor           0x0eef D-WAV Scientific Co., Ltd
-  idProduct          0xc002
-  iManufacturer           1 eGalax Inc.
-  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
-
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Link: https://lore.kernel.org/r/20200331104015.24868-3-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Arun Easi <aeasi@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h        | 1 +
- drivers/hid/hid-multitouch.c | 3 +++
- 2 files changed, 4 insertions(+)
+ drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 9d372fa7c298..a1e5e0529545 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -369,6 +369,7 @@
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
- #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
-+#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 5e8ae510aef8..9d9737114dcf 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -2998,7 +2998,7 @@ qla24xx_abort_command(srb_t *sp)
+ 	ql_dbg(ql_dbg_mbx + ql_dbg_verbose, vha, 0x108c,
+ 	    "Entered %s.\n", __func__);
  
- #define USB_VENDOR_ID_ELAN		0x04f3
+-	if (vha->flags.qpairs_available && sp->qpair)
++	if (sp->qpair)
+ 		req = sp->qpair->req;
  
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 07d92d4a9f7c..db29bf539a4b 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -1550,6 +1550,9 @@ static const struct hid_device_id mt_devices[] = {
- 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
- 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
- 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
-+	{ .driver_data = MT_CLS_EGALAX,
-+		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-+			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
- 
- 	/* Elitegroup panel */
- 	{ .driver_data = MT_CLS_SERIAL,
+ 	if (ql2xasynctmfenable)
 -- 
 2.25.1
 
