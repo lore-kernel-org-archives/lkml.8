@@ -2,291 +2,163 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B06C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6A920870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=guzman.io header.i=@guzman.io header.b="CO/cb0lp"
+	by mail.kernel.org (Postfix) with ESMTP id 4001820870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:19:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590531589;
+	bh=bKlQNn/LWFxPJxkiyOz5A0mBP6CdTyek73u34XgevK4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k9obayQNNXv34v/Jq6aRhC/Mr1oao97Fm86RMoC6OJu9hvVLX2CtGh+xY43UA3cY3
+	 S0pi/X0j4ypzhTyB0lofTRi2TatdEgU8cq1CvZxao59d+hUMormgqLL1PDfozXE3LV
+	 gfQvgTaeVgs8McHMlWBTok5AlX+TYNCb+xbinGs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391654AbgEZWTh (ORCPT
+        id S2403949AbgEZWTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:19:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389382AbgEZWTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:19:36 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CEBC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:19:36 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w20so5726967pga.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 15:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=guzman.io; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version;
-        bh=a5XHeXngMi4U8eBw5luwPmNRrNUYniKzbWyuK/cavbU=;
-        b=CO/cb0lpNvKA/oLdu25dbFW0P9eTeGKEX6HW/ympFdniKYJynDxRLuclUm+a9rxOdO
-         2r9B2gPJgdI6AEjSM7tARhIFs/vhhDrfeyOeQpo3El7dzaZwuSv/b5bAXMu5VJay74VP
-         lYpEKyUR7+MFt8jQEotJVerXIbXq+uwkop4nU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version;
-        bh=a5XHeXngMi4U8eBw5luwPmNRrNUYniKzbWyuK/cavbU=;
-        b=O3zY3rRW6EF68PsLWw48WBtjh69ODekzpkkYG+xdQQUfCHfoNyTw/ONC67rIzTemMb
-         iPG8DitcSZfMxYWjwKX1jymVSGiPXfbrXJ4HfdVoa2Swu1ozJauAzdaCSWyxONUNGV4+
-         HBLWzYwbUEjUvuG3DTfONCOgtfu/Q49DCNMfvnRX7Xi8RjsrFiNajy8NdiAiOxOEW8MY
-         kdicq48T9kd6OdXt++dU1fV+Ry0cjapR6dOYG2x0VglrkUinm+w0TzptJQv5kihZ0h1s
-         b3jdUaFzujRPMtkrA6Xv2nYuCAM1X4HccTJrh7iZ6ja5iENBK6TZ/rLDS+iU4Bv4LFBe
-         wqlA==
-X-Gm-Message-State: AOAM532PGvTJubyHv8Mg5gLt/4ksjiWoWIQeLaOWM9gv1nGwS3Swfw+L
-        gitVC8LXkrrbxyM1aKnu1jhVaw==
-X-Google-Smtp-Source: ABdhPJzXju3+PnWMx0+X/Gpcg8MAEncxZsMcwegsOmxsfS6mJWGG84G02h+1pXbnjv8HmoC0ZPvo/g==
-X-Received: by 2002:a62:e801:: with SMTP id c1mr871313pfi.217.1590531576045;
-        Tue, 26 May 2020 15:19:36 -0700 (PDT)
-Received: from ?IPv6:2601:645:4000:ba:30d8:f462:8a0e:6cae? ([2601:645:4000:ba:30d8:f462:8a0e:6cae])
-        by smtp.gmail.com with ESMTPSA id z16sm453922pfq.125.2020.05.26.15.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 15:19:34 -0700 (PDT)
-Message-ID: <da3027a2aa9d1b7110a65de919e88f42ef2e13bb.camel@guzman.io>
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-From:   Alex Guzman <alex@guzman.io>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mario.Limonciello@dell.com, peterhuewe@gmx.de,
-        jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Date:   Tue, 26 May 2020 15:19:32 -0700
-In-Reply-To: <1590521924.15108.1.camel@HansenPartnership.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
-         <1590521924.15108.1.camel@HansenPartnership.com>
-Content-Type: multipart/mixed; boundary="=-0c7m6JvSmHlZf6X2co44"
-User-Agent: Evolution 3.36.2 
+        Tue, 26 May 2020 18:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389382AbgEZWTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 18:19:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09D3A20870;
+        Tue, 26 May 2020 22:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590531586;
+        bh=bKlQNn/LWFxPJxkiyOz5A0mBP6CdTyek73u34XgevK4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ycac6ILJkUlU5lQePEd0NMtfiaDAgplP8FmvtCueKBQehobAxnDFJNmQ3IumlwfYd
+         8pobB2Mi8QFjUoGszYO1oVESJMtrI2rt9scyaYdBN6M+q5pB/0EPJphts1Z/4JMycd
+         U2nU3/loBc5tCa/KKXjTzlJBpbsxC8m4qt0yRb9Q=
+Date:   Wed, 27 May 2020 00:19:44 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v3 04/18] nitro_enclaves: Init PCI device driver
+Message-ID: <20200526221944.GA179549@kroah.com>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-5-andraprs@amazon.com>
+ <20200526064819.GC2580530@kroah.com>
+ <b4bd54ca-8fe2-8ebd-f4fc-012ed2ac498a@amazon.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4bd54ca-8fe2-8ebd-f4fc-012ed2ac498a@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-0c7m6JvSmHlZf6X2co44
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-On Tue, 2020-05-26 at 12:38 -0700, James Bottomley wrote:
-> On Tue, 2020-05-26 at 19:23 +0000, Mario.Limonciello@dell.com wrote:
-> > > On Tue, 2020-05-26 at 13:32 -0500, Mario Limonciello wrote:
-> > > > This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
-> > > > 
-> > > > This commit has caused regressions for the XPS 9560 containing
-> > > > a Nuvoton TPM.
-> > > 
-> > > Presumably this is using the tis driver?
-> > 
-> > Correct.
-> > 
-> > > > As mentioned by the reporter all TPM2 commands are failing
-> > > > with:
-> > > >   ERROR:tcti:src/tss2-tcti/tcti-
-> > > > device.c:290:tcti_device_receive()
-> > > >   Failed to read response from fd 3, got errno 1: Operation not
-> > > > permitted
-> > > > 
-> > > > The reporter bisected this issue back to this commit which was
-> > > > backported to stable as commit 4d6ebc4.
-> > > 
-> > > I think the problem is request_locality ... for some inexplicable
-> > > reason a failure there returns -1, which is EPERM to user space.
-> > > 
-> > > That seems to be a bug in the async code since everything else
-> > > gives a ESPIPE error if tpm_try_get_ops fails ... at least no-one
-> > > assumes it gives back a sensible return code.
-> > > 
-> > > What I think is happening is that with the patch the TPM goes
-> > > through a quick sequence of request, relinquish, request,
-> > > relinquish and it's the third request which is failing (likely
-> > > timing out).  Without the patch, the patch there's only one
-> > > request,relinquish cycle because the ops are held while the async
-> > > work is executed.  I have a vague recollection that there is a
-> > > problem with too many locality request in quick succession, but
-> > > I'll defer to Jason, who I think understands the intricacies of
-> > > localities better than I do.
-> > 
-> > Thanks, I don't pretend to understand the nuances of this
-> > particular
-> > code, but I was hoping that the request to revert got some
-> > attention
-> > since Alex's kernel Bugzilla and message a few months ago to linux
-> > integrity weren't.
-> > 
-> > > If that's the problem, the solution looks simple enough: just
-> > > move
-> > > the ops get down because the priv state is already protected by
-> > > the
-> > > buffer mutex
-> > 
-> > Yeah, if that works for Alex's situation it certainly sounds like a
-> > better solution than reverting this patch as this patch actually
-> > does
-> > fix a problem reported by Jeffrin originally.
-> > 
-> > Could you propose a specific patch that Alex and Jeffrin can
-> > perhaps
-> > both try?
+On Tue, May 26, 2020 at 09:35:33PM +0300, Paraschiv, Andra-Irina wrote:
 > 
-> Um, what's wrong with the one I originally attached and which you
-> quote
-> below?  It's only compile tested, but I think it will work, if the
-> theory is correct.
 > 
-> James
-> 
-> > > James
+> On 26/05/2020 09:48, Greg KH wrote:
+> > On Tue, May 26, 2020 at 01:13:20AM +0300, Andra Paraschiv wrote:
+> > > The Nitro Enclaves PCI device is used by the kernel driver as a means of
+> > > communication with the hypervisor on the host where the primary VM and
+> > > the enclaves run. It handles requests with regard to enclave lifetime.
 > > > 
+> > > Setup the PCI device driver and add support for MSI-X interrupts.
+> > > 
+> > > Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+> > > Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
+> > > Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 > > > ---
+> > > Changelog
 > > > 
-> > > diff --git a/drivers/char/tpm/tpm-dev-common.c
-> > > b/drivers/char/tpm/tpm-dev-
-> > > common.c
-> > > index 87f449340202..1784530b8387 100644
-> > > --- a/drivers/char/tpm/tpm-dev-common.c
-> > > +++ b/drivers/char/tpm/tpm-dev-common.c
-> > > @@ -189,15 +189,6 @@ ssize_t tpm_common_write(struct file *file,
-> > > const char
-> > > __user *buf,
-> > >  		goto out;
-> > >  	}
+> > > v2 -> v3
 > > > 
-> > > -	/* atomic tpm command send and result receive. We only
-> > > hold the ops
-> > > -	 * lock during this period so that the tpm can be
-> > > unregistered even if
-> > > -	 * the char dev is held open.
-> > > -	 */
-> > > -	if (tpm_try_get_ops(priv->chip)) {
-> > > -		ret = -EPIPE;
-> > > -		goto out;
-> > > -	}
-> > > -
-> > >  	priv->response_length = 0;
-> > >  	priv->response_read = false;
-> > >  	*off = 0;
-> > > @@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *file,
-> > > const char
-> > > __user *buf,
-> > >  	if (file->f_flags & O_NONBLOCK) {
-> > >  		priv->command_enqueued = true;
-> > >  		queue_work(tpm_dev_wq, &priv->async_work);
-> > > -		tpm_put_ops(priv->chip);
-> > >  		mutex_unlock(&priv->buffer_mutex);
-> > >  		return size;
-> > >  	}
+> > > * Remove the GPL additional wording as SPDX-License-Identifier is already in
+> > > place.
+> > > * Remove the WARN_ON calls.
+> > > * Remove linux/bug include that is not needed.
+> > > * Update static calls sanity checks.
+> > > * Remove "ratelimited" from the logs that are not in the ioctl call paths.
+> > > * Update kzfree() calls to kfree().
 > > > 
-> > > +	/* atomic tpm command send and result receive. We only
-> > > hold the ops
-> > > +	 * lock during this period so that the tpm can be
-> > > unregistered even if
-> > > +	 * the char dev is held open.
-> > > +	 */
-> > > +	if (tpm_try_get_ops(priv->chip)) {
-> > > +		ret = -EPIPE;
-> > > +		goto out;
-> > > +	}
+> > > v1 -> v2
+> > > 
+> > > * Add log pattern for NE.
+> > > * Update PCI device setup functions to receive PCI device data structure and
+> > > then get private data from it inside the functions logic.
+> > > * Remove the BUG_ON calls.
+> > > * Add teardown function for MSI-X setup.
+> > > * Update goto labels to match their purpose.
+> > > * Implement TODO for NE PCI device disable state check.
+> > > * Update function name for NE PCI device probe / remove.
+> > > ---
+> > >   drivers/virt/nitro_enclaves/ne_pci_dev.c | 252 +++++++++++++++++++++++
+> > >   1 file changed, 252 insertions(+)
+> > >   create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
+> > > 
+> > > diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+> > > new file mode 100644
+> > > index 000000000000..0b66166787b6
+> > > --- /dev/null
+> > > +++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+> > > @@ -0,0 +1,252 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> > > + */
 > > > +
-> > >  	ret = tpm_dev_transmit(priv->chip, priv->space, priv-
-> > > > data_buffer,
-> > > 
-> > >  			       sizeof(priv->data_buffer));
-> > >  	tpm_put_ops(priv->chip);
+> > > +/* Nitro Enclaves (NE) PCI device driver. */
+> > > +
+> > > +#include <linux/delay.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/mutex.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/nitro_enclaves.h>
+> > > +#include <linux/pci.h>
+> > > +#include <linux/types.h>
+> > > +#include <linux/wait.h>
+> > > +
+> > > +#include "ne_misc_dev.h"
+> > > +#include "ne_pci_dev.h"
+> > > +
+> > > +#define DEFAULT_TIMEOUT_MSECS (120000) /* 120 sec */
+> > > +
+> > > +#define NE "nitro_enclaves: "
+> > Why is this needed?  The dev_* functions should give you all the
+> > information that you need to properly describe the driver and device in
+> > question.  No extra "prefixes" should be needed at all.
+> 
+> This was needed to have an identifier for the overall NE logic - PCI dev,
+> ioctl and misc dev.
 
-When using your patch, I get a hang when trying to use tpm2_getcap, and
-dmesg shows some info.
+Why?  They are all different "devices", and refer to different
+interfaces.  Stick to what the dev_* gives you for them.  You probably
+want to stick with the pci dev for almost all of those anyway.
 
+> The ioctl and misc dev logic has pr_* logs, but I can update them to dev_*
+> with misc dev, then remove this prefix.
 
+That would be good, thanks.
 
---=-0c7m6JvSmHlZf6X2co44
-Content-Disposition: attachment; filename="buglog.txt"
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; name="buglog.txt"; charset="UTF-8"
-
-WyAgNTcwLjkxMzc3OV0gQlVHOiB1bmFibGUgdG8gaGFuZGxlIHBhZ2UgZmF1bHQgZm9yIGFkZHJl
-c3M6IGZmZmZiMjAwMDEyNDcwMDAKWyAgNTcwLjkxMzc4Ml0gI1BGOiBzdXBlcnZpc29yIHdyaXRl
-IGFjY2VzcyBpbiBrZXJuZWwgbW9kZQpbICA1NzAuOTEzNzgzXSAjUEY6IGVycm9yX2NvZGUoMHgw
-MDAyKSAtIG5vdC1wcmVzZW50IHBhZ2UKWyAgNTcwLjkxMzc4NF0gUEdEIDAgUDREIDAgClsgIDU3
-MC45MTM3ODVdIE9vcHM6IDAwMDIgWyMzXSBTTVAgUFRJClsgIDU3MC45MTM3ODddIENQVTogNiBQ
-SUQ6IDI0NzQ0IENvbW06IHRwbTJfZ2V0Y2FwIFRhaW50ZWQ6IEcgICAgIFVEICAgICAgICAgICA1
-LjcuMC1yYzcrICMzMQpbICA1NzAuOTEzNzg4XSBIYXJkd2FyZSBuYW1lOiBEZWxsIEluYy4gWFBT
-IDE1IDk1NjAvMDVGRkROLCBCSU9TIDEuMTguMCAxMS8xNy8yMDE5ClsgIDU3MC45MTM3OTFdIFJJ
-UDogMDAxMDppb3dyaXRlOCsweDkvMHg1MApbICA1NzAuOTEzNzkyXSBDb2RlOiA0OCBjNyBjMiA0
-MCA0MyA5ZiA5OSA0OCA4OSAwNCAyNCBlOCAxNCBhNyA5MCBmZiAwZiAwYiA0OCA4YiAwNCAyNCA0
-OCA4MyBjNCAwOCBjMyA2NiAwZiAxZiA0NCAwMCAwMCA0OCA4MSBmZSBmZiBmZiAwMyAwMCA3NiAw
-NCA8NDA+IDg4IDNlIGMzIDQ4IDgxIGZlIDAwIDAwIDAxIDAwIDc2IDA3IDBmIGI3IGQ2IDg5IGY4
-IGVlIGMzIDhiIDA1ClsgIDU3MC45MTM3OTNdIFJTUDogMDAxODpmZmZmYjFmZjA0OWQ3ZGIwIEVG
-TEFHUzogMDAwMTAyOTIKWyAgNTcwLjkxMzc5NF0gUkFYOiBmZmZmZmZmZjk4MWJmNTIwIFJCWDog
-ZmZmZmIxZmYwNDlkN2RmOSBSQ1g6IGZmZmZiMWZmMDQ5ZDdkZjgKWyAgNTcwLjkxMzc5NV0gUkRY
-OiAwMDAwMDAwMDAwMDAwMDAxIFJTSTogZmZmZmIyMDAwMTI0NzAwMCBSREk6IDAwMDAwMDAwMDAw
-MDAwMjAKWyAgNTcwLjkxMzc5Nl0gUkJQOiBmZmZmYjFmZjA0OWQ3ZGY5IFIwODogMDAwMDAwMDAw
-MDAwMDAwMCBSMDk6IGZmZmY4YjgwZGU1MzcwZjAKWyAgNTcwLjkxMzc5N10gUjEwOiAwMDAwMDAw
-MDAwYjcxYjAwIFIxMTogMDAwMDAwMDAwMDAwMDI4ZiBSMTI6IGZmZmY4YjgwYjE0OGNkYTgKWyAg
-NTcwLjkxMzc5N10gUjEzOiAwMDAwMDAwMGZmZmZmMDAwIFIxNDogZmZmZjhiODBiMTQ4Y2RhOCBS
-MTU6IGZmZmY4YjgwY2I0NGEwYmEKWyAgNTcwLjkxMzc5OV0gRlM6ICAwMDAwN2Y3OGY3Y2QwZDgw
-KDAwMDApIEdTOmZmZmY4YjgwZGU1MDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAwMDAwMApb
-ICA1NzAuOTEzNzk5XSBDUzogIDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgw
-MDUwMDMzClsgIDU3MC45MTM4MDBdIENSMjogZmZmZmIyMDAwMTI0NzAwMCBDUjM6IDAwMDAwMDA3
-OTU2MTgwMDEgQ1I0OiAwMDAwMDAwMDAwMzYwNmUwClsgIDU3MC45MTM4MDFdIENhbGwgVHJhY2U6
-ClsgIDU3MC45MTM4MDNdICB0cG1fdGNnX3dyaXRlX2J5dGVzKzB4MmYvMHg0MApbICA1NzAuOTEz
-ODA1XSAgcmVsZWFzZV9sb2NhbGl0eSsweDQ5LzB4MjIwClsgIDU3MC45MTM4MDddICB0cG1fcmVs
-aW5xdWlzaF9sb2NhbGl0eSsweDFmLzB4NDAKWyAgNTcwLjkxMzgwOF0gIHRwbV9jaGlwX3N0b3Ar
-MHgyMS8weDQwClsgIDU3MC45MTM4MTBdICB0cG1fcHV0X29wcysweDkvMHgzMApbICA1NzAuOTEz
-ODExXSAgdHBtX2NvbW1vbl93cml0ZSsweDE3OS8weDE5MApbICA1NzAuOTEzODEzXSAgdmZzX3dy
-aXRlKzB4YjEvMHgxYTAKWyAgNTcwLjkxMzgxNV0gIGtzeXNfd3JpdGUrMHg1YS8weGQwClsgIDU3
-MC45MTM4MTZdICBkb19zeXNjYWxsXzY0KzB4NDMvMHgxMzAKWyAgNTcwLjkxMzgxOV0gIGVudHJ5
-X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ0LzB4YTkKWyAgNTcwLjkxMzgyMF0gUklQOiAw
-MDMzOjB4N2Y3OGY3ZTAwMTIzClsgIDU3MC45MTM4MjFdIENvZGU6IDBjIDAwIGY3IGQ4IDY0IDg5
-IDAyIDQ4IGM3IGMwIGZmIGZmIGZmIGZmIGViIGJiIDBmIDFmIDgwIDAwIDAwIDAwIDAwIDY0IDhi
-IDA0IDI1IDE4IDAwIDAwIDAwIDg1IGMwIDc1IDE0IGI4IDAxIDAwIDAwIDAwIDBmIDA1IDw0OD4g
-M2QgMDAgZjAgZmYgZmYgNzcgNTUgYzMgMGYgMWYgNDAgMDAgNDggODMgZWMgMjggNDggODkgNTQg
-MjQgMTgKWyAgNTcwLjkxMzgyMl0gUlNQOiAwMDJiOjAwMDA3ZmZmNzI0ZThjNjggRUZMQUdTOiAw
-MDAwMDI0NiBPUklHX1JBWDogMDAwMDAwMDAwMDAwMDAwMQpbICA1NzAuOTEzODIzXSBSQVg6IGZm
-ZmZmZmZmZmZmZmZmZGEgUkJYOiAwMDAwMDAwMDAwMDAwMDAzIFJDWDogMDAwMDdmNzhmN2UwMDEy
-MwpbICA1NzAuOTEzODI0XSBSRFg6IDAwMDAwMDAwMDAwMDAwMTYgUlNJOiAwMDAwNTY0Y2YyNGE3
-MjIwIFJESTogMDAwMDAwMDAwMDAwMDAwMwpbICA1NzAuOTEzODI1XSBSQlA6IDAwMDAwMDAwMDAw
-MDAwMTYgUjA4OiAwMDAwN2Y3OGY3Y2NjNzg1IFIwOTogMDAwMDdmNzhmN2NjY2E0MApbICA1NzAu
-OTEzODI2XSBSMTA6IDAwMDA3ZmZmNzI0ZThiMTAgUjExOiAwMDAwMDAwMDAwMDAwMjQ2IFIxMjog
-MDAwMDU2NGNmMjRhNzIyMApbICA1NzAuOTEzODI2XSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0
-OiAwMDAwMDAwMDAwMDAwMDE2IFIxNTogMDAwMDdmNzhmN2NjYzg5MApbICA1NzAuOTEzODI3XSBN
-b2R1bGVzIGxpbmtlZCBpbjogc3F1YXNoZnMgcnRzeF9wY2lfc2RtbWMgeDg2X3BrZ190ZW1wX3Ro
-ZXJtYWwgY29yZXRlbXAgcnRzeF9wY2kgbWZkX2NvcmUKWyAgNTcwLjkxMzgzMV0gQ1IyOiBmZmZm
-YjIwMDAxMjQ3MDAwClsgIDU3MC45MTM4MzJdIC0tLVsgZW5kIHRyYWNlIGM4NDQzN2IwMGYwZDAx
-YTAgXS0tLQpbICA1NzAuOTEzODMzXSBSSVA6IDAwMTA6aW93cml0ZTgrMHg5LzB4NTAKWyAgNTcw
-LjkxMzgzNF0gQ29kZTogNDggYzcgYzIgNDAgNDMgOWYgOTkgNDggODkgMDQgMjQgZTggMTQgYTcg
-OTAgZmYgMGYgMGIgNDggOGIgMDQgMjQgNDggODMgYzQgMDggYzMgNjYgMGYgMWYgNDQgMDAgMDAg
-NDggODEgZmUgZmYgZmYgMDMgMDAgNzYgMDQgPDQwPiA4OCAzZSBjMyA0OCA4MSBmZSAwMCAwMCAw
-MSAwMCA3NiAwNyAwZiBiNyBkNiA4OSBmOCBlZSBjMyA4YiAwNQpbICA1NzAuOTEzODM1XSBSU1A6
-IDAwMTg6ZmZmZmIxZmYwMzBiN2RiMCBFRkxBR1M6IDAwMDEwMjkyClsgIDU3MC45MTM4MzZdIFJB
-WDogZmZmZmZmZmY5ODFiZjUyMCBSQlg6IGZmZmZiMWZmMDMwYjdkZjkgUkNYOiBmZmZmYjFmZjAz
-MGI3ZGY4ClsgIDU3MC45MTM4MzddIFJEWDogMDAwMDAwMDAwMDAwMDAwMSBSU0k6IGZmZmZiMjAw
-MDEyNDcwMDAgUkRJOiAwMDAwMDAwMDAwMDAwMDIwClsgIDU3MC45MTM4MzddIFJCUDogZmZmZmIx
-ZmYwMzBiN2RmOSBSMDg6IDAwMDAwMDAwMDAwMDAwMDAgUjA5OiBmZmZmOGI4MGRlMjM3MGYwClsg
-IDU3MC45MTM4MzhdIFIxMDogMDAwMDAwMDAwMGI3MWIwMCBSMTE6IDAwMDAwMDAwMDAwMDAxOWMg
-UjEyOiBmZmZmOGI4MGIxNDhjZGE4ClsgIDU3MC45MTM4MzldIFIxMzogMDAwMDAwMDBmZmZmZjAw
-MCBSMTQ6IGZmZmY4YjgwYjE0OGNkYTggUjE1OiBmZmZmOGI4MGM0Y2ZjMGJhClsgIDU3MC45MTM4
-NDBdIEZTOiAgMDAwMDdmNzhmN2NkMGQ4MCgwMDAwKSBHUzpmZmZmOGI4MGRlNTAwMDAwKDAwMDAp
-IGtubEdTOjAwMDAwMDAwMDAwMDAwMDAKWyAgNTcwLjkxMzg0MF0gQ1M6ICAwMDEwIERTOiAwMDAw
-IEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpbICA1NzAuOTEzODQxXSBDUjI6IGZmZmZi
-MjAwMDEyNDcwMDAgQ1IzOiAwMDAwMDAwNzk1NjE4MDAxIENSNDogMDAwMDAwMDAwMDM2MDZlMAo=
-
-
---=-0c7m6JvSmHlZf6X2co44--
-
+greg k-h
