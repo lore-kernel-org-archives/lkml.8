@@ -2,251 +2,147 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC55C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4625A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E684F20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388712AbgEZKpO (ORCPT
+        id S2388680AbgEZKsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:45:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:48996 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgEZKpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:45:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4BF9E55D;
-        Tue, 26 May 2020 03:45:13 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65DF43F52E;
-        Tue, 26 May 2020 03:45:10 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:45:07 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, maz@kernel.org, will@kernel.org,
-        catalin.marinas@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
-        aarcange@redhat.com, shan.gavin@gmail.com
-Subject: Re: [PATCH RFCv2 5/9] kvm/arm64: Replace hsr with esr
-Message-ID: <20200526104507.GC1363@C02TD0UTHF1T.local>
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-6-gshan@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200508032919.52147-6-gshan@redhat.com>
+        Tue, 26 May 2020 06:48:04 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:57540 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726977AbgEZKsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:48:04 -0400
+Received: from localhost.localdomain (unknown [222.205.78.173])
+        by mail-app4 (Coremail) with SMTP id cS_KCgAHD1O288xeGV4XAA--.8295S4;
+        Tue, 26 May 2020 18:47:22 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] iio: magnetometer: ak8974: Fix runtime PM imbalance on error
+Date:   Tue, 26 May 2020 18:47:17 +0800
+Message-Id: <20200526104717.3181-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgAHD1O288xeGV4XAA--.8295S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGrW7Ww47tw15urW5WFWxJFb_yoW5XF4fpr
+        WkZFy7trW8Xa47XF4YyrsI9ry5Ca9xJry8CrZYk3WUZF1ayFZ8tFn7Jr1aqF18CFZ7JF45
+        JF48t39ruF129r7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUva1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
+        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxG
+        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+        uYvjfUonmRUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcMBlZdtOUGZwABs1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 08, 2020 at 01:29:15PM +1000, Gavin Shan wrote:
-> This replace the variable names to make them self-explaining. The
-> tracepoint isn't changed accordingly because they're part of ABI:
-> 
->    * @hsr to @esr
->    * @hsr_ec to @ec
->    * Use kvm_vcpu_trap_get_class() helper if possible
-> 
-> Signed-off-by: Gavin Shan <gshan@redhat.com>
+When devm_regmap_init_i2c() returns an error code, a pairing
+runtime PM usage counter decrement is needed to keep the
+counter balanced. For error paths after ak8974_set_power(),
+ak8974_detect() and ak8974_reset(), things are the same.
 
-As with patch 3, I think this cleanup makes sense independent from the
-rest of the series, and I think it'd make sense to bundle all the
-patches renaming hsr -> esr, and send those as a preparatory series.
+However, When iio_triggered_buffer_setup() returns an error
+code, there will be two PM usgae counter decrements.
 
-Thanks,
-Mark.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-> ---
->  arch/arm64/kvm/handle_exit.c | 28 ++++++++++++++--------------
->  arch/arm64/kvm/hyp/switch.c  |  9 ++++-----
->  arch/arm64/kvm/sys_regs.c    | 30 +++++++++++++++---------------
->  3 files changed, 33 insertions(+), 34 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/handle_exit.c b/arch/arm64/kvm/handle_exit.c
-> index 00858db82a64..e3b3dcd5b811 100644
-> --- a/arch/arm64/kvm/handle_exit.c
-> +++ b/arch/arm64/kvm/handle_exit.c
-> @@ -123,13 +123,13 @@ static int kvm_handle_wfx(struct kvm_vcpu *vcpu, struct kvm_run *run)
->   */
->  static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
-> -	u32 hsr = kvm_vcpu_get_esr(vcpu);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
->  	int ret = 0;
->  
->  	run->exit_reason = KVM_EXIT_DEBUG;
-> -	run->debug.arch.hsr = hsr;
-> +	run->debug.arch.hsr = esr;
->  
-> -	switch (ESR_ELx_EC(hsr)) {
-> +	switch (kvm_vcpu_trap_get_class(esr)) {
->  	case ESR_ELx_EC_WATCHPT_LOW:
->  		run->debug.arch.far = vcpu->arch.fault.far_el2;
->  		/* fall through */
-> @@ -139,8 +139,8 @@ static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  	case ESR_ELx_EC_BRK64:
->  		break;
->  	default:
-> -		kvm_err("%s: un-handled case hsr: %#08x\n",
-> -			__func__, (unsigned int) hsr);
-> +		kvm_err("%s: un-handled case esr: %#08x\n",
-> +			__func__, (unsigned int)esr);
->  		ret = -1;
->  		break;
->  	}
-> @@ -150,10 +150,10 @@ static int kvm_handle_guest_debug(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  
->  static int kvm_handle_unknown_ec(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
-> -	u32 hsr = kvm_vcpu_get_esr(vcpu);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
->  
-> -	kvm_pr_unimpl("Unknown exception class: hsr: %#08x -- %s\n",
-> -		      hsr, esr_get_class_string(hsr));
-> +	kvm_pr_unimpl("Unknown exception class: esr: %#08x -- %s\n",
-> +		      esr, esr_get_class_string(esr));
->  
->  	kvm_inject_undefined(vcpu);
->  	return 1;
-> @@ -230,10 +230,10 @@ static exit_handle_fn arm_exit_handlers[] = {
->  
->  static exit_handle_fn kvm_get_exit_handler(struct kvm_vcpu *vcpu)
->  {
-> -	u32 hsr = kvm_vcpu_get_esr(vcpu);
-> -	u8 hsr_ec = ESR_ELx_EC(hsr);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
-> +	u8 ec = kvm_vcpu_trap_get_class(esr);
->  
-> -	return arm_exit_handlers[hsr_ec];
-> +	return arm_exit_handlers[ec];
->  }
->  
->  /*
-> @@ -273,15 +273,15 @@ int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
->  {
->  	if (ARM_SERROR_PENDING(exception_index)) {
->  		u32 esr = kvm_vcpu_get_esr(vcpu);
-> -		u8 hsr_ec = ESR_ELx_EC(esr);
-> +		u8 ec = kvm_vcpu_trap_get_class(esr);
->  
->  		/*
->  		 * HVC/SMC already have an adjusted PC, which we need
->  		 * to correct in order to return to after having
->  		 * injected the SError.
->  		 */
-> -		if (hsr_ec == ESR_ELx_EC_HVC32 || hsr_ec == ESR_ELx_EC_HVC64 ||
-> -		    hsr_ec == ESR_ELx_EC_SMC32 || hsr_ec == ESR_ELx_EC_SMC64) {
-> +		if (ec == ESR_ELx_EC_HVC32 || ec == ESR_ELx_EC_HVC64 ||
-> +		    ec == ESR_ELx_EC_SMC32 || ec == ESR_ELx_EC_SMC64) {
->  			u32 adj =  kvm_vcpu_trap_il_is32bit(esr) ? 4 : 2;
->  			*vcpu_pc(vcpu) -= adj;
->  		}
-> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-> index 369f22f49f3d..7bf4840bf90e 100644
-> --- a/arch/arm64/kvm/hyp/switch.c
-> +++ b/arch/arm64/kvm/hyp/switch.c
-> @@ -356,8 +356,8 @@ static bool __hyp_text __populate_fault_info(struct kvm_vcpu *vcpu)
->  static bool __hyp_text __hyp_handle_fpsimd(struct kvm_vcpu *vcpu)
->  {
->  	u32 esr = kvm_vcpu_get_esr(vcpu);
-> +	u8 ec = kvm_vcpu_trap_get_class(esr);
->  	bool vhe, sve_guest, sve_host;
-> -	u8 hsr_ec;
->  
->  	if (!system_supports_fpsimd())
->  		return false;
-> @@ -372,14 +372,13 @@ static bool __hyp_text __hyp_handle_fpsimd(struct kvm_vcpu *vcpu)
->  		vhe = has_vhe();
->  	}
->  
-> -	hsr_ec = kvm_vcpu_trap_get_class(esr);
-> -	if (hsr_ec != ESR_ELx_EC_FP_ASIMD &&
-> -	    hsr_ec != ESR_ELx_EC_SVE)
-> +	if (ec != ESR_ELx_EC_FP_ASIMD &&
-> +	    ec != ESR_ELx_EC_SVE)
->  		return false;
->  
->  	/* Don't handle SVE traps for non-SVE vcpus here: */
->  	if (!sve_guest)
-> -		if (hsr_ec != ESR_ELx_EC_FP_ASIMD)
-> +		if (ec != ESR_ELx_EC_FP_ASIMD)
->  			return false;
->  
->  	/* Valid trap.  Switch the context: */
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 012fff834a4b..58f81ab519af 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -2182,10 +2182,10 @@ static void unhandled_cp_access(struct kvm_vcpu *vcpu,
->  				struct sys_reg_params *params)
->  {
->  	u32 esr = kvm_vcpu_get_esr(vcpu);
-> -	u8 hsr_ec = kvm_vcpu_trap_get_class(esr);
-> +	u8 ec = kvm_vcpu_trap_get_class(esr);
->  	int cp = -1;
->  
-> -	switch(hsr_ec) {
-> +	switch (ec) {
->  	case ESR_ELx_EC_CP15_32:
->  	case ESR_ELx_EC_CP15_64:
->  		cp = 15;
-> @@ -2216,17 +2216,17 @@ static int kvm_handle_cp_64(struct kvm_vcpu *vcpu,
->  			    size_t nr_specific)
->  {
->  	struct sys_reg_params params;
-> -	u32 hsr = kvm_vcpu_get_esr(vcpu);
-> -	int Rt = kvm_vcpu_sys_get_rt(hsr);
-> -	int Rt2 = (hsr >> 10) & 0x1f;
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
-> +	int Rt = kvm_vcpu_sys_get_rt(esr);
-> +	int Rt2 = (esr >> 10) & 0x1f;
->  
->  	params.is_aarch32 = true;
->  	params.is_32bit = false;
-> -	params.CRm = (hsr >> 1) & 0xf;
-> -	params.is_write = ((hsr & 1) == 0);
-> +	params.CRm = (esr >> 1) & 0xf;
-> +	params.is_write = ((esr & 1) == 0);
->  
->  	params.Op0 = 0;
-> -	params.Op1 = (hsr >> 16) & 0xf;
-> +	params.Op1 = (esr >> 16) & 0xf;
->  	params.Op2 = 0;
->  	params.CRn = 0;
->  
-> @@ -2273,18 +2273,18 @@ static int kvm_handle_cp_32(struct kvm_vcpu *vcpu,
->  			    size_t nr_specific)
->  {
->  	struct sys_reg_params params;
-> -	u32 hsr = kvm_vcpu_get_esr(vcpu);
-> -	int Rt  = kvm_vcpu_sys_get_rt(hsr);
-> +	u32 esr = kvm_vcpu_get_esr(vcpu);
-> +	int Rt = kvm_vcpu_sys_get_rt(esr);
->  
->  	params.is_aarch32 = true;
->  	params.is_32bit = true;
-> -	params.CRm = (hsr >> 1) & 0xf;
-> +	params.CRm = (esr >> 1) & 0xf;
->  	params.regval = vcpu_get_reg(vcpu, Rt);
-> -	params.is_write = ((hsr & 1) == 0);
-> -	params.CRn = (hsr >> 10) & 0xf;
-> +	params.is_write = ((esr & 1) == 0);
-> +	params.CRn = (esr >> 10) & 0xf;
->  	params.Op0 = 0;
-> -	params.Op1 = (hsr >> 14) & 0x7;
-> -	params.Op2 = (hsr >> 17) & 0x7;
-> +	params.Op1 = (esr >> 14) & 0x7;
-> +	params.Op2 = (esr >> 17) & 0x7;
->  
->  	if (!emulate_cp(vcpu, &params, target_specific, nr_specific) ||
->  	    !emulate_cp(vcpu, &params, global, nr_global)) {
-> -- 
-> 2.23.0
-> 
+Changelog:
+
+v2: - Change 3 goto targets from "power_off" to
+      "disabel_pm". Remove unused lable "power_off".
+      Move 3 PM runtime related calls to the end of
+      the function.
+---
+ drivers/iio/magnetometer/ak8974.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
+index d32996702110..c48c67d4b371 100644
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -764,19 +764,21 @@ static int ak8974_probe(struct i2c_client *i2c,
+ 	ak8974->map = devm_regmap_init_i2c(i2c, &ak8974_regmap_config);
+ 	if (IS_ERR(ak8974->map)) {
+ 		dev_err(&i2c->dev, "failed to allocate register map\n");
++		pm_runtime_put_noidle(&i2c->dev);
++		pm_runtime_disable(&i2c->dev);
+ 		return PTR_ERR(ak8974->map);
+ 	}
+ 
+ 	ret = ak8974_set_power(ak8974, AK8974_PWR_ON);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "could not power on\n");
+-		goto power_off;
++		goto disable_pm;
+ 	}
+ 
+ 	ret = ak8974_detect(ak8974);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "neither AK8974 nor AMI30x found\n");
+-		goto power_off;
++		goto disable_pm;
+ 	}
+ 
+ 	ret = ak8974_selftest(ak8974);
+@@ -786,14 +788,9 @@ static int ak8974_probe(struct i2c_client *i2c,
+ 	ret = ak8974_reset(ak8974);
+ 	if (ret) {
+ 		dev_err(&i2c->dev, "AK8974 reset failed\n");
+-		goto power_off;
++		goto disable_pm;
+ 	}
+ 
+-	pm_runtime_set_autosuspend_delay(&i2c->dev,
+-					 AK8974_AUTOSUSPEND_DELAY);
+-	pm_runtime_use_autosuspend(&i2c->dev);
+-	pm_runtime_put(&i2c->dev);
+-
+ 	indio_dev->dev.parent = &i2c->dev;
+ 	indio_dev->channels = ak8974_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(ak8974_channels);
+@@ -846,6 +843,11 @@ static int ak8974_probe(struct i2c_client *i2c,
+ 		goto cleanup_buffer;
+ 	}
+ 
++	pm_runtime_set_autosuspend_delay(&i2c->dev,
++					 AK8974_AUTOSUSPEND_DELAY);
++	pm_runtime_use_autosuspend(&i2c->dev);
++	pm_runtime_put(&i2c->dev);
++
+ 	return 0;
+ 
+ cleanup_buffer:
+@@ -854,7 +856,6 @@ static int ak8974_probe(struct i2c_client *i2c,
+ 	pm_runtime_put_noidle(&i2c->dev);
+ 	pm_runtime_disable(&i2c->dev);
+ 	ak8974_set_power(ak8974, AK8974_PWR_OFF);
+-power_off:
+ 	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
+ 
+ 	return ret;
+-- 
+2.17.1
+
