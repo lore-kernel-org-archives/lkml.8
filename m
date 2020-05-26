@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D28C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D13D208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC7C208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519992;
-	bh=BJ0tO64MAidki1KuaMNtI00MVaxBlWf8j4Gm2u/+cZo=;
+	s=default; t=1590519996;
+	bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MK2dRWUV3NUY6Me1x9DKYPEh9UncReh5Mh3smMv+aFVHBP7AgsrB6Q8pUTNaP0yXc
-	 hNezkBi4Kn99tr2lo6KdPUweIT/7V4r6pPI+ZWrTgSXKliz7eQlWa90qnTw1VPR8/O
-	 FiHPoaJSAGJ2AlsTgg6DjayxT1Y/S31C9yyOxlR4=
+	b=DkE150h3vlRZPflVNczWYyeTcVfyLFjHLY/+lZyBqp7Gu3E/V2L9odTExqNCzb74c
+	 VW83sWbfdz4+q3QAWF4TUloww8WMO4kPdXmoWuJhovwV8Ld4hkWxwvagQL2Hkb+LTA
+	 oF010wiko4fPLT4WWKGQs8cNvE1K/vuZZvblgoT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390890AbgEZTGb (ORCPT
+        id S2391189AbgEZTGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34644 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391570AbgEZTGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:25 -0400
+        id S2391559AbgEZTG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A2220776;
-        Tue, 26 May 2020 19:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1126F20873;
+        Tue, 26 May 2020 19:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519984;
-        bh=BJ0tO64MAidki1KuaMNtI00MVaxBlWf8j4Gm2u/+cZo=;
+        s=default; t=1590519986;
+        bh=bFUuWf7lEhjrgELh7Ay8Q+iXglie08ZUdzhs4xcPd48=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuZuJzeegK53xgmauThOMay2cBGrJ9P9LSOOUhvrLy9jdWOzuF2+0oWJi7qHmqCpO
-         xmgASUYZThxw6yWk4bY92MQSr/aaYmesHuF+BQeKMOpeQRn1H+ypvFe4qjkS+VrGGA
-         IJu6qF9IOF0wubk5k0ndVjDS/vxJQnJYGhpOEyyY=
+        b=NxUJtBYENcpG+Br5QfSpPZm5NjFNcIPwEHGt2BlnLQr1oLgy6nnMmZE/RV6fu/fg1
+         odMOgYOm/O1Tmhx1hTKasWPWCBU642/KBfPDWL02xDE+j+6txBEkn0D9ZT9XsVrF9O
+         VJPwEhYbmG2+3SWWkHhE6MxKruFrdN4TudatLfP0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 013/111] evm: Fix a small race in init_desc()
-Date:   Tue, 26 May 2020 20:52:31 +0200
-Message-Id: <20200526183933.818958199@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 014/111] i2c: mux: demux-pinctrl: Fix an error handling path in i2c_demux_pinctrl_probe()
+Date:   Tue, 26 May 2020 20:52:32 +0200
+Message-Id: <20200526183933.933884548@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -62,96 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 8433856947217ebb5697a8ff9c4c9cad4639a2cf ]
+[ Upstream commit e9d1a0a41d4486955e96552293c1fcf1fce61602 ]
 
-The IS_ERR_OR_NULL() function has two conditions and if we got really
-unlucky we could hit a race where "ptr" started as an error pointer and
-then was set to NULL.  Both conditions would be false even though the
-pointer at the end was NULL.
+A call to 'i2c_demux_deactivate_master()' is missing in the error handling
+path, as already done in the remove function.
 
-This patch fixes the problem by ensuring that "*tfm" can only be NULL
-or valid.  I have introduced a "tmp_tfm" variable to make that work.  I
-also reversed a condition and pulled the code in one tab.
-
-Reported-by: Roberto Sassu <roberto.sassu@huawei.com>
-Fixes: 53de3b080d5e ("evm: Check also if *tfm is an error pointer in init_desc()")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Roberto Sassu <roberto.sassu@huawei.com>
-Acked-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Fixes: 50a5ba876908 ("i2c: mux: demux-pinctrl: add driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/evm/evm_crypto.c | 44 ++++++++++++++---------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ drivers/i2c/muxes/i2c-demux-pinctrl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index 302adeb2d37b..cc826c2767a3 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -75,7 +75,7 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
- {
- 	long rc;
- 	const char *algo;
--	struct crypto_shash **tfm;
-+	struct crypto_shash **tfm, *tmp_tfm;
- 	struct shash_desc *desc;
- 
- 	if (type == EVM_XATTR_HMAC) {
-@@ -93,31 +93,31 @@ static struct shash_desc *init_desc(char type, uint8_t hash_algo)
- 		algo = hash_algo_name[hash_algo];
- 	}
- 
--	if (IS_ERR_OR_NULL(*tfm)) {
--		mutex_lock(&mutex);
--		if (*tfm)
--			goto out;
--		*tfm = crypto_alloc_shash(algo, 0, CRYPTO_NOLOAD);
--		if (IS_ERR(*tfm)) {
--			rc = PTR_ERR(*tfm);
--			pr_err("Can not allocate %s (reason: %ld)\n", algo, rc);
--			*tfm = NULL;
-+	if (*tfm)
-+		goto alloc;
-+	mutex_lock(&mutex);
-+	if (*tfm)
-+		goto unlock;
-+
-+	tmp_tfm = crypto_alloc_shash(algo, 0, CRYPTO_NOLOAD);
-+	if (IS_ERR(tmp_tfm)) {
-+		pr_err("Can not allocate %s (reason: %ld)\n", algo,
-+		       PTR_ERR(tmp_tfm));
-+		mutex_unlock(&mutex);
-+		return ERR_CAST(tmp_tfm);
-+	}
-+	if (type == EVM_XATTR_HMAC) {
-+		rc = crypto_shash_setkey(tmp_tfm, evmkey, evmkey_len);
-+		if (rc) {
-+			crypto_free_shash(tmp_tfm);
- 			mutex_unlock(&mutex);
- 			return ERR_PTR(rc);
- 		}
--		if (type == EVM_XATTR_HMAC) {
--			rc = crypto_shash_setkey(*tfm, evmkey, evmkey_len);
--			if (rc) {
--				crypto_free_shash(*tfm);
--				*tfm = NULL;
--				mutex_unlock(&mutex);
--				return ERR_PTR(rc);
--			}
--		}
--out:
--		mutex_unlock(&mutex);
- 	}
--
-+	*tfm = tmp_tfm;
-+unlock:
-+	mutex_unlock(&mutex);
-+alloc:
- 	desc = kmalloc(sizeof(*desc) + crypto_shash_descsize(*tfm),
- 			GFP_KERNEL);
- 	if (!desc)
+diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+index 0e16490eb3a1..5365199a31f4 100644
+--- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
++++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+@@ -272,6 +272,7 @@ static int i2c_demux_pinctrl_probe(struct platform_device *pdev)
+ err_rollback_available:
+ 	device_remove_file(&pdev->dev, &dev_attr_available_masters);
+ err_rollback:
++	i2c_demux_deactivate_master(priv);
+ 	for (j = 0; j < i; j++) {
+ 		of_node_put(priv->chan[j].parent_np);
+ 		of_changeset_destroy(&priv->chan[j].chgset);
 -- 
 2.25.1
 
