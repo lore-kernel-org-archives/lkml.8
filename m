@@ -2,237 +2,311 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8076BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CEAC20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D5420776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 06:59:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D7Uw9a/J"
+	dkim=pass (1024-bit key) header.d=sargun.me header.i=@sargun.me header.b="IMtvqyNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731246AbgEZG7l (ORCPT
+        id S1731338AbgEZG76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 02:59:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33322 "EHLO
+        Tue, 26 May 2020 02:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgEZG7l (ORCPT
+        with ESMTP id S1728172AbgEZG75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 02:59:41 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7641C03E97E
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:59:39 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id j16so6828141wrb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:59:39 -0700 (PDT)
+        Tue, 26 May 2020 02:59:57 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500F3C03E97E
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:59:56 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id e2so22563391eje.13
+        for <linux-kernel@vger.kernel.org>; Mon, 25 May 2020 23:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Dz97bPhLZ2ojNQGt11gbxPQ9ck+IuPqmj2aW0HoNGhg=;
-        b=D7Uw9a/JVKnF0pVA+pYqWXeBRUa/98xIhoXCxzZ0fMF6kxK3Yclb5IyPwH1rQvZcQx
-         PRIDQjMWomTvrUmpx10glsAB0F9n+0wjDUtkRQbjinYPxpQcCNIO911QKzLlQ8dy20R6
-         /seAYXBtxV2WEX1sL94NgARBwogsDH7He7z0moGleqimmz5jG/fQ79ihd/ZoBE4sAa9d
-         gWPBNgQkl8ogkDEwKnaxbtIvQE4XdpF7Tqinb8gypUmNoaE5WgChBHQK/SxNSXTGgkZY
-         oVb7CkMzDuEw7Wm3JULpbd7dGpMzTWm+5+vCOYwwuEdb8pv0EjRGzemUS4NkOl++5zQk
-         FI/w==
+        d=sargun.me; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jwUwNbR5CqkZfKXp34MLLr2FdLANCXsmldjRmcZbcAY=;
+        b=IMtvqyNCddHdr+Dg+hG8KQcXr84JmNxxVimpszlEfUHrcjBDVoDh3Gvy9ORJbxEgV0
+         vZea+oDkn72s0xoPFO4YOowXE9LgGhrgQ3WpNcxKR/0ui1LiB/AQUz74OPqDFogZYq8J
+         0hihwxkFMa3ny3Gt0tpDDjn2bRZAeYr4bxIAY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Dz97bPhLZ2ojNQGt11gbxPQ9ck+IuPqmj2aW0HoNGhg=;
-        b=Djq6hejbeeyMwdBWSaJ2lcVNc1kle4EjIpiqDP0rNxWk9sBjQvSG7nyAVRDgGc7VmE
-         9ebWS2QLNJ3vBz9OHiCGudvwFm2uKLvDnxb3AwEbfVwTBSbWI0M2VrhETczFSy2JW6PB
-         u2ghIMN9KzBl6YcSM9t+bB2vFd1NxXO6zsUKDb0Xqy1RBouLxkaDsrtzxakjtMIqmpYG
-         XvQFWhDca1UyWDsp0eY6FOfi1RhSBLF/owynMgj42Te2BH9YyBxNfPA1rs8O/jKjhAq8
-         cdHfGjJbXXFvrxFGleAPwSLmxjWNCBvhaKNSbRQb6Fakyq0hmW9lx9+hLqace1UamRvF
-         Ys6w==
-X-Gm-Message-State: AOAM533VcZi/Xv++myFfI6njKencEK+xaXqo6KtnxN6J/+toC7BmOxxP
-        NTpIaeSHzTT1kWphjPSB+4cE2g==
-X-Google-Smtp-Source: ABdhPJw+bsauGUqy0+jK+Ts+WdqeB/X3jRFwdtLs+MM/yik3Rw1liGYIXDZchJ+h6BTQeTJhUpK2XA==
-X-Received: by 2002:a05:6000:128b:: with SMTP id f11mr18590698wrx.227.1590476378170;
-        Mon, 25 May 2020 23:59:38 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id l204sm10601698wmf.19.2020.05.25.23.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 May 2020 23:59:37 -0700 (PDT)
-Date:   Tue, 26 May 2020 07:59:35 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v13 00/11] Convert PWM period and duty cycle to u64
-Message-ID: <20200526065935.GA3628@dell>
-References: <20200423114857.GG3612@dell>
- <20200423215306.GA8670@codeaurora.org>
- <20200424064303.GJ3612@dell>
- <20200424221422.GA31118@codeaurora.org>
- <20200427064434.GA3559@dell>
- <20200520231508.GA29437@codeaurora.org>
- <20200521071505.GL271301@dell>
- <20200522111657.GA2163848@ulmo>
- <20200522113147.GU271301@dell>
- <20200522125028.GG2163848@ulmo>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jwUwNbR5CqkZfKXp34MLLr2FdLANCXsmldjRmcZbcAY=;
+        b=sz3HAaqP6LHF7vOD7xjHwNakTxQjy6xnMdND627Sk/22b46+OimNv0vPTAXsR1G9pz
+         zOuJlOWijBfZlAlSZmVzL+pi882I7+yUVYY6D7QHTh/0/8hFZTwu+Jk/LKDYjeOceiZK
+         9UOlxqVLKM7PQDhVNzd+pz3LXBXiKyAnET4+I40YSh1kbPfmzhFQYIr4p03ksrUWHjGv
+         tFdLYHzwAxNor+ke2FBzqWGfQx1ZNLUaqxsVbNepUtszK9D28CT8gsvOsFQmR9RymKxJ
+         y50l40P29iyf1+9I/1Yp6RsbS4sHaiLTNtrDHlZdwjOeJU0O6QkPvY/Mo+u9WZy6FlzZ
+         e32A==
+X-Gm-Message-State: AOAM532uXcCMRDQ2R1FNe9gTKD591ARmwx30sOTBB7pybkygF2u0dKIe
+        Dir7wf4wqSgEVf6gpJs4NdlAPGrQLn+AcucIoX91Yw==
+X-Google-Smtp-Source: ABdhPJwxwYXyVJmHG/mBlM95egzgq1256tHggH/W1/HazYAUXo1fUH/qtznxqLmrJKAy22W9wsdBT9FmIbAjY9XPzaI=
+X-Received: by 2002:a17:907:1002:: with SMTP id ox2mr20982901ejb.189.1590476394778;
+ Mon, 25 May 2020 23:59:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200522125028.GG2163848@ulmo>
+References: <20200524233942.8702-1-sargun@sargun.me> <20200524233942.8702-3-sargun@sargun.me>
+ <20200525135036.vp2nmmx42y7dfznf@wittgenstein>
+In-Reply-To: <20200525135036.vp2nmmx42y7dfznf@wittgenstein>
+From:   Sargun Dhillon <sargun@sargun.me>
+Date:   Mon, 25 May 2020 23:59:18 -0700
+Message-ID: <CAMp4zn9b_o+LS3U9KcNvvJS5hroPS=3oRMSVuN=VgbwbXB=mKg@mail.gmail.com>
+Subject: Re: [PATCH 2/5] seccomp: Introduce addfd ioctl to seccomp user notifier
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Jann Horn <jannh@google.com>, Robert Sesek <rsesek@google.com>,
+        Chris Palmer <palmer@google.com>,
+        Matt Denton <mpdenton@google.com>,
+        Kees Cook <keescook@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020, Thierry Reding wrote:
+On Mon, May 25, 2020 at 6:50 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Sun, May 24, 2020 at 04:39:39PM -0700, Sargun Dhillon wrote:
+> > This adds a seccomp notifier ioctl which allows for the listener to "add"
+> > file descriptors to a process which originated a seccomp user
+> > notification. This allows calls like mount, and mknod to be "implemented",
+> > as the return value, and the arguments are data in memory. On the other
+> > hand, calls like connect can be "implemented" using pidfd_getfd.
+> >
+> > Unfortunately, there are calls which return file descriptors, like
+> > open, which are vulnerable to TOC-TOU attacks, and require that the
+> > more privileged supervisor can inspect the argument, and perform the
+> > syscall on behalf of the process generating the notifiation. This
+> > allows the file descriptor generated from that open call to be
+> > returned to the calling process.
+> >
+> > In addition, there is funcitonality to allow for replacement of
+> > specific file descriptors, following dup2-like semantics.
+> >
+> > Signed-off-by: Sargun Dhillon <sargun@sargun.me>
+> > Suggested-by: Matt Denton <mpdenton@google.com>
+> > Cc: Kees Cook <keescook@google.com>,
+> > Cc: Jann Horn <jannh@google.com>,
+> > Cc: Robert Sesek <rsesek@google.com>,
+> > Cc: Chris Palmer <palmer@google.com>
+> > Cc: Christian Brauner <christian.brauner@ubuntu.com>
+> > Cc: Tycho Andersen <tycho@tycho.ws>
+> > ---
+> >  include/uapi/linux/seccomp.h |  25 ++++++
+> >  kernel/seccomp.c             | 169 ++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 193 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> > index c1735455bc53..7d450a9e4c29 100644
+> > --- a/include/uapi/linux/seccomp.h
+> > +++ b/include/uapi/linux/seccomp.h
+> > @@ -113,6 +113,27 @@ struct seccomp_notif_resp {
+> >       __u32 flags;
+> >  };
+> >
+> > +/* valid flags for seccomp_notif_addfd */
+> > +#define SECCOMP_ADDFD_FLAG_SETFD     (1UL << 0) /* Specify remote fd */
+> > +
+> > +/**
+> > + * struct seccomp_notif_addfd
+> > + * @size: The size of the seccomp_notif_addfd datastructure
+> > + * @fd: The local fd number
+> > + * @id: The ID of the seccomp notification
+> > + * @fd_flags: Flags the remote FD should be allocated under
+> > + * @remote_fd: Optional remote FD number if SETFD option is set, otherwise 0.
+> > + * @flags: SECCOMP_ADDFD_FLAG_*
+> > + */
+> > +struct seccomp_notif_addfd {
+> > +     __u32 size;
+> > +     __u32 fd;
+> > +     __u64 id;
+> > +     __u32 fd_flags;
+> > +     __u32 remote_fd;
+> > +     __u64 flags;
+> > +};
+>
+> This was a little confusing to me at first. So fd is the fd from which
+> we take the struct file and remote_fd is either -1 at which point we
+> just allocate the next free fd number and if it is not we
+> allocate/replace a specific one. Maybe it would be clearer if we did:
+>
+> struct seccomp_notif_addfd {
+>         __u32 size;
+>         __u64 id;
+>         __u64 flags;
+>         __u32 srcfd;
+>         __u32 newfd;
+>         __u32 newfd_flags;
+> };
+>
+> No need to hide in the name that this is remote_dup2().
+>
+> > +
+> >  #define SECCOMP_IOC_MAGIC            '!'
+> >  #define SECCOMP_IO(nr)                       _IO(SECCOMP_IOC_MAGIC, nr)
+> >  #define SECCOMP_IOR(nr, type)                _IOR(SECCOMP_IOC_MAGIC, nr, type)
+> > @@ -124,4 +145,8 @@ struct seccomp_notif_resp {
+> >  #define SECCOMP_IOCTL_NOTIF_SEND     SECCOMP_IOWR(1, \
+> >                                               struct seccomp_notif_resp)
+> >  #define SECCOMP_IOCTL_NOTIF_ID_VALID SECCOMP_IOR(2, __u64)
+> > +/* On success, the return value is the remote process's added fd number */
+> > +#define SECCOMP_IOCTL_NOTIF_ADDFD    SECCOMP_IOR(3,  \
+> > +                                             struct seccomp_notif_addfd)
+> > +
+> >  #endif /* _UAPI_LINUX_SECCOMP_H */
+> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > index f6ce94b7a167..88940eeabaee 100644
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -77,10 +77,42 @@ struct seccomp_knotif {
+> >       long val;
+> >       u32 flags;
+> >
+> > -     /* Signals when this has entered SECCOMP_NOTIFY_REPLIED */
+> > +     /*
+> > +      * Signals when this has changed states, such as the listener
+> > +      * dying, a new seccomp addfd message, or changing to REPLIED
+> > +      */
+> >       struct completion ready;
+> >
+> >       struct list_head list;
+> > +
+> > +     /* outstanding addfd requests */
+> > +     struct list_head addfd;
+> > +};
+> > +
+> > +/**
+> > + * struct seccomp_kaddfd - contianer for seccomp_addfd ioctl messages
+>
+>                               ^^^ typo
+>
+> > + *
+> > + * @file: A reference to the file to install in the other task
+> > + * @fd: The fd number to install it at. If the fd number is -1, it means the
+> > + *      installing process should allocate the fd as normal.
+> > + * @flags: The flags for the new file descriptor. At the moment, only O_CLOEXEC
+> > + *         is allowed.
+> > + * @ret: The return value of the installing process. It is set to the fd num
+> > + *       upon success (>= 0).
+> > + * @completion: Indicates that the installing process has completed fd
+> > + *              installation, or gone away (either due to successful
+> > + *              reply, or signal)
+> > + *
+> > + */
+> > +struct seccomp_kaddfd {
+> > +     struct file *file;
+> > +     int fd;
+> > +     unsigned int flags;
+> > +
+> > +     /* To only be set on reply */
+> > +     int ret;
+> > +     struct completion completion;
+> > +     struct list_head list;
+> >  };
+> >
+> >  /**
+> > @@ -735,6 +767,35 @@ static u64 seccomp_next_notify_id(struct seccomp_filter *filter)
+> >       return filter->notif->next_id++;
+> >  }
+> >
+> > +static void seccomp_handle_addfd(struct seccomp_kaddfd *addfd)
+> > +{
+> > +     int ret;
+> > +
+> > +     /*
+> > +      * Remove the notification, and reset the list pointers, indicating
+> > +      * that it has been handled.
+> > +      */
+> > +     list_del_init(&addfd->list);
+> > +
+> > +     ret = security_file_receive(addfd->file);
+> > +     if (ret)
+> > +             goto out;
+> > +
+> > +     if (addfd->fd >= 0) {
+> > +             ret = replace_fd(addfd->fd, addfd->file, addfd->flags);
+> > +             if (ret >= 0)
+> > +                     fput(addfd->file);
+> > +     } else {
+> > +             ret = get_unused_fd_flags(addfd->flags);
+> > +             if (ret >= 0)
+> > +                     fd_install(ret, addfd->file);
+> > +     }
+> > +
+> > +out:
+> > +     addfd->ret = ret;
+> > +     complete(&addfd->completion);
+> > +}
+> > +
+> >  static int seccomp_do_user_notification(int this_syscall,
+> >                                       struct seccomp_filter *match,
+> >                                       const struct seccomp_data *sd)
+> > @@ -743,6 +804,7 @@ static int seccomp_do_user_notification(int this_syscall,
+> >       u32 flags = 0;
+> >       long ret = 0;
+> >       struct seccomp_knotif n = {};
+> > +     struct seccomp_kaddfd *addfd, *tmp;
+> >
+> >       mutex_lock(&match->notify_lock);
+> >       err = -ENOSYS;
+> > @@ -755,6 +817,7 @@ static int seccomp_do_user_notification(int this_syscall,
+> >       n.id = seccomp_next_notify_id(match);
+> >       init_completion(&n.ready);
+> >       list_add(&n.list, &match->notif->notifications);
+> > +     INIT_LIST_HEAD(&n.addfd);
+> >
+> >       up(&match->notif->request);
+> >       wake_up_poll(&match->notif->wqh, EPOLLIN | EPOLLRDNORM);
+> > @@ -763,14 +826,31 @@ static int seccomp_do_user_notification(int this_syscall,
+> >       /*
+> >        * This is where we wait for a reply from userspace.
+> >        */
+> > +wait:
+> >       err = wait_for_completion_interruptible(&n.ready);
+> >       mutex_lock(&match->notify_lock);
+> >       if (err == 0) {
+> > +             /* Check if we were woken up by a addfd message */
+> > +             addfd = list_first_entry_or_null(&n.addfd,
+> > +                                              struct seccomp_kaddfd, list);
+> > +             if (addfd && n.state != SECCOMP_NOTIFY_REPLIED) {
+> > +                     seccomp_handle_addfd(addfd);
+> > +                     mutex_unlock(&match->notify_lock);
+> > +                     goto wait;
+> > +             }
+> >               ret = n.val;
+> >               err = n.error;
+> >               flags = n.flags;
+> >       }
+> >
+> > +     /* If there were any pending addfd calls, clear them out */
+> > +     list_for_each_entry_safe(addfd, tmp, &n.addfd, list) {
+> > +             /* The process went away before we got a chance to handle it */
+> > +             addfd->ret = -ENOENT;
+>
+> Looks like it should be -ESRCH?
+>
+I'm a little confused on where we use ESRCH vs. ENOENT. It looks like
+in the cookie
+check (SECCOMP_IOCTL_NOTIF_ID_VALID), we return ENOENT on both error paths
+-- whether the notification is missing, or whether the notification
+was already replied to.
 
-> On Fri, May 22, 2020 at 12:31:47PM +0100, Lee Jones wrote:
-> > On Fri, 22 May 2020, Thierry Reding wrote:
-> > 
-> > > On Thu, May 21, 2020 at 08:15:05AM +0100, Lee Jones wrote:
-> > > > On Wed, 20 May 2020, Guru Das Srinagesh wrote:
-> > > > 
-> > > > > On Mon, Apr 27, 2020 at 07:44:34AM +0100, Lee Jones wrote:
-> > > > > > On Fri, 24 Apr 2020, Guru Das Srinagesh wrote:
-> > > > > > 
-> > > > > > > On Fri, Apr 24, 2020 at 07:43:03AM +0100, Lee Jones wrote:
-> > > > > > > > A great deal of mailing lists contain numerous protections against
-> > > > > > > > things like flooding and spamming.  One of those protections is a
-> > > > > > > > check for "Too many recipients to the message".  Most of the time this
-> > > > > > > > simply requires moderator intervention by way of review and approval,
-> > > > > > > > but this ultimately depends on the ML's configuration.
-> > > > > > > > 
-> > > > > > > > The first thing to ascertain is why your recipients list is so large.
-> > > > > > > > Have you added every reviewer, subsystem-maintainer, maintainer and
-> > > > > > > > contributor suggested by get-maintainer.pl?  If so, consider pruning
-> > > > > > > > that a little.  Contributors do not tend to care about subsequent
-> > > > > > > > changes to a file.  As someone who receives a lot of patches, I tend
-> > > > > > > > to get fed-up when receiving patches simply because I made a change X
-> > > > > > > > years ago.  Stick to listed maintainers/reviewers in the first
-> > > > > > > > instance and see how far that takes you.
-> > > > > > > 
-> > > > > > > Thank you for the detailed reply. I did this in the first few patchsets
-> > > > > > > and then when a few patches didn't get any attention, expanded the
-> > > > > > > audience thus. Still, around 50% of the patches in this series remain
-> > > > > > > unreviewed by anyone.
-> > > > > > 
-> > > > > > This isn't a reason to add more recipients (who are likely to care
-> > > > > > even less than your original group).  However it *is* a good argument
-> > > > > > for including all of the specified maintainers/reviewers in on all of
-> > > > > > the patches.
-> > > > > > 
-> > > > > > > > If your recipients list is as succinct as reasonably possible, maybe
-> > > > > > > > just accept that every version isn't going to be archived by every
-> > > > > > > > ML.  It's still much more useful for the correct people to have
-> > > > > > > > visibility into the set than for it to be archived multiple times.
-> > > > > > > 
-> > > > > > > Thank you, will prune the list and remove past contributors from the
-> > > > > > > Cc-list and add all parties to all patches.
-> > > > > > 
-> > > > > > Great.  Once you've done that, we can start to help you acquire the
-> > > > > > Acks you need on your remaining patches.
-> > > > > 
-> > > > > Hi Lee, Thierry, Uwe,
-> > > > > 
-> > > > > In v14 of this patchset I've pruned the list of contributors, removed
-> > > > > past contributors from the cc-list, and added all parties to all patches
-> > > > > (except for the patches that are yet to reviewed, for which I've added
-> > > > > what get_maintainer.pl showed me). I've also resent v14 a couple of
-> > > > > times already, with around a week's time interval between resends, and
-> > > > > somehow it seems like this set has lost traction.
-> > > > > 
-> > > > > Could you please indicate what next steps I should take to have more
-> > > > > eyes on the unreviewed patches? Only 4 out of 11 patches remain
-> > > > > unreviewed.
-> > > > 
-> > > > Looks like we're waiting on Thierry (again).
-> > > > 
-> > > > This has been a common theme over the past few months.
-> > > > 
-> > > > Perhaps he has changed employer/project?
-> > > 
-> > > My work on PWM is purely done in my spare time. I don't get paid for any
-> > > of it. I currently have two kids that need home-schooling, as many
-> > > others probably do, and I have a full time job doing non-PWM related
-> > > things. As a result my spare time is close to nil these days.
-> > 
-> > This is no different to many others.  I too am not paid for this work,
-> > but it's still my responsibly to ensure a reply within a reasonable
-> > amount of time.
-> 
-> I realize that this is the same for many others. Still, you seemed to
-> suggest that the lack of time that I was able to spend on PWM was
-> somehow related to me changing employers, so I wanted to clarify that
-> this isn't 
-> 
-> > We can all appreciate that the latest situation has exacerbated issues,
-> > but a reasonable level of PWM participation, blocking various
-> > patch-sets has been lacking for months before we'd even heard of
-> > Covid-19 [0].
-> 
-> Covid-19 started to impact me around mid-March, and you'll see that
-> that's about the time that I stopped maintaining patchwork.
-> 
-> > If you need help, just ask for it.
-> 
-> Hm... who do you go and ask for help? Every maintainer I know is already
-> at least as busy as I am.
-> 
-> > I am willing to step up and review patches if you're overloaded. Uwe
-> > is already listed as a designated reviewer. Perhaps between the 3 of
-> > us we can work something out in order to reduce the latency.
-> 
-> That's very kind of you. Yes, I'd be willing to do this as a sort of
-> group maintenance, and perhaps even eventually step away from my role
-> as maintainer entirely if I think somebody else will do a better job.
-> I do still care about the PWM subsystem, having looked after it for a
-> couple of years, so I do want any hand-off to be somewhat orderly.
-> 
-> > [0] https://patchwork.ozlabs.org/project/linux-pwm/list/
-> > 
-> > > I very much appreciate all the effort that others have spent in getting
-> > > this reviewed. I haven't been able to keep a very close eye on this, but
-> > > even the latest versions have some comments, so I didn't consider this
-> > > ready yet. If that's changed and everybody's okay with the changes, then
-> > > I can apply this to for-next. We haven't got all that much time left
-> > > before the merge window and I had hoped this would be ready earlier so
-> > > that we'd have more time for this in linux-next. But I'd be willing to
-> > > at least give it a try. If it starts to look like there are going to be
-> > > issues with this I can always back them out and we can have another go
-> > > next release.
-> > 
-> > If you would be so kind as to review the PWM patches, I can take them
-> > in but I can't do anything without your Ack.
-> 
-> Looking at v14 I think there are no longer any discussions (looks like
-> the last comment I thought was from v14 was actually on v13 and it seems
-> to have been solved in v14 now) and there are Acked-bys for all the non-
-> PWM patches, so there's nothing in the way of me applying this to the
-> PWM tree. I can let it soak there for a few days and send out a stable
-> branch if anyone needs it if there aren't any huge issues.
-> 
-> Does that sound like a plan?
-
-I had it in my mind that I'd apply it, as MFD is usually the central
-repo to a lot of these cross-subsystem type patchsets, and the fact
-that I'm already set-up for it (I have scripts which make this easy).
-
-However, as long as a pull-request is sent out for us to potentially
-pull from, it really makes no difference to me.  Go for it! :)
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I originally had this as ESRCH, but switched to ENOENT to be
+consistent with that API.
+Do we want the API to disclose information about half-done /
+incomplete notifications?
