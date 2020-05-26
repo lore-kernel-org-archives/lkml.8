@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3425EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14E0C20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BDC20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519827;
-	bh=ConqutJgbi4/Qis/DO2822iciViU/8gVeGfHmxkd1Do=;
+	s=default; t=1590519830;
+	bh=FVRhLzacGoEhzd4mO/2FsiTrK9j4U0vluiHtXiSMJ1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ahU0jSE6FnINI2IzN3sEZSwNM6lyRXF7kpbPoQ6BDkjMgscF+Un/1CwGVZBsr6G7I
-	 RzglqZnUi5zV9vxrygSPhNWILqctUjVhgWClMXpwneQyaiMao9FjGV31E4DDwpDhZS
-	 URTXaF6aiqkj6ym0D4xzF4Of/vdMxKwqFW4pzoH0=
+	b=jHiK3cS2T7OF7O8kBLTFShq4ewscegXXIz9oaowTJsCXblcp2bt1hUeFdtqijd/Xv
+	 Qxxdkmg7phJ9TxOE68sN2dtfSpkPspqclBuEmS9P13dSTa6nuz1RQ535wuUeSSZ8A2
+	 KUfbOPf2XwK8BQyYEQpcSaZRe3M/cUp2UTlma16s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391267AbgEZTDp (ORCPT
+        id S2391278AbgEZTDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:03:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59084 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:03:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391252AbgEZTDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:43 -0400
+        id S2391252AbgEZTDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84C1620873;
-        Tue, 26 May 2020 19:03:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC7B420849;
+        Tue, 26 May 2020 19:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519823;
-        bh=ConqutJgbi4/Qis/DO2822iciViU/8gVeGfHmxkd1Do=;
+        s=default; t=1590519825;
+        bh=FVRhLzacGoEhzd4mO/2FsiTrK9j4U0vluiHtXiSMJ1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kEq6qboQlgXnww5+i6yAiN82cLZFHYhhqWKo8b1R9ssAembLOJcQhtyQgFMJO1F0G
-         sd/P6k4ghCvG2bY7yMqQJ6GBmraD+IbRrYFGm01Kw1UKiJjoiwOOfdBLl5ykm+zfxg
-         zcB25bRS8iH4sKSlsh2ISWWHq2IM0/oIouWMZBYI=
+        b=sfPa+2Jb29EczjX9LfKwxVp0WGgq8Mtz5cGHCTnCQxMOZBQvdhZHqNKW6tOGmE5up
+         iKf4z68bWkc6gprw6XLEX2RWf5PVtizzD/MnY96PDr9fHnoOj+rDjHzEmDUfbCSGd1
+         n3iavfpTQxAkVsBSsk8Ogqg3PswLgFobSczNe5o8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wu Bo <wubo40@huawei.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Maxim Petrov <mmrmaximuzz@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 30/81] ceph: fix double unlock in handle_cap_export()
-Date:   Tue, 26 May 2020 20:53:05 +0200
-Message-Id: <20200526183930.831806653@linuxfoundation.org>
+Subject: [PATCH 4.19 31/81] stmmac: fix pointer check after utilization in stmmac_interrupt
+Date:   Tue, 26 May 2020 20:53:06 +0200
+Message-Id: <20200526183930.897646125@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,35 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wu Bo <wubo40@huawei.com>
+From: Maxim Petrov <mmrmaximuzz@gmail.com>
 
-[ Upstream commit 4d8e28ff3106b093d98bfd2eceb9b430c70a8758 ]
+[ Upstream commit f42234ffd531ca6b13d9da02faa60b72eccf8334 ]
 
-If the ceph_mdsc_open_export_target_session() return fails, it will
-do a "goto retry", but the session mutex has already been unlocked.
-Re-lock the mutex in that case to ensure that we don't unlock it
-twice.
+The paranoidal pointer check in IRQ handler looks very strange - it
+really protects us only against bogus drivers which request IRQ line
+with null pointer dev_id. However, the code fragment is incorrect
+because the dev pointer is used before the actual check which leads
+to undefined behavior. Remove the check to avoid confusing people
+with incorrect code.
 
-Signed-off-by: Wu Bo <wubo40@huawei.com>
-Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Maxim Petrov <mmrmaximuzz@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/caps.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
-index 5241102b81a8..a2d4eed27f80 100644
---- a/fs/ceph/caps.c
-+++ b/fs/ceph/caps.c
-@@ -3632,6 +3632,7 @@ retry:
- 		WARN_ON(1);
- 		tsession = NULL;
- 		target = -1;
-+		mutex_lock(&session->s_mutex);
- 	}
- 	goto retry;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 9c7b1d8e8220..c41879a955b5 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3684,7 +3684,7 @@ static int stmmac_set_features(struct net_device *netdev,
+ /**
+  *  stmmac_interrupt - main ISR
+  *  @irq: interrupt number.
+- *  @dev_id: to pass the net device pointer.
++ *  @dev_id: to pass the net device pointer (must be valid).
+  *  Description: this is the main driver interrupt service routine.
+  *  It can call:
+  *  o DMA service routine (to manage incoming frame reception and transmission
+@@ -3708,11 +3708,6 @@ static irqreturn_t stmmac_interrupt(int irq, void *dev_id)
+ 	if (priv->irq_wake)
+ 		pm_wakeup_event(priv->device, 0);
  
+-	if (unlikely(!dev)) {
+-		netdev_err(priv->dev, "%s: invalid dev pointer\n", __func__);
+-		return IRQ_NONE;
+-	}
+-
+ 	/* Check if adapter is up */
+ 	if (test_bit(STMMAC_DOWN, &priv->state))
+ 		return IRQ_HANDLED;
 -- 
 2.25.1
 
