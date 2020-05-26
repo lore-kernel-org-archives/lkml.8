@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD070C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F653C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA8C20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C0020776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520473;
-	bh=wG6r09WBZXBQHy367q4m6MyNiVwiapMtLH9N6qQ59aE=;
+	s=default; t=1590520477;
+	bh=FNwJtqw0co+L2BKi0lDKL+YKNyPzCvSShNaJsFMku0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pS42KuKrzxnmFMd+9shkROA1LmT1lgkt4qe8wl1l/Ro8GBuzA+aLM8R6cuzNQiJWL
-	 wZzh7CKh2BIykPewbuTYDOGX5RS03bCM1ofbPl5HfyRhXqNMofTAznDAvY7XSAm98l
-	 aM2yZHiYzDTtTdRNhzlxfhOuIV6hQBIEWS2PxyEM=
+	b=Cdk6bQwdFHS6IgcSP5sI77+Utr6nHyvUJQ0JKTb94m7P6uJB7eqv0tIl0Uq85EN8x
+	 A33FH0hO74rnO4+H8db8G0ExHkELjA6Mu44lreoEIB8PmB7zHyTg6vSp9tMqnItvw0
+	 3QfD1FoXrqhrKwknC2Vlu+x+4ECq8t9DxREfHrpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392176AbgEZTOc (ORCPT
+        id S2404381AbgEZTOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404360AbgEZTOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:23 -0400
+        id S2392143AbgEZTO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01B47208B8;
-        Tue, 26 May 2020 19:14:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BA5620776;
+        Tue, 26 May 2020 19:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520462;
-        bh=wG6r09WBZXBQHy367q4m6MyNiVwiapMtLH9N6qQ59aE=;
+        s=default; t=1590520467;
+        bh=FNwJtqw0co+L2BKi0lDKL+YKNyPzCvSShNaJsFMku0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v1blbWKBllFEOogb8hc8hPKppyPr4wG6n7IU8i91+JAPomypUFL58oFQk0zvp3ruj
-         zV3QfE4rR+7sh89am5qmyMka1vPZdP2MjX4NtEvPj6IdbPDFDKlytqe6Ruh/nIG9UC
-         7IZQogYmZGb0B+JfxW6dJ6/ysMycHVYUlNsG/vn0=
+        b=bkaUDZKFduebYkm4CGUJhuJJJH0D65FQ5Lkx8uwk+2SrCBxTLczrNpTclsbVgOovx
+         LlK9ASo5L2IAPbVamciFu6WFJ6uIl1xudVPKGTmmCB7xJybBEGVvPDffvEetuIEQJw
+         As08skcmUot+Eq4CiLQokIE2SMyK9YyDak871WGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 089/126] kbuild: Remove debug info from kallsyms linking
-Date:   Tue, 26 May 2020 20:53:46 +0200
-Message-Id: <20200526183945.432692955@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>
+Subject: [PATCH 5.6 091/126] staging: wfx: unlock on error path
+Date:   Tue, 26 May 2020 20:53:48 +0200
+Message-Id: <20200526183945.571669993@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,142 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit af73d78bd384aa9b8789aa6e7ddbb165f971276f ]
+commit f0b9d875faa4499afe3381404c3795e9da84bc00 upstream.
 
-When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
-time collecting and writing the dwarf sections to the temporary output
-files. kallsyms does not need this information, and leaving it off
-halves their linking time. This is especially noticeable without
-CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
-need those details.
+We need to release the tx_lock on the error path before returning.
 
-Refactor the BTF and kallsyms generation stages slightly for more
-regularized temporary names. Skip debug during kallsyms links.
-Additionally move "info BTF" to the correct place since commit
-8959e39272d6 ("kbuild: Parameterize kallsyms generation and correct
-reporting"), which added "info LD ..." to vmlinux_link calls.
+Fixes: d1c015b4ef6f ("staging: wfx: rewrite wfx_hw_scan()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Jérôme Pouiller <jerome.pouiller@silabs.com>
+Link: https://lore.kernel.org/r/20200512083656.GA251760@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-For a full debug info build with BTF, my link time goes from 1m06s to
-0m54s, saving about 12 seconds, or 18%.
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/202003031814.4AEA3351@keescook
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ drivers/staging/wfx/scan.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index dd484e92752e..ac569e197bfa 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -63,12 +63,18 @@ vmlinux_link()
- 	local lds="${objtree}/${KBUILD_LDS}"
- 	local output=${1}
- 	local objects
-+	local strip_debug
- 
- 	info LD ${output}
- 
- 	# skip output file argument
- 	shift
- 
-+	# The kallsyms linking does not need debug symbols included.
-+	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
-+		strip_debug=-Wl,--strip-debug
-+	fi
-+
- 	if [ "${SRCARCH}" != "um" ]; then
- 		objects="--whole-archive			\
- 			${KBUILD_VMLINUX_OBJS}			\
-@@ -79,6 +85,7 @@ vmlinux_link()
- 			${@}"
- 
- 		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
-+			${strip_debug#-Wl,}			\
- 			-o ${output}				\
- 			-T ${lds} ${objects}
- 	else
-@@ -91,6 +98,7 @@ vmlinux_link()
- 			${@}"
- 
- 		${CC} ${CFLAGS_vmlinux}				\
-+			${strip_debug}				\
- 			-o ${output}				\
- 			-Wl,-T,${lds}				\
- 			${objects}				\
-@@ -106,6 +114,8 @@ gen_btf()
- {
- 	local pahole_ver
- 	local bin_arch
-+	local bin_format
-+	local bin_file
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
- 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-@@ -118,8 +128,9 @@ gen_btf()
- 		return 1
- 	fi
- 
--	info "BTF" ${2}
- 	vmlinux_link ${1}
-+
-+	info "BTF" ${2}
- 	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
- 
- 	# dump .BTF section into raw binary file to link with final vmlinux
-@@ -127,11 +138,12 @@ gen_btf()
- 		cut -d, -f1 | cut -d' ' -f2)
- 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
- 		awk '{print $4}')
-+	bin_file=.btf.vmlinux.bin
- 	${OBJCOPY} --change-section-address .BTF=0 \
- 		--set-section-flags .BTF=alloc -O binary \
--		--only-section=.BTF ${1} .btf.vmlinux.bin
-+		--only-section=.BTF ${1} $bin_file
- 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
--		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
-+		--rename-section .data=.BTF $bin_file ${2}
- }
- 
- # Create ${2} .o file with all symbols from the ${1} object file
-@@ -166,8 +178,8 @@ kallsyms()
- kallsyms_step()
- {
- 	kallsymso_prev=${kallsymso}
--	kallsymso=.tmp_kallsyms${1}.o
--	kallsyms_vmlinux=.tmp_vmlinux${1}
-+	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
-+	kallsymso=${kallsyms_vmlinux}.o
- 
- 	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
- 	kallsyms ${kallsyms_vmlinux} ${kallsymso}
-@@ -190,7 +202,6 @@ cleanup()
- {
- 	rm -f .btf.*
- 	rm -f .tmp_System.map
--	rm -f .tmp_kallsyms*
- 	rm -f .tmp_vmlinux*
- 	rm -f System.map
- 	rm -f vmlinux
-@@ -257,9 +268,8 @@ tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
- 
- btf_vmlinux_bin_o=""
- if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
--	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
--		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
--	else
-+	btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-+	if ! gen_btf .tmp_vmlinux.btf $btf_vmlinux_bin_o ; then
- 		echo >&2 "Failed to generate BTF for vmlinux"
- 		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
- 		exit 1
--- 
-2.25.1
-
+--- a/drivers/staging/wfx/scan.c
++++ b/drivers/staging/wfx/scan.c
+@@ -57,8 +57,10 @@ static int send_scan_req(struct wfx_vif
+ 	wvif->scan_abort = false;
+ 	reinit_completion(&wvif->scan_complete);
+ 	timeout = hif_scan(wvif, req, start_idx, i - start_idx);
+-	if (timeout < 0)
++	if (timeout < 0) {
++		wfx_tx_unlock(wvif->wdev);
+ 		return timeout;
++	}
+ 	ret = wait_for_completion_timeout(&wvif->scan_complete, timeout);
+ 	if (req->channels[start_idx]->max_power != wvif->vif->bss_conf.txpower)
+ 		hif_set_output_power(wvif, wvif->vif->bss_conf.txpower);
 
 
