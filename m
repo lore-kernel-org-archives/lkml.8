@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97076C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7619320888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65DFE208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521262;
-	bh=UepWdnsWpDppgVk5vfkJFKBUbmMK8J+U8pMrQTMIVVo=;
+	s=default; t=1590521272;
+	bh=o6xEWP3l3NxJIyh56Zls/j+EDwwS16Hn5+vt1XvPQsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTyqWMLAsZDw/G9Ptgs/YB6Rfc6+EIAreHQ3J0xRpTgU46GX7/rXlJOso4G57hmJF
-	 I4y3bj8JPOl2DK14KIqjFfdAHND64MbtYlgqrjvzs6f8FF6XT/T8kc9uPoSUz1s4++
-	 MbVhGyHLQSmus0qx6uQ/Zu1zg3XtqJVB7l9GoIhs=
+	b=Jntevjhsc2M8bZPEFhEf+ZKdey4JvFr46vFRrMFV/2JXMqPPlu5k1flbucZgrSM1x
+	 4zehLM5wqO7xyWXaDZN5TJqLwJOJigd2rWv3q2/9rULKpBxxY2CYPO3XEY0wWTna/9
+	 TZgD/Pm3e9bQM5aVfoQd3sLIHa9b0RCo9cdadO0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391304AbgEZTEC (ORCPT
+        id S2392581AbgEZT1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59426 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:27:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390518AbgEZTD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:58 -0400
+        id S2391288AbgEZTDx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C4CF20873;
-        Tue, 26 May 2020 19:03:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE0D20849;
+        Tue, 26 May 2020 19:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519837;
-        bh=UepWdnsWpDppgVk5vfkJFKBUbmMK8J+U8pMrQTMIVVo=;
+        s=default; t=1590519832;
+        bh=o6xEWP3l3NxJIyh56Zls/j+EDwwS16Hn5+vt1XvPQsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h9mT6jN3zILXnD4vvt8XhHswIcGy9McAP7Jez2ru8JX/7ZIcJ2/BxHk7IqCqP3Hac
-         ULG2Uwwpnb6DeZPKH8P4HIPTAqNkHfxLKRUF1allKANbTO6ZskqQy07fQDWW43l5mF
-         nDnl4uZo78149NLWFUhMs4SLKqzF52oO+eJohnkA=
+        b=pX9EnXe0AU+26DftWl1+iXW0wmAZ8sUa65Z1WZe3SNkiKE8rL1QEMZz1g7uGJyaKK
+         WpY1gemp1Hapetu8VqVNVZZtp8LukXxMrVijIIJVnfWHzdJ00F8zQW0jjxS519dCab
+         u/TmhGE5XgN4oE6aj2CU3ks+H2K4NBPpfa+PsSG0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/81] padata: initialize pd->cpu with effective cpumask
-Date:   Tue, 26 May 2020 20:53:11 +0200
-Message-Id: <20200526183931.357121297@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 34/81] ARM: futex: Address build warning
+Date:   Tue, 26 May 2020 20:53:09 +0200
+Message-Id: <20200526183931.170337844@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,74 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit ec9c7d19336ee98ecba8de80128aa405c45feebb ]
+[ Upstream commit 8101b5a1531f3390b3a69fa7934c70a8fd6566ad ]
 
-Exercising CPU hotplug on a 5.2 kernel with recent padata fixes from
-cryptodev-2.6.git in an 8-CPU kvm guest...
+Stephen reported the following build warning on a ARM multi_v7_defconfig
+build with GCC 9.2.1:
 
-    # modprobe tcrypt alg="pcrypt(rfc4106(gcm(aes)))" type=3
-    # echo 0 > /sys/devices/system/cpu/cpu1/online
-    # echo c > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
-    # modprobe tcrypt mode=215
+kernel/futex.c: In function 'do_futex':
+kernel/futex.c:1676:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+ 1676 |   return oldval == cmparg;
+      |          ~~~~~~~^~~~~~~~~
+kernel/futex.c:1652:6: note: 'oldval' was declared here
+ 1652 |  int oldval, ret;
+      |      ^~~~~~
 
-...caused the following crash:
+introduced by commit a08971e9488d ("futex: arch_futex_atomic_op_inuser()
+calling conventions change").
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    #PF: supervisor read access in kernel mode
-    #PF: error_code(0x0000) - not-present page
-    PGD 0 P4D 0
-    Oops: 0000 [#1] SMP PTI
-    CPU: 2 PID: 134 Comm: kworker/2:2 Not tainted 5.2.0-padata-base+ #7
-    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-<snip>
-    Workqueue: pencrypt padata_parallel_worker
-    RIP: 0010:padata_reorder+0xcb/0x180
-    ...
-    Call Trace:
-     padata_do_serial+0x57/0x60
-     pcrypt_aead_enc+0x3a/0x50 [pcrypt]
-     padata_parallel_worker+0x9b/0xe0
-     process_one_work+0x1b5/0x3f0
-     worker_thread+0x4a/0x3c0
-     ...
+While that change should not make any difference it confuses GCC which
+fails to work out that oldval is not referenced when the return value is
+not zero.
 
-In padata_alloc_pd, pd->cpu is set using the user-supplied cpumask
-instead of the effective cpumask, and in this case cpumask_first picked
-an offline CPU.
+GCC fails to properly analyze arch_futex_atomic_op_inuser(). It's not the
+early return, the issue is with the assembly macros. GCC fails to detect
+that those either set 'ret' to 0 and set oldval or set 'ret' to -EFAULT
+which makes oldval uninteresting. The store to the callsite supplied oldval
+pointer is conditional on ret == 0.
 
-The offline CPU's reorder->list.next is NULL in padata_reorder because
-the list wasn't initialized in padata_init_pqueues, which only operates
-on CPUs in the effective mask.
+The straight forward way to solve this is to make the store unconditional.
 
-Fix by using the effective mask in padata_alloc_pd.
+Aside of addressing the build warning this makes sense anyway because it
+removes the conditional from the fastpath. In the error case the stored
+value is uninteresting and the extra store does not matter at all.
 
-Fixes: 6fc4dbcf0276 ("padata: Replace delayed timer with immediate workqueue in padata_reorder")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/87pncao2ph.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/include/asm/futex.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 47dc31ce15ac..e9b8d517fd4b 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -451,7 +451,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	atomic_set(&pd->refcnt, 1);
- 	pd->pinst = pinst;
- 	spin_lock_init(&pd->lock);
--	pd->cpu = cpumask_first(pcpumask);
-+	pd->cpu = cpumask_first(pd->cpumask.pcpu);
- 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+diff --git a/arch/arm/include/asm/futex.h b/arch/arm/include/asm/futex.h
+index ffebe7b7a5b7..91ca80035fc4 100644
+--- a/arch/arm/include/asm/futex.h
++++ b/arch/arm/include/asm/futex.h
+@@ -163,8 +163,13 @@ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+ 	preempt_enable();
+ #endif
  
- 	return pd;
+-	if (!ret)
+-		*oval = oldval;
++	/*
++	 * Store unconditionally. If ret != 0 the extra store is the least
++	 * of the worries but GCC cannot figure out that __futex_atomic_op()
++	 * is either setting ret to -EFAULT or storing the old value in
++	 * oldval which results in a uninitialized warning at the call site.
++	 */
++	*oval = oldval;
+ 
+ 	return ret;
+ }
 -- 
 2.25.1
 
