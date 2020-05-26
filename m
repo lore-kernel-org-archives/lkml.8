@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3179C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91415C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F67D208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B052208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520347;
-	bh=ebGrwf6jkpO160XY52EjyzS+rqmPdZq2in3TQgM5QH0=;
+	s=default; t=1590520352;
+	bh=rbi3a+PbdSMbyR8m15t3ysXJq+b6p36K+8o0FGva/1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z8Z/q7o+UOMfvQcjyFYgvYiXKgogluKRNKZ8BWtru2RGXs3iiXL8dn+sF3owoRY8Z
-	 hG0UzdS73HzMHro1YzbUoyLZcALMgB501h4Bt8+35QipaQekfpls0OHjGeh9pyrdGi
-	 Bo3C2DmLhF55sHPRCEZ+TJiR3RErrFhosJPHUfLY=
+	b=o+sH/XRt6Wp/py6Bm2wjNskapFC5v0LwyGW5mF+f5OCG7RNL8bxTB/6vi7aKDuuiM
+	 oEk+WbSJLsx02wZmaCt3nLSVc7EQt4kmLpIqu6e+a5b+ABvQ+VWTBkYNWOH+vhmSl/
+	 x9ACtkYbAfiMDH158uRS0tF4Wgg68MleJ+osTrWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392079AbgEZTM0 (ORCPT
+        id S2392080AbgEZTMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392066AbgEZTMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:22 -0400
+        id S2392081AbgEZTM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1201B208A7;
-        Tue, 26 May 2020 19:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D93C208E4;
+        Tue, 26 May 2020 19:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520341;
-        bh=ebGrwf6jkpO160XY52EjyzS+rqmPdZq2in3TQgM5QH0=;
+        s=default; t=1590520346;
+        bh=rbi3a+PbdSMbyR8m15t3ysXJq+b6p36K+8o0FGva/1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVf7Phtlqgl9GUCXxeGOHLjG8cEnmkT0wiQvZsdS4yubOZS+RrC7outrXdExUlWTV
-         rUFL2xDCdsVcKmDNtIYr6lbOslfGuQ6RbmnYM6f9FJ771wGCQz0dtaFTWis946boSw
-         aqMUawE0iZ3F2Gc0UvDp7cEqG99qC6jxDwOZapA0=
+        b=LccVjTiUJe2rNVOEX99/4vAWSrZlh0sQ5eYlaiEc9swJAKMpEpemwbqCfepDtPFwq
+         KJWudGhInYuKAqjS4UHSqaeGEb6okoYEM+VwGAok/8rSrMaBS7ik4ELPCZRaNRws0A
+         ZNzl1+pNz97bHqrtfAnvYKBGWjWkgCmyYk7vxato=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 042/126] gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
-Date:   Tue, 26 May 2020 20:52:59 +0200
-Message-Id: <20200526183941.511724564@linuxfoundation.org>
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 043/126] HID: quirks: Add HID_QUIRK_NO_INIT_REPORTS quirk for Dell K12A keyboard-dock
+Date:   Tue, 26 May 2020 20:53:00 +0200
+Message-Id: <20200526183941.590465108@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,59 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 846c68f7f1ac82c797a2f1db3344a2966c0fe2e1 ]
+[ Upstream commit 1e189f267015a098bdcb82cc652d13fbf2203fa0 ]
 
-In drivers/net/gtp.c, gtp_genl_dump_pdp() should set NLM_F_MULTI
-flag since it returns multipart message.
-This patch adds a new arg "flags" in gtp_genl_fill_info() so that
-flags can be set by the callers.
+Add a HID_QUIRK_NO_INIT_REPORTS quirk for the Dell K12A keyboard-dock,
+which can be used with various Dell Venue 11 models.
 
-Signed-off-by: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Without this quirk the keyboard/touchpad combo works fine when connected
+at boot, but when hotplugged 9 out of 10 times it will not work properly.
+Adding the quirk fixes this.
+
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 672cd2caf2fb..21640a035d7d 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -1169,11 +1169,11 @@ out_unlock:
- static struct genl_family gtp_genl_family;
- 
- static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
--			      u32 type, struct pdp_ctx *pctx)
-+			      int flags, u32 type, struct pdp_ctx *pctx)
- {
- 	void *genlh;
- 
--	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
-+	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
- 			    type);
- 	if (genlh == NULL)
- 		goto nlmsg_failure;
-@@ -1227,8 +1227,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
- 		goto err_unlock;
- 	}
- 
--	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
--				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
-+	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
-+				 0, info->nlhdr->nlmsg_type, pctx);
- 	if (err < 0)
- 		goto err_unlock_free;
- 
-@@ -1271,6 +1271,7 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
- 				    gtp_genl_fill_info(skb,
- 					    NETLINK_CB(cb->skb).portid,
- 					    cb->nlh->nlmsg_seq,
-+					    NLM_F_MULTI,
- 					    cb->nlh->nlmsg_type, pctx)) {
- 					cb->args[0] = i;
- 					cb->args[1] = j;
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 55afc089cb25..b1d6156ebf9d 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1111,6 +1111,7 @@
+ #define USB_DEVICE_ID_SYNAPTICS_LTS2	0x1d10
+ #define USB_DEVICE_ID_SYNAPTICS_HD	0x0ac3
+ #define USB_DEVICE_ID_SYNAPTICS_QUAD_HD	0x1ac3
++#define USB_DEVICE_ID_SYNAPTICS_DELL_K12A	0x2819
+ #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012	0x2968
+ #define USB_DEVICE_ID_SYNAPTICS_TP_V103	0x5710
+ #define USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5	0x81a7
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 3735546bb524..acc7c14f7fbc 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -163,6 +163,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_LTS2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_QUAD_HD), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_TP_V103), HID_QUIRK_NO_INIT_REPORTS },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS, USB_DEVICE_ID_SYNAPTICS_DELL_K12A), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOPMAX, USB_DEVICE_ID_TOPMAX_COBRAPAD), HID_QUIRK_BADPAD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_TOUCHPACK, USB_DEVICE_ID_TOUCHPACK_RTS), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_TPV, USB_DEVICE_ID_TPV_OPTICAL_TOUCHSCREEN_8882), HID_QUIRK_NOGET },
 -- 
 2.25.1
 
