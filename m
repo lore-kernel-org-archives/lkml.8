@@ -2,101 +2,131 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02179C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30C9F20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520700;
-	bh=zWsa3AUmB//Wf1mTtlrz0g0Yvlc+DxhzDn2A2kufhjo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8SlxwP/yPi0WIMw6NC72+HWsVbgAhGhSSKOWdL2PD4AYtnK0TNYrZ5EZ6Oygbfrp
-	 NJDHZpUmNJHZbiUD8gRJV/GOn8IMNx8VdQka7L42S3A6HnF4tz6qFUGSm2voLjDbeE
-	 c/kd5TkaUkKCwlJLve9mBq9VCGWoPiY6KtdDxrG8=
+	by mail.kernel.org (Postfix) with ESMTP id D0AD220776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:18:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="aMUmiQRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392385AbgEZTSR (ORCPT
+        id S2392394AbgEZTSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44274 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404319AbgEZTNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:18:20 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46288 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404316AbgEZTNr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 15:13:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D520E20888;
-        Tue, 26 May 2020 19:13:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520427;
-        bh=zWsa3AUmB//Wf1mTtlrz0g0Yvlc+DxhzDn2A2kufhjo=;
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id E374030D776;
+        Tue, 26 May 2020 12:13:45 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com E374030D776
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520425;
+        bh=DqJ1lrPkpo+wwETwincyBoAPTwPAXLpwicYuxaLaS7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jfsa/Bm7+FMcIc5vGsqdDjJ/Jw0Z0NHp8xd0aauJRzz4xgHAGhDDLzr09nCEc+imn
-         pdqewc35sMv7ck+LCGE7bpK9HcSFrhZTx5WRoONgNvdSoDyfvCfPTIVh+X1LOENQj4
-         bEOaxeo1APGi+Py1a6bKN65sFeH0OvZaOYJsasMw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
-        Laurence Oberman <loberman@redhat.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 068/126] scsi: qla2xxx: Do not log message when reading port speed via sysfs
-Date:   Tue, 26 May 2020 20:53:25 +0200
-Message-Id: <20200526183943.897738690@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=aMUmiQRo6EHGBqbE6K3jxjg9XXY+8oBGsC2rf9B6m2zdGmpZW/0Xu3gLD7HDyL+YF
+         2cZQ4mvyxbd/g2Mfj17XlhByKISqi11ZdYXVCJR8nwElmyEDVaCd2pWfRGF2PMrW8o
+         HUdSdKyGDrytbkbQaCBB8unpYA+G0OuXm2Prp2yg=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 6526E14008D;
+        Tue, 26 May 2020 12:13:44 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 13/14] PCI: brcmstb: Set bus max burst size by chip type
+Date:   Tue, 26 May 2020 15:12:52 -0400
+Message-Id: <20200526191303.1492-14-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ewan D. Milne <emilne@redhat.com>
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-commit fb9024b0646939e59d8a0b6799b317070619795a upstream.
+The proper value of the parameter SCB_MAX_BURST_SIZE varies per chip.  The
+2711 family requires 128B whereas other devices can employ 512.  The
+assignment is complicated by the fact that the values for this two-bit
+field have different meanings;
 
-Calling ql_log() inside qla2x00_port_speed_show() is causing messages to be
-output to the console for no particularly good reason.  The sysfs read
-routine should just return the information to userspace.  The only reason
-to log a message is when the port speed actually changes, and this already
-occurs elsewhere.
+  Value   Type_Generic    Type_7278
 
-Link: https://lore.kernel.org/r/20200504175416.15417-1-emilne@redhat.com
-Fixes: 4910b524ac9e ("scsi: qla2xxx: Add support for setting port speed")
-Cc: <stable@vger.kernel.org> # v5.1+
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Reviewed-by: Laurence Oberman <loberman@redhat.com>
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+     00       Reserved         128B
+     01           128B         256B
+     10           256B         512B
+     11           512B     Reserved
 
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 ---
- drivers/scsi/qla2xxx/qla_attr.c |    3 ---
- 1 file changed, 3 deletions(-)
+ drivers/pci/controller/pcie-brcmstb.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -1777,9 +1777,6 @@ qla2x00_port_speed_show(struct device *d
- 		return -EINVAL;
- 	}
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 9930419e3ac2..131cf0a51398 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -53,7 +53,7 @@
+ #define  PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK		0x1000
+ #define  PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK	0x2000
+ #define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK	0x300000
+-#define  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128		0x0
++
+ #define  PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK		0xf8000000
+ #define  PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK		0x07c00000
+ #define  PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK		0x0000001f
+@@ -848,7 +848,7 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	int num_out_wins = 0;
+ 	u16 nlw, cls, lnksta;
+ 	int i, ret, memc;
+-	u32 tmp, aspm_support;
++	u32 tmp, burst, aspm_support;
  
--	ql_log(ql_log_info, vha, 0x70d6,
--	    "port speed:%d\n", ha->link_data_rate);
--
- 	return scnprintf(buf, PAGE_SIZE, "%s\n", spd[ha->link_data_rate]);
- }
+ 	/* Reset the bridge */
+ 	brcm_pcie_bridge_sw_init_set(pcie, 1);
+@@ -864,10 +864,22 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	/* Wait for SerDes to be stable */
+ 	usleep_range(100, 200);
  
-
++	/*
++	 * SCB_MAX_BURST_SIZE is a two bit field.  For GENERIC chips it
++	 * is encoded as 0=128, 1=256, 2=512, 3=Rsvd, for BCM7278 it
++	 * is encoded as 0=Rsvd, 1=128, 2=256, 3=512.
++	 */
++	if (pcie->type == BCM2711)
++		burst = 0x0; /* 128B */
++	else if (pcie->type == BCM7278)
++		burst = 0x3; /* 512 bytes */
++	else
++		burst = 0x2; /* 512 bytes */
++
+ 	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
+ 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK);
+ 	u32p_replace_bits(&tmp, 1, PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK);
+-	u32p_replace_bits(&tmp, PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_128,
++	u32p_replace_bits(&tmp, burst,
+ 			  PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK);
+ 	writel(tmp, base + PCIE_MISC_MISC_CTRL);
+ 
+-- 
+2.17.1
 
