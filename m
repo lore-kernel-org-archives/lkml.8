@@ -2,126 +2,117 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BCEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B10572070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E322070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:10:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p2bdzANU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D+4nQ0vW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbgEZPKM (ORCPT
+        id S1729924AbgEZPKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:10:12 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:60270 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgEZPKL (ORCPT
+        Tue, 26 May 2020 11:10:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728968AbgEZPKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:10:11 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04QF85lJ070012;
-        Tue, 26 May 2020 15:10:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=ZOr1VcRREznxIQgGfsM1wm47OiDUEuIfZ1m11gcxhz0=;
- b=p2bdzANU+Bj/HIxmKhacjR94duHnsJ2zqw3yfIZNJ0PT0TbdsuylcNYnQ7griC723dZa
- qxZRXJ+qxdK07ecHLUY7btbjkVOMO857zwYO3SJEpkuUUNg7gHlF6s9w3p/kuVt/O2y4
- rRUIl0CRk++GTIDwvPl4dlGMItL0lX95YgQscqrx/KT1Wfuv4/nsXAZZyZ//W2ClERaI
- xEamFGkD3q4rheBcVA2oeBS+bBLwNGNF0h17XKMK1+U2mgQJDJZvXMZVFlenKs7+Te9y
- JVgVMH3CxliXI6bffMSn58F2DS/6ZR4XqY+2FI3686JwinjUHpL4fGn0+nbYWyMydPaA 7Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 318xe1af0n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 15:10:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04QF8piN174854;
-        Tue, 26 May 2020 15:10:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 317drxmd71-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 May 2020 15:10:06 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04QFA4xg020270;
-        Tue, 26 May 2020 15:10:04 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 May 2020 08:10:03 -0700
-Date:   Tue, 26 May 2020 18:09:54 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     GAURAV PATHAK <gauravpathak129@gmail.com>
-Cc:     devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        abbotti@mev.co.uk, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Removing ununsed variable int lo, hi, int data and int i
- from comedi/drivers/dt2814.c.
-Message-ID: <20200526150954.GA30374@kadam>
-References: <20200524113613.GA19734@xebrium.com>
- <20200526141346.GV30374@kadam>
- <20200526145448.GA5197@xebrium.com>
+        Tue, 26 May 2020 11:10:40 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99057C03E96F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:10:40 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id s69so1540183pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zuN1PH7d2dfCgGQO7mbhwyoBsWzuZEv+CGEfJv0Zw+c=;
+        b=D+4nQ0vWQOUObnvWLE2c2rqZVSpP4vHdMdjPbiYho4sYugLqtt6WRlJ+HEBBjO+1lQ
+         2eR7eboY09he7DRe3bVtn422CDYVxb587PRQ/F+XM06FycTChxmMLph4uSQfy6rrhj88
+         Uj/F+naAfokobOjg7tIBJp6aRXQKGJrWwM0M5NQhdl2IHrzkJZx4YN7V8c4YmU5AiA4m
+         2klNrqpTzCwkPVLI9ZrzKuMoCf/oP8Y0Egww1cMRgelz+NygXiJoljRrWYfv9E+KnDQ2
+         1VULYXUIQtH0XM1HRyfnK3yn7EbRcnN61uIfb9jjlWUJ7wTomFrOFYUYdUmZtFvN1GcP
+         jAQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zuN1PH7d2dfCgGQO7mbhwyoBsWzuZEv+CGEfJv0Zw+c=;
+        b=XfvDPb+w3G3NZy9Giq1nuuUXbC6Z7ORuh0OkEPcJpie0VVGpmDqAgcd+dVllvZue/V
+         RXhF4u3AtH17lmgNBaDgQ4B1lg1msf1laklVkojgYO9IsYyZu4JHDpPWFfMBlC3OfbdV
+         JVZ1/soF0jVW1PxLqrQxfO5dqTWZUo0CDU1GiKiYQVaSW+zvQbsoNV90WXFWpvUlehqV
+         UeJ/970/o/AyolprP+Y8V4qthpD29uIor/5VfUYvLLFDr5S+XbIoxr8/4ZQ/VRtuzES9
+         U7pB8WXaD5hCJ0qSNaMEfM/zVcKSYSePiGdETk4AaP+LxMd5B5VjmeG/QxWv8FSTENFt
+         iqiw==
+X-Gm-Message-State: AOAM5330x41D9VHBiTCc0Y6fQtT4CypMDAmR41fea1vxtsA9+bVudJKL
+        j0r6hWnXdCHv/G5KhzioDAPEgg==
+X-Google-Smtp-Source: ABdhPJwe+1sgmh2OwBptymAExtulFHEpnY96Q4RDulxomLppHnhiwFUYKKMDqrVR8wVFmvAPxb4eUQ==
+X-Received: by 2002:a17:90a:1a17:: with SMTP id 23mr27507707pjk.198.1590505839978;
+        Tue, 26 May 2020 08:10:39 -0700 (PDT)
+Received: from [10.140.0.202] ([45.135.186.12])
+        by smtp.gmail.com with ESMTPSA id i197sm3623225pfe.30.2020.05.26.08.10.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 08:10:39 -0700 (PDT)
+Subject: Re: [PATCH 1/2] PCI: Introduce PCI_FIXUP_IOMMU
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+ <1590493749-13823-2-git-send-email-zhangfei.gao@linaro.org>
+ <20200526144644.GA20784@infradead.org>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <39144dc0-3b04-3127-978b-bd8487dd06e0@linaro.org>
+Date:   Tue, 26 May 2020 23:09:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526145448.GA5197@xebrium.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9632 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260118
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9632 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1015 impostorscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260118
+In-Reply-To: <20200526144644.GA20784@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:24:50PM +0530, GAURAV PATHAK wrote:
-> On Tue, May 26, 2020 at 05:13:46PM +0300, Dan Carpenter wrote:
-> > Your subject doesn't use the correct patch prefix please use.
-> > 
-> > [PATCH] Staging: comedi: dt2814: remove unused assignments
-> > 
-> > Please resend a v2.
-> > 
-> > Correct the references to Sparse as well like Luc said.
-> > 
-> > regards,
-> > dan carpenter
-> > 
-> 
-> Hello Dan,
-> Thank you for reviewing and suggesting changes. I have modified the
-> patch and attached it with the e-mail to keep this thread conversation.
-> I hope I have made the changes correctly.
-> 
+Hi, Christoph
 
-No, this isn't how to send a v2 patch.
+On 2020/5/26 下午10:46, Christoph Hellwig wrote:
+> On Tue, May 26, 2020 at 07:49:08PM +0800, Zhangfei Gao wrote:
+>> Some platform devices appear as PCI but are actually on the AMBA bus,
+>> and they need fixup in drivers/pci/quirks.c handling iommu_fwnode.
+>> Here introducing PCI_FIXUP_IOMMU, which is called after iommu_fwnode
+>> is allocated, instead of reusing PCI_FIXUP_FINAL since it will slow
+>> down iommu probing as all devices in fixup final list will be
+>> reprocessed.
+> Who is going to use this?  I don't see a single user in the series.
+We will add iommu fixup in drivers/pci/quirks.c, handling
 
-https://www.google.com/search?client=firefox-b-d&q=how+to+send+a+v2+patch
+fwspec->can_stall, which is introduced in
 
-Put [PATCH v2] in the subject.  Don't send patches as attachments.
-Put a comment after the --- cut off line:
+https://www.spinics.net/lists/linux-pci/msg94559.html
 
-Signed-off...
----
-v2: Update subject and commit message.
+Unfortunately, the patch does not catch v5.8, so we have to wait.
+And we want to check whether this is a right method to solve this issue.
 
-If you want to reply to the thread, that's good.  Use --in-reply-to=<Message-id>
-But don't worry about it too much.  Greg applies or deletes patches as
-soon as he sees them so either way he's not going to have the original
-thread in his inbox.
-
-regards,
-dan carpenter
-
+Thanks
 
