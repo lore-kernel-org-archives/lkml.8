@@ -2,215 +2,339 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7321C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64139C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0CA02086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:58:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IiYzYMWU"
+	by mail.kernel.org (Postfix) with ESMTP id 32D3C2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590519541;
+	bh=kZ9mboQE3/aQsUhpCHZB6N4PwuNWxmxxb5lYCPPbQYI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WV5IaYJpohQ4ahC8ufxwj4chjrwqAZzKIIgXok8fYIg7mBA9avhKK4gvXAFzHTWV4
+	 D7FcBsjLNCVfeNWSgANFfi3TFqM+sY/C5oQietZYgqrHvfIfJg/E46RLnO0eJiFcGQ
+	 4+otSb0jsdvu0JY3bDuTLNmOBrt1h9URo42EKu4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389588AbgEZS66 (ORCPT
+        id S2390453AbgEZS7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390428AbgEZS6y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:58:54 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77FD9C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:58:54 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id v4so17097157qte.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:58:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SjoliUfvbku6NAedJER/qXlY6SBZSp5CpYZIHr5HINA=;
-        b=IiYzYMWUvmNd5hzuMmXXytnwc4UwCEuW3hPpITIAioJ270FpHW9eQDA25d+VUTRUyV
-         /dFTBpU0IBDTV+SzfofT+BLcaaKMYszPa8Mg/NudsKGPn5ur5DvaSFZEXKGmRzHP0Kk2
-         efn+BdwZDIxJ3U5aain49eCJefS1/q0Yy8QHN95I2lbHFFnWyL6a7FRVprrM01hWOuLa
-         GjsZhH0Wn0JM5D2nYaDO1PWSskADk7tahX2wHWnrf9oKKXlg0huwSFMRBAwk0iOev9w4
-         8vcv0yMrI/PjIUg9k7/c3KPaKxVritmc3iMdrSOD7O2K5tFIu2Ey8Zax6q7cD4hS0pJf
-         NRig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SjoliUfvbku6NAedJER/qXlY6SBZSp5CpYZIHr5HINA=;
-        b=txG9R1B6C/HeaUpoc7f+rPH6ZNkTLllYrzuz653/9WQzdBrJ2bZt/APry9k45J5yjX
-         YstVNIDXFqHPcJ1GAER3nLWrLDnrynsInkhFfi0Q4DdIZJ3ExHRNkISTIY+UUlmXh2+U
-         hJSMCaOfynbJ833M86jPA8crCE6p88oV0JYwmhOvH4u1D1UPtfWI5HAS8E3tjKI4Qkvx
-         kiDM0qCWIEnkfzlqYSSm5jyKUwFWUBAUCujJaXmUr8FjRhz9gcEMsLicgU5yHXtKXFQS
-         iYpVmSn3FnDAkxKY01iW6a8k+KUPMIJX+lifoCjMD9TsE36ibfZNWPajN9gIRxex8zf7
-         C+Hw==
-X-Gm-Message-State: AOAM5332QcCCXp4jfIHuQT+XsVUpT3kNfBH1g3AadlPeiZwjzp5RJV2e
-        8VGxdTpTIu6OsgYzcFYnRFjI6Q==
-X-Google-Smtp-Source: ABdhPJxJX2uoD88ndJDHTyRWsJwus80AMdWEX5WKid7HU24VXzVLq9dM17nRp54quc8a5QEH3WUzSQ==
-X-Received: by 2002:ac8:1601:: with SMTP id p1mr228565qtj.311.1590519533596;
-        Tue, 26 May 2020 11:58:53 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r7sm509210qtc.25.2020.05.26.11.58.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:58:52 -0700 (PDT)
-Date:   Tue, 26 May 2020 14:58:50 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/lockdep: Increase MAX_LOCKDEP_ENTRIES by half
-Message-ID: <20200526185850.GE991@lca.pw>
-References: <20200526174349.8312-1-longman@redhat.com>
+        Tue, 26 May 2020 14:59:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390433AbgEZS64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:58:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E2262084C;
+        Tue, 26 May 2020 18:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519535;
+        bh=kZ9mboQE3/aQsUhpCHZB6N4PwuNWxmxxb5lYCPPbQYI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WwM4WHXENvMfqM5ld4T7DABp05p8liSP2mIfITmpU0dw/9rs/erc5KRZCh56j2GuT
+         u4TSiq3lfA7K3Cdeo0ba1nwhnq35KhukA+KhILV1uPbpOJR7+QgOYym8VWusG+YUvV
+         vR3L/CKQ1jscDxm3wgwUjR6gRpWdOvEDBuxneJ5c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/64] 4.9.225-rc1 review
+Date:   Tue, 26 May 2020 20:52:29 +0200
+Message-Id: <20200526183913.064413230@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526174349.8312-1-longman@redhat.com>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.225-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.225-rc1
+X-KernelTest-Deadline: 2020-05-28T18:39+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:43:49PM -0400, Waiman Long wrote:
-> It was found by Qian Cai that lockdep splat sometimes appears with the
-> "BUG: MAX_LOCKDEP_ENTRIES too low" message on linux-next. On a 32-vcpu VM
-> guest with a v5.7-rc7 based kernel, I looked at how many of the various
-> table entries were being used after bootup and after a parallel kernel
-> build (make -j32). The tables below show the usage statistics.
+This is the start of the stable review cycle for the 4.9.225 release.
+There are 64 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-I think this approach could help the situatin on this AMD server.
-However, I don't understand why this particular system starts to exceed
-the MAX_LOCKDEP_ENTRIES. All other Intel, powerpc, amd64 and s390
-running the same workload have only < 20k at the end, but on this AMD
-server,
+Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+Anything received after that time might be too late.
 
-After system boot: ~13000 (which is similar to other arches.)
-After LTP MM +2000
-After LTP Syscalls: +5000
-After reading all sysfs [1] (except debugfs): +10000
-[1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/read_all/read_all.c
-# read_all -d /sys -q -r 10
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.225-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-I still don't understand why reading all sysfs files on this system
-could increase that much, but here is the lockdep file after
-running sysfs read to see if you could spot anything obviously,
+thanks,
 
-https://cailca.github.io/files/lockdep.txt
+greg k-h
 
-lock-classes:                         2114 [max: 8192]
- direct dependencies:                 28568 [max: 32768]
- indirect dependencies:              126882
- all direct dependencies:            304192
- dependency chains:                   38269 [max: 65536]
- dependency chain hlocks used:       141480 [max: 327680]
- dependency chain hlocks lost:            0
- in-hardirq chains:                     166
- in-softirq chains:                     818
- in-process chains:                   37285
- stack-trace entries:                175558 [max: 524288]
- number of stack traces:               8355
- number of stack hash chains:          6545
- combined max dependencies:       804750782
- hardirq-safe locks:                     80
- hardirq-unsafe locks:                 1048
- softirq-safe locks:                    169
- softirq-unsafe locks:                  957
- irq-safe locks:                        183
- irq-unsafe locks:                     1048
- hardirq-read-safe locks:                 4
- hardirq-read-unsafe locks:             943
- softirq-read-safe locks:                12
- softirq-read-unsafe locks:             940
- irq-read-safe locks:                    12
- irq-read-unsafe locks:                 943
- uncategorized locks:                   255
- unused locks:                            0
- max locking depth:                      19
- max bfs queue depth:                  1136
- chain lookup misses:                 43195
- chain lookup hits:              3151662027
- cyclic checks:                       44009
- redundant checks:                        0
- redundant links:                         0
- find-mask forwards checks:            7726
- find-mask backwards checks:           8095
- hardirq on events:              3503795225
- hardirq off events:             3503795224
- redundant hardirq ons:              453772
- redundant hardirq offs:         1856554342
- softirq on events:                51104551
- softirq off events:               51104551
- redundant softirq ons:                   0
- redundant softirq offs:                  0
- debug_locks:                             1
+-------------
+Pseudo-Shortlog of commits:
 
- zapped classes:                       1101
- zapped lock chains:                   1117
- large chain blocks:                      1
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.225-rc1
 
-> 
->   After bootup:
-> 
->   Table               Used        Max      %age
->   -----               ----        ---      ----
->   lock_classes[]      1834       8192      22.4
->   list_entries[]     15646      32768      47.7
->   lock_chains[]      20873      65536      31.8
->   chain_hlocks[]     83199     327680      25.4
->   stack_trace[]     146177     524288      27.9
-> 
->   After parallel kernel build:
-> 
->   Table               Used        Max      %age
->   -----               ----        ---      ----
->   lock_classes[]      1864       8192      22.8
->   list_entries[]     17134      32768      52.3
->   lock_chains[]      25196      65536      38.4
->   chain_hlocks[]    106321     327680      32.4
->   stack_trace[]     158700     524288      30.3
-> 
-> Percentage-wise, it can be seen that the list_entries for direct
-> dependencies are used much more than the other tables. So it is also
-> the table that is mostly likely to run out of space when running a
-> compex workload.
-> 
-> To reduce the likelihood of running out of table entries, we can increase
-> MAX_LOCKDEP_ENTRIES by 50% from 16384/32768 to 24576/49152.  On a 64-bit
-> architecture, that represents an increase in memory consumption of
-> 917504 bytes. With that change, the percentage usage of list_entries[]
-> will fall to 31.8% and 34.9% respectively to make them more in line
-> with the other tables.
-> 
-> Signed-off-by: Waiman Long <longman@redhat.com>
-> ---
->  kernel/locking/lockdep_internals.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
-> index baca699b94e9..6108d2fbe775 100644
-> --- a/kernel/locking/lockdep_internals.h
-> +++ b/kernel/locking/lockdep_internals.h
-> @@ -89,12 +89,12 @@ static const unsigned long LOCKF_USED_IN_IRQ_READ =
->   * table (if it's not there yet), and we check it for lock order
->   * conflicts and deadlocks.
->   */
-> -#define MAX_LOCKDEP_ENTRIES	16384UL
-> +#define MAX_LOCKDEP_ENTRIES	24576UL
->  #define MAX_LOCKDEP_CHAINS_BITS	15
->  #define MAX_STACK_TRACE_ENTRIES	262144UL
->  #define STACK_TRACE_HASH_SIZE	8192
->  #else
-> -#define MAX_LOCKDEP_ENTRIES	32768UL
-> +#define MAX_LOCKDEP_ENTRIES	49152UL
->  
->  #define MAX_LOCKDEP_CHAINS_BITS	16
->  
-> -- 
-> 2.18.1
-> 
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    iio: sca3000: Remove an erroneous 'get_device()'
+
+John Hubbard <jhubbard@nvidia.com>
+    rapidio: fix an error in get_user_pages_fast() error handling
+
+Alexander Usyskin <alexander.usyskin@intel.com>
+    mei: release me_cl object reference
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    iio: dac: vf610: Fix an error handling path in 'vf610_dac_probe()'
+
+Oscar Carter <oscar.carter@gmx.com>
+    staging: greybus: Fix uninitialized scalar variable
+
+Dragos Bogdan <dragos.bogdan@analog.com>
+    staging: iio: ad2s1210: Fix SPI reading
+
+Bob Peterson <rpeterso@redhat.com>
+    Revert "gfs2: Don't demote a glock until its revokes are written"
+
+Arjun Vynipadath <arjun@chelsio.com>
+    cxgb4/cxgb4vf: Fix mac_hlist initialization and free
+
+Arjun Vynipadath <arjun@chelsio.com>
+    cxgb4: free mac_hlist properly
+
+Vishal Verma <vishal.l.verma@intel.com>
+    libnvdimm/btt: Remove unnecessary code in btt_freelist_init
+
+Colin Ian King <colin.king@canonical.com>
+    platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+
+Arnd Bergmann <arnd@arndb.de>
+    ubsan: build ubsan.c more conservatively
+
+Peter Zijlstra <peterz@infradead.org>
+    x86/uaccess, ubsan: Fix UBSAN vs. SMAP
+
+R. Parameswaran <parameswaran.r7@gmail.com>
+    l2tp: device MTU setup, tunnel socket needs a lock
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    dmaengine: tegra210-adma: Fix an error handling path in 'tegra_adma_probe()'
+
+Brent Lu <brent.lu@intel.com>
+    ALSA: pcm: fix incorrect hw_base increase
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: initialise PPP sessions before registering them
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: protect sock pointer of struct pppol2tp_session with RCU
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: initialise l2tp_eth sessions before registering them
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: don't register sessions in l2tp_session_create()
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: fix l2tp_eth module loading
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: pass tunnel pointer to ->session_create()
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: prevent creation of sessions on terminated tunnels
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: hold tunnel used while creating sessions with netlink
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: hold tunnel while handling genl TUNNEL_GET commands
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: hold tunnel while handling genl tunnel updates
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: hold tunnel while processing genl delete command
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: hold tunnel while looking up sessions in l2tp_netlink
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: initialise session's refcount before making it reachable
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: define parameters of l2tp_tunnel_find*() as "const"
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: define parameters of l2tp_session_get*() as "const"
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: remove l2tp_session_find()
+
+Guillaume Nault <g.nault@alphalink.fr>
+    l2tp: remove useless duplicate session detection in l2tp_netlink
+
+R. Parameswaran <parameswaran.r7@gmail.com>
+    L2TP:Adjust intf MTU, add underlay L3, L2 hdrs.
+
+R. Parameswaran <parameswaran.r7@gmail.com>
+    New kernel function to get IP overhead on a socket.
+
+Asbjørn Sloth Tønnesen <asbjorn@asbjorn.st>
+    net: l2tp: ppp: change PPPOL2TP_MSG_* => L2TP_MSG_*
+
+Asbjørn Sloth Tønnesen <asbjorn@asbjorn.st>
+    net: l2tp: deprecate PPPOL2TP_MSG_* in favour of L2TP_MSG_*
+
+Asbjørn Sloth Tønnesen <asbjorn@asbjorn.st>
+    net: l2tp: export debug flags to UAPI
+
+Kevin Hao <haokexin@gmail.com>
+    watchdog: Fix the race between the release of watchdog_core_data and cdev
+
+Christoph Hellwig <hch@lst.de>
+    arm64: fix the flush_icache_range arguments in machine_kexec
+
+Daniel Jordan <daniel.m.jordan@oracle.com>
+    padata: purge get_cpu and reorder_via_wq from padata_do_serial
+
+Daniel Jordan <daniel.m.jordan@oracle.com>
+    padata: initialize pd->cpu with effective cpumask
+
+Herbert Xu <herbert@gondor.apana.org.au>
+    padata: Replace delayed timer with immediate workqueue in padata_reorder
+
+Mathias Krause <minipli@googlemail.com>
+    padata: set cpu_index of unused CPUs to -1
+
+Kevin Hao <haokexin@gmail.com>
+    i2c: dev: Fix the race between the release of i2c_dev and cdev
+
+Thomas Gleixner <tglx@linutronix.de>
+    ARM: futex: Address build warning
+
+Hans de Goede <hdegoede@redhat.com>
+    platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: core: Fix misleading driver bug report
+
+Wu Bo <wubo40@huawei.com>
+    ceph: fix double unlock in handle_cap_export()
+
+Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+    gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
+
+James Hilliard <james.hilliard1@gmail.com>
+    component: Silence bind error on -EPROBE_DEFER
+
+Xiyu Yang <xiyuyang19@fudan.edu.cn>
+    configfs: fix config_item refcnt leak in configfs_rmdir()
+
+Sebastian Reichel <sebastian.reichel@collabora.com>
+    HID: multitouch: add eGalaxTouch P80H84 support
+
+Frédéric Pierret (fepitre) <frederic.pierret@qubes-os.org>
+    gcc-common.h: Update for GCC 10
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    i2c: mux: demux-pinctrl: Fix an error handling path in 'i2c_demux_pinctrl_probe()'
+
+Alexander Monakov <amonakov@ispras.ru>
+    iommu/amd: Fix over-read of ACPI UID from IVRS table
+
+Al Viro <viro@zeniv.linux.org.uk>
+    fix multiplication overflow in copy_fdtable()
+
+Roberto Sassu <roberto.sassu@huawei.com>
+    ima: Fix return value of ima_write_policy()
+
+Roberto Sassu <roberto.sassu@huawei.com>
+    evm: Check also if *tfm is an error pointer in init_desc()
+
+Mathias Krause <minipli@googlemail.com>
+    padata: ensure padata_do_serial() runs on the correct CPU
+
+Mathias Krause <minipli@googlemail.com>
+    padata: ensure the reorder timer callback runs on the correct CPU
+
+Jason A. Donenfeld <Jason@zx2c4.com>
+    padata: get_next is never NULL
+
+Tobias Klauser <tklauser@distanz.ch>
+    padata: Remove unused but set variables
+
+Cao jin <caoj.fnst@cn.fujitsu.com>
+    igb: use igb_adapter->io_addr instead of e1000_hw->hw_addr
+
+
+-------------
+
+Diffstat:
+
+ Documentation/networking/l2tp.txt                  |   8 +-
+ Makefile                                           |   4 +-
+ arch/arm/include/asm/futex.h                       |   9 +-
+ arch/arm64/kernel/machine_kexec.c                  |   3 +-
+ drivers/base/component.c                           |   8 +-
+ drivers/dma/tegra210-adma.c                        |   2 +-
+ drivers/hid/hid-ids.h                              |   1 +
+ drivers/hid/hid-multitouch.c                       |   3 +
+ drivers/i2c/i2c-dev.c                              |  48 ++--
+ drivers/i2c/muxes/i2c-demux-pinctrl.c              |   1 +
+ drivers/iio/dac/vf610_dac.c                        |   1 +
+ drivers/iommu/amd_iommu_init.c                     |   9 +-
+ drivers/misc/mei/client.c                          |   2 +
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c    |  13 +-
+ .../net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c    |   6 +-
+ drivers/net/ethernet/intel/igb/igb_main.c          |   4 +-
+ drivers/net/gtp.c                                  |   9 +-
+ drivers/nvdimm/btt.c                               |   8 +-
+ drivers/platform/x86/alienware-wmi.c               |  17 +-
+ drivers/platform/x86/asus-nb-wmi.c                 |  24 ++
+ drivers/rapidio/devices/rio_mport_cdev.c           |   5 +
+ drivers/staging/greybus/uart.c                     |   4 +-
+ drivers/staging/iio/accel/sca3000_ring.c           |   2 +-
+ drivers/staging/iio/resolver/ad2s1210.c            |  17 +-
+ drivers/usb/core/message.c                         |   4 +-
+ drivers/watchdog/watchdog_dev.c                    |  67 ++---
+ fs/ceph/caps.c                                     |   1 +
+ fs/configfs/dir.c                                  |   1 +
+ fs/file.c                                          |   2 +-
+ fs/gfs2/glock.c                                    |   3 -
+ include/linux/net.h                                |   3 +
+ include/linux/padata.h                             |  13 +-
+ include/uapi/linux/if_pppol2tp.h                   |  13 +-
+ include/uapi/linux/l2tp.h                          |  17 +-
+ kernel/padata.c                                    |  88 +++---
+ lib/Makefile                                       |   2 +
+ net/l2tp/l2tp_core.c                               | 174 ++++--------
+ net/l2tp/l2tp_core.h                               |  46 +--
+ net/l2tp/l2tp_eth.c                                | 216 ++++++++------
+ net/l2tp/l2tp_netlink.c                            |  79 +++---
+ net/l2tp/l2tp_ppp.c                                | 309 ++++++++++++---------
+ net/socket.c                                       |  46 +++
+ scripts/gcc-plugins/Makefile                       |   1 +
+ scripts/gcc-plugins/gcc-common.h                   |   4 +
+ security/integrity/evm/evm_crypto.c                |   2 +-
+ security/integrity/ima/ima_fs.c                    |   3 +-
+ sound/core/pcm_lib.c                               |   1 +
+ 47 files changed, 734 insertions(+), 569 deletions(-)
+
+
