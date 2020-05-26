@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D06C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B33C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC4A20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C5020776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521629;
-	bh=kBSF++gb6m4kTRiXsle1v76F4W+mwBGYsEFJVJcd0dA=;
+	s=default; t=1590521636;
+	bh=ICYSVU/X9xqeXGvBRFzKeQSNfyqQXJbdXb38mcw1iL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEaeg8YvmBmOSnjzYUT8dIRH6pzs7Q2/44k+d3wvkfBWT4jnVpSMiscTv1NGA6yf2
-	 3lz80R295mXZ3Cml3ivA4YQC3kU+DrMdyNVVoG2G7WWAEfCYpxrhlQP+R13DEKJh5V
-	 aBXMsnUEPFI8gFx3ex+ch5tKsKgmWe2p84HNAYQk=
+	b=oorTrsXF95HdYpLiKVe/LeM6IPJNCNsGwtuyNVOqNjmZqV71sJjTHI3mvNkm/ZfSD
+	 aTM7TWNJwdkqI6jKs/uch1OPGxSsptO9WlR0V7Ye36k3rdJSIxpbOK5RShVaiCdJel
+	 nZ9zZQKopbx9bz2QubxzsZQVj6ezV5nCToQxOaS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391577AbgEZTds (ORCPT
+        id S2404500AbgEZTdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48488 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389678AbgEZSz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:56 -0400
+        id S2389644AbgEZSzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0155D208B8;
-        Tue, 26 May 2020 18:55:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46B7A208B3;
+        Tue, 26 May 2020 18:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519355;
-        bh=kBSF++gb6m4kTRiXsle1v76F4W+mwBGYsEFJVJcd0dA=;
+        s=default; t=1590519347;
+        bh=ICYSVU/X9xqeXGvBRFzKeQSNfyqQXJbdXb38mcw1iL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0H8tOPrnmvs964ksSHKXaiVwIeNELiOv/M+zj4F6imOu82b/pOJrMHJE3TPZSBnkz
-         jI6NcN7PSiIsV/vTeo0DyPI/BHJTbmaiNPXJ1nZBkObjpiLQ0un5PhYLe75qpizoEE
-         zo1KG10csjxunPIBPEPNfgvXsSKnYUPL6b4/kfq0=
+        b=B5HeTyAgALG5GEYjxBPkuP8g0c4WFEjjZeEz9R1GQo6AhOLXL9h7cuFrl0bMJHjdM
+         SPqStbq9kXEsNBKgHrdavN67cVni1u5VBgPSpUVaa2l30sgegJ61fRShh/Y1VT/Mrv
+         7eIKiCr5dmZSgt1OVprSXXAEEIp8C+b4VX0GXhVc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, greg@kroah.com
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.4 35/65] l2tp: fix racy socket lookup in l2tp_ip and l2tp_ip6 bind()
-Date:   Tue, 26 May 2020 20:52:54 +0200
-Message-Id: <20200526183918.432782150@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>
+Subject: [PATCH 4.4 32/65] platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+Date:   Tue, 26 May 2020 20:52:51 +0200
+Message-Id: <20200526183917.810880502@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -60,202 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit d5e3a190937a1e386671266202c62565741f0f1a upstream.
+commit 98e2630284ab741804bd0713e932e725466f2f84 upstream.
 
-It's not enough to check for sockets bound to same address at the
-beginning of l2tp_ip{,6}_bind(): even if no socket is found at that
-time, a socket with the same address could be bound before we take
-the l2tp lock again.
+Currently the kfree of output.pointer can be potentially freeing
+an uninitalized pointer in the case where out_data is NULL. Fix this
+by reworking the case where out_data is not-null to perform the
+ACPI status check and also the kfree of outpoint.pointer in one block
+and hence ensuring the pointer is only freed when it has been used.
 
-This patch moves the lookup right before inserting the new socket, so
-that no change can ever happen to the list between address lookup and
-socket insertion.
+Also replace the if (ptr != NULL) idiom with just if (ptr).
 
-Care is taken to avoid side effects on the socket in case of failure.
-That is, modifications of the socket are done after the lookup, when
-binding is guaranteed to succeed, and before releasing the l2tp lock,
-so that concurrent lookups will always see fully initialised sockets.
-
-For l2tp_ip, 'ret' is set to -EINVAL before checking the SOCK_ZAPPED
-bit. Error code was mistakenly set to -EADDRINUSE on error by commit
-32c231164b76 ("l2tp: fix racy SOCK_ZAPPED flag check in l2tp_ip{,6}_bind()").
-Using -EINVAL restores original behaviour.
-
-For l2tp_ip6, the lookup is now always done with the correct bound
-device. Before this patch, when binding to a link-local address, the
-lookup was done with the original sk->sk_bound_dev_if, which was later
-overwritten with addr->l2tp_scope_id. Lookup is now performed with the
-final sk->sk_bound_dev_if value.
-
-Finally, the (addr_len >= sizeof(struct sockaddr_in6)) check has been
-dropped: addr is a sockaddr_l2tpip6 not sockaddr_in6 and addr_len has
-already been checked at this point (this part of the code seems to have
-been copy-pasted from net/ipv6/raw.c).
-
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
+Fixes: ff0e9f26288d ("platform/x86: alienware-wmi: Correct a memory leak")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_ip.c  |   27 ++++++++++++---------------
- net/l2tp/l2tp_ip6.c |   43 ++++++++++++++++++++-----------------------
- 2 files changed, 32 insertions(+), 38 deletions(-)
 
---- a/net/l2tp/l2tp_ip.c
-+++ b/net/l2tp/l2tp_ip.c
-@@ -269,15 +269,9 @@ static int l2tp_ip_bind(struct sock *sk,
- 	if (addr->l2tp_family != AF_INET)
- 		return -EINVAL;
+---
+ drivers/platform/x86/alienware-wmi.c |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+--- a/drivers/platform/x86/alienware-wmi.c
++++ b/drivers/platform/x86/alienware-wmi.c
+@@ -449,23 +449,22 @@ static acpi_status alienware_hdmi_comman
  
--	ret = -EADDRINUSE;
--	read_lock_bh(&l2tp_ip_lock);
--	if (__l2tp_ip_bind_lookup(net, addr->l2tp_addr.s_addr,
--				  sk->sk_bound_dev_if, addr->l2tp_conn_id))
--		goto out_in_use;
+ 	input.length = (acpi_size) sizeof(*in_args);
+ 	input.pointer = in_args;
+-	if (out_data != NULL) {
++	if (out_data) {
+ 		output.length = ACPI_ALLOCATE_BUFFER;
+ 		output.pointer = NULL;
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
+ 					     command, &input, &output);
+-	} else
++		if (ACPI_SUCCESS(status)) {
++			obj = (union acpi_object *)output.pointer;
++			if (obj && obj->type == ACPI_TYPE_INTEGER)
++				*out_data = (u32)obj->integer.value;
++		}
++		kfree(output.pointer);
++	} else {
+ 		status = wmi_evaluate_method(WMAX_CONTROL_GUID, 1,
+ 					     command, &input, NULL);
 -
--	read_unlock_bh(&l2tp_ip_lock);
--
- 	lock_sock(sk);
-+
-+	ret = -EINVAL;
- 	if (!sock_flag(sk, SOCK_ZAPPED))
- 		goto out;
- 
-@@ -294,14 +288,22 @@ static int l2tp_ip_bind(struct sock *sk,
- 		inet->inet_rcv_saddr = inet->inet_saddr = addr->l2tp_addr.s_addr;
- 	if (chk_addr_ret == RTN_MULTICAST || chk_addr_ret == RTN_BROADCAST)
- 		inet->inet_saddr = 0;  /* Use device */
--	sk_dst_reset(sk);
- 
-+	write_lock_bh(&l2tp_ip_lock);
-+	if (__l2tp_ip_bind_lookup(net, addr->l2tp_addr.s_addr,
-+				  sk->sk_bound_dev_if, addr->l2tp_conn_id)) {
-+		write_unlock_bh(&l2tp_ip_lock);
-+		ret = -EADDRINUSE;
-+		goto out;
-+	}
-+
-+	sk_dst_reset(sk);
- 	l2tp_ip_sk(sk)->conn_id = addr->l2tp_conn_id;
- 
--	write_lock_bh(&l2tp_ip_lock);
- 	sk_add_bind_node(sk, &l2tp_ip_bind_table);
- 	sk_del_node_init(sk);
- 	write_unlock_bh(&l2tp_ip_lock);
-+
- 	ret = 0;
- 	sock_reset_flag(sk, SOCK_ZAPPED);
- 
-@@ -309,11 +311,6 @@ out:
- 	release_sock(sk);
- 
- 	return ret;
--
--out_in_use:
--	read_unlock_bh(&l2tp_ip_lock);
--
--	return ret;
- }
- 
- static int l2tp_ip_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
---- a/net/l2tp/l2tp_ip6.c
-+++ b/net/l2tp/l2tp_ip6.c
-@@ -278,6 +278,7 @@ static int l2tp_ip6_bind(struct sock *sk
- 	struct sockaddr_l2tpip6 *addr = (struct sockaddr_l2tpip6 *) uaddr;
- 	struct net *net = sock_net(sk);
- 	__be32 v4addr = 0;
-+	int bound_dev_if;
- 	int addr_type;
- 	int err;
- 
-@@ -296,13 +297,6 @@ static int l2tp_ip6_bind(struct sock *sk
- 	if (addr_type & IPV6_ADDR_MULTICAST)
- 		return -EADDRNOTAVAIL;
- 
--	err = -EADDRINUSE;
--	read_lock_bh(&l2tp_ip6_lock);
--	if (__l2tp_ip6_bind_lookup(net, &addr->l2tp_addr,
--				   sk->sk_bound_dev_if, addr->l2tp_conn_id))
--		goto out_in_use;
--	read_unlock_bh(&l2tp_ip6_lock);
--
- 	lock_sock(sk);
- 
- 	err = -EINVAL;
-@@ -312,28 +306,25 @@ static int l2tp_ip6_bind(struct sock *sk
- 	if (sk->sk_state != TCP_CLOSE)
- 		goto out_unlock;
- 
-+	bound_dev_if = sk->sk_bound_dev_if;
-+
- 	/* Check if the address belongs to the host. */
- 	rcu_read_lock();
- 	if (addr_type != IPV6_ADDR_ANY) {
- 		struct net_device *dev = NULL;
- 
- 		if (addr_type & IPV6_ADDR_LINKLOCAL) {
--			if (addr_len >= sizeof(struct sockaddr_in6) &&
--			    addr->l2tp_scope_id) {
--				/* Override any existing binding, if another
--				 * one is supplied by user.
--				 */
--				sk->sk_bound_dev_if = addr->l2tp_scope_id;
--			}
-+			if (addr->l2tp_scope_id)
-+				bound_dev_if = addr->l2tp_scope_id;
- 
- 			/* Binding to link-local address requires an
--			   interface */
--			if (!sk->sk_bound_dev_if)
-+			 * interface.
-+			 */
-+			if (!bound_dev_if)
- 				goto out_unlock_rcu;
- 
- 			err = -ENODEV;
--			dev = dev_get_by_index_rcu(sock_net(sk),
--						   sk->sk_bound_dev_if);
-+			dev = dev_get_by_index_rcu(sock_net(sk), bound_dev_if);
- 			if (!dev)
- 				goto out_unlock_rcu;
- 		}
-@@ -348,13 +339,22 @@ static int l2tp_ip6_bind(struct sock *sk
+-	if (ACPI_SUCCESS(status) && out_data != NULL) {
+-		obj = (union acpi_object *)output.pointer;
+-		if (obj && obj->type == ACPI_TYPE_INTEGER)
+-			*out_data = (u32) obj->integer.value;
  	}
- 	rcu_read_unlock();
- 
--	inet->inet_rcv_saddr = inet->inet_saddr = v4addr;
-+	write_lock_bh(&l2tp_ip6_lock);
-+	if (__l2tp_ip6_bind_lookup(net, &addr->l2tp_addr, bound_dev_if,
-+				   addr->l2tp_conn_id)) {
-+		write_unlock_bh(&l2tp_ip6_lock);
-+		err = -EADDRINUSE;
-+		goto out_unlock;
-+	}
-+
-+	inet->inet_saddr = v4addr;
-+	inet->inet_rcv_saddr = v4addr;
-+	sk->sk_bound_dev_if = bound_dev_if;
- 	sk->sk_v6_rcv_saddr = addr->l2tp_addr;
- 	np->saddr = addr->l2tp_addr;
- 
- 	l2tp_ip6_sk(sk)->conn_id = addr->l2tp_conn_id;
- 
--	write_lock_bh(&l2tp_ip6_lock);
- 	sk_add_bind_node(sk, &l2tp_ip6_bind_table);
- 	sk_del_node_init(sk);
- 	write_unlock_bh(&l2tp_ip6_lock);
-@@ -367,10 +367,7 @@ out_unlock_rcu:
- 	rcu_read_unlock();
- out_unlock:
- 	release_sock(sk);
--	return err;
- 
--out_in_use:
--	read_unlock_bh(&l2tp_ip6_lock);
- 	return err;
+-	kfree(output.pointer);
+ 	return status;
+-
  }
  
+ static ssize_t show_hdmi_cable(struct device *dev,
 
 
