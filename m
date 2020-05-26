@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FD3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1601F20C56
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A080C208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520014;
-	bh=6S1ZVz/Nu5RytmAE3pYQv0MP7oNAREJUuYy1rCPjnqw=;
+	s=default; t=1590520015;
+	bh=5Jw2XWPyAflQbiow2IPI844NGJrnWr7R0NZIMUjNWrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=StUWONUKUR/n6vtRsDZOj/nFCTnz0t85Y2gcE9VZuFl6/6OpAm1H0+/St907uDVju
-	 bHNGyustgbZAvOeskMlwmviwt9SAdsZnNn2PnI+NaddyMD9xFjwjqUF+CdY7fFPiCO
-	 b87TyK3KC9L2GRLdHwJxElNTTt6Ii1SujopzuAGc=
+	b=d3sld+Jk3o86HLTiR1def2XOEXYMHtTk4i55w58uIClIuBfA2w5ORb3WxEOl//7GH
+	 0dIsooigg/chpZBvGBD5sgx2uPruc4CHf+x7nm+uoWL2iPazHhMtZBbUowNL5DGSuQ
+	 VBonjDg2HQvhxmG9/xqc/3W9nAwENYDcA7B2QjTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391555AbgEZTFy (ORCPT
+        id S2390919AbgEZTGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:05:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391039AbgEZTFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:46 -0400
+        id S2391659AbgEZTGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD29F20776;
-        Tue, 26 May 2020 19:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 400FE208B6;
+        Tue, 26 May 2020 19:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519946;
-        bh=6S1ZVz/Nu5RytmAE3pYQv0MP7oNAREJUuYy1rCPjnqw=;
+        s=default; t=1590520006;
+        bh=5Jw2XWPyAflQbiow2IPI844NGJrnWr7R0NZIMUjNWrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1vUQUahlpKw073u36B4W8Jg3PG+mUZF2R/QHAk1IHh5DLH8lK4VGgm5IC/7HmaP5L
-         peNT1Y2xVeW5gQMe1sFTYGgF3Rr4Sb0i5vyPz1W6kYwzcpA6nGFBi1gxqgWITaj+2K
-         e5ZYzQ+VXX5aQkcRpXiiT5qMAVngMHHMpQJOLQ6k=
+        b=0dWgvCespcuoFqChA9HClFLCx8iZmGBrh2sDpWOYQDo2aSDeqS8s8s/tR4qPkmVvY
+         Y/oJHwhAOLbW+6EUDHmWU9S/0vDMkiASTv4p8ONiKsQkH4KcE2GKERYyfLnc8nLJvg
+         DblNQK6Ghdeuiqisk7HxCJfiEb1t0wm3CYTInvf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 79/81] rxrpc: Trace discarded ACKs
-Date:   Tue, 26 May 2020 20:53:54 +0200
-Message-Id: <20200526183935.810869824@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 021/111] HID: multitouch: add eGalaxTouch P80H84 support
+Date:   Tue, 26 May 2020 20:52:39 +0200
+Message-Id: <20200526183934.698397708@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
-References: <20200526183923.108515292@linuxfoundation.org>
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+References: <20200526183932.245016380@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,98 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit d1f129470e6cb79b8b97fecd12689f6eb49e27fe ]
+[ Upstream commit f9e82295eec141a0569649d400d249333d74aa91 ]
 
-Add a tracepoint to track received ACKs that are discarded due to being
-outside of the Tx window.
+Add support for P80H84 touchscreen from eGalaxy:
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+  idVendor           0x0eef D-WAV Scientific Co., Ltd
+  idProduct          0xc002
+  iManufacturer           1 eGalax Inc.
+  iProduct                2 eGalaxTouch P80H84 2019 vDIVA_1204_T01 k4.02.146
+
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/trace/events/rxrpc.h | 35 +++++++++++++++++++++++++++++++++++
- net/rxrpc/input.c            | 12 ++++++++++--
- 2 files changed, 45 insertions(+), 2 deletions(-)
+ drivers/hid/hid-ids.h        | 1 +
+ drivers/hid/hid-multitouch.c | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/include/trace/events/rxrpc.h b/include/trace/events/rxrpc.h
-index 0924119bcfa4..bc5b232440b6 100644
---- a/include/trace/events/rxrpc.h
-+++ b/include/trace/events/rxrpc.h
-@@ -1549,6 +1549,41 @@ TRACE_EVENT(rxrpc_notify_socket,
- 		      __entry->serial)
- 	    );
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 646b98809ed3..ecb5ff8202ef 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -385,6 +385,7 @@
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_7349	0x7349
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_73F7	0x73f7
+ #define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001	0xa001
++#define USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002	0xc002
  
-+TRACE_EVENT(rxrpc_rx_discard_ack,
-+	    TP_PROTO(unsigned int debug_id, rxrpc_serial_t serial,
-+		     rxrpc_seq_t first_soft_ack, rxrpc_seq_t call_ackr_first,
-+		     rxrpc_seq_t prev_pkt, rxrpc_seq_t call_ackr_prev),
-+
-+	    TP_ARGS(debug_id, serial, first_soft_ack, call_ackr_first,
-+		    prev_pkt, call_ackr_prev),
-+
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int,	debug_id	)
-+		    __field(rxrpc_serial_t,	serial		)
-+		    __field(rxrpc_seq_t,	first_soft_ack)
-+		    __field(rxrpc_seq_t,	call_ackr_first)
-+		    __field(rxrpc_seq_t,	prev_pkt)
-+		    __field(rxrpc_seq_t,	call_ackr_prev)
-+			     ),
-+
-+	    TP_fast_assign(
-+		    __entry->debug_id		= debug_id;
-+		    __entry->serial		= serial;
-+		    __entry->first_soft_ack	= first_soft_ack;
-+		    __entry->call_ackr_first	= call_ackr_first;
-+		    __entry->prev_pkt		= prev_pkt;
-+		    __entry->call_ackr_prev	= call_ackr_prev;
-+			   ),
-+
-+	    TP_printk("c=%08x r=%08x %08x<%08x %08x<%08x",
-+		      __entry->debug_id,
-+		      __entry->serial,
-+		      __entry->first_soft_ack,
-+		      __entry->call_ackr_first,
-+		      __entry->prev_pkt,
-+		      __entry->call_ackr_prev)
-+	    );
-+
- #endif /* _TRACE_RXRPC_H */
+ #define USB_VENDOR_ID_ELAN		0x04f3
+ #define USB_DEVICE_ID_TOSHIBA_CLICK_L9W	0x0401
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 362805ddf377..03c720b47306 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -1922,6 +1922,9 @@ static const struct hid_device_id mt_devices[] = {
+ 	{ .driver_data = MT_CLS_EGALAX_SERIAL,
+ 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+ 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_A001) },
++	{ .driver_data = MT_CLS_EGALAX,
++		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
++			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
  
- /* This part must be outside protection */
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index d9beb28fc32f..4cc3b54ebc49 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -879,8 +879,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 
- 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
- 	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq))
-+	    before(prev_pkt, call->ackr_prev_seq)) {
-+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+					   first_soft_ack, call->ackr_first_seq,
-+					   prev_pkt, call->ackr_prev_seq);
- 		return;
-+	}
- 
- 	buf.info.rxMTU = 0;
- 	ioffset = offset + nr_acks + 3;
-@@ -892,8 +896,12 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
- 
- 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
- 	if (before(first_soft_ack, call->ackr_first_seq) ||
--	    before(prev_pkt, call->ackr_prev_seq))
-+	    before(prev_pkt, call->ackr_prev_seq)) {
-+		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+					   first_soft_ack, call->ackr_first_seq,
-+					   prev_pkt, call->ackr_prev_seq);
- 		goto out;
-+	}
- 	call->acks_latest_ts = skb->tstamp;
- 	call->acks_latest = sp->hdr.serial;
- 
+ 	/* Elitegroup panel */
+ 	{ .driver_data = MT_CLS_SERIAL,
 -- 
 2.25.1
 
