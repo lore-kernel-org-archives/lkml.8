@@ -2,68 +2,73 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFCEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD88B2078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9276D2078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uoMTFB4J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjnwkQFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgEZOrx (ORCPT
+        id S1729473AbgEZOtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:47:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
+        Tue, 26 May 2020 10:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726437AbgEZOrw (ORCPT
+        with ESMTP id S1727990AbgEZOtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:47:52 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466E7C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:47:52 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id b6so20742719qkh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:47:52 -0700 (PDT)
+        Tue, 26 May 2020 10:49:10 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B2EC03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:49:10 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id j3so20615245ilk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DF52Yl3w2y2rZvHSbpSmCXcEBNFth4QYKFFksKvfyHA=;
-        b=uoMTFB4Jq9fuHWg38dVBHhBsx0erHTJlOdrJT8Y+Zur+CTH9QlKZ/LDlXJa9U5YAEX
-         WpQk/NcZ1KkxyJ4+QrkQqCcnBpIzuWWxHCzXNL+6oCsQp5HFkWDISaMRp8AATPLqyWH3
-         roGY5zkVxoDaZkW3kVKC1rQIRAo1Y1671HGukCqXkTZNh1awtqAGZ9PaNzVISYlamSwX
-         0kUfbcnhc2I8CF5IvNOogiub9I3OHbQp+a0LISEY23XdAeY4fKUlxsVB39Im19kUs+sX
-         TVjNYfwIjSKjBbw0suCxhvMT/WoBKDstub4MKtrg5bDXS9Xtircs1G15QyjnIyoPMZ9a
-         p4eA==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=75Cv5QlDFeWUxdwMekB0M6x6yiG8Rq+IvfwgTddBGqc=;
+        b=ZjnwkQFRu1xHVc9KQkeWddNmjar+smTcLF2oWn9u4buwmL5x3/E4gd/KgoukZWqCcc
+         MsYokKK8l0cdxrLj4R9bqbV14KgkgYbIRANTJJYfoPHtjm/y6z76cUoD9CDmh7Ss9BSO
+         zAlmMkr3a9/DOv+AoWAOExGuKTSuO+g+z9cFMxXxkiAZuydaAxBankwmdlFQxD5YY+Wd
+         i9J9A4REqU4i3vMjjmB+N7vI6fXKZTwW8VdFRtpH/KfrJdZSkH6Ji8bnsY3JYbugLp+a
+         t8IfdM16KhyL9Yn0Ly8xRkJJHuzhij1F6D7TAQZ7ulRYnYDiAmZPq57sqf97WJGG/E4g
+         skZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=DF52Yl3w2y2rZvHSbpSmCXcEBNFth4QYKFFksKvfyHA=;
-        b=IoKJ5KWgtbo0ecJJ64YecjfxX1I9YlaW5qoYJ6QSh/QshijeV3PrVUtideAOK5E0A9
-         pZnf8/Is6saCVS5lEoudA/ZjY52UgyoUxA1LAsauRLmCuA2n8ILihBrBdanvLOElGXbQ
-         hdvIW1KZiiciD9sVIELSv7bgydTHqSKrBCgi2/9iPggkkM7DsYr/S3OgE5P4yeck6uBt
-         JhPRFnQbwe71Xs4MdAyzFWoG8mgNkhRQOApQ58pc0PY9y5uEPBJ0K6e+HoZ05FUFjxSK
-         FTclgQs8yDq1kfFypgzDZGU2fs+ZBGOpq+K2jrvugHTL7qdNZWd3c5EKJ2h8VwgwoImg
-         HXiQ==
-X-Gm-Message-State: AOAM530bjglT0CrXKkAgFBahKl/e+/dQh+kPSI+/4qLj6iqRw4JcOIDY
-        qYnRd6XMVcQachaGSviwl6M=
-X-Google-Smtp-Source: ABdhPJxgaF6EiLvLMP9AVUuWiD8h4H9f1puyBPFieaz59Jb5Beh0O26mDaWvCpahZ9QLmdtMqy2zeg==
-X-Received: by 2002:a37:7904:: with SMTP id u4mr1723991qkc.297.1590504471446;
-        Tue, 26 May 2020 07:47:51 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id b189sm7453670qkg.110.2020.05.26.07.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 07:47:50 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 26 May 2020 10:47:48 -0400
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=75Cv5QlDFeWUxdwMekB0M6x6yiG8Rq+IvfwgTddBGqc=;
+        b=fw5dgM6ydfXBjA2oRFDGfhq9sSjVnLZDBZOuuupnKzHudzbjaKBPh9crHGnUpy7CMi
+         1KujnnIJXY0RJ0ujZWjid3zZ+qAygod89JicflY06QBrYNvPxfquQtS7LlXd+LhF+Pyj
+         TsOJ3/M2UT/5iTsHeWqFB2wHPPhaRCiuf/FXyIwQoylQsQasjSH38919IPn2OG+2bt3z
+         9G+lGN8LPboVkKycqGbAxetAyq3p21BMKdT/8TRJmCKsGuyS36o8dlIQY4dgCnMcAZZN
+         YlfbXnQrKNj4pERy2PpDKtVRku3ExJ6l6n6GDe282wuw6sy7qkWvpDCyIEBLOF2v8NrI
+         SXhw==
+X-Gm-Message-State: AOAM531OJYXdoTZOJzrpQOnafVjkdz/waMyW4tf8LZIgAOMT2RldlXlS
+        +rch9x3fu8EvsOV4pKohH+B2FnFqU5rVgZ+Ki5I=
+X-Google-Smtp-Source: ABdhPJwgh0NLIkL350xhsjlt8C3EUTf5EDVit6R9S6h6OmR9vkR1LlII1XbeuGMr0QxdSozYOKH71ja2U9wRGMprcd4=
+X-Received: by 2002:a92:de0a:: with SMTP id x10mr1492196ilm.226.1590504549289;
+ Tue, 26 May 2020 07:49:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200524212816.243139-1-nivedita@alum.mit.edu>
+ <20200525225918.1624470-1-nivedita@alum.mit.edu> <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
+ <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
+ <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com> <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
+In-Reply-To: <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 26 May 2020 16:48:58 +0200
+Message-ID: <CA+icZUWTKJ=-OGJPzqm6HNQMkB1uS_B0ydU-9Xa035wB7vA4iw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
+ compressed kernel
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
@@ -74,29 +79,236 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Daniel Kiper <daniel.kiper@oracle.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
- compressed kernel
-Message-ID: <20200526144748.GA2190602@rani.riverdale.lan>
-References: <20200524212816.243139-1-nivedita@alum.mit.edu>
- <20200525225918.1624470-1-nivedita@alum.mit.edu>
- <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
- <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
- <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com>
- <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 02:44:29PM +0200, Sedat Dilek wrote:
-> 
+On Tue, May 26, 2020 at 2:44 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Tue, May 26, 2020 at 2:33 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Tue, May 26, 2020 at 2:30 PM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > On Tue, 26 May 2020 at 14:29, Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > > >
+> > > > On Tue, May 26, 2020 at 12:59 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > > > >
+> > > > > The compressed kernel currently contains bogus runtime relocations in
+> > > > > the startup code in head_{32,64}.S, which are generated by the linker,
+> > > > > but must not actually be processed at runtime.
+> > > > >
+> > > > > This generates warnings when linking with the BFD linker, and errors
+> > > > > with LLD, which defaults to erroring on runtime relocations in read-only
+> > > > > sections. It also requires the -z noreloc-overflow hack for the 64-bit
+> > > > > kernel, which prevents us from linking it as -pie on an older BFD linker
+> > > > > (<= 2.26) or on LLD, because the locations that are to be apparently
+> > > > > relocated are only 32-bits in size and so cannot normally have
+> > > > > R_X86_64_RELATIVE relocations.
+> > > > >
+> > > > > This series aims to get rid of these relocations. It is based on
+> > > > > efi/next, where the latest patches touch the head code to eliminate the
+> > > > > global offset table.
+> > > > >
+> > > > > The first patch is an independent fix for LLD, to avoid an orphan
+> > > > > section in arch/x86/boot/setup.elf.
+> > > > >
+> > > > > The second patch gets rid of almost all the relocations. It uses
+> > > > > standard PIC addressing technique for 32-bit, i.e. loading a register
+> > > > > with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+> > > > > references to access variables. For 64-bit, there is 32-bit code that
+> > > > > cannot use RIP-relative addressing, and also cannot use the 32-bit
+> > > > > method, since GOTOFF references are 64-bit only. This is instead handled
+> > > > > using a macro to replace a reference like gdt with (gdt-startup_32)
+> > > > > instead. The assembler will generate a PC32 relocation entry, with
+> > > > > addend set to (.-startup_32), and these will be replaced with constants
+> > > > > at link time. This works as long as all the code using such references
+> > > > > lives in the same section as startup_32, i.e. in .head.text.
+> > > > >
+> > > > > The third patch addresses a remaining issue with the BFD linker, which
+> > > > > insists on generating runtime relocations for absolute symbols. We use
+> > > > > z_input_len and z_output_len, defined in the generated piggy.S file, as
+> > > > > symbols whose absolute "addresses" are actually the size of the
+> > > > > compressed payload and the size of the decompressed kernel image
+> > > > > respectively. LLD does not generate relocations for these two symbols,
+> > > > > but the BFD linker does, prior to the upcoming 2.35. To get around this,
+> > > > > piggy.S is extended to also define two u32 variables (in .rodata) with
+> > > > > the lengths, and the head code is modified to use those instead of the
+> > > > > symbol addresses.
+> > > > >
+> > > > > An alternative way to handle z_input_len/z_output_len would be to just
+> > > > > include piggy.S in head_{32,64}.S instead of as a separate object file,
+> > > > > since the GNU assembler doesn't generate relocations for symbols set to
+> > > > > constants.
+> > > > >
+> > > > > The last patch adds a check in the linker script to ensure that no
+> > > > > runtime relocations get reintroduced. Since the GOT has been eliminated
+> > > > > as well, the compressed kernel has no runtime relocations whatsoever any
+> > > > > more.
+> > > > >
+> > > > > Changes from v1:
+> > > > > - Add .text.* to setup.ld instead of just .text.startup
+> > > > > - Rename the la() macro introduced in the second patch for 64-bit to
+> > > > >   rva(), and rework the explanatory comment.
+> > > > > - In the last patch, check both .rel.dyn and .rela.dyn, instead of just
+> > > > >   one per arch.
+> > > > >
+> > > >
+> > > > Hi,
+> > > >
+> > > > I would like to test this patchset v2 on top of Linux v5.7-rc7 together with:
+> > > >
+> > > > [1] x86/boot: Discard .discard.unreachable for arch/x86/boot/compressed/vmlinux
+> > > > [2] x86/boot: Correct relocation destination on old linkers
+> > > >
+> > > > I tried to pull efi/next on top of Linux v5.7-rc7 and cleaned up the
+> > > > merge problems, but I am not sure I did it correctly.
+> > > > So, which patches are really relevant from efi/next?
+> > > >
+> > > > What's your suggestions?
+> > > >
+> > >
+> > > efi/next is here:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git/log/?h=next
+> > >
+> > > You'll need the top 3 patches.
+> >
+> > Thanks /o\.
+> >
+> > - Sedat -
+>
 > Are those diffs correct when using "x86/boot: Correct relocation
 > destination on old linkers"?
-> 
+>
+> $ cat ../head_32_S.diff
+> diff --cc arch/x86/boot/compressed/head_32.S
+> index 064e895bad92,03557f2174bf..000000000000
+> --- a/arch/x86/boot/compressed/head_32.S
+> +++ b/arch/x86/boot/compressed/head_32.S
+> @@@ -49,13 -49,17 +49,14 @@@
+>    * Position Independent Executable (PIE) so that linker won't optimize
+>    * R_386_GOT32X relocation to its fixed symbol address.  Older
+>    * linkers generate R_386_32 relocations against locally defined symbols,
+> -  * _bss, _ebss, in PIE.  It isn't wrong, just suboptimal compared
+>  - * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
+>  - * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
+> ++ * _bss, _ebss, _end in PIE.  It isn't wrong, just suboptimal compared
+>  + * to R_386_RELATIVE.  But the x86 kernel fails to properly handle
+>    * R_386_32 relocations when relocating the kernel.  To generate
+> -  * R_386_RELATIVE relocations, we mark _bss and _ebss as hidden:
+>  - * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
+>  - * hidden:
+> ++ * R_386_RELATIVE relocations, we mark _bss, _ebss and _end as hidden:
+>    */
+>         .hidden _bss
+>         .hidden _ebss
+>  -      .hidden _got
+>  -      .hidden _egot
+> +       .hidden _end
+>
+>         __HEAD
+>   SYM_FUNC_START(startup_32)
+>
+> $ cat ../head_64_S.diff
+> diff --cc arch/x86/boot/compressed/head_64.S
+> index 4b7ad1dfbea6,76d1d64d51e3..000000000000
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@@ -40,34 -40,11 +40,35 @@@
+>    */
+>         .hidden _bss
+>         .hidden _ebss
+>  -      .hidden _got
+>  -      .hidden _egot
+> +       .hidden _end
+>
+>         __HEAD
+>  +
+>  +/*
+>  + * This macro gives the relative virtual address of X, i.e. the offset of X
+>  + * from startup_32. This is the same as the link-time virtual address of X,
+>  + * since startup_32 is at 0, but defining it this way tells the
+>  + * assembler/linker that we do not want the actual run-time address of X. This
+>  + * prevents the linker from trying to create unwanted run-time relocation
+>  + * entries for the reference when the compressed kernel is linked as PIE.
+>  + *
+>  + * A reference X(%reg) will result in the link-time VA of X being stored with
+>  + * the instruction, and a run-time R_X86_64_RELATIVE relocation entry that
+>  + * adds the 64-bit base address where the kernel is loaded.
+>  + *
+>  + * Replacing it with (X-startup_32)(%reg) results in the offset being stored,
+>  + * and no run-time relocation.
+>  + *
+>  + * The macro should be used as a displacement with a base register containing
+>  + * the run-time address of startup_32 [i.e. rva(X)(%reg)], or as an immediate
+>  + * [$ rva(X)].
+>  + *
+>  + * This macro can only be used from within the .head.text section, since the
+>  + * expression requires startup_32 to be in the same section as the code being
+>  + * assembled.
+>  + */
+>  +#define rva(X) ((X) - startup_32)
+>  +
+>         .code32
+>   SYM_FUNC_START(startup_32)
+>         /*
+>
+> Thanks.
+>
 
-It looks ok, but that patch (and even marking the other symbols .hidden)
-should be unnecessary after this series.
+With LLVM/Clang/LLD I see:
+
+  mycompiler -Wp,-MD,arch/x86/boot/compressed/.kernel_info.o.d
+-nostdinc -isystem
+/home/dileks/src/llvm-toolchain/install/lib/clang/10.0.1rc1/include
+-I./arch/x86/include -I./arch/x86/include/generated  -I./include
+-I./arch/x86/include/uapi -I./arch/x86/include/generated/uapi
+-I./include/uapi -I./include/generated/uapi -include
+./include/linux/kconfig.h -D__KERNEL__ -Qunused-arguments -m64 -O2
+-fno-strict-aliasing -fPIE -DDISABLE_BRANCH_PROFILING -mcmodel=small
+-mno-mmx -mno-sse -ffreestanding -fno-stack-protector
+-Wno-address-of-packed-member -Wno-gnu -Wno-pointer-sign
+-fmacro-prefix-map=./= -fno-asynchronous-unwind-tables -include
+hidden.h -D__ASSEMBLY__    -c -o
+arch/x86/boot/compressed/kernel_info.o
+arch/x86/boot/compressed/kernel_info.S
+<built-in>:345:10: fatal error: 'hidden.h' file not found
+#include "hidden.h"
+         ^~~~~~~~~~
+1 error generated.
+make[5]: *** [scripts/Makefile.build:349:
+arch/x86/boot/compressed/kernel_info.o] Error 1
+make[4]: *** [arch/x86/boot/Makefile:114:
+arch/x86/boot/compressed/vmlinux] Error 2
+make[4]: *** Waiting for unfinished jobs....
+
+mycompiler is a wrapper-script to use ccache * clang-10 as compiler.
+
+patchset to previous build:
+
+$ git log --no-merges --oneline 5.7.0-rc7-1-amd64-clang..5.7.0-rc7-2-amd64-clang
+8b74901cb9e5 (for-5.7/x86-boot-remove-runtime-relocations-from-compressed-kernel-v2-nivedita76)
+x86/boot: Check that there are no runtime relocations
+83fb1bc3b076 x86/boot: Remove runtime relocations from head_{32,64}.S
+fede23dacbbd x86/boot: Remove run-time relocations from .head.text code
+3e5ea481b8fb x86/boot: Add .text.* to setup.ld
+bec910ba3d67 x86/boot/compressed: Get rid of GOT fixup code
+be834cee6f39 x86/boot/compressed: Force hidden visibility for all
+symbol references
+9b7c7d8d2d7b x86/boot/compressed: Move .got.plt entries out of the .got section
+ba6a49f806a0 (for-5.7/kbuild-compressed-debug-info) Makefile: support
+compressed debug info
+a1fb11944d11 (for-5.7/x86-boot-nivedita76) x86/boot: Correct
+relocation destination on old linkers
+c70e3890058f (for-5.7/x86-build-maskray) x86/boot: Discard
+.discard.unreachable for arch/x86/boot/compressed/vmlinux
+
+$ find ./ -name hidden.h
+./drivers/firmware/efi/libstub/hidden.h
+./arch/x86/boot/compressed/hidden.h
+
+Any thoughts?
+
+- Sedat -
