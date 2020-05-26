@@ -2,52 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F37C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE36820721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A731520721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521248;
-	bh=eUVjV3AP6pVxx9BUy2BWXmtarhggMcNmDp9jlExEm9A=;
+	s=default; t=1590521253;
+	bh=iOAwMRBSlHy9XiMQy0/QkkEIEB2ri9V80CPULmrxMVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7WRO3E4+CZH/c4RPbIZIym+q58r008fHgSVlGujuu/lI4INUDnYDIkXDa9j7NGgd
-	 k1TsgQVos8tS+RO0r5HQP6c+4qbeGEq+sKIrELUVrFHhIcx7eM+26qsLOJQHbNV2Wd
-	 wqULI5AjL7l+tPY9Fm5hmIrlMlYe4V8X9t6HyRsI=
+	b=YiymtgRuvP+evCvbTVoHEGNDJXUqmoAkjNpxqUbPLyAzdBK/+35pJY0OVY7HM6q+u
+	 WYZoAClXiVQkHRI6VQUHBLgpxZdeSCIa1bmgL6R64/5WFhrjm576CYsQ0bj95Esx/W
+	 nqsCpMcY87G/eXuk9XCPEzWfhAES2QSzMkdb7ROg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392472AbgEZT12 (ORCPT
+        id S2389358AbgEZTEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59930 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:04:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391342AbgEZTEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:20 -0400
+        id S2391321AbgEZTEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98A9C20849;
-        Tue, 26 May 2020 19:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA3C6208B3;
+        Tue, 26 May 2020 19:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519860;
-        bh=eUVjV3AP6pVxx9BUy2BWXmtarhggMcNmDp9jlExEm9A=;
+        s=default; t=1590519845;
+        bh=iOAwMRBSlHy9XiMQy0/QkkEIEB2ri9V80CPULmrxMVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBLvqerzmeDSSJvdJyYUOf98KYmqS91U1PfOftr/VUWytMo2fHlh8HjxLms7oEYw5
-         2LrrDfeblR0V5QRkZ+5uTe+15CWvZIdyBXxIBFJtXSAQ9A7r9gKI7Wq6Y/gp1PGd0y
-         tQ19mtAxsEInNmx1SkeXo3v0SWKubNW5pgkQMGcg=
+        b=uygF6mnmu44+2LXYNRceyW+TN36NBtQTgyvjz0SOBjvv77JxjDDUDg7jDJ9VzW1zQ
+         6118+ll/58SGgEifAKaHw5Jhhx49jrBkeliDy9wkg/PXPVLrieXxfXPfJb0Oni8nFZ
+         Epiap2+T8yvheLW5zodJnSntRk5XEYpO9Lb8rDEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-Subject: [PATCH 4.19 44/81] apparmor: fix potential label refcnt leak in aa_change_profile
-Date:   Tue, 26 May 2020 20:53:19 +0200
-Message-Id: <20200526183931.948240214@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 12/81] iommu/amd: Fix over-read of ACPI UID from IVRS table
+Date:   Tue, 26 May 2020 20:52:47 +0200
+Message-Id: <20200526183927.467526457@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,51 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-commit a0b845ffa0d91855532b50fc040aeb2d8338dca4 upstream.
+[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
 
-aa_change_profile() invokes aa_get_current_label(), which returns
-a reference of the current task's label.
+IVRS parsing code always tries to read 255 bytes from memory when
+retrieving ACPI device path, and makes an assumption that firmware
+provides a zero-terminated string. Both of those are bugs: the entry
+is likely to be shorter than 255 bytes, and zero-termination is not
+guaranteed.
 
-According to the comment of aa_get_current_label(), the returned
-reference must be put with aa_put_label().
-However, when the original object pointed by "label" becomes
-unreachable because aa_change_profile() returns or a new object
-is assigned to "label", reference count increased by
-aa_get_current_label() is not decreased, causing a refcnt leak.
+With Acer SF314-42 firmware these issues manifest visibly in dmesg:
 
-Fix this by calling aa_put_label() before aa_change_profile() return
-and dropping unnecessary aa_get_current_label().
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
+AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
 
-Fixes: 9fcf78cca198 ("apparmor: update domain transitions that are subsets of confinement at nnp")
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The first three lines show how the code over-reads adjacent table
+entries into the UID, and in the last line it even reads garbage data
+beyond the end of the IVRS table itself.
 
+Since each entry has the length of the UID (uidl member of ivhd_entry
+struct), use that for memcpy, and manually add a zero terminator.
+
+Avoid zero-filling hid and uid arrays up front, and instead ensure
+the uid array is always zero-terminated. No change needed for the hid
+array, as it was already properly zero-terminated.
+
+Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
+
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org
+Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/domain.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/security/apparmor/domain.c
-+++ b/security/apparmor/domain.c
-@@ -1338,6 +1338,7 @@ int aa_change_profile(const char *fqname
- 		ctx->nnp = aa_get_label(label);
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 2557ed112bc2..c7d0bb3b4a30 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -1334,8 +1334,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 		}
+ 		case IVHD_DEV_ACPI_HID: {
+ 			u16 devid;
+-			u8 hid[ACPIHID_HID_LEN] = {0};
+-			u8 uid[ACPIHID_UID_LEN] = {0};
++			u8 hid[ACPIHID_HID_LEN];
++			u8 uid[ACPIHID_UID_LEN];
+ 			int ret;
  
- 	if (!fqname || !*fqname) {
-+		aa_put_label(label);
- 		AA_DEBUG("no profile name");
- 		return -EINVAL;
- 	}
-@@ -1356,8 +1357,6 @@ int aa_change_profile(const char *fqname
- 			op = OP_CHANGE_PROFILE;
- 	}
+ 			if (h->type != 0x40) {
+@@ -1352,6 +1352,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			}
  
--	label = aa_get_current_label();
--
- 	if (*fqname == '&') {
- 		stack = true;
- 		/* don't have label_parse() do stacking */
++			uid[0] = '\0';
+ 			switch (e->uidf) {
+ 			case UID_NOT_PRESENT:
+ 
+@@ -1366,8 +1367,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
+ 				break;
+ 			case UID_IS_CHARACTER:
+ 
+-				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
+-				uid[ACPIHID_UID_LEN - 1] = '\0';
++				memcpy(uid, &e->uid, e->uidl);
++				uid[e->uidl] = '\0';
+ 
+ 				break;
+ 			default:
+-- 
+2.25.1
+
 
 
