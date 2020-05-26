@@ -2,183 +2,119 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A93C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04038C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39562206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6505206D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nDx1rAuA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgEZPgh (ORCPT
+        id S2388238AbgEZPgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:36:37 -0400
-Received: from mga12.intel.com ([192.55.52.136]:51208 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgEZPgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:36:37 -0400
-IronPort-SDR: 43cyAXVZHP1C88E8i17p0KAM9JwfSeFRQNqD1P6IvcW+aCOlQK3UjxrTB3dm+2v0nqpmnD+/wT
- 9Wza9nDI37OA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 08:36:36 -0700
-IronPort-SDR: 4EhNy3eDS8wkgCtFNcGOZyBbow78wWY/Ff7B279t7rKURPh8t3+pfsZHOgvKD6XQoj+gUfaPFL
- xphpp55/Tm5Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
-   d="scan'208";a="442123122"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.157]) ([10.237.72.157])
-  by orsmga005.jf.intel.com with ESMTP; 26 May 2020 08:36:33 -0700
-Subject: Re: [PATCH] perf tools: Fix debuginfo search for Ubuntu
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Travis Downs <travis.downs@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20200526152910.1587-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <e6b51637-5713-02fb-4eda-c1f2f0cd8288@intel.com>
-Date:   Tue, 26 May 2020 18:36:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 11:36:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727898AbgEZPgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:36:40 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148ADC03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:36:40 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id w3so15465086qkb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0kOaEeDNNDbr5A18fELJn1A8SP35RyFdZgGb0lfoRlU=;
+        b=nDx1rAuAahvdyIagOM6nr9EhhZhs3kHHpZUQxuiAGyC9v14GLtvEKO+QG+yEblcUiB
+         i78CzO4Ud1CSb+8Hi8B6XtnL6obi/o9t7l59Q9hIcbctV4nodflZcSa1mW2Zg8sOi0VC
+         3wv+6+qhLkD8aaInYPadLCMluxU9MZFS0hLrz3XYgrMzLhJszQSk/HDsfoNYBwZPEFWI
+         0RVPxpCdyu/ia5MbpF4j84bclZjDBm0BWSr9KKVJyDUv0NT5UaZIDBUm1SOBomeutC0V
+         P68/hHC+XUkgvtCnRWfMPd+EuipzLK7hL9IHINil9tdYnJEzzo45EPBxVbF24QGUsVcX
+         lCzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=0kOaEeDNNDbr5A18fELJn1A8SP35RyFdZgGb0lfoRlU=;
+        b=nfb6VkVAfp01W44fnLAEKF4Aq6RusaZWzwJSClzphOzc3w1Ro1We7qxx6NwiW97d0L
+         dE5qNcchxgB+ND3YunTGcrk6LgVrroV+3BEyzlpC5/qaWIsn8qO9Jp4bT8d0lz9wiS6Q
+         5tB+zLzlmoKkuDpY776UYyyz7ANnmSPbBAz7NTYS10QMha7dc4vlBWmtAN57rgsdbZld
+         si7Nig24Jzok9LpTbCV27zv/elt/MyMROU9XjFu0n4MEP7hRFu/bWgfYTFwnjO4wjgfw
+         jJ9whKL+RY5UggJLCy6juckHsQ14EC8TMf3KxYrN1NR8M6RNu/qftCeGjzpgT33EBoDu
+         2saw==
+X-Gm-Message-State: AOAM533o4rhqazmeHydlxG15JB20kWduIalLJ3YfQXNCDr//Gip3aMWN
+        exFVRd8CMtMcbmEjAdck7JY=
+X-Google-Smtp-Source: ABdhPJxqEFAudnxzJDAVNnvuhVkNYeZKTB+d5uG/IqMt1dYt45Rg7t8ylDuhV7tCgA9tT/aF3Ol/dg==
+X-Received: by 2002:a37:dce:: with SMTP id 197mr2023209qkn.250.1590507399282;
+        Tue, 26 May 2020 08:36:39 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d5sm4784878qkj.64.2020.05.26.08.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 08:36:38 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 26 May 2020 11:36:36 -0400
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
+ compressed kernel
+Message-ID: <20200526153636.GD2190602@rani.riverdale.lan>
+References: <20200524212816.243139-1-nivedita@alum.mit.edu>
+ <20200525225918.1624470-1-nivedita@alum.mit.edu>
+ <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
+ <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
+ <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com>
+ <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
+ <20200526144748.GA2190602@rani.riverdale.lan>
+ <CA+icZUUY7a5XGwcQQ511OeoTjOzWbrgF8BZdTrLDK09QWG4hwQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200526152910.1587-1-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <CA+icZUUY7a5XGwcQQ511OeoTjOzWbrgF8BZdTrLDK09QWG4hwQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/05/20 6:29 pm, Adrian Hunter wrote:
-> Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
-> debug symbol files, putting files expected to be in
-> /usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
-> another dso_binary_type.
+On Tue, May 26, 2020 at 04:50:38PM +0200, Sedat Dilek wrote:
+> On Tue, May 26, 2020 at 4:47 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, May 26, 2020 at 02:44:29PM +0200, Sedat Dilek wrote:
+> > >
+> > > Are those diffs correct when using "x86/boot: Correct relocation
+> > > destination on old linkers"?
+> > >
+> >
+> > It looks ok, but that patch (and even marking the other symbols .hidden)
+> > should be unnecessary after this series.
 > 
-> Example on Ubuntu 20.04
+> You mean _bss, _ebss and _end?
 > 
->   Before:
-> 
->     $ perf record -e intel_pt//u uname
->     Linux
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.030 MB perf.data ]
->     $ perf script --call-trace | head -5
->            uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
->            uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
->            uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
->            uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
->            uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
-> 
->   After:
-> 
->     $ perf script --call-trace | head -5
->            uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
->            uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
->            uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
->            uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
->            uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-> 
-> Reported-by: Travis Downs <travis.downs@gmail.com>
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/util/dso.c          | 14 ++++++++++++++
->  tools/perf/util/dso.h          |  1 +
->  tools/perf/util/probe-finder.c |  1 +
->  tools/perf/util/symbol.c       |  2 ++
->  4 files changed, 18 insertions(+)
-> 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index e68e1375e3c0..15b635d6c83c 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -47,6 +47,7 @@ char dso__symtab_origin(const struct dso *dso)
->  		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
->  		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
->  		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
-> +		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
->  		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
->  		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
->  		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
-> @@ -129,6 +130,19 @@ int dso__read_binary_type_filename(const struct dso *dso,
->  		snprintf(filename + len, size - len, "%s", dso->long_name);
->  		break;
->  
-> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-> +		/*
-> +		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
-> +		 * /usr/lib/debug/lib when it is expected to be in
-> +		 * /usr/lib/debug/usr/lib
-> +		 */
-> +		if (strlen(dso->long_name) < 9 ||
-> +		    strncmp(dso->long_name, "/usr/lib/", 9))
-> +			ret = -1;
+> - Sedat -
 
-Oops, pushed send too soon.  That should be:
-
-		if (strlen(dso->long_name) < 9 ||
-		    strncmp(dso->long_name, "/usr/lib/", 9)) {
-			ret = -1;
-			break;
-		}
-
-> +		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-> +		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
-> +		break;
-> +
->  	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
->  	{
->  		const char *last_slash;
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index 42b3a278ac59..8b7958f02609 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -30,6 +30,7 @@ enum dso_binary_type {
->  	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
->  	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
->  	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
-> +	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
->  	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
->  	DSO_BINARY_TYPE__GUEST_KMODULE,
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index e4cff49384f4..55924255c535 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -101,6 +101,7 @@ enum dso_binary_type distro_dwarf_types[] = {
->  	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
->  	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
-> +	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
->  
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 7725c83996f4..44d81f90b604 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -79,6 +79,7 @@ static enum dso_binary_type binary_type_symtab[] = {
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
->  	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
->  	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
-> +	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
->  	DSO_BINARY_TYPE__NOT_FOUND,
->  };
->  
-> @@ -1529,6 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
->  	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
->  	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
->  	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
->  	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
->  	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
->  		return !kmod && dso->kernel == DSO_TYPE_USER;
-> 
-
+Yes. Those .hidden markings are there to ensure that when relocations
+are generated (as they are currently), they're generated as
+R_386_RELATIVE (which uses B+A calculation, with A being the link-time
+virtual address of the symbol, and stored in the relocation field)
+rather than R_386_32 (which uses S+A calculation, and so doesn't work
+without runtime processing). After this patchset there aren't any
+relocations, so while the .hidden markings won't hurt, they won't be
+necessary either.
