@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A882C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3166D20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71914208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519930;
-	bh=bTdwv1vyZUg+549OUWqfF6B+jLil2PTqgnQIUtA4yM4=;
+	s=default; t=1590519934;
+	bh=BWfUhi6QYQqiecRQFU7Lv31BU1wSKaNQc+VwZW0cAFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jL0fR3nzCp3lmWaU2QjCMdDoOgq7I5gqmoGBkPATG9W45BIsqEM7u4c4zd02VyXAz
-	 jge9CphLM8Q+bzNEvxf450L8D6H5z8Xl2sIqX0lNu1QRc+jSxhY2v/5uu7i0qL8nxE
-	 9/T5WZeRSUK3yqiBxXaCQRkOj9uQBsE8eIaBkmsw=
+	b=EBm3JfQOfsbxnnOUnQATvbdNSvAdVyWQFeryM5ioE+DEW5rjdzQyRC7HYVvqA2L3L
+	 VYnJcvfFRttOysYFnoU0djiuZM7/+91c3UfQDjHDLotTez9t3mxSayEN3UFvp61xjk
+	 ffN1RXrZnAgT2KU4LO64YespEbz45ocyFhCwNR3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391031AbgEZTF2 (ORCPT
+        id S2391509AbgEZTFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33254 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:05:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391494AbgEZTFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:21 -0400
+        id S2391501AbgEZTFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5995720873;
-        Tue, 26 May 2020 19:05:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA76420776;
+        Tue, 26 May 2020 19:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519920;
-        bh=bTdwv1vyZUg+549OUWqfF6B+jLil2PTqgnQIUtA4yM4=;
+        s=default; t=1590519923;
+        bh=BWfUhi6QYQqiecRQFU7Lv31BU1wSKaNQc+VwZW0cAFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fit/HQf1EYvkUn7bEFfJkoOa/6TcBqH+5RoDolr+gPWeTdwdI/6lbFVediMOnW3X7
-         T0IXKl8Isbo4Gs2anEgDuTX6WS8aXZLBgbbKrjh4Vajiz85Ul+sySHdXJuoL7x1YJW
-         xpSUDYqXD5yoajmrm6C1Fy7ZY7e+Rauavdo4Yh4g=
+        b=qmp1CtZlDF7+QEe249B8zECTycbyCx4/d+sqPghBTZUYwk9BJFreny7Kjchqw55uo
+         DTg4hVKf2O3Lov7DOjalNtISByuqZIHssXbDeBc8keCjJ56I6hSb7KsZVK2uFqGt9c
+         6pYmKy2EkJqF2yYTPeKSEbWfkao2kMsdQ6usphGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
-        Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 70/81] mei: release me_cl object reference
-Date:   Tue, 26 May 2020 20:53:45 +0200
-Message-Id: <20200526183934.821601135@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Samuel Iglesias Gonsalvez <siglesias@igalia.com>
+Subject: [PATCH 4.19 71/81] ipack: tpci200: fix error return code in tpci200_register()
+Date:   Tue, 26 May 2020 20:53:46 +0200
+Message-Id: <20200526183934.932044758@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,42 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit fc9c03ce30f79b71807961bfcb42be191af79873 upstream.
+commit 133317479f0324f6faaf797c4f5f3e9b1b36ce35 upstream.
 
-Allow me_cl object to be freed by releasing the reference
-that was acquired  by one of the search functions:
-__mei_me_cl_by_uuid_id() or __mei_me_cl_by_uuid()
+Fix to return negative error code -ENOMEM from the ioremap() error handling
+case instead of 0, as done elsewhere in this function.
 
-Cc: <stable@vger.kernel.org>
-Reported-by: 亿一 <teroincn@gmail.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200512223140.32186-1-tomas.winkler@intel.com
+Fixes: 43986798fd50 ("ipack: add error handling for ioremap_nocache")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Samuel Iglesias Gonsalvez <siglesias@igalia.com>
+Link: https://lore.kernel.org/r/20200507094237.13599-1-weiyongjun1@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/client.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/ipack/carriers/tpci200.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/misc/mei/client.c
-+++ b/drivers/misc/mei/client.c
-@@ -276,6 +276,7 @@ void mei_me_cl_rm_by_uuid(struct mei_dev
- 	down_write(&dev->me_clients_rwsem);
- 	me_cl = __mei_me_cl_by_uuid(dev, uuid);
- 	__mei_me_cl_del(dev, me_cl);
-+	mei_me_cl_put(me_cl);
- 	up_write(&dev->me_clients_rwsem);
- }
- 
-@@ -297,6 +298,7 @@ void mei_me_cl_rm_by_uuid_id(struct mei_
- 	down_write(&dev->me_clients_rwsem);
- 	me_cl = __mei_me_cl_by_uuid_id(dev, uuid, id);
- 	__mei_me_cl_del(dev, me_cl);
-+	mei_me_cl_put(me_cl);
- 	up_write(&dev->me_clients_rwsem);
- }
+--- a/drivers/ipack/carriers/tpci200.c
++++ b/drivers/ipack/carriers/tpci200.c
+@@ -309,6 +309,7 @@ static int tpci200_register(struct tpci2
+ 			"(bn 0x%X, sn 0x%X) failed to map driver user space!",
+ 			tpci200->info->pdev->bus->number,
+ 			tpci200->info->pdev->devfn);
++		res = -ENOMEM;
+ 		goto out_release_mem8_space;
+ 	}
  
 
 
