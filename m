@@ -2,126 +2,204 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16767C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4043DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1AC620787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ew3v7vK1"
+	by mail.kernel.org (Postfix) with ESMTP id 12B7D2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 15:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590506490;
+	bh=QAByh4OSefUf5iKj8VcvuLLXIsSRwRrH1mymUqjFuHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=btwhGNHrdCAS9B6PqF3kI83jGbDuBxXSXvduxzQd3na1fkTjQ7JgFPkfwNJruNDho
+	 fltzfmw6SYObl1PH3R0QHaBq8AziaY3VqXkPO1wqgY0aSPSlImo1/EbZcSj22wMTIb
+	 0dTNVGFItvYiJQYfmdb0kMfw4Tz6WBifr2B7UINQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgEZPTb (ORCPT
+        id S1729473AbgEZPV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 11:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54328 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729311AbgEZPTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 11:19:30 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B73EC03E96E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:19:30 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id p12so16357889qtn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 08:19:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hDH2DFAglXWP9IvsKwaFfTJwRoZ4ZUxT5xU4AOWlNtc=;
-        b=ew3v7vK1IiRYKmBo4BlEfAQV0X7Vle4ysiILIAaUadDtUs9RZVZjCFWeVNxUuxzqjw
-         V3J53Ve4+4oHwHSttgYhLJOjAlcixkAfLhcM9hafOeetwThu/J10+z15s9Zh2drODxq2
-         +46Z1+jn0AXkV/K1D7KAjt8B+tqWuySU5D3GWW/Ao+PnsXgFhIJBGYMIRPnZlfmsw2gs
-         KEfuSHDeMej4tQyV3a4FqvPTyUvSP0+1C0Qu61/wsa0bG5PbrORM9tQ9lH8lKzXR2kA5
-         tuztnNH/+5eqraX3pXjo20jap70rt8AW9cVFHkUtD4EwCBzgii229NXnLkzIhnamct60
-         ve5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hDH2DFAglXWP9IvsKwaFfTJwRoZ4ZUxT5xU4AOWlNtc=;
-        b=OdUjpYEJEJjH4WvVLiXmriHzzX/tXV/v6a6FC3GyKRnX4NOWn2vw3L5bz3pEubnwKa
-         QF61dp/i1tzNvd9QLxGo/zZQkVHccHI+/a8O0MmkgDvJyZNLYwg/8xlj7hdwFkk1XodV
-         vQvjWYhwO+K0yNp9mVtMfl9g9xxmIIf4eoXWJCqbAH2VByxJNPYgedLBNOPAsSAkQY8p
-         j+1DyRv6NeaHw70cMDaKpWfhKsRNvaRVT4piPXMl6KcJ2Be/eQAf3ill9A1x7MzEzzQF
-         YgJkvB/3p2ZvzO23D4FjfYWpRs/QxckE6zdBAFwR4mU1nWl4N6i+oFpkTjNDMp1zL8UA
-         Ft5A==
-X-Gm-Message-State: AOAM5320lDLB5ZSj+Z8S+jwcqB8W9ggnjU/sBLBS1hN83Nn9B6iseSTU
-        Ybtz+IjQggXRg4PFy31y/tnVjA==
-X-Google-Smtp-Source: ABdhPJwhJhErE+oCuvfF7C1a9gRtveLbj48wq2YUhRCdsjoG2NGVY4fhqnkQCC2jFoUae1lHzjzsdw==
-X-Received: by 2002:ac8:2bc4:: with SMTP id n4mr1823482qtn.222.1590506369531;
-        Tue, 26 May 2020 08:19:29 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 10sm11741905qkv.136.2020.05.26.08.19.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 08:19:28 -0700 (PDT)
-Date:   Tue, 26 May 2020 11:19:26 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Don Brace <don.brace@microsemi.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Scott Teel <scott.teel@microsemi.com>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        esc.storagedev@microsemi.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: UBSAN: array-index-out-of-bounds in drivers/scsi/hpsa.c:4421:7
-Message-ID: <20200526151926.GC991@lca.pw>
-References: <20200526151416.GB991@lca.pw>
+        Tue, 26 May 2020 11:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729088AbgEZPV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 11:21:27 -0400
+Received: from kernel.org (unknown [87.70.212.59])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B772F20723;
+        Tue, 26 May 2020 15:21:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590506487;
+        bh=QAByh4OSefUf5iKj8VcvuLLXIsSRwRrH1mymUqjFuHs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oBgbUVXKZ39t92u4Ni9pif2r5OeduNYeI/oWf67NOIQfbbWDx1Q9ZTg2lLKGtHidQ
+         FDQgfjrwiLr3QI/AsQYrxSGIYKTzytZLEmoH8wxWAS6Wo3/fSspFMN9GTpENlzWvmO
+         N2c5NrlBL2WfnTeUUG0bqgsnsyly3ZK677wvpsp8=
+Date:   Tue, 26 May 2020 18:21:20 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        elver@google.com, tglx@linutronix.de, paulmck@kernel.org,
+        mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+Message-ID: <20200526152120.GD48741@kernel.org>
+References: <20200517000050.GA87467@roeck-us.net>
+ <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
+ <20200520170306.GG1118872@kernel.org>
+ <6034a1b5-d4f6-c836-142c-9b3b06db3246@roeck-us.net>
+ <20200520195110.GH1118872@kernel.org>
+ <c80c04a4-75d0-6a47-3813-dea9325b6623@roeck-us.net>
+ <20200524123256.GN1118872@kernel.org>
+ <20200526132634.GC27166@willie-the-truck>
+ <20200526140126.GD27166@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526151416.GB991@lca.pw>
+In-Reply-To: <20200526140126.GD27166@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, adding a missing subject line.
+On Tue, May 26, 2020 at 03:01:27PM +0100, Will Deacon wrote:
+> On Tue, May 26, 2020 at 02:26:35PM +0100, Will Deacon wrote:
+> > On Sun, May 24, 2020 at 03:32:56PM +0300, Mike Rapoport wrote:
+> > > On Thu, May 21, 2020 at 04:02:11PM -0700, Guenter Roeck wrote:
+> > > > On 5/20/20 12:51 PM, Mike Rapoport wrote:
+> > > > > On Wed, May 20, 2020 at 12:03:31PM -0700, Guenter Roeck wrote:
+> > > > >> With above patch applied on top of Ira's patch, I get:
+> > > > >>
+> > > > >> BUG: spinlock recursion on CPU#0, S01syslogd/139
+> > > > >>  lock: 0xf5448350, .magic: dead4ead, .owner: S01syslogd/139, .owner_cpu: 0
+> > > > >> CPU: 0 PID: 139 Comm: S01syslogd Not tainted 5.7.0-rc6-next-20200518-00002-gb178d2d56f29-dirty #1
+> > > > >> [f0067a64 :
+> > > > >> do_raw_spin_lock+0xa8/0xd8 ]
+> > > > >> [f00d5034 :
+> > > > >> copy_page_range+0x328/0x804 ]
+> > > > >> [f0025be4 :
+> > > > >> dup_mm+0x334/0x434 ]
+> > > > >> [f0027124 :
+> > > > >> copy_process+0x1224/0x12b0 ]
+> > > > >> [f0027344 :
+> > > > >> _do_fork+0x54/0x30c ]
+> > > > >> [f0027670 :
+> > > > >> do_fork+0x5c/0x6c ]
+> > > > >> [f000de44 :
+> > > > >> sparc_do_fork+0x18/0x38 ]
+> > > > >> [f000b7f4 :
+> > > > >> do_syscall+0x34/0x40 ]
+> > > > >> [5010cd4c :
+> > > > >> 0x5010cd4c ]
+> > > > >>
+> > > > >> Looks like yet another problem.
+> > > > > 
+> > > > > I've checked the patch above on top of the mmots which already has Ira's
+> > > > > patches and it booted fine. I've used sparc32_defconfig to build the
+> > > > > kernel and qemu-system-sparc with default machine and CPU. 
+> > > > > 
+> > > > 
+> > > > Try sparc32_defconfig+SMP.
+> > >  
+> > > I see a differernt problem, but this could be related:
+> > > 
+> > > INIT: version 2.86 booting
+> > > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > > 	(detected by 0, t=5252 jiffies, g=-935, q=3)
+> > > rcu: All QSes seen, last rcu_sched kthread activity 5252 (-68674--73926), jiffies_till_next_fqs=1, root ->qsmask 0x0
+> > > rcu: rcu_sched kthread starved for 5252 jiffies! g-935 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
+> > > rcu: 	Unless rcu_sched kthread gets sufficient CPU time, OOM is now expected behavior.
+> > > rcu: RCU grace-period kthread stack dump:
+> > > rcu_sched       R  running task        0    10      2 0x00000000
+> > > 
+> > > I'm running a bit old debian [1] with qemu-img-sparc.
+> > > 
+> > > My bisect pointed at commit 8c8f3156dd40 ("sparc32: mm: Reduce
+> > > allocation size for PMD and PTE tables"). The commit ID is valid for
+> > > next-20200522.
+> > 
+> > Can you try the diff below please?
+> 
+> Actually, that's racy. New version below!
 
-On Tue, May 26, 2020 at 11:14:16AM -0400, Qian Cai wrote:
-> The commit 64ce60cab246 ("hpsa: correct skipping masked peripherals")
-> trigger an UBSAN warning below.
+Well, both versions worked for me with sparc32_defconfig+SMP build when
+I ran qemu-system-sparc with default machine (SS-5) that does not allow
+SMP.
+
+I could not check with actial SMP because
+qemu-system-sparc -M SS-10 -smp 2 and qemu-system-sparc -M SS-20 -smp 2
+fail early with an exception even in v5.7-rc7...
+
+> Will
 > 
-> When i == 0 in hpsa_update_scsi_devices(),
+> --->8
 > 
-> for (i = 0; i < nphysicals + nlogicals + 1; i++) {
-> ...
->         int phys_dev_index = i - (raid_ctlr_position == 0);
-> 
-> It ends up calling LUN[-1].
-> 
-> &physdev_list->LUN[phys_dev_index]
-> 
-> Should there by a test of underflow to set phys_dev_index == 0 in this case?
-> 
-> [  118.395557][   T13] hpsa can't handle SMP requests
-> [  118.444870][   T13] ================================================================================
-> [  118.486725][   T13] UBSAN: array-index-out-of-bounds in drivers/scsi/hpsa.c:4421:7
-> [  118.521606][   T13] index -1 is out of range for type 'struct ext_report_lun_entry [1024]'
-> [  118.559481][   T13] CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 5.7.0-rc6-next-20200522+ #3
-> [  118.598179][   T13] Hardware name: HP ProLiant BL660c Gen9, BIOS I38 10/17/2018
-> [  118.632882][   T13] Workqueue: events work_for_cpu_fn
-> [  118.656492][   T13] Call Trace:
-> [  118.670899][   T13]  dump_stack+0x10b/0x17f
-> [  118.690216][   T13]  __ubsan_handle_out_of_bounds+0xd2/0x110
-> [  118.712593][  T378] bnx2x 0000:41:00.1: 63.008 Gb/s available PCIe bandwidth (8.0 GT/s PCIe x8 link)
-> [  118.716249][   T13]  hpsa_update_scsi_devices+0x28e3/0x2cc0 [hpsa]
-> [  118.786774][   T13]  hpsa_scan_start+0x228/0x260 [hpsa]
-> [  118.810663][   T13]  ? _raw_spin_unlock_irqrestore+0x6a/0x80
-> [  118.836529][   T13]  do_scsi_scan_host+0x8a/0x110
-> [  118.858104][   T13]  scsi_scan_host+0x222/0x280
-> [  118.879287][   T13]  ? hpsa_scsi_do_inquiry+0xcd/0xe0 [hpsa]
-> [  118.907707][   T13]  hpsa_init_one+0x1b79/0x27c0 [hpsa]
-> [  118.934818][   T13]  ? hpsa_find_device_by_sas_rphy+0xd0/0xd0 [hpsa]
-> [  118.964279][   T13]  local_pci_probe+0x82/0xe0
-> [  118.985405][   T13]  ? pci_name+0x70/0x70
-> [  119.004244][   T13]  work_for_cpu_fn+0x3a/0x60
-> [  119.024672][   T13]  process_one_work+0x49f/0x8f0
-> [  119.046431][   T13]  process_scheduled_works+0x72/0xa0
-> [  119.069906][   T13]  worker_thread+0x463/0x5b0
-> [  119.090347][   T13]  kthread+0x21d/0x240
-> [  119.108531][   T13]  ? pr_cont_work+0xa0/0xa0
-> [  119.128450][   T13]  ? __write_once_size+0x30/0x30
-> [  119.150405][   T13]  ret_from_fork+0x27/0x40
+> diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
+> index c861c0f0df73..068029471aa4 100644
+> --- a/arch/sparc/mm/srmmu.c
+> +++ b/arch/sparc/mm/srmmu.c
+> @@ -363,11 +363,16 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
+>  
+>  	if ((ptep = pte_alloc_one_kernel(mm)) == 0)
+>  		return NULL;
+> +
+>  	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
+> -	if (!pgtable_pte_page_ctor(page)) {
+> -		__free_page(page);
+> -		return NULL;
+> +
+> +	spin_lock(&mm->page_table_lock);
+> +	if (page_ref_inc_return(page) == 2 && !pgtable_pte_page_ctor(page)) {
+> +		page_ref_dec(page);
+> +		ptep = NULL;
+>  	}
+> +	spin_unlock(&mm->page_table_lock);
+> +
+>  	return ptep;
+>  }
+>  
+> @@ -376,7 +381,12 @@ void pte_free(struct mm_struct *mm, pgtable_t ptep)
+>  	struct page *page;
+>  
+>  	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
+> -	pgtable_pte_page_dtor(page);
+> +
+> +	spin_lock(&mm->page_table_lock);
+> +	if (page_ref_dec_return(page) == 1)
+> +		pgtable_pte_page_dtor(page);
+> +	spin_unlock(&mm->page_table_lock);
+> +
+>  	srmmu_free_nocache(ptep, SRMMU_PTE_TABLE_SIZE);
+>  }
+>  
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index c1acc34c1c35..97458119cce8 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -192,6 +192,9 @@ config MEMORY_HOTREMOVE
+>  # Default to 4 for wider testing, though 8 might be more appropriate.
+>  # ARM's adjust_pte (unused if VIPT) depends on mm-wide page_table_lock.
+>  # PA-RISC 7xxx's spinlock_t would enlarge struct page from 32 to 44 bytes.
+> +# SPARC32 allocates multiple pte tables within a single page, and therefore
+> +# a per-page lock leads to problems when multiple tables need to be locked
+> +# at the same time (e.g. copy_page_range()).
+>  # DEBUG_SPINLOCK and DEBUG_LOCK_ALLOC spinlock_t also enlarge struct page.
+>  #
+>  config SPLIT_PTLOCK_CPUS
+> @@ -199,6 +202,7 @@ config SPLIT_PTLOCK_CPUS
+>  	default "999999" if !MMU
+>  	default "999999" if ARM && !CPU_CACHE_VIPT
+>  	default "999999" if PARISC && !PA20
+> +	default "999999" if SPARC32
+>  	default "4"
+>  
+>  config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+
+-- 
+Sincerely yours,
+Mike.
