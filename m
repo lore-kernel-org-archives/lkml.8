@@ -7,98 +7,75 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4241420776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAD6207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:59:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/dXU9fy"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="qKvFKOr4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbgEZH7F (ORCPT
+        id S1731734AbgEZH7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgEZH7E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:59:04 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5D8C03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:59:04 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id q11so7275454wrp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:59:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=zYdjgpNGKkhHUaPVM1/nhRkNBCVbxfKW4NHkKWtwJ2Y=;
-        b=n/dXU9fyQ+2u0G9SXzRKn0Sd6pJTChNHgO3T/qJJlCgWgMb4CS573tIEQx+xoycpt5
-         ZH5fEO/STnba6a5noZgK+uleLYZg24fRK4RpI+M93bAfb7iWvfyTECnKeAx3Hs1Nyy8z
-         3k6qYlbQlDVjbj7whcev/TQosfr+iCL0jQikOosi/J4RO2+fyTg6NguWXboOJsI/tsAm
-         8p2GrWuV0sCQbUNji569BEikqLrJI2tJSONaEZf5CDhmIWZwRenMEDB1rC10eiprVUO7
-         djKXcWdnhf+v+kzsegrbQjmBD4aVi//DZxmrvgOt1Z4TYdJ9h3i+v/dLSIU26jWEA2gk
-         sp8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zYdjgpNGKkhHUaPVM1/nhRkNBCVbxfKW4NHkKWtwJ2Y=;
-        b=oGjGbVafD7iVCrsJZtIJQjpyJ9MvN5Epk2edRA2T19Ho70Q+lKGq69XMOdVsC1EFGL
-         xOjI3E5Az4IQM8TGfTWuG6W776+WhUGkAg4QJxtV77yH3FeIkMU6nHIPWu0qP8kDZiTb
-         CWCg0zsItAO4h+m2rdWX7DYDw66Cm/4b/OdEjLD7fHGLLvIVTi2DqcQAAFU3bOmPBiV+
-         jlRDUo6e349zM+mTp45VG3Q4Gnxy6i9eFHwP6/Z1UZOxTDUcEVPlHPbp8Bp2ycgdBPXq
-         H0qd6f14QzcHB27PXk8AhwioHW0X8qvPp5Go/IXhfn/ecH5DWUOUrmOo+embM2l+OZ7J
-         SUwQ==
-X-Gm-Message-State: AOAM532vqObHgAZcD9eiCFDxktktalkNGk29uaOkZ2TGm1lIFKB84tOi
-        kKYbzRF/IsLokeBbwJlLW0ENbg==
-X-Google-Smtp-Source: ABdhPJzjh8siprJLpdOwjtzMP60lf7tTZJoWmJAVMzTka0tpDJqO/GhIRtY1OB3npRBX5C5TYEDnUw==
-X-Received: by 2002:adf:a51c:: with SMTP id i28mr1970108wrb.78.1590479943335;
-        Tue, 26 May 2020 00:59:03 -0700 (PDT)
-Received: from dell ([95.149.164.102])
-        by smtp.gmail.com with ESMTPSA id d6sm22344913wrj.90.2020.05.26.00.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:59:02 -0700 (PDT)
-Date:   Tue, 26 May 2020 08:59:01 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mfd: stmfx: disable irq in suspend to avoid spurious
- interrupt
-Message-ID: <20200526075901.GG3628@dell>
-References: <20200422090833.9743-1-amelie.delaunay@st.com>
- <20200422090833.9743-4-amelie.delaunay@st.com>
+        Tue, 26 May 2020 03:59:14 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:35505 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726971AbgEZH7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 03:59:14 -0400
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 49WRDv3x0gz9sSs; Tue, 26 May 2020 17:59:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1590479951; bh=y9Dh8QD2sldowdau5z37SlPA9CE0uXq3c+Lcs+yQous=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qKvFKOr4bi6PBmH5CPpjSHqLaLsfjMJlHFldlHQBVeS+7XcOjYOfYTH4di0pdc7Hi
+         FVViWy67aZlWPBRAQGPlYeSxhJYnxAMg6tUrxM7ujmP2xoQhgf6Mx0UN0vM1hJeY7t
+         JvM8uJJGbFh2/CAEX/ygfnuoL2sIBrm+X2QAxmHRutXk9tH3mjlx6udhTPxaPT9II6
+         VPTxAVMeS3Kg+Ml9CWLC5I2cKQR8ZvZT9IzeTqwbN1e+m7RnnK2SqRIwmruJYzVQ3a
+         qOnWFZnPedUSiv7IL6wWd3+Wx1GF6WRLG0IndceBboMAoFmwEvQbSFUs7V1n+5okLr
+         6ncWU8VKADeHA==
+Date:   Tue, 26 May 2020 17:59:04 +1000
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org,
+        akpm@linux-foundation.org, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, pbonzini@redhat.com, sfr@canb.auug.org.au,
+        rppt@linux.ibm.com, aneesh.kumar@linux.ibm.com, msuchanek@suse.de,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kvm@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [linux-next PATCH] mm/gup.c: Convert to use
+ get_user_{page|pages}_fast_only()
+Message-ID: <20200526075904.GE282305@thinks.paulus.ozlabs.org>
+References: <1590396812-31277-1-git-send-email-jrdr.linux@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200422090833.9743-4-amelie.delaunay@st.com>
+In-Reply-To: <1590396812-31277-1-git-send-email-jrdr.linux@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 22 Apr 2020, Amelie Delaunay wrote:
-
-> When STMFX supply is stopped, spurious interrupt can occur. To avoid that,
-> disable the interrupt in suspend before disabling the regulator and
-> re-enable it at the end of resume.
+On Mon, May 25, 2020 at 02:23:32PM +0530, Souptick Joarder wrote:
+> API __get_user_pages_fast() renamed to get_user_pages_fast_only()
+> to align with pin_user_pages_fast_only().
 > 
-> Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  drivers/mfd/stmfx.c       | 6 ++++++
->  include/linux/mfd/stmfx.h | 1 +
->  2 files changed, 7 insertions(+)
+> As part of this we will get rid of write parameter.
+> Instead caller will pass FOLL_WRITE to get_user_pages_fast_only().
+> This will not change any existing functionality of the API.
+> 
+> All the callers are changed to pass FOLL_WRITE.
+> 
+> Also introduce get_user_page_fast_only(), and use it in a few
+> places that hard-code nr_pages to 1.
+> 
+> Updated the documentation of the API.
+> 
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 
-Applied, thanks.
+The arch/powerpc/kvm bits look reasonable.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Reviewed-by: Paul Mackerras <paulus@ozlabs.org>
