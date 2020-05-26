@@ -2,117 +2,196 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15022C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0EB20704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:44:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FWh9bm1Y"
+	by mail.kernel.org (Postfix) with ESMTP id C145620823
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:45:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590515149;
+	bh=Ps4DhrKP7xuN3oWvf+n24VJztP7gLUxaV3Hx/CAeoDo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=YuZff7S0u3WaQdxIxyezqtkwLbUdLKZBLxcAPuwv3hU+X8VVxizDr8hSnpO6CDQ8T
+	 mEus14DQtT8j4GFUCKF7G+QXYNcmZXOu93msqv1fWSEFDAMGTn0Kli9GPX7SK7UQOt
+	 +cR6W23r3ZsaoPAqUsb2+aeyiYiXCTJ4NHJTqYxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388953AbgEZRow (ORCPT
+        id S2389061AbgEZRps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgEZRov (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:44:51 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9BD7C03E96D;
-        Tue, 26 May 2020 10:44:51 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id z15so179969pjb.0;
-        Tue, 26 May 2020 10:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=cljdO69PpR9Yn85c4H83HHV+v26sg/S1OrVInDsaoVw=;
-        b=FWh9bm1YuXT403RedcK+86VXJvsCb0P2MBptBQXYBk1gdGqh5ZRtzLZdBD0RB2QuLX
-         sj5mkppX/ez+KTGqfQS7sW3Canfg+kY6kZQackLhQH7PmdRuZ5lj+lD8QYuXeWGxD/7a
-         DWtr4gNMlD9cG7wwf+FbyhAPHtIIj42I7GK2PVEivppuYX3TsC/j/8YW2y6aob8huntI
-         n6EHBAv7GGXP9gOqQ2k+FeKWKjwiwLHI/oZIih3U8qNWrXKMaOZbIubB5A+uvPqYEYz5
-         7O1p7JQOwYeUx8dVdyQjACUt4G5xDeBOKUxgmaJpdTH45KnX1aBAqyJJjfWKXrDzE5k0
-         T1sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=cljdO69PpR9Yn85c4H83HHV+v26sg/S1OrVInDsaoVw=;
-        b=BdjjlOswayEH3zCHskibiWQRrgpBAy/6obZS1zOl1N7hF5GE0J8U4i0OOALSKd+o5H
-         2xIqslfO30/KJQpVluxpL3yHOPs7F1rYLG2rtVxL6caMLaoWyO3TfQ1X0ao+MTaDdXEQ
-         cS01gEmHOu4s7uOgB8OQwrG2YJ11PJsge45+egG1ng+I/rhGRwxIOF1cKQ3L+qTI8QUx
-         hCLi4FOE2wY56cTnu5XKUd3RrID8qwTArdXZWTpfjTBvd67/R9k7vtQ1IU/NmtFL0TVu
-         TeYx16kHB4ALpsc8WvZPbGV8Y4JKBWftFAS/akPfXmogr0aUJQu+JefVyI4bt4vNwQi9
-         jZjw==
-X-Gm-Message-State: AOAM532IatWUg6jV4rE2InDQGJlWZCSQv5jQp9EFmDhs3wThLkFbJqO6
-        5MiSf1uJJm3mCCK7MQgitio=
-X-Google-Smtp-Source: ABdhPJzuTTSGsv729fFf+ylgFAAzqsB1xWHNricjinAGfuWDAkNrPQbkkEcHeCct8y19F+yZbBYg+A==
-X-Received: by 2002:a17:902:7885:: with SMTP id q5mr2151756pll.320.1590515091291;
-        Tue, 26 May 2020 10:44:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u45sm124194pjb.7.2020.05.26.10.44.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 26 May 2020 10:44:50 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Guenter Roeck <linux@roeck-us.net>, Tejun Heo <tj@kernel.org>
-Subject: [PATCH] topology: Fix cpumask_of_node macro for CONFIG_NEED_MULTIPLE_NODES=n
-Date:   Tue, 26 May 2020 10:44:43 -0700
-Message-Id: <20200526174443.207610-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Tue, 26 May 2020 13:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388794AbgEZRps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 13:45:48 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4412220704;
+        Tue, 26 May 2020 17:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590515147;
+        bh=Ps4DhrKP7xuN3oWvf+n24VJztP7gLUxaV3Hx/CAeoDo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UmXibeH5wL2z8iL7Ot453yspY2o+JCqMpr/AH4BGKXjjKEgXjNNCUjCwRmV/Gaddq
+         PTRJjOz/y+E3oFjXIu7XpxYOISMUZbF1OQ6sXO3S3reZx//Og/xaCPborKojoUckfm
+         hQayLH9DvhWQKma9pAXNZm4FYRGTbPF+8JViDtmc=
+Message-ID: <3860895382201ae7a2eb687070724872e77e347a.camel@kernel.org>
+Subject: Re: [v2] ceph: show max caps in debugfs caps file
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Yanhu Cao <gmayyyha@gmail.com>
+Cc:     idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yanhu Cao <jrcaoyanhu@jd.com>,
+        kbuild test robot <lkp@intel.com>
+Date:   Tue, 26 May 2020 13:45:46 -0400
+In-Reply-To: <20200525025049.4292-1-gmayyyha@gmail.com>
+References: <20200525025049.4292-1-gmayyyha@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following compile error is seen in linux-next if
-NUMA=n and CONFIG_NEED_MULTIPLE_NODES=n.
+On Mon, 2020-05-25 at 10:50 +0800, Yanhu Cao wrote:
+> before
+> ------
+> total		1286
+> avail		1005
+> used		281
+> reserved	0
+> min		1024
+> 
+> after
+> -----
+> total		1286
+> avail		1005
+> used		281
+> limit		261
+> reserved	0
+> min		1024
+> 
 
-  CC      drivers/hwmon/amd_energy.o
-In file included from ../arch/x86/include/asm/cpumask.h:5:0,
-                 from ../arch/x86/include/asm/msr.h:11,
-                 from ../arch/x86/include/asm/processor.h:22,
-                 from ../arch/x86/include/asm/cpu_device_id.h:16,
-                 from ../drivers/hwmon/amd_energy.c:6:
-../drivers/hwmon/amd_energy.c: In function 'amd_energy_read':
-../include/asm-generic/topology.h:51:36: error:
-			void value not ignored as it ought to be
-     #define cpumask_of_node(node) ((void)node, cpu_online_mask)
-../include/linux/cpumask.h:618:72: note:
-			in definition of macro 'cpumask_first_and'
- #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
-                                                                        ^~~~~
-../drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro 'cpumask_of_node'
+The description should explain what this new field actually _means_.
 
-cpumask_of_node() is missing () around the 'node' parameter.
+> Signed-off-by: Yanhu Cao <gmayyyha@gmail.com>
+> Signed-off-by: Yanhu Cao <jrcaoyanhu@jd.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> ---
+>  fs/ceph/caps.c       | 6 ++++--
+>  fs/ceph/debugfs.c    | 8 +++++---
+>  fs/ceph/mds_client.c | 1 +
+>  fs/ceph/mds_client.h | 4 +++-
+>  fs/ceph/super.h      | 2 +-
+>  5 files changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+> index 5f3aa4d607de..17191d6cd3b5 100644
+> --- a/fs/ceph/caps.c
+> +++ b/fs/ceph/caps.c
+> @@ -404,8 +404,8 @@ void ceph_put_cap(struct ceph_mds_client *mdsc, struct ceph_cap *cap)
+>  }
+>  
+>  void ceph_reservation_status(struct ceph_fs_client *fsc,
+> -			     int *total, int *avail, int *used, int *reserved,
+> -			     int *min)
+> +			     int *total, int *avail, int *used, int *limit,
+> +			     int *reserved, int *min)
+>  {
+>  	struct ceph_mds_client *mdsc = fsc->mdsc;
+>  
+> @@ -417,6 +417,8 @@ void ceph_reservation_status(struct ceph_fs_client *fsc,
+>  		*avail = mdsc->caps_avail_count;
+>  	if (used)
+>  		*used = mdsc->caps_use_count;
+> +	if (limit)
+> +		*limit = mdsc->caps_limit;
+>  	if (reserved)
+>  		*reserved = mdsc->caps_reserve_count;
+>  	if (min)
+> diff --git a/fs/ceph/debugfs.c b/fs/ceph/debugfs.c
+> index 481ac97b4d25..617020261902 100644
+> --- a/fs/ceph/debugfs.c
+> +++ b/fs/ceph/debugfs.c
+> @@ -138,16 +138,18 @@ static int caps_show(struct seq_file *s, void *p)
+>  {
+>  	struct ceph_fs_client *fsc = s->private;
+>  	struct ceph_mds_client *mdsc = fsc->mdsc;
+> -	int total, avail, used, reserved, min, i;
+> +	int total, avail, used, limit, reserved, min, i;
+>  	struct cap_wait	*cw;
+>  
+> -	ceph_reservation_status(fsc, &total, &avail, &used, &reserved, &min);
+> +	ceph_reservation_status(fsc, &total, &avail, &used,
+> +				&limit, &reserved, &min);
+>  	seq_printf(s, "total\t\t%d\n"
+>  		   "avail\t\t%d\n"
+>  		   "used\t\t%d\n"
+> +		   "limit\t\t%d\n"
+>  		   "reserved\t%d\n"
+>  		   "min\t\t%d\n\n",
+> -		   total, avail, used, reserved, min);
+> +		   total, avail, used, limit, reserved, min);
+>  	seq_printf(s, "ino                issued           implemented\n");
+>  	seq_printf(s, "-----------------------------------------------\n");
+>  
+> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+> index 7c63abf5bea9..d26bc065f5f5 100644
+> --- a/fs/ceph/mds_client.c
+> +++ b/fs/ceph/mds_client.c
+> @@ -1920,6 +1920,7 @@ int ceph_trim_caps(struct ceph_mds_client *mdsc,
+>  		   int max_caps)
+>  {
+>  	int trim_caps = session->s_nr_caps - max_caps;
+> +	mdsc->caps_limit = max_caps;
+>  
 
-Fixes: b339752d054f ("cpumask: fix spurious cpumask_of_node() on non-NUMA multi-node configs")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tejun Heo <tj@kernel.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- include/asm-generic/topology.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I was thinking that you'd track this in handle_session. Note that
+ceph_trim_caps is called from ceph_reserve_caps as well. There's also
+some delay between calling ceph_trim_caps and actually releasing them,
+so it's not clear to me how one should interpret mdsc->caps_limit. 
 
-diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-index 238873739550..5aa8705df87e 100644
---- a/include/asm-generic/topology.h
-+++ b/include/asm-generic/topology.h
-@@ -48,7 +48,7 @@
-   #ifdef CONFIG_NEED_MULTIPLE_NODES
-     #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
-   #else
--    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
-+    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
-   #endif
- #endif
- #ifndef pcibus_to_node
+What does that value actually _mean_? I think it would be a lot more
+straightforward to have this be the limit sent by the MDS (if any). If
+there is value in tracking it this way then we need to carefully
+document what it means and how it should be interpreted.
+
+>  	dout("trim_caps mds%d start: %d / %d, trim %d\n",
+>  	     session->s_mds, session->s_nr_caps, max_caps, trim_caps);
+> diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
+> index 903d9edfd4bf..840d47976dbb 100644
+> --- a/fs/ceph/mds_client.h
+> +++ b/fs/ceph/mds_client.h
+> @@ -445,7 +445,9 @@ struct ceph_mds_client {
+>  	struct		list_head cap_wait_list;
+>  	int		caps_total_count;    /* total caps allocated */
+>  	int		caps_use_count;      /* in use */
+> -	int		caps_use_max;	     /* max used caps */
+> +	int		caps_use_max;	     /* max used caps,
+> +						limited by client */
+> +	int		caps_limit;          /* limited by mds */
+>  	int		caps_reserve_count;  /* unused, reserved */
+>  	int		caps_avail_count;    /* unused, unreserved */
+>  	int		caps_min_count;      /* keep at least this many
+> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+> index 60aac3aee055..052d7725761d 100644
+> --- a/fs/ceph/super.h
+> +++ b/fs/ceph/super.h
+> @@ -700,7 +700,7 @@ extern void ceph_unreserve_caps(struct ceph_mds_client *mdsc,
+>  			       struct ceph_cap_reservation *ctx);
+>  extern void ceph_reservation_status(struct ceph_fs_client *client,
+>  				    int *total, int *avail, int *used,
+> -				    int *reserved, int *min);
+> +				    int *limit, int *reserved, int *min);
+>  
+>  
+>  
+
 -- 
-2.17.1
+Jeff Layton <jlayton@kernel.org>
 
