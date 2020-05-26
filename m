@@ -2,398 +2,323 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D762075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 22:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 914B82078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 23:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uaiTTtc9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391379AbgEZW7H (ORCPT
+        id S2404500AbgEZXAh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 18:59:07 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:60398 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389565AbgEZW7G (ORCPT
+        Tue, 26 May 2020 19:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389579AbgEZXAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 18:59:06 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 86F55803086D;
-        Tue, 26 May 2020 22:59:02 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IAHkLLPlnR-a; Wed, 27 May 2020 01:59:01 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lee Jones <lee.jones@linaro.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
-Subject: [PATCH RESEND v2] mtd: physmap: Add Baikal-T1 physically mapped ROMs support
-Date:   Wed, 27 May 2020 01:58:48 +0300
-Message-ID: <20200526225849.20985-1-Sergey.Semin@baikalelectronics.ru>
+        Tue, 26 May 2020 19:00:36 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 236BEC061A0F;
+        Tue, 26 May 2020 16:00:36 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id n15so491399pjt.4;
+        Tue, 26 May 2020 16:00:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CCd7Vtb/eQ9Zt//vnQsGWWLBXoCU2zwFDR1s9G+IfPc=;
+        b=uaiTTtc9dI0vOan4RIKV0wMf5/k3LzOSUJth08vgL0DOo94ZtFAZR41yh2AgEi7Y+R
+         +5kKjD/pius9sDnLO0++GL2APlxN0dFYP0OPgNP1qyHIG4muDykXTvkqeUbfzm9NgD3o
+         iQqJY+4MO67++SGLwgnPxplalX2/L5KbV90cSuGoWwjreyc2AQ9uPyW0gpVLQJPcdNDi
+         ciEIz/ACV9SFI4/cSzTtLeoWn1vJ2ovRKpUjxdkLZoM9c0eFW0wbh5wEujUQG3uL/73k
+         2s0+kX9ZbkAWZgwkp7gHR4y/MF/5Wj8mfFxQzwl6BGrNhCxXv1e0+zcQ//n8YjVDFajC
+         8bwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CCd7Vtb/eQ9Zt//vnQsGWWLBXoCU2zwFDR1s9G+IfPc=;
+        b=kpLjuR0JQlktpAgZJVltBjNMkcvlpiStxNkW8ofAiOieCRf8E0bWaiCdIKORr/Cn3+
+         TAuhX87lD4st/ryjyF+w/rYJfBabhe7sTCGi7DmWXa94OFEOgVA+quFEYjDExiiDtgec
+         ADIawLC+fWzI7IvuuRkxGyYeVZSOFduhbDwXiFY52HcIGPhZ5nRtp/nh8uLHxrBewXgA
+         E/70iCeRbtKuw0BTbyM48E26QiL0BjniC2wvnhIQGJn/2/ICNxZfJ1HzrnvLvHy/3aRz
+         hP99FvxaWg9+h+pmcHajcJzF2dmJZcOgrxukV9xPGjC3BhgSggmhwYS0aIh696CO+9aY
+         E79w==
+X-Gm-Message-State: AOAM532vFon4m30JvKNre28T/ZxfXzWp3DB2SWduVrrJw2DyyDPNP0Yx
+        e5scF1thurn2HMVgzzBpDZMrJjxap0U=
+X-Google-Smtp-Source: ABdhPJys9Mh3yxXBue9FLvcm9GHwfvHUOkIO6WHCL4taPoDYotQHL2gWm0yvyQjiGRjGj59vDAZpkA==
+X-Received: by 2002:a17:90a:1b6c:: with SMTP id q99mr1584654pjq.214.1590534035171;
+        Tue, 26 May 2020 16:00:35 -0700 (PDT)
+Received: from [192.168.11.3] (KD106167171201.ppp-bb.dion.ne.jp. [106.167.171.201])
+        by smtp.gmail.com with ESMTPSA id q100sm471944pjc.11.2020.05.26.16.00.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 16:00:34 -0700 (PDT)
+Subject: Re: Some -serious- BPF-related litmus tests
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     luc.maranget@inria.fr, Andrii Nakryiko <andriin@fb.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Peter Zijlstra <peterz@infradead.org>, parri.andrea@gmail.com,
+        will@kernel.org, Boqun Feng <boqun.feng@gmail.com>,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        dlustig@nvidia.com, Joel Fernandes <joel@joelfernandes.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arch@vger.kernel.org
+References: <20200522003850.GA32698@paulmck-ThinkPad-P72>
+ <20200522094407.GK325280@hirez.programming.kicks-ass.net>
+ <20200522143201.GB32434@rowland.harvard.edu>
+ <20200522174352.GJ2869@paulmck-ThinkPad-P72>
+ <006e2bc6-7516-1584-3d8c-e253211c157e@fb.com>
+ <ac799c98-45dd-d056-386f-cbebc7270c0c@gmail.com>
+ <CAEf4BzYGbLfGA=NN=dP1RqDj7yp_Fnu0L-1bgQojPMt0-Y_X=g@mail.gmail.com>
+ <69ed3604-4275-d73e-a5d6-2b70dd877104@gmail.com>
+ <CAEf4BzajE6jCkbBQ+f0cG=Y+vAEPWGNhfOMFVVhoDZWjNV-oGA@mail.gmail.com>
+ <d1113b47-a920-c0e4-9aa4-88781368a26f@gmail.com>
+ <b92f9c0a-826c-d074-5389-8c340f7cccf2@gmail.com>
+ <CAEf4BzZF6JO9Tpc2wRk1GDHKfDr0LeYz7LrHz93W1uNjSaq=bg@mail.gmail.com>
+From:   Akira Yokosawa <akiyks@gmail.com>
+Message-ID: <e994dbc1-4b8c-971f-5ec9-4e039b2658a2@gmail.com>
+Date:   Wed, 27 May 2020 08:00:25 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <CAEf4BzZF6JO9Tpc2wRk1GDHKfDr0LeYz7LrHz93W1uNjSaq=bg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baikal-T1 Boot Controller provides an access to a RO storages, which are
-physically mapped into the MMIO space. In particularly there are the
-Internal ROM embedded into the SoC with a pre-installed firmware,
-externally attached SPI flash (also accessed in the read-only mode) and a
-memory region, which mirrors one of them in accordance with the currently
-enabled system boot mode (also called Boot ROM).
+On Tue, 26 May 2020 13:19:36 -0700, Andrii Nakryiko wrote:
+> On Tue, May 26, 2020 at 7:02 AM Akira Yokosawa <akiyks@gmail.com> wrote=
+:
+>>
+>> On Tue, 26 May 2020 19:50:47 +0900, Akira Yokosawa wrote:
+>>> On Mon, 25 May 2020 16:31:05 -0700, Andrii Nakryiko wrote:
+>>>> On Mon, May 25, 2020 at 3:01 PM Akira Yokosawa <akiyks@gmail.com> wr=
+ote:
+>>>>>
+>>> [...]
+>>>>> Yes, that should work.
+>>>>
+>>>> Ok, assigning to zero didn't work (it still complained about
+>>>> uninitialized read), but using a separate int *lenFail to assign to
+>>>> rLenPtr worked. Curiously, if I used rLenPtr =3D len1; in error case=
+, it
+>>>> actually takes a bit more time to verify.
+>>>>
+>>>> So I've converted everything else as you suggested. I compiled lates=
+t
+>>>> herd7 and it doesn't produce any warnings. But it's also extremely
+>>>> slow, compared to the herd7 that I get by default. Validating simple=
 
-This commit adds the ROMs support to the physmap driver of the MTD kernel
-subsystem. Currently the driver only supports the Internal ROM, since
-physically mapped SPI flash is utilized by the Baikal-T1 System Boot
-Controller driver so won't be available over mtd-rom interface and
-the Boot ROM mirror mapping has dependency on the SPI flash mapping
-switcher available within the SPI flash registers space. The real access
-to the Boot ROM memory will be added in future.
+>>>> 1p1c cases takes about 2.5x times longer (0.03s vs 0.07),
+>>
+>> Wait a moment!
+>>
+>> This 0.03s was the run time of the original 1p1c litmus test, wasn't i=
+t?
+>> Then you are comparing apples and oranges.
+>>
+>> How long does your default herd7 take to complete the updated 1p1c tes=
+t?
+>>
+>>         Thanks, Akira
+>=20
+> It could be new test vs old test, so I re-ran again. Identical
+> 1p1c-unbound test:
+>=20
+> OLD version:
+>=20
+> $ herd7 -version && herd7 -unroll 0 -conf linux-kernel.cfg
+> ../../Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+unbound.litmus
+> 7.52, Rev: exported
+> Test bpf-rb+1p1c+unbound Allowed
+> States 2
+> 0:rFail=3D0; 1:rFail=3D0; cx=3D0; len1=3D1; px=3D1;
+> 0:rFail=3D0; 1:rFail=3D0; cx=3D1; len1=3D1; px=3D1;
+> Ok
+> Witnesses
+> Positive: 3 Negative: 0
+> Condition exists (0:rFail=3D0 /\ 1:rFail=3D0 /\ px=3D1 /\ len1=3D1 /\ (=
+cx=3D0 \/ cx=3D1))
+> Observation bpf-rb+1p1c+unbound Always 3 0
+> Time bpf-rb+1p1c+unbound 0.03
+> Hash=3D20a68cc69b09fbb79f407f825c015623
+>=20
+> LATEST from sources version:
+>=20
+> $ herd7 -version && herd7 -unroll 0 -conf linux-kernel.cfg
+> ../../Documentation/litmus-tests/bpf-rb/bpf-rb+1p1c+unbound.litmus
+> 7.55+01(dev), Rev: 61e23aaee7bba87ccf4cdf1a620a3a9fa8f9a586
+> Test bpf-rb+1p1c+unbound Allowed
+> States 2
+> 0:rFail=3D0; 1:rFail=3D0; cx=3D0; len1=3D1; px=3D1;
+> 0:rFail=3D0; 1:rFail=3D0; cx=3D1; len1=3D1; px=3D1;
+> Ok
+> Witnesses
+> Positive: 3 Negative: 0
+> Condition exists (0:rFail=3D0 /\ 1:rFail=3D0 /\ px=3D1 /\ len1=3D1 /\ (=
+cx=3D0 \/ cx=3D1))
+> Observation bpf-rb+1p1c+unbound Always 3 0
+> Time bpf-rb+1p1c+unbound 0.06
+> Hash=3D20a68cc69b09fbb79f407f825c015623
+>=20
+> Still 2x difference.
 
-Note we had to create a dedicated code for the ROMs since read from the
-corresponding memory regions must be done via the dword-aligned addresses.
-In addition the driver in future states will have to take into account
-that the Boot ROM might mirror the SPI flash region so before accessing it
-the SPI flash direct mapping must be enabled by means of a dedicated flag
-in the Baikal-T1 System SPI register flag.
+I see opposite tendency on a different set of time consuming
+litmus tests comparing herd7 7.52 and HEAD.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: linux-mips@vger.kernel.org
+                                                herd7 7.52     herd7 HEAD=
 
----
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u+l-o-o-u+l-o-o-u      8.44           6.12
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u+l-o-o-u-C           77.19          69.92
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u+l-o-o-u-CE         355.62         287.27
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u+l-o-o-u-X          157.87         191.50
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u+l-o-o-u              2.36           0.94
+C-SB+l-o-o-u+l-o-o-u-+l-o-o-u-C                   2.32           0.93
+C-SB+l-o-o-u+l-o-o-u-+l-o-o-u-CE                  5.64           3.52
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u-X                    3.18           2.52
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u-XE                  11.81          10.35
+C-SB+l-o-o-u+l-o-o-u+l-o-o-u                      0.25           0.19
+C-SB+l-o-o-u+l-o-o-u-C                            0.15           0.12
+C-SB+l-o-o-u+l-o-o-u-CE                           0.26           0.20
+C-SB+l-o-o-u+l-o-o-u-X                            0.17           0.14
+C-SB+l-o-o-u+l-o-o-u-XE                           0.38           0.30
+C-SB+l-o-o-u+l-o-o-u                              0.04           0.03
 
-Miquel, Richard, Vignesh, the merge window is upon us, please review/merge
-in/whatever this patch.
+NOTE: These were taken on a fairly old PC, with power-saving mode enabled=
+=2E
 
-This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
-base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-tag: v5.7-rc4
+Did you used the original 1p1c unbound test?
+I'd like you to compare the updated 1p1c unbound test.
 
-New vendor prefix will be added in the framework of the next patchset:
-https://lkml.org/lkml/2020/5/6/1047
+        Thanks, Akira
 
-Note since the next patchset is no longer relevant (as a result of a
-discussion with @Lee and @Miquel)
-https://lkml.org/lkml/2020/3/6/421
-and Boot ROM mtd is currently unsupported I can freely submit this patch,
-while in former case I had to wait for the patchset merged.
+>=20
+>>
+>>>>                                                           but trying=
 
-Link: https://lore.kernel.org/linux-mtd/20200508100905.5854-1-Sergey.Semin@baikalelectronics.ru/
-Changelog v2:
-- Resend.
----
- drivers/mtd/maps/Kconfig           |   8 ++
- drivers/mtd/maps/Makefile          |   1 +
- drivers/mtd/maps/physmap-bt1-rom.c | 189 +++++++++++++++++++++++++++++
- drivers/mtd/maps/physmap-bt1-rom.h |  17 +++
- drivers/mtd/maps/physmap-core.c    |   5 +
- 5 files changed, 220 insertions(+)
- create mode 100644 drivers/mtd/maps/physmap-bt1-rom.c
- create mode 100644 drivers/mtd/maps/physmap-bt1-rom.h
+>>>> to validate 2p1c case, which normally validates in 42s (unbounded) a=
+nd
+>>>> 110s (bounded), it took more than 20 minutes and hasn't finished,
+>>>> before I gave up. So I don't know what's going on there...
+>>>
+>>> herdtools7 has recently been heavily restructured.
+>>> On the performance regression, I must defer to Luc.
+>>>
+>>> Luc, do you have any idea?
+>>>
+>>>>
+>>>> As for klitmus7, I managed to generate everything without warnings,
+>>>> but couldn't make it build completely due to:
+>>>>
+>>>> $ make
+>>>> make -C /lib/modules/5.6.13-01802-g938d64da97c6/build/
+>>>
+>>> So you are on Linux 5.6.x which requires cutting-edge klitmus7.
+>>>
+>>>> M=3D/home/andriin/local/linux-trees/tools/memory-model/mymodules mod=
+ules
+>>>> make[1]: Entering directory `/data/users/andriin/linux-build/fb-conf=
+ig'
+>>>> make[2]: Entering directory `/data/users/andriin/linux-build/default=
+-x86_64'
+>>>>   CC [M]  /home/andriin/local/linux-trees/tools/memory-model/mymodul=
+es/litmus000.o
+>>>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus0=
+00.c:
+>>>> In function =E2=80=98zyva=E2=80=99:
+>>>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus0=
+00.c:507:12:
+>>>> warning: ISO C90 forbids variable length array =E2=80=98th=E2=80=99 =
+[-Wvla]
+>>>>      struct task_struct *th[nth];
+>>>>             ^~~~~~~~~~~
+>>>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus0=
+00.c:
+>>>> In function =E2=80=98litmus_init=E2=80=99:
+>>>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus0=
+00.c:605:67:
+>>>> error: passing argument 4 of =E2=80=98proc_create=E2=80=99 from inco=
+mpatible pointer
+>>>> type [-Werror=3Dincompatible-pointer-types]
+>>>>    struct proc_dir_entry *litmus_pde =3D
+>>>> proc_create("litmus",0,NULL,&litmus_proc_fops);
+>>>>
+>>>> ^~~~~~~~~~~~~~~~~
+>>>> In file included from
+>>>> /home/andriin/local/linux-trees/tools/memory-model/mymodules/litmus0=
+00.c:15:
+>>>> /data/users/andriin/linux-fb/include/linux/proc_fs.h:64:24: note:
+>>>> expected =E2=80=98const struct proc_ops *=E2=80=99 but argument is o=
+f type =E2=80=98const
+>>>> struct file_operations *=E2=80=99
+>>>>  struct proc_dir_entry *proc_create(const char *name, umode_t mode,
+>>>> struct proc_dir_entry *parent, const struct proc_ops *proc_ops);
+>>>>                         ^~~~~~~~~~~
+>>>> cc1: some warnings being treated as errors
+>>>> make[3]: *** [/home/andriin/local/linux-trees/tools/memory-model/mym=
+odules/litmus000.o]
+>>>> Error 1
+>>>> make[2]: *** [/home/andriin/local/linux-trees/tools/memory-model/mym=
+odules]
+>>>> Error 2
+>>>> make[2]: Leaving directory `/data/users/andriin/linux-build/default-=
+x86_64'
+>>>> make[1]: *** [sub-make] Error 2
+>>>> make[1]: Leaving directory `/data/users/andriin/linux-build/fb-confi=
+g'
+>>>> make: *** [all] Error 2
+>>>>
+>>>
+>>> These errors suggest the klitmus7 you used is version 7.52 or some su=
+ch.
+>>> You said you have built herd7 from the source.  Have you also built k=
+litmus7?
+>>>
+>>> The up-to-date klitmus7 should generate code compatible with Linux 5.=
+6.x.
+>>>
+>>> Could you try with the latest one?
+>>>
+>>>         Thanks, Akira
+>>>
+>>>>
+>>>> But at least it doesn't complain about atomic_t anymore. So anyways,=
 
-diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
-index b28225a7c4f3..60b4285cd86a 100644
---- a/drivers/mtd/maps/Kconfig
-+++ b/drivers/mtd/maps/Kconfig
-@@ -107,6 +107,14 @@ config MTD_PHYSMAP_IXP4XX
- 	  This provides some extra DT physmap parsing for the Intel IXP4xx
- 	  platforms, some elaborate endianness handling in particular.
- 
-+config MTD_PHYSMAP_BT1_ROM
-+	bool "Baikal-T1 Boot ROMs OF-based physical memory map handling"
-+	depends on (MIPS_BAIKAL_T1 && MTD_PHYSMAP_OF) || COMPILE_TEST
-+	select MTD_COMPLEX_MAPPINGS
-+	help
-+	  This provides some extra DT physmap parsing for the Baikal-T1
-+	  platforms, some detection and setting up ROMs-specific accessors.
-+
- config MTD_PHYSMAP_GPIO_ADDR
- 	bool "GPIO-assisted Flash Chip Support"
- 	depends on MTD_PHYSMAP
-diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-index c0da86a5d26f..45f3a151f568 100644
---- a/drivers/mtd/maps/Makefile
-+++ b/drivers/mtd/maps/Makefile
-@@ -21,6 +21,7 @@ physmap-objs-y			+= physmap-core.o
- physmap-objs-$(CONFIG_MTD_PHYSMAP_VERSATILE) += physmap-versatile.o
- physmap-objs-$(CONFIG_MTD_PHYSMAP_GEMINI) += physmap-gemini.o
- physmap-objs-$(CONFIG_MTD_PHYSMAP_IXP4XX) += physmap-ixp4xx.o
-+physmap-objs-$(CONFIG_MTD_PHYSMAP_BT1_ROM) += physmap-bt1-rom.o
- physmap-objs			:= $(physmap-objs-y)
- obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
- obj-$(CONFIG_MTD_PISMO)		+= pismo.o
-diff --git a/drivers/mtd/maps/physmap-bt1-rom.c b/drivers/mtd/maps/physmap-bt1-rom.c
-new file mode 100644
-index 000000000000..55149af18729
---- /dev/null
-+++ b/drivers/mtd/maps/physmap-bt1-rom.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-+ *
-+ * Authors:
-+ *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-+ *
-+ * Baikal-T1 Physically Mapped ROMs driver
-+ */
-+#include <linux/kernel.h>
-+#include <linux/types.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/bits.h>
-+#include <linux/mtd/map.h>
-+#include <linux/mtd/xip.h>
-+#include <linux/string.h>
-+
-+#include "physmap-bt1-rom.h"
-+
-+struct bt1_rom_io {
-+	map_word (*read)(struct map_info *map, unsigned long ofs);
-+	void (*copy_from)(struct map_info *map, void *to, unsigned long from,
-+			  ssize_t len);
-+};
-+
-+/*
-+ * Baikal-T1 SoC ROMs are only accessible by the dword-aligned instructions.
-+ * We have to take this into account when implementing the data read-methods.
-+ * Note there is no need in bothering with endianness, since both Baikal-T1
-+ * CPU and MMIO are LE.
-+ */
-+static map_word __xipram bt1_rom_map_read(struct map_info *map,
-+					  unsigned long ofs)
-+{
-+	void __iomem *src = map->virt + ofs;
-+	unsigned long shift;
-+	map_word ret;
-+	u32 data;
-+
-+	/* Read data within offset dword. */
-+	shift = (unsigned long)src & 0x3;
-+	data = readl_relaxed(src - shift);
-+	if (!shift) {
-+		ret.x[0] = data;
-+		return ret;
-+	}
-+	ret.x[0] = data >> (shift * BITS_PER_BYTE);
-+
-+	/* Read data from the next dword. */
-+	shift = 4 - shift;
-+	if (ofs + shift >= map->size)
-+		return ret;
-+
-+	data = readl_relaxed(src + shift);
-+	ret.x[0] |= data << (shift * BITS_PER_BYTE);
-+
-+	return ret;
-+}
-+
-+static void __xipram bt1_rom_map_copy_from(struct map_info *map,
-+					   void *to, unsigned long from,
-+					   ssize_t len)
-+{
-+	void __iomem *src = map->virt + from;
-+	ssize_t shift, chunk;
-+	u32 data;
-+
-+	if (len <= 0 || from >= map->size)
-+		return;
-+
-+	/* Make sure we don't go over the map limit. */
-+	len = min_t(ssize_t, map->size - from, len);
-+
-+	/*
-+	 * Since requested data size can be pretty big we have to implement
-+	 * the copy procedure as optimal as possible. That's why it's split
-+	 * up into the next three stages: unaligned head, aligned body,
-+	 * unaligned tail.
-+	 */
-+	shift = (ssize_t)src & 0x3;
-+	if (shift) {
-+		chunk = min_t(ssize_t, 4 - shift, len);
-+		data = readl_relaxed(src - shift);
-+		memcpy(to, &data + shift, chunk);
-+		src += chunk;
-+		to += chunk;
-+		len -= chunk;
-+	}
-+
-+	while (len >= 4) {
-+		data = readl_relaxed(src);
-+		memcpy(to, &data, 4);
-+		src += 4;
-+		to += 4;
-+		len -= 4;
-+	}
-+
-+	if (len) {
-+		data = readl_relaxed(src);
-+		memcpy(to, &data, len);
-+	}
-+}
-+
-+static map_word __xipram bt1_rom_dummy_read(struct map_info *map,
-+					  unsigned long ofs)
-+{
-+	map_word ret;
-+
-+	ret.x[0] = 0xFF;
-+
-+	return ret;
-+}
-+
-+static void __xipram bt1_rom_dummy_copy_from(struct map_info *map,
-+					   void *to, unsigned long from,
-+					   ssize_t len)
-+{
-+	if (len <= 0 || from >= map->size)
-+		return;
-+
-+	len = min_t(ssize_t, map->size - from, len);
-+
-+	memset(to, 0xFF, len);
-+}
-+
-+static const struct bt1_rom_io bt1_rom_normal_io = {
-+	.read = bt1_rom_map_read,
-+	.copy_from = bt1_rom_map_copy_from
-+};
-+
-+static const struct bt1_rom_io bt1_rom_dummy_io = {
-+	.read = bt1_rom_dummy_read,
-+	.copy_from = bt1_rom_dummy_copy_from
-+};
-+
-+/*
-+ * Currently Baikal-T1 SoC internal ROM is only supported. Boot ROM region is
-+ * dummy-data filled for now since in case of the system booted up from an
-+ * external SPI flash the ROM will mirror the Baikal-T1 System Boot SPI direct
-+ * mapping memory region. That region can be only accessed when transparent
-+ * mode is enabled, which we unable to do here because this feature is provided
-+ * by the SPI controller config space occupied by the corresponding driver.
-+ * In future we'll export the mode setting method from the Baikal-T1 System
-+ * Boot SPI Controller driver to also have the Boot ROM supported here.
-+ */
-+static const struct of_device_id bt1_rom_of_match[] = {
-+	{
-+		.compatible = "baikal,bt1-int-rom",
-+		.data = &bt1_rom_normal_io
-+	},
-+	{
-+		.compatible = "baikal,bt1-boot-rom",
-+		.data = &bt1_rom_dummy_io
-+	},
-+	{ }
-+};
-+
-+int of_flash_probe_bt1_rom(struct platform_device *pdev,
-+			   struct device_node *np,
-+			   struct map_info *map)
-+{
-+	const struct of_device_id *match;
-+	struct device *dev = &pdev->dev;
-+	const struct bt1_rom_io *io;
-+
-+	/* It's supposed to be read-only MTD. */
-+	if (!of_device_is_compatible(np, "mtd-rom")) {
-+		dev_info(dev, "No mtd-rom compatible string\n");
-+		return 0;
-+	}
-+
-+	/* Multiplatform guard. */
-+	match = of_match_device(bt1_rom_of_match, dev);
-+	if (!match)
-+		return 0;
-+
-+	/* Sanity check the device parameters retrieved from DTB. */
-+	if (map->bankwidth != 4)
-+		dev_warn(dev, "Bank width is supposed to be 32 bits wide\n");
-+
-+	io = match->data;
-+	map->read = io->read;
-+	map->copy_from = io->copy_from;
-+
-+	return 0;
-+}
-diff --git a/drivers/mtd/maps/physmap-bt1-rom.h b/drivers/mtd/maps/physmap-bt1-rom.h
-new file mode 100644
-index 000000000000..5874f2acf929
---- /dev/null
-+++ b/drivers/mtd/maps/physmap-bt1-rom.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#include <linux/of.h>
-+#include <linux/mtd/map.h>
-+
-+#ifdef CONFIG_MTD_PHYSMAP_BT1_ROM
-+int of_flash_probe_bt1_rom(struct platform_device *pdev,
-+			   struct device_node *np,
-+			   struct map_info *map);
-+#else
-+static inline
-+int of_flash_probe_bt1_rom(struct platform_device *pdev,
-+			   struct device_node *np,
-+			   struct map_info *map)
-+{
-+	return 0;
-+}
-+#endif
-diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-index 8f7f966fa9a7..a0716da933b5 100644
---- a/drivers/mtd/maps/physmap-core.c
-+++ b/drivers/mtd/maps/physmap-core.c
-@@ -44,6 +44,7 @@
- #include "physmap-gemini.h"
- #include "physmap-ixp4xx.h"
- #include "physmap-versatile.h"
-+#include "physmap-bt1-rom.h"
- 
- struct physmap_flash_info {
- 	unsigned int		nmaps;
-@@ -383,6 +384,10 @@ static int physmap_flash_of_init(struct platform_device *dev)
- 		if (err)
- 			return err;
- 
-+		err = of_flash_probe_bt1_rom(dev, dp, &info->maps[i]);
-+		if (err)
-+			return err;
-+
- 		/*
- 		 * On some platforms (e.g. MPC5200) a direct 1:1 mapping
- 		 * may cause problems with JFFS2 usage, as the local bus (LPB)
--- 
-2.26.2
+>>>> I'm going to post updated litmus tests separately from BPF ringbuf
+>>>> patches, because Documentation/litmus-tests is not yet present in
+>>>> bpf-next.
+>>>>
+>>>>>
+>>>>> You can find a basic introduction of klitmus7 in tools/memory-model=
+/README.
+>>>>>
+>>>>>         Thanks, Akira
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> Please note that if you are on Linux 5.6 (or later), you need an =
+up-to-date
+>>>>>>> klitmus7 due to a change in kernel API.
+>>>>>>>
+>>>>>>> Any question is welcome!
+>>>>>>>
+>>>>>>>         Thanks, Akira
+>>>>>>>
+>>>>
+>>>> [...]
+>>>>
+>>>
+>>
 
