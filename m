@@ -2,130 +2,224 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 937D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B054D208A9
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72E6C20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:53:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="SjLml/DV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgEZOw4 (ORCPT
+        id S1729597AbgEZOx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729368AbgEZOwz (ORCPT
+        Tue, 26 May 2020 10:53:27 -0400
+Received: from mail.efficios.com ([167.114.26.124]:48070 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbgEZOx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:52:55 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DF2C03E96D;
-        Tue, 26 May 2020 07:52:55 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jdawl-0004PS-Md; Tue, 26 May 2020 16:52:51 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 032F91C00FA;
-        Tue, 26 May 2020 16:52:51 +0200 (CEST)
-Date:   Tue, 26 May 2020 14:52:50 -0000
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/syscalls: Revert "x86/syscalls: Make
- __X32_SYSCALL_BIT be unsigned long"
-Cc:     Thorsten Glaser <t.glaser@tarent.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@suse.de>, stable@kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org>
-References: <92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org>
+        Tue, 26 May 2020 10:53:26 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 4323D2530AB;
+        Tue, 26 May 2020 10:53:25 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Wd-fD4srGR5b; Tue, 26 May 2020 10:53:24 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D2F562530AA;
+        Tue, 26 May 2020 10:53:24 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D2F562530AA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1590504804;
+        bh=J03/Qz2NTKez9n+J8FkkHyKFt/pjXwvDlXKd3V/IOls=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=SjLml/DV0mUiubHEz7WbIknofrTOg6Fqmjhiu++r2bpVIAdJprhCu37B7gYzF3QUH
+         xJmxVXJ67mEFnymWdjVrdwr4qncETd2Nyt2L87b1d5Tj4MbnvZ9uXT35NL3loSbA0j
+         MKh87jgTJPSID5Es8Cqq8lPn884zG2nnuXOSti+PgcUH4bRevn84Q6wSHXiHLRKhoZ
+         8Yqmw5kT5mjFdipya4nTITK42XrxDzvHuUKfWv3Zrb1eEOyIPOTRL7O1+CXl+jAD7C
+         ddcIVHybri/tre/IbMzsT0Ht+XHFQ5zHSwsPAjYWoRbdP+SgW4GnKsrjln2ZOPkUuP
+         hvIcRm2nYxgEg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id TN0OeTI4tPQP; Tue, 26 May 2020 10:53:24 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id BFB152530A9;
+        Tue, 26 May 2020 10:53:24 -0400 (EDT)
+Date:   Tue, 26 May 2020 10:53:24 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     libc-alpha <libc-alpha@sourceware.org>,
+        Rich Felker <dalias@libc.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>,
+        Joseph Myers <joseph@codesourcery.com>
+Message-ID: <1931644690.34207.1590504804638.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87ftbmpxqi.fsf@oldenburg2.str.redhat.com>
+References: <20200501021439.2456-1-mathieu.desnoyers@efficios.com> <87v9kqbzse.fsf@oldenburg2.str.redhat.com> <941087675.33347.1590418305398.JavaMail.zimbra@efficios.com> <87367ovy6k.fsf@oldenburg2.str.redhat.com> <108939265.33525.1590428184533.JavaMail.zimbra@efficios.com> <87lflerhqt.fsf@oldenburg2.str.redhat.com> <1701081361.34159.1590503556923.JavaMail.zimbra@efficios.com> <87ftbmpxqi.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH glibc 1/3] glibc: Perform rseq registration at C startup
+ and thread creation (v19)
 MIME-Version: 1.0
-Message-ID: <159050477082.17951.1414743958663563425.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3928 (ZimbraWebClient - FF76 (Linux)/8.8.15_GA_3928)
+Thread-Topic: glibc: Perform rseq registration at C startup and thread creation (v19)
+Thread-Index: +WF+p2h1qwweiPpTqvCExj6y4Uu9/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+----- On May 26, 2020, at 10:38 AM, Florian Weimer fweimer@redhat.com wrote=
+:
 
-Commit-ID:     700d3a5a664df267f01ec8887fd2d8ff98f67e7f
-Gitweb:        https://git.kernel.org/tip/700d3a5a664df267f01ec8887fd2d8ff98f67e7f
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Fri, 08 May 2020 17:25:32 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 26 May 2020 16:42:43 +02:00
+> * Mathieu Desnoyers:
+>=20
+>> AFAIU, the only gain here would be to make sure we don't emit useless
+>> ";" in the "/* nothing */" case. But does it matter ?
+>=20
+> I don't think C allows empty constructs like this at the top level.
+>=20
+>>>>> And something similar for _Alignas/attribute aligned,
+>>>>
+>>>> I don't see where _Alignas is needed here ?
+>>>>
+>>>> For attribute aligned, what would be the oldest supported C and C++
+>>>> standards ?
+>>>=20
+>>> There are no standardized attributes for C, there is only _Alignas.
+>>> C++11 has an alignas specifier; it's not an attribute either.  I think
+>>> these are syntactically similar.
+>>
+>> There appears to be an interesting difference between attribute aligned
+>> and alignas. It seems like alignas cannot be used on a structure declara=
+tion,
+>> only on fields, e.g.:
+>>
+>> struct blah {
+>>         int a;
+>> } _Alignas (16);
+>>
+>> o.c:3:1: warning: useless =E2=80=98_Alignas=E2=80=99 in empty declaratio=
+n
+>>  } _Alignas (16);
+>>
+>> But
+>>
+>> struct blah {
+>>         int _Alignas (16) a;
+>> };
+>=20
+> Like the attribute, it needs to come right after the struct keyword, I
+> think.  (Trailing attributes can be ambiguous, but not in this case.)
 
-x86/syscalls: Revert "x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long"
+Nope. _Alignas really _is_ special :-(
 
-Revert
+struct _Alignas (16) blah {
+        int a;
+};
 
-  45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
+p.c:1:8: error: expected =E2=80=98{=E2=80=99 before =E2=80=98_Alignas=E2=80=
+=99
+ struct _Alignas (16) blah {
 
-and add a comment to discourage someone else from making the same
-mistake again.
+Also:
 
-It turns out that some user code fails to compile if __X32_SYSCALL_BIT
-is unsigned long. See, for example [1] below.
+struct blah _Alignas (16) {
+        int a;
+};
 
- [ bp: Massage and do the same thing in the respective tools/ header. ]
+p.c:1:27: error: expected identifier or =E2=80=98(=E2=80=99 before =E2=80=
+=98{=E2=80=99 token
+ struct blah _Alignas (16) {
 
-Fixes: 45e29d119e99 ("x86/syscalls: Make __X32_SYSCALL_BIT be unsigned long")
-Reported-by: Thorsten Glaser <t.glaser@tarent.de>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: stable@kernel.org
-Link: [1] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=954294
-Link: https://lkml.kernel.org/r/92e55442b744a5951fdc9cfee10badd0a5f7f828.1588983892.git.luto@kernel.org
----
- arch/x86/include/uapi/asm/unistd.h       | 11 +++++++++--
- tools/arch/x86/include/uapi/asm/unistd.h |  2 +-
- 2 files changed, 10 insertions(+), 3 deletions(-)
+>=20
+>> is OK. So if I change e.g. struct rseq_cs to align
+>> the first field:
+>>
+>> struct rseq_cs
+>>   {
+>>     /* Version of this structure.  */
+>>     uint32_t rseq_align (32) version;
+>>     /* enum rseq_cs_flags.  */
+>>     uint32_t flags;
+>>     uint64_t start_ip;
+>>     /* Offset from start_ip.  */
+>>     uint64_t post_commit_offset;
+>>     uint64_t abort_ip;
+>>   };
+>>
+>> It should work.
+>=20
+> Indeed.
 
-diff --git a/arch/x86/include/uapi/asm/unistd.h b/arch/x86/include/uapi/asm/unistd.h
-index 196fdd0..be5e2e7 100644
---- a/arch/x86/include/uapi/asm/unistd.h
-+++ b/arch/x86/include/uapi/asm/unistd.h
-@@ -2,8 +2,15 @@
- #ifndef _UAPI_ASM_X86_UNISTD_H
- #define _UAPI_ASM_X86_UNISTD_H
- 
--/* x32 syscall flag bit */
--#define __X32_SYSCALL_BIT	0x40000000UL
-+/*
-+ * x32 syscall flag bit.  Some user programs expect syscall NR macros
-+ * and __X32_SYSCALL_BIT to have type int, even though syscall numbers
-+ * are, for practical purposes, unsigned long.
-+ *
-+ * Fortunately, expressions like (nr & ~__X32_SYSCALL_BIT) do the right
-+ * thing regardless.
-+ */
-+#define __X32_SYSCALL_BIT	0x40000000
- 
- #ifndef __KERNEL__
- # ifdef __i386__
-diff --git a/tools/arch/x86/include/uapi/asm/unistd.h b/tools/arch/x86/include/uapi/asm/unistd.h
-index 196fdd0..30d7d04 100644
---- a/tools/arch/x86/include/uapi/asm/unistd.h
-+++ b/tools/arch/x86/include/uapi/asm/unistd.h
-@@ -3,7 +3,7 @@
- #define _UAPI_ASM_X86_UNISTD_H
- 
- /* x32 syscall flag bit */
--#define __X32_SYSCALL_BIT	0x40000000UL
-+#define __X32_SYSCALL_BIT	0x40000000
- 
- #ifndef __KERNEL__
- # ifdef __i386__
+OK, so let's go for that approach.
+
+>=20
+>> /* Rely on GNU extensions for older standards and tls model.  */
+>> #ifdef __GNUC__
+>> # ifndef rseq_alignof
+>> #  define rseq_alignof(x) __alignof__ (x)
+>> # endif
+>> # ifndef rseq_alignas
+>> #  define rseq_alignas(x) __attribute__ ((aligned (x)))
+>> # endif
+>> # define rseq_tls_model_ie __attribute__ ((__tls_model__ ("initial-exec"=
+)))
+>> #else
+>> /* Specifying the TLS model on the declaration is optional.  */
+>> # define rseq_tls_model_ie /* Nothing.  */
+>> #endif
+>>
+>> /* Fall back to __thread for TLS storage class.  */
+>> #ifndef rseq_tls_storage_class
+>> # define rseq_tls_storage_class __thread
+>> #endif
+>=20
+> If they are only used in the glibc headers, they should have __rseq
+> prefixes, so that application code doesn't start using them (in case we
+> have to change/fix them, or move the into <sys/cdefs.h> later).
+
+OK will do.
+
+>=20
+> Rest looks fine.
+
+One last thing I'm planning to add in sys/rseq.h to cover acessing the
+rseq_cs pointers with both the UAPI headers and the glibc struct rseq
+declarations:
+
+/* The rseq_cs_ptr macro can be used to access the pointer to the current
+   rseq critical section descriptor.  */
+#ifdef __LP64__
+# define rseq_cs_ptr(rseq) \
+           ((const struct rseq_cs *) (rseq)->rseq_cs.ptr)
+#else /* __LP64__ */
+# define rseq_cs_ptr(rseq) \
+           ((const struct rseq_cs *) (rseq)->rseq_cs.ptr.ptr32)
+#endif /* __LP64__ */
+
+Does it make sense ?
+
+Thanks,
+
+Mathieu
+
+>=20
+> Thanks,
+> Florian
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
