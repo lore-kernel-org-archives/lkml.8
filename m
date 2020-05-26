@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0090C20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AD5208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520491;
-	bh=+h9rwYI/xKlJmnEgPrnwvsAMxjyE8wJ7SqiZPWkNuyA=;
+	s=default; t=1590520493;
+	bh=p9OcJyFAMvLDmi1flaOtACr8M52ClYUm0OlUxAf6mzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RGleKCdVQzix4gGp3OPs8kmAXkzti1eC/xVXs58m73aQl/Gomo9H53yFqrayCLDbT
-	 qEX90O66+R/0dfBsgL3O5Rf3kQSnMEnlIEgWMTlsDj/+xPGMX+M0CcbLKfxDUAkv6l
-	 6BFzwXts5FovWIjIuPzZMXA1loYYrK5RKc+qsM1I=
+	b=m+pxEXLatEH+SYEYscfCbGYw3sBEXN2HWmf5fefwR5MCJGW3HW6DCkHJTEU/RNEhf
+	 ERaHMtvyJ9NMCwHoEcAEDUcRsmNTp7/3U8+EeiG0e9bwWRxB4K0bUSk0HcOI00dBr/
+	 2CkYKQ9bn5YiTCYrtBwMx6CsoXE3lXPOtKQNRXlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392215AbgEZTOu (ORCPT
+        id S2392222AbgEZTOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392183AbgEZTOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:45 -0400
+        id S2392097AbgEZTOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC5E120776;
-        Tue, 26 May 2020 19:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 621F620888;
+        Tue, 26 May 2020 19:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520485;
-        bh=+h9rwYI/xKlJmnEgPrnwvsAMxjyE8wJ7SqiZPWkNuyA=;
+        s=default; t=1590520487;
+        bh=p9OcJyFAMvLDmi1flaOtACr8M52ClYUm0OlUxAf6mzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PVgsNNTdX+EbHalo0f/orIaKhVn72v/2Hsnw8CosjqYN9dYClO+EG7QmkhgNGPY9A
-         q6PPPkLy0TaWGrJxp2u/KQwWKkn5NFPFmW9gnXye9o13x4WS+CVKygVCabXfVtwoHb
-         AIvVGdRU5liszFyoLb/jLFNAdHlHQWWtvxu/YitM=
+        b=hooG0q8hQIx+dwv9flg/KEg7I/IjZ9nCvNeGk16WQo69c8KjE/k/pNa1QJ13utiWU
+         DiWOnxZmg4zJ86PUgMZOT+eZXdsYRWxwIPfG2udd8SiZyzd1mAPdZH5Rhnga2ZX7HM
+         FsmMI0oE6+UrlF6jeeJqSNOuxD/cS6gJZ0p+1Rhs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
         Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.6 097/126] iio: dac: vf610: Fix an error handling path in vf610_dac_probe()
-Date:   Tue, 26 May 2020 20:53:54 +0200
-Message-Id: <20200526183945.960511619@linuxfoundation.org>
+Subject: [PATCH 5.6 098/126] iio: adc: ti-ads8344: Fix channel selection
+Date:   Tue, 26 May 2020 20:53:55 +0200
+Message-Id: <20200526183946.025431733@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,31 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit aad4742fbf0a560c25827adb58695a4497ffc204 upstream.
+commit bcfa1e253d2e329e1ebab5c89f3c73f6dd17606c upstream.
 
-A call to 'vf610_dac_exit()' is missing in an error handling path.
+During initial submission the selection of the channel was done using
+the scan_index member of the iio_chan_spec structure. It was an abuse
+because this member is supposed to be used with a buffer so it was
+removed.
 
-Fixes: 1b983bf42fad ("iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+However there was still the need to be able to known how to select a
+channel, the correct member to store this information is address.
+
+Thanks to this it is possible to select any other channel than the
+channel 0.
+
+Fixes: 8dd2d7c0fed7 ("iio: adc: Add driver for the TI ADS8344 A/DC chips")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/dac/vf610_dac.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/adc/ti-ads8344.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/dac/vf610_dac.c
-+++ b/drivers/iio/dac/vf610_dac.c
-@@ -223,6 +223,7 @@ static int vf610_dac_probe(struct platfo
- 	return 0;
+--- a/drivers/iio/adc/ti-ads8344.c
++++ b/drivers/iio/adc/ti-ads8344.c
+@@ -32,16 +32,17 @@ struct ads8344 {
+ 	u8 rx_buf[3];
+ };
  
- error_iio_device_register:
-+	vf610_dac_exit(info);
- 	clk_disable_unprepare(info->clk);
+-#define ADS8344_VOLTAGE_CHANNEL(chan, si)				\
++#define ADS8344_VOLTAGE_CHANNEL(chan, addr)				\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+ 		.channel = chan,					\
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++		.address = addr,					\
+ 	}
  
- 	return ret;
+-#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
++#define ADS8344_VOLTAGE_CHANNEL_DIFF(chan1, chan2, addr)		\
+ 	{								\
+ 		.type = IIO_VOLTAGE,					\
+ 		.indexed = 1,						\
+@@ -50,6 +51,7 @@ struct ads8344 {
+ 		.differential = 1,					\
+ 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+ 		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
++		.address = addr,					\
+ 	}
+ 
+ static const struct iio_chan_spec ads8344_channels[] = {
+@@ -105,7 +107,7 @@ static int ads8344_read_raw(struct iio_d
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		mutex_lock(&adc->lock);
+-		*value = ads8344_adc_conversion(adc, channel->scan_index,
++		*value = ads8344_adc_conversion(adc, channel->address,
+ 						channel->differential);
+ 		mutex_unlock(&adc->lock);
+ 		if (*value < 0)
 
 
