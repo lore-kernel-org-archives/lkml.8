@@ -3,55 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81130C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3576DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 611A7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CEA520776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520607;
-	bh=7IACNEB+1M0tSKpRru+93NDuVZNrVl4F0ZbxYmbGCuc=;
+	s=default; t=1590520611;
+	bh=dwPwdG0SK+kS1i7Rh+GeJcYZE0NSE+OYrDVqABO7+H4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HoSIjnGSIuGLzTr3oIspI5yvR71VTNazg15AI9t2PigEhgSRjGldzuMYObYxLHvN3
-	 fbGa1Fgy4Oxs1+L9LIQaOStGcBJ3oLRk8e0/K/rdkyJnuDMfP7MT5xUSf5T+yvNnsI
-	 IVsonlbt7FQkYgz+moKM76uAXgtH0bc2B7WDCHmA=
+	b=WAdeZ/QduoF57ZFp1Hxj/18DxFcBssS+MWb2NxI2h0cEkKgAD6tZvGh0LdBzjJwzT
+	 kH6WAnJrc/3n+DaoGOWksge6bxnqoutwCHHklRU1/Oa3Roj0BSKORHBbNJ8YmbpiWj
+	 oe3WLkalGbtwRodUgPE0XOGYWcX5S0WakeLTQ2qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404411AbgEZTPV (ORCPT
+        id S2392303AbgEZTQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46738 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404393AbgEZTPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:15:14 -0400
+        id S2404393AbgEZTPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:15:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2826220776;
-        Tue, 26 May 2020 19:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50D72208B6;
+        Tue, 26 May 2020 19:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520513;
-        bh=7IACNEB+1M0tSKpRru+93NDuVZNrVl4F0ZbxYmbGCuc=;
+        s=default; t=1590520520;
+        bh=dwPwdG0SK+kS1i7Rh+GeJcYZE0NSE+OYrDVqABO7+H4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=raaEr+J/QHz4yETjemd1r4Li+xQ3Irthp55VClsiZNjWrjsqM2z9EImdgePZE2Ydd
-         8hqXwqIzcz/eHPyr77kTp3QbAO/VqAeC1sZavjcKDt5wFLIEy5DsT9Vck9p2GltNVK
-         E4Jnk1iPOYhy/URvLGtwEspgargvuLKJl8k7p+eA=
+        b=MUSmbcGbV2NXRP37B5eY8dtH9ODQShc8929s2EaroR5q5198bzMkO79L2duK/l1dr
+         F3m4fX2k8AnBWXQCzqEs2kdZDmjBmMmFM+DpSk+q/3E4VtVGnuHZXHCC+NBtqefvW7
+         zNpkuQmfPb75ucpFQToEcyIotdTZD4cf3RVRst24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.6 107/126] device-dax: dont leak kernel memory to user space after unloading kmem
-Date:   Tue, 26 May 2020 20:54:04 +0200
-Message-Id: <20200526183946.613425167@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 5.6 072/126] drm/etnaviv: fix perfmon domain interation
+Date:   Tue, 26 May 2020 20:53:29 +0200
+Message-Id: <20200526183944.293494261@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -64,126 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Christian Gmeiner <christian.gmeiner@gmail.com>
 
-commit 60858c00e5f018eda711a3aa84cf62214ef62d61 upstream.
+commit 40b697e256ccdb88aaff424b44b4d300eb8460e8 upstream.
 
-Assume we have kmem configured and loaded:
+The GC860 has one GPU device which has a 2d and 3d core. In this case
+we want to expose perfmon information for both cores.
 
-  [root@localhost ~]# cat /proc/iomem
-  ...
-  140000000-33fffffff : Persistent Memory$
-    140000000-1481fffff : namespace0.0
-    150000000-33fffffff : dax0.0
-      150000000-33fffffff : System RAM
+The driver has one array which contains all possible perfmon domains
+with some meta data - doms_meta. Here we can see that for the GC860
+two elements of that array are relevant:
 
-Assume we try to unload kmem. This force-unloading will work, even if
-memory cannot get removed from the system.
+  doms_3d: is at index 0 in the doms_meta array with 8 perfmon domains
+  doms_2d: is at index 1 in the doms_meta array with 1 perfmon domain
 
-  [root@localhost ~]# rmmod kmem
-  [   86.380228] removing memory fails, because memory [0x0000000150000000-0x0000000157ffffff] is onlined
-  ...
-  [   86.431225] kmem dax0.0: DAX region [mem 0x150000000-0x33fffffff] cannot be hotremoved until the next reboot
+The userspace driver wants to get a list of all perfmon domains and
+their perfmon signals. This is done by iterating over all domains and
+their signals. If the userspace driver wants to access the domain with
+id 8 the kernel driver fails and returns invalid data from doms_3d with
+and invalid offset.
 
-Now, we can reconfigure the namespace:
+This results in:
+  Unable to handle kernel paging request at virtual address 00000000
 
-  [root@localhost ~]# ndctl create-namespace --force --reconfig=namespace0.0 --mode=devdax
-  [  131.409351] nd_pmem namespace0.0: could not reserve region [mem 0x140000000-0x33fffffff]dax
-  [  131.410147] nd_pmem: probe of namespace0.0 failed with error -16namespace0.0 --mode=devdax
-  ...
+On such a device it is not possible to use the userspace driver at all.
 
-This fails as expected due to the busy memory resource, and the memory
-cannot be used.  However, the dax0.0 device is removed, and along its
-name.
+The fix for this off-by-one error is quite simple.
 
-The name of the memory resource now points at freed memory (name of the
-device):
-
-  [root@localhost ~]# cat /proc/iomem
-  ...
-  140000000-33fffffff : Persistent Memory
-    140000000-1481fffff : namespace0.0
-    150000000-33fffffff : �_�^7_��/_��wR��WQ���^��� ...
-    150000000-33fffffff : System RAM
-
-We have to make sure to duplicate the string.  While at it, remove the
-superfluous setting of the name and fixup a stale comment.
-
-Fixes: 9f960da72b25 ("device-dax: "Hotremove" persistent memory that is used like normal RAM")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <stable@vger.kernel.org>	[5.3]
-Link: http://lkml.kernel.org/r/20200508084217.9160-2-david@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Paul Cercueil <paul@crapouillou.net>
+Fixes: ed1dd899baa3 ("drm/etnaviv: rework perfmon query infrastructure")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/dax/kmem.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_perfmon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/dax/kmem.c
-+++ b/drivers/dax/kmem.c
-@@ -22,6 +22,7 @@ int dev_dax_kmem_probe(struct device *de
- 	resource_size_t kmem_size;
- 	resource_size_t kmem_end;
- 	struct resource *new_res;
-+	const char *new_res_name;
- 	int numa_node;
- 	int rc;
+--- a/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_perfmon.c
+@@ -453,7 +453,7 @@ static const struct etnaviv_pm_domain *p
+ 		if (!(gpu->identity.features & meta->feature))
+ 			continue;
  
-@@ -48,11 +49,16 @@ int dev_dax_kmem_probe(struct device *de
- 	kmem_size &= ~(memory_block_size_bytes() - 1);
- 	kmem_end = kmem_start + kmem_size;
- 
--	/* Region is permanently reserved.  Hot-remove not yet implemented. */
--	new_res = request_mem_region(kmem_start, kmem_size, dev_name(dev));
-+	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
-+	if (!new_res_name)
-+		return -ENOMEM;
-+
-+	/* Region is permanently reserved if hotremove fails. */
-+	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
- 	if (!new_res) {
- 		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
- 			 &kmem_start, &kmem_end);
-+		kfree(new_res_name);
- 		return -EBUSY;
- 	}
- 
-@@ -63,12 +69,12 @@ int dev_dax_kmem_probe(struct device *de
- 	 * unknown to us that will break add_memory() below.
- 	 */
- 	new_res->flags = IORESOURCE_SYSTEM_RAM;
--	new_res->name = dev_name(dev);
- 
- 	rc = add_memory(numa_node, new_res->start, resource_size(new_res));
- 	if (rc) {
- 		release_resource(new_res);
- 		kfree(new_res);
-+		kfree(new_res_name);
- 		return rc;
- 	}
- 	dev_dax->dax_kmem_res = new_res;
-@@ -83,6 +89,7 @@ static int dev_dax_kmem_remove(struct de
- 	struct resource *res = dev_dax->dax_kmem_res;
- 	resource_size_t kmem_start = res->start;
- 	resource_size_t kmem_size = resource_size(res);
-+	const char *res_name = res->name;
- 	int rc;
- 
- 	/*
-@@ -102,6 +109,7 @@ static int dev_dax_kmem_remove(struct de
- 	/* Release and free dax resources */
- 	release_resource(res);
- 	kfree(res);
-+	kfree(res_name);
- 	dev_dax->dax_kmem_res = NULL;
- 
- 	return 0;
+-		if (meta->nr_domains < (index - offset)) {
++		if (index - offset >= meta->nr_domains) {
+ 			offset += meta->nr_domains;
+ 			continue;
+ 		}
 
 
