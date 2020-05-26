@@ -2,53 +2,51 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04736C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF4C72086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCDB2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519584;
-	bh=vD5WoP4lTdpRbN/IxdmcqV8p9UNc8KxGm1x8FKbUuus=;
+	s=default; t=1590519587;
+	bh=M9qRowqm/saiFkWC37zh2qKz39SS2qco/qONgG6lAWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1G47DTpo549Y7v8c1V5fHt46DSgoxANAoW0aoqpJlYwRcJJNnN9Wq/IJa9hK/swt
-	 QfpzAE7NbShghH4OcwaRhmHkrNvuoBolRzqOqmlY4oeoRX7drQBCtxEE3iBoWnHaqw
-	 5xa/8MU3n5edb8WuH3whl6aMN926wQ2Dz79m/s80=
+	b=ajMjk2IaJ6ZU07l18Iw726b1DFDJfrNxuODrvngonQ31a3HdCstV+dHPY+TGJpY/Z
+	 5bsOTDbkCFgjrjHoqZ2A5wGfrnffNWo2Sl1ExqjJD6hQC1Mci9dEiwZq9tVZcY6qN2
+	 pRqArchE+FoE4qE9u3lLXEsLKQVEhtohKqf4qZZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390575AbgEZS7o (ORCPT
+        id S2390587AbgEZS7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:59:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53584 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:59:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389905AbgEZS7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:59:41 -0400
+        id S2390555AbgEZS7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D402086A;
-        Tue, 26 May 2020 18:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7A6F208B6;
+        Tue, 26 May 2020 18:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519581;
-        bh=vD5WoP4lTdpRbN/IxdmcqV8p9UNc8KxGm1x8FKbUuus=;
+        s=default; t=1590519578;
+        bh=M9qRowqm/saiFkWC37zh2qKz39SS2qco/qONgG6lAWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0u2L2fTIgZ7OY1XRyBsNP/U82EPifyLX7NzUcvHdRpDpsmGpZz6DIZj3HqSDRlkpA
-         W131cWsegFWblBqaA2HVLxpxWgJPuZkSwUtBhAnftmY2CE4oZYSmIFn7CpJ3gtsbfp
-         daTzfHEbmPTAVd64bRTY+sHvecWy7vZXtQ0R72lY=
+        b=ElBJvdXw5YDI6E2/qJ/i1QxluHcymNJUBs27dfWcGm14qnMz22rVE/0XCKwpXTY30
+         AgwS1SNFK/vL9W6xoAhsiPqU4xgVQghSaP1og2zdUXqxksm/i/vdksmof0JE3V2Gsd
+         d7VjLWlE981C05CC1wlT50NN5rz2bhWqkeahIcJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.9 59/64] staging: iio: ad2s1210: Fix SPI reading
-Date:   Tue, 26 May 2020 20:53:28 +0200
-Message-Id: <20200526183931.358395909@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 58/64] Revert "gfs2: Dont demote a glock until its revokes are written"
+Date:   Tue, 26 May 2020 20:53:27 +0200
+Message-Id: <20200526183931.185221353@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -61,63 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-commit 5e4f99a6b788047b0b8a7496c2e0c8f372f6edf2 upstream.
+[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
 
-If the serial interface is used, the 8-bit address should be latched using
-the rising edge of the WR/FSYNC signal.
+This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
 
-This basically means that a CS change is required between the first byte
-sent, and the second one.
-This change splits the single-transfer transfer of 2 bytes into 2 transfers
-with a single byte, and CS change in-between.
+This patch fixes a regression: patch df5db5f9ee112 allowed function
+run_queue() to bypass its call to do_xmote() if revokes were queued for
+the glock. That's wrong because its call to do_xmote() is what is
+responsible for calling the go_sync() glops functions to sync both
+the ail list and any revokes queued for it. By bypassing the call,
+gfs2 could get into a stand-off where the glock could not be demoted
+until its revokes are written back, but the revokes would not be
+written back because do_xmote() was never called.
 
-Note fixes tag is not accurate, but reflects a point beyond which there
-are too many refactors to make backporting straight forward.
+It "sort of" works, however, because there are other mechanisms like
+the log flush daemon (logd) that can sync the ail items and revokes,
+if it deems it necessary. The problem is: without file system pressure,
+it might never deem it necessary.
 
-Fixes: b19e9ad5e2cb ("staging:iio:resolver:ad2s1210 general driver cleanup.")
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/iio/resolver/ad2s1210.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ fs/gfs2/glock.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/staging/iio/resolver/ad2s1210.c
-+++ b/drivers/staging/iio/resolver/ad2s1210.c
-@@ -126,17 +126,24 @@ static int ad2s1210_config_write(struct
- static int ad2s1210_config_read(struct ad2s1210_state *st,
- 				unsigned char address)
- {
--	struct spi_transfer xfer = {
--		.len = 2,
--		.rx_buf = st->rx,
--		.tx_buf = st->tx,
-+	struct spi_transfer xfers[] = {
-+		{
-+			.len = 1,
-+			.rx_buf = &st->rx[0],
-+			.tx_buf = &st->tx[0],
-+			.cs_change = 1,
-+		}, {
-+			.len = 1,
-+			.rx_buf = &st->rx[1],
-+			.tx_buf = &st->tx[1],
-+		},
- 	};
- 	int ret = 0;
- 
- 	ad2s1210_set_mode(MOD_CONFIG, st);
- 	st->tx[0] = address | AD2S1210_MSB_IS_HIGH;
- 	st->tx[1] = AD2S1210_REG_FAULT;
--	ret = spi_sync_transfer(st->sdev, &xfer, 1);
-+	ret = spi_sync_transfer(st->sdev, xfers, 2);
- 	if (ret < 0)
- 		return ret;
- 	st->old_data = true;
+diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+index adc1a97cfe96..efd44d5645d8 100644
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -548,9 +548,6 @@ __acquires(&gl->gl_lockref.lock)
+ 			goto out_unlock;
+ 		if (nonblock)
+ 			goto out_sched;
+-		smp_mb();
+-		if (atomic_read(&gl->gl_revokes) != 0)
+-			goto out_sched;
+ 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
+ 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
+ 		gl->gl_target = gl->gl_demote_state;
+-- 
+2.25.1
+
 
 
