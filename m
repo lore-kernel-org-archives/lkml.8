@@ -2,212 +2,187 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F18AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D60C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE341207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iE3qXf/O"
+	by mail.kernel.org (Postfix) with ESMTP id D47962088E
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590522751;
+	bh=ojp6/YpHEc1NW2ePcbFEVlErml7dvQ+2552G/h+0Ss4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UvLQpHoesDfwb+oMksb5iyRdPAowlKYU/3Ttp4j/N40ZwbzhfbRJ1a9/oJQsIv1hZ
+	 E4JLknmo2xvxbZuJvlEmJTti/L7T32ErAHOqPJFFrLw6471aBVfeM+IfU8i+jDUfjf
+	 3lWNYI0ifnAMU3R25DItPduu5+Y0gXzIhy3ePXpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390476AbgEZTwY (ORCPT
+        id S2390562AbgEZTwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:52:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390285AbgEZTvd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:51:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A04C03E96E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:51:32 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id t8so260896pju.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 12:51:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=91LPx4VFG9btmYMQhwNjB8l3CSYHzquXTBOwjvdo+tY=;
-        b=iE3qXf/OK07yvdsW8Vb51ZnFfsRrhY/I8AyPsPZBuYDCG+TC8jz9R0D0M+GRoONqmI
-         gim5npZm8cxTM+QSweOQXfZsODg5VS6+7bN+CKZ4dMY7gY+QpgkMzMrv59Fphw7RYayS
-         JBGmAVIX3BEE46Smv2GYnsm+ImSrUvQiaACUJ58syDnlB+HNG5sK2LsdT4XG1F3dqp/4
-         oVhakRyiZ0nYbu4FXaNA5/FJOFFKKsGpp/Hce7YkE5gJePG3prwbUWapZwHq23NDXkHD
-         /0mpwLPbH1DZDuHuFhnGHadUwVq75hkc8cYWz+Lkln7BqwK/1OvfBTdLVjGY87S3aO6Z
-         QMtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=91LPx4VFG9btmYMQhwNjB8l3CSYHzquXTBOwjvdo+tY=;
-        b=SkE0NlmOQ6RFm6SR/KVfKutAk9b4FfmfMJWonSdGUvivrwGmdCu3Qqf4LQ3jDAiUJw
-         dZFaE3ISHGoFBS3H9NQFobvhpSyHA1CWVocp4cfCnQVdPBCuXe5KFdfbCJfruVp2/ytR
-         eopMolBet1WDm3OBgwcrnZ4GQBPXTAuOPdm4hck6v63bE1zNEjJwbzYHP8qMzoC/ymrV
-         ZNs3cdHSwkF45YkXV/krgW4e+Dfi5OfIFEjlkl0NTrgp1QAs/3LFJpA6Emd6Q4ReE0wg
-         oMD+OkBEz8hTlUmjEVZmZpFAsk8iufR/Wdlmb04e3LZ2xFXN0a7baYEK9ut+XYpjl0kR
-         binQ==
-X-Gm-Message-State: AOAM531jjuIEOhnsHhLO3MqmjbEtMIzA8ToLcu2MjlFAHr9HgPFzXD/X
-        lMdQjhUuswMaMhJyyQY7Mft5HQ==
-X-Google-Smtp-Source: ABdhPJzk5ZeLZ9PiNns9o7WtuSDeeuU8oJZ8JIZZ0HjXadMCEeQTkM4QJqeJe1UnHKeyrNQoGn1fyg==
-X-Received: by 2002:a17:90a:2a0d:: with SMTP id i13mr909880pjd.94.1590522691575;
-        Tue, 26 May 2020 12:51:31 -0700 (PDT)
-Received: from x1.lan ([2605:e000:100e:8c61:94bb:59d2:caf6:70e1])
-        by smtp.gmail.com with ESMTPSA id c184sm313943pfc.57.2020.05.26.12.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 12:51:31 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 04/12] mm: add support for async page locking
-Date:   Tue, 26 May 2020 13:51:15 -0600
-Message-Id: <20200526195123.29053-5-axboe@kernel.dk>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526195123.29053-1-axboe@kernel.dk>
-References: <20200526195123.29053-1-axboe@kernel.dk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 26 May 2020 15:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390187AbgEZTvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:51:31 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0664207D8;
+        Tue, 26 May 2020 19:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590522690;
+        bh=ojp6/YpHEc1NW2ePcbFEVlErml7dvQ+2552G/h+0Ss4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Cnt67Dt2wLXOxwpUvPU/At41OYlrB9eXq7uQQvCL07XpgX5MFuMc5h5hvOEQfaDN2
+         JKi8I23q0M8jv+IaPdhSIkuHfjwGNdmfxNILnDXv1VZ2yhHJ66/ch/jRyXIplwTCW5
+         Sh7daajd/aAVa9IgYUOtwQ7sCi64sYamhulyYmWE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jdfbk-00FVxX-OC; Tue, 26 May 2020 20:51:28 +0100
+Date:   Tue, 26 May 2020 20:51:27 +0100
+Message-ID: <87sgfmzd8g.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Oscar Carter <oscar.carter@gmx.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers/irqchip: Remove function callback casts
+In-Reply-To: <20200526172527.GA3465@ubuntu>
+References: <20200524162220.10186-1-oscar.carter@gmx.com>
+        <87tv04z3kq.wl-maz@kernel.org>
+        <20200526172527.GA3465@ubuntu>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: oscar.carter@gmx.com, keescook@chromium.org, tglx@linutronix.de, jason@lakedaemon.net, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Normally waiting for a page to become unlocked, or locking the page,
-requires waiting for IO to complete. Add support for lock_page_async()
-and wait_on_page_locked_async(), which are callback based instead. This
-allows a caller to get notified when a page becomes unlocked, rather
-than wait for it.
+On Tue, 26 May 2020 18:25:27 +0100,
+Oscar Carter <oscar.carter@gmx.com> wrote:
+> 
+> On Mon, May 25, 2020 at 11:55:33AM +0100, Marc Zyngier wrote:
+> > On Sun, 24 May 2020 17:22:20 +0100,
+> > Oscar Carter <oscar.carter@gmx.com> wrote:
+> > >
+> > >  include/linux/acpi.h    | 11 +++++++++++
+> >
+> > You now need to Cc the ACPI maintainers.
+> 
+> Sorry for forgetting.
 
-We add a new iocb field, ki_waitq, to pass in the necessary data for this
-to happen. We can unionize this with ki_cookie, since that is only used
-for polled IO. Polled IO can never co-exist with async callbacks, as it is
-(by definition) polled completions. struct wait_page_key is made public,
-and we define struct wait_page_async as the interface between the caller
-and the core.
+No worries. In general, use scripts/get_maintainers.pl to find out who
+to Cc.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- include/linux/fs.h      |  7 ++++++-
- include/linux/pagemap.h |  9 +++++++++
- mm/filemap.c            | 41 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 56 insertions(+), 1 deletion(-)
+> 
+> > >  include/linux/irqchip.h |  5 +++--
+> > >  2 files changed, 14 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> > > index d661cd0ee64d..fed49b276a90 100644
+> > > --- a/include/linux/acpi.h
+> > > +++ b/include/linux/acpi.h
+> > > @@ -1154,6 +1154,17 @@ struct acpi_probe_entry {
+> > >  			.driver_data = data, 				\
+> > >  		   }
+> > >
+> > > +#define ACPI_DECLARE_SUBTABLE_PROBE_ENTRY(table, name, table_id,	\
+> > > +					  subtable, valid, data, fn)	\
+> > > +	static const struct acpi_probe_entry __acpi_probe_##name	\
+> > > +		__used __section(__##table##_acpi_probe_table) = {	\
+> > > +			.id = table_id,					\
+> > > +			.type = subtable,				\
+> > > +			.subtable_valid = valid,			\
+> > > +			.probe_subtbl = (acpi_tbl_entry_handler)fn,	\
+> >
+> > It strikes me that under the guise of removing function casts, you are
+> > actually adding one! And this cast is actually hiding all sorts of
+> > sins (remove it, and see things exploding).
+> 
+> Yes, if I remove it I see things exploiding. I'm very sorry.
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index d3ebb49189df..ba1fff0e7bca 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -314,6 +314,8 @@ enum rw_hint {
- #define IOCB_SYNC		(1 << 5)
- #define IOCB_WRITE		(1 << 6)
- #define IOCB_NOWAIT		(1 << 7)
-+/* iocb->ki_waitq is valid */
-+#define IOCB_WAITQ		(1 << 8)
- 
- struct kiocb {
- 	struct file		*ki_filp;
-@@ -327,7 +329,10 @@ struct kiocb {
- 	int			ki_flags;
- 	u16			ki_hint;
- 	u16			ki_ioprio; /* See linux/ioprio.h */
--	unsigned int		ki_cookie; /* for ->iopoll */
-+	union {
-+		unsigned int		ki_cookie; /* for ->iopoll */
-+		struct wait_page_queue	*ki_waitq; /* for async buffered IO */
-+	};
- 
- 	randomized_struct_fields_end
- };
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 53d980f2208d..d3e63c9c61ae 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -495,6 +495,7 @@ static inline int wake_page_match(struct wait_page_queue *wait_page,
- 
- extern void __lock_page(struct page *page);
- extern int __lock_page_killable(struct page *page);
-+extern int __lock_page_async(struct page *page, struct wait_page_queue *wait);
- extern int __lock_page_or_retry(struct page *page, struct mm_struct *mm,
- 				unsigned int flags);
- extern void unlock_page(struct page *page);
-@@ -531,6 +532,14 @@ static inline int lock_page_killable(struct page *page)
- 	return 0;
- }
- 
-+static inline int lock_page_async(struct page *page,
-+				  struct wait_page_queue *wait)
-+{
-+	if (!trylock_page(page))
-+		return __lock_page_async(page, wait);
-+	return 0;
-+}
-+
- /*
-  * lock_page_or_retry - Lock the page, unless this would block and the
-  * caller indicated that it can handle a retry.
-diff --git a/mm/filemap.c b/mm/filemap.c
-index e891b5bee8fd..c746541b1d49 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1183,6 +1183,42 @@ int wait_on_page_bit_killable(struct page *page, int bit_nr)
- }
- EXPORT_SYMBOL(wait_on_page_bit_killable);
- 
-+static int __wait_on_page_locked_async(struct page *page,
-+				       struct wait_page_queue *wait, bool set)
-+{
-+	struct wait_queue_head *q = page_waitqueue(page);
-+	int ret = 0;
-+
-+	wait->page = page;
-+	wait->bit_nr = PG_locked;
-+
-+	spin_lock_irq(&q->lock);
-+	if (set)
-+		ret = !trylock_page(page);
-+	else
-+		ret = PageLocked(page);
-+	if (ret) {
-+		__add_wait_queue_entry_tail(q, &wait->wait);
-+		SetPageWaiters(page);
-+		if (set)
-+			ret = !trylock_page(page);
-+		else
-+			ret = PageLocked(page);
-+		/*
-+		 * If we were succesful now, we know we're still on the
-+		 * waitqueue as we're still under the lock. This means it's
-+		 * safe to remove and return success, we know the callback
-+		 * isn't going to trigger.
-+		 */
-+		if (!ret)
-+			__remove_wait_queue(q, &wait->wait);
-+		else
-+			ret = -EIOCBQUEUED;
-+	}
-+	spin_unlock_irq(&q->lock);
-+	return ret;
-+}
-+
- /**
-  * put_and_wait_on_page_locked - Drop a reference and wait for it to be unlocked
-  * @page: The page to wait for.
-@@ -1345,6 +1381,11 @@ int __lock_page_killable(struct page *__page)
- }
- EXPORT_SYMBOL_GPL(__lock_page_killable);
- 
-+int __lock_page_async(struct page *page, struct wait_page_queue *wait)
-+{
-+	return __wait_on_page_locked_async(page, wait, true);
-+}
-+
- /*
-  * Return values:
-  * 1 - page is locked; mmap_sem is still held.
+No need to be sorry. We all learn from past mistakes.
+
+> 
+> > I've fixed it with the patch below (ACPI is such a mess of data
+> > structure case...).
+> 
+> > diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+> > index d7006ef18a0d..3870e9d4d3a8 100644
+> > --- a/drivers/irqchip/irq-gic-v3.c
+> > +++ b/drivers/irqchip/irq-gic-v3.c
+> > @@ -2117,7 +2117,7 @@ static void __init gic_acpi_setup_kvm_info(void)
+> >  }
+> >
+> >  static int __init
+> > -gic_acpi_init(struct acpi_subtable_header *header, const unsigned long end)
+> > +gic_acpi_init(union acpi_subtable_headers *header, const unsigned long end)
+> >  {
+> >  	struct acpi_madt_generic_distributor *dist;
+> >  	struct fwnode_handle *domain_handle;
+> > diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> > index 30ab623343d3..fc431857ce90 100644
+> > --- a/drivers/irqchip/irq-gic.c
+> > +++ b/drivers/irqchip/irq-gic.c
+> > @@ -1593,7 +1593,7 @@ static void __init gic_acpi_setup_kvm_info(void)
+> >  	gic_set_kvm_info(&gic_v2_kvm_info);
+> >  }
+> >
+> > -static int __init gic_v2_acpi_init(struct acpi_subtable_header *header,
+> > +static int __init gic_v2_acpi_init(union acpi_subtable_headers *header,
+> >  				   const unsigned long end)
+> >  {
+> >  	struct acpi_madt_generic_distributor *dist;
+> > diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> > index fed49b276a90..4f4ddbfce3d3 100644
+> > --- a/include/linux/acpi.h
+> > +++ b/include/linux/acpi.h
+> > @@ -1150,7 +1150,7 @@ struct acpi_probe_entry {
+> >  			.id = table_id,					\
+> >  			.type = subtable,				\
+> >  			.subtable_valid = valid,			\
+> > -			.probe_table = (acpi_tbl_table_handler)fn,	\
+> > +			.probe_table = fn,				\
+> >  			.driver_data = data, 				\
+> >  		   }
+> >
+> > @@ -1161,7 +1161,7 @@ struct acpi_probe_entry {
+> >  			.id = table_id,					\
+> >  			.type = subtable,				\
+> >  			.subtable_valid = valid,			\
+> > -			.probe_subtbl = (acpi_tbl_entry_handler)fn,	\
+> > +			.probe_subtbl = fn,				\
+> >  			.driver_data = data,				\
+> >  		}
+> >
+> 
+> Thanks for your help with this patch. I will do all the necessary changes
+> and I will resend a new version.
+> 
+> Do you mind if I add these two lines:
+> 
+> Co-developed-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> 
+> in the next version to give you credit?
+
+Sure, that's very kind of you to offer.
+
+Thanks,
+
+	M.
+
 -- 
-2.26.2
-
+Without deviation from the norm, progress is not possible.
