@@ -2,86 +2,100 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E45DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB044C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB55A20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8088620776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:58:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A7d9iE7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgEZH6U (ORCPT
+        id S1731710AbgEZH6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:58:20 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36120 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgEZH6T (ORCPT
+        Tue, 26 May 2020 03:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgEZH6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:58:19 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h7so15588562otr.3;
-        Tue, 26 May 2020 00:58:17 -0700 (PDT)
+        Tue, 26 May 2020 03:58:23 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70C09C03E97E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:58:23 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id v19so2227989wmj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:58:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dJ7nNUH8waduGIyWxEV016jy3YBm4py1dEFZ4+moc0s=;
+        b=A7d9iE7b9Upf36zlLWHFUh7N1P1CY4mQqszhIpb9d5Sl8zevcB1DdmcwQavIqWQbmw
+         pX+23S3Y1u3fl+wZ932ldGkO8w6Lrtdl76NH7X0zFC1xB8ALdR3JhznT+pd07/KSSnsf
+         hCNw+RSP5VLmcXqsozFu77d+Obd993ZdQ9KthTUkdwwx5xKTcb+n12El7J8g2uHUZw7s
+         T/kxf3Nm+HWWBNgPaItR7FgJhTv8WyEaKfpONmcc1Py0NV6pLjU7LcHxvNrlRdSJr7im
+         ACQBHGegYS3SNrFf59kTSNyyP10AXgMMR2wvqDAM4Wh2QHgxSgJIYVk/PAfvvrItr5on
+         ZwJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SQz/g1UQo2PLzZue916rto+4fVizs6mX0h0IORmeiK0=;
-        b=BMpO/DQPMIDCK5RSnRFDmaVNOlR8KrVFFMYvVFSsOsyWOhmRcfvNHwszEFap24xxQj
-         3vzHMuvCKdmkUlqp1fkNEUuA241d2qQzXSrTHjiDnfsSLxaQIBT6lDTrEMQX0tAL/z76
-         lgXfENByj8urcYxrZg6o4HK1PaGQ3dbT+b45XoLia5ik3Ig0zD/uVohTq7NbJUqT6MQ2
-         ov6h472GwXJcReydSrV0lr1onsQNj7+/zFfHk3H/MeUBnaWTACIbSgh9kpeCErSY0lpe
-         AQXBxTOJrzrhC/4RkwfzbI09cRRzwup29CEZaggNuFCCVuPcsmFXaSWWgDIrMT5B/lBH
-         KF3A==
-X-Gm-Message-State: AOAM533HydBs7iDNDMZEyA0ZBLQgQUJdUGnloVn397hJVaiyMQgeF10j
-        +YHKwGezA9IZK4bGQb34XIl8Q2jp6R2CnhGmR90AvQ==
-X-Google-Smtp-Source: ABdhPJyuK6xwILTTOZRjRZdK8dk8+wKmTSvqQijuIOWWRVWKbQR78bFQXvGUvPSmgY/YJKHrRp9PMVfS0D5qbVByH/g=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr22222885ote.107.1590479897644;
- Tue, 26 May 2020 00:58:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dJ7nNUH8waduGIyWxEV016jy3YBm4py1dEFZ4+moc0s=;
+        b=CCOOB4+hoJwBQRbOrs78Ffr3vEr6S3z5YCTs9mjdF8uJCH7Jqg+Xe5qq+OhIPJptZt
+         1ytRT7XpYO0h/VZFZ8/MbexThCHtEv2fEMC3PnBB4Ic+2iOeOdVIx7d6prXDOUjBTX9o
+         5IJIiPl5zxyjpE6/bGs6R+6qSO+k3CtKiZxI8NwV8rQwz4AanbwWGO9KgNacEqPDQpt+
+         iMCZDSnNBtLIQyYF8yO2FC66av1xfk2089C9TWDLV/7SejjcWcIon9mnHP3bocYtGCgk
+         +AxZpbU12H5/qg46CJJho77KBwoNgrLbyAZf9RziOx3DpDSz9Rd8bt8waH545BBjqeA8
+         bN2A==
+X-Gm-Message-State: AOAM531lbVjo3jOEbenjtUNH4SnDBCS3uedghQB5+SvAjP7iENq45LiE
+        t4ze/qLPlkcRhZgob6sMKkizv0trLTw=
+X-Google-Smtp-Source: ABdhPJy8TQ7mKu5n0oMECEFkFjYc1EBZIzKzt2vRKCSKp3QhxeDkjqVyOGQXnuS+OyFgvG/1kqiDJw==
+X-Received: by 2002:a1c:a1c5:: with SMTP id k188mr176648wme.41.1590479902146;
+        Tue, 26 May 2020 00:58:22 -0700 (PDT)
+Received: from dell ([95.149.164.102])
+        by smtp.gmail.com with ESMTPSA id j4sm18893746wrx.24.2020.05.26.00.58.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 00:58:21 -0700 (PDT)
+Date:   Tue, 26 May 2020 08:58:19 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mfd: stmfx: fix stmfx_irq_init error path
+Message-ID: <20200526075819.GF3628@dell>
+References: <20200422090833.9743-1-amelie.delaunay@st.com>
+ <20200422090833.9743-3-amelie.delaunay@st.com>
 MIME-Version: 1.0
-References: <1590420129-7531-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590420129-7531-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1590420129-7531-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 26 May 2020 09:58:06 +0200
-Message-ID: <CAMuHMdWjGX43EDnwxu0xp3U7aedWHuW5MLQo==1d5v_mV-1R9A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: r8a7742-iwg21d-q7: Enable SDHI2 controller
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200422090833.9743-3-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Wed, 22 Apr 2020, Amelie Delaunay wrote:
 
-On Mon, May 25, 2020 at 5:23 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable the SDHI2 controller on iWave RZ/G1H carrier board.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> In case the interrupt signal can't be configured, IRQ domain needs to be
+> removed.
+> 
+> Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  drivers/mfd/stmfx.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.9.
+Applied, thanks.
 
-BTW, perhaps you want to add an LED trigger for SDIO_LED, connected
-to GP5_22?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
