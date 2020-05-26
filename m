@@ -2,100 +2,200 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B99BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B410208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="csLBG7MW"
+	by mail.kernel.org (Postfix) with ESMTP id C88B2208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590519359;
+	bh=NOUY2cFAxW4NOpv/x7vgV6FUGdxcy+oqZ/7YtptmUIs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MD8DESH08SoTPKfdEl8E6BSMdTII9g7tHDGVOBmBeOm04XjE+lORkwtpEjWgrSDh6
+	 6sH4dtAwgrLtG+MUrJe+dUlDZ98D7Rrcl2ruf3/0T7ZLWxZFcFXpFyLHvWUTuvnj7L
+	 fJFBIZK6nB4HWOM4U0TmoLsGmp+5eOXcmZ0UQ0co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbgEZSzu (ORCPT
+        id S2389684AbgEZSz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60042 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389623AbgEZSzp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:45 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4772CC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:55:45 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id nu7so184522pjb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:55:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=mP6Cu0mgfRIdytKJmT/JbpqFGV5hti6hDDcYjXsp/n8=;
-        b=csLBG7MWmFDFdyDmAAKhK0DYdONM8BHZYeFGTC879KpVj6Y5Xk9doyuUkTKGKdCiHi
-         HfmAj4dC0cDcFBzY60F/ZTZbf47RRLBKsfVyQ+yGxEpMt/1nTlSUAcKXI8s+ieYL+zUU
-         X8wuWyyDODagttgQCaEPsRv5TGBmu1cP5EwDA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=mP6Cu0mgfRIdytKJmT/JbpqFGV5hti6hDDcYjXsp/n8=;
-        b=IvPqnlSGmQ5uuf4X0jsHmU7jknaqRcdEyUPXvLWgLS/5G0rofZjwlMr3+mBZ9d9dL9
-         ZL0W7658yMgzzkju9zAof7l04fkqczf0CXUM6wncXX1jat/Eh0f74GZa5H0XM8Na9aUQ
-         rtZTCGs4xvYDXkK1reYzMdJSKV5pkjLoDwrh/OXVV5zLrko8Dz9+X2F21nAqPsAGVTew
-         Jx+3ToDNSsJi7xD+sIwNAm+FSKRtXJ7ZFULLV6fyMH6uliIFN2rQ+pIC+3XFNQAu2bB5
-         NhbqneBk50b8nZdHc+BasR2vr/WEUbigNzVizrHiVpsmfF8fPTaJ8GJi/vqyIiJLvjqw
-         +QuQ==
-X-Gm-Message-State: AOAM531V5JZHoArtoPaOx6tDzK1Wb7t+vW43La/2IiA/isJtFUeufaip
-        wP8ya5m5J2JOGv0r+qkJWts3+g==
-X-Google-Smtp-Source: ABdhPJwQICMwBntB9aeujLedOj2O9kL1o7DOX7kSwX8RdQ0FSeMECkQjs44736Z3YvI7DbRdr2NpLg==
-X-Received: by 2002:a17:90a:e016:: with SMTP id u22mr707865pjy.28.1590519344815;
-        Tue, 26 May 2020 11:55:44 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x191sm263045pfd.37.2020.05.26.11.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:55:44 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 26 May 2020 14:55:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48382 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389671AbgEZSzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 830232086A;
+        Tue, 26 May 2020 18:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590519353;
+        bh=NOUY2cFAxW4NOpv/x7vgV6FUGdxcy+oqZ/7YtptmUIs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TL+EsfELdovadTz759QINdor245D5BTQ0UsNIvvO4L6bRMyzrhzEE3oBGbciiu2KQ
+         23GN93SvgsOjxv1s9Mrbwx9yCrnj7MWVxHthYwFlIZ9jrOXX17egzV+H6OohT1Vo+Z
+         A22r3kR2pWejRYWx3kQODCwW0lmoSFg/+HkBvN78=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.4 34/65] l2tp: lock socket before checking flags in connect()
+Date:   Tue, 26 May 2020 20:52:53 +0200
+Message-Id: <20200526183918.173764337@linuxfoundation.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
+References: <20200526183905.988782958@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200526173117.155339-1-ndesaulniers@google.com>
-References: <20200526173117.155339-1-ndesaulniers@google.com>
-Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org, Manoj Gupta <manojgupta@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>
-Date:   Tue, 26 May 2020 11:55:43 -0700
-Message-ID: <159051934304.88029.10469584232447870375@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nick Desaulniers (2020-05-26 10:31:14)
-> Custom toolchains that modify the default target to -mthumb cannot
-> compile the arm64 compat vdso32, as
-> arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> contains assembly that's invalid in -mthumb.  Force the use of -marm,
-> always.
->=20
-> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=3D1084372
-> Cc: Stephen Boyd <swboyd@google.com>
-> Reported-by: Luis Lozano <llozano@google.com>
-> Tested-by: Manoj Gupta <manojgupta@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+commit 0382a25af3c771a8e4d5e417d1834cbe28c2aaac upstream.
+
+Socket flags aren't updated atomically, so the socket must be locked
+while reading the SOCK_ZAPPED flag.
+
+This issue exists for both l2tp_ip and l2tp_ip6. For IPv6, this patch
+also brings error handling for __ip6_datagram_connect() failures.
+
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/ipv6.h  |    2 ++
+ net/ipv6/datagram.c |    4 +++-
+ net/l2tp/l2tp_ip.c  |   19 ++++++++++++-------
+ net/l2tp/l2tp_ip6.c |   16 +++++++++++-----
+ 4 files changed, 28 insertions(+), 13 deletions(-)
+
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -915,6 +915,8 @@ int compat_ipv6_setsockopt(struct sock *
+ int compat_ipv6_getsockopt(struct sock *sk, int level, int optname,
+ 			   char __user *optval, int __user *optlen);
+ 
++int __ip6_datagram_connect(struct sock *sk, struct sockaddr *addr,
++			   int addr_len);
+ int ip6_datagram_connect(struct sock *sk, struct sockaddr *addr, int addr_len);
+ int ip6_datagram_connect_v6_only(struct sock *sk, struct sockaddr *addr,
+ 				 int addr_len);
+--- a/net/ipv6/datagram.c
++++ b/net/ipv6/datagram.c
+@@ -40,7 +40,8 @@ static bool ipv6_mapped_addr_any(const s
+ 	return ipv6_addr_v4mapped(a) && (a->s6_addr32[3] == 0);
+ }
+ 
+-static int __ip6_datagram_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
++int __ip6_datagram_connect(struct sock *sk, struct sockaddr *uaddr,
++			   int addr_len)
+ {
+ 	struct sockaddr_in6	*usin = (struct sockaddr_in6 *) uaddr;
+ 	struct inet_sock	*inet = inet_sk(sk);
+@@ -213,6 +214,7 @@ out:
+ 	fl6_sock_release(flowlabel);
+ 	return err;
+ }
++EXPORT_SYMBOL_GPL(__ip6_datagram_connect);
+ 
+ int ip6_datagram_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ {
+--- a/net/l2tp/l2tp_ip.c
++++ b/net/l2tp/l2tp_ip.c
+@@ -321,21 +321,24 @@ static int l2tp_ip_connect(struct sock *
+ 	struct sockaddr_l2tpip *lsa = (struct sockaddr_l2tpip *) uaddr;
+ 	int rc;
+ 
+-	if (sock_flag(sk, SOCK_ZAPPED)) /* Must bind first - autobinding does not work */
+-		return -EINVAL;
+-
+ 	if (addr_len < sizeof(*lsa))
+ 		return -EINVAL;
+ 
+ 	if (ipv4_is_multicast(lsa->l2tp_addr.s_addr))
+ 		return -EINVAL;
+ 
+-	rc = ip4_datagram_connect(sk, uaddr, addr_len);
+-	if (rc < 0)
+-		return rc;
+-
+ 	lock_sock(sk);
+ 
++	/* Must bind first - autobinding does not work */
++	if (sock_flag(sk, SOCK_ZAPPED)) {
++		rc = -EINVAL;
++		goto out_sk;
++	}
++
++	rc = __ip4_datagram_connect(sk, uaddr, addr_len);
++	if (rc < 0)
++		goto out_sk;
++
+ 	l2tp_ip_sk(sk)->peer_conn_id = lsa->l2tp_conn_id;
+ 
+ 	write_lock_bh(&l2tp_ip_lock);
+@@ -343,7 +346,9 @@ static int l2tp_ip_connect(struct sock *
+ 	sk_add_bind_node(sk, &l2tp_ip_bind_table);
+ 	write_unlock_bh(&l2tp_ip_lock);
+ 
++out_sk:
+ 	release_sock(sk);
++
+ 	return rc;
+ }
+ 
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -383,9 +383,6 @@ static int l2tp_ip6_connect(struct sock
+ 	int	addr_type;
+ 	int rc;
+ 
+-	if (sock_flag(sk, SOCK_ZAPPED)) /* Must bind first - autobinding does not work */
+-		return -EINVAL;
+-
+ 	if (addr_len < sizeof(*lsa))
+ 		return -EINVAL;
+ 
+@@ -402,10 +399,18 @@ static int l2tp_ip6_connect(struct sock
+ 			return -EINVAL;
+ 	}
+ 
+-	rc = ip6_datagram_connect(sk, uaddr, addr_len);
+-
+ 	lock_sock(sk);
+ 
++	 /* Must bind first - autobinding does not work */
++	if (sock_flag(sk, SOCK_ZAPPED)) {
++		rc = -EINVAL;
++		goto out_sk;
++	}
++
++	rc = __ip6_datagram_connect(sk, uaddr, addr_len);
++	if (rc < 0)
++		goto out_sk;
++
+ 	l2tp_ip6_sk(sk)->peer_conn_id = lsa->l2tp_conn_id;
+ 
+ 	write_lock_bh(&l2tp_ip6_lock);
+@@ -413,6 +418,7 @@ static int l2tp_ip6_connect(struct sock
+ 	sk_add_bind_node(sk, &l2tp_ip6_bind_table);
+ 	write_unlock_bh(&l2tp_ip6_lock);
+ 
++out_sk:
+ 	release_sock(sk);
+ 
+ 	return rc;
+
+
