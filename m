@@ -2,125 +2,280 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC358C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA929C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B602073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92421207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:08:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="F0upllyC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbgEZRIA (ORCPT
+        id S1729783AbgEZRIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:08:00 -0400
-Received: from out28-53.mail.aliyun.com ([115.124.28.53]:42632 "EHLO
-        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728589AbgEZRH7 (ORCPT
+        Tue, 26 May 2020 13:08:42 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:46513 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728523AbgEZRIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:07:59 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1391001|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0227803-0.000153134-0.977067;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.HdyIWoB_1590512865;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HdyIWoB_1590512865)
-          by smtp.aliyun-inc.com(10.147.43.230);
-          Wed, 27 May 2020 01:07:53 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, tsbogend@alpha.franken.de, hns@goldelico.com,
-        paul@boddie.org.uk, dongsheng.qiu@ingenic.com,
-        aric.pzqi@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH 1/1] dt-bindings: MIPS: Document Ingenic SoCs binding.
-Date:   Wed, 27 May 2020 01:07:22 +0800
-Message-Id: <20200526170722.17206-2-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200526170722.17206-1-zhouyanjie@wanyeetech.com>
-References: <20200526170722.17206-1-zhouyanjie@wanyeetech.com>
+        Tue, 26 May 2020 13:08:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590512920; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=E/TUuzUpjVlMjRqaJlVv+mTsnkBZEql2N8QaKUXAGtk=; b=F0upllyCv/CQxDCPM7SzRUt2/cAQNkoFCMMclSC2kXV1HYKoG6KTeaRxJA2fHwcfqNa24tfg
+ 7weeqa/oYYjFvxvzAUQ8fAE23yHKcogjoUvu/mQQSXKTqzljrbpVSI2CYo9qMXe7/FnpmeQd
+ WybgPxa4NcjUyOKXN6RFVannj88=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ecd4d09809d904967469b2d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 26 May 2020 17:08:25
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 49A03C433C6; Tue, 26 May 2020 17:08:25 +0000 (UTC)
+Received: from [10.79.43.230] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BCC43C433C9;
+        Tue, 26 May 2020 17:08:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BCC43C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH v8 09/10] dt-bindings: interconnect: Add interconnect-tags
+ bindings
+To:     Saravana Kannan <saravanak@google.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+ <20200512125327.1868-10-georgi.djakov@linaro.org>
+ <20200519185836.GA469006@bogus>
+ <CAGETcx8+NZYT863ySLf6XvgLBm8PM_4euue2=zbDscgmDFh+7g@mail.gmail.com>
+ <3a392629be195fa6bebca18309efffab@codeaurora.org>
+ <CAGETcx9a=9pMonfyoNGqkkfaDwJ+=U6OqK1op5UYM2zQbktsXQ@mail.gmail.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <7eed4379-618c-46b6-3b3e-2e4c0334bf2e@codeaurora.org>
+Date:   Tue, 26 May 2020 22:38:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGETcx9a=9pMonfyoNGqkkfaDwJ+=U6OqK1op5UYM2zQbktsXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the available properties for the SoC root node and the
-CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- .../bindings/mips/ingenic/ingenic,cpu.yaml         | 57 ++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
 
-diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-new file mode 100644
-index 000000000000..afb02071a756
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Bindings for Ingenic XBurst family CPUs
-+
-+maintainers:
-+  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-+
-+description:
-+  Ingenic XBurst family CPUs shall have the following properties.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+
-+      - description: Ingenic XBurst®1 CPU Cores
-+        items:
-+          enum:
-+            - ingenic,xburst-mxu1.0
-+            - ingenic,xburst-fpu1.0-mxu1.1
-+            - ingenic,xburst-fpu2.0-mxu2.0
-+
-+      - description: Ingenic XBurst®2 CPU Cores
-+        items:
-+          enum:
-+            - ingenic,xburst2-fpu2.1-mxu2.1-smt
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - device_type
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    cpus {
-+    	#address-cells = <1>;
-+    	#size-cells = <0>;
-+
-+    	cpu0: cpu@0 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
-+    		reg = <0>;
-+    	};
-+
-+    	cpu1: cpu@1 {
-+    		device_type = "cpu";
-+    		compatible = "ingenic,xburst-fpu1.0-mxu1.1";
-+    		reg = <1>;
-+    	};
-+    };
-+...
+On 5/21/20 12:43 AM, Saravana Kannan wrote:
+> On Wed, May 20, 2020 at 11:51 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>>
+>> On 2020-05-20 01:27, Saravana Kannan wrote:
+>>> On Tue, May 19, 2020 at 11:58 AM Rob Herring <robh@kernel.org> wrote:
+>>>>
+>>>> On Tue, May 12, 2020 at 03:53:26PM +0300, Georgi Djakov wrote:
+>>>>> From: Sibi Sankar <sibis@codeaurora.org>
+>>>>>
+>>>>> Add interconnect-tags bindings to enable passing of optional
+>>>>> tag information to the interconnect framework.
+>>>>>
+>>>>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>>>>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>>>>> ---
+>>>>> v8:
+>>>>> * New patch, picked from here:
+>>>>>    https://lore.kernel.org/r/20200504202243.5476-10-sibis@codeaurora.org
+>>>>>
+>>>>>   .../devicetree/bindings/interconnect/interconnect.txt        | 5 +++++
+>>>>>   1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>> index 6f5d23a605b7..c1a226a934e5 100644
+>>>>> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+>>>>> @@ -55,6 +55,11 @@ interconnect-names : List of interconnect path name strings sorted in the same
+>>>>>                         * dma-mem: Path from the device to the main memory of
+>>>>>                                    the system
+>>>>>
+>>>>> +interconnect-tags : List of interconnect path tags sorted in the same order as the
+>>>>> +                 interconnects property. Consumers can append a specific tag to
+>>>>> +                 the path and pass this information to the interconnect framework
+>>>>> +                 to do aggregation based on the attached tag.
+>>>>
+>>>> Why isn't this information in the 'interconnect' arg cells?
+>>>>
+>>>> We have 'interconnect-names' because strings don't mix with cells. An
+>>>> expanding list of 'interconnect-.*' is not a good pattern IMO.
+>>
+>> Rob,
+>> Currently the interconnect paths
+>> assume a default tag and only few
+>> icc paths require tags that differ
+>> from the default ones. Encoding the
+>> tags in the interconnect arg cells
+>> would force all paths to specify
+>> the tags. I guess that's okay.
+> 
+> I think that's the right thing. Those cells are meant to be "args" to
+> the provider.
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi 
+b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+
+index ea4764f06a901..b34f024d4ab63 100644
+
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+
+@@ -132,9 +132,8 @@ &LITTLE_CPU_SLEEP_1
+
+                         capacity-dmips-mhz = <1024>;
+
+                         dynamic-power-coefficient = <100>;
+
+                         operating-points-v2 = <&cpu0_opp_table>;
+
+-                       interconnects = <&gem_noc MASTER_APPSS_PROC 
+&mc_virt SLAVE_EBI1>,
+
++                       interconnects = <&gem_noc MASTER_APPSS_PROC 3 
+&mc_virt SLAVE_EBI1 3>,
+
+                                         <&osm_l3 MASTER_OSM_L3_APPS 
+&osm_l3 SLAVE_OSM_L3>;
+
+                         next-level-cache = <&L2_0>;
+
+                         #cooling-cells = <2>;
+
+                         qcom,freq-domain = <&cpufreq_hw 0>;
+
+
+
+....
+
+                 mc_virt: interconnect@1638000 {
+
+                         compatible = "qcom,sc7180-mc-virt";
+
+                         reg = <0 0x01638000 0 0x1000>;
+
+-                       #interconnect-cells = <1>;
+
++                       #interconnect-cells = <2>;
+
+                         qcom,bcm-voters = <&apps_bcm_voter>;
+
+                 };
+
+....
+
+
+
+@@ -2216,14 +2208,14 @@ system-cache-controller@9200000 {
+
+                 gem_noc: interconnect@9680000 {
+
+                         compatible = "qcom,sc7180-gem-noc";
+
+                         reg = <0 0x09680000 0 0x3e200>;
+
+-                       #interconnect-cells = <1>;
+
++                       #interconnect-cells = <2>;
+
+                         qcom,bcm-voters = <&apps_bcm_voter>;
+
+                 };
+
+....
+
+
+
+diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+
+index 294e9c58565bb..6a7a785bd90b9 100644
+
+--- a/drivers/interconnect/core.c
+
++++ b/drivers/interconnect/core.c
+
+@@ -340,7 +340,7 @@ static struct icc_node 
+*of_icc_get_from_provider(struct of_phandle_args *spec)
+
+         struct icc_node *node = ERR_PTR(-EPROBE_DEFER);
+
+         struct icc_provider *provider;
+
+
+
+-       if (!spec || spec->args_count != 1)
+
++       if (!spec || spec->args_count < 1)
+
+                 return ERR_PTR(-EINVAL);
+
+
+
+         mutex_lock(&icc_lock);
+
+@@ -469,6 +469,9 @@ struct icc_path *of_icc_get_by_index(struct device 
+*dev, int idx)
+
+                 return ERR_PTR(-ENOMEM);
+
+         }
+
+
+
++       if (src_args.args_count == 2)
+
++               icc_set_tag(path, src_args.args[1]);
+
+diff: https://paste.ubuntu.com/p/sRRYhxQjsV/
+
+Saravana/Georgi,
+A few concerns here, I feel tag info as the second arg to the provider
+may not be true for all socs. Does introducing soc specific of_icc_get
+functions make sense?
+
+> 
+>>>
+>>> Also, is there an example for interconnect-tags that I missed? Is it a
+>>> list of strings, numbers, etc?
+>>
+>> Saravana,
+>> https://patchwork.kernel.org/patch/11527589/
+>> ^^ is an example of interconnect-tag useage.
+> 
+> If we actually merge interconnect-tags, I think the doc should be
+> updated. Instead of having to grep around.
+> 
+> -Saravana
+> 
+
 -- 
-2.11.0
-
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
