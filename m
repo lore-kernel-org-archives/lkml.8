@@ -2,203 +2,150 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13B9F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s9uWFzKu"
+	by mail.kernel.org (Postfix) with ESMTP id 9BEEA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbgEZMAi (ORCPT
+        id S1732009AbgEZMAo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:00:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35296 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727948AbgEZMAi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:00:38 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QC0WbH103538;
-        Tue, 26 May 2020 07:00:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590494432;
-        bh=BpXxWfmdYvNF+ijQSVSGnbQkH6FsWQci/xJaoWIPLEo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s9uWFzKuFCOqoA2jMl9OYh63UvK85B1AGXBdIpgj4jGy0Jzp41M6zm8ycNoaoMXDs
-         lwJKjGTY40/m99+juW0WOVyJ4Dqy1R8HLlLvJQgXQpKEv5axOwr7Cq1+OkJigXXJJw
-         0JFuwUUpAvTyKrPzMwp04Ec96fptMjo6Cru6QgUk=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QC0Wr3108109;
-        Tue, 26 May 2020 07:00:32 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 07:00:31 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 07:00:31 -0500
-Received: from [10.250.52.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QC0VcX123548;
-        Tue, 26 May 2020 07:00:31 -0500
-Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-References: <20200504211344.13221-1-dmurphy@ti.com>
- <20200504211344.13221-2-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c6dfde9b-e1a7-1959-1413-16ebff803536@ti.com>
-Date:   Tue, 26 May 2020 07:00:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 08:00:44 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2085 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727948AbgEZMAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 08:00:43 -0400
+Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 8CC2A219BB824B1F228F;
+        Tue, 26 May 2020 20:00:40 +0800 (CST)
+Received: from DGGEML531-MBS.china.huawei.com ([169.254.5.130]) by
+ DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
+ 14.03.0487.000; Tue, 26 May 2020 20:00:34 +0800
+From:   "Gonglei (Arei)" <arei.gonglei@huawei.com>
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     LABBE Corentin <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Jason Wang" <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Markus Elfring" <Markus.Elfring@web.de>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
+ virtio_crypto_skcipher_finalize_req()
+Thread-Topic: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
+ virtio_crypto_skcipher_finalize_req()
+Thread-Index: AQHWMwyZcHiP+r3rKk+F0nYZAiiWqKi6Qu8g
+Date:   Tue, 26 May 2020 12:00:33 +0000
+Message-ID: <33183CC9F5247A488A2544077AF19020DF5EA250@dggeml531-mbs.china.huawei.com>
+References: <20200526031956.1897-1-longpeng2@huawei.com>
+ <20200526031956.1897-3-longpeng2@huawei.com>
+In-Reply-To: <20200526031956.1897-3-longpeng2@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.133.225.234]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20200504211344.13221-2-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
 
-On 5/4/20 4:13 PM, Dan Murphy wrote:
-> Add DT bindings for the LEDs multicolor class framework.
-> Add multicolor ID to the color ID list for device tree bindings.
->
-> CC: Rob Herring <robh@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> -----Original Message-----
+> From: Longpeng (Mike, Cloud Infrastructure Service Product Dept.)
+> Sent: Tuesday, May 26, 2020 11:20 AM
+> To: linux-crypto@vger.kernel.org
+> Cc: Longpeng (Mike, Cloud Infrastructure Service Product Dept.)
+> <longpeng2@huawei.com>; LABBE Corentin <clabbe@baylibre.com>; Gonglei
+> (Arei) <arei.gonglei@huawei.com>; Herbert Xu
+> <herbert@gondor.apana.org.au>; Michael S. Tsirkin <mst@redhat.com>; Jason
+> Wang <jasowang@redhat.com>; David S. Miller <davem@davemloft.net>;
+> Markus Elfring <Markus.Elfring@web.de>;
+> virtualization@lists.linux-foundation.org; linux-kernel@vger.kernel.org;
+> stable@vger.kernel.org
+> Subject: [PATCH v2 2/2] crypto: virtio: Fix use-after-free in
+> virtio_crypto_skcipher_finalize_req()
+> 
+> The system'll crash when the users insmod crypto/tcrypto.ko with mode=155
+> ( testing "authenc(hmac(sha1),cbc(aes))" ). It's caused by reuse the memory of
+> request structure.
+> 
+> In crypto_authenc_init_tfm(), the reqsize is set to:
+>   [PART 1] sizeof(authenc_request_ctx) +
+>   [PART 2] ictx->reqoff +
+>   [PART 3] MAX(ahash part, skcipher part) and the 'PART 3' is used by both
+> ahash and skcipher in turn.
+> 
+> When the virtio_crypto driver finish skcipher req, it'll call ->complete callback(in
+> crypto_finalize_skcipher_request) and then free its resources whose pointers
+> are recorded in 'skcipher parts'.
+> 
+> However, the ->complete is 'crypto_authenc_encrypt_done' in this case, it will
+> use the 'ahash part' of the request and change its content, so virtio_crypto
+> driver will get the wrong pointer after ->complete finish and mistakenly free
+> some other's memory. So the system will crash when these memory will be used
+> again.
+> 
+> The resources which need to be cleaned up are not used any more. But the
+> pointers of these resources may be changed in the function
+> "crypto_finalize_skcipher_request". Thus release specific resources before
+> calling this function.
+> 
+> Fixes: dbaf0624ffa5 ("crypto: add virtio-crypto driver")
+> Reported-by: LABBE Corentin <clabbe@baylibre.com>
+> Cc: Gonglei <arei.gonglei@huawei.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Markus Elfring <Markus.Elfring@web.de>
+> Cc: virtualization@lists.linux-foundation.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> Message-Id: <20200123101000.GB24255@Red>
+> Signed-off-by: Longpeng(Mike) <longpeng2@huawei.com>
 > ---
->   .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
->   drivers/leds/led-core.c                       |  1 +
->   include/dt-bindings/leds/common.h             |  3 +-
->   3 files changed, 74 insertions(+), 1 deletion(-)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> new file mode 100644
-> index 000000000000..fa6ea8e5c46b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common properties for the multicolor LED class.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  Bindings for multi color LEDs show how to describe current outputs of
-> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-> +  modules. This is achieved by adding multi-led nodes layer to the
-> +  monochrome LED bindings.
-> +  The nodes and properties defined in this document are unique to the multicolor
-> +  LED class.  Common LED nodes and properties are inherited from the common.txt
-> +  within this documentation directory.
-> +
-> +properties:
-> +  color:
-> +    description: |
-> +      For multicolor LED support this property should be defined as
-> +      LED_COLOR_ID_MULTI and further definition can be found in
-> +      include/linux/leds/common.h.
-> +
-> +required:
-> +  - color
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        led-controller@14 {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          compatible = "ti,lp5009";
-> +          reg = <0x14>;
-> +
-> +          multi-led@1 {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            reg = <1>;
-> +            color = <LED_COLOR_ID_MULTI>;
-> +            function = LED_FUNCTION_CHARGING;
-> +
-> +            led@0 {
-> +              reg = <0>;
-> +              color = <LED_COLOR_ID_RED>;
-> +            };
-> +
-> +            led@1 {
-> +              reg = <1>;
-> +              color = <LED_COLOR_ID_GREEN>;
-> +            };
-> +
-> +            led@2 {
-> +              reg = <2>;
-> +              color = <LED_COLOR_ID_BLUE>;
-> +            };
-> +          };
-> +        };
-> +    };
-> +
-> +additionalProperties: false
-> +...
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index f1f718dbe0f8..846248a0693d 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
->   	[LED_COLOR_ID_VIOLET] = "violet",
->   	[LED_COLOR_ID_YELLOW] = "yellow",
->   	[LED_COLOR_ID_IR] = "ir",
-> +	[LED_COLOR_ID_MULTI] = "multicolor",
->   };
->   EXPORT_SYMBOL_GPL(led_colors);
->   
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-> index 0ce7dfc00dcb..a463ce6a8794 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -30,7 +30,8 @@
->   #define LED_COLOR_ID_VIOLET	5
->   #define LED_COLOR_ID_YELLOW	6
->   #define LED_COLOR_ID_IR		7
-> -#define LED_COLOR_ID_MAX	8
-> +#define LED_COLOR_ID_MULTI	8
-> +#define LED_COLOR_ID_MAX	9
->   
->   /* Standard LED functions */
->   /* Keyboard LEDs, usually it would be input4::capslock etc. */
 
+Acked-by: Gonglei <arei.gonglei@huawei.com>
 
-Can you re-review this series for dt-bindings?
+Regards,
+-Gonglei
 
-https://lore.kernel.org/patchwork/project/lkml/list/?series=441958
-
-I know you may reviewed them before and may have acked them but they 
-have changed enough that I did not feel right about keeping your ack.
-
-Dan
-
+>  drivers/crypto/virtio/virtio_crypto_algs.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/crypto/virtio/virtio_crypto_algs.c
+> b/drivers/crypto/virtio/virtio_crypto_algs.c
+> index 5f8243563009..52261b6c247e 100644
+> --- a/drivers/crypto/virtio/virtio_crypto_algs.c
+> +++ b/drivers/crypto/virtio/virtio_crypto_algs.c
+> @@ -582,10 +582,11 @@ static void virtio_crypto_skcipher_finalize_req(
+>  		scatterwalk_map_and_copy(req->iv, req->dst,
+>  					 req->cryptlen - AES_BLOCK_SIZE,
+>  					 AES_BLOCK_SIZE, 0);
+> -	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
+> -					   req, err);
+>  	kzfree(vc_sym_req->iv);
+>  	virtcrypto_clear_request(&vc_sym_req->base);
+> +
+> +	crypto_finalize_skcipher_request(vc_sym_req->base.dataq->engine,
+> +					   req, err);
+>  }
+> 
+>  static struct virtio_crypto_algo virtio_crypto_algs[] = { {
+> --
+> 2.23.0
 
