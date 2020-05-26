@@ -2,104 +2,89 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A19C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B99BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8A032071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47DD2208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590481076;
+	bh=FSwmFkxuSzNUR+zuH7Zn3DAi6cLT2fFo8dtMDocf8cM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o/kTqcWj00oItc6fK3ijSx1MsL2tsTgyY8hR9xSwo37TUKcbLUIHKuqN9dcvMUSfz
+	 khmgZ6SupHbJVbejrZabwq2lfMxeREder/QqNRzW6VG22HcU1DDvRRncRYxG5vUDvc
+	 uHb692UpYgObC+eeqR+eNAKvWTYhcqNYe0MC86mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgEZIQv convert rfc822-to-8bit (ORCPT
+        id S1730420AbgEZIRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:16:51 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:22048 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726926AbgEZIQt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:16:49 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-272-m1JOel9CNVyNzDk7C8tOAg-1; Tue, 26 May 2020 09:16:46 +0100
-X-MC-Unique: m1JOel9CNVyNzDk7C8tOAg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 26 May 2020 09:16:45 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 26 May 2020 09:16:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Pavel Machek' <pavel@ucw.cz>, "Dr. Greg" <greg@enjellic.com>
-CC:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dave.hansen@intel.com" <dave.hansen@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "haitao.huang@intel.com" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "kai.svahn@intel.com" <kai.svahn@intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "kai.huang@intel.com" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "cedric.xing@intel.com" <cedric.xing@intel.com>,
-        "puiterwijk@redhat.com" <puiterwijk@redhat.com>
-Subject: RE: [PATCH v29 00/20] Intel SGX foundations
-Thread-Topic: [PATCH v29 00/20] Intel SGX foundations
-Thread-Index: AQHWMhIeab+zFDSEIUyJtVV397qBpKi6Bwlw
-Date:   Tue, 26 May 2020 08:16:45 +0000
-Message-ID: <d8df2f130c5a4957acc56eecb18895b8@AcuMS.aculab.com>
-References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
- <20200426165753.GA11046@wind.enjellic.com>
- <87d07gk24l.fsf@nanos.tec.linutronix.de>
- <20200508190226.GA31465@wind.enjellic.com>
- <20200508195635.GR27052@linux.intel.com>
- <20200514091637.GA25156@wind.enjellic.com> <20200524212719.GA1192@bug>
-In-Reply-To: <20200524212719.GA1192@bug>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 26 May 2020 04:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbgEZIRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 04:17:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF0B320776;
+        Tue, 26 May 2020 08:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590481075;
+        bh=FSwmFkxuSzNUR+zuH7Zn3DAi6cLT2fFo8dtMDocf8cM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=quWEouPkVJ9Znhpt/F+1qts9DS26VXpGDAS6hvdCF87TyIXFu3qLUDZ8st7rXVf8m
+         0JHpATuvZsGTQgfwvYLv7aCyoR8v8CV72nNPAq8RDa5zWut82u4sXHwLCZQyz2gscC
+         h87tfCpsU+JOXvXlDsVqkhIAaRZDuWNX3ZQCnjMI=
+Date:   Tue, 26 May 2020 10:17:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        sashal@kernel.org, Andi Kleen <ak@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
+Message-ID: <20200526081752.GA2650351@kroah.com>
+References: <20200526052848.605423-1-andi@firstfloor.org>
+ <20200526065618.GC2580410@kroah.com>
+ <20200526075736.GH317569@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526075736.GH317569@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Machek
-> Sent: 24 May 2020 22:27
-..
-> It provides false sense of security, and I'm afraid big companies will try to force
-> people to use it. "DRM, now with hardware support". "Finally advertisments you can
-> not skip". "Just run this piece of code on your machine to access your bank account.
-> Trust us!"
+On Tue, May 26, 2020 at 09:57:36AM +0200, Peter Zijlstra wrote:
+> On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
+> > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
+> > > From: Andi Kleen <ak@linux.intel.com>
+> > > 
+> > > Since there seem to be kernel modules floating around that set
+> > > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+> > > CR4 pinning just checks that bits are set, this also checks
+> > > that the FSGSBASE bit is not set, and if it is clears it again.
+> > 
+> > So we are trying to "protect" ourselves from broken out-of-tree kernel
+> > modules now?  Why stop with this type of check, why not just forbid them
+> > entirely if we don't trust them?  :)
+> 
+> Oh, I have a bunch of patches pending for that :-)
 
-Hey malware guys, here is somewhere you can hide your code
-making it very difficult to find.
-You can then use the hardware disk encryption that people think
-gives them security to encrypt all the files.
+Ah, I thought I had seen something like that go by a while ago.
 
-Job done...
+It's sad that we have to write a "don't do stupid things" checker for
+kernel modules now :(
 
-	David
+> It will basically decode the module text and refuse to load the module
+> for most CPL0 instruction.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Ok, so why would Andi's patch even be needed then?  Andi, why post this?
 
+thanks,
+
+greg k-h
