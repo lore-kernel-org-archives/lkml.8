@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52621C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E7EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27E51208B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D41208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519310;
-	bh=RFQHU8ppshZ34+/Hgd0H57iQCdEBzNIhkBiqtOAvyqQ=;
+	s=default; t=1590519311;
+	bh=jAtbxIzhcXeEqb9MjkeDGbpA6gPCjjR5oaJeenG23EY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G1rg2HHKEUZRhNR0HKGaXtYLED7tvqeZvzBtfqqbp4T7qM4RmOIzWzQ8jrOMv4e+3
-	 TTreNNAjV/ufFIHgSiZUwzdZSFpjlZX6plK0VkNosfllt9QnxBttE8Q5/KzcT9Rfg1
-	 VFCass7go5rI4qxIe15+jopyJl0BtfSaahI2hqyw=
+	b=C4CRcvHW4EvZcx5R8BAUmcGlJG2IXNVJ1wWIlEC5HaKlqSeftHvvEisaa6wf6rD6X
+	 wsLanLoulxfKjPKurZYr6xSfw5pGLS/k7tJGOsPRsslmilgAxDNFTdZtRZ3jIB+B+v
+	 hwAmKjJGeWsfAe9by64SKRPSdY7Roqmgfk99QvcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389324AbgEZSzJ (ORCPT
+        id S2389346AbgEZSzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47396 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:55:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389296AbgEZSzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:55:07 -0400
+        id S2389242AbgEZSzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:55:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1607E2070A;
-        Tue, 26 May 2020 18:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97443207FB;
+        Tue, 26 May 2020 18:55:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519305;
-        bh=RFQHU8ppshZ34+/Hgd0H57iQCdEBzNIhkBiqtOAvyqQ=;
+        s=default; t=1590519303;
+        bh=jAtbxIzhcXeEqb9MjkeDGbpA6gPCjjR5oaJeenG23EY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbjsCgdcVDr5oUQzd93PFFxZLxqKu9JLtEtLuuZX8I5fHrimMu53UwXbzM6OVR40D
-         q83IugFm7iyEalsxh+yxtvYKlWxZHCG7FOPiRc9dKSI4utMi13eI+H/i+4wx82yDzP
-         AAJxciomPLkQl3wgXiAxoHjuTruwW48eX0nwY8pU=
+        b=qpUwbgwPoq/q7xR/35pHB5HzD1cqovwXGu2jJuCaxcJNUzHyi6OnpLYg3YX6//Y5t
+         cRrab+U+uzHY8E7YMAdCI4qZSnUXh5b6shVQrXvN/JjDykZGHGAfY6uQQPq00d/AjX
+         LqYWGZC7+qbv5Sy55Oe9jTVxeN/AfgGEjkXuv/PQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mauro Carvalho Chehab <mchehab@s-opensource.com>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 17/65] media-device: dynamically allocate struct media_devnode
-Date:   Tue, 26 May 2020 20:52:36 +0200
-Message-Id: <20200526183912.438531575@linuxfoundation.org>
+Subject: [PATCH 4.4 16/65] media-devnode: fix namespace mess
+Date:   Tue, 26 May 2020 20:52:35 +0200
+Message-Id: <20200526183912.318728302@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 References: <20200526183905.988782958@linuxfoundation.org>
@@ -64,261 +64,351 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 
-commit a087ce704b802becbb4b0f2a20f2cb3f6911802e upstream.
+commit 163f1e93e995048b894c5fc86a6034d16beed740 upstream.
 
-struct media_devnode is currently embedded at struct media_device.
+Along all media controller code, "mdev" is used to represent
+a pointer to struct media_device, and "devnode" for a pointer
+to struct media_devnode.
 
-While this works fine during normal usage, it leads to a race
-condition during devnode unregister. the problem is that drivers
-assume that, after calling media_device_unregister(), the struct
-that contains media_device can be freed. This is not true, as it
-can't be freed until userspace closes all opened /dev/media devnodes.
+However, inside media-devnode.[ch], "mdev" is used to represent
+a pointer to struct media_devnode.
 
-In other words, if the media devnode is still open, and media_device
-gets freed, any call to an ioctl will make the core to try to access
-struct media_device, with will cause an use-after-free and even GPF.
+This is very confusing and may lead to development errors.
 
-Fix this by dynamically allocating the struct media_devnode and only
-freeing it when it is safe.
+So, let's change all occurrences at media-devnode.[ch] to
+also use "devnode" for such pointers.
+
+This patch doesn't make any functional changes.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-[bwh: Backported to 4.4:
- - Drop change in au0828
- - Include <linux/slab.h> in media-device.c
- - Adjust context]
+[bwh: Backported to 4.4: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/media-device.c       | 40 +++++++++++++++++++++---------
- drivers/media/media-devnode.c      |  8 +++++-
- drivers/media/usb/uvc/uvc_driver.c |  2 +-
- include/media/media-device.h       |  5 +---
- include/media/media-devnode.h      | 10 +++++++-
- 5 files changed, 46 insertions(+), 19 deletions(-)
+ drivers/media/media-devnode.c | 114 +++++++++++++++++-----------------
+ include/media/media-devnode.h |  10 +--
+ 2 files changed, 62 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/media/media-device.c b/drivers/media/media-device.c
-index 7b39440192d6..fb018fe1a8f7 100644
---- a/drivers/media/media-device.c
-+++ b/drivers/media/media-device.c
-@@ -24,6 +24,7 @@
- #include <linux/export.h>
- #include <linux/ioctl.h>
- #include <linux/media.h>
-+#include <linux/slab.h>
- #include <linux/types.h>
- 
- #include <media/media-device.h>
-@@ -234,7 +235,7 @@ static long media_device_ioctl(struct file *filp, unsigned int cmd,
- 			       unsigned long arg)
- {
- 	struct media_devnode *devnode = media_devnode_data(filp);
--	struct media_device *dev = to_media_device(devnode);
-+	struct media_device *dev = devnode->media_dev;
- 	long ret;
- 
- 	switch (cmd) {
-@@ -303,7 +304,7 @@ static long media_device_compat_ioctl(struct file *filp, unsigned int cmd,
- 				      unsigned long arg)
- {
- 	struct media_devnode *devnode = media_devnode_data(filp);
--	struct media_device *dev = to_media_device(devnode);
-+	struct media_device *dev = devnode->media_dev;
- 	long ret;
- 
- 	switch (cmd) {
-@@ -344,7 +345,8 @@ static const struct media_file_operations media_device_fops = {
- static ssize_t show_model(struct device *cd,
- 			  struct device_attribute *attr, char *buf)
- {
--	struct media_device *mdev = to_media_device(to_media_devnode(cd));
-+	struct media_devnode *devnode = to_media_devnode(cd);
-+	struct media_device *mdev = devnode->media_dev;
- 
- 	return sprintf(buf, "%.*s\n", (int)sizeof(mdev->model), mdev->model);
- }
-@@ -372,6 +374,7 @@ static void media_device_release(struct media_devnode *mdev)
- int __must_check __media_device_register(struct media_device *mdev,
- 					 struct module *owner)
- {
-+	struct media_devnode *devnode;
- 	int ret;
- 
- 	if (WARN_ON(mdev->dev == NULL || mdev->model[0] == 0))
-@@ -382,17 +385,27 @@ int __must_check __media_device_register(struct media_device *mdev,
- 	spin_lock_init(&mdev->lock);
- 	mutex_init(&mdev->graph_mutex);
- 
-+	devnode = kzalloc(sizeof(*devnode), GFP_KERNEL);
-+	if (!devnode)
-+		return -ENOMEM;
-+
- 	/* Register the device node. */
--	mdev->devnode.fops = &media_device_fops;
--	mdev->devnode.parent = mdev->dev;
--	mdev->devnode.release = media_device_release;
--	ret = media_devnode_register(&mdev->devnode, owner);
--	if (ret < 0)
-+	mdev->devnode = devnode;
-+	devnode->fops = &media_device_fops;
-+	devnode->parent = mdev->dev;
-+	devnode->release = media_device_release;
-+	ret = media_devnode_register(mdev, devnode, owner);
-+	if (ret < 0) {
-+		mdev->devnode = NULL;
-+		kfree(devnode);
- 		return ret;
-+	}
- 
--	ret = device_create_file(&mdev->devnode.dev, &dev_attr_model);
-+	ret = device_create_file(&devnode->dev, &dev_attr_model);
- 	if (ret < 0) {
--		media_devnode_unregister(&mdev->devnode);
-+		mdev->devnode = NULL;
-+		media_devnode_unregister(devnode);
-+		kfree(devnode);
- 		return ret;
- 	}
- 
-@@ -413,8 +426,11 @@ void media_device_unregister(struct media_device *mdev)
- 	list_for_each_entry_safe(entity, next, &mdev->entities, list)
- 		media_device_unregister_entity(entity);
- 
--	device_remove_file(&mdev->devnode.dev, &dev_attr_model);
--	media_devnode_unregister(&mdev->devnode);
-+	/* Check if mdev devnode was registered */
-+	if (media_devnode_is_registered(mdev->devnode)) {
-+		device_remove_file(&mdev->devnode->dev, &dev_attr_model);
-+		media_devnode_unregister(mdev->devnode);
-+	}
- }
- EXPORT_SYMBOL_GPL(media_device_unregister);
- 
 diff --git a/drivers/media/media-devnode.c b/drivers/media/media-devnode.c
-index 98211c570e11..000efb17b95b 100644
+index 86c7c3732c84..98211c570e11 100644
 --- a/drivers/media/media-devnode.c
 +++ b/drivers/media/media-devnode.c
-@@ -44,6 +44,7 @@
- #include <linux/uaccess.h>
+@@ -59,21 +59,21 @@ static DECLARE_BITMAP(media_devnode_nums, MEDIA_NUM_DEVICES);
+ /* Called when the last user of the media device exits. */
+ static void media_devnode_release(struct device *cd)
+ {
+-	struct media_devnode *mdev = to_media_devnode(cd);
++	struct media_devnode *devnode = to_media_devnode(cd);
  
- #include <media/media-devnode.h>
-+#include <media/media-device.h>
+ 	mutex_lock(&media_devnode_lock);
  
- #define MEDIA_NUM_DEVICES	256
- #define MEDIA_NAME		"media"
-@@ -74,6 +75,8 @@ static void media_devnode_release(struct device *cd)
+ 	/* Delete the cdev on this minor as well */
+-	cdev_del(&mdev->cdev);
++	cdev_del(&devnode->cdev);
+ 
+ 	/* Mark device node number as free */
+-	clear_bit(mdev->minor, media_devnode_nums);
++	clear_bit(devnode->minor, media_devnode_nums);
+ 
+ 	mutex_unlock(&media_devnode_lock);
+ 
  	/* Release media_devnode and perform other cleanups as needed. */
- 	if (devnode->release)
- 		devnode->release(devnode);
-+
-+	kfree(devnode);
+-	if (mdev->release)
+-		mdev->release(mdev);
++	if (devnode->release)
++		devnode->release(devnode);
  }
  
  static struct bus_type media_bus_type = {
-@@ -221,6 +224,7 @@ static const struct file_operations media_devnode_fops = {
+@@ -83,37 +83,37 @@ static struct bus_type media_bus_type = {
+ static ssize_t media_read(struct file *filp, char __user *buf,
+ 		size_t sz, loff_t *off)
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+-	if (!mdev->fops->read)
++	if (!devnode->fops->read)
+ 		return -EINVAL;
+-	if (!media_devnode_is_registered(mdev))
++	if (!media_devnode_is_registered(devnode))
+ 		return -EIO;
+-	return mdev->fops->read(filp, buf, sz, off);
++	return devnode->fops->read(filp, buf, sz, off);
+ }
+ 
+ static ssize_t media_write(struct file *filp, const char __user *buf,
+ 		size_t sz, loff_t *off)
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+-	if (!mdev->fops->write)
++	if (!devnode->fops->write)
+ 		return -EINVAL;
+-	if (!media_devnode_is_registered(mdev))
++	if (!media_devnode_is_registered(devnode))
+ 		return -EIO;
+-	return mdev->fops->write(filp, buf, sz, off);
++	return devnode->fops->write(filp, buf, sz, off);
+ }
+ 
+ static unsigned int media_poll(struct file *filp,
+ 			       struct poll_table_struct *poll)
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+-	if (!media_devnode_is_registered(mdev))
++	if (!media_devnode_is_registered(devnode))
+ 		return POLLERR | POLLHUP;
+-	if (!mdev->fops->poll)
++	if (!devnode->fops->poll)
+ 		return DEFAULT_POLLMASK;
+-	return mdev->fops->poll(filp, poll);
++	return devnode->fops->poll(filp, poll);
+ }
+ 
+ static long
+@@ -121,12 +121,12 @@ __media_ioctl(struct file *filp, unsigned int cmd, unsigned long arg,
+ 	      long (*ioctl_func)(struct file *filp, unsigned int cmd,
+ 				 unsigned long arg))
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+ 	if (!ioctl_func)
+ 		return -ENOTTY;
+ 
+-	if (!media_devnode_is_registered(mdev))
++	if (!media_devnode_is_registered(devnode))
+ 		return -EIO;
+ 
+ 	return ioctl_func(filp, cmd, arg);
+@@ -134,9 +134,9 @@ __media_ioctl(struct file *filp, unsigned int cmd, unsigned long arg,
+ 
+ static long media_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+-	return __media_ioctl(filp, cmd, arg, mdev->fops->ioctl);
++	return __media_ioctl(filp, cmd, arg, devnode->fops->ioctl);
+ }
+ 
+ #ifdef CONFIG_COMPAT
+@@ -144,9 +144,9 @@ static long media_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ static long media_compat_ioctl(struct file *filp, unsigned int cmd,
+ 			       unsigned long arg)
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+-	return __media_ioctl(filp, cmd, arg, mdev->fops->compat_ioctl);
++	return __media_ioctl(filp, cmd, arg, devnode->fops->compat_ioctl);
+ }
+ 
+ #endif /* CONFIG_COMPAT */
+@@ -154,7 +154,7 @@ static long media_compat_ioctl(struct file *filp, unsigned int cmd,
+ /* Override for the open function */
+ static int media_open(struct inode *inode, struct file *filp)
+ {
+-	struct media_devnode *mdev;
++	struct media_devnode *devnode;
+ 	int ret;
+ 
+ 	/* Check if the media device is available. This needs to be done with
+@@ -164,23 +164,23 @@ static int media_open(struct inode *inode, struct file *filp)
+ 	 * a crash.
+ 	 */
+ 	mutex_lock(&media_devnode_lock);
+-	mdev = container_of(inode->i_cdev, struct media_devnode, cdev);
++	devnode = container_of(inode->i_cdev, struct media_devnode, cdev);
+ 	/* return ENXIO if the media device has been removed
+ 	   already or if it is not registered anymore. */
+-	if (!media_devnode_is_registered(mdev)) {
++	if (!media_devnode_is_registered(devnode)) {
+ 		mutex_unlock(&media_devnode_lock);
+ 		return -ENXIO;
+ 	}
+ 	/* and increase the device refcount */
+-	get_device(&mdev->dev);
++	get_device(&devnode->dev);
+ 	mutex_unlock(&media_devnode_lock);
+ 
+-	filp->private_data = mdev;
++	filp->private_data = devnode;
+ 
+-	if (mdev->fops->open) {
+-		ret = mdev->fops->open(filp);
++	if (devnode->fops->open) {
++		ret = devnode->fops->open(filp);
+ 		if (ret) {
+-			put_device(&mdev->dev);
++			put_device(&devnode->dev);
+ 			filp->private_data = NULL;
+ 			return ret;
+ 		}
+@@ -192,16 +192,16 @@ static int media_open(struct inode *inode, struct file *filp)
+ /* Override for the release function */
+ static int media_release(struct inode *inode, struct file *filp)
+ {
+-	struct media_devnode *mdev = media_devnode_data(filp);
++	struct media_devnode *devnode = media_devnode_data(filp);
+ 
+-	if (mdev->fops->release)
+-		mdev->fops->release(filp);
++	if (devnode->fops->release)
++		devnode->fops->release(filp);
+ 
+ 	filp->private_data = NULL;
+ 
+ 	/* decrease the refcount unconditionally since the release()
+ 	   return value is ignored. */
+-	put_device(&mdev->dev);
++	put_device(&devnode->dev);
+ 	return 0;
+ }
+ 
+@@ -221,7 +221,7 @@ static const struct file_operations media_devnode_fops = {
  
  /**
   * media_devnode_register - register a media device node
-+ * @media_dev: struct media_device we want to register a device node
-  * @devnode: media device node structure we want to register
+- * @mdev: media device node structure we want to register
++ * @devnode: media device node structure we want to register
   *
   * The registration code assigns minor numbers and registers the new device node
-@@ -233,7 +237,8 @@ static const struct file_operations media_devnode_fops = {
+  * with the kernel. An error is returned if no free minor number can be found,
+@@ -233,7 +233,7 @@ static const struct file_operations media_devnode_fops = {
   * the media_devnode structure is *not* called, so the caller is responsible for
   * freeing any data.
   */
--int __must_check media_devnode_register(struct media_devnode *devnode,
-+int __must_check media_devnode_register(struct media_device *mdev,
-+					struct media_devnode *devnode,
+-int __must_check media_devnode_register(struct media_devnode *mdev,
++int __must_check media_devnode_register(struct media_devnode *devnode,
  					struct module *owner)
  {
  	int minor;
-@@ -252,6 +257,7 @@ int __must_check media_devnode_register(struct media_devnode *devnode,
+@@ -251,40 +251,40 @@ int __must_check media_devnode_register(struct media_devnode *mdev,
+ 	set_bit(minor, media_devnode_nums);
  	mutex_unlock(&media_devnode_lock);
  
- 	devnode->minor = minor;
-+	devnode->media_dev = mdev;
+-	mdev->minor = minor;
++	devnode->minor = minor;
  
  	/* Part 2: Initialize and register the character device */
- 	cdev_init(&devnode->cdev, &media_devnode_fops);
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index 9cd0268b2767..f353ab569b8e 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1800,7 +1800,7 @@ static void uvc_delete(struct uvc_device *dev)
- 	if (dev->vdev.dev)
- 		v4l2_device_unregister(&dev->vdev);
- #ifdef CONFIG_MEDIA_CONTROLLER
--	if (media_devnode_is_registered(&dev->mdev.devnode))
-+	if (media_devnode_is_registered(dev->mdev.devnode))
- 		media_device_unregister(&dev->mdev);
- #endif
+-	cdev_init(&mdev->cdev, &media_devnode_fops);
+-	mdev->cdev.owner = owner;
++	cdev_init(&devnode->cdev, &media_devnode_fops);
++	devnode->cdev.owner = owner;
  
-diff --git a/include/media/media-device.h b/include/media/media-device.h
-index 6e6db78f1ee2..00bbd679864a 100644
---- a/include/media/media-device.h
-+++ b/include/media/media-device.h
-@@ -60,7 +60,7 @@ struct device;
- struct media_device {
- 	/* dev->driver_data points to this struct. */
- 	struct device *dev;
--	struct media_devnode devnode;
-+	struct media_devnode *devnode;
+-	ret = cdev_add(&mdev->cdev, MKDEV(MAJOR(media_dev_t), mdev->minor), 1);
++	ret = cdev_add(&devnode->cdev, MKDEV(MAJOR(media_dev_t), devnode->minor), 1);
+ 	if (ret < 0) {
+ 		pr_err("%s: cdev_add failed\n", __func__);
+ 		goto error;
+ 	}
  
- 	char model[32];
- 	char serial[40];
-@@ -84,9 +84,6 @@ struct media_device {
- #define MEDIA_DEV_NOTIFY_PRE_LINK_CH	0
- #define MEDIA_DEV_NOTIFY_POST_LINK_CH	1
+ 	/* Part 3: Register the media device */
+-	mdev->dev.bus = &media_bus_type;
+-	mdev->dev.devt = MKDEV(MAJOR(media_dev_t), mdev->minor);
+-	mdev->dev.release = media_devnode_release;
+-	if (mdev->parent)
+-		mdev->dev.parent = mdev->parent;
+-	dev_set_name(&mdev->dev, "media%d", mdev->minor);
+-	ret = device_register(&mdev->dev);
++	devnode->dev.bus = &media_bus_type;
++	devnode->dev.devt = MKDEV(MAJOR(media_dev_t), devnode->minor);
++	devnode->dev.release = media_devnode_release;
++	if (devnode->parent)
++		devnode->dev.parent = devnode->parent;
++	dev_set_name(&devnode->dev, "media%d", devnode->minor);
++	ret = device_register(&devnode->dev);
+ 	if (ret < 0) {
+ 		pr_err("%s: device_register failed\n", __func__);
+ 		goto error;
+ 	}
  
--/* media_devnode to media_device */
--#define to_media_device(node) container_of(node, struct media_device, devnode)
--
- int __must_check __media_device_register(struct media_device *mdev,
- 					 struct module *owner);
- #define media_device_register(mdev) __media_device_register(mdev, THIS_MODULE)
+ 	/* Part 4: Activate this minor. The char device can now be used. */
+-	set_bit(MEDIA_FLAG_REGISTERED, &mdev->flags);
++	set_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
+ 
+ 	return 0;
+ 
+ error:
+ 	mutex_lock(&media_devnode_lock);
+-	cdev_del(&mdev->cdev);
+-	clear_bit(mdev->minor, media_devnode_nums);
++	cdev_del(&devnode->cdev);
++	clear_bit(devnode->minor, media_devnode_nums);
+ 	mutex_unlock(&media_devnode_lock);
+ 
+ 	return ret;
+@@ -292,7 +292,7 @@ int __must_check media_devnode_register(struct media_devnode *mdev,
+ 
+ /**
+  * media_devnode_unregister - unregister a media device node
+- * @mdev: the device node to unregister
++ * @devnode: the device node to unregister
+  *
+  * This unregisters the passed device. Future open calls will be met with
+  * errors.
+@@ -300,16 +300,16 @@ int __must_check media_devnode_register(struct media_devnode *mdev,
+  * This function can safely be called if the device node has never been
+  * registered or has already been unregistered.
+  */
+-void media_devnode_unregister(struct media_devnode *mdev)
++void media_devnode_unregister(struct media_devnode *devnode)
+ {
+-	/* Check if mdev was ever registered at all */
+-	if (!media_devnode_is_registered(mdev))
++	/* Check if devnode was ever registered at all */
++	if (!media_devnode_is_registered(devnode))
+ 		return;
+ 
+ 	mutex_lock(&media_devnode_lock);
+-	clear_bit(MEDIA_FLAG_REGISTERED, &mdev->flags);
++	clear_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
+ 	mutex_unlock(&media_devnode_lock);
+-	device_unregister(&mdev->dev);
++	device_unregister(&devnode->dev);
+ }
+ 
+ /*
 diff --git a/include/media/media-devnode.h b/include/media/media-devnode.h
-index 79f702d26d1f..8b854c044032 100644
+index 17ddae32060d..79f702d26d1f 100644
 --- a/include/media/media-devnode.h
 +++ b/include/media/media-devnode.h
-@@ -33,6 +33,8 @@
- #include <linux/device.h>
- #include <linux/cdev.h>
+@@ -80,24 +80,24 @@ struct media_devnode {
+ 	unsigned long flags;		/* Use bitops to access flags */
  
-+struct media_device;
-+
- /*
-  * Flag to mark the media_devnode struct as registered. Drivers must not touch
-  * this flag directly, it will be set and cleared by media_devnode_register and
-@@ -67,6 +69,8 @@ struct media_file_operations {
-  * before registering the node.
-  */
- struct media_devnode {
-+	struct media_device *media_dev;
-+
- 	/* device ops */
- 	const struct media_file_operations *fops;
+ 	/* callbacks */
+-	void (*release)(struct media_devnode *mdev);
++	void (*release)(struct media_devnode *devnode);
+ };
  
-@@ -86,7 +90,8 @@ struct media_devnode {
  /* dev to media_devnode */
  #define to_media_devnode(cd) container_of(cd, struct media_devnode, dev)
  
--int __must_check media_devnode_register(struct media_devnode *devnode,
-+int __must_check media_devnode_register(struct media_device *mdev,
-+					struct media_devnode *devnode,
+-int __must_check media_devnode_register(struct media_devnode *mdev,
++int __must_check media_devnode_register(struct media_devnode *devnode,
  					struct module *owner);
- void media_devnode_unregister(struct media_devnode *devnode);
+-void media_devnode_unregister(struct media_devnode *mdev);
++void media_devnode_unregister(struct media_devnode *devnode);
  
-@@ -97,6 +102,9 @@ static inline struct media_devnode *media_devnode_data(struct file *filp)
- 
- static inline int media_devnode_is_registered(struct media_devnode *devnode)
+ static inline struct media_devnode *media_devnode_data(struct file *filp)
  {
-+	if (!devnode)
-+		return false;
-+
- 	return test_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
+ 	return filp->private_data;
  }
  
+-static inline int media_devnode_is_registered(struct media_devnode *mdev)
++static inline int media_devnode_is_registered(struct media_devnode *devnode)
+ {
+-	return test_bit(MEDIA_FLAG_REGISTERED, &mdev->flags);
++	return test_bit(MEDIA_FLAG_REGISTERED, &devnode->flags);
+ }
+ 
+ #endif /* _MEDIA_DEVNODE_H */
 -- 
 2.25.1
 
