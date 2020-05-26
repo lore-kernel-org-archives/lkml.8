@@ -7,142 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E684F20776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 863812086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388680AbgEZKsE (ORCPT
+        id S2388724AbgEZKtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 06:48:04 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:57540 "EHLO zju.edu.cn"
+        Tue, 26 May 2020 06:49:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5284 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726977AbgEZKsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:48:04 -0400
-Received: from localhost.localdomain (unknown [222.205.78.173])
-        by mail-app4 (Coremail) with SMTP id cS_KCgAHD1O288xeGV4XAA--.8295S4;
-        Tue, 26 May 2020 18:47:22 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] iio: magnetometer: ak8974: Fix runtime PM imbalance on error
-Date:   Tue, 26 May 2020 18:47:17 +0800
-Message-Id: <20200526104717.3181-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cS_KCgAHD1O288xeGV4XAA--.8295S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrW7Ww47tw15urW5WFWxJFb_yoW5XF4fpr
-        WkZFy7trW8Xa47XF4YyrsI9ry5Ca9xJry8CrZYk3WUZF1ayFZ8tFn7Jr1aqF18CFZ7JF45
-        JF48t39ruF129r7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUva1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
-        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
-        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j
-        6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxG
-        rwCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-        6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjfUonmRUUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcMBlZdtOUGZwABs1
+        id S1726977AbgEZKtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 06:49:04 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1B41DDB73B7C7464554A;
+        Tue, 26 May 2020 18:49:02 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 26 May 2020 18:48:55 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH] blk-mq: Explicitly zero-init blk_mq_tags.active_queues
+Date:   Tue, 26 May 2020 18:45:00 +0800
+Message-ID: <1590489900-121753-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When devm_regmap_init_i2c() returns an error code, a pairing
-runtime PM usage counter decrement is needed to keep the
-counter balanced. For error paths after ak8974_set_power(),
-ak8974_detect() and ak8974_reset(), things are the same.
+As is good practice, explicitly zero-init atomic_t type
+blk_mq_tags.active_queues.
 
-However, When iio_triggered_buffer_setup() returns an error
-code, there will be two PM usgae counter decrements.
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
-
-Changelog:
-
-v2: - Change 3 goto targets from "power_off" to
-      "disabel_pm". Remove unused lable "power_off".
-      Move 3 PM runtime related calls to the end of
-      the function.
----
- drivers/iio/magnetometer/ak8974.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
-index d32996702110..c48c67d4b371 100644
---- a/drivers/iio/magnetometer/ak8974.c
-+++ b/drivers/iio/magnetometer/ak8974.c
-@@ -764,19 +764,21 @@ static int ak8974_probe(struct i2c_client *i2c,
- 	ak8974->map = devm_regmap_init_i2c(i2c, &ak8974_regmap_config);
- 	if (IS_ERR(ak8974->map)) {
- 		dev_err(&i2c->dev, "failed to allocate register map\n");
-+		pm_runtime_put_noidle(&i2c->dev);
-+		pm_runtime_disable(&i2c->dev);
- 		return PTR_ERR(ak8974->map);
- 	}
+diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
+index 586c9d6e904a..cbbd0af9f3b0 100644
+--- a/block/blk-mq-tag.c
++++ b/block/blk-mq-tag.c
+@@ -469,6 +469,7 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
  
- 	ret = ak8974_set_power(ak8974, AK8974_PWR_ON);
- 	if (ret) {
- 		dev_err(&i2c->dev, "could not power on\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
+ 	tags->nr_tags = total_tags;
+ 	tags->nr_reserved_tags = reserved_tags;
++	atomic_set(&tags->active_queues, 0);
  
- 	ret = ak8974_detect(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "neither AK8974 nor AMI30x found\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
- 	ret = ak8974_selftest(ak8974);
-@@ -786,14 +788,9 @@ static int ak8974_probe(struct i2c_client *i2c,
- 	ret = ak8974_reset(ak8974);
- 	if (ret) {
- 		dev_err(&i2c->dev, "AK8974 reset failed\n");
--		goto power_off;
-+		goto disable_pm;
- 	}
- 
--	pm_runtime_set_autosuspend_delay(&i2c->dev,
--					 AK8974_AUTOSUSPEND_DELAY);
--	pm_runtime_use_autosuspend(&i2c->dev);
--	pm_runtime_put(&i2c->dev);
--
- 	indio_dev->dev.parent = &i2c->dev;
- 	indio_dev->channels = ak8974_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(ak8974_channels);
-@@ -846,6 +843,11 @@ static int ak8974_probe(struct i2c_client *i2c,
- 		goto cleanup_buffer;
- 	}
- 
-+	pm_runtime_set_autosuspend_delay(&i2c->dev,
-+					 AK8974_AUTOSUSPEND_DELAY);
-+	pm_runtime_use_autosuspend(&i2c->dev);
-+	pm_runtime_put(&i2c->dev);
-+
- 	return 0;
- 
- cleanup_buffer:
-@@ -854,7 +856,6 @@ static int ak8974_probe(struct i2c_client *i2c,
- 	pm_runtime_put_noidle(&i2c->dev);
- 	pm_runtime_disable(&i2c->dev);
- 	ak8974_set_power(ak8974, AK8974_PWR_OFF);
--power_off:
- 	regulator_bulk_disable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
- 
- 	return ret;
+ 	return blk_mq_init_bitmap_tags(tags, node, alloc_policy);
+ }
 -- 
-2.17.1
+2.16.4
 
