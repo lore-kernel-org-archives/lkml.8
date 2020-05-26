@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E3BC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC07C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A77B520776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06ABC20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521487;
-	bh=SBO2CtJOq45C8dSvcgZYZQrfHJFowCVleqXEM/AknR0=;
+	s=default; t=1590521498;
+	bh=OM8PtUd8CjsHPtaeRHDUmfH4lV9YfCs4la5ZyoUDdKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYFDzgjuIAYSwzBI81GDICpiVG4TfrmTqmH/jgJMyX+kjcMeI61Uh3XP65FQXEYsZ
-	 4wviKDCccXU2TWGC0iKs9rcweYomRYMkoH0frcVxFv7M2QyY097w1Otr0bUOp7qnN8
-	 CXcvlOII1xhhtcmWwLinC42m+OjzWI06TqgF7BjI=
+	b=i8VseDIYYmm+44ffaoV48+SY6CSHiuNq0cT1LDq+3Xb9P7Dq1s2YJP4rUjpB4gLGE
+	 DjM6/DhaDtNkNeD4HtUVkC1QpSOfx4bv/EHRlLtNhLF/ytvnz8FTiz5RL8sObY3w4u
+	 Q0wNJT2MTkyoBlOdAiav1SBtnJ+QtXn4dKrxgEUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390435AbgEZS64 (ORCPT
+        id S2389300AbgEZS6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52476 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390421AbgEZS6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:58:53 -0400
+        id S2389085AbgEZS6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:58:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AED620849;
-        Tue, 26 May 2020 18:58:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661442084C;
+        Tue, 26 May 2020 18:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519532;
-        bh=SBO2CtJOq45C8dSvcgZYZQrfHJFowCVleqXEM/AknR0=;
+        s=default; t=1590519517;
+        bh=OM8PtUd8CjsHPtaeRHDUmfH4lV9YfCs4la5ZyoUDdKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOcPDtb/Tg3xEezj0VM02Jg+l9ThNoUExBL4vDyiFDqjJPnxDz6IQtM10E6ijeQ7i
-         UsOx6Dgt7sXuskF3sfVf4tIaqoBmAH/kaBfeEmgOQAFIioU2fXrlnFC0MDGQSw3N87
-         ZJVNDmoP4WVpdFjubNHIZr50PpnKN4PhG24w7eT0=
+        b=M6rTWj8Qq7CcPtMcvLp4p6gYIEhjh+XEz5E8uVqrCkHHpx3Bg9uySncQAIZ+p7uFP
+         uoYFZS2ZIemiDsbnGcZaZ9sXkapFtST1nLiwE6IAjKZ2+Vn7syh+Q482u7KxQHiOf1
+         7ddJJmozhMISMz/7wC6/yjlUqhoX5KSWKGKUm6tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Monakov <amonakov@ispras.ru>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 09/64] iommu/amd: Fix over-read of ACPI UID from IVRS table
-Date:   Tue, 26 May 2020 20:52:38 +0200
-Message-Id: <20200526183917.314759956@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuliano Procida <gprocida@google.com>
+Subject: [PATCH 4.9 33/64] l2tp: remove l2tp_session_find()
+Date:   Tue, 26 May 2020 20:53:02 +0200
+Message-Id: <20200526183923.567881660@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -61,82 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Monakov <amonakov@ispras.ru>
+From: Guillaume Nault <g.nault@alphalink.fr>
 
-[ Upstream commit e461b8c991b9202b007ea2059d953e264240b0c9 ]
+commit 55a3ce3b9d98f752df9e2cfb1cba7e715522428a upstream.
 
-IVRS parsing code always tries to read 255 bytes from memory when
-retrieving ACPI device path, and makes an assumption that firmware
-provides a zero-terminated string. Both of those are bugs: the entry
-is likely to be shorter than 255 bytes, and zero-termination is not
-guaranteed.
+This function isn't used anymore.
 
-With Acer SF314-42 firmware these issues manifest visibly in dmesg:
-
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR0\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR1\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR2\xf0\xa5, rdevid:160
-AMD-Vi: ivrs, add hid:AMDI0020, uid:\_SB.FUR3>\x83e\x8d\x9a\xd1...
-
-The first three lines show how the code over-reads adjacent table
-entries into the UID, and in the last line it even reads garbage data
-beyond the end of the IVRS table itself.
-
-Since each entry has the length of the UID (uidl member of ivhd_entry
-struct), use that for memcpy, and manually add a zero terminator.
-
-Avoid zero-filling hid and uid arrays up front, and instead ensure
-the uid array is always zero-terminated. No change needed for the hid
-array, as it was already properly zero-terminated.
-
-Fixes: 2a0cb4e2d423c ("iommu/amd: Add new map for storing IVHD dev entry type HID")
-
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: iommu@lists.linux-foundation.org
-Link: https://lore.kernel.org/r/20200511102352.1831-1-amonakov@ispras.ru
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iommu/amd_iommu_init.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/l2tp/l2tp_core.c |   51 +--------------------------------------------------
+ net/l2tp/l2tp_core.h |    3 ---
+ 2 files changed, 1 insertion(+), 53 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index e6ae8d123984..a3279f303b49 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -1171,8 +1171,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 		}
- 		case IVHD_DEV_ACPI_HID: {
- 			u16 devid;
--			u8 hid[ACPIHID_HID_LEN] = {0};
--			u8 uid[ACPIHID_UID_LEN] = {0};
-+			u8 hid[ACPIHID_HID_LEN];
-+			u8 uid[ACPIHID_UID_LEN];
- 			int ret;
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -216,27 +216,6 @@ static void l2tp_tunnel_sock_put(struct
+ 	sock_put(sk);
+ }
  
- 			if (h->type != 0x40) {
-@@ -1189,6 +1189,7 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			}
+-/* Lookup a session by id in the global session list
+- */
+-static struct l2tp_session *l2tp_session_find_2(struct net *net, u32 session_id)
+-{
+-	struct l2tp_net *pn = l2tp_pernet(net);
+-	struct hlist_head *session_list =
+-		l2tp_session_id_hash_2(pn, session_id);
+-	struct l2tp_session *session;
+-
+-	rcu_read_lock_bh();
+-	hlist_for_each_entry_rcu(session, session_list, global_hlist) {
+-		if (session->session_id == session_id) {
+-			rcu_read_unlock_bh();
+-			return session;
+-		}
+-	}
+-	rcu_read_unlock_bh();
+-
+-	return NULL;
+-}
+-
+ /* Session hash list.
+  * The session_id SHOULD be random according to RFC2661, but several
+  * L2TP implementations (Cisco and Microsoft) use incrementing
+@@ -249,35 +228,7 @@ l2tp_session_id_hash(struct l2tp_tunnel
+ 	return &tunnel->session_hlist[hash_32(session_id, L2TP_HASH_BITS)];
+ }
  
-+			uid[0] = '\0';
- 			switch (e->uidf) {
- 			case UID_NOT_PRESENT:
- 
-@@ -1203,8 +1204,8 @@ static int __init init_iommu_from_acpi(struct amd_iommu *iommu,
- 				break;
- 			case UID_IS_CHARACTER:
- 
--				memcpy(uid, (u8 *)(&e->uid), ACPIHID_UID_LEN - 1);
--				uid[ACPIHID_UID_LEN - 1] = '\0';
-+				memcpy(uid, &e->uid, e->uidl);
-+				uid[e->uidl] = '\0';
- 
- 				break;
- 			default:
--- 
-2.25.1
-
+-/* Lookup a session by id
+- */
+-struct l2tp_session *l2tp_session_find(struct net *net, struct l2tp_tunnel *tunnel, u32 session_id)
+-{
+-	struct hlist_head *session_list;
+-	struct l2tp_session *session;
+-
+-	/* In L2TPv3, session_ids are unique over all tunnels and we
+-	 * sometimes need to look them up before we know the
+-	 * tunnel.
+-	 */
+-	if (tunnel == NULL)
+-		return l2tp_session_find_2(net, session_id);
+-
+-	session_list = l2tp_session_id_hash(tunnel, session_id);
+-	read_lock_bh(&tunnel->hlist_lock);
+-	hlist_for_each_entry(session, session_list, hlist) {
+-		if (session->session_id == session_id) {
+-			read_unlock_bh(&tunnel->hlist_lock);
+-			return session;
+-		}
+-	}
+-	read_unlock_bh(&tunnel->hlist_lock);
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL_GPL(l2tp_session_find);
+-
+-/* Like l2tp_session_find() but takes a reference on the returned session.
++/* Lookup a session. A new reference is held on the returned session.
+  * Optionally calls session->ref() too if do_ref is true.
+  */
+ struct l2tp_session *l2tp_session_get(struct net *net,
+--- a/net/l2tp/l2tp_core.h
++++ b/net/l2tp/l2tp_core.h
+@@ -234,9 +234,6 @@ out:
+ struct l2tp_session *l2tp_session_get(struct net *net,
+ 				      struct l2tp_tunnel *tunnel,
+ 				      u32 session_id, bool do_ref);
+-struct l2tp_session *l2tp_session_find(struct net *net,
+-				       struct l2tp_tunnel *tunnel,
+-				       u32 session_id);
+ struct l2tp_session *l2tp_session_get_nth(struct l2tp_tunnel *tunnel, int nth,
+ 					  bool do_ref);
+ struct l2tp_session *l2tp_session_get_by_ifname(struct net *net, char *ifname,
 
 
