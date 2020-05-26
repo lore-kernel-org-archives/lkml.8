@@ -3,45 +3,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C023C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC3920707
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D630E208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390589AbgEZVzx (ORCPT
+        id S2390741AbgEZVz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:55:53 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:59986 "EHLO
+        Tue, 26 May 2020 17:55:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:60006 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389384AbgEZVzu (ORCPT
+        with ESMTP id S2390202AbgEZVzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:55:50 -0400
+        Tue, 26 May 2020 17:55:52 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2ED9A8030877;
-        Tue, 26 May 2020 21:55:40 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BCCD58030833;
+        Tue, 26 May 2020 21:55:43 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Z0qVl-qB3sNO; Wed, 27 May 2020 00:55:39 +0300 (MSK)
+        with ESMTP id zgntezMAGneV; Wed, 27 May 2020 00:55:43 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 06/12] i2c: designware: slave: Set DW I2C core module dependency
-Date:   Wed, 27 May 2020 00:55:22 +0300
-Message-ID: <20200526215528.16417-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 10/12] i2c: designware: Retrieve quirk flags as early as possible
+Date:   Wed, 27 May 2020 00:55:26 +0300
+Message-ID: <20200526215528.16417-11-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,39 +53,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DW APB I2C slave code in fact depends on the DW I2C driver core, but not
-on the platform code. Yes, the I2C slave interface is currently supported
-by the platform version of the IP core, but it doesn't make it dependent
-on it. So make sure the DW APB I2C slave config is only available if the
-I2C_DESIGNWARE_CORE config is enabled.
+Some platforms might need to activate the driver quirks at a very early
+probe stage. For instance, Baikal-T1 System I2C doesn't need to map the
+registers space as ones belong to the system controller. Instead it will
+request the syscon regmap from the parental DT node. In order to be able
+to do so let's retrieve the model flags right after the DW I2C private
+data is created.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/i2c/busses/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 2ddca08f8a76..b907d4046942 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -540,8 +540,8 @@ config I2C_DESIGNWARE_PLATFORM
+---
+
+Changelog v3:
+- This is a new patch, which has been created due to declining the
+  glue-layer approach.
+---
+ drivers/i2c/busses/i2c-designware-platdrv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 57475f19448a..5ef7ffcf7f85 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -252,6 +252,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	if (!dev)
+ 		return -ENOMEM;
  
- config I2C_DESIGNWARE_SLAVE
- 	bool "Synopsys DesignWare Slave"
-+	depends on I2C_DESIGNWARE_CORE
- 	select I2C_SLAVE
--	depends on I2C_DESIGNWARE_PLATFORM
- 	help
- 	  If you say yes to this option, support will be included for the
- 	  Synopsys DesignWare I2C slave adapter.
++	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	dev->base = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(dev->base))
+@@ -295,8 +297,6 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	else
+ 		t->bus_freq_hz = I2C_MAX_FAST_MODE_FREQ;
+ 
+-	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
+-
+ 	if (pdev->dev.of_node)
+ 		dw_i2c_of_configure(pdev);
+ 
 -- 
 2.26.2
 
