@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BF7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31925C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951F920888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F552100A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:20:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520853;
-	bh=++VqZKrYqAQ5Dck8ZaiFp4nu/4KSfacu9BrCWRmdi6M=;
+	s=default; t=1590520857;
+	bh=1SXGO42ArmKLcBXx+m3RGId2KHzSNDSpEYoeyqJ7ot4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQmpghxIdpN7QrjRUsqOom8zHNLCIlkdy4jkJje7TP+50ry75DvIksqt5mBrH+cdI
-	 lMBxMoqrSh7riXxvkQTwBcgaV8LXyeUnPXEkabdtFu2PGEMX8xjveVWPVrjj3fQ6IG
-	 +rUMd+A80iOb9Hhl4yUsD6t7T7igjDMAhMHRQ6bw=
+	b=VPamXwPWxkZa0D56oSJhMIRKN4lFiO5VwuSngONyhQuvyVw8i0sJABuuxOax3wz9Y
+	 hNYJBTc7+cgFG6Hae4AV4j8k/65/Q0NKNzv9gv75UxgF2eHHwMd+cNQi7xnhWKmPYJ
+	 jINSQmrC3lB1XjndWbrpwVXMZsY3IiOJ0bgtCfS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392025AbgEZTMV (ORCPT
+        id S2404123AbgEZTMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:12:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41778 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:12:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404136AbgEZTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:12:17 -0400
+        id S2392061AbgEZTMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:12:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E58E320888;
-        Tue, 26 May 2020 19:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 145FE20776;
+        Tue, 26 May 2020 19:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520336;
-        bh=++VqZKrYqAQ5Dck8ZaiFp4nu/4KSfacu9BrCWRmdi6M=;
+        s=default; t=1590520326;
+        bh=1SXGO42ArmKLcBXx+m3RGId2KHzSNDSpEYoeyqJ7ot4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVTXCvV9esPjk9cvfKAJdhMHpTHfgOoK47pSE3DQFz8s61BUQV7NAxieC1xi6PvB+
-         GV2L8iV8wl38o5aZ/Vr3CobMT/gtisce0fpG/o6bJdxf5bgUn6fu9t5fuT7J5AqrLQ
-         fx+q9XjOJk0BVJLMWePlXGww9C388t8lc8TIAU4o=
+        b=X8k8IBD7JfN5b1KVSDpnRoHhPRrjfMog9pR/wmmMTJJ90RayL0oZaF2cSR0lh3BQ0
+         y1dOiD9dUlngkrLVAiL7+l3wX+hslAVzHfofRHALUVicXeRvws7nU676mFwMSpdrje
+         Dfv9K+kIpdw8AJWBm8BbWXPCvy+n8wsA1Q/62Cvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 040/126] selftests: fix kvm relocatable native/cross builds and installs
-Date:   Tue, 26 May 2020 20:52:57 +0200
-Message-Id: <20200526183941.314354114@linuxfoundation.org>
+Subject: [PATCH 5.6 036/126] scsi: ibmvscsi: Fix WARN_ON during event pool release
+Date:   Tue, 26 May 2020 20:52:53 +0200
+Message-Id: <20200526183940.933329817@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,127 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shuah Khan <skhan@linuxfoundation.org>
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-[ Upstream commit 66d69e081b526b6a6031f0d3ca8ddff71e5707a5 ]
+[ Upstream commit b36522150e5b85045f868768d46fbaaa034174b2 ]
 
-kvm test Makefile doesn't fully support cross-builds and installs.
-UNAME_M = $(shell uname -m) variable is used to define the target
-programs and libraries to be built from arch specific sources in
-sub-directories.
+While removing an ibmvscsi client adapter a WARN_ON like the following is
+seen in the kernel log:
 
-For cross-builds to work, UNAME_M has to map to ARCH and arch specific
-directories and targets in this Makefile.
+drmgr: drmgr: -r -c slot -s U9080.M9S.783AEC8-V11-C11 -w 5 -d 1
+WARNING: CPU: 9 PID: 24062 at ../kernel/dma/mapping.c:311 dma_free_attrs+0x78/0x110
+Supported: No, Unreleased kernel
+CPU: 9 PID: 24062 Comm: drmgr Kdump: loaded Tainted: G               X 5.3.18-12-default
+NIP:  c0000000001fa758 LR: c0000000001fa744 CTR: c0000000001fa6e0
+REGS: c0000002173375d0 TRAP: 0700   Tainted: G               X (5.3.18-12-default)
+MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 28088282  XER: 20000000
+CFAR: c0000000001fbf0c IRQMASK: 1
+GPR00: c0000000001fa744 c000000217337860 c00000000161ab00 0000000000000000
+GPR04: 0000000000000000 c000011e12250000 0000000018010000 0000000000000000
+GPR08: 0000000000000000 0000000000000001 0000000000000001 c0080000190f4fa8
+GPR12: c0000000001fa6e0 c000000007fc2a00 0000000000000000 0000000000000000
+GPR16: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+GPR20: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+GPR24: 000000011420e310 0000000000000000 0000000000000000 0000000018010000
+GPR28: c00000000159de50 c000011e12250000 0000000000006600 c000011e5c994848
+NIP [c0000000001fa758] dma_free_attrs+0x78/0x110
+LR [c0000000001fa744] dma_free_attrs+0x64/0x110
+Call Trace:
+[c000000217337860] [000000011420e310] 0x11420e310 (unreliable)
+[c0000002173378b0] [c0080000190f0280] release_event_pool+0xd8/0x120 [ibmvscsi]
+[c000000217337930] [c0080000190f3f74] ibmvscsi_remove+0x6c/0x160 [ibmvscsi]
+[c000000217337960] [c0000000000f3cac] vio_bus_remove+0x5c/0x100
+[c0000002173379a0] [c00000000087a0a4] device_release_driver_internal+0x154/0x280
+[c0000002173379e0] [c0000000008777cc] bus_remove_device+0x11c/0x220
+[c000000217337a60] [c000000000870fc4] device_del+0x1c4/0x470
+[c000000217337b10] [c0000000008712a0] device_unregister+0x30/0xa0
+[c000000217337b80] [c0000000000f39ec] vio_unregister_device+0x2c/0x60
+[c000000217337bb0] [c00800001a1d0964] dlpar_remove_slot+0x14c/0x250 [rpadlpar_io]
+[c000000217337c50] [c00800001a1d0bcc] remove_slot_store+0xa4/0x110 [rpadlpar_io]
+[c000000217337cd0] [c000000000c091a0] kobj_attr_store+0x30/0x50
+[c000000217337cf0] [c00000000057c934] sysfs_kf_write+0x64/0x90
+[c000000217337d10] [c00000000057be10] kernfs_fop_write+0x1b0/0x290
+[c000000217337d60] [c000000000488c4c] __vfs_write+0x3c/0x70
+[c000000217337d80] [c00000000048c648] vfs_write+0xd8/0x260
+[c000000217337dd0] [c00000000048ca8c] ksys_write+0xdc/0x130
+[c000000217337e20] [c00000000000b488] system_call+0x5c/0x70
+Instruction dump:
+7c840074 f8010010 f821ffb1 20840040 eb830218 7c8407b4 48002019 60000000
+2fa30000 409e003c 892d0988 792907e0 <0b090000> 2fbd0000 419e0028 2fbc0000
+---[ end trace 5955b3c0cc079942 ]---
+rpadlpar_io: slot U9080.M9S.783AEC8-V11-C11 removed
 
-UNAME_M variable to used to run the compiles pointing to the right arch
-directories and build the right targets for these supported architectures.
+This is tripped as a result of irqs being disabled during the call to
+dma_free_coherent() by release_event_pool(). At this point in the code path
+we have quiesced the adapter and it is overly paranoid to be holding the
+host lock.
 
-TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
-LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
+[mkp: fixed build warning reported by sfr]
 
-x86_64 targets are named to include x86_64 as a suffix and directories
-for includes are in x86_64 sub-directory. s390x and aarch64 follow the
-same convention. "uname -m" doesn't result in the correct mapping for
-s390x and aarch64. Fix it to set UNAME_M correctly for s390x and aarch64
-cross-builds.
-
-In addition, Makefile doesn't create arch sub-directories in the case of
-relocatable builds and test programs under s390x and x86_64 directories
-fail to build. This is a problem for native and cross-builds. Fix it to
-create all necessary directories keying off of TEST_GEN_PROGS.
-
-The following use-cases work with this change:
-
-Native x86_64:
-make O=/tmp/kselftest -C tools/testing/selftests TARGETS=kvm install \
- INSTALL_PATH=$HOME/x86_64
-
-arm64 cross-build:
-make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
-	CROSS_COMPILE=aarch64-linux-gnu- defconfig
-
-make O=$HOME/arm64_build/ ARCH=arm64 HOSTCC=gcc \
-	CROSS_COMPILE=aarch64-linux-gnu- all
-
-make kselftest-install TARGETS=kvm O=$HOME/arm64_build ARCH=arm64 \
-	HOSTCC=gcc CROSS_COMPILE=aarch64-linux-gnu-
-
-s390x cross-build:
-make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
-	CROSS_COMPILE=s390x-linux-gnu- defconfig
-
-make O=$HOME/s390x_build/ ARCH=s390 HOSTCC=gcc \
-	CROSS_COMPILE=s390x-linux-gnu- all
-
-make kselftest-install TARGETS=kvm O=$HOME/s390x_build/ ARCH=s390 \
-	HOSTCC=gcc CROSS_COMPILE=s390x-linux-gnu- all
-
-No regressions in the following use-cases:
-make -C tools/testing/selftests TARGETS=kvm
-make kselftest-all TARGETS=kvm
-
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/1588027793-17952-1-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/Makefile | 29 +++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ drivers/scsi/ibmvscsi/ibmvscsi.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index d91c53b726e6..75dec268787f 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -5,8 +5,34 @@ all:
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index 7f66a7783209..59f0f1030c54 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -2320,16 +2320,12 @@ static int ibmvscsi_probe(struct vio_dev *vdev, const struct vio_device_id *id)
+ static int ibmvscsi_remove(struct vio_dev *vdev)
+ {
+ 	struct ibmvscsi_host_data *hostdata = dev_get_drvdata(&vdev->dev);
+-	unsigned long flags;
  
- top_srcdir = ../../../..
- KSFT_KHDR_INSTALL := 1
-+
-+# For cross-builds to work, UNAME_M has to map to ARCH and arch specific
-+# directories and targets in this Makefile. "uname -m" doesn't map to
-+# arch specific sub-directory names.
-+#
-+# UNAME_M variable to used to run the compiles pointing to the right arch
-+# directories and build the right targets for these supported architectures.
-+#
-+# TEST_GEN_PROGS and LIBKVM are set using UNAME_M variable.
-+# LINUX_TOOL_ARCH_INCLUDE is set using ARCH variable.
-+#
-+# x86_64 targets are named to include x86_64 as a suffix and directories
-+# for includes are in x86_64 sub-directory. s390x and aarch64 follow the
-+# same convention. "uname -m" doesn't result in the correct mapping for
-+# s390x and aarch64.
-+#
-+# No change necessary for x86_64
- UNAME_M := $(shell uname -m)
+ 	srp_remove_host(hostdata->host);
+ 	scsi_remove_host(hostdata->host);
  
-+# Set UNAME_M for arm64 compile/install to work
-+ifeq ($(ARCH),arm64)
-+	UNAME_M := aarch64
-+endif
-+# Set UNAME_M s390x compile/install to work
-+ifeq ($(ARCH),s390)
-+	UNAME_M := s390x
-+endif
-+
- LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
- LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
- LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
-@@ -47,7 +73,7 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
- INSTALL_HDR_PATH = $(top_srcdir)/usr
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
- LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
--LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/x86/include
-+LINUX_TOOL_ARCH_INCLUDE = $(top_srcdir)/tools/arch/$(ARCH)/include
- CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
- 	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
- 	-I$(LINUX_TOOL_ARCH_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude \
-@@ -78,6 +104,7 @@ $(LIBKVM_OBJ): $(OUTPUT)/%.o: %.c
- $(OUTPUT)/libkvm.a: $(LIBKVM_OBJ)
- 	$(AR) crs $@ $^
+ 	purge_requests(hostdata, DID_ERROR);
+-
+-	spin_lock_irqsave(hostdata->host->host_lock, flags);
+ 	release_event_pool(&hostdata->pool, hostdata);
+-	spin_unlock_irqrestore(hostdata->host->host_lock, flags);
  
-+x := $(shell mkdir -p $(sort $(dir $(TEST_GEN_PROGS))))
- all: $(STATIC_LIBS)
- $(TEST_GEN_PROGS): $(STATIC_LIBS)
- 
+ 	ibmvscsi_release_crq_queue(&hostdata->queue, hostdata,
+ 					max_events);
 -- 
 2.25.1
 
