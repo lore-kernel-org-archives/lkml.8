@@ -2,53 +2,52 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9989C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C62D020873
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69776208B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519675;
-	bh=Bh+4jULTa5d3rs6IKvG71GMmRZmRBPtpFh60phO/o4c=;
+	s=default; t=1590519684;
+	bh=XJJyoQtDvFZe4chBEWSdTN/XbaT92U3oizYWFpXeESA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b1XvF/EJCd1B/ht+AxbZgVYkhecgxiwSH9cCPv2yhzq1JBleKLfBLMHJo77XUj55m
-	 +CdwobcFPZb3Zlb02ZJ1zlRzMotNr0MuFqZEHEMjinV+TZwUrQLJAT68muwHWlMtrf
-	 wFM9YdqKUbl/5wfEy7V3/AEZQwIjHdRIbOMg/5cE=
+	b=TMab4pRyHNf8lOmbX6qhzC8FAFw+Mn387i5LucfmKI2YiriBCyNLa1f5hTNbKwqiq
+	 FQIasZ6oBDEkfdpyKV2pBaulP2HJW3/gBkckOclcSYUY8qkMHKQIRyrUVVyQZNURmQ
+	 v6E5wxfR/pcI+5fzyJZfBaTRQwi6ghd3H2CNX4aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390909AbgEZTBO (ORCPT
+        id S2389859AbgEZTBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:01:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390901AbgEZTBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:11 -0400
+        id S2389833AbgEZTBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C092086A;
-        Tue, 26 May 2020 19:01:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D9F20849;
+        Tue, 26 May 2020 19:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519671;
-        bh=Bh+4jULTa5d3rs6IKvG71GMmRZmRBPtpFh60phO/o4c=;
+        s=default; t=1590519669;
+        bh=XJJyoQtDvFZe4chBEWSdTN/XbaT92U3oizYWFpXeESA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+L1sIoY/hEA5y5pBWEj4jdriRM0bR9WlE727KQRFYb49Sfhggb7lXtTDSsTcbep3
-         unuDy1A91Q86PqMDFMOMUJNtAwdXcLfWS1EXQQk1Sfm2OojJNiN/ydGDqSVYv9gVCm
-         4yf9FSrlbWhR0HGIxoc9KiCzCxsHdj8JwBc0txv8=
+        b=zgPFCbQ42cu0IBU5bkkTDxPL0+tGHUYiYNlO1ygS/zAQnF+CZ5tLQ8g4SL9AHX4xk
+         VbnP7LbYCJW7QSBAzYhubOOCO/0qqAoZ+ckL0IMyNixyeAsFZic1LoXLkbuyvdXDwf
+         ixzZeZPyuQa4zQnqxj5oK54ypG1gW6Pq2ZF7WUfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/59] ima: Set file->f_mode instead of file->f_flags in ima_calc_file_hash()
-Date:   Tue, 26 May 2020 20:52:51 +0200
-Message-Id: <20200526183909.120611336@linuxfoundation.org>
+        stable@vger.kernel.org, Mathias Krause <minipli@googlemail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.14 05/59] padata: ensure padata_do_serial() runs on the correct CPU
+Date:   Tue, 26 May 2020 20:52:50 +0200
+Message-Id: <20200526183908.707547348@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -61,72 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+From: Mathias Krause <minipli@googlemail.com>
 
-[ Upstream commit 0014cc04e8ec077dc482f00c87dfd949cfe2b98f ]
+commit 350ef88e7e922354f82a931897ad4a4ce6c686ff upstream.
 
-Commit a408e4a86b36 ("ima: open a new file instance if no read
-permissions") tries to create a new file descriptor to calculate a file
-digest if the file has not been opened with O_RDONLY flag. However, if a
-new file descriptor cannot be obtained, it sets the FMODE_READ flag to
-file->f_flags instead of file->f_mode.
+If the algorithm we're parallelizing is asynchronous we might change
+CPUs between padata_do_parallel() and padata_do_serial(). However, we
+don't expect this to happen as we need to enqueue the padata object into
+the per-cpu reorder queue we took it from, i.e. the same-cpu's parallel
+queue.
 
-This patch fixes this issue by replacing f_flags with f_mode as it was
-before that commit.
+Ensure we're not switching CPUs for a given padata object by tracking
+the CPU within the padata object. If the serial callback gets called on
+the wrong CPU, defer invoking padata_reorder() via a kernel worker on
+the CPU we're expected to run on.
 
-Cc: stable@vger.kernel.org # 4.20.x
-Fixes: a408e4a86b36 ("ima: open a new file instance if no read permissions")
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/integrity/ima/ima_crypto.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ include/linux/padata.h |    2 ++
+ kernel/padata.c        |   20 +++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 06b0ee75f34f..7b16e54f01c6 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -432,7 +432,7 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 	loff_t i_size;
- 	int rc;
- 	struct file *f = file;
--	bool new_file_instance = false, modified_flags = false;
-+	bool new_file_instance = false, modified_mode = false;
+--- a/include/linux/padata.h
++++ b/include/linux/padata.h
+@@ -37,6 +37,7 @@
+  * @list: List entry, to attach to the padata lists.
+  * @pd: Pointer to the internal control structure.
+  * @cb_cpu: Callback cpu for serializatioon.
++ * @cpu: Cpu for parallelization.
+  * @seq_nr: Sequence number of the parallelized data object.
+  * @info: Used to pass information from the parallel to the serial function.
+  * @parallel: Parallel execution function.
+@@ -46,6 +47,7 @@ struct padata_priv {
+ 	struct list_head	list;
+ 	struct parallel_data	*pd;
+ 	int			cb_cpu;
++	int			cpu;
+ 	int			info;
+ 	void                    (*parallel)(struct padata_priv *padata);
+ 	void                    (*serial)(struct padata_priv *padata);
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -133,6 +133,7 @@ int padata_do_parallel(struct padata_ins
+ 	padata->cb_cpu = cb_cpu;
  
- 	/*
- 	 * For consistency, fail file's opened with the O_DIRECT flag on
-@@ -452,13 +452,13 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- 		f = dentry_open(&file->f_path, flags, file->f_cred);
- 		if (IS_ERR(f)) {
- 			/*
--			 * Cannot open the file again, lets modify f_flags
-+			 * Cannot open the file again, lets modify f_mode
- 			 * of original and continue
- 			 */
- 			pr_info_ratelimited("Unable to reopen file for reading.\n");
- 			f = file;
--			f->f_flags |= FMODE_READ;
--			modified_flags = true;
-+			f->f_mode |= FMODE_READ;
-+			modified_mode = true;
- 		} else {
- 			new_file_instance = true;
- 		}
-@@ -476,8 +476,8 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
- out:
- 	if (new_file_instance)
- 		fput(f);
--	else if (modified_flags)
--		f->f_flags &= ~FMODE_READ;
-+	else if (modified_mode)
-+		f->f_mode &= ~FMODE_READ;
- 	return rc;
+ 	target_cpu = padata_cpu_hash(pd);
++	padata->cpu = target_cpu;
+ 	queue = per_cpu_ptr(pd->pqueue, target_cpu);
+ 
+ 	spin_lock(&queue->parallel.lock);
+@@ -376,10 +377,21 @@ void padata_do_serial(struct padata_priv
+ 	int cpu;
+ 	struct padata_parallel_queue *pqueue;
+ 	struct parallel_data *pd;
++	int reorder_via_wq = 0;
+ 
+ 	pd = padata->pd;
+ 
+ 	cpu = get_cpu();
++
++	/* We need to run on the same CPU padata_do_parallel(.., padata, ..)
++	 * was called on -- or, at least, enqueue the padata object into the
++	 * correct per-cpu queue.
++	 */
++	if (cpu != padata->cpu) {
++		reorder_via_wq = 1;
++		cpu = padata->cpu;
++	}
++
+ 	pqueue = per_cpu_ptr(pd->pqueue, cpu);
+ 
+ 	spin_lock(&pqueue->reorder.lock);
+@@ -396,7 +408,13 @@ void padata_do_serial(struct padata_priv
+ 
+ 	put_cpu();
+ 
+-	padata_reorder(pd);
++	/* If we're running on the wrong CPU, call padata_reorder() via a
++	 * kernel worker.
++	 */
++	if (reorder_via_wq)
++		queue_work_on(cpu, pd->pinst->wq, &pqueue->reorder_work);
++	else
++		padata_reorder(pd);
  }
+ EXPORT_SYMBOL(padata_do_serial);
  
--- 
-2.25.1
-
 
 
