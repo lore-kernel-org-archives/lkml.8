@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE656C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2A420888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A35A8208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520498;
-	bh=W0NrlpBBLbhhjgg9G7Odx/xWAoRBKox2cXnYyWaIKGY=;
+	s=default; t=1590520501;
+	bh=WF515+u3fTVSxI5Vy7kdHYf2rPsuGfWzFa+WZRzo3+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KvTHHeSR2CMSsmwJHCKMo8Y/aIBTuXEvj0go55S5HTh/E7L0vySAywm4lwXet1dRj
-	 u+5/SW+KX2g4Q6dtxemSREAL8XkYCuom2AiSqOA02pCHPRIUkxwI8ClvEc7NATgdpc
-	 YXd2buFAwI46wjEVua7JbRAdyTy7ncAdDwncIZ+0=
+	b=fQre1jyGpEAuwaIc+aE2IdlYKxV3plAYyxFAA/Q9f5M4+pAxA8IWsFkUAmzwpy9Kf
+	 I1vZ65yJwo3/WNRnjZ3kLBlILuJAwXCMRqcdE4phCrAxbytIbWt6ALP96BVuZJoyPS
+	 hB+61gigFdxGY2j8/gHAy6Yq3TRnpLtygPwWZ8iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404384AbgEZTO5 (ORCPT
+        id S2392228AbgEZTPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392218AbgEZTOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:51 -0400
+        id S2392088AbgEZTO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 588D9208A7;
-        Tue, 26 May 2020 19:14:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 348D420888;
+        Tue, 26 May 2020 19:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520490;
-        bh=W0NrlpBBLbhhjgg9G7Odx/xWAoRBKox2cXnYyWaIKGY=;
+        s=default; t=1590520495;
+        bh=WF515+u3fTVSxI5Vy7kdHYf2rPsuGfWzFa+WZRzo3+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+9RhNuSqPBIULSUug94rTx4a8+H4mwmEPcRm/+I0uZcw2nYALWhF/5dQWYj2gJR7
-         3OsQ+2C/VxuTUaufK5e9/G/w5HC9TVpYWIYWnIMZVSfN/Y0OixcwB4HUPkpCzk+LHT
-         yGeDzMtGNd8PNJB37RmzX40gmLUwM2OCyCkwZTxg=
+        b=tdzhZtzmxfJemTIA10k2AwYpfn31qFi+TiaODyWOOLaWZUzpfTgxNUgA7dk/OIxlt
+         gtCNqhXosPiD5mjvsGzMYlSQdHLi4LIeA3pf2bu3XdIWhk19XC7FVcD/2H55QZLwji
+         2bmSTNA6RNsqp/v410pa53od9RuZ6JOeMWj103XM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Saravana Kannan <saravanak@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.6 099/126] driver core: Fix SYNC_STATE_ONLY device link implementation
-Date:   Tue, 26 May 2020 20:53:56 +0200
-Message-Id: <20200526183946.089959904@linuxfoundation.org>
+        stable@vger.kernel.org, Klaus Doth <kdlnx@doth.eu>
+Subject: [PATCH 5.6 101/126] misc: rtsx: Add short delay after exit from ASPM
+Date:   Tue, 26 May 2020 20:53:58 +0200
+Message-Id: <20200526183946.219228178@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -59,184 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
+From: Klaus Doth <kdlnx@doth.eu>
 
-commit 21c27f06587d2c18150d27ca2382a509ec55c482 upstream.
+commit 7a839dbab1be59f5ed3b3b046de29e166784c9b4 upstream.
 
-When SYNC_STATE_ONLY support was added in commit 05ef983e0d65 ("driver
-core: Add device link support for SYNC_STATE_ONLY flag"),
-device_link_add() incorrectly skipped adding the new SYNC_STATE_ONLY
-device link to the supplier's and consumer's "device link" list.
+DMA transfers to and from the SD card stall for 10 seconds and run into
+timeout on RTS5260 card readers after ASPM was enabled.
 
-This causes multiple issues:
-- The device link is lost forever from driver core if the caller
-  didn't keep track of it (caller typically isn't expected to). This is
-  a memory leak.
-- The device link is also never visible to any other code path after
-  device_link_add() returns.
+Adding a short msleep after disabling ASPM fixes the issue on several
+Dell Precision 7530/7540 systems I tested.
 
-If we fix the "device link" list handling, that exposes a bunch of
-issues.
+This function is only called when waking up after the chip went into
+power-save after not transferring data for a few seconds. The added
+msleep does therefore not change anything in data transfer speed or
+induce any excessive waiting while data transfers are running, or the
+chip is sleeping. Only the transition from sleep to active is affected.
 
-1. The device link "status" state management code rightfully doesn't
-handle the case where a DL_FLAG_MANAGED device link exists between a
-supplier and consumer, but the consumer manages to probe successfully
-before the supplier. The addition of DL_FLAG_SYNC_STATE_ONLY links break
-this assumption. This causes device_links_driver_bound() to throw a
-warning when this happens.
-
-Since DL_FLAG_SYNC_STATE_ONLY device links are mainly used for creating
-proxy device links for child device dependencies and aren't useful once
-the consumer device probes successfully, this patch just deletes
-DL_FLAG_SYNC_STATE_ONLY device links once its consumer device probes.
-This way, we avoid the warning, free up some memory and avoid
-complicating the device links "status" state management code.
-
-2. Creating a DL_FLAG_STATELESS device link between two devices that
-already have a DL_FLAG_SYNC_STATE_ONLY device link will result in the
-DL_FLAG_STATELESS flag not getting set correctly. This patch also fixes
-this.
-
-Lastly, this patch also fixes minor whitespace issues.
-
-Cc: stable@vger.kernel.org
-Fixes: 05ef983e0d65 ("driver core: Add device link support for SYNC_STATE_ONLY flag")
-Signed-off-by: Saravana Kannan <saravanak@google.com>
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Link: https://lore.kernel.org/r/20200519063000.128819-1-saravanak@google.com
+Signed-off-by: Klaus Doth <kdlnx@doth.eu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/4434eaa7-2ee3-a560-faee-6cee63ebd6d4@doth.eu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/base/core.c |   61 +++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 39 insertions(+), 22 deletions(-)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -360,13 +360,12 @@ struct device_link *device_link_add(stru
+---
+ drivers/misc/cardreader/rtsx_pcr.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -142,6 +142,9 @@ static void rtsx_comm_pm_full_on(struct
  
- 		if (flags & DL_FLAG_STATELESS) {
- 			kref_get(&link->kref);
-+			link->flags |= DL_FLAG_STATELESS;
- 			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
--			    !(link->flags & DL_FLAG_STATELESS)) {
--				link->flags |= DL_FLAG_STATELESS;
-+			    !(link->flags & DL_FLAG_STATELESS))
- 				goto reorder;
--			} else {
-+			else
- 				goto out;
--			}
- 		}
+ 	rtsx_disable_aspm(pcr);
  
- 		/*
-@@ -433,12 +432,16 @@ struct device_link *device_link_add(stru
- 	    flags & DL_FLAG_PM_RUNTIME)
- 		pm_runtime_resume(supplier);
- 
-+	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
-+	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
++	/* Fixes DMA transfer timout issue after disabling ASPM on RTS5260 */
++	msleep(1);
 +
- 	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
- 		dev_dbg(consumer,
- 			"Linked as a sync state only consumer to %s\n",
- 			dev_name(supplier));
- 		goto out;
- 	}
-+
- reorder:
- 	/*
- 	 * Move the consumer and all of the devices depending on it to the end
-@@ -449,12 +452,9 @@ reorder:
- 	 */
- 	device_reorder_to_tail(consumer, NULL);
+ 	if (option->ltr_enabled)
+ 		rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
  
--	list_add_tail_rcu(&link->s_node, &supplier->links.consumers);
--	list_add_tail_rcu(&link->c_node, &consumer->links.suppliers);
--
- 	dev_dbg(consumer, "Linked as a consumer to %s\n", dev_name(supplier));
- 
-- out:
-+out:
- 	device_pm_unlock();
- 	device_links_write_unlock();
- 
-@@ -829,6 +829,13 @@ static void __device_links_supplier_defe
- 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
- }
- 
-+static void device_link_drop_managed(struct device_link *link)
-+{
-+	link->flags &= ~DL_FLAG_MANAGED;
-+	WRITE_ONCE(link->status, DL_STATE_NONE);
-+	kref_put(&link->kref, __device_link_del);
-+}
-+
- /**
-  * device_links_driver_bound - Update device links after probing its driver.
-  * @dev: Device to update the links for.
-@@ -842,7 +849,7 @@ static void __device_links_supplier_defe
-  */
- void device_links_driver_bound(struct device *dev)
- {
--	struct device_link *link;
-+	struct device_link *link, *ln;
- 	LIST_HEAD(sync_list);
- 
- 	/*
-@@ -882,18 +889,35 @@ void device_links_driver_bound(struct de
- 	else
- 		__device_links_queue_sync_state(dev, &sync_list);
- 
--	list_for_each_entry(link, &dev->links.suppliers, c_node) {
-+	list_for_each_entry_safe(link, ln, &dev->links.suppliers, c_node) {
-+		struct device *supplier;
-+
- 		if (!(link->flags & DL_FLAG_MANAGED))
- 			continue;
- 
--		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
--		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		supplier = link->supplier;
-+		if (link->flags & DL_FLAG_SYNC_STATE_ONLY) {
-+			/*
-+			 * When DL_FLAG_SYNC_STATE_ONLY is set, it means no
-+			 * other DL_MANAGED_LINK_FLAGS have been set. So, it's
-+			 * save to drop the managed link completely.
-+			 */
-+			device_link_drop_managed(link);
-+		} else {
-+			WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
-+			WRITE_ONCE(link->status, DL_STATE_ACTIVE);
-+		}
- 
-+		/*
-+		 * This needs to be done even for the deleted
-+		 * DL_FLAG_SYNC_STATE_ONLY device link in case it was the last
-+		 * device link that was preventing the supplier from getting a
-+		 * sync_state() call.
-+		 */
- 		if (defer_sync_state_count)
--			__device_links_supplier_defer_sync(link->supplier);
-+			__device_links_supplier_defer_sync(supplier);
- 		else
--			__device_links_queue_sync_state(link->supplier,
--							&sync_list);
-+			__device_links_queue_sync_state(supplier, &sync_list);
- 	}
- 
- 	dev->links.status = DL_DEV_DRIVER_BOUND;
-@@ -903,13 +927,6 @@ void device_links_driver_bound(struct de
- 	device_links_flush_sync_list(&sync_list, dev);
- }
- 
--static void device_link_drop_managed(struct device_link *link)
--{
--	link->flags &= ~DL_FLAG_MANAGED;
--	WRITE_ONCE(link->status, DL_STATE_NONE);
--	kref_put(&link->kref, __device_link_del);
--}
--
- /**
-  * __device_links_no_driver - Update links of a device without a driver.
-  * @dev: Device without a drvier.
 
 
