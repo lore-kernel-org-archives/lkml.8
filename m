@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C15C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF304207CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EA9E2087D
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 07:03:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="O1fSBWC+"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mvVjA5mk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731539AbgEZHDT (ORCPT
+        id S1731530AbgEZHDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 03:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33926 "EHLO
+        Tue, 26 May 2020 03:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731493AbgEZHDR (ORCPT
+        with ESMTP id S1731510AbgEZHDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 03:03:17 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C7CC061A0E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:17 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id f21so6569481pgg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:17 -0700 (PDT)
+        Tue, 26 May 2020 03:03:15 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C414C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:15 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id n15so9731903pfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 00:03:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=UTa6e4uati/mC1lpRGebfubs1gwZzy90fbCylq5T17w=;
-        b=O1fSBWC+2oXmb5j7RceiWUwGAfEkuKAVD/tgEAq8i4EcQOlTa1aEPwBiS8cy6cZTlp
-         U8wWupuOcEpZ9siGvFKdl7GQR5spvRfuxpUN1D1XV6Rq83IbxHr0ziiTnIq0Xpt+/zWi
-         UkZoEz7MxtXVPrJxXk+gdY4vSBZaJQuygPRYPmIMq7tTcFKOxb7nNYb88nz9tQz45CKg
-         /jCoArJVUV/IslA3BGUx41iWrU5VnBcdiu2xqXlQY6CBJ7SQsTvQumZHxgRzVmyrEyUP
-         gdeanKKVfpi+SEo3yYx4LnWiugMDftofxx79qxefwLcIKhnUe+tDrxtMcvfVWtTjc7ax
-         k3gA==
+        bh=f85Vn4OuGxjQe/WprhGo5P1pwBgJ5q0VeEPd5gC4HYw=;
+        b=mvVjA5mkqlSCRsV0hWJXQfgQW2EKXKVzl9KCXz0dVWjoM7MNkN/UwWJvoT68TiixQZ
+         pOgMpdfKhcG3KKooS4e7Lb687eSsfVtruJJoZPgc/qPvWkaxccEEErkfNDgcnkVZruTd
+         PVcyh5PyK24WUzGUCHEoe9BsnF7AJZjBZn/ktvYEAnuYlL+MqnJS8///agNGaX0M1MeJ
+         jutdO/RjRfK3B0PM8C0K5glqPOpYqhOvsdh5YdPos9IAwYpXN9tGD3d5+bSRglTsLvpf
+         +l1NBti/l6MTxRhJnUg/z/QuYmbzPsxgsWNLfqLI8T0GFy2VH1u4TieQkbkWXrnsrdeD
+         hSbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UTa6e4uati/mC1lpRGebfubs1gwZzy90fbCylq5T17w=;
-        b=bqSe6fT1GyajQ/cMWU0ef3DNy+/SmjMQhFnmdDggTbeHHWsBE5oWuzUdDffdPKNevS
-         8TFCS2a6ffEfL0wdme4bCbmn5TjPAno+U8hTGSQyQOwCPBHnQDVEUUxWHuJm9ayfQ9cc
-         tBDwJfHS5mIVzgQ0975BUo3GBWX2s+WK/HhLD8HPuhvy72zayLl+7OhtK6lZTMsNtKGW
-         48aofLq/dnlC96Eukl50SG+wZbMnArNUb/P5yzJsc6RUJ5jgLsNFwL5fDPtdyhv+JNPg
-         j3h08bMmezB70tiVeQfLchVkCoqTVTnqIpa7zmTAEeykukuIvvXThvh7Tbpgqvd5tgy7
-         KB1Q==
-X-Gm-Message-State: AOAM530Duco1NcUtVZycei9qsxVjVy+Rnt5IWZYRJMdXtfIdKZDUUYXe
-        FxPmJyzfRrX8N1TFSas41Wkq0g==
-X-Google-Smtp-Source: ABdhPJyHLPVIbiZnTPLCFOkJTGyiNtB6HY85/M77vYHMbqVoSrDV0Qu/gbZiDjtkaW6HxGhnv9srjQ==
-X-Received: by 2002:aa7:9106:: with SMTP id 6mr7958314pfh.245.1590476596842;
-        Tue, 26 May 2020 00:03:16 -0700 (PDT)
+        bh=f85Vn4OuGxjQe/WprhGo5P1pwBgJ5q0VeEPd5gC4HYw=;
+        b=fxLyHFoRpAzXwJfGmjfCiFcIGzdeYRbzstzgs5ZuEG/hkQqhgcthDFYBmIVSKWCebP
+         fU4Iui2hUDvA+QLSxQqS1Jz0poejHaInpY5xCCgKNI9wmIHuj3V56ZGwZu+bdJeB90Vd
+         m/E7+5ei6XJN5tLINwbUw9r5tindrJD+4WLIwEqkGUUuye6c5RrUe/A4Szsu7ERR4u76
+         kBU2qHWeFVWiJPBX1uQCcBM0y7PjNfK2a4ZHsvojs5CpiTASvpyAFBfRkn7mly4Ff2fL
+         1ye98jElh7KlXCe3XtAl/FRSLvQQlAbUQsdJRodi5utK82YunReB5My9UaZppB/ohCiM
+         7j7w==
+X-Gm-Message-State: AOAM531XMIAo0BhQPqzRtc5T58tFwJyYxUe9CJ/NOKRdKgIXuFtcm74q
+        QtPeeCejITRJ/hPUJ3vR1AIxIA==
+X-Google-Smtp-Source: ABdhPJyA8DWABjY15lGbo3kBA5t3k19gSIsjCy5JXETqptaEzgVZp8aO2jxq7pDI7+wl9J0+PPPIMw==
+X-Received: by 2002:a62:9244:: with SMTP id o65mr14222963pfd.138.1590476594852;
+        Tue, 26 May 2020 00:03:14 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.03.15
+        by smtp.gmail.com with ESMTPSA id q34sm15167431pja.22.2020.05.26.00.03.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 00:03:16 -0700 (PDT)
+        Tue, 26 May 2020 00:03:14 -0700 (PDT)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, guoren@linux.alibaba.com,
         vincent.chen@sifive.com, paul.walmsley@sifive.com,
         palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, oleg@redhat.com
-Subject: [RFC PATCH v4 13/13] riscv: signal: Report signal frame size to userspace via auxv
-Date:   Tue, 26 May 2020 15:02:42 +0800
-Message-Id: <fbf926cd6a835a8210fd0dfec8f25611eb2592fb.1590474856.git.greentime.hu@sifive.com>
+Subject: [RFC PATCH v4 12/13] riscv: Add sigcontext save/restore for vector
+Date:   Tue, 26 May 2020 15:02:41 +0800
+Message-Id: <8dd3e441842d2b0fb63da82ecc04b08f99930e6a.1590474856.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1590474856.git.greentime.hu@sifive.com>
 References: <cover.1590474856.git.greentime.hu@sifive.com>
@@ -77,140 +77,180 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-The vector register belongs to the signal context. They need to be stored
-and restored as entering and leaving the signal handler. According to the
-V-extension specification, the maximum length of the vector registers can
-be 2^(XLEN-1). Hence, if userspace refers to the MINSIGSTKSZ #define
-(2KB) to create a sigframe, it may not be enough. To resolve this problem,
-this patch refers to the commit 94b07c1f8c39c
-("arm64: signal: Report signal frame size to userspace via auxv") to enable
-userspace to know the minimum required sigframe size through the auxiliary
-vector and use it to allocate enough memory for signal context.
+This patch adds sigcontext save/restore for vector. The vector registers
+will be saved in datap pointer. The datap pointer will be allocaed
+dynamically when the task needs in kernel space. The datap pointer will
+be set right after the __riscv_v_state data structure to save all the
+vector registers in the signal handler stack.
 
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+[greentime.hu@sifive.com: add support for dynamic vlen]
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 ---
- arch/riscv/include/asm/elf.h         | 17 +++++++++++++----
- arch/riscv/include/asm/processor.h   |  2 ++
- arch/riscv/include/uapi/asm/auxvec.h |  2 ++
- arch/riscv/kernel/setup.c            |  5 +++++
- arch/riscv/kernel/signal.c           | 16 ++++++++++++++++
- 5 files changed, 38 insertions(+), 4 deletions(-)
+ arch/riscv/include/uapi/asm/sigcontext.h |  2 +
+ arch/riscv/kernel/signal.c               | 92 +++++++++++++++++++++++-
+ 2 files changed, 91 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/include/asm/elf.h b/arch/riscv/include/asm/elf.h
-index d83a4efd052b..b6b15fc5f784 100644
---- a/arch/riscv/include/asm/elf.h
-+++ b/arch/riscv/include/asm/elf.h
-@@ -57,10 +57,19 @@ extern unsigned long elf_hwcap;
- #define ELF_PLATFORM	(NULL)
- 
- #ifdef CONFIG_MMU
--#define ARCH_DLINFO						\
--do {								\
--	NEW_AUX_ENT(AT_SYSINFO_EHDR,				\
--		(elf_addr_t)current->mm->context.vdso);		\
-+#define ARCH_DLINFO						 \
-+do {								 \
-+	NEW_AUX_ENT(AT_SYSINFO_EHDR,				 \
-+		(elf_addr_t)current->mm->context.vdso);		 \
-+	/*							 \
-+	 * Should always be nonzero unless there's a kernel bug. \
-+	 * If we haven't determined a sensible value to give to	 \
-+	 * userspace, omit the entry:				 \
-+	 */							 \
-+	if (likely(signal_minsigstksz))				 \
-+		NEW_AUX_ENT(AT_MINSIGSTKSZ, signal_minsigstksz); \
-+	else							 \
-+		NEW_AUX_ENT(AT_IGNORE, 0);			 \
- } while (0)
- #define ARCH_HAS_SETUP_ADDITIONAL_PAGES
- struct linux_binprm;
-diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-index 217273375cfb..5be2da702897 100644
---- a/arch/riscv/include/asm/processor.h
-+++ b/arch/riscv/include/asm/processor.h
-@@ -7,6 +7,7 @@
- #define _ASM_RISCV_PROCESSOR_H
- 
- #include <linux/const.h>
-+#include <linux/cache.h>
+diff --git a/arch/riscv/include/uapi/asm/sigcontext.h b/arch/riscv/include/uapi/asm/sigcontext.h
+index 84f2dfcfdbce..4217f3f1c8ba 100644
+--- a/arch/riscv/include/uapi/asm/sigcontext.h
++++ b/arch/riscv/include/uapi/asm/sigcontext.h
+@@ -8,6 +8,7 @@
  
  #include <asm/ptrace.h>
  
-@@ -79,6 +80,7 @@ int riscv_of_processor_hartid(struct device_node *node);
++#define RVV_MAGIC	0x53465457
+ /*
+  * Signal context structure
+  *
+@@ -17,6 +18,7 @@
+ struct sigcontext {
+ 	struct user_regs_struct sc_regs;
+ 	union __riscv_fp_state sc_fpregs;
++	struct __riscv_v_state sc_vregs;
+ };
  
- extern void riscv_fill_hwcap(void);
- 
-+extern unsigned long signal_minsigstksz __ro_after_init;
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_RISCV_PROCESSOR_H */
-diff --git a/arch/riscv/include/uapi/asm/auxvec.h b/arch/riscv/include/uapi/asm/auxvec.h
-index d86cb17bbabe..9745a01e5e61 100644
---- a/arch/riscv/include/uapi/asm/auxvec.h
-+++ b/arch/riscv/include/uapi/asm/auxvec.h
-@@ -10,4 +10,6 @@
- /* vDSO location */
- #define AT_SYSINFO_EHDR 33
- 
-+#define AT_MINSIGSTKSZ 51
-+
- #endif /* _UAPI_ASM_RISCV_AUXVEC_H */
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index 145128a7e560..6220e25ea9b0 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -17,6 +17,7 @@
- #include <linux/sched/task.h>
- #include <linux/swiotlb.h>
- #include <linux/smp.h>
-+#include <linux/processor.h>
- 
- #include <asm/clint.h>
- #include <asm/cpu_ops.h>
-@@ -62,6 +63,8 @@ void __init parse_dtb(void)
- #endif
- }
- 
-+extern void __init minsigstksz_setup(void);
-+
- void __init setup_arch(char **cmdline_p)
- {
- 	init_mm.start_code = (unsigned long) _stext;
-@@ -95,6 +98,8 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	riscv_fill_hwcap();
-+
-+	minsigstksz_setup();
- }
- 
- static int __init topology_init(void)
+ #endif /* _UAPI_ASM_RISCV_SIGCONTEXT_H */
 diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
-index 9ada6f74bb95..4f81251867e6 100644
+index 17ba190e84a5..9ada6f74bb95 100644
 --- a/arch/riscv/kernel/signal.c
 +++ b/arch/riscv/kernel/signal.c
-@@ -404,3 +404,19 @@ asmlinkage __visible void do_notify_resume(struct pt_regs *regs,
- 		tracehook_notify_resume(regs);
- 	}
- }
-+
-+unsigned long __ro_after_init signal_minsigstksz;
-+
-+/*
-+ * Determine the stack space required for guaranteed signal devliery.
-+ * This function is used to populate AT_MINSIGSTKSZ at process startup.
-+ * cpufeatures setup is assumed to be complete.
-+ */
-+void __init minsigstksz_setup(void)
-+{
-+	signal_minsigstksz = sizeof(struct rt_sigframe);
+@@ -83,6 +83,80 @@ static long save_fp_state(struct pt_regs *regs,
+ #define restore_fp_state(task, regs) (0)
+ #endif
+ 
 +#ifdef CONFIG_VECTOR
-+	if (has_vector)
-+		signal_minsigstksz += riscv_vsize;
-+#endif
++static long restore_v_state(struct pt_regs *regs, struct sigcontext *sc)
++{
++	long err;
++	struct __riscv_v_state __user *state = &sc->sc_vregs;
++	void *datap;
++	__u32 magic;
++
++	/* Get magic number and check it. */
++	err = __get_user(magic, &state->magic);
++	if (unlikely(err))
++		return err;
++
++	if (magic != RVV_MAGIC)
++		return -EINVAL;
++
++	/* Copy everything of __riscv_v_state except datap. */
++	err = __copy_from_user(&current->thread.vstate, state,
++			       RISCV_V_STATE_DATAP);
++	if (unlikely(err))
++		return err;
++
++	/* Copy the pointer datap itself. */
++	err = __get_user(datap, &state->datap);
++	if (unlikely(err))
++		return err;
++
++
++	/* Copy the whole vector content from user space datap. */
++	err = __copy_from_user(current->thread.vstate.datap, datap,
++			       current->thread.vstate.size);
++	if (unlikely(err))
++		return err;
++
++	vstate_restore(current, regs);
++
++	return err;
 +}
++
++static long save_v_state(struct pt_regs *regs, struct sigcontext *sc)
++{
++	long err;
++	struct __riscv_v_state __user *state = &sc->sc_vregs;
++	/* Set the datap right after the sigcntext structure. */
++	void *datap = sc + 1;
++
++	vstate_save(current, regs);
++	/* Copy everything of vstate but datap. */
++	err = __copy_to_user(state, &current->thread.vstate,
++			     RISCV_V_STATE_DATAP);
++	if (unlikely(err))
++		return err;
++
++	/* Copy the magic number. */
++	err = __put_user(RVV_MAGIC, &state->magic);
++	if (unlikely(err))
++		return err;
++
++	/* Copy the pointer datap itself. */
++	err = __put_user(datap, &state->datap);
++	if (unlikely(err))
++		return err;
++
++	/* Copy the whole vector content to user space datap. */
++	err = __copy_to_user(datap, current->thread.vstate.datap,
++			     current->thread.vstate.size);
++
++	return err;
++}
++#else
++#define save_v_state(task, regs) (0)
++#define restore_v_state(task, regs) (0)
++#endif
++
+ static long restore_sigcontext(struct pt_regs *regs,
+ 	struct sigcontext __user *sc)
+ {
+@@ -92,6 +166,9 @@ static long restore_sigcontext(struct pt_regs *regs,
+ 	/* Restore the floating-point state. */
+ 	if (has_fpu)
+ 		err |= restore_fp_state(regs, &sc->sc_fpregs);
++	/* Restore the vector state. */
++	if (has_vector)
++		err |= restore_v_state(regs, sc);
+ 	return err;
+ }
+ 
+@@ -101,13 +178,16 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 	struct rt_sigframe __user *frame;
+ 	struct task_struct *task;
+ 	sigset_t set;
++	size_t frame_size = sizeof(*frame);
+ 
+ 	/* Always make any pending restarted system calls return -EINTR */
+ 	current->restart_block.fn = do_no_restart_syscall;
+ 
+ 	frame = (struct rt_sigframe __user *)regs->sp;
+ 
+-	if (!access_ok(frame, sizeof(*frame)))
++	if (has_vector)
++		frame_size += current->thread.vstate.size;
++	if (!access_ok(frame, frame_size))
+ 		goto badframe;
+ 
+ 	if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
+@@ -145,6 +225,9 @@ static long setup_sigcontext(struct rt_sigframe __user *frame,
+ 	/* Save the floating-point state. */
+ 	if (has_fpu)
+ 		err |= save_fp_state(regs, &sc->sc_fpregs);
++	/* Save the vector state. */
++	if (has_vector)
++		err |= save_v_state(regs, sc);
+ 	return err;
+ }
+ 
+@@ -176,9 +259,12 @@ static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
+ {
+ 	struct rt_sigframe __user *frame;
+ 	long err = 0;
++	size_t frame_size = sizeof(*frame);
+ 
+-	frame = get_sigframe(ksig, regs, sizeof(*frame));
+-	if (!access_ok(frame, sizeof(*frame)))
++	if (has_vector)
++		frame_size += current->thread.vstate.size;
++	frame = get_sigframe(ksig, regs, frame_size);
++	if (!access_ok(frame, frame_size))
+ 		return -EFAULT;
+ 
+ 	err |= copy_siginfo_to_user(&frame->info, &ksig->info);
 -- 
 2.26.2
 
