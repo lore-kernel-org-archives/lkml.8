@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB689C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FAEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 826D120776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD7EA20776
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520895;
-	bh=DKb0ALmsiFZedu5tthQYLY1kwwXyjwj+9xGl6d2TjXw=;
+	s=default; t=1590520899;
+	bh=tKXQmljvVS67CsXNIjd1NAZlest5cr4b3g4C5vd/z5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RjrKK5UbfU2I8SxC7qwmK7UVv3iAlVdYomrcBz/LJJ2WKCWafUjTtsdq8EWc8HhZn
-	 f+qw2eOMhyFUBGO791NNtT0xfXEtZtB3LPJ/S4Zwry+umzQuaPixSFN0/Fm4Nl0xY+
-	 B6c5pC7iWE/k+QCtS/kEsxU50Ss3EUSL8nnHKBUE=
+	b=feZxKfuXI+qq31VHktPi8O+4ZQW5nhWbDOdYaAoN3yUuS2ZrKIdhXRdjbhZCSUHnF
+	 XonvzQuaAqIum5SgDsUadzwkZk11xuuUi03O2UuYwT3U81DQV9X11vJzRGX3wzwUpq
+	 SC7kEDKsSR/f9HTnvB0ltGN2K7io3vUPcalUDoJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404080AbgEZTLd (ORCPT
+        id S2404441AbgEZTVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:11:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391950AbgEZTL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:11:26 -0400
+        id S2404079AbgEZTLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:11:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D92F20888;
-        Tue, 26 May 2020 19:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8409220888;
+        Tue, 26 May 2020 19:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520286;
-        bh=DKb0ALmsiFZedu5tthQYLY1kwwXyjwj+9xGl6d2TjXw=;
+        s=default; t=1590520291;
+        bh=tKXQmljvVS67CsXNIjd1NAZlest5cr4b3g4C5vd/z5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qEVom3Gfj0pWnej9s4NEpCSJsmA5dtx4lJC4GQNc4vbU5NCiDuYNGuatcimGpjjzK
-         5p5iWkoGJ5bB+jwr3tmxfDcwB72NSGHbAhhVPaBLDecdLYXgj2NO3H5Jmb809J6L0c
-         3U2loUkWfVIC3AHiO8fRh2v74jKYkAQxbbmqIksc=
+        b=dFQbviB7SYEkvihwSxFgx2m9C5PbGoxGpouApP3JqWjOThcAEDhAtZyj1d9m0MwJY
+         ojCgql0KH0i1QtrfQRBXIgMVPZPvBqkwXi4eRVbKklJG8eNYFv+LbD8QkdgyfHbqZO
+         sLcBGyk9z+tgFm+UB2KeKnEbagq41gSuHO0Rnvjw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Jerry Snitselaar <jsnitsel@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Tom Murphy <murphyt7@tcd.ie>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.6 002/126] ARC: [plat-hsdk]: fix USB regression
-Date:   Tue, 26 May 2020 20:52:19 +0200
-Message-Id: <20200526183937.694190297@linuxfoundation.org>
+Subject: [PATCH 5.6 021/126] iommu: Fix deferred domain attachment
+Date:   Tue, 26 May 2020 20:52:38 +0200
+Message-Id: <20200526183939.443147529@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,42 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 4c13ca86dcf80a8c705b1f3674ff43d318e970e0 ]
+[ Upstream commit bd421264ed307dd296eab036851221b225071a32 ]
 
-As of today the CONFIG_USB isn't explicitly present in HSDK defconfig
-as it is implicitly forcibly enabled by UDL driver which selects CONFIG_USB
-in its kconfig.
-The commit 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
-reverse the dependencies between UDL and USB so UDL now depends on
-CONFIG_USB and not selects it. This introduces regression for ARC HSDK
-board as HSDK defconfig wasn't adjusted and now it misses USB support
-due to lack of CONFIG_USB enabled.
+The IOMMU core code has support for deferring the attachment of a domain
+to a device. This is needed in kdump kernels where the new domain must
+not be attached to a device before the device driver takes it over.
 
-Fix that.
+When the AMD IOMMU driver got converted to use the dma-iommu
+implementation, the deferred attaching got lost. The code in
+dma-iommu.c has support for deferred attaching, but it calls into
+iommu_attach_device() to actually do it. But iommu_attach_device()
+will check if the device should be deferred in it code-path and do
+nothing, breaking deferred attachment.
 
-Cc: <stable@vger.kernel.org> # 5.6.x
-Fixes: 5d50bd440bc2 ("drm/udl: Make udl driver depend on CONFIG_USB")
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Move the is_deferred_attach() check out of the attach_device path and
+into iommu_group_add_device() to make deferred attaching work from the
+dma-iommu code.
+
+Fixes: 795bbbb9b6f8 ("iommu/dma-iommu: Handle deferred devices")
+Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Tested-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Tom Murphy <murphyt7@tcd.ie>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Link: https://lore.kernel.org/r/20200519130340.14564-1-joro@8bytes.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/configs/hsdk_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/iommu.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-index 0974226fab55..aa000075a575 100644
---- a/arch/arc/configs/hsdk_defconfig
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -65,6 +65,7 @@ CONFIG_DRM_UDL=y
- CONFIG_DRM_ETNAVIV=y
- CONFIG_FB=y
- CONFIG_FRAMEBUFFER_CONSOLE=y
-+CONFIG_USB=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
- CONFIG_USB_OHCI_HCD=y
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 8d2477941fd9..22b28076d48e 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -692,6 +692,15 @@ out:
+ 	return ret;
+ }
+ 
++static bool iommu_is_attach_deferred(struct iommu_domain *domain,
++				     struct device *dev)
++{
++	if (domain->ops->is_attach_deferred)
++		return domain->ops->is_attach_deferred(domain, dev);
++
++	return false;
++}
++
+ /**
+  * iommu_group_add_device - add a device to an iommu group
+  * @group: the group into which to add the device (reference should be held)
+@@ -746,7 +755,7 @@ rename:
+ 
+ 	mutex_lock(&group->mutex);
+ 	list_add_tail(&device->list, &group->devices);
+-	if (group->domain)
++	if (group->domain  && !iommu_is_attach_deferred(group->domain, dev))
+ 		ret = __iommu_attach_device(group->domain, dev);
+ 	mutex_unlock(&group->mutex);
+ 	if (ret)
+@@ -1652,9 +1661,6 @@ static int __iommu_attach_device(struct iommu_domain *domain,
+ 				 struct device *dev)
+ {
+ 	int ret;
+-	if ((domain->ops->is_attach_deferred != NULL) &&
+-	    domain->ops->is_attach_deferred(domain, dev))
+-		return 0;
+ 
+ 	if (unlikely(domain->ops->attach_dev == NULL))
+ 		return -ENODEV;
+@@ -1726,8 +1732,7 @@ EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+ static void __iommu_detach_device(struct iommu_domain *domain,
+ 				  struct device *dev)
+ {
+-	if ((domain->ops->is_attach_deferred != NULL) &&
+-	    domain->ops->is_attach_deferred(domain, dev))
++	if (iommu_is_attach_deferred(domain, dev))
+ 		return;
+ 
+ 	if (unlikely(domain->ops->detach_dev == NULL))
 -- 
 2.25.1
 
