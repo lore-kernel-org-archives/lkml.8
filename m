@@ -2,53 +2,56 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F27C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D99C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4149320776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C27208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520466;
-	bh=hFig9hmtta8baLq9l4NUzE2/ChNeohb5Mi97YN1hjHw=;
+	s=default; t=1590520471;
+	bh=ROkDuAVEAX5iprg27/OAqxRmFR4g+xJwM9tn3TX5o7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfmKpgEl9JljpYc70PMQwmp7NTkG/2qKo1mgnF8UVUwM9++0HL6UfO6baJJR7UGGp
-	 TAlIg+o2pXvm9y2ePRkHKcQWIQ6LArobsrYpd+wwLmXab3GjlbmX2roQMAg+A1w2ZU
-	 +in+0vDvwlkYMr0Tbgmo+d/dJ6sDX10NMj557nZg=
+	b=L9ADDgX//pl1RF9BmEZOJRVkc3air+MrGdvei0rPAYgPsQOHzi3Dq6xDC9TCNvEZh
+	 1GdvKUiP6pueCCQfKxLlJE4X2yQwTjs/4t/ApGtO60ghuwQuzWVQwwMjnZC5JzTYqs
+	 aLcrUhC1k9RaqDUEcYn/kdd1K+b09/Kp1nRgihpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404378AbgEZTOZ (ORCPT
+        id S2392164AbgEZTOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44988 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:14:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404338AbgEZTOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:15 -0400
+        id S2404345AbgEZTOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:14:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE297208B6;
-        Tue, 26 May 2020 19:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 223CB20776;
+        Tue, 26 May 2020 19:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520455;
-        bh=hFig9hmtta8baLq9l4NUzE2/ChNeohb5Mi97YN1hjHw=;
+        s=default; t=1590520457;
+        bh=ROkDuAVEAX5iprg27/OAqxRmFR4g+xJwM9tn3TX5o7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XIOXt7c95bmHbZ8819qMrR1361QYOLMjsZXHYEFDS9j/CDtnA+tOydgptCYLBn3mJ
-         a10XEk4VeD5qU05O6nz/SW8yWaHuZuKsyzIPntXQrgPLvfjYpX4XsM7vEbabyu0/wX
-         jwB78Ca+lQZHAYjP9zALYlVfKTUkv+rDMoWXV6ps=
+        b=Izso1PozQOLxXMT7JbzGCU8SlFIRfxz/EKQebsEaNcvVHO4iCoFgKNEr2sTwtZAnM
+         bpr1jb7fkAIhjLswOfRJnTK/Grq3hBIHGw71zzm61ACBYRmv46syk1GYscoMG1ayGY
+         DRrVrvK39xiLYQtfI6pNeU7jXmADDp8D8yi59VQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Bryant G. Ly" <bryangly@gmail.com>,
-        Bart van Assche <bvanassche@acm.org>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.6 069/126] scsi: target: Put lun_ref at end of tmr processing
-Date:   Tue, 26 May 2020 20:53:26 +0200
-Message-Id: <20200526183943.975359174@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        Christoph Hellwig <hch@lst.de>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.6 087/126] Revert "driver core: platform: Initialize dma_parms for platform devices"
+Date:   Tue, 26 May 2020 20:53:44 +0200
+Message-Id: <20200526183945.302867078@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
 References: <20200526183937.471379031@linuxfoundation.org>
@@ -61,61 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+[ Upstream commit 1d2a14649ef5b5eb64ea5ce276d7df502bac4dbe ]
 
-commit f2e6b75f6ee82308ef7b00f29e71e5f1c6b3d52a upstream.
+[ Upstream commit 885a64715fd81e6af6d94a038556e0b2e6deb19c ]
 
-Testing with Loopback I found that, after a Loopback LUN has executed a
-TMR, I can no longer unlink the LUN.  The rm command hangs in
-transport_clear_lun_ref() at wait_for_completion(&lun->lun_shutdown_comp)
-The reason is, that transport_lun_remove_cmd() is not called at the end of
-target_tmr_work().
+This reverts commit 7c8978c0837d40c302f5e90d24c298d9ca9fc097, a new
+version will come in the next release cycle.
 
-It seems, that in other fabrics this call happens implicitly when the
-fabric drivers call transport_generic_free_cmd() during their
-->queue_tm_rsp().
-
-Unfortunately Loopback seems to not comply to the common way
-of calling transport_generic_free_cmd() from ->queue_*().
-Instead it calls transport_generic_free_cmd() from its
-  ->check_stop_free() only.
-
-But the ->check_stop_free() is called by
-transport_cmd_check_stop_to_fabric() after it has reset the se_cmd->se_lun
-pointer.  Therefore the following transport_generic_free_cmd() skips the
-transport_lun_remove_cmd().
-
-So this patch re-adds the transport_lun_remove_cmd() at the end of
-target_tmr_work(), which was removed during commit 2c9fa49e100f ("scsi:
-target/core: Make ABORT and LUN RESET handling synchronous").
-
-For fabrics using transport_generic_free_cmd() in the usual way the double
-call to transport_lun_remove_cmd() doesn't harm, as
-transport_lun_remove_cmd() checks for this situation and does not release
-lun_ref twice.
-
-Link: https://lore.kernel.org/r/20200513153443.3554-1-bstroesser@ts.fujitsu.com
-Fixes: 2c9fa49e100f ("scsi: target/core: Make ABORT and LUN RESET handling synchronous")
-Cc: stable@vger.kernel.org
-Tested-by: Bryant G. Ly <bryangly@gmail.com>
-Reviewed-by: Bart van Assche <bvanassche@acm.org>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: <stable@vger.kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Ludovic Barre <ludovic.barre@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_transport.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/platform.c         | 2 --
+ include/linux/platform_device.h | 1 -
+ 2 files changed, 3 deletions(-)
 
---- a/drivers/target/target_core_transport.c
-+++ b/drivers/target/target_core_transport.c
-@@ -3349,6 +3349,7 @@ static void target_tmr_work(struct work_
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index c81b68d5d66d..b5ce7b085795 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -361,8 +361,6 @@ struct platform_object {
+  */
+ static void setup_pdev_dma_masks(struct platform_device *pdev)
+ {
+-	pdev->dev.dma_parms = &pdev->dma_parms;
+-
+ 	if (!pdev->dev.coherent_dma_mask)
+ 		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+ 	if (!pdev->dev.dma_mask) {
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index 81900b3cbe37..041bfa412aa0 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -25,7 +25,6 @@ struct platform_device {
+ 	bool		id_auto;
+ 	struct device	dev;
+ 	u64		platform_dma_mask;
+-	struct device_dma_parameters dma_parms;
+ 	u32		num_resources;
+ 	struct resource	*resource;
  
- 	cmd->se_tfo->queue_tm_rsp(cmd);
- 
-+	transport_lun_remove_cmd(cmd);
- 	transport_cmd_check_stop_to_fabric(cmd);
- 	return;
- 
+-- 
+2.25.1
+
 
 
