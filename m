@@ -2,99 +2,129 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74238C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 179F4C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 486EA207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mwjDL+wW"
+	by mail.kernel.org (Postfix) with ESMTP id EC272207CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:18:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgEZOQ1 (ORCPT
+        id S1729074AbgEZOSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:16:27 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49646 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgEZOQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:16:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=ZEZ1+yG3T0vEd58X58pERPcfzN4dbTvcTqCMRc8b9RQ=; b=mwjDL+wWgCxatP4XIvGOhsucBR
-        sYYetvGOeYtDiCDaYnPMf19gGi5la/8GEIhcC3Me4+QEzKqUEPzQ8E2INyTB3j6c8qBAew7S/s4g3
-        Yr6FjMBwCT5Re5vMGbX/NZ4MqVfNEmWtY8VJFGpTnXQwMYyiIMn+3pRNonmA+TDQxhQI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jdaNB-003HxR-V6; Tue, 26 May 2020 16:16:05 +0200
-Date:   Tue, 26 May 2020 16:16:05 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] [not for merge] netstats: example use of stats_fs
- API
-Message-ID: <20200526141605.GJ768009@lunn.ch>
-References: <20200526110318.69006-1-eesposit@redhat.com>
- <20200526110318.69006-8-eesposit@redhat.com>
+        Tue, 26 May 2020 10:18:01 -0400
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:49594 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727997AbgEZOSA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:18:00 -0400
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 04QEHZAU008687;
+        Tue, 26 May 2020 17:17:35 +0300
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id EA22A639BE; Tue, 26 May 2020 17:17:35 +0300 (IDT)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org,
+        "benoit.houyere@st.com--to=mark.rutland"@arm.com,
+        peterhuewe@gmx.de, christophe-h.richard@st.com, jgg@ziepe.ca,
+        arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v9 7/8] tpm: Add YAML schema for TPM TIS I2C options
+Date:   Tue, 26 May 2020 17:16:57 +0300
+Message-Id: <20200526141658.157801-8-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200526141658.157801-1-amirmizi6@gmail.com>
+References: <20200526141658.157801-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526110318.69006-8-eesposit@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:03:17PM +0200, Emanuele Giuseppe Esposito wrote:
-> Apply stats_fs on the networking statistics subsystem.
-> 
-> Currently it only works with disabled network namespace
-> (CONFIG_NET_NS=n), because multiple namespaces will have the same
-> device name under the same root source that will cause a conflict in
-> stats_fs.
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-Hi Emanuele
+Added a YAML schema to support tpm tis i2c related dt-bindings for the I2c
+PTP based physical layer.
 
-How do you atomically get and display a group of statistics?
+This patch adds the documentation for corresponding device tree bindings of
+I2C based Physical TPM.
+Refer to the 'I2C Interface Definition' section in
+'TCG PC Client PlatformTPMProfile(PTP) Specification' publication
+for specification.
 
-If you look at how the netlink socket works, you will see code like:
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ .../bindings/security/tpm/tpm-tis-i2c.yaml         | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
 
-                do {
-                        start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
-                        rx_packets = cpu_stats->rx_packets;
-                        rx_bytes = cpu_stats->rx_bytes;
-			....
-                } while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+new file mode 100644
+index 0000000..68b13d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/security/tpm/tpm-tis-i2c.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/security/tpm/tpm-tis-i2c.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: I2C PTP based TPM Device Tree Bindings
++
++maintainers:
++  - Amir Mizinski <amirmizi6@gmail.com>
++
++description:
++  Device Tree Bindings for I2C based Trusted Platform Module(TPM).
++
++properties:
++  compatible:
++    items:
++      - enum:
++          # Nuvoton's Trusted Platform Module (TPM) (NPCT75x)
++          - nuvoton,npct75x
++      - const: tcg,tpm-tis-i2c
++
++  reg:
++    maxItems: 1
++
++  interrupt:
++    maxItems: 1
++
++  crc-checksum:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Set this flag to enable CRC checksum.
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      tpm@2e {
++        compatible = "nuvoton,npct75x", "tcg,tpm-tis-i2c";
++        reg = <0x2e>;
++        crc-checksum;
++      };
++    };
++...
+-- 
+2.7.4
 
-It will ensure that rx_packets and rx_bytes are consistent with each
-other. If the value of the sequence counter changes while inside the
-loop, the loop so repeated until it does not change.
-
-In general, hardware counters in NICs are the same.  You tell it to
-take a snapshot of the statistics counters, and then read them all
-back, to give a consistent view across all the statistics.
-
-I've not looked at this new code in detail, but it looks like you have
-one file per statistic, and assume each statistic is independent of
-every other statistic. This independence can limit how you use the
-values, particularly when debugging. The netlink interface we use does
-not have this limitation.
-
-	     Andrew
