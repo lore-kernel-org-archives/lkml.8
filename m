@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30624C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D414C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B706204EF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6D7204EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388911AbgEZM7t (ORCPT
+        id S2389307AbgEZM77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:59:49 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:57372 "EHLO
+        Tue, 26 May 2020 08:59:59 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57282 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731828AbgEZM7q (ORCPT
+        with ESMTP id S1726325AbgEZM7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:59:46 -0400
+        Tue, 26 May 2020 08:59:40 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 9B75E8030870;
-        Tue, 26 May 2020 12:59:39 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 66961803086B;
+        Tue, 26 May 2020 12:59:35 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id OhPfr2KPV8q7; Tue, 26 May 2020 15:59:38 +0300 (MSK)
+        with ESMTP id B2Q0vX5ntY65; Tue, 26 May 2020 15:59:34 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
 List-Id: <soc.lore.kernel.org>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        Olof Johansson <olof@lixom.net>, <linux-mips@vger.kernel.org>,
         <soc@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 6/6] memory: Add Baikal-T1 L2-cache Control Block driver
-Date:   Tue, 26 May 2020 15:59:28 +0300
-Message-ID: <20200526125928.17096-7-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v3 1/6] dt-bindings: bus: Add Baikal-T1 AXI-bus binding
+Date:   Tue, 26 May 2020 15:59:23 +0300
+Message-ID: <20200526125928.17096-2-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -54,405 +54,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Baikal-T1 SoC provides a way to tune the MIPS P5600 CM2 L2-cache
-performance up. It can be done by changing the L2-RAM Data/Tag/WS
-latencies in a dedicated register exposed by the system controller.
-The driver added by this commit provides a dts properties-based and
-sysfs-based interface for it. The device DT node is supposed to be a
-child of Baikal-T1 System Controller node.
+AXI3-bus is the main communication bus connecting all high-speed
+peripheral IP-cores with RAM controller and with MIPS P5600 cores on
+Baikal-T1 SoC. This binding describes the DW AMBA 3 AXI Inteconnect
+and Errors Handler Block synthesized on top of it, which are
+responsible for the AXI-bus traffic arbitration and errors reporting
+upstream to CPU. Baikal-T1 AXI-bus DT node is supposed to be compatible
+with "be,bt1-axi" and "simple-bus" drivers, should have reg property with
+AXI-bus QOS registers space, syscon phandle reference to the Baikal-T1
+System Controller, IRQ line declared, AXI Interconnect reference clock and
+reset line.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Paul Burton <paulburton@kernel.org>
 Cc: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: soc@kernel.org
-Cc: devicetree@vger.kernel.org
 
 ---
 
 Changelog v2:
-- Move driver from soc to memory subsystem.
-- Get regmap from the parental syscon DT node.
-- Use generic FIELD_{GET,PREP} macro.
-- Remove probe-status info string printout.
-- Since the driver depends on the OF config we can remove of_match_ptr()
-  macro utilization.
-- Select MFD_SYSCON config.
+- Move driver to the bus subsystem.
+- Use dual GPL/BSD license.
+- Use single lined copyright header.
+- Lowercase the unit-address.
+- Convert a simple EHB block binding to the Baikal-T1 AXI-bus one with
+  interconnect capabilities support.
+- Replace "additionalProperties: false" property with
+  "unevaluatedProperties: false".
+- Add AXI reference clock and reset support.
+- Add syscon phandle reference to the Baikal-T1 System Controller node.
 
 Changelog v3:
-- Discard CONFIG_OF dependency since there is non at compile-time.
-- Fix invalid of_property_read_u32() return value test.
+- Add syscon EHB registers range to the reg property as optional entry.
 ---
- drivers/memory/Kconfig      |  11 ++
- drivers/memory/Makefile     |   1 +
- drivers/memory/bt1-l2-ctl.c | 322 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 334 insertions(+)
- create mode 100644 drivers/memory/bt1-l2-ctl.c
+ .../bindings/bus/baikal,bt1-axi.yaml          | 107 ++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
 
-diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
-index 9bddca292330..04368ee2a809 100644
---- a/drivers/memory/Kconfig
-+++ b/drivers/memory/Kconfig
-@@ -46,6 +46,17 @@ config ATMEL_EBI
- 	  tree is used. This bus supports NANDs, external ethernet controller,
- 	  SRAMs, ATA devices, etc.
- 
-+config BT1_L2_CTL
-+	bool "Baikal-T1 CM2 L2-RAM Cache Control Block"
-+	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
-+	select MFD_SYSCON
-+	help
-+	  Baikal-T1 CPU is based on the MIPS P5600 Warrior IP-core. The CPU
-+	  resides Coherency Manager v2 with embedded 1MB L2-cache. It's
-+	  possible to tune the L2 cache performance up by setting the data,
-+	  tags and way-select latencies of RAM access. This driver provides a
-+	  dt properties-based and sysfs interface for it.
-+
- config TI_AEMIF
- 	tristate "Texas Instruments AEMIF driver"
- 	depends on (ARCH_DAVINCI || ARCH_KEYSTONE) && OF
-diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
-index 27b493435e61..6d7e3e64ba62 100644
---- a/drivers/memory/Makefile
-+++ b/drivers/memory/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_ARM_PL172_MPMC)	+= pl172.o
- obj-$(CONFIG_ATMEL_SDRAMC)	+= atmel-sdramc.o
- obj-$(CONFIG_ATMEL_EBI)		+= atmel-ebi.o
- obj-$(CONFIG_ARCH_BRCMSTB)	+= brcmstb_dpfe.o
-+obj-$(CONFIG_BT1_L2_CTL)	+= bt1-l2-ctl.o
- obj-$(CONFIG_TI_AEMIF)		+= ti-aemif.o
- obj-$(CONFIG_TI_EMIF)		+= emif.o
- obj-$(CONFIG_OMAP_GPMC)		+= omap-gpmc.o
-diff --git a/drivers/memory/bt1-l2-ctl.c b/drivers/memory/bt1-l2-ctl.c
+diff --git a/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
 new file mode 100644
-index 000000000000..633fea6a4edf
+index 000000000000..203bc0e5346b
 --- /dev/null
-+++ b/drivers/memory/bt1-l2-ctl.c
-@@ -0,0 +1,322 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-+ *
-+ * Authors:
-+ *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-+ *
-+ * Baikal-T1 CM2 L2-cache Control Block driver.
-+ */
++++ b/Documentation/devicetree/bindings/bus/baikal,bt1-axi.yaml
+@@ -0,0 +1,107 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bus/baikal,bt1-axi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/bitfield.h>
-+#include <linux/types.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/sysfs.h>
-+#include <linux/of.h>
++title: Baikal-T1 AXI-bus
 +
-+#define L2_CTL_REG			0x028
-+#define L2_CTL_DATA_STALL_FLD		0
-+#define L2_CTL_DATA_STALL_MASK		GENMASK(1, L2_CTL_DATA_STALL_FLD)
-+#define L2_CTL_TAG_STALL_FLD		2
-+#define L2_CTL_TAG_STALL_MASK		GENMASK(3, L2_CTL_TAG_STALL_FLD)
-+#define L2_CTL_WS_STALL_FLD		4
-+#define L2_CTL_WS_STALL_MASK		GENMASK(5, L2_CTL_WS_STALL_FLD)
-+#define L2_CTL_SET_CLKRATIO		BIT(13)
-+#define L2_CTL_CLKRATIO_LOCK		BIT(31)
++maintainers:
++  - Serge Semin <fancer.lancer@gmail.com>
 +
-+#define L2_CTL_STALL_MIN		0
-+#define L2_CTL_STALL_MAX		3
-+#define L2_CTL_STALL_SET_DELAY_US	1
-+#define L2_CTL_STALL_SET_TOUT_US	1000
++description: |
++  AXI3-bus is the main communication bus of Baikal-T1 SoC connecting all
++  high-speed peripheral IP-cores with RAM controller and with MIPS P5600
++  cores. Traffic arbitration is done by means of DW AXI Interconnect (so
++  called AXI Main Interconnect) routing IO requests from one block to
++  another: from CPU to SoC peripherals and between some SoC peripherals
++  (mostly between peripheral devices and RAM, but also between DMA and
++  some peripherals). In case of any protocol error, device not responding
++  an IRQ is raised and a faulty situation is reported to the AXI EHB
++  (Errors Handler Block) embedded on top of the DW AXI Interconnect and
++  accessible by means of the Baikal-T1 System Controller.
 +
-+/*
-+ * struct l2_ctl - Baikal-T1 L2 Control block private data.
-+ * @dev: Pointer to the device structure.
-+ * @sys_regs: Baikal-T1 System Controller registers map.
-+ */
-+struct l2_ctl {
-+	struct device *dev;
++allOf:
++ - $ref: /schemas/simple-bus.yaml#
 +
-+	struct regmap *sys_regs;
-+};
++properties:
++  compatible:
++    contains:
++      const: baikal,bt1-axi
 +
-+/*
-+ * enum l2_ctl_stall - Baikal-T1 L2-cache-RAM stall identifier.
-+ * @L2_WSSTALL: Way-select latency.
-+ * @L2_TAGSTALL: Tag latency.
-+ * @L2_DATASTALL: Data latency.
-+ */
-+enum l2_ctl_stall {
-+	L2_WS_STALL,
-+	L2_TAG_STALL,
-+	L2_DATA_STALL
-+};
++  reg:
++    minItems: 1
++    items:
++      - description: Synopsys DesignWare AXI Interconnect QoS registers
++      - description: AXI EHB MMIO system controller registers
 +
-+/*
-+ * struct l2_ctl_device_attribute - Baikal-T1 L2-cache device attribute.
-+ * @dev_attr: Actual sysfs device attribute.
-+ * @id: L2-cache stall field identifier.
-+ */
-+struct l2_ctl_device_attribute {
-+	struct device_attribute dev_attr;
-+	enum l2_ctl_stall id;
-+};
-+#define to_l2_ctl_dev_attr(_dev_attr) \
-+	container_of(_dev_attr, struct l2_ctl_device_attribute, dev_attr)
++  reg-names:
++    minItems: 1
++    items:
++      - const: qos
++      - const: ehb
 +
-+#define L2_CTL_ATTR_RW(_name, _prefix, _id) \
-+	struct l2_ctl_device_attribute l2_ctl_attr_##_name = \
-+		{ __ATTR(_name, 0644, _prefix##_show, _prefix##_store),	_id }
++  '#interconnect-cells':
++    const: 1
 +
-+static int l2_ctl_get_latency(struct l2_ctl *l2, enum l2_ctl_stall id, u32 *val)
-+{
-+	u32 data = 0;
-+	int ret;
++  syscon:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description: Phandle to the Baikal-T1 System Controller DT node
 +
-+	ret = regmap_read(l2->sys_regs, L2_CTL_REG, &data);
-+	if (ret)
-+		return ret;
++  interrupts:
++    maxItems: 1
 +
-+	switch (id) {
-+	case L2_WS_STALL:
-+		*val = FIELD_GET(L2_CTL_WS_STALL_MASK, data);
-+		break;
-+	case L2_TAG_STALL:
-+		*val = FIELD_GET(L2_CTL_TAG_STALL_MASK, data);
-+		break;
-+	case L2_DATA_STALL:
-+		*val = FIELD_GET(L2_CTL_DATA_STALL_MASK, data);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
++  clocks:
++    items:
++      - description: Main Interconnect uplink reference clock
 +
-+	return 0;
-+}
++  clock-names:
++    items:
++      - const: aclk
 +
-+static int l2_ctl_set_latency(struct l2_ctl *l2, enum l2_ctl_stall id, u32 val)
-+{
-+	u32 mask = 0, data = 0;
-+	int ret;
++  resets:
++    items:
++      - description: Main Interconnect reset line
 +
-+	val = clamp_val(val, L2_CTL_STALL_MIN, L2_CTL_STALL_MAX);
++  reset-names:
++    items:
++      - const: arst
 +
-+	switch (id) {
-+	case L2_WS_STALL:
-+		data = FIELD_PREP(L2_CTL_WS_STALL_MASK, val);
-+		mask = L2_CTL_WS_STALL_MASK;
-+		break;
-+	case L2_TAG_STALL:
-+		data = FIELD_PREP(L2_CTL_TAG_STALL_MASK, val);
-+		mask = L2_CTL_TAG_STALL_MASK;
-+		break;
-+	case L2_DATA_STALL:
-+		data = FIELD_PREP(L2_CTL_DATA_STALL_MASK, val);
-+		mask = L2_CTL_DATA_STALL_MASK;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
++unevaluatedProperties: false
 +
-+	data |= L2_CTL_SET_CLKRATIO;
-+	mask |= L2_CTL_SET_CLKRATIO;
++required:
++  - compatible
++  - reg
++  - reg-names
++  - syscon
++  - interrupts
++  - clocks
++  - clock-names
 +
-+	ret = regmap_update_bits(l2->sys_regs, L2_CTL_REG, mask, data);
-+	if (ret)
-+		return ret;
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/mips-gic.h>
 +
-+	return regmap_read_poll_timeout(l2->sys_regs, L2_CTL_REG, data,
-+					data & L2_CTL_CLKRATIO_LOCK,
-+					L2_CTL_STALL_SET_DELAY_US,
-+					L2_CTL_STALL_SET_TOUT_US);
-+}
++    bus@1f05a000 {
++      compatible = "baikal,bt1-axi", "simple-bus";
++      reg = <0 0x1f05a000 0 0x1000>,
++            <0 0x1f04d110 0 0x8>;
++      reg-names = "qos", "ehb";
++      #address-cells = <1>;
++      #size-cells = <1>;
++      #interconnect-cells = <1>;
 +
-+static void l2_ctl_clear_data(void *data)
-+{
-+	struct l2_ctl *l2 = data;
-+	struct platform_device *pdev = to_platform_device(l2->dev);
++      syscon = <&syscon>;
 +
-+	platform_set_drvdata(pdev, NULL);
-+}
++      ranges;
 +
-+static struct l2_ctl *l2_ctl_create_data(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct l2_ctl *l2;
-+	int ret;
++      interrupts = <GIC_SHARED 127 IRQ_TYPE_LEVEL_HIGH>;
 +
-+	l2 = devm_kzalloc(dev, sizeof(*l2), GFP_KERNEL);
-+	if (!l2)
-+		return ERR_PTR(-ENOMEM);
++      clocks = <&ccu_axi 0>;
++      clock-names = "aclk";
 +
-+	ret = devm_add_action(dev, l2_ctl_clear_data, l2);
-+	if (ret) {
-+		dev_err(dev, "Can't add L2 CTL data clear action\n");
-+		return ERR_PTR(ret);
-+	}
-+
-+	l2->dev = dev;
-+	platform_set_drvdata(pdev, l2);
-+
-+	return l2;
-+}
-+
-+static int l2_ctl_find_sys_regs(struct l2_ctl *l2)
-+{
-+	l2->sys_regs = syscon_node_to_regmap(l2->dev->of_node->parent);
-+	if (IS_ERR(l2->sys_regs)) {
-+		dev_err(l2->dev, "Couldn't get L2 CTL register map\n");
-+		return PTR_ERR(l2->sys_regs);
-+	}
-+
-+	return 0;
-+}
-+
-+static int l2_ctl_of_parse_property(struct l2_ctl *l2, enum l2_ctl_stall id,
-+				    const char *propname)
-+{
-+	int ret = 0;
-+	u32 data;
-+
-+	if (!of_property_read_u32(l2->dev->of_node, propname, &data)) {
-+		ret = l2_ctl_set_latency(l2, id, data);
-+		if (ret)
-+			dev_err(l2->dev, "Invalid value of '%s'\n", propname);
-+	}
-+
-+	return ret;
-+}
-+
-+static int l2_ctl_of_parse(struct l2_ctl *l2)
-+{
-+	int ret;
-+
-+	ret = l2_ctl_of_parse_property(l2, L2_WS_STALL, "baikal,l2-ws-latency");
-+	if (ret)
-+		return ret;
-+
-+	ret = l2_ctl_of_parse_property(l2, L2_TAG_STALL, "baikal,l2-tag-latency");
-+	if (ret)
-+		return ret;
-+
-+	return l2_ctl_of_parse_property(l2, L2_DATA_STALL,
-+					"baikal,l2-data-latency");
-+}
-+
-+static ssize_t l2_ctl_latency_show(struct device *dev,
-+				   struct device_attribute *attr,
-+				   char *buf)
-+{
-+	struct l2_ctl_device_attribute *devattr = to_l2_ctl_dev_attr(attr);
-+	struct l2_ctl *l2 = dev_get_drvdata(dev);
-+	u32 data;
-+	int ret;
-+
-+	ret = l2_ctl_get_latency(l2, devattr->id, &data);
-+	if (ret)
-+		return ret;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%u\n", data);
-+}
-+
-+static ssize_t l2_ctl_latency_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	struct l2_ctl_device_attribute *devattr = to_l2_ctl_dev_attr(attr);
-+	struct l2_ctl *l2 = dev_get_drvdata(dev);
-+	u32 data;
-+	int ret;
-+
-+	if (kstrtouint(buf, 0, &data) < 0)
-+		return -EINVAL;
-+
-+	ret = l2_ctl_set_latency(l2, devattr->id, data);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+static L2_CTL_ATTR_RW(l2_ws_latency, l2_ctl_latency, L2_WS_STALL);
-+static L2_CTL_ATTR_RW(l2_tag_latency, l2_ctl_latency, L2_TAG_STALL);
-+static L2_CTL_ATTR_RW(l2_data_latency, l2_ctl_latency, L2_DATA_STALL);
-+
-+static struct attribute *l2_ctl_sysfs_attrs[] = {
-+	&l2_ctl_attr_l2_ws_latency.dev_attr.attr,
-+	&l2_ctl_attr_l2_tag_latency.dev_attr.attr,
-+	&l2_ctl_attr_l2_data_latency.dev_attr.attr,
-+	NULL
-+};
-+ATTRIBUTE_GROUPS(l2_ctl_sysfs);
-+
-+static void l2_ctl_remove_sysfs(void *data)
-+{
-+	struct l2_ctl *l2 = data;
-+
-+	device_remove_groups(l2->dev, l2_ctl_sysfs_groups);
-+}
-+
-+static int l2_ctl_init_sysfs(struct l2_ctl *l2)
-+{
-+	int ret;
-+
-+	ret = device_add_groups(l2->dev, l2_ctl_sysfs_groups);
-+	if (ret) {
-+		dev_err(l2->dev, "Failed to create L2 CTL sysfs nodes\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(l2->dev, l2_ctl_remove_sysfs, l2);
-+	if (ret)
-+		dev_err(l2->dev, "Can't add L2 CTL sysfs remove action\n");
-+
-+	return ret;
-+}
-+
-+static int l2_ctl_probe(struct platform_device *pdev)
-+{
-+	struct l2_ctl *l2;
-+	int ret;
-+
-+	l2 = l2_ctl_create_data(pdev);
-+	if (IS_ERR(l2))
-+		return PTR_ERR(l2);
-+
-+	ret = l2_ctl_find_sys_regs(l2);
-+	if (ret)
-+		return ret;
-+
-+	ret = l2_ctl_of_parse(l2);
-+	if (ret)
-+		return ret;
-+
-+	ret = l2_ctl_init_sysfs(l2);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id l2_ctl_of_match[] = {
-+	{ .compatible = "baikal,bt1-l2-ctl" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, l2_ctl_of_match);
-+
-+static struct platform_driver l2_ctl_driver = {
-+	.probe = l2_ctl_probe,
-+	.driver = {
-+		.name = "bt1-l2-ctl",
-+		.of_match_table = l2_ctl_of_match
-+	}
-+};
-+module_platform_driver(l2_ctl_driver);
-+
-+MODULE_AUTHOR("Serge Semin <Sergey.Semin@baikalelectronics.ru>");
-+MODULE_DESCRIPTION("Baikal-T1 L2-cache driver");
-+MODULE_LICENSE("GPL v2");
++      resets = <&ccu_axi 0>;
++      reset-names = "arst";
++    };
++...
 -- 
 2.26.2
 
