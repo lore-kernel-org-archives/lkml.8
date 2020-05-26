@@ -2,220 +2,507 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1075FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6412C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE63B2073B
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="ecGB8EiR"
+	by mail.kernel.org (Postfix) with ESMTP id 640D82073B
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590518121;
+	bh=56+jc2YBY6x6hHWjn5ToyvjEGYq6fLZWGafNFZADRJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Q21iTRXIE4XPuOLj75NRDBLXyfv8/prLiiwjORr8aNwfFKzEx0JxfwZ+mJd8zNMyi
+	 szTmWhnpLOMOdJE7MtrbzrxMuzPCWsSTcDdXLjD6O8TU7h+/x9s7b7RgFMNGfkHegV
+	 F/XTA5slkXQtBIoBeDP8r4vIohFpXjsTWM0vPIqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbgEZSfO (ORCPT
+        id S2388915AbgEZSfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:35:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728113AbgEZSfN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:35:13 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED72C03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:35:13 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id c185so7569995qke.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 11:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=massaru-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tOHefzf5rrf6G5EWDMOouxVnKSU7Wd/O1AnRn9bMs1U=;
-        b=ecGB8EiRX+iwxbGas+Dcx/BedPX+XhFTrkIpEUtRlmlYtDVzT38LGjlDQ+q0FGUsVq
-         vMlno1I/lZLGX10FakV/Gie2hEbDpAk9KwWjUPG2tp9zqkjs2XGBadd0xZTH7ZtTiz+g
-         f6OYTzZ35mk2dWOeVG/8r0pwIUn4JixaihXgg9Di9Be2BWUjgpaQIFKGBsZ1+uowDH83
-         +6aFYeXMhY5gvukVB1flp+GlXlpw6t6WZWGk6fX5tZgluAbwhKJtaZb3j7YIj2IIOl/x
-         lt2akuZxcJ21/6+Vaj0s9YkLkKgZwjy6mUVeAzk8jXI3/Pnhw2EsE+qzD2CdI2zQUUjR
-         ahJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tOHefzf5rrf6G5EWDMOouxVnKSU7Wd/O1AnRn9bMs1U=;
-        b=mfOVlrbp4KGTRvw9otcfr7Aqw9z6h21580xsD9T5TMrck457a3Pd3XQescLeDFQZv3
-         dRZ4ks6ijIGIFMQDaKM6ggJXilaKbpbL/QfJSRmOF0NaPGftFyNEwKzFar2g+ENzLCO0
-         a3CRa5a/ajIUVcx8k07dJvw/mfN+ZLnAspwEKOil2sNi5/yeCxxrJEFQ5Tg2Ob3iiaJl
-         UkgcM2ElAzD4C8H2+78JHM8p+izx+8UKU/US6Dk82u2rPmQw2NvRKlDB8VdiRhpQA85C
-         l1VBiYWMsrfrMUIM7OMNF53+lmFX3hHtvsCNJAPggT+f2A7vKTxbB7q7xWn3dznzoU2N
-         sAkA==
-X-Gm-Message-State: AOAM532ac9JkyVAkl45meQupUia7xMPEeK+BQx+puJvOJxOMKEsBCQkd
-        z5HcMaKyf3Z45JKllrOJdF9lvQ==
-X-Google-Smtp-Source: ABdhPJxCRmUucVbdyfLei9YA5WE+HsPraMh/wlOImgdfrkErvWAIFR3hdUWwt5WWeBJVD5+n89/mHw==
-X-Received: by 2002:a05:620a:22f5:: with SMTP id p21mr129040qki.241.1590518112425;
-        Tue, 26 May 2020 11:35:12 -0700 (PDT)
-Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
-        by smtp.gmail.com with ESMTPSA id o2sm396942qtj.70.2020.05.26.11.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 11:35:11 -0700 (PDT)
-From:   Vitor Massaru Iha <vitor@massaru.org>
-To:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brendanhiggins@google.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [fixup] kunit: use KUnit defconfig by default
-Date:   Tue, 26 May 2020 15:35:06 -0300
-Message-Id: <20200526183506.47104-1-vitor@massaru.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 26 May 2020 14:35:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728113AbgEZSfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:35:18 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E408D207FB;
+        Tue, 26 May 2020 18:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590518115;
+        bh=56+jc2YBY6x6hHWjn5ToyvjEGYq6fLZWGafNFZADRJQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G4lGutaL6vy8of+yL2FyUXZ13a0yzS7AcXmN+76vej1slcGHjLqAqCMRMA63WRfHI
+         WGkF1CILUX0gpR1EJjX+pIjKFVnZ5xghSGngoUxpIwtTUxoPXP5RWiJ4fVoJcPSTeY
+         eCmWeZ5lQJ88mVNrrusbK3LJHFviHcs7r1FHHnv4=
+Date:   Tue, 26 May 2020 11:35:12 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next RFC v3 0/6] net: marvell: prestera: Add Switchdev
+ driver for Prestera family ASIC device 98DX326x (AC3x)
+Message-ID: <20200526113512.33246247@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <20200526171302.28649-1-vadym.kochan@plvision.eu>
+References: <20200526171302.28649-1-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To improve the usability of KUnit, defconfig is used
-by default if no kunitconfig is present.
+On Tue, 26 May 2020 20:12:56 +0300 Vadym Kochan wrote:
+> Marvell Prestera 98DX326x integrates up to 24 ports of 1GbE with 8
+> ports of 10GbE uplinks or 2 ports of 40Gbps stacking for a largely
+> wireless SMB deployment.
 
- * https://bugzilla.kernel.org/show_bug.cgi?id=205259
+This series adds lots of warnings when built with W=3D1, please make sure
+every individual patch builds cleanly.
 
-Fixed up minor merge conflicts - Shuah Khan <skhan@linuxfoundation.org>
-
-Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
-Version after kunit merge branch:
- * removes code related defconfig;
- * handles when there is no .kunitconfig. 
----
- tools/testing/kunit/kunit.py | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index b3490271a103..787b6d4ad716 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -23,7 +23,7 @@ import kunit_parser
- KunitResult = namedtuple('KunitResult', ['status','result','elapsed_time'])
- 
- KunitConfigRequest = namedtuple('KunitConfigRequest',
--				['build_dir', 'defconfig', 'make_options'])
-+				['build_dir', 'make_options'])
- KunitBuildRequest = namedtuple('KunitBuildRequest',
- 			       ['jobs', 'build_dir', 'alltests',
- 				'make_options'])
-@@ -32,8 +32,8 @@ KunitExecRequest = namedtuple('KunitExecRequest',
- KunitParseRequest = namedtuple('KunitParseRequest',
- 			       ['raw_output', 'input_data'])
- KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
--					   'build_dir', 'defconfig',
--					   'alltests', 'make_options'])
-+					   'build_dir', 'alltests',
-+					   'make_options'])
- 
- KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
- 
-@@ -60,8 +60,7 @@ def config_tests(linux: kunit_kernel.LinuxSourceTree,
- 	kunit_parser.print_with_timestamp('Configuring KUnit Kernel ...')
- 
- 	config_start = time.time()
--	if request.defconfig:
--		create_default_kunitconfig()
-+	create_default_kunitconfig()
- 	success = linux.build_reconfig(request.build_dir, request.make_options)
- 	config_end = time.time()
- 	if not success:
-@@ -131,7 +130,6 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
- 	run_start = time.time()
- 
- 	config_request = KunitConfigRequest(request.build_dir,
--					    request.defconfig,
- 					    request.make_options)
- 	config_result = config_tests(linux, config_request)
- 	if config_result.status != KunitStatus.SUCCESS:
-@@ -177,11 +175,6 @@ def add_common_opts(parser):
- 			    help='Run all KUnit tests through allyesconfig',
- 			    action='store_true')
- 
--def add_config_opts(parser):
--	parser.add_argument('--defconfig',
--			    help='Uses a default .kunitconfig.',
--			    action='store_true')
--
- def add_build_opts(parser):
- 	parser.add_argument('--jobs',
- 			    help='As in the make command, "Specifies  the number of '
-@@ -210,7 +203,6 @@ def main(argv, linux=None):
- 	# The 'run' command will config, build, exec, and parse in one go.
- 	run_parser = subparser.add_parser('run', help='Runs KUnit tests.')
- 	add_common_opts(run_parser)
--	add_config_opts(run_parser)
- 	add_build_opts(run_parser)
- 	add_exec_opts(run_parser)
- 	add_parse_opts(run_parser)
-@@ -219,7 +211,6 @@ def main(argv, linux=None):
- 						help='Ensures that .config contains all of '
- 						'the options in .kunitconfig')
- 	add_common_opts(config_parser)
--	add_config_opts(config_parser)
- 
- 	build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
- 	add_common_opts(build_parser)
-@@ -251,6 +242,9 @@ def main(argv, linux=None):
- 			cli_args.build_dir,
- 			kunit_kernel.kunitconfig_path)
- 
-+		if not os.path.exists(kunit_kernel.kunitconfig_path):
-+			create_default_kunitconfig()
-+
- 		if not linux:
- 			linux = kunit_kernel.LinuxSourceTree()
- 
-@@ -258,7 +252,6 @@ def main(argv, linux=None):
- 				       cli_args.timeout,
- 				       cli_args.jobs,
- 				       cli_args.build_dir,
--				       cli_args.defconfig,
- 				       cli_args.alltests,
- 				       cli_args.make_options)
- 		result = run_tests(linux, request)
-@@ -272,11 +265,13 @@ def main(argv, linux=None):
- 				cli_args.build_dir,
- 				kunit_kernel.kunitconfig_path)
- 
-+		if not os.path.exists(kunit_kernel.kunitconfig_path):
-+			create_default_kunitconfig()
-+
- 		if not linux:
- 			linux = kunit_kernel.LinuxSourceTree()
- 
- 		request = KunitConfigRequest(cli_args.build_dir,
--					     cli_args.defconfig,
- 					     cli_args.make_options)
- 		result = config_tests(linux, request)
- 		kunit_parser.print_with_timestamp((
-@@ -292,6 +287,9 @@ def main(argv, linux=None):
- 				cli_args.build_dir,
- 				kunit_kernel.kunitconfig_path)
- 
-+		if not os.path.exists(kunit_kernel.kunitconfig_path):
-+			create_default_kunitconfig()
-+
- 		if not linux:
- 			linux = kunit_kernel.LinuxSourceTree()
- 
-@@ -313,6 +311,9 @@ def main(argv, linux=None):
- 				cli_args.build_dir,
- 				kunit_kernel.kunitconfig_path)
- 
-+		if not os.path.exists(kunit_kernel.kunitconfig_path):
-+			create_default_kunitconfig()
-+
- 		if not linux:
- 			linux = kunit_kernel.LinuxSourceTree()
- 
--- 
-2.26.2
-
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:38:24: warning:=
+ symbol 'prestera_devlink_alloc' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:47:6: warning: =
+symbol 'prestera_devlink_free' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:54:5: warning: =
+symbol 'prestera_devlink_register' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:68:6: warning: =
+symbol 'prestera_devlink_unregister' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:75:5: warning: =
+symbol 'prestera_devlink_port_register' was not declared. Should it be stat=
+ic?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:95:6: warning: =
+symbol 'prestera_devlink_port_unregister' was not declared. Should it be st=
+atic?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:100:6: warning:=
+ symbol 'prestera_devlink_port_type_set' was not declared. Should it be sta=
+tic?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:105:21: warning=
+: symbol 'prestera_devlink_get_port' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:656:5: warning: sy=
+mbol 'prestera_sdma_switch_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:716:6: warning: sy=
+mbol 'prestera_sdma_switch_fini' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:755:13: warning: s=
+ymbol 'prestera_sdma_xmit' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:812:5: warning: sy=
+mbol 'prestera_rxtx_switch_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:825:6: warning: sy=
+mbol 'prestera_rxtx_switch_fini' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:831:5: warning: sy=
+mbol 'prestera_rxtx_port_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:843:13: warning: s=
+ymbol 'prestera_rxtx_xmit' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:38:25: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_alloc=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   38 | struct prestera_switch *prestera_devlink_alloc(void)
+      |                         ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:47:6: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_free=C3=A2=
+=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   47 | void prestera_devlink_free(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:54:5: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_register=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   54 | int prestera_devlink_register(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:68:6: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_unregister=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   68 | void prestera_devlink_unregister(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:75:5: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_port_regist=
+er=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   75 | int prestera_devlink_port_register(struct prestera_port *port)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:95:6: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_port_unregi=
+ster=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   95 | void prestera_devlink_port_unregister(struct prestera_port *port)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:100:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_port_type_=
+set=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  100 | void prestera_devlink_port_type_set(struct prestera_port *port)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:105:22: warning=
+: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_get_port=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  105 | struct devlink_port *prestera_devlink_get_port(struct net_device *d=
+ev)
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c: In function =C3=
+=A2=E2=82=AC=CB=9Cprestera_sdma_tx_recycle_work_fn=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:535:17: warning: v=
+ariable =C3=A2=E2=82=AC=CB=9Cdma_dev=C3=A2=E2=82=AC=E2=84=A2 set but not us=
+ed [-Wunused-but-set-variable]
+  535 |  struct device *dma_dev;
+      |                 ^~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c: At top level:
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:656:5: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_sdma_switch_init=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  656 | int prestera_sdma_switch_init(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:716:6: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_sdma_switch_fini=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  716 | void prestera_sdma_switch_fini(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:755:13: warning: n=
+o previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_sdma_xmit=C3=A2=E2=
+=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  755 | netdev_tx_t prestera_sdma_xmit(struct prestera_sdma *sdma, struct s=
+k_buff *skb)
+      |             ^~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:812:5: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_switch_init=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  812 | int prestera_rxtx_switch_init(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:825:6: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_switch_fini=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  825 | void prestera_rxtx_switch_fini(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:831:5: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_port_init=C3=A2=
+=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  831 | int prestera_rxtx_port_init(struct prestera_port *port)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:843:13: warning: n=
+o previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_xmit=C3=A2=E2=
+=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  843 | netdev_tx_t prestera_rxtx_xmit(struct prestera_port *port, struct s=
+k_buff *skb)
+      |             ^~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:296:6: warning:=
+ symbol 'prestera_ethtool_get_drvinfo' was not declared. Should it be stati=
+c?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:473:5: warning:=
+ symbol 'prestera_ethtool_get_link_ksettings' was not declared. Should it b=
+e static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:598:5: warning:=
+ symbol 'prestera_ethtool_set_link_ksettings' was not declared. Should it b=
+e static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:634:5: warning:=
+ symbol 'prestera_ethtool_get_fecparam' was not declared. Should it be stat=
+ic?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:661:5: warning:=
+ symbol 'prestera_ethtool_set_fecparam' was not declared. Should it be stat=
+ic?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:696:5: warning:=
+ symbol 'prestera_ethtool_get_sset_count' was not declared. Should it be st=
+atic?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:706:6: warning:=
+ symbol 'prestera_ethtool_get_strings' was not declared. Should it be stati=
+c?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:715:6: warning:=
+ symbol 'prestera_ethtool_get_stats' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:726:5: warning:=
+ symbol 'prestera_ethtool_nway_reset' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:296:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_drvinf=
+o=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  296 | void prestera_ethtool_get_drvinfo(struct net_device *dev,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:473:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_link_k=
+settings=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  473 | int prestera_ethtool_get_link_ksettings(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:598:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_set_link_k=
+settings=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  598 | int prestera_ethtool_set_link_ksettings(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:634:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_fecpar=
+am=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  634 | int prestera_ethtool_get_fecparam(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:661:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_set_fecpar=
+am=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  661 | int prestera_ethtool_set_fecparam(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:696:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_sset_c=
+ount=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  696 | int prestera_ethtool_get_sset_count(struct net_device *dev, int sse=
+t)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:706:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_string=
+s=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  706 | void prestera_ethtool_get_strings(struct net_device *dev,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:715:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_stats=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  715 | void prestera_ethtool_get_stats(struct net_device *dev,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:726:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_nway_reset=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  726 | int prestera_ethtool_nway_reset(struct net_device *dev)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_pci.c: In function =C3=A2=
+=E2=82=AC=CB=9Cprestera_fw_rev_check=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/net/ethernet/marvell/prestera/prestera_pci.c:590:15: warning: co=
+mparison is always true due to limited range of data type [-Wtype-limits]
+  590 |      rev->min >=3D PRESTERA_SUPP_FW_MIN_VER) {
+      |               ^~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:656:5: warning: sy=
+mbol 'prestera_sdma_switch_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:716:6: warning: sy=
+mbol 'prestera_sdma_switch_fini' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:755:13: warning: s=
+ymbol 'prestera_sdma_xmit' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:812:5: warning: sy=
+mbol 'prestera_rxtx_switch_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:825:6: warning: sy=
+mbol 'prestera_rxtx_switch_fini' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:831:5: warning: sy=
+mbol 'prestera_rxtx_port_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:843:13: warning: s=
+ymbol 'prestera_rxtx_xmit' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:296:6: warning:=
+ symbol 'prestera_ethtool_get_drvinfo' was not declared. Should it be stati=
+c?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:473:5: warning:=
+ symbol 'prestera_ethtool_get_link_ksettings' was not declared. Should it b=
+e static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:598:5: warning:=
+ symbol 'prestera_ethtool_set_link_ksettings' was not declared. Should it b=
+e static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:634:5: warning:=
+ symbol 'prestera_ethtool_get_fecparam' was not declared. Should it be stat=
+ic?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:661:5: warning:=
+ symbol 'prestera_ethtool_set_fecparam' was not declared. Should it be stat=
+ic?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:696:5: warning:=
+ symbol 'prestera_ethtool_get_sset_count' was not declared. Should it be st=
+atic?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:706:6: warning:=
+ symbol 'prestera_ethtool_get_strings' was not declared. Should it be stati=
+c?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:715:6: warning:=
+ symbol 'prestera_ethtool_get_stats' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:726:5: warning:=
+ symbol 'prestera_ethtool_nway_reset' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:38:24: warning:=
+ symbol 'prestera_devlink_alloc' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:47:6: warning: =
+symbol 'prestera_devlink_free' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:54:5: warning: =
+symbol 'prestera_devlink_register' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:68:6: warning: =
+symbol 'prestera_devlink_unregister' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:75:5: warning: =
+symbol 'prestera_devlink_port_register' was not declared. Should it be stat=
+ic?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:95:6: warning: =
+symbol 'prestera_devlink_port_unregister' was not declared. Should it be st=
+atic?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:100:6: warning:=
+ symbol 'prestera_devlink_port_type_set' was not declared. Should it be sta=
+tic?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:105:21: warning=
+: symbol 'prestera_devlink_get_port' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:214:6: warnin=
+g: symbol 'prestera_port_vlan_destroy' was not declared. Should it be stati=
+c?
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:288:24: warni=
+ng: symbol 'prestera_bridge_by_dev' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:537:5: warnin=
+g: symbol 'prestera_bridge_port_event' was not declared. Should it be stati=
+c?
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:1238:5: warni=
+ng: symbol 'prestera_switchdev_init' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:1276:6: warni=
+ng: symbol 'prestera_switchdev_fini' was not declared. Should it be static?
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:38:25: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_alloc=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   38 | struct prestera_switch *prestera_devlink_alloc(void)
+      |                         ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:47:6: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_free=C3=A2=
+=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   47 | void prestera_devlink_free(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:54:5: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_register=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   54 | int prestera_devlink_register(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:68:6: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_unregister=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   68 | void prestera_devlink_unregister(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:75:5: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_port_regist=
+er=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   75 | int prestera_devlink_port_register(struct prestera_port *port)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:95:6: warning: =
+no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_port_unregi=
+ster=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+   95 | void prestera_devlink_port_unregister(struct prestera_port *port)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:100:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_port_type_=
+set=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  100 | void prestera_devlink_port_type_set(struct prestera_port *port)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_devlink.c:105:22: warning=
+: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_devlink_get_port=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  105 | struct devlink_port *prestera_devlink_get_port(struct net_device *d=
+ev)
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:296:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_drvinf=
+o=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  296 | void prestera_ethtool_get_drvinfo(struct net_device *dev,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:473:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_link_k=
+settings=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  473 | int prestera_ethtool_get_link_ksettings(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:598:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_set_link_k=
+settings=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  598 | int prestera_ethtool_set_link_ksettings(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:634:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_fecpar=
+am=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  634 | int prestera_ethtool_get_fecparam(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:661:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_set_fecpar=
+am=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  661 | int prestera_ethtool_set_fecparam(struct net_device *dev,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:696:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_sset_c=
+ount=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  696 | int prestera_ethtool_get_sset_count(struct net_device *dev, int sse=
+t)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:706:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_string=
+s=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  706 | void prestera_ethtool_get_strings(struct net_device *dev,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:715:6: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_get_stats=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  715 | void prestera_ethtool_get_stats(struct net_device *dev,
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_ethtool.c:726:5: warning:=
+ no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_ethtool_nway_reset=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  726 | int prestera_ethtool_nway_reset(struct net_device *dev)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c: In function =C3=
+=A2=E2=82=AC=CB=9Cprestera_sdma_tx_recycle_work_fn=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:535:17: warning: v=
+ariable =C3=A2=E2=82=AC=CB=9Cdma_dev=C3=A2=E2=82=AC=E2=84=A2 set but not us=
+ed [-Wunused-but-set-variable]
+  535 |  struct device *dma_dev;
+      |                 ^~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c: At top level:
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:656:5: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_sdma_switch_init=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  656 | int prestera_sdma_switch_init(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:716:6: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_sdma_switch_fini=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  716 | void prestera_sdma_switch_fini(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:755:13: warning: n=
+o previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_sdma_xmit=C3=A2=E2=
+=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  755 | netdev_tx_t prestera_sdma_xmit(struct prestera_sdma *sdma, struct s=
+k_buff *skb)
+      |             ^~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:812:5: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_switch_init=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  812 | int prestera_rxtx_switch_init(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:825:6: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_switch_fini=C3=
+=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  825 | void prestera_rxtx_switch_fini(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:831:5: warning: no=
+ previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_port_init=C3=A2=
+=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  831 | int prestera_rxtx_port_init(struct prestera_port *port)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_rxtx.c:843:13: warning: n=
+o previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_rxtx_xmit=C3=A2=E2=
+=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  843 | netdev_tx_t prestera_rxtx_xmit(struct prestera_port *port, struct s=
+k_buff *skb)
+      |             ^~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_pci.c: In function =C3=A2=
+=E2=82=AC=CB=9Cprestera_fw_rev_check=C3=A2=E2=82=AC=E2=84=A2:
+../drivers/net/ethernet/marvell/prestera/prestera_pci.c:590:15: warning: co=
+mparison is always true due to limited range of data type [-Wtype-limits]
+  590 |      rev->min >=3D PRESTERA_SUPP_FW_MIN_VER) {
+      |               ^~
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:214:6: warnin=
+g: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_port_vlan_destro=
+y=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  214 | void prestera_port_vlan_destroy(struct prestera_port_vlan *port_vla=
+n)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:288:25: warni=
+ng: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_bridge_by_dev=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  288 | struct prestera_bridge *prestera_bridge_by_dev(struct prestera_swit=
+chdev *swdev,
+      |                         ^~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:537:5: warnin=
+g: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_bridge_port_even=
+t=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+  537 | int prestera_bridge_port_event(struct net_device *dev, unsigned lon=
+g event,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:1238:5: warni=
+ng: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_switchdev_init=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+ 1238 | int prestera_switchdev_init(struct prestera_switch *sw)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/ethernet/marvell/prestera/prestera_switchdev.c:1276:6: warni=
+ng: no previous prototype for =C3=A2=E2=82=AC=CB=9Cprestera_switchdev_fini=
+=C3=A2=E2=82=AC=E2=84=A2 [-Wmissing-prototypes]
+ 1276 | void prestera_switchdev_fini(struct prestera_switch *sw)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~
