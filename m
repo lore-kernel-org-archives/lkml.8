@@ -2,93 +2,105 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A277C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC60A206D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B8B207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 02:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jrwl5nQm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388560AbgEZCjw (ORCPT
+        id S2388565AbgEZCnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 25 May 2020 22:39:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:45820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388428AbgEZCjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 25 May 2020 22:39:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D92A51FB;
-        Mon, 25 May 2020 19:39:50 -0700 (PDT)
-Received: from [10.163.76.123] (unknown [10.163.76.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3712B3F52E;
-        Mon, 25 May 2020 19:39:42 -0700 (PDT)
-Subject: Re: [PATCH v3 1/6] arm64: Detect the ARMv8.4 TTL feature
-To:     Zhenyu Ye <yezhenyu2@huawei.com>, catalin.marinas@arm.com,
-        peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
-        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
-        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
-        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
-        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
-        broonie@kernel.org, guohanjun@huawei.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com, kuhn.chenqun@huawei.com
-References: <20200525125300.794-1-yezhenyu2@huawei.com>
- <20200525125300.794-2-yezhenyu2@huawei.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c6b6eb07-2606-9fc0-280a-e53b81a6491c@arm.com>
-Date:   Tue, 26 May 2020 08:09:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 25 May 2020 22:43:10 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:63446 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388428AbgEZCnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 25 May 2020 22:43:10 -0400
+X-UUID: 4a9a0bf8295c41558350d89cd6b0d0ec-20200526
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=diGs7P/c4KSIhXYc7oj93Qp0T+jxxg9AoG2TnBsAgcc=;
+        b=jrwl5nQmSk9CjJiebW6NI+m7HX6Z/CkhYX75eqncInbLj+uu3ULF4PgQZrT4HmiPsohy2VUtzv0CoJ3sKRQEUU1d+4+OHss1CqFoIJKAlpjmWFAaojTFtUauOmKUwonHxraNNYw91ubXBD8QrMQhbQkZNovafXBsqlHGCPY2vv8=;
+X-UUID: 4a9a0bf8295c41558350d89cd6b0d0ec-20200526
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1215273139; Tue, 26 May 2020 10:43:06 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 26 May 2020 10:42:57 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 26 May 2020 10:43:03 +0800
+Message-ID: <1590460982.28324.17.camel@mtksdaap41>
+Subject: Re: [PATCH v1] clk: mediatek: assign the initial value to
+ clk_init_data of mtk_mux
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        <srv_heupstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, Fan Chen <fan.chen@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        Owen Chen <owen.chen@mediatek.com>,
+        <linux-clk@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 26 May 2020 10:43:02 +0800
+In-Reply-To: <1abb3571-75ad-10d8-ff62-17be270b5b71@gmail.com>
+References: <1590388889-28382-1-git-send-email-weiyi.lu@mediatek.com>
+         <1abb3571-75ad-10d8-ff62-17be270b5b71@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200525125300.794-2-yezhenyu2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: DDDB6C0F3A8AA9AC19A3F7982F4108E532DADCCD36F602FF9C91EF042C7AAF1B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Zhenyu,
+T24gTW9uLCAyMDIwLTA1LTI1IGF0IDExOjA4ICswMjAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMjUvMDUvMjAyMCAwODo0MSwgV2VpeWkgTHUgd3JvdGU6DQo+ID4gSXQnZCBi
+ZSBkYW5nZXJvdXMgd2hlbiBzdHJ1Y3QgY2xrX2NvcmUgaGF2ZSBuZXcgbWVtZWJlcnMuDQo+ID4g
+QWRkIHRoZSBtaXNzaW5nIGluaXRpYWwgdmFsdWUgdG8gY2xrX2luaXRfZGF0YS4NCj4gPiANCj4g
+DQo+IFNvcnJ5IEkgZG9uJ3QgcmVhbGx5IHVuZGVyc3RhbmQgdGhpcyBjb21taXQgbWVzc2FnZSwg
+Y2FuIHBsZWFzZSBleHBsYWluLg0KPiBJbiBhbnkgY2FzZSBpZiB0aGlzIGlzIGEgcHJvYmxlbSwg
+dGhlbiB3ZSBwcm9iYWJseSB3ZSBzaG91bGQgZml4IGl0IGZvciBhbGwgZHJpdmVycy4NCj4gQXBh
+cnQgZnJvbSBkcml2ZXJzL2Nsay9tZWRpYXRlay9jbGstY3B1bXV4LmMNCj4gDQoNCkFjdHVhbGx5
+LCB3ZSB3ZXJlIGxvb2tpbmcgaW50byBhbiBhbmRyb2lkIGtlcm5lbCBwYXRjaCAiQU5EUk9JRDog
+R0tJOg0KY2xrOiBBZGQgc3VwcG9ydCBmb3Igdm9sdGFnZSB2b3RpbmciIFsxXQ0KDQpJbiB0aGlz
+IHBhdGNoLCB0aGVyZSBhZGRzIGEgbmV3IG1lbWJlciBzdHJ1Y3QgY2xrX3ZkZF9jbGFzcwkqdmRk
+X2NsYXNzOw0KaW4gc3RydWN0IGNsa19pbml0X2RhdGEgYW5kIHN0cnVjdCBjbGtfY29yZQ0KDQpB
+bmQgdGhlbiBpbiBjbGtfcmVnaXN0ZXIoLi4uKQ0KY29yZS0+dmRkX2NsYXNzID0gaHctPmluaXQt
+PnZkZF9jbGFzczsNCg0KSW4gbWFueSBjbG9jayBBUElzLCBpdCB3aWxsIGNoZWNrIHRoZSBjb3Jl
+LT52ZGRfY2xhc3MgdG8gc2VsZWN0IHRoZQ0KY29ycmVjdCBjb250cm9sIGZsb3cuDQpTbywgaWYg
+d2UgZG9uJ3QgYXNzaWduIGFuIGluaXRpYWwgdmFsdWUgdG8gY2xrX2luaXRfZGF0YSBvZiBtdGtf
+bXV4DQpjbG9jayB0eXBlLCBzb21ldGhpbmcgbWlnaHQgZ28gd3JvbmcuIEFuZCBhc3NpZ25pbmcg
+YW4gaW5pdGlhbCB2YWx1ZQ0KbWlnaHQgYmUgdGhlIGVhc2llc3QgYW5kIGdvb2Qgd2F5IHRvIGF2
+b2lkIHN1Y2ggcHJvYmxlbSBpZiBhbnkgbmV3IGNsb2NrDQpzdXBwb3J0IGFkZGVkIGluIHRoZSBm
+dXR1cmUuDQoNClsxXSBodHRwczovL2FuZHJvaWQtcmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20vYy9r
+ZXJuZWwvY29tbW9uLysvMTI3ODA0Ng0KDQo+IEl0J3MgYSB3aWRlbHkgdXNlZCBwYXR0ZXJuOg0K
+PiAkIGdpdCBncmVwICJzdHJ1Y3QgY2xrX2luaXRfZGF0YSBpbml0OyJ8IHdjIC1sDQo+IDIzNQ0K
+PiANCj4gUmVnYXJkcywNCj4gTWF0dGhpYXMNCj4gDQo+ID4gRml4ZXM6IGEzYWU1NDk5MTdmMSAo
+ImNsazogbWVkaWF0ZWs6IEFkZCBuZXcgY2xrbXV4IHJlZ2lzdGVyIEFQSSIpDQo+ID4gQ2M6IDxz
+dGFibGVAdmdlci5rZXJuZWwub3JnPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFdlaXlpIEx1IDx3ZWl5
+aS5sdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Ns
+ay1tdXguYyB8IDIgKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRl
+bGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Ns
+ay1tdXguYyBiL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdXguYw0KPiA+IGluZGV4IDc2Zjlj
+ZDAuLjE0ZTEyN2UgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW11
+eC5jDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvbWVkaWF0ZWsvY2xrLW11eC5jDQo+ID4gQEAgLTE2
+MCw3ICsxNjAsNyBAQCBzdHJ1Y3QgY2xrICptdGtfY2xrX3JlZ2lzdGVyX211eChjb25zdCBzdHJ1
+Y3QgbXRrX211eCAqbXV4LA0KPiA+ICAJCQkJIHNwaW5sb2NrX3QgKmxvY2spDQo+ID4gIHsNCj4g
+PiAgCXN0cnVjdCBtdGtfY2xrX211eCAqY2xrX211eDsNCj4gPiAtCXN0cnVjdCBjbGtfaW5pdF9k
+YXRhIGluaXQ7DQo+ID4gKwlzdHJ1Y3QgY2xrX2luaXRfZGF0YSBpbml0ID0ge307DQo+ID4gIAlz
+dHJ1Y3QgY2xrICpjbGs7DQo+ID4gIA0KPiA+ICAJY2xrX211eCA9IGt6YWxsb2Moc2l6ZW9mKCpj
+bGtfbXV4KSwgR0ZQX0tFUk5FTCk7DQo+ID4gDQoNCg==
 
-On 05/25/2020 06:22 PM, Zhenyu Ye wrote:
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index c4ac0ac25a00..477d84ba1056 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -725,6 +725,7 @@
->  
->  /* id_aa64mmfr2 */
->  #define ID_AA64MMFR2_E0PD_SHIFT		60
-> +#define ID_AA64MMFR2_TTL_SHIFT		48
->  #define ID_AA64MMFR2_FWB_SHIFT		40
->  #define ID_AA64MMFR2_AT_SHIFT		32
->  #define ID_AA64MMFR2_LVA_SHIFT		16
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 9fac745aa7bb..d993dc6dc7d5 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -244,6 +244,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
->  
->  static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_E0PD_SHIFT, 4, 0),
-> +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_TTL_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_FWB_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_AT_SHIFT, 4, 0),
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
-> @@ -1622,6 +1623,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
->  		.matches = has_cpuid_feature,
->  		.cpu_enable = cpu_has_fwb,
->  	},
-
-This patch (https://patchwork.kernel.org/patch/11557359/) is adding some
-more ID_AA64MMFR2 features including the TTL. I am going to respin parts
-of the V4 series patches along with the above mentioned patch. So please
-rebase this series accordingly, probably on latest next.
-
-- Anshuman
