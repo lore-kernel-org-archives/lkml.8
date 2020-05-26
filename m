@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FE3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF07C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE74208B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 900BC208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520117;
-	bh=BqWOzCDmMrAFz2dz3SAGPUMEexLeAFZfpbfaMsSt4IU=;
+	s=default; t=1590520120;
+	bh=hNhJJ72biHjlOV8Ry/wGyzVaCZlDK8hJNpZZazDmRnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0MkBMUo2HGAdBl+uYmnbTQL2mQ2cD+GvhmATiiNmvd9cMTkaqiGcV922PfASwQWn
-	 u6z6WGIAhvs5bb4K7tA3lx30GVvaoWGJlIsH7tDuIe5ok5S9ZXFtZ+yBKotMrQQsT8
-	 DKi22XTQwJ4k+IxFxmGZxaKTCJCm6Bxeh+B/UaBc=
+	b=NfcWBIYJ46l+CuYv3W6tYw2GvhCx+dCCvcD+pFHVgbEXxOXh4zuemmMj8XTB/Pb6N
+	 v6IWeCEcLX2Db0E21w2OqlObfiOKwfjWksxdIYtgFoV05MbiL4kPgTS8cejkKTmeIy
+	 AlIp1hSzcF5is6y1THxcVRBu5WIsxpbiynzkHMH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390251AbgEZTIf (ORCPT
+        id S2403907AbgEZTIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37472 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391798AbgEZTIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:08:30 -0400
+        id S2391467AbgEZTId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:08:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A41B920873;
-        Tue, 26 May 2020 19:08:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20271208B3;
+        Tue, 26 May 2020 19:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520110;
-        bh=BqWOzCDmMrAFz2dz3SAGPUMEexLeAFZfpbfaMsSt4IU=;
+        s=default; t=1590520112;
+        bh=hNhJJ72biHjlOV8Ry/wGyzVaCZlDK8hJNpZZazDmRnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NlDOXRz0/WwEO8wGll2zZa8qyGcPsM51Zv29l49y0/MG2XsifCE+yj0ZHKn/zcTHZ
-         jTynyQMPowXmY/DvSu4RX0CPsrxQLX9NOEAdC4xRPdwOvUI+LApg5exdmSyhXbsjG1
-         EOm38Muae9Q5M+HT1lb9+3h2fdv9vl+1YborYjU4=
+        b=KURIh+rPQbNJg94tAkutfCrt1Q1tojC0F1wNyBRQhDcgDC6SOQyqGWyw6r0l5tnJQ
+         yk5q5e/D4lrpZpYQWLsuVZeQxD5pEcRQqdhMhsGsNUfuP8/EWJugsv7WHg79gocJX2
+         Y/bz6iVPofQvk4oijLaijC5F2gZX2FFzL5AZvIwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, PeiSen Hou <pshou@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 061/111] ALSA: hda/realtek - Add more fixup entries for Clevo machines
-Date:   Tue, 26 May 2020 20:53:19 +0200
-Message-Id: <20200526183938.621698443@linuxfoundation.org>
+        stable@vger.kernel.org, Lee Duncan <lduncan@suse.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 062/111] scsi: qla2xxx: Do not log message when reading port speed via sysfs
+Date:   Tue, 26 May 2020 20:53:20 +0200
+Message-Id: <20200526183938.719233478@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,34 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PeiSen Hou <pshou@realtek.com>
+From: Ewan D. Milne <emilne@redhat.com>
 
-commit 259eb82475316672a5d682a94dc8bdd53cf8d8c3 upstream.
+commit fb9024b0646939e59d8a0b6799b317070619795a upstream.
 
-A few known Clevo machines (PC50, PC70, X170) with ALC1220 codec need
-the existing quirk for pins for PB51 and co.
+Calling ql_log() inside qla2x00_port_speed_show() is causing messages to be
+output to the console for no particularly good reason.  The sysfs read
+routine should just return the information to userspace.  The only reason
+to log a message is when the port speed actually changes, and this already
+occurs elsewhere.
 
-Signed-off-by: PeiSen Hou <pshou@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200519065012.13119-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200504175416.15417-1-emilne@redhat.com
+Fixes: 4910b524ac9e ("scsi: qla2xxx: Add support for setting port speed")
+Cc: <stable@vger.kernel.org> # v5.1+
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Laurence Oberman <loberman@redhat.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/qla2xxx/qla_attr.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2473,6 +2473,9 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1558, 0x97e1, "Clevo P970[ER][CDFN]", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1558, 0x65d1, "Clevo PB51[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
- 	SND_PCI_QUIRK(0x1558, 0x67d1, "Clevo PB71[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x50d3, "Clevo PC50[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x70d1, "Clevo PC70[ER][CDF]", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x7714, "Clevo X170", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
- 	SND_PCI_QUIRK_VENDOR(0x1558, "Clevo laptop", ALC882_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x161f, 0x2054, "Medion laptop", ALC883_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x17aa, 0x3a0d, "Lenovo Y530", ALC882_FIXUP_LENOVO_Y530),
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -1775,9 +1775,6 @@ qla2x00_port_speed_show(struct device *d
+ 		return -EINVAL;
+ 	}
+ 
+-	ql_log(ql_log_info, vha, 0x70d6,
+-	    "port speed:%d\n", ha->link_data_rate);
+-
+ 	return scnprintf(buf, PAGE_SIZE, "%s\n", spd[ha->link_data_rate]);
+ }
+ 
 
 
