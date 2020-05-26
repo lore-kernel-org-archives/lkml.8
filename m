@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E966CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFEB0208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A5A208B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519998;
-	bh=7aRW87m6EIHEtIfH685cdeFH9ykaBvHaUsl8sCOyeJo=;
+	s=default; t=1590520001;
+	bh=j4eEHVXuIUd0pRN0L2CoepN4/OVyE4wx9B5EwVoukPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JScc522HT9tblTUN6ysKjoUL3ytboVTxdKIKZGhDw682vCWBb/COMPeKT1s8HnrkD
-	 hsGZL7jJE6iHjWkwjYOsVOR+ptXc2q2O9jOhhMFUn/LQpcP8cc2eqRYoZHWWIVOW9+
-	 5Ih06N9G/Rg9HeUPW8ci9loXJmAk81PEVf3SOY18=
+	b=EOG4+gmCgOItupYf/5qKwmHGJSqbYd4Nrx1IQtfGfNlF/wTE5gpYM4hrBXGtH+eYP
+	 uejo5SzbJF0BfFi0Ft6b7UJfveq3P2BM93fxm8DhWc7SyLEn6jZksf+DW69d3kKxHj
+	 dhApoNyAOOpBug606ZAImoIm6JgOLp5v7OJT/7ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391657AbgEZTGh (ORCPT
+        id S2391183AbgEZTGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:06:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391615AbgEZTG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:29 -0400
+        id S2391653AbgEZTGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CB63208A7;
-        Tue, 26 May 2020 19:06:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA6EB20873;
+        Tue, 26 May 2020 19:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519989;
-        bh=7aRW87m6EIHEtIfH685cdeFH9ykaBvHaUsl8sCOyeJo=;
+        s=default; t=1590519996;
+        bh=j4eEHVXuIUd0pRN0L2CoepN4/OVyE4wx9B5EwVoukPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKi7yNUm9B39AwRItpoDA3ye1dxlAENtFWhnlKef/y8hgvH2Eeps26XlPlfb5fbhF
-         FT6kuGV/PBV0VIoeslfljOZwWV4WfX7RiaCeOdUtqTgWAv0pnEGn9XQtbLFpUNUlpE
-         Aa3LbPad1nl8M9np8n2OekcQ9ClKmaOlGilunTy4=
+        b=rN7PxoPy9CGGlkv98t2B2GaWa5OI7I943V8Occ9HMjh6N2fUKHYjsn36GJ7gPNOOQ
+         nIxndSZ2CG/LyEsQT1iLvouAV4GelQsmBo+fYV0kdWaZEbEbMCwy3gG4K+maozHXyt
+         lB1rS9Ks+lwqJKwyyilHtdcW6MKjaKHRHSMmmZAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 015/111] ubi: Fix seq_file usage in detailed_erase_block_info debugfs file
-Date:   Tue, 26 May 2020 20:52:33 +0200
-Message-Id: <20200526183934.037307639@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 018/111] kbuild: avoid concurrency issue in parallel building dtbs and dtbs_check
+Date:   Tue, 26 May 2020 20:52:36 +0200
+Message-Id: <20200526183934.390242504@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,58 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 0e7572cffe442290c347e779bf8bd4306bb0aa7c ]
+[ Upstream commit b5154bf63e5577faaaca1d942df274f7de91dd2a ]
 
-3bfa7e141b0b ("fs/seq_file.c: seq_read(): add info message about buggy .next functions")
-showed that we don't use seq_file correctly.
-So make sure that our ->next function always updates the position.
+'make dtbs_check' checks the shecma in addition to building *.dtb files,
+in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
+So, you do not have to do 'make dtbs dtbs_check', but I want to keep
+the build system as robust as possible in any use.
 
-Fixes: 7bccd12d27b7 ("ubi: Add debugfs file for tracking PEB state")
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Currently, 'dtbs' and 'dtbs_check' are independent of each other.
+In parallel building, two threads descend into arch/*/boot/dts/,
+one for dtbs and the other for dtbs_check, then end up with building
+the same DTB simultaneously.
+
+This commit fixes the concurrency issue. Otherwise, I see build errors
+like follows:
+
+$ make ARCH=arm64 defconfig
+$ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
+  <snip>
+  DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
+  DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
+  DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+  CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
+make[2]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
+  DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
+  DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
+fixdep: parse error; no targets found
+make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
+make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
+make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
+make[1]: *** Waiting for unfinished jobs....
+  DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/debug.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ Makefile | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/ubi/debug.c b/drivers/mtd/ubi/debug.c
-index a1dff92ceedf..8a83072401a7 100644
---- a/drivers/mtd/ubi/debug.c
-+++ b/drivers/mtd/ubi/debug.c
-@@ -392,9 +392,6 @@ static void *eraseblk_count_seq_start(struct seq_file *s, loff_t *pos)
- {
- 	struct ubi_device *ubi = s->private;
+diff --git a/Makefile b/Makefile
+index 1bd1b17cd207..ba154f92b203 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1246,11 +1246,15 @@ ifneq ($(dtstree),)
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
  
--	if (*pos == 0)
--		return SEQ_START_TOKEN;
--
- 	if (*pos < ubi->peb_count)
- 		return pos;
+ PHONY += dtbs dtbs_install dtbs_check
+-dtbs dtbs_check: include/config/kernel.release scripts_dtc
++dtbs: include/config/kernel.release scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
  
-@@ -408,8 +405,6 @@ static void *eraseblk_count_seq_next(struct seq_file *s, void *v, loff_t *pos)
- {
- 	struct ubi_device *ubi = s->private;
++ifneq ($(filter dtbs_check, $(MAKECMDGOALS)),)
++dtbs: dt_binding_check
++endif
++
+ dtbs_check: export CHECK_DTBS=1
+-dtbs_check: dt_binding_check
++dtbs_check: dtbs
  
--	if (v == SEQ_START_TOKEN)
--		return pos;
- 	(*pos)++;
- 
- 	if (*pos < ubi->peb_count)
-@@ -431,11 +426,8 @@ static int eraseblk_count_seq_show(struct seq_file *s, void *iter)
- 	int err;
- 
- 	/* If this is the start, print a header */
--	if (iter == SEQ_START_TOKEN) {
--		seq_puts(s,
--			 "physical_block_number\terase_count\tblock_status\tread_status\n");
--		return 0;
--	}
-+	if (*block_number == 0)
-+		seq_puts(s, "physical_block_number\terase_count\n");
- 
- 	err = ubi_io_is_bad(ubi, *block_number);
- 	if (err)
+ dtbs_install:
+ 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
 -- 
 2.25.1
 
