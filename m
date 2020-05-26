@@ -2,51 +2,50 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D1BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC76C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51896208B8
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C27D20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519911;
-	bh=KOOqmjkT3/NHkepUVqMyX89PGaVwj5+wi37xbhKpEEo=;
+	s=default; t=1590519915;
+	bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZeeimCRB5F/2i2SYxGaZ7KlfUihRtXy9St19RyBQDf4y0Rf9wWnoG0IE4U312RI4
-	 9E8RrUufxXN9U3MZc/Kx7i63DgWDRBfgg4vtNl+gZICZSytjJwJuzIZX6Gm0EZhAuI
-	 p47EsyFi/E9KZh/EewVpgXsfqsuqUp9K1pr3C/SE=
+	b=lniZAwChKUlkXkHOqHJHakHLe/aLINE91xCuUFy5aL9+3PMVi/an3m8sMYK4DTU6a
+	 2phXstiTF06yTv/+SSX+Pn/+2RCejOUSYkP3JiEYehCpokTrrZxwewZCkoqcGYNIAa
+	 fVxT5Rc61kLGR8Rtdj/+RMVX/BCZAFNppL98N/uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391471AbgEZTFK (ORCPT
+        id S2391476AbgEZTFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389967AbgEZTFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:05:06 -0400
+        id S2389956AbgEZTFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:05:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 661B820873;
-        Tue, 26 May 2020 19:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 452CF20873;
+        Tue, 26 May 2020 19:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519905;
-        bh=KOOqmjkT3/NHkepUVqMyX89PGaVwj5+wi37xbhKpEEo=;
+        s=default; t=1590519910;
+        bh=GhCaJpooWSavZpBdhK6aphQyLv9d4skXugYJfXJu21A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qJsz0WOWI7xhqXZX0E1aNWalmXkZ4sajY0+cBz2jvTGDpYE05SyPyeoHEbkautWTu
-         3BxIh4BN88Gy9rwbOdwGdPq/4fXHbnZYwwArc3Pd5QA7CeUKtb6n+C22V+dKmJP5Eu
-         PKEqIL48nj9Q+/xgA2wWcJjwgNtSqlTWod92O1gE=
+        b=eYGoOlKG+l018svu/vr/pKrO+UZLAPcDRdJTTRFHCdCbg9al4QMmFKQl+yq75e31E
+         ch6pTlg1rWwfFyF0sTdcucEFDi2QFmEo85IPSdLQlEm/5iRDHVR02E+wWjv7NEOfWv
+         91c2+gwSXcRDEdeAFtFUuW2soratWUodz+SJ4bkw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 64/81] Revert "gfs2: Dont demote a glock until its revokes are written"
-Date:   Tue, 26 May 2020 20:53:39 +0200
-Message-Id: <20200526183934.175831135@linuxfoundation.org>
+        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
+Subject: [PATCH 4.19 66/81] staging: greybus: Fix uninitialized scalar variable
+Date:   Tue, 26 May 2020 20:53:41 +0200
+Message-Id: <20200526183934.368362793@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -59,48 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Oscar Carter <oscar.carter@gmx.com>
 
-[ Upstream commit b14c94908b1b884276a6608dea3d0b1b510338b7 ]
+commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
 
-This reverts commit df5db5f9ee112e76b5202fbc331f990a0fc316d6.
+In the "gb_tty_set_termios" function the "newline" variable is declared
+but not initialized. So the "flow_control" member is not initialized and
+the OR / AND operations with itself results in an undefined value in
+this member.
 
-This patch fixes a regression: patch df5db5f9ee112 allowed function
-run_queue() to bypass its call to do_xmote() if revokes were queued for
-the glock. That's wrong because its call to do_xmote() is what is
-responsible for calling the go_sync() glops functions to sync both
-the ail list and any revokes queued for it. By bypassing the call,
-gfs2 could get into a stand-off where the glock could not be demoted
-until its revokes are written back, but the revokes would not be
-written back because do_xmote() was never called.
+The purpose of the code is to set the flow control type, so remove the
+OR / AND self operator and set the value directly.
 
-It "sort of" works, however, because there are other mechanisms like
-the log flush daemon (logd) that can sync the ail items and revokes,
-if it deems it necessary. The problem is: without file system pressure,
-it might never deem it necessary.
+Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
+Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
+Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/glock.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/staging/greybus/uart.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
-index f8a5eef3d014..ccdd8c821abd 100644
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -636,9 +636,6 @@ __acquires(&gl->gl_lockref.lock)
- 			goto out_unlock;
- 		if (nonblock)
- 			goto out_sched;
--		smp_mb();
--		if (atomic_read(&gl->gl_revokes) != 0)
--			goto out_sched;
- 		set_bit(GLF_DEMOTE_IN_PROGRESS, &gl->gl_flags);
- 		GLOCK_BUG_ON(gl, gl->gl_demote_state == LM_ST_EXCLUSIVE);
- 		gl->gl_target = gl->gl_demote_state;
--- 
-2.25.1
-
+--- a/drivers/staging/greybus/uart.c
++++ b/drivers/staging/greybus/uart.c
+@@ -537,9 +537,9 @@ static void gb_tty_set_termios(struct tt
+ 	}
+ 
+ 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
+-		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
++		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
+ 	else
+-		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
++		newline.flow_control = 0;
+ 
+ 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
+ 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
 
 
