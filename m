@@ -2,99 +2,192 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14839C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF94C20B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:00:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NUYWWu+f"
+	by mail.kernel.org (Postfix) with ESMTP id E535E208A9
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:01:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590501694;
+	bh=j4r2suThCDUMOafUx5RYzfeHJPTRkpk35oKAvdOKYeE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aAYAhuX9MaFZ71C7ARooD97p9Dv4mYRfm+sDCqxys+oVT4m23D+KNKrcN2+9tkpJ6
+	 0hmTv+uh46PzeNmTD0fFPlFB1YIm1Veufvo//gp6jIZ1YwpF4FDS0sZUaIpnqje7fJ
+	 PykKSCdunQ7+LK/mY1wxptaMwzTedaXXlxUacz6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbgEZOAh (ORCPT
+        id S1731804AbgEZOBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:00:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23666 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728558AbgEZOAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:00:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590501636;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=86WQURgCqAHa0WXNLzZX28I5KUeKUOWQEKAQ4Gpwaf0=;
-        b=NUYWWu+fDO93/EZYSH8HVplpoD0SlCYkH/vAqA7m5bYDAJs+h7SaNkowpkU559ZRj32OD5
-        u2jNY44XCBxcrePIuBQdz7XlCRmamchd3XamDE5PbkcAUPnXpHClOL3x4wEwp+hB+Q/6Lo
-        CQ2EunuSYqZH4J+ZeVcBAz6jJAUJo1E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-OvaMsk5FP-u0DBdNEz45pQ-1; Tue, 26 May 2020 10:00:32 -0400
-X-MC-Unique: OvaMsk5FP-u0DBdNEz45pQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 26 May 2020 10:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729443AbgEZOBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 10:01:33 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8357100CD14;
-        Tue, 26 May 2020 14:00:30 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.193.170])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3210460E1C;
-        Tue, 26 May 2020 14:00:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 26 May 2020 16:00:30 +0200 (CEST)
-Date:   Tue, 26 May 2020 16:00:28 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     guoren@linux.alibaba.com, vincent.chen@sifive.com,
-        paul.walmsley@sifive.com, palmerdabbelt@google.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 01/13] ptrace: Use regset_size() for dynamic
- regset size.
-Message-ID: <20200526140027.GC24212@redhat.com>
-References: <cover.1590474856.git.greentime.hu@sifive.com>
- <3700190a602a6d30fcbf76e1eea667e29a65c4c9.1590474856.git.greentime.hu@sifive.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B95B12087D;
+        Tue, 26 May 2020 14:01:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590501692;
+        bh=j4r2suThCDUMOafUx5RYzfeHJPTRkpk35oKAvdOKYeE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K5WCGqmZ5rMseZLf8YqHin2gpc0dbViNYwVDJTRTpeQBCn04jLbDFdb9LZQ60RuIv
+         YcY2BoqH2LrAhkkXK8yWKczpylPPezbYCTwT5fVpOFZcvqFU5NDGF+RDKnwFW/O6lO
+         fx/BaU/Arjmux+MFGWjuPyfnLjv7BotY8+mzssU0=
+Date:   Tue, 26 May 2020 15:01:27 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org,
+        elver@google.com, tglx@linutronix.de, paulmck@kernel.org,
+        mingo@kernel.org, peterz@infradead.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v5 04/18] sparc32: mm: Reduce allocation size for PMD and
+ PTE tables
+Message-ID: <20200526140126.GD27166@willie-the-truck>
+References: <20200511204150.27858-5-will@kernel.org>
+ <20200517000050.GA87467@roeck-us.net>
+ <20200517000750.GA157503@roeck-us.net>
+ <20200518083715.GA31383@willie-the-truck>
+ <20200520170306.GG1118872@kernel.org>
+ <6034a1b5-d4f6-c836-142c-9b3b06db3246@roeck-us.net>
+ <20200520195110.GH1118872@kernel.org>
+ <c80c04a4-75d0-6a47-3813-dea9325b6623@roeck-us.net>
+ <20200524123256.GN1118872@kernel.org>
+ <20200526132634.GC27166@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3700190a602a6d30fcbf76e1eea667e29a65c4c9.1590474856.git.greentime.hu@sifive.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200526132634.GC27166@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/26, Greentime Hu wrote:
->
-> @@ -882,13 +882,18 @@ static int ptrace_regset(struct task_struct *task, int req, unsigned int type,
->  	const struct user_regset_view *view = task_user_regset_view(task);
->  	const struct user_regset *regset = find_regset(view, type);
->  	int regset_no;
-> +	unsigned int size;
->
-> -	if (!regset || (kiov->iov_len % regset->size) != 0)
-> +	if (!regset)
->  		return -EINVAL;
->
->  	regset_no = regset - view->regsets;
-> -	kiov->iov_len = min(kiov->iov_len,
-> -			    (__kernel_size_t) (regset->n * regset->size));
-> +	size = regset_size(task, regset);
-> +
-> +	if ((kiov->iov_len % size) != 0)
-> +		return -EINVAL;
+On Tue, May 26, 2020 at 02:26:35PM +0100, Will Deacon wrote:
+> On Sun, May 24, 2020 at 03:32:56PM +0300, Mike Rapoport wrote:
+> > On Thu, May 21, 2020 at 04:02:11PM -0700, Guenter Roeck wrote:
+> > > On 5/20/20 12:51 PM, Mike Rapoport wrote:
+> > > > On Wed, May 20, 2020 at 12:03:31PM -0700, Guenter Roeck wrote:
+> > > >> With above patch applied on top of Ira's patch, I get:
+> > > >>
+> > > >> BUG: spinlock recursion on CPU#0, S01syslogd/139
+> > > >>  lock: 0xf5448350, .magic: dead4ead, .owner: S01syslogd/139, .owner_cpu: 0
+> > > >> CPU: 0 PID: 139 Comm: S01syslogd Not tainted 5.7.0-rc6-next-20200518-00002-gb178d2d56f29-dirty #1
+> > > >> [f0067a64 :
+> > > >> do_raw_spin_lock+0xa8/0xd8 ]
+> > > >> [f00d5034 :
+> > > >> copy_page_range+0x328/0x804 ]
+> > > >> [f0025be4 :
+> > > >> dup_mm+0x334/0x434 ]
+> > > >> [f0027124 :
+> > > >> copy_process+0x1224/0x12b0 ]
+> > > >> [f0027344 :
+> > > >> _do_fork+0x54/0x30c ]
+> > > >> [f0027670 :
+> > > >> do_fork+0x5c/0x6c ]
+> > > >> [f000de44 :
+> > > >> sparc_do_fork+0x18/0x38 ]
+> > > >> [f000b7f4 :
+> > > >> do_syscall+0x34/0x40 ]
+> > > >> [5010cd4c :
+> > > >> 0x5010cd4c ]
+> > > >>
+> > > >> Looks like yet another problem.
+> > > > 
+> > > > I've checked the patch above on top of the mmots which already has Ira's
+> > > > patches and it booted fine. I've used sparc32_defconfig to build the
+> > > > kernel and qemu-system-sparc with default machine and CPU. 
+> > > > 
+> > > 
+> > > Try sparc32_defconfig+SMP.
+> >  
+> > I see a differernt problem, but this could be related:
+> > 
+> > INIT: version 2.86 booting
+> > rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+> > 	(detected by 0, t=5252 jiffies, g=-935, q=3)
+> > rcu: All QSes seen, last rcu_sched kthread activity 5252 (-68674--73926), jiffies_till_next_fqs=1, root ->qsmask 0x0
+> > rcu: rcu_sched kthread starved for 5252 jiffies! g-935 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=0
+> > rcu: 	Unless rcu_sched kthread gets sufficient CPU time, OOM is now expected behavior.
+> > rcu: RCU grace-period kthread stack dump:
+> > rcu_sched       R  running task        0    10      2 0x00000000
+> > 
+> > I'm running a bit old debian [1] with qemu-img-sparc.
+> > 
+> > My bisect pointed at commit 8c8f3156dd40 ("sparc32: mm: Reduce
+> > allocation size for PMD and PTE tables"). The commit ID is valid for
+> > next-20200522.
+> 
+> Can you try the diff below please?
 
-Hmm. this doesn't look right.
+Actually, that's racy. New version below!
 
-Before this patch we check "iov_len % regset->size", this is not the same
-as "iov_len % regset_size()".
+Will
 
-IOW, currently you can read/write, say, only the 1st register, you patch
-breaks this?
+--->8
 
-Oleg.
-
+diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
+index c861c0f0df73..068029471aa4 100644
+--- a/arch/sparc/mm/srmmu.c
++++ b/arch/sparc/mm/srmmu.c
+@@ -363,11 +363,16 @@ pgtable_t pte_alloc_one(struct mm_struct *mm)
+ 
+ 	if ((ptep = pte_alloc_one_kernel(mm)) == 0)
+ 		return NULL;
++
+ 	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
+-	if (!pgtable_pte_page_ctor(page)) {
+-		__free_page(page);
+-		return NULL;
++
++	spin_lock(&mm->page_table_lock);
++	if (page_ref_inc_return(page) == 2 && !pgtable_pte_page_ctor(page)) {
++		page_ref_dec(page);
++		ptep = NULL;
+ 	}
++	spin_unlock(&mm->page_table_lock);
++
+ 	return ptep;
+ }
+ 
+@@ -376,7 +381,12 @@ void pte_free(struct mm_struct *mm, pgtable_t ptep)
+ 	struct page *page;
+ 
+ 	page = pfn_to_page(__nocache_pa((unsigned long)ptep) >> PAGE_SHIFT);
+-	pgtable_pte_page_dtor(page);
++
++	spin_lock(&mm->page_table_lock);
++	if (page_ref_dec_return(page) == 1)
++		pgtable_pte_page_dtor(page);
++	spin_unlock(&mm->page_table_lock);
++
+ 	srmmu_free_nocache(ptep, SRMMU_PTE_TABLE_SIZE);
+ }
+ 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index c1acc34c1c35..97458119cce8 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -192,6 +192,9 @@ config MEMORY_HOTREMOVE
+ # Default to 4 for wider testing, though 8 might be more appropriate.
+ # ARM's adjust_pte (unused if VIPT) depends on mm-wide page_table_lock.
+ # PA-RISC 7xxx's spinlock_t would enlarge struct page from 32 to 44 bytes.
++# SPARC32 allocates multiple pte tables within a single page, and therefore
++# a per-page lock leads to problems when multiple tables need to be locked
++# at the same time (e.g. copy_page_range()).
+ # DEBUG_SPINLOCK and DEBUG_LOCK_ALLOC spinlock_t also enlarge struct page.
+ #
+ config SPLIT_PTLOCK_CPUS
+@@ -199,6 +202,7 @@ config SPLIT_PTLOCK_CPUS
+ 	default "999999" if !MMU
+ 	default "999999" if ARM && !CPU_CACHE_VIPT
+ 	default "999999" if PARISC && !PA20
++	default "999999" if SPARC32
+ 	default "4"
+ 
+ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
