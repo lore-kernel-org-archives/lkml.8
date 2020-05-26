@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B66C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AB2B20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C282086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519763;
-	bh=icfMV+3Qw8xRr0W9Ef+XkW1RsearV5WsBG6CAr3JNew=;
+	s=default; t=1590519765;
+	bh=uQ7TT+6LjRYw3/bbTIqTodcAqepgC9ZKwFae8MXI/hw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yAGgJo97mZjkVKrU2b/Wt5oBszmwhI6lfAu7RpiI8HRUSc+GRsOM23djDG5Lmd5Uc
-	 EWNzm06rd0YP7LdFuuBhuuXJATFzwWGfA24Il4VLJC2d4MloJ+SPhnr2B6palztguB
-	 qakRTZ3v8rYtMi6blnfWM9HYHz79VLkM7QUp0H9I=
+	b=UMILoU/lYUY8N8PrL5nweaKGumsLAzsbVf+zNl1m5TYTtyPS705oOngIOtkOEusVX
+	 jNtrpb7PRbO0/7HwyQERIPv50kU+3lFqs9XatdIEtgOq9h5ILaMO13gPniRDm8tKjF
+	 kfoz3YhnekTMc4nfJ6CDLWFjO+/HH/09ATu/wZ+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389360AbgEZTCm (ORCPT
+        id S2391138AbgEZTCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57508 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391115AbgEZTCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:02:38 -0400
+        id S2389684AbgEZTCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:02:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659FE208C3;
-        Tue, 26 May 2020 19:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2CC920873;
+        Tue, 26 May 2020 19:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519756;
-        bh=icfMV+3Qw8xRr0W9Ef+XkW1RsearV5WsBG6CAr3JNew=;
+        s=default; t=1590519762;
+        bh=uQ7TT+6LjRYw3/bbTIqTodcAqepgC9ZKwFae8MXI/hw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RKRnTGZ7gXPMvNd1u9fTI8M2JqMyGS1+TxBBDLeL9RNNjAKLlAzX/FFTZ/BJA+1YE
-         bLeRZoVK+4We908Pk0d95koBylEbKqTB8EhLHUZYDG67L9hZ38oTTpp1wZTyhAvsXT
-         1oHg/pkZv5wRBsNyv6IS5civ4wdfdbnYIT39Hw00=
+        b=hU9eQ+N9TO6XuEIpN933JNQJIPhO3Pgd1g5aKBd2fx5lrGV/a2TsPkUDBPhaaZ4pp
+         LOO6p7KpYcE0dHu4Zs6rd6He/AnIKvjpWE3OiiI0j5bheq7HmKuOWcqg1qJd2nAvB0
+         h/BgcngjhCG46HWYedewUpbkx2gLsFus3AGtjIto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.14 34/59] l2tp: initialise PPP sessions before registering them
-Date:   Tue, 26 May 2020 20:53:19 +0200
-Message-Id: <20200526183918.894935065@linuxfoundation.org>
+        stable@vger.kernel.org, Brent Lu <brent.lu@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 36/59] ALSA: pcm: fix incorrect hw_base increase
+Date:   Tue, 26 May 2020 20:53:21 +0200
+Message-Id: <20200526183919.254026440@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -60,190 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Brent Lu <brent.lu@intel.com>
 
-commit f98be6c6359e7e4a61aaefb9964c1db31cb9ec0c upstream.
+commit e7513c5786f8b33f0c107b3759e433bc6cbb2efa upstream.
 
-pppol2tp_connect() initialises L2TP sessions after they've been exposed
-to the rest of the system by l2tp_session_register(). This puts
-sessions into transient states that are the source of several races, in
-particular with session's deletion path.
+There is a corner case that ALSA keeps increasing the hw_ptr but DMA
+already stop working/updating the position for a long time.
 
-This patch centralises the initialisation code into
-pppol2tp_session_init(), which is called before the registration phase.
-The only field that can't be set before session registration is the
-pppol2tp socket pointer, which has already been converted to RCU. So
-pppol2tp_connect() should now be race-free.
+In following log we can see the position returned from DMA driver does
+not move at all but the hw_ptr got increased at some point of time so
+snd_pcm_avail() will return a large number which seems to be a buffer
+underrun event from user space program point of view. The program
+thinks there is space in the buffer and fill more data.
 
-The session's .session_close() callback is now set before registration.
-Therefore, it's always called when l2tp_core deletes the session, even
-if it was created by pppol2tp_session_create() and hasn't been plugged
-to a pppol2tp socket yet. That'd prevent session free because the extra
-reference taken by pppol2tp_session_close() wouldn't be dropped by the
-socket's ->sk_destruct() callback (pppol2tp_session_destruct()).
-We could set .session_close() only while connecting a session to its
-pppol2tp socket, or teach pppol2tp_session_close() to avoid grabbing a
-reference when the session isn't connected, but that'd require adding
-some form of synchronisation to be race free.
+[  418.510086] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  418.510149] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6910 avail 9554
+...
+[  418.681052] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15102 avail 1362
+[  418.681130] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+[  418.726515] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 16464 avail 16368
 
-Instead of that, we can just let the pppol2tp socket hold a reference
-on the session as soon as it starts depending on it (that is, in
-pppol2tp_connect()). Then we don't need to utilise
-pppol2tp_session_close() to hold a reference at the last moment to
-prevent l2tp_core from dropping it.
+This is because the hw_base will be increased by runtime->buffer_size
+frames unconditionally if the hw_ptr is not updated for over half of
+buffer time. As the hw_base increases, so does the hw_ptr increased
+by the same number.
 
-When releasing the socket, pppol2tp_release() now deletes the session
-using the standard l2tp_session_delete() function, instead of merely
-removing it from hash tables. l2tp_session_delete() drops the reference
-the sessions holds on itself, but also makes sure it doesn't remove a
-session twice. So it can safely be called, even if l2tp_core already
-tried, or is concurrently trying, to remove the session.
-Finally, pppol2tp_session_destruct() drops the reference held by the
-socket.
+The avail value returned from snd_pcm_avail() could exceed the limit
+(buffer_size) easily becase the hw_ptr itself got increased by same
+buffer_size samples when the corner case happens. In following log,
+the buffer_size is 16368 samples but the avail is 21810 samples so
+CRAS server complains about it.
 
-Fixes: fd558d186df2 ("l2tp: Split pppol2tp patch into separate l2tp and ppp parts")
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
+[  418.851755] sound pcmC0D5p: pos 96 hw_ptr 16464 appl_ptr 27390 avail 5442
+[  418.926491] sound pcmC0D5p: pos 96 hw_ptr 32832 appl_ptr 27390 avail 21810
+
+cras_server[1907]: pcm_avail returned frames larger than buf_size:
+sof-glkda7219max: :0,5: 21810 > 16368
+
+By updating runtime->hw_ptr_jiffies each time the HWSYNC is called,
+the hw_base will keep the same when buffer stall happens at long as
+the interval between each HWSYNC call is shorter than half of buffer
+time.
+
+Following is a log captured by a patched kernel. The hw_base/hw_ptr
+value is fixed in this corner case and user space program should be
+aware of the buffer stall and handle it.
+
+[  293.525543] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 4096 avail 12368
+[  293.525606] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 6880 avail 9584
+[  293.525975] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 10976 avail 5488
+[  293.611178] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 15072 avail 1392
+[  293.696429] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+...
+[  381.139517] sound pcmC0D5p: pos 96 hw_ptr 96 appl_ptr 16464 avail 0
+
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1589776238-23877-1-git-send-email-brent.lu@intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_ppp.c |   69 ++++++++++++++++++++++++++++------------------------
- 1 file changed, 38 insertions(+), 31 deletions(-)
 
---- a/net/l2tp/l2tp_ppp.c
-+++ b/net/l2tp/l2tp_ppp.c
-@@ -449,9 +449,6 @@ static void pppol2tp_session_close(struc
- 			inet_shutdown(sk->sk_socket, SEND_SHUTDOWN);
- 		sock_put(sk);
+---
+ sound/core/pcm_lib.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -440,6 +440,7 @@ static int snd_pcm_update_hw_ptr0(struct
+ 
+  no_delta_check:
+ 	if (runtime->status->hw_ptr == new_hw_ptr) {
++		runtime->hw_ptr_jiffies = curr_jiffies;
+ 		update_audio_tstamp(substream, &curr_tstamp, &audio_tstamp);
+ 		return 0;
  	}
--
--	/* Don't let the session go away before our socket does */
--	l2tp_session_inc_refcount(session);
- }
- 
- /* Really kill the session socket. (Called from sock_put() if
-@@ -507,8 +504,7 @@ static int pppol2tp_release(struct socke
- 	if (session != NULL) {
- 		struct pppol2tp_session *ps;
- 
--		__l2tp_session_unhash(session);
--		l2tp_session_queue_purge(session);
-+		l2tp_session_delete(session);
- 
- 		ps = l2tp_session_priv(session);
- 		mutex_lock(&ps->sk_lock);
-@@ -600,6 +596,35 @@ static void pppol2tp_show(struct seq_fil
- }
- #endif
- 
-+static void pppol2tp_session_init(struct l2tp_session *session)
-+{
-+	struct pppol2tp_session *ps;
-+	struct dst_entry *dst;
-+
-+	session->recv_skb = pppol2tp_recv;
-+	session->session_close = pppol2tp_session_close;
-+#if IS_ENABLED(CONFIG_L2TP_DEBUGFS)
-+	session->show = pppol2tp_show;
-+#endif
-+
-+	ps = l2tp_session_priv(session);
-+	mutex_init(&ps->sk_lock);
-+	ps->tunnel_sock = session->tunnel->sock;
-+	ps->owner = current->pid;
-+
-+	/* If PMTU discovery was enabled, use the MTU that was discovered */
-+	dst = sk_dst_get(session->tunnel->sock);
-+	if (dst) {
-+		u32 pmtu = dst_mtu(dst);
-+
-+		if (pmtu) {
-+			session->mtu = pmtu - PPPOL2TP_HEADER_OVERHEAD;
-+			session->mru = pmtu - PPPOL2TP_HEADER_OVERHEAD;
-+		}
-+		dst_release(dst);
-+	}
-+}
-+
- /* connect() handler. Attach a PPPoX socket to a tunnel UDP socket
-  */
- static int pppol2tp_connect(struct socket *sock, struct sockaddr *uservaddr,
-@@ -611,7 +636,6 @@ static int pppol2tp_connect(struct socke
- 	struct l2tp_session *session = NULL;
- 	struct l2tp_tunnel *tunnel;
- 	struct pppol2tp_session *ps;
--	struct dst_entry *dst;
- 	struct l2tp_session_cfg cfg = { 0, };
- 	int error = 0;
- 	u32 tunnel_id, peer_tunnel_id;
-@@ -763,8 +787,8 @@ static int pppol2tp_connect(struct socke
- 			goto end;
- 		}
- 
-+		pppol2tp_session_init(session);
- 		ps = l2tp_session_priv(session);
--		mutex_init(&ps->sk_lock);
- 		l2tp_session_inc_refcount(session);
- 
- 		mutex_lock(&ps->sk_lock);
-@@ -777,26 +801,6 @@ static int pppol2tp_connect(struct socke
- 		drop_refcnt = true;
- 	}
- 
--	ps->owner	     = current->pid;
--	ps->tunnel_sock = tunnel->sock;
--
--	session->recv_skb	= pppol2tp_recv;
--	session->session_close	= pppol2tp_session_close;
--#if IS_ENABLED(CONFIG_L2TP_DEBUGFS)
--	session->show		= pppol2tp_show;
--#endif
--
--	/* If PMTU discovery was enabled, use the MTU that was discovered */
--	dst = sk_dst_get(tunnel->sock);
--	if (dst != NULL) {
--		u32 pmtu = dst_mtu(dst);
--
--		if (pmtu != 0)
--			session->mtu = session->mru = pmtu -
--				PPPOL2TP_HEADER_OVERHEAD;
--		dst_release(dst);
--	}
--
- 	/* Special case: if source & dest session_id == 0x0000, this
- 	 * socket is being created to manage the tunnel. Just set up
- 	 * the internal context for use by ioctl() and sockopt()
-@@ -830,6 +834,12 @@ out_no_ppp:
- 	rcu_assign_pointer(ps->sk, sk);
- 	mutex_unlock(&ps->sk_lock);
- 
-+	/* Keep the reference we've grabbed on the session: sk doesn't expect
-+	 * the session to disappear. pppol2tp_session_destruct() is responsible
-+	 * for dropping it.
-+	 */
-+	drop_refcnt = false;
-+
- 	sk->sk_state = PPPOX_CONNECTED;
- 	l2tp_info(session, L2TP_MSG_CONTROL, "%s: created\n",
- 		  session->name);
-@@ -853,7 +863,6 @@ static int pppol2tp_session_create(struc
- {
- 	int error;
- 	struct l2tp_session *session;
--	struct pppol2tp_session *ps;
- 
- 	/* Error if tunnel socket is not prepped */
- 	if (!tunnel->sock) {
-@@ -876,9 +885,7 @@ static int pppol2tp_session_create(struc
- 		goto err;
- 	}
- 
--	ps = l2tp_session_priv(session);
--	mutex_init(&ps->sk_lock);
--	ps->tunnel_sock = tunnel->sock;
-+	pppol2tp_session_init(session);
- 
- 	error = l2tp_session_register(session, tunnel);
- 	if (error < 0)
 
 
