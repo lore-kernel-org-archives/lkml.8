@@ -2,75 +2,113 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6592088E
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7E1207ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 10:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbgEZKNC (ORCPT
+        id S2388524AbgEZKND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 26 May 2020 06:13:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36132 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388339AbgEZKNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 06:13:02 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:55030 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728810AbgEZKNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 06:13:02 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Tue, 26 May 2020 18:12:46
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.78.173]
-Date:   Tue, 26 May 2020 18:12:46 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Vignesh Raghavendra" <vigneshr@ti.com>
-Cc:     kjlu@umn.edu, "Alim Akhtar" <alim.akhtar@samsung.com>,
-        "Avri Altman" <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] scsi: ufs: Fix runtime PM imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <73cb87f7-52ac-1a18-364e-977080cc149c@ti.com>
-References: <20200522045335.30556-1-dinghao.liu@zju.edu.cn>
- <73cb87f7-52ac-1a18-364e-977080cc149c@ti.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 39E51B1C1;
+        Tue, 26 May 2020 10:13:04 +0000 (UTC)
+Subject: Re: [PATCH v3 12/19] mm: memcg/slab: use a single set of kmem_caches
+ for all accounted allocations
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+References: <20200422204708.2176080-1-guro@fb.com>
+ <20200422204708.2176080-13-guro@fb.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <4d9e18ea-3100-8311-e969-a376096a0b60@suse.cz>
+Date:   Tue, 26 May 2020 12:12:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Message-ID: <20dbb267.d17cd.172507864cf.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgCH_0Ke68xesPgJAA--.2822W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgkMBlZdtOUEVwADsL
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_JrI_JrylV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8twCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
+In-Reply-To: <20200422204708.2176080-13-guro@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBIaSwKPiAKPiBPbiAyMi8wNS8yMCAxMDoyMyBhbSwgRGluZ2hhbyBMaXUgd3JvdGU6Cj4gPiBX
-aGVuIGRldm1fY2xrX2dldCgpIHJldHVybnMgYW4gZXJyb3IgY29kZSwgYSBwYWlyaW5nCj4gPiBy
-dW50aW1lIFBNIHVzYWdlIGNvdW50ZXIgZGVjcmVtZW50IGlzIG5lZWRlZCB0byBrZWVwCj4gPiB0
-aGUgY291bnRlciBiYWxhbmNlZC4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogRGluZ2hhbyBMaXUg
-PGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Cj4gPiAtLS0KPiAKPiBUaGFua3MgZm9yIHRoZSBwYXRj
-aCEgQnV0IHRoaXMgZml4IGlzIGluY29tcGxldGUsIEkgaGF2ZSBwb3N0ZWQgCj4gYSBtb3JlIGNv
-bXByZWhlbnNpdmUgZml4IGF0IFsxXS4uIFBsZWFzZSB0YWtlIGEgbG9vayEKCgpZb3UgYXJlIHJp
-Z2h0LCB3ZSBzaG91bGQgY2FsbCBwbV9ydW50aW1lX2Rpc2FibGUoKSBvbiBlcnJvciwgdG9vLgpU
-aGFuayB5b3VyIGZvciB5b3VyIHJlbWluZGVyIQoKUmVnYXJkcywKRGluZ2hhbw==
+On 4/22/20 10:47 PM, Roman Gushchin wrote:
+> This is fairly big but mostly red patch, which makes all accounted
+> slab allocations use a single set of kmem_caches instead of
+> creating a separate set for each memory cgroup.
+> 
+> Because the number of non-root kmem_caches is now capped by the number
+> of root kmem_caches, there is no need to shrink or destroy them
+> prematurely. They can be perfectly destroyed together with their
+> root counterparts. This allows to dramatically simplify the
+> management of non-root kmem_caches and delete a ton of code.
+> 
+> This patch performs the following changes:
+> 1) introduces memcg_params.memcg_cache pointer to represent the
+>    kmem_cache which will be used for all non-root allocations
+> 2) reuses the existing memcg kmem_cache creation mechanism
+>    to create memcg kmem_cache on the first allocation attempt
+> 3) memcg kmem_caches are named <kmemcache_name>-memcg,
+>    e.g. dentry-memcg
+> 4) simplifies memcg_kmem_get_cache() to just return memcg kmem_cache
+>    or schedule it's creation and return the root cache
+> 5) removes almost all non-root kmem_cache management code
+>    (separate refcounter, reparenting, shrinking, etc)
+> 6) makes slab debugfs to display root_mem_cgroup css id and never
+>    show :dead and :deact flags in the memcg_slabinfo attribute.
+> 
+> Following patches in the series will simplify the kmem_cache creation.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> ---
+>  include/linux/memcontrol.h |   5 +-
+>  include/linux/slab.h       |   5 +-
+>  mm/memcontrol.c            | 163 +++-----------
+>  mm/slab.c                  |  16 +-
+>  mm/slab.h                  | 145 ++++---------
+>  mm/slab_common.c           | 426 ++++---------------------------------
+>  mm/slub.c                  |  38 +---
+>  7 files changed, 128 insertions(+), 670 deletions(-)
+
+Nice stats.
+
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+
+> @@ -548,17 +502,14 @@ static __always_inline int charge_slab_page(struct page *page,
+>  					    gfp_t gfp, int order,
+>  					    struct kmem_cache *s)
+>  {
+> -#ifdef CONFIG_MEMCG_KMEM
+
+Ah, indeed. Still, less churn if ref manipulation was done in
+memcg_alloc/free_page_obj() ?
+
+>  	if (!is_root_cache(s)) {
+>  		int ret;
+>  
+>  		ret = memcg_alloc_page_obj_cgroups(page, gfp, objs_per_slab(s));
+>  		if (ret)
+>  			return ret;
+> -
+> -		percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
+>  	}
+> -#endif
+> +
+>  	mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
+>  			    PAGE_SIZE << order);
+>  	return 0;
