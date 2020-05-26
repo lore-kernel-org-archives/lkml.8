@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE279C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB12C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCAD20849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFA120849
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521284;
-	bh=qIYiUvaKyT6yKbzKqazvPY4D3CtMCuQdze1olFzRzxQ=;
+	s=default; t=1590521290;
+	bh=O1++ku7X7vO63YjWqVg15Ay2i4S7GYq4slZXrtov+qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3r6QB3phH6H0H8kEj4dhGQxKaozoC3OA8oTAnla2ygDv71l7BudIysXQ8ayLb8t0
-	 mBkU+w7Z71X4CewvAldjsmPJlX3KsBPSWzD1Iyw0anOOcUOm/NDVWTGbQDRtVUFdSU
-	 2JF04HzFP49naT5rNrtNX3eMAikfqFjFgawPY+oE=
+	b=vMW+aXh0v9cdvSXb0gHFWt/QKu0ydEn5AXaTY9jrc1aWKVuqNymeisKazgISNmY0M
+	 5FK4DdgNbDGEso80NDl+ePmLYpVVWSi3UAFqx/lIlMSsFbnS/kSifnn80WnYdOl14o
+	 5gHw7oknli26FGOutpUswKsF2kjc9S0RoIArGXJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391854AbgEZT2E (ORCPT
+        id S2391214AbgEZTD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58906 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391231AbgEZTDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:03:35 -0400
+        id S2391184AbgEZTDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:03:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A83120873;
-        Tue, 26 May 2020 19:03:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFB1D2086A;
+        Tue, 26 May 2020 19:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519815;
-        bh=qIYiUvaKyT6yKbzKqazvPY4D3CtMCuQdze1olFzRzxQ=;
+        s=default; t=1590519802;
+        bh=O1++ku7X7vO63YjWqVg15Ay2i4S7GYq4slZXrtov+qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RExq8b4wCTr9/ybZmqYshPTBYL5W96RyE1yZdq+Tympeahz0BrmzU+YoSJGPZoWZO
-         77R+doxoVswXsFitjMbt5iVAYo/4CdPVzIj/L+JylTuJIeqxukaP6Py+lpug+xthMX
-         ImBquV/7bwIkZ7+78QISQ5Kxs7u1/7J8w7N1Rg6s=
+        b=pXZVpIZXt/cmv+tQxPvHmbEjHvV2l00v890X+4AUWpPVa0dxanfx4WAEeyhgm+TCl
+         5quHNZtduLd+qGkK3ulcdKe/ZGjrn1uexU4zcL6LJH/r7C81UBRBTJIzPfJxsecdAB
+         uK2DHdvZVVlq91qm7aesNiglnMV5oXb1ywOFLyOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>,
+        Richard Clark <richard.xnu.clark@gmail.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/81] gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
-Date:   Tue, 26 May 2020 20:53:03 +0200
-Message-Id: <20200526183930.618910925@linuxfoundation.org>
+Subject: [PATCH 4.19 23/81] aquantia: Fix the media type of AQC100 ethernet controller in the driver
+Date:   Tue, 26 May 2020 20:52:58 +0200
+Message-Id: <20200526183929.588416841@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -61,59 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+From: Richard Clark <richard.xnu.clark@gmail.com>
 
-[ Upstream commit 846c68f7f1ac82c797a2f1db3344a2966c0fe2e1 ]
+[ Upstream commit 6de556c31061e3b9c36546ffaaac5fdb679a2f14 ]
 
-In drivers/net/gtp.c, gtp_genl_dump_pdp() should set NLM_F_MULTI
-flag since it returns multipart message.
-This patch adds a new arg "flags" in gtp_genl_fill_info() so that
-flags can be set by the callers.
+The Aquantia AQC100 controller enables a SFP+ port, so the driver should
+configure the media type as '_TYPE_FIBRE' instead of '_TYPE_TP'.
 
-Signed-off-by: Yoshiyuki Kurauchi <ahochauwaaaaa@gmail.com>
+Signed-off-by: Richard Clark <richard.xnu.clark@gmail.com>
+Cc: Igor Russkikh <irusskikh@marvell.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Acked-by: Igor Russkikh <irusskikh@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/gtp.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index eab9984f73a8..d73850ebb671 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -1177,11 +1177,11 @@ out_unlock:
- static struct genl_family gtp_genl_family;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+index 750007513f9d..43dbfb228b0e 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+@@ -60,7 +60,7 @@ static const struct aq_board_revision_s hw_atl_boards[] = {
+ 	{ AQ_DEVICE_ID_D108,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_D109,	AQ_HWREV_2,	&hw_atl_ops_b0, &hw_atl_b0_caps_aqc109, },
  
- static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
--			      u32 type, struct pdp_ctx *pctx)
-+			      int flags, u32 type, struct pdp_ctx *pctx)
- {
- 	void *genlh;
- 
--	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, 0,
-+	genlh = genlmsg_put(skb, snd_portid, snd_seq, &gtp_genl_family, flags,
- 			    type);
- 	if (genlh == NULL)
- 		goto nlmsg_failure;
-@@ -1235,8 +1235,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
- 		goto err_unlock;
- 	}
- 
--	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid,
--				 info->snd_seq, info->nlhdr->nlmsg_type, pctx);
-+	err = gtp_genl_fill_info(skb2, NETLINK_CB(skb).portid, info->snd_seq,
-+				 0, info->nlhdr->nlmsg_type, pctx);
- 	if (err < 0)
- 		goto err_unlock_free;
- 
-@@ -1279,6 +1279,7 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
- 				    gtp_genl_fill_info(skb,
- 					    NETLINK_CB(cb->skb).portid,
- 					    cb->nlh->nlmsg_seq,
-+					    NLM_F_MULTI,
- 					    cb->nlh->nlmsg_type, pctx)) {
- 					cb->args[0] = i;
- 					cb->args[1] = j;
+-	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
++	{ AQ_DEVICE_ID_AQC100,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc100, },
+ 	{ AQ_DEVICE_ID_AQC107,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc107, },
+ 	{ AQ_DEVICE_ID_AQC108,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc108, },
+ 	{ AQ_DEVICE_ID_AQC109,	AQ_HWREV_ANY,	&hw_atl_ops_b1, &hw_atl_b0_caps_aqc109, },
 -- 
 2.25.1
 
