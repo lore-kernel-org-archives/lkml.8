@@ -2,140 +2,106 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A90DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 478632068D
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="LzYeHHKN"
+	by mail.kernel.org (Postfix) with ESMTP id DA203206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590517992;
+	bh=zqqKYGDqYq+jWP/jsl64bWcD9Pu4bJsseF9495JaNws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=UgcoWbpAYBVAZsey9R1VSFNANiZAZUI9eEpXC0j+wIAVPD3aQymf1yhSXJQX60oID
+	 ulCwh16SMjH+bKeyY72z19yWW+K22EsolNJuTVkV09O0qKe3B5Ylkt4hQovBXg4Uxh
+	 hGMOq8yHifUKZ7p0j0I5aa0aEUvAdrF/Z9b1xn5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbgEZSck (ORCPT
+        id S1730209AbgEZSdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:32:40 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:59250 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728113AbgEZScj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:32:39 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QIHLl9015082;
-        Tue, 26 May 2020 14:32:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=smtpout1; bh=Te1mkX2H/rmHg2h5LVQwpFbnaZ6Tap4l+WBfe+VOlyA=;
- b=LzYeHHKN0Mf1v4FQvfLjOtOm4bDmU0+teOYFx80of3tQF84Gh572LLiuLSHRdiLhhUOs
- io5GY0JnsmHxhPpoB7z0ourkFahDrSpPnUeSSl7K5RzknPwRUAC8wCC7AFIF7i7CAlC8
- 2wcQ4/JPX+anBjJnNLyRhovZDOU/4lSMMMw587Ij6NsmSLEdGzLYS3UnmlQarWtKQXWp
- InxRPpxbFvsCN/onJMo2K3OSPU3S6vlMc2ylAFAq2q+92McsRjOcVPOoS26KY/kIwBbX
- axcrpdKOslFn7WHOG4TllDq2rGbKc75agIOdhvaX2Wts0+LKBrVjbUMaumydJ+U0p5pB fQ== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 316vwurke8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 26 May 2020 14:32:38 -0400
-Received: from pps.filterd (m0144102.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QIEXuZ016883;
-        Tue, 26 May 2020 14:32:38 -0400
-Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
-        by mx0b-00154901.pphosted.com with ESMTP id 3194yekm4x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 26 May 2020 14:32:38 -0400
-X-LoopCount0: from 10.173.37.130
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="552834903"
-From:   Mario Limonciello <mario.limonciello@dell.com>
-To:     Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Alex Guzman <alex@guzman.io>
-Subject: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING mode"
-Date:   Tue, 26 May 2020 13:32:13 -0500
-Message-Id: <20200526183213.20720-1-mario.limonciello@dell.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 26 May 2020 14:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728113AbgEZSdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:33:11 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 919F72068D;
+        Tue, 26 May 2020 18:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590517991;
+        bh=zqqKYGDqYq+jWP/jsl64bWcD9Pu4bJsseF9495JaNws=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xoKoTwDBiy/RtF4geXCUT9O945JVCDIyVCuaAHHe/qgGUoSZxbRMT8nvmG0FfT7t1
+         OkkLZoLpkyFRoImhyuBgbQ+iIOnvHNyanKx9oppQJljEQ4c3Hz99pda6K1cI4MsypW
+         VS+ABpkVNrs7NQ3kBwrCqLL2vkSrVB88TiRRb/kE=
+Date:   Tue, 26 May 2020 11:33:09 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next RFC v3 2/6] net: marvell: prestera: Add PCI interface
+ support
+Message-ID: <20200526113309.1c46d496@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <20200526171302.28649-3-vadym.kochan@plvision.eu>
+References: <20200526171302.28649-1-vadym.kochan@plvision.eu>
+        <20200526171302.28649-3-vadym.kochan@plvision.eu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 cotscore=-2147483648 suspectscore=0 priorityscore=1501
- bulkscore=0 spamscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 clxscore=1011 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260142
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- phishscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005260142
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
+On Tue, 26 May 2020 20:12:58 +0300 Vadym Kochan wrote:
+> Add PCI interface driver for Prestera Switch ASICs family devices, which
+> provides:
+> 
+>     - Firmware loading mechanism
+>     - Requests & events handling to/from the firmware
+>     - Access to the firmware on the bus level
+> 
+> The firmware has to be loaded each time device is reset. The driver is
+> loading it from:
+> 
+>     /lib/firmware/marvell/prestera_fw-v{MAJOR}.{MINOR}.img
+> 
+> The full firmware image version is located within internal header and
+> consists of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has
+> hard-coded minimum supported firmware version which it can work with:
+> 
+>     MAJOR - reflects the support on ABI level between driver and loaded
+>             firmware, this number should be the same for driver and loaded
+>             firmware.
+> 
+>     MINOR - this is the minimum supported version between driver and the
+>             firmware.
+> 
+>     PATCH - indicates only fixes, firmware ABI is not changed.
+> 
+> Firmware image file name contains only MAJOR and MINOR numbers to make
+> driver be compatible with any PATCH version.
+> 
+> Signed-off-by: Oleksandr Mazur <oleksandr.mazur@plvision.eu>
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
 
-This commit has caused regressions for the XPS 9560 containing
-a Nuvoton TPM.
+W=1 gives me:
 
-As mentioned by the reporter all TPM2 commands are failing with:
-  ERROR:tcti:src/tss2-tcti/tcti-device.c:290:tcti_device_receive()
-  Failed to read response from fd 3, got errno 1: Operation not permitted
-
-The reporter bisected this issue back to this commit which was
-backported to stable as commit 4d6ebc4.
-
-Cc: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206275
-Fixes: d23d124 ("tpm: fix invalid locking in NONBLOCKING mode")
-Reported-by: Alex Guzman <alex@guzman.io>
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
----
- drivers/char/tpm/tpm-dev-common.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
-index 87f449340202..bc9d7c7ddc01 100644
---- a/drivers/char/tpm/tpm-dev-common.c
-+++ b/drivers/char/tpm/tpm-dev-common.c
-@@ -61,12 +61,6 @@ static void tpm_dev_async_work(struct work_struct *work)
- 
- 	mutex_lock(&priv->buffer_mutex);
- 	priv->command_enqueued = false;
--	ret = tpm_try_get_ops(priv->chip);
--	if (ret) {
--		priv->response_length = ret;
--		goto out;
--	}
--
- 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
- 			       sizeof(priv->data_buffer));
- 	tpm_put_ops(priv->chip);
-@@ -74,7 +68,6 @@ static void tpm_dev_async_work(struct work_struct *work)
- 		priv->response_length = ret;
- 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
- 	}
--out:
- 	mutex_unlock(&priv->buffer_mutex);
- 	wake_up_interruptible(&priv->async_wait);
- }
-@@ -211,7 +204,6 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
- 	if (file->f_flags & O_NONBLOCK) {
- 		priv->command_enqueued = true;
- 		queue_work(tpm_dev_wq, &priv->async_work);
--		tpm_put_ops(priv->chip);
- 		mutex_unlock(&priv->buffer_mutex);
- 		return size;
- 	}
--- 
-2.25.1
-
+drivers/net/ethernet/marvell/prestera/prestera_pci.c: In function prestera_fw_rev_check:
+drivers/net/ethernet/marvell/prestera/prestera_pci.c:590:15: warning: comparison is always true due to limited range of data type [-Wtype-limits]
+  590 |      rev->min >= PRESTERA_SUPP_FW_MIN_VER) {
+      |               ^~
