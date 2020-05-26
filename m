@@ -2,188 +2,121 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AABC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE549C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278A2205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NC0LhcBA"
+	by mail.kernel.org (Postfix) with ESMTP id A088A208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 09:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590485935;
+	bh=asJ1S2B6MCqDowX0hgAW1wGWg3tmcnbvJjmv6zK+dIQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c3iBuXnnf3II3FEv1qAUMnLp3mo1GazfEV33djZrx0uStt88KcA055xtAHSUgEcFa
+	 e7A0hXxd0vtWmAs1NLfADy3lUC6mn0zYdjPKqensuCPPLUnMIM1n8JK73ITVJjynee
+	 nfcjfyFy4FIAYYLi26Cj2CEk+vkNSTb6h6XFaArY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388632AbgEZJh5 (ORCPT
+        id S2388670AbgEZJiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 05:37:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:51026 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388460AbgEZJhz (ORCPT
+        Tue, 26 May 2020 05:38:55 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38137 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388460AbgEZJiy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 05:37:55 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04Q9bivF097440;
-        Tue, 26 May 2020 04:37:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590485864;
-        bh=tO6NCt0Ul17AwB1fqX5PvzK5VWUW+MRp8Lj/CkrzcBo=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NC0LhcBA2UgYYbohKRvSjt1BBFlx5DzA/r3LnAo8PKJa3w3+LbJuM961VJD3qtNdr
-         GjShzPJvq1T+J+5he9l+FhWocEbJzGwLFxrbBhy2FgsfzAzVFtu33gozBlCCyuUfL4
-         8JsbcM1Ws4nlojfW+3mRKqL07rLfjHINN89P3eXg=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04Q9biZb081598
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 26 May 2020 04:37:44 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 04:37:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 04:37:44 -0500
-Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04Q9b9hP066907;
-        Tue, 26 May 2020 04:37:39 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
-        <dinguyen@kernel.org>, <marex@denx.de>
-Subject: [PATCH v2 6/6] spi: Move cadence-quadspi driver to drivers/spi/
-Date:   Tue, 26 May 2020 15:06:04 +0530
-Message-ID: <20200526093604.11846-7-vigneshr@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526093604.11846-1-vigneshr@ti.com>
-References: <20200526093604.11846-1-vigneshr@ti.com>
+        Tue, 26 May 2020 05:38:54 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e1so19724897wrt.5;
+        Tue, 26 May 2020 02:38:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ok53FF3ob85NQ3kaOmkDOVfvfrQyMjF4yDCUjHtVYOU=;
+        b=MVqw4cpdBpWPt3uLAFe87iH4rvDwliMVgA9OKx1x3+ZIuOWXY5rK3X99Mv5Mz/xfBG
+         mC9Sk2axRxKKQb1O85Voc2bT5wZhaSLE0GdXdAlOe+BGgvoPjMlC9H6TWUjy2ZQbgu18
+         9cmEMHc+DxyVcwHjfbOx4ANhanT3AxspWAej9jikvP2tw1QZW0j4yhqnXLX4DIlvZQf2
+         1uvnUyQJnSW6z6YHhdZpQQOm4dpWN6t8ged0/W/yGJUwvXCZL7HiDq6B11AvRiowLYdi
+         1+Im300UugfQn1tjU254KEnT9HnLxiK0noVYDaum589hOKKGIvzNxBoiy2FWXl7pWRGI
+         uTeg==
+X-Gm-Message-State: AOAM530HXBN+o/klPkoqZ0xwDzMytwX4cuyPPJQH9Fmys5Frn9EpexQU
+        ER8PLuAe/EUa9M6+35N2QAjAqqEg
+X-Google-Smtp-Source: ABdhPJyx1bwlQiUXpBhsXKw9pC/WSAdrM9iOef2uVPf7AY+mlydpS0OKd3PhkTqLeC/FiDOn0YvykA==
+X-Received: by 2002:adf:a396:: with SMTP id l22mr18769444wrb.76.1590485932051;
+        Tue, 26 May 2020 02:38:52 -0700 (PDT)
+Received: from debian (82.149.115.87.dyn.plus.net. [87.115.149.82])
+        by smtp.gmail.com with ESMTPSA id w15sm142131wmk.30.2020.05.26.02.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 02:38:51 -0700 (PDT)
+Date:   Tue, 26 May 2020 10:38:49 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] PCI: hv: Use struct_size() helper
+Message-ID: <20200526093849.keva4hp775m4dzuo@debian>
+References: <20200525164319.GA13596@embeddedor>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525164319.GA13596@embeddedor>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Mon, May 25, 2020 at 11:43:19AM -0500, Gustavo A. R. Silva wrote:
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+> 
+> struct hv_dr_state {
+> 	...
+>         struct hv_pcidev_description func[];
+> };
+> 
+> struct pci_bus_relations {
+> 	...
+>         struct pci_function_description func[];
+> } __packed;
+> 
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following forms:
+> 
+> offsetof(struct hv_dr_state, func) +
+> 	(sizeof(struct hv_pcidev_description) *
+> 	(relations->device_count))
+> 
+> offsetof(struct pci_bus_relations, func) +
+> 	(sizeof(struct pci_function_description) *
+> 	(bus_rel->device_count))
+> 
+> with:
+> 
+> struct_size(dr, func, relations->device_count)
+> 
+> and
+> 
+> struct_size(bus_rel, func, bus_rel->device_count)
+> 
+> respectively.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Now that cadence-quadspi has been converted to use spi-mem framework,
-move it under drivers/spi/
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
 
-Update license header to match SPI subsystem style
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/mtd/spi-nor/controllers/Kconfig            | 11 -----------
- drivers/mtd/spi-nor/controllers/Makefile           |  1 -
- drivers/spi/Kconfig                                | 11 +++++++++++
- drivers/spi/Makefile                               |  1 +
- .../spi-cadence-quadspi.c}                         | 14 +++++++-------
- 5 files changed, 19 insertions(+), 19 deletions(-)
- rename drivers/{mtd/spi-nor/controllers/cadence-quadspi.c => spi/spi-cadence-quadspi.c} (99%)
-
-diff --git a/drivers/mtd/spi-nor/controllers/Kconfig b/drivers/mtd/spi-nor/controllers/Kconfig
-index 10b86660b821..95fcd4b435be 100644
---- a/drivers/mtd/spi-nor/controllers/Kconfig
-+++ b/drivers/mtd/spi-nor/controllers/Kconfig
-@@ -9,17 +9,6 @@ config SPI_ASPEED_SMC
- 	  and support for the SPI flash memory controller (SPI) for
- 	  the host firmware. The implementation only supports SPI NOR.
- 
--config SPI_CADENCE_QUADSPI
--	tristate "Cadence Quad SPI controller"
--	depends on OF && (ARM || ARM64 || COMPILE_TEST)
--	help
--	  Enable support for the Cadence Quad SPI Flash controller.
--
--	  Cadence QSPI is a specialized controller for connecting an SPI
--	  Flash over 1/2/4-bit wide bus. Enable this option if you have a
--	  device with a Cadence QSPI controller and want to access the
--	  Flash as an MTD device.
--
- config SPI_HISI_SFC
- 	tristate "Hisilicon FMC SPI-NOR Flash Controller(SFC)"
- 	depends on ARCH_HISI || COMPILE_TEST
-diff --git a/drivers/mtd/spi-nor/controllers/Makefile b/drivers/mtd/spi-nor/controllers/Makefile
-index 46e6fbe586e3..e7abba491d98 100644
---- a/drivers/mtd/spi-nor/controllers/Makefile
-+++ b/drivers/mtd/spi-nor/controllers/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
--obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
- obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 099d6a75a371..2de8098b26c1 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -200,6 +200,17 @@ config SPI_CADENCE
- 	  This selects the Cadence SPI controller master driver
- 	  used by Xilinx Zynq and ZynqMP.
- 
-+config SPI_CADENCE_QUADSPI
-+	tristate "Cadence Quad SPI controller"
-+	depends on OF && (ARM || ARM64 || COMPILE_TEST)
-+	help
-+	  Enable support for the Cadence Quad SPI Flash controller.
-+
-+	  Cadence QSPI is a specialized controller for connecting an SPI
-+	  Flash over 1/2/4-bit wide bus. Enable this option if you have a
-+	  device with a Cadence QSPI controller and want to access the
-+	  Flash as an MTD device.
-+
- config SPI_CLPS711X
- 	tristate "CLPS711X host SPI controller"
- 	depends on ARCH_CLPS711X || COMPILE_TEST
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 889368f4ad53..f03834d1d312 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_SPI_BCM_QSPI)		+= spi-iproc-qspi.o spi-brcmstb-qspi.o spi-bcm-qspi.
- obj-$(CONFIG_SPI_BITBANG)		+= spi-bitbang.o
- obj-$(CONFIG_SPI_BUTTERFLY)		+= spi-butterfly.o
- obj-$(CONFIG_SPI_CADENCE)		+= spi-cadence.o
-+obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= spi-cadence-quadspi.o
- obj-$(CONFIG_SPI_CLPS711X)		+= spi-clps711x.o
- obj-$(CONFIG_SPI_COLDFIRE_QSPI)		+= spi-coldfire-qspi.o
- obj-$(CONFIG_SPI_DAVINCI)		+= spi-davinci.o
-diff --git a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-similarity index 99%
-rename from drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-rename to drivers/spi/spi-cadence-quadspi.c
-index c1df4b221889..8e8937ec5b1b 100644
---- a/drivers/mtd/spi-nor/controllers/cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Driver for Cadence QSPI Controller
-- *
-- * Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-- * Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-- * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-- */
-+//
-+// Driver for Cadence QSPI Controller
-+//
-+// Copyright Altera Corporation (C) 2012-2014. All rights reserved.
-+// Copyright Intel Corporation (C) 2019-2020. All rights reserved.
-+// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
-+
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
--- 
-2.26.2
-
+FAOD I expect this patch to go through pci tree.
