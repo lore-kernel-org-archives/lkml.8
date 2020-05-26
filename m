@@ -2,54 +2,53 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA59AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE38C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D8E2084C
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0217B2084C
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519697;
-	bh=14eDN6iWkvLygluEYtdkN4nLLdQl8xArd15UGUNLXjM=;
+	s=default; t=1590519700;
+	bh=+Dvm2rdDVTfbgx2YcMhPo7v8qPnIq2C9eoViBsYKTEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V1DWAAKyQozTcg2HCpEWk7zKHbtZknOMfjTLUMoe9ylWaQDckWrbLnKKXsJ+NmK0p
-	 UbBvxJOf5JC+f2lhtSt+FwZ9Xqrpk1IukeJcoey1LygkpIed1gtGhVtKCZVt9ZQyyR
-	 AfV+VnSDScHnsjezr6+FT6H3EVzeLevb5/ghDlJk=
+	b=nb7v75hTikidhrFSRo7kP+rFp54UBll9W8++ufNV9JHANs4vKtHgb3ibHcBPMtT5f
+	 xn67h5mqcogL1PBpN7sIJAB4VaS7Vq7l1Rp1PgqVp6kB6sYJ/kKDmp3kcv65X8qTH6
+	 18LWFCBxSZFQ1+A7X56Ee/e/wh82tJYl+VeXtEP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403771AbgEZTBg (ORCPT
+        id S2403782AbgEZTBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:01:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55816 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390958AbgEZTB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:01:29 -0400
+        id S2390971AbgEZTBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:01:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67FDE20873;
-        Tue, 26 May 2020 19:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5DEC20849;
+        Tue, 26 May 2020 19:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519688;
-        bh=14eDN6iWkvLygluEYtdkN4nLLdQl8xArd15UGUNLXjM=;
+        s=default; t=1590519691;
+        bh=+Dvm2rdDVTfbgx2YcMhPo7v8qPnIq2C9eoViBsYKTEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fdg+5a03pjCViFC0oix+qbKpg7cxqCs1auMfaCCpibo1gkr7Gvg1Rmsuk9yODxa+B
-         RhzUacsdEDErXooufnrfV71LaYruBLKKtG/O9m6Hhib2M5r9oGoO2HxdaY5Xpf20Ow
-         x8f0B3WuUgJyMTqLP+KMErIlOx0wJ5FgUFGiwpyk=
+        b=xNC2k7uLmcEBq9Hg93sg6JUyOGrQntHuJ9+tCbGm1Oz5D4j1XLQ6j4K1pDIzJCkYt
+         2RElwb3QAEvXQmYRf15FEIf9J+dFHvrCBI+PBRWM1+RdCYr0QrNaoy6FS/C1zFcSjh
+         fQcfJDLwFZJm2csnKFmtJ7V/VgKvReu3DkWZMj6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 4.14 38/59] dmaengine: tegra210-adma: Fix an error handling path in tegra_adma_probe()
-Date:   Tue, 26 May 2020 20:53:23 +0200
-Message-Id: <20200526183919.642744121@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 39/59] powerpc: restore alphabetic order in Kconfig
+Date:   Tue, 26 May 2020 20:53:24 +0200
+Message-Id: <20200526183919.859893348@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183907.123822792@linuxfoundation.org>
 References: <20200526183907.123822792@linuxfoundation.org>
@@ -62,40 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 3a5fd0dbd87853f8bd2ea275a5b3b41d6686e761 upstream.
+[ Upstream commit 4ec591e51a4b0aedb6c7f1a8cd722aa58d7f61ba ]
 
-Commit b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-has moved some code in the probe function and reordered the error handling
-path accordingly.
-However, a goto has been missed.
+This patch restores the alphabetic order which was broken by
+commit 1e0fc9d1eb2b0 ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX
+for some configs")
 
-Fix it and goto the right label if 'dma_async_device_register()' fails, so
-that all resources are released.
-
-Fixes: b53611fb1ce9 ("dmaengine: tegra210-adma: Fix crash during probe")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/20200516214205.276266-1-christophe.jaillet@wanadoo.fr
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1e0fc9d1eb2b0 ("powerpc/Kconfig: Enable STRICT_KERNEL_RWX for some configs")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/tegra210-adma.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -793,7 +793,7 @@ static int tegra_adma_probe(struct platf
- 	ret = dma_async_device_register(&tdma->dma_dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "ADMA registration failed: %d\n", ret);
--		goto irq_dispose;
-+		goto rpm_put;
- 	}
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node,
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 277e4ffb928b..6b73ef2bba2e 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -141,12 +141,14 @@ config PPC
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
+ 	select ARCH_HAS_SG_CHAIN
++	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
+ 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+ 	select ARCH_HAS_ZONE_DEVICE		if PPC_BOOK3S_64
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
++	select ARCH_OPTIONAL_KERNEL_RWX		if ARCH_HAS_STRICT_KERNEL_RWX
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_DEFERRED_STRUCT_PAGE_INIT
+ 	select ARCH_USE_BUILTIN_BSWAP
+@@ -178,8 +180,6 @@ config PPC
+ 	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
+ 	select HAVE_ARCH_SECCOMP_FILTER
+ 	select HAVE_ARCH_TRACEHOOK
+-	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
+-	select ARCH_OPTIONAL_KERNEL_RWX		if ARCH_HAS_STRICT_KERNEL_RWX
+ 	select HAVE_CBPF_JIT			if !PPC64
+ 	select HAVE_CONTEXT_TRACKING		if PPC64
+ 	select HAVE_DEBUG_KMEMLEAK
+-- 
+2.25.1
+
 
 
