@@ -2,99 +2,88 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF77C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD27AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D03920888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520676;
-	bh=UB225bkBOAb7NVsN5iNweXrXSv5RIdCjD+JX39Q3gRE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dXbUXWT9BXgfpS73MoCOX3OI1UfWHkxlL7EFJt+BmnC5txBq8TMh1GWlEtiVXcWRU
-	 LsfLnY/UR2zf3kn6DIZxtiDD815opx+Evksx/8jlJuaIMV49RTY8AL/cL1uUtscjbp
-	 +jtBio2V7mB6dOWisLy7Ca2MWcshOX2R1rOSUIcw=
+	by mail.kernel.org (Postfix) with ESMTP id A2D0820888
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:17:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hfe62d57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392350AbgEZTR4 (ORCPT
+        id S2392013AbgEZTN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:17:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392141AbgEZTOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:14:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7D83208B6;
-        Tue, 26 May 2020 19:14:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520447;
-        bh=UB225bkBOAb7NVsN5iNweXrXSv5RIdCjD+JX39Q3gRE=;
+        Tue, 26 May 2020 15:13:58 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:46306 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404321AbgEZTNt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:13:49 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 96E9D30D79D;
+        Tue, 26 May 2020 12:13:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 96E9D30D79D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590520427;
+        bh=TD+pvEeaAmIZ4gEFvHmv/B24eOz6zs85BaHEGnwgiAs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJ3tFuJYBoHexEuYnmkMtbQe4yu6FobuERHmrqYJYlsS77VX1swtCmVbqIa/Btj70
-         Lyy+SyqFwbSYMTAPa4b7nOv8DMprSDzSeyoZorPCXnzSnMk67EjxNLyfMKirZwRgCl
-         HekKb2b8AbRCKa9hez1kCZJ/sBrIza6F4P/nFYbg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.6 084/126] drm/i915: Propagate error from completed fences
-Date:   Tue, 26 May 2020 20:53:41 +0200
-Message-Id: <20200526183945.105425987@linuxfoundation.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=hfe62d57qbpTb415H8SRSPuUrUqZluoAya3dfh+fSyJ9MbVu1AW5egz29Yp3LLa+M
+         iEflTmOjHNRly4fFxUAznA7LsnQUKYPmnwIdfFojAjXwFw6Vd0B6Ss+ffLdxznWJ4F
+         p2bsM+eNnOpY3gXvhELGIBH+6tuAwByMYRoY4w7k=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id F092C140069;
+        Tue, 26 May 2020 12:13:45 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 14/14] PCI: brcmstb: Add bcm7211, bcm7216, bcm7445, bcm7278 to match list
+Date:   Tue, 26 May 2020 15:12:53 -0400
+Message-Id: <20200526191303.1492-15-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200526191303.1492-1-james.quinlan@broadcom.com>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+Now that the support is in place with previous commits, we add several
+chips that use the BrcmSTB driver.
 
-commit bc850943486887e3859597a266767f95db90aa72 upstream.
-
-We need to preserve fatal errors from fences that are being terminated
-as we hook them up.
-
-Fixes: ef4688497512 ("drm/i915: Propagate fence errors")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: Matthew Auld <matthew.auld@intel.com>
-Reviewed-by: Matthew Auld <matthew.auld@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200506162136.3325-1-chris@chris-wilson.co.uk
-(cherry picked from commit 24fe5f2ab2478053d50a3bc629ada895903a5cbc)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 ---
- drivers/gpu/drm/i915/i915_request.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pci/controller/pcie-brcmstb.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/i915/i915_request.c
-+++ b/drivers/gpu/drm/i915/i915_request.c
-@@ -947,8 +947,10 @@ i915_request_await_request(struct i915_r
- 	GEM_BUG_ON(to == from);
- 	GEM_BUG_ON(to->timeline == from->timeline);
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index 131cf0a51398..22dbecb5403c 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -1189,6 +1189,10 @@ static int brcm_pcie_remove(struct platform_device *pdev)
  
--	if (i915_request_completed(from))
-+	if (i915_request_completed(from)) {
-+		i915_sw_fence_set_error_once(&to->submit, from->fence.error);
- 		return 0;
-+	}
+ static const struct of_device_id brcm_pcie_match[] = {
+ 	{ .compatible = "brcm,bcm2711-pcie", .data = &bcm2711_cfg },
++	{ .compatible = "brcm,bcm7211-pcie", .data = &generic_cfg },
++	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
++	{ .compatible = "brcm,bcm7216-pcie", .data = &bcm7278_cfg },
++	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
+ 	{},
+ };
  
- 	if (to->engine->schedule) {
- 		ret = i915_sched_node_add_dependency(&to->sched,
-
+-- 
+2.17.1
 
