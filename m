@@ -2,172 +2,298 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C024C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31F4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBB620776
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:19:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="b1Kd3yy/"
+	by mail.kernel.org (Postfix) with ESMTP id 7C46E208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 08:19:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590481176;
+	bh=JyeR7ylxyLdHePDvWhmlDR+MY7YiH26+tyuIzL57JAQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sVVxCeW9at7pCucwacZGz+8nfAW/FN0OAig8RO3l8TfY7oj7gAy4iCZ5rdqW5hMUH
+	 asrHtzEHKmGrK8M59Xp0bh1k0C4rImg+NBlZ2eDOXa0t7eynLBdEBNngYg034Du4Ya
+	 tdGEhw1NQ31oIYIf5QTGehaffmGCrsXxGqtivI/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgEZITQ (ORCPT
+        id S1731381AbgEZITf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 04:19:16 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:7535 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbgEZITP (ORCPT
+        Tue, 26 May 2020 04:19:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41917 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbgEZITf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 04:19:15 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5eccd0f70000>; Tue, 26 May 2020 01:19:03 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 26 May 2020 01:19:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 26 May 2020 01:19:15 -0700
-Received: from [10.2.58.199] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 26 May
- 2020 08:19:15 +0000
-Subject: Re: [PATCH] mm/gup: correct pin_user_pages.rst location
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, <linux-mm@kvack.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jan Kara <jack@suse.cz>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>
-References: <20200526081338.179532-1-vkuznets@redhat.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <16496017-14a9-146a-c257-35f9d3c2d3cb@nvidia.com>
-Date:   Tue, 26 May 2020 01:19:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 26 May 2020 04:19:35 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 63so15606273oto.8;
+        Tue, 26 May 2020 01:19:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KsvQXeXpFRPNar5wQqzlPMtmhRYyKZVsuupY3jGdM1E=;
+        b=QLUi9LjCShLQP3J/tKOvkuSW7pRQPUpfxZ1oczHkI7rmgU7aE6aLqBHkZexQTn5dkr
+         2jDS8OP/gihyO6pWLKoGjajwXplGAKLV7Z/YAe2i0W3yGRvK9V/3uRqccpQUrRj8Srm0
+         KKCW7woSzoP0HpnQZC/9agcVgt6OrU2x0Zw0zttcxFtE516jv1TufIqtHgkn8f2Pk9h9
+         2w1Hlf4sceXnDm8YYCdj/iELJLCnleiigfx3hkfuuUIla+uk4kZtSfZw/RGl3eCmT94a
+         vYeuuX39+Ces5UGRsW04RX0D8O4HRf7lUul97fvfJL1NDQQNVTDAeE6GOgpOEN7ZVf7f
+         OZcQ==
+X-Gm-Message-State: AOAM532umeZCwfVWi0vDKge4MkFHDFXqSHc8oAzfxzQcXDvPaz5tpDig
+        WmOKGsTNzO8HTfHnCeGvdktMoqfy1NlYNBN+GNo=
+X-Google-Smtp-Source: ABdhPJz91c3R5cD6QHE0e4JfDdOdZaa6g2vXS3BZTtKAxHVTomXeIVwcab2P4mjhewzXMeomqVg/ZWaEHBF+6ozcEcM=
+X-Received: by 2002:a9d:4713:: with SMTP id a19mr36157otf.167.1590481173929;
+ Tue, 26 May 2020 01:19:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526081338.179532-1-vkuznets@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590481143; bh=3sW4iiM0PCSt6YtpVfVEsIZMROlKg64amfSxZGfb1nc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=b1Kd3yy/vj+SjyNr/0DSJfxC4gckhSQ34lOoQ6Jhk0Kqx2T+w0xWk+EI5w91r2N0+
-         HQbzookzuMoLt8x+qdrZCPMIsQllOPfCpXrAU+RZmrxI2EJmKgytnh/egZF6zyoLNo
-         vF2bPMNkbUcKa6yjF/NyjTjJf7W/Ucx/GD05R0YSh8qkyNX/vRhe9jnf2VjkWQokoC
-         0kIdHJKnsdpGhp9/3SIhH3/Ezv6yb4WONFedE2wmVXUarwQP1dbw39VpnMGkI3OBiF
-         Zl6QkMnTskc6iUcrIiG6hhy1nJR56tkON1BG+LOh7eWr8CHTGop+g0UxEhdZDDgUwm
-         RD99ZnCqQOypA==
+References: <3169564.ZRsPWhXyMD@kreacher> <87mu5wre1v.fsf@intel.com>
+ <CAJZ5v0hBiKdDQJjdcuV72+3jCOZPNekmGxdtod-f9Sgwc_7D+g@mail.gmail.com> <87a71vraus.fsf@intel.com>
+In-Reply-To: <87a71vraus.fsf@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 26 May 2020 10:19:21 +0200
+Message-ID: <CAJZ5v0j4EYLej+Xb=huAGTDEH_0mgRShBkjBeib38exmss60Sg@mail.gmail.com>
+Subject: Re: [RFC/RFT][PATCH] cpufreq: intel_pstate: Work in passive mode with
+ HWP enabled
+To:     Francisco Jerez <francisco.jerez.plata@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-26 01:13, Vitaly Kuznetsov wrote:
-> pin_user_pages.rst lives in Documentation/core-api/, not Documentation/vm/,
-> adjust all links accordingly.
-> 
-> Fixes: 3faa52c03f44 ("mm/gup: track FOLL_PIN pages")
-> Fixes: eddb1c228f79 ("mm/gup: introduce pin_user_pages*() and FOLL_PIN")
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->   include/linux/mm.h |  4 ++--
->   mm/gup.c           | 18 +++++++++---------
->   2 files changed, 11 insertions(+), 11 deletions(-)
+ to On Mon, May 25, 2020 at 10:57 PM Francisco Jerez
+<francisco.jerez.plata@intel.com> wrote:
+>
+> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>
+> > On Mon, May 25, 2020 at 3:39 AM Francisco Jerez
+> > <francisco.jerez.plata@intel.com> wrote:
+> >>
+> >> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> >>
+> >> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> >
+> >> > Allow intel_pstate to work in the passive mode with HWP enabled and
+> >> > make it translate the target frequency supplied by the cpufreq
+> >> > governor in use into an EPP value to be written to the HWP request
+> >> > MSR (high frequencies are mapped to low EPP values that mean more
+> >> > performance-oriented HWP operation) as a hint for the HWP algorithm
+> >> > in the processor, so as to prevent it and the CPU scheduler from
+> >> > working against each other at least when the schedutil governor is
+> >> > in use.
+> >> >
+> >> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >> > ---
+> >> >
+> >> > This is a prototype not intended for production use (based on linux-next).
+> >> >
+> >> > Please test it if you can (on HWP systems, of course) and let me know the
+> >> > results.
+> >> >
+> >> > The INTEL_CPUFREQ_TRANSITION_DELAY_HWP value has been guessed and it very well
+> >> > may turn out to be either too high or too low for the general use, which is one
+> >> > reason why getting as much testing coverage as possible is key here.
+> >> >
+> >> > If you can play with different INTEL_CPUFREQ_TRANSITION_DELAY_HWP values,
+> >> > please do so and let me know the conclusions.
+> >> >
+> >> > Cheers,
+> >> > Rafael
+> >> >
+> >> > ---
+> >> >  drivers/cpufreq/intel_pstate.c |  169 +++++++++++++++++++++++++++++++----------
+> >> >  1 file changed, 131 insertions(+), 38 deletions(-)
+> >> >
+> >> > Index: linux-pm/drivers/cpufreq/intel_pstate.c
+> >> > ===================================================================
+> >> > --- linux-pm.orig/drivers/cpufreq/intel_pstate.c
+> >> > +++ linux-pm/drivers/cpufreq/intel_pstate.c
+> >> > @@ -36,6 +36,7 @@
+> >> >  #define INTEL_PSTATE_SAMPLING_INTERVAL       (10 * NSEC_PER_MSEC)
+> >> >
+> >> >  #define INTEL_CPUFREQ_TRANSITION_LATENCY     20000
+> >> > +#define INTEL_CPUFREQ_TRANSITION_DELAY_HWP   5000
+> >> >  #define INTEL_CPUFREQ_TRANSITION_DELAY               500
+> >> >
+> >> >  #ifdef CONFIG_ACPI
+> >> > @@ -95,6 +96,8 @@ static inline int32_t percent_ext_fp(int
+> >> >       return div_ext_fp(percent, 100);
+> >> >  }
+> >> >
+> >> > +#define HWP_EPP_TO_BYTE(x)   (((u64)x >> 24) & 0xFF)
+> >> > +
+> >> >  /**
+> >> >   * struct sample -   Store performance sample
+> >> >   * @core_avg_perf:   Ratio of APERF/MPERF which is the actual average
+> >> > @@ -2175,7 +2178,10 @@ static int intel_pstate_verify_policy(st
+> >> >
+> >> >  static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
+> >> >  {
+> >> > -     intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+> >> > +     if (hwp_active)
+> >> > +             intel_pstate_hwp_force_min_perf(policy->cpu);
+> >> > +     else
+> >> > +             intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+> >> >  }
+> >> >
+> >> >  static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+> >> > @@ -2183,12 +2189,10 @@ static void intel_pstate_stop_cpu(struct
+> >> >       pr_debug("CPU %d exiting\n", policy->cpu);
+> >> >
+> >> >       intel_pstate_clear_update_util_hook(policy->cpu);
+> >> > -     if (hwp_active) {
+> >> > +     if (hwp_active)
+> >> >               intel_pstate_hwp_save_state(policy);
+> >> > -             intel_pstate_hwp_force_min_perf(policy->cpu);
+> >> > -     } else {
+> >> > -             intel_cpufreq_stop_cpu(policy);
+> >> > -     }
+> >> > +
+> >> > +     intel_cpufreq_stop_cpu(policy);
+> >> >  }
+> >> >
+> >> >  static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
+> >> > @@ -2296,7 +2300,8 @@ static int intel_cpufreq_verify_policy(s
+> >> >  #define      INTEL_PSTATE_TRACE_TARGET 10
+> >> >  #define      INTEL_PSTATE_TRACE_FAST_SWITCH 90
+> >> >
+> >> > -static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type, int old_pstate)
+> >> > +static void intel_cpufreq_trace(struct cpudata *cpu, unsigned int trace_type,
+> >> > +                             int from, int to)
+> >> >  {
+> >> >       struct sample *sample;
+> >> >
+> >> > @@ -2309,8 +2314,8 @@ static void intel_cpufreq_trace(struct c
+> >> >       sample = &cpu->sample;
+> >> >       trace_pstate_sample(trace_type,
+> >> >               0,
+> >> > -             old_pstate,
+> >> > -             cpu->pstate.current_pstate,
+> >> > +             from,
+> >> > +             to,
+> >> >               sample->mperf,
+> >> >               sample->aperf,
+> >> >               sample->tsc,
+> >> > @@ -2318,40 +2323,110 @@ static void intel_cpufreq_trace(struct c
+> >> >               fp_toint(cpu->iowait_boost * 100));
+> >> >  }
+> >> >
+> >> > -static int intel_cpufreq_target(struct cpufreq_policy *policy,
+> >> > -                             unsigned int target_freq,
+> >> > -                             unsigned int relation)
+> >> > +static void intel_cpufreq_update_hwp_request(struct cpudata *cpu, u8 new_epp)
+> >> >  {
+> >> > -     struct cpudata *cpu = all_cpu_data[policy->cpu];
+> >> > -     struct cpufreq_freqs freqs;
+> >> > -     int target_pstate, old_pstate;
+> >> > +     u64 value, prev;
+> >> >
+> >> > -     update_turbo_state();
+> >> > +     prev = READ_ONCE(cpu->hwp_req_cached);
+> >> > +     value = prev;
+> >> >
+> >> > -     freqs.old = policy->cur;
+> >> > -     freqs.new = target_freq;
+> >> > +     /*
+> >> > +      * The entire MSR needs to be updated in order to update the EPP field
+> >> > +      * in it, so opportunistically update the min and max too if needed.
+> >> > +      */
+> >> > +     value &= ~HWP_MIN_PERF(~0L);
+> >> > +     value |= HWP_MIN_PERF(cpu->min_perf_ratio);
+> >> > +
+> >> > +     value &= ~HWP_MAX_PERF(~0L);
+> >> > +     value |= HWP_MAX_PERF(cpu->max_perf_ratio);
+> >> > +
+> >> > +     if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+> >> > +             intel_cpufreq_trace(cpu, INTEL_PSTATE_TRACE_TARGET,
+> >> > +                                 HWP_EPP_TO_BYTE(prev), new_epp);
+> >> > +
+> >> > +             value &= ~GENMASK_ULL(31, 24);
+> >> > +             value |= HWP_ENERGY_PERF_PREFERENCE(new_epp);
+> >> > +     }
+> >> > +
+> >> > +     if (value != prev) {
+> >> > +             WRITE_ONCE(cpu->hwp_req_cached, value);
+> >> > +             wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
+> >> > +     }
+> >> > +}
+> >> > +
+> >> > +/**
+> >> > + * intel_cpufreq_adjust_hwp_request - Adjust the HWP reuqest register.
+> >> > + * @cpu: Target CPU.
+> >> > + * @max_freq: Maximum frequency to consider.
+> >> > + * @target_freq: Target frequency selected by the governor.
+> >> > + *
+> >> > + * Translate the target frequency into a new EPP value to be written into the
+> >> > + * HWP request MSR of @cpu as a hint for the HW-driven P-state selection.
+> >> > + *
+> >> > + * The purpose of this is to avoid situations in which the kernel and the HWP
+> >> > + * algorithm work against each other by giving a hint about the expectations of
+> >> > + * the former to the latter.
+> >> > + *
+> >> > + * The mapping betweeen the target frequencies and the hint values need not be
+> >> > + * exact, but it must be monotonic, so that higher target frequencies always
+> >> > + * indicate more performance-oriented P-state selection.
+> >> > + */
+> >> > +static void intel_cpufreq_adjust_hwp_request(struct cpudata *cpu, s64 max_freq,
+> >> > +                                          unsigned int target_freq)
+> >> > +{
+> >> > +     s64 epp_fp = div_fp(255 * (max_freq - target_freq), max_freq);
+> >> > +
+> >> > +     intel_cpufreq_update_hwp_request(cpu, fp_toint(epp_fp));
+> >> > +}
+> >> > +
+> >>
+> >> Hey Rafael, I'm building a kernel with this in order to give it a try on
+> >> my system, but I'm skeptical that translating the target frequency to an
+> >> EPP value will work reliably.  AFAIA the EPP value only has an indirect
+> >> influence on the processor's performance by adjusting the trade-off
+> >> between its responsiveness (rather than the actual clock frequency which
+> >> it will sustain in the long run) and its energy usage, in a largely
+> >> unspecified and non-linear way (non-linear like the effect of switching
+> >> CPU energy optimization features on and off, or like its effect on the
+> >> energy balancing behavior of the processor which can have a paradoxical
+> >> effect on performance).
+> >>
+> >> I doubt that the scheduling-based CPU utilization is a good predictor
+> >> for the optimal trade-off between those two variables.
+> >
+> > While I agree that this is not perfect, there barely is anything else
+> > that can be used for this purpose.
+> >
+> > Using the desired field or trying to adjust the limits relatively
+> > often would basically cause the P-state selection to be driven
+> > entirely by the kernel which simply doesn't know certain things only
+> > known to the P-unit, so it is reasonable to leave some level of
+> > control to the latter, so as to allow it to use the information known
+> > to it only.
+> >
+> > However, if it is allowed to do whatever it likes without any hints
+> > from the kernel, it may very well go against the scheduler's decisions
+> > which is not going to be optimal.
+> >
+> > I'm simply not sure if there is any other way to give such hints to it
+> > that through the EPP.
+> >
+>
+> Why not HWP_MIN_PERF?  That would leave the HWP quite some room for
+> maneuvering (the whole HWP_MIN_PERF-HWP_MAX_PERF P-state range, it's not
+> like P-state selection would be entirely driven by the kernel), while
+> avoiding every failure scenario I was describing in my previous reply.
 
-Hi Vitaly,
+Actually, I have been thinking about the HWP min as an alternative
+that may be worth evaluating.
 
-Thanks for the fix,
+However, I would rather set the HWP min to something like 80% if the
+cpufreq request.
 
-     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-(+CC Souptick, who fixed a similar set of links, maybe in a different
-file, as I recall.)
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 5a323422d783..1f2850465f59 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -1219,7 +1219,7 @@ void unpin_user_pages(struct page **pages, unsigned long npages);
->    * used to track the pincount (instead using of the GUP_PIN_COUNTING_BIAS
->    * scheme).
->    *
-> - * For more information, please see Documentation/vm/pin_user_pages.rst.
-> + * For more information, please see Documentation/core-api/pin_user_pages.rst.
->    *
->    * @page:	pointer to page to be queried.
->    * @Return:	True, if it is likely that the page has been "dma-pinned".
-> @@ -2834,7 +2834,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
->    * releasing pages: get_user_pages*() pages must be released via put_page(),
->    * while pin_user_pages*() pages must be released via unpin_user_page().
->    *
-> - * Please see Documentation/vm/pin_user_pages.rst for more information.
-> + * Please see Documentation/core-api/pin_user_pages.rst for more information.
->    */
->   
->   static inline int vm_fault_to_errno(vm_fault_t vm_fault, int foll_flags)
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 87a6a59fe667..87a3a4b400f9 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2845,10 +2845,10 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast);
->    * the arguments here are identical.
->    *
->    * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-> - * see Documentation/vm/pin_user_pages.rst for further details.
-> + * see Documentation/core-api/pin_user_pages.rst for further details.
->    *
-> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
-> - * is NOT intended for Case 2 (RDMA: long-term pins).
-> + * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
-> + * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
->    */
->   int pin_user_pages_fast(unsigned long start, int nr_pages,
->   			unsigned int gup_flags, struct page **pages)
-> @@ -2885,10 +2885,10 @@ EXPORT_SYMBOL_GPL(pin_user_pages_fast);
->    * the arguments here are identical.
->    *
->    * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-> - * see Documentation/vm/pin_user_pages.rst for details.
-> + * see Documentation/core-api/pin_user_pages.rst for details.
->    *
-> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
-> - * is NOT intended for Case 2 (RDMA: long-term pins).
-> + * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
-> + * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
->    */
->   long pin_user_pages_remote(struct task_struct *tsk, struct mm_struct *mm,
->   			   unsigned long start, unsigned long nr_pages,
-> @@ -2921,10 +2921,10 @@ EXPORT_SYMBOL(pin_user_pages_remote);
->    * FOLL_PIN is set.
->    *
->    * FOLL_PIN means that the pages must be released via unpin_user_page(). Please
-> - * see Documentation/vm/pin_user_pages.rst for details.
-> + * see Documentation/core-api/pin_user_pages.rst for details.
->    *
-> - * This is intended for Case 1 (DIO) in Documentation/vm/pin_user_pages.rst. It
-> - * is NOT intended for Case 2 (RDMA: long-term pins).
-> + * This is intended for Case 1 in Documentation/core-api/pin_user_pages.rst
-> + * (DIO). It is NOT intended for Case 2 (RDMA: long-term pins).
->    */
->   long pin_user_pages(unsigned long start, unsigned long nr_pages,
->   		    unsigned int gup_flags, struct page **pages,
-> 
-
+Let me cut an alternative patch.
