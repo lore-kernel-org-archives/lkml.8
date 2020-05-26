@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAAB9208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACFE8208B8
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520020;
-	bh=VqLCUw1tF9OI3LKI55H06kmqwDcftiQXKBWpE2hQ+e0=;
+	s=default; t=1590520026;
+	bh=1cQobtFSLgGvO79Pe8W90LfNb9Zpz2C60JGfDnCAzVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zaKx+ltlkjhLkfLcsXBITQqBc/ysk52TxaWq4HcvxwWPgDW2kNOTVIDVHjLaMbsAq
-	 hGhhiwvHCT/PKEskwz0eSeuiVCMlvL8Vi37Hjq8+e4T2HomMWZodQWR6wEoVwrWOOx
-	 blUXUiAVyjVOZU9C2OB8i7s7D8v1PeZ/jBDFB0gI=
+	b=MPkVduuea5Z6NHE3qJeAsuRPaFlAGdx+a44vWT9ElLgQlq4PY6WIRxiJJhiQ2UZAf
+	 vaanOuHzKEB8Mw7wGqJ3w/l6yLTL/vVzz/I4Sgq5NA44hl1JAyz7iHVRuCTD6hoy5+
+	 utkRTpkT3UpIol29UFBAYIlGeacUCTcNBgxzEfIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390733AbgEZTHA (ORCPT
+        id S2403894AbgEZTHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35240 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391666AbgEZTGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:06:49 -0400
+        id S2391083AbgEZTG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:06:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABA40208A7;
-        Tue, 26 May 2020 19:06:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0301A208A7;
+        Tue, 26 May 2020 19:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520009;
-        bh=VqLCUw1tF9OI3LKI55H06kmqwDcftiQXKBWpE2hQ+e0=;
+        s=default; t=1590520016;
+        bh=1cQobtFSLgGvO79Pe8W90LfNb9Zpz2C60JGfDnCAzVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5VhhB/zxunFUyYSlTs7J7tHnxhbtK1KUrjr7c4AGPE2WldbAWcckTZrvhUawiADa
-         o9qOpyhggOg/U3D2fm/N5dVurpiiNfwc9UhTWvBJh4ct3L0E9vhkl2CXKUkWoIlaZk
-         1SSAB1mKYxuvhVh6yJkiLyhA9/a+0CxzAp1l+qAE=
+        b=sTfuoCsIuxKwohbRxLIrCZgwBTey8JNleBtAraHolUrdLzfhMXBbCfn3SKNUy8J5d
+         YlnLb84b40WzvGhM0ddKTzOTZhOcSAQMIz8dObpm7cHTqOiG5ykJyArJw7xyfDTjJq
+         BGzuVxOHhejL+wRpwTAknl4g+h9KG0BwXK0+bCZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artem Borisov <dedsa2002@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 022/111] HID: alps: Add AUI1657 device ID
-Date:   Tue, 26 May 2020 20:52:40 +0200
-Message-Id: <20200526183934.808194624@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 025/111] scsi: qla2xxx: Delete all sessions before unregister local nvme port
+Date:   Tue, 26 May 2020 20:52:43 +0200
+Message-Id: <20200526183935.120998955@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -59,46 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Artem Borisov <dedsa2002@gmail.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 640e403b1fd24e7f31ac6f29f0b6a21d285ed729 ]
+[ Upstream commit c48f849d3f7a4ec1025105f446e29d395c4dcc2f ]
 
-This device is used on Lenovo V130-15IKB variants and uses
-the same registers as U1.
+Delete all sessions before unregistering local nvme port.  This allows nvme
+layer to decrement all active rport count down to zero.  Once the count is
+down to zero, nvme would call qla to continue with the npiv port deletion.
 
-Signed-off-by: Artem Borisov <dedsa2002@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+PID: 27448  TASK: ffff9e34b777c1c0  CPU: 0   COMMAND: "qaucli"
+ 0 [ffff9e25e84abbd8] __schedule at ffffffff977858ca
+ 1 [ffff9e25e84abc68] schedule at ffffffff97785d79
+ 2 [ffff9e25e84abc78] schedule_timeout at ffffffff97783881
+ 3 [ffff9e25e84abd28] wait_for_completion at ffffffff9778612d
+ 4 [ffff9e25e84abd88] qla_nvme_delete at ffffffffc0e3024e [qla2xxx]
+ 5 [ffff9e25e84abda8] qla24xx_vport_delete at ffffffffc0e024b9 [qla2xxx]
+ 6 [ffff9e25e84abdf0] fc_vport_terminate at ffffffffc011c247 [scsi_transport_fc]
+ 7 [ffff9e25e84abe28] store_fc_host_vport_delete at ffffffffc011cd94 [scsi_transport_fc]
+ 8 [ffff9e25e84abe70] dev_attr_store at ffffffff974b376b
+ 9 [ffff9e25e84abe80] sysfs_kf_write at ffffffff972d9a92
+10 [ffff9e25e84abe90] kernfs_fop_write at ffffffff972d907b
+11 [ffff9e25e84abec8] vfs_write at ffffffff9724c790
+12 [ffff9e25e84abf08] sys_write at ffffffff9724d55f
+13 [ffff9e25e84abf50] system_call_fastpath at ffffffff97792ed2
+    RIP: 00007fc0bd81a6fd  RSP: 00007ffff78d9648  RFLAGS: 00010202
+    RAX: 0000000000000001  RBX: 0000000000000022  RCX: 00007ffff78d96e0
+    RDX: 0000000000000022  RSI: 00007ffff78d94e0  RDI: 0000000000000008
+    RBP: 00007ffff78d9440   R8: 0000000000000000   R9: 00007fc0bd48b2cd
+    R10: 0000000000000017  R11: 0000000000000293  R12: 0000000000000000
+    R13: 00005624e4dac840  R14: 00005624e4da9a10  R15: 0000000000000000
+    ORIG_RAX: 0000000000000001  CS: 0033  SS: 002b
+
+Link: https://lore.kernel.org/r/20200331104015.24868-4-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-alps.c | 1 +
- drivers/hid/hid-ids.h  | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_attr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-index fa704153cb00..c2a2bd528890 100644
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -802,6 +802,7 @@ static int alps_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 		break;
- 	case HID_DEVICE_ID_ALPS_U1_DUAL:
- 	case HID_DEVICE_ID_ALPS_U1:
-+	case HID_DEVICE_ID_ALPS_1657:
- 		data->dev_type = U1;
- 		break;
- 	default:
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index ecb5ff8202ef..cc2b6f497f53 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -81,7 +81,7 @@
- #define HID_DEVICE_ID_ALPS_U1		0x1215
- #define HID_DEVICE_ID_ALPS_T4_BTNLESS	0x120C
- #define HID_DEVICE_ID_ALPS_1222		0x1222
--
-+#define HID_DEVICE_ID_ALPS_1657         0x121E
+diff --git a/drivers/scsi/qla2xxx/qla_attr.c b/drivers/scsi/qla2xxx/qla_attr.c
+index 1fbc5c6c6c14..3aa343633250 100644
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -2926,11 +2926,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
+ 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
+ 		msleep(1000);
  
- #define USB_VENDOR_ID_AMI		0x046b
- #define USB_DEVICE_ID_AMI_VIRT_KEYBOARD_AND_MOUSE	0xff10
+-	qla_nvme_delete(vha);
+ 
+ 	qla24xx_disable_vp(vha);
+ 	qla2x00_wait_for_sess_deletion(vha);
+ 
++	qla_nvme_delete(vha);
+ 	vha->flags.delete_progress = 1;
+ 
+ 	qlt_remove_target(ha, vha);
 -- 
 2.25.1
 
