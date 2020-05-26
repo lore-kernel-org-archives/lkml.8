@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66872C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334C820849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F4E2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 18:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590519590;
-	bh=Ew1ABeXUibXAgZ0JYe/xr33/Ay1UbJV9hJJkdKr01xM=;
+	s=default; t=1590519595;
+	bh=vGmwZHpig1AFU6Fxkz5cwv3Zkugjp1Au9Ze6oLu3msg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPzteorvlLJc4DsU9PRfodKQKE7CJqRl+EuSiUseOu547zZYe1GETUoAWtfanInx2
-	 eLw5NBOjtpxIyd3RDnyviJ7/Q+XUaxljjinE3F9/qLeyku82WYsW+iJ7GrZNaagpnC
-	 EF/Cffp1xFIPGGXjuhLPnL4iac65lgyLKya/ys+A=
+	b=d3QQ2E2IcBv9PAK79fOCSleV6s7wPNeigRL1BIxfV5LNnDPsKTSH2dAG3lkkltHIl
+	 cW8mly9dC2w20AefisCiaJUGjpGvXTpj7m2vkxiCgDLsW1Hq5X/BEuFjZ+gWttDJNL
+	 LIBkqc/J0FaK5T6+w3v+qx9gTUZ8fiM7mbRvpjAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390593AbgEZS7t (ORCPT
+        id S2390613AbgEZS7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 14:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53650 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390571AbgEZS7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 14:59:44 -0400
+        id S2390583AbgEZS7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FC2A208E4;
-        Tue, 26 May 2020 18:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CD7C2084C;
+        Tue, 26 May 2020 18:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519583;
-        bh=Ew1ABeXUibXAgZ0JYe/xr33/Ay1UbJV9hJJkdKr01xM=;
+        s=default; t=1590519586;
+        bh=vGmwZHpig1AFU6Fxkz5cwv3Zkugjp1Au9Ze6oLu3msg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=caHS5pk9j77/HAzySdLIzG39ugi1kX3B34PTsldqWOrNpiXq2rQPWnLKgKYLkSSPK
-         xja7mfVIvfuPBxwLeQeGX+27KhgLjJbCWDscWAyCw37QFkewuiw4O5003lCD4n0Ed5
-         WAydLLmrLGSz3Qh+6SfhyKuWn2jqqPjX7CehEL20=
+        b=rdowEOeQt4K3e91SczR4JznLL3QAEeLZJANM3NxMqT1QOFs+4WMnucESsPtOEugRv
+         yRuaEgfTgVEowKw9SznOaIWDvoa9/56YJYowXsQh8EhdNeSKJnaN1IVNKixKeZK5Pw
+         zvGhqju2GfPB28VKP+B5kBjl/aXKg3lyGr/261kA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oscar Carter <oscar.carter@gmx.com>
-Subject: [PATCH 4.9 60/64] staging: greybus: Fix uninitialized scalar variable
-Date:   Tue, 26 May 2020 20:53:29 +0200
-Message-Id: <20200526183931.428602643@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 61/64] iio: dac: vf610: Fix an error handling path in vf610_dac_probe()
+Date:   Tue, 26 May 2020 20:53:30 +0200
+Message-Id: <20200526183931.516954919@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -58,42 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oscar Carter <oscar.carter@gmx.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit 34625c1931f8204c234c532b446b9f53c69f4b68 upstream.
+commit aad4742fbf0a560c25827adb58695a4497ffc204 upstream.
 
-In the "gb_tty_set_termios" function the "newline" variable is declared
-but not initialized. So the "flow_control" member is not initialized and
-the OR / AND operations with itself results in an undefined value in
-this member.
+A call to 'vf610_dac_exit()' is missing in an error handling path.
 
-The purpose of the code is to set the flow control type, so remove the
-OR / AND self operator and set the value directly.
-
-Addresses-Coverity-ID: 1374016 ("Uninitialized scalar variable")
-Fixes: e55c25206d5c9 ("greybus: uart: Handle CRTSCTS flag in termios")
-Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200510101426.23631-1-oscar.carter@gmx.com
+Fixes: 1b983bf42fad ("iio: dac: vf610_dac: Add IIO DAC driver for Vybrid SoC")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/uart.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/dac/vf610_dac.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/staging/greybus/uart.c
-+++ b/drivers/staging/greybus/uart.c
-@@ -539,9 +539,9 @@ static void gb_tty_set_termios(struct tt
- 	}
+--- a/drivers/iio/dac/vf610_dac.c
++++ b/drivers/iio/dac/vf610_dac.c
+@@ -235,6 +235,7 @@ static int vf610_dac_probe(struct platfo
+ 	return 0;
  
- 	if (C_CRTSCTS(tty) && C_BAUD(tty) != B0)
--		newline.flow_control |= GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = GB_SERIAL_AUTO_RTSCTS_EN;
- 	else
--		newline.flow_control &= ~GB_SERIAL_AUTO_RTSCTS_EN;
-+		newline.flow_control = 0;
+ error_iio_device_register:
++	vf610_dac_exit(info);
+ 	clk_disable_unprepare(info->clk);
  
- 	if (memcmp(&gb_tty->line_coding, &newline, sizeof(newline))) {
- 		memcpy(&gb_tty->line_coding, &newline, sizeof(newline));
+ 	return ret;
 
 
