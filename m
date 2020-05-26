@@ -2,114 +2,135 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9ACB20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:32:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590528751;
-	bh=hzpAMm6GNwKwC8RuiexegDiwWWnK2huIXZ53CLBXjxw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SdYD0Cd3rTr8bYSpJ+XM9+/XoBlyRCoMho5XEqu1Yf3sW+/gylHdb2HDYZhksr0kl
-	 aEZxiEPrY0bFoFymYLfMX5SRSJK3VVrXfafcoTqvWqnquyUrZyg04aAA0acDSFVhF0
-	 asbcCApJwkZpxsXo4zyn6SvvxcfTjRi/R/kexdyg=
+	by mail.kernel.org (Postfix) with ESMTP id 6FBCB20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 21:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fj8x4BcI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389579AbgEZVcb (ORCPT
+        id S2389745AbgEZVdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 17:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388740AbgEZVca (ORCPT
+        Tue, 26 May 2020 17:33:15 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52192 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388740AbgEZVdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 17:32:30 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362B5C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:32:30 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id r125so13170098lff.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/KSqN/1uGFSWAMqjcchuGZIR3exJ8WM8bq7gNpjfuAI=;
-        b=fheyBaLlluDLksZ+2j65q0tTKxfK1g+WnuTKf3lXv190aV4fKXfwhttUxZ0VsqTlii
-         ARxk9QHilPvtC+sjmqpulPyab9zAp/voO602TJp0MrEWMqo2HJsGfYVYN0LKJAZq35I7
-         kQ5HQMhKqeWDvBXtAvAYAlYca6C9iIw6goapQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/KSqN/1uGFSWAMqjcchuGZIR3exJ8WM8bq7gNpjfuAI=;
-        b=OpMAQm4ut+IR/djcrT2dQZSDo0hbyUJM6ES3yDPm5ekXvZeh6jkCqX3gkHSRspNEBJ
-         v3QcgpFsIlyv1+zSW7uyKSJHzYOhZwnyKFns0d968Luaebucc+rcZU9FaQHu9XY+V5So
-         rd0aerK24NYfB038vgts5JmvCNR/b7ii7RO385wLqWohaWC9WeDXm9jtpRADNGuAtWd9
-         TtaQ0C4BzuCv7/fkFk6D/7+I/OgUg5erakEHv19xmS5HSkBZW51SPK5ootnXmF0V5kxx
-         JeRKtlHF4Hby11jz732SG1X2GbCqthO4z6Ir9kJ41hyITLrumaH5WjDEhYb8Z2gLqgGL
-         aDTw==
-X-Gm-Message-State: AOAM5335mcXgfDCpnHgFkNl49GjHgmGgUtkHeFeKPydtzs14/a4AQHil
-        vbr++t1nNRDVpZacSoBvu2c/rkIxi/c=
-X-Google-Smtp-Source: ABdhPJx4Cji/xzhcTPpf1Vdpa55DUZd8tQw2t7WayCeyCe4Rtn7HNmt46TNMOEsj44F+1aqNPTpc3g==
-X-Received: by 2002:a19:740e:: with SMTP id v14mr1436795lfe.62.1590528748246;
-        Tue, 26 May 2020 14:32:28 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id c22sm259438lfm.25.2020.05.26.14.32.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 14:32:26 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id h188so13227428lfd.7
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 14:32:26 -0700 (PDT)
-X-Received: by 2002:a19:4048:: with SMTP id n69mr1410519lfa.31.1590528746289;
- Tue, 26 May 2020 14:32:26 -0700 (PDT)
+        Tue, 26 May 2020 17:33:14 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04QLX8rf000603;
+        Tue, 26 May 2020 16:33:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590528788;
+        bh=BlTc2XD4wveY6Y5v42t1Iy3n20uEtWA8G60rMOOS12M=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fj8x4BcIDJiQKBswYbydlLW1JBAuSaRwx4NH0Ka2036RykFLtbC4ZWm4Lzn7aFWk3
+         Lyu1RAR7BnYlLGOpYen7MixGckUHqpEoRANIHWkiQ2puVTYDWsGEKVqr9mVDoTxBg8
+         J2k7iLndDXfXN/DbPqU6kQ6C+vsporWRx16+z1wU=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04QLX8oJ045675
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 May 2020 16:33:08 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 16:33:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 16:33:07 -0500
+Received: from [10.250.74.234] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04QLX7jN024529;
+        Tue, 26 May 2020 16:33:07 -0500
+Subject: Re: [net-next RFC PATCH 00/13] net: hsr: Add PRP driver
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20200506163033.3843-1-m-karicheri2@ti.com>
+ <87r1vdkxes.fsf@intel.com>
+ <CA+h21hqiV71wc0v=-KkPbWNyXSY+-oiz+DsQLAe1XEJw7eP=_Q@mail.gmail.com>
+ <a7d1ebef-7161-9ecc-09ca-83f868ff7dac@ti.com>
+ <CA+h21hp+khuj0jV9+keDuzPDe11Xz1Rs8KKkt=n8MeWVHkcmvQ@mail.gmail.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <2e9e56e4-be15-9745-f984-15f9188cdf80@ti.com>
+Date:   Tue, 26 May 2020 17:33:06 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <871rn6a6e5.fsf@x220.int.ebiederm.org> <CAHk-=wh5cddDjyS2Av57Oc=qaowkx0XrtuJN=sErcq08qpnb7w@mail.gmail.com>
- <87pnaq5tf9.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87pnaq5tf9.fsf@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 26 May 2020 14:32:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whTcs=GjYGs+KHSAL16vkrK1KRuxuWf8WdrR-W2k9wXaQ@mail.gmail.com>
-Message-ID: <CAHk-=whTcs=GjYGs+KHSAL16vkrK1KRuxuWf8WdrR-W2k9wXaQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull exec fix for v5.7
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CA+h21hp+khuj0jV9+keDuzPDe11Xz1Rs8KKkt=n8MeWVHkcmvQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 1:36 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> I don't see us touching cap_ambient anywhere except the line that does:
->
->         /* File caps or setid cancels ambient. */
->         if (has_fcap || is_setid)
->                 cap_clear(new->cap_ambient);
+Hi Vladimir
 
-That's the one I was thinking of.
+On 5/26/20 2:25 PM, Vladimir Oltean wrote:
+> Hi Murali,
+> 
+> On Tue, 26 May 2020 at 17:12, Murali Karicheri <m-karicheri2@ti.com> wrote:
+>>
+>> Hi Vladimir,
+>>
+> 
+>> I haven't looked the spec for 802.1CB. If they re-use HSR/PRP Tag in the
+>> L2 protocol it make sense to enhance the driver. Else I don't see any
+>> re-use possibility. Do you know the above?
+>>
+>> Thanks
+>>
+>> Murali
+> 
+> IEEE 802.1CB redundancy tag sits between Source MAC address and
+> Ethertype or any VLAN tag, is 6 bytes in length, of which:
+> - first 2 bytes are the 0xf1c1 EtherType
+> - next 2 bytes are reserved
+> - last 2 bytes are the sequence number
+> There is also a pre-standard version of the IEEE 802.1CB redundancy
+> tag, which is only 4 bytes in length. I assume vendors of pre-standard
+> equipment will want to have support for this 4-byte tag as well, as
+> well as a mechanism of converting between HSR/PRP/pre-standard 802.1CB
+> tag on one set of ports, and 802.1CB on another set of ports.
+> 
+Thanks for sharing the details. I also took a quick glance at the
+802.1CB spec today. It answered also my above question
+1) In addition to FRER tag, it also includes HSR tag and PRP trailer
+that can be provisioned through management objects.
+2) Now I think I get what Vinicius refers to the interoperability. there
+can be HSR tag received on ingress port and PRP on the egress port of
+a relay function.
 
-I think it would have made more sense to simply initialize it there
-and have all accesses to cap_ambient in one place.
+Essentially tag usage is configurable on a stream basis. Since both
+HSR and PRP functions for frame formatting and decoding would be
+re-usable. In addition driver could be enhanced for FRER functions.
 
-The (even better?) alternative would have been to simply just always
-re-initialize it in the caller.
+Regards,
 
-If this is about interpreter vs scripts, I really find it confusing
-how we make these kinds of re-initializations at the security layer
-that doesn't know about one vs the other.. Yes, in your cleanup
-branch, the "primary" thing becomes more clear, but it very much is
-_not_ clear within the context of this patch.
+Murali
+>>
+>> --
+>> Murali Karicheri
+>> Texas Instruments
+> 
+> Thanks,
+> -Vladimir
+> 
 
-Hmm?
-
-              Linus
+-- 
+Murali Karicheri
+Texas Instruments
