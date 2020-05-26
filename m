@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFBEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC01C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A3C20888
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5B9208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590520247;
-	bh=GEzZKEFck/laAHvXNM4F0VHtJ/O2SrpRrI0SkmrRHbE=;
+	s=default; t=1590520250;
+	bh=clFe/GQAHqSYLypx5ztprUXZNyS6D9G3lry4dPZ7X4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zETXq8FkHvUQpjiH+xs7GqfRwqeRWnzL8jJp7htdb9hR7xdKO7Xf5RCusuWkNUFRH
-	 wsS7uPYj0wMhzMggry7bYmkxc+aL6G47krwatm43riRbG0bt3C7I0WutweCH/u88DK
-	 VVzMPLBqxO02whuDqmmVWenvF3vYCyV7Ru92lnxY=
+	b=tJXALhorkZRxzB1DFSrGnFkJuNMgoyHQ6FrjN2JhmjSP7792Qom3HEQUxB1MZG4eq
+	 +ZHF74GRumd6iAGrqnmukN9O9B/Tz7xlMN8fUePARZV2k+I20BFqbJ/VGhcRqVSHsj
+	 qxUapY9UqErUOzRtel1fXPb+gKJIIgtg4eCRWMdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404019AbgEZTKq (ORCPT
+        id S2391575AbgEZTKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391059AbgEZTKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:10:42 -0400
+        id S2391452AbgEZTKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:10:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7781E20888;
-        Tue, 26 May 2020 19:10:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09DED20776;
+        Tue, 26 May 2020 19:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590520241;
-        bh=GEzZKEFck/laAHvXNM4F0VHtJ/O2SrpRrI0SkmrRHbE=;
+        s=default; t=1590520239;
+        bh=clFe/GQAHqSYLypx5ztprUXZNyS6D9G3lry4dPZ7X4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bRJzS1svbeXBctFT1xLnHj+F1RlGkN3EY/9NJbOIOTk4sQdFbvEn9FqopPLcsADnj
-         +LWiKjvQ6PhQssSOwVSIFSsXKb8YDRxmSEGtGYJ6eCqBIbrfuNQZ38njCk7SmTOAP2
-         4z//u0ZES5HWHSUhC5/gugmN2ru4PV5VYLzh2T+U=
+        b=WscNLrP/fM/mbveq3uPcnByykBWcqspyX2QxhOoKdcYWimWumWBHaJMDV/Ow6aM9G
+         C6KIx1+2JB+GQvPWDU1wz4xusueB577swrRC2fyvVzGjybSRIaBIeCCuOtGZpxq1ct
+         ZwPwSeUW0fS8OQ3nNhKIjzk7a9aHs8bLPr9is+Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Phil Auld <pauld@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/111] powerpc: Remove STRICT_KERNEL_RWX incompatibility with RELOCATABLE
-Date:   Tue, 26 May 2020 20:53:34 +0200
-Message-Id: <20200526183940.074511261@linuxfoundation.org>
+Subject: [PATCH 5.4 111/111] sched/fair: Fix enqueue_task_fair() warning some more
+Date:   Tue, 26 May 2020 20:54:09 +0200
+Message-Id: <20200526183943.413814507@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
 References: <20200526183932.245016380@linuxfoundation.org>
@@ -60,37 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell Currey <ruscur@russell.cc>
+From: Phil Auld <pauld@redhat.com>
 
-[ Upstream commit c55d7b5e64265fdca45c85b639013e770bde2d0e ]
+[ Upstream commit b34cb07dde7c2346dec73d053ce926aeaa087303 ]
 
-I have tested this with the Radix MMU and everything seems to work, and
-the previous patch for Hash seems to fix everything too.
-STRICT_KERNEL_RWX should still be disabled by default for now.
+sched/fair: Fix enqueue_task_fair warning some more
 
-Please test STRICT_KERNEL_RWX + RELOCATABLE!
+The recent patch, fe61468b2cb (sched/fair: Fix enqueue_task_fair warning)
+did not fully resolve the issues with the rq->tmp_alone_branch !=
+&rq->leaf_cfs_rq_list warning in enqueue_task_fair. There is a case where
+the first for_each_sched_entity loop exits due to on_rq, having incompletely
+updated the list.  In this case the second for_each_sched_entity loop can
+further modify se. The later code to fix up the list management fails to do
+what is needed because se does not point to the sched_entity which broke out
+of the first loop. The list is not fixed up because the throttled parent was
+already added back to the list by a task enqueue in a parallel child hierarchy.
 
-Signed-off-by: Russell Currey <ruscur@russell.cc>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191224064126.183670-2-ruscur@russell.cc
+Address this by calling list_add_leaf_cfs_rq if there are throttled parents
+while doing the second for_each_sched_entity loop.
+
+Fixes: fe61468b2cb ("sched/fair: Fix enqueue_task_fair warning")
+Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20200512135222.GC2201@lorien.usersys.redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2b1033f13210..198bbf42e398 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -133,7 +133,7 @@ config PPC
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC_BOOK3S_64
--	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
-+	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE
- 	select ARCH_HAS_UACCESS_MCSAFE		if PPC64
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 42cc3de24dcc..193b6ab74d7f 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5254,6 +5254,13 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		/* end evaluation on encountering a throttled cfs_rq */
+ 		if (cfs_rq_throttled(cfs_rq))
+ 			goto enqueue_throttle;
++
++               /*
++                * One parent has been throttled and cfs_rq removed from the
++                * list. Add it back to not break the leaf list.
++                */
++               if (throttled_hierarchy(cfs_rq))
++                       list_add_leaf_cfs_rq(cfs_rq);
+ 	}
+ 
+ enqueue_throttle:
 -- 
 2.25.1
 
