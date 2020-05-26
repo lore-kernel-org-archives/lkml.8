@@ -2,52 +2,51 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5783C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA26C20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF95F20721
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521230;
-	bh=hrbJyOLEuxk36OPNi1fKCASFHtlHY4Zp1pnVLXNnWFQ=;
+	s=default; t=1590521238;
+	bh=UBGgTQ+VrY6jAmzSh2eiqUZxcGKelMEXlK6OtpundcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QG9hAQpceJ+adXZKJ1GWsPR/Rhzg+TdRavqZFrjrYIXnqUPxbwiOWvHgZigz9+lTL
-	 KbBSO+Ean9mTz9rBvRokV/NTU3hG0TF5/LHyFMiBzIjW2JTZBoPoD5kdh+8lRsGitl
-	 o6rwfkvJB0cLfChekp3FMXZM2LVlhYW6I28VhPfc=
+	b=g+QezHadI4XHkJToPhpOWxFOrHy4Y/19ROKKFYpuNk083+q8FiNBSfhxePGgAJD6j
+	 Pel+3+UUvXQGbZYVv+KVxDYYxw2wDV6OsxbR6beAoEq1UwvpiD06BxYBmPx4QqQURZ
+	 /7pyh2/nvBM6Ro4SAWoxJJrnNT4nfiinCKmxPcgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391422AbgEZT1J (ORCPT
+        id S2392271AbgEZT1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60272 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 15:27:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390273AbgEZTEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:04:35 -0400
+        id S2389763AbgEZTEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 15:04:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F87920849;
-        Tue, 26 May 2020 19:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B935220849;
+        Tue, 26 May 2020 19:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519875;
-        bh=hrbJyOLEuxk36OPNi1fKCASFHtlHY4Zp1pnVLXNnWFQ=;
+        s=default; t=1590519870;
+        bh=UBGgTQ+VrY6jAmzSh2eiqUZxcGKelMEXlK6OtpundcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z/3lB3vEz1sKEpO09avOvLf73ordnElXrDEl1HPHfiQqxcb1ZWlyRtOrH1cPll6dj
-         V8F+Oduhwx+fkEW4iIHb4SD6eK65fBGN4GpNryM0QKfSIy3VeBHT60LTWsrxZnSA8E
-         SepBQxqLIdPLCgzQ4zgtKVngoluAfrLYPCeOoN1M=
+        b=u+xtjv90geklDpKeztzEMZyOPPclGAA1yhbUgNHTiAB+Is/dpxdEWllT6VZqsqp5z
+         9iNJ/r2vYMjNBFSnNIcbX4Rp1GTHPitQmfnjTyxcq2KZxM0nlBtHWNMVoR7hD6uYp6
+         wqAL59Dccd5MqSHIAay8OJJrUAs8GDCAmV4n/OYE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/81] powerpc: Remove STRICT_KERNEL_RWX incompatibility with RELOCATABLE
-Date:   Tue, 26 May 2020 20:53:24 +0200
-Message-Id: <20200526183932.664564063@linuxfoundation.org>
+        stable@vger.kernel.org, Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Colin Xu <colin.xu@intel.com>
+Subject: [PATCH 4.19 48/81] drm/i915/gvt: Init DPLL/DDI vreg for virtual display instead of inheritance.
+Date:   Tue, 26 May 2020 20:53:23 +0200
+Message-Id: <20200526183932.535281956@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
 References: <20200526183923.108515292@linuxfoundation.org>
@@ -60,39 +59,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell Currey <ruscur@russell.cc>
+From: Colin Xu <colin.xu@intel.com>
 
-[ Upstream commit c55d7b5e64265fdca45c85b639013e770bde2d0e ]
+commit f965b68188ab59a40a421ced1b05a2fea638465c upstream.
 
-I have tested this with the Radix MMU and everything seems to work, and
-the previous patch for Hash seems to fix everything too.
-STRICT_KERNEL_RWX should still be disabled by default for now.
+Init value of some display vregs rea inherited from host pregs. When
+host display in different status, i.e. all monitors unpluged, different
+display configurations, etc., GVT virtual display setup don't consistent
+thus may lead to guest driver consider display goes malfunctional.
 
-Please test STRICT_KERNEL_RWX + RELOCATABLE!
+The added init vreg values are based on PRMs and fixed by calcuation
+from current configuration (only PIPE_A) and the virtual EDID.
 
-Signed-off-by: Russell Currey <ruscur@russell.cc>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191224064126.183670-2-ruscur@russell.cc
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 04d348ae3f0a ("drm/i915/gvt: vGPU display virtualization")
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Colin Xu <colin.xu@intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200508060506.216250-1-colin.xu@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/gvt/display.c |   49 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 6f475dc5829b..da48a2ca272e 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -139,7 +139,7 @@ config PPC
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
- 	select ARCH_HAS_SG_CHAIN
--	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
-+	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBERNATION)
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
--- 
-2.25.1
-
+--- a/drivers/gpu/drm/i915/gvt/display.c
++++ b/drivers/gpu/drm/i915/gvt/display.c
+@@ -206,14 +206,41 @@ static void emulate_monitor_status_chang
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG0) |
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG1) |
+ 				SKL_FUSE_PG_DIST_STATUS(SKL_PG2);
+-		vgpu_vreg_t(vgpu, LCPLL1_CTL) |=
+-				LCPLL_PLL_ENABLE |
+-				LCPLL_PLL_LOCK;
+-		vgpu_vreg_t(vgpu, LCPLL2_CTL) |= LCPLL_PLL_ENABLE;
+-
++		/*
++		 * Only 1 PIPE enabled in current vGPU display and PIPE_A is
++		 *  tied to TRANSCODER_A in HW, so it's safe to assume PIPE_A,
++		 *   TRANSCODER_A can be enabled. PORT_x depends on the input of
++		 *   setup_virtual_dp_monitor, we can bind DPLL0 to any PORT_x
++		 *   so we fixed to DPLL0 here.
++		 * Setup DPLL0: DP link clk 1620 MHz, non SSC, DP Mode
++		 */
++		vgpu_vreg_t(vgpu, DPLL_CTRL1) =
++			DPLL_CTRL1_OVERRIDE(DPLL_ID_SKL_DPLL0);
++		vgpu_vreg_t(vgpu, DPLL_CTRL1) |=
++			DPLL_CTRL1_LINK_RATE(DPLL_CTRL1_LINK_RATE_1620, DPLL_ID_SKL_DPLL0);
++		vgpu_vreg_t(vgpu, LCPLL1_CTL) =
++			LCPLL_PLL_ENABLE | LCPLL_PLL_LOCK;
++		vgpu_vreg_t(vgpu, DPLL_STATUS) = DPLL_LOCK(DPLL_ID_SKL_DPLL0);
++		/*
++		 * Golden M/N are calculated based on:
++		 *   24 bpp, 4 lanes, 154000 pixel clk (from virtual EDID),
++		 *   DP link clk 1620 MHz and non-constant_n.
++		 * TODO: calculate DP link symbol clk and stream clk m/n.
++		 */
++		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) = 63 << TU_SIZE_SHIFT;
++		vgpu_vreg_t(vgpu, PIPE_DATA_M1(TRANSCODER_A)) |= 0x5b425e;
++		vgpu_vreg_t(vgpu, PIPE_DATA_N1(TRANSCODER_A)) = 0x800000;
++		vgpu_vreg_t(vgpu, PIPE_LINK_M1(TRANSCODER_A)) = 0x3cd6e;
++		vgpu_vreg_t(vgpu, PIPE_LINK_N1(TRANSCODER_A)) = 0x80000;
+ 	}
+ 
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_B)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_B);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_B);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_B);
+ 		vgpu_vreg_t(vgpu, SFUSE_STRAP) |= SFUSE_STRAP_DDIB_DETECTED;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
+@@ -234,6 +261,12 @@ static void emulate_monitor_status_chang
+ 	}
+ 
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_C)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_C);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_C);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_C);
+ 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTC_HOTPLUG_CPT;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
+@@ -254,6 +287,12 @@ static void emulate_monitor_status_chang
+ 	}
+ 
+ 	if (intel_vgpu_has_monitor_on_port(vgpu, PORT_D)) {
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) &=
++			~DPLL_CTRL2_DDI_CLK_OFF(PORT_D);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_CLK_SEL(DPLL_ID_SKL_DPLL0, PORT_D);
++		vgpu_vreg_t(vgpu, DPLL_CTRL2) |=
++			DPLL_CTRL2_DDI_SEL_OVERRIDE(PORT_D);
+ 		vgpu_vreg_t(vgpu, SDEISR) |= SDE_PORTD_HOTPLUG_CPT;
+ 		vgpu_vreg_t(vgpu, TRANS_DDI_FUNC_CTL(TRANSCODER_A)) &=
+ 			~(TRANS_DDI_BPC_MASK | TRANS_DDI_MODE_SELECT_MASK |
 
 
