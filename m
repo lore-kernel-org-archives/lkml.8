@@ -2,201 +2,205 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B216DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1015C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898BA2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1CC20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 14:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AJNSGDSf"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="pxFhTpCd";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="DRV3oqMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgEZOdU (ORCPT
+        id S1728568AbgEZOfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 10:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727782AbgEZOdT (ORCPT
+        Tue, 26 May 2020 10:35:25 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:37142 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726977AbgEZOfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 10:33:19 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DBAC03E96E
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:33:18 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id z6so24731877ljm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 07:33:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0XNs/z+HzuB59iVLQSidnn2zWHlhMfuK3vNWUtRr6ws=;
-        b=AJNSGDSfNLMhfW8MR4WMSxN7shbZzwvsA+SgXkvOo9gLJlrq/DvslmSb3llnMoHN+2
-         N07foBDeOt5oRmNg5k5/a4ShmiPB3Q6DsA+3nLPAniHEdspTxJ53jt4oeuS/X35T5BNX
-         Id2psjRd0f7exkYRf0M7MfCw3R9B6yQjRINOyIBI9yWRptDxCq/h/NimyA7hfW5P918O
-         upR2l+WMr4Y0BG85jYPVIuGe0K1wGOq0RlbLnt1+2ZVhRXSl4uzx9+AbVDWFg9jZnExm
-         QaPcayNeEuKyDBCxGLPetjvs4yL7AwOF0yy6g1gVjVUiVC08IYZHLbIGiSg/F65c1Xs8
-         4aWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0XNs/z+HzuB59iVLQSidnn2zWHlhMfuK3vNWUtRr6ws=;
-        b=pzl43h8xNQWn5vbkugfT9InN++4Z1ynE4IYl0igQqCrnJftEL7U/D/rLI0r93RRBYt
-         9yv0ddljHU9wpGJmXGk789qtBhM5NVMBArjyiRDP4QxaYvZbWeUbFJeMsHDvXrFeOTyn
-         8hWbuDlNNmW0oZFEnEy0BmrrcNYXOanTJdiLxBgwVCqSir6AUy+hi2bA5fa1sOV3AqRB
-         sySKgPQQrMsJeG5cied+sp01frvjArYXv6pmZz8MlH/rco7rwbB56SnbwXHGz7kFPtUH
-         r8PpJhnltgnvvgndy6CFGUESDcvxIMfRNTb/qLVTz0UfTidX88al8NM+TwpJ278P1umJ
-         0DOA==
-X-Gm-Message-State: AOAM530pWO1/8ZC/WWUiBabjyuCnc5lOUaVgPizAwE9pFL62rxOs/yLi
-        gdpf/2pKTIOFlUzyKHenauIIzs71SPZuYPJti0fwzg==
-X-Google-Smtp-Source: ABdhPJy0M6RjEyOLU2xO6uFHuus18qBN6s4gGcKzjgHFed2Oc1kL0YHpAX+ZT7CNHuAUNct3HxtD8lY7RTBQrIYFabk=
-X-Received: by 2002:a2e:9b4f:: with SMTP id o15mr709223ljj.358.1590503596476;
- Tue, 26 May 2020 07:33:16 -0700 (PDT)
+        Tue, 26 May 2020 10:35:25 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04QEYPCI031214;
+        Tue, 26 May 2020 07:35:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=u3jT2OctnMOe8MwyIw5sI2Fw0KdWv8RgTdM7k9pvMwg=;
+ b=pxFhTpCdUJWVCArmb1KJGJr0EMPh6dNnsMmEFKmYd96Y6oeh64l1VnvkNXXQywmENOLk
+ IfIs1wJc/Lnz6WJCks9IvEh7VzJdgD/5DA1w79FQfGQKlpvUtIDXkc4pgiPgz9tIY70j
+ sxxtlxG5krz5XxKIqKjyavyYxJ33nDuZnzketXWh4QU6JEjV6Iqtt9VD7U1mqe4uf+Eg
+ XSPuRxv2xZ4BSXNX2XLQq9U6NBtfiIcyUwuOYBxS8HVwXDDHbpDh2O8SLLDV6+3xrfR/
+ ROnafYSwXTeeT24UmgTIVlLbjj6/InbbkrzkRP2Pzt9JKv1+34lCBjXekrAw5839bUqc 4Q== 
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 316ye08qqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 26 May 2020 07:35:16 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eLlm4xtVsNT3pNkQ8PyjmV+ANcckjhiXJ2up+Mesz+CApwh3zrwj7g2I1FKMPWwd/KUqRTMtBR3c+tjChnBkM8kIecjBVzPzplhGcsB9Qm/XMnJGwOryob0m9ZSwp+xPFJ6uo/yfEFk5o8NTqL8xJm5l/B3JBk1G2GEfn/77CwK0n9fblEtcXPpzp5rPj33jXwZooJ+5u4MI8iJDPEALsREd5Fxy0ZXqULJPxPdKyL+if5NksADndDbHazbw5VHKyOx0VEL/MEqeYi+mGPS13xsNluDiN+UxLAM99JlyF9HVZSN2Bgwfzk12j9FwdsQ3D/5IdKw+XVVEKq4oXsR+bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u3jT2OctnMOe8MwyIw5sI2Fw0KdWv8RgTdM7k9pvMwg=;
+ b=XtRwJ4bvoB8FswInauQuZATx1SPhipaVBKWzksQ0M7PlCYnWBsbEn3oqNjCZlWT31jXh6MdphRbH0rtHq0DYn4TOxZK5hZa7zB1eNfGZKySk7UHYiyY+n+GoWBItUaiHZSJ/7AM7UGvqwRIZr8GmNIcq0TgzHp0fBe9ob+mB9QULpyxb+3h35gFwdk/ytCLiQuKOyiWjNyPJGdhn7rAED/J7ELh6F9EYULs9zH3UA+I22jwRTV8AW0vo2+dxmPkPkBJcV3cv5GT8A4JX4Cg6Cn7FlLes8uQSBLiKZE7piEtOyhQfWTFTT3TTfm5n7DsKwAYV53jMXaUgPcUcvi+8mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 199.43.4.23) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u3jT2OctnMOe8MwyIw5sI2Fw0KdWv8RgTdM7k9pvMwg=;
+ b=DRV3oqMRl88qGde8/l71bnsqK728yB6ceIWWN6KrtNBmShQFTIoYpRmNllQaVwu35ZU3SJzYLgLjvN0ay3YNzwOHbcpAAmK9V4/ChWTJeP+XTXSdu9xhEbtUP+3V+rfaYH8rxha18fqMENUPK9oqeWdl5S51ENrYnLJRDFwzRhM=
+Received: from BN8PR16CA0004.namprd16.prod.outlook.com (2603:10b6:408:4c::17)
+ by BN6PR07MB3586.namprd07.prod.outlook.com (2603:10b6:405:65::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Tue, 26 May
+ 2020 14:35:13 +0000
+Received: from BN8NAM12FT061.eop-nam12.prod.protection.outlook.com
+ (2603:10b6:408:4c:cafe::8e) by BN8PR16CA0004.outlook.office365.com
+ (2603:10b6:408:4c::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.24 via Frontend
+ Transport; Tue, 26 May 2020 14:35:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
+ smtp.mailfrom=cadence.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=pass action=none header.from=cadence.com;
+Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
+ 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
+ client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
+Received: from rmmaillnx1.cadence.com (199.43.4.23) by
+ BN8NAM12FT061.mail.protection.outlook.com (10.13.182.175) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3045.10 via Frontend Transport; Tue, 26 May 2020 14:35:12 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 04QEZ8HC002019
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 26 May 2020 10:35:11 -0400
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Tue, 26 May 2020 16:35:07 +0200
+Received: from vleu-orange.cadence.com (10.160.88.83) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 26 May 2020 16:35:07 +0200
+Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
+        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 04QEZ7OH015144;
+        Tue, 26 May 2020 16:35:07 +0200
+Received: (from yamonkar@localhost)
+        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 04QEZ7hV015143;
+        Tue, 26 May 2020 16:35:07 +0200
+From:   Yuti Amonkar <yamonkar@cadence.com>
+To:     <linux-kernel@vger.kernel.org>, <kishon@ti.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <maxime@cerno.tech>
+CC:     <nsekhar@ti.com>, <jsarha@ti.com>, <tomi.valkeinen@ti.com>,
+        <praneeth@ti.com>, <mparab@cadence.com>, <sjakhade@cadence.com>,
+        <yamonkar@cadence.com>
+Subject: [PATCH v2 1/2] phy: Add max_link_rate as a PHY attribute and APIs to get/set phy_attrs
+Date:   Tue, 26 May 2020 16:35:03 +0200
+Message-ID: <1590503704-15057-2-git-send-email-yamonkar@cadence.com>
+X-Mailer: git-send-email 2.4.5
+In-Reply-To: <1590503704-15057-1-git-send-email-yamonkar@cadence.com>
+References: <1590503704-15057-1-git-send-email-yamonkar@cadence.com>
 MIME-Version: 1.0
-References: <20200411115508.284500414@linuxfoundation.org> <20200411115513.709554942@linuxfoundation.org>
- <OSAPR01MB366788E02572D95F246D6DEC92DD0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
- <20200413082137.GB2792388@kroah.com> <CA+G9fYsq5uADdbUG9RnVYOpmbGX+uEVRC-R6wfPCNtCgTyrj8w@mail.gmail.com>
- <OSAPR01MB36677B25C6FE12897832B3DD92D20@OSAPR01MB3667.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSAPR01MB36677B25C6FE12897832B3DD92D20@OSAPR01MB3667.jpnprd01.prod.outlook.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 26 May 2020 20:03:04 +0530
-Message-ID: <CA+G9fYs2gucSrOanDB=CPm+RYH=QOaPeuExGmq0Qcrh5sVaciw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 50/54] drm/msm: stop abusing dma_map/unmap for cache
-To:     nobuhiro1.iwamatsu@toshiba.co.jp
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, swboyd@chromium.org,
-        jcrouse@codeaurora.org, Rob Clark <robdclark@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(376002)(396003)(136003)(36092001)(46966005)(82740400003)(107886003)(2906002)(8676002)(186003)(70206006)(26005)(42186006)(36906005)(70586007)(4326008)(47076004)(5660300002)(110136005)(316002)(54906003)(8936002)(426003)(82310400002)(356005)(6666004)(81166007)(336012)(478600001)(36756003)(2616005)(86362001)(2101003);DIR:OUT;SFP:1101;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7d64c937-1e1e-4a1b-741d-08d80181ffe2
+X-MS-TrafficTypeDiagnostic: BN6PR07MB3586:
+X-Microsoft-Antispam-PRVS: <BN6PR07MB35861884D510AEB91EEDC9F5D2B00@BN6PR07MB3586.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
+X-Forefront-PRVS: 041517DFAB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QoVWUMvgtXaCo9StsWPFqL9m6juBFaqzBUBg9N4GNJeChl/Z85DKSGU2LAlnAo2/RTNepu52CgMwRtyWXjGtd2ULfj93JVI4IlZorX9BHY0khDPv1odqGMz7R74Jughn2mPIptXyidIMaSMyxLxHtaK2jRUA34Py2h2X3a9ZUjciGXV2y8DsxJfb9k4OuM0dw7WUR7oTeFjG1p/Ca83s+fQD+3bGOgdO64DlhYocFY6vp0SvEHrTV4/Rt6Vz0CCR8wonVzGMe2Khd5sBpoXs10m7UCBTiYHJYPLAVfvPQivWPl7RCUUsoOlHObLMmwp6h0f3TItQzDSGouu7fLSax5Q66vEwWyBOdHX8kXTGwU6ryHU3Lo+vedWvNJKqczELhLStgbXDACdA29Ud1FLLOszyXzpWhtjYyUADd7VOxC6as4K/xqkB0EYDfUlEmAcy
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 May 2020 14:35:12.8095
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7d64c937-1e1e-4a1b-741d-08d80181ffe2
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR07MB3586
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-26_02:2020-05-26,2020-05-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 phishscore=0 cotscore=-2147483648 spamscore=0
+ mlxscore=0 suspectscore=0 adultscore=0 impostorscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005260113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Apr 2020 at 05:03, <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
-<trim>
->
-> I think the following patch is needed for this.
->
-> 9f614197c744002f9968e82c649fdf7fe778e1e7
-> 3de433c5b38af49a5fc7602721e2ab5d39f1e69c
->
-> But I have no environment to check this now.
+The patch adds a pair of APIs that allows generic PHY subsystem
+to get/set PHY attributes supported by the PHY. The PHY provider
+driver may use phy_set_attrs() to set phy attributes that the PHY
+supports. The controller driver may then use phy_get_attrs()
+to fetch the PHY attributes to properly configure the controller.
 
-The above suggested two patches already in stable-rc 4.19 branch
-but i still notice Internal error: Oops: 96000144 [#1] PREEMPT SMP
-on arm64 qualcomm dragonboard-410c device while booting.
+Signed-off-by: Yuti Amonkar <yamonkar@cadence.com>
+---
+ include/linux/phy/phy.h | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-[    7.906343] msm 1a00000.mdss: bound 1a98000.dsi (ops dsi_ops [msm])
-[    7.912697] adreno 1c00000.gpu: 1c00000.gpu supply vdd not found,
-using dummy regulator
-[    7.918567] adreno 1c00000.gpu: Linked as a consumer to regulator.0
-[    7.926521] adreno 1c00000.gpu: 1c00000.gpu supply vddcx not found,
-using dummy regulator
-[    7.932759] msm 1a00000.mdss: A306: using IOMMU
-[    7.941207] Unable to handle kernel paging request at virtual
-address ffffffff80000000
-[    7.945375] Mem abort info:
-[    7.953353]   ESR = 0x96000144
-[    7.956034]   Exception class = DABT (current EL), IL = 32 bits
-[    7.970501]   EA = 0, S1PTW = 0
-[    7.970516] Data abort info:
-[    7.972485]   ISV = 0, ISS = 0x00000144
-[    7.975577]   CM = 1, WnR = 1
-[    7.979169] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
-[    7.982295] [ffffffff80000000] pgd=0000000000000000
-[    7.989099] Internal error: Oops: 96000144 [#1] PREEMPT SMP
-[    7.993802] Modules linked in: msm(+) crc32_ce adv7511 cec
-mdt_loader drm_kms_helper drm drm_panel_orientation_quirks fuse
-[    7.999367] Process systemd-udevd (pid: 2849, stack limit =
-0x(____ptrval____))
-[    8.010474] CPU: 1 PID: 2849 Comm: systemd-udevd Not tainted
-4.19.125-rc1-00077-g0708fb235b9c #1
-[    8.017677] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    8.026703] pstate: 80000005 (Nzcv daif -PAN -UAO)
-[    8.033390] pc : __clean_dcache_area_poc+0x20/0x38
-[    8.037998] lr : __swiotlb_sync_sg_for_device+0x74/0xa0
-[    8.038001] sp : ffff00000e313490
-[    8.038004] x29: ffff00000e313490 x28: 0000000000000001
-[    8.038009] x27: ffff000000d56e40 x26: ffff800036301000
-[    8.038013] x25: ffff80003c108410 x24: ffff000009069998
-[    8.038018] x23: ffff80003c108810 x22: 0000000000000000
-[    8.038023] x21: 0000000000000001 x20: 0000000000000001
-[    8.038027] x19: ffff80003acd4480 x18: ffff0000092298c8
-[    8.038032] x17: 0000000000000000 x16: 0000000000000000
-[    8.038036] x15: 0000000000000010 x14: ffffffffffffffff
-[    8.038042] x13: ffff0000893987d7 x12: 0000000000000000
-[    8.038046] x11: 0000800036c56000 x10: ffff8000362ef368
-[    8.038050] x9 : 0000000000001000 x8 : ffff7e0000e71640
-[    8.038055] x7 : 0000000000000001 x6 : 0000000000000000
-[    8.038059] x5 : 0000000000000000 x4 : ffffffff80000000
-[    8.038064] x3 : 000000000000003f x2 : 0000000000000040
-[    8.038068] x1 : ffffffff80001000 x0 : ffffffff80000000
-[    8.038072] Call trace:
-[    8.038078]  __clean_dcache_area_poc+0x20/0x38
-[    8.038204]  get_pages+0x1cc/0x240 [msm]
-[    8.038327]  msm_gem_get_iova+0x94/0x138 [msm]
-[    8.141741]  _msm_gem_kernel_new+0x40/0xb0 [msm]
-[    8.145989]  msm_gem_kernel_new+0x10/0x18 [msm]
-[    8.150759]  msm_gpu_init+0x300/0x568 [msm]
-[    8.155004]  adreno_gpu_init+0x14c/0x268 [msm]
-[    8.159171]  a3xx_gpu_init+0x7c/0x108 [msm]
-[    8.163682]  adreno_bind+0x144/0x238 [msm]
-[    8.167676]  component_bind_all+0x110/0x278
-[    8.171939]  msm_drm_bind+0x104/0x760 [msm]
-[    8.175921]  try_to_bring_up_master+0x14c/0x1b0
-[    8.180086]  component_master_add_with_match+0xc0/0x100
-[    8.184697]  msm_pdev_probe+0x280/0x320 [msm]
-[    8.189810]  platform_drv_probe+0x50/0xa0
-[    8.194322]  really_probe+0x1f4/0x290
-[    8.198314]  driver_probe_device+0x54/0xe8
-[    8.201960]  __driver_attach+0xe0/0xe8
-[    8.205952]  bus_for_each_dev+0x70/0xb8
-[    8.209685]  driver_attach+0x20/0x28
-[    8.213417]  bus_add_driver+0x1a0/0x210
-[    8.217237]  driver_register+0x60/0x110
-[    8.220797]  __platform_driver_register+0x44/0x50
-[    8.224717]  msm_drm_register+0x54/0x68 [msm]
-[    8.229479]  do_one_initcall+0x54/0x154
-[    8.233819]  do_init_module+0x54/0x1c8
-[    8.237463]  load_module+0x1bf4/0x2190
-[    8.241282]  __se_sys_finit_module+0xb8/0xc8
-[    8.245016]  __arm64_sys_finit_module+0x18/0x20
-[    8.249445]  el0_svc_common+0x70/0x168
-[    8.253695]  el0_svc_handler+0x2c/0x80
-[    8.257514]  el0_svc+0x8/0xc
-[    8.261250] Code: 9ac32042 8b010001 d1000443 8a230000 (d50b7e20)
-[    8.264290] ---[ end trace 2effae58ca65f06b ]---
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index bcee8eba62b3..48693321ae36 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -119,6 +119,7 @@ struct phy_ops {
+  */
+ struct phy_attrs {
+ 	u32			bus_width;
++	u32			max_link_rate;
+ 	enum phy_mode		mode;
+ };
+ 
+@@ -231,6 +232,20 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+ {
+ 	phy->attrs.bus_width = bus_width;
+ }
++
++static inline void phy_get_attrs(struct phy *phy, struct phy_attrs *attrs)
++{
++	attrs->bus_width = phy->attrs.bus_width;
++	attrs->max_link_rate = phy->attrs.max_link_rate;
++	attrs->mode = phy->attrs.mode;
++}
++
++static inline void phy_set_attrs(struct phy *phy, struct phy_attrs attrs)
++{
++	phy->attrs.bus_width = attrs.bus_width;
++	phy->attrs.max_link_rate = attrs.max_link_rate;
++	phy->attrs.mode = attrs.mode;
++}
+ struct phy *phy_get(struct device *dev, const char *string);
+ struct phy *phy_optional_get(struct device *dev, const char *string);
+ struct phy *devm_phy_get(struct device *dev, const char *string);
+@@ -389,6 +404,16 @@ static inline void phy_set_bus_width(struct phy *phy, int bus_width)
+ 	return;
+ }
+ 
++static inline void phy_get_attrs(struct phy *phy, struct phy_attrs *attrs)
++{
++	return;
++}
++
++static inline void phy_set_attrs(struct phy *phy, struct phy_attrs attrs)
++{
++	return;
++}
++
+ static inline struct phy *phy_get(struct device *dev, const char *string)
+ {
+ 	return ERR_PTR(-ENOSYS);
+-- 
+2.17.1
 
-on stable-rc 4.19 branch git log show this info,
-$ git log  --oneline drivers/gpu/drm/msm/msm_gem.c | head
-05fe33cad985 drm/msm: Use the correct dma_sync calls harder
-39718d086d9b drm/msm: Use the correct dma_sync calls in msm_gem
-9c23e00804f8 drm/msm: stop abusing dma_map/unmap for cache
-a5f74ec7d3cb gpu: drm: msm: Change return type to vm_fault_t
-3976626ea3d2 drm/msm: Fix possible null dereference on failure of get_pages()
-d71b6bd80d96 drm/msm/dsi: fix direct caller of msm_gem_free_object()
-dc9a9b32053e drm/msm: Replace gem_object deprecated functions
-62e3a3e342af drm/msm: fix leak in failed get_pages
-7a88cbd8d65d Backmerge tag 'v4.14-rc7' into drm-next
-fad33f4b1073 drm/msm: add special _get_vaddr_active() for cmdstream dumps
-
-link to full boot log,
-https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.124-77-g0708fb235b9c/testrun/1450572/log
-https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.124-77-g0708fb235b9c/testrun/1450572
-
-Kernel config:
-https://builds.tuxbuild.com/Xp5Fh9e52QxohQeW6nazPA/kernel.config
-
->
-> Best regards,
->   Nobuhiro
-> >
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
