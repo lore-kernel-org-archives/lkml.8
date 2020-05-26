@@ -2,168 +2,103 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E11C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E13C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F400220787
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407E820787
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 12:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qlSo2Zbx"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JI1at74G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgEZMwV (ORCPT
+        id S2388801AbgEZMxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 08:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59754 "EHLO
+        Tue, 26 May 2020 08:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgEZMwU (ORCPT
+        with ESMTP id S1726882AbgEZMxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 08:52:20 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D1FC03E96D;
-        Tue, 26 May 2020 05:52:20 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0f910029cc1ac058818593.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:9100:29cc:1ac0:5881:8593])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 26 May 2020 08:53:30 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0AB7C03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 05:53:29 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CD3C51EC0118;
-        Tue, 26 May 2020 14:52:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590497538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZGH6cJ+EMFRFX4aplnDSD+DpMuQLo38Ps+fJV82VzCI=;
-        b=qlSo2ZbxzQoEd46ObhBqeRWPa6sLsZbdFDMdO6sqoBqhzSgPMMxW0dZvXVV9mMQ/2l//1O
-        sHyXBTNiS43qkWgA9OkgGUuAzdGy61Wu2libvEx7SeFNdr3MH860Ee7RdoT/YGbR1ryt4V
-        VUppJQiINcI6WieHJiReA+PRI0FpEB0=
-Date:   Tue, 26 May 2020 14:52:08 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, sean.j.christopherson@intel.com,
-        nhorman@redhat.com, npmccallum@redhat.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, josh@joshtriplett.org, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        puiterwijk@redhat.com, Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200526125207.GE28228@zn.tnic>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49WYmR1NcJz9sSk;
+        Tue, 26 May 2020 22:53:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1590497607;
+        bh=EtQztu5NmCVqCIZyOPV1ACDAhtqa29TG/2fKZ5rLLpM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=JI1at74GbvNS0bVZEFf4OJViTkUOEyGb9fPhmr2DTYm5O7v0GBZG/v95TXx6OEi/3
+         TJvX6neupQJbZFN5DwEeJCflq/AdfjG4KX2SVWUFJGqapba3Qhl9Th4l/pmHEIetbk
+         WPgw4N5388UQGaJPyZ2DAM+ns5FY1MpNoEA/+N4r3AWzP3n6gh1s58vWvPV4giPXQs
+         U6A98J/W8N/M0+FtXA/bEWw785sz4tDDsyqxXmwwC2Rj/dzm/CKtM5rvxXsM/W6xNj
+         Dxj+d3NsG23J/wrpteipjywiqGmjwQcXbj2l+RDakBFQju9YkcBSK8UFtWDvzB5a21
+         3gPpFoBMjaWCQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 07/45] powerpc/ptdump: Limit size of flags text to 1/2 chars on PPC32
+In-Reply-To: <e505c554-21b1-3d02-1ea5-c2a214b80ebb@csgroup.eu>
+References: <cover.1589866984.git.christophe.leroy@csgroup.eu> <83a7a0cfca6198e63caf7a16839bd18454961f52.1589866984.git.christophe.leroy@csgroup.eu> <87h7w4fvcy.fsf@mpe.ellerman.id.au> <e505c554-21b1-3d02-1ea5-c2a214b80ebb@csgroup.eu>
+Date:   Tue, 26 May 2020 22:53:50 +1000
+Message-ID: <87zh9ueu1t.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 03:43:58AM +0300, Jarkko Sakkinen wrote:
-> Add functions for allocating page from Enclave Page Cache (EPC). A page is
+Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> Le 25/05/2020 =C3=A0 07:15, Michael Ellerman a =C3=A9crit=C2=A0:
+>> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>>> In order to have all flags fit on a 80 chars wide screen,
+>>> reduce the flags to 1 char (2 where ambiguous).
+>>=20
+>> I don't love this, the output is less readable. Is fitting on an 80 char
+>> screen a real issue for you? I just make my terminal window bigger.
+>
+> I don't have strong opinion about that, and the terminal can be made bigg=
+er.
+> I just don't like how messy it is, some flags are so big that they hide=20
+> other ones and getting it more ordered and more compact helped me during=
+=20
+> all the verifications I did with this series, but we can leave it as is=20
+> if you prefer.
 
-				pages
+I think I do.
 
-> allocated by going through the EPC sections and returning the first free
-> page.
-> 
-> When a page is freed, it might have a valid state, which means that the
-> callee has assigned it to an enclave, which are protected memory ares used
+> Would you like a v5 without patches 7 and 8 ? Or I can just resend the=20
+> patches that will be impacted, that is 9 and 38 ?
 
-								  areas
+I dropped 7 and 8 and then fixed up 9 and 38, it was easy enough.
 
-although explaining what enclaves are has already happened so probably
-not needed here too.
+I used "coherent" and "huge".
 
-> to run code protected from outside access. The page is returned back to the
-> invalid state with ENCLS[EREMOVE] [1].
-> 
-> [1] Intel SDM: 40.3 INTEL® SGX SYSTEM LEAF FUNCTION REFERENCE
-> 
-> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Acked-by: Jethro Beekman <jethro@fortanix.com>
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
->  arch/x86/kernel/cpu/sgx/main.c | 60 ++++++++++++++++++++++++++++++++++
->  arch/x86/kernel/cpu/sgx/sgx.h  |  3 ++
->  2 files changed, 63 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
-> index 38424c1e8341..60d82e7537c8 100644
-> --- a/arch/x86/kernel/cpu/sgx/main.c
-> +++ b/arch/x86/kernel/cpu/sgx/main.c
-> @@ -13,6 +13,66 @@
->  struct sgx_epc_section sgx_epc_sections[SGX_MAX_EPC_SECTIONS];
->  int sgx_nr_epc_sections;
->  
-> +static struct sgx_epc_page *__sgx_try_alloc_page(struct sgx_epc_section *section)
-> +{
-> +	struct sgx_epc_page *page;
-> +
-> +	if (list_empty(&section->page_list))
-> +		return NULL;
-> +
-> +	page = list_first_entry(&section->page_list, struct sgx_epc_page, list);
-> +	list_del_init(&page->list);
-> +	return page;
-> +}
-> +
-> +/**
-> + * sgx_try_alloc_page() - Allocate an EPC page
+> With the change I get.
+>
+> ---[ Start of kernel VM ]---
+> 0xc0000000-0xc0ffffff  0x00000000        16M   h  r   x  p        sh     a
+> 0xc1000000-0xc7ffffff  0x01000000       112M   h  rw     p        sh  d  a
+> ---[ vmalloc() Area ]---
+> 0xc9000000-0xc9003fff  0x050e4000        16K      rw     p        sh  d  a
+> 0xc9008000-0xc900bfff  0x050ec000        16K      rw     p        sh  d  a
+> 0xc9010000-0xc9013fff  0xd0000000        16K      rw     p  i  g  sh  d  a
+> 0xc9018000-0xc901bfff  0x050f0000        16K      rw     p        sh  d  a
 
-Uuh, this is confusing. Looking forward into the patchset, you guys have
+It's definitely more compact :)
 
-sgx_alloc_page()
-sgx_alloc_va_page()
+But I worry no one other than you will be able to decipher it, without
+constantly referring back to the source code.
 
-and this here
-
-sgx_try_alloc_page()
-
-So this one here should be called sgx_alloc_epc_page() if we're going to
-differentiate *what* it is allocating.
-
-But then looking at sgx_alloc_page():
-
-+ * sgx_alloc_page() - Allocate an EPC page
-...
-
-+ struct sgx_epc_page *sgx_alloc_page(void *owner, bool reclaim)
-
-this one returns a struct sgx_epc_page * too.
-
-The former "allocates" from the EPC cache so I'm thinking former should
-not have "alloc" in its name at all. It should be called something like
-
-sgx_get_epc_page()
-
-or so.
-
-Now, looking at sgx_alloc_page(), it does call this one -
-sgx_try_alloc_page() to get a page from the page list but it
-does not allocate anything. The actual allocation happens in
-sgx_alloc_epc_section() which actually does the k*alloc().
-
-Which sounds to me like those functions should not use "alloc" and
-"free" in their names but "get" and "put" to denote that they're simply
-getting pages from lists and returning them back to those lists.
-
-IMNSVHO.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+cheers
