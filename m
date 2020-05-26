@@ -2,225 +2,116 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8937AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6431FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67CFC2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="g1/7QOjK"
+	by mail.kernel.org (Postfix) with ESMTP id 494DB20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbgEZNuw (ORCPT
+        id S1731512AbgEZNvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729400AbgEZNuv (ORCPT
+        Tue, 26 May 2020 09:51:11 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:57760 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729400AbgEZNvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:50:51 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD82BC03E96D
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:50:51 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id cx22so1455568pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TsJ+ya7DLaAC9EC4liADTO0tprvxGjdA+7opmVl0FVA=;
-        b=g1/7QOjKa61RC7wBeOn5GBPb3KCi20eVgYcsv13bLH50Z/106HIIkaLsu8OSxDSIFg
-         ucdGdTmC48KzoU4rK60EfjAk9scExcaZ13dVFvi3tSLDoUcxKj/R/NFPqtNpe7MfrRXU
-         dw3ZyFTS7C4diWZUxMwp9bdibC+YFYfzhQPe0AE89vq49rIBUReh4cFWufHq8nko2pco
-         MTFYlOIl/V3YBqvvgIqihIeVIK2gPJx4HV3jVvEEkdeJvSqdMMBhrCeZukUvWBQCBePu
-         DWM01ieH5nVgZ2sYu/3BF4pfwo2Ml59RwghLR5qHs2m6V1axIso60dJSSbANhObcrRa8
-         V7Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=TsJ+ya7DLaAC9EC4liADTO0tprvxGjdA+7opmVl0FVA=;
-        b=k8o04dHCsL0pL2ap5fwmgoJ8nLwNaCq3qN0FECy5TZ41TU71NoKThctThoLCV4V2sR
-         nb65ha2lYvhUbICMEel6CB0JALl88rTdXHZ2C+gGW9drWJbtlCNqXmuCPOQaCpgdVLR1
-         48MRrSrh2oECqjyykHRbo5a0b2CUdtI1LHCttkSrV9mkf8ev7jH+8evrSsDChhjczBfT
-         WeYPlMGAI1KtqTRMNLQ+i1Zj9yaafpJXWNjVMvenBFW3yjyBu8EaowPghJ2dkQV8//aT
-         DWH9ctD+nq05bN6IZHKrc4gswHi/RQbTMHJ5vY4p3Th8Es4ACwm+G2GcI0GPMd71A3DH
-         GpUg==
-X-Gm-Message-State: AOAM530yrdKBBrx3MakfFh9VKhZCnevsN01HoufcFSeAKwA95l/ul4V3
-        mPDBsNK4eesxpljDbEKTjHxWfX1rabhLng==
-X-Google-Smtp-Source: ABdhPJwb1HZnXvh9qc7bN00VRiWnUaq6RK+j3csWhmS5gI/dE6tv/8uzHsGkFpESYgQ0S8vnjlSm/A==
-X-Received: by 2002:a17:902:502:: with SMTP id 2mr1199090plf.134.1590501051121;
-        Tue, 26 May 2020 06:50:51 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:a9e6:df54:e55e:4c47? ([2605:e000:100e:8c61:a9e6:df54:e55e:4c47])
-        by smtp.gmail.com with ESMTPSA id i3sm15567936pfe.44.2020.05.26.06.50.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 06:50:50 -0700 (PDT)
-Subject: Re: [PATCH 12/12] io_uring: support true async buffered reads, if
- file provides it
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200523185755.8494-1-axboe@kernel.dk>
- <20200523185755.8494-13-axboe@kernel.dk>
- <8d429d6b-81ee-0a28-8533-2e1d4faa6b37@gmail.com>
- <717e474a-5168-8e1e-2e02-c1bdff007bd9@kernel.dk>
- <a8212987-bd06-5c67-73d7-e77a654df4ac@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <69516a01-a209-8a7e-6b9a-7d5b6fef4e96@kernel.dk>
-Date:   Tue, 26 May 2020 07:50:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 09:51:11 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 468CD803086E;
+        Tue, 26 May 2020 13:51:08 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 36kKExf0ojJW; Tue, 26 May 2020 16:51:07 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-mips@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: power: reset: Unrequire regmap property in syscon-reboot node
+Date:   Tue, 26 May 2020 16:51:00 +0300
+Message-ID: <20200526135102.21236-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <a8212987-bd06-5c67-73d7-e77a654df4ac@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 1:44 AM, Pavel Begunkov wrote:
-> On 25/05/2020 22:59, Jens Axboe wrote:
->> On 5/25/20 1:29 AM, Pavel Begunkov wrote:
->>> On 23/05/2020 21:57, Jens Axboe wrote:
->>>> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
->>>> the buffered read to an io-wq worker. Instead we can rely on page
->>>> unlocking callbacks to support retry based async IO. This is a lot more
->>>> efficient than doing async thread offload.
->>>>
->>>> The retry is done similarly to how we handle poll based retry. From
->>>> the unlock callback, we simply queue the retry to a task_work based
->>>> handler.
->>>>
->>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>>> ---
->>>>  fs/io_uring.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++
->>>>  1 file changed, 99 insertions(+)
->>>>
->>> ...
->>>> +
->>>> +	init_task_work(&rw->task_work, io_async_buf_retry);
->>>> +	/* submit ref gets dropped, acquire a new one */
->>>> +	refcount_inc(&req->refs);
->>>> +	tsk = req->task;
->>>> +	ret = task_work_add(tsk, &rw->task_work, true);
->>>> +	if (unlikely(ret)) {
->>>> +		/* queue just for cancelation */
->>>> +		init_task_work(&rw->task_work, io_async_buf_cancel);
->>>> +		tsk = io_wq_get_task(req->ctx->io_wq);
->>>
->>> IIRC, task will be put somewhere around io_free_req(). Then shouldn't here be
->>> some juggling with reassigning req->task with task_{get,put}()?
->>
->> Not sure I follow? Yes, we'll put this task again when the request
->> is freed, but not sure what you mean with juggling?
-> 
-> I meant something like:
-> 
-> ...
-> /* queue just for cancelation */
-> init_task_work(&rw->task_work, io_async_buf_cancel);
-> + put_task_struct(req->task);
-> + req->task = get_task_struct(io_wq_task);
-> 
-> 
-> but, thinking twice, if I got the whole idea right, it should be ok as
-> is -- io-wq won't go away before the request anyway, and leaving
-> req->task pinned down for a bit is not a problem.
+Since normally syscon-reboot block is supposed to be a part of a system
+controller, lets mark the regmap property as deprecated and recommend the
+syscon-reboot node to be a sub-node of SYSCON.
 
-OK good, then I thin kwe agree it's fine.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-mips@vger.kernel.org
 
->>>> +		task_work_add(tsk, &rw->task_work, true);
->>>> +	}
->>>> +	wake_up_process(tsk);
->>>> +	return 1;
->>>> +}
->>> ...
->>>>  static int io_read(struct io_kiocb *req, bool force_nonblock)
->>>>  {
->>>>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
->>>> @@ -2601,6 +2696,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->>>>  	if (!ret) {
->>>>  		ssize_t ret2;
->>>>  
->>>> +retry:
->>>>  		if (req->file->f_op->read_iter)
->>>>  			ret2 = call_read_iter(req->file, kiocb, &iter);
->>>>  		else
->>>> @@ -2619,6 +2715,9 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->>>>  			if (!(req->flags & REQ_F_NOWAIT) &&
->>>>  			    !file_can_poll(req->file))
->>>>  				req->flags |= REQ_F_MUST_PUNT;
->>>> +			if (io_rw_should_retry(req))
->>>
->>> It looks like a state machine with IOCB_WAITQ and gotos. Wouldn't it be cleaner
->>> to call call_read_iter()/loop_rw_iter() here directly instead of "goto retry" ?
->>
->> We could, probably making that part a separate helper then. How about the
->> below incremental?
-> 
-> IMHO, it was easy to get lost with such implicit state switching.
-> Looks better now! See a small comment below.
+---
 
-Agree, that is cleaner.
+Changelog v2:
+- This is a new patch created as a result of the discussion:
+  https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
+---
+ .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
->> diff --git a/fs/io_uring.c b/fs/io_uring.c
->> index a5a4d9602915..669dccd81207 100644
->> --- a/fs/io_uring.c
->> +++ b/fs/io_uring.c
->> @@ -2677,6 +2677,13 @@ static bool io_rw_should_retry(struct io_kiocb *req)
->>  	return false;
->>  }
->>  
->> +static int __io_read(struct io_kiocb *req, struct iov_iter *iter)
->> +{
->> +	if (req->file->f_op->read_iter)
->> +		return call_read_iter(req->file, &req->rw.kiocb, iter);
->> +	return loop_rw_iter(READ, req->file, &req->rw.kiocb, iter);
->> +}
->> +
->>  static int io_read(struct io_kiocb *req, bool force_nonblock)
->>  {
->>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
->> @@ -2710,11 +2717,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->>  	if (!ret) {
->>  		ssize_t ret2;
->>  
->> -retry:
->> -		if (req->file->f_op->read_iter)
->> -			ret2 = call_read_iter(req->file, kiocb, &iter);
->> -		else
->> -			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
->> +		ret2 = __io_read(req, &iter);
->>  
->>  		/* Catch -EAGAIN return for forced non-blocking submission */
->>  		if (!force_nonblock || ret2 != -EAGAIN) {
->> @@ -2729,8 +2732,11 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
->>  			if (!(req->flags & REQ_F_NOWAIT) &&
->>  			    !file_can_poll(req->file))
->>  				req->flags |= REQ_F_MUST_PUNT;
->> -			if (io_rw_should_retry(req))
->> -				goto retry;
->> +			if (io_rw_should_retry(req)) {
->> +				ret2 = __io_read(req, &iter);
->> +				if (ret2 != -EAGAIN)
->> +					goto out_free;
-> 
-> "goto out_free" returns ret=0, so someone should add a cqe
-> 
-> if (ret2 != -EAGAIN) {
-> 	kiocb_done(kiocb, ret2);
-> 	goto free_out;
-> }
-
-Fixed up in the current one.
-
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+index b80772cb9f06..da2509724812 100644
+--- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
++++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+@@ -12,9 +12,12 @@ maintainers:
+ description: |+
+   This is a generic reset driver using syscon to map the reset register.
+   The reset is generally performed with a write to the reset register
+-  defined by the register map pointed by syscon reference plus the offset
+-  with the value and mask defined in the reboot node.
+-  Default will be little endian mode, 32 bit access only.
++  defined by the SYSCON register map base plus the offset with the value and
++  mask defined in the reboot node. Default will be little endian mode, 32 bit
++  access only. The SYSCON registers map is normally retrieved from the
++  parental dt-node. So the SYSCON reboot node should be represented as a
++  sub-node of a "syscon", "simple-mfd" node. Though the regmap property
++  pointing to the system controller node is also supported.
+ 
+ properties:
+   compatible:
+@@ -30,7 +33,10 @@ properties:
+ 
+   regmap:
+     $ref: /schemas/types.yaml#/definitions/phandle
+-    description: Phandle to the register map node.
++    deprecated: true
++    description: |
++      Phandle to the register map node. This property is deprecated in favor of
++      the syscon-reboot node been a child of a system controller node.
+ 
+   value:
+     $ref: /schemas/types.yaml#/definitions/uint32
+@@ -38,7 +44,6 @@ properties:
+ 
+ required:
+   - compatible
+-  - regmap
+   - offset
+ 
+ additionalProperties: false
 -- 
-Jens Axboe
+2.26.2
 
