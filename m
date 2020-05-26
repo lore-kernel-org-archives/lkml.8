@@ -2,112 +2,81 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B936820704
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBtcweQR"
+	by mail.kernel.org (Postfix) with ESMTP id 3FDC720704
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 17:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389482AbgEZRgq (ORCPT
+        id S2389501AbgEZRhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 13:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388767AbgEZRgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 13:36:45 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3C3C03E96D;
-        Tue, 26 May 2020 10:36:45 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id 82so12820599lfh.2;
-        Tue, 26 May 2020 10:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6IlskwMTJl7vWoE1K5IAJ/zT8ap+14SXBXEKr3GYl3g=;
-        b=KBtcweQRN1Ly2WQUXwXrvirQmEJX3foTZW4k86v96UQeDg49R7AMZtxVtdl7dStIfG
-         IOlCXiIk6BMrrP9hy+4NPPbWG9lVAnxpzYs2XH6lPhGDowzhqH9fgUP4WdBnNt51h17A
-         7nRgiyUd7mx/Urv3qFgdfQzohn7nx3QizBvWB3xqlyIO6+nSxsHdxU7gu2V3jxLE6pWB
-         Twefvt4+3BqjyE1sqCmHa3AeBJXWX5c3fupFEYyvCw1trua85WmeYQsU9roOMhR8SnKm
-         /yOudbmkFNlakIR/k3AeccPIH3LybQo1/1GIXzXk36MZhcohCg14V41x/Vp26cFSKkjM
-         HTnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6IlskwMTJl7vWoE1K5IAJ/zT8ap+14SXBXEKr3GYl3g=;
-        b=EwDuP7K71XR6k/M8LoZFqBdgEuc7eXHU5V+8xvkCbeQUZO5XLbH+akV6DwuyTx8/Mv
-         S5TuolO8nFi2+V8Mk/6jkxLRKuDZBs0LdxN18eF928RqLRj3sGW4g/3oM/MfYgju5yg+
-         zbOymUeF1Q4VRd14ENiatmcRJBDd13EfpvO+Z1CXknXgiq9yIf0X1l9LRu1zRkjbvXOx
-         opUjFgyJ7+HZcRd2w9wRnEVmHwTpnXvkyMlc6qq9SwDlieEvrAgki7Iw8EpfCgYEUEnx
-         5o+30tfm/M30EITO1VrMrGG9Y7kg3xpepdQ320HvZHqGSue65PteBeSJ50tHt8zDeCWN
-         Ktbg==
-X-Gm-Message-State: AOAM5336O0GMl7pGrc6nXRErBVa8H1vTa25F0fJlVEn3jErsaENqWDej
-        ahG03jfdSUoNMAvjqCaTrzQ=
-X-Google-Smtp-Source: ABdhPJyGF8gpzWW7wy42TWKwQTsStej6Qdkik5tTvc30uBtfIRyorLEQTfvl5wF3x3X0+4UMqV4yHw==
-X-Received: by 2002:a19:987:: with SMTP id 129mr1035156lfj.8.1590514603702;
-        Tue, 26 May 2020 10:36:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-76-17-204.pppoe.mtu-net.ru. [91.76.17.204])
-        by smtp.googlemail.com with ESMTPSA id a6sm90002lji.29.2020.05.26.10.36.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 26 May 2020 10:36:42 -0700 (PDT)
-Subject: Re: [PATCH v11 33/56] Input: atmel_mxt_ts - delay enabling IRQ when
- not using regulators
-To:     "Wang, Jiada" <jiada_wang@mentor.com>
-Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200508055656.96389-34-jiada_wang@mentor.com>
- <3a942afa-c047-2c88-1c8e-a90fa018738e@gmail.com>
- <6af23ae6-2f1c-0459-d2b6-1b01ddb0c3dc@mentor.com>
- <c88d24ef-e0e0-db3b-1000-b21af906eb4f@gmail.com>
- <aaf99a11-037e-93d8-93e4-d83e3aa4a42e@mentor.com>
- <63c93fc0-ac09-ec77-c590-08e419734205@gmail.com>
- <8c6f73a2-f613-b402-d727-5cb7fb3e1f09@mentor.com>
- <2e41656c-e7e4-5dcb-1156-bcfcbc8ea595@gmail.com>
- <f5da1587-02e7-5704-a676-1829b915c6f8@gmail.com>
- <0e439df9-ccd4-699f-dbb3-51431d7f0fbe@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b3c1765b-8050-e8f6-b714-18bd40d58ef2@gmail.com>
-Date:   Tue, 26 May 2020 20:36:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <0e439df9-ccd4-699f-dbb3-51431d7f0fbe@mentor.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 26 May 2020 13:37:05 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33528 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388767AbgEZRhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 13:37:05 -0400
+IronPort-SDR: aEyHuJtU+0wVsMuLnuFCMOrIvwuLUozA0q5lh1s8cRjBkCQckG6EpcQ8CvfRcMcqefNw0DLlPh
+ BWcOFYv2up7g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 10:37:04 -0700
+IronPort-SDR: MJKhGcrATuF0i0KihAqALeT6vQzlCUKnj4irifv+c5R2fkiG4jSSSvt3WU07w6sFGOrz0/LpiV
+ +H1hu/8moy9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,437,1583222400"; 
+   d="scan'208";a="310319561"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2020 10:37:04 -0700
+Received: from orsmsx114.amr.corp.intel.com (10.22.240.10) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 26 May 2020 10:37:03 -0700
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.3]) by
+ ORSMSX114.amr.corp.intel.com ([169.254.8.205]) with mapi id 14.03.0439.000;
+ Tue, 26 May 2020 10:37:03 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>, Jue Wang <juew@google.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        x86 <x86@kernel.org>
+Subject: RE: [tip: ras/core] x86/{mce,mm}: Change so poison pages are either
+ unmapped or marked uncacheable
+Thread-Topic: [tip: ras/core] x86/{mce,mm}: Change so poison pages are
+ either unmapped or marked uncacheable
+Thread-Index: AQHWMoOxAO03JBXooEyMNcBj14jCyqi5ua4AgADovGA=
+Date:   Tue, 26 May 2020 17:37:03 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F64615F@ORSMSX115.amr.corp.intel.com>
+References: <159040440370.17951.17560303737298768113.tip-bot2@tip-bot2>
+ <20200525204010.GB25598@zn.tnic>
+In-Reply-To: <20200525204010.GB25598@zn.tnic>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.05.2020 17:51, Wang, Jiada пишет:
-> Hello Dmitry
-...
-> 
-> Thanks for detailed information to help me boot ubuntu on acer tab a500,
-> now I am able to boot it with ubuntu and reproduced the issue with v11
-> patch-set.
-> 
-> I will start to investigate the root cause,
-> from now on, my update patch-set will be tested on both samsung
-> chromebook pro and acer tab a500
-> 
-> Thanks for your help
-
-That's awesome!
-
-I haven't had a chance yet to investigate the problem of v11, maybe
-later this week. Please feel free to beat me to it :)
+PiBPaywgSSBoYWQgdG8gY2hhbmdlIHRoaXMgb25lIGR1ZSB0byBvdGhlciBwZW5kaW5nIGNoYW5n
+ZXMgaW4NCj4gdGlwOng4Ni9lbnRyeS4gVGhlIG5ldyB2ZXJzaW9uIGJlbG93Lg0KPg0KPiBDYW4g
+eW91IGd1eXMgcnVuIHRoaXMgYnJhbmNoIHRvIG1ha2Ugc3VyZSBpdCBzdGlsbCB3b3JrcyBhcyBl
+eHBlY3RlZD8NCj4NCj4gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5l
+bC9naXQvYnAvYnAuZ2l0L2xvZy8/aD10aXAtcmFzLWNvcmUNCg0KVGVzdGVkIHRoZSBuYXRpdmUg
+Y2FzZS4gV2UgY29ycmVjdGx5IHRyeSB0byBzZXQgdGhlIHBhZ2UgdW5jYWNoZWFibGUgYmVjYXVz
+ZQ0KdGhlIHNjb3BlIG9mIHRoZSBlcnJvciBpcyBhIGNhY2hlIGxpbmUuDQoNCkkgZG9uJ3QgaGF2
+ZSB0aGUgcmlnaHQgc2V0dXAgdG8gdGVzdCB0aGUgdmlydHVhbGl6YXRpb24gY2FzZS4gTWF5YmUg
+SnVlIGNhbiB0ZXN0IGFnYWluPw0KDQotVG9ueQ0K
