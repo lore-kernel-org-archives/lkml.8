@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF14220849
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A39320873
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 19:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590521449;
-	bh=gpZmhsnwNHdyJCaMvj9OyCG9hcuSd46Tspnmci5xZsQ=;
+	s=default; t=1590521453;
+	bh=bTdwv1vyZUg+549OUWqfF6B+jLil2PTqgnQIUtA4yM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ERehj1ekKQ6BNty+3ROdFUsp6piiyuJGJoPiqZAhL4auw8Fg3aeykbKs55c4dy7Ar
-	 XcPiyo89HS5+WSQyv4yeO69W6HXBqmE7P+0AT98yNu8TL0jqsCeMTUmdlOoXrPWkf0
-	 Z6ObF8/XFgM36BoVhsCYLtE5Vc160BfRi0jvNBhU=
+	b=f153PyT0aeQGOdA17Zmz22opcLOo0IIOx9Kk4l6HcvNjrhO2iKeryITHFJ3PXIA2T
+	 za+Sx2vHkrL4BaZgs8UBb4t/4jp1ozBnwXv9K8tC8SGI/8lI76Ny5aSC/MdjsPpitd
+	 xPEaNG28QMnDHBWDk42twoDrRP9NxXqZ0gCD8Eww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390789AbgEZTar (ORCPT
+        id S2390603AbgEZS7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 15:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 14:59:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390639AbgEZTAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 15:00:04 -0400
+        id S2389478AbgEZS7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 14:59:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0182C2084C;
-        Tue, 26 May 2020 19:00:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F8320849;
+        Tue, 26 May 2020 18:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590519603;
-        bh=gpZmhsnwNHdyJCaMvj9OyCG9hcuSd46Tspnmci5xZsQ=;
+        s=default; t=1590519588;
+        bh=bTdwv1vyZUg+549OUWqfF6B+jLil2PTqgnQIUtA4yM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YT09Gv5h0lsoNrV3Xly3VRO4l4sYijWKepz/SxB0uVsJ3tc857C3naDbauD1NsteK
-         +yLbOcLcrwkYKbV2IAvjwgEV0Gwpb/nRzKkITnKvuNYd3cHTc/eEYe70Tn/NDVGsWN
-         JQjT/x59mrGXNrEYZG8VvbfGZDOfvc94SjwKxk6w=
+        b=m4Mq2OxfDUn9Gt7GvuyVA7fawxkg2rd/3mSlKWQVkLdcs1XAnsn+zzUAzWvvUYM9h
+         P8Fp50hRuscDNyzvRGROALMusvV3QfxtXO3dubfUOc4FtgKv+EuZBQ9ZkdiqqdCglF
+         fDh+iLvpH4meYIYyAF++bFP31/QGV91wsUC7riu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, greg@kroah.com
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <g.nault@alphalink.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giuliano Procida <gprocida@google.com>
-Subject: [PATCH 4.9 40/64] l2tp: hold tunnel while handling genl TUNNEL_GET commands
-Date:   Tue, 26 May 2020 20:53:09 +0200
-Message-Id: <20200526183926.706282045@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?=E4=BA=BF=E4=B8=80?= <teroincn@gmail.com>,
+        Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>
+Subject: [PATCH 4.9 62/64] mei: release me_cl object reference
+Date:   Tue, 26 May 2020 20:53:31 +0200
+Message-Id: <20200526183931.584298265@linuxfoundation.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
 References: <20200526183913.064413230@linuxfoundation.org>
@@ -60,76 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <g.nault@alphalink.fr>
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-commit 4e4b21da3acc68a7ea55f850cacc13706b7480e9 upstream.
+commit fc9c03ce30f79b71807961bfcb42be191af79873 upstream.
 
-Use l2tp_tunnel_get() instead of l2tp_tunnel_find() so that we get
-a reference on the tunnel, preventing l2tp_tunnel_destruct() from
-freeing it from under us.
+Allow me_cl object to be freed by releasing the reference
+that was acquired  by one of the search functions:
+__mei_me_cl_by_uuid_id() or __mei_me_cl_by_uuid()
 
-Also move l2tp_tunnel_get() below nlmsg_new() so that we only take
-the reference when needed.
-
-Fixes: 309795f4bec2 ("l2tp: Add netlink control API for L2TP")
-Signed-off-by: Guillaume Nault <g.nault@alphalink.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Giuliano Procida <gprocida@google.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: 亿一 <teroincn@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200512223140.32186-1-tomas.winkler@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/l2tp/l2tp_netlink.c |   27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
 
---- a/net/l2tp/l2tp_netlink.c
-+++ b/net/l2tp/l2tp_netlink.c
-@@ -436,34 +436,37 @@ static int l2tp_nl_cmd_tunnel_get(struct
+---
+ drivers/misc/mei/client.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/misc/mei/client.c
++++ b/drivers/misc/mei/client.c
+@@ -276,6 +276,7 @@ void mei_me_cl_rm_by_uuid(struct mei_dev
+ 	down_write(&dev->me_clients_rwsem);
+ 	me_cl = __mei_me_cl_by_uuid(dev, uuid);
+ 	__mei_me_cl_del(dev, me_cl);
++	mei_me_cl_put(me_cl);
+ 	up_write(&dev->me_clients_rwsem);
+ }
  
- 	if (!info->attrs[L2TP_ATTR_CONN_ID]) {
- 		ret = -EINVAL;
--		goto out;
-+		goto err;
- 	}
- 
- 	tunnel_id = nla_get_u32(info->attrs[L2TP_ATTR_CONN_ID]);
- 
--	tunnel = l2tp_tunnel_find(net, tunnel_id);
--	if (tunnel == NULL) {
--		ret = -ENODEV;
--		goto out;
--	}
--
- 	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
- 	if (!msg) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto err;
-+	}
-+
-+	tunnel = l2tp_tunnel_get(net, tunnel_id);
-+	if (!tunnel) {
-+		ret = -ENODEV;
-+		goto err_nlmsg;
- 	}
- 
- 	ret = l2tp_nl_tunnel_send(msg, info->snd_portid, info->snd_seq,
- 				  NLM_F_ACK, tunnel, L2TP_CMD_TUNNEL_GET);
- 	if (ret < 0)
--		goto err_out;
-+		goto err_nlmsg_tunnel;
-+
-+	l2tp_tunnel_dec_refcount(tunnel);
- 
- 	return genlmsg_unicast(net, msg, info->snd_portid);
- 
--err_out:
-+err_nlmsg_tunnel:
-+	l2tp_tunnel_dec_refcount(tunnel);
-+err_nlmsg:
- 	nlmsg_free(msg);
--
--out:
-+err:
- 	return ret;
+@@ -297,6 +298,7 @@ void mei_me_cl_rm_by_uuid_id(struct mei_
+ 	down_write(&dev->me_clients_rwsem);
+ 	me_cl = __mei_me_cl_by_uuid_id(dev, uuid, id);
+ 	__mei_me_cl_del(dev, me_cl);
++	mei_me_cl_put(me_cl);
+ 	up_write(&dev->me_clients_rwsem);
  }
  
 
