@@ -2,188 +2,225 @@ Return-Path: <SRS0=fR4S=7I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D809FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8937AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7151207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CFC2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 26 May 2020 13:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AdrV5cjt"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="g1/7QOjK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgEZNuC (ORCPT
+        id S1729984AbgEZNuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 09:50:02 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50527 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727926AbgEZNuB (ORCPT
+        Tue, 26 May 2020 09:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40560 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729400AbgEZNuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 09:50:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590500999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xFBlBZWC8AF7yCEYzueJxo7F/xZ4SJZE1DQ6e6ZS30Y=;
-        b=AdrV5cjtZkt1KQnppcIKu+BDCxiKaxwzMfOpofupEioU9l0ko8f3y4+4YJWu9DyYFZC8LN
-        SroSzvMhdHmE7q8hpyCnGWFuKdiu1+BLeOvcyqdL3U2/kvmuQ9ceDFBf6PBgNsFqU/ojQ/
-        wbTlbVfdQU/FObsnIUWdACQ2laJp2go=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-jgdZsXC9MvCQcRE5mqSSag-1; Tue, 26 May 2020 09:49:57 -0400
-X-MC-Unique: jgdZsXC9MvCQcRE5mqSSag-1
-Received: by mail-qv1-f72.google.com with SMTP id h15so19761164qvk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:49:57 -0700 (PDT)
+        Tue, 26 May 2020 09:50:51 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD82BC03E96D
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:50:51 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cx22so1455568pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 06:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TsJ+ya7DLaAC9EC4liADTO0tprvxGjdA+7opmVl0FVA=;
+        b=g1/7QOjKa61RC7wBeOn5GBPb3KCi20eVgYcsv13bLH50Z/106HIIkaLsu8OSxDSIFg
+         ucdGdTmC48KzoU4rK60EfjAk9scExcaZ13dVFvi3tSLDoUcxKj/R/NFPqtNpe7MfrRXU
+         dw3ZyFTS7C4diWZUxMwp9bdibC+YFYfzhQPe0AE89vq49rIBUReh4cFWufHq8nko2pco
+         MTFYlOIl/V3YBqvvgIqihIeVIK2gPJx4HV3jVvEEkdeJvSqdMMBhrCeZukUvWBQCBePu
+         DWM01ieH5nVgZ2sYu/3BF4pfwo2Ml59RwghLR5qHs2m6V1axIso60dJSSbANhObcrRa8
+         V7Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xFBlBZWC8AF7yCEYzueJxo7F/xZ4SJZE1DQ6e6ZS30Y=;
-        b=CAnZWaDyHV7vVzXu/TXApNtivH8TZg0hJnEedNDXJd28nU/4sEj0NFUgmiM/Nx4Z2i
-         Ywx2pv+tndofU+Qy8EjofVyd06KZWxXxBMmL2r4dawmk7iPe7qNzkW9tpu7RTlRQAOtD
-         jGmnISaxklMV4TBxmKWbVCmcwlS8+LNZX9rsxEn2RuRuAwkE77qgRz5vGXP5R535dUSW
-         7Zf9ajhw/RW7HJqBdMLajrFAPGQ1oZPipL31WphlFR119D7r//Q1TY74uOzm874ryHNS
-         kfzFK21y7B2XJH0Mou0D4r5S1ZSBfUYlTh8yHmAk4wxU2029KLrA8jmcWWGi7/rXgc+m
-         ps2A==
-X-Gm-Message-State: AOAM5314xPbdAZ2YUZtgxVMXv6u3KDsw+hUvf9QG8A4fTeFzz+lsEZB3
-        SoCEMP9CNaQrNSPawFEaYauWrig72SzLS8KPxUPswvzVYYRzdHQ0EyZZ0is9ERHlnL7LPDfdjDe
-        gAxqVrdPAM9JiEcLdnwyB/q1T
-X-Received: by 2002:a05:620a:21cc:: with SMTP id h12mr207237qka.194.1590500997232;
-        Tue, 26 May 2020 06:49:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwW+SJpicJXuqvl2lxXngg9xX37ULjP0/u82Jcjf9Mx/AgkgHJKX/7o1q0P2H2FDSQOAsLqYA==
-X-Received: by 2002:a05:620a:21cc:: with SMTP id h12mr207200qka.194.1590500996867;
-        Tue, 26 May 2020 06:49:56 -0700 (PDT)
-Received: from xz-x1 (CPEf81d0fb19163-CMf81d0fb19160.cpe.net.fido.ca. [72.137.123.47])
-        by smtp.gmail.com with ESMTPSA id d78sm2522059qkg.106.2020.05.26.06.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 06:49:55 -0700 (PDT)
-Date:   Tue, 26 May 2020 09:49:54 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, cai@lca.pw,
-        Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [PATCH v3 3/3] vfio-pci: Invalidate mmaps and block MMIO access
- on disabled memory
-Message-ID: <20200526134954.GA1125781@xz-x1>
-References: <20200523193417.GI766834@xz-x1>
- <20200523170602.5eb09a66@x1.home>
- <20200523235257.GC939059@xz-x1>
- <20200525122607.GC744@ziepe.ca>
- <20200525142806.GC1058657@xz-x1>
- <20200525144651.GE744@ziepe.ca>
- <20200525151142.GE1058657@xz-x1>
- <20200525165637.GG744@ziepe.ca>
- <3d9c1c8b-5278-1c4d-0e9c-e6f8fdb75853@nvidia.com>
- <20200526003705.GK744@ziepe.ca>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TsJ+ya7DLaAC9EC4liADTO0tprvxGjdA+7opmVl0FVA=;
+        b=k8o04dHCsL0pL2ap5fwmgoJ8nLwNaCq3qN0FECy5TZ41TU71NoKThctThoLCV4V2sR
+         nb65ha2lYvhUbICMEel6CB0JALl88rTdXHZ2C+gGW9drWJbtlCNqXmuCPOQaCpgdVLR1
+         48MRrSrh2oECqjyykHRbo5a0b2CUdtI1LHCttkSrV9mkf8ev7jH+8evrSsDChhjczBfT
+         WeYPlMGAI1KtqTRMNLQ+i1Zj9yaafpJXWNjVMvenBFW3yjyBu8EaowPghJ2dkQV8//aT
+         DWH9ctD+nq05bN6IZHKrc4gswHi/RQbTMHJ5vY4p3Th8Es4ACwm+G2GcI0GPMd71A3DH
+         GpUg==
+X-Gm-Message-State: AOAM530yrdKBBrx3MakfFh9VKhZCnevsN01HoufcFSeAKwA95l/ul4V3
+        mPDBsNK4eesxpljDbEKTjHxWfX1rabhLng==
+X-Google-Smtp-Source: ABdhPJwb1HZnXvh9qc7bN00VRiWnUaq6RK+j3csWhmS5gI/dE6tv/8uzHsGkFpESYgQ0S8vnjlSm/A==
+X-Received: by 2002:a17:902:502:: with SMTP id 2mr1199090plf.134.1590501051121;
+        Tue, 26 May 2020 06:50:51 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:a9e6:df54:e55e:4c47? ([2605:e000:100e:8c61:a9e6:df54:e55e:4c47])
+        by smtp.gmail.com with ESMTPSA id i3sm15567936pfe.44.2020.05.26.06.50.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 06:50:50 -0700 (PDT)
+Subject: Re: [PATCH 12/12] io_uring: support true async buffered reads, if
+ file provides it
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200523185755.8494-1-axboe@kernel.dk>
+ <20200523185755.8494-13-axboe@kernel.dk>
+ <8d429d6b-81ee-0a28-8533-2e1d4faa6b37@gmail.com>
+ <717e474a-5168-8e1e-2e02-c1bdff007bd9@kernel.dk>
+ <a8212987-bd06-5c67-73d7-e77a654df4ac@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <69516a01-a209-8a7e-6b9a-7d5b6fef4e96@kernel.dk>
+Date:   Tue, 26 May 2020 07:50:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
+In-Reply-To: <a8212987-bd06-5c67-73d7-e77a654df4ac@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200526003705.GK744@ziepe.ca>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 09:37:05PM -0300, Jason Gunthorpe wrote:
-> On Mon, May 25, 2020 at 01:56:28PM -0700, John Hubbard wrote:
-> > On 2020-05-25 09:56, Jason Gunthorpe wrote:
-> > > On Mon, May 25, 2020 at 11:11:42AM -0400, Peter Xu wrote:
-> > > > On Mon, May 25, 2020 at 11:46:51AM -0300, Jason Gunthorpe wrote:
-> > > > > On Mon, May 25, 2020 at 10:28:06AM -0400, Peter Xu wrote:
-> > > > > > On Mon, May 25, 2020 at 09:26:07AM -0300, Jason Gunthorpe wrote:
-> > > > > > > On Sat, May 23, 2020 at 07:52:57PM -0400, Peter Xu wrote:
-> > > > > > > 
-> > > > > > > > For what I understand now, IMHO we should still need all those handlings of
-> > > > > > > > FAULT_FLAG_RETRY_NOWAIT like in the initial version.  E.g., IIUC KVM gup will
-> > > > > > > > try with FOLL_NOWAIT when async is allowed, before the complete slow path.  I'm
-> > > > > > > > not sure what would be the side effect of that if fault() blocked it.  E.g.,
-> > > > > > > > the caller could be in an atomic context.
-> > > > > > > 
-> > > > > > > AFAICT FAULT_FLAG_RETRY_NOWAIT only impacts what happens when
-> > > > > > > VM_FAULT_RETRY is returned, which this doesn't do?
-> > > > > > 
-> > > > > > Yes, that's why I think we should still properly return VM_FAULT_RETRY if
-> > > > > > needed..  because IMHO it is still possible that the caller calls with
-> > > > > > FAULT_FLAG_RETRY_NOWAIT.
-> > > > > > 
-> > > > > > My understanding is that FAULT_FLAG_RETRY_NOWAIT majorly means:
-> > > > > > 
-> > > > > >    - We cannot release the mmap_sem, and,
-> > > > > >    - We cannot sleep
-> > > > > 
-> > > > > Sleeping looks fine, look at any FS implementation of fault, say,
-> > > > > xfs. The first thing it does is xfs_ilock() which does down_write().
-> > > > 
-> > > > Yeah.  My wild guess is that maybe fs code will always be without
-> > > > FAULT_FLAG_RETRY_NOWAIT so it's safe to sleep unconditionally (e.g., I think
-> > > > the general #PF should be fine to sleep in fault(); gup should be special, but
-> > > > I didn't observe any gup code called upon file systems)?
-> > > 
-> > > get_user_pages is called on filesystem backed pages.
-> > > 
-> > > I have no idea what FAULT_FLAG_RETRY_NOWAIT is supposed to do. Maybe
-> > > John was able to guess when he reworked that stuff?
-> > > 
-> > 
-> > Although I didn't end up touching that particular area, I'm sure it's going
-> > to come up sometime soon, so I poked around just now, and found that
-> > FAULT_FLAG_RETRY_NOWAIT was added almost exactly 9 years ago. This flag was
-> > intended to make KVM and similar things behave better when doing GUP on
-> > file-backed pages that might, or might not be in memory.
-> > 
-> > The idea is described in the changelog, but not in the code comments or
-> > Documentation, sigh:
-> > 
-> > commit 318b275fbca1ab9ec0862de71420e0e92c3d1aa7
-> > Author: Gleb Natapov <gleb@redhat.com>
-> > Date:   Tue Mar 22 16:30:51 2011 -0700
-> > 
-> >     mm: allow GUP to fail instead of waiting on a page
-> > 
-> >     GUP user may want to try to acquire a reference to a page if it is already
-> >     in memory, but not if IO, to bring it in, is needed.  For example KVM may
-> >     tell vcpu to schedule another guest process if current one is trying to
-> >     access swapped out page.  Meanwhile, the page will be swapped in and the
-> >     guest process, that depends on it, will be able to run again.
-> > 
-> >     This patch adds FAULT_FLAG_RETRY_NOWAIT (suggested by Linus) and
-> >     FOLL_NOWAIT follow_page flags.  FAULT_FLAG_RETRY_NOWAIT, when used in
-> >     conjunction with VM_FAULT_ALLOW_RETRY, indicates to handle_mm_fault that
-> >     it shouldn't drop mmap_sem and wait on a page, but return VM_FAULT_RETRY
-> >     instead.
+On 5/26/20 1:44 AM, Pavel Begunkov wrote:
+> On 25/05/2020 22:59, Jens Axboe wrote:
+>> On 5/25/20 1:29 AM, Pavel Begunkov wrote:
+>>> On 23/05/2020 21:57, Jens Axboe wrote:
+>>>> If the file is flagged with FMODE_BUF_RASYNC, then we don't have to punt
+>>>> the buffered read to an io-wq worker. Instead we can rely on page
+>>>> unlocking callbacks to support retry based async IO. This is a lot more
+>>>> efficient than doing async thread offload.
+>>>>
+>>>> The retry is done similarly to how we handle poll based retry. From
+>>>> the unlock callback, we simply queue the retry to a task_work based
+>>>> handler.
+>>>>
+>>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>>> ---
+>>>>  fs/io_uring.c | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 99 insertions(+)
+>>>>
+>>> ...
+>>>> +
+>>>> +	init_task_work(&rw->task_work, io_async_buf_retry);
+>>>> +	/* submit ref gets dropped, acquire a new one */
+>>>> +	refcount_inc(&req->refs);
+>>>> +	tsk = req->task;
+>>>> +	ret = task_work_add(tsk, &rw->task_work, true);
+>>>> +	if (unlikely(ret)) {
+>>>> +		/* queue just for cancelation */
+>>>> +		init_task_work(&rw->task_work, io_async_buf_cancel);
+>>>> +		tsk = io_wq_get_task(req->ctx->io_wq);
+>>>
+>>> IIRC, task will be put somewhere around io_free_req(). Then shouldn't here be
+>>> some juggling with reassigning req->task with task_{get,put}()?
+>>
+>> Not sure I follow? Yes, we'll put this task again when the request
+>> is freed, but not sure what you mean with juggling?
 > 
-> So, from kvm's perspective it was to avoid excessively long blocking in
-> common paths when it could rejoin the completed IO by somehow waiting
-> on a page itself?
+> I meant something like:
 > 
-> It all seems like it should not be used unless the page is going to go
-> to IO?
-
-I think NOWAIT is used as a common flag for kvm for its initial attempt to
-fault in a normal page, however...  I just noticed another fact that actually
-__get_user_pages() won't work with PFNMAP (check_vma_flags should fail), but
-KVM just started to support fault() for PFNMAP from commit add6a0cd1c5b (2016)
-using fixup_user_fault(), where nvidia seems to have a similar request to have
-a fault handler on some mapped BARs.
-
+> ...
+> /* queue just for cancelation */
+> init_task_work(&rw->task_work, io_async_buf_cancel);
+> + put_task_struct(req->task);
+> + req->task = get_task_struct(io_wq_task);
 > 
-> Certainly there is no reason to optimize the fringe case of vfio
-> sleeping if there is and incorrect concurrnent attempt to disable the
-> a BAR.
+> 
+> but, thinking twice, if I got the whole idea right, it should be ok as
+> is -- io-wq won't go away before the request anyway, and leaving
+> req->task pinned down for a bit is not a problem.
 
-If fixup_user_fault() (which is always with ALLOW_RETRY && !RETRY_NOWAIT) is
-the only path for the new fault(), then current way seems ok.  Not sure whether
-this would worth a WARN_ON_ONCE(RETRY_NOWAIT) in the fault() to be clear of
-that fact.
+OK good, then I thin kwe agree it's fine.
 
-Thanks,
+>>>> +		task_work_add(tsk, &rw->task_work, true);
+>>>> +	}
+>>>> +	wake_up_process(tsk);
+>>>> +	return 1;
+>>>> +}
+>>> ...
+>>>>  static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>>>  {
+>>>>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+>>>> @@ -2601,6 +2696,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>>>  	if (!ret) {
+>>>>  		ssize_t ret2;
+>>>>  
+>>>> +retry:
+>>>>  		if (req->file->f_op->read_iter)
+>>>>  			ret2 = call_read_iter(req->file, kiocb, &iter);
+>>>>  		else
+>>>> @@ -2619,6 +2715,9 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>>>  			if (!(req->flags & REQ_F_NOWAIT) &&
+>>>>  			    !file_can_poll(req->file))
+>>>>  				req->flags |= REQ_F_MUST_PUNT;
+>>>> +			if (io_rw_should_retry(req))
+>>>
+>>> It looks like a state machine with IOCB_WAITQ and gotos. Wouldn't it be cleaner
+>>> to call call_read_iter()/loop_rw_iter() here directly instead of "goto retry" ?
+>>
+>> We could, probably making that part a separate helper then. How about the
+>> below incremental?
+> 
+> IMHO, it was easy to get lost with such implicit state switching.
+> Looks better now! See a small comment below.
+
+Agree, that is cleaner.
+
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index a5a4d9602915..669dccd81207 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -2677,6 +2677,13 @@ static bool io_rw_should_retry(struct io_kiocb *req)
+>>  	return false;
+>>  }
+>>  
+>> +static int __io_read(struct io_kiocb *req, struct iov_iter *iter)
+>> +{
+>> +	if (req->file->f_op->read_iter)
+>> +		return call_read_iter(req->file, &req->rw.kiocb, iter);
+>> +	return loop_rw_iter(READ, req->file, &req->rw.kiocb, iter);
+>> +}
+>> +
+>>  static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  {
+>>  	struct iovec inline_vecs[UIO_FASTIOV], *iovec = inline_vecs;
+>> @@ -2710,11 +2717,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  	if (!ret) {
+>>  		ssize_t ret2;
+>>  
+>> -retry:
+>> -		if (req->file->f_op->read_iter)
+>> -			ret2 = call_read_iter(req->file, kiocb, &iter);
+>> -		else
+>> -			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
+>> +		ret2 = __io_read(req, &iter);
+>>  
+>>  		/* Catch -EAGAIN return for forced non-blocking submission */
+>>  		if (!force_nonblock || ret2 != -EAGAIN) {
+>> @@ -2729,8 +2732,11 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+>>  			if (!(req->flags & REQ_F_NOWAIT) &&
+>>  			    !file_can_poll(req->file))
+>>  				req->flags |= REQ_F_MUST_PUNT;
+>> -			if (io_rw_should_retry(req))
+>> -				goto retry;
+>> +			if (io_rw_should_retry(req)) {
+>> +				ret2 = __io_read(req, &iter);
+>> +				if (ret2 != -EAGAIN)
+>> +					goto out_free;
+> 
+> "goto out_free" returns ret=0, so someone should add a cqe
+> 
+> if (ret2 != -EAGAIN) {
+> 	kiocb_done(kiocb, ret2);
+> 	goto free_out;
+> }
+
+Fixed up in the current one.
 
 -- 
-Peter Xu
+Jens Axboe
 
