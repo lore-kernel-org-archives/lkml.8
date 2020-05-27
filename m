@@ -2,95 +2,79 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E16C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C70D8207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="sExtPwMI"
+	by mail.kernel.org (Postfix) with ESMTP id 2F73B207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387486AbgE0Dtv (ORCPT
+        id S2387503AbgE0DuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgE0Dtu (ORCPT
+        Tue, 26 May 2020 23:50:01 -0400
+Received: from [58.211.163.100] ([58.211.163.100]:60890 "EHLO
+        mail.advantech.com.cn" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387487AbgE0DuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:49:50 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20736C03E97B
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 20:49:49 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x12so18127816qts.9
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 20:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dVMhtUwlG7AgZ0Ijz3j9HLaOpimNX6eb8QQEpufvZ6g=;
-        b=sExtPwMIpav1ROWvRyoQV2sve5tEvstu/cUoWiG8YF+qvuePbma/yLZ0k8svPQhpQg
-         b4zE5SnUv8LyJ/sXjy2t8wvivL6wwko8GOq6BSMx0Zu4S8is/+8gROSd9+J/EJkreJaE
-         0dIpEI8jMKZOz1gNuUUDxRlpZq68hkucY9YMRiTDP4grSJsIleVRRkDO6pksVFnEhXIZ
-         xhWfDqzwFOAcFFLGQNzsV3Hz/l1mHI9pk5+ZEix3zzH/uUALeraXLtiAvAGFniq2CS2t
-         3LLlbEGo2DFv51LzG3hD1/mwnfS8mr864C/U+LpL3U8s0jSDsyaB3q59lH4r68bDRqt3
-         WMHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dVMhtUwlG7AgZ0Ijz3j9HLaOpimNX6eb8QQEpufvZ6g=;
-        b=rSO3cAj97Ni3b3camdlkVy5+DOMJkcRVhVTd1UZL+qS7zhc8O2Ht47+DEMhvFjAktR
-         UY9ccBXhD03dX82LXeBCb7DZGlrFKSs3+nihV6lfJSRk2WQ7JNegNrqhjHjVpDozgZVL
-         prDWQIGNK8vf55k31p4I5mqmvb3SVyLupAhOjeIQ2OoYF/Rt+hChnRWzhb9nfbdQLrSh
-         doquoHgY5IrQxuEhlKr3KeX3iqkGjXwy/tmFCOWbfIhhmcOuYd34lzIzJvQnINZDxgLl
-         gAyWJhb/VwqSxD0rgegjP2LUL2AaJeO3TiEW0ruDVSLrT7yGU6fjMOnLZkXWeher5UuU
-         XFVA==
-X-Gm-Message-State: AOAM530f3gn2X5Cs/SRlc0EMda3KjSMaM8UG961dXdf0GcGfc6f4MnhK
-        fc0Lj7BzZHsvo9ZI6hYhoow/OGenz9PFZfvIkWLzFQ==
-X-Google-Smtp-Source: ABdhPJzw/Ea21QjAz+NNc+UEvVjKgzKsu7W2vzxBdItWR7V+TRRc1JIl7TX2+ezCAqEJ32OO1Ie36scyU+a6wB1ZZqk=
-X-Received: by 2002:ac8:7383:: with SMTP id t3mr2301591qtp.221.1590551388107;
- Tue, 26 May 2020 20:49:48 -0700 (PDT)
+        Tue, 26 May 2020 23:50:01 -0400
+Received: from ACNMB2.ACN.ADVANTECH.CORP (unverified [172.21.128.148]) by ACN-SWEEPER01.ACN.ADVANTECH.CORP
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdf625ddc7dac158030ecc@ACN-SWEEPER01.ACN.ADVANTECH.CORP>;
+ Wed, 27 May 2020 11:47:05 +0800
+Received: from ADVANTECH.CORP (172.17.10.144) by ACNMB2.ACN.ADVANTECH.CORP
+ (172.21.128.148) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 27 May
+ 2020 11:49:57 +0800
+From:   <yuechao.zhao@advantech.com.cn>
+To:     <345351830@qq.com>
+CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
+        <jia.sui@advantech.com.cn>,
+        Yuechao Zhao <yuechao.zhao@advantech.com.cn>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [v2,1/1] hwmon:(nct7904) Set default timeout
+Date:   Wed, 27 May 2020 03:49:50 +0000
+Message-ID: <1590551390-40177-1-git-send-email-yuechao.zhao@advantech.com.cn>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com> <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan> <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com> <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
-In-Reply-To: <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Wed, 27 May 2020 11:49:36 +0800
-Message-ID: <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [172.17.10.144]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ ACNMB2.ACN.ADVANTECH.CORP (172.21.128.148)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
 
-On Tue, May 26, 2020 at 6:20 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> I gave it a try with U-Boot with my latest work and couldn't reproduce it, so it
-> seems that I fixed it along the way
+The timeout module parameter should not be used for setting the default
+timeout. Because, if you set the timeout = 0, the default timeout will
+be meaningless. And the timeout module parameter of 0 means "no timeout
+module paraameter specified".
 
-Is your latest work available in a git branch anywhere that we could
-test directly?
+Signed-off-by: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
+---
+- modify subject to 'hwmon:(nct7904) Set default timeout'
+---
+ drivers/hwmon/nct7904.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Daniel
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index 18c95be..27eb276 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -1147,7 +1147,7 @@ static int nct7904_probe(struct i2c_client *client,
+ 	data->wdt.ops = &nct7904_wdt_ops;
+ 	data->wdt.info = &nct7904_wdt_info;
+ 
+-	data->wdt.timeout = timeout * 60; /* in seconds */
++	data->wdt.timeout = WATCHDOG_TIMEOUT * 60; /* Set default timeout */
+ 	data->wdt.min_timeout = MIN_TIMEOUT;
+ 	data->wdt.max_timeout = MAX_TIMEOUT;
+ 	data->wdt.parent = &client->dev;
+-- 
+1.8.3.1
+
