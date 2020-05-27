@@ -2,120 +2,240 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F20DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F20102089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56B6D208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387420AbgE0UJh (ORCPT
+        id S2387536AbgE0UJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:09:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:52878 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgE0UJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:09:36 -0400
-IronPort-SDR: TaMRkLinzWzGr3EtcyDBzxPV47kU3Rcsrf2v6gVDD7H/mDbf4OyHMauQe+Z1VyYQFAaZfqQ8KA
- W6DEFsFpsk+Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 13:09:35 -0700
-IronPort-SDR: Uae7lhmeinT5YiWWmiUkt6Tj7A1nsDizky35Cl75Rv3tTZYtdmqBDkYOzeLGMAeuc2tnKOfKQF
- EofL5u+UPwLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
-   d="scan'208";a="376137006"
-Received: from lkakolx-mobl.ger.corp.intel.com ([10.249.43.73])
-  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 13:09:30 -0700
-Message-ID: <37da2695fe6de09d69e27b77f3e29e068596205f.camel@linux.intel.com>
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mario.Limonciello@dell.com, peterhuewe@gmx.de, jgg@ziepe.ca
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in, alex@guzman.io
-Date:   Wed, 27 May 2020 23:09:28 +0300
-In-Reply-To: <1590521924.15108.1.camel@HansenPartnership.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
-         <1590521924.15108.1.camel@HansenPartnership.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 27 May 2020 16:09:52 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46008 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387432AbgE0UJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:09:52 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id 5345E2A0494
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     axboe@kernel.dk, corbet@lwn.net, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH] docs: block: Create blk-mq documentation
+Date:   Wed, 27 May 2020 17:09:39 -0300
+Message-Id: <20200527200939.77452-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 12:38 -0700, James Bottomley wrote:
-> On Tue, 2020-05-26 at 19:23 +0000, Mario.Limonciello@dell.com wrote:
-> > > On Tue, 2020-05-26 at 13:32 -0500, Mario Limonciello wrote:
-> > > > This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
-> > > > 
-> > > > This commit has caused regressions for the XPS 9560 containing
-> > > > a Nuvoton TPM.
-> > > 
-> > > Presumably this is using the tis driver?
-> > 
-> > Correct.
-> > 
-> > > > As mentioned by the reporter all TPM2 commands are failing with:
-> > > >   ERROR:tcti:src/tss2-tcti/tcti-
-> > > > device.c:290:tcti_device_receive()
-> > > >   Failed to read response from fd 3, got errno 1: Operation not
-> > > > permitted
-> > > > 
-> > > > The reporter bisected this issue back to this commit which was
-> > > > backported to stable as commit 4d6ebc4.
-> > > 
-> > > I think the problem is request_locality ... for some inexplicable
-> > > reason a failure there returns -1, which is EPERM to user space.
-> > > 
-> > > That seems to be a bug in the async code since everything else
-> > > gives a ESPIPE error if tpm_try_get_ops fails ... at least no-one
-> > > assumes it gives back a sensible return code.
-> > > 
-> > > What I think is happening is that with the patch the TPM goes
-> > > through a quick sequence of request, relinquish, request,
-> > > relinquish and it's the third request which is failing (likely
-> > > timing out).  Without the patch, the patch there's only one
-> > > request,relinquish cycle because the ops are held while the async
-> > > work is executed.  I have a vague recollection that there is a
-> > > problem with too many locality request in quick succession, but
-> > > I'll defer to Jason, who I think understands the intricacies of
-> > > localities better than I do.
-> > 
-> > Thanks, I don't pretend to understand the nuances of this particular
-> > code, but I was hoping that the request to revert got some attention
-> > since Alex's kernel Bugzilla and message a few months ago to linux
-> > integrity weren't.
-> > 
-> > > If that's the problem, the solution looks simple enough: just move
-> > > the ops get down because the priv state is already protected by the
-> > > buffer mutex
-> > 
-> > Yeah, if that works for Alex's situation it certainly sounds like a
-> > better solution than reverting this patch as this patch actually does
-> > fix a problem reported by Jeffrin originally.
-> > 
-> > Could you propose a specific patch that Alex and Jeffrin can perhaps
-> > both try?
-> 
-> Um, what's wrong with the one I originally attached and which you quote
-> below?  It's only compile tested, but I think it will work, if the
-> theory is correct.
+Create a documentation providing a background and explanation around the
+operation of the Multi-Queue Block IO Queueing Mechanism (blk-mq).
 
-Please send a legit patch, thanks.
+The reference for writing this documentation was the source code and
+"Linux Block IO: Introducing Multi-queue SSD Access on Multi-core
+Systems", by Axboe et al.
 
-/Jarkko
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
+Hello,
+
+This commit was tested using "make htmldocs" and the HTML output has
+been verified.
+
+Thanks,
+	André
+---
+ Documentation/block/blk-mq.rst | 154 +++++++++++++++++++++++++++++++++
+ Documentation/block/index.rst  |   1 +
+ 2 files changed, 155 insertions(+)
+ create mode 100644 Documentation/block/blk-mq.rst
+
+diff --git a/Documentation/block/blk-mq.rst b/Documentation/block/blk-mq.rst
+new file mode 100644
+index 000000000000..4c37b37df50e
+--- /dev/null
++++ b/Documentation/block/blk-mq.rst
+@@ -0,0 +1,154 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++================================================
++Multi-Queue Block IO Queueing Mechanism (blk-mq)
++================================================
++
++The Multi-Queue Block IO Queueing Mechanism is an API to enable fast storage
++devices to achieve a huge number of input/output operations per second (IOPS)
++through queueing and submitting IO requests to block devices simultaneously,
++benefiting from the parallelism offered by modern storage devices.
++
++Introduction
++============
++
++Background
++----------
++
++Magnetic hard disks have been the de facto standard from the beginning of the
++development of the kernel. The Block IO subsystem aimed to achieve the best
++performance possible for those devices with a high penalty when doing random
++access, and the bottleneck was the mechanical moving parts, a lot more slower
++than any layer on the storage stack. One example of such optimization technique
++involves ordering read/write requests accordingly to the current position of
++the hard disk head.
++
++However, with the development of Solid State Drivers and Non-Volatile Memories
++without mechanical parts nor random access penalty and capable of performing
++high parallel access, the bottleneck of the stack had moved from the storage
++device to the operating system. In order to  take advantage of the parallelism
++in those devices design, the multi-queue mechanism was introduced.
++
++The former design had a single queue to store block IO requests with a single
++lock, that did not scale well in SMP systems due to dirty data in cache and the
++bottleneck of having a single lock for multiple processors. This setup also
++suffered with congestion when different processes (or the same process, moving
++to different CPUs) wanted to perform block IO. Instead of this, this API spawns
++multiple queues with individual entry points local to the CPU, removing the
++need for a lock. A deeper explanation on how this works is covered in the
++following section (`Operation`_).
++
++Operation
++---------
++
++When the userspace performs IO to a block device (reading or writing a file,
++for instance), the blk-mq takes action: it will store and manage IO requests to
++the block device, acting as a middleware between the userspace (and a file
++system, if present) and the block device driver.
++
++The blk-mq has two group of queues: software staging queues and hardware
++dispatch queues. When the request arrives the block layer, it will try the
++shortest path possible: send it directly to the hardware queue. However, there
++are two cases that it might not to do that: if there's an IO scheduler attached
++at the layer or if we want to try to merge requests. In both cases, requests
++will be sent to the software queue.
++
++Then, after the requests being processed at software queues, they will be
++placed at the hardware queue, a second stage queue were the hardware has direct
++access to process those requests. However, if the hardware has not enough
++resources to accept more requests, it will place requests at temporary queue,
++to be sent in the future, when the hardware is able.
++
++Software staging queues
++~~~~~~~~~~~~~~~~~~~~~~~
++
++The block IO subsystem adds requests (represented by struct
++:c:type:`blk_mq_ctx`) in the software staging queues in case that they weren't
++sent directly to the driver. A request is a collection of BIOs. They arrived at
++the block layer through the data structures struct :c:type:`bio`. The block
++layer will then build a new structure from it, the struct :c:type:`request`
++that will be used to communicate with the device driver. Each queue has its
++owns lock and the number of queues is defined by a per-CPU or per-node basis.
++
++The staging queue can be used to merge requests for adjacent sectors. For
++instance, requests for sector 3-6, 6-7, 7-9 can become one request for 3-9.
++Even if random access to SSDs and NVMs have the same time of response compared
++to sequential access, grouped requests for sequential access decreases the
++number of individual requests. This technique of merging requests is called
++plugging.
++
++Along with that, the requests can be reordered to ensure fairness of system
++resources (e.g. to ensure that no application suffer from starvation) and/or to
++improve IO performance, by an IO scheduler.
++
++IO Schedulers
++^^^^^^^^^^^^^
++
++There are several schedulers implemented by the block layer, each one following
++a heuristics to improve the IO performance. They are "pluggable" (as in plug
++and play), in the sense of they can be selected at run time using sysfs. You
++can read more about Linux's IO schedulers `here
++<https://www.kernel.org/doc/html/latest/block/index.html>`_. The scheduling
++happens only between requests in the same queue, so it is not possible to merge
++requests from different queues, otherwise there would be cache trashing and a
++need to have a lock for each queue. After the scheduling, the requests are
++eligible to be sent to the hardware. One of the possibles schedulers to be
++selected is the NOOP scheduler, the most straightforward one, that implements a
++simple FIFO, without performing any reordering. This is useful in the following
++scenarios: when scheduling will be performed in a next step somewhere in the
++stack, like block devices controllers; the actual sector position of blocks are
++transparent for the host, meaning it hasn't enough information to take a proper
++decision; or the overhead of reordering is higher than the handicap of
++non-sequential accesses.
++
++Hardware dispatch queues
++~~~~~~~~~~~~~~~~~~~~~~~~
++
++The hardware queue is a memory space shared with the block device (e.g. DMA)
++where the hardware can access and dispatch requests (represented by struct
++:c:type:`blk_mq_hw_ctx`). To run this queue, the block layer removes
++requests from the associated software queues and tries to dispatch to the
++hardware.
++
++If it's not possible to send the requests directly to hardware, they will be
++added to a linked list (:c:type:`hctx->dispatched`) of requests. Then,
++next time the block layer runs a queue, it will send the requests laying at the
++:c:type:`dispatched` list first, to ensure a fairness dispatch with those
++requests that were ready to be sent first. The number of hardware queues
++depends on the number of hardware context supported by the hardware and its
++device driver, but it will not be more than the number of cores of the system.
++There is no reordering at this stage, and each software queues has a set of
++hardware queues to send requests for.
++
++.. note::
++
++        Neither the block layer nor the device protocols guarantee
++        the order of completion of requests. This must be handled by
++        higher layers, like the filesystem.
++
++Tag-based completion
++~~~~~~~~~~~~~~~~~~~~
++
++In order to indicate which request has been completed, every request is
++identified by an integer, ranging from 0 to the dispatch queue size. This tag
++is generated by the block layer and later reused by the device driver, removing
++the need to create a redundant identifier. When a request is completed in the
++drive, the tag is sent back to the block layer to notify it of the finalization.
++This removes the need to do a linear search to find out which IO has been
++completed.
++
++Further reading
++---------------
++
++- `Linux Block IO: Introducing Multi-queue SSD Access on Multi-core Systems <http://kernel.dk/blk-mq.pdf>`_
++
++- `NOOP scheduler <https://en.wikipedia.org/wiki/Noop_scheduler>`_
++
++- `Null block device driver <https://www.kernel.org/doc/html/latest/block/null_blk.html>`_
++
++Source code documentation
++=========================
++
++.. kernel-doc:: include/linux/blk-mq.h
++
++.. kernel-doc:: block/blk-mq.c
+diff --git a/Documentation/block/index.rst b/Documentation/block/index.rst
+index 3fa7a52fafa4..3a3f38322185 100644
+--- a/Documentation/block/index.rst
++++ b/Documentation/block/index.rst
+@@ -10,6 +10,7 @@ Block
+    bfq-iosched
+    biodoc
+    biovecs
++   blk-mq
+    capability
+    cmdline-partition
+    data-integrity
+-- 
+2.26.2
 
