@@ -2,194 +2,89 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE51C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F202620C56
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:52:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B9A20E65
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbgE0Hwf (ORCPT
+        id S2387684AbgE0Hwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:52:35 -0400
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:37488 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387580AbgE0Hwf (ORCPT
+        Wed, 27 May 2020 03:52:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46930 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387650AbgE0Hwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:52:35 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 04R7pVcN020237; Wed, 27 May 2020 16:51:31 +0900
-X-Iguazu-Qid: 34trvY1fG1mvPucIcN
-X-Iguazu-QSIG: v=2; s=0; t=1590565891; q=34trvY1fG1mvPucIcN; m=V/JwDVwyufJlnOHiv8pezmCqoI4GjsYCFwr1FYcaDEc=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1513) id 04R7pRHt031104;
-        Wed, 27 May 2020 16:51:27 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id 04R7pRnP025984;
-        Wed, 27 May 2020 16:51:27 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id 04R7pQZO028147;
-        Wed, 27 May 2020 16:51:26 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c23lg8HJ5myAesg7k+BYDKeGHCwFwfjJzUdmz0JoWZ249B5WC7IzIOWJ1wLr5jI/Qtjlablsla1SYTSJ/b3eACKyHC0uGqKb7RmZ7QVnsKpOPf90y+uOoCdIc2zt2uaEt7OqWKAQ+2TW/gdPhfOgOs61VdmGexh0wepN91TDDYibe6M28iiOSkVdcj6EhYTezCt0xBeTOof2kOlQGKCVobzofkqCTk0zyIw98CVI7UixLKIIlH55nwVS/5IRXPO7krGyhWsSsjxsi5/8OzVDG/rZlJFWJCOqvokNfFgZy/gTimnu8dbcIgAPb83DqBJpIUEbowEVgRQKoCScWwy94A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SHaib6lqr49fhWmqMZyIIXjop2QTa7ActVMtMNXsaQ0=;
- b=Uv4QJmQFx9jsLJmifU8bjXbTH3wd00FvTAI+jDK/oiEDB/oCW1Clu2oHqgrBjRfEhJU2OPh1CvpV9pVEtCNQYiZSi+xgwsBh/dGfHAGeNeeb9nSsJ1OE1FbKozEyNXVPch5iOS8ANz2TdvAQxA3Up3ZlpSR3voJQf3N0nyCikEi/kxrgeNltDvA77AsPEVcnNrGaIMqFNHZknamzMFz5QZklrlHghEpQi0dS/4M+sErYovp3LV3o3bPsto5ip4gNWqu9XnS3wFCDwqJB+hdReX2vECsMEQwXZ2ttj9WRt7L40Bh/v/C8mpjmIKQU866G1jkWyGoRoLOTcdHVZpoR2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toshiba.co.jp; dmarc=pass action=none
- header.from=toshiba.co.jp; dkim=pass header.d=toshiba.co.jp; arc=none
-From:   <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, <peterz@infradead.org>,
-        <lvenanci@redhat.com>, <torvalds@linux-foundation.org>,
-        <efault@gmx.de>, <riel@redhat.com>, <tglx@linutronix.de>,
-        <lwang@redhat.com>, <mingo@kernel.org>,
-        <daniel.m.jordan@oracle.com>, <sashal@kernel.org>
-Subject: RE: [PATCH 4.4 26/65] sched/fair, cpumask: Export for_each_cpu_wrap()
-Thread-Topic: [PATCH 4.4 26/65] sched/fair, cpumask: Export
- for_each_cpu_wrap()
-Thread-Index: AQHWM49OdkD5h5MJHk66Ceus/dOIHai7hyGQ
-Date:   Wed, 27 May 2020 07:50:56 +0000
-X-TSB-HOP: ON
-Message-ID: <OSBPR01MB29836310986EC6E2E132A02F92B10@OSBPR01MB2983.jpnprd01.prod.outlook.com>
-References: <20200526183905.988782958@linuxfoundation.org>
- <20200526183915.976645661@linuxfoundation.org>
-In-Reply-To: <20200526183915.976645661@linuxfoundation.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-authentication-results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=toshiba.co.jp;
-x-originating-ip: [103.91.184.0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4840a48-fec0-475f-fec9-08d80212b0a6
-x-ms-traffictypediagnostic: OSBPR01MB2150:
-x-microsoft-antispam-prvs: <OSBPR01MB215085E674C72D275D6915B092B10@OSBPR01MB2150.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:93;
-x-forefront-prvs: 04163EF38A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IA6GCQgJCX3hK61LJqZF1lRRGZjE/jb1Yti1aAJMRDT/0TGPbrYcmEAObar4+Cq909dJ0iJHM5WiXyFIW3DHKncuxEkqoP8u+6WSZcLTCPOYUU8Ey/IWuveT0zJyWy8n8x7yLueNH8IqBBW7PkFeiFf911izLyZwfiQ7vtPLvPV+gGqr9IyNAVLlTjFfny4SGAwAkXvfwhbmpOpNk+0sQO/Sc2Mnsk304rIuFEAfXQiWzHupPupFwS8gDYHHdCjR97NuRwGTx0WJt4rxb3sdD9QlgyVlSGK6SjewcUe6rEPHnXxlgj5e3JS+YCkYNNDxvU+/OhLdV9UiF1drsGjmoNi/SpKsktQAlPHXE/njY/1PoXB3pXYi51pnY4iT99J5m36eNKk/w4FpoFlJ/hIlzw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB2983.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(64756008)(33656002)(2906002)(86362001)(55016002)(316002)(66946007)(7416002)(66476007)(9686003)(4326008)(5660300002)(66556008)(478600001)(66446008)(966005)(76116006)(110136005)(186003)(26005)(45080400002)(8676002)(52536014)(6506007)(71200400001)(53546011)(8936002)(54906003)(83380400001)(7696005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: VCSwZkv2DOeQzTe96fISoFiYnU14EQbfT1jD7tIO1UxcQPjNMmKKq/ucOnQGjudgLCguLSBVitH2rJhCENYS+TWcBNNsHd3IU2iijcTUpzQQfrakqZ7LaMn1XvoxqPaMrWKFoBt5QkfUuKSrdJTqI0fjkWpEQVE8yRruBxmbp25PRqlLnhIShjpQIkbuIgByTGVfuhe32vCias3PKW1A+7fUOA3bKc4qrK793akWq3XZ8SIK+ohlgfaZgtqoHviAWLtwyunFf+uReFn/itqvSYS4AyD5ZtGFlHq1H4sFNboi6skayXJuUyZc60vZG1M7CyW63n00ygfubLpgIXFXuXTeKjWykEGdVXx2LpR3nrgSnFkz8BLcyUDRzjA4u+Yf1ItVEv2ehX8Vn3ZRp7A7erpTldGWU3XPD75MUmjze4ekf6LGS/PFXTuJKHEFNV01zqIdOBYRUo/Sun2cHehmTpIqkDvNK0eo5+ECUuxfHMc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 27 May 2020 03:52:43 -0400
+Received: by mail-ot1-f66.google.com with SMTP id g25so18458909otp.13;
+        Wed, 27 May 2020 00:52:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S/vXGrBoFycwluM2P5rydMxcUoPDQRXCjdLYfWHMt+E=;
+        b=nRaSjJe3qtTsnpuPc36TJBCa8WIfR3RHp8BMv/yh6UlvBWcICMRZHdxbwBqG/bAqUa
+         oybSSVMKskrspoZDTXqHkLjGh/DRmdK9Pfd66iKCpVSSYzrMNoAOmggF5QlJZ5XqXSPu
+         3BPC2BZYdCjuh5NC7jAAgQLXt9Ooz7NnybuVEInI+18BDgHZqpyFnkCfvqDObuV9N131
+         BiitQ2Q8HYfOPrnJSJ8o9GPMDG4NnGZLCChpvkJkSip2OU+234m7U4bTt+0WvdA18c2C
+         ruTIesetsBSwqMVZMV/CMaxFB08i1dwziZO2lsR98ywQd/IzeEhfRGhwnrykEZudoR+8
+         kz+w==
+X-Gm-Message-State: AOAM533tcNNzZ+93RePWbC0mtIKfE2sddhLxntwQCTrUovsKFCTzb2/k
+        1+B89Glug4bDwN6Vo7OGIXyjTE7tvtPfEa0f4ve/nA==
+X-Google-Smtp-Source: ABdhPJyh6XnGunqKyldUQUDAVmqdF5DZz8KnpZzyv3nLlCp4H9hrYSx91YK6xYIWALYMvjLu0Y9UEg6PEXXjbHVOKSI=
+X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr3526020ote.107.1590565962830;
+ Wed, 27 May 2020 00:52:42 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4840a48-fec0-475f-fec9-08d80212b0a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2020 07:50:56.8276
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f109924e-fb71-4ba0-b2cc-65dcdf6fbe4f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OmwobLj8AAXokCgdI7QMbW9Blj7WdjEa8hsadPWUtGorNwhXGbBiD6fr3VQj27/OB0/REE0bIuVW2BuoA2rAK6qWo0H/z+WRUd/2AI5ygohqz2lhgOxpA+twje1E6OKE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB2150
-X-OriginatorOrg: toshiba.co.jp
-MSSCP.TransferMailToMossAgent: 103
+References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590526904-13855-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590526904-13855-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 27 May 2020 09:52:31 +0200
+Message-ID: <CAMuHMdWQ5i4QiMuSEPrHC4i6fDGa2aJrKO5gzyrsc=uCCdYAhQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7742: Add audio support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogc3RhYmxlLW93bmVy
-QHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOnN0YWJsZS1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9u
-IEJlaGFsZiBPZiBHcmVnIEtyb2FoLUhhcnRtYW4NCj4gU2VudDogV2VkbmVzZGF5LCBNYXkgMjcs
-IDIwMjAgMzo1MyBBTQ0KPiBUbzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzog
-R3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IHN0YWJsZUB2
-Z2VyLmtlcm5lbC5vcmc7IFBldGVyIFppamxzdHJhIChJbnRlbCkNCj4gPHBldGVyekBpbmZyYWRl
-YWQub3JnPjsgTGF1cm8gUmFtb3MgVmVuYW5jaW8gPGx2ZW5hbmNpQHJlZGhhdC5jb20+OyBMaW51
-cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+Ow0KPiBNaWtlIEdhbGJy
-YWl0aCA8ZWZhdWx0QGdteC5kZT47IFJpayB2YW4gUmllbCA8cmllbEByZWRoYXQuY29tPjsgVGhv
-bWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+Ow0KPiBsd2FuZ0ByZWRoYXQuY29tOyBJ
-bmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz47IERhbmllbCBKb3JkYW4gPGRhbmllbC5tLmpv
-cmRhbkBvcmFjbGUuY29tPjsgU2FzaGEgTGV2aW4NCj4gPHNhc2hhbEBrZXJuZWwub3JnPg0KPiBT
-dWJqZWN0OiBbUEFUQ0ggNC40IDI2LzY1XSBzY2hlZC9mYWlyLCBjcHVtYXNrOiBFeHBvcnQgZm9y
-X2VhY2hfY3B1X3dyYXAoKQkNCj4gDQo+IEZyb206IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
-cmFkZWFkLm9yZz4NCj4gDQo+IFsgVXBzdHJlYW0gY29tbWl0IGM3NDNmMGE1YzUwZjJmY2JjNjI4
-NTI2Mjc5Y2ZhMjRmM2RhYmUxODIgXQ0KPiANCj4gTW9yZSB1c2VycyBmb3IgZm9yX2VhY2hfY3B1
-X3dyYXAoKSBoYXZlIGFwcGVhcmVkLiBQcm9tb3RlIHRoZSBjb25zdHJ1Y3QNCj4gdG8gZ2VuZXJp
-YyBjcHVtYXNrIGludGVyZmFjZS4NCj4gDQo+IFRoZSBpbXBsZW1lbnRhdGlvbiBpcyBzbGlnaHRs
-eSBtb2RpZmllZCB0byByZWR1Y2UgYXJndW1lbnRzLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGV0
-ZXIgWmlqbHN0cmEgKEludGVsKSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+DQo+IENjOiBMYXVybyBS
-YW1vcyBWZW5hbmNpbyA8bHZlbmFuY2lAcmVkaGF0LmNvbT4NCj4gQ2M6IExpbnVzIFRvcnZhbGRz
-IDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4NCj4gQ2M6IE1pa2UgR2FsYnJhaXRoIDxl
-ZmF1bHRAZ214LmRlPg0KPiBDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3Jn
-Pg0KPiBDYzogUmlrIHZhbiBSaWVsIDxyaWVsQHJlZGhhdC5jb20+DQo+IENjOiBUaG9tYXMgR2xl
-aXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCj4gQ2M6IGx3YW5nQHJlZGhhdC5jb20NCj4gTGlu
-azogaHR0cDovL2xrbWwua2VybmVsLm9yZy9yLzIwMTcwNDE0MTIyMDA1Lm8zNW1lMmg1bm93cWt4
-YnZAaGlyZXoucHJvZ3JhbW1pbmcua2lja3MtYXNzLm5ldA0KPiBTaWduZWQtb2ZmLWJ5OiBJbmdv
-IE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz4NCj4gW2RqOiBpbmNsdWRlIG9ubHkgd2hhdCdzIGFk
-ZGVkIHRvIHRoZSBjcHVtYXNrIGludGVyZmFjZSwgNC40IGRvZXNuJ3QNCj4gICAgICBoYXZlIHRo
-ZW0gaW4gdGhlIHNjaGVkdWxlcl0NCj4gU2lnbmVkLW9mZi1ieTogRGFuaWVsIEpvcmRhbiA8ZGFu
-aWVsLm0uam9yZGFuQG9yYWNsZS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFNhc2hhIExldmluIDxz
-YXNoYWxAa2VybmVsLm9yZz4NCj4gLS0tDQo+ICBpbmNsdWRlL2xpbnV4L2NwdW1hc2suaCB8IDE3
-ICsrKysrKysrKysrKysrKysrDQo+ICBsaWIvY3B1bWFzay5jICAgICAgICAgICB8IDMyICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDQ5IGluc2Vy
-dGlvbnMoKykNCg0KVGhpcyBjb21taXQgYWxzbyBuZWVkcyB0aGUgZm9sbG93aW5nIGNvbW1pdHM6
-DQoNCmNvbW1pdCBkMjA3YWYyZWFiM2Y4NjY4Yjk1YWQwMmIyMTkzMDQ4MWM0MjgwNmZkDQpBdXRo
-b3I6IE1pY2hhZWwgS2VsbGV5IDxtaGtlbGxleUBvdXRsb29rLmNvbT4NCkRhdGU6ICAgV2VkIEZl
-YiAxNCAwMjo1NDowMyAyMDE4ICswMDAwDQoNCiAgICBjcHVtYXNrOiBNYWtlIGZvcl9lYWNoX2Nw
-dV93cmFwKCkgYXZhaWxhYmxlIG9uIFVQIGFzIHdlbGwNCiAgICANCiAgICBmb3JfZWFjaF9jcHVf
-d3JhcCgpIHdhcyBvcmlnaW5hbGx5IGFkZGVkIGluIHRoZSAjZWxzZSBoYWxmIG9mIGENCiAgICBs
-YXJnZSAiI2lmIE5SX0NQVVMgPT0gMSIgc3RhdGVtZW50LCBidXQgd2FzIG9taXR0ZWQgaW4gdGhl
-ICNpZg0KICAgIGhhbGYuICBUaGlzIHBhdGNoIGFkZHMgdGhlIG1pc3NpbmcgI2lmIGhhbGYgdG8g
-cHJldmVudCBjb21waWxlDQogICAgZXJyb3JzIHdoZW4gTlJfQ1BVUyBpcyAxLg0KICAgIA0KICAg
-IFJlcG9ydGVkLWJ5OiBrYnVpbGQgdGVzdCByb2JvdCA8ZmVuZ2d1YW5nLnd1QGludGVsLmNvbT4N
-CiAgICBTaWduZWQtb2ZmLWJ5OiBNaWNoYWVsIEtlbGxleSA8bWhrZWxsZXlAb3V0bG9vay5jb20+
-DQogICAgQ2M6IExpbnVzIFRvcnZhbGRzIDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4N
-CiAgICBDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPg0KICAgIENjOiBU
-aG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4NCiAgICBDYzoga3lzQG1pY3Jvc29m
-dC5jb20NCiAgICBDYzogbWFydGluLnBldGVyc2VuQG9yYWNsZS5jb20NCiAgICBDYzogbWlrZWxs
-ZXlAbWljcm9zb2Z0LmNvbQ0KICAgIEZpeGVzOiBjNzQzZjBhNWM1MGYgKCJzY2hlZC9mYWlyLCBj
-cHVtYXNrOiBFeHBvcnQgZm9yX2VhY2hfY3B1X3dyYXAoKSIpDQogICAgTGluazogaHR0cDovL2xr
-bWwua2VybmVsLm9yZy9yL1NONlBSMTkwMU1CMjA0NUYwODdGNTk0NTA1MDdENEZDQzE3Q0JGNTBA
-U042UFIxOTAxTUIyMDQ1Lm5hbXByZDE5LnByb2Qub3V0bG9vay5jb20NCiAgICBTaWduZWQtb2Zm
-LWJ5OiBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz4NCg0KUGxlYXNlIGFwcGx5IHRoaXMg
-Y29tbWl0Lg0KDQpCZXN0IHJlZ2FyZHMsDQogIE5vYnVocm8NCg0KPiANCj4gZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvbGludXgvY3B1bWFzay5oIGIvaW5jbHVkZS9saW51eC9jcHVtYXNrLmgNCj4gaW5k
-ZXggYmIzYTRiYjM1MTgzLi4xMzIyODgzZTdiNDYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGlu
-dXgvY3B1bWFzay5oDQo+ICsrKyBiL2luY2x1ZGUvbGludXgvY3B1bWFzay5oDQo+IEBAIC0yMzIs
-NiArMjMyLDIzIEBAIHVuc2lnbmVkIGludCBjcHVtYXNrX2xvY2FsX3NwcmVhZCh1bnNpZ25lZCBp
-bnQgaSwgaW50IG5vZGUpOw0KPiAgCQkoY3B1KSA9IGNwdW1hc2tfbmV4dF96ZXJvKChjcHUpLCAo
-bWFzaykpLAlcDQo+ICAJCShjcHUpIDwgbnJfY3B1X2lkczspDQo+IA0KPiArZXh0ZXJuIGludCBj
-cHVtYXNrX25leHRfd3JhcChpbnQgbiwgY29uc3Qgc3RydWN0IGNwdW1hc2sgKm1hc2ssIGludCBz
-dGFydCwgYm9vbCB3cmFwKTsNCj4gKw0KPiArLyoqDQo+ICsgKiBmb3JfZWFjaF9jcHVfd3JhcCAt
-IGl0ZXJhdGUgb3ZlciBldmVyeSBjcHUgaW4gYSBtYXNrLCBzdGFydGluZyBhdCBhIHNwZWNpZmll
-ZCBsb2NhdGlvbg0KPiArICogQGNwdTogdGhlIChvcHRpb25hbGx5IHVuc2lnbmVkKSBpbnRlZ2Vy
-IGl0ZXJhdG9yDQo+ICsgKiBAbWFzazogdGhlIGNwdW1hc2sgcG9pdGVyDQo+ICsgKiBAc3RhcnQ6
-IHRoZSBzdGFydCBsb2NhdGlvbg0KPiArICoNCj4gKyAqIFRoZSBpbXBsZW1lbnRhdGlvbiBkb2Vz
-IG5vdCBhc3N1bWUgYW55IGJpdCBpbiBAbWFzayBpcyBzZXQgKGluY2x1ZGluZyBAc3RhcnQpLg0K
-PiArICoNCj4gKyAqIEFmdGVyIHRoZSBsb29wLCBjcHUgaXMgPj0gbnJfY3B1X2lkcy4NCj4gKyAq
-Lw0KPiArI2RlZmluZSBmb3JfZWFjaF9jcHVfd3JhcChjcHUsIG1hc2ssIHN0YXJ0KQkJCQkJXA0K
-PiArCWZvciAoKGNwdSkgPSBjcHVtYXNrX25leHRfd3JhcCgoc3RhcnQpLTEsIChtYXNrKSwgKHN0
-YXJ0KSwgZmFsc2UpOwlcDQo+ICsJICAgICAoY3B1KSA8IG5yX2NwdW1hc2tfYml0czsJCQkJCQlc
-DQo+ICsJICAgICAoY3B1KSA9IGNwdW1hc2tfbmV4dF93cmFwKChjcHUpLCAobWFzayksIChzdGFy
-dCksIHRydWUpKQ0KPiArDQo+ICAvKioNCj4gICAqIGZvcl9lYWNoX2NwdV9hbmQgLSBpdGVyYXRl
-IG92ZXIgZXZlcnkgY3B1IGluIGJvdGggbWFza3MNCj4gICAqIEBjcHU6IHRoZSAob3B0aW9uYWxs
-eSB1bnNpZ25lZCkgaW50ZWdlciBpdGVyYXRvcg0KPiBkaWZmIC0tZ2l0IGEvbGliL2NwdW1hc2su
-YyBiL2xpYi9jcHVtYXNrLmMNCj4gaW5kZXggNWE3MGY2MTk2ZjU3Li4yNGYwNmU3YWJmOTIgMTAw
-NjQ0DQo+IC0tLSBhL2xpYi9jcHVtYXNrLmMNCj4gKysrIGIvbGliL2NwdW1hc2suYw0KPiBAQCAt
-NDIsNiArNDIsMzggQEAgaW50IGNwdW1hc2tfYW55X2J1dChjb25zdCBzdHJ1Y3QgY3B1bWFzayAq
-bWFzaywgdW5zaWduZWQgaW50IGNwdSkNCj4gIAlyZXR1cm4gaTsNCj4gIH0NCj4gDQo+ICsvKioN
-Cj4gKyAqIGNwdW1hc2tfbmV4dF93cmFwIC0gaGVscGVyIHRvIGltcGxlbWVudCBmb3JfZWFjaF9j
-cHVfd3JhcA0KPiArICogQG46IHRoZSBjcHUgcHJpb3IgdG8gdGhlIHBsYWNlIHRvIHNlYXJjaA0K
-PiArICogQG1hc2s6IHRoZSBjcHVtYXNrIHBvaW50ZXINCj4gKyAqIEBzdGFydDogdGhlIHN0YXJ0
-IHBvaW50IG9mIHRoZSBpdGVyYXRpb24NCj4gKyAqIEB3cmFwOiBhc3N1bWUgQG4gY3Jvc3Npbmcg
-QHN0YXJ0IHRlcm1pbmF0ZXMgdGhlIGl0ZXJhdGlvbg0KPiArICoNCj4gKyAqIFJldHVybnMgPj0g
-bnJfY3B1X2lkcyBvbiBjb21wbGV0aW9uDQo+ICsgKg0KPiArICogTm90ZTogdGhlIEB3cmFwIGFy
-Z3VtZW50IGlzIHJlcXVpcmVkIGZvciB0aGUgc3RhcnQgY29uZGl0aW9uIHdoZW4NCj4gKyAqIHdl
-IGNhbm5vdCBhc3N1bWUgQHN0YXJ0IGlzIHNldCBpbiBAbWFzay4NCj4gKyAqLw0KPiAraW50IGNw
-dW1hc2tfbmV4dF93cmFwKGludCBuLCBjb25zdCBzdHJ1Y3QgY3B1bWFzayAqbWFzaywgaW50IHN0
-YXJ0LCBib29sIHdyYXApDQo+ICt7DQo+ICsJaW50IG5leHQ7DQo+ICsNCj4gK2FnYWluOg0KPiAr
-CW5leHQgPSBjcHVtYXNrX25leHQobiwgbWFzayk7DQo+ICsNCj4gKwlpZiAod3JhcCAmJiBuIDwg
-c3RhcnQgJiYgbmV4dCA+PSBzdGFydCkgew0KPiArCQlyZXR1cm4gbnJfY3B1bWFza19iaXRzOw0K
-PiArDQo+ICsJfSBlbHNlIGlmIChuZXh0ID49IG5yX2NwdW1hc2tfYml0cykgew0KPiArCQl3cmFw
-ID0gdHJ1ZTsNCj4gKwkJbiA9IC0xOw0KPiArCQlnb3RvIGFnYWluOw0KPiArCX0NCj4gKw0KPiAr
-CXJldHVybiBuZXh0Ow0KPiArfQ0KPiArRVhQT1JUX1NZTUJPTChjcHVtYXNrX25leHRfd3JhcCk7
-DQo+ICsNCj4gIC8qIFRoZXNlIGFyZSBub3QgaW5saW5lIGJlY2F1c2Ugb2YgaGVhZGVyIHRhbmds
-ZXMuICovDQo+ICAjaWZkZWYgQ09ORklHX0NQVU1BU0tfT0ZGU1RBQ0sNCj4gIC8qKg0KPiAtLQ0K
-PiAyLjI1LjENCj4gCQ0KPiANCg0K
+CC Morimoto-san
+
+On Tue, May 26, 2020 at 11:02 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add sound support for the RZ/G1H SoC (a.k.a. R8A7742).
+>
+> This work is based on similar work done on the R8A7744 SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.9.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
