@@ -2,146 +2,121 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD82C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50A2C20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D7QwxQvI"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3AB208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590542229;
+	bh=8l4JN0kpUN40ijrV7VPgvw+qnI1/iLBCBZ67DRjYRXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y2FiXV7qqAEX0pVoySF5SYGKB7ucZ9DvTZ1j1H3jOieWpGFfJEIVxqtvr/P6ZsS4f
+	 CrcST/Q/Pcosse39KXT9dYxDwy4V+ykWXVzTqy0ytiaTSpshzgLcJ+oAX3ivkVr/9Y
+	 yHzctVlx7VcPras/h+3KbW0zATyt2MnhUJwOfuK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbgE0BQc (ORCPT
+        id S1728277AbgE0BRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:16:32 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57754 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbgE0BQc (ORCPT
+        Tue, 26 May 2020 21:17:08 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45302 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbgE0BRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:16:32 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04R1GUbm093022;
-        Tue, 26 May 2020 20:16:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590542190;
-        bh=YaLjPcSfIGjeXsxNRxJYxq5PIRurQHe+sHMb1HbpNqE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=D7QwxQvI4mWsmsEqjEAoTQozZj4ML/fZ6w9wuvRxqoH3WYQ7+PRgi2m9R9ypPzeuN
-         smCNq/6pRllEq8X+20mADyFmNpoVN8IyGWjHECdzSV8NI+PMy/JxOV3C6VuqpyGXlH
-         +/p2I0rp8lOHKe4Dhxs6w6kvhL6XTeUiCsB/I3Vw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04R1GU96045204;
-        Tue, 26 May 2020 20:16:30 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
- May 2020 20:16:30 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 26 May 2020 20:16:30 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04R1GTSS001014;
-        Tue, 26 May 2020 20:16:29 -0500
-Subject: Re: [RFC] power: supply: bq27xxx_battery: Fix polling interval after
- re-bind
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Anton Vorontsov <cbouatmailru@gmail.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>
-References: <20200525113220.369-1-krzk@kernel.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <65ccf383-85a3-3ccd-f38c-e92ddae8fe1e@ti.com>
-Date:   Tue, 26 May 2020 21:16:28 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 26 May 2020 21:17:07 -0400
+Received: by mail-il1-f196.google.com with SMTP id 9so3966026ilg.12;
+        Tue, 26 May 2020 18:17:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=K2RpsvgqWdvk/VhLsXZfdJ8GJexHCmKIWzl61ljgxjU=;
+        b=trX2tcvJGNLZ3vRh6iUMNQJwZg3PAeZ767HnrSSHrL/ShjlrzlY1G6Ub35UFxmUFcp
+         CJAuzuINZAwP9zFwgGbo8Xq6ZaZQsegltK8J7BcqQPvjmFc48yB8NKhl6bimO77kjHS9
+         elJtWUizZ+rROzF9IrkOfyo46kvPefWOaljW9n5FIXU/ec4hnzklzD1tYV0sw0N0n0g8
+         zkrss0wCdeymyfezuwgcILTz6l0FdvSLVc7qzrv5VP5whFIEeli5ULjOtd1kDbjp7ZKQ
+         wvfCe6As6BzExlzRCW8wkOEeHq0qbDzfqtMdVWupix58FPPocHBvRybg2YfZxnqhzt5n
+         36eg==
+X-Gm-Message-State: AOAM533u3ObuLw99qB4rGR/It19jmk2Qi5MnlAR/G48ScIQM9+Oc4RW3
+        zc7bmCrLsxxREaOpVV7TfmCj+I0=
+X-Google-Smtp-Source: ABdhPJz9jOzb4M6JUeX67KjpLCWqMnC7X4U7KMu7WaisuKAW36Ms05pdr0FupZfHM0JMSMwZOAKTwg==
+X-Received: by 2002:a92:2a0d:: with SMTP id r13mr3597939ile.21.1590542225912;
+        Tue, 26 May 2020 18:17:05 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c62sm206186ill.62.2020.05.26.18.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 18:17:05 -0700 (PDT)
+Received: (nullmailer pid 817648 invoked by uid 1000);
+        Wed, 27 May 2020 01:17:04 -0000
+Date:   Tue, 26 May 2020 19:17:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg
+ flags support
+Message-ID: <20200527011704.GA808104@bogus>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200525113220.369-1-krzk@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 7:32 AM, Krzysztof Kozlowski wrote:
-> This reverts commit 8cfaaa811894a3ae2d7360a15a6cfccff3ebc7db.
+On Wed, May 27, 2020 at 12:55:17AM +0300, Serge Semin wrote:
+> Recently the I2C-controllers slave interface support was added to the
+> kernel I2C subsystem. In this case Linux can be used as, for example,
+> a I2C EEPROM machine. See [1] for details. Other than instantiating
+> the EEPROM-slave device from user-space there is a way to declare the
+> device in dts. In this case firstly the I2C bus controller must support
+> the slave interface. Secondly I2C-slave sub-node of that controller
+> must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> declared in [2]). That flag is declared as (1 << 30), which when set
+> makes dtc unhappy about too big address set for a I2C-slave:
 > 
-> If device was unbound and bound, the polling interval would be set to 0.
-> This is both unexpected and messes up with other bq27xxx devices (if
-> more than one battery device is used).
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
 > 
-> This reset of polling interval was added in commit 8cfaaa811894
-> ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00 driver")
-> stating that power_supply_unregister() calls get_property().  However in
-> Linux kernel v3.1 and newer, such call trace does not exist.
-> Unregistering power supply does not call get_property() on unregistered
-> power supply.
+> Similar problem would have happened if we had set the 10-bit address
+> flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
 > 
-> Fixes: 8cfaaa811894 ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00 driver")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> In order to fix the problem we suggest to alter the I2C-bus reg-check
+> algorithm, so one would be aware of the upper bits set. Normally if no
+> flag specified, the 7-bit address is expected in the "reg"-property.
+> If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
 > 
+> [1] Documentation/i2c/slave-interface.rst
+> [2] include/dt-bindings/i2c/i2c.h
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: linux-mips@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
 > ---
-> 
-> I really could not identify the issue being fixed in offending commit
-> 8cfaaa811894 ("bq27x00_battery: Fix OOPS caused by unregistring bq27x00
-> driver"), therefore maybe I missed here something important.
-> 
-> Please share your thoughts on this.
+>  scripts/dtc/checks.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
+I've lost track of who all I've said this to already for this issue, but 
+patches to dtc should be against upstream and a version of this has been 
+sent there already. But it seems they've lost interest in addressing the 
+review comments. So feel free to send another one. The same comment 
+applies here.
 
-I'm having a hard time finding the OOPS also. Maybe there is a window
-where the poll function is running or about to run where
-cancel_delayed_work_sync() is called and cancels the work, only to have
-an interrupt or late get_property call in to the poll function and
-re-schedule it.
-
-What we really need is to do is look at how we are handling the polling
-function. It gets called from the workqueue, from a threaded interrupt
-context, and from a power supply framework callback, possibly all at the
-same time. Sometimes its protected by a lock, sometimes not. Updating
-the device's cached data should always be locked.
-
-What's more is the poll function is self-arming, so if we call
-cancel_delayed_work_sync() (remove it from the work queue then then wait
-for it to finish if running), are we sure it wont have just re-arm itself?
-
-We should make the only way we call the poll function be through the
-work queue, (plus make sure all accesses to the cache are locked).
-
-Andrew
-
-
-> ---
->  drivers/power/supply/bq27xxx_battery.c | 8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-> index 942c92127b6d..4c94ee72de95 100644
-> --- a/drivers/power/supply/bq27xxx_battery.c
-> +++ b/drivers/power/supply/bq27xxx_battery.c
-> @@ -1905,14 +1905,6 @@ EXPORT_SYMBOL_GPL(bq27xxx_battery_setup);
->  
->  void bq27xxx_battery_teardown(struct bq27xxx_device_info *di)
->  {
-> -	/*
-> -	 * power_supply_unregister call bq27xxx_battery_get_property which
-> -	 * call bq27xxx_battery_poll.
-> -	 * Make sure that bq27xxx_battery_poll will not call
-> -	 * schedule_delayed_work again after unregister (which cause OOPS).
-> -	 */
-> -	poll_interval = 0;
-> -
->  	cancel_delayed_work_sync(&di->work);
->  
->  	power_supply_unregister(di->bat);
-> 
+Rob
