@@ -2,152 +2,281 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FB5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC23FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD4C20DD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590564177;
-	bh=1aq3yZzokjVj+RoQhhhzUgjY0nXbOLSSfK8XA7fR4Do=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1PnjU26iWjPFJSlsvQXF0jTcxcAgZZ6rO5D9M5X/XO9ceQW6FmfUwmvD5Pxu/0Rt1
-	 +blFEG4co+R2eJ3mO0ruTfT+4Fk/AMjM/+69f6qMhxEu6yqDVUZxWqs+Vqj50F/Fir
-	 ApGS96L2xcduJKpQcZeaV2YYoynKykAa3lSEYYew=
+	by mail.kernel.org (Postfix) with ESMTP id CDEED20E65
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgE0HW4 (ORCPT
+        id S1729235AbgE0H0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:22:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44288 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 03:26:43 -0400
+Received: from mga05.intel.com ([192.55.52.43]:7186 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgE0HW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:22:56 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F96B20C56;
-        Wed, 27 May 2020 07:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590564175;
-        bh=1aq3yZzokjVj+RoQhhhzUgjY0nXbOLSSfK8XA7fR4Do=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JjMYLITu4AH/Co3BABCLGX1qgQBoQdNzHH36mQeMM6h79+RSteQzen2+qpGHf+rXr
-         Qpn8iIKkzrId+/F1cUN1RdeBjuqFB/mEDB98+afZLXWFAybb/SGvcx6dt0nqsxbsp8
-         8TTzh3dX8FNL9lfvsJB9dXUGijtMCz9CUTs2bKEo=
-Date:   Wed, 27 May 2020 08:22:49 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement
- expression
-Message-ID: <20200527072248.GA9887@willie-the-truck>
-References: <20200521142047.169334-1-elver@google.com>
- <20200521142047.169334-10-elver@google.com>
- <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
- <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
- <20200526120245.GB27166@willie-the-truck>
- <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
- <CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com>
- <20200526173312.GA30240@google.com>
- <CAK8P3a3ZawPnzmzx4q58--M1h=v4X-1GtQLiwL1=G6rDK8=Wpg@mail.gmail.com>
- <CAK8P3a3UYQeXhiufUevz=rwe09WM_vSTCd9W+KvJHJcOeQyWVA@mail.gmail.com>
+        id S1728303AbgE0H0m (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:26:42 -0400
+IronPort-SDR: ekH/x4lUwyqbArEUHhH0Ex2IFsymaQxlE/fiOmNQS3t/Yxh6dcpHPzXDnfPXaQ+pEvGpip4LXr
+ nzCZ1puij4Cw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 00:26:41 -0700
+IronPort-SDR: 9V7ogVoTODyRT2Nq47Vo9K+mkTl/APvqOomugdaO5MZ3zwoy42G2FST+8zRegV7NEDWgcFMSgW
+ bFuKueoAis1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
+   d="scan'208";a="375946941"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
+  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 00:26:39 -0700
+Subject: Re: [PATCH v2 1/2] perf evlist: Ensure grouped events with same cpu
+ map
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200525065559.6422-1-yao.jin@linux.intel.com>
+ <20200526115155.GE333164@krava>
+ <32c4663a-6934-2a2d-79e2-7a335e3629a2@linux.intel.com>
+ <d6986a15-1e21-3414-9d68-c265e7db03f4@linux.intel.com>
+Message-ID: <4c670bf6-c0e4-1f9d-455c-a4bf9fd005fc@linux.intel.com>
+Date:   Wed, 27 May 2020 15:26:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3UYQeXhiufUevz=rwe09WM_vSTCd9W+KvJHJcOeQyWVA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <d6986a15-1e21-3414-9d68-c265e7db03f4@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:10:00AM +0200, Arnd Bergmann wrote:
-> On Tue, May 26, 2020 at 9:00 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Tue, May 26, 2020 at 7:33 PM 'Marco Elver' via Clang Built Linux
-> > <clang-built-linux@googlegroups.com> wrote:
-> > > On Tue, 26 May 2020, Marco Elver wrote:
-> > > > On Tue, 26 May 2020 at 14:19, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > Note that an 'allyesconfig' selects KASAN and not KCSAN by default.
-> > > > But I think that's not relevant, since KCSAN-specific code was removed
-> > > > from ONCEs. In general though, it is entirely expected that we have a
-> > > > bit longer compile times when we have the instrumentation passes
-> > > > enabled.
-> > > >
-> > > > But as you pointed out, that's irrelevant, and the significant
-> > > > overhead is from parsing and pre-processing. FWIW, we can probably
-> > > > optimize Clang itself a bit:
-> > > > https://github.com/ClangBuiltLinux/linux/issues/1032#issuecomment-633712667
-> > >
-> > > Found that optimizing __unqual_scalar_typeof makes a noticeable
-> > > difference. We could use C11's _Generic if the compiler supports it (and
-> > > all supported versions of Clang certainly do).
-> > >
-> > > Could you verify if the below patch improves compile-times for you? E.g.
-> > > on fs/ocfs2/journal.c I was able to get ~40% compile-time speedup.
-> >
-> > Yes, that brings both the preprocessed size and the time to preprocess it
-> > with clang-11 back to where it is in mainline, and close to the speed with
-> > gcc-10 for this particular file.
-> >
-> > I also cross-checked with gcc-4.9 and gcc-10 and found that they do see
-> > the same increase in the preprocessor output, but it makes little difference
-> > for preprocessing performance on gcc.
+Hi Jiri,
+
+On 5/27/2020 2:31 PM, Jin, Yao wrote:
+> Hi Jiri,
 > 
-> Just for reference, I've tested this against a patch I made that completely
-> shortcuts READ_ONCE() on anything but alpha (which needs the
-> read_barrier_depends()):
+> On 5/27/2020 11:20 AM, Jin, Yao wrote:
+>> Hi Jiri,
+>>
+>> On 5/26/2020 7:51 PM, Jiri Olsa wrote:
+>>> On Mon, May 25, 2020 at 02:55:58PM +0800, Jin Yao wrote:
+>>>
+>>> SNIP
+>>>
+>>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+>>>> index 2a9de6491700..1161cffc0688 100644
+>>>> --- a/tools/perf/util/evlist.c
+>>>> +++ b/tools/perf/util/evlist.c
+>>>> @@ -1704,3 +1704,52 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
+>>>>       }
+>>>>       return leader;
+>>>>   }
+>>>> +
+>>>> +static bool cpus_map_matched(struct evsel *prev, struct evsel *evsel)
+>>>> +{
+>>>> +    if (evsel->core.cpus->nr != prev->core.cpus->nr)
+>>>> +        return false;
+>>>> +
+>>>> +    for (int i = 0; i < evsel->core.cpus->nr; i++) {
+>>>> +        if (evsel->core.cpus->map[i] != prev->core.cpus->map[i])
+>>>> +            return false;
+>>>> +    }
+>>>> +
+>>>> +    return true;
+>>>> +}
+>>>> +
+>>>> +bool evlist__cpus_map_matched(struct evlist *evlist)
+>>>> +{
+>>>> +    struct evsel *prev = evlist__first(evlist), *evsel = prev;
+>>>> +    int nr_members = prev->core.nr_members;
+>>>> +
+>>>> +    evlist__for_each_entry_continue(evlist, evsel) {
+>>>> +        if (nr_members <= 1) {
+>>>> +            prev = evsel;
+>>>> +            nr_members = evsel->core.nr_members;
+>>>> +            continue;
+>>>> +        }
+>>>> +
+>>>> +        nr_members--;
+>>>> +
+>>>> +        if (!cpus_map_matched(prev, evsel))
+>>>> +            return false;
+>>>> +
+>>>> +        prev = evsel;
+>>>> +    }
+>>>> +
+>>>> +    return true;
+>>>> +}
+>>>> +
+>>>> +void evlist__force_disable_group(struct evlist *evlist)
+>>>> +{
+>>>> +    struct evsel *evsel;
+>>>> +
+>>>> +    pr_warning("WARNING: event cpu maps are not fully matched, "
+>>>> +           "stop event grouping\n");
+>>>> +
+>>>> +    evlist__for_each_entry(evlist, evsel) {
+>>>> +        evsel->leader = evsel;
+>>>> +        evsel->core.nr_members = 0;
+>>>> +    }
+>>>> +}
+>>>
+>>> I think this is too much, we need to disable only groups with not
+>>> matching cpus, not all of them, how about something like this
+>>>
+>>
+>> Yes, that's too much.
+>>
+>>>
+>>>          struct evsel *pos;
+>>>
+>>>          evlist__for_each_entry(evlist, evsel) {
+>>>                  if (evsel->leader == evsel)
+>>>                          continue;
+>>>                  if (!cpus_map_matched(evsel->leader, evsel))
+>>>                          continue;
+>>>                  pr_warn("Disabling group...
+>>>
+>>>                  for_each_group_member(pos, evsel->leader) {
+>>>                          pos->leader = pos;
+>>>                          evsel->core.nr_members = 0;
+>>>                  }
+>>>          }
+>>>
+>>> jirka
+>>>
+>>
+>> Hmm, change "!cpus_map_matched()" to "cpus_map_matched()"? and use for_each_group_evsel() to 
+>> replace for_each_group_member()?
+>>
+>> How about something like following?
+>>
+>> void evlist__check_cpu_maps(struct evlist *evlist)
+>> {
+>>      struct evsel *evsel, *pos;
+>>
+>>      evlist__for_each_entry(evlist, evsel) {
+>>          if (evsel->leader == evsel)
+>>              continue;
+>>
+>>          if (cpu_maps_matched(evsel->leader, evsel))
+>>              continue;
+>>
+>>          pr_warning("WARNING: event cpu maps are not fully matched, "
+>>                 "disable group\n");
+>>
+>>          for_each_group_evsel(pos, evsel->leader) {
+>>              pos->leader = pos;
+>>              pos->core.nr_members = 0;
+>>          }
+>>
+>>          /*
+>>           * For core & uncore mixed event group, for example,
+>>           * '{cycles,unc_cbo_cache_lookup.any_i}',
+>>           * In evlist:
+>>           * cycles,
+>>           * unc_cbo_cache_lookup.any_i,
+>>           * unc_cbo_cache_lookup.any_i,
+>>           * unc_cbo_cache_lookup.any_i,
+>>           * unc_cbo_cache_lookup.any_i,
+>>           *
+>>           * cycles is leader and all unc_cbo_cache_lookup.any_i
+>>           * point to this leader. But for_each_group_evsel can't
+>>           * iterate all members from cycles. It only iterates
+>>           * cycles and one unc_cbo_cache_lookup.any_i. So we
+>>           * set extra evsel here.
+>>           */
+>>          evsel->leader = evsel;
+>>          evsel->core.nr_members = 0;
+>>      }
+>> }
+>>
+>> Thanks
+>> Jin Yao
 > 
-> --- a/include/linux/compiler.h
-> +++ b/include/linux/compiler.h
-> @@ -224,18 +224,21 @@ void ftrace_likely_update(struct
-> ftrace_likely_data *f, int val,
->   * atomicity or dependency ordering guarantees. Note that this may result
->   * in tears!
->   */
-> -#define __READ_ONCE(x) (*(const volatile __unqual_scalar_typeof(x) *)&(x))
-> +#define __READ_ONCE(x) (*(const volatile typeof(x) *)&(x))
+> Issue is found!
 > 
-> +#ifdef CONFIG_ALPHA /* smp_read_barrier_depends is a NOP otherwise */
->  #define __READ_ONCE_SCALAR(x)                                          \
->  ({                                                                     \
->         __unqual_scalar_typeof(x) __x = __READ_ONCE(x);                 \
->         smp_read_barrier_depends();                                     \
-> -       (typeof(x))__x;                                                 \
-> +       __x;                                                            \
->  })
-> +#else
-> +#define __READ_ONCE_SCALAR(x) __READ_ONCE(x)
-> +#endif
+> It looks we can't set "pos->leader = pos" in either for_each_group_member() or in 
+> for_each_group_evsel() because it may exit the iteration immediately.
+> 
+>      evlist__for_each_entry(evlist, evsel) {
+>          if (evsel->leader == evsel)
+>              continue;
+> 
+>          if (cpu_maps_matched(evsel->leader, evsel))
+>              continue;
+> 
+>          pr_warning("WARNING: event cpu maps are not fully matched, "
+>                 "disable group\n");
+> 
+>          for_each_group_member(pos, evsel->leader) {
+>              pos->leader = pos;
+>              pos->core.nr_members = 0;
+>          }
+> 
+> Let me use the example of '{cycles,unc_cbo_cache_lookup.any_i}' again.
+> 
+> In evlist:
+> cycles,
+> unc_cbo_cache_lookup.any_i,
+> unc_cbo_cache_lookup.any_i,
+> unc_cbo_cache_lookup.any_i,
+> unc_cbo_cache_lookup.any_i,
+> 
+> When we reach the for_each_group_member at first time, evsel is the first unc_cbo_cache_lookup.any_i 
+> and evsel->leader is cycles. pos is same as the evsel (the first unc_cbo_cache_lookup.any_i).
+> 
+> Once we execute "pos->leader = pos;", it's actually "evsel->leader = evsel". So now evsel->leader is 
+> changed to the first unc_cbo_cache_lookup.any_i.
+> 
+> In next iteration, pos is the second unc_cbo_cache_lookup.any_i. pos->leader is cycles but 
+> unfortunately evsel->leader has been changed to the first unc_cbo_cache_lookup.any_i. So iteration 
+> stops immediately.
+> 
+> I'm now thinking if we can solve this issue by an easy way.
+> 
+> Thanks
+> Jin Yao
 
-Nice! FWIW, I'm planning to have Alpha override __READ_ONCE_SCALAR()
-eventually, so that smp_read_barrier_depends() can disappear forever. I
-just bit off more than I can chew for 5.8 :(
+How about this fix?
 
-However, '__unqual_scalar_typeof()' is still useful for
-load-acquire/store-release on arm64, so we still need a better solution to
-the build-time regression imo. I'm not fond of picking random C11 features
-to accomplish that, but I also don't have any better ideas...
+void evlist__check_cpu_maps(struct evlist *evlist)
+{
+	struct evsel *evsel, *pos, *tmp;
 
-Is there any mileage in the clever trick from Rasmus?
+	evlist__for_each_entry(evlist, evsel) {
+		if (evsel->leader == evsel)
+			continue;
 
-https://lore.kernel.org/r/6cbc8ae1-8eb1-a5a0-a584-2081fca1c4aa@rasmusvillemoes.dk
+		if (cpu_maps_matched(evsel->leader, evsel))
+			continue;
 
-Will
+		pr_warning("WARNING: event cpu maps are not fully matched, "
+			   "disable group\n");
+
+		for_each_group_member(pos, evsel->leader) {
+			if (pos != evsel) {
+				pos->leader = pos;
+				pos->core.nr_members = 0;
+			}
+		}
+
+		tmp = evsel->leader;
+		tmp->leader = tmp;
+		tmp->core.nr_members = 0;
+
+		evsel->leader = evsel;
+		evsel->core.nr_members = 0;
+	}
+}
+
+Thanks
+Jin Yao
