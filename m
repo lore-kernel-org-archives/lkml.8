@@ -2,158 +2,131 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19414C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E6D2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="XV2h4N9q"
+	by mail.kernel.org (Postfix) with ESMTP id AAAA52071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391483AbgE0QqF (ORCPT
+        id S2391508AbgE0Qqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:46:05 -0400
-Received: from sonic307-15.consmr.mail.ne1.yahoo.com ([66.163.190.38]:35709
-        "EHLO sonic307-15.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388333AbgE0QqE (ORCPT
+        Wed, 27 May 2020 12:46:34 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:41049 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388249AbgE0Qqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:46:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1590597963; bh=4RUKhG0MsorRuTFWk3IKXk7iyxpxqMUqyq1xoFppTaw=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=XV2h4N9q2trocfRvbMfbAm47mC6BlnPWOOYiCSThd6X1U1nY6oR6RPbhbp8ZAJe/XTaoH1//U/5hw2tqznUi69FVOs82ikDMiOggV+jPFoNE89yy7TH4kiWyrNa1vJ1olTPsPiuKfsnz9V1JHhxci1cH7b5ogRJ2nlVyID8BcLi4cmbGHeObVvxvxgwNEm1gm9hnQtGh53PWngCshLMJmv8YsdREBtaxkc0+7FTRTnHFQRPhZPFsI+y55sh1bQIdhL/dN78WEscXebEBN86es4JVM7eolk8SnK6vyvi4ph4mFzNkJlmFEUirbd/K4VHlztEk73Mva4VSzoXxz/aUOA==
-X-YMail-OSG: IKruBnUVM1kuwlSdjAURCpF0gZRNauOK_K.x.x13adDUYJ_d0VdJjXj7m83J_pC
- 0Q_2amgXYltWN7kom71kxzqA1nnxIqVzl5jWj2fAimlr_L5N_jZKnSTJsh306EYocPwbDB4u_jVF
- BLz6GGDeDCnsuJA9Ucs_O8rC2pIAdw5QzyChK0Jmq5YDjg7NJIaIh9XEmv8TqwmnWCHvaN9_Z0ES
- 3ri2c2f6HxaOocm0QgHPAtjQQvUpERm7pkYvJbs.eAlutOIxtpw4slD4XKtRTBPP0KRIyOX7A7is
- sNPL9oB1.d4To8UdMcsiSOeFcq7qTcRZ1idPij28KYfY1Rh0I_m2VywBzoL7S6baqPryoWFdS7Qh
- wDDvQaqhBorhDu5zPD7nvCevKlYKQ1Ufh8WtSa0Tt.a6XOrOIYGedLoqvi3uJR1uan8jZKZSDD80
- fGRsYi7PTyuaKrTQ3FmhIlUH_UomBV3nj6OOt0AdlJayegQw3.9Mxx9lPrX8Xwt7fwkQh66pJ5hP
- Hs8b1wk2hS.OgoRkXjubSIL2O4I710JDknRqYBAP4MTiIfldfnx9.VFe3fjIbyY5Jt69m3gSkdBh
- UiFV_JalgIg36D_7jBwoHzFRfRNSVS6J6ZFsk03mat.2NDgJEKtTUKw_jrJqrKKdBAoTm4ecZEbY
- 9RR3alEnJGo_bcFpuAOdWLzN41uwYva1yYBtPjpQvK89fD7PqPtWxaS5IFyqNWB3xfw6Gc_9LHVC
- fY.MjXPB9W8kf90_OVGldF1IQSEmFswPt7jgc6s3W1qgdCUPqrC2kvvM4cG5PeWvEtYq8XsFWGB9
- TQBI8V3ZX36u8mLSlQ6QoYUuIrIEyLn0b759PMMoYyvV5cXf91qw4caiVu4JshAF8SDqCKSlsSGE
- mNl0S92k1lEj3TJbMAK.cOGswgyCZhNuKIcYTFvA7Nix0bkQgvkq6dCor6dlBJXZNPpCDFdT4PPc
- .WQ_g3ABtWj4HTc_guS_AgXgqm9clpWUSCz1q_4C_nEeo9Ic1OklGQWd5OIKerEJYwmLARbpjRbP
- RsWIa1FbmH_h2VvuNoy.Cb21URXG_J0CnW79gyDUHquOMcJNZJLMRkNVcIzAgjrjAkD7XA7Thr5E
- gZeqG9OAfF35nyVqXKglOtPiOZuznMUawsolcOYSHicDnyOlEOuCNIHQLEaOm6v23VFrwutMSjkD
- Yh1F1n6ofvnJ4SnOKzMOinXbU_WsnIwusWJ6A0.Hd_hCqXVL8OleQ9oVeo9C2MGoL2P4ii2FPJEY
- uI6wNvHnwyXgEqhsjpcoi2gdghsRiw0x.8dxVXhgUZZpvw7xzbmyLS1PC0buX38ZHFWiBRdVuB.O
- 3_0EA5o_nayTilzjgmUKMTWMU0UDJ2Lps.8xgYHx3tp_KKuZShVVz_sTJAorbiDJ87AZxm41UZTM
- CXnwxQ_BcTAQCi8zAyfmhmii1rodpPhKgjw--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Wed, 27 May 2020 16:46:03 +0000
-Received: by smtp419.mail.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID b0e54431ea93744bec34cb09feee7ca8;
-          Wed, 27 May 2020 16:46:02 +0000 (UTC)
-Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
-To:     Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        Adrian Reber <areber@redhat.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200522055350.806609-1-areber@redhat.com>
- <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
- <20200525080541.GF104922@dcbz.redhat.com>
- <a75f3f71-66cf-e615-2cd5-86ac65a3bbdc@schaufler-ca.com>
- <20200527134842.GA250149@dcbz.redhat.com>
- <f43921ac-2e55-7d9d-406a-d0f4cfd8ff93@schaufler-ca.com>
- <ac167440b8b64f02a034dd94687b8aee@EXMBDFT11.ad.twosigma.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <518a910c-b526-b7aa-f9f1-ddccb992954f@schaufler-ca.com>
-Date:   Wed, 27 May 2020 09:46:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 12:46:33 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D0DFA1BF20E;
+        Wed, 27 May 2020 16:46:27 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, richardcochran@gmail.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
+        foss@0leil.net, antoine.tenart@bootlin.com
+Subject: [PATCH net-next 0/8] net: phy: mscc: PHC and timestamping support
+Date:   Wed, 27 May 2020 18:41:50 +0200
+Message-Id: <20200527164158.313025-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <ac167440b8b64f02a034dd94687b8aee@EXMBDFT11.ad.twosigma.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.15959 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/2020 9:37 AM, Nicolas Viennot wrote:
->>> If I understand part of CRIU correctly, then we only need read-access 
->>> for the current user. I am sure Andrei, Pavel or Cyrill will correct 
->>> me if I am wrong concerning map_files.
->> If I do "ls -l /proc/self/map_files" I get the link name and link content.
->> While I can't open /proc/self/map_files/7fbde0c3200-7fbde0c3300 I can read that it points to /usr/lib64/ld-2.30.so, which is something I can open and read. Sure, it's an extra step, but it's no big deal. It does raise the question of what value comes from disallowing open via the symlink.
-> Reading the symlink doesn't work in two cases:
-> 1) The file has been deleted
+Hello,
 
-In which case you won't be able to read it directly from
-the symlink, either.
+This series aims at adding support for PHC and timestamping operations
+in the MSCC PHY driver, for the VSC858x and VSC8575. Those PHYs are
+capable of timestamping in 1-step and 2-step for both L2 and L4 traffic.
 
-> 2) The file is a memfd file
+As of this series, only IPv4 support was implemented when using L4 mode.
+This is because of an hardware limitation which prevents us for
+supporting both IPv4 and IPv6 at the same time. Implementing support for
+IPv6 should be quite easy (I do have the modifications needed for the
+hardware configuration) but I did not see a way to retrieve this
+information in hwtstamp(). What would you suggest?
 
-Ditto? Or is there some other problem?
+Those PHYs are distributed in hardware packages containing multiple
+times the PHY. The VSC8584 for example is composed of 4 PHYs. With
+hardware packages, parts of the logic is usually common and one of the
+PHY has to be used for some parts of the initialization. Following this
+logic, the 1588 blocks of those PHYs are shared between two PHYs and
+accessing the registers has to be done using the "base" PHY of the
+group. This is handled thanks to helpers in the PTP code (and locks).
+We also need the MDIO bus lock while performing a single read or write
+to the 1588 registers as the read/write are composed of multiple MDIO
+transactions (and we don't want other threads updating the page).
+
+To get and set the PHC time, a GPIO has to be used and changes are only
+retrieved or committed when on a rising edge. The same GPIO is shared by
+all PHYs, so the granularity of the lock protecting it has to be
+different from the ones protecting the 1588 registers (the VSC8584 PHY
+has 2 1588 blocks, and a single load/save pin).
+
+Patch 1 extends the recently added helpers to share information between
+PHYs of the same hardware package; to allow having part of the probe to
+be shared (in addition to the already supported init part). This will be
+used when adding support for PHC/TS to initialize locks.
+
+Patches 2 and 3 are mostly cosmetic.
+
+Patch 4 takes into account the 1588 block in the MACsec initialization,
+to allow having both the MACsec and 1588 blocks initialized on a running
+system.
+
+Patches 5 and 6 add support for PHC and timestamping operations in the
+MSCC driver. An initialization of the 1588 block (plus all the registers
+definition; and helpers) is added first; and then comes a patch to
+implement the PHC and timestamping API.
+
+Patches 7 and 8 add the required hardware description for device trees,
+to be able to use the load/save GPIO pin on the PCB120 board.
+
+To use this on a PCB120 board, two other series are needed and have
+already been sent upstream (one is merged). There are no dependency
+between all those series.
+
+Thanks!
+Antoine
+
+Antoine Tenart (5):
+  net: phy: add support for a common probe between shared PHYs
+  net: phy: mscc: fix copyright and author information in MACsec
+  net: phy: mscc: take into account the 1588 block in MACsec init
+  net: phy: mscc: timestamping and PHC support
+  dt-bindings: net: phy: vsc8531: document the load/save GPIO
+
+Quentin Schulz (3):
+  net: phy: mscc: remove the TR CLK disable magic value
+  net: phy: mscc: 1588 block initialization
+  MIPS: dts: ocelot: describe the load/save GPIO
+
+ .../bindings/net/mscc-phy-vsc8531.txt         |    3 +
+ arch/mips/boot/dts/mscc/ocelot_pcb120.dts     |   12 +-
+ drivers/net/phy/mscc/Makefile                 |    4 +
+ drivers/net/phy/mscc/mscc.h                   |   63 +
+ drivers/net/phy/mscc/mscc_fc_buffer.h         |    2 +-
+ drivers/net/phy/mscc/mscc_mac.h               |    2 +-
+ drivers/net/phy/mscc/mscc_macsec.c            |   10 +-
+ drivers/net/phy/mscc/mscc_macsec.h            |    2 +-
+ drivers/net/phy/mscc/mscc_main.c              |   63 +-
+ drivers/net/phy/mscc/mscc_ptp.c               | 1608 +++++++++++++++++
+ drivers/net/phy/mscc/mscc_ptp.h               |  477 +++++
+ include/linux/phy.h                           |   18 +-
+ 12 files changed, 2243 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/net/phy/mscc/mscc_ptp.c
+ create mode 100644 drivers/net/phy/mscc/mscc_ptp.h
+
+-- 
+2.26.2
 
