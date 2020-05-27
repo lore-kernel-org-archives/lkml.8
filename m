@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7D820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6005020776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Zu2ERzNb";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TGcyIT+6"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="GDPfI1e5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="smWN56+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730897AbgE0P5I (ORCPT
+        id S1730915AbgE0P5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:57:08 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:58811 "EHLO
+        Wed, 27 May 2020 11:57:11 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60367 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390114AbgE0Ptf (ORCPT
+        by vger.kernel.org with ESMTP id S2390106AbgE0Pte (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:49:35 -0400
+        Wed, 27 May 2020 11:49:34 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 95A4F582007;
-        Wed, 27 May 2020 11:49:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:34 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id D3E3D582005;
+        Wed, 27 May 2020 11:49:32 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=9VNSPM39dPjV/
-        5EKHPEmX5F0pfjtv/pW8b8YIRJwQsE=; b=Zu2ERzNbysuyjRUW9ui7IOax81fJn
-        /PuKKzKalOtkCUNlbWOtj/awsnqJMz5hfCLySk4u2DdholnRmwlJOzECoclBO1Ll
-        m/1vSvCub4hMOknEiRfnSx1Uh6eF5ZxWUqNbual67rDF7LZskuaOhhiBKE08GZxj
-        o/EchnMpcZiD6Vr5raNkNp6lIlEnTZcLKSDvda46Jvh70ZUyKf8mSVIDxLs9QxUd
-        sMsWGCe4JDnK4btlzDe97w6VWiTvv1oIPiFG3masPYVS8j0x4furil5JP/Tuq+7Y
-        2Hy6lQwIQKZ4Q4z6QAW8oxJvaWnEayP1D9viwssMLIv1eY5FQ7qx7Yi0A==
+        :mime-version:content-transfer-encoding; s=fm2; bh=2I5zMakGdefyc
+        AHM9J30Y7T2xEqngHoH53dlRgc3XbQ=; b=GDPfI1e5KUvbj23n5X227mloVFY/3
+        t4ZnnUqAy/V3vYC+s/+6lMhmuG6BtTkgtEbtVzCK94xHj2Q4HA8PR2ZpDuq56By3
+        DxgK6hq6FzzbDnvoNjb4XRc5cufhUaM+mYmQ2bBT1FiFV7zIgfKSk3S8q1WcfZGa
+        /GjPj0dKNEsd1PXwsfFGN30JySBg37GWLtTjEMlJwyaOnXSm44KQKaVkXVSjdKk1
+        mYQCIh0Qza9H5KMKa4z7Lb/1N6lX94AWMlOG9mR+Xh81E7Xu2uxQlqZHeWUFHLjz
+        A7Zw9upBF1pbzNOxoXQALpubQutmyZnP2fb5UBvRNgTfhutbsA8XRlN7Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=9VNSPM39dPjV/5EKHPEmX5F0pfjtv/pW8b8YIRJwQsE=; b=TGcyIT+6
-        ZJksWnbv04zfv4ORiD9qWzVEvqr5FW9haI32kWovSBeWt0Mfm/f0Le1mXsxHpErc
-        9lBSifKVS3jaGEpQDsga7l0P4MMdKoaWD94IC4ncHRtTphGXNytbPybU2NqDUd+T
-        tW4kstJWIMZIJJE1Nt8a3k9BhJyzenL+KwX6IETBs1/xd9dRt0vMEaXAIjrWO3Nw
-        otNmRPqgiRbdP5l8S+nK8iOQAnygZtW3U2c0SKRZiDgnQ7N5ViToy1iNYPbSyACy
-        xL74QIq1sy9ZJccKLspswGfnUMGDK5ME3bKjuR94wRHeO2RYYqHCC4vV5a/wyPv/
-        dTgV80+s0eD8Dg==
-X-ME-Sender: <xms:DozOXghRpF60Ats_V7Pkd_YqvkD-DOcLC2keMa3KmBPbnQJ710-HKQ>
+        fm2; bh=2I5zMakGdefycAHM9J30Y7T2xEqngHoH53dlRgc3XbQ=; b=smWN56+f
+        1pwLp2iGMWQSidpEwae8QUOnqW840OQijmct90Dz6zXB6VOYcQmO9RjZfXY/rJSa
+        l/Ei/x2nOpNOwmEVtD0n3drmA0ayxudShPW9ezpeP+Uhdm4qPe1U/Ri0p5ygMGLz
+        fKkOgxQn+peJ3Xy6PVAB/hdJ3lFPuObAWwb9pFPzQwKITqgzB0eQrZaniug2ryk8
+        2CnqmlBdCdcXRqlcYfP62H+qgaVBkw13tlkHnNnBQQ/ETBGkHWDQW6lgb7kT10im
+        KmmPdnkGp9HRgD8gbUGNsiEETxL5w5pSc8Um3e8daSFqAJbcLxkJEo6NHHeeYdYC
+        g/h/65WiMaQrNw==
+X-ME-Sender: <xms:DIzOXnXWO_lISxlUCitH0rnMi4dKb6xYO7PsRyUpc23fbq_uej2VXA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepfedune
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdejne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:DozOXpDMGdhqpWrzgU4B46gDGudNCfHulI-g2mhR3I7P5YVaw2xWqg>
-    <xmx:DozOXoHR5Zyv2niY-HoCGqBlEO8skX2XC9qxvxnbwu4WQC9hjqSFtw>
-    <xmx:DozOXhSG440H8499WEPUXZCmFm6n9nEI-v1FHoWWk4d63jBI30TrBQ>
-    <xmx:DozOXsyaz7VNj9GjcpHT0DqV2ZcxX2YHJfBhSqz-Vp3dIRiNUV5zjw>
+X-ME-Proxy: <xmx:DIzOXvmJ-VLAYX7qZ8v_tQ4_-ZFCAXRL07JbpEF6cARKfTiu9UKe-Q>
+    <xmx:DIzOXjbNIZ1MgebVYfsSEM9A8JT1D2v51Vpk3OC615B3pUrb3zZLkA>
+    <xmx:DIzOXiVQbowtYBPCONx9JBbLeqp_fX-AKEne-jAcExujoqViiPQBOg>
+    <xmx:DIzOXijEe9LvUU_f5KZSujyNyDIGd8kLTiMlvpBXyrygEKgS4FDRQQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 052973062499;
-        Wed, 27 May 2020 11:49:33 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 78ABA3280060;
+        Wed, 27 May 2020 11:49:32 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -75,10 +75,11 @@ Cc:     dri-devel@lists.freedesktop.org,
         Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 011/105] drm/vc4: drv: Add include guards
-Date:   Wed, 27 May 2020 17:47:41 +0200
-Message-Id: <68e89e315c4c35b313efc277c9642eca684e0ade.1590594512.git-series.maxime@cerno.tech>
+        Maxime Ripard <maxime@cerno.tech>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 010/105] dt-bindings: display: vc4: Document BCM2711 VC5
+Date:   Wed, 27 May 2020 17:47:40 +0200
+Message-Id: <c92be0086d086cd763160bec08c81dd8b8fd32e6.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,32 +90,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vc4_drv.h doesn't have any include guards which prevents it from being
-included twice. Let's add them.
+The BCM2711 comes with a new VideoCore. Add a compatible for it.
 
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_drv.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 3b1f02efefbe..6f50a91e3933 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -2,6 +2,8 @@
- /*
-  * Copyright (C) 2015 Broadcom
-  */
-+#ifndef _VC4_DRV_H_
-+#define _VC4_DRV_H_
+diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+index 0dcf0c397375..49a5e041aa49 100644
+--- a/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
++++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+@@ -17,6 +17,7 @@ description: >
+ properties:
+   compatible:
+     enum:
++      - brcm,bcm2711-vc5
+       - brcm,bcm2835-vc4
+       - brcm,cygnus-vc4
  
- #include <linux/delay.h>
- #include <linux/refcount.h>
-@@ -897,3 +899,5 @@ int vc4_perfmon_destroy_ioctl(struct drm_device *dev, void *data,
- 			      struct drm_file *file_priv);
- int vc4_perfmon_get_values_ioctl(struct drm_device *dev, void *data,
- 				 struct drm_file *file_priv);
-+
-+#endif /* _VC4_DRV_H_ */
 -- 
 git-series 0.9.1
