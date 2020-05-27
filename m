@@ -2,106 +2,119 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A7AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37C72078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F20D2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:23:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TqSI87qi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qg5jBIOJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbgE0XXF (ORCPT
+        id S1725900AbgE0XXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:23:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42918 "EHLO
+        Wed, 27 May 2020 19:23:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0XXE (ORCPT
+        with ESMTP id S1725819AbgE0XXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:23:04 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94936C08C5C1;
-        Wed, 27 May 2020 16:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kkKuXlZkefdaTbsQ8LAr7bWz0v+au1TpQMecu+KkdsM=; b=TqSI87qiYboEzCul9zKvX0pV6
-        CG+C4VH88nAcLysydmf2QjR8db5MzBma2hUviRr9B2iPXGpg5b7aBc9QMKldb6tjliUyxS3V7FC1l
-        /GgPfx9HBpG+GQcnAaOHtZdGLIYjumsOcT5x8GJ/PTabw1alvkAkKzCbpHkR1xOyBrwba/LFHnx2F
-        CsABDueVmhT/mSrPU1/FhNshqKHvHMGs+C/3OY9N3l7jYvi4lEbti85gGaqIwPMHI+YfwWHutHd1j
-        IUcb9LRh8J6z6/8OhAMPeKNeFApUtTt44VTuhjTtnU9h5u1pociNlMSgJVVWXy7DxY7ngSwedI50U
-        AhAlRGwFg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37856)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1je5Ny-0003si-Fg; Thu, 28 May 2020 00:22:58 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1je5Nx-0006r0-RY; Thu, 28 May 2020 00:22:57 +0100
-Date:   Thu, 28 May 2020 00:22:57 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
-Message-ID: <20200527232257.GS1551@shell.armlinux.org.uk>
-References: <20200528090941.341ad93a@canb.auug.org.au>
+        Wed, 27 May 2020 19:23:49 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C1CC08C5C1;
+        Wed, 27 May 2020 16:23:47 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id q13so2458842edi.3;
+        Wed, 27 May 2020 16:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wIVZxySUnBYIOh1u+axvWyg8nrJdsmWrI8rTFK6qLVg=;
+        b=Qg5jBIOJ/fnN/Gke/Ow3JmBDV/gHExZTNzXoLEYshE5IPCFeaIyXdpSeewVt/pCERE
+         QSy8ZFFHWMzfJ5mcOTathiF9yOLEHFX+Ib3VyDj3WORcpvTCUJ3SpvdVk5TU7NAcnsoW
+         iDeHRty7UUBWQ78SUsxkvxadSzDLJX4ctgRVCjTbMh774Go9YfE5GtXADJsj3c+kUHSz
+         L0uV0TAG0qejh3Hzz/Q8c8WW5K1Crr2ZcFSC30XUE01UzgI85Tb1VGKKmSokO5k2QDGR
+         euSSu74G2kCqAykqTJv0cEAd5cAuVHbMbJP2Cfo/G8WVzhHSPKgypqe7I4jgJULBgUOg
+         uOrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wIVZxySUnBYIOh1u+axvWyg8nrJdsmWrI8rTFK6qLVg=;
+        b=qonFjQ6x2wRzpmdRCE0Z1AazjDR6rXgHSzq7EFnZ9HEmThHwU2/WVO+jfjYvjuJxQP
+         lFLcFSTFj6zXdOzF9IMh/LQitpE/FfV9ZuoHR9nq+mjOkhsR9Ph77VajrvADHjU+dc5V
+         ca5jRAvxavGw9S/eJ+czQ8Yk2az9UKvpJZEBw4mu8SvvygDoCd3sEURrlTEJNRsTY4xM
+         IgYlgmMlp9L8SpheiEl7qVczv3rK7KN7Jf/34dlSOrYR75O5dpLeqw/0gA1gEe4+Jt1g
+         NqqD2cqLVtoKRSECo4XEzJtiRJjkCZqP2IKRuP3JQj/1AsGS0SnbfJcWLDztkyM9iWds
+         NqIQ==
+X-Gm-Message-State: AOAM532zoTE0svSJMfD23KpF7Vb0HNWAmLgWZAuvo2g2AaLHENoCythq
+        6/luA4gaJpSh2vRGTEsz3vXxw7HQ6N/BOZuIsBs=
+X-Google-Smtp-Source: ABdhPJzFmTwEl6MHDoni4mS3GYwuJBWsIM1gkQwV01ccEMndn8oOJCrkDRqOfJHo0Ue19BklzCp7MWJWZ971zOtu80I=
+X-Received: by 2002:a50:b082:: with SMTP id j2mr450297edd.201.1590621826391;
+ Wed, 27 May 2020 16:23:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528090941.341ad93a@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200527230442.24228-1-wu000273@umn.edu>
+In-Reply-To: <20200527230442.24228-1-wu000273@umn.edu>
+From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date:   Thu, 28 May 2020 08:23:34 +0900
+Message-ID: <CAKFNMokewQQnx9VyK1TpZx+o11UTmNoVsZ-eqFrRzXnYdP-NYg@mail.gmail.com>
+Subject: Re: [PATCH V2] nilfs2: Fix reference count leak in nilfs_sysfs_create_device_group
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-nilfs <linux-nilfs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, kjlu@umn.edu,
+        Vyacheslav Dubeyko <Vyacheslav.Dubeyko@hgst.com>,
+        wu000273@umn.edu
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ard,
+Hi Andrew,
 
-Please take a look.  Obviously, whatever the resolution is going to be
-needed when Linus opens the merge window.
+Please pick this up as well.
 
-Thanks.
+Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
 
-On Thu, May 28, 2020 at 09:09:41AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the arm tree got a conflict in:
-> 
->   arch/arm/boot/compressed/head.S
-> 
-> between commit:
-> 
->   a94691680bac ("efi/arm: Deal with ADR going out of range in efi_enter_kernel()")
-> 
-> from Linus' tree and commit:
-> 
->   d0f9ca9be11f ("ARM: decompressor: run decompressor in place if loaded via UEFI")
-> 
-> from the arm tree.
-> 
-> I fixed it up (I just used the latter) and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-
-
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+On Thu, May 28, 2020 at 8:04 AM <wu000273@umn.edu> wrote:
+>
+> From: Qiushi Wu <wu000273@umn.edu>
+>
+> kobject_init_and_add() takes reference even when it fails.
+> In nilfs_sysfs_create_device_group(), the memory allocated by
+> kobject_init_and_add() is not freed when kobject_init_and_add()
+> fails. Fix this issue by calling kobject_put() to clean up the
+> kobject.
+>
+> Fixes: da7141fb78db ("nilfs2: add /sys/fs/nilfs2/<device> group")
+> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+> ---
+>  V2: using kobject_put() to handle kobject_init_and_add() instead of
+>  kobject_del().
+>
+>  fs/nilfs2/sysfs.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nilfs2/sysfs.c b/fs/nilfs2/sysfs.c
+> index e60be7bb55b0..8416f915d118 100644
+> --- a/fs/nilfs2/sysfs.c
+> +++ b/fs/nilfs2/sysfs.c
+> @@ -999,8 +999,10 @@ int nilfs_sysfs_create_device_group(struct super_block *sb)
+>         init_completion(&nilfs->ns_dev_kobj_unregister);
+>         err = kobject_init_and_add(&nilfs->ns_dev_kobj, &nilfs_dev_ktype, NULL,
+>                                     "%s", sb->s_id);
+> -       if (err)
+> +       if (err) {
+> +               kobject_put(&nilfs->ns_dev_kobj);
+>                 goto free_dev_subgroups;
+> +       }
+>
+>         err = nilfs_sysfs_create_mounted_snapshots_group(nilfs);
+>         if (err)
+> --
+> 2.17.1
+>
