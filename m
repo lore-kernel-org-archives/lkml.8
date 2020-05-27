@@ -2,139 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E83C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 431CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B60AE207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rtJegCKL"
+	by mail.kernel.org (Postfix) with ESMTP id 1FC7C207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590578274;
+	bh=5z9xtdi52FskRYXJfdwKFMi6uEuh2+knbFiPB1z1Od8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bhiDC4nsrReq+oXK4PCN11ghxUYegZAtAzP+NykeNcAwlhXUwY4mGgDBJCdqHn9N3
+	 oziUaI7xpCT8pqfjtLN7n8A0JHtuZo9dFcYJ8cMqhx875yPAtgMP1DfRSJqmzJ/CaA
+	 liwEsmdodlLgUga+/7pMoOKK7CAvwgRVfpGq2+GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbgE0LRf (ORCPT
+        id S2388129AbgE0LRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:17:35 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54360 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387397AbgE0LRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:17:34 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RBBXim014001;
-        Wed, 27 May 2020 13:17:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=rr7ePK+lAdwpvBXNXavKI3R8C4Kk3NnESgyEf8criWw=;
- b=rtJegCKLGvavFARM5Tsya5iX1vUKjOfVvlDqgiXKgSH2EczQYLVHm73X+qT0TgJGffee
- zGjSVlLyKwR54Vwd4f2Ywmivh32IoRcyNUka5YTHXrMpWwsrEyi2EtZvglA7OVQasdkK
- pvGUlrfBcUvBVP05+f/WyJCJfCB2lvq3JBnDBKEdWiIC6TtP6desLTJj+O3Gim2cVnK3
- +gSCRncK1uiqJ5p61WCxSc4LOYdi9FjwowMyexgkB3IVgVjz2rKMMsYR4stRiqNMAtVe
- fzUC+Fqf2LqZQ0mP5JfyaIl3mF0SloAovp4AOaty3AKt0Gn2dPtVCYs9MfX0VAAIu/Pm yw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316tqh51y3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 13:17:11 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 86F1010002A;
-        Wed, 27 May 2020 13:17:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 64AEC2A4D83;
-        Wed, 27 May 2020 13:17:10 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE1.st.com
- (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 May
- 2020 13:17:09 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 27 May 2020 13:17:09 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
-Thread-Topic: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
-Thread-Index: AQHWM3CeA6bTrCFpTUymlrJxXTw8j6i7lUyAgAATBIA=
-Date:   Wed, 27 May 2020 11:17:09 +0000
-Message-ID: <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
-References: <20200526151619.8779-1-benjamin.gaignard@st.com>
- <jhjk10xu1tq.mognet@arm.com>
-In-Reply-To: <jhjk10xu1tq.mognet@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <39E329C3251EC747879CFC71C308FA00@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 27 May 2020 07:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52844 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387397AbgE0LRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:17:52 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C222207CB;
+        Wed, 27 May 2020 11:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590578272;
+        bh=5z9xtdi52FskRYXJfdwKFMi6uEuh2+knbFiPB1z1Od8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M477cvlPVQMNDFXWmqezt5D0ambD+4fGVQNXF4WFsTitXDzCulZDkV36wz45rx+0W
+         vIowVuc5yg27js77yPSsK8eXAzhKABjEv4meOc7a0r0RzCo9cvSK6BC7xo9gH0u++B
+         RyNNgfb+nNvIKGS/9MnbkDciO5E/XAZggjl44JjI=
+Date:   Wed, 27 May 2020 12:17:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] regulator: Add support for sync_state() callbacks
+Message-ID: <20200527111750.GB5308@sirena.org.uk>
+References: <20200527074057.246606-1-saravanak@google.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="b5gNqxB1S1yM7hjW"
+Content-Disposition: inline
+In-Reply-To: <20200527074057.246606-1-saravanak@google.com>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDUvMjcvMjAgMTI6MDkgUE0sIFZhbGVudGluIFNjaG5laWRlciB3cm90ZToNCj4gSGkg
-QmVuamFtaW4sDQo+DQo+IE9uIDI2LzA1LzIwIDE2OjE2LCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90
-ZToNCj4+IEEgZmlyc3Qgcm91bmQgWzFdIG9mIGRpc2N1c3Npb25zIGFuZCBzdWdnZXN0aW9ucyBo
-YXZlIGFscmVhZHkgYmUgZG9uZSBvbg0KPj4gdGhpcyBzZXJpZXMgYnV0IHdpdGhvdXQgZm91bmQg
-YSBzb2x1dGlvbiB0byB0aGUgcHJvYmxlbS4gSSByZXNlbmQgaXQgdG8NCj4+IHByb2dyZXNzIG9u
-IHRoaXMgdG9waWMuDQo+Pg0KPiBBcG9sb2dpZXMgZm9yIHNsZWVwaW5nIG9uIHRoYXQgcHJldmlv
-dXMgdGhyZWFkLg0KPg0KPiBTbyB3aGF0IGhhZCBiZWVuIHN1Z2dlc3RlZCBvdmVyIHRoZXJlIHdh
-cyB0byB1c2UgdWNsYW1wIHRvIGJvb3N0IHRoZQ0KPiBmcmVxdWVuY3kgb2YgdGhlIGhhbmRsaW5n
-IHRocmVhZDsgaG93ZXZlciBpZiB5b3UgdXNlIHRocmVhZGVkIElSUXMgeW91DQo+IGdldCBSVCB0
-aHJlYWRzLCB3aGljaCBhbHJlYWR5IGdldCB0aGUgbWF4IGZyZXF1ZW5jeSBieSBkZWZhdWx0IChh
-dCBsZWFzdA0KPiB3aXRoIHNjaGVkdXRpbCkuDQo+DQo+IERvZXMgdGhhdCBub3Qgd29yayBmb3Ig
-eW91LCBhbmQgaWYgc28sIHdoeT8NClRoYXQgZG9lc24ndCB3b3JrIGJlY2F1c2UgYWxtb3N0IGV2
-ZXJ5dGhpbmcgaXMgZG9uZSBieSB0aGUgaGFyZHdhcmUgYmxvY2tzDQp3aXRob3V0IGNoYXJnZSB0
-aGUgQ1BVIHNvIHRoZSB0aHJlYWQgaXNuJ3QgcnVubmluZy4gSSBoYXZlIGRvbmUgdGhlIA0KdGVz
-dHMgd2l0aCBzY2hlZHV0aWwNCmFuZCBvbmRlbWFuZCBzY2hlZHVsZXIgKHdoaWNoIGlzIHRoZSBv
-bmUgSSdtIHRhcmdldGluZykuIEkgaGF2ZSBubyANCmlzc3VlcyB3aGVuIHVzaW5nDQpwZXJmb3Jt
-YW5jZSBzY2hlZHVsZXIgYmVjYXVzZSBpdCBhbHdheXMga2VlcCB0aGUgaGlnaGVzdCBmcmVxdWVu
-Y2llcy4NCg0KDQo+DQo+PiBXaGVuIHN0YXJ0IHN0cmVhbWluZyBmcm9tIHRoZSBzZW5zb3IgdGhl
-IENQVSBsb2FkIGNvdWxkIHJlbWFpbiB2ZXJ5IGxvdw0KPj4gYmVjYXVzZSBhbG1vc3QgYWxsIHRo
-ZSBjYXB0dXJlIHBpcGVsaW5lIGlzIGRvbmUgaW4gaGFyZHdhcmUgKGkuZS4gd2l0aG91dA0KPj4g
-dXNpbmcgdGhlIENQVSkgYW5kIGxldCBiZWxpZXZlIHRvIGNwdWZyZXEgZ292ZXJub3IgdGhhdCBp
-dCBjb3VsZCB1c2UgbG93ZXINCj4+IGZyZXF1ZW5jaWVzLiBJZiB0aGUgZ292ZXJub3IgZGVjaWRl
-cyB0byB1c2UgYSB0b28gbG93IGZyZXF1ZW5jeSB0aGF0DQo+PiBiZWNvbWVzIGEgcHJvYmxlbSB3
-aGVuIHdlIG5lZWQgdG8gYWNrbm93bGVkZ2UgdGhlIGludGVycnVwdCBkdXJpbmcgdGhlDQo+PiBi
-bGFua2luZyB0aW1lLg0KPj4gVGhlIGRlbGF5IHRvIGFjayB0aGUgaW50ZXJydXB0IGFuZCBwZXJm
-b3JtIGFsbCB0aGUgb3RoZXIgYWN0aW9ucyBiZWZvcmUNCj4+IHRoZSBuZXh0IGZyYW1lIGlzIHZl
-cnkgc2hvcnQgYW5kIGRvZXNuJ3QgYWxsb3cgdG8gdGhlIGNwdWZyZXEgZ292ZXJub3IgdG8NCj4+
-IHByb3ZpZGUgdGhlIHJlcXVpcmVkIGJ1cnN0IG9mIHBvd2VyLiBUaGF0IGxlZCB0byBkcm9wIHRo
-ZSBoYWxmIG9mIHRoZSBmcmFtZXMuDQo+Pg0KPj4gVG8gYXZvaWQgdGhpcyBwcm9ibGVtLCBEQ01J
-IGRyaXZlciBpbmZvcm1zIHRoZSBjcHVmcmVxIGdvdmVybm9ycyBieSBhZGRpbmcNCj4+IGEgY3B1
-ZnJlcSBtaW5pbXVtIGxvYWQgUW9TIHJlc3F1ZXN0Lg0KPj4NCj4+IEJlbmphbWluDQo+Pg0KPj4g
-WzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDIwLzQvMjQvMzYwDQo+Pg0KPj4gQmVuamFtaW4g
-R2FpZ25hcmQgKDMpOg0KPj4gICAgUE06IFFvUzogSW50cm9kdWNlIGNwdWZyZXEgbWluaW11bSBs
-b2FkIFFvUw0KPj4gICAgY3B1ZnJlcTogZ292ZXJub3I6IFVzZSBtaW5pbXVtIGxvYWQgUW9TDQo+
-PiAgICBtZWRpYTogc3RtMzItZGNtaTogSW5mb3JtIGNwdWZyZXEgZ292ZXJub3JzIGFib3V0IGNw
-dSBsb2FkIG5lZWRzDQo+Pg0KPj4gICBkcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcV9nb3Zlcm5vci5j
-ICAgICAgICB8ICAgNSArDQo+PiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzIt
-ZGNtaS5jIHwgICA4ICsrDQo+PiAgIGluY2x1ZGUvbGludXgvcG1fcW9zLmggICAgICAgICAgICAg
-ICAgICAgIHwgIDEyICsrDQo+PiAgIGtlcm5lbC9wb3dlci9xb3MuYyAgICAgICAgICAgICAgICAg
-ICAgICAgIHwgMjEzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPj4gICA0IGZpbGVz
-IGNoYW5nZWQsIDIzOCBpbnNlcnRpb25zKCspDQo=
+
+--b5gNqxB1S1yM7hjW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, May 27, 2020 at 12:40:56AM -0700, Saravana Kannan wrote:
+
+> When a regulator is left on by the bootloader or anything else before
+> the kernel starts (let's call this a "boot on" regulator), we need to
+> keep it on till all the consumers of the regulator have probed. This is
+
+No, we don't.  As ever we have no idea if there ever will be consumers -
+we don't know what drivers the system is going to load, we don't know
+what the intentions of the OS and system integration are and we have
+zero idea why the system is in the state it's in.
+
+> This commit adds a regulator_sync_state() helper function that takes
+> care of all the "boot on" regulator clean up for any regulator driver.
+> All one needs to do is add the following line to the driver struct.
+
+None of the issues around this have *anything* to do with individual
+drivers, all this is doing is forcing us to go through and add this to
+every single driver which doesn't accomplish anything.  Regulator
+drivers have no role in this, they don't set policy, so there is no
+reason why they should be aware of any of this.
+
+Please go and look at the previous discussions of this topic, this needs
+to work for other users as well.
+
+--b5gNqxB1S1yM7hjW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OTF0ACgkQJNaLcl1U
+h9Av1wf5AWMYXcj3te9Nw7oD+uN5sFblIyhNUmw6KUiEoMvFHDgezM4ClRYeGFpW
+JPAKZG9DFS+jcfcDykDF3vdjcJElqlym4VXK9pZXwTc9EPX1aC+Iiio5PVXLRnQ4
+FWxWD86/H3KWqnuC+vAhvuXGe4aOY3iAyFmppAPdjoLK9hcisBw7fAGfI47QzVv8
+J1fLJ9DBlCIcL9OOAIxjCkLVLDywRqqBg3cGI2NQm/kBBirfHgfTQ5u06UoANxhH
+ovE0bHaUZYNIGT/MRjNiNVmzUZRZd6IzZ5z0pI05EXfF5mIgf089SJdYFV5UJ3p/
+jVie+AkcjnD6CZGK1wE1sYQwPRYNoA==
+=VM8y
+-----END PGP SIGNATURE-----
+
+--b5gNqxB1S1yM7hjW--
