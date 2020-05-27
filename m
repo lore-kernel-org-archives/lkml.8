@@ -2,127 +2,116 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55350C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D778F20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:44:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JO4hX5vo"
+	by mail.kernel.org (Postfix) with ESMTP id 31456207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387581AbgE0MoX (ORCPT
+        id S1730064AbgE0Mp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387514AbgE0MoW (ORCPT
+        Wed, 27 May 2020 08:45:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19046 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728513AbgE0Mp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:44:22 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331E2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:44:22 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id dh1so11014563qvb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:44:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=SG6R5fwcwu0F3wXBZAetFtlGMrCPJrWFQW7Tk4R8pX8=;
-        b=JO4hX5voxOSBXrFSDCfVw+fU62Ree4bW4Gy/nlNHSBO1n6UWZrpq8mvT8fC5YaJ2w1
-         pp8wQ8vb/F9udJvwHpWe0OBLKrmexHwi+TdPMmUSz0O3B5ID6xLVA0VOQciRNt7mvxGw
-         A4PABBg/oAvMzPdS/iJn2OAXDHb2XyuFGU6m+w0qAj2/Rq7/BWkMgSMex4/4wc1KvFmQ
-         gTp8vxtwz5eCDOe8de+CJNYDvfYEAlZMGHqhuV1Wxmgadjtdyamdj+3UodxPr1wGDl23
-         tEZ2ICPVIt7C5nqLMV6HGv0c6PWtdybcP0cFzzf6SXMxQrqy738pVMY7x3wOcgiztCAX
-         NZhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=SG6R5fwcwu0F3wXBZAetFtlGMrCPJrWFQW7Tk4R8pX8=;
-        b=HEGcL2ZA49FKXc4h74GpiryyXsCvrL1ZwOuTrQBGoUkgr9t+GO5MXfrQRCTTXNXAzO
-         XU+efLu96USBwa7cVJHiKq8IEqwhSKJzCQiIrcoCAGg6tCnwvBVe/NOBsspmA3SbLOEg
-         GLjvvQY6zfijsL1XJtdfkHyCta/s8J2iC+ky6s0PAcVpTL9pa3V88XcOuVpLm6lodUgj
-         XhNxJ7ebHjeZvh8+NrCJtVBE8nsuvsrIwtCh2orn+rhGn245d2pIX/JBgGf+842gqW/3
-         S6tIWvJDbLC6JNdRHY89nQqR7vDocTlsUVDTM640ewQbSzZ8WwrqwVifRFzYVgUjHFsE
-         GvdA==
-X-Gm-Message-State: AOAM532Y49P4Ok7HyDG2WdGZDXZjj274htS3Zb0bkg3vlafy3tSnKI7J
-        kMQAAMDM096DVn6A9jVCTIU=
-X-Google-Smtp-Source: ABdhPJwakQCUE8zxEyozSmQIsktEcJrASJvgQJPKyDtIxsRIVMwLdjYWz6d4+l/FnbrcS94apfuEKg==
-X-Received: by 2002:a05:6214:1021:: with SMTP id k1mr3776904qvr.180.1590583461236;
-        Wed, 27 May 2020 05:44:21 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id b11sm2275339qti.50.2020.05.27.05.44.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 May 2020 05:44:20 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:43:40 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <xgl9367mndy6.fsf@arm.com>
-References: <20200522065330.34872-1-nick.gasson@arm.com> <20200526115547.GF333164@krava> <xgl9367mndy6.fsf@arm.com>
+        Wed, 27 May 2020 08:45:29 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RCWOgG067581;
+        Wed, 27 May 2020 08:45:16 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3170c72v4p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 08:45:16 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04RCX31u070298;
+        Wed, 27 May 2020 08:45:16 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3170c72v3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 08:45:16 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04RCiru1024551;
+        Wed, 27 May 2020 12:45:14 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02dal.us.ibm.com with ESMTP id 316ufake6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 12:45:14 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04RCiCXO9372298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 12:44:12 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 256D26A051;
+        Wed, 27 May 2020 12:44:13 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02E9E6A04D;
+        Wed, 27 May 2020 12:44:10 +0000 (GMT)
+Received: from [9.211.128.7] (unknown [9.211.128.7])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 27 May 2020 12:44:10 +0000 (GMT)
+Subject: Re: [PATCH 0/4] kernfs: proposed locking and concurrency improvement
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Kent <raven@themaw.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Howells <dhowells@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <159038508228.276051.14042452586133971255.stgit@mickey.themaw.net>
+ <20200525061616.GA57080@kroah.com>
+From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
+Message-ID: <1d185eb3-8a85-9138-9277-92400ba03e0a@linux.vnet.ibm.com>
+Date:   Wed, 27 May 2020 05:44:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] perf jvmti: remove redundant jitdump line table entries
-To:     Nick Gasson <nick.gasson@arm.com>, Jiri Olsa <jolsa@redhat.com>
-CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        linux-kernel@vger.kernel.org
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Message-ID: <FAA0E3A0-505F-4EEE-9509-A174FACB6AC6@gmail.com>
+In-Reply-To: <20200525061616.GA57080@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ cotscore=-2147483648 priorityscore=1501 impostorscore=0 clxscore=1011
+ suspectscore=0 spamscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/24/20 11:16 PM, Greg Kroah-Hartman wrote:
 
+> Independant of your kernfs changes, why do we really need to represent
+> all of this memory with that many different "memory objects"?  What is
+> that providing to userspace?
+> 
+> I remember Ben Herrenschmidt did a lot of work on some of the kernfs and
+> other functions to make large-memory systems boot faster to remove some
+> of the complexity in our functions, but that too did not look into why
+> we needed to create so many objects in the first place.
 
-On May 27, 2020 2:29:05 AM GMT-03:00, Nick Gasson <nick=2Egasson@arm=2Ecom=
-> wrote:
->On 05/26/20 19:55 PM, Jiri Olsa wrote:
->> On Fri, May 22, 2020 at 02:53:30PM +0800, Nick Gasson wrote:
->>> For each PC/BCI pair in the JVMTI compiler inlining record table,
->the
->>> jitdump plugin emits debug line table entries for every source line
->in
->>> the method preceding that BCI=2E Instead only emit one source line per
->>> PC/BCI pair=2E Reported by Ian Rogers=2E This reduces the =2Edump size=
- for
->>> SPECjbb from ~230MB to ~40MB=2E
->>>=20
->>> Also fix an error in the DWARF line table state machine where
->addresses
->>> are incorrectly offset by -0x40 (GEN_ELF_TEXT_OFFSET)=2E This can be
->seen
->>> with `objdump -S` on the ELF files after perf inject=2E
->>
->> hi,
->> I can't apply this on latest Arnaldo's perf/core:
->>
->> patching file jvmti/libjvmti=2Ec
->> Hunk #1 FAILED at 32=2E
->> Hunk #2 succeeded at 67 (offset -4 lines)=2E
->> Hunk #3 FAILED at 85=2E
->> Hunk #4 succeeded at 114 (offset -7 lines)=2E
->>
->
->Sorry I based this on my earlier patch series below but I didn't
->realise
->that wasn't merged to perf/core yet=2E Could those patches be applied
->first? I believe Ian added a Reviewed-by for all three=2E
->
->https://lore=2Ekernel=2Eorg/lkml/20200427061520=2E24905-3-nick=2Egasson@a=
-rm=2Ecom/T/
+That was my first choice too.  Unfortunately, I was not consulted on this design decision, however, and now it's out there.  It is, as you guessed, a hardware "feature".  The hw believes there is value in identifying memory in 256MB chunks.  There are, unfortunately, 2^18 or over 250,000 of those on a 64TB system, compared with dozens or maybe even hundreds of other devices.
 
-I'll check, thanks
-- Arnaldo
+We considered a revamping of the boot process - delaying some devices, reordering operations and such - but deemed that more dangerous to other architectures.  Although this change is driven by a particular architecture, the changes we've identified are architecture independent.  The risk of breaking something else is much lower than if we start reordering boot steps.
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> Also, why do you need to create the devices _when_ you create them?  Can
+> you wait until after init is up and running to start populating the
+> device tree with them?  That way boot can be moving on and disks can be
+> spinning up earlier?
+
+I'm not a systemd expert, unfortunately, so I don't know if it needs to happen *right* then or not.  I do know that upon successful boot, a ps reveals many systemd children still reporting in.  It's not that we're waiting on everybody; the contention is causing a delay in the discovery of key devices like disks, and *that* leads to timeouts firing in systemd rules.  Any workaround bent on dodging the problem tends to get exponentially worse when the numbers change.  We noticed this problem at 32TB, designed some timeout changes and udev options to improve it, only to have both fail at 64TB.  Worse, at 64TB, larger timeouts and udev options failed to work consistently anymore.
+
+There are two times we do coldplugs - once in the initramfs, and then again after we switch over to the actual root.  I did try omitting memory devices after the switchover.  Much faster!  So, why is the second one necessary?  Are there some architectures that need that?  I've not found anyone who can answer that, so going that route presents us with a different big risk.
+
+Rick
+
