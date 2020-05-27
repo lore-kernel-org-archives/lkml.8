@@ -2,119 +2,103 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B18C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA82C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 252A22088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C699208A7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:09:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NmN5S/cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbgE0BIb (ORCPT
+        id S1728162AbgE0BJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:08:31 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:53702 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728092AbgE0BIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:08:31 -0400
-Received: from [10.20.42.25] (unknown [10.20.42.25])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axpultvc1eVXI5AA--.413S3;
-        Wed, 27 May 2020 09:07:57 +0800 (CST)
-Subject: Re: [PATCH v6 1/4] MIPS: Do not flush tlb page when updating PTE
- entry
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
- <79778fc3-c029-272b-358e-4f8f8e5772d3@cogentembedded.com>
- <0a38f25d-dba0-688f-4588-345c861325aa@cogentembedded.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-From:   maobibo <maobibo@loongson.cn>
-Message-ID: <9b71761b-a744-086f-43f5-78dcca18b459@loongson.cn>
-Date:   Wed, 27 May 2020 09:07:57 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 26 May 2020 21:09:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44396 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728137AbgE0BJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:09:10 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R18I8q001652;
+        Wed, 27 May 2020 01:08:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=TE1U6kmBDIx0P+TEG5r2eqfZg1hODVX9MWfuH0SoAVw=;
+ b=NmN5S/crAypezw7f1yeWTBv8ioDprtOvDR02eBk+n5Bospz3rW9iZBv4P7PMlnpGM/pU
+ ShNFcFX08pL0XUEvB912BSq3+OwCZQ/VV3BLsDT1Oin1+yjKzlAHryvgE7EXOX1cj76q
+ r2taUlpCoeFjn2cYGkGOjlxd3fzfxYjhN/vytbpGPdRm5pptMSpJNGRrnYuHzl6brqWo
+ sLTp4fHVKmmQSe3TMg7ea59XcmXByJha7Ez4EyyJyp1mku+Eiy+Cgt14o4qrrD5hs1iH
+ v37oMnVkvbeVBXJNrn1mnRRo8luzlXUylVvl/+taVy+RB3WC27O7XgwcR9s1YRmEwpZ6 GQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 316u8qvsmg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 01:08:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R17XAf102198;
+        Wed, 27 May 2020 01:08:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 317j5q510t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 01:08:52 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04R18oNx023797;
+        Wed, 27 May 2020 01:08:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 May 2020 18:08:50 -0700
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?utf-8?Q?Kai_M=C3=A4kisara_=28Kolumbus=29?= 
+        <kai.makisara@kolumbus.fi>, Bart Van Assche <bvanassche@acm.org>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH v2] scsi: st: convert convert get_user_pages() -->
+ pin_user_pages()
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1mu5ukwx4.fsf@ca-mkp.ca.oracle.com>
+References: <20200526182709.99599-1-jhubbard@nvidia.com>
+        <98b7f283-b208-d222-1d65-8a2e34d0a1af@nvidia.com>
+Date:   Tue, 26 May 2020 21:08:47 -0400
+In-Reply-To: <98b7f283-b208-d222-1d65-8a2e34d0a1af@nvidia.com> (John Hubbard's
+        message of "Tue, 26 May 2020 18:05:01 -0700")
 MIME-Version: 1.0
-In-Reply-To: <0a38f25d-dba0-688f-4588-345c861325aa@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Axpultvc1eVXI5AA--.413S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr15XF1UZFyfCw4DuFyDZFb_yoW8Xr43pF
-        97CayYganrW34xKF1xXw4kurWfCws5KFWjqry3ArW5ZanrZr1kKr43ta10kr97Wr1fu3WI
-        v3yDt3y8Za45Z3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr
-        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
-        Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG
-        6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJbIYCTnIWIevJa73UjIFyTuYvjxU2znQUUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=1
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005270003
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=1
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270003
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+John,
 
-On 05/25/2020 04:31 PM, Sergei Shtylyov wrote:
-> On 25.05.2020 11:12, Sergei Shtylyov wrote:
-> 
->>> It is not necessary to flush tlb page on all CPUs if suitable PTE
->>> entry exists already during page fault handling, just updating
->>> TLB is fine.
->>>
->>> Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
->>
->>     Need empty line here.
->>
->>> V6:
->>> - Add update_mmu_tlb function as empty on all platform except mips
->>>    system, we use this function to update local tlb for page fault
->>>    smp-race handling
->>> V5:
->>> - define update_mmu_cache function specified on MIPS platform, and
->>>    add page fault smp-race stats info
->>> V4:
->>> - add pte_sw_mkyoung function to implement readable privilege, and
->>>    this function is  only in effect on MIPS system.
->>> - add page valid bit judgement in function pte_modify
->>> V3:
->>> - add detailed changelog, modify typo issue in patch V2
->>> v2:
->>> - split flush_tlb_fix_spurious_fault and tlb update into two patches
->>> - comments typo modification
->>> - separate tlb update and add pte readable privilege into two patches
->>
->>    It was a bad idea to keep the version change log in the 1st patch only,
->> we have either cover letter for that, or all the individual patches...
-> 
->    Sorry for noticing this only now. With 4 patches, you should have a cover letter anyway...
-Thanks for reviewing my patch, a cover letter will be added.
+> For some reason, the "convert convert" subject line is really hard to
+> get rid of from my scsi st patch. In this case, I'd dropped the patch
+> entirely, and recreated it with the old subject line somehow. Sorry
+> about that persistent typo!
+>
+> I'll send a v3 if necessary, to correct that.
 
-> 
+I'll fix it up when I apply.
 
->>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
->> [...]
-> 
-> MBR, Sergei
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
