@@ -2,91 +2,74 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65064C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F239C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39FF02088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB22206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590538518;
+	bh=zGice6jKCkqlnjdMIbO4/jRRAGT8tgSKxow3DZdlnTg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=g7VDS+WA0cls6CbBl8vk9lxt5tRWSc3ceCaLx3KbZZm/zkkVG7Tq0e659K7CEOdIb
+	 u8iP+DUf1o9yoVt40p0Bk4ZjqOhVctyTdKzHuEG3sLZB/CE1XVd0QCa11dFaQbclU2
+	 8oJNTtdZULFoVxauoM2Ey/4O6j5k3S2JugBWSWFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgE0AMP (ORCPT
+        id S1726835AbgE0APS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 20:12:15 -0400
-Received: from mga04.intel.com ([192.55.52.120]:14717 "EHLO mga04.intel.com"
+        Tue, 26 May 2020 20:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgE0AMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 20:12:14 -0400
-IronPort-SDR: DUsAlBE1/cbQEr8X+PBFtbDIy0V8b40WT/FunzzkusoxVmFEHCkM+1/OyY/yGD3carKpYHmCX9
- TQ+Vxve+fkYQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 17:12:14 -0700
-IronPort-SDR: KQnRZ+5k13psFrnBoq88rIvT+3D2Ihvhk0t6qttIJX/a2X43NEjNGfsHwVkQ/uwwamVkqckvKK
- WaU0dtnyT74A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="345350156"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 26 May 2020 17:12:13 -0700
-Date:   Tue, 26 May 2020 17:12:13 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     syzbot <syzbot+904752567107eefb728c@syzkaller.appspotmail.com>
-Cc:     bp@alien8.de, eesposit@redhat.com, gregkh@linuxfoundation.org,
-        hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        vkuznets@redhat.com, wanpengli@tencent.com, x86@kernel.org
-Subject: Re: kernel BUG at arch/x86/kvm/mmu/mmu.c:LINE! (2)
-Message-ID: <20200527001213.GA31696@linux.intel.com>
-References: <000000000000935ffd05a6939060@google.com>
+        id S1725969AbgE0APQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 20:15:16 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F01206C3;
+        Wed, 27 May 2020 00:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590538516;
+        bh=zGice6jKCkqlnjdMIbO4/jRRAGT8tgSKxow3DZdlnTg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=W1TH0ZIeo+CiQHQuRF+Iq0wiautB8h4BRP1s5i2iiCcgEAZZAsNROeDs23rI99i7B
+         qMcvWBQQ2uaAm6v6p8JP9JShujcV/VVLISuhGnFQwr8I/g5MlGXQrWNOOSHGptvU0l
+         n1ji/RSjpUHFtp4Fnszfa7FPO48a2d+tUrSzCUec=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000935ffd05a6939060@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200521052728.2141377-1-vkoul@kernel.org>
+References: <20200521052728.2141377-1-vkoul@kernel.org>
+Subject: Re: [PATCH] clk: qcom: gcc: Fix parent for gpll0_out_even
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Deepak Katragadda <dkatraga@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Vinod Koul <vkoul@kernel.org>
+Date:   Tue, 26 May 2020 17:15:15 -0700
+Message-ID: <159053851521.88029.14881547817872478672@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 02:13:19PM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    c11d28ab Add linux-next specific files for 20200522
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=153b5016100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-> dashboard link: https://syzkaller.appspot.com/bug?extid=904752567107eefb728c
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11510cba100000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129301e2100000
-> 
-> The bug was bisected to:
-> 
-> commit 63d04348371b7ea4a134bcf47c79763d969e9168
-> Author: Paolo Bonzini <pbonzini@redhat.com>
-> Date:   Tue Mar 31 22:42:22 2020 +0000
-> 
->     KVM: x86: move kvm_create_vcpu_debugfs after last failure point
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1226e8ee100000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1126e8ee100000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1626e8ee100000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+904752567107eefb728c@syzkaller.appspotmail.com
-> Fixes: 63d04348371b ("KVM: x86: move kvm_create_vcpu_debugfs after last failure point")
-> 
-> L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for details.
-> ------------[ cut here ]------------
-> kernel BUG at arch/x86/kvm/mmu/mmu.c:3722!
+Quoting Vinod Koul (2020-05-20 22:27:28)
+> Documentation says that gpll0 is parent of gpll0_out_even, somehow
+> driver coded that as bi_tcxo, so fix it
+>=20
+> Fixes: 2a1d7eb854bb ("clk: qcom: gcc: Add global clock controller driver =
+for SM8150")
+> Reported-by: Jonathan Marek <jonathan@marek.ca>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-The bisection has a completely different signature, it's likely a different
-bug.  I'll take a look at both.
+Applied to clk-fixes
