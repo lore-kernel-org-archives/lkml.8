@@ -2,89 +2,87 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3115C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC492084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:33:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="XqQQSknD"
+	by mail.kernel.org (Postfix) with ESMTP id A8E1320C56
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590597262;
+	bh=/mizaYdqp+hZYk4tEb8OL6JOUfMkd/TMvSqcX7rGohg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=p7SSurgkq+8iwWYj0nZjG22CF1PcHo61KSLyUDugCLz08jkz2joyy2n2AkIjuiwsy
+	 dPPzD2DxJUqsubyDGfr7lXsIstWFdxprkZBMcmW0698vHQOhTn0ZwIVKS5UOeFyUcf
+	 sQu7neRP+Dqy/z7d6LRKK8ukUTuCnKOJoWAgWchM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391245AbgE0Qd5 (ORCPT
+        id S2391257AbgE0QeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:33:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390679AbgE0Qd5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:33:57 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61ADC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:33:56 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id c21so14847846lfb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4R64lQECAezSIekk6lfrKMmFFora0mq1CFEKW++lIpo=;
-        b=XqQQSknDXgHqnwyIRF1WdjWReCla6ArE+ipVeGU+Y0Fs7zp+DK2ItCI09Dq7gx/Dyj
-         hJf8C7JzYXLFFiEFPSIdtpTmPXi2couBReRwKrfpziAgeR25ImfBTsGCqZ0900Sg420V
-         z/54ca6O8t7uoH9d/pihKqLAZOuKmtUV7Yi6dH5K8BbubPM8Tvv2W8Pxcgdx5oaFi4dZ
-         hDRBsfqV/wQ0coxuFblYgulLkwiWqgTgOJw/n3rvVaXBhvE5H8wI2VlOwvKt27ojlEeO
-         vURwwXQwETHDoE/k0iaYAURYW/tVRFO8RSQLJtspA+gHvGUH0NqUsG7wshy4+xfs7f5W
-         2WJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4R64lQECAezSIekk6lfrKMmFFora0mq1CFEKW++lIpo=;
-        b=BPMLb3iwE4ckCIPO6sGVmbQ5DCSe2nRMZ/3/xHcJzJ2OHLz7oIYvnsVULrSEnJtOGo
-         og1XGl5qltihhbDZuE75yTnmDYemrcTfCsXXhscKmJDBU6ufmVvU99wol1oS/ss2AmhG
-         AubmHLxQqSbU00W2g7bQMHYK1vCku/QX1Ta2wp+vKwlTVFzOKvYrxiTncAxPpCKm6pXK
-         c62HL4ipV+dXMqzY3fecwz8DvkLOJyLfqifib2gGQlHRhjX12+yhzI3mNdxuIFkJ1U/i
-         NZR3N7JXxbOjG+7lzJdzNbDhaB8P5vw2toWjoPhxsvnOtOzCH/THkKrlynK+p140hldi
-         eAhg==
-X-Gm-Message-State: AOAM533Gr7oce6cSCO1FZRKkafqZQL5MaLWiUsaTIvOcJF9C0LBtT+Kt
-        bHViI9TiZMAuxAvqrDVSlJr58Gzyc9YDq4VAlrMNfw==
-X-Google-Smtp-Source: ABdhPJzJGyZZ6OFZilVkNjwkWI14qi3Sk9vJd3/Q9ngB/1XlT/NI9vsgFlwoXIDHHg0zMevhGY3B/9Qh957nmNFRnN4=
-X-Received: by 2002:a19:f813:: with SMTP id a19mr3516133lff.212.1590597235190;
- Wed, 27 May 2020 09:33:55 -0700 (PDT)
+        Wed, 27 May 2020 12:34:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390679AbgE0QeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:34:21 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1CDA2084C;
+        Wed, 27 May 2020 16:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590597261;
+        bh=/mizaYdqp+hZYk4tEb8OL6JOUfMkd/TMvSqcX7rGohg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=tPAQVcaRdttqqq0GidMhRHAPXoZTEqapgm7aK4czDRsaxB2Uch7Yf0W96yTNPzXpX
+         xtnQB4vjeMSxooCa/1C4cbDsDHQvIt1ZzhmlaqHerlXxts1U66/yE/zQ5qh+amd4P+
+         4tRzvWGiBZmPDLX3DILKudblX8esv9LpT0Jd4vJ0=
+Subject: Re: [PATCH 5.4 000/111] 5.4.43-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200526183932.245016380@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <78be4108-bab8-0c08-c495-a67e09fec6b9@kernel.org>
+Date:   Wed, 27 May 2020 10:34:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <1aaadf9a5176591c891622cb00b0c50f42e569dc.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <1aaadf9a5176591c891622cb00b0c50f42e569dc.1590594512.git-series.maxime@cerno.tech>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Wed, 27 May 2020 09:33:44 -0700
-Message-ID: <CADaigPWQdeTd2CGCK-yxq+TAU6xKMVsdZfhSVptn4RSENxpdxg@mail.gmail.com>
-Subject: Re: [PATCH v3 015/105] drm/vc4: hvs: Boost the core clock during modeset
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200526183932.245016380@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 8:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> In order to prevent timeouts and stalls in the pipeline, the core clock
-> needs to be maxed at 500MHz during a modeset on the BCM2711.
+On 5/26/20 12:52 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.43 release.
+> There are 111 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.43-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Like, the whole system's core clock?  How is it reasonable for some
-device driver to crank the system's core clock up and back down to
-some fixed-in-the-driver frequency?  Sounds like you need some sort of
-opp thing here.
+Compiled and booted on my test system. No dmesg regressions.
 
-Patch 13,14 r-b.
+thanks,
+-- Shuah
