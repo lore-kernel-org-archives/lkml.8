@@ -2,214 +2,107 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A569CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12555C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 885D7212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6164212CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbgE0Jup (ORCPT
+        id S1729461AbgE0Jun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:50:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44922 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729445AbgE0Jum (ORCPT
+        Wed, 27 May 2020 05:50:43 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34018 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729391AbgE0Juj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:50:42 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04R9X1dm143570;
-        Wed, 27 May 2020 05:50:36 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 316ygc513k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 05:50:36 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04R9Zx55021305;
-        Wed, 27 May 2020 09:50:29 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma02fra.de.ibm.com with ESMTP id 316uf8u3ke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 09:50:29 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04R9oQYi852376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 09:50:26 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8C1D4C050;
-        Wed, 27 May 2020 09:50:26 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D86F4C044;
-        Wed, 27 May 2020 09:50:24 +0000 (GMT)
-Received: from localhost.localdomain.localdomain (unknown [9.85.74.206])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 May 2020 09:50:24 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, ravi.bangoria@linux.ibm.com,
-        maddy@linux.vnet.ibm.com, acme@kernel.org, anju@linux.vnet.ibm.com,
-        jolsa@kernel.org, mpe@ellerman.id.au, atrajeev@linux.vnet.ibm.com
-Subject: [PATCH V4 2/2] tools/perf: Add perf tools support for extended register capability in powerpc
-Date:   Wed, 27 May 2020 05:50:18 -0400
-Message-Id: <1590573018-5201-3-git-send-email-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1590573018-5201-1-git-send-email-atrajeev@linux.vnet.ibm.com>
-References: <1590573018-5201-1-git-send-email-atrajeev@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-26,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- cotscore=-2147483648 spamscore=0 lowpriorityscore=0 suspectscore=1
- bulkscore=0 mlxlogscore=999 mlxscore=0 clxscore=1015 malwarescore=0
- adultscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270071
+        Wed, 27 May 2020 05:50:39 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BDCD5803080A;
+        Wed, 27 May 2020 09:50:35 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id k5YrOO-wnkEP; Wed, 27 May 2020 12:50:35 +0300 (MSK)
+Date:   Wed, 27 May 2020 12:50:34 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 11/12] i2c: designware: Move reg-space remapping into
+ a dedicated function
+Message-ID: <20200527095034.xd52qv45nzcnkbnz@mobilestation>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-12-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75Veygd2y8Tp28p+ZX8Hm_u975QdqatKbsNOG9tNz6HOCAg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Veygd2y8Tp28p+ZX8Hm_u975QdqatKbsNOG9tNz6HOCAg@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+On Wed, May 27, 2020 at 12:26:09PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 4:03 AM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
+> >
+> > This is a preparation patch before adding a quirk with custom registers
+> > map creation required for the Baikal-T1 System I2C support. Since we've
+> > touched this code anyway let's replace
+> > platform_get_resource()-devm_ioremap_resource() tuple with ready-to-use
+> > helper devm_platform_get_and_ioremap_resource().
+> 
+> ...
+> 
+> > +static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
+> > +{
+> > +       struct platform_device *pdev = to_platform_device(dev->dev);
+> 
+> > +       int ret = 0;
+> 
+> Redundant.
+> 
+> > +       dev->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+> 
+> What's the point of this API if you don't use resource parameter?
+> 
+> > +       if (IS_ERR(dev->base))
+> > +               ret = PTR_ERR(dev->base);
+> > +
+> > +       return ret;
+> 
+> return PTR_ERR_OR_ZERO(dev->base);
+> 
+> > +}
+> 
+> > -       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > -       dev->base = devm_ioremap_resource(&pdev->dev, mem);
+> > -       if (IS_ERR(dev->base))
+> > -               return PTR_ERR(dev->base);
+> 
+> Wolfram, did my last series make your tree? I think there was a patch
+> that touched this part...
 
-Add extended regs to sample_reg_mask in the tool side to use
-with `-I?` option. Perf tools side uses extended mask to display
-the platform supported register names (with -I? option) to the user
-and also send this mask to the kernel to capture the extended registers
-in each sample. Hence decide the mask value based on the processor
-version.
+Right. It is there. I'll rebase the series on top of the i2c/for-next branch.
 
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-[Decide extended mask at run time based on platform]
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
----
- tools/arch/powerpc/include/uapi/asm/perf_regs.h | 14 ++++++-
- tools/perf/arch/powerpc/include/perf_regs.h     |  5 ++-
- tools/perf/arch/powerpc/util/perf_regs.c        | 55 +++++++++++++++++++++++++
- 3 files changed, 72 insertions(+), 2 deletions(-)
+-Serge
 
-diff --git a/tools/arch/powerpc/include/uapi/asm/perf_regs.h b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-index f599064..485b1d5 100644
---- a/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/powerpc/include/uapi/asm/perf_regs.h
-@@ -48,6 +48,18 @@ enum perf_event_powerpc_regs {
- 	PERF_REG_POWERPC_DSISR,
- 	PERF_REG_POWERPC_SIER,
- 	PERF_REG_POWERPC_MMCRA,
--	PERF_REG_POWERPC_MAX,
-+	/* Extended registers */
-+	PERF_REG_POWERPC_MMCR0,
-+	PERF_REG_POWERPC_MMCR1,
-+	PERF_REG_POWERPC_MMCR2,
-+	/* Max regs without the extended regs */
-+	PERF_REG_POWERPC_MAX = PERF_REG_POWERPC_MMCRA + 1,
- };
-+
-+#define PERF_REG_PMU_MASK	((1ULL << PERF_REG_POWERPC_MAX) - 1)
-+
-+/* PERF_REG_EXTENDED_MASK value for CPU_FTR_ARCH_300 */
-+#define PERF_REG_PMU_MASK_300   (((1ULL << (PERF_REG_POWERPC_MMCR2 + 1)) - 1) \
-+				- PERF_REG_PMU_MASK)
-+
- #endif /* _UAPI_ASM_POWERPC_PERF_REGS_H */
-diff --git a/tools/perf/arch/powerpc/include/perf_regs.h b/tools/perf/arch/powerpc/include/perf_regs.h
-index e18a355..46ed00d 100644
---- a/tools/perf/arch/powerpc/include/perf_regs.h
-+++ b/tools/perf/arch/powerpc/include/perf_regs.h
-@@ -64,7 +64,10 @@
- 	[PERF_REG_POWERPC_DAR] = "dar",
- 	[PERF_REG_POWERPC_DSISR] = "dsisr",
- 	[PERF_REG_POWERPC_SIER] = "sier",
--	[PERF_REG_POWERPC_MMCRA] = "mmcra"
-+	[PERF_REG_POWERPC_MMCRA] = "mmcra",
-+	[PERF_REG_POWERPC_MMCR0] = "mmcr0",
-+	[PERF_REG_POWERPC_MMCR1] = "mmcr1",
-+	[PERF_REG_POWERPC_MMCR2] = "mmcr2",
- };
- 
- static inline const char *perf_reg_name(int id)
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index 0a52429..9179230 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -6,9 +6,14 @@
- 
- #include "../../../util/perf_regs.h"
- #include "../../../util/debug.h"
-+#include "../../../util/event.h"
-+#include "../../../util/header.h"
-+#include "../../../perf-sys.h"
- 
- #include <linux/kernel.h>
- 
-+#define PVR_POWER9		0x004E
-+
- const struct sample_reg sample_reg_masks[] = {
- 	SMPL_REG(r0, PERF_REG_POWERPC_R0),
- 	SMPL_REG(r1, PERF_REG_POWERPC_R1),
-@@ -55,6 +60,9 @@
- 	SMPL_REG(dsisr, PERF_REG_POWERPC_DSISR),
- 	SMPL_REG(sier, PERF_REG_POWERPC_SIER),
- 	SMPL_REG(mmcra, PERF_REG_POWERPC_MMCRA),
-+	SMPL_REG(mmcr0, PERF_REG_POWERPC_MMCR0),
-+	SMPL_REG(mmcr1, PERF_REG_POWERPC_MMCR1),
-+	SMPL_REG(mmcr2, PERF_REG_POWERPC_MMCR2),
- 	SMPL_REG_END
- };
- 
-@@ -163,3 +171,50 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 
- 	return SDT_ARG_VALID;
- }
-+
-+uint64_t arch__intr_reg_mask(void)
-+{
-+	struct perf_event_attr attr = {
-+		.type                   = PERF_TYPE_HARDWARE,
-+		.config                 = PERF_COUNT_HW_CPU_CYCLES,
-+		.sample_type            = PERF_SAMPLE_REGS_INTR,
-+		.precise_ip             = 1,
-+		.disabled               = 1,
-+		.exclude_kernel         = 1,
-+	};
-+	int fd, ret;
-+	char buffer[64];
-+	u32 version;
-+	u64 extended_mask = 0;
-+
-+	/* Get the PVR value to set the extended
-+	 * mask specific to platform
-+	 */
-+	get_cpuid(buffer, sizeof(buffer));
-+	ret = sscanf(buffer, "%u,", &version);
-+
-+	if (ret != 1) {
-+		pr_debug("Failed to get the processor version, unable to output extended registers\n");
-+		return PERF_REGS_MASK;
-+	}
-+
-+	if (version == PVR_POWER9)
-+		extended_mask = PERF_REG_PMU_MASK_300;
-+	else
-+		return PERF_REGS_MASK;
-+
-+	attr.sample_regs_intr = extended_mask;
-+	attr.sample_period = 1;
-+	event_attr_init(&attr);
-+
-+	/*
-+	 * check if the pmu supports perf extended regs, before
-+	 * returning the register mask to sample.
-+	 */
-+	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-+	if (fd != -1) {
-+		close(fd);
-+		return (extended_mask | PERF_REGS_MASK);
-+	}
-+	return PERF_REGS_MASK;
-+}
--- 
-1.8.3.1
-
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
