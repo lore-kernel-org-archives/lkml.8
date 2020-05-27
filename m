@@ -2,88 +2,253 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A015C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE7220776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C9CF20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590595069;
+	bh=0chIcTzL9zF8Xj2Xy7CX8f0cZi2EEy6h0mItKk0tc1Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CwlpI3kW3CeaNLJGfKBMR2MNqhdfxoBsBS18V9RpYldCFvIEYg/Sa9UmiBtD0qIjm
+	 alGHo72O8yGobgsDXHbrA0F66Gs1xU1xyaYsHpclClEjifTBHtDcTr8dZhweS7C29H
+	 UzAytiM/hQN9GrklHxHOgrjy5+BWlxcWio2Cd9Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389103AbgE0P5e (ORCPT
+        id S1730322AbgE0P5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:57:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46751 "EHLO mga09.intel.com"
+        Wed, 27 May 2020 11:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389098AbgE0P5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:57:30 -0400
-IronPort-SDR: /RmBll3NcqzurLjWivv0Ghnq5xxgj2jb78FFbvo/j95HEIbawZi2Ty6mY8fSVXBSvyIAIbdPHw
- uVF0hID3qgQQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:57:28 -0700
-IronPort-SDR: 48nmseDxO4buDj9BHJ72XfM7rkj0ZuzQrmlgWuQGxqfSjijDZadQB+8NIQrLGd5GtUaD3f9rrI
- YhKw3Kbh5dwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="255505955"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 08:57:23 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdyQn-009Ftm-Uq; Wed, 27 May 2020 18:57:25 +0300
-Date:   Wed, 27 May 2020 18:57:25 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 07/11] i2c: designware: Discard Cherry Trail model flag
-Message-ID: <20200527155725.GK1634618@smile.fi.intel.com>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
- <20200527153046.6172-8-Sergey.Semin@baikalelectronics.ru>
+        id S1730901AbgE0P5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:57:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E27720776;
+        Wed, 27 May 2020 15:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590595028;
+        bh=0chIcTzL9zF8Xj2Xy7CX8f0cZi2EEy6h0mItKk0tc1Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ThmUx8BkabnsufRDAv2/wQD1tRSV65a9aLWqMka7Prx3FtAmb7fYZlk2pp1RLDfYF
+         AsLmpvQwTxll1cvmk0r3RkGjYxp3sBPC17StynchkIIwxlixHWkML0f2vvNkyke76L
+         ThRbwA08ii6FvBLqLZ8p0/k5J1QB2V3LCL0YjcYo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 4.4.225
+Date:   Wed, 27 May 2020 17:55:26 +0200
+Message-Id: <159059490320228@kroah.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527153046.6172-8-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:30:42PM +0300, Serge Semin wrote:
-> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
-> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
-> bus pm_disabled workaround"), but the flag most likely by mistake has been
-> left in the Dw I2C drivers. Let's remove it.
+I'm announcing the release of the 4.4.225 kernel.
 
-Same comment as per previous version.
+All users of the 4.4 kernel series must upgrade.
 
-> Since MODEL_MSCC_OCELOT is
-> the only model-flag left, redefine it to be 0x100 so setting a very first
-> bit in the MODEL_MASK bits range.
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Cool, but why should we care?
+thanks,
 
-> -#define MODEL_MSCC_OCELOT	0x00000200
-> +#define MODEL_MSCC_OCELOT	0x00000100
+greg k-h
 
-We have 4 bits for that, and you are going to reuse this anyway.
+------------
 
-I consider this unneeded churn.
+ Documentation/networking/l2tp.txt         |    8 
+ Makefile                                  |    2 
+ arch/arm/include/asm/futex.h              |    9 
+ drivers/hid/hid-ids.h                     |    1 
+ drivers/hid/hid-multitouch.c              |    3 
+ drivers/i2c/i2c-dev.c                     |   60 +++--
+ drivers/media/media-device.c              |   43 +++-
+ drivers/media/media-devnode.c             |  168 +++++++++-------
+ drivers/media/usb/uvc/uvc_driver.c        |    2 
+ drivers/misc/mei/client.c                 |    2 
+ drivers/net/ethernet/intel/igb/igb_main.c |    4 
+ drivers/nvdimm/btt.c                      |    8 
+ drivers/platform/x86/alienware-wmi.c      |   17 -
+ drivers/platform/x86/asus-nb-wmi.c        |   24 ++
+ drivers/staging/iio/accel/sca3000_ring.c  |    2 
+ drivers/staging/iio/resolver/ad2s1210.c   |   17 +
+ drivers/usb/core/message.c                |    4 
+ fs/ceph/caps.c                            |    1 
+ fs/ext4/xattr.c                           |   66 +++---
+ fs/file.c                                 |    2 
+ fs/gfs2/glock.c                           |    3 
+ include/linux/cpumask.h                   |   19 +
+ include/linux/net.h                       |    3 
+ include/linux/padata.h                    |   13 -
+ include/media/media-device.h              |    5 
+ include/media/media-devnode.h             |   32 ++-
+ include/net/ipv6.h                        |    2 
+ include/uapi/linux/if_pppol2tp.h          |   13 -
+ include/uapi/linux/l2tp.h                 |   17 +
+ kernel/padata.c                           |   88 +++-----
+ lib/cpumask.c                             |   32 +++
+ net/ipv6/datagram.c                       |    4 
+ net/l2tp/l2tp_core.c                      |  181 +++++------------
+ net/l2tp/l2tp_core.h                      |   47 ++--
+ net/l2tp/l2tp_eth.c                       |  216 ++++++++++++--------
+ net/l2tp/l2tp_ip.c                        |   68 +++---
+ net/l2tp/l2tp_ip6.c                       |   82 +++----
+ net/l2tp/l2tp_netlink.c                   |  124 +++++++-----
+ net/l2tp/l2tp_ppp.c                       |  309 +++++++++++++++++-------------
+ net/socket.c                              |   46 ++++
+ security/integrity/evm/evm_crypto.c       |    2 
+ sound/core/pcm_lib.c                      |    1 
+ 42 files changed, 1015 insertions(+), 735 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Al Viro (1):
+      fix multiplication overflow in copy_fdtable()
 
+Alan Stern (1):
+      USB: core: Fix misleading driver bug report
+
+Alexander Usyskin (1):
+      mei: release me_cl object reference
+
+Asbjørn Sloth Tønnesen (3):
+      net: l2tp: export debug flags to UAPI
+      net: l2tp: deprecate PPPOL2TP_MSG_* in favour of L2TP_MSG_*
+      net: l2tp: ppp: change PPPOL2TP_MSG_* => L2TP_MSG_*
+
+Bob Peterson (1):
+      Revert "gfs2: Don't demote a glock until its revokes are written"
+
+Brent Lu (1):
+      ALSA: pcm: fix incorrect hw_base increase
+
+Cao jin (1):
+      igb: use igb_adapter->io_addr instead of e1000_hw->hw_addr
+
+Christophe JAILLET (1):
+      iio: sca3000: Remove an erroneous 'get_device()'
+
+Colin Ian King (1):
+      platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+
+Dan Carpenter (1):
+      i2c: dev: use after free in detach
+
+Daniel Jordan (2):
+      padata: initialize pd->cpu with effective cpumask
+      padata: purge get_cpu and reorder_via_wq from padata_do_serial
+
+Dragos Bogdan (1):
+      staging: iio: ad2s1210: Fix SPI reading
+
+Erico Nunes (1):
+      i2c: dev: switch from register_chrdev to cdev API
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.225
+
+Guillaume Nault (22):
+      l2tp: lock socket before checking flags in connect()
+      l2tp: fix racy socket lookup in l2tp_ip and l2tp_ip6 bind()
+      l2tp: hold session while sending creation notifications
+      l2tp: take a reference on sessions used in genetlink handlers
+      l2tp: don't use l2tp_tunnel_find() in l2tp_ip and l2tp_ip6
+      l2tp: remove useless duplicate session detection in l2tp_netlink
+      l2tp: remove l2tp_session_find()
+      l2tp: define parameters of l2tp_session_get*() as "const"
+      l2tp: define parameters of l2tp_tunnel_find*() as "const"
+      l2tp: initialise session's refcount before making it reachable
+      l2tp: hold tunnel while looking up sessions in l2tp_netlink
+      l2tp: hold tunnel while processing genl delete command
+      l2tp: hold tunnel while handling genl tunnel updates
+      l2tp: hold tunnel while handling genl TUNNEL_GET commands
+      l2tp: hold tunnel used while creating sessions with netlink
+      l2tp: prevent creation of sessions on terminated tunnels
+      l2tp: pass tunnel pointer to ->session_create()
+      l2tp: fix l2tp_eth module loading
+      l2tp: don't register sessions in l2tp_session_create()
+      l2tp: initialise l2tp_eth sessions before registering them
+      l2tp: protect sock pointer of struct pppol2tp_session with RCU
+      l2tp: initialise PPP sessions before registering them
+
+Hans de Goede (1):
+      platform/x86: asus-nb-wmi: Do not load on Asus T100TA and T200TA
+
+Herbert Xu (1):
+      padata: Replace delayed timer with immediate workqueue in padata_reorder
+
+Jason A. Donenfeld (1):
+      padata: get_next is never NULL
+
+Kevin Hao (1):
+      i2c: dev: Fix the race between the release of i2c_dev and cdev
+
+Mathias Krause (3):
+      padata: ensure the reorder timer callback runs on the correct CPU
+      padata: ensure padata_do_serial() runs on the correct CPU
+      padata: set cpu_index of unused CPUs to -1
+
+Mauro Carvalho Chehab (2):
+      media-devnode: fix namespace mess
+      media-device: dynamically allocate struct media_devnode
+
+Max Kellermann (2):
+      drivers/media/media-devnode: clear private_data before put_device()
+      media-devnode: add missing mutex lock in error handler
+
+Michael Kelley (1):
+      cpumask: Make for_each_cpu_wrap() available on UP as well
+
+Peter Zijlstra (1):
+      sched/fair, cpumask: Export for_each_cpu_wrap()
+
+R. Parameswaran (3):
+      New kernel function to get IP overhead on a socket.
+      L2TP:Adjust intf MTU, add underlay L3, L2 hdrs.
+      l2tp: device MTU setup, tunnel socket needs a lock
+
+Roberto Sassu (1):
+      evm: Check also if *tfm is an error pointer in init_desc()
+
+Sebastian Reichel (1):
+      HID: multitouch: add eGalaxTouch P80H84 support
+
+Shuah Khan (3):
+      media: Fix media_open() to clear filp->private_data in error leg
+      media: fix use-after-free in cdev_put() when app exits after driver unbind
+      media: fix media devnode ioctl/syscall and unregister race
+
+Theodore Ts'o (1):
+      ext4: lock the xattr block before checksuming it
+
+Thomas Gleixner (1):
+      ARM: futex: Address build warning
+
+Tobias Klauser (1):
+      padata: Remove unused but set variables
+
+Vishal Verma (1):
+      libnvdimm/btt: Remove unnecessary code in btt_freelist_init
+
+Wolfram Sang (1):
+      i2c: dev: don't start function name with 'return'
+
+Wu Bo (1):
+      ceph: fix double unlock in handle_cap_export()
+
+viresh kumar (1):
+      i2c-dev: don't get i2c adapter via i2c_dev
 
