@@ -2,89 +2,113 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FBCC20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590601513;
-	bh=5cL0zL/EkjM3ZbcAUkkqbjK8O5I2MUhkut02VQ5zlZw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lpNFzM11UskPmS3F1yO54DPaP0vKQrqGXp7Cx9vog+u3rDekQKC3fikYhKcJFoy0F
-	 S8Lffl+HVU5QMdvl2LvKI7UThVSf16Fp+3Cnoop4a2bu/Jjm4MBuMNoNqWFUXp+ad3
-	 hxnM0//xUL7YNzK67XUee5kwjqC/99wazvBghjEA=
+	by mail.kernel.org (Postfix) with ESMTP id 7FA6820835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="dvDvQkJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391534AbgE0RpN (ORCPT
+        id S2403893AbgE0RpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:45:13 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45414 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbgE0RpM (ORCPT
+        Wed, 27 May 2020 13:45:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391542AbgE0RpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:45:12 -0400
-Received: by mail-il1-f196.google.com with SMTP id 9so6469854ilg.12;
-        Wed, 27 May 2020 10:45:11 -0700 (PDT)
+        Wed, 27 May 2020 13:45:17 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ACF0C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:45:17 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id e2so29036340eje.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:45:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8mFtPr70+M6apdHwECQwtE0zBIswHryRWPxkV/RNuy4=;
+        b=dvDvQkJQFI8yWa2awybOsZrnFGgmcqFM7ZW4rJz0zjtlx9s5xgduk+OM2lc7nFfjCo
+         c6Vz/iUvE0DfRgVV8SbSVoTXQXQ0YkZok9A0AcjzfZBwT7RKbjwXU4ELIKGZQStewJmz
+         kknihChozQhZ/pQ1tJ0hEKMYQq7b7X7ggStktoC+sFL9O5rM300uiKvwtj8+HhR2zmvF
+         Jt8Sa02KiuYawH9lV3OB5Lv0XI4o4N8/YWfD1IIinggWKQj3PAk/vq+0MWxl8fLsc4Hy
+         KkfBO7OGsIxqdFboM3JUWjhvWxCNRHxD/Pm6nPrxZ79lem0gPlqNHUEYAtaF7FUfRBhN
+         54Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I9TPy0t0r7dSvS0Zzgr1lWRHOL4KGYxQvJlUxGn8jM8=;
-        b=P7EGvfl6NaTcYrmPGl6X/dxrc+xhSAxuBwaYawCnjHvnmn67m7P7mIRhnG35BFtuW4
-         2ZIljouJZ9kc9NXYhhHm7jZuPQ0FByTM83neUH37qzSQ6c2kN+vVqwsRDmdWl9wYvOGt
-         nXQW+SIwssxK4jgeHHNKvF5Vdqk07nH4SoB9WiMPlARTckBLKdz8KzAGkgU7otE7g3Hd
-         hCvp9VVUEGCYwgmBwv9m8UdhVC42YY/Xe7fUoYiCn5TT2piMVL1O2tost9dWCEYM+wXG
-         4jP5haaETxdaGOZUQicfYFt5OLn3lxYM8+6IFrlKq+GbNezJFcwunQow//tsJKARh+3D
-         En9w==
-X-Gm-Message-State: AOAM530j2myhn768frbqiUvpP9TCcgYGIucaJ6L+dzeFoeG7lqLk/UYv
-        xtpjGqH432va05g2VWegjw==
-X-Google-Smtp-Source: ABdhPJzIlIEDCZnDLRqrKu3BwU47IfsOVT8bD7cFnLhHISpdClWRPNqxMTTeNb0UJvqQzLMgNwwaAA==
-X-Received: by 2002:a92:d94b:: with SMTP id l11mr7013138ilq.105.1590601511506;
-        Wed, 27 May 2020 10:45:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id o70sm2006483ild.3.2020.05.27.10.45.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:45:10 -0700 (PDT)
-Received: (nullmailer pid 2436105 invoked by uid 1000);
-        Wed, 27 May 2020 17:45:09 -0000
-Date:   Wed, 27 May 2020 11:45:09 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     devicetree@vger.kernel.org, mturquette@baylibre.com,
-        broonie@kernel.org, robh+dt@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org, linux@roeck-us.net,
-        jdelvare@suse.com, linus.walleij@linaro.org,
-        patches@opensource.cirrus.com, lgirdwood@gmail.com
-Subject: Re: [PATCH v3 1/5] hwmon: lochnagar: Move binding over to dtschema
-Message-ID: <20200527174509.GA2435968@bogus>
-References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8mFtPr70+M6apdHwECQwtE0zBIswHryRWPxkV/RNuy4=;
+        b=hmvVrasrfG0/yAPWmzFksyKGtRwgLz2r98B91RNgtl9bb/YvHy5BoupEVrZVfL9tBF
+         BDVBAQhw9BBwFrgESqGuUx48BlwLnh8cnL2Ljb+YJfpZLmN0dNoN0zg30xSpiCLkh1tJ
+         l+3nMLNKvV4TKGi4jQoGQl6d2eU7LNvWMhEDk9NDE/R77NX42GmUNDs4+6Z+EcO6pCPH
+         1Oc7LYG3dZhWhArDMPR3KUZ/8ZnirINbBQyv+hd6ru789sHp7KlitK/zTPtcfoNaBaqs
+         goroqNfH5gLJzQ13SCMWGSQr9Y34tzYGAEFU9BUdHFFE0c1yZiVfXSFbtmVenU7wwdVW
+         XvLw==
+X-Gm-Message-State: AOAM531d5blwASBUOyi9Z6BUyPjYNDl/qTxTlbQc4yYGGegqMwyxO/jV
+        jI8A0H7K8GXhjHKA5qIkLomSuiyAPQpc0CUi0Qe4cg==
+X-Google-Smtp-Source: ABdhPJyTjA/zTkYCTIHeH9PsmBKXEZoxnZzzLtoLEydIvlAGMECI+VKgrxr/M1xDJHkM9rV+v4IRpxyHFaY0PLCjndg=
+X-Received: by 2002:a17:906:3597:: with SMTP id o23mr7022104ejb.174.1590601516095;
+ Wed, 27 May 2020 10:45:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
+References: <159010126119.975921.6614194205409771984.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159010126739.975921.6393757191247357952.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <87mu5yg8n6.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87mu5yg8n6.fsf@mpe.ellerman.id.au>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 27 May 2020 10:45:05 -0700
+Message-ID: <CAPcyv4h6moXY0fB=cyGuXOpT=+rFWupCy0kh87OT0X_1ZB2ROg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] x86, powerpc: Rename memcpy_mcsafe() to
+ copy_mc_to_{user, kernel}()
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        stable <stable@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 16:23:54 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> No changes since v2.
-> 
-> Thanks,
-> Charles
-> 
->  .../devicetree/bindings/hwmon/cirrus,lochnagar.txt | 26 ----------------
->  .../bindings/hwmon/cirrus,lochnagar.yaml           | 35 ++++++++++++++++++++++
->  2 files changed, 35 insertions(+), 26 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.txt
->  create mode 100644 Documentation/devicetree/bindings/hwmon/cirrus,lochnagar.yaml
-> 
+On Sat, May 23, 2020 at 5:04 AM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> Hi Dan,
+>
+> Sorry one minor nit below.
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+> > diff --git a/tools/testing/selftests/powerpc/copyloops/.gitignore b/tools/testing/selftests/powerpc/copyloops/.gitignore
+> > index ddaf140b8255..1152bcc819fe 100644
+> > --- a/tools/testing/selftests/powerpc/copyloops/.gitignore
+> > +++ b/tools/testing/selftests/powerpc/copyloops/.gitignore
+> > @@ -12,4 +12,4 @@ memcpy_p7_t1
+> >  copyuser_64_exc_t0
+> >  copyuser_64_exc_t1
+> >  copyuser_64_exc_t2
+> > -memcpy_mcsafe_64
+> > +copy_mc_to_user
+>
+> Should be:
+>
+> +copy_mc_64
+>
+> Otherwise the powerpc bits look good to me.
+>
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-Applied, thanks!
+Will update, thanks!
