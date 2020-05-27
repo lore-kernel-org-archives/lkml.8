@@ -2,96 +2,99 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBF5C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA508C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B658208B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590578752;
-	bh=oU0Y/5u25huOd72JaBmNFl5U1KrJrZttts86TRQdAFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ssaVgutgZ3M3qK3qou+jYhFsxDaFqTuFklBSSQKwd4gVsFdLO7bV0aowc1fJdFSeJ
-	 UKNM2+Gdm6l5jE5msmF4G2CyJoYxxPDtBFsPBFtWrEvTqkCf70MNPs1UADa3ReLWam
-	 LI7ExeRqxFfmp29SgnH33X3QRB+aM9kpB0Wrc/JQ=
+	by mail.kernel.org (Postfix) with ESMTP id A75F4207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xu6sjpfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbgE0LZw (ORCPT
+        id S1729527AbgE0L0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgE0LZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:25:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD7D6206DF;
-        Wed, 27 May 2020 11:25:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590578751;
-        bh=oU0Y/5u25huOd72JaBmNFl5U1KrJrZttts86TRQdAFc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NXm3eC/74XUS9k/zL2j5RrjTjlWlgrAMk2dRRne6SHvHh6vaV0IhcqR+WOSBg6g1u
-         IiI7B9chF7Hd/V77ZpvINKa+B1SfRn0AI/7Ihl+avmo5G1yjFPXHczozSdNUc6inBF
-         ZZLsgYDSrWG5OgQeNVFaqM/GCZEQUbJ37YjQUa7w=
-Date:   Wed, 27 May 2020 12:25:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
-Message-ID: <20200527112548.GD5308@sirena.org.uk>
-References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 27 May 2020 07:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgE0L0Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:26:16 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F81C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:16 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z6so28403091ljm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lWRYWz8j8QnnnM8ufaAXpNzsDpZkkNcBRIK2qhhydRM=;
+        b=Xu6sjpfTRcKeL67QCgUgs7cBy6Ma6/R/KaBHq9H5Ngab54V9as90JwaXrpLCNyFuQ2
+         LfzdvPQVwIp4icx/gd/fEBON/h49xest5MkZQU3piml2IcOpVpDg6TjIp89fJbJygEWk
+         mqh2juZbpw7Y83y3tQL8imqesNsItGL406+aEYDPJyZj9XDfah91mKSl7xWFdR7HBD4+
+         /cDoWFNXac2nzEnDVaX9ZEXCBzpjvaZWNx3l7b7YSG1Nyt4uUXmOIiyDdPk+FcnIqPOy
+         /0nPh/++3YholLJfcqXm4X9PSQzRWSVCQXSaMeC7AtdUEA17awgYdSw1oGPou6M8s4sJ
+         QupA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lWRYWz8j8QnnnM8ufaAXpNzsDpZkkNcBRIK2qhhydRM=;
+        b=DZu1QK83poMEpIwWEImwpwESWu2ta8jdDI6+0ggizAAzMwUGUV0NtvloazS2do9Jmb
+         2oEGXTO/BLeTBL28UZZ5U8udabvtuFjFiUQc8xrSDPKL9ReJjwbA6PQXBqPkcy2c5Tyc
+         Lvnlbdnll3xCzX4aFbIJWfxW0mHRBB2MU56tp3BpRavb6ohcD9srvPo//7SuB2cTQhUs
+         Rl4rTyu3ctagkGRzv1iVcApAavADv1E0M1Cgu/ZwOhyh3Bz079bDwEPJScBjzEVJZxrH
+         FmCMtaJ4ipt0NVvq+VlUsDEGNuBvEDlaHfOHNNTcr8Oxk0b41+SFatZUmNwZ9REXcHCU
+         mPoQ==
+X-Gm-Message-State: AOAM532JDQi6iulRNkmXXQxKLhQ37h4ZUoy4fBMCY46L6Bzsl+GFOkCd
+        KBqYOrGgsY9xr9NtJXY3tF6UFQ==
+X-Google-Smtp-Source: ABdhPJwUCC5ItOzijFp1n+ALKMHGKknZgz0Oa6TXm5dDosIRP2//Fby7ngZQ+3NlCiiSDFr+PqMaag==
+X-Received: by 2002:a2e:9586:: with SMTP id w6mr2708235ljh.274.1590578774453;
+        Wed, 27 May 2020 04:26:14 -0700 (PDT)
+Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
+        by smtp.gmail.com with ESMTPSA id s8sm750146lfd.61.2020.05.27.04.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 04:26:13 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+List-Id: <soc.lore.kernel.org>
+To:     soc@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, linus.walleij@linaro.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [PATCH 0/5] vexpress: modularize power reset driver
+Date:   Wed, 27 May 2020 13:26:03 +0200
+Message-Id: <20200527112608.3886105-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
-Content-Disposition: inline
-In-Reply-To: <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Cookie: Drop in any mailbox.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patchset contains a bugfixe, a cleanup and fixes allmodconfig build breakages
+on arm and arm64. Also making the vexpress power reset driver a module.
 
-On Tue, May 26, 2020 at 10:01:43PM +0100, Lad Prabhakar wrote:
+Cheers,
+Anders
 
->  				  Examples with soctypes are:
-> +				    - "renesas,rcar_sound-r8a7742" (RZ/G1H)
->  				    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
->  				    - "renesas,rcar_sound-r8a7744" (RZ/G1N)
->  				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
+Anders Roxell (5):
+  power: vexpress: add suppress_bind_attrs to true
+  power: vexpress: cleanup: use builtin_platform_driver
+  Revert "ARM: vexpress: Don't select VEXPRESS_CONFIG"
+  power: reset: vexpress: fix build issue
+  power: vexpress: make the reset driver a module
 
-I'd expect a matching patch adding this compatible to the driver.
+ arch/arm/mach-vexpress/Kconfig          | 2 +-
+ drivers/power/reset/Kconfig             | 3 ++-
+ drivers/power/reset/vexpress-poweroff.c | 8 +++++++-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.26.2
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OTjsACgkQJNaLcl1U
-h9DwwQf/f7ybVQEernStDVG3TFsQK7/YunjNpnQ29AOR0oZ8z5Rx4bOF8GWRtBLh
-NooWHgqGXUTPz33IDGptxlvTEwjH3GL+z8EW72NAnagxLCl1bs0IOjMvbDMLX0CG
-qhvcgAr3oR+PVOZDB8BXvotNJ/hcF6M6kvdPd1LWTa2usE52u0dg1Zb/8uoYCWyq
-calyH03qZW/1HxVgpjJRNmpeGrroXofyxLo5SSQQR1laFQgRxyxwiWAIWl5n1yO5
-tcc80ocEq1fipR69xRCkQU0VrEFBHZIZwm1prHIxWD6PRfn/W9/0P50tLMfko5ut
-fTPwT7eahVymkQkdtM++bNorrkfusg==
-=BGUJ
------END PGP SIGNATURE-----
-
---zbGR4y+acU1DwHSi--
