@@ -2,222 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D72EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AA9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14472207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8502089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388160AbgE0LTI (ORCPT
+        id S2388233AbgE0LUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:19:08 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57006 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387619AbgE0LTI (ORCPT
+        Wed, 27 May 2020 07:20:06 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34554 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388146AbgE0LUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:19:08 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1jdu5R-0000AW-CA; Wed, 27 May 2020 11:19:05 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 2/2] tests: test seccomp filter notifications
-Date:   Wed, 27 May 2020 13:19:02 +0200
-Message-Id: <20200527111902.163213-2-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200527111902.163213-1-christian.brauner@ubuntu.com>
-References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+        Wed, 27 May 2020 07:20:05 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 90624803080A;
+        Wed, 27 May 2020 11:20:02 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9Bltaobyr5kB; Wed, 27 May 2020 14:20:01 +0300 (MSK)
+Date:   Wed, 27 May 2020 14:20:01 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg
+ flags support
+Message-ID: <20200527112001.pxnzd4ofxsps7x57@mobilestation>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
+ <20200527011704.GA808104@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200527011704.GA808104@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This verifies we're correctly notified when a seccomp filter becomes
-unused when a notifier is in use.
+On Tue, May 26, 2020 at 07:17:04PM -0600, Rob Herring wrote:
+> On Wed, May 27, 2020 at 12:55:17AM +0300, Serge Semin wrote:
+> > Recently the I2C-controllers slave interface support was added to the
+> > kernel I2C subsystem. In this case Linux can be used as, for example,
+> > a I2C EEPROM machine. See [1] for details. Other than instantiating
+> > the EEPROM-slave device from user-space there is a way to declare the
+> > device in dts. In this case firstly the I2C bus controller must support
+> > the slave interface. Secondly I2C-slave sub-node of that controller
+> > must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> > declared in [2]). That flag is declared as (1 << 30), which when set
+> > makes dtc unhappy about too big address set for a I2C-slave:
+> > 
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > 
+> > Similar problem would have happened if we had set the 10-bit address
+> > flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+> > 
+> > In order to fix the problem we suggest to alter the I2C-bus reg-check
+> > algorithm, so one would be aware of the upper bits set. Normally if no
+> > flag specified, the 7-bit address is expected in the "reg"-property.
+> > If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> > performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+> > 
+> > [1] Documentation/i2c/slave-interface.rst
+> > [2] include/dt-bindings/i2c/i2c.h
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: linux-i2c@vger.kernel.org
+> > ---
+> >  scripts/dtc/checks.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> I've lost track of who all I've said this to already for this issue, but 
+> patches to dtc should be against upstream and a version of this has been 
+> sent there already. But it seems they've lost interest in addressing the 
+> review comments. So feel free to send another one. The same comment 
+> applies here.
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 137 ++++++++++++++++++
- 1 file changed, 137 insertions(+)
+There is another patch in this series:
+[PATCH v3 04/12] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C controller
+which is also waiting for your review. I've updated it as you requested.
+Could you take a look at that too?
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index c0aa46ce14f6..472b93b1c3d5 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -45,12 +45,14 @@
- #include <sys/socket.h>
- #include <sys/ioctl.h>
- #include <linux/kcmp.h>
-+#include <sys/epoll.h>
- 
- #include <unistd.h>
- #include <sys/syscall.h>
- #include <poll.h>
- 
- #include "../kselftest_harness.h"
-+#include "../clone3/clone3_selftests.h"
- 
- #ifndef PR_SET_PTRACER
- # define PR_SET_PTRACER 0x59616d61
-@@ -3686,6 +3688,141 @@ TEST(user_notification_continue)
- 	}
- }
- 
-+TEST(user_notification_filter_empty)
-+{
-+	pid_t pid;
-+	long ret;
-+	int status;
-+	struct pollfd pollfd;
-+	struct clone_args args = {
-+		.flags = CLONE_FILES,
-+		.exit_signal = SIGCHLD,
-+	};
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	pid = sys_clone3(&args, sizeof(args));
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		int listener;
-+
-+		listener = user_trap_syscall(__NR_mknod, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+		if (listener < 0)
-+			_exit(EXIT_FAILURE);
-+
-+		if (dup2(listener, 200) != 200)
-+			_exit(EXIT_FAILURE);
-+
-+		close(listener);
-+
-+		_exit(EXIT_SUCCESS);
-+	}
-+
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+
-+	/*
-+	 * The seccomp filter has become unused so we should be notified once
-+	 * the kernel gets around to cleaning up task struct.
-+	 */
-+	pollfd.fd = 200;
-+	pollfd.events = POLLHUP;
-+
-+	EXPECT_GT(poll(&pollfd, 1, -1), 0);
-+	EXPECT_GT((pollfd.revents & POLLHUP) ?: 0, 0);
-+}
-+
-+static void *do_thread(void *data)
-+{
-+	return NULL;
-+}
-+
-+TEST(user_notification_filter_empty_threaded)
-+{
-+	pid_t pid;
-+	long ret;
-+	int status;
-+	struct pollfd pollfd;
-+	struct clone_args args = {
-+		.flags = CLONE_FILES,
-+		.exit_signal = SIGCHLD,
-+	};
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	pid = sys_clone3(&args, sizeof(args));
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		pid_t pid1, pid2;
-+		int listener, status;
-+		pthread_t thread;
-+
-+		listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+		if (listener < 0)
-+			_exit(EXIT_FAILURE);
-+
-+		if (dup2(listener, 200) != 200)
-+			_exit(EXIT_FAILURE);
-+
-+		close(listener);
-+
-+		pid1 = fork();
-+		if (pid1 < 0)
-+			_exit(EXIT_FAILURE);
-+
-+		if (pid1 == 0)
-+			_exit(EXIT_SUCCESS);
-+
-+		pid2 = fork();
-+		if (pid2 < 0)
-+			_exit(EXIT_FAILURE);
-+
-+		if (pid2 == 0)
-+			_exit(EXIT_SUCCESS);
-+
-+		if (pthread_create(&thread, NULL, do_thread, NULL) ||
-+		    pthread_join(thread, NULL))
-+			_exit(EXIT_FAILURE);
-+
-+		if (pthread_create(&thread, NULL, do_thread, NULL) ||
-+		    pthread_join(thread, NULL))
-+			_exit(EXIT_FAILURE);
-+
-+		if (waitpid(pid1, &status, 0) != pid1 || !WIFEXITED(status) ||
-+		    WEXITSTATUS(status))
-+			_exit(EXIT_FAILURE);
-+
-+		if (waitpid(pid2, &status, 0) != pid2 || !WIFEXITED(status) ||
-+		    WEXITSTATUS(status))
-+			_exit(EXIT_FAILURE);
-+
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+
-+	/*
-+	 * The seccomp filter has become unused so we should be notified once
-+	 * the kernel gets around to cleaning up task struct.
-+	 */
-+	pollfd.fd = 200;
-+	pollfd.events = POLLHUP;
-+
-+	EXPECT_GT(poll(&pollfd, 1, -1), 0);
-+	EXPECT_GT((pollfd.revents & POLLHUP) ?: 0, 0);
-+}
-+
- /*
-  * TODO:
-  * - add microbenchmarks
--- 
-2.26.2
+-Sergey
 
+> 
+> Rob
