@@ -2,184 +2,82 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4095EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B203CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E63207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AXQd5hj8"
+	by mail.kernel.org (Postfix) with ESMTP id 8BCA9207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590605261;
+	bh=KhXH7jHlv+CUjM2JV5Ru81DLpLuKvH2wyb/r9lIBt5U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fcmUtUeowg2niO1XzBa/2OhT1G0yIuah0jG7WHdc2ex46g5LDq0UqeQWhnFhpmuYU
+	 +jGBgNtSXoX8wFABgNyNPGxTZz2YjGbJC3ocCJbqNF6U6ZcjK0B9qHiN0wKdmp4ooZ
+	 KMahwNq1fHEy1ZUQfskdJUl8oSjCQ031LrWby+vU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgE0SrQ (ORCPT
+        id S1726893AbgE0Srk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 14:47:16 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37089 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbgE0SrP (ORCPT
+        Wed, 27 May 2020 14:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgE0Srg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 14:47:15 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590605235; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=6t2pkQsbSECmtGTXOY98W5BwhT1648xPdDFse8Y3ryY=;
- b=AXQd5hj88HcGMjb6mrmlC5Z/Smun+WwnSLj5dZ7LVplvqSzKiJa8C4AOS/8f2W4eQxhJi+tD
- xIjwCcdu/FUDXBosHZsUjGMgGKpKX1H5olhY9tqKaJ4jZqc7Y0E9aUtB0j5YPqqs8On+BlKh
- SFH20bncc1TKcq9dHXwHuLoiZuc=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5eceb1f93131442d95b1b436 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 18:31:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 51C03C433C9; Wed, 27 May 2020 18:31:20 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 76523C433CB;
-        Wed, 27 May 2020 18:31:19 +0000 (UTC)
+        Wed, 27 May 2020 14:47:36 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36CDC008635;
+        Wed, 27 May 2020 11:41:12 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id r2so16902995ioo.4;
+        Wed, 27 May 2020 11:41:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SZIP9gMLgQ3EMwU5hsVyfxacis5ozsWVrpZIFpNFZGc=;
+        b=G+4gJintsKdfnw7fRfaD8JBiK50z0248dtdyAiUCtgFne2vvp2IawDUNvMBn3A9gvs
+         mzywz4NvWqJDFSJ3+CHTEO5Al5lzUJf1cbR/czx2LwMpjGCTPeMKryhIqHI3mxE5i+uJ
+         Sjs0+Jnap5wVAZ+SXCyQ4ucCJdHQu0dSAWpRBXpjYbWamZ4oMKHGY1m6VKF0RM7rqyH9
+         YTCLP4GK3iyaRZm+KDUAkxI4kwaoZkbpKzgEqp7mtjn3t8NJTz2VG7QivKdnyO/i2msJ
+         c77ee5aWqlLxSQaoO2iZOL6ItyLLNhZNrpLtFlR1DNKgDUQkxRXGELllQ4cArbmdA5jc
+         g+rA==
+X-Gm-Message-State: AOAM533obs/Ln8JBjkH09fwceSH2cfUR4o9pXlmJVvzwFQwNFvJ85HD5
+        zaA6FsZof5iU6oTW7622YQ==
+X-Google-Smtp-Source: ABdhPJy9b/AK7GxNKc/ofJ9HvLdVBBl8IZ9/rlzqGnAPgtRfy+4FSAq2XENSvm4Jrr7coT1f/mQx8w==
+X-Received: by 2002:a02:90cd:: with SMTP id c13mr6859068jag.83.1590604872125;
+        Wed, 27 May 2020 11:41:12 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id g19sm1552123iom.21.2020.05.27.11.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 11:41:11 -0700 (PDT)
+Received: (nullmailer pid 2530396 invoked by uid 1000);
+        Wed, 27 May 2020 18:41:10 -0000
+Date:   Wed, 27 May 2020 12:41:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     devicetree@vger.kernel.org, frowand.list@gmail.com,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt/platform: Fix comment in of_dev_lookup()
+Message-ID: <20200527184110.GA2530290@bogus>
+References: <20200524152614.69393-1-arch0.zheng@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 May 2020 00:01:19 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, georgi.djakov@linaro.org,
-        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH V2] opp: Remove bandwidth votes when target_freq is zero
-In-Reply-To: <3aa3870d71b536127bb6af88c1dbfb4672ba4173.1590552778.git.viresh.kumar@linaro.org>
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <3aa3870d71b536127bb6af88c1dbfb4672ba4173.1590552778.git.viresh.kumar@linaro.org>
-Message-ID: <8bcec7186a4fc0d291d834a5964dab2f@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524152614.69393-1-arch0.zheng@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-27 09:43, Viresh Kumar wrote:
-> We already drop several votes when target_freq is set to zero, drop
-> bandwidth votes as well.
+On Sun, 24 May 2020 23:26:14 +0800, Qi Zheng wrote:
+> The code is using of_dev_lookup() rather than of_devname_lookup().
 > 
-> Reported-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
 > ---
-> V2: Some changes left uncommited in my tree by mistake.
+>  drivers/of/platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Viresh,
-Thanks for the patch :)
-
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-
-> 
->  drivers/opp/core.c | 49 ++++++++++++++++++++++++++++++++++------------
->  1 file changed, 37 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index 56d3022c1ca2..df12c3804533 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -725,6 +725,34 @@ static int _generic_set_opp_regulator(struct
-> opp_table *opp_table,
->  	return ret;
->  }
-> 
-> +static int _set_opp_bw(const struct opp_table *opp_table,
-> +		       struct dev_pm_opp *opp, struct device *dev, bool remove)
-> +{
-> +	u32 avg, peak;
-> +	int i, ret;
-> +
-> +	if (!opp_table->paths)
-> +		return 0;
-> +
-> +	for (i = 0; i < opp_table->path_count; i++) {
-> +		if (remove) {
-> +			avg = 0;
-> +			peak = 0;
-> +		} else {
-> +			avg = opp->bandwidth[i].avg;
-> +			peak = opp->bandwidth[i].peak;
-> +		}
-> +		ret = icc_set_bw(opp_table->paths[i], avg, peak);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to %s bandwidth[%d]: %d\n",
-> +				remove ? "remove" : "set", i, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int _set_opp_custom(const struct opp_table *opp_table,
->  			   struct device *dev, unsigned long old_freq,
->  			   unsigned long freq,
-> @@ -820,7 +848,7 @@ int dev_pm_opp_set_rate(struct device *dev,
-> unsigned long target_freq)
->  	unsigned long freq, old_freq, temp_freq;
->  	struct dev_pm_opp *old_opp, *opp;
->  	struct clk *clk;
-> -	int ret, i;
-> +	int ret;
-> 
->  	opp_table = _find_opp_table(dev);
->  	if (IS_ERR(opp_table)) {
-> @@ -837,12 +865,17 @@ int dev_pm_opp_set_rate(struct device *dev,
-> unsigned long target_freq)
->  		if (!_get_opp_count(opp_table))
->  			return 0;
-> 
-> -		if (!opp_table->required_opp_tables && !opp_table->regulators) {
-> +		if (!opp_table->required_opp_tables && !opp_table->regulators &&
-> +		    !opp_table->paths) {
->  			dev_err(dev, "target frequency can't be 0\n");
->  			ret = -EINVAL;
->  			goto put_opp_table;
->  		}
-> 
-> +		ret = _set_opp_bw(opp_table, opp, dev, true);
-> +		if (ret)
-> +			return ret;
-> +
->  		if (opp_table->regulator_enabled) {
->  			regulator_disable(opp_table->regulators[0]);
->  			opp_table->regulator_enabled = false;
-> @@ -932,16 +965,8 @@ int dev_pm_opp_set_rate(struct device *dev,
-> unsigned long target_freq)
->  			dev_err(dev, "Failed to set required opps: %d\n", ret);
->  	}
-> 
-> -	if (!ret && opp_table->paths) {
-> -		for (i = 0; i < opp_table->path_count; i++) {
-> -			ret = icc_set_bw(opp_table->paths[i],
-> -					 opp->bandwidth[i].avg,
-> -					 opp->bandwidth[i].peak);
-> -			if (ret)
-> -				dev_err(dev, "Failed to set bandwidth[%d]: %d\n",
-> -					i, ret);
-> -		}
-> -	}
-> +	if (!ret)
-> +		ret = _set_opp_bw(opp_table, opp, dev, false);
-> 
->  put_opp:
->  	dev_pm_opp_put(opp);
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Applied, thanks!
