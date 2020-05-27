@@ -2,143 +2,86 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79796C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54963C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52BFB20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33DDF207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tLnG5r3z"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qa3bSPrv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgE0GZe (ORCPT
+        id S1728363AbgE0GZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:25:34 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37805 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728007AbgE0GZe (ORCPT
+        Wed, 27 May 2020 02:25:59 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:44740 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728007AbgE0GZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:25:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590560733; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=jh63g7zVfWyaLq4vPu9kEFHYtKDWPkdQ7ls9thvyg1Y=; b=tLnG5r3zqoOxUUZZx5EParrDKHJV3yYNsg4ANZDWIe+lbOPssQSBQ2y3pmMYR3LFDO8MLuKO
- +g/2jR82RF6hbfPycEmFkhgcFGRBkkoqor4WbST34vEGKWi0shXyGKqEAfRT5w/yMskHNfPx
- U9YADv16bkvJqbEILUYYtyXPS0I=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ece07bf27386861267c2265 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 06:25:03
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C7B16C433CB; Wed, 27 May 2020 06:25:02 +0000 (UTC)
-Received: from vjitta-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vjitta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 03CC2C433C9;
-        Wed, 27 May 2020 06:24:59 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 03CC2C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
-From:   vjitta@codeaurora.org
-To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     vinmenon@codeaurora.org, kernel-team@android.com,
-        vjitta@codeaurora.org
-Subject: [PATCH] iommu/iova: Free global iova rcache on iova alloc failure
-Date:   Wed, 27 May 2020 11:54:39 +0530
-Message-Id: <1590560679-11927-1-git-send-email-vjitta@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 27 May 2020 02:25:59 -0400
+X-UUID: cc806eb682f1441e965534c1150cb877-20200527
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=3JgPtKgRdy8ddR7xtaWXijDFOHGnyaGurBt3CDZDbJc=;
+        b=qa3bSPrvl0ZaXE29kjfi/OCbwK/CBns3iU/bn193BTzTIC8m9KXM7e+ODSYjAyw4m/MhHBZ64uESU0j3wJdPRzr2SXv3k15qGdBMpe6favG1RWr12y3QHPawBEzy0oMy/v1gokoVwDoouJLug0hDk5423JdQnefmWRUEb6k0DFA=;
+X-UUID: cc806eb682f1441e965534c1150cb877-20200527
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1443509584; Wed, 27 May 2020 14:25:55 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 27 May 2020 14:25:52 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 27 May 2020 14:25:52 +0800
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, <stable@vger.kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>
+Subject: [PATCH v2] clk: mediatek: assign the initial value to clk_init_data of mtk_mux
+Date:   Wed, 27 May 2020 14:25:49 +0800
+Message-ID: <1590560749-29136-1-git-send-email-weiyi.lu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: BFDC40E46F0324815F4D3721A56AD387881A75494A619CD8E2BD5B4CD48C0DC62000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijayanand Jitta <vjitta@codeaurora.org>
+V2hlbiBzb21lIG5ldyBjbG9jayBzdXBwb3J0cyBhcmUgaW50cm9kdWNlZCwgZS5nLiBbMV0NCml0
+IG1pZ2h0IGxlYWQgdG8gYW4gZXJyb3IgYWx0aG91Z2ggaXQgc2hvdWxkIGJlIE5VTEwgYmVjYXVz
+ZQ0KY2xrX2luaXRfZGF0YSBpcyBvbiB0aGUgc3RhY2sgYW5kIGl0IG1pZ2h0IGhhdmUgcmFuZG9t
+IHZhbHVlcw0KaWYgdXNpbmcgd2l0aG91dCBpbml0aWFsaXphdGlvbi4NCkFkZCB0aGUgbWlzc2lu
+ZyBpbml0aWFsIHZhbHVlIHRvIGNsa19pbml0X2RhdGEuDQoNClsxXSBodHRwczovL2FuZHJvaWQt
+cmV2aWV3Lmdvb2dsZXNvdXJjZS5jb20vYy9rZXJuZWwvY29tbW9uLysvMTI3ODA0Ng0KDQpGaXhl
+czogYTNhZTU0OTkxN2YxICgiY2xrOiBtZWRpYXRlazogQWRkIG5ldyBjbGttdXggcmVnaXN0ZXIg
+QVBJIikNCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IFdlaXlp
+IEx1IDx3ZWl5aS5sdUBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTogTWF0dGhpYXMgQnJ1Z2dl
+ciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNvbT4NCi0tLQ0KIGRyaXZlcnMvY2xrL21lZGlhdGVrL2Ns
+ay1tdXguYyB8IDIgKy0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdXguYyBiL2Ry
+aXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdXguYw0KaW5kZXggNzZmOWNkMC4uMTRlMTI3ZSAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvY2xrL21lZGlhdGVrL2Nsay1tdXguYw0KKysrIGIvZHJpdmVycy9j
+bGsvbWVkaWF0ZWsvY2xrLW11eC5jDQpAQCAtMTYwLDcgKzE2MCw3IEBAIHN0cnVjdCBjbGsgKm10
+a19jbGtfcmVnaXN0ZXJfbXV4KGNvbnN0IHN0cnVjdCBtdGtfbXV4ICptdXgsDQogCQkJCSBzcGlu
+bG9ja190ICpsb2NrKQ0KIHsNCiAJc3RydWN0IG10a19jbGtfbXV4ICpjbGtfbXV4Ow0KLQlzdHJ1
+Y3QgY2xrX2luaXRfZGF0YSBpbml0Ow0KKwlzdHJ1Y3QgY2xrX2luaXRfZGF0YSBpbml0ID0ge307
+DQogCXN0cnVjdCBjbGsgKmNsazsNCiANCiAJY2xrX211eCA9IGt6YWxsb2Moc2l6ZW9mKCpjbGtf
+bXV4KSwgR0ZQX0tFUk5FTCk7DQotLSANCjEuOC4xLjEuZGlydHkNCg==
 
-When ever an iova alloc request fails we free the iova
-ranges present in the percpu iova rcaches and then retry
-but the global iova rcache is not freed as a result we
-could still see iova alloc failure even after retry as
-global rcache is still holding the iova's which can cause
-fragmentation. So, free the global iova rcache as well
-and then go for the retry.
-
-Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
----
- drivers/iommu/iova.c | 22 ++++++++++++++++++++++
- include/linux/iova.h |  6 ++++++
- 2 files changed, 28 insertions(+)
-
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 0e6a953..5ae0328 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -431,6 +431,7 @@ struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn)
- 		flush_rcache = false;
- 		for_each_online_cpu(cpu)
- 			free_cpu_cached_iovas(cpu, iovad);
-+		free_global_cached_iovas(iovad);
- 		goto retry;
- 	}
- 
-@@ -1044,5 +1045,26 @@ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad)
- 	}
- }
- 
-+/*
-+ * free all the IOVA ranges of global cache
-+ */
-+void free_global_cached_iovas(struct iova_domain *iovad)
-+{
-+	struct iova_rcache *rcache;
-+	int i, j;
-+
-+	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
-+		rcache = &iovad->rcaches[i];
-+		spin_lock(&rcache->lock);
-+		for (j = 0; j < rcache->depot_size; ++j) {
-+			iova_magazine_free_pfns(rcache->depot[j], iovad);
-+			iova_magazine_free(rcache->depot[j]);
-+			rcache->depot[j] = NULL;
-+		}
-+		rcache->depot_size = 0;
-+		spin_unlock(&rcache->lock);
-+	}
-+}
-+
- MODULE_AUTHOR("Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>");
- MODULE_LICENSE("GPL");
-diff --git a/include/linux/iova.h b/include/linux/iova.h
-index a0637ab..a905726 100644
---- a/include/linux/iova.h
-+++ b/include/linux/iova.h
-@@ -163,6 +163,7 @@ int init_iova_flush_queue(struct iova_domain *iovad,
- struct iova *split_and_remove_iova(struct iova_domain *iovad,
- 	struct iova *iova, unsigned long pfn_lo, unsigned long pfn_hi);
- void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad);
-+void free_global_cached_iovas(struct iova_domain *iovad);
- #else
- static inline int iova_cache_get(void)
- {
-@@ -270,6 +271,11 @@ static inline void free_cpu_cached_iovas(unsigned int cpu,
- 					 struct iova_domain *iovad)
- {
- }
-+
-+static inline void free_global_cached_iovas(struct iova_domain *iovad)
-+{
-+}
-+
- #endif
- 
- #endif
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
