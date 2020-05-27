@@ -2,105 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7116C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5ED420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEA120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:41:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="B3Jk1Hud"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sIhuLsfQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390957AbgE0RkR (ORCPT
+        id S2388585AbgE0Rlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbgE0RkQ (ORCPT
+        Wed, 27 May 2020 13:41:55 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59698 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387564AbgE0Rlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:40:16 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447FEC03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:40:16 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id k22so10380064pls.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:40:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=message-id:subject:from:to:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=Rk1xhV7XufxkO/E1iLQ3yEa3ALqyATLWKjuDwexe4Yg=;
-        b=B3Jk1Hud+b+F59wbna0Yyx92ZDbqgoGy+IywWGh/04Vvc78f8fVPMvcBEfH/Top/q3
-         KxCxyEdfGGUaYF5vbk6B2eeHP9wQdhP3E/h/sxJ/XoKYjr2WLVFi1gFMPWr5RLHjJCLV
-         L+HmYXaMSDWQpcLgOuRnO2cV++BAhRsQHZ8gkfRJ+ArNvmmi+FrDii7LZHGkwVON08CO
-         o6r1diaC8v8ohqR5s+vLFuxkirwOF9TKuRDUv/7goVceeRPWuEwbJZw/rRUo9yPuViHZ
-         nXOWr0qGm87Y1DvGkFdr8c/FlIPpULSYp2u0WY6k7/aP/79f4N2oi4J3Q+f0+FsI2o+k
-         NVZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=Rk1xhV7XufxkO/E1iLQ3yEa3ALqyATLWKjuDwexe4Yg=;
-        b=nIEyCgKbJVtuVI9anMhlvbf2NeXilpShowR8jmLPDFygsFnB4RA7lZw83z/700k3HT
-         P4+N3nO9A0qnjAFz0d9B3WPiQ6LzZb0jCzQEBUVIIBAStlJ8rzD7yvPLF5/qZN1MSwn0
-         yWNtf69lLfvfC07G2jUI3OQBmtpvQ1diG1Bkx2ckHS7T8e82CjKxWfq6p2piKZ71+/JP
-         e49zPFM4Tq04LW6cH/nTKde71rt9uftKO9fChKw6jrYBfgfILUybqUH71oO0HCclTf99
-         IPUGtxnrwTSqcda83wrAPudTBIX7Gbp07TRc2+MIr/aLBwkplSM/A96nsboaHA5paQTW
-         CD4w==
-X-Gm-Message-State: AOAM531HRugQP+ji1PzXfc9peYlL1+L/f8H+e3R7kA/3uoKtmtXlDzWZ
-        mTIwFQW9X5E1SuiWBTZGyjogeJKtJXXHlw==
-X-Google-Smtp-Source: ABdhPJxzjZxL86XD8n5itdGJFpoSmpa+c/9aBh1Q5bl5oLm/WDw+b2+84UNvphC7GfTOcDb949OKPg==
-X-Received: by 2002:a17:90b:110d:: with SMTP id gi13mr6419016pjb.173.1590601215584;
-        Wed, 27 May 2020 10:40:15 -0700 (PDT)
-Received: from posk-x1c (c-73-202-129-89.hsd1.ca.comcast.net. [73.202.129.89])
-        by smtp.gmail.com with ESMTPSA id w190sm2505061pfw.35.2020.05.27.10.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:40:15 -0700 (PDT)
-Message-ID: <58974e229908b22f5a2e6c52a21ae63149300049.camel@posk.io>
-Subject: [PATCH] smp: fix a comment typo.
-From:   Peter Oskolkov <posk@posk.io>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Wed, 27 May 2020 10:40:14 -0700
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 27 May 2020 13:41:55 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RHfl50183983;
+        Wed, 27 May 2020 17:41:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=PK51SzOBvZ8R1oDn+sXjXMpcGWRS6/VN8/Q6+fQ5Oow=;
+ b=sIhuLsfQv8J+L6DXMb10GEBjel3vAPUAUKqRxjRxHdPumzzkWx23AKYrJO2/aUVCi9BM
+ Gg886E8phaEn9dTTxu8vaim6Ld4Su7MoHrqncmEG+pe3FD8L0s+n33fL3Y0d2dyW5gR8
+ vC39sOLs5jFOXxJuabwdZtnB2dr5jA44tDLYajTqQX4mdylwSJku56qt52tTgh3kwwWu
+ 58ogc7BemR015NVTXrZNDArFFatyuyaqyTxuMYxee0lXUviQ09BvQok53GOMiQBhZExG
+ O5g6VL3I0IXDAcFJ/o3jWRScC50FSlte/r5HUNBBHx1GgL0n/Q7Jt7MlyN6ZFFNisWaO tQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 318xbk0vw5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 17:41:47 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RHXd8e105821;
+        Wed, 27 May 2020 17:41:42 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 317j5sg6g2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 17:41:41 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04RHff5f015866;
+        Wed, 27 May 2020 17:41:41 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 27 May 2020 10:41:40 -0700
+Date:   Wed, 27 May 2020 20:41:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     kbuild@lists.01.org, kbuild test robot <lkp@intel.com>,
+        kbuild-all@lists.01.org, lkml <linux-kernel@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: net/dsa/tag_8021q.c:109 dsa_8021q_restore_pvid() error:
+ uninitialized symbol 'pvid'.
+Message-ID: <20200527174134.GM22511@kadam>
+References: <20200526145454.GZ30374@kadam>
+ <CA+h21hqw8Ed_k_E8KK7mzDTag7p8jTYFLLkJ_i6+8__BKCdEUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hqw8Ed_k_E8KK7mzDTag7p8jTYFLLkJ_i6+8__BKCdEUQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=979 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005270137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
+ suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005270138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From b93e86294d30f58440762106e517d9467f4f3b69 Mon Sep 17 00:00:00 2001
-From: Peter Oskolkov <posk@posk.io>
-Date: Wed, 27 May 2020 10:23:07 -0700
-Subject: [PATCH] smp: fix a comment typo.
+On Wed, May 27, 2020 at 07:43:29PM +0300, Vladimir Oltean wrote:
+> For net-next I just sent a patch that removes this function altogether:
+> https://patchwork.ozlabs.org/project/netdev/patch/20200527164134.1081548-1-olteanv@gmail.com/
+> Do you think a patch for the net tree is still necessary, that
+> reorders the checks? Will you send that patch or should I?
 
-Fix a typo in a comment.
+Since you've already removed the function then that's fine.  Thanks!
 
-Signed-off-by: Peter Oskolkov <posk@posk.io>
----
- include/linux/smp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/smp.h b/include/linux/smp.h
-index cbc9162689d0..bb25075a981d 100644
---- a/include/linux/smp.h
-+++ b/include/linux/smp.h
-@@ -182,7 +182,7 @@ static inline int get_boot_cpu_id(void)
- /**
-  * raw_processor_id() - get the current (unstable) CPU id
-  *
-- * For then you know what you are doing and need an unstable
-+ * For when you know what you are doing and need an unstable
-  * CPU id.
-  */
- 
--- 
-2.25.1
-
+regards,
+dan carpenter
 
