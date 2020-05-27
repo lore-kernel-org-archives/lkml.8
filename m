@@ -2,292 +2,78 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06CBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF56CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D655620787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83811208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590558951;
+	bh=PcP0elMmxsxvC2yH2JORrMx/2zoxr/+2rXhvhlQJreI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=l2JQKATt/8bLL9XSbalgpK7GwT/eN3pq9F7mbv0bLbAcW3cdp8kzaVcSSf83yd0lT
+	 e6SRdo/85n6FKuyEmwmNoccgIk5scCAoWZVv4Q/IM/+B4wQ48NFlIsblLkzzYV26G3
+	 tiuGpQSsTsDuMLGoDChviK3PJNuX5X2X3/+3XCEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgE0FzG (ORCPT
+        id S1726963AbgE0Fzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:55:06 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:17813 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725819AbgE0FzE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:55:04 -0400
-X-IronPort-AV: E=Sophos;i="5.73,440,1583164800"; 
-   d="scan'208";a="93187909"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 27 May 2020 13:54:57 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 2CE4646B5FB0;
-        Wed, 27 May 2020 13:54:56 +0800 (CST)
-Received: from [10.167.220.69] (10.167.220.69) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 27 May 2020 13:54:54 +0800
-Message-ID: <5ECE00AE.3010802@cn.fujitsu.com>
-Date:   Wed, 27 May 2020 13:54:54 +0800
-From:   Xiao Yang <yangx.jy@cn.fujitsu.com>
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 6.2; zh-CN; rv:1.9.2.18) Gecko/20110616 Thunderbird/3.1.11
+        Wed, 27 May 2020 01:55:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbgE0Fzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 01:55:50 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AD90206F1;
+        Wed, 27 May 2020 05:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590558950;
+        bh=PcP0elMmxsxvC2yH2JORrMx/2zoxr/+2rXhvhlQJreI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=OhocTK+Uz/yQpuW5nOGw7pZ64VE+pkmrKgYxsJ2bRR0uxGgVQ2y0o9D4cPASOhtDi
+         BO4Dxh6HPtbHVS6xKrNo17LfFDr5RI1a1n7MSnYtLvgbpoQO6Agjwr3JRq27IRQQnj
+         jTwS8Lc73ngULTpqDPrjBZ6AgWcHKM0PZlKadvBI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-To:     <ira.weiny@intel.com>
-CC:     <linux-ext4@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V4 6/8] fs/ext4: Make DAX mount option a tri-state
-References: <20200521191313.261929-1-ira.weiny@intel.com> <20200521191313.261929-7-ira.weiny@intel.com>
-In-Reply-To: <20200521191313.261929-7-ira.weiny@intel.com>
-Content-Type: text/plain; charset="GB2312"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.220.69]
-X-ClientProxiedBy: G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) To
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206)
-X-yoursite-MailScanner-ID: 2CE4646B5FB0.A0170
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: yangx.jy@cn.fujitsu.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200330231617.17079-3-digetx@gmail.com>
+References: <20200330231617.17079-1-digetx@gmail.com> <20200330231617.17079-3-digetx@gmail.com>
+Subject: Re: [PATCH v1 2/5] clk: Introduce clk_round_rate_unboundly()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Date:   Tue, 26 May 2020 22:55:49 -0700
+Message-ID: <159055894944.88029.2029223648098859689@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/22 3:13, ira.weiny@intel.com wrote:
-> From: Ira Weiny<ira.weiny@intel.com>
-> 
-> We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
-> operate the same which is equivalent to 'always'.  This new
-> functionality is limited to ext4 only.
-> 
-> Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
-> it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
-> 
-> We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
-> 
-> Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
-> specified that option for printing.
-Hi Ira,
+Quoting Dmitry Osipenko (2020-03-30 16:16:14)
+> In same cases it may be desired to round clock's rate without taking into
+> account current min/max requests made by the clock's users. One example is
+> building up OPP table based on a possible clock rates.
 
-I have two questions when reviewing this patch:
-1) After doing mount with the same dax=inode option, ext4/xfs shows
-differnt output(i.e. xfs doesn't print 'dax=inode'):
----------------------------------------------------
-# mount -o dax=inode /dev/pmem0 /mnt/xfstests/test/
-# mount | grep pmem0
-/dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode)
+Shouldn't the OPP table come from firmware/DT? I don't quite understand
+why we're generating OPP tables on top of the rate rounding API.
+clk_round_rate() is supposed to tell us what rate we'll get if we call
+clk_set_rate() with the same arguments. An unboundly version of that
+doesn't make sense.=20
 
-# mount -odax=inode /dev/pmem1 /mnt/xfstests/scratch/
-# mount | grep pmem1
-/dev/pmem1 on /mnt/xfstests/scratch type xfs
-(rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
-----------------------------------------------------
-Is this expected output? why don't unify the output?
-
-2) Do mount without dax and mount with -odax=inode have the same behavior?
----------------------------------------------------
-# mount /dev/pmem0 /mnt/xfstests/test/
-# mount | grep pmem0
-/dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel)
-# umount /mnt/xfstests/test
-# mount -odax=inode /dev/pmem0 /mnt/xfstests/test/
-# mount | grep pmem0
-/dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode
----------------------------------------------------
-
-BTW: I focus on the support of per-file/directory DAX operations recently.
-
-> 
-> Reviewed-by: Jan Kara<jack@suse.cz>
-> Signed-off-by: Ira Weiny<ira.weiny@intel.com>
-> 
-> ---
-> Changes from V1:
-> 	Fix up mounting options to only show an option if specified
-> 	Fix remount to prevent dax changes
-> 	Isolate behavior to ext4 only
-> 
-> Changes from RFC:
-> 	Combine remount check for DAX_NEVER with DAX_ALWAYS
-> 	Update ext4_should_enable_dax()
-> ---
->   fs/ext4/ext4.h  |  2 ++
->   fs/ext4/inode.c |  2 ++
->   fs/ext4/super.c | 67 +++++++++++++++++++++++++++++++++++++++++--------
->   3 files changed, 61 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index f5291693ce6e..65ffb831b2b9 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -1168,6 +1168,8 @@ struct ext4_inode_info {
->   						      blocks */
->   #define EXT4_MOUNT2_HURD_COMPAT		0x00000004 /* Support HURD-castrated
->   						      file systems */
-> +#define EXT4_MOUNT2_DAX_NEVER		0x00000008 /* Do not allow Direct Access */
-> +#define EXT4_MOUNT2_DAX_INODE		0x00000010 /* For printing options only */
-> 
->   #define EXT4_MOUNT2_EXPLICIT_JOURNAL_CHECKSUM	0x00000008 /* User explicitly
->   						specified journal checksum */
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 01636cf5f322..68fac9289109 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -4402,6 +4402,8 @@ static bool ext4_should_enable_dax(struct inode *inode)
->   {
->   	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
-> 
-> +	if (test_opt2(inode->i_sb, DAX_NEVER))
-> +		return false;
->   	if (!S_ISREG(inode->i_mode))
->   		return false;
->   	if (ext4_should_journal_data(inode))
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index 80eb814c47eb..5e056aa20ce9 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1512,7 +1512,8 @@ enum {
->   	Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota, Opt_offgrpjquota,
->   	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
->   	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
-> -	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version, Opt_dax,
-> +	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version,
-> +	Opt_dax, Opt_dax_always, Opt_dax_inode, Opt_dax_never,
->   	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
->   	Opt_nowarn_on_error, Opt_mblk_io_submit,
->   	Opt_lazytime, Opt_nolazytime, Opt_debug_want_extra_isize,
-> @@ -1579,6 +1580,9 @@ static const match_table_t tokens = {
->   	{Opt_nobarrier, "nobarrier"},
->   	{Opt_i_version, "i_version"},
->   	{Opt_dax, "dax"},
-> +	{Opt_dax_always, "dax=always"},
-> +	{Opt_dax_inode, "dax=inode"},
-> +	{Opt_dax_never, "dax=never"},
->   	{Opt_stripe, "stripe=%u"},
->   	{Opt_delalloc, "delalloc"},
->   	{Opt_warn_on_error, "warn_on_error"},
-> @@ -1726,6 +1730,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
->   #define MOPT_NO_EXT3	0x0200
->   #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
->   #define MOPT_STRING	0x0400
-> +#define MOPT_SKIP	0x0800
-> 
->   static const struct mount_opts {
->   	int	token;
-> @@ -1775,7 +1780,13 @@ static const struct mount_opts {
->   	{Opt_min_batch_time, 0, MOPT_GTE0},
->   	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
->   	{Opt_init_itable, 0, MOPT_GTE0},
-> -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
-> +	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
-> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
-> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
-> +	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
-> +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
->   	{Opt_stripe, 0, MOPT_GTE0},
->   	{Opt_resuid, 0, MOPT_GTE0},
->   	{Opt_resgid, 0, MOPT_GTE0},
-> @@ -2084,13 +2095,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
->   		}
->   		sbi->s_jquota_fmt = m->mount_opt;
->   #endif
-> -	} else if (token == Opt_dax) {
-> +	} else if (token == Opt_dax || token == Opt_dax_always ||
-> +		   token == Opt_dax_inode || token == Opt_dax_never) {
->   #ifdef CONFIG_FS_DAX
-> -		ext4_msg(sb, KERN_WARNING,
-> -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> -		sbi->s_mount_opt |= m->mount_opt;
-> +		switch (token) {
-> +		case Opt_dax:
-> +		case Opt_dax_always:
-> +			ext4_msg(sb, KERN_WARNING,
-> +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
-> +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
-> +			sbi->s_mount_opt2&= ~EXT4_MOUNT2_DAX_NEVER;
-> +			break;
-> +		case Opt_dax_never:
-> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
-> +			sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
-> +			break;
-> +		case Opt_dax_inode:
-> +			sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
-> +			sbi->s_mount_opt2&= ~EXT4_MOUNT2_DAX_NEVER;
-> +			/* Strictly for printing options */
-> +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_INODE;
-> +			break;
-> +		}
->   #else
->   		ext4_msg(sb, KERN_INFO, "dax option not supported");
-> +		sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
-> +		sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
->   		return -1;
->   #endif
-
-For s_mount_opt/s_mount_opt2, could we make the code more readable by
-using set_opt()/set_opt2()/clear_opt()/clear_opt2() macros?
-
-Thanks,
-Xiao Yang
->   	} else if (token == Opt_data_err_abort) {
-> @@ -2254,7 +2284,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
->   	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
->   		int want_set = m->flags&  MOPT_SET;
->   		if (((m->flags&  (MOPT_SET|MOPT_CLEAR)) == 0) ||
-> -		    (m->flags&  MOPT_CLEAR_ERR))
-> +		    (m->flags&  MOPT_CLEAR_ERR) || m->flags&  MOPT_SKIP)
->   			continue;
->   		if (!nodefs&&  !(m->mount_opt&  (sbi->s_mount_opt ^ def_mount_opt)))
->   			continue; /* skip if same as the default */
-> @@ -2314,6 +2344,17 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
->   	if (DUMMY_ENCRYPTION_ENABLED(sbi))
->   		SEQ_OPTS_PUTS("test_dummy_encryption");
-> 
-> +	if (test_opt(sb, DAX_ALWAYS)) {
-> +		if (IS_EXT2_SB(sb))
-> +			SEQ_OPTS_PUTS("dax");
-> +		else
-> +			SEQ_OPTS_PUTS("dax=always");
-> +	} else if (test_opt2(sb, DAX_NEVER)) {
-> +		SEQ_OPTS_PUTS("dax=never");
-> +	} else if (test_opt2(sb, DAX_INODE)) {
-> +		SEQ_OPTS_PUTS("dax=inode");
-> +	}
-> +
->   	ext4_show_quota_options(seq, sb);
->   	return 0;
->   }
-> @@ -5436,10 +5477,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
->   		goto restore_opts;
->   	}
-> 
-> -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt)&  EXT4_MOUNT_DAX_ALWAYS) {
-> +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt)&  EXT4_MOUNT_DAX_ALWAYS ||
-> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2)&  EXT4_MOUNT2_DAX_NEVER ||
-> +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2)&  EXT4_MOUNT2_DAX_INODE) {
->   		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
-> -			"dax flag with busy inodes while remounting");
-> -		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
-> +			"dax mount option with busy inodes while remounting");
-> +		sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
-> +		sbi->s_mount_opt |= old_opts.s_mount_opt&  EXT4_MOUNT_DAX_ALWAYS;
-> +		sbi->s_mount_opt2&= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
-> +		sbi->s_mount_opt2 |= old_opts.s_mount_opt2&
-> +				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
->   	}
-> 
->   	if (sbi->s_mount_flags&  EXT4_MF_FS_ABORTED)
-
-
-
+I wonder if perhaps the clk provider should be populating OPP tables in
+this case? Or basically anything besides adding another clk consumer API
+to solve this problem. Who is the caller? Something later in this
+series?
