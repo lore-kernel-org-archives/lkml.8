@@ -2,124 +2,69 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBBBC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D741C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601AF207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063582075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590607703;
-	bh=Z2GGB6Wt+dGToaBaYkxOJDivct59R520WSiT9oG7HOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nAr9Jrru7iMMnFVU7BdTtmeL1f/WPXYJLy75/b+wBdYNc11hWRakfM1AQVxX5GHYP
-	 rmaDwlsN+nUGwWU/SwpYy4lzv9Fnte4lRKNX9oVY6Q6sNqVsLWIMbZQdUSVhAwAVGz
-	 AFldtrgJfXvNMwPxStPp99qsI5dJDTYxCFLfMKYA=
+	s=default; t=1590607835;
+	bh=yB3E8aqzW3OvKuaG42APyedRVwI1AwVLwI54ZqxWZvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=wd4OTLC2tpTDr5l9iOK7hSMDoZfyZrDdaRDXX0z0wrigd+VyRvalr64J3NpJxyr6Z
+	 GxXYAo3qxyrnMo9zCDOvTOA58G6Xf1+NB/59JYiqMXXQ8W9nDlDu9KcqcBHaMHewa2
+	 Z9ut4BDFL+0dTxHe6S86DSUa2EGY5O1ol0vi8KK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgE0T2W (ORCPT
+        id S1726519AbgE0Tae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:28:22 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35901 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgE0T2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:28:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id y18so6951703iow.3;
-        Wed, 27 May 2020 12:28:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bgk9XpqXSxucV5OMC4BoaIOWVkM3DvrsJIDo7nwW2GA=;
-        b=h6pSbWeXmTcoLy6Xah1Q2OBlmdmbgTl+hzps5MCINZD31132xk9WObg9EV5taIhJzA
-         /gnX5nVe7VGhxdz7+olrPf9xvAjp+pAZyqqIJ/GxbOLZ0C/ZGZxepVb0mNwYLx/mRHOz
-         btbjmwu18I3Au91kJpXVF177BUtfHV68otsZocHFXN8U0KQAPOjq1dhLY9rbIL75UEul
-         mMFzg9EDZLLNGsfIEvojwuTLAOWIbES+0ZAVYw3kf5eU7TLFiOcyYX8yzfSNQVFv3md8
-         iVytEb05A2BkvKPMy8n+4YWFXGIFLt8dZ+oJQo8ZdROEscJdVY+fPc4bKgBOq/dxYEYW
-         +yiA==
-X-Gm-Message-State: AOAM532ufOqeccsVwPmD1bUyXjfV9cWvNW3p7BQFNnglhtjK3vUagl5d
-        hF6WueRu8xg6umv/vQpPiA==
-X-Google-Smtp-Source: ABdhPJz2AR1rkipQGqnDMAjyexmb3CQOj9FvL6X/yiuBHdY+4XWSLol+S+ivS3k+KdxI0/RLJhY2Ww==
-X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr12134767iod.94.1590607700123;
-        Wed, 27 May 2020 12:28:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j15sm1989870ilk.0.2020.05.27.12.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:28:19 -0700 (PDT)
-Received: (nullmailer pid 2597176 invoked by uid 1000);
-        Wed, 27 May 2020 19:28:17 -0000
-Date:   Wed, 27 May 2020 13:28:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Johan Hovold <johan@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 3/6] dt-bindings: serdev: ngsm: Add binding for GNSS
- child node
-Message-ID: <20200527192817.GA2587830@bogus>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200512214713.40501-4-tony@atomide.com>
+        Wed, 27 May 2020 15:30:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725320AbgE0Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:30:33 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CAE320723;
+        Wed, 27 May 2020 19:30:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590607833;
+        bh=yB3E8aqzW3OvKuaG42APyedRVwI1AwVLwI54ZqxWZvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RPokBkyI2Dkc0L+na1ltgQA27uvepDoIrOcyYJirgyJJRP8hwlu+ZG7XPrD9/LoK8
+         /wzB75ReeiPnHEXoLy8hiQu+DtlGR5U+HR4858RwVEBfHHmlv/gwjYhyI/vCoa1kjz
+         1FDnFPXbCtvjHZ8CvcCfVyqJT3TNUTYnsyEI6yQI=
+Date:   Wed, 27 May 2020 12:30:31 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     tanhuazhong <tanhuazhong@huawei.com>
+Cc:     David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
+Message-ID: <20200527123031.7fd4834d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
+References: <1590061105-36478-1-git-send-email-tanhuazhong@huawei.com>
+        <20200521121707.6499ca6b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200521.143726.481524442371246082.davem@davemloft.net>
+        <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
+        <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512214713.40501-4-tony@atomide.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 02:47:10PM -0700, Tony Lindgren wrote:
-> For motorola modem case, we may have a GNSS device on channel 4.
-> Let's add that to the binding and example.
+On Wed, 27 May 2020 10:31:59 +0800 tanhuazhong wrote:
+> Hi, Jakub & David.
 > 
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  .../devicetree/bindings/serdev/serdev-ngsm.yaml          | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> --- a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> +++ b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
-> @@ -42,6 +42,10 @@ allOf:
->            description: Name of the USB PHY
->            const: usb
->  
-> +        compatible:
-> +          description: GNSS receiver
-> +          const: motorola,mapphone-mdm6600-gnss
+> For patch#1, is it acceptable adding "ethtool --get-priv-flags"
+> to query the VLAN. If yes, I will send a RFC for it.
 
-I'm not sure how this isn't failing on the example because it is wrong.
-
-You're saying this compatible belongs at the same level as 
-phys/phy-names, but that would be the parent which already has a 
-compatible. You have to define a child node property (gnss@4) and have 
-'compatible' under it. At that point, this schema becomes very much 
-Motorola specific.
-
-> +
->        required:
->          - phys
->          - phy-names
-> @@ -61,4 +65,9 @@ examples:
->        phy-names = "usb";
->        #address-cells = <1>;
->        #size-cells = <0>;
-> +
-> +      gnss@4 {
-> +         compatible = "motorola,mapphone-mdm6600-gnss";
-> +         reg = <4>;
-> +      };
->      };
-> -- 
-> 2.26.2
+The recommended way of implementing vfs with advanced vlan
+configurations is via "switchdev mode" & representors.
