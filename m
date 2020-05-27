@@ -2,78 +2,88 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EAC1C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A420C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5399E2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:00:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590570011;
-	bh=GzN9KZi8SIAiZv6JsaMy5rtT9c4WVtJCbDQmDejM+Rc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g8hZ3WN9Ll2S2fdkV4Zlo2EJfeDU2dfRU8idZFuK2BpYJqSb7lihud4kulwvGCQ9A
-	 FY+8p9/Cu76nAZm/9DG4lNQiQpwIqCkpyH6nJL5cV4PrS7LswLhmbRdvxZh0xQw6n8
-	 j9TVniyXDNOYb/NjRF91NSnHSzfHg+jaeg53GhuQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0CBF8207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kpVwA1oo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388399AbgE0JAK (ORCPT
+        id S2388418AbgE0JAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388251AbgE0JAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:00:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE06A20723;
-        Wed, 27 May 2020 09:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590570009;
-        bh=GzN9KZi8SIAiZv6JsaMy5rtT9c4WVtJCbDQmDejM+Rc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dw8PQDiM90GK1xPK0MDmtsB/uuNO5KqcuE2U8o5Bi9m3bkWcLa2RYu4UYcftfI8gL
-         7map9j1fDgO+xHYZCtIgx1wv9/xmbcAUQMZ2V17LMke54thxct3Cz7n7lWZ60o+1Qn
-         SucOB5Se6nCwWAoR5L8bMbTnC5mBS13qfDJaL2Og=
-Date:   Wed, 27 May 2020 11:00:07 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-Message-ID: <20200527090007.GA179718@kroah.com>
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+        Wed, 27 May 2020 05:00:17 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:60345 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388251AbgE0JAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:00:16 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7B9615C01A7;
+        Wed, 27 May 2020 05:00:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 05:00:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=3ZRtiX
+        lcFQeWgLraPyBZ52n+2xUg/Eap8AOdNZJnsiM=; b=kpVwA1ooWMY1GERAeJ1I4i
+        NKmF3C7XjF1Qfzufdga2X0bvgpskSXp+zOx6hQK6BYL71jzG5WO7EOFXWoetrv9I
+        pNuCuVz/l4Swic9Vj8ZWKJQn1Uu02uaSjISgVkLPb+iyFZ/MWXGc5da5eS2L7rJ8
+        1E8gKfgUsRkkCkEyFlOlXZIjFg086i2DuqcEYZUWcmsOpF4JIqly3ThvgrjbSRaM
+        PC/2uFSsqKNoBllLv5L/hH2/GGrEMh6vX/84Bs93wEsmnQStUEftJvRjegy0LLGp
+        TTX9PFKWupf8atAyLobnHEWkNhSfy7Pc3tmXfg3hL2/Ko1Hdn76mxe7kuGxQ37DQ
+        ==
+X-ME-Sender: <xms:HyzOXhxHULXxQXP6jVh68lamNyyVSAOXBOJC-l_JAj3KY0zU6zLrsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgtdekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
+    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
+    teenucfkphepuddtledrieehrddufeelrddukedtnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:HyzOXhSL13DQuGBmZ3vRvkBnO3sH_4HilU2Dx85_iRmrt1OWZSBe2w>
+    <xmx:HyzOXrWHijhxf3VgC_WQMoG8QES7eW0NpFTl7JQJRKceG7qXSRYYTw>
+    <xmx:HyzOXjjSp97FHIN8OtlOnU5ew1Q2cow-3wCvQhzN7TDiov5QK2-UsA>
+    <xmx:HyzOXqNqBn1FTq_h8yiTPYIPPe-eB58tIGdKuqnqTy-8f1gBj4E2WQ>
+Received: from localhost (bzq-109-65-139-180.red.bezeqint.net [109.65.139.180])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8F65C3060F09;
+        Wed, 27 May 2020 05:00:14 -0400 (EDT)
+Date:   Wed, 27 May 2020 12:00:11 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2][net-next] mlxsw: spectrum_router: remove redundant
+ initialization of pointer br_dev
+Message-ID: <20200527090011.GA1519147@splinter>
+References: <20200527081555.124615-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+In-Reply-To: <20200527081555.124615-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:49:07PM +0800, Zhangfei Gao wrote:
-> Some platform devices appear as PCI but are actually on the AMBA bus,
+On Wed, May 27, 2020 at 09:15:55AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The pointer br_dev is being initialized with a value that is never read
+> and is being updated with a new value later on. The initialization
+> is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Why would these devices not just show up on the AMBA bus and use all of
-that logic instead of being a PCI device and having to go through odd
-fixes like this?
+Reviewed-by: Ido Schimmel <idosch@mellanox.com>
 
-thanks,
-
-greg k-h
+Thanks
