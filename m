@@ -2,203 +2,84 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C497BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2227C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A10AE2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U9PFUgFA"
+	by mail.kernel.org (Postfix) with ESMTP id DB9282088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:16:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387877AbgE0KPw (ORCPT
+        id S2387949AbgE0KQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387852AbgE0KPu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:15:50 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48AAC03E979
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 03:15:50 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z26so11629895pfk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 03:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=TlnmUrscKa/rIKFGJ53s4sxtDr9jacnXeVYHbyTFQtU=;
-        b=U9PFUgFAFXaZ31fVg/bX9FAw0grwENMcVfqGyk+QHHM8fDNoIXX/5Jit64oU2z6s3V
-         QMe5JjD120SyMoGMqxhHG8jEFrM0uIeE5nEHudeCswPopXz5ChGfdIyiq7e07lDABEEs
-         614QVBHQD1bVz9Vl/rsQhNUZpNiWdfsiHeo9E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=TlnmUrscKa/rIKFGJ53s4sxtDr9jacnXeVYHbyTFQtU=;
-        b=Xki2hpJyVCQWg2xsG/oV7NZmZWJki9Xvi2Y4dyljXTTCl2YJvcxVssivDXEIFNuc1h
-         5NXMy3DB5tXfzX8rrOvGmJuZSNT9i6fSBMuo3R+LvtxveH85L2Qk7rqEJRDd6tT7M/ob
-         3SNUCIf7hijnSCyKVJl3/Xj9wcHU9qfaeQizrSmCgwoVW8ZuydxcuH+Mq3rtEb1DIQcu
-         xPy2oUqyquddxQdleRbObin0TXaWmdBSRjPnEw2Fuf0V0B7p4zzQU7/SUyLAx085pzee
-         1REY2MXaOoqWXVZFMGjTwy8WNE9PXJwy3a4NWal2IxLKa9Mo9xE3+t4kjuCSSb0iLEbc
-         2J+Q==
-X-Gm-Message-State: AOAM532RZP/sbq7Cy/s+bZgKAPIxAKvkohDFA3IXkU7Jk2cYd1fkYXs1
-        BIc8wcgWosoeO2lVWZrpDdJsgbi2ZFo=
-X-Google-Smtp-Source: ABdhPJyaQkX9GG0uxrGZHHp5tPrfy/kI025wjd11LmMZcniWV4wMMcJ/NJrAhz2pbNaPKnqpjnpfxQ==
-X-Received: by 2002:a63:7d53:: with SMTP id m19mr3475449pgn.168.1590574549868;
-        Wed, 27 May 2020 03:15:49 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id z18sm1744925pfj.148.2020.05.27.03.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 03:15:49 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 06:16:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35324 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387899AbgE0KQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:16:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 27984ABC7;
+        Wed, 27 May 2020 10:16:22 +0000 (UTC)
+Date:   Wed, 27 May 2020 12:16:18 +0200
+From:   Jiri Bohac <jbohac@suse.cz>
+To:     lijiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        ebiederm@xmission.com, jmorris@namei.org, mjg59@google.com,
+        dyoung@redhat.com, bhe@redhat.com
+Subject: Re: [PATCH] kexec: Do not verify the signature without the lockdown
+ or mandatory signature
+Message-ID: <20200527101618.jgbxbk5ooiaett43@dwarf.suse.cz>
+References: <20200525052351.24134-1-lijiang@redhat.com>
+ <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
+ <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
+ <4da44e94-a839-2033-29d2-90bebd4ee1e2@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Wed, 27 May 2020 03:15:47 -0700
-Message-ID: <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4da44e94-a839-2033-29d2-90bebd4ee1e2@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-05-23 10:11:13)
-> Remove irq_disable callback to allow lazy disable for pdc interrupts.
->=20
-> Add irq_set_wake callback that unmask interrupt in HW when drivers
-> mark interrupt for wakeup. Interrupt will be cleared in HW during
-> lazy disable if its not marked for wakeup.
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/irqchip/qcom-pdc.c | 33 +++++++++++++++++----------------
->  1 file changed, 17 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index 6ae9e1f..f7c0662 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -36,6 +36,7 @@ struct pdc_pin_region {
->         u32 cnt;
->  };
-> =20
-> +DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
+On Wed, May 27, 2020 at 12:08:12PM +0800, lijiang wrote:
+> Or the following change looks better? What's your opinion?
+> 
+> static int
+> kimage_validate_signature(struct kimage *image)
+> {
+>         int ret;
+> 
+>         ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>                                            image->kernel_buf_len);
+>         if (ret) {
+> 
+>                 if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+>                         pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
+>                         return ret;
+>                 }
+> 
+>                 /*
+>                  * If IMA is guaranteed to appraise a signature on the kexec
+>                  * image, permit it even if the kernel is otherwise locked
+>                  * down.
+>                  */
+>                 if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
+>                     security_locked_down(LOCKDOWN_KEXEC))
+>                         return -EPERM;
+> 
+>                 pr_debug("kernel signature verification failed (%d).\n", ret);
+>         }
+> 
+>         return 0;
+> }
 
-static?
+Looks good to me, thanks!
 
->  static DEFINE_RAW_SPINLOCK(pdc_lock);
->  static void __iomem *pdc_base;
->  static struct pdc_pin_region *pdc_region;
-> @@ -87,22 +88,20 @@ static void pdc_enable_intr(struct irq_data *d, bool =
-on)
->         raw_spin_unlock(&pdc_lock);
->  }
-> =20
-> -static void qcom_pdc_gic_disable(struct irq_data *d)
-> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
->  {
->         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
-> -               return;
-> -
-> -       pdc_enable_intr(d, false);
-> -       irq_chip_disable_parent(d);
-> -}
-> +               return 0;
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
 
-Shouldn't this fail if we can't set for wake?
-
-> =20
-> -static void qcom_pdc_gic_enable(struct irq_data *d)
-> -{
-> -       if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
-> -               return;
-> +       if (on) {
-> +               pdc_enable_intr(d, true);
-> +               irq_chip_enable_parent(d);
-> +               set_bit(d->hwirq, pdc_wake_irqs);
-> +       } else {
-> +               clear_bit(d->hwirq, pdc_wake_irqs);
-> +       }
-> =20
-> -       pdc_enable_intr(d, true);
-> -       irq_chip_enable_parent(d);
-> +       return irq_chip_set_wake_parent(d, on);
->  }
-> =20
->  static void qcom_pdc_gic_mask(struct irq_data *d)
-
-The diff is really hard to read too. Maybe set_wake can be added first
-and then the enable/disable functions removed?
-
-> @@ -110,6 +109,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
->         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
->                 return;
-> =20
-> +       if (!test_bit(d->hwirq, pdc_wake_irqs))
-> +               pdc_enable_intr(d, false);
-> +
->         irq_chip_mask_parent(d);
->  }
-> =20
-> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
->         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
->                 return;
-> =20
-> +       pdc_enable_intr(d, true);
->         irq_chip_unmask_parent(d);
->  }
-> =20
-
-I find these two hunks deeply confusing. I'm not sure what the
-maintainers think though. I hope it would be simpler to always enable
-the hwirqs in the pdc when an irq is requested and only disable it in
-the pdc when the system goes to suspend and the pdc pin isn't for an irq
-that's marked for wakeup. Does that break somehow?
-
-My understanding of the hardware is that the GPIO controller has lines
-directly connected to various SPI lines on the GIC and PDC has a way to
-monitor those direct connections and wakeup the CPUs when they trigger
-the detection logic in the PDC. The enable/disable bit in PDC gates that
-logic for each wire between the GPIO controller and the GIC.
-
-So isn't it simpler to leave the PDC monitoring pins that we care about
-all the time and only stop monitoring when we enter and leave suspend?
-And shouldn't the driver set something sane in qcom_pdc_init() to
-disable all the pdc pins so that we don't rely on boot state to
-configure pins for wakeup?
-
-> @@ -197,15 +200,13 @@ static struct irq_chip qcom_pdc_gic_chip =3D {
->         .irq_eoi                =3D irq_chip_eoi_parent,
->         .irq_mask               =3D qcom_pdc_gic_mask,
->         .irq_unmask             =3D qcom_pdc_gic_unmask,
-> -       .irq_disable            =3D qcom_pdc_gic_disable,
-> -       .irq_enable             =3D qcom_pdc_gic_enable,
->         .irq_get_irqchip_state  =3D qcom_pdc_gic_get_irqchip_state,
->         .irq_set_irqchip_state  =3D qcom_pdc_gic_set_irqchip_state,
->         .irq_retrigger          =3D irq_chip_retrigger_hierarchy,
->         .irq_set_type           =3D qcom_pdc_gic_set_type,
-> +       .irq_set_wake           =3D qcom_pdc_gic_set_wake,
->         .flags                  =3D IRQCHIP_MASK_ON_SUSPEND |
-> -                                 IRQCHIP_SET_TYPE_MASKED |
-> -                                 IRQCHIP_SKIP_SET_WAKE,
-> +                                 IRQCHIP_SET_TYPE_MASKED,
->         .irq_set_vcpu_affinity  =3D irq_chip_set_vcpu_affinity_parent,
->         .irq_set_affinity       =3D irq_chip_set_affinity_parent,
