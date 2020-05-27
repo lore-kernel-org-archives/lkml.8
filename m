@@ -2,110 +2,85 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E697C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E94CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 149D72078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:34:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h1KNMu/X"
+	by mail.kernel.org (Postfix) with ESMTP id 748A72084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590568507;
+	bh=4P6drQSHi9/fWQsr/Ga8r0JMRYT3l59WI9ynWwuCi20=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=v1mhSg9QfegQNFjmIBAauDBXMN5pPLToyU2o6m6ZUWv9NZ9sVks4a9XuSMQoFk3do
+	 XXHoTa+VCnpTlNm7F4zX8+Q1fMWkUMS08EYcDOfP0aMxA20si4AwzgIDh3Ji4xxc0w
+	 0pR2gWxV9AHA15JX200HsVLkJpnYoi6taTGhMzZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbgE0Iea (ORCPT
+        id S2388118AbgE0IfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:34:30 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:18593 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388037AbgE0Ie3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:34:29 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ece25bc0000>; Wed, 27 May 2020 01:33:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 27 May 2020 01:34:29 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 27 May 2020 01:34:29 -0700
-Received: from [10.26.74.131] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 May
- 2020 08:34:26 +0000
-Subject: Re: [PATCH 5.6 000/126] 5.6.15-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200526183937.471379031@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d5c1dffe-98d3-d60e-669b-90277bbb0a03@nvidia.com>
-Date:   Wed, 27 May 2020 09:34:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200526183937.471379031@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
+        Wed, 27 May 2020 04:35:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388082AbgE0IfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:35:04 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7453D20723;
+        Wed, 27 May 2020 08:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590568504;
+        bh=4P6drQSHi9/fWQsr/Ga8r0JMRYT3l59WI9ynWwuCi20=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=OjqOTc1g6ZzEGZuUAXSx989Y9yhyWypaASH76M03vrBHEMdC2kKDvUqSFrGWTrFmH
+         1HPFcNZTtVVMVJUpFSVbdN9ObGVTdQznRmcwESXxXFFL1NCa3d9/N9vuwCqVXrJ7bO
+         igkQZANuQEZyBwRcwAGYW/38P863/fZt08cACyao=
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590568380; bh=eCJczOzJXw50OnVXon9Pjid3fsAlyDrm8Ygj/fkaOrM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=h1KNMu/XVnIl1vo5WTH7xZEo9V2aT1R4mKchd/aVj2v+oSBvTDza3eX0sWWvIeY52
-         KzRhUsZBQL/FdLW6yZ8SUF6OqcU5jkQhlO7rxkABVKwjYsSaK8xkwieq4czbkXoLbU
-         6A65JuIU3X5Eh+3Fw2OVkHD174Rka3EhStIZISFgNhBAfFrFadiWDDUMLLxlSpd5tC
-         k7iueYaULTIuDXBhJHA25239LRo06msrWouX7HXHMaaIwvjbQoKVmDHApcvmklIwX2
-         VVvuOKzwm8befNRLP4dHSRpFwWYjDlwXgQ/jeTSZN1guTvBXpI7v7I9jXb3uEXWK5O
-         DYhIcfgs5Ge2g==
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590564453-24499-6-git-send-email-dillon.minfei@gmail.com>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com> <1590564453-24499-6-git-send-email-dillon.minfei@gmail.com>
+Subject: Re: [PATCH v6 5/9] clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillonhua@gmail.com, dillon min <dillon.minfei@gmail.com>
+To:     airlied@linux.ie, alexandre.torgue@st.com,
+        andy.shevchenko@gmail.com, broonie@kernel.org, daniel@ffwll.ch,
+        dillon.minfei@gmail.com, linus.walleij@linaro.org,
+        mcoquelin.stm32@gmail.com, mturquette@baylibre.com,
+        noralf@tronnes.org, p.zabel@pengutronix.de, robh+dt@kernel.org,
+        sam@ravnborg.org, thierry.reding@gmail.com
+Date:   Wed, 27 May 2020 01:35:03 -0700
+Message-ID: <159056850384.88029.10852284922297394339@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting dillon.minfei@gmail.com (2020-05-27 00:27:29)
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> This is due to misuse \u2018PLL_VCO_SAI' and'PLL_SAI' in clk-stm32f4.c
+> 'PLL_SAI' is 2, 'PLL_VCO_SAI' is 7(defined in
+> include/dt-bindings/clock/stm32fx-clock.h).
+>=20
+> 'post_div' point to 'post_div_data[]', 'post_div->pll_num'
+> is PLL_I2S or PLL_SAI.
+>=20
+> 'clks[PLL_VCO_SAI]' has valid 'struct clk_hw* ' return
+> from stm32f4_rcc_register_pll() but, at line 1777 of
+> driver/clk/clk-stm32f4.c, use the 'clks[post_div->pll_num]',
+> equal to 'clks[PLL_SAI]', this is invalid array member at that time.
+>=20
+> Fixes: 517633ef630e ("clk: stm32f4: Add post divisor for I2S & SAI PLLs")
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
 
-On 26/05/2020 19:52, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.6.15 release.
-> There are 126 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.15-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-
-All tests are passing for Tegra ...
-
-Test results for stable-v5.6:
-    11 builds:	11 pass, 0 fail
-    26 boots:	26 pass, 0 fail
-    42 tests:	42 pass, 0 fail
-
-Linux version:	5.6.15-rc1-g8f40203f4915
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Acked-by: Stephen Boyd <sboyd@kernel.org>
