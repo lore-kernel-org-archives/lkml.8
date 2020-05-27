@@ -2,73 +2,123 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1520C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02616C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA7320835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAE0620B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:53:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ccLgHZcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgE0TxL (ORCPT
+        id S1728522AbgE0Txj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:53:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgE0TxK (ORCPT
+        Wed, 27 May 2020 15:53:39 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41166 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgE0Txi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:53:10 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1190C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:53:10 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
-        id 1je26p-00GTjv-QR; Wed, 27 May 2020 19:53:03 +0000
-Date:   Wed, 27 May 2020 20:53:03 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com,
-        x86@kernel.org
-Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
- fill_thread_core_info()
-Message-ID: <20200527195303.GF23230@ZenIV.linux.org.uk>
-References: <202004201540.01C8F82B@keescook>
- <20200421034249.GB23230@ZenIV.linux.org.uk>
- <CAG_fn=VZZ7yUxtOGzuTLkr7wmfXWtKK9BHHYawj=rt9XWnCYvg@mail.gmail.com>
- <20200512010901.GQ23230@ZenIV.linux.org.uk>
- <20200512034400.GA1537486@ZenIV.linux.org.uk>
- <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
- <20200513033349.GR23230@ZenIV.linux.org.uk>
- <20200524234535.GA23230@ZenIV.linux.org.uk>
- <20200526223817.GA3819674@ZenIV.linux.org.uk>
- <20200527190456.GD1721@zn.tnic>
+        Wed, 27 May 2020 15:53:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RJrYc9004904;
+        Wed, 27 May 2020 14:53:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590609214;
+        bh=I7pi5mOUjhyhsQYqgRtibXFt9RQY4lMz86byA4rrrs4=;
+        h=From:To:CC:Subject:Date;
+        b=ccLgHZcRkVQFwUpbZeHLL73W78V4WV2mzrdxrfRqicZnX3oqYeNzmzjIPR0ynyL7/
+         U+CqQKYD+VRAmcP39eTeHj1R4tZ8ujyIMfpij4cefDgQEHVhX6mil7KU7TvTTLaZmx
+         Mq4H6TNlFsawcDursm3VH9yew+jJ6E3QtHVRHs/U=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RJrYxd053341
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 14:53:34 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 14:53:34 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 14:53:34 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RJrYw5129529;
+        Wed, 27 May 2020 14:53:34 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>,
+        <robh@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+Subject: [PATCH 1/4] power_supply: Add additional health properties to the header
+Date:   Wed, 27 May 2020 14:53:24 -0500
+Message-ID: <20200527195327.23163-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527190456.GD1721@zn.tnic>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 09:04:56PM +0200, Borislav Petkov wrote:
-> On Tue, May 26, 2020 at 11:38:17PM +0100, Al Viro wrote:
-> > Folks, could you test the following?
-> > 
-> > copy_xstate_to_kernel(): don't leave parts of destination uninitialized
-> > 
-> > copy the corresponding pieces of init_fpstate into the gaps instead.
-> > 
-> > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-> 
-> Am I taking this through tip (would prefer to as there's other FPU stuff
-> pending) or should I ack this so that you can send it upwards?
+Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
 
-Either way would work - I was going to send it to Linus tonight and an
-extra Acked-by: would be welcome.  OTOH, if you would rather have all
-x86-related patches go through x86 git... your subtree, your rules.
+HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
+
+Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/ABI/testing/sysfs-class-power | 2 +-
+ drivers/power/supply/power_supply_sysfs.c   | 2 +-
+ include/linux/power_supply.h                | 3 +++
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+index bf3b48f022dc..9f3fd01a9373 100644
+--- a/Documentation/ABI/testing/sysfs-class-power
++++ b/Documentation/ABI/testing/sysfs-class-power
+@@ -190,7 +190,7 @@ Description:
+ 		Valid values: "Unknown", "Good", "Overheat", "Dead",
+ 			      "Over voltage", "Unspecified failure", "Cold",
+ 			      "Watchdog timer expire", "Safety timer expire",
+-			      "Over current"
++			      "Over current", "Warm", "Cool", "Hot"
+ 
+ What:		/sys/class/power_supply/<supply_name>/precharge_current
+ Date:		June 2017
+diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+index f37ad4eae60b..d0d549611794 100644
+--- a/drivers/power/supply/power_supply_sysfs.c
++++ b/drivers/power/supply/power_supply_sysfs.c
+@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
+ static const char * const power_supply_health_text[] = {
+ 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
+ 	"Unspecified failure", "Cold", "Watchdog timer expire",
+-	"Safety timer expire", "Over current"
++	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
+ };
+ 
+ static const char * const power_supply_technology_text[] = {
+diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+index dcd5a71e6c67..8670e90c1d51 100644
+--- a/include/linux/power_supply.h
++++ b/include/linux/power_supply.h
+@@ -61,6 +61,9 @@ enum {
+ 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+ 	POWER_SUPPLY_HEALTH_OVERCURRENT,
++	POWER_SUPPLY_HEALTH_WARM,
++	POWER_SUPPLY_HEALTH_COOL,
++	POWER_SUPPLY_HEALTH_HOT,
+ };
+ 
+ enum {
+-- 
+2.26.2
+
