@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9215C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15FC6207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC2E207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgE0L6C (ORCPT
+        id S1729990AbgE0L6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:58:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40806 "EHLO mx2.suse.de"
+        Wed, 27 May 2020 07:58:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40758 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgE0LyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:54:16 -0400
+        id S1729309AbgE0LyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:54:15 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D9E3AAD66;
-        Wed, 27 May 2020 11:54:17 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 413C8ADE3;
+        Wed, 27 May 2020 11:54:16 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
@@ -32,9 +32,9 @@ Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
         gregkh@linuxfoundation.org,
         Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         devel@driverdev.osuosl.org
-Subject: [RFC 04/50] staging: vchi: Merge vchi_msg_queue() into vchi_queue_kernel_message()
-Date:   Wed, 27 May 2020 13:53:09 +0200
-Message-Id: <20200527115400.31391-5-nsaenzjulienne@suse.de>
+Subject: [RFC 02/50] staging: vchi: Get rid of vchi_queue_user_message()
+Date:   Wed, 27 May 2020 13:53:07 +0200
+Message-Id: <20200527115400.31391-3-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527115400.31391-1-nsaenzjulienne@suse.de>
 References: <20200527115400.31391-1-nsaenzjulienne@suse.de>
@@ -45,66 +45,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no gains from that extra indirection level. Also, get rid of
-the function description, the whole file will disappear soon.
+The function has no users.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../interface/vchiq_arm/vchiq_shim.c          | 29 +++----------------
- 1 file changed, 4 insertions(+), 25 deletions(-)
+ .../vc04_services/interface/vchi/vchi.h       |  6 ----
+ .../interface/vchiq_arm/vchiq_shim.c          | 34 -------------------
+ 2 files changed, 40 deletions(-)
 
+diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
+index 686cfc536012..62d9d3efa755 100644
+--- a/drivers/staging/vc04_services/interface/vchi/vchi.h
++++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
+@@ -111,12 +111,6 @@ vchi_queue_kernel_message(struct vchi_service_handle *handle,
+ 			  void *data,
+ 			  unsigned int size);
+ 
+-/* Routine to send a message from user memory across a service */
+-extern int
+-vchi_queue_user_message(struct vchi_service_handle *handle,
+-			void __user *data,
+-			unsigned int size);
+-
+ // Routine to receive a msg from a service
+ // Dequeue is equivalent to hold, copy into client buffer, release
+ extern int32_t vchi_msg_dequeue(struct vchi_service_handle *handle,
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-index 1c5ddea8b076..081ab67ad6fd 100644
+index 9a040651bb9b..2c2bd7a9dc27 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
-@@ -84,30 +84,15 @@ int32_t vchi_msg_remove(struct vchi_service_handle *handle)
+@@ -150,40 +150,6 @@ vchi_queue_kernel_message(struct vchi_service_handle *handle,
  }
- EXPORT_SYMBOL(vchi_msg_remove);
- 
--/***********************************************************
-- * Name: vchi_msg_queue
-- *
-- * Arguments:  struct vchi_service_handle *handle,
-- *             ssize_t (*copy_callback)(void *context, void *dest,
-- *				        size_t offset, size_t maxsize),
-- *	       void *context,
-- *             uint32_t data_size
-- *
-- * Description: Thin wrapper to queue a message onto a connection
-- *
-- * Returns: int32_t - success == 0
-- *
-- ***********************************************************/
--static
--int32_t vchi_msg_queue(struct vchi_service_handle *handle, void *context,
--		       uint32_t data_size)
-+int vchi_queue_kernel_message(struct vchi_service_handle *handle, void *data,
-+			       unsigned int size)
- {
- 	struct shim_service *service = (struct shim_service *)handle;
- 	enum vchiq_status status;
- 
- 	while (1) {
--		status = vchiq_queue_kernel_message(service->handle, context,
--						    data_size);
-+		status = vchiq_queue_kernel_message(service->handle, data,
-+						    size);
- 
- 		/*
- 		 * vchiq_queue_message() may return VCHIQ_RETRY, so we need to
-@@ -122,12 +107,6 @@ int32_t vchi_msg_queue(struct vchi_service_handle *handle, void *context,
- 
- 	return vchiq_status_to_vchi(status);
- }
--
--int vchi_queue_kernel_message(struct vchi_service_handle *handle, void *data,
--			      unsigned int size)
--{
--	return vchi_msg_queue(handle, data, size);
--}
  EXPORT_SYMBOL(vchi_queue_kernel_message);
  
+-struct vchi_queue_user_message_context {
+-	void __user *data;
+-};
+-
+-static ssize_t
+-vchi_queue_user_message_callback(void *context,
+-				 void *dest,
+-				 size_t offset,
+-				 size_t maxsize)
+-{
+-	struct vchi_queue_user_message_context *copycontext = context;
+-
+-	if (copy_from_user(dest, copycontext->data + offset, maxsize))
+-		return -EFAULT;
+-
+-	return maxsize;
+-}
+-
+-int
+-vchi_queue_user_message(struct vchi_service_handle *handle,
+-			void __user *data,
+-			unsigned int size)
+-{
+-	struct vchi_queue_user_message_context copycontext = {
+-		.data = data
+-	};
+-
+-	return vchi_msg_queue(handle,
+-			      vchi_queue_user_message_callback,
+-			      &copycontext,
+-			      size);
+-}
+-EXPORT_SYMBOL(vchi_queue_user_message);
+-
  /***********************************************************
+  * Name: vchi_bulk_queue_receive
+  *
 -- 
 2.26.2
 
