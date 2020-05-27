@@ -2,197 +2,164 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1372DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC94C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D28B9207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA787207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:43:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="FTX6IFuX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDhAuU75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgE0BlE (ORCPT
+        id S1726810AbgE0BnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:41:04 -0400
-Received: from mail-bn8nam11on2051.outbound.protection.outlook.com ([40.107.236.51]:44353
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbgE0BlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:41:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A/XRNPGakuZvAFtDMLQAtP989RB8RljHUs5Cy3w+fQi835Y1yFfDY3CgBwPwRNbe7iMrIfHdUmaAoPqGZ4kfOM6vIVQ5WFzes+oF1j5H2IuJ8Rw4qL0YeXhoD0wqPT4WcUKQx3BkO4vTsmitJw6TNhBOsgdxt7WQBRKZSwKr2067bSG4PUQ8Ear/MjxZ8w9A4jP1ARbV+OgvytqWlpYdC+B95d5ZAj8aUTorcmAh9+KnbzEGX7Ao4MFm3yErcVpDDXCTPDOlhCbRxKuVr9xFAEc4Wh49QIHhL/9k90wgybZNxBJAjlnD9cYgJ9eotfHHCzvUHL+rWImB5hXwiAMu8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AnKRLyg1xhUuoBvUr7eu4tr4+uX0uKFemvAM9oMeQ4M=;
- b=gomUReAuhc9f1TpYzvzV9U1gRO+2sZy3u78z38EZvP4aQnYjFNlR6R9y0bepvX9/gfDGCqeov0iEGdYd+HgX7mKyR4UnnzAq0ycbMdIuAXw0RS4KaHDwJHNQXTIFzNyjVQ1rWI60bqWi2YYwYzbLlxi3gvpYryZyZNBXkzh+5FfTCfkSuRq5k09GFAxSAOgdvuCxKmIhoSZQttNFxWtvRywcmif3CynlQAwSh5f+FEZykJ/8IzhxzBc6IQ+H0NQQ38Ifjr4D101F1BAsby2rJV2OToC5LgaMwEDMSk/NdhAJmf6RcSm22VVe3NCcVWqIrSs/SxLSU9OZrR8CFGsnNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 26 May 2020 21:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgE0BnA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:43:00 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09670C061A0F;
+        Tue, 26 May 2020 18:43:00 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id 131so2648271pfv.13;
+        Tue, 26 May 2020 18:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AnKRLyg1xhUuoBvUr7eu4tr4+uX0uKFemvAM9oMeQ4M=;
- b=FTX6IFuXdsZNazyP6QVb+uBfIT8Kq7zAXUn72VQk0ItJqjMSsPpDCOAfXpnIZZThchjo4iwqLdj6GYvw26iXYYqGez/crQ38OG1N6MQLi5DkD01VL1ZsaPe64TFiCAG8nrS+G4eSS5ORnfrKm6tan1C0FyX5sxQX3QV16HjWVYk=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1849.namprd12.prod.outlook.com (2603:10b6:3:107::23)
- by DM5PR12MB2487.namprd12.prod.outlook.com (2603:10b6:4:af::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Wed, 27 May
- 2020 01:41:00 +0000
-Received: from DM5PR12MB1849.namprd12.prod.outlook.com
- ([fe80::7d3e:85b9:e3cb:40a7]) by DM5PR12MB1849.namprd12.prod.outlook.com
- ([fe80::7d3e:85b9:e3cb:40a7%9]) with mapi id 15.20.3021.029; Wed, 27 May 2020
- 01:41:00 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, yuhsuan@chromium.org,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: AMD: Use mixer control to switch between DMICs
-Date:   Wed, 27 May 2020 07:10:16 +0530
-Message-Id: <20200527014023.2781-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0122.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:35::16) To DM5PR12MB1849.namprd12.prod.outlook.com
- (2603:10b6:3:107::23)
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TMYPzf1zyGGWbUzm30NY2XXvAZv7yIeZIH3rUZQbHZ0=;
+        b=aDhAuU759PeqA8cjkqHn8adpDLvzToq0LVho3g0nQGloHty1hnnswAJKFZJ4VDJEYm
+         I/NgUF6P23Emcgg9NkiXw6EyxQvVirYZRc9hzYzu0b+nldYFiQUvTlk1SRL5x68mORv9
+         IJk5wLdgxfD48NAvBxIDibign9kv0e5c/w61ygUcEDzgf9TC9/HAf2xwg/Q2FGZvIqLG
+         aKruAu7zdsgF6bPufeSPTDO2UQ4BViFGfGH1hDZ2KtiY8ZJHWyF0iC5IbdP8/ztZ944e
+         NrI3rT4/OeHL7QLQwJPnlDnXFw1ZTFSb+0dOqLsL8FtAOl+Pd0bJmgXuRCn01YmbJM7Y
+         lq1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TMYPzf1zyGGWbUzm30NY2XXvAZv7yIeZIH3rUZQbHZ0=;
+        b=lOW+QcBuXb2foPHXh4g8OHya+GNMpPCn6udymgryA3loLK/wqYniU7G7KWwzMywCJB
+         fNVTUOU53MVOw2GmBXhrrwzsl8+qRLgaQIJrffmhiC+mNHL5m0Qd0vL7UBvbwLMKNpAp
+         7duH7raPhMzAMBIwq3joQQzntwMQoJD7PaBBEI3hnE47oC6zEOONpSmKsaZW/FlSNxMt
+         ROaokfbAKvTikX3OUYLAEF71Mz6UIDh5dr4R7Yky3Bb20j8AX4+PaplyWwS083k+HeVV
+         xaep4yH9azxG6nvnMEnSyYMKcHeNd81Mkm9+uoSKCvLMPU09LcvFKSBbPZbG0x4+b/hU
+         o7fA==
+X-Gm-Message-State: AOAM532xq2i4XTWRccF8ZhlDTNRbz7JXlmbgoy09krT/EegN2CborMCD
+        ahiyzXY/p4A3r7+XS5HmBSqvQjRB
+X-Google-Smtp-Source: ABdhPJypNKnsEraByPoOKKR2nH5/93q/md72DNbuMFLZxLPjVlTARJ8Qr8pYRvCyJAUtiW5Ce1mvHg==
+X-Received: by 2002:aa7:9ad9:: with SMTP id x25mr1595779pfp.179.1590543779087;
+        Tue, 26 May 2020 18:42:59 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k65sm623030pfd.156.2020.05.26.18.42.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 26 May 2020 18:42:58 -0700 (PDT)
+Subject: Re: [v1,1/1 1/2] Check the timeout module parameter is in the min-max
+ range
+To:     yuechao.zhao@advantech.com.cn, 345351830@qq.com
+Cc:     amy.shih@advantech.com.tw, oakley.ding@advantech.com.tw,
+        jia.sui@advantech.com.cn, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1590542319-35736-1-git-send-email-yuechao.zhao@advantech.com.cn>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <2f482f42-0977-db1d-704a-b6f83ad715ef@roeck-us.net>
+Date:   Tue, 26 May 2020 18:42:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from akshu-HP-EliteBook-745-G4.dlink.router (122.171.58.15) by MA1PR01CA0122.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:35::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Wed, 27 May 2020 01:40:51 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.171.58.15]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a1ce28d9-d455-4c33-dff9-08d801df01f1
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2487:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2487E4722DFD45F888AAEF69F8B10@DM5PR12MB2487.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 04163EF38A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hj/5Ig80nmprOpqa9PRyR8C1ZxA7PWvGiUIRKe9VBQL3AniuAhz4LZpSK2WMEdBHVB73ZO/+CmiCeudMwEVDEdtlkI7fwgwu1oLF6dqjG3sEcDUMhTjbbk1lQCyIrWKxl3rE0aLOqkaHPSOq6goCEJQH9TXLT2yUvNaOFHyPbm0QARvjeZw4/a43pddS7g6L8jO41mt20NSjgllfLmqRo+KXsh8CmhpzRgn3hBoXLzNQnM5pbh8WsT4HNPKgQ/xPiTqzA9WIwYGf6MfxGcTJfKKdXYd1X5wAzq1joUKK2cMMlc2PF2wfK4ZJD17XDPc9cmvNYs4IzHTMXGnyAzU12s0j3cf4zdHZzoIjafoW4vH9Ju5hj3Lw2o1eRlpamldO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1849.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(39850400004)(376002)(366004)(396003)(8676002)(186003)(6512007)(4326008)(1076003)(8936002)(83380400001)(316002)(6666004)(36756003)(54906003)(6486002)(2906002)(478600001)(956004)(66556008)(26005)(5660300002)(44832011)(16526019)(2616005)(66476007)(66946007)(52116002)(109986005)(86362001)(6506007)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: RyZOqEZIRBIkI8nAQut5NaXGaxc+vIzZoyF5YHYoEeYdKMjJEldl+sAtCbyfrTVgjyz1/ikK6JgommKyiWWPMcRzpkKpPX2qu12dWzzVP6c2zMJb2xgYSOk2a9Ag6Oq++rQ9LPEbHUQE2aC3Ldk6hkph+Hr6YSmSkOskD3XcAvJK4y3gC+KggfNLP80TIqlmE+gYPgnCn7KO96I3m1dXZKfPKVDmO/Y/FvGlmhWkT5Hwg/6iDCa358uDQRDmabE1lS0ZvLl8bgyjOVUUaYLn5Zg59OzbpDbWMQehO6katflHVY9MWoOTadx664qGJ3i10jg1WzEq0bBHugmtdQ5yqZcIV5Gu4vE3udB5BNl0G5uF6JEc1bIkyoXjvVJQ4kH/Q07QA/+AJj//RFHq4GrIOce9QZU/GE/Up+wD5nvZEFjcD/hm+zy1Z3mUy51DQqBcF/Z8Quj253T7v5T9cKRkz0CmHV5F4oUhEtXojUcAaj8=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1ce28d9-d455-4c33-dff9-08d801df01f1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 01:40:59.9056
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tMjDibMwlwAUA+4f99gy3r8wTSQEhbVk0PpjufyEXKCvGV80kEPqoDqkyUlO0klCPm7vHVFGEGHrRILU2cnfog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2487
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1590542319-35736-1-git-send-email-yuechao.zhao@advantech.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having mixer control to switch between DMICs prevents user to
-initiate capture simultaneously on both the DMIcs.
-Earlier 2 separate devices, one for each DMIC, gave an option of
-using them simultaneously, which is not supported.
+On 5/26/20 6:18 PM, yuechao.zhao@advantech.com.cn wrote:
+> From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
+> 
+> Check the return value of 'watchdog_init_timeout()' for checking the
+> timeout module parameter is in the min-max range.
+> 
+> Signed-off-by: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- sound/soc/amd/acp3x-rt5682-max9836.c | 43 +++++++++++-----------------
- 1 file changed, 16 insertions(+), 27 deletions(-)
+Please fix the subject. It should start with "hwmon: (nct7904)"
 
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index e499c00e0c66..19f55a814547 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -188,25 +188,27 @@ static int acp3x_ec_dmic0_startup(struct snd_pcm_substream *substream)
- 
- 	machine->cap_i2s_instance = I2S_BT_INSTANCE;
- 	snd_soc_dai_set_bclk_ratio(codec_dai, 64);
--	if (dmic_sel)
--		gpiod_set_value(dmic_sel, 0);
- 
- 	return rt5682_clk_enable(substream);
- }
- 
--static int acp3x_ec_dmic1_startup(struct snd_pcm_substream *substream)
--{
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
--	struct snd_soc_card *card = rtd->card;
--	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
--	struct acp3x_platform_info *machine = snd_soc_card_get_drvdata(card);
-+static int front_mic_enabled;
- 
--	machine->cap_i2s_instance = I2S_BT_INSTANCE;
--	snd_soc_dai_set_bclk_ratio(codec_dai, 64);
--	if (dmic_sel)
--		gpiod_set_value(dmic_sel, 1);
-+static int front_mic_get(struct snd_kcontrol *kcontrol,
-+			 struct snd_ctl_elem_value *ucontrol)
-+{
-+	ucontrol->value.integer.value[0] = front_mic_enabled;
-+	return 0;
-+}
- 
--	return rt5682_clk_enable(substream);
-+static int front_mic_set(struct snd_kcontrol *kcontrol,
-+			 struct snd_ctl_elem_value *ucontrol)
-+{
-+	if (dmic_sel) {
-+		front_mic_enabled = ucontrol->value.integer.value[0];
-+		gpiod_set_value(dmic_sel, !front_mic_enabled);
-+	}
-+	return 0;
- }
- 
- static void rt5682_shutdown(struct snd_pcm_substream *substream)
-@@ -229,11 +231,6 @@ static const struct snd_soc_ops acp3x_ec_cap0_ops = {
- 	.shutdown = rt5682_shutdown,
- };
- 
--static const struct snd_soc_ops acp3x_ec_cap1_ops = {
--	.startup = acp3x_ec_dmic1_startup,
--	.shutdown = rt5682_shutdown,
--};
--
- SND_SOC_DAILINK_DEF(acp3x_i2s,
- 	DAILINK_COMP_ARRAY(COMP_CPU("acp3x_i2s_playcap.0")));
- SND_SOC_DAILINK_DEF(acp3x_bt,
-@@ -279,15 +276,6 @@ static struct snd_soc_dai_link acp3x_dai_5682_98357[] = {
- 		.ops = &acp3x_ec_cap0_ops,
- 		SND_SOC_DAILINK_REG(acp3x_bt, cros_ec, platform),
- 	},
--	{
--		.name = "acp3x-ec-dmic1-capture",
--		.stream_name = "Capture DMIC1",
--		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF
--				| SND_SOC_DAIFMT_CBS_CFS,
--		.dpcm_capture = 1,
--		.ops = &acp3x_ec_cap1_ops,
--		SND_SOC_DAILINK_REG(acp3x_bt, cros_ec, platform),
--	},
- };
- 
- static const struct snd_soc_dapm_widget acp3x_widgets[] = {
-@@ -307,6 +295,7 @@ static const struct snd_kcontrol_new acp3x_mc_controls[] = {
- 	SOC_DAPM_PIN_SWITCH("Headphone Jack"),
- 	SOC_DAPM_PIN_SWITCH("Spk"),
- 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
-+	SOC_SINGLE_BOOL_EXT("Front Mic", 0, front_mic_get, front_mic_set),
- };
- 
- static struct snd_soc_card acp3x_card = {
--- 
-2.20.1
+> ---
+>  drivers/hwmon/nct7904.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+> index 18c95be..d069d59 100644
+> --- a/drivers/hwmon/nct7904.c
+> +++ b/drivers/hwmon/nct7904.c
+> @@ -1152,7 +1152,10 @@ static int nct7904_probe(struct i2c_client *client,
+>  	data->wdt.max_timeout = MAX_TIMEOUT;
+>  	data->wdt.parent = &client->dev;
+>  
+> -	watchdog_init_timeout(&data->wdt, timeout * 60, &client->dev);
+> +	ret = watchdog_init_timeout(&data->wdt, timeout * 60, &client->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+
+Why ? The idea of returning an error from watchdog_init_timeout
+is to give the driver a chance to select a default, not to refuse
+loading the driver.
+
+>  	watchdog_set_nowayout(&data->wdt, nowayout);
+>  	watchdog_set_drvdata(&data->wdt, data);
+>  
+> 
 
