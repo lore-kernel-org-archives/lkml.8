@@ -2,84 +2,143 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E32C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE0B20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590578900;
-	bh=stCGAA1ed0nu7Y5QVUWfc3X+iqcwiKMoONgp2zgDIbg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pfw8OuJgyszNvp8M+nNS96V9BOCMbQPR90GEjJT0o83OT4hD79DifjWRIdtbdpmEK
-	 pxM9tiVWlSyXBHny2Mnccv/7qvwSUQodUq6gI6x5yb8nCHEeREXu2VdDBrQP+fJorR
-	 NM50WVhuIb0aQTHirvspIwvSm2pW9pG8uc0dst8M=
+	by mail.kernel.org (Postfix) with ESMTP id 78C8F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOZNcbLX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730039AbgE0L2T (ORCPT
+        id S1730048AbgE0L2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:28:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728570AbgE0L2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:28:18 -0400
-Received: from localhost (lfbn-ncy-1-324-171.w83-196.abo.wanadoo.fr [83.196.159.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33010206DF;
-        Wed, 27 May 2020 11:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590578898;
-        bh=stCGAA1ed0nu7Y5QVUWfc3X+iqcwiKMoONgp2zgDIbg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2Tj86PypBDcNx+ibeq2mRILawkLPq+Jts2feIamq+JYrVliEJYfWQnSaavr3Me3C4
-         JOiVlxqU6BnbW1pYwjZ428nTA33A2jSAqKWFZksdF292Bo/15IvRY9wARdpko2m+HY
-         RmBm57bXLiTe45wmPSk0c8KgoWadFKdQEl9wOR7E=
-Date:   Wed, 27 May 2020 13:28:16 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Qian Cai <cai@lca.pw>,
-        Mel Gorman <mgorman@techsingularity.net>
-Subject: Re: [RFC][PATCH 1/7] sched: Fix smp_call_function_single_async()
- usage for ILB
-Message-ID: <20200527112815.GB8942@lenoir>
-References: <20200526161057.531933155@infradead.org>
- <20200526161907.778543557@infradead.org>
- <CAKfTPtA6t5=Gc6cWR3iS9QL+Vy=jhUkP345V9q2xqyhHx=rGNQ@mail.gmail.com>
+        Wed, 27 May 2020 07:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728568AbgE0L2f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:28:35 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028F9C061A0F;
+        Wed, 27 May 2020 04:28:35 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id k19so19981044edv.9;
+        Wed, 27 May 2020 04:28:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cUS3+FHzxdOJYBvppLYv/k7Qnu4FBiAFM6a3qwD7zwE=;
+        b=EOZNcbLX4WgtgegWPrbd31D1EDL1EwaAPdS/8W+FukopOQKazQsRHeVSMbBY0lh8Sp
+         55WI9/eWKvjGONoI96NM4gz4SLe6yxjSXzBDMdI6TaaNquols/wODObgUqHchYP2ykNh
+         Mt/50OjTxCzIUxPDhnaK19aG2LsNmXZt0jxj3p7Wcdi2E4AsjFkwtQ8+veswFbOkZgsP
+         3SaH38NQKvl5Gzh/5TwsrOpd+sU6phvrZa8McqrqjC9vKkcg2lucAgjAQ3BXzs+8Fn0Q
+         G/LH5EgJpE661+jvyfKfUKPd3i8M5b3ZgjJbFwucRPnQ0qxTaozdh6XRhry6D/Do/MWZ
+         76kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cUS3+FHzxdOJYBvppLYv/k7Qnu4FBiAFM6a3qwD7zwE=;
+        b=YpwFRom3o8uC3cd2t8KGy70SC6AOqnDEH7bZrtmdKlgcXI3uG0MKL+SiyD9D0sOzx/
+         vVWEj/AD10kaUoQI9gm5yj5pmQz4nSxfyQmh+rY57x3PU81ezQOtmJzHzDDyIcRnmNO9
+         eDIjSAif/UaBVj9LAw1/NhPe8hRKXK9Nlyo2rblbFVjFTAXMOZkHYp6wfrYHHpNXHWf1
+         Z2B5p6nbQay+LXwyj6mPs2KCZ+zMyiK2uwdwDwcA3AfW/zIo0BegRX1bA4LSAizY9hWT
+         wwjBR9nUiBqBzha8/9ENgzEhMqLh2MQExwJ/jLX12mHDgKcYyzGn7uJOToddLZfMVkQg
+         PaAg==
+X-Gm-Message-State: AOAM531BhXejA9ALuzAo4bcgzRYnFUQU36t5RSHpJXUdIUas13ytV2bo
+        R2+z4DyeA0aUcX21cwD5kjJc8Yj2rG6r1UGGn0w=
+X-Google-Smtp-Source: ABdhPJwApfQ8QYyu3sVC9yXDreluemdyvMzOiEEd71HoZVJi+WtLnVwAzYnI3LiLJWzGu11AWxzRM6Aa182jB7eHhGQ=
+X-Received: by 2002:a50:f983:: with SMTP id q3mr908282edn.259.1590578913571;
+ Wed, 27 May 2020 04:28:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtA6t5=Gc6cWR3iS9QL+Vy=jhUkP345V9q2xqyhHx=rGNQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CANpvso4V67SBKn9+SXc+H=r-H-up+GWt77K4jH5HJx9k+sR+hA@mail.gmail.com>
+ <CACXcFmkYtSeRMNTr=NXGK06MUyEnvaFqe_9Q11kWZq=f1ZdE_A@mail.gmail.com>
+In-Reply-To: <CACXcFmkYtSeRMNTr=NXGK06MUyEnvaFqe_9Q11kWZq=f1ZdE_A@mail.gmail.com>
+From:   Eric Curtin <ericcurtin17@gmail.com>
+Date:   Wed, 27 May 2020 12:28:21 +0100
+Message-ID: <CANpvso5xjawMVcRff-qbTeoPLkvyNNYCqdCuZYVEOYv-zsycQw@mail.gmail.com>
+Subject: Re: Looking for an open-source thesis idea
+To:     Sandy Harris <sandyinchina@gmail.com>
+Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:23:23PM +0200, Vincent Guittot wrote:
-> > -static void nohz_csd_func(void *info)
-> > -{
-> > -       struct rq *rq = info;
-> > +       flags = atomic_fetch_andnot(NOHZ_KICK_MASK, nohz_flags(cpu));
-> 
-> Why can't this be done in nohz_idle_balance() instead ?
-> 
-> you are not using flags in nohz_csd_func() and SCHED_SOFTIRQ which
-> calls nohz_idle_balance(), happens after nohz_csd_func(), isn't it ?
-> 
-> In this case, you don't have to use the intermediate variable
-> this_rq->nohz_idle_balance
+Hi Sandy,
 
-That's in fact to fix the original issue. The softirq was clearing
-the nohz_flags but the softirq could be issued from two sources:
-the tick and the IPI. And the tick source softirq could then clear
-the flags set from the IPI sender before the IPI itself, resulting
-in races such as described there: https://lore.kernel.org/lkml/20200521004035.GA15455@lenoir/
+I actually have worked quite a bit with IPsec, it's not a protocol I'm
+a huge fan of, it's use of multiple ports make it difficult to work
+with middleboxs (be it load-balancers, TLS interceptors, reverse
+proxies, proxies, firewalls, routers, switches, etc.). I've even seen
+issues where some middleboxes only recognize TCP/UDP packets and not
+ESP packets. There's so many implementations of IPsec with various
+routers OS's and the standard seems to be only sort of universally
+accepted. It can be difficult to deploy.
 
-Thanks.
+Although Wireshark does solve at many of these problems, it's simpler
+at least, as regards VPNs I really like it. I'm actually more a fan of
+protocols that applications have a little more control over like QUIC
+over UDP or TLS over TCP.
+
+I actually use HTTPS Everywhere plugin, but at the end of the day,
+that simply just turns on TLS encryption if it's available right?
+
+I like some of the problems QUIC solves, the multiple handshake
+problem decreasing overall round trips, and just that it's more
+modern. openssl is brilliant, but there's a lot of deadwood, older
+encryption techniques in that codebase.
+
+A monolithic secure TCP protocol seems like a nice idea, but maybe it
+is too difficult.
+
+I think it's a nice idea to explore OOM killer and compare it to the
+solutions on various other OS's (FreeBSD, AIX, z/OS, Solaris, HP-UX,
+macOS, iOS, Windows, Zircon, etc. and the OS I work on Powermax).
+Thanks for that.
+
+Any other ideas, keep them coming :)
+
+On Tue, 26 May 2020 at 08:18, Sandy Harris <sandyinchina@gmail.com> wrote:
+>
+> Eric Curtin <ericcurtin17@gmail.com> wrote:
+>
+> > Hope I'm not bothering you. I'm looking for a masters thesis idea, ...
+>
+> > I'm really liking this
+> > new QUIC (UDP) protocol as an alternative to TCP over TLS. And with
+> > the growth of new modern secure protocols like Wireguard. I was
+> > wondering, would it be an idea to do a monolithic secure TCP protocol
+> > (as an alternative to TCP over TLS) as a small thesis project or is it
+> > as hard as the guys at Google make is sound?
+> >
+> > "Because TCP is implemented in operating system kernels, and middlebox
+> > firmware, making significant changes to TCP is next to impossible."
+>
+> I'm inclined to agree with the Google folk on that. However, what about
+> IPsec? That was designed to secure anything-over-IP so it should be
+> a more general solution. The FreeS/WAN project added opportunistic
+> encryption for wider availability
+> https://freeswan.org/freeswan_trees/freeswan-2.06/doc/intro.html#goals
+>
+> Today some opportunistic encryption protocols -- SMTP-over-TLS and
+> HTTPS Everywhere -- are quite widespread but my impression is
+> that opportunistic IPsec is not. Would adding it to an open source
+> router be a thesis-sized project? Or, since routers likely have IPsec
+> already, just making it easier to deploy?
+>
+> > I'm open to any other suggestions also for my thesis :)
+>
+> Linux's OOM killer strikes me as a spectacularly ugly kluge,
+> but people who are certainly more knowledgeable and likely
+> more competent seem to think it is necessary. Is there a
+> thesis in examining it, looking at how other Unix-like systems
+> handle the problem & perhaps implementing an alternative
+> for Linux?
