@@ -2,334 +2,201 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1BBA208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="nyApV0qL"
+	by mail.kernel.org (Postfix) with ESMTP id 973EA20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgE0PeR (ORCPT
+        id S1728270AbgE0PfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:34:17 -0400
-Received: from mail-bn7nam10on2051.outbound.protection.outlook.com ([40.107.92.51]:19580
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbgE0PeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:34:16 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=obh5Wg9tvZNF1JXNJ/x3PvkAi1mADjre5V49XCZTNuT56NX5Tx3Rt0FnIHmGFIiGxLxPZS2yC2Kh4nKPlPlQVXB7nHzXg+sbMJ6CiZW4LEw3d22Y7TWpAq0Ah1M8Bdrtd66Ar1lTzQGOWTxw9p4YmmZk6j5uKTWCbTtshyF8rKgjk5eu0hfMLEzHFa9bIiZBzMO6UuuxErhHflRA99hno7haoauSf4rqUa6NeSqOR2wwcSKiVrwAHsIcMytjJeGJOQ0KcxONy9AlJPxS9zg/q10G2xq176NO4L+dV5eP8k3dCSjM0X94vIQCknZG6090jGBlRvkT6YE7LnEmvVX8gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/hA+W0Q8gbj4Cai2Hc26qqAhkw8JrVUFb2+upYzjUJI=;
- b=HD0/I4pKr65ga3XrevFVf2mcVnIQQTeG6Gjfc8zXWf3B3Q/94WL3BUNapGGSvuOTTjb0tCu7tvCIgxirsA3ld/vQbqhKo0lsu6gouGJ8vzP/C6AgYrVPOY4ONPJfCLDokLjej9Fgt5yLJqcxQWuWqRrjmILjWPzBP13fYISf/Qjh3NBvJ3ZpvCdLYaPvWQDARCXUEL3uSkj3soauGcUNlGLb7OMFUhu1JuF1AYcX/SXpZnWvcAOua9haFODn0pL2MPX3RDOD25jwqpZhtcUFSxaS153ch12OpcYaeL++nyUY2TzX6frl4HsmzANYBmLVoAKKfqZMuiWShOFF/ZylKw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/hA+W0Q8gbj4Cai2Hc26qqAhkw8JrVUFb2+upYzjUJI=;
- b=nyApV0qL5pt4vapHT7T+PSmwkc7OcR3zzuYQQdubY7HTQEBHmkafy5odT4wMzl+yvKmA4b1Abz3f7O53u6SKTRAiaoAT2GMj+v9P2omsVSn9/JoUNPKZR/jaxSeD1fNznV0NoYN29LAMQ/X7L2UD5DQTz6mh3VIxg4GBmM9OoHU=
-Authentication-Results: lists.linux-foundation.org; dkim=none (message not
- signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
- header.from=amd.com;
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
- DM5PR12MB2408.namprd12.prod.outlook.com (2603:10b6:4:b9::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3045.17; Wed, 27 May 2020 15:34:11 +0000
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::4ce1:9947:9681:c8b1]) by DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::4ce1:9947:9681:c8b1%10]) with mapi id 15.20.3021.029; Wed, 27 May
- 2020 15:34:11 +0000
-Subject: Re: [PATCH v3 64/75] x86/sev-es: Cache CPUID results for improved
- performance
-To:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org
-Cc:     hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-65-joro@8bytes.org>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <2ffc956a-e62d-1a5c-b735-e7b1a2bfe8b1@amd.com>
-Date:   Wed, 27 May 2020 10:34:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-In-Reply-To: <20200428151725.31091-65-joro@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA9PR11CA0029.namprd11.prod.outlook.com
- (2603:10b6:806:6e::34) To DM5PR12MB1355.namprd12.prod.outlook.com
- (2603:10b6:3:6e::7)
+        Wed, 27 May 2020 11:35:05 -0400
+Received: from mga01.intel.com ([192.55.52.88]:20458 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgE0PfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:35:04 -0400
+IronPort-SDR: huMKgE7xiPxuJPymovmBoV3o4MayGtvRIT/hbMoQhutBl9SNLxfV9wMdVvHM4XWpRRH23NznKj
+ qpB3lh3Ob7Sw==
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:34:57 -0700
+IronPort-SDR: Mwtc5Op92tlTuWfEIyCknT8qEsT/vXV75fZHXovIHM2I4NLCaXQ42XuGdGdU+ni58wupz9ZuDE
+ 0Vmh+XB/X3Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="gz'50?scan'50,208,50";a="256794701"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 27 May 2020 08:34:56 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jdy51-000Hua-JC; Wed, 27 May 2020 23:34:55 +0800
+Date:   Wed, 27 May 2020 23:34:37 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Ingo Molnar <mingo@kernel.org>
+Subject: [tip:WIP.sched/core 7/9] smp.c:undefined reference to
+ `irq_work_single'
+Message-ID: <202005272334.U8mnIlfl%lkp@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from office-linux.texastahm.com (67.79.209.213) by SA9PR11CA0029.namprd11.prod.outlook.com (2603:10b6:806:6e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Wed, 27 May 2020 15:34:09 +0000
-X-Originating-IP: [67.79.209.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9831c4ff-b481-4495-2308-08d802536731
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2408:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2408FAA9DEC6EC7E0129D5D9ECB10@DM5PR12MB2408.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 04163EF38A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zj+X+PBdC/ecCvj20CxcyDwqpVz9Elzucy8YSl8nhqgFOCb0srQ8HvCkptxOnuAxX9XUEc25BR0qcOnrZoFyR0ibZhqoC5NVz66uN+VP/DEz1QzfgzwUcZqvVT5fRx1Si6geSPkvwJwIhpAp0tzbieGOnoKOcVVLcA38vZTuui+kMqDGngcOmZkW8awlkdKIwufasdW0TfcwLeduThOyfNuhGVbUHwfdjTXnXZJ3UDv6ycMWUvhvgF32VimWP+MiET0W0IYhIehgrfZT9/spd3tpSbAtq/TxiYo4jsQsja568pFkPfEqsLqzpbBCwl/fJJr0AgCB1PF7lUZFC1qokYBNpviuNqbOJXO61p9bQOpVkYZC5qGgIuXX6LtSnlL5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(376002)(346002)(396003)(39860400002)(4326008)(6512007)(86362001)(956004)(7416002)(316002)(5660300002)(83380400001)(31686004)(66556008)(66946007)(66476007)(8936002)(2616005)(36756003)(478600001)(16526019)(31696002)(6506007)(8676002)(26005)(52116002)(2906002)(186003)(6486002)(53546011)(54906003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: vUNggXcgxWEz4SCYO/EmQVLhUjlYIS8Imwfr6+gRLDygqmiwFklVw3Uwgs9S9MzR9IPK40yJpF/CVp4Pvc+zIa821//I18DRX6p60B8j38j8cZF/PY2CidvS7VOEhvqdIBYDRqSNnQi0InN3VKMbSqL2XTous5rtakbW4/EQC+4A7FM90WCW9YtGWMsNx5BS8VR1aMoR7OlBEjmmnlwx59tYKzKhN+/V9omSaAMFarNbeqQfWjMYn0YwR1fgqSOqc3Gb3FX1/PqSl3gUGghJUCHU4+USdsVV/rnhPSEs5HmR/WlU6kyc0eGwDvxq+d745OWqqkjCHF33IDrU43eI2xHieFQcyldLFY8FzhUQvJu2sqXN0YGUnCw4h0TdOGAG/7BGTxHc7qwA66p3SSo+V/eDPDFUfABS/JszPLHt1ZVkpJzdB6rf10E0suOza+RY1VSV0zzy7SCppubRq3K0HURDjen7hZILpuwRqz5vh5M=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9831c4ff-b481-4495-2308-08d802536731
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 15:34:11.4667
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yrzgjphEkIbFJz1iJzXiDDbdtIhl0atUGM1TxIIEuaHckjas6VSVHaxwVNd12F8v7GHqtyzrT4IWv6shZ0CEqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2408
+Content-Type: multipart/mixed; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/28/20 10:17 AM, Joerg Roedel wrote:
-> From: Mike Stunes <mstunes@vmware.com>
-> 
-> To avoid a future VMEXIT for a subsequent CPUID function, cache the
-> results returned by CPUID into an xarray.
-> 
->   [tl: coding standard changes, register zero extension]
-> 
-> Signed-off-by: Mike Stunes <mstunes@vmware.com>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> [ jroedel@suse.de: - Wrapped cache handling into vc_handle_cpuid_cached()
->                     - Used lower_32_bits() where applicable
-> 		   - Moved cache_index out of struct es_em_ctxt ]
-> Co-developed-by: Joerg Roedel <jroedel@suse.de>
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->   arch/x86/kernel/sev-es-shared.c |  12 ++--
->   arch/x86/kernel/sev-es.c        | 119 +++++++++++++++++++++++++++++++-
->   2 files changed, 124 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-> index 5bfc1f3030d4..cfdafe12da4f 100644
-> --- a/arch/x86/kernel/sev-es-shared.c
-> +++ b/arch/x86/kernel/sev-es-shared.c
-> @@ -427,8 +427,8 @@ static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
->   	u32 cr4 = native_read_cr4();
->   	enum es_result ret;
->   
-> -	ghcb_set_rax(ghcb, regs->ax);
-> -	ghcb_set_rcx(ghcb, regs->cx);
-> +	ghcb_set_rax(ghcb, lower_32_bits(regs->ax));
-> +	ghcb_set_rcx(ghcb, lower_32_bits(regs->cx));
->   
->   	if (cr4 & X86_CR4_OSXSAVE)
->   		/* Safe to read xcr0 */
-> @@ -447,10 +447,10 @@ static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
->   	      ghcb_is_valid_rdx(ghcb)))
->   		return ES_VMM_ERROR;
->   
-> -	regs->ax = ghcb->save.rax;
-> -	regs->bx = ghcb->save.rbx;
-> -	regs->cx = ghcb->save.rcx;
-> -	regs->dx = ghcb->save.rdx;
-> +	regs->ax = lower_32_bits(ghcb->save.rax);
-> +	regs->bx = lower_32_bits(ghcb->save.rbx);
-> +	regs->cx = lower_32_bits(ghcb->save.rcx);
-> +	regs->dx = lower_32_bits(ghcb->save.rdx);
->   
->   	return ES_OK;
->   }
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 03095bc7b563..0303834d4811 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -19,6 +19,7 @@
->   #include <linux/memblock.h>
->   #include <linux/kernel.h>
->   #include <linux/mm.h>
-> +#include <linux/xarray.h>
->   
->   #include <generated/asm-offsets.h>
->   #include <asm/cpu_entry_area.h>
-> @@ -33,6 +34,16 @@
->   
->   #define DR7_RESET_VALUE        0x400
->   
-> +struct sev_es_cpuid_cache_entry {
-> +	unsigned long eax;
-> +	unsigned long ebx;
-> +	unsigned long ecx;
-> +	unsigned long edx;
-> +};
-> +
-> +static struct xarray sev_es_cpuid_cache;
-> +static bool __ro_after_init sev_es_cpuid_cache_initialized;
-> +
->   /* For early boot hypervisor communication in SEV-ES enabled guests */
->   static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
->   
-> @@ -463,6 +474,9 @@ void __init sev_es_init_vc_handling(void)
->   		sev_es_setup_vc_stack(cpu);
->   	}
->   
-> +	xa_init_flags(&sev_es_cpuid_cache, XA_FLAGS_LOCK_IRQ);
-> +	sev_es_cpuid_cache_initialized = true;
-> +
->   	init_vc_stack_names();
->   }
->   
-> @@ -744,6 +758,91 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
->   	return ret;
->   }
->   
-> +static unsigned long sev_es_get_cpuid_cache_index(struct es_em_ctxt *ctxt)
-> +{
-> +	unsigned long hi, lo;
-> +
-> +	/* Don't attempt to cache until the xarray is initialized */
-> +	if (!sev_es_cpuid_cache_initialized)
-> +		return ULONG_MAX;
-> +
-> +	lo = lower_32_bits(ctxt->regs->ax);
-> +
-> +	/*
-> +	 * CPUID 0x0000000d requires both RCX and XCR0, so it can't be
-> +	 * cached.
-> +	 */
-> +	if (lo == 0x0000000d)
-> +		return ULONG_MAX;
-> +
-> +	/*
-> +	 * Some callers of CPUID don't always set RCX to zero for CPUID
-> +	 * functions that don't require RCX, which can result in excessive
-> +	 * cached values, so RCX needs to be manually zeroed for use as part
-> +	 * of the cache index. Future CPUID values may need RCX, but since
-> +	 * they can't be known, they must not be cached.
-> +	 */
-> +	if (lo > 0x80000020)
-> +		return ULONG_MAX;
-> +
-> +	switch (lo) {
-> +	case 0x00000007:
-> +	case 0x0000000b:
-> +	case 0x0000000f:
-> +	case 0x00000010:
-> +	case 0x8000001d:
-> +	case 0x80000020:
-> +		hi = ctxt->regs->cx << 32;
-> +		break;
-> +	default:
-> +		hi = 0;
-> +	}
-> +
-> +	return hi | lo;
-> +}
-> +
-> +static bool sev_es_check_cpuid_cache(struct es_em_ctxt *ctxt,
-> +				     unsigned long cache_index)
-> +{
-> +	struct sev_es_cpuid_cache_entry *cache_entry;
-> +
-> +	if (cache_index == ULONG_MAX)
-> +		return false;
-> +
-> +	cache_entry = xa_load(&sev_es_cpuid_cache, cache_index);
-> +	if (!cache_entry)
-> +		return false;
-> +
-> +	ctxt->regs->ax = cache_entry->eax;
-> +	ctxt->regs->bx = cache_entry->ebx;
-> +	ctxt->regs->cx = cache_entry->ecx;
-> +	ctxt->regs->dx = cache_entry->edx;
-> +
-> +	return true;
-> +}
-> +
-> +static void sev_es_add_cpuid_cache(struct es_em_ctxt *ctxt,
-> +				   unsigned long cache_index)
-> +{
-> +	struct sev_es_cpuid_cache_entry *cache_entry;
-> +	int ret;
-> +
-> +	if (cache_index == ULONG_MAX)
-> +		return;
-> +
-> +	cache_entry = kzalloc(sizeof(*cache_entry), GFP_ATOMIC);
-> +	if (cache_entry) {
-> +		cache_entry->eax = ctxt->regs->ax;
-> +		cache_entry->ebx = ctxt->regs->bx;
-> +		cache_entry->ecx = ctxt->regs->cx;
-> +		cache_entry->edx = ctxt->regs->dx;
-> +
-> +		/* Ignore insertion errors */
-> +		ret = xa_insert(&sev_es_cpuid_cache, cache_index,
-> +				cache_entry, GFP_ATOMIC);
 
-Just realized, that on error, the cache_entry should be freed.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Tom
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.sched/core
+head:   68a1740c687d4a75b9e9dea0ab0aae61f167c880
+commit: 5033cfdeb4a2a51fa847b1a3f5f6eee65dda6c75 [7/9] irq_work, smp: Allow irq_work on call_single_queue
+config: s390-allnoconfig (attached as .config)
+compiler: s390-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git checkout 5033cfdeb4a2a51fa847b1a3f5f6eee65dda6c75
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
 
-> +	}
-> +}
-> +
->   static enum es_result vc_handle_dr7_write(struct ghcb *ghcb,
->   					  struct es_em_ctxt *ctxt)
->   {
-> @@ -895,6 +994,24 @@ static enum es_result vc_handle_trap_db(struct ghcb *ghcb,
->   	return ES_EXCEPTION;
->   }
->   
-> +static enum es_result vc_handle_cpuid_cached(struct ghcb *ghcb,
-> +					     struct es_em_ctxt *ctxt)
-> +{
-> +	unsigned long cache_index;
-> +	enum es_result result;
-> +
-> +	cache_index = sev_es_get_cpuid_cache_index(ctxt);
-> +
-> +	if (sev_es_check_cpuid_cache(ctxt, cache_index))
-> +		return ES_OK;
-> +
-> +	result = vc_handle_cpuid(ghcb, ctxt);
-> +	if (result == ES_OK)
-> +		sev_es_add_cpuid_cache(ctxt, cache_index);
-> +
-> +	return result;
-> +}
-> +
->   static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
->   					 struct ghcb *ghcb,
->   					 unsigned long exit_code)
-> @@ -926,7 +1043,7 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
->   		result = ES_UNSUPPORTED;
->   		break;
->   	case SVM_EXIT_CPUID:
-> -		result = vc_handle_cpuid(ghcb, ctxt);
-> +		result = vc_handle_cpuid_cached(ghcb, ctxt);
->   		break;
->   	case SVM_EXIT_IOIO:
->   		result = vc_handle_ioio(ghcb, ctxt);
-> 
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>, old ones prefixed by <<):
+
+s390-linux-ld: kernel/smp.o: in function `flush_smp_call_function_queue':
+<< kernel/smp.c:799: warning: cannot understand function prototype: 'struct smp_call_on_cpu_struct '
+>> smp.c:(.text+0x110): undefined reference to `irq_work_single'
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+7q/z/B02yWn/R9k0qIuZVPx/AWPMv1XUWAAA
+
+--yrj/dFKFPuw6o+aM--
