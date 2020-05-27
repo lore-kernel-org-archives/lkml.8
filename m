@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E87F2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B618E208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TJfxogc/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BMTDeSA5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgE0WrS (ORCPT
+        id S1726580AbgE0WrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:47:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37402 "EHLO
+        Wed, 27 May 2020 18:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgE0WrO (ORCPT
+        with ESMTP id S1725836AbgE0WrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:47:14 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECD2C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:13 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id 19so27404858qtp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:13 -0700 (PDT)
+        Wed, 27 May 2020 18:47:16 -0400
+Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 858DAC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:15 -0700 (PDT)
+Received: by mail-qv1-xf49.google.com with SMTP id k35so6114911qva.18
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=EPOmpxXNIJ+6In9IN6TBBRdLz/P9JOhwRE1awJTQ7UI=;
-        b=TJfxogc/xDxHr9mQZHN7JkU1Up2TtKdYLsm4R30RDECy3TUXBL+JSdGI70Tnf4ldY7
-         I6P3Nc/b4csbG+TKEInX8M6A6kHdKFJ6Enw4CBjP1DFYTGKgxuS9QNf5kkmqwR7LyYUb
-         dgdRuJVwR9eb+7Am0jKimjii8WIx1CDMTKFsjE/q8gCW8lQZoz7JUbxvfteUvuCSq5pv
-         LGD2bb7wY0U2v6EqJbeCyNedhKsLTPZSzzF3ymQS/vJDK77ygCvNSxCvBU5gCkrGLaR6
-         3PA6GEnMQuvK12duehw64GuRd9xBM9XmRSxP/o6s5Jp94b6+uD3bF0F2jFefUO2UIMom
-         mO2g==
+        bh=4rgQHj0e4rf2gKwkFZaKemGDRL0W5vamS2+zR9c8gWM=;
+        b=BMTDeSA5xRUXFpTQeoVkWY8C3uEkAEVow71OZ5ZnEDkAQL0nigc+V/hKtAsFLAXavH
+         dgfjcMQBVB/x/01JXMj8XJHgorNibQ7JATwBvagi9tMqGdS9pq3tMRozJarFqj7GXZH+
+         T3uCGY8lCBMevwGjz5QShJ3VHPgx47cOSK3DehkYFY/lt1ByBTGFmxGb8XeRtg7HqvWx
+         WC1i7C3Nm+eAy8XwWhRinsnN00PeHFvPXupmoaHaUvyB4/HMXtH6e3Ib1dvfCtwP7boA
+         FzbqorEa/HdUA/OQ+GMyc0FlHBpVextzJJ70IkQWLpZoAJ3TGoUbGvnrbUP/mkzhSdPJ
+         sD6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=EPOmpxXNIJ+6In9IN6TBBRdLz/P9JOhwRE1awJTQ7UI=;
-        b=O2JSNesOoPAnMVZAuOz3ETSHCY9T6uGpRdUK5bZB9pl1JhaAkEANvPIicxOxhAbCic
-         KRPL/xD6o8phmWIZcLDoy4jH8+zkXMtH6OLepdu+U/VaCvILpfGmUVpQiTkqAD2AYzmB
-         0kE+2kOgIiDdfqDQV4mJawTp55r/vM2i35OwRBHxV/YJa57qfcCs4OodzsYNmP5JcYn9
-         UPHUIrrkkW0LlXrHW7424O0cMtsZAQhQylCMEfNn16YvtCKYLrLrt12DE5gvd7Afekm2
-         aipunrEMbQPyJHQYpGMbiElIdGMiyZnhUDyb6JBA2nU0URRnPCqlX4/Jq5CPnzxl0lSA
-         f7Cw==
-X-Gm-Message-State: AOAM533XDluFsnFQjMPGsYpRRaDj4Fz+dQpF0ziDsadnpIMw/w/Nol4z
-        XcOMJJf0HedyXPlr2saIew5gYrj85WXtDoVT4a6yocJdpGZ+wUp789pgikrw0epy0oKsJqP9zoz
-        yg7QuS+Z6Bt9zu1qmFy+tBzERC6ipb8iFIzcZwkhk/VAdJvRHtXdBLtO8rJdgCC36T8qY92FO
-X-Google-Smtp-Source: ABdhPJxjxd/6kJpQ9z8kT6kKlT6FKW+xMzusW2OFeQEQ0rKlH4J1wfDQgf0ZaX/krytmcAgJN795UmBexRo/
-X-Received: by 2002:a0c:9aeb:: with SMTP id k43mr278612qvf.101.1590619632442;
- Wed, 27 May 2020 15:47:12 -0700 (PDT)
-Date:   Wed, 27 May 2020 15:46:56 -0700
+        bh=4rgQHj0e4rf2gKwkFZaKemGDRL0W5vamS2+zR9c8gWM=;
+        b=jj27p11NE3swHpM5KT/VcaZm4SETuN/1JKNlNbNvpKnJwDg7kle6i+nuxmxeiYSlj1
+         ltIOLh1y3fopKnVfhKgL1DhKkzNfveXXcM7DPtw112Q/t5djH1nDM4zHVn5zuOiI74eX
+         1U6+HUJd63pvgTUb80l0omTN8g5dHA1TbdemDlnUAAc3omwQ4wck6KPxGYGEHkPpKaWQ
+         92i5aQdr3onwB92J8vqnoUWDLInOGZqshWvY3GszFNaCkf8k9IQtedEY/CwXrJQ88+B4
+         lKSzs87af2SixIy9PLxcagYmXfz2hIwAdhgH8u3NT615HiGkPBT/KHidSaR13gJXK7g8
+         y6aw==
+X-Gm-Message-State: AOAM532/KKL5BnuxkzbhaRz5OG2+RnmJFQ2Ul01XhhGZlJAG4sPbvkcR
+        PI4h2VGGxXMRVNcO/XF/cPVnNBnrC2Up5/aZ6z0tteLh07dlbcjhX6NiLFKP280Luvp1aHtt/LS
+        CSyYrmUXjxkaWZWgDdUJ0NoMzs48eOOKSesafxM2NGM3G24JQzKy0sz04/BrxmF9xJWbsuL0w
+X-Google-Smtp-Source: ABdhPJzxDLTKMbF6fHEzohkPrNbbv2yrVYQKS7aY6Psdazpz4EufoMGpb5hkzZZNOYvHetCFwMA+RhG7KPzq
+X-Received: by 2002:a0c:b259:: with SMTP id k25mr262137qve.111.1590619634659;
+ Wed, 27 May 2020 15:47:14 -0700 (PDT)
+Date:   Wed, 27 May 2020 15:46:57 -0700
 In-Reply-To: <20200527224659.206129-1-eranian@google.com>
-Message-Id: <20200527224659.206129-3-eranian@google.com>
+Message-Id: <20200527224659.206129-4-eranian@google.com>
 Mime-Version: 1.0
 References: <20200527224659.206129-1-eranian@google.com>
 X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH v2 2/5] perf/x86/rapl: refactor code for Intel/AMD sharing
+Subject: [PATCH v2 3/5] perf/x86/rapl: flip logic on default events visibility
 From:   Stephane Eranian <eranian@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@elte.hu, irogers@google.com,
@@ -73,142 +73,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch modifies the rapl_model struct to include architecture specific
-knowledge to Intel specific structure, and in particular the MSR for
-POWER_UNIT and the rapl_msrs array.
-
-No functional changes.
+This patch modifies the default visibility of the attribute_group
+for each RAPL event. By default if the grp.is_visible field is NULL,
+then sysfs considers that it must display the attribute group.
+If the field is not NULL (callback function), then the return value
+of the callback determines the visibility (0 = not visible). The RAPL
+attribute groups had the field set to NULL, meaning that unless they
+failed the probing from perf_msr_probe(), they would be visible. We want
+to avoid having to specify attribute groups that are not supported by hw
+in the rapl_msrs[] array, they don't have MSR address to begin with.
+Therefore, we intialize the visible field of all RAPL attribute groups
+to a callback that returns 0. If the RAPL msr goes through probing
+and succeeds the is_visible field will be set back to NULL (visible).
+If the probing fails the field is set to a callback that return 0 (no visible).
 
 Signed-off-by: Stephane Eranian <eranian@google.com>
+
 ---
- arch/x86/events/rapl.c | 29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ arch/x86/events/rapl.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index ece043fb7b494..72990e9a4e71f 100644
+index 72990e9a4e71f..fcb21fbcfe0d0 100644
 --- a/arch/x86/events/rapl.c
 +++ b/arch/x86/events/rapl.c
-@@ -131,7 +131,9 @@ struct rapl_pmus {
+@@ -460,9 +460,16 @@ static struct attribute *rapl_events_cores[] = {
+ 	NULL,
  };
  
- struct rapl_model {
-+	struct perf_msr *rapl_msrs;
- 	unsigned long	events;
-+	unsigned int	msr_power_unit;
- 	bool		apply_quirk;
- };
- 
-@@ -141,7 +143,7 @@ static struct rapl_pmus *rapl_pmus;
- static cpumask_t rapl_cpu_mask;
- static unsigned int rapl_cntr_mask;
- static u64 rapl_timer_ms;
--static struct perf_msr rapl_msrs[];
-+static struct perf_msr *rapl_msrs;
- 
- static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
- {
-@@ -516,7 +518,7 @@ static bool test_msr(int idx, void *data)
- 	return test_bit(idx, (unsigned long *) data);
- }
- 
--static struct perf_msr rapl_msrs[] = {
-+static struct perf_msr intel_rapl_msrs[] = {
- 	[PERF_RAPL_PP0]  = { MSR_PP0_ENERGY_STATUS,      &rapl_events_cores_group, test_msr },
- 	[PERF_RAPL_PKG]  = { MSR_PKG_ENERGY_STATUS,      &rapl_events_pkg_group,   test_msr },
- 	[PERF_RAPL_RAM]  = { MSR_DRAM_ENERGY_STATUS,     &rapl_events_ram_group,   test_msr },
-@@ -578,13 +580,13 @@ static int rapl_cpu_online(unsigned int cpu)
- 	return 0;
- }
- 
--static int rapl_check_hw_unit(bool apply_quirk)
-+static int rapl_check_hw_unit(struct rapl_model *rm)
- {
- 	u64 msr_rapl_power_unit_bits;
- 	int i;
- 
- 	/* protect rdmsrl() to handle virtualization */
--	if (rdmsrl_safe(MSR_RAPL_POWER_UNIT, &msr_rapl_power_unit_bits))
-+	if (rdmsrl_safe(rm->msr_power_unit, &msr_rapl_power_unit_bits))
- 		return -1;
- 	for (i = 0; i < NR_RAPL_DOMAINS; i++)
- 		rapl_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
-@@ -595,7 +597,7 @@ static int rapl_check_hw_unit(bool apply_quirk)
- 	 * "Intel Xeon Processor E5-1600 and E5-2600 v3 Product Families, V2
- 	 * of 2. Datasheet, September 2014, Reference Number: 330784-001 "
- 	 */
--	if (apply_quirk)
-+	if (rm->apply_quirk)
- 		rapl_hw_unit[PERF_RAPL_RAM] = 16;
- 
- 	/*
-@@ -676,6 +678,8 @@ static struct rapl_model model_snb = {
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_PP1),
- 	.apply_quirk	= false,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static struct rapl_model model_snbep = {
-@@ -683,6 +687,8 @@ static struct rapl_model model_snbep = {
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
- 	.apply_quirk	= false,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static struct rapl_model model_hsw = {
-@@ -691,6 +697,8 @@ static struct rapl_model model_hsw = {
- 			  BIT(PERF_RAPL_RAM) |
- 			  BIT(PERF_RAPL_PP1),
- 	.apply_quirk	= false,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static struct rapl_model model_hsx = {
-@@ -698,12 +706,16 @@ static struct rapl_model model_hsx = {
- 			  BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
- 	.apply_quirk	= true,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static struct rapl_model model_knl = {
- 	.events		= BIT(PERF_RAPL_PKG) |
- 			  BIT(PERF_RAPL_RAM),
- 	.apply_quirk	= true,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static struct rapl_model model_skl = {
-@@ -713,6 +725,8 @@ static struct rapl_model model_skl = {
- 			  BIT(PERF_RAPL_PP1) |
- 			  BIT(PERF_RAPL_PSYS),
- 	.apply_quirk	= false,
-+	.msr_power_unit = MSR_RAPL_POWER_UNIT,
-+	.rapl_msrs      = intel_rapl_msrs,
- };
- 
- static const struct x86_cpu_id rapl_model_match[] __initconst = {
-@@ -758,10 +772,13 @@ static int __init rapl_pmu_init(void)
- 		return -ENODEV;
- 
- 	rm = (struct rapl_model *) id->driver_data;
++static umode_t
++rapl_not_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	return 0;
++}
 +
-+	rapl_msrs = rm->rapl_msrs;
-+
- 	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
- 					false, (void *) &rm->events);
+ static struct attribute_group rapl_events_cores_group = {
+ 	.name  = "events",
+ 	.attrs = rapl_events_cores,
++	.is_visible = rapl_not_visible,
+ };
  
--	ret = rapl_check_hw_unit(rm->apply_quirk);
-+	ret = rapl_check_hw_unit(rm);
- 	if (ret)
- 		return ret;
+ static struct attribute *rapl_events_pkg[] = {
+@@ -475,6 +482,7 @@ static struct attribute *rapl_events_pkg[] = {
+ static struct attribute_group rapl_events_pkg_group = {
+ 	.name  = "events",
+ 	.attrs = rapl_events_pkg,
++	.is_visible = rapl_not_visible,
+ };
  
+ static struct attribute *rapl_events_ram[] = {
+@@ -487,6 +495,7 @@ static struct attribute *rapl_events_ram[] = {
+ static struct attribute_group rapl_events_ram_group = {
+ 	.name  = "events",
+ 	.attrs = rapl_events_ram,
++	.is_visible = rapl_not_visible,
+ };
+ 
+ static struct attribute *rapl_events_gpu[] = {
+@@ -499,6 +508,7 @@ static struct attribute *rapl_events_gpu[] = {
+ static struct attribute_group rapl_events_gpu_group = {
+ 	.name  = "events",
+ 	.attrs = rapl_events_gpu,
++	.is_visible = rapl_not_visible,
+ };
+ 
+ static struct attribute *rapl_events_psys[] = {
+@@ -511,6 +521,7 @@ static struct attribute *rapl_events_psys[] = {
+ static struct attribute_group rapl_events_psys_group = {
+ 	.name  = "events",
+ 	.attrs = rapl_events_psys,
++	.is_visible = rapl_not_visible,
+ };
+ 
+ static bool test_msr(int idx, void *data)
 -- 
 2.27.0.rc0.183.gde8f92d652-goog
 
