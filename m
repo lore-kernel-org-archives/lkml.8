@@ -2,92 +2,173 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 920BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70C4220C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D14420873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:25:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="W9kEaIQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389158AbgE0OYK (ORCPT
+        id S2389164AbgE0OZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:24:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36164 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388138AbgE0OYK (ORCPT
+        Wed, 27 May 2020 10:25:35 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:52010 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387813AbgE0OZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:24:10 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8F8698030835;
-        Wed, 27 May 2020 14:24:08 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5TlXx3ITg-gd; Wed, 27 May 2020 17:24:07 +0300 (MSK)
-Date:   Wed, 27 May 2020 17:24:06 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 06/11] i2c: designware: Add Baytrail sem config DW I2C
- platform dependency
-Message-ID: <20200527142406.jzdtkbdb2q6st7e6@mobilestation>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-7-Sergey.Semin@baikalelectronics.ru>
- <20200527134220.GX1634618@smile.fi.intel.com>
+        Wed, 27 May 2020 10:25:35 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200527142533epoutp046d043c67ab2f0cf74616bc5f9e5dfd15~S6MDLtwt72449624496epoutp04c
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 14:25:33 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200527142533epoutp046d043c67ab2f0cf74616bc5f9e5dfd15~S6MDLtwt72449624496epoutp04c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590589533;
+        bh=8AMzre57Rup3O+2yQwlsUsj50VyKkmZ2g+QwOJq+y7Y=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=W9kEaIQjNj5JhOT8uf0y1EDi7qscje+3NIJC9xkOY4DPrY9P/SMSS8n+GbP3vkuVi
+         nnADxkuU+7XDAPxVlNF3DaGD22g7xCOLCePJB8LPRTAimk8j5013WEXsWoTq2ljqhK
+         fGGMQsWn4sdCMBSeWaYxxtRHNrNxhhkVjRF5PQ/8=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200527142532epcas1p259f002e2149e64a3fb8962df982d75eb~S6MCexqye2537825378epcas1p2F;
+        Wed, 27 May 2020 14:25:32 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49XCmC3dgszMqYkY; Wed, 27 May
+        2020 14:25:31 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2B.3B.04388.B587ECE5; Wed, 27 May 2020 23:25:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200527142531epcas1p152d74fcd78d072f6123ad550da7b6619~S6MBMPItD1754017540epcas1p1U;
+        Wed, 27 May 2020 14:25:31 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200527142531epsmtrp23fc003863097bebb120da62b6ebb444f~S6MBLh8_B1203612036epsmtrp2b;
+        Wed, 27 May 2020 14:25:31 +0000 (GMT)
+X-AuditID: b6c32a35-793ff70000001124-13-5ece785b9420
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        20.91.08303.A587ECE5; Wed, 27 May 2020 23:25:30 +0900 (KST)
+Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200527142530epsmtip11c0ad50e370ff13ed85241c5137d68bc~S6MA84F9u2634626346epsmtip1g;
+        Wed, 27 May 2020 14:25:30 +0000 (GMT)
+From:   "Sungjong Seo" <sj1557.seo@samsung.com>
+To:     "'Namjae Jeon'" <linkinjeon@kernel.org>,
+        "'Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp'" 
+        <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     "'Mori.Takahiro@ab.MitsubishiElectric.co.jp'" 
+        <Mori.Takahiro@ab.mitsubishielectric.co.jp>,
+        "'Motai.Hirotaka@aj.MitsubishiElectric.co.jp'" 
+        <Motai.Hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Namjae Jeon'" <namjae.jeon@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kohada.t2@gmail.com>
+In-Reply-To: <CAKYAXd_oG6dc7CNiHszKmhabHd2zrN_VOaNYaWRPES=7hRu+pA@mail.gmail.com>
+Subject: RE: [PATCH] exfat: optimize dir-cache
+Date:   Wed, 27 May 2020 23:25:30 +0900
+Message-ID: <000701d63432$ace24f10$06a6ed30$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200527134220.GX1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQKbEd8GOCYeHYQBe/Vm0kX/gmqw5wMD/7F2AWi7CpYCLmCEuwJD5ds7putEalA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2znbzsrVaVq9rah1MkxjuuOaniSz0mKRqBV0MdIOenLW2YWd
+        LSqIbrKadNOyaNmFIi1DC5PUmUV2MUulK5QhQUnQPbfKWVBtO0X+e97vfZ7veZ/vewlMdVmm
+        JootDs5uYXlKNgy/cjNWp121sTtP5/GOZwLHX+DMh44KnCk7fBZjrrZ24Mxjb6WMefzbhzNV
+        Xw/iTODI1jmE8Wtlu9zoOvhLbtx557zM2OzplRvra9wy476GGmT010/Mkefys0wcW8jZNZyl
+        wFpYbClKpRYtzU/PNyTpaC09k0mmNBbWzKVSGZk52gXFfHAoSrOB5Z3BoxxWEKiE2bPsVqeD
+        05isgiOV4myFvI3W2eIF1iw4LUXxBVZzCq3TJRqCzDW8aXfJU5mtOmLjo1sebBs6oyhFBAHk
+        DLjVailFwwgV2YSg48hLiVj4ELjfD+Bi4UfwuXa7rBQpwor6jz/wEFaRXgQnXo0USW8RlH8v
+        D5NkpBb6ng1ioUYUeQDBsR33wvdiZLsEnl+7IQ2ZK8jF0LhrekgQScZD//e3khDGyanwOtAZ
+        xkpyJjReqMBFPAo6jvaFMUZOgsaPlZg4kQZafLelIRxFZkF/f5dU5ETBMbcrPASQDQT0eRsx
+        MXQGdA6MELWR8K69QS5iNfg/tf5NuRPBvt6ForYEQU3Tjr8NPfj8fhS6ByNj4aI3QTyeDM0/
+        jyPRdwR8+rZHKlopYbdLJVKiYeBLM/7P6kngqeQAojxDknmGJPMMSeD5b3YK4TVoDGcTzEWc
+        QNvooZ9dj8ILG2doQoe6M9sQSSAqQqkzdueppOwGYZO5DQGBUVHKeV3381TKQnbTZs5uzbc7
+        eU5oQ4bgw5dh6tEF1uD6Wxz5tCFRr9czM5KSkwx6aqzyZKAzT0UWsQ5uPcfZOPs/nYRQqLeh
+        eaezswZ68GVb5uZejST264pTBhO1PvvNdDp6zJy9rTHzW9Kqf51Mzd414dLguVElzoq64asb
+        0h6eWdBvfRZROr4ukCk4stJX9rjG3V0+Wl8W05eyzpXRQ40sn+A2+XM1BdJaX4Wh93p6chr/
+        5K7iQQn9oWqt+o2UX+GessTlmGamcMHE0nGYXWD/AI7snwLGAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsWy7bCSnG5Uxbk4g/lNphY/5t5msXhzciqL
+        xcRpS5kt9uw9yWJxedccNovL/z+xWCz7MpnF4sf0egcOjy9zjrN7tE3+x+7RfGwlm8fOWXfZ
+        PTat6mTz6NuyitHj8ya5APYoLpuU1JzMstQifbsEroyOlqtsBct5Ki4dmcXcwLiYs4uRk0NC
+        wERi09tfLF2MXBxCAjsYJf682AbkcAAlpCQO7tOEMIUlDh8uhih5ziixb9ofZpBeNgFdiSc3
+        fjKDJEQE+hgl7h1bzgjiMAscZ5JYsf4qI1QLk8TXGTsYQUZxCgRKbG/XBukWFtCT+PjtJROI
+        zSKgKvH4xxkwm1fAUmL76qksELagxMmZT8BsZgFtid6HrYwQtrzE9rdzmCE+UJDY/ekoK4gt
+        IuAn8fHjWVaIGhGJ2Z1tzBMYhWchGTULyahZSEbNQtKygJFlFaNkakFxbnpusWGBUV5quV5x
+        Ym5xaV66XnJ+7iZGcKxpae1g3LPqg94hRiYOxkOMEhzMSiK8TmdPxwnxpiRWVqUW5ccXleak
+        Fh9ilOZgURLn/TprYZyQQHpiSWp2ampBahFMlomDU6qByYdj/rKnl4Q5FlyJ6Eic5xGyQTvb
+        pUS20sF48h01rvMHPq8+eax7rlNqzvvOhjfLq9hPnoi7zs2fkXbqP/fNudqbt204tWL6VM+Q
+        S3l/tui2XA8JVaz/MOHVjFNcs6pfBVoXzFur6z/p1bYPv1T3rlsiLSlzUVfx1KkgyZv7chf6
+        X1VJW21ZPXVh9dtiofvML1+t7WYLe5YuP+N2cM7suy2zvdbabVdgzGS1XXv1vuuusolt+jI2
+        sw/58cgKBcz2nvfk4c/sNw6mZ6TUnM82TpGfG/i0wOY869QED2/vErb4lfxHJU1EaoyUbpeu
+        Ldr/u+H9Z8Xo2+w8Hybmnuk/Fd84ffK1/Uwf7RtsTnSveKzEUpyRaKjFXFScCAA+aJ8aJAMA
+        AA==
+X-CMS-MailID: 20200527142531epcas1p152d74fcd78d072f6123ad550da7b6619
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61
+References: <CGME20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61@epcas1p2.samsung.com>
+        <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+        <055a01d63306$82b13440$88139cc0$@samsung.com>
+        <TY1PR01MB15784E70CEACDA05F688AE6790B10@TY1PR01MB1578.jpnprd01.prod.outlook.com>
+        <CAKYAXd_oG6dc7CNiHszKmhabHd2zrN_VOaNYaWRPES=7hRu+pA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:42:20PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 03:01:06PM +0300, Serge Semin wrote:
-> > Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
-> > platform driver. It's a bit confusing to see it's config in the menu at
-> > some separated place with no reference to the platform code. Let's move the
-> > config definition to be below the I2C_DESIGNWARE_PLATFORM config and mark
-> > it with "depends on I2C_DESIGNWARE_PLATFORM" statement. By doing so the
-> > config menu will display the feature right below the DW I2C platform
-> > driver item and will indent it to the right so signifying its belonging.
-> 
-> ...
-> 
+> 2020-05-27 17:00 GMT+09:00,
+> Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+> <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>:
+> > Thank you for your comment.
+> >
+> >  >> +    for (i = 0; i < es->num_bh; i++) {
+> >  >> +            if (es->modified)
+> >  >> +                    exfat_update_bh(es->sb, es->bh[i], sync);
+> >  >
+> >  > Overall, it looks good to me.
+> >  > However, if "sync" is set, it looks better to return the result of
+> > exfat_update_bh().
+> >  > Of course, a tiny modification for exfat_update_bh() is also required.
+> >
+> >  I thought the same, while creating this patch.
+> >  However this patch has changed a lot and I didn't add any new error
+> > checking.
+> >  (So, the same behavior will occur even if an error occurs)
+> >
+> >  >> +struct exfat_dentry *exfat_get_dentry_cached(
+> >  >> +    struct exfat_entry_set_cache *es, int num) {
+> >  >> +    int off = es->start_off + num * DENTRY_SIZE;
+> >  >> +    struct buffer_head *bh = es->bh[EXFAT_B_TO_BLK(off, es->sb)];
+> >  >> +    char *p = bh->b_data + EXFAT_BLK_OFFSET(off, es->sb);
+> >  >
+> >  > In order to prevent illegal accesses to bh and dentries, it would
+> > be better to check validation for num and bh.
+> >
+> >  There is no new error checking for same reason as above.
+> >
+> >  I'll try to add error checking to this v2 patch.
+> >  Or is it better to add error checking in another patch?
+> The latter:)
+> Thanks!
 
-> >  config I2C_DESIGNWARE_BAYTRAIL
-> >  	bool "Intel Baytrail I2C semaphore support"
-> >  	depends on ACPI
-> > +	depends on I2C_DESIGNWARE_PLATFORM
-> >  	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
-> >  		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
-> 
-> I didn't get this. What is broken now with existing dependencies?
+Yes, the latter looks better.
+Thanks!
 
-With no explicit "depends on I2C_DESIGNWARE_PLATFORM" the entry isn't right
-shifted with respect to the I2C_DESIGNWARE_PLATFORM config entry in the kernel
-menuconfig. So it looks like a normal no-yes driver without it. 
+> >
+> > BR
+> > ---
+> > Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 
--Sergey
-
-> 
-> (The move of the PCI part is fine)
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
