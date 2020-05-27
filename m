@@ -2,161 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB99EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D836C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB9320776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D7A220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jK+3u8gz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388578AbgE0PzX (ORCPT
+        id S2390679AbgE0PzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:55:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40944 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390591AbgE0PzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:55:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2A042ABB2;
-        Wed, 27 May 2020 15:55:09 +0000 (UTC)
-Date:   Wed, 27 May 2020 17:55:05 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
- printk(KERN_DEBUG)
-Message-ID: <20200527155504.GD3529@linux-b0ei>
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200525084218.GC5300@linux-b0ei>
- <20200525091157.GF755@jagdpanzerIV.localdomain>
- <f02a71bc-0867-be60-182b-10d7377b2b04@i-love.sakura.ne.jp>
- <20200527083747.GA27273@linux-b0ei>
- <35d76737-8d23-9fb2-8e55-507109317f44@i-love.sakura.ne.jp>
+        Wed, 27 May 2020 11:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390663AbgE0PzR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:55:17 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA7BC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:55:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8xrIhDlIclhuFcqK5PRfwDksN1V3DbW5RDvwy1wQ9Ew=; b=jK+3u8gz/vaf9KvIxc6RpzgF2X
+        hrcfW+klGLluvqpKhL4qEC3V/HU7rUTDUsu0JhmM0nd1/zDrXL+KytM6+OXKDkPDXfk7mIR/aFHVW
+        GRd5prqBgteWLGiwfjZecLusE3teAjo+VeJec5JYbGMtb/BIIWjepsH1K6fPVebpsXzinBRxuf/fG
+        7wh3SeH6mUCpI/ZBVakDM8wd80LgJ5z7vSxdbi8gBvgHBxkXKNy9HM4WXiI1ffWCEmGTOOoYyp1ty
+        5ME5sHg+ENhLsCx+TZ8dbmS9el1TDAhFektU5QKsSZh5GpHSJfQ5xOJKeI3mgMoWnwC1/fSQ4/kKe
+        /eZJcgcg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdyO6-00040I-Ry; Wed, 27 May 2020 15:54:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5B80A307994;
+        Wed, 27 May 2020 17:54:36 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 444522024369D; Wed, 27 May 2020 17:54:36 +0200 (CEST)
+Date:   Wed, 27 May 2020 17:54:36 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V7 00/15] perf/x86: Add perf text poke events
+Message-ID: <20200527155436.GA706460@hirez.programming.kicks-ass.net>
+References: <20200512121922.8997-1-adrian.hunter@intel.com>
+ <bee04840-143c-18bb-df82-5aa58d70730e@intel.com>
+ <20200520014001.GF28228@kernel.org>
+ <20200520155634.GQ317569@hirez.programming.kicks-ass.net>
+ <20200527154716.GC16490@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35d76737-8d23-9fb2-8e55-507109317f44@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200527154716.GC16490@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-05-27 19:13:38, Tetsuo Handa wrote:
-> On 2020/05/27 17:37, Petr Mladek wrote:
-> > On Mon 2020-05-25 19:43:04, Tetsuo Handa wrote:
-> >> On 2020/05/25 17:42, Petr Mladek wrote:
-> >>> I see few drawbacks with this patch:
-> >>>
-> >>> 1. It will cause adding much more messages into the logbuffer even
-> >>>    though they are not flushed to the console. It might cause that
-> >>>    more important messages will get overridden before they reach
-> >>>    console. They might also make hard to read the full log.
-> >>
-> >> Since the user of this twist option will select console loglevel in a way
-> >> KERN_DEBUG messages are not printed to consoles, KERN_DEBUG messages will
-> >> be immediately processed (and space for future messages will be reclaimed).
-> >> Therefore, I don't think that more important messages will get overridden.
+On Wed, May 27, 2020 at 12:47:16PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 20, 2020 at 05:56:34PM +0200, Peter Zijlstra escreveu:
+> > On Tue, May 19, 2020 at 10:40:01PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > PeterZ, from what we discussed for the next merge Window, perhaps we
+> > > should route the kernel bits via the tip tree while I will push the
+> > > tooling bits on my 5.8 merge request to Linus, Ok?
 > > 
-> > This is not fully true. More important messages will still be printed
-> > to the console. The debug messages will not be skipped before the
-> > older messages are proceed.
-> > 
-> > I mean that many debug messages might cause losing more important ones
-> > before the old important messages are proceed.
+> > Sure, I can take the kernel bits. Thanks!
 > 
-> Then, this reasoning will be also applicable to
-> 
->   [PATCH] printk: Add loglevel for "do not print to consoles".
-> 
-> in a sense that "don't try to quickly queue a lot of messages" rule. This concern
-> cannot be solved even if asynchronous printk() and per console loglevel are
-> supported someday, and oom_dump_tasks() is not allowed to count on these for
-> solving the stall problem caused by reporting all OOM victim candidates at once.
+> So, I'm going thru the userpace bits and stopped at the patch copying
+> include/uapi/linux/perf_events.h to
+> tools/include/uapi/linux/perf_events.h to get the text_poke
+> perf_event_attr bit, looked at tip/ and this hasn't landed there yet,
+> any issues with the kernel bits?
 
-Good point. Even the "do_not_print_to_consoles" flag might cause
-loosing other important messages on consoles. It is because all
-consoles are handled in a single loop.
+Nah, I was waiting on the 0day robot, but its broken *again* :-(
 
-The asynchronous consoles would use one kthread per console. It would
-allow to see all messages at least by fast consoles and userspace.
-
-The OOM problem will also be solvable with a bigger log buffer.
-It would all to keep the entire dump until it can be seen on
-consoles or stored by userspace. The asynchronous consoles will
-prevent blocking OOM killer which is the primary problem.
-
-
-> >> This twist option might increase possibility of mixing KERN_DEBUG messages
-> >> and non-KERN_DEBUG messages due to KERN_CONT case.
-> >>
-> >> But if these concerns turn out to be a real problem, we can redirect
-> >> pr_devel()/pr_debug() to simple snprintf() which evaluates arguments
-> >> but discards the result without storing into the logbuffer.
-> >>
-> >>>
-> >>> 2. Crash inside printk() causes recursive messages. They are currently
-> >>>    printed into the printk_safe() buffers and there is a bigger risk
-> >>>    that they will not reach the console.
-> >>
-> >> Currently "static char textbuf[LOG_LINE_MAX];" is "static" because it is used
-> >> under logbuf_lock. If we remove "static", we can use "char textbuf[LOG_LINE_MAX];"
-> >> without logbuf_lock. Then, we can bring potentially dangerous-and-slow vscnprintf()
-> >> in vprintk_store() to earlier stage (and vprintk_store() will need to do simple
-> >> copy) so that oops in printk() will happen before entering printk-safe context.
-> >> I think that this change follows a direction which lockless logbuf will want.
-> > 
-> > No, LOG_LINE_MAX is too big to be allocated on stack.
-> 
-> We could assign per task_struct buffers and per CPU interrupt context buffers
-> (like we discussed about how to handle KERN_CONT problem). But managing these
-> off stack buffers is out of scope for this patch.
-
-This is much more complicated than the vsprintf(NULL) approach.
-
-
-> > Well, it would be possible to call vsprintf() with NULL buffer. It is
-> > normally used to calculate the length of the message before it is
-> > printed. But it also does all the accesses without printing anything.
-> 
-> OK. I think that redirecting pr_debug() to vsnprintf(NULL, 0) will be
-> better than modifying dynamic_debug path, for
-
-It might get more complicated if you would actually want to see
-pr_debug() messages for a selected module in the fuzzer.
-
-
-> >>> Have you tested this patch by the syzcaller with many runs, please?
-> >>> Did it helped to actually discover more bugs?
-> >>> Did it really made things easier?
-> >>
-> >> syzbot can't test with custom patches. The only way to test this patch is
-> >> to send to e.g. linux-next.git which syzbot is testing.
-> > 
-> > OK, we could try this via some test branch that will go into
-> > linux-next but it would not be scheduled for the next merge window.
-> > 
-> > For the testing, this patch might be good enough.
-> > 
-> > For eventual upstreaming, I would prefer to handle this in
-> > lib/dynamic_debug.c by enabling all entries by default. This
-> > would solve all DYNAMIC_DEBUG_BRANCH() users at one place.
-> 
-> since "enabling all entries by default" will redirect pr_debug() calls to
-> printk(KERN_DEBUG), the "don't try to quickly queue too much messages" above
-> remains (i.e. it is essentially same with what this patch is doing).
-
-vsprintf(NULL, ) can be called for pr_debug() messages in
-vprintk_store(). It will be again only a single place for
-all printk() wrappers.
-
-Best Regards,
-Petr
+Let me go move things along manually.
