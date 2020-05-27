@@ -2,297 +2,189 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99869C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD582078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756D32078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFo4I+Ta"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Xv/iIwQL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388301AbgE0IuE (ORCPT
+        id S2388305AbgE0IvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48252 "EHLO
+        Wed, 27 May 2020 04:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388075AbgE0IuD (ORCPT
+        with ESMTP id S2388070AbgE0IvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:50:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35252C061A0F;
-        Wed, 27 May 2020 01:50:03 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t18so9112810wru.6;
-        Wed, 27 May 2020 01:50:03 -0700 (PDT)
+        Wed, 27 May 2020 04:51:21 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033EEC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:51:21 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r7so6495878wro.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:51:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+9kBhKIDtW+ZxWUmIeYFLRWCnO57gv4RzLSn5WOvXRM=;
-        b=OFo4I+TaLb0OZtCkqTOcgtGy07oPtsd/ZuB00Kur6c1xaBXXekdDOB4Vnz+0G/OSq1
-         qYn6EShJr/P3GMU90WKQ5RH9aJh0UC5/BAr+htwHluFvCsFlWZE675Zp6mo1ClOcJG5s
-         bY4I1iUM74QpevBqDYtHozEp/wvFN4AFKwJULn5ETJDP+nmx1+o3Xbef46BY5jIgwvL8
-         C/TIc+VPXpldt9+jGieqiLCFLXr5lIYTEvJyJw7AjZmugxgBqfl91k8sbIVNVL4vp24I
-         jDQ7vp6WeXg/MePpvrtkeEsCJ8MAeozuEfbbbbF84dXI+OL+ASuHdwlbFFz6tDQc/OSh
-         qmuA==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fhMSWvuNPBXpgKYtNNiDpeOzCXthXUhwfothIO9NKNc=;
+        b=Xv/iIwQLTMFPM9ojjW89x4wU6m1Nk4zxlV2lFYOzK/YeX5SVJ2QS7zKO2ep51C8Idy
+         stbGc0fsYeZ7fht0c/o9lfGLZTtr8jZZBFGQQMOpEetaU5IW4UPpENwNAuCY9GCGjkKW
+         g12dEH4XXpkOyUjPEX3PfxZJomdQ1I72fgCGo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+9kBhKIDtW+ZxWUmIeYFLRWCnO57gv4RzLSn5WOvXRM=;
-        b=TgCu9kl0p+3ZO/5/bucMPd6bdzZh9xU+1GbfzeyusfCPn+tG36taJtgo2tDxq/vXox
-         f1FRDteWwvuC7mkqcBtTEYsARpK4kTilYm5f8gIefNh1lJiNf+H5Q8P4OmXAWG+xS8Fv
-         /4SV67MJttzN/lu2tePneoI6KjpitDeEMUo8wz42Np1F9OgBTwmx+eZjmfFvTB97zWJ2
-         TNVy5SoIKTTUqF80eD9u9bdnodUwH4STGEGouOAtMnbTCjIOH4Phlci2jHnvllyk0/TT
-         /seLq96sarqCrRaFPbBPHmV+8CKOg4WL1V/DawEeNSA6tyTqbJqm90ArT4StWDxM/23T
-         gFpw==
-X-Gm-Message-State: AOAM533YFjw/o+qBD02n3CIEjGbeBCdQMxgI9VGcsVl7sUAKm1kAd1XM
-        U1KexwTl1F+POc7qI3bW/Bk=
-X-Google-Smtp-Source: ABdhPJzNHB5+4AYdG1qbbHaXmHj9IE2XCiwvXkwA52VYJLKAFDe+Is5zLxb/qF26m34eLUMf98PQsA==
-X-Received: by 2002:a5d:4090:: with SMTP id o16mr12360488wrp.354.1590569401809;
-        Wed, 27 May 2020 01:50:01 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id b9sm2190368wrt.39.2020.05.27.01.50.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=fhMSWvuNPBXpgKYtNNiDpeOzCXthXUhwfothIO9NKNc=;
+        b=p9EDT/XXRf8dBvaPng9QH9EKqI1sKBkkk0ldt26U5icIA4sork/Il6C9+/7mV00aaW
+         5n0VdlnYdgH9TKtGOvKv6EBorCJvapcov0ltwzaHGNFD0E1udsXCybK8qd2WSVlIRiTk
+         xyYbF5ycxfw3nC3rVm5a4ARiXoGpgImHx/rKHb9i9LzJbLYhf21YYS0VbzZgGVC2rruA
+         gmxK2YhxrW5B+5vurldxTnrbH84fgRga3z3ZuYGMkLLNDryPIqSiXLAki8Itg6H9oXFJ
+         JSZGy6Pd2NCXWBCEiNSibTdvYD0QZ3wHGLjNXgraiVJI63x+U+86qDzu0gOBmqi4Ki1Q
+         S4JQ==
+X-Gm-Message-State: AOAM533pcTG8XIcNhsivzQsZalvQQrGxnqV8MxvmIMU0s0OFgarrYuYn
+        GnrlGdtYW58mJnwmFB6suQwsHw==
+X-Google-Smtp-Source: ABdhPJxEZ23G/V3SZPvyhyfGWPt5N2KRE3O+yYWtCD/lwEOS2AoferVAQgqxVybjqghH58UBwveWpQ==
+X-Received: by 2002:a5d:4841:: with SMTP id n1mr25171654wrs.64.1590569479666;
+        Wed, 27 May 2020 01:51:19 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id q13sm2157909wrn.84.2020.05.27.01.51.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 01:50:00 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:49:59 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Andra Paraschiv <andraprs@amazon.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
-        ne-devel-upstream@amazon.com
-Subject: Re: [PATCH v3 01/18] nitro_enclaves: Add ioctl interface definition
-Message-ID: <20200527084959.GA29137@stefanha-x1.localdomain>
-References: <20200525221334.62966-1-andraprs@amazon.com>
- <20200525221334.62966-2-andraprs@amazon.com>
+        Wed, 27 May 2020 01:51:19 -0700 (PDT)
+Date:   Wed, 27 May 2020 10:51:17 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>, alexander.deucher@amd.com,
+        christian.koenig@amd.com, David1.Zhou@amd.com, daniel@ffwll.ch,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/radeon: Convert get_user_pages() --> pin_user_pages()
+Message-ID: <20200527085117.GO206103@phenom.ffwll.local>
+Mail-Followup-To: John Hubbard <jhubbard@nvidia.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>, alexander.deucher@amd.com,
+        christian.koenig@amd.com, David1.Zhou@amd.com,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <1590526802-3008-1-git-send-email-jrdr.linux@gmail.com>
+ <69a033cf-63b2-7da6-6a5e-a5bbc94b8afb@nvidia.com>
+ <20200527084852.GN206103@phenom.ffwll.local>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200525221334.62966-2-andraprs@amazon.com>
+In-Reply-To: <20200527084852.GN206103@phenom.ffwll.local>
+X-Operating-System: Linux phenom 5.6.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 10:48:52AM +0200, Daniel Vetter wrote:
+> On Tue, May 26, 2020 at 03:57:45PM -0700, John Hubbard wrote:
+> > On 2020-05-26 14:00, Souptick Joarder wrote:
+> > > This code was using get_user_pages(), in a "Case 2" scenario
+> > > (DMA/RDMA), using the categorization from [1]. That means that it's
+> > > time to convert the get_user_pages() + release_pages() calls to
+> > > pin_user_pages() + unpin_user_pages() calls.
+> > > 
+> > > There is some helpful background in [2]: basically, this is a small
+> > > part of fixing a long-standing disconnect between pinning pages, and
+> > > file systems' use of those pages.
+> > > 
+> > > [1] Documentation/core-api/pin_user_pages.rst
+> > > 
+> > > [2] "Explicit pinning of user-space pages":
+> > >      https://lwn.net/Articles/807108/
+> 
+> I don't think this is a case 2 here, nor is it any of the others. Feels
+> like not covered at all by the doc.
+> 
+> radeon has a mmu notifier (might be a bit broken, but hey whatever there's
+> other drivers which have the same concept, but less broken). So when you
+> do an munmap, radeon will release the page refcount.
 
---vkogqOf2sHV7VnPd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I forgot to add: It's also not case 3, since there's no hw page fault
+support. It's all faked in software, and explicitly synchronizes against
+pending io (or preempts it, that depends a bit upon the jobs running).
 
-On Tue, May 26, 2020 at 01:13:17AM +0300, Andra Paraschiv wrote:
-> The Nitro Enclaves driver handles the enclave lifetime management. This
-> includes enclave creation, termination and setting up its resources such
-> as memory and CPU.
->=20
-> An enclave runs alongside the VM that spawned it. It is abstracted as a
-> process running in the VM that launched it. The process interacts with
-> the NE driver, that exposes an ioctl interface for creating an enclave
-> and setting up its resources.
->=20
-> Include part of the KVM ioctls in the provided ioctl interface, with
-> additional NE ioctl commands that e.g. triggers the enclave run.
->=20
-> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> ---
-> Changelog
->=20
-> v2 -> v3
->=20
-> * Remove the GPL additional wording as SPDX-License-Identifier is already=
- in
-> place.
->=20
-> v1 -> v2
->=20
-> * Add ioctl for getting enclave image load metadata.
-> * Update NE_ENCLAVE_START ioctl name to NE_START_ENCLAVE.=20
-> * Add entry in Documentation/userspace-api/ioctl/ioctl-number.rst for NE =
-ioctls.
-> * Update NE ioctls definition based on the updated ioctl range for major =
-and
-> minor.
-> ---
->  .../userspace-api/ioctl/ioctl-number.rst      |  5 +-
->  include/linux/nitro_enclaves.h                | 11 ++++
->  include/uapi/linux/nitro_enclaves.h           | 65 +++++++++++++++++++
->  3 files changed, 80 insertions(+), 1 deletion(-)
->  create mode 100644 include/linux/nitro_enclaves.h
->  create mode 100644 include/uapi/linux/nitro_enclaves.h
->=20
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documen=
-tation/userspace-api/ioctl/ioctl-number.rst
-> index f759edafd938..8a19b5e871d3 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -325,8 +325,11 @@ Code  Seq#    Include File                          =
-                 Comments
->  0xAC  00-1F  linux/raw.h
->  0xAD  00                                                             Net=
-filter device in development:
->                                                                       <ma=
-ilto:rusty@rustcorp.com.au>
-> -0xAE  all    linux/kvm.h                                             Ker=
-nel-based Virtual Machine
-> +0xAE  00-1F  linux/kvm.h                                             Ker=
-nel-based Virtual Machine
->                                                                       <ma=
-ilto:kvm@vger.kernel.org>
-> +0xAE  40-FF  linux/kvm.h                                             Ker=
-nel-based Virtual Machine
-> +                                                                     <ma=
-ilto:kvm@vger.kernel.org>
-> +0xAE  20-3F  linux/nitro_enclaves.h                                  Nit=
-ro Enclaves
->  0xAF  00-1F  linux/fsl_hypervisor.h                                  Fre=
-escale hypervisor
->  0xB0  all                                                            RAT=
-IO devices in development:
->                                                                       <ma=
-ilto:vgo@ratio.de>
+> Which case it that?
+> 
+> Note that currently only amdgpu doesn't work like that for gpu dma
+> directly to userspace ranges, it uses hmm and afaiui doens't hold a full
+> page pin refcount.
+> 
+> Cheers, Daniel
+> 
+> 
+> > > 
+> > > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > 
+> > > Hi,
+> > > 
+> > > I'm compile tested this, but unable to run-time test, so any testing
+> > > help is much appriciated.
+> > > ---
+> > >   drivers/gpu/drm/radeon/radeon_ttm.c | 6 +++---
+> > >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c b/drivers/gpu/drm/radeon/radeon_ttm.c
+> > > index 5d50c9e..e927de2 100644
+> > > --- a/drivers/gpu/drm/radeon/radeon_ttm.c
+> > > +++ b/drivers/gpu/drm/radeon/radeon_ttm.c
+> > > @@ -506,7 +506,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+> > >   		uint64_t userptr = gtt->userptr + pinned * PAGE_SIZE;
+> > >   		struct page **pages = ttm->pages + pinned;
+> > > -		r = get_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
+> > > +		r = pin_user_pages(userptr, num_pages, write ? FOLL_WRITE : 0,
+> > >   				   pages, NULL);
+> > >   		if (r < 0)
+> > >   			goto release_pages;
+> > > @@ -535,7 +535,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt *ttm)
+> > >   	kfree(ttm->sg);
+> > >   release_pages:
+> > > -	release_pages(ttm->pages, pinned);
+> > > +	unpin_user_pages(ttm->pages, pinned);
+> > >   	return r;
+> > >   }
+> > > @@ -562,7 +562,7 @@ static void radeon_ttm_tt_unpin_userptr(struct ttm_tt *ttm)
+> > >   			set_page_dirty(page);
+> > 
+> > 
+> > Maybe we also need a preceding patch, to fix the above? It should be
+> > set_page_dirty_lock(), rather than set_page_dirty(), unless I'm overlooking
+> > something (which is very possible!).
+> > 
+> > Either way, from a tunnel vision perspective of changing gup to pup, this
+> > looks good to me, so
+> > 
+> >     Acked-by: John Hubbard <jhubbard@nvidia.com>
+> > 
+> > 
+> > thanks,
+> > -- 
+> > John Hubbard
+> > NVIDIA
+> > 
+> > >   		mark_page_accessed(page);
+> > > -		put_page(page);
+> > > +		unpin_user_page(page);
+> > >   	}
+> > >   	sg_free_table(ttm->sg);
+> > > 
+> > 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-Reusing KVM ioctls seems a little hacky. Even the ioctls that are used
-by this driver don't use all the fields or behave in the same way as
-kvm.ko.
-
-For example, the memory regions slot number is not used by Nitro
-Enclaves.
-
-It would be cleaner to define NE-specific ioctls instead.
-
-> diff --git a/include/linux/nitro_enclaves.h b/include/linux/nitro_enclave=
-s.h
-> new file mode 100644
-> index 000000000000..d91ef2bfdf47
-> --- /dev/null
-> +++ b/include/linux/nitro_enclaves.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserve=
-d.
-> + */
-> +
-> +#ifndef _LINUX_NITRO_ENCLAVES_H_
-> +#define _LINUX_NITRO_ENCLAVES_H_
-> +
-> +#include <uapi/linux/nitro_enclaves.h>
-> +
-> +#endif /* _LINUX_NITRO_ENCLAVES_H_ */
-> diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nit=
-ro_enclaves.h
-> new file mode 100644
-> index 000000000000..3413352baf32
-> --- /dev/null
-> +++ b/include/uapi/linux/nitro_enclaves.h
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserve=
-d.
-> + */
-> +
-> +#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
-> +#define _UAPI_LINUX_NITRO_ENCLAVES_H_
-> +
-> +#include <linux/kvm.h>
-> +#include <linux/types.h>
-> +
-> +/* Nitro Enclaves (NE) Kernel Driver Interface */
-> +
-> +/**
-> + * The command is used to get information needed for in-memory enclave i=
-mage
-> + * loading e.g. offset in enclave memory to start placing the enclave im=
-age.
-> + *
-> + * The image load metadata is an in / out data structure. It includes in=
-fo
-> + * provided by the caller - flags - and returns the offset in enclave me=
-mory
-> + * where to start placing the enclave image.
-> + */
-> +#define NE_GET_IMAGE_LOAD_METADATA _IOWR(0xAE, 0x20, struct image_load_m=
-etadata)
-> +
-> +/**
-> + * The command is used to trigger enclave start after the enclave resour=
-ces,
-> + * such as memory and CPU, have been set.
-> + *
-> + * The enclave start metadata is an in / out data structure. It includes=
- info
-> + * provided by the caller - enclave cid and flags - and returns the slot=
- uid
-> + * and the cid (if input cid is 0).
-> + */
-> +#define NE_START_ENCLAVE _IOWR(0xAE, 0x21, struct enclave_start_metadata)
-> +
-
-image_load_metadata->flags and enclave_start_metadata->flags constants
-are missing.
-
-> +/* Metadata necessary for in-memory enclave image loading. */
-> +struct image_load_metadata {
-> +	/**
-> +	 * Flags to determine the enclave image type e.g. Enclave Image Format
-> +	 * (EIF) (in).
-> +	 */
-> +	__u64 flags;
-> +
-> +	/**
-> +	 * Offset in enclave memory where to start placing the enclave image
-> +	 * (out).
-> +	 */
-> +	__u64 memory_offset;
-> +};
-
-What about feature bits or a API version number field? If you add
-features to the NE driver, how will userspace detect them?
-
-Even if you intend to always compile userspace against the exact kernel
-headers that the program will run on, it can still be useful to have an
-API version for informational purposes and to easily prevent user
-errors (running a new userspace binary on an old kernel where the API is
-different).
-
-Finally, reserved struct fields may come in handy in the future. That
-way userspace and the kernel don't need to explicitly handle multiple
-struct sizes.
-
---vkogqOf2sHV7VnPd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7OKbcACgkQnKSrs4Gr
-c8jJVAgAo7KasfyNLaEi6MJPaDQp8v3M/aDIOEGPQsQ7f9cGH63De1A98S9ZOa/s
-derpLcBDuMKFpTbU8QOUI4ihiiFRQR6KYRRsmvNkxWDi7bdF9NpNILhvN991gLQT
-ui6GfLtCSuYkhdYS5gxg6AQ2kEHT6eGqA/lmXDnfe5pmPg0rOZV+QhhSxq7i6THO
-UpnqPRAch2uA2TMRZfx6HX7tK+yUlPqlzS3lrxmzVVA3ixZY5uHgsAX0IvKLkUna
-T056VDXxl+B1O3GmxpfXEyw+TQee5nJG8D3xYs7+QTeIa9YDyfua3C0UsufxGZiT
-jv0DHwuj5R3uGbJTNwJ/hYeu5+9exg==
-=nwyo
------END PGP SIGNATURE-----
-
---vkogqOf2sHV7VnPd--
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
