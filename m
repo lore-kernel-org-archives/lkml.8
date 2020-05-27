@@ -2,94 +2,89 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701B1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A92C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4354F2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D32032078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388934AbgE0NxM convert rfc822-to-8bit (ORCPT
+        id S2388944AbgE0Nx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:53:12 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:33555 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388713AbgE0NxM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:53:12 -0400
-X-Originating-IP: 93.23.196.54
-Received: from xps13 (54.196.23.93.rev.sfr.net [93.23.196.54])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id AE2641BF213;
-        Wed, 27 May 2020 13:53:05 +0000 (UTC)
-Date:   Wed, 27 May 2020 15:53:04 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mtd: rawnand: arasan: select CONFIG_BCH
-Message-ID: <20200527155304.0cf42848@xps13>
-In-Reply-To: <20200527134210.847411-1-arnd@arndb.de>
-References: <20200527134210.847411-1-arnd@arndb.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 27 May 2020 09:53:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:38910 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388713AbgE0Nx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:53:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9B6630E;
+        Wed, 27 May 2020 06:53:26 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17D9C3F6C4;
+        Wed, 27 May 2020 06:53:24 -0700 (PDT)
+Date:   Wed, 27 May 2020 14:53:22 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Stephen Boyd <swboyd@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org, Manoj Gupta <manojgupta@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
+Message-ID: <20200527135322.GU5031@arm.com>
+References: <20200526173117.155339-1-ndesaulniers@google.com>
+ <159052247565.23781.7800427985507723263.b4-ty@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159052247565.23781.7800427985507723263.b4-ty@kernel.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Tue, May 26, 2020 at 09:45:05PM +0100, Will Deacon wrote:
+> On Tue, 26 May 2020 10:31:14 -0700, Nick Desaulniers wrote:
+> > Custom toolchains that modify the default target to -mthumb cannot
 
-Arnd Bergmann <arnd@arndb.de> wrote on Wed, 27 May 2020 15:42:03 +0200:
+It's probably too late to water this down, but it's unfortunate to have
+this comment in the upstream commit history.
 
-> Like several other nand flash drivers, this one requires the BCH
-> library to be selected from Kconfig.
+It's not constructive to call the native compiler configuration of
+major distros for many years a "custom" toolchain.  Unmodified GCC has
+had a clean configure option for this for a very long time; it's not
+someone's dirty hack.  (The wisdom of armhf's choice of -mthumb might
+be debated, but it is well established.)
 
-Actually most of the time these drivers do not depend on BCH directly.
-Here it is a bit particular: the hardware ECC engine logic being
-broken, I found a workaround by using BCH's library functions directly
-to verify the hardware correctness.
+Ignoring the triplet and passing random options to a compiler in the
+hopes that it will do the right thing for an irregular usecase has never
+been reliable.  Usecases don't get much more irregular than building
+vdso32.
 
-Anyway, thank you very much for the fix but if I didn't make a mistake
-it should have been fixed yesterday night already, so it's probably not
-in linux-next yet.
+arch/arm has the proper options in its Makefiles.
 
-> arm-linux-gnueabi-ld: drivers/mtd/nand/raw/arasan-nand-controller.o: in function `anfc_attach_chip':
-> arasan-nand-controller.c:(.text+0x894): undefined reference to `bch_init'
-> arm-linux-gnueabi-ld: drivers/mtd/nand/raw/arasan-nand-controller.o: in function `anfc_detach_chip':
-> arasan-nand-controller.c:(.text+0x98c): undefined reference to `bch_free'
-> arm-linux-gnueabi-ld: drivers/mtd/nand/raw/arasan-nand-controller.o: in function `anfc_read_page_hw_ecc':
-> arasan-nand-controller.c:(.text+0x1080): undefined reference to `bch_decode'
+This patch is a kernel bugfix, plain and simple.
+
+> > compile the arm64 compat vdso32, as
+> > arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> > contains assembly that's invalid in -mthumb.  Force the use of -marm,
+> > always.
 > 
-> Fixes: 197b88fecc50 ("mtd: rawnand: arasan: Add new Arasan NAND controller")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/mtd/nand/raw/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> Applied to arm64 (for-next/vdso), thanks!
 > 
-> diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-> index e2bc87779bf9..113f61052269 100644
-> --- a/drivers/mtd/nand/raw/Kconfig
-> +++ b/drivers/mtd/nand/raw/Kconfig
-> @@ -456,6 +456,7 @@ config MTD_NAND_CADENCE
->  config MTD_NAND_ARASAN
->  	tristate "Support for Arasan NAND flash controller"
->  	depends on HAS_IOMEM && HAS_DMA
-> +	select BCH
->  	help
->  	  Enables the driver for the Arasan NAND flash controller on
->  	  Zynq Ultrascale+ MPSoC.
+> [1/1] arm64: vdso32: force vdso32 to be compiled as -marm
+>       https://git.kernel.org/arm64/c/20363b59ad4f
 
-Thanks,
-Miquèl
+Does this need to go to stable?
+
+Cheers
+---Dave
