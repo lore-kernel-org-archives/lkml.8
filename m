@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86695C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42612C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E931207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29209208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387522AbgE0LyA (ORCPT
+        id S2387486AbgE0Lx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:54:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
+        Wed, 27 May 2020 07:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728710AbgE0Lx0 (ORCPT
+        with ESMTP id S1728527AbgE0Lx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 07:53:26 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606D5C05BD1E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695FFC08C5C1
         for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:53:26 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 802793C3; Wed, 27 May 2020 13:53:23 +0200 (CEST)
+        id A2F9E3D0; Wed, 27 May 2020 13:53:23 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Joerg Roedel <joro@8bytes.org>
 Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
         jroedel@suse.de
-Subject: [PATCH 02/10] iommu/amd: Unexport get_dev_data()
-Date:   Wed, 27 May 2020 13:53:05 +0200
-Message-Id: <20200527115313.7426-3-joro@8bytes.org>
+Subject: [PATCH 03/10] iommu/amd: Let free_pagetable() not rely on domain->pt_root
+Date:   Wed, 27 May 2020 13:53:06 +0200
+Message-Id: <20200527115313.7426-4-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200527115313.7426-1-joro@8bytes.org>
 References: <20200527115313.7426-1-joro@8bytes.org>
@@ -44,100 +44,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-This function is internal to the AMD IOMMU driver and only exported
-because the amd_iommu_v2 modules calls it. But the reason it is called
-from there could better be handled by amd_iommu_is_attach_deferred().
-So unexport get_dev_data() and use amd_iommu_is_attach_deferred()
-instead.
+Use 'struct domain_pgtable' instead to free_pagetable(). This solves
+the problem that amd_iommu_domain_direct_map() needs to restore
+domain->pt_root after the device table has been updated just to make
+free_pagetable release the domain page-table.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/amd/amd_iommu_proto.h |  3 ++-
- drivers/iommu/amd/iommu.c           |  9 +++++----
- drivers/iommu/amd/iommu_v2.c        | 10 ++++------
- 3 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/iommu/amd/iommu.c | 36 ++++++++++++++++--------------------
+ 1 file changed, 16 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/iommu/amd/amd_iommu_proto.h b/drivers/iommu/amd/amd_iommu_proto.h
-index 92c2ba6468a0..1c6c12c11368 100644
---- a/drivers/iommu/amd/amd_iommu_proto.h
-+++ b/drivers/iommu/amd/amd_iommu_proto.h
-@@ -92,5 +92,6 @@ static inline void *iommu_phys_to_virt(unsigned long paddr)
- }
- 
- extern bool translation_pre_enabled(struct amd_iommu *iommu);
--extern struct iommu_dev_data *get_dev_data(struct device *dev);
-+extern bool amd_iommu_is_attach_deferred(struct iommu_domain *domain,
-+					 struct device *dev);
- #endif /* _ASM_X86_AMD_IOMMU_PROTO_H  */
 diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 39155f550f18..8368f6b9c17f 100644
+index 8368f6b9c17f..c7e47a7f0d45 100644
 --- a/drivers/iommu/amd/iommu.c
 +++ b/drivers/iommu/amd/iommu.c
-@@ -280,11 +280,10 @@ static struct iommu_dev_data *find_dev_data(u16 devid)
- 	return dev_data;
+@@ -1391,20 +1391,19 @@ static struct page *free_sub_pt(unsigned long root, int mode,
+ 	return freelist;
  }
  
--struct iommu_dev_data *get_dev_data(struct device *dev)
-+static struct iommu_dev_data *get_dev_data(struct device *dev)
+-static void free_pagetable(struct protection_domain *domain)
++static void free_pagetable(struct domain_pgtable *pgtable)
  {
- 	return dev->archdata.iommu;
- }
--EXPORT_SYMBOL(get_dev_data);
+-	struct domain_pgtable pgtable;
+ 	struct page *freelist = NULL;
+ 	unsigned long root;
  
- /*
- * Find or create an IOMMU group for a acpihid device.
-@@ -2706,12 +2705,14 @@ static void amd_iommu_get_resv_regions(struct device *dev,
- 	list_add_tail(&region->list, head);
- }
+-	amd_iommu_domain_get_pgtable(domain, &pgtable);
+-	atomic64_set(&domain->pt_root, 0);
++	if (pgtable->mode == PAGE_MODE_NONE)
++		return;
  
--static bool amd_iommu_is_attach_deferred(struct iommu_domain *domain,
--					 struct device *dev)
-+bool amd_iommu_is_attach_deferred(struct iommu_domain *domain,
-+				  struct device *dev)
+-	BUG_ON(pgtable.mode < PAGE_MODE_NONE ||
+-	       pgtable.mode > PAGE_MODE_6_LEVEL);
++	BUG_ON(pgtable->mode < PAGE_MODE_NONE ||
++	       pgtable->mode > PAGE_MODE_6_LEVEL);
+ 
+-	root = (unsigned long)pgtable.root;
+-	freelist = free_sub_pt(root, pgtable.mode, freelist);
++	root = (unsigned long)pgtable->root;
++	freelist = free_sub_pt(root, pgtable->mode, freelist);
+ 
+ 	free_page_list(freelist);
+ }
+@@ -1823,12 +1822,16 @@ static void free_gcr3_table(struct protection_domain *domain)
+  */
+ static void dma_ops_domain_free(struct protection_domain *domain)
  {
- 	struct iommu_dev_data *dev_data = dev->archdata.iommu;
++	struct domain_pgtable pgtable;
 +
- 	return dev_data->defer_attach;
- }
-+EXPORT_SYMBOL_GPL(amd_iommu_is_attach_deferred);
+ 	if (!domain)
+ 		return;
  
- static void amd_iommu_flush_iotlb_all(struct iommu_domain *domain)
- {
-diff --git a/drivers/iommu/amd/iommu_v2.c b/drivers/iommu/amd/iommu_v2.c
-index d6d85debd01b..9b6e038150c1 100644
---- a/drivers/iommu/amd/iommu_v2.c
-+++ b/drivers/iommu/amd/iommu_v2.c
-@@ -517,13 +517,12 @@ static int ppr_notifier(struct notifier_block *nb, unsigned long e, void *data)
- 	struct amd_iommu_fault *iommu_fault;
- 	struct pasid_state *pasid_state;
- 	struct device_state *dev_state;
-+	struct pci_dev *pdev = NULL;
+ 	iommu_put_dma_cookie(&domain->domain);
+ 
+-	free_pagetable(domain);
++	amd_iommu_domain_get_pgtable(domain, &pgtable);
++	atomic64_set(&domain->pt_root, 0);
++	free_pagetable(&pgtable);
+ 
+ 	if (domain->id)
+ 		domain_id_free(domain->id);
+@@ -2496,9 +2499,8 @@ static void amd_iommu_domain_free(struct iommu_domain *dom)
+ 		break;
+ 	default:
+ 		amd_iommu_domain_get_pgtable(domain, &pgtable);
+-
+-		if (pgtable.mode != PAGE_MODE_NONE)
+-			free_pagetable(domain);
++		atomic64_set(&domain->pt_root, 0);
++		free_pagetable(&pgtable);
+ 
+ 		if (domain->flags & PD_IOMMUV2_MASK)
+ 			free_gcr3_table(domain);
+@@ -2796,7 +2798,6 @@ void amd_iommu_domain_direct_map(struct iommu_domain *dom)
+ 	struct protection_domain *domain = to_pdomain(dom);
+ 	struct domain_pgtable pgtable;
  	unsigned long flags;
- 	struct fault *fault;
- 	bool finish;
- 	u16 tag, devid;
- 	int ret;
--	struct iommu_dev_data *dev_data;
--	struct pci_dev *pdev = NULL;
+-	u64 pt_root;
  
- 	iommu_fault = data;
- 	tag         = iommu_fault->tag & 0x1ff;
-@@ -534,12 +533,11 @@ static int ppr_notifier(struct notifier_block *nb, unsigned long e, void *data)
- 					   devid & 0xff);
- 	if (!pdev)
- 		return -ENODEV;
--	dev_data = get_dev_data(&pdev->dev);
+ 	spin_lock_irqsave(&domain->lock, flags);
  
--	/* In kdump kernel pci dev is not initialized yet -> send INVALID */
- 	ret = NOTIFY_DONE;
--	if (translation_pre_enabled(amd_iommu_rlookup_table[devid])
--		&& dev_data->defer_attach) {
-+
-+	/* In kdump kernel pci dev is not initialized yet -> send INVALID */
-+	if (amd_iommu_is_attach_deferred(NULL, &pdev->dev)) {
- 		amd_iommu_complete_ppr(pdev, iommu_fault->pasid,
- 				       PPR_INVALID, tag);
- 		goto out;
+@@ -2804,18 +2805,13 @@ void amd_iommu_domain_direct_map(struct iommu_domain *dom)
+ 	amd_iommu_domain_get_pgtable(domain, &pgtable);
+ 
+ 	/* Update data structure */
+-	pt_root = amd_iommu_domain_encode_pgtable(NULL, PAGE_MODE_NONE);
+-	atomic64_set(&domain->pt_root, pt_root);
++	atomic64_set(&domain->pt_root, 0);
+ 
+ 	/* Make changes visible to IOMMUs */
+ 	update_domain(domain);
+ 
+-	/* Restore old pgtable in domain->ptroot to free page-table */
+-	pt_root = amd_iommu_domain_encode_pgtable(pgtable.root, pgtable.mode);
+-	atomic64_set(&domain->pt_root, pt_root);
+-
+ 	/* Page-table is not visible to IOMMU anymore, so free it */
+-	free_pagetable(domain);
++	free_pagetable(&pgtable);
+ 
+ 	spin_unlock_irqrestore(&domain->lock, flags);
+ }
 -- 
 2.17.1
 
