@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB74C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF2D20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0739A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:50:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="VvbBmlSj";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oE5qmfKt"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qESqrgYV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GdDbO9dO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730570AbgE0Pud (ORCPT
+        id S1730580AbgE0Puh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:50:33 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55535 "EHLO
+        Wed, 27 May 2020 11:50:37 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51305 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729616AbgE0PuP (ORCPT
+        by vger.kernel.org with ESMTP id S1729818AbgE0PuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:50:15 -0400
+        Wed, 27 May 2020 11:50:19 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id F1C9758206B;
-        Wed, 27 May 2020 11:50:14 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 32812582074;
+        Wed, 27 May 2020 11:50:18 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:14 -0400
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=AYntIEGn/N8Te
-        jy9EdOiCZqtq7NEMMt3i/z/5gIyw54=; b=VvbBmlSjZBuMrFAaip71bI8fXKq6Z
-        3LrLWECRjAxsoDoK9cSBJ1xXioJN7ZTYDQfkQKq3cpHFeLiIUmHSl8bOAcAP67M5
-        KMDAnMHIArA3s/NZmB7JeGUuxpp7B5HwfGGS5SRwbSmJkxmNKSFABerTJHXVML2F
-        LG6UP5LUFUL6sVlA305edDOgCn3xWe4ubldFSkU1xMKrG3ks14P5PwydABNDTqR3
-        wgmiTcRHqqgSkna+vhTcNMbQylmg60dWgrLrY1pjAy3Mcp9+uk+D36tnkx6rBOnI
-        KOq82DkgQKyAoVk21LupYTHoWadtdQej1JQ8ELNKJsZNrPewzP+TIJpRQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=6Oe8Eug7eQDXt
+        mN82ebKfvpSmt8HaYdF7dwjSqGj6vE=; b=qESqrgYVNbtJSTD2SVgywHLBwLNgQ
+        Fao7SrluL2qTa6kHYjQ7Vb6+mdiWfGBdCxz8rHSIr38yq/ulv5taXugxfxIb22wR
+        ZDIMCjO6jVf4Rir3XXvfPBPzTHZeCV+BaQ0OkWCbQ6SdBxiUf6HepzkiwZQRvWjL
+        9xLgwB1kZvN6XChu0Bue9yRGTroa5iQHiNmGHKJxDOrYc8k5msoNpq5jKxhfRu7e
+        g8ClLC0lyAWuY0Mn36XuwcEg790pmBOCTfz3yYEDtpAU0Lg9hZcGsV+0s74x1eJG
+        j+oaAF5zakt1zKnKBiEkAvpR65k21g6LJTRksuusTonvgQ8OJ/6u13VWg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=AYntIEGn/N8Tejy9EdOiCZqtq7NEMMt3i/z/5gIyw54=; b=oE5qmfKt
-        l+bCXrZH1oU0cPyl0B8xcM1twPXQbg30RYWJMgIRm1uJBik04qqeanBr2aVKYjtY
-        lK5Zs70pv71sJ8Q8u8P4seitPE3Gt+07z53HNsLI+9TxbqHWCkVlSZF715dNZywg
-        a+yVgiPGYysJxLrPBl7boPfbjCh0rA2wJDL6fjON7e0YuQIV0CQ6qV8Fj0MFNLYO
-        kJyRj0GLrsrvFdlpWF8AaWWZ9rPG6vz/gbsMuTBx3N822xNeA+R5eCF5FEjGGjds
-        BK+q4+nlv6V1yOY6fNZKNv4blZvXMH/iPrbxFtvsQLLKSlPhxTJ8rI8Q0JIWiG2j
-        IdW0t0tGbq8vXQ==
-X-ME-Sender: <xms:NozOXrZJAirHLCGLi6CgUA9SdCmX6UbVig1WaAOwTi7fmXNgZIOVsA>
+        fm2; bh=6Oe8Eug7eQDXtmN82ebKfvpSmt8HaYdF7dwjSqGj6vE=; b=GdDbO9dO
+        ch2NXw6qZeWNE6OcH3HmIR0HzjVnHZup3XqBCuM4HewBM+lHaj+mI8DbpqcCW4KR
+        8RasJPfRtQVGSlNwbvY8xgF0lFlDX6N7tH79509qkTVle5D1e31xajwAwd+1Hv07
+        ATlkdBSKNV9mdf+SXnhHJTYhWtyAs5c5FJmHgGgmyBnLNb3qAtnwLf0CtfTtO8QW
+        CY1agT89hfUB8/uEDFGx8WWQP8rMGUlA/mNMXk49QldnVUTcYWUznF3pyXb1idHP
+        J6RtVnhXXBUv490dsSL5h8XVAsoyNoZqogULwnrABTE00PJGMRLJCs/dgXoueMYb
+        45J1ECakTzp1xg==
+X-ME-Sender: <xms:OozOXhMV1-_CyoXxD8kFU0PvbozWTvfB8Y3Ia2CirdOCkMM6FHFMRA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudejne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:NozOXqYC8QAJCS474wOqrNWz5Mm-iyVedAl-B-yGkTuSXxgVeqQ53g>
-    <xmx:NozOXt-cZ0uIX0FczYgl2LAJvslHFDhwGShmg1eA40y8AAGQPCn7xw>
-    <xmx:NozOXhqRhXYGsb4nF-2m0IX2VjlQNOD7zg5i1UMHGcwyc7jpjXkpLg>
-    <xmx:NozOXmKC2ITdjF0Q2I1311JWogleQ68o2GOpT4ZqpwdgWlUoJ05lwQ>
+X-ME-Proxy: <xmx:OozOXj8n_Yppv_wnReMeCexpcsDrsAU1WFvrP1zT6wCxjtH4afo9qQ>
+    <xmx:OozOXgSogGZa6E5nVnJOHb5LTXqhZMRgFP5L5ZH_uuiqRjDYsHvpAQ>
+    <xmx:OozOXtuNTtzdATgt4SftCOgz4FNL6HOl7C5FDeQiN_0wTqhhF7wSzg>
+    <xmx:OozOXjv_ip-OlGo6bw9ng0WR7bNIeSHvyTtOPScd_JvACS95PVVI5Q>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 90341328005D;
-        Wed, 27 May 2020 11:50:14 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id BE47A3280060;
+        Wed, 27 May 2020 11:50:17 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 036/105] drm/vc4: crtc: Rename HDMI encoder type to HDMI0
-Date:   Wed, 27 May 2020 17:48:06 +0200
-Message-Id: <0304b076c3a67091c8eabc005b827032827e9339.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 038/105] drm/vc4: crtc: Remove redundant call to drm_crtc_enable_color_mgmt
+Date:   Wed, 27 May 2020 17:48:08 +0200
+Message-Id: <e576f64eacbcd2a7e4f8f0aabeb5b7e340561a59.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,55 +89,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The previous generations were only supporting a single HDMI controller, but
-that's about to change, so put an index as well to differentiate between
-the two controllers.
+The driver calls the helper to add the color management properties twice,
+which is redundant. Remove the first one.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 2 +-
- drivers/gpu/drm/vc4/vc4_drv.h  | 2 +-
- drivers/gpu/drm/vc4/vc4_hdmi.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 12cfa0fb2e19..07e23f76451c 100644
+index 07e23f76451c..8a3fe4d39847 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -1111,7 +1111,7 @@ static const struct vc4_crtc_data bcm2835_pv2_data = {
- 	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
--		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI,
-+		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI0,
- 		[PV_CONTROL_CLK_SELECT_VEC] = VC4_ENCODER_TYPE_VEC,
- 	},
- };
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 1f62dffd6676..cc30e54d75ab 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -429,7 +429,7 @@ to_vc4_plane_state(struct drm_plane_state *state)
+@@ -1199,7 +1199,6 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
+ 				  &vc4_crtc_funcs, NULL);
+ 	drm_crtc_helper_add(crtc, &vc4_crtc_helper_funcs);
+ 	drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
+-	drm_crtc_enable_color_mgmt(crtc, 0, false, crtc->gamma_size);
  
- enum vc4_encoder_type {
- 	VC4_ENCODER_TYPE_NONE,
--	VC4_ENCODER_TYPE_HDMI,
-+	VC4_ENCODER_TYPE_HDMI0,
- 	VC4_ENCODER_TYPE_VEC,
- 	VC4_ENCODER_TYPE_DSI0,
- 	VC4_ENCODER_TYPE_DSI1,
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 625bfcf52dc4..19a0780a14bd 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1309,7 +1309,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 					GFP_KERNEL);
- 	if (!vc4_hdmi_encoder)
- 		return -ENOMEM;
--	vc4_hdmi_encoder->base.type = VC4_ENCODER_TYPE_HDMI;
-+	vc4_hdmi_encoder->base.type = VC4_ENCODER_TYPE_HDMI0;
- 	hdmi->encoder = &vc4_hdmi_encoder->base.base;
- 
- 	hdmi->pdev = pdev;
+ 	/* We support CTM, but only for one CRTC at a time. It's therefore
+ 	 * implemented as private driver state in vc4_kms, not here.
 -- 
 git-series 0.9.1
