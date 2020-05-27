@@ -2,177 +2,83 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A734207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590565031;
-	bh=0M1mFsGDTKIzE9/6yoIC6rR97OlF6HfqERxEr8t9U4c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=atHN1YUIfRqboyZ/oVXdMnEskugcBTgU5G8yimz184jevLV30nVZaL0xsZuFpLFzT
-	 iKwsB8Lb2oAddZK6zKC3XkPn+vLl0oWDpt9KWgyTJZJ2ZMFolQEGxjlrJdoGJA+pQy
-	 27mdjQCt7eiPmnLk2+UN5BdLLngKqGvzxRVTpbeg=
+	by mail.kernel.org (Postfix) with ESMTP id 1956F208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgE0HhK (ORCPT
+        id S1729332AbgE0HiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729212AbgE0HhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:37:10 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E832207CB;
-        Wed, 27 May 2020 07:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590565029;
-        bh=0M1mFsGDTKIzE9/6yoIC6rR97OlF6HfqERxEr8t9U4c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YvrR6OuBxoy9z1BVf2rExUxfPg3agb10ofmlmcyMDTTaeYIAOmn8QaXB7vdbF/Sbv
-         +lYSGpYQS82+AuEAc32Sb3Ec2u2bVkqX9hEFUam+DAFG69l8iWDqGzKBW+GSHqu9kT
-         StqP/6DkYMcG2bufjcuOoS4XdXvDOS+W5gGuFn3A=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jdqcd-00FdBE-0J; Wed, 27 May 2020 08:37:07 +0100
+        Wed, 27 May 2020 03:38:21 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34613 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbgE0HiV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:38:21 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b18so18502157oti.1;
+        Wed, 27 May 2020 00:38:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PNLv5z8EKY1yuhWqFKsZJ0tNJNt2riKYrmpKQdpJCq4=;
+        b=syxooSn8MTa3f2hzeY9xQvNzJ1q7Fcd6JOD5UuYQheaxtT/zgqp5BJy9MD/02ipNek
+         uKzF1cluwJ4Ju+1S3ALLDbNlpLP9VsfLGIoEzw3oFi6AUuu9+AmbS1AnEj3DWJwBFvzQ
+         P4Y8uhDEnxaUNxmG8VonaSTQIDL1Lny5AS3N7Q/u6W6rYh5Nirktew9dc43jGcSEUqdk
+         UQg/YPtCOYxMt4rAKQOvqTgI2bNeKS5GBs/jRa5Rp/yS0xC71wvY/4ZbwFCI2T7M4fiy
+         IIkXFOT8MytJnbe5HJv6T8urHJoiMOWgYqppASUMVxA31forL4OFsygtj5yWCWMY9MpE
+         x3aQ==
+X-Gm-Message-State: AOAM531ySmx8on6XLprfAJFlgw1U8PwOJhWhiD7DV3I7tU6sZJIufJ9t
+        FtF7GNgxZhH5UR1WoGzYxVw+IcZizaagBpJrocE=
+X-Google-Smtp-Source: ABdhPJxm2iQnKGPaQ8cudthAdTY+DMCSTWHl/gI3LFICJOmziwdjskV5xtEX0AQPODgatzLU0HkSgXSO28tDFRH9NJs=
+X-Received: by 2002:a9d:7e92:: with SMTP id m18mr3628517otp.145.1590565100227;
+ Wed, 27 May 2020 00:38:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 May 2020 08:37:06 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
-        aarcange@redhat.com, shan.gavin@gmail.com
-Subject: Re: [PATCH RFCv2 7/9] kvm/arm64: Support async page fault
-In-Reply-To: <e1230110-b51f-b8b8-60d9-372660c5c387@redhat.com>
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-8-gshan@redhat.com>
- <20200526123424.GF1363@C02TD0UTHF1T.local>
- <e1230110-b51f-b8b8-60d9-372660c5c387@redhat.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <28c74819f42306e66370ddaf88f16918@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: gshan@redhat.com, mark.rutland@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com, aarcange@redhat.com, shan.gavin@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 27 May 2020 09:38:08 +0200
+Message-ID: <CAMuHMdVZJoRYTohMs+Qt9oYF+2MSHVNDa56BNj6VJNnqPXPvhw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-27 05:05, Gavin Shan wrote:
-> Hi Mark,
-> 
+On Tue, May 26, 2020 at 11:02 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document RZ/G1H (R8A7742) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-[...]
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->>> +struct kvm_vcpu_pv_apf_data {
->>> +	__u32	reason;
->>> +	__u8	pad[60];
->>> +	__u32	enabled;
->>> +};
->> 
->> What's all the padding for?
->> 
-> 
-> The padding is ensure the @reason and @enabled in different cache
-> line. @reason is shared by host/guest, while @enabled is almostly
-> owned by guest.
+Gr{oetje,eeting}s,
 
-So you are assuming that a cache line is at most 64 bytes.
-It is actualy implementation defined, and you can probe for it
-by looking at the CTR_EL0 register. There are implementations
-ranging from 32 to 256 bytes in the wild, and let's not mention
-broken big-little implementations here.
+                        Geert
 
-[...]
-
->>> +bool kvm_arch_can_inject_async_page_not_present(struct kvm_vcpu 
->>> *vcpu)
->>> +{
->>> +	u64 vbar, pc;
->>> +	u32 val;
->>> +	int ret;
->>> +
->>> +	if (!(vcpu->arch.apf.control_block & KVM_ASYNC_PF_ENABLED))
->>> +		return false;
->>> +
->>> +	if (vcpu->arch.apf.send_user_only && vcpu_mode_priv(vcpu))
->>> +		return false;
->>> +
->>> +	/* Pending page fault, which ins't acknowledged by guest */
->>> +	ret = kvm_async_pf_read_cache(vcpu, &val);
->>> +	if (ret || val)
->>> +		return false;
->>> +
->>> +	/*
->>> +	 * Events can't be injected through data abort because it's
->>> +	 * going to clobber ELR_EL1, which might not consued (or saved)
->>> +	 * by guest yet.
->>> +	 */
->>> +	vbar = vcpu_read_sys_reg(vcpu, VBAR_EL1);
->>> +	pc = *vcpu_pc(vcpu);
->>> +	if (pc >= vbar && pc < (vbar + vcpu->arch.apf.no_fault_inst_range))
->>> +		return false;
->> 
->> Ah, so that's when this `no_fault_inst_range` is for.
->> 
->> As-is this is not sufficient, and we'll need t be extremely careful
->> here.
->> 
->> The vectors themselves typically only have a small amount of stub 
->> code,
->> and the bulk of the non-reentrant exception entry work happens
->> elsewhere, in a mixture of assembly and C code that isn't even 
->> virtually
->> contiguous with either the vectors or itself.
->> 
->> It's possible in theory that code in modules (or perhaps in eBPF JIT'd
->> code) that isn't safe to take a fault from, so even having a 
->> contiguous
->> range controlled by the kernel isn't ideal.
->> 
->> How does this work on x86?
->> 
-> 
-> Yeah, here we just provide a mechanism to forbid injecting data abort. 
-> The
-> range is fed by guest through HVC call. So I think it's guest related 
-> issue.
-> You had more comments about this in PATCH[9]. I will explain a bit more 
-> there.
-> 
-> x86 basically relies on EFLAGS[IF] flag. The async page fault can be 
-> injected
-> if it's on. Otherwise, it's forbidden. It's workable because exception 
-> is
-> special interrupt to x86 if I'm correct.
-> 
->            return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
->                   !(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
->                         (GUEST_INTR_STATE_STI | 
-> GUEST_INTR_STATE_MOV_SS));
-
-I really wish this was relying on an architected exception delivery
-mechanism that can be blocked by the guest itself (PSTATE.{I,F,A}).
-Trying to guess based on the PC won't fly. But these signals are
-pretty hard to multiplex with anything else. Like any form of
-non-architected exception injection, I don't see a good path forward
-unless we start considering something like SDEI.
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
