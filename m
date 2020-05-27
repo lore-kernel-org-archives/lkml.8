@@ -2,103 +2,103 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D187C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12DA620B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B492088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgE0JyI (ORCPT
+        id S1729588AbgE0JzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:54:08 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:32817 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgE0JyH (ORCPT
+        Wed, 27 May 2020 05:55:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16082 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725550AbgE0JzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:54:07 -0400
-Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MBltK-1jjLKT2c6m-00CDQl; Wed, 27 May 2020 11:54:05 +0200
-Received: by mail-qv1-f47.google.com with SMTP id dh1so10830611qvb.13;
-        Wed, 27 May 2020 02:54:05 -0700 (PDT)
-X-Gm-Message-State: AOAM533l6opv8qtsuRCknZJWxN9mxqkxakKQZXRox1ZB6l8pPY/cujqk
-        libGPswclU007e0F2M3O/sNDzmsOyV7OYa0nueM=
-X-Google-Smtp-Source: ABdhPJwFY+9e2QwGxBuOVJhyvZzHkmdup67C33Hon0tX+xYCanXD6siiWNyzzW3vpc4K6tTqx9WsMyOJzXh6HoLxoPA=
-X-Received: by 2002:a05:6214:370:: with SMTP id t16mr24222212qvu.197.1590573244279;
- Wed, 27 May 2020 02:54:04 -0700 (PDT)
+        Wed, 27 May 2020 05:55:22 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04R9XYco116026;
+        Wed, 27 May 2020 05:54:46 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 317hejn88r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 05:54:46 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04R9a7cM008744;
+        Wed, 27 May 2020 09:54:45 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03wdc.us.ibm.com with ESMTP id 316uf9e7hj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 09:54:45 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04R9sjk941419090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 09:54:45 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EED45112067;
+        Wed, 27 May 2020 09:54:44 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1FE8112063;
+        Wed, 27 May 2020 09:54:42 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.85.125.124])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 27 May 2020 09:54:42 +0000 (GMT)
+X-Mailer: emacs 27.0.91 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v8 3/5] powerpc/papr_scm: Fetch nvdimm health
+ information from PHYP
+In-Reply-To: <20200527041244.37821-4-vaibhav@linux.ibm.com>
+References: <20200527041244.37821-1-vaibhav@linux.ibm.com>
+ <20200527041244.37821-4-vaibhav@linux.ibm.com>
+Date:   Wed, 27 May 2020 15:24:40 +0530
+Message-ID: <87v9kh7len.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org> <20200527090007.GA179718@kroah.com>
-In-Reply-To: <20200527090007.GA179718@kroah.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 11:53:48 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
-Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:7K2loUdsuzT4IObBECaTn5y/oTwu9Qnf7fQGq3o3+5XHTkSeubV
- RkTn504d1Z3tqqH5zotfEfCbYHNzcz7ngEoG4h5+ogwKwxhFOdzfXXT1uY0AWLucWB2PLHR
- dqkjxVfhTidDANOLpVF1+u7kI0XC3zFrDVIpU5sBiApHBh/4OxfJ/bzSbYnmnvJuFl8225L
- jAT9cXT8IQvkLTSHkfbQw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DbAEUAVsBkM=:7+j/lOP7swsqLFFxJSAwFf
- ItEC3r0lBQC310bf0/c3QzQbF84sZuRnNiMCBE8TLhSAeUv8xxYikqgF650oIKqNymmHdt004
- F08oVFVZ7aXRpfvfjzEqavIlw8j/Ba95gvaqi3+x/Ncc6rtSxY5xU7cOl9RynkZqVURxlYKLo
- 4LH7Ws/t0aqA9WXGeQ3k1+u+lfkfcGVir/daeX3QTAXmKku/spJl4u1B+3c+clr1WnFVWg5ar
- oLk9Ow3KVtUp+KvVJAcvYPa9FuuzDVkUWrgvKr0EwP02DFcRzAqBdIRfvTMw003Rq6+4BIXyM
- am1JdeZ35CoJGUTxe538lEdwobpe8YPs8+jvs5R5+rqWmex/KC7FyTvX5WX6Gwu2+2v3aPQXj
- ZiZ1Ik7xwSRDWe0DgulC3XwlE5EyI/Yp8Zxx/dt3ETB7WyDtIX5DFfxAX26bQnIi0kh1S1kkm
- zJuSO4KrO8HvLJvF/BHhg5xEy1w03Mfq9JMNWZabgxKxd1+gnQw6QHxW3CElkr+t0N0nqD38R
- xu1XrBBdgctMN74gdHWvaIsNDLVASuOOxKKZBmBwebuQ9twv9IJdWU49lUPxaLRPaAkUq8kpb
- uP4EwQG4f7mreMQykVlroIbC+XRj3fdte3PFEs570mYw3gWbb2lsEmFtCV/0Hp+ndYulb/D58
- JgQwRg7AASPjMOo1Aat8IywGuyGp+RxqwQbKsofsnCas2HojPD37fSuxyCGj8RGqiLbn+02EY
- OQpuJmkC3a32velZ0MjS2ODlSOp8TPOGiGQhZsLoqwauWQCWJlkz9GL3Fzh4bHSiU5Q8VkJbg
- UJYRC664fnWhVVjS/xKOLJofbn8Sr9EmixSWQ3D+C4mSpPjUjU=
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-27_03:2020-05-26,2020-05-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=754 malwarescore=0 clxscore=1015 adultscore=0
+ phishscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:00 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Vaibhav Jain <vaibhav@linux.ibm.com> writes:
+
+> Implement support for fetching nvdimm health information via
+> H_SCM_HEALTH hcall as documented in Ref[1]. The hcall returns a pair
+> of 64-bit bitmap, bitwise-and of which is then stored in
+> 'struct papr_scm_priv' and subsequently partially exposed to
+> user-space via newly introduced dimm specific attribute
+> 'papr/flags'. Since the hcall is costly, the health information is
+> cached and only re-queried, 60s after the previous successful hcall.
 >
-> On Tue, May 26, 2020 at 07:49:07PM +0800, Zhangfei Gao wrote:
-> > Some platform devices appear as PCI but are actually on the AMBA bus,
+> The patch also adds a  documentation text describing flags reported by
+> the the new sysfs attribute 'papr/flags' is also introduced at
+> Documentation/ABI/testing/sysfs-bus-papr-scm.
 >
-> Why would these devices not just show up on the AMBA bus and use all of
-> that logic instead of being a PCI device and having to go through odd
-> fixes like this?
+> [1] commit 58b278f568f0 ("powerpc: Provide initial documentation for
+> PAPR hcalls")
+>
 
-There is a general move to having hardware be discoverable even with
-ARM processors. Having on-chip devices be discoverable using PCI config
-space is how x86 SoCs usually do it, and that is generally a good thing
-as it means we don't need to describe them in DT
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-I guess as the hardware designers are still learning about it, this is not
-always done correctly. In general, we can also describe PCI devices on
-DT and do fixups during the probing there, but I suspect that won't work
-as easily using ACPI probing, so the fixup is keyed off the hardware ID,
-again as is common for x86 on-chip devices.
-
-      Arnd
+> Cc: "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
