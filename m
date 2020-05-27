@@ -2,123 +2,92 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C014DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A9A2089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6522089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:07:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="s7vxinaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbgE0UGD (ORCPT
+        id S1728550AbgE0UHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:06:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
+        Wed, 27 May 2020 16:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgE0UGD (ORCPT
+        with ESMTP id S1726114AbgE0UHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:06:03 -0400
-X-Greylist: delayed 18763 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 27 May 2020 13:06:03 PDT
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:12e:520::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6055EC05BD1E;
-        Wed, 27 May 2020 13:06:03 -0700 (PDT)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1je2JN-0002DO-Fg; Wed, 27 May 2020 22:06:01 +0200
-Date:   Wed, 27 May 2020 22:06:01 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Florian Westphal <fw@strlen.de>,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        sgrubb@redhat.com, omosnace@redhat.com, twoerner@redhat.com,
-        eparis@parisplace.org, tgraf@infradead.org
-Subject: Re: [PATCH ghak124 v1] audit: log nftables configuration change
- events
-Message-ID: <20200527200601.GJ2915@breakpoint.cc>
-References: <d92a718b54269f426acc18f28e561031da66d3ca.1590579994.git.rgb@redhat.com>
- <20200527145317.GI2915@breakpoint.cc>
- <20200527152443.7axktc2im3zpvk37@madcap2.tricolour.ca>
+        Wed, 27 May 2020 16:07:32 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344A0C05BD1E;
+        Wed, 27 May 2020 13:07:32 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id g9so21329200edw.10;
+        Wed, 27 May 2020 13:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r9Y1R6h6DQE2/rRX48OYyaXQnQUWwp5Xf+j2aGf7gqg=;
+        b=s7vxinaEYjtzfrgWsA897RFKnul98c2LtsGm2X5fTEzJJ8s8ox+RVpNgDiCR0uwNJL
+         UUQn1hd9ILlYH2C/rLNPOqG4c9LpnAlvLP1ueUJSdlpedy/UMsmCsNwnJgm3fl7J2nlJ
+         wb8jTmxugLUPoz31SYsMS9VJgREP81GDO+UH3kzWWAXvYVy5S/SwmINCQ7RpYLcav8Hm
+         OLGzMGKNdjbCLR0PiaMJ9HlKqUh3jB1b0segRmfiXzdOQeGYrnSl1oId90IGe/lRygXG
+         p2Rls31nIr100yTQ6MmVM3gmCAjetS9ZUVA0z3pmnNkMOusbF3WtFrqk1M/p7vWbi2/4
+         mMEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r9Y1R6h6DQE2/rRX48OYyaXQnQUWwp5Xf+j2aGf7gqg=;
+        b=HSnkqkWef84klg83FURmx/dIAjrmAVPfrtFD/FIISCDFj2N6Izb3plX5tfcyB6BqlF
+         Qodo1kPXcdgXvQaXf54RMq8EuU9wdGQqwKG0cAl6BgbUp82I+CdZaKfH8Yvx1zAgRPuM
+         dDQv5eB6UYRdqrRNd6P8oXc6gN1pOA+T25cEjR4yADbV9oj8Rw0daNx5+IZBSevm6w/X
+         gzfU7a10HYzqKcH/HpWGfas9m8/yEccT5GpPANtbI/HhxzsRFQF6qeSKbDlhSQIqwOQs
+         hXQ0JU2Ev4GEJkWk6gzvrEg5w/xTOgO54uvL1KZxUNiSs2y4F1Z0bmsapMY5hPSrhawQ
+         xsow==
+X-Gm-Message-State: AOAM53085J2KHPnkzrT06rrimIqz83Iq3/YL9EA9x976R00PSY+7Znqt
+        o6WJzNXhBCB4Ym50+0oGhZbVNy/eyItXS50am6c=
+X-Google-Smtp-Source: ABdhPJyqwKfqj/ZsK6VxnjlHRRAbKxb2lAkRclrEAbzJjpz55OWtedJWwYD1IMRCvlPlhHeTBS0ql+qxc5LESffBOh0=
+X-Received: by 2002:a50:c014:: with SMTP id r20mr24517567edb.110.1590610050817;
+ Wed, 27 May 2020 13:07:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527152443.7axktc2im3zpvk37@madcap2.tricolour.ca>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200519170440.294601-1-jbrunet@baylibre.com>
+In-Reply-To: <20200519170440.294601-1-jbrunet@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Wed, 27 May 2020 22:07:20 +0200
+Message-ID: <CAFBinCBXTwKz81bQK3U1bv7vGiryhShijqh2hqaypPvLopvwNA@mail.gmail.com>
+Subject: Re: [PATCH] clk: add api to get clk consummer from clk_hw
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Richard Guy Briggs <rgb@redhat.com> wrote:
-> Well, we are only logging "some change", so is it necessary to log the
-> generation count to show that?  Is the generation count of specific
-> interest?
+Hi Jerome,
 
-No, its of no specific interest.  I just worded this poorly.
-If the generation id increments, then something has been changed by the
-batch, thats all.
+On Tue, May 19, 2020 at 7:09 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+[...]
+> + * Calls to this function must be balanced with calls clk_put()
+> + */
+> +struct clk *clk_hw_get_clk(struct clk_hw *hw)
+I haven't looked at it myself yet, but would it be hard to have a
+devm_ variant of this function as well?
+a non-devm managed function would add boilerplate to the meson-mx-sdhc-mmc code
 
-> > (After that, kernel can't back down anymore, i.e. all errors are
-> >  caught/handled beforehand).
-> 
-> I did think of recording all failed attempts too, but coding that would
-> be more effort.  It is worth doing if it is deemed important,
-> particularly for permission issues (as opposed to resource limits or
-> packet format errors.  This would be more of interest to a security
-> officer rather than a network technician, but the latter may find it
-> useful for debugging.
+also this may or may not simplify how to fetch the struct device
+pointer for this use-case.
+(that said, I only know about drivers for Amlogic related IP and there
+the devm_ variant can be used, but I don't know about other potential
+consumers of this new API)
 
-The permission check is done early, in nfnetlink_rcv() (search for
-EPERM), you would need to add an audit call there if thats relevant
-for audit purposes.
 
-> > If its 'any config change', then you also need to handle adds
-> > or delete from sets/maps, since that may allow something that wasn't
-> > allowed before, e.g. consider
-> > 
-> > ip saddr @trused accept
-> > 
-> > and then, later on,
-> > nft add element ip filter @trusted { 10.0.0.0/8, 192.168.0.1 }
-> > 
-> > This would not add a table, or chain, or set, but it does implicitly
-> > alter the ruleset.
-> 
-> Ah, ok, so yes, we would need that too.  I see family and table in
-> there, op is evident.  Is there a useful value we can use in the
-> "entries" field?
-
-Maybe the handle of the set that the element was added to.
-Each set, rule, chain, ... has a kernel-assigned number that
-serves as a unique identifier.
-
-> > Is that record format expected to emit the current number of chains?
-> 
-> I was aiming for a relevant value such as perhaps the new rule number or
-> the rule number being deleted.
-
-In that case, use the handle, which is a u64 with a unique value (for a
-given table).
-
-> > Since table names can be anything in nf_tables (they have no special
-> > properties anymore), the table name is interesting from a informational
-> > pov, but not super interesting.
-> 
-> I don't think we need to be able to completely reconstruct the
-> tables/chains/rules from the information in the audit log, but be aware
-> of who is changing what when.
-
-Ok.  Have a look at nf_tables_fill_gen_info() in that case, you probably
-want to emit at least the pid and task info, unless audit doesn't add
-that already anyway.
-
-> > Consider a batch update that commits 100 new rules in chain x,
-> > this would result in 100 audit_log_nfcfg() calls, each with the
-> > same information.
-> 
-> So rule number would be a useful differentiator here.
-
-Ok.  Yes, that is available (rule->handle).
+Thank you!
+Martin
