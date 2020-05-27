@@ -2,89 +2,120 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF30C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F20DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 761BB2089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EoqI1QIY"
+	by mail.kernel.org (Postfix) with ESMTP id F20102089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgE0UJW (ORCPT
+        id S2387420AbgE0UJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:09:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgE0UJW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:09:22 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C1BC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:09:22 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0b8700952f735680ed3731.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:952f:7356:80ed:3731])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 67B761EC03C1;
-        Wed, 27 May 2020 22:09:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590610160;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=fRPuxBakBVbcmSCEg2bC/jV+3VKUhQ73s7iWSD9boGI=;
-        b=EoqI1QIYPQYGvHcoAvkkthP8DyiXmirTvOWJWMdEpPPAt5Th+ltsYDYwHq96Oed8CXrbff
-        xwhGNI7UpdhvzhDifoZ03vmJlfZRBY9HPzpKMeGbU/Dm0Bf0ba/ueAE6Rh0byf8nLebdfI
-        TWreLrS7TjWgUlGN49vxBIydfyLHCvI=
-Date:   Wed, 27 May 2020 22:09:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, sunhaoyl@outlook.com,
-        x86@kernel.org
-Subject: Re: [PATCH] fs/binfmt_elf.c: allocate initialized memory in
- fill_thread_core_info()
-Message-ID: <20200527200910.GE1721@zn.tnic>
-References: <20200421034249.GB23230@ZenIV.linux.org.uk>
- <CAG_fn=VZZ7yUxtOGzuTLkr7wmfXWtKK9BHHYawj=rt9XWnCYvg@mail.gmail.com>
- <20200512010901.GQ23230@ZenIV.linux.org.uk>
- <20200512034400.GA1537486@ZenIV.linux.org.uk>
- <CAG_fn=Xopqwu8qpdH2xDHmGSy1utp7uyPn7s6btm0hdaV7JVRg@mail.gmail.com>
- <20200513033349.GR23230@ZenIV.linux.org.uk>
- <20200524234535.GA23230@ZenIV.linux.org.uk>
- <20200526223817.GA3819674@ZenIV.linux.org.uk>
- <20200527190456.GD1721@zn.tnic>
- <20200527195303.GF23230@ZenIV.linux.org.uk>
+        Wed, 27 May 2020 16:09:37 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52878 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726798AbgE0UJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:09:36 -0400
+IronPort-SDR: TaMRkLinzWzGr3EtcyDBzxPV47kU3Rcsrf2v6gVDD7H/mDbf4OyHMauQe+Z1VyYQFAaZfqQ8KA
+ W6DEFsFpsk+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 13:09:35 -0700
+IronPort-SDR: Uae7lhmeinT5YiWWmiUkt6Tj7A1nsDizky35Cl75Rv3tTZYtdmqBDkYOzeLGMAeuc2tnKOfKQF
+ EofL5u+UPwLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="376137006"
+Received: from lkakolx-mobl.ger.corp.intel.com ([10.249.43.73])
+  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 13:09:30 -0700
+Message-ID: <37da2695fe6de09d69e27b77f3e29e068596205f.camel@linux.intel.com>
+Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
+ mode"
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mario.Limonciello@dell.com, peterhuewe@gmx.de, jgg@ziepe.ca
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jeffrin@rajagiritech.edu.in, alex@guzman.io
+Date:   Wed, 27 May 2020 23:09:28 +0300
+In-Reply-To: <1590521924.15108.1.camel@HansenPartnership.com>
+References: <20200526183213.20720-1-mario.limonciello@dell.com>
+         <1590520454.11810.40.camel@HansenPartnership.com>
+         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
+         <1590521924.15108.1.camel@HansenPartnership.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200527195303.GF23230@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:53:03PM +0100, Al Viro wrote:
-> Either way would work - I was going to send it to Linus tonight and an
-> extra Acked-by: would be welcome.  OTOH, if you would rather have all
-> x86-related patches go through x86 git... your subtree, your rules.
+On Tue, 2020-05-26 at 12:38 -0700, James Bottomley wrote:
+> On Tue, 2020-05-26 at 19:23 +0000, Mario.Limonciello@dell.com wrote:
+> > > On Tue, 2020-05-26 at 13:32 -0500, Mario Limonciello wrote:
+> > > > This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
+> > > > 
+> > > > This commit has caused regressions for the XPS 9560 containing
+> > > > a Nuvoton TPM.
+> > > 
+> > > Presumably this is using the tis driver?
+> > 
+> > Correct.
+> > 
+> > > > As mentioned by the reporter all TPM2 commands are failing with:
+> > > >   ERROR:tcti:src/tss2-tcti/tcti-
+> > > > device.c:290:tcti_device_receive()
+> > > >   Failed to read response from fd 3, got errno 1: Operation not
+> > > > permitted
+> > > > 
+> > > > The reporter bisected this issue back to this commit which was
+> > > > backported to stable as commit 4d6ebc4.
+> > > 
+> > > I think the problem is request_locality ... for some inexplicable
+> > > reason a failure there returns -1, which is EPERM to user space.
+> > > 
+> > > That seems to be a bug in the async code since everything else
+> > > gives a ESPIPE error if tpm_try_get_ops fails ... at least no-one
+> > > assumes it gives back a sensible return code.
+> > > 
+> > > What I think is happening is that with the patch the TPM goes
+> > > through a quick sequence of request, relinquish, request,
+> > > relinquish and it's the third request which is failing (likely
+> > > timing out).  Without the patch, the patch there's only one
+> > > request,relinquish cycle because the ops are held while the async
+> > > work is executed.  I have a vague recollection that there is a
+> > > problem with too many locality request in quick succession, but
+> > > I'll defer to Jason, who I think understands the intricacies of
+> > > localities better than I do.
+> > 
+> > Thanks, I don't pretend to understand the nuances of this particular
+> > code, but I was hoping that the request to revert got some attention
+> > since Alex's kernel Bugzilla and message a few months ago to linux
+> > integrity weren't.
+> > 
+> > > If that's the problem, the solution looks simple enough: just move
+> > > the ops get down because the priv state is already protected by the
+> > > buffer mutex
+> > 
+> > Yeah, if that works for Alex's situation it certainly sounds like a
+> > better solution than reverting this patch as this patch actually does
+> > fix a problem reported by Jeffrin originally.
+> > 
+> > Could you propose a specific patch that Alex and Jeffrin can perhaps
+> > both try?
+> 
+> Um, what's wrong with the one I originally attached and which you quote
+> below?  It's only compile tested, but I think it will work, if the
+> theory is correct.
 
-Ok, here we go:
+Please send a legit patch, thanks.
 
-Acked-by: Borislav Petkov <bp@suse.de>
+/Jarkko
 
-Thx!
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
