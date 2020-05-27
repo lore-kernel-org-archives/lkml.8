@@ -2,160 +2,224 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D178C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8209C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 108162075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7644B20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QEqoUDlI"
+	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="n5jA1URN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vhoXYIJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgE0Vo4 (ORCPT
+        id S1727064AbgE0Vqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 17:44:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47552 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725930AbgE0Voy (ORCPT
+        Wed, 27 May 2020 17:46:48 -0400
+Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:48525 "EHLO
+        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726787AbgE0Vqr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 17:44:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590615892;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fBvAWYmBdzgrA5U0LT3xtBczNhEDcnN6W5IKb+q9W/4=;
-        b=QEqoUDlIvmI2hBiD4wCZGEVXSoFKikYClEgisZAokONZIGycxBOUcu9FhKgkp0XiC4dDmA
-        +/5YHL25q8RLW57uN5cwLoa7ALTzjPHsZ8V2MygNEyWV73VLQc1JG3/gB058ZGMP6AkqPA
-        FJaPGnugxh9r1/I3f0eVuB7jOckuwHw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-473-aSBTTzSIMxi_-BB5z1QEXw-1; Wed, 27 May 2020 17:44:49 -0400
-X-MC-Unique: aSBTTzSIMxi_-BB5z1QEXw-1
-Received: by mail-wr1-f72.google.com with SMTP id l18so6658481wrm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 14:44:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fBvAWYmBdzgrA5U0LT3xtBczNhEDcnN6W5IKb+q9W/4=;
-        b=CfOArljPdXkWPA7Tt9xrrv6zsmNd5zA0G9sdBbYDeS13RpKkkVTywhvMozGlMgS9RS
-         w3d0wdQscscB0gXmfLzJW9bKJ9JRcb/6zHyyyltWPiRDy3YRHHg8Dg4SAc6o2excbxRm
-         odjjSHYeYZuu7OpV6jNJaqwXjikV39ZV0Z8ntkL5u6178iMh+0xenZy45gTcvSIeqiMk
-         dY5xSD2Xn1dllBCBgaauM3Pb4IUXMYx411EnCffh9/F9uN3Rx2ITAoqEuzE+z/+FeRUM
-         kY2xXoSVpZcJO0xz3YpkFq3XLItfv28m5tREN1r9xX22xcG3dL2j1thsAy3nS5g1saAj
-         B+cg==
-X-Gm-Message-State: AOAM531gIOfrpyECv4hQbgMIy/G7UkifhNjSPqDKFU8lRRrr6K86jdUm
-        cLITH3E/WackNhlwArCm1VxZP7yj48B/61zxN1LFbTb+4DC8TCxSDQ5KBv+ev4ppV4wwoQTOsxV
-        E+C3ShNzYeHC8pkgPxlNahnIL
-X-Received: by 2002:a1c:790a:: with SMTP id l10mr144589wme.80.1590615888698;
-        Wed, 27 May 2020 14:44:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy3Af0J2CmuPpUG32rxwXfc1KYndN+k+SQB+Tn++8tDC1cfUbE9HPS7Kypz3xsxeZWawipQoA==
-X-Received: by 2002:a1c:790a:: with SMTP id l10mr144569wme.80.1590615888450;
-        Wed, 27 May 2020 14:44:48 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id j135sm4749631wmj.43.2020.05.27.14.44.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 14:44:47 -0700 (PDT)
-Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
- kernel statistics
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Emanuele Giuseppe Esposito <eesposit@redhat.com>,
-        kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-References: <20200526110318.69006-1-eesposit@redhat.com>
- <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
- <20200527132321.54bcdf04@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <af2ba926-73bc-26c3-7ce7-bd45f657fd85@redhat.com>
- <20200527142741.77e7de37@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <925502d6-875a-4d19-b574-1ffd47a9c2ce@redhat.com>
-Date:   Wed, 27 May 2020 23:44:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 27 May 2020 17:46:47 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id E0700AAA;
+        Wed, 27 May 2020 17:46:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 17:46:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
+        :to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=1uMfllCwGVRSV
+        eD897uL9SAlLt6bpaVgLEM5vf/6PXU=; b=n5jA1URN2O3JQQOPok0OlsSawfeLb
+        qbcVZyXyIOqc6v3EddUBeX2546X93UB6qLgI/tUrxtS7V7joMKVJch25KM6pi07J
+        2G4QRoB5Z5Gp6iLFfjIzZQgmBePIV+CiRnSljB8JMlMF8VryCaYpgdqvHH18HC2p
+        N9SfcT/g5sMGoAoJTlompcbWSatAW3SmDwAlwEqGhrZ2rb4h+ucztpJ7m+R/Y217
+        vD2l6OBFvxs3ylviaMh9x339IDg5qNBMRvKL0vW0qy8Kq/u6+YpzRcysjUnb6c23
+        oLZK0HZ1VskQV+FoPvUuwi6qoH4eYr22Dmn8DKgrQtCqsGkbBit2Y0Cdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=1uMfllCwGVRSVeD897uL9SAlLt6bpaVgLEM5vf/6PXU=; b=vhoXYIJy
+        /3lxQnWiTue+356RJ4otCRAQYzaNChiU+HSGfGb3JVGdhIs6J6jBuZ3DPWPe444H
+        OpqQccWga+AETOEIZwyUEWEiH6sJrqkOsSvpY2DlSnbsm+RFqzvTjBgVfKKewHwV
+        1XMl++ndMIQr5BGrEeBBG8qZ2zPnhgH1MbJBQ3kqtQBUpVn4cVfvahqL0wBR2zcV
+        PwLWrqQ5tCe1cA5UHpI/EIfMfgxeKKg2k7P4wauR3jXRa2qdDApY0sjFusDBgn+7
+        Zzk0eMXCjxFgWcVTecs325j0DHqERu/P8Qzc5J3B/igvzH9jRXjt3dIi8pmioNyu
+        ZTa2649CKs8xlA==
+X-ME-Sender: <xms:w9_OXihbCd_T2cI525J_EuxTj3CfThoBndGDvD07xykf1PKJ31HMCA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvhedgtdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhrihhs
+    uceuuhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepie
+    euffeuvdeiueejhfehiefgkeevudejjeejffevvdehtddufeeihfekgeeuheelnecukfhp
+    peduieefrdduudegrddufedvrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepsghorhhishessghurhdrihho
+X-ME-Proxy: <xmx:w9_OXjDct1_DPzWmPDM8nOmLIsZk_q8ZQDxHzUBoVlvzM8ZmPvw7WQ>
+    <xmx:w9_OXqE4vIQU7lIpdphkuEZiXCEwRsUp-ya6HK3lEyxII_lhXUc7CQ>
+    <xmx:w9_OXrQuVLYJb0xRS0DX18E9ve8yUVTS-Fvixgrs81FBU0Z6Q5G3Mw>
+    <xmx:xd_OXmzSkHVYyo8lVCKGqV_RQ9cG495BkLBY6v8z7cupzCq6mlTciwx-djiOrpZYFkibbQ>
+Received: from localhost (unknown [163.114.132.3])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 111E23280060;
+        Wed, 27 May 2020 17:46:43 -0400 (EDT)
+From:   Boris Burkov <boris@bur.io>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Boris Burkov <boris@bur.io>
+Subject: [PATCH v2 cgroup/for-5.8] cgroup: add cpu.stat file to root cgroup
+Date:   Wed, 27 May 2020 14:43:19 -0700
+Message-Id: <20200527214316.524124-1-boris@bur.io>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200527160821.GC42293@cmpxchg.org>
+References: <20200527160821.GC42293@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200527142741.77e7de37@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/20 23:27, Jakub Kicinski wrote:
-> On Wed, 27 May 2020 23:07:53 +0200 Paolo Bonzini wrote:
->>> Again, I have little KVM knowledge, but BPF also uses a fd-based API,
->>> and carries stats over the same syscall interface.  
->>
->> Can BPF stats (for BPF scripts created by whatever process is running in
->> the system) be collected by an external daemon that does not have access
->> to the file descriptor?  For KVM it's of secondary importance to gather
->> stats in the program; it can be nice to have and we are thinking of a
->> way to export the stats over the fd-based API, but it's less useful than
->> system-wide monitoring.  Perhaps this is a difference between the two.
-> 
-> Yes, check out bpftool prog list (bpftool code is under tools/bpf/ in
-> the kernel tree). BPF statistics are under a static key, so you may not
-> see any on your system. My system shows e.g.:
-> 
-> 81: kprobe  name abc  tag cefaa9376bdaae75  gpl run_time_ns 80941 run_cnt 152
-> 	loaded_at 2020-05-26T13:00:24-0700  uid 0
-> 	xlated 512B  jited 307B  memlock 4096B  map_ids 66,64
-> 	btf_id 16
-> 
-> In this example run_time_ns and run_cnt are stats.
-> 
-> The first number on the left is the program ID. BPF has an IDA, and
-> each object gets an integer id. So admin (or CAP_BPF, I think) can
-> iterate over the ids and open fds to objects of interest.
+Currently, the root cgroup does not have a cpu.stat file. Add one which
+is consistent with /proc/stat to capture global cpu statistics that
+might not fall under cgroup accounting.
 
-Got it, thanks.  But then "I'd hope that whatever daemon collects [BPF]
-stats doesn't run as root". :)
+We haven't done this in the past because the data are already presented
+in /proc/stat and we didn't want to add overhead from collecting root
+cgroup stats when cgroups are configured, but no cgroups have been
+created.
 
->> Another case where stats and configuration are separate is CPUs, where
->> CPU enumeration is done in sysfs but statistics are exposed in various
->> procfs files such as /proc/interrupts and /proc/stats.
-> 
-> True, but I'm guessing everyone is just okay living with the legacy
-> procfs format there. Otherwise I'd guess the stats would had been added
-> to sysfs. I'd be curious to hear the full story there.
+By keeping the data consistent with /proc/stat, I think we avoid the
+first problem, while improving the usability of cgroups stats.
+We avoid the second problem by computing the contents of cpu.stat from
+existing data collected for /proc/stat anyway.
 
-Yeah, it's a chicken-and-egg problem in that there's no good place in
-sysfs to put statistics right now, which is part of what this filesystem
-is trying to solve (the other part is the API).
+Signed-off-by: Boris Burkov <boris@bur.io>
+Suggested-by: Tejun Heo <tj@kernel.org>
+---
+ Documentation/admin-guide/cgroup-v2.rst |  6 +--
+ kernel/cgroup/cgroup.c                  |  1 -
+ kernel/cgroup/rstat.c                   | 60 +++++++++++++++++++++----
+ 3 files changed, 54 insertions(+), 13 deletions(-)
 
-You can read more about Google's usecase at
-http://lkml.iu.edu/hypermail/linux/kernel/2005.0/08056.html, it does
-include both network and interrupt stats and it's something that they've
-been using in production for quite some time.  We'd like the statsfs API
-to be the basis for including something akin to that in Linux.
-
-To be honest, it's unlikely that Emanuele (who has just finished his
-internship at Red Hat) and I will pursue the networking stats further
-than the demo patch at the end of this series. However, we're trying to
-make sure that the API is at least ready for that, and to probe whether
-any developers from other subsystems would be interested in using
-statsfs.  So thanks for bringing your point of view!
-
-Thanks,
-
-Paolo
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index fed4e1d2a343..fec2f13fe065 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -714,9 +714,7 @@ Conventions
+ - Settings for a single feature should be contained in a single file.
+ 
+ - The root cgroup should be exempt from resource control and thus
+-  shouldn't have resource control interface files.  Also,
+-  informational files on the root cgroup which end up showing global
+-  information available elsewhere shouldn't exist.
++  shouldn't have resource control interface files.
+ 
+ - The default time unit is microseconds.  If a different unit is ever
+   used, an explicit unit suffix must be present.
+@@ -985,7 +983,7 @@ CPU Interface Files
+ All time durations are in microseconds.
+ 
+   cpu.stat
+-	A read-only flat-keyed file which exists on non-root cgroups.
++	A read-only flat-keyed file.
+ 	This file exists whether the controller is enabled or not.
+ 
+ 	It always reports the following three stats:
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 557a9b9d2244..b8a75169c3e4 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -4881,7 +4881,6 @@ static struct cftype cgroup_base_files[] = {
+ 	},
+ 	{
+ 		.name = "cpu.stat",
+-		.flags = CFTYPE_NOT_ON_ROOT,
+ 		.seq_show = cpu_stat_show,
+ 	},
+ #ifdef CONFIG_PSI
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 41ca996568df..b6397a186ce9 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -389,18 +389,62 @@ void __cgroup_account_cputime_field(struct cgroup *cgrp,
+ 	cgroup_base_stat_cputime_account_end(cgrp, rstatc);
+ }
+ 
++/*
++ * compute the cputime for the root cgroup by getting the per cpu data
++ * at a global level, then categorizing the fields in a manner consistent
++ * with how it is done by __cgroup_account_cputime_field for each bit of
++ * cpu time attributed to a cgroup.
++ */
++static void root_cgroup_cputime(struct task_cputime *cputime)
++{
++	int i;
++
++	cputime->stime = 0;
++	cputime->utime = 0;
++	cputime->sum_exec_runtime = 0;
++	for_each_possible_cpu(i) {
++		struct kernel_cpustat kcpustat;
++		u64 *cpustat = kcpustat.cpustat;
++		u64 user = 0;
++		u64 sys = 0;
++
++		kcpustat_cpu_fetch(&kcpustat, i);
++
++		user += cpustat[CPUTIME_USER];
++		user += cpustat[CPUTIME_NICE];
++		cputime->utime += user;
++
++		sys += cpustat[CPUTIME_SYSTEM];
++		sys += cpustat[CPUTIME_IRQ];
++		sys += cpustat[CPUTIME_SOFTIRQ];
++		cputime->stime += sys;
++
++		cputime->sum_exec_runtime += user;
++		cputime->sum_exec_runtime += sys;
++		cputime->sum_exec_runtime += cpustat[CPUTIME_STEAL];
++		cputime->sum_exec_runtime += cpustat[CPUTIME_GUEST];
++		cputime->sum_exec_runtime += cpustat[CPUTIME_GUEST_NICE];
++	}
++}
++
+ void cgroup_base_stat_cputime_show(struct seq_file *seq)
+ {
+ 	struct cgroup *cgrp = seq_css(seq)->cgroup;
+ 	u64 usage, utime, stime;
+-
+-	if (!cgroup_parent(cgrp))
+-		return;
+-
+-	cgroup_rstat_flush_hold(cgrp);
+-	usage = cgrp->bstat.cputime.sum_exec_runtime;
+-	cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime, &utime, &stime);
+-	cgroup_rstat_flush_release();
++	struct task_cputime cputime;
++
++	if (cgroup_parent(cgrp)) {
++		cgroup_rstat_flush_hold(cgrp);
++		usage = cgrp->bstat.cputime.sum_exec_runtime;
++		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
++			       &utime, &stime);
++		cgroup_rstat_flush_release();
++	} else {
++		root_cgroup_cputime(&cputime);
++		usage = cputime.sum_exec_runtime;
++		utime = cputime.utime;
++		stime = cputime.stime;
++	}
+ 
+ 	do_div(usage, NSEC_PER_USEC);
+ 	do_div(utime, NSEC_PER_USEC);
+-- 
+2.24.1
 
