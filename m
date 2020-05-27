@@ -2,102 +2,144 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C64EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379EC2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:30:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hTgIxhi2"
+	by mail.kernel.org (Postfix) with ESMTP id 4E3CD208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725966AbgE0X37 (ORCPT
+        id S1725852AbgE0XcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:29:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0X37 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:29:59 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 088B3C08C5C1;
-        Wed, 27 May 2020 16:29:59 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XRrP2FbJz9sRY;
-        Thu, 28 May 2020 09:29:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590622197;
-        bh=LIoCRDHWCSt12oTlKU5hbRoSfau0dTS0ZIKctflBnws=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hTgIxhi2tA1pYu50DOT3xrvRysd6K8TVBNZY3TkEIecX8O5+ZdvxGgSLSr41Pu2dx
-         U+4Mwlx9VFREXMnPv6IzQQh2glXKTzrThqHM6LhZ1l8IFmNEPrhu+cg3vpeYACNCh9
-         FOumSv1g2DybWm2m+jtHunJIW46/um9P5F4Z4uQJGCWQljkRFzzNIl77/eNOMUn9tC
-         cYfv03m57keD692iTUfvAIqXg12ogb7lGw29t87uERh6kLZyvR7oIH3ICw0PCOTbcU
-         /BhNGQMbh21/5Ap44+LTeuHHK3qNY1uiRlyCHCqJ/CuMhAlEbFS/JkBViP8D0LIDKt
-         XyND4H1hsB6Mg==
-Date:   Thu, 28 May 2020 09:29:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the amdgpu tree
-Message-ID: <20200528092956.462e55e0@canb.auug.org.au>
+        Wed, 27 May 2020 19:32:17 -0400
+Received: from mga01.intel.com ([192.55.52.88]:59614 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbgE0XcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 19:32:16 -0400
+IronPort-SDR: zTxJoFGe6l67sGDfq/TdTW9sfuXpctbipeTLM9zqMi2jXVrkFr2DQzi13sPT5KeCQR2PKcf3Gn
+ EMSDTs0QNwHQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 16:32:15 -0700
+IronPort-SDR: iEsL43pqVRxubhjulJjrmlksCwoF5232uz13oUS773kTp06RtP2k+Mh+fjGacTvc+lBxww8hrf
+ 6gisOIHbJNbg==
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="302270504"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 16:32:14 -0700
+Subject: [PATCH v5 0/2] Renovate memcpy_mcsafe with copy_mc_to_{user, kernel}
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Borislav Petkov <bp@alien8.de>, stable@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Erwin Tsaur <erwin.tsaur@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Date:   Wed, 27 May 2020 16:16:02 -0700
+Message-ID: <159062136234.2192412.7285856919306307817.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/vzcan2ywOy/HGT4..iFz30D";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/vzcan2ywOy/HGT4..iFz30D
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Changes since v4 [1]:
+- Fix up .gitignore for PowerPC test artifacts (Michael)
 
-Hi all,
+- Collect Michael's Ack.
 
-In commit
+[1]: http://lore.kernel.org/r/159010126119.975921.6614194205409771984.stgit@dwillia2-desk3.amr.corp.intel.com
 
-  31fba61da070 ("drm/amdgpu/pm: don't bail for in_suspend")
+---
 
-Fixes tag
+The primary motivation to go touch memcpy_mcsafe() is that the existing
+benefit of doing slow "handle with care" copies is obviated on newer
+CPUs. With that concern lifted it also obviates the need to continue to
+update the MCA-recovery capability detection code currently gated by
+"mcsafe_key". Now the old "mcsafe_key" opt-in to perform the copy with
+concerns for recovery fragility can instead be made an opt-out from the
+default fast copy implementation (enable_copy_mc_fragile()).
 
-  Fixes: f7c8d853b029df ("drm/amdgpu/pm: return an error during GPU reset o=
-r suspend")
+The discussion with Linus on the first iteration of this patch
+identified that memcpy_mcsafe() was misnamed relative to its usage. The
+new names copy_mc_to_user() and copy_mc_to_kernel() clearly indicate the
+intended use case and lets the architecture organize the implementation
+accordingly.
 
-has these problem(s):
+For both powerpc and x86 a copy_mc_generic() implementation is added as
+the backend for these interfaces.
 
-  - Target SHA1 does not exist
+Patches are relative to tip/master.
 
-Maybe you meant
+---
 
-Fixes: 2d0021bb7157 ("drm/amdgpu/pm: return an error during GPU reset or su=
-spend")
+Dan Williams (2):
+      x86, powerpc: Rename memcpy_mcsafe() to copy_mc_to_{user,kernel}()
+      x86/copy_mc: Introduce copy_mc_generic()
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/vzcan2ywOy/HGT4..iFz30D
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ arch/powerpc/Kconfig                               |    2 
+ arch/powerpc/include/asm/string.h                  |    2 
+ arch/powerpc/include/asm/uaccess.h                 |   40 +++--
+ arch/powerpc/lib/Makefile                          |    2 
+ arch/powerpc/lib/copy_mc_64.S                      |    4 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/Kconfig.debug                             |    2 
+ arch/x86/include/asm/copy_mc_test.h                |   75 +++++++++
+ arch/x86/include/asm/mcsafe_test.h                 |   75 ---------
+ arch/x86/include/asm/string_64.h                   |   32 ----
+ arch/x86/include/asm/uaccess.h                     |   21 +++
+ arch/x86/include/asm/uaccess_64.h                  |   20 --
+ arch/x86/kernel/cpu/mce/core.c                     |    8 -
+ arch/x86/kernel/quirks.c                           |    9 -
+ arch/x86/lib/Makefile                              |    1 
+ arch/x86/lib/copy_mc.c                             |   64 ++++++++
+ arch/x86/lib/copy_mc_64.S                          |  165 ++++++++++++++++++++
+ arch/x86/lib/memcpy_64.S                           |  115 --------------
+ arch/x86/lib/usercopy_64.c                         |   21 ---
+ drivers/md/dm-writecache.c                         |   15 +-
+ drivers/nvdimm/claim.c                             |    2 
+ drivers/nvdimm/pmem.c                              |    6 -
+ include/linux/string.h                             |    9 -
+ include/linux/uaccess.h                            |    9 +
+ include/linux/uio.h                                |   10 +
+ lib/Kconfig                                        |    7 +
+ lib/iov_iter.c                                     |   43 +++--
+ tools/arch/x86/include/asm/mcsafe_test.h           |   13 --
+ tools/arch/x86/lib/memcpy_64.S                     |  115 --------------
+ tools/objtool/check.c                              |    5 -
+ tools/perf/bench/Build                             |    1 
+ tools/perf/bench/mem-memcpy-x86-64-lib.c           |   24 ---
+ tools/testing/nvdimm/test/nfit.c                   |   48 +++---
+ .../testing/selftests/powerpc/copyloops/.gitignore |    2 
+ tools/testing/selftests/powerpc/copyloops/Makefile |    6 -
+ .../selftests/powerpc/copyloops/copy_mc_64.S       |    1 
+ .../selftests/powerpc/copyloops/memcpy_mcsafe_64.S |    1 
+ 37 files changed, 451 insertions(+), 526 deletions(-)
+ rename arch/powerpc/lib/{memcpy_mcsafe_64.S => copy_mc_64.S} (98%)
+ create mode 100644 arch/x86/include/asm/copy_mc_test.h
+ delete mode 100644 arch/x86/include/asm/mcsafe_test.h
+ create mode 100644 arch/x86/lib/copy_mc.c
+ create mode 100644 arch/x86/lib/copy_mc_64.S
+ delete mode 100644 tools/arch/x86/include/asm/mcsafe_test.h
+ delete mode 100644 tools/perf/bench/mem-memcpy-x86-64-lib.c
+ create mode 120000 tools/testing/selftests/powerpc/copyloops/copy_mc_64.S
+ delete mode 120000 tools/testing/selftests/powerpc/copyloops/memcpy_mcsafe_64.S
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7O9/QACgkQAVBC80lX
-0GyY/Qf/cjAOa6AwB3Gi1TkdJDRasCZ8TOMpWC/I+pcudBaaGRA176Dcf88EgO1z
-/9tLhO5lvZ8uR4xA4HYznQD8VCGwaXMuwDE7N1/u6wT1uQzfF5omxsdsz4K+wvkC
-QF29PW5bknNPMBd0GrZtknvk4LYaiFNb99JA0Z8qZ91yrewEt5M2jGkDStTQYqLI
-bpukya2MYDlkObA1QRUMNdTXoZlnZckqSC+5CZqU45JVZMhC52JhEQi+VrXQqc6/
-Iwuk2XjARt/c9/VpX8XghwS9kZLAZNi32he7W4jNvZ7d1s/xFGhZqkcmvFysNYym
-udk5ouKqcXBs2gsE2idZ58ZofmoaHg==
-=wMzD
------END PGP SIGNATURE-----
-
---Sig_/vzcan2ywOy/HGT4..iFz30D--
+base-commit: 229aaa8c059f2c908e0561453509f996f2b2d5c4
