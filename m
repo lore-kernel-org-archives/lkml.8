@@ -2,121 +2,233 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D93C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB79204EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3DF204EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:33:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PWYVMjGM"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dVJP8j4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgE0UdW (ORCPT
+        id S1728515AbgE0UdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:33:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44800 "EHLO
+        Wed, 27 May 2020 16:33:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgE0UdV (ORCPT
+        with ESMTP id S1726129AbgE0UdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:33:21 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DF9C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:33:21 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id f3so27630598ioj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:33:21 -0700 (PDT)
+        Wed, 27 May 2020 16:33:22 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BACA1C03E96E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:33:22 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id p20so14163296iop.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2vFN875M4SjcSJqsQBhIyGl6yme7p3cXKTVvGnFDckQ=;
-        b=PWYVMjGMInGK/+VGo90K1Nt077ISBvqH8S5m6aLr4ibsjLTafr454aQn5QUd9Jb3hg
-         HIU8mhDByYhLX3UkQt4D2Rzx+UVqcITBJt/Z4Nm6cp0g3Yl09HlbCDBmvalwwApZDcJq
-         TCSN2E+kQC1owKCySYdCL/ZBpO/l+v9tEX/zkwIqcVmYC3Es00307vvVuukW+gfBKFav
-         i6oSBJGUvh2sDvYIrnmTx+zjY2VjsXPx1P13677f7kwCF/waz1sJrfeR5w+b0s69jvIE
-         AHkw/MwxAJolk8NT1IA/Xyxgf38aptnsu1Ger4NNw9zCeR9Z9AU3V+o4nn5nRSj+QM8o
-         ELDg==
+        bh=pI3f6FKz8OHKe3srBJy+Kk47lv+nHGJwqIqesXJLlHc=;
+        b=dVJP8j4s640cjF3F3NnKnEVdNesKeUUtUZtjJiYtedKHUM1miC7/w3m6nvrmcrMKX4
+         f7YwuQqAYQTQjulogCDZ5+5KFkBK/+QIVn5loGcB2+ReVLbbj4bklaJzpVzEVeSnzPoz
+         tCH+U8/xWBdHhAakmcku57uGAlmRw4kmvfWx0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2vFN875M4SjcSJqsQBhIyGl6yme7p3cXKTVvGnFDckQ=;
-        b=KVAsvAcS8w4LhXxc4vI/gfRWz8tnfUdzH9nUSvFwC573XaYhf9mEKXW/P/GYtboqBs
-         EDa0SiSO67SYGZmbK2qN8wNXDA54fqpBWdavygIqKjaVUbMyWFDGMGjmHncSTyEgAExx
-         d9xNmE83FmsajGlSUO+VJMIN/oU+7CbQz9vXEQHsTBdia1Isaxg/lpDVedcP7c2ILK0E
-         6/Qad5TbGz/NudHwH5X49ExnqCDt/3S5WyxVm8P7jjDp7ov6KbX5ZPLorKxQYdJIubQo
-         hg8WzMA8JW1KUVeW2iHmU2by6dxcN34RRDFNSFD8BdM9QrdPvf0ADUWpwzKGL+zSG2iB
-         /9wg==
-X-Gm-Message-State: AOAM53390CqFgzg/GsgSaA/sCeUzks+0jgVmZ3tiw5Zzx3vl83n6WQ0p
-        Y9DYBlsm+Oln2TAFXnqXoYeqRzT6IRnwpDwH5NOLZA==
-X-Google-Smtp-Source: ABdhPJwjayx9asTvHrdVtxj1V1NSaSKRT0BosTcJ5cpULOtZMGwSZrsfDFwEsny8NbcaKy/c0xKEWbch/jHI5WEaREE=
-X-Received: by 2002:a02:3b4b:: with SMTP id i11mr7539961jaf.16.1590611600730;
- Wed, 27 May 2020 13:33:20 -0700 (PDT)
+        bh=pI3f6FKz8OHKe3srBJy+Kk47lv+nHGJwqIqesXJLlHc=;
+        b=ahj8yNIRM+sPcoIMiJpms7TcDAITnwdHbjA7DMC2u0P+e/DR+BTlQ2vRtDa1JAJxc/
+         a6iLCLqf6FqrRxDRjiGbJy8vK+TIFK3XrplqOVMnCqF4nsz25PG6PG10OcNU4f8j0oh6
+         CbuRRU/Er6tEdz5cKh3TROuibI2l2h+SL757q89FzWZ/9BOsmKNlbK8GBQsmQpkNe/1u
+         OUib5H/Kby8C9Z0Twb9IHjv6h26hmsBVndOKywk6ap+XMYo9Ot8MaHNyI5EkMXUBuAmC
+         i9iH835TIAk5F4+0XvSle8LuPu9U/w+sYPjc2Ocovedcg2XixwdL+AgKm+T4RFnZbKHE
+         t7bQ==
+X-Gm-Message-State: AOAM5307tn3mmTF0vTCDijN+MxXPEESJoQoTQxX7kRI0igUWbTIZulfw
+        TPNmwSZTflvt677AYhv7ABKKwPL6vSQOK3IdblESdA==
+X-Google-Smtp-Source: ABdhPJy6ZXLI6yzw3Qac8FZVFdb+Tu+Lt8rpzRVfOLkUhSt0lReBGKcJQuHtgTvaQlGh5aS7i5hAy52i4MEuTVGxypw=
+X-Received: by 2002:a02:1746:: with SMTP id 67mr7108664jah.103.1590611601910;
+ Wed, 27 May 2020 13:33:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200523212919.33181-1-pterjan@google.com> <20200527194811.GF30374@kadam>
-In-Reply-To: <20200527194811.GF30374@kadam>
-From:   Pascal Terjan <pterjan@google.com>
-Date:   Wed, 27 May 2020 21:33:03 +0100
-Message-ID: <CAANdO=LqcHOzxSjudw+G+292sjguOoA-E2y4iAFZtCfa0UFe1A@mail.gmail.com>
-Subject: Re: [PATCH] staging: rtl8723bs: Use shared header constants
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <20200411115508.284500414@linuxfoundation.org> <20200411115513.709554942@linuxfoundation.org>
+ <OSAPR01MB366788E02572D95F246D6DEC92DD0@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+ <20200413082137.GB2792388@kroah.com> <CA+G9fYsq5uADdbUG9RnVYOpmbGX+uEVRC-R6wfPCNtCgTyrj8w@mail.gmail.com>
+ <OSAPR01MB36677B25C6FE12897832B3DD92D20@OSAPR01MB3667.jpnprd01.prod.outlook.com>
+ <CA+G9fYs2gucSrOanDB=CPm+RYH=QOaPeuExGmq0Qcrh5sVaciw@mail.gmail.com>
+In-Reply-To: <CA+G9fYs2gucSrOanDB=CPm+RYH=QOaPeuExGmq0Qcrh5sVaciw@mail.gmail.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Wed, 27 May 2020 13:33:44 -0700
+Message-ID: <CAJs_Fx4yyQiMtA2APcjDrfxGPQ5f8nCQ2oLsD-Q3RCY92P5+sA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 50/54] drm/msm: stop abusing dma_map/unmap for cache
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     nobuhiro1.iwamatsu@toshiba.co.jp,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, lkft-triage@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 20:48, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+On Tue, May 26, 2020 at 7:33 AM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
 >
-> On Sat, May 23, 2020 at 10:29:19PM +0100, Pascal Terjan wrote:
-> > This is one of the 9 drivers redefining rfc1042_header.
+> On Thu, 23 Apr 2020 at 05:03, <nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
+> <trim>
 > >
+> > I think the following patch is needed for this.
+> >
+> > 9f614197c744002f9968e82c649fdf7fe778e1e7
+> > 3de433c5b38af49a5fc7602721e2ab5d39f1e69c
+> >
+> > But I have no environment to check this now.
 >
-> This is how the patch looks like in my email client:
+> The above suggested two patches already in stable-rc 4.19 branch
+> but i still notice Internal error: Oops: 96000144 [#1] PREEMPT SMP
+> on arm64 qualcomm dragonboard-410c device while booting.
 >
-> https://marc.info/?l=linux-driver-devel&m=159026973821890&w=2
+> [    7.906343] msm 1a00000.mdss: bound 1a98000.dsi (ops dsi_ops [msm])
+> [    7.912697] adreno 1c00000.gpu: 1c00000.gpu supply vdd not found,
+> using dummy regulator
+> [    7.918567] adreno 1c00000.gpu: Linked as a consumer to regulator.0
+> [    7.926521] adreno 1c00000.gpu: 1c00000.gpu supply vddcx not found,
+> using dummy regulator
+> [    7.932759] msm 1a00000.mdss: A306: using IOMMU
+> [    7.941207] Unable to handle kernel paging request at virtual
+> address ffffffff80000000
+> [    7.945375] Mem abort info:
+> [    7.953353]   ESR = 0x96000144
+> [    7.956034]   Exception class = DABT (current EL), IL = 32 bits
+> [    7.970501]   EA = 0, S1PTW = 0
+> [    7.970516] Data abort info:
+> [    7.972485]   ISV = 0, ISS = 0x00000144
+> [    7.975577]   CM = 1, WnR = 1
+> [    7.979169] swapper pgtable: 4k pages, 48-bit VAs, pgdp = (____ptrval____)
+> [    7.982295] [ffffffff80000000] pgd=0000000000000000
+> [    7.989099] Internal error: Oops: 96000144 [#1] PREEMPT SMP
+> [    7.993802] Modules linked in: msm(+) crc32_ce adv7511 cec
+> mdt_loader drm_kms_helper drm drm_panel_orientation_quirks fuse
+> [    7.999367] Process systemd-udevd (pid: 2849, stack limit =
+> 0x(____ptrval____))
+> [    8.010474] CPU: 1 PID: 2849 Comm: systemd-udevd Not tainted
+> 4.19.125-rc1-00077-g0708fb235b9c #1
+> [    8.017677] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [    8.026703] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> [    8.033390] pc : __clean_dcache_area_poc+0x20/0x38
+> [    8.037998] lr : __swiotlb_sync_sg_for_device+0x74/0xa0
+> [    8.038001] sp : ffff00000e313490
+> [    8.038004] x29: ffff00000e313490 x28: 0000000000000001
+> [    8.038009] x27: ffff000000d56e40 x26: ffff800036301000
+> [    8.038013] x25: ffff80003c108410 x24: ffff000009069998
+> [    8.038018] x23: ffff80003c108810 x22: 0000000000000000
+> [    8.038023] x21: 0000000000000001 x20: 0000000000000001
+> [    8.038027] x19: ffff80003acd4480 x18: ffff0000092298c8
+> [    8.038032] x17: 0000000000000000 x16: 0000000000000000
+> [    8.038036] x15: 0000000000000010 x14: ffffffffffffffff
+> [    8.038042] x13: ffff0000893987d7 x12: 0000000000000000
+> [    8.038046] x11: 0000800036c56000 x10: ffff8000362ef368
+> [    8.038050] x9 : 0000000000001000 x8 : ffff7e0000e71640
+> [    8.038055] x7 : 0000000000000001 x6 : 0000000000000000
+> [    8.038059] x5 : 0000000000000000 x4 : ffffffff80000000
+> [    8.038064] x3 : 000000000000003f x2 : 0000000000000040
+> [    8.038068] x1 : ffffffff80001000 x0 : ffffffff80000000
+> [    8.038072] Call trace:
+> [    8.038078]  __clean_dcache_area_poc+0x20/0x38
+> [    8.038204]  get_pages+0x1cc/0x240 [msm]
+> [    8.038327]  msm_gem_get_iova+0x94/0x138 [msm]
+> [    8.141741]  _msm_gem_kernel_new+0x40/0xb0 [msm]
+> [    8.145989]  msm_gem_kernel_new+0x10/0x18 [msm]
+> [    8.150759]  msm_gpu_init+0x300/0x568 [msm]
+> [    8.155004]  adreno_gpu_init+0x14c/0x268 [msm]
+> [    8.159171]  a3xx_gpu_init+0x7c/0x108 [msm]
+> [    8.163682]  adreno_bind+0x144/0x238 [msm]
+> [    8.167676]  component_bind_all+0x110/0x278
+> [    8.171939]  msm_drm_bind+0x104/0x760 [msm]
+> [    8.175921]  try_to_bring_up_master+0x14c/0x1b0
+> [    8.180086]  component_master_add_with_match+0xc0/0x100
+> [    8.184697]  msm_pdev_probe+0x280/0x320 [msm]
+> [    8.189810]  platform_drv_probe+0x50/0xa0
+> [    8.194322]  really_probe+0x1f4/0x290
+> [    8.198314]  driver_probe_device+0x54/0xe8
+> [    8.201960]  __driver_attach+0xe0/0xe8
+> [    8.205952]  bus_for_each_dev+0x70/0xb8
+> [    8.209685]  driver_attach+0x20/0x28
+> [    8.213417]  bus_add_driver+0x1a0/0x210
+> [    8.217237]  driver_register+0x60/0x110
+> [    8.220797]  __platform_driver_register+0x44/0x50
+> [    8.224717]  msm_drm_register+0x54/0x68 [msm]
+> [    8.229479]  do_one_initcall+0x54/0x154
+> [    8.233819]  do_init_module+0x54/0x1c8
+> [    8.237463]  load_module+0x1bf4/0x2190
+> [    8.241282]  __se_sys_finit_module+0xb8/0xc8
+> [    8.245016]  __arm64_sys_finit_module+0x18/0x20
+> [    8.249445]  el0_svc_common+0x70/0x168
+> [    8.253695]  el0_svc_handler+0x2c/0x80
+> [    8.257514]  el0_svc+0x8/0xc
+> [    8.261250] Code: 9ac32042 8b010001 d1000443 8a230000 (d50b7e20)
+> [    8.264290] ---[ end trace 2effae58ca65f06b ]---
 >
-> Do you see how the subject is far away from the body of the commit
-> message?  I normally only read the subject or the body when I'm
-> reviewing patches so it's good if the body is clear on its own.  Maybe
-> write something like:
+> on stable-rc 4.19 branch git log show this info,
+> $ git log  --oneline drivers/gpu/drm/msm/msm_gem.c | head
+> 05fe33cad985 drm/msm: Use the correct dma_sync calls harder
+> 39718d086d9b drm/msm: Use the correct dma_sync calls in msm_gem
+> 9c23e00804f8 drm/msm: stop abusing dma_map/unmap for cache
+> a5f74ec7d3cb gpu: drm: msm: Change return type to vm_fault_t
+> 3976626ea3d2 drm/msm: Fix possible null dereference on failure of get_pages()
+> d71b6bd80d96 drm/msm/dsi: fix direct caller of msm_gem_free_object()
+> dc9a9b32053e drm/msm: Replace gem_object deprecated functions
+> 62e3a3e342af drm/msm: fix leak in failed get_pages
+> 7a88cbd8d65d Backmerge tag 'v4.14-rc7' into drm-next
+> fad33f4b1073 drm/msm: add special _get_vaddr_active() for cmdstream dumps
 >
-> "This driver creates a local definitions of "rtw_rfc1042_header" and
-> "rtw_bridge_tunnel_header" but it should just use the standard definitions
-> from cfg80211.h."
+> link to full boot log,
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.124-77-g0708fb235b9c/testrun/1450572/log
+> https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.124-77-g0708fb235b9c/testrun/1450572
+>
+> Kernel config:
+> https://builds.tuxbuild.com/Xp5Fh9e52QxohQeW6nazPA/kernel.config
 
-Thanks, I see both together when writing the commit message and need
-to remember they are actually separate.
+I suspect there is some difference between qcom_iommu and arm-smmu?
+Maybe qcom_iommu (esp. back in v4.19) is missing something for
+automatic hookup of iommu-dma-ops?
 
-> >  void _rtw_init_sta_recv_priv(struct sta_recv_priv *psta_recvpriv)
-> > @@ -1625,11 +1622,11 @@ sint wlanhdr_to_ethhdr(union recv_frame *precvframe)
-> >       psnap_type = ptr+pattrib->hdrlen + pattrib->iv_len+SNAP_SIZE;
-> >       /* convert hdr + possible LLC headers into Ethernet header */
-> >       /* eth_type = (psnap_type[0] << 8) | psnap_type[1]; */
-> > -     if ((!memcmp(psnap, rtw_rfc1042_header, SNAP_SIZE) &&
-> > -             (memcmp(psnap_type, SNAP_ETH_TYPE_IPX, 2)) &&
-> > -             (memcmp(psnap_type, SNAP_ETH_TYPE_APPLETALK_AARP, 2))) ||
-> > -             /* eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) || */
-> > -              !memcmp(psnap, rtw_bridge_tunnel_header, SNAP_SIZE)) {
-> > +     if ((!memcmp(psnap, rfc1042_header, SNAP_SIZE) &&
-> > +          memcmp(psnap_type, SNAP_ETH_TYPE_IPX, 2) &&
-> > +          memcmp(psnap_type, SNAP_ETH_TYPE_APPLETALK_AARP, 2)) ||
-> > +         /* eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) || */
-> > +         !memcmp(psnap, bridge_tunnel_header, SNAP_SIZE)) {
-> >               /* remove RFC1042 or Bridge-Tunnel encapsulation and replace EtherType */
-> >               bsnaphdr = true;
->
-> Your indenting is correct, but I would probably do that in a separate
-> patch.  It makes it harder to review.  Also probably delete the
-> commented out code.  Do you see how if we don't touch the indenting then
-> it doesn't raise the question about if we should delete the comments as
-> well?
+All the ugliness around dma-sync is related to trying to avoid using
+dma_map_*/dma_unmap_* when arm-smmu is in use (and the iommu dma-ops
+are installed, since they end up fighting w/ drm/msm's direct use of
+it's iommus).  It looks like we are going to finally get a way to
+solve this uglyness a bit better once some arm-smmu patches[1] land in
+v5.8.  I suppose that doesn't really help v4.19.
 
-I initially didn't want to change it but checkpatch was sad which
-makes me sad, maybe I should have cleaned up this area in a first
-trivial patch before touching that line.
+But taking a step back, I'm not entirely sure whether this was a
+problem yet on v4.19.  Presumably dropping these would make db410c
+(qcom_iommu) work:
+
+  05fe33cad985 drm/msm: Use the correct dma_sync calls harder
+  39718d086d9b drm/msm: Use the correct dma_sync calls in msm_gem
+  9c23e00804f8 drm/msm: stop abusing dma_map/unmap for cache
+
+What I'm not entirely sure of (v4.19 seems so long ago now) is whether
+that would cause problems for db820c (arm-smmu)?  Looks like the first
+of those patches landed around v5.4, so presumably the problem it was
+meant to workaround started happening sometime after v4.19?
+
+BR,
+-R
+
+[1] https://lkml.org/lkml/2020/4/20/1142
+
+> >
+> > Best regards,
+> >   Nobuhiro
+> > >
+> > > --
+> > > Linaro LKFT
+> > > https://lkft.linaro.org
