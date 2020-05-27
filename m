@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C65EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1210C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46D5820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9894C20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgE0MHg (ORCPT
+        id S1729529AbgE0MHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:07:36 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34894 "EHLO
+        Wed, 27 May 2020 08:07:40 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34924 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728530AbgE0MHc (ORCPT
+        with ESMTP id S1728611AbgE0MHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:07:32 -0400
+        Wed, 27 May 2020 08:07:33 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4A2CA803083B;
-        Wed, 27 May 2020 12:07:28 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 16C46803083F;
+        Wed, 27 May 2020 12:07:30 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SCCFiA2iPBDp; Wed, 27 May 2020 15:07:27 +0300 (MSK)
+        with ESMTP id 1F0nizAo2-Du; Wed, 27 May 2020 15:07:29 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Wolfram Sang <wsa@the-dreams.de>,
@@ -39,9 +39,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 07/11] i2c: designware: Discard Cherry Trail model flag
-Date:   Wed, 27 May 2020 15:01:07 +0300
-Message-ID: <20200527120111.5781-8-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v4 09/11] i2c: designware: Retrieve quirk flags as early as possible
+Date:   Wed, 27 May 2020 15:01:09 +0300
+Message-ID: <20200527120111.5781-10-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,13 +53,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
-since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
-bus pm_disabled workaround"), but the flag most likely by mistake has been
-left in the Dw I2C drivers. Let's remove it.
+Some platforms might need to activate the driver quirks at a very early
+probe stage. For instance, Baikal-T1 System I2C doesn't need to map the
+registers space as ones belong to the system controller. Instead it will
+request the syscon regmap from the parental DT node. In order to be able
+to do so let's retrieve the model flags right after the DW I2C private
+data is created.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -69,54 +70,34 @@ Cc: devicetree@vger.kernel.org
 ---
 
 Changelog v3:
-- Since MSCC and Baikal-T1 will be a part of the platform driver code, we
-  have to preserve the MODEL_MASK macro to use it to filter the model
-  flags during the IP-specific quirks activation.
+- This is a new patch, which has been created due to declining the
+  glue-layer approach.
 ---
- drivers/i2c/busses/i2c-designware-core.h    | 3 +--
- drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
- drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-designware-platdrv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index 150de5e5c31b..b9ef9b0deef0 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -289,8 +289,7 @@ struct dw_i2c_dev {
- #define ACCESS_INTR_MASK	0x00000004
- #define ACCESS_NO_IRQ_SUSPEND	0x00000008
- 
--#define MODEL_CHERRYTRAIL	0x00000100
--#define MODEL_MSCC_OCELOT	0x00000200
-+#define MODEL_MSCC_OCELOT	0x00000100
- #define MODEL_MASK		0x00000f00
- 
- u32 dw_readl(struct dw_i2c_dev *dev, int offset);
-diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
-index 11a5e4751eab..947c096f86e3 100644
---- a/drivers/i2c/busses/i2c-designware-pcidrv.c
-+++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
-@@ -149,7 +149,6 @@ static struct dw_pci_controller dw_pci_controllers[] = {
- 	},
- 	[cherrytrail] = {
- 		.bus_num = -1,
--		.flags = MODEL_CHERRYTRAIL,
- 		.scl_sda_cfg = &byt_config,
- 	},
- 	[elkhartlake] = {
 diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index f6d2c96e35ce..ca057aa9eac4 100644
+index ca057aa9eac4..ad292de2d260 100644
 --- a/drivers/i2c/busses/i2c-designware-platdrv.c
 +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -44,7 +44,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
- 	{ "INT3432", 0 },
- 	{ "INT3433", 0 },
- 	{ "80860F41", ACCESS_NO_IRQ_SUSPEND },
--	{ "808622C1", ACCESS_NO_IRQ_SUSPEND | MODEL_CHERRYTRAIL },
-+	{ "808622C1", ACCESS_NO_IRQ_SUSPEND },
- 	{ "AMD0010", ACCESS_INTR_MASK },
- 	{ "AMDI0010", ACCESS_INTR_MASK },
- 	{ "AMDI0510", 0 },
+@@ -124,6 +124,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 	if (!dev)
+ 		return -ENOMEM;
+ 
++	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
++
+ 	dev->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(dev->base))
+ 		return PTR_ERR(dev->base);
+@@ -146,8 +148,6 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+ 
+ 	i2c_dw_acpi_adjust_bus_speed(&pdev->dev);
+ 
+-	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
+-
+ 	if (pdev->dev.of_node)
+ 		dw_i2c_of_configure(pdev);
+ 
 -- 
 2.26.2
 
