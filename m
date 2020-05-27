@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9DEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A09DD20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89D420873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vJADURQt";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2uIUBetx"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Lvo2Y+qk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l65K9OGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389973AbgE0PqM (ORCPT
+        id S1730433AbgE0PqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:46:12 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:45545 "EHLO
+        Wed, 27 May 2020 11:46:25 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40647 "EHLO
         out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389929AbgE0PqC (ORCPT
+        by vger.kernel.org with ESMTP id S2389946AbgE0PqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:46:02 -0400
+        Wed, 27 May 2020 11:46:07 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 192695C0229;
-        Wed, 27 May 2020 11:46:01 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:46:01 -0400
+        by mailout.nyi.internal (Postfix) with ESMTP id 053785C0220;
+        Wed, 27 May 2020 11:46:06 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:46:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=Br1uyNI7ITy6T
-        7Cb01ktGmvtq22WgQAeHm0e1UAZ/lA=; b=vJADURQtqkaS6ntR542Xt0Idob2hP
-        8pTNVNCdxCNtfEu9iwbh/CjQcZMY77qIV1msIf2YGLw0yQnRDdtIXB4mh0iv602T
-        m+hjjXtgu5RqHg4MwyCy0iTnb25J7nYmuIyu2JgFGGVSlvx31lEQ26ACjwdzSiMM
-        UwcwO1CZXvELYR7hNKALEXW5K7TfZ6nXhmJnGCZiuhuFQHswRVM49PyHM4ITK6R0
-        CvUYMxisnf7/V7z1bzQtNGYLToZymVUAv749MFNxXqRuwoIrJ8rn9sgQZsFHrpT2
-        xdfTG1hvNCHtDqixKdkWVaNCo4RHEfijACIX/85coL0/JobJPwX5i34XA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=87eNKXUXLK3tl
+        nLtCpRNlpSIF8WfpGhrUkNfAEF99uc=; b=Lvo2Y+qkUjbo3DDu0fzrcR2f1wgTW
+        UJZ5UvkUhM65Fd76Uei/flqLULaXV0AEHgdClcT2Gi53GpgBSZ2Di9EgowZvaCPX
+        7L8fOAadlHob08WuF6Lls01Rflyr3oI9hdF7Saw/TCUEBjH7n/7nGg5EFFN4UI9z
+        wWHNauMu6xIiySMy0holRk9wgS8dztfcu0Ls2fG3lU+UHY7fHa9173ZV0yDiS82E
+        bLmag+oSkzKf0HxwRM/pdIFCmZr5jJpXyfaZnzV0NRt0o+fL3/mTNlLHuWewa9O2
+        o+7ITsinNck/SYsVvPNYyxhIjSYMLM4hbtFvjxx6CpkGVwNBDq3g0V66A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Br1uyNI7ITy6T7Cb01ktGmvtq22WgQAeHm0e1UAZ/lA=; b=2uIUBetx
-        Qou6spF7Vqkn4AlLfdvVJzJlyH7PVFbYZqCBC8sAqXLDMsgDNk9628lr2YtllZJZ
-        UQcxixGAj5ccT6xc7mqC8jY7RmW2kntn1p+HuwqHxZVHEnjYqwQv8mj8IdWtag3H
-        tFwB0Yo7Hlc97+W3zFeSajnyr37qCYoqiPCS1NOZVyhb73UMguO2xLkV5lwHSiEa
-        CJR6Kxq9XXYXg8Grx9tAdyl8UJBWc2kTAsIwEzba7vmRQYA4lz3WYWz7Ht4UQsZx
-        muUDh2ukj7A3anWIhMmUW8BAcMo2xVcNV8vNYcq0XjMaaBuyIWATBn9WQNiCoEW3
-        L0s24vulPr5bGw==
-X-ME-Sender: <xms:OYvOXoURO_hi4e7H8SKaBgmQxmnzmw06xU5uGbCuN50yGp4oTTQLJA>
+        fm2; bh=87eNKXUXLK3tlnLtCpRNlpSIF8WfpGhrUkNfAEF99uc=; b=l65K9OGZ
+        TSbIrtWXlZu9MVogylcJ8/dHF30saDK8dc30RM7Va5QzcmimMbGWaU+rxZiKmuq/
+        PvW1qOYpDg9CwxGxJnm2jF2ANwJHGd5zmH7BT1dz8Bwl2HJFhhFx5kQUgX0z+2Yx
+        sb1Ydhf/5pBzeh+VPDfX+g/HCh27xVl/SYg+hrmpLO5jccSonf52sfE/T39K1Fqb
+        QwSfvSU+BDGIS1A3Fd8HKdir4MhozeMdiq3beIlcuuhDuZ4RMhP0vxnW5Qmc6LZ7
+        hNQ5KZDFK/HJpYhHQtlhO1d8kEarYPHHP5ZBDQpWeobbSESlJhHoAVjZFL6Zgo64
+        mJFZ+xlvjcDD4w==
+X-ME-Sender: <xms:PYvOXoY_ybKs2nv92JfY7Nnxm3Y5IzRdFdQp5AkOWR-TGEHDh7m6gA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudekne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvddvne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:OYvOXskPdofykykOYXqmwRP94J4HMbqvudLeJn-IT6Wa9T6HsGGgRw>
-    <xmx:OYvOXsamH5Lmt1b7O7yaoD1HU7jfkR8Ww8g3VjjUtDkh0WUAa3W50Q>
-    <xmx:OYvOXnVSu172DI9nb67jjVn1DnqleWwzlZKtES9yHcryssg_gym8IQ>
-    <xmx:OYvOXptJCfDoFi2-pi_2XfgggRMxEyZ96IqjqZWe_x-BqpQ9ok5Umg>
+X-ME-Proxy: <xmx:PYvOXjaMQPqg5dpar60mvJ6uAfMj3KXapdS1XitN4jiLMQvSeDq6lQ>
+    <xmx:PYvOXi-PnJjpBlIzpKqJn5lNoFWJnoZTzFgR3fWStdTwD74vcmbNkQ>
+    <xmx:PYvOXiqdhKkG5itgr8mcgAGyGU9haKcrAaUk8RCfB9t-vkBfHJW_xQ>
+    <xmx:PovOXkCm27yFuWpONNGk0jlJ0YX0jnovff8pvQjk2q7WQkQGtu3LWw>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C095A328005D;
-        Wed, 27 May 2020 11:46:00 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 832A230614FA;
+        Wed, 27 May 2020 11:46:05 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     linux-rpi-kernel@lists.infradead.org,
@@ -74,9 +74,9 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 22/25] clk: bcm: rpi: Give firmware clocks a name
-Date:   Wed, 27 May 2020 17:45:18 +0200
-Message-Id: <135a5d32e42d9a117e264f1f52ac9fb6b9dc20e6.1590594293.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 25/25] ARM: dts: bcm2711: Add firmware clocks node
+Date:   Wed, 27 May 2020 17:45:21 +0200
+Message-Id: <ec9e6942c9f16390e530c2aea2a565f95fe6e929.1590594293.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
 References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
@@ -87,64 +87,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've registered the firmware clocks using their ID as name, but it's much
-more convenient to register them using their proper name. Since the
-firmware doesn't provide it, we have to duplicate it.
+Now that we have a clock driver for the clocks exposed by the firmware,
+let's add the device tree nodes for it.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/clk/bcm/clk-raspberrypi.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
-index 8d3acf3ee053..cee634cb5323 100644
---- a/drivers/clk/bcm/clk-raspberrypi.c
-+++ b/drivers/clk/bcm/clk-raspberrypi.c
-@@ -36,6 +36,23 @@ enum rpi_firmware_clk_id {
- 	RPI_FIRMWARE_NUM_CLK_ID,
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index c7f1d97e69bb..222d7825e1ab 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -69,6 +69,11 @@
  };
  
-+static char *rpi_firmware_clk_names[] = {
-+	[RPI_FIRMWARE_EMMC_CLK_ID]	= "emmc",
-+	[RPI_FIRMWARE_UART_CLK_ID]	= "uart",
-+	[RPI_FIRMWARE_ARM_CLK_ID]	= "arm",
-+	[RPI_FIRMWARE_CORE_CLK_ID]	= "core",
-+	[RPI_FIRMWARE_V3D_CLK_ID]	= "v3d",
-+	[RPI_FIRMWARE_H264_CLK_ID]	= "h264",
-+	[RPI_FIRMWARE_ISP_CLK_ID]	= "isp",
-+	[RPI_FIRMWARE_SDRAM_CLK_ID]	= "sdram",
-+	[RPI_FIRMWARE_PIXEL_CLK_ID]	= "pixel",
-+	[RPI_FIRMWARE_PWM_CLK_ID]	= "pwm",
-+	[RPI_FIRMWARE_HEVC_CLK_ID]	= "hevc",
-+	[RPI_FIRMWARE_EMMC2_CLK_ID]	= "emmc2",
-+	[RPI_FIRMWARE_M2MC_CLK_ID]	= "m2mc",
-+	[RPI_FIRMWARE_PIXEL_BVB_CLK_ID]	= "pixel-bvb",
-+};
+ &firmware {
++	firmware_clocks: clocks {
++		compatible = "raspberrypi,firmware-clocks";
++		#clock-cells = <1>;
++	};
 +
- #define RPI_FIRMWARE_STATE_ENABLE_BIT	BIT(0)
- #define RPI_FIRMWARE_STATE_WAIT_BIT	BIT(1)
- 
-@@ -343,7 +360,9 @@ static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *rpi,
- 	data->rpi = rpi;
- 	data->id = id;
- 
--	init.name = devm_kasprintf(rpi->dev, GFP_KERNEL, "fw-clk-%u", id);
-+	init.name = devm_kasprintf(rpi->dev, GFP_KERNEL,
-+				   "fw-clk-%s",
-+				   rpi_firmware_clk_names[id]);
- 	init.ops = &raspberrypi_firmware_clk_ops;
- 	init.flags = CLK_GET_RATE_NOCACHE;
- 
-@@ -367,8 +386,8 @@ static struct clk_hw *raspberrypi_clk_register(struct raspberrypi_clk *rpi,
- 		return ERR_PTR(ret);
- 	}
- 
--	dev_info(rpi->dev, "Clock %d frequency range: min %u, max %u\n",
--		 id, min_rate, max_rate);
-+	dev_info(rpi->dev, "Clock %s frequency range: min %u, max %u\n",
-+		 rpi_firmware_clk_names[id], min_rate, max_rate);
- 
- 	ret = devm_clk_hw_register(rpi->dev, &data->hw);
- 	if (ret)
+ 	expgpio: gpio {
+ 		compatible = "raspberrypi,firmware-gpio";
+ 		gpio-controller;
 -- 
 git-series 0.9.1
