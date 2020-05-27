@@ -5,74 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D548C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D34C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734B92084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE612084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTHq9CNa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAQrcI47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389654AbgE0PG2 (ORCPT
+        id S2389532AbgE0PHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50276 "EHLO
+        Wed, 27 May 2020 11:07:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389316AbgE0PG1 (ORCPT
+        with ESMTP id S2388922AbgE0PHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:06:27 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A13C05BD1E;
-        Wed, 27 May 2020 08:06:27 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t11so11873937pgg.2;
-        Wed, 27 May 2020 08:06:27 -0700 (PDT)
+        Wed, 27 May 2020 11:07:10 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A5DC05BD1E;
+        Wed, 27 May 2020 08:07:10 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id z26so11927717pfk.12;
+        Wed, 27 May 2020 08:07:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KoZe606OflP+pqwc544DH0O+4ssFpqgDgsR2zurkW6E=;
-        b=fTHq9CNaoO/Gi4/N0riUfko+pG34aq7YNbAwwUvsFRuBb5GAhsWZLr9xfV4mcZcRsU
-         QnglNUdToL3uMhDaPuOEy3wOxmwCTN5ogN4KlsGkmntq1LZFQlZyiCuy7YiUSvPrrsZe
-         pV7BSEcUNIO6NelYjVS62q5JL52V55lud3Yn3KMiQyVldN5CwsKtPPynE8Dc4LKOgAvQ
-         dGwJQRQCzdkPzOF7Gn3tEJhPNpcqNp2iiBwR7AIQS/TawJ38jZ1adMhcwl3f2OKkmd1K
-         EL1f9JSLCmIHUTI09LohN7PXo9o9L6P2YKhq+MjSPtUFEOqjqmmQ5QBbjn9bN/oysqgh
-         jpKA==
+        bh=JBMhR/E6YxOWzbmlEXEk9KBZIqv6+OPXL6Fa2JH9S9E=;
+        b=CAQrcI47RH2LponFhwU9pyD+TTHIPaukEhD4HwWtShJpo8VT2JAqL15Znuh64varDB
+         Qj48XGJClDwnxPtcwZo7THveNeYW8YKKrhek031jVVPxhpItzBi9ZgCXdtL7S8HfIpGt
+         h3K7gymfo4nyPedMTeTNDbTUH1+6itCXcpsnODAnLwjtCsI/7CV/26vhsS8/yZ1jzod4
+         yl9jeRs8Swigjbr4fLOgE824FaocjylZzw0h0ey25k+bL+5azXaH7XyrLMnnBPft628F
+         /95F5SwSdbKgkZFnZ8bgPF5MECdIjACPqpZ2Z6NYvO1GNqARMuAQuQ605Tcm3nN273kF
+         nB4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KoZe606OflP+pqwc544DH0O+4ssFpqgDgsR2zurkW6E=;
-        b=rpaLkRm8d884MSo8MrMoN38o07CjK3QO+0lEOzWwcyMYJhS+dPnA07DwikU1w1TjuG
-         uF9VoFKih7FeuwghkrZr7rzt9/kdzopmZarsSo3m4KdnF6QwKrVOua5sk3qBI5d8M+xe
-         lF4lIyareu5TLk9RWT0pLFra8medq8wkNEKZ2RfbpuCI+Idogldd2Ceg4bckXJjQzCe8
-         hufRgUoZcX7faxq853FM5+Z3KzKOs2cKvWWQ7Px7Da9ErE4ryMx6lYB5BGhSeFYSe688
-         XoThvUXWzLI5qafNCrd/cXY5mWpf40A+gnrrVddqPEFAjsqrp33MDf6b6CHBkMfleb8V
-         4vbA==
-X-Gm-Message-State: AOAM533R4iDu4Dq6Rl8KviMc6aJKPvP0coJipn1qP/l3sO7K9sDKYN4K
-        Y7flXniOgeKGNyoStjg169k=
-X-Google-Smtp-Source: ABdhPJxgEH3iDLHEIuRn42o6PH92ZI2uivVSnqhr8WUdlOF6ENTJ/r+yXck2jN01wrAUDOVHsdU/nA==
-X-Received: by 2002:aa7:8c53:: with SMTP id e19mr4381417pfd.264.1590591986809;
-        Wed, 27 May 2020 08:06:26 -0700 (PDT)
+        bh=JBMhR/E6YxOWzbmlEXEk9KBZIqv6+OPXL6Fa2JH9S9E=;
+        b=aZdxmXTXxrqVFYK3nql4rfge43L3pgfTnV9WX4WBbv6ILE1JsnGqX8F2J7FIcJ7rC3
+         yIWkX8zAM90d840bbAMj1NDh4Y9tLeCyDOpvjf0EtcBHY0LSJgPlar02W9RwP6yP8HCd
+         FRM7DC7Hyf5NwUcFic+lYhg1RDdtqKXN9ydCz1c/ILMa5t7+Wp76HSWgMmzjzhAS+HFz
+         klvC33OChcWgzPb9tlxL5ef/1QIr+H25A53zwkPU5j9HgRzpzPKmnmZp2qARoNVMMTH4
+         fPj+0LBZlSioctazjmE/IBFbIRDWKPO5xBWVvye6W9bcSRMd/3S14qFClVPKPm4rVAre
+         Zc8g==
+X-Gm-Message-State: AOAM5333FcZfsxgkpMYGBhuWUwp/AXlQZc28/w9HmSiikd47KKdWSSff
+        8wyJSV0p35u7kMECrhdFPvNFxmQtinE=
+X-Google-Smtp-Source: ABdhPJyKDMkGx+dsSJqCjjr2+ctNeg3f4rTXqsQK+jQvAyZypbK/eut1SVUlbgWn2njTtnCgHOd6gw==
+X-Received: by 2002:a63:4a1d:: with SMTP id x29mr4301681pga.53.1590592030456;
+        Wed, 27 May 2020 08:07:10 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id a16sm2465326pfl.167.2020.05.27.08.06.23
+        by smtp.gmail.com with ESMTPSA id j15sm2970961pjj.12.2020.05.27.08.07.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 08:06:26 -0700 (PDT)
+        Wed, 27 May 2020 08:07:09 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester95@gmail.com>,
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] media: exynos4-is: add the missed check for pinctrl_lookup_state
-Date:   Wed, 27 May 2020 23:06:20 +0800
-Message-Id: <20200527150620.539247-1-hslester96@gmail.com>
+Subject: [PATCH] rtc: rv3028: add the missed check for devm_regmap_init_i2c
+Date:   Wed, 27 May 2020 23:07:04 +0800
+Message-Id: <20200527150704.539315-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,29 +77,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester95@gmail.com>
-
-fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
+rv3028_probe() misses a check for devm_regmap_init_i2c().
 Add the missed check to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/rtc/rtc-rv3028.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index 9aaf3b8060d5..9c31d950cddf 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
+diff --git a/drivers/rtc/rtc-rv3028.c b/drivers/rtc/rtc-rv3028.c
+index a0ddc86c975a..ec84db0b3d7a 100644
+--- a/drivers/rtc/rtc-rv3028.c
++++ b/drivers/rtc/rtc-rv3028.c
+@@ -755,6 +755,8 @@ static int rv3028_probe(struct i2c_client *client)
+ 		return -ENOMEM;
  
- 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
- 					PINCTRL_STATE_IDLE);
-+	if (IS_ERR(pctl->state_idle))
-+		return PTR_ERR(pctl->state_idle);
-+
- 	return 0;
- }
+ 	rv3028->regmap = devm_regmap_init_i2c(client, &regmap_config);
++	if (IS_ERR(rv3028->regmap))
++		return PTR_ERR(rv3028->regmap);
+ 
+ 	i2c_set_clientdata(client, rv3028);
  
 -- 
 2.26.2
