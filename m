@@ -2,117 +2,140 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA89CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D16EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7698208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB202089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mlA8n5lt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QWadH3xO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbgE0Kqb (ORCPT
+        id S1729973AbgE0Ktw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbgE0Kqa (ORCPT
+        Wed, 27 May 2020 06:49:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54206 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbgE0Ktv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:46:30 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B924C061A0F;
-        Wed, 27 May 2020 03:46:30 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id j3so23445007ilk.11;
-        Wed, 27 May 2020 03:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jV5qqlg6B+ZoGgVeaw+flUZDliIqHLZTV9SrChni80o=;
-        b=mlA8n5ltaxaXU5Jzq9gQDdiAdLm7WHNtzEPDDmBFHHI5aY7Pd0ha50AJnDMF9b5/Xm
-         Z2ZZRZAcqCMtYbCKXy3nceVZD3RnzhXQfF+FLoOHKH8bFRYpXfHoR4oHaf9m4htN+X4B
-         kHOeUbi0Es6U1y5RBtZATXe0Vo/gA2fGm6nOOsrDYa+k5mwPj63ViOoY1u9rdK/cGq+8
-         TNYJXlgXwwoTT32s8D0Fll3n5Ele44yw479wCHp13y6U/wV9kEPFVAgD6FH+dQ8sbV4q
-         7hsp0Qisu5/+NRQsczixdYHaJcgLXXiFIaskLiZHmpQiPYObZI0OhYc25SDBa5uqdRto
-         J8OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jV5qqlg6B+ZoGgVeaw+flUZDliIqHLZTV9SrChni80o=;
-        b=N5L3jLQjaFij+uE3WYhoqmzNVPi6mofdTAXFBdxgJIbqks5h+NYPwKJjAnZm5wsHWA
-         Do6OUwR2vIvh5RWr0h+VHdr0Itme56VEu3gln0ppNLNUfLf7viLuVw2jS7uHfum79bAo
-         91WRYLjysewqTDqkSHKySBrHGiHi1C9pU/qAfwituWNx7PILmC20JnqJexIZjlJCcRJC
-         wtcLfZwmUev1MOKiUPPB60mnoplJ8V5GRbAmhohwtJE7cFMEJknXI5M5jC7yOFpeDhRD
-         c+WOmU4uqN5SKOWoPGtTgPViHg7waqDNQfJxAxCAKSNW5LHAdogdTVXwJNJkr4Qju2EY
-         zcwg==
-X-Gm-Message-State: AOAM532bxiT9wyzBGCAVfNh6XIVUb8Lnkb54wNCwVsIeMd51JUDCeW5c
-        1xLXBsRoaBQLVyWYI/x2AyMsYleEADXzFO+SyaY=
-X-Google-Smtp-Source: ABdhPJxI8DmrhVOnjKvhDVgxWJ8+FIMyXLu/ryLZET7ClD2+54nQb9OTeBYG7x2X1lNxLOkc/LfdMlqtuwE8cn4F3ds=
-X-Received: by 2002:a92:dc85:: with SMTP id c5mr4964053iln.270.1590576390035;
- Wed, 27 May 2020 03:46:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
- <1590564453-24499-9-git-send-email-dillon.minfei@gmail.com> <20200527095109.GA5308@sirena.org.uk>
-In-Reply-To: <20200527095109.GA5308@sirena.org.uk>
-From:   dillon min <dillon.minfei@gmail.com>
-Date:   Wed, 27 May 2020 18:45:53 +0800
-Message-ID: <CAL9mu0JA=XRTj_HONQGtj74X05TAV0__dW2At0AAeymwNvJhEw@mail.gmail.com>
-Subject: Re: [PATCH v6 8/9] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
- support for stm32f4
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, p.zabel@pengutronix.de,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        thierry.reding@gmail.com, Sam Ravnborg <sam@ravnborg.org>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        Wed, 27 May 2020 06:49:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnZnC113309;
+        Wed, 27 May 2020 05:49:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590576575;
+        bh=PD+boL1tjck4sdCDgLl/S8WZdUjIHY0I5B2iMdPDagU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=QWadH3xOFV3pgUzj6qG4hBxcxtI/8N/9aKAye8xOuN2atXdd1fS2UpjsWwMsVoL+V
+         xFmgJHBBGy11xtVTT7TaGZUKtvV0oXI7CctJ+U/7+S8RWjiTIBMKHpzaAa1aV3Srh/
+         dbKabKVR9yggVeExJmbzECP8fdGOUjsBZ6+wvMIk=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnZKX073235;
+        Wed, 27 May 2020 05:49:35 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 05:49:35 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 05:49:35 -0500
+Received: from [10.250.233.85] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RAnV0o056154;
+        Wed, 27 May 2020 05:49:32 -0500
+Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
+ perform only 32-bit accesses
+To:     Rob Herring <robh@kernel.org>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Hua Dillon <dillonhua@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200522033631.32574-1-kishon@ti.com>
+ <20200522033631.32574-4-kishon@ti.com>
+ <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
+ <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com>
+ <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <b3663862-44df-867f-0824-28802909f224@ti.com>
+Date:   Wed, 27 May 2020 16:19:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 5:51 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 03:27:32PM +0800, dillon.minfei@gmail.com wrote:
-> > From: dillon min <dillon.minfei@gmail.com>
-> >
-> > in l3gd20 driver startup, there is a setup failed error return from
-> > stm32 spi driver
->
-> Please do not submit new versions of already applied patches, please
-> submit incremental updates to the existing code.  Modifying existing
-> commits creates problems for other users building on top of those
-> commits so it's best practice to only change pubished git commits if
-> absolutely essential.
+Hi Rob,
 
-Hi Mark,
+On 5/26/2020 8:42 PM, Rob Herring wrote:
+> On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 5/22/2020 9:24 PM, Rob Herring wrote:
+>>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>
+>>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+>>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
+>>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
+>>>> for adding PCIe support in TI's J721E SoC.
+>>>
+>>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
+>>> with this and never can be given the PCI_COMMAND and PCI_STATUS
+>>> registers are in the same word (IIRC, that's the main reason 32-bit
+>>> config space accesses are broken). So this isn't going to work at
+>>
+>> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
+>> could be reset while raising legacy interrupt. While this cannot be avoided for
+>> TI's J721E, other platforms doesn't have to have this limitation.
+>>> least for EP accesses. And maybe you need a custom .raise_irq() hook
+>>> to minimize any problems (such as making the RMW atomic at least from
+>>> the endpoint's perspective).
+>>
+>> This is to make sure EP doesn't update in-consistent state when RC is updating
+>> the PCI_STATUS register? Since this involves two different systems, how do we
+>> make this atomic?
+> 
+> You can't make it atomic WRT both systems, but is there locking around
+> each RMW? Specifically, are preemption and interrupts disabled to
+> ensure time between a read and write are minimized? You wouldn't want
+> interrupts disabled during the delay too though (i.e. around
+> .raise_irq()).
 
-sorry, forget to remove these two patch from this submits, will not
-include it in later submits
-which ack other's review result.
+Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
+pointed below that delay for legacy interrupt is wrong and it has to be fixed
+(with a later series).
 
-thanks.
+How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
+changing the default implementation to perform only 32-bit access (used for
+legacy interrupt, msi-x interrupt and while writing standard headers) and it's
+not okay only for legacy interrupts for platforms other than TI.
 
-best regards
+So just for legacy interrupt, you want me to add a different accessor which
+does not perform 32-bit writes (while we add a different .raise_irq for TI
+platform?
+> 
+> BTW, I've asked this question before, but aren't PCI legacy interrupts
+> level triggered? If so, isn't generating a pulse wrong?
 
-Dillon,
+You are right. This is wrong and it has to be fixed. I'll work on this later.
+
+Thanks
+Kishon
