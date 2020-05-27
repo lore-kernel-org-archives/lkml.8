@@ -2,99 +2,90 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17420C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 375DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0F362078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1636B20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388555AbgE0NlX (ORCPT
+        id S2388563AbgE0NmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:41:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:43773 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726810AbgE0NlX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:41:23 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N7Qp3-1ixLzb0LZl-017j0Y; Wed, 27 May 2020 15:41:14 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Alex Maftei (amaftei)" <amaftei@solarflare.com>,
-        Tom Zhao <tzhao@solarflare.com>, netdev@vger.kernel.org,
+        Wed, 27 May 2020 09:42:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11080 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387771AbgE0NmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:42:21 -0400
+IronPort-SDR: VUoUA6ge9QyNZ8FD+D8CgPPlFR6AeYRY2fzHKkm1HDxaNEEN0jHkVk4mNoilXbTdqCno1r/AFD
+ XgU6ONkAtvCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:42:20 -0700
+IronPort-SDR: vW6e7s7Gzf/CPGZx6t4D/RIeBm/4YAK4Hjp3JykGkTjQ4CRqBvxRYnXV0wkC/DVCr2S9XXN+QK
+ Mqw3x+haU+5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="442523669"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 06:42:17 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdwK4-009EjZ-2S; Wed, 27 May 2020 16:42:20 +0300
+Date:   Wed, 27 May 2020 16:42:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next] sfc: avoid an unused-variable warning
-Date:   Wed, 27 May 2020 15:41:06 +0200
-Message-Id: <20200527134113.827128-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+Subject: Re: [PATCH v4 06/11] i2c: designware: Add Baytrail sem config DW I2C
+ platform dependency
+Message-ID: <20200527134220.GX1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-7-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:2qV0ouQ231GRn5/kmWBmCmf9v/l6VkWkkO3TQdHRDfHjfMM+7ni
- uNhtbVK3yyHkAKZcYRcmUOtm9iCNP0EJwVz8jtshL8KiO72f7c7oRw8njgaQMbX7LD3RmCt
- 6eQMcNDRSdNV5euilakJ078ge8+A2zQrCjKcQ58RAv96TdUAmOUNyAptZy+nG254GOrDmIb
- mWZ21CET7e5EYyb9j2RRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xyZRuz9UDIc=:ROAlNwSe1jkIIEWyvDI7sy
- b4OxXNEOVdY3DzEPD+lC8Y4PLENkqKSEfAsl1yXE6SlNx0c2DQAa4coaw2TnbqwdQEXIOsa9h
- oKwAAmbni18D996g/cKxF3OfljaLKdFUNWug0DLb+pIz9ryqJDd/qI1NmDwjFErNTBt/3xec1
- dI+SwVJQsFGnuRR/pK1AtiisYgeD30kJQzUoKUF6fWFBWMi25gQw75g4MldGR9T/TbfWRT5Pl
- diwIA+VkipOpLdYg09S0/yDFTaFIx4LaArr5vTY+cuRQTD9ddpGiNPsBYJz7utG7Icgf23KHz
- 9Jfjir+liGxJt4vmZkS/a5CSMQTymez0JegbR5SqPD8Bg6ELX9SyXiKlSk+dszBuu05Cc4mBY
- IbLWKF8W+WN8nuoUaUdLc2Bg6WC8gfCAuB6k7ln8Wk9l7uBP+m8RPpKlxuMfZ+lBm6Nl7kOuM
- r+RACoXjZSCoAzuNp6vKd76UYy6PW+trZBWiV0Crv/dpGrkDIEFrXFA7tXgDzx+dzhGQWHmSO
- hlDTUAEnmT5qZzugIC0XnyNbJJtHrn7B0lewu95cZ+7Rj8JCC6ZKd70KwCca2ScszqeGhBYNm
- n+F0E8Q33P7pUCzs2Aka6Jnu5ZFRMs+NgrcClvG1HZ/MPkNca2h7tav7hJoG+2Rq6dzHeS8w6
- Sk2stqiNbXXPWWXUS3eX4l2lezOC2izmSnmsLU8tHJTqwSwoIonw+Q+MnmNNutZ3ptbNhkVb1
- jIMEjurL55VygZqdIKBeX+nz96Y7NIz6S062I0J8qrdVkyztSQ9iYd+ij9f1YGXqo3gvXNYZe
- 1MGFsIy0OsZRBeS8bI0yCZ9IT5dSy92+ZnG8vX1hIBztW2OrhM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527120111.5781-7-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'nic_data' is no longer used outside of the #ifdef block
-in efx_ef10_set_mac_address:
+On Wed, May 27, 2020 at 03:01:06PM +0300, Serge Semin wrote:
+> Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
+> platform driver. It's a bit confusing to see it's config in the menu at
+> some separated place with no reference to the platform code. Let's move the
+> config definition to be below the I2C_DESIGNWARE_PLATFORM config and mark
+> it with "depends on I2C_DESIGNWARE_PLATFORM" statement. By doing so the
+> config menu will display the feature right below the DW I2C platform
+> driver item and will indent it to the right so signifying its belonging.
 
-drivers/net/ethernet/sfc/ef10.c:3231:28: error: unused variable 'nic_data' [-Werror,-Wunused-variable]
-        struct efx_ef10_nic_data *nic_data = efx->nic_data;
+...
 
-Move the variable into a local scope.
+>  config I2C_DESIGNWARE_BAYTRAIL
+>  	bool "Intel Baytrail I2C semaphore support"
+>  	depends on ACPI
+> +	depends on I2C_DESIGNWARE_PLATFORM
+>  	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
+>  		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
 
-Fixes: dfcabb078847 ("sfc: move vport_id to struct efx_nic")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/sfc/ef10.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I didn't get this. What is broken now with existing dependencies?
 
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index e634e8110585..964c5e842cec 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -3228,7 +3228,6 @@ static int efx_ef10_vport_set_mac_address(struct efx_nic *efx)
- static int efx_ef10_set_mac_address(struct efx_nic *efx)
- {
- 	MCDI_DECLARE_BUF(inbuf, MC_CMD_VADAPTOR_SET_MAC_IN_LEN);
--	struct efx_ef10_nic_data *nic_data = efx->nic_data;
- 	bool was_enabled = efx->port_enabled;
- 	int rc;
- 
-@@ -3256,6 +3255,7 @@ static int efx_ef10_set_mac_address(struct efx_nic *efx)
- 
- #ifdef CONFIG_SFC_SRIOV
- 	if (efx->pci_dev->is_virtfn && efx->pci_dev->physfn) {
-+		struct efx_ef10_nic_data *nic_data = efx->nic_data;
- 		struct pci_dev *pci_dev_pf = efx->pci_dev->physfn;
- 
- 		if (rc == -EPERM) {
+(The move of the PCI part is fine)
+
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
