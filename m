@@ -2,147 +2,221 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C26C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E0CC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D5620723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE932089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:42:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G6qMI0JX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJxUyzIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388163AbgE0Ijk (ORCPT
+        id S2388179AbgE0Im0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:39:40 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25100 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387999AbgE0Ijj (ORCPT
+        Wed, 27 May 2020 04:42:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388161AbgE0ImZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:39:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590568779;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5CtVNmzXXKb/GJnyK3cmtp2ErHYUKsptEP9TQUHQbxw=;
-        b=G6qMI0JXsaEA95oPVcjzNX79Go3SDGiFDpal7vxbO2y4h8ho3U/KFii69k6zYtjqj9VLdg
-        HnXc3RqgI2/u9p6fwj8gdtrYyxrK1ybmE9SZvFudCMKjaRVksrvo8A3SEl6mMIHNvDeU4H
-        NoEqqriNzM/HOfwc43jpJ0sAAofe5E8=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-j355oZm9NvOb8-tm1aLtvg-1; Wed, 27 May 2020 04:39:37 -0400
-X-MC-Unique: j355oZm9NvOb8-tm1aLtvg-1
-Received: by mail-ej1-f69.google.com with SMTP id qo26so8595641ejb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:39:37 -0700 (PDT)
+        Wed, 27 May 2020 04:42:25 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6411BC03E97C
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:42:25 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 82so13987339lfh.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0cVbaBKHPFRHFgLj7eTRo1bAadVyagSGQGQWcN/OrRE=;
+        b=oJxUyzIVgZq7u4vhV2WTxYtWXGyQmwh7FnwZ8aW0G3ACHvkdtdA5Vg8o7/V1sOarON
+         yNJdUef2IB0O73wQevzC4PCIMlKH3IWiY6zcax+lX2CmWdkv8j2+pjwlJkLtYIpsWFgp
+         SuQ5IhYNHlfCZxc8AijCOMtBvTka3/7rbhfY3Nc6zRHthYsIW9Ia5YXmDFUO15q7K9hn
+         gv0TJ0vBP1RCF2fErFoKvNPuVJOLNxLkd0zU42psapjDni5JhYPlHuSrQgTT1TsaksnW
+         bLzX4DiKNHL6Hr18kFZRWSRt4TTWKotEOD6xkTw9O+WJMFFWo3KHfgwwU34C3KRgL8N2
+         oZ1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=5CtVNmzXXKb/GJnyK3cmtp2ErHYUKsptEP9TQUHQbxw=;
-        b=ZK9Amn6kIAfR2shcBY5G5QMBkYdHdmK0k47ewyt15vqIE6KKvFI5MEsCjpVZke9wq0
-         J0vzog7TMbU/c/aKQpsU7YtukH0Y1nZA0Hk/5KDg1f7JXINJVDTJUlaTAlbwRONOgyXc
-         Ti5jRk1ly2eErDV3m3UwEj93rm965VFPMMvfLLByVfsrEUgiMataXOqn/EMVrwNimjSJ
-         TVVDgHYGR0jGnYlhw9Eisp1TQqPiEf9WkLC3vB5LHZ4llBR9s39DQY6ckNIXdHNk0IkR
-         llpRucm4zC5AcvRCVzKnfRJRsn/96kbBOzQY81g7qOEvq1N1ZBDr1kOvc4BcAnZiS5xp
-         2P3Q==
-X-Gm-Message-State: AOAM532Ku9sU9qTHQSkbIFzX+/q3IeBmL/NA2lVnPfbCncYHc8Axrzju
-        90N2031VtjMdL9JEdxkO6WhbDvGr4CypNcyS7Qhge3AQnzrTzEPeA6PQwLRFaDJERsDeW9uh4GJ
-        iXI068Y7cOlOGh0hsn433C7N3
-X-Received: by 2002:a17:906:3b9a:: with SMTP id u26mr4827603ejf.456.1590568776134;
-        Wed, 27 May 2020 01:39:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwp2aIsA3XEwQ6IIPY4EvLkOvUOmXFr3P4IIB2DE6c8rBlbscdO/yOITd5hElHhUs1XcB7/yQ==
-X-Received: by 2002:a17:906:3b9a:: with SMTP id u26mr4827580ejf.456.1590568775832;
-        Wed, 27 May 2020 01:39:35 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id s19sm2124076eja.91.2020.05.27.01.39.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 01:39:34 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe\, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen\, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
-In-Reply-To: <20200527050350.GK31696@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com> <20200522125214.31348-3-kirill.shutemov@linux.intel.com> <87d06s83is.fsf@vitty.brq.redhat.com> <20200525151525.qmfvzxbl7sq46cdq@box> <20200527050350.GK31696@linux.intel.com>
-Date:   Wed, 27 May 2020 10:39:33 +0200
-Message-ID: <87eer56abe.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0cVbaBKHPFRHFgLj7eTRo1bAadVyagSGQGQWcN/OrRE=;
+        b=hk1j+r/qnQKmfKORuyPHtFycbIkNAhIOQRB7LJ/Sh3IJNdgE8WmC9sSjfEkv2wjv3W
+         pDoJJwdxrHaBXApaAkkGvK5EE2v2twOQyprkYC/Nv6fpoq/hq+jfw1MwS08CZ4wFrcFT
+         3sZhtuB21+WvSNfqHuj+TlmhpYj6u+HodGDX6xOIZ8wPfxmd/0grOIziy6wDkNhsHVHD
+         I1wbFMMl2Bz/KsUmcsG8vYG9UZF8rbaRZ/+dYvSuATum30DTv8Y3xEhSVK8odwDPc8lz
+         6AHBMXObKH3W9KVwPQwDTWEL0himl5ebDYvec5Q1ZGMKYDRJpVNllHhMbFZY4SQXaGP6
+         IR5w==
+X-Gm-Message-State: AOAM530vGQ3Itkw2aazuPDPFnkdqvZVDTyRECTU7ulnLesnR5LakCYqH
+        iIHkWgp5JyI4CvPgsHViCW9z+nAF5QZM0w==
+X-Google-Smtp-Source: ABdhPJyNlPGUsdKFIc4nPUUBfYBG9iP9HgT7+hNyJKOoA+mEZpSqes4qfc2yvtAB8gm2VZvscTPBfw==
+X-Received: by 2002:a19:550e:: with SMTP id n14mr2628879lfe.81.1590568943796;
+        Wed, 27 May 2020 01:42:23 -0700 (PDT)
+Received: from [192.168.118.216] (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
+        by smtp.gmail.com with ESMTPSA id f2sm543541ljf.113.2020.05.27.01.42.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 01:42:23 -0700 (PDT)
+Subject: Re: [PATCH v3 07/10] media: i2c: imx290: Add RAW12 mode support
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        manivannan.sadhasivam@linaro.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
+        a.brela@framos.com, Peter Griffin <peter.griffin@linaro.org>
+References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
+ <20200524192505.20682-8-andrey.konovalov@linaro.org>
+ <CAPY8ntAW+yfxw0NTDi3yEwoZ+AqUuXD__pqB977bXgJr=jnNXg@mail.gmail.com>
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+Message-ID: <3597b850-5ce6-0e88-8f1f-e16bad5f75ef@linaro.org>
+Date:   Wed, 27 May 2020 11:42:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAPY8ntAW+yfxw0NTDi3yEwoZ+AqUuXD__pqB977bXgJr=jnNXg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi Dave,
 
-> On Mon, May 25, 2020 at 06:15:25PM +0300, Kirill A. Shutemov wrote:
->> On Mon, May 25, 2020 at 04:58:51PM +0200, Vitaly Kuznetsov wrote:
->> > > @@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
->> > >  {
->> > >  	kvmclock_init();
->> > >  	x86_platform.apic_post_init = kvm_apic_init;
->> > > +
->> > > +	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
->> > > +		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
->> > > +			pr_err("Failed to enable KVM memory protection\n");
->> > > +			return;
->> > > +		}
->> > > +
->> > > +		mem_protected = true;
->> > > +	}
->> > >  }
->> > 
->> > Personally, I'd prefer to do this via setting a bit in a KVM-specific
->> > MSR instead. The benefit is that the guest doesn't need to remember if
->> > it enabled the feature or not, it can always read the config msr. May
->> > come handy for e.g. kexec/kdump.
->> 
->> I think we would need to remember it anyway. Accessing MSR is somewhat
->> expensive. But, okay, I can rework it MSR if needed.
->
-> I think Vitaly is talking about the case where the kernel can't easily get
-> at its cached state, e.g. after booting into a new kernel.  The kernel would
-> still have an X86_FEATURE bit or whatever, providing a virtual MSR would be
-> purely for rare slow paths.
->
-> That being said, a hypercall plus CPUID bit might be better, e.g. that'd
-> allow the guest to query the state without risking a #GP.
+On 26.05.2020 19:05, Dave Stevenson wrote:
+> Hi Andrey
+> 
+> Thanks for the patch.
+> 
+> On Sun, 24 May 2020 at 20:26, Andrey Konovalov
+> <andrey.konovalov@linaro.org> wrote:
+>>
+>> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>
+>> IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
+>> 12 bit formats. Since the driver already supports RAW10 mode, let's add
+>> the missing RAW12 mode as well.
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+>> ---
+>>   drivers/media/i2c/imx290.c | 36 +++++++++++++++++++++++++++++++++---
+>>   1 file changed, 33 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+>> index 162c345fffac..6e70ff22bc5f 100644
+>> --- a/drivers/media/i2c/imx290.c
+>> +++ b/drivers/media/i2c/imx290.c
+>> @@ -71,6 +71,7 @@ struct imx290 {
+>>          struct clk *xclk;
+>>          struct regmap *regmap;
+>>          u8 nlanes;
+>> +       u8 bpp;
+>>
+>>          struct v4l2_subdev sd;
+>>          struct v4l2_fwnode_endpoint ep;
+>> @@ -90,10 +91,12 @@ struct imx290 {
+>>
+>>   struct imx290_pixfmt {
+>>          u32 code;
+>> +       u8 bpp;
+>>   };
+>>
+>>   static const struct imx290_pixfmt imx290_formats[] = {
+>> -       { MEDIA_BUS_FMT_SRGGB10_1X10 },
+>> +       { MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
+>> +       { MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
+>>   };
+>>
+>>   static const struct regmap_config imx290_regmap_config = {
+>> @@ -261,6 +264,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
+>>          { 0x300b, 0x00},
+>>   };
+>>
+>> +static const struct imx290_regval imx290_12bit_settings[] = {
+>> +       { 0x3005, 0x01 },
+>> +       { 0x3046, 0x01 },
+>> +       { 0x3129, 0x00 },
+>> +       { 0x317c, 0x00 },
+>> +       { 0x31ec, 0x0e },
+>> +       { 0x3441, 0x0c },
+>> +       { 0x3442, 0x0c },
+>> +       { 0x300a, 0xf0 },
+>> +       { 0x300b, 0x00 },
+>> +};
+>> +
+>>   /* supported link frequencies */
+>>   static const s64 imx290_link_freq_2lanes[] = {
+>>          891000000, /* 1920x1080 -  2 lane */
+>> @@ -421,7 +436,12 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
+>>                  } else {
+>>                          imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
+>>                          msleep(10);
+>> -                       imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
+>> +                       if (imx290->bpp == 10)
+>> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
+>> +                                                0x3c);
+>> +                       else /* 12 bits per pixel */
+>> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
+>> +                                                0xf0);
+>>                          imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
+>>                  }
+>>                  break;
+>> @@ -496,7 +516,7 @@ static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
+>>          u8 nlanes = imx290->nlanes;
+>>
+>>          /* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
+>> -       return (link_freq * 2 * nlanes / 10);
+>> +       return (link_freq * 2 * nlanes / imx290->bpp);
+> 
+> This doesn't link on a 32bit system as it's a 64bit divide:
+> ERROR: "__aeabi_ldivmod" [drivers/media/i2c/imx290.ko] undefined!
+> It ought to be using do_div().
 
-We have rdmsr_safe() for that! :-) MSR (and hypercall to that matter)
-should have an associated CPUID feature bit of course.
+Nice catch, thanks!
+I'll fix this in the next version of the patchset.
 
-Yes, hypercall + CPUID would do but normally we treat CPUID data as
-static and in this case we'll make it a dynamically flipping
-bit. Especially if we introduce 'KVM_HC_DISABLE_MEM_PROTECTED' later.
+Thanks,
+Andrey
 
->
->> Note, that we can avoid the enabling algother, if we modify BIOS to deal
->> with private/shared memory. Currently BIOS get system crash if we enable
->> the feature from time zero.
->
-> Which would mesh better with a CPUID feature bit.
->
-
-And maybe even help us to resolve 'reboot' problem.
-
--- 
-Vitaly
-
+> Admittedly it didn't compile before as you still had a s64 divide by
+> 10, but I hadn't tried that :-)
+> 
+>    Dave
+> 
+>>   }
+>>
+>>   static int imx290_set_fmt(struct v4l2_subdev *sd,
+>> @@ -533,6 +553,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
+>>          } else {
+>>                  format = &imx290->current_format;
+>>                  imx290->current_mode = mode;
+>> +               imx290->bpp = imx290_formats[i].bpp;
+>>
+>>                  if (imx290->link_freq)
+>>                          __v4l2_ctrl_s_ctrl(imx290->link_freq,
+>> @@ -577,6 +598,15 @@ static int imx290_write_current_format(struct imx290 *imx290)
+>>                          return ret;
+>>                  }
+>>                  break;
+>> +       case MEDIA_BUS_FMT_SRGGB12_1X12:
+>> +               ret = imx290_set_register_array(imx290, imx290_12bit_settings,
+>> +                                               ARRAY_SIZE(
+>> +                                                       imx290_12bit_settings));
+>> +               if (ret < 0) {
+>> +                       dev_err(imx290->dev, "Could not set format registers\n");
+>> +                       return ret;
+>> +               }
+>> +               break;
+>>          default:
+>>                  dev_err(imx290->dev, "Unknown pixel format\n");
+>>                  return -EINVAL;
+>> --
+>> 2.17.1
+>>
