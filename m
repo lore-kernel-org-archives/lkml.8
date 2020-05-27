@@ -2,89 +2,149 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED82B20FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:33:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590608010;
-	bh=Pq+rxZUMqNHTw/5lfv1Xy78GvJezZInVlXGQVAaZCVw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MowScRCYyQjPQcQKBUiK6tJk32g5EtggwXjJyKQrMrW5jF9v/zdko7FIpNcqc7+hG
-	 u1xN5Js6R2o+YO/io35tPXDpE4D6NyprqZWILBTIrBWswzh/i+tIvKnJkwZBolHLjf
-	 /vz4A2bH4u2LhsJZkkWRFfh7ot+hxhwq7M+zZN5o=
+	by mail.kernel.org (Postfix) with ESMTP id 4C780207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:34:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgE0Td3 (ORCPT
+        id S1726887AbgE0TeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:33:29 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34263 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgE0Td2 (ORCPT
+        Wed, 27 May 2020 15:34:18 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:49932 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgE0TeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:33:28 -0400
-Received: by mail-io1-f67.google.com with SMTP id f3so27442628ioj.1;
-        Wed, 27 May 2020 12:33:28 -0700 (PDT)
+        Wed, 27 May 2020 15:34:17 -0400
+Received: by mail-io1-f71.google.com with SMTP id h17so17713170ior.16
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:34:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=W3JSjQKNUTVDwq2jZfNyE8OlRvobHjfbDFjoKiJceQk=;
-        b=soe1lxQ6KCUovy/wCCVQfmdS/kkskn7vpqztuoVaxgE1rjOYrEcZGmxquccJPJvKdB
-         NXcOTZZnay7m9WbtzbVmZTk9IflsuIN6oPgCcz0hQn4Pf8WrbF27SZFbBEEN2Li1W2Iw
-         4vstvuRR8v6WlH3zC6P4MHzhO6EvHw0iF/vvbvsko9iqfvPA4zmsDIr5Q0ayy3SFz+O3
-         jFjj5mtHVHp+l0mhfaDaacibfKmlt5OLCvJoDaXZt3gSoQjsX60W0eeE6+bJHWyzwG1K
-         wDYfQVZwSbp7+BllR4/hbz1Nm3E32jwSpBiflwqLQXD7mwjjHuC5hQAdFsJJvNybp0ff
-         7GRw==
-X-Gm-Message-State: AOAM532xkYCF1X3aEQc3aLn7U0HHxSQKdrIhM2knikBK8UrqI+hFXFB7
-        EUqGlQnhAbAUB2f9/fKKzg==
-X-Google-Smtp-Source: ABdhPJxRWfw0O6HofA51rJdaC3d5All8AHRJ9jL/XoXkz1mv9qFlW+eJj6Id/+SWWdbo4NPhKdWj2w==
-X-Received: by 2002:a02:4d:: with SMTP id 74mr7144801jaa.141.1590608007841;
-        Wed, 27 May 2020 12:33:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id t17sm2037371ilm.7.2020.05.27.12.33.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:33:27 -0700 (PDT)
-Received: (nullmailer pid 2604073 invoked by uid 1000);
-        Wed, 27 May 2020 19:33:26 -0000
-Date:   Wed, 27 May 2020 13:33:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: Re: [PATCH] dt-bindings: watchdog: Convert UniPhier watchdog timer
- to json-schema
-Message-ID: <20200527193326.GA2604024@bogus>
-References: <1589348545-22244-1-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=W56eeROf/6B9r0VDmmlfml93PYb/srpgJXNe3sUJhfA=;
+        b=STWubZ4EHrqzz2//Qk5Bg861f4jarl2RcVxF3MVH+c4RvPu67vZ0upKarGRoGLSUpb
+         OOUPjgNVgfUuktZVgYf9YyZU+6MuMP0FT6FXK7ozHwN1dIoz6W3Tyi7k3F/4/OuUD9bu
+         /4XtiRB3+upmzKW4V96rcMUJNElK0o6UlFrTCOJq76zmXTuFuVYgu7FNyXjyb7ezdqAd
+         4sI6bFZh9HILZt7XDLmKSUJY0wix5LXAoomOk7sKRNoJ++K2LPqkD4o0Ynx2xyh+shW+
+         uj6KcSZxRgePXMwZQYiveD61KuqXT4KqDR8mrPV7uFQM9cCETrmTNuATNEQGFV3DAVjm
+         ozJA==
+X-Gm-Message-State: AOAM533hPlpXfzy4uT23AwMM9QOO4UUYfNNEU/3s3KY1Zt79Poy6ty7e
+        Ph7jXZ9iZ1nt/ko74FOM+MaJNGAlQbkjnPpINxhgCTGgal5g
+X-Google-Smtp-Source: ABdhPJwUS6XHZxoufD0yHNyC0/Cvb3zkIpNDyUoYuNmWrKQMfwLf7Oa3fAJmDgN5goFXbKIJxCUUxX7yZLXE9dsLd9OdgA0p3H2J
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589348545-22244-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Received: by 2002:a05:6602:2431:: with SMTP id g17mr3540300iob.3.1590608056779;
+ Wed, 27 May 2020 12:34:16 -0700 (PDT)
+Date:   Wed, 27 May 2020 12:34:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000033888405a6a64c2f@google.com>
+Subject: general protection fault in __tipc_sendstream
+From:   syzbot <syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, tuong.t.lien@dektech.com.au,
+        ying.xue@windriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 14:42:25 +0900, Kunihiko Hayashi wrote:
-> Convert UniPhier watchdog timer binding to DT schema format.
-> 
-> Cc: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../bindings/watchdog/socionext,uniphier-wdt.yaml  | 36 ++++++++++++++++++++++
->  .../devicetree/bindings/watchdog/uniphier-wdt.txt  | 20 ------------
->  2 files changed, 36 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/socionext,uniphier-wdt.yaml
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
-> 
+Hello,
 
-Applied, thanks!
+syzbot found the following crash on:
+
+HEAD commit:    fb8ddaa9 Merge tag 'batadv-next-for-davem-20200526' of git..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=161c99e2100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7e1bc97341edbea6
+dashboard link: https://syzkaller.appspot.com/bug?extid=8eac6d030e7807c21d32
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=125ef99a100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14741416100000
+
+The bug was bisected to:
+
+commit 0a3e060f340dbe232ffa290c40f879b7f7db595b
+Author: Tuong Lien <tuong.t.lien@dektech.com.au>
+Date:   Tue May 26 09:38:38 2020 +0000
+
+    tipc: add test for Nagle algorithm effectiveness
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=173f1cd2100000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14bf1cd2100000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10bf1cd2100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8eac6d030e7807c21d32@syzkaller.appspotmail.com
+Fixes: 0a3e060f340d ("tipc: add test for Nagle algorithm effectiveness")
+
+general protection fault, probably for non-canonical address 0xdffffc0000000019: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000000c8-0x00000000000000cf]
+CPU: 1 PID: 7060 Comm: syz-executor394 Not tainted 5.7.0-rc6-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__tipc_sendstream+0xbde/0x11f0 net/tipc/socket.c:1591
+Code: 00 00 00 00 48 39 5c 24 28 48 0f 44 d8 e8 fa 3e db f9 48 b8 00 00 00 00 00 fc ff df 48 8d bb c8 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e2 04 00 00 48 8b 9b c8 00 00 00 48 b8 00 00 00
+RSP: 0018:ffffc90003ef7818 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8797fd9d
+RDX: 0000000000000019 RSI: ffffffff8797fde6 RDI: 00000000000000c8
+RBP: ffff888099848040 R08: ffff88809a5f6440 R09: fffffbfff1860b4c
+R10: ffffffff8c305a5f R11: fffffbfff1860b4b R12: ffff88809984857e
+R13: 0000000000000000 R14: ffff888086aa4000 R15: 0000000000000000
+FS:  00000000009b4880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 00000000a7fdf000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ tipc_sendstream+0x4c/0x70 net/tipc/socket.c:1533
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x32f/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmmsg+0x195/0x480 net/socket.c:2496
+ __do_sys_sendmmsg net/socket.c:2525 [inline]
+ __se_sys_sendmmsg net/socket.c:2522 [inline]
+ __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2522
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x440199
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe74856df8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440199
+RDX: 0492492492492619 RSI: 0000000020003240 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a20
+R13: 0000000000401ab0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 0d2e71066c248d44 ]---
+RIP: 0010:__tipc_sendstream+0xbde/0x11f0 net/tipc/socket.c:1591
+Code: 00 00 00 00 48 39 5c 24 28 48 0f 44 d8 e8 fa 3e db f9 48 b8 00 00 00 00 00 fc ff df 48 8d bb c8 00 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 e2 04 00 00 48 8b 9b c8 00 00 00 48 b8 00 00 00
+RSP: 0018:ffffc90003ef7818 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff8797fd9d
+RDX: 0000000000000019 RSI: ffffffff8797fde6 RDI: 00000000000000c8
+RBP: ffff888099848040 R08: ffff88809a5f6440 R09: fffffbfff1860b4c
+R10: ffffffff8c305a5f R11: fffffbfff1860b4b R12: ffff88809984857e
+R13: 0000000000000000 R14: ffff888086aa4000 R15: 0000000000000000
+FS:  00000000009b4880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000140 CR3: 00000000a7fdf000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
