@@ -2,130 +2,120 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1535EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C255B20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iuXe3awq"
+	by mail.kernel.org (Postfix) with ESMTP id E73E62073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgE0WfX (ORCPT
+        id S1726993AbgE0Wfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:35:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:48602 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgE0WfV (ORCPT
+        Wed, 27 May 2020 18:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgE0Wfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:35:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RMMCx8054693;
-        Wed, 27 May 2020 22:35:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
- message-id : date : from : to : cc : subject : references : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=bPT+VORLylxcPAWpuFfNtjTNb+GnFV3EtWluz+y7630=;
- b=iuXe3awqVD7jdre/ppfwWPneSn50hN0SKbrxFDjlilZI0Q4fwndV4WJEkVGBPONBiYy7
- dYpyex/I0PRzfVneSMlbndZP++DnpvbJhEzARKwvWmBCizcKN70X+MMgS5mrlXkcK1g2
- ZhuPJ2RGuuvN8nRXgQ7RqHZ4pAp2VOSBOHTnOVnIyFhgZyuVD/XYkdvg2fbeD5XVX4dc
- Y3h1y1+hdVY8XorK+HMBct29orqDiNbJow2v0G5yW75QIdUpNlJkKehC0EeMJOQpAxdi
- qP2+HuPvU3nETYjdTD0RhXXjSLTMcbha59Jff6fyM40Qv+/T1c+8v+LHb4CgFRpMcUE7 /A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 316u8r21cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 22:35:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RMHc5D184460;
-        Wed, 27 May 2020 22:35:13 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 317dkv9ae6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 22:35:13 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04RMZCjn017158;
-        Wed, 27 May 2020 22:35:12 GMT
-Received: from [10.39.225.245] (/10.39.225.245) by default (Oracle Beehive
- Gateway v4.0) with ESMTP ; Wed, 27 May 2020 15:34:28 -0700
-AUTOCRYPT: addr=boris.ostrovsky@oracle.com; keydata=
- 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
-USER-AGENT: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-Content-Language: en-US
-MIME-Version: 1.0
-Message-ID: <612fee00-4e7c-9b90-511d-4efb7676cbed@oracle.com>
-Date:   Wed, 27 May 2020 15:34:26 -0700 (PDT)
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Juergen Gross <jgross@suse.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 1/2] xen-pciback: Use dev_printk() when possible
-References: <20200527174326.254329-1-helgaas@kernel.org>
- <20200527174326.254329-2-helgaas@kernel.org>
-In-Reply-To: <20200527174326.254329-2-helgaas@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Wed, 27 May 2020 18:35:47 -0400
+Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEF2C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:35:46 -0700 (PDT)
+Received: from mr1.cc.vt.edu (mr1.cc.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04RMZjSQ021662
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:35:45 -0400
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04RMZePL002980
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:35:45 -0400
+Received: by mail-qt1-f200.google.com with SMTP id t24so3068778qtj.15
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:35:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=wAfrgwiy8FRYZqVG4if/0XphI1xwoqduQ4nX1CyB3XQ=;
+        b=iwkaPL2Hh32pVcPWv/3SMe3jGTFknRGgrc2Aiz+ctsfKESsywJbnxa2Qlvhf0CX7IG
+         iD5CCFuaWtYgeaVwgfvz9vmGKn0vr3/khOGqhf7myBUccyUDmIGJnVb5OS45FD3j6O8R
+         CtE4YLwQEHJesXujtaIRFYkKD7IObMtenyKJw+yHavkP3RbDsDrzjl9kAuFFYyy1/uyB
+         aUWIRH1lDYwHiIFTE7C9YafdBUplEFuok31PYgLgOsXwquG54ud1mQ5ZxcGwUP/3mkoc
+         Mpf6E9Sop0lhgeebk5l9Ez4BPxOHLf7s1jUF8NYnKKKoHNdprPbRX72pBdlC1DONK7Zm
+         9Pxw==
+X-Gm-Message-State: AOAM5332yNqqbNmaw3kFShAC2kPscUgsqEygkGFmkBeZxUIKYwK3JhRs
+        +TBBo2GfMoXFTfghhAZbpATuvVfjrcysB212SRX9HjolT6xgZ5C10KXzE1f5Qu4dZ0t0KBDAdzW
+        LaQNnyJ+3KEht/xYXLWPfz5zpcq4g1+Xq4fU=
+X-Received: by 2002:ad4:5624:: with SMTP id cb4mr244722qvb.154.1590618940014;
+        Wed, 27 May 2020 15:35:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzvSOV04NC8GPpLZ3kCE1Jln8ku1I0WYDMmMd8SFB2kWTPSoZpLpaIek+ain75HZ4nTzoLQeQ==
+X-Received: by 2002:ad4:5624:: with SMTP id cb4mr244700qvb.154.1590618939680;
+        Wed, 27 May 2020 15:35:39 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id w3sm3519357qkb.85.2020.05.27.15.35.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 15:35:38 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     ebiederm@xmission.com (Eric W. Biederman)
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] binfmt_elf_fdpic: fix execfd build regression
+In-Reply-To: <877dwx3u9y.fsf@x220.int.ebiederm.org>
+References: <20200527134911.1024114-1-arnd@arndb.de>
+ <877dwx3u9y.fsf@x220.int.ebiederm.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1590618937_16657P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 bulkscore=0
- spamscore=0 suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270170
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
- phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270170
+Date:   Wed, 27 May 2020 18:35:37 -0400
+Message-ID: <441347.1590618937@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 1:43 PM, Bjorn Helgaas wrote:
-> @@ -155,8 +157,8 @@ int xen_pcibk_config_read(struct pci_dev *dev, int offset, int size,
->  	u32 value = 0, tmp_val;
->  
->  	if (unlikely(verbose_request))
-> -		printk(KERN_DEBUG DRV_NAME ": %s: read %d bytes at 0x%x\n",
-> -		       pci_name(dev), size, offset);
-> +		dev_printk(KERN_DEBUG, &dev->dev, "read %d bytes at 0x%x\n",
-> +			   size, offset);
+--==_Exmh_1590618937_16657P
+Content-Type: text/plain; charset=us-ascii
+
+On Wed, 27 May 2020 17:08:57 -0500, Eric W. Biederman said:
+
+> Is there an easy to build-test configuration that includes
+> binfmt_elf_fdpic?
+
+I tripped over it with a 'make ARM=arch allmodconfig', but any
+config that includes CONFIG_BINFMT_ELF_FDPIC should suffice.
+I haven't checked the 'depends' for that variable though...
+
+> I have this sense that it might be smart to unify binfmt_elf
+> and binftm_elf_fdpic to the extent possible, and that will take build
+> tests.
+
+Bring it on! :)
 
 
-Maybe then dev_dbg() ?
+--==_Exmh_1590618937_16657P
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
 
--boris
+iQIVAwUBXs7rOAdmEQWDXROgAQKfFg/6A1io4tXqeORzdvfNlEZnJZC5ZT1M+b1V
+yC+vexxgJY/0oRN5y+76+hhBckAoacD4ABy9sH755aKwaPbsnmo9v3DCLK8W/Dxr
+taIQ7NlSDWm9F4gTo4nkiutbogP5QjYbAnJdO5h/TrUN/HzOvf2TrJ43WYBxGQrE
+4Tpy8knIfdZb/MNlSA0zbcqzzs3oZ4UxQvVs/xJ0NsLoR7FvVIELhEovxd+mpwLH
+/Ynf2K73gIHhamKCRvCA3YZuXX1qWZPAr0XjJ/FcIWc8LsQD4WDksPKzYJjHun0B
+sh/7aVPzd9HYcotsNamWAkdJL4wtH1LSItSS1TxX69FAN4OchXhiSZlHtPlJ1sI0
+US2WjWffW0xC9rzJFTNvhft4FuB2AJlP4bJmuH7QXyR2UH0IG51J2LhQkzBwb7EV
+bxa7pUV7lVrqEvB1nFc4nYC441kT8MlGF3AQh1W74InfeB7Os1nLrvVlzsoCXrFn
+l7WLHTgi9Vtb7DXDmQz76+cpdq35NMbQL3+Aiqv/SphmTDIt8ePQ0hgH/5p3snGf
+jh1zhjyQeRfgZj7cs0FpGtUhgO0cA1TcBhyPadUju1IVk5yut5hfPREd6dC2VmJS
+Il5MuZFGpGfXkaLnE2EgnEVNmzXDQi2TnYguqvhtOgJPn9dl+X4EeR7rpTERWlkH
+nBq+1ugzGtw=
+=ccnE
+-----END PGP SIGNATURE-----
 
-
+--==_Exmh_1590618937_16657P--
