@@ -2,93 +2,155 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CB5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADA952089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590601677;
-	bh=rSaJJZXTFSQo5V8SYqelQDcIOgr53WZjyRZI3TXtzSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zfabqj+uSs+LZPepvhE76KxpoI0hMf3cxusHao+31nXzx/ufFe80sa11pQZuz2os/
-	 l6vHCWrWEMtUoQncuNg92r4A7qPmamfffkWr7w43441Msyu/75w/QJ0uCiRVWdFA8b
-	 JZBvDhhTzo7Q6lHJybGSloGdH6Mz5vzk3xw6Oa84=
+	by mail.kernel.org (Postfix) with ESMTP id E867020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="UQq0s2Hs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391703AbgE0Rr5 (ORCPT
+        id S2391727AbgE0RtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:47:57 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41322 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387924AbgE0Rr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:47:56 -0400
-Received: by mail-il1-f196.google.com with SMTP id d1so2432761ila.8;
-        Wed, 27 May 2020 10:47:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=IRFVL6+5bKwj2i/4vQTFTXAfMw+OfdS62EpNoSmSV3I=;
-        b=bmI0PA2/78uOXCpFTZE0LIwrvpDl3yYmVm6lNA5pfwmaJhul5j7aTcmzpAJZFHqbkA
-         dy8LLfR2OwyKJ8mRTiJrEUCqgiXI/GmWZkL38O26sfJxEhKR1MzM+h272x/JVX3Q5X+Z
-         20oSo+HkzqCpvY+MStVQnrv2XHTE2kQDhGHDHaZaHUQWttr3/MjuPpakVyccFj6GGWhd
-         yIDW1l1lK8NjSaZJ3nZK9kZd4j50au2g0tYzGURQVk9KVpWTviiMvR5mq8CqRos0FKL6
-         h9/IeUUTWU8VJS+k9bWSS0h6FECgepuNjGoo15yHT3KIz/KCOcBzJ5jP6dUGzjcGziYf
-         rlPw==
-X-Gm-Message-State: AOAM531JD0/iXTze/7lnBbE4B2S+lC760MzujYm71cDpr19WIAgyofb5
-        S6rgjbTw7s4fMeXZsTyE1w==
-X-Google-Smtp-Source: ABdhPJzUBxL+J+xPV5JwZZiLBG7Yc15b/Sdl4BNiDHIgs0PftuDN9IsXIOwC4XuIpdh/Lt3QSRMCTA==
-X-Received: by 2002:a92:d591:: with SMTP id a17mr4951741iln.13.1590601675793;
-        Wed, 27 May 2020 10:47:55 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id r68sm1858093ilb.37.2020.05.27.10.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:47:55 -0700 (PDT)
-Received: (nullmailer pid 2443835 invoked by uid 1000);
-        Wed, 27 May 2020 17:47:54 -0000
-Date:   Wed, 27 May 2020 11:47:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     patches@opensource.cirrus.com, broonie@kernel.org,
-        linux@roeck-us.net, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, mturquette@baylibre.com,
-        linus.walleij@linaro.org, sboyd@kernel.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, jdelvare@suse.com
-Subject: Re: [PATCH v3 5/5] mfd: lochnagar: Move binding over to dtschema
-Message-ID: <20200527174754.GA2443798@bogus>
-References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
- <20200512152359.11839-5-ckeepax@opensource.cirrus.com>
+        Wed, 27 May 2020 13:49:17 -0400
+Received: from mail-eopbgr770071.outbound.protection.outlook.com ([40.107.77.71]:22343
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388206AbgE0RtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:49:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bi6+keD1htTp9gWHN90Ict3QrEbPvl10wOvg4ujybDUqW/wE6u+hAM56nw9k2ch0HjbZ4KludR7wU+OQ3JjM4BfGf8BIclfHgfRdz0ccilWPGy4pQUxu/YqUH6475+2uPgslbSUfl6LrfjTSyv/JWI7ZAc3xpaWsjEidLbZt+2qvx06++BwboLGFHIaA7OSmI8PtEcmlz/EjdNS7yqUDjDjBGkAe35zEqLmJbeYpSC8Oepd5SDwxNmQKBXXQ15VWNiN7M0KparnwKKbwuh7mis72FSWNf0VM55XoHaDneW9hCEV08qdq7k7xOLRohuS9kr71UzgQzuxAAzBpGLCpUA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tpAlLepyQNGtKXB2bnwBKoBls64kpU+zxLrsMjcTf/w=;
+ b=j913ecVh3hxRnQ0phtZg4JY091y4q/o6jkXtHvLw4gf0hssGJlv/30Lm7SEvZ1OTkTnHjAtIgxzBKcvrP/4QObwEn0Oo02QBHN3lzOC6I/Jh5t302YdAyi9JDhObGQct3fdf4F/mzh+q5ZxIn2tIV1Hqke5ZiSk2avZuKVRbiCntTGxhDjzUOQcDHx6YHpF/dbkKj2CRo6xD28JRb8aAEZaT3DPZX3NkrIwiSwLN77AuHjgCPAB4aNIMaHQTMmLoGBDmO8BE5tq/shVEEoy95pQr4xaiQiJhxEht+JdSntL4HZK9MJXm7P+MIM3h7A14bD/uY8gDhxY8/DMxhN4T6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tpAlLepyQNGtKXB2bnwBKoBls64kpU+zxLrsMjcTf/w=;
+ b=UQq0s2HsriNxwT11+3DvBDOxB1+NNOwjwmg/diVneQc/SrqaCDkWECngXBFkv/qtKXVRtfegAEJyRZ8wecmRvzs5GGc229bDl5PYiissWQBxkyBU2RIgEriEHbrSKnPaQaQuMpNsvtT1V5Gn/ONXWwHuSnOWqgSB9YGCrJVLXCE=
+Authentication-Results: lists.linux-foundation.org; dkim=none (message not
+ signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
+ DM5PR12MB1228.namprd12.prod.outlook.com (2603:10b6:3:74::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.27; Wed, 27 May 2020 17:49:10 +0000
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::4ce1:9947:9681:c8b1]) by DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::4ce1:9947:9681:c8b1%10]) with mapi id 15.20.3021.029; Wed, 27 May
+ 2020 17:49:10 +0000
+Subject: Re: [PATCH v3 64/75] x86/sev-es: Cache CPUID results for improved
+ performance
+To:     Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+References: <20200428151725.31091-1-joro@8bytes.org>
+ <20200428151725.31091-65-joro@8bytes.org>
+ <20200520051637.GA16599@linux.intel.com> <20200526091909.GB28228@zn.tnic>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <cab5e409-be9e-f2c7-424f-6b7d031324dc@amd.com>
+Date:   Wed, 27 May 2020 12:49:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200526091909.GB28228@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR04CA0097.namprd04.prod.outlook.com
+ (2603:10b6:805:f2::38) To DM5PR12MB1355.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512152359.11839-5-ckeepax@opensource.cirrus.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from office-linux.texastahm.com (67.79.209.213) by SN6PR04CA0097.namprd04.prod.outlook.com (2603:10b6:805:f2::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Wed, 27 May 2020 17:49:08 +0000
+X-Originating-IP: [67.79.209.213]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3ee69599-7334-4a4c-793e-08d80266425e
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1228:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1228474D69F8B00ACB6FD84FECB10@DM5PR12MB1228.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 04163EF38A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iLhq+j93Q1B8ZSRgVykF00ZJM8QIVQXA8QvywMoTy3aRmPFLXEm7yyOiMcDhxLUgeczLnikZHbEVl9m2HWPdNkH5br7/+qbRzHhXPjBtvJH4dnomv4Ucn3y7P0ZqSfTPaZo3Nkzt97Y2E8DoxxDbACkwDXDQ6wWmu6zLaj6z/k83a9jNHpdMmNuLtk+qncJ4zqXAi0o8PmIPG5uc//q/BXunA0HNBru999tHSLIwA7tPyHkl+v6EzC5TlP7OM7YCx41smr1fnw7IaYHLaiPEiL1sSz44OuVTxaQSxsXN+i+gwAyqXv5qHzQvk5mO7bEqxMncpea0suixpsWyrRDQVjREp5trUeMOnRQRux6+MLso9SiuzDhhdsMoZ7+v9d/a
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(136003)(366004)(39860400002)(346002)(36756003)(16526019)(2906002)(26005)(6512007)(8676002)(31696002)(66946007)(66556008)(53546011)(52116002)(83380400001)(6506007)(31686004)(956004)(5660300002)(478600001)(2616005)(54906003)(110136005)(66476007)(316002)(4326008)(8936002)(186003)(86362001)(6486002)(7416002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 2+2IjZM/5fA4TGQlC0/jCbGLLAyejC24Xm6mAJZyi8kTGgknyWqnB72b11Os7HRTfNu9PiloInUy8RCpJjTJC7mdiBqi4YSeixxEQFx+wCtpnXotxeICzWVe5rmNTm4G2gGRl3AZbCjE4t6zFvxNB2plXH0Z8npgw/MGuwwmnPm5DNxmH3V3r01NtcNep1g1AxVQu9Q2HrN/5bI5gPVO61lKmIo8KLOnbyAaLhn7v8Q0atBqCxh4v72ukIwJVwmOhDAO424EQGe7VuMPDUG6ccULnOBYNJjZq6b4qlpcsh0OmDdFr9pZ8SpXggSNMPSAar/NCqckve0eNo/ZkVC9RhSW1vWVGbsE5sq1CEFzjd5JJ3C2Rr/szJifwxveB6xsDoSVBtTrLFCZ/i0D6CaNM3XkPY3d0XHqbBgtZdePEVgzAh99V0ZpmhCS8seVirsZ0iPU5HMWNuhh21ERXyAx5qmIUtf2oa8amYTF3orLzng=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ee69599-7334-4a4c-793e-08d80266425e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 17:49:10.1630
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RcnZMn5hZLOHKIGDzn1XpweoVXG7o1NfB3P2+V6So1X19vgtQAItTVfb54IDnu1mS1Q6GqTMYNEfFSaplKFdvg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1228
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 16:23:58 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
+On 5/26/20 4:19 AM, Borislav Petkov wrote:
+> On Tue, May 19, 2020 at 10:16:37PM -0700, Sean Christopherson wrote:
+>> The whole cache on-demand approach seems like overkill.  The number of CPUID
+>> leaves that are invoked after boot with any regularity can probably be counted
+>> on one hand.   IIRC glibc invokes CPUID to gather TLB/cache info, XCR0-based
+>> features, and one or two other leafs.  A statically sized global array that's
+>> arbitrarily index a la x86_capability would be just as simple and more
+>> performant.  It would also allow fancier things like emulating CPUID 0xD in
+>> the guest if you want to go down that road.
 > 
-> No changes since v2.
-> 
-> Thanks,
-> Charles
-> 
->  .../devicetree/bindings/mfd/cirrus,lochnagar.txt   |  85 -----
->  .../devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 352 +++++++++++++++++++++
->  .../bindings/regulator/cirrus,lochnagar.txt        |  82 -----
->  MAINTAINERS                                        |  11 +-
->  4 files changed, 357 insertions(+), 173 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/cirrus,lochnagar.txt
-> 
+> And before we do any of that "caching" or whatnot, I'd like to see
+> numbers justifying its existence. Because if it is only a couple of
+> CPUID invocations and the boot delay is immeasurable, then it's not
+> worth the effort.
 
-Applied, thanks!
+I added some rudimentary stats code to see how many times there was a 
+CPUID cache hit on a 64-vCPU guest during a kernel build (make clean 
+followed by make with -j 64):
+
+   SEV-ES CPUID cache statistics
+     0x00000000/0x00000000: 220,384
+     0x00000007/0x00000000: 213,306
+     0x80000000/0x00000000: 1,054,642
+     0x80000001/0x00000000: 213,306
+     0x80000005/0x00000000: 210,334
+     0x80000006/0x00000000: 420,668
+     0x80000007/0x00000000: 210,334
+     0x80000008/0x00000000: 420,684
+
+     2,963,658 cache hits
+
+So it is significant in quantity, but I'm not sure what the overall 
+performance difference is. If I can find some more time I'll try to 
+compare the kernel builds with and without the caching to see if it is 
+noticeable.
+
+Thanks,
+Tom
+
+> 
