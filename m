@@ -2,113 +2,101 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F93C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEEFD207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:35:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="KYcnLUNV"
+	by mail.kernel.org (Postfix) with ESMTP id 4161D207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388359AbgE0Nf2 (ORCPT
+        id S2388384AbgE0Nfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:35:28 -0400
-Received: from mail-m964.mail.126.com ([123.126.96.4]:58900 "EHLO
-        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387664AbgE0Nf1 (ORCPT
+        Wed, 27 May 2020 09:35:38 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:35437 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387664AbgE0Nfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:35:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=3DyG6h3I4Y9QuJnn1o
-        Dt9FDzi0q1kTIE4vr9uP1Hf8Y=; b=KYcnLUNVxO6wHCp0XK4d5TSzi445ljV8J4
-        ruv/SA+S5CdLgJYZNQVEwilx0YJa3dsYuTbgXcZVhb076F1/aHDYVaYqqNqhvdJt
-        jyzuQWKakGfEdlkt7oeyoBr7oV5rud+vKiJhG0pwBPwk6Efh2QR1ZbPA7X89FT3X
-        PtnXPZPKM=
-Received: from localhost.localdomain (unknown [122.194.9.250])
-        by smtp9 (Coremail) with SMTP id NeRpCgBHa2sqbM5eBKQPPw--.188S3;
-        Wed, 27 May 2020 21:33:32 +0800 (CST)
-From:   chenxb_99091@126.com
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Xuebing Chen <chenxb_99091@126.com>
-Subject: Re:Re:[PATCH] drm: fix setting of plane_mask in pan_display_atomic()  function for linux-4.4
-Date:   Wed, 27 May 2020 21:33:27 +0800
-Message-Id: <1590586407-4109-1-git-send-email-chenxb_99091@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: NeRpCgBHa2sqbM5eBKQPPw--.188S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7uFyDAw1ftrWDJw48Zw43ZFb_yoW8Cr1fpF
-        4xAF95KF18ta1UCasFgan7Zr13ua1xWr1xWr1Ygr1Y9ryUtFy7tFsrZ3y3Wa4jqry3Gw13
-        twn8CasF9F15ArJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b8Oz3UUUUU=
-X-Originating-IP: [122.194.9.250]
-X-CM-SenderInfo: hfkh05lebzmiizr6ij2wof0z/1tbiJQ0xxV3WD2bedwABsW
+        Wed, 27 May 2020 09:35:37 -0400
+Received: from localhost.localdomain ([149.172.98.151]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MUD7D-1jUlQi0JwB-00RKHc; Wed, 27 May 2020 15:35:19 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Felix Fietkau <nbd@openwrt.org>, John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [net-next] mtk-star-emac: mark PM functions as __maybe_unused
+Date:   Wed, 27 May 2020 15:34:45 +0200
+Message-Id: <20200527133513.579367-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:cjj7qKhbYdAc+XoRu26dmgr99+0Mva2jDkFaa+78wl0aZCmV0UC
+ ncWKQldljAs9dUqWY0pwFACTSCYn+/UUUoGqoBekQdJxfEOmZ8sl1HSxzBgSyVaAO/n82XN
+ AkaShtBDsW9lZ8jpzC0+KlPr+2Y837pRS9hMODZSl5LC0r0sD1Ic6quun77ngs6pdMvub+y
+ RyKC7kjWmzV29q58j/l4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oj+4JOX6juU=:0m8IpO+rj+vvHLiYhZyv58
+ D4pCaNsPZ1/q70Tk2+JpIvmlDIZoPGimTin1lF+Sc16SU5olSM75WbhAaB7DcPnDWoTSgDxpT
+ Rs1v3nRGTX5OU7FHDg7T0TwbHPu8hz5P0lA7uSExtaCZ9MdwFbiBA4V5Uifyi7+mFGBB3Ku05
+ 1p2K/sQLMSkLJ7R5YWl9J1xgm9Q13Dpx9yCdIhSHCNIfbGhxl2xhR1kr/IAB6H+7X+b5MfncL
+ hilM5lyLg367eb/mY5vEOmG/BFU7qUYxOx51fTaKMD5piYkjGhe+VbbXk7wXmb8XFrunvAoaO
+ stSL9IuHMslwPrE8R9t0OuJyoyD4p9ORgUJAt/aNnOzVWToYoM2Bz2ptG+brORPXNpQleY0vU
+ ytUjSljBF9rh/7KWROwvrrIYKSfIksSCrriVubLuVKuTGEg4tF9VM0ENRChN6mstZXasxBdKb
+ 3kRtme4WFswSSMmttxf00aRO1IxGerzYscCJCqnR5KElnjHh9lUfU1rwx+E00RMappZji8y9N
+ wc7oMm2EMBKGmQRYKrNdCboJP3EUNkmaqMf8PmI8lbEUmT6We8ZYT4uqyejwDtqRDlgL+yCsf
+ oNg9rZBeBQB9urX3AOO68xlnOj4kSTQGcTYzdp1093vZpJINl9lErqkTeKoKWgRqeU0dZB9dI
+ 908SW4x0C349asxQQdKek789w1MRNkNgHYeeXo8yhlORH7/8e6gYpWQB6RjTBMZBs/Js+k4aP
+ UPfmHIS6Tj4wmqsdhSBh5MmevMDEqNlXA2lfa12XRaqCtpj8w97k/qOMQG5W9LGa5paADueGt
+ OMrDQ5hTnr6zTtfaIXcL+PRkXXI6gsp4NOpc4g/BJwgRSgpXJ0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xuebing Chen <chenxb_99091@126.com>
+Without CONFIG_PM, the compiler warns about two unused functions:
 
-On Mon, May 25, 2020 at 04:34:28PM +0200, Daniel Vetter wrote:
-> On Sat, May 23, 2020 at 11:49:07AM +0800, chenxb_99091@126.com wrote:
-> > From: Xuebing Chen <chenxb_99091@126.com>
-> > 
-> > The <include/drm/drm_crtc.h> provides drm_for_each_plane_mask macro and
-> > plane_mask is defined as bitmask of plane indices, such as
-> > 1<<drm_plane_index(plane). This patch fixes error setting of plane_mask
-> > in pan_display_atomic() function.
-> > 
-> > Signed-off-by: Xuebing Chen <chenxb_99091@126.com>
-> 
-> What kernel is this patch against? Latest upstream doesn't have any such
-> code anymore ... I'm assuming that Ville fixed this in one of his patches,
-> but I can't find the right one just now.
+drivers/net/ethernet/mediatek/mtk_star_emac.c:1472:12: error: unused function 'mtk_star_suspend' [-Werror,-Wunused-function]
+drivers/net/ethernet/mediatek/mtk_star_emac.c:1488:12: error: unused function 'mtk_star_resume' [-Werror,-Wunused-function]
 
-This bug is still present in the longterm-supported versions of kernel 4.4.y, 
-including the latest kernel v4.4.224,
-See https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/?h=v4.4.224
+Mark these as __maybe_unused.
 
+Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/mediatek/mtk_star_emac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-
-> -Daniel
-> 
-> > ---
-> >  drivers/gpu/drm/drm_fb_helper.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-> > index e449f22..6a9f7ee 100644
-> > --- a/drivers/gpu/drm/drm_fb_helper.c
-> > +++ b/drivers/gpu/drm/drm_fb_helper.c
-> > @@ -1256,7 +1256,7 @@ retry:
-> >  			goto fail;
-> >  
-> >  		plane = mode_set->crtc->primary;
-> > -		plane_mask |= drm_plane_index(plane);
-> > +		plane_mask |= 1 << drm_plane_index(plane);
-> >  		plane->old_fb = plane->fb;
-> >  	}
-> >  
-> > -- 
-> > 2.7.4
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
-
-
+diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+index b18ce47c4f2e..3223567fe1cb 100644
+--- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
++++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+@@ -1469,7 +1469,7 @@ static int mtk_star_mdio_init(struct net_device *ndev)
+ 	return ret;
+ }
+ 
+-static int mtk_star_suspend(struct device *dev)
++static __maybe_unused int mtk_star_suspend(struct device *dev)
+ {
+ 	struct mtk_star_priv *priv;
+ 	struct net_device *ndev;
+@@ -1485,7 +1485,7 @@ static int mtk_star_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int mtk_star_resume(struct device *dev)
++static __maybe_unused int mtk_star_resume(struct device *dev)
+ {
+ 	struct mtk_star_priv *priv;
+ 	struct net_device *ndev;
+-- 
+2.26.2
 
