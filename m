@@ -2,218 +2,303 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4631BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE076C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25F8A207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:49:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590544146;
-	bh=PRfGitUSrfn8k2Z4gRtjn++4ZGpMz0ywxN2UDzywaqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nPDsxO/47vnckH0SfIU9VKfnmrXArb8N3wOJOupCXTvQOBzr5HbN8LuLN1dW7EvlB
-	 cnsRdewEeabUKZ/qqka1oOqqoRpPo0eviHsjpCFGy2jTLTCmVHkpCGEYqSd0WtVD5U
-	 MisINk3L0uEU9SeMYNVVFRGi9qUlOJs85NePtzmo=
+	by mail.kernel.org (Postfix) with ESMTP id A7CA22073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="V8UDDlMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgE0BtF (ORCPT
+        id S1728059AbgE0Bv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:49:05 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35661 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgE0BtF (ORCPT
+        Tue, 26 May 2020 21:51:58 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44048 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgE0Bv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:49:05 -0400
-Received: by mail-io1-f66.google.com with SMTP id s18so10297518ioe.2;
-        Tue, 26 May 2020 18:49:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NpFq0R0aWjAOVLGwhQJ2XIanByWj7TpCd6S10cJEALk=;
-        b=ehLhdobTilPxhRKmxjuoc82vpr/YACLkJRS9VQ6rineCgdisQmKDlKtCc8XIwwCo5L
-         +5kXdJB5o8toyHqyDngXAF6NzPtcAAGCHtWf/bXIW6KVfNAy5gtGEN/OoK0SDk0shMGV
-         bJ3OpRp3zdIcdUOzEyAudcJ4+0wIjHvaOLVyGLxJmFtKSZcoKcpr/r0F2vbT0Rw5JiEu
-         2mandnBPZc5tdPcwUAGQLzvXeMrRsayxK9Ac9eZtBGqwKGdVWCkyK8MCUmz19ragAvHj
-         8To4k12ii+TznF93il90DrMTlluk9E1UK7vBK16naLUN9afYU9QiEt6P8+yPFvggbSe2
-         3psw==
-X-Gm-Message-State: AOAM530ckeTaJlQtf7fF5+TvPuBWFTLH0mPZJznlPaLoFx/QjnHWEiz3
-        RaQ/Ady1lFATlOtcmp8gWZV2Cbk=
-X-Google-Smtp-Source: ABdhPJwnUd9gtPnPbiK2tnmPcj4pMtkePhPFVkdrcrLBI+LLU1Mcp7uTqwffmLKF1kyjD8RFzL2RBQ==
-X-Received: by 2002:a6b:5c19:: with SMTP id z25mr2942857ioh.119.1590544143956;
-        Tue, 26 May 2020 18:49:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id h23sm633451ioj.39.2020.05.26.18.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 18:49:03 -0700 (PDT)
-Received: (nullmailer pid 874370 invoked by uid 1000);
-        Wed, 27 May 2020 01:49:02 -0000
-Date:   Tue, 26 May 2020 19:49:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        Tue, 26 May 2020 21:51:57 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1040)
+        id 7D19520B717B; Tue, 26 May 2020 18:51:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7D19520B717B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1590544315;
+        bh=C9ajJeJOQyL3l974xDokVYQ2Tn8ZMUfjZ4zwNe9QJkM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V8UDDlMwDyd+30hefwbAUrqx1yhHsCfUBoj/MlbWwlNyAocgxHRZnN9L6/P4Rrvxk
+         IehBXj73lBaX+XReNqzNRM753cTPopdFOz2ibJP89WWvgAx0aNO+JtVzPa7sig0kdz
+         67VCtK8D7dgybLPA95IgHgONHTW/ZXVu99sAC3YQ=
+From:   Steve MacLean <steve.maclean@linux.microsoft.com>
+Cc:     Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-Message-ID: <20200527014902.GA859634@bogus>
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-2-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526164652.2331-2-dmurphy@ti.com>
+Subject: [PATCH v4] perf inject --jit: Remove //anon mmap events
+Date:   Tue, 26 May 2020 18:51:11 -0700
+Message-Id: <1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:46:37AM -0500, Dan Murphy wrote:
-> Add DT bindings for the LEDs multicolor class framework.
-> Add multicolor ID to the color ID list for device tree bindings.
-> 
-> CC: Rob Herring <robh@kernel.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
->  drivers/leds/led-core.c                       |  1 +
->  include/dt-bindings/leds/common.h             |  3 +-
->  3 files changed, 74 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> new file mode 100644
-> index 000000000000..fa6ea8e5c46b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
-> @@ -0,0 +1,71 @@
-> +# SPDX-License-Identifier: GPL-2.0
+From: Steve MacLean <Steve.MacLean@Microsoft.com>
 
-Dual license new bindings please.
+**perf-<pid>.map and jit-<pid>.dump designs:
 
-GPL-2.0-only OR BSD-2-Clause
+When a JIT generates code to be executed, it must allocate memory and
+mark it executable using an mmap call.
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common properties for the multicolor LED class.
-> +
-> +maintainers:
-> +  - Dan Murphy <dmurphy@ti.com>
-> +
-> +description: |
-> +  Bindings for multi color LEDs show how to describe current outputs of
-> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
-> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
-> +  modules. This is achieved by adding multi-led nodes layer to the
-> +  monochrome LED bindings.
-> +  The nodes and properties defined in this document are unique to the multicolor
-> +  LED class.  Common LED nodes and properties are inherited from the common.txt
-> +  within this documentation directory.
-> +
-> +properties:
-> +  color:
-> +    description: |
-> +      For multicolor LED support this property should be defined as
-> +      LED_COLOR_ID_MULTI and further definition can be found in
-> +      include/linux/leds/common.h.
+*** perf-<pid>.map design
 
-This should have:
+The perf-<pid>.map assumes that any sample recorded in an anonymous
+memory page is JIT code. It then tries to resolve the symbol name by
+looking at the process' perf-<pid>.map.
 
-const: X  # LED_COLOR_ID_MULTI
+*** jit-<pid>.dump design
 
-It can't use the define, so you have to use the value.
+The jit-<pid>.dump mechanism takes a different approach. It requires a JIT
+to write a `<path>/jit-<pid>.dump` file. This file must also be mmapped
+so that perf inject -jit can find the file. The JIT must also add
+JIT_CODE_LOAD records for any functions it generates. The records are
+timestamped using a clock which can be correlated to the perf record
+clock.
 
-> +
-> +required:
-> +  - color
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/leds/common.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        led-controller@14 {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          compatible = "ti,lp5009";
-> +          reg = <0x14>;
-> +
-> +          multi-led@1 {
+After perf record,  the `perf inject -jit` pass parses the recording
+looking for a `<path>/jit-<pid>.dump` file. When it finds the file, it
+parses it and for each JIT_CODE_LOAD record:
+* creates an elf file `<path>/jitted-<pid>-<code_index>.so
+* injects a new mmap record mapping the new elf file into the process.
 
-Define $nodename must be 'multi-led(@[0-9a-f]+)?'
+*** Coexistence design
 
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            reg = <1>;
-> +            color = <LED_COLOR_ID_MULTI>;
-> +            function = LED_FUNCTION_CHARGING;
-> +
-> +            led@0 {
+The kernel and perf support both of these mechanisms. We need to make
+sure perf works on an app supporting either or both of these mechanisms.
+Both designs rely on mmap records to determine how to resolve an ip
+address.
 
-Then the schema should define child nodes named 'led'.
+The mmap records of both techniques by definition overlap. When the JIT
+compiles a method, it must:
+* allocate memory (mmap)
+* add execution privilege (mprotect or mmap. either will
+generate an mmap event form the kernel to perf)
+* compile code into memory
+* add a function record to perf-<pid>.map and/or jit-<pid>.dump
 
-> +              reg = <0>;
-> +              color = <LED_COLOR_ID_RED>;
+Because the jit-<pid>.dump mechanism supports greater capabilities, perf
+prefers the symbols from jit-<pid>.dump. It implements this based on
+timestamp ordering of events. There is an implicit ASSUMPTION that the
+JIT_CODE_LOAD record timestamp will be after the // anon mmap event that
+was generated during memory allocation or adding the execution privilege setting.
 
-I assume in this case 'reg' and 'color' need to be defined as required?
+*** Problems with the ASSUMPTION
 
-> +            };
-> +
-> +            led@1 {
-> +              reg = <1>;
-> +              color = <LED_COLOR_ID_GREEN>;
-> +            };
-> +
-> +            led@2 {
-> +              reg = <2>;
-> +              color = <LED_COLOR_ID_BLUE>;
-> +            };
-> +          };
-> +        };
-> +    };
-> +
-> +additionalProperties: false
-> +...
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+The ASSUMPTION made in the Coexistence design section above is violated
+in the following scenario.
 
-This isn't a binding file. Belongs in another patch.
+*** Scenario
 
-> index f1f718dbe0f8..846248a0693d 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
->  	[LED_COLOR_ID_VIOLET] = "violet",
->  	[LED_COLOR_ID_YELLOW] = "yellow",
->  	[LED_COLOR_ID_IR] = "ir",
-> +	[LED_COLOR_ID_MULTI] = "multicolor",
->  };
->  EXPORT_SYMBOL_GPL(led_colors);
->  
-> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
-> index 0ce7dfc00dcb..a463ce6a8794 100644
-> --- a/include/dt-bindings/leds/common.h
-> +++ b/include/dt-bindings/leds/common.h
-> @@ -30,7 +30,8 @@
->  #define LED_COLOR_ID_VIOLET	5
->  #define LED_COLOR_ID_YELLOW	6
->  #define LED_COLOR_ID_IR		7
-> -#define LED_COLOR_ID_MAX	8
-> +#define LED_COLOR_ID_MULTI	8
-> +#define LED_COLOR_ID_MAX	9
->  
->  /* Standard LED functions */
->  /* Keyboard LEDs, usually it would be input4::capslock etc. */
-> -- 
-> 2.25.1
-> 
+While a JIT is jitting code it will eventually need to commit more
+pages and change these pages to executable permissions. Typically the
+JIT will want these collocated to minimize branch displacements.
+
+The kernel will coalesce these anonymous mapping with identical
+permissions before sending an MMAP event for the new pages. The address
+range of the new mmap will not be just the most recently mmap pages.
+It will include the entire coalesced mmap region.
+
+See mm/mmap.c
+
+unsigned long mmap_region(struct file *file, unsigned long addr,
+                unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
+                struct list_head *uf)
+{
+...
+        /*
+         * Can we just expand an old mapping?
+         */
+...
+        perf_event_mmap(vma);
+...
+}
+
+*** Symptoms
+
+The coalesced // anon mmap event will be timestamped after the
+JIT_CODE_LOAD records. This means it will be used as the most recent
+mapping for that entire address range. For remaining events it will look at the
+inferior perf-<pid>.map for symbols.
+
+If both mechanisms are supported, the symbol will appear twice with
+different module names. This causes weird behavior in reporting.
+
+If only jit-<pid>.dump is supported, the symbol will no longer be resolved.
+
+** Implemented solution
+
+This patch solves the issue by removing // anon mmap events for any
+process which has a valid jit-<pid>.dump file.
+
+It tracks on a per process basis to handle the case where some running
+apps support jit-<pid>.dump, but some only support perf-<pid>.map.
+
+It adds new assumptions:
+* // anon mmap events are only required for perf-<pid>.map support.
+* An app that uses jit-<pid>.dump, no longer needs
+perf-<pid>.map support. It assumes that any perf-<pid>.map info is
+inferior.
+
+*** Details
+
+Use thread->priv to store whether a jitdump file has been processed
+
+During "perf inject --jit", discard "//anon*" mmap events for any pid which
+has sucessfully processed a jitdump file.
+
+** Committer testing:
+
+// jitdump case
+perf record <app with jitdump>
+perf inject --jit --input perf.data --output perfjit.data
+// verify mmap "//anon" events present initially
+perf script --input perf.data --show-mmap-events | grep '//anon'
+// verify mmap "//anon" events removed
+perf script --input perfjit.data --show-mmap-events | grep '//anon'
+// no jitdump case
+perf record <app without jitdump>
+perf inject --jit --input perf.data --output perfjit.data
+// verify mmap "//anon" events present initially
+perf script --input perf.data --show-mmap-events | grep '//anon'
+// verify mmap "//anon" events not removed
+perf script --input perfjit.data --show-mmap-events | grep '//anon'
+
+** Repro:
+
+This issue was discovered while testing the initial CoreCLR jitdump
+implementation. https://github.com/dotnet/coreclr/pull/26897.
+
+** Alternate solutions considered
+
+These were also briefly considered
+* Change kernel to not coalesce mmap regions.
+* Change kernel reporting of coalesced mmap regions to perf. Only
+include newly mapped memory.
+* Only strip parts of // anon mmap events overlapping existing
+jitted-<pid>-<code_index>.so mmap events.
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+---
+ tools/perf/builtin-inject.c |  4 ++--
+ tools/perf/util/jitdump.c   | 31 ++++++++++++++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 372ecb3..0f38862 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -263,7 +263,7 @@ static int perf_event__jit_repipe_mmap(struct perf_tool *tool,
+ 	 * if jit marker, then inject jit mmaps and generate ELF images
+ 	 */
+ 	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap.filename, sample->pid, &n);
++			  event->mmap.filename, event->mmap.pid, &n);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (ret) {
+@@ -301,7 +301,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_tool *tool,
+ 	 * if jit marker, then inject jit mmaps and generate ELF images
+ 	 */
+ 	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap2.filename, sample->pid, &n);
++			  event->mmap2.filename, event->mmap2.pid, &n);
+ 	if (ret < 0)
+ 		return ret;
+ 	if (ret) {
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index e3ccb0c..d18596e 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -26,6 +26,7 @@
+ #include "jit.h"
+ #include "jitdump.h"
+ #include "genelf.h"
++#include "thread.h"
+ 
+ #include <linux/ctype.h>
+ #include <linux/zalloc.h>
+@@ -749,6 +750,28 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	return 0;
+ }
+ 
++static void jit_add_pid(struct machine *machine, pid_t pid)
++{
++	struct thread *thread = machine__findnew_thread(machine, pid, pid);
++
++	if (!thread) {
++		pr_err("%s: thread %d not found or created\n", __func__, pid);
++		return;
++	}
++
++	thread->priv = (void *)1;
++}
++
++static bool jit_has_pid(struct machine *machine, pid_t pid)
++{
++	struct thread *thread = machine__find_thread(machine, pid, pid);
++
++	if (!thread)
++		return 0;
++
++	return (bool)thread->priv;
++}
++
+ int
+ jit_process(struct perf_session *session,
+ 	    struct perf_data *output,
+@@ -764,8 +787,13 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	/*
+ 	 * first, detect marker mmap (i.e., the jitdump mmap)
+ 	 */
+-	if (jit_detect(filename, pid))
++	if (jit_detect(filename, pid)) {
++		// Strip //anon* mmaps if we processed a jitdump for this pid
++		if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) == 0))
++			return 1;
++
+ 		return 0;
++	}
+ 
+ 	memset(&jd, 0, sizeof(jd));
+ 
+@@ -784,6 +812,7 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 
+ 	ret = jit_inject(&jd, filename);
+ 	if (!ret) {
++		jit_add_pid(machine, pid);
+ 		*nbytes = jd.bytes_written;
+ 		ret = 1;
+ 	}
+-- 
+1.8.3.1
+
