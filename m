@@ -2,81 +2,81 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6094C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF16E20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D41720899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590541699;
+	bh=gEQCahnR2XMMiWuyGv9OLa98c7dUNuD50Z8vXWxnv1s=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=u+p40paxYtfXeCZGYL66A3M83ynNmr9CGhkvb1bybZf38SmwxL1hNPPLqOsiIGRRZ
+	 JEv2sHiEAaN6Er4/CqEit457ZvjXgjCqIHssenQMKv3eukEiMMyFr0W7WIbjcv9EdO
+	 JSX4mupd+XJVSeq1CeJL0f4hUx72nZPRS1hdwf9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgE0BIM (ORCPT
+        id S1728119AbgE0BIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:08:12 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:48938 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728092AbgE0BIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:08:12 -0400
-Received: by ajax-webmail-mail-app2 (Coremail) ; Wed, 27 May 2020 09:07:40
- +0800 (GMT+08:00)
-X-Originating-IP: [222.205.60.151]
-Date:   Wed, 27 May 2020 09:07:40 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>
-Cc:     kjlu@umn.edu, "Cezary Rojewski" <cezary.rojewski@intel.com>,
-        "Liam Girdwood" <liam.r.girdwood@linux.intel.com>,
-        "Jie Yang" <yang.jie@linux.intel.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Allison Randal" <allison@lohutok.net>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Alexios Zavras" <alexios.zavras@intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] ASoC: Intel: sst: Fix runtime PM imbalance in
- sst_power_control
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <922ac37c-0a5a-dff7-0cd7-d3487cf9ff00@linux.intel.com>
-References: <20200525070701.3888-1-dinghao.liu@zju.edu.cn>
- <922ac37c-0a5a-dff7-0cd7-d3487cf9ff00@linux.intel.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Tue, 26 May 2020 21:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728092AbgE0BIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:08:17 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F922088E;
+        Wed, 27 May 2020 01:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590541697;
+        bh=gEQCahnR2XMMiWuyGv9OLa98c7dUNuD50Z8vXWxnv1s=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Pr3AovO/66JVsQ6pMOFxy3X3OQ2+GE39lheSQKMxSP/jIN6snMAwzNKg1bDAhZUJp
+         tLPe/YEGL7n54na79S06oG9hjY3SBm7bQ3zYo7eV1aIu0A6W1ukXZIFA5x9vAH+Vol
+         5CCJvEAtXiKHfrON8DlLGdYlwrplmm/iuOeptsNE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Message-ID: <73fef900.d8158.17253abb08c.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: by_KCgCnEbxcvc1eVVkcAA--.3818W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0MBlZdtOUT6wAGsh
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbuCS07vEb7Iv0x
-        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW0oVCq3wCS07vE84ACjcxK6I8E87Iv67AKxVW0oV
-        Cq3wCS07vE84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DMIAIbVAS0I0E0xvYzxvE52x0
-        82IY62kv0487MIAIbVAqx4xG64xvF2IEw4CE5I8CrVC2j2WlV2xY6cIj6xIIjxv20xvE14
-        v26r1j6r18MIAIbVAv7VC2z280aVAFwI0_Jr0_Gr1lV2xY6cvjeVCFs4IE7xkEbVWUJVW8
-        JwCS07vEFIxGxcIEc7CjxVA2Y2ka0xkIwI1lV2xY6x02cVAKzwCS07vEc2xSY4AK67AK6w
-        4lV2xY6xkI7II2jI8vz4vEwIxGrwCS07vE42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMIAI
-        bVCF72vE77IF4wCS07vE4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lV2xY6I8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lV2xY6I8I3I0E7480Y4vE14v26r106r1rMIAIbVC2zVAF1VAY17CE14v26r1q
-        6r43MIAIbVCI42IY6xIIjxv20xvE14v26r1j6r1xMIAIbVCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Gr0_Cr1lV2xY6IIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIAIbVCI42IY6I8E
-        87Iv67AKxVWUJVW8JwCS07vEIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUU==
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1584048699-24186-3-git-send-email-jolly.shah@xilinx.com>
+References: <1584048699-24186-1-git-send-email-jolly.shah@xilinx.com> <1584048699-24186-3-git-send-email-jolly.shah@xilinx.com>
+Subject: Re: [PATCH v2 2/2] drivers: clk: zynqmp: Update fraction clock check from custom type flags
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>
+To:     Jolly Shah <jolly.shah@xilinx.com>, arm@kernel.org,
+        linux-clk@vger.kernel.org, michal.simek@xilinx.com,
+        mturquette@baylibre.com, olof@lixom.net
+Date:   Tue, 26 May 2020 18:08:16 -0700
+Message-ID: <159054169658.88029.371843532116000844@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAKPiB0aGlzIGNoYW5nZSBkb2Vzbid0IHNlZW0gcXVpdGUgcmlnaHQsIGlmIHlvdSBsb29rIHRo
-ZSBjb2RlIGJlbG93IHRoZXJlIAo+IGlzIG5vIFBNIGltYmFsYW5jZSwgaXMgdGhlcmU/Cj4gCj4g
-aW50IHNzdF9wbV9ydW50aW1lX3B1dChzdHJ1Y3QgaW50ZWxfc3N0X2RydiAqc3N0X2RydikKPiB7
-Cj4gCWludCByZXQ7Cj4gCj4gCXBtX3J1bnRpbWVfbWFya19sYXN0X2J1c3koc3N0X2Rydi0+ZGV2
-KTsKPiAJcmV0ID0gcG1fcnVudGltZV9wdXRfYXV0b3N1c3BlbmQoc3N0X2Rydi0+ZGV2KTsKPiAJ
-aWYgKHJldCA8IDApCj4gCQlyZXR1cm4gcmV0Owo+IAlyZXR1cm4gMDsKPiB9CgpZb3UgYXJlIHJp
-Z2h0LiBUaGFuayB5b3UgZm9yIHlvdXIgY29ycmVjdGlvbiEKClJlZ2FyZHMsCkRpbmdoYW8K
+Quoting Jolly Shah (2020-03-12 14:31:39)
+> From: Tejas Patel <tejas.patel@xilinx.com>
+>=20
+> Older firmware version sets BIT(13) in clkflag to mark a
+> divider as fractional divider. Updated firmware version sets BIT(4)
+> in type flags to mark a divider as fractional divider since
+> BIT(13) is defined as CLK_DUTY_CYCLE_PARENT in the common clk
+> framework flags.
+>=20
+> To support both old and new firmware version, consider BIT(13) from
+> clkflag and BIT(4) from type_flag to check if divider is fractional
+> or not.
+>=20
+> To maintain compatibility BIT(13) of clkflag in firmware will not be
+> used in future for any purpose and will be marked as unused.
+
+Why are we mixing the firmware flags with the ccf flags? They shouldn't
+be the same. The firmware should have its own 'flag numberspace' that is
+distinct from the common clk framework's 'flag numberspace'. Please fix
+the code.
