@@ -2,113 +2,97 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD12C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3E920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455BB2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ihOkLe3N"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nyd4q0kk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388383AbgE0LXK (ORCPT
+        id S2388393AbgE0LXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388143AbgE0LXI (ORCPT
+        Wed, 27 May 2020 07:23:55 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:15137 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387939AbgE0LXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:23:08 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385E0C061A0F;
-        Wed, 27 May 2020 04:23:08 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id x22so18878938otq.4;
-        Wed, 27 May 2020 04:23:08 -0700 (PDT)
+        Wed, 27 May 2020 07:23:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Fp0svMZCl7416GUNw4GqWtjLX0o7vCvEcznT00dMb8A=;
-        b=ihOkLe3NKVS7aTB07R2E2Qb7QqfoeyQfissj2+aNNq76WhAxLMb1jn++IJg0TeYVwN
-         gGhfYq9DyZbbOCNfIZlb80PNVr9RwJfsJUiKiQE/kF84HjZkM13HiT8ZvI5P15RboXX2
-         xCMNJYszyXrtIsgNlhQo4ZJ/QtpvbW+6o0VlZHY1CaOYH9+Ofpj6y72R0q4cRcdIzA7B
-         3exfjhEvVihaXfBKWVj9Lx681NdmYAVw2dRS3kz1IGwAiFuHD2hWkbkXE0NRaYitiG/x
-         9yjiRt2gIXW2XQPiymeQIAmBwfiOuck8/eOUScEjcvaCejAYC1a7rPCYIdmDk8m9MynK
-         6+9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fp0svMZCl7416GUNw4GqWtjLX0o7vCvEcznT00dMb8A=;
-        b=OURr7ZszvVSJO272IshNCUq2jjpBeZgBvfim5iELOac5LT15gLJjkSaBvibvlnbE/V
-         WZWYAGznQwRbEBGZzwlDyHRgbGtQ1ZsbUOX28MlT7Cc3g6V3WrlwpTgRdDhRNpFI4tcw
-         FuGAH9TKQ3AjQwBS0m9w6abMqwQ8fuJkpAqVSQ8lm2RxGYy+J47ibBJoApvqT7ITFdYl
-         pBYAqEGLcLvji/fxW6Rdi+o9TLUF3r5zeZgFabZoDednar+IsIq1BK22RjJRba6KQcfm
-         9F/lw3InI9p8BIZzM132liLmtgiR7qFKhUbuBq2G912ZRrsfIybmK6CPZMd2061VIB1M
-         jJaQ==
-X-Gm-Message-State: AOAM531hPpHB54kC7T7cI7mADJYS6s+Uf8lQxtOyeSqq+jmElrC0LT3e
-        jGBTGUaRbmYz+1sGF1lPztVtIqLXAg8v5uqa3b0=
-X-Google-Smtp-Source: ABdhPJwRs0irm8ujT4wRDJ1yNMXOLkQGDLfhS4wYsUks2EzBi7aBEZfzFaiACJYFXZ647Iot246VfuxQuYwM1M8Tfxw=
-X-Received: by 2002:a9d:d83:: with SMTP id 3mr4102738ots.365.1590578587535;
- Wed, 27 May 2020 04:23:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200527013136.GA838011@bogus>
-In-Reply-To: <20200527013136.GA838011@bogus>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 27 May 2020 12:22:41 +0100
-Message-ID: <CA+V-a8t6mXkTUac69V=T8_27r_sdN+=MktDTM1mmtbXRn8SSQQ@mail.gmail.com>
-Subject: Re: [PATCH 16/17] dt-bindings: watchdog: renesas,wdt: Document
- r8a7742 support
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Jens Axboe <axboe@kernel.dk>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-ide@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590578635; x=1622114635;
+  h=from:to:cc:subject:date:message-id:in-reply-to;
+  bh=aSGAbbZ6MrjWpWJVHoh/BDwsMhfPsX7leLeYt2MGtFQ=;
+  b=nyd4q0kkj8a17MR2uKxdFILLKmSK5uhURXM4vDvGRKLFepqRc/uLfPC9
+   GvrJY8dDMRgfanoe84bfcVhlvC69zDk8ygz32+uOk5dbkT4aR45G4KVwF
+   metBbROkuA+VpS3S4xwzbkFVotfEloB6zcFOOkgqATkh/Wck3cd7qWRdH
+   M=;
+IronPort-SDR: e38Jv9GMufS/NfxDU2X0mIYzoy4Gb04ykr8SXT/W/n3NWmuNcECOZxB5pnRZkxcOlTna3rwezv
+ DB0qoPEUuDJA==
+X-IronPort-AV: E=Sophos;i="5.73,441,1583193600"; 
+   d="scan'208";a="33842613"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 27 May 2020 11:23:40 +0000
+Received: from uc85b765ebdd8595b4b67.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 34E49A181A;
+        Wed, 27 May 2020 11:23:35 +0000 (UTC)
+Received: from uc85b765ebdd8595b4b67.ant.amazon.com (localhost [127.0.0.1])
+        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id 04RBNXIq027030;
+        Wed, 27 May 2020 13:23:33 +0200
+Received: (from foersleo@localhost)
+        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Submit) id 04RBNX0a027028;
+        Wed, 27 May 2020 13:23:33 +0200
+From:   Leonard Foerster <foersleo@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        Jonathan.Cameron@Huawei.com, aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, dwmw@amazon.com, irogers@google.com,
+        jolsa@redhat.com, kirill@shutemov.name, mark.rutland@arm.com,
+        mgorman@suse.de, minchan@kernel.org, mingo@redhat.com,
+        namhyung@kernel.org, peterz@infradead.org, rdunlap@infradead.org,
+        riel@surriel.com, rientjes@google.com, rostedt@goodmis.org,
+        sblbir@amazon.com, shakeelb@google.com, shuah@kernel.org,
+        sj38.park@gmail.com, snu@amazon.de, vbabka@suse.cz,
+        vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 03/15] mm: Introduce Data Access MONitor (DAMON)
+Date:   Wed, 27 May 2020 13:23:31 +0200
+Message-Id: <1590578611-26983-1-git-send-email-foersleo@amazon.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20200525091512.30391-4-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 2020-05-25T11:15:00+02:00 SeongJae Park <sjpark@amazon.com> wrote:
 
-On Wed, May 27, 2020 at 2:31 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, May 15, 2020 at 04:08:56PM +0100, Lad Prabhakar wrote:
-> > RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
-> > therefore add relevant documentation.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
-> >  1 file changed, 1 insertion(+)
->
-> Meanwhile in the DT tree, converting this schema landed. Can you prepare
-> a version based on the schema.
->
-This was kindly taken care by Stephen during merge in linux-next [1].
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> This commit introduces a kernel module named DAMON.  Note that this
+> commit is implementing only the stub for the module load/unload, basic
+> data structures, and simple manipulation functions of the structures to
+> keep the size of commit small.  The core mechanisms of DAMON will be
+> implemented one by one by following commits.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> ---
+> [...]
+> +
+> +/**
+> + * struct damon_ctx - Represents a context for each monitoring.
+> + * @tasks_list:		Head of monitring target tasks (&damon_task) list.
 
-[1] https://lkml.org/lkml/2020/5/26/32
+nit: monitring -> monitoring
 
-Cheers,
---Prabhakar
+Reviewed-by: Leonard Foerster <foersleo@amazon.de>
 
-> Rob
