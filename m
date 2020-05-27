@@ -2,174 +2,213 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E772CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45112C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71F4207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2234520EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:40:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="pqEbnn3G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Si4JZhki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387627AbgE0HkV (ORCPT
+        id S2387639AbgE0Hk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:40:21 -0400
-Received: from mail-eopbgr1410098.outbound.protection.outlook.com ([40.107.141.98]:3489
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387444AbgE0HkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:40:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VGxkBzWVRIGpXu5xg60cZ5ZNxVR85J/pJpuxKrYMGKj+SNFBXCK3pav14N8ikakjN8MeshctnY3xdxZM9mWOoic/4BRqgob5DkyJx3m1wUwU/P1xdExACbh7KwnR539yIMxOFMN9eYRuC66Xb8+vVQtLKTCCebTnjGS5RtUto95QWu2W+Ul+al7cLycmlhG6aNjsPas9E6Akh0bzz4Y3Kl/cmNcvcRYWpiH9uVN425AuBJNa9IC1YHzc84Y48y0/w7ZV8avCmZX2HzOYPC8hBlDa+L7PyHcQe8A9AHj+qfuPr5CMbO3YXUTdB9dBYc0MX6JN0s1oIUVxHTPH7eHcRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2RlMt1IIV+0Tb9BN+ly15+dljxe6TeB6pfhFK52Nj8Y=;
- b=EjcTQhaG4nBFS6mL3loROMhOvv9QfWEfJ+0B+Hs/8m6mB/KOw4MaEIqJhdCfZ3PCieHqYKhAXAwc9t0ghocSDIjn0Ug97c1zCpEqlSKxPtvR+oBIN2fWUeWvRvIwzMXKRiuzW6K/BtX3FJYCZ0OeK54icAT0GtW6Dl6RH4bPXgV6UeSe8hqD7clrGEYPYv0q6y5I5ggFzUMIrz7e89D4+64oEgrmHNh47H4enzwzKRqyx2YET97dSP1EVV2B/J9br14a8NezAVxymrpg5YNUaDOXEPrIGZmlObAU52ov06/bP+UbQS7ZusKkOjHSoZyO0ancTaN47riIUqlRqCj/Pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Wed, 27 May 2020 03:40:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387630AbgE0Hk1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:40:27 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50293C03E97A
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:40:27 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id r10so859068vsa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:40:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2RlMt1IIV+0Tb9BN+ly15+dljxe6TeB6pfhFK52Nj8Y=;
- b=pqEbnn3GDLEfguyHo4PrU4E10TTy2fZefOa88iTwBvochodCRljBax2Wj2Q+U/Vy1i/g7syY04yKuGOdi59TbmyfC1RfNxc5bUH9D1JkMg9Vl26fHgS3GSCCsYpXo+soySfz4SXFRPtJBimtEovHBjaGipQdhazMKd2/qPaBkNw=
-Received: from OSAPR01MB2114.jpnprd01.prod.outlook.com (2603:1096:603:1b::19)
- by OSAPR01MB2179.jpnprd01.prod.outlook.com (2603:1096:603:15::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.25; Wed, 27 May
- 2020 07:40:14 +0000
-Received: from OSAPR01MB2114.jpnprd01.prod.outlook.com
- ([fe80::2cc4:72d3:1ade:f467]) by OSAPR01MB2114.jpnprd01.prod.outlook.com
- ([fe80::2cc4:72d3:1ade:f467%3]) with mapi id 15.20.3021.029; Wed, 27 May 2020
- 07:40:14 +0000
-From:   Gotthard Voellmeke <gotthard.voellmeke@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "REE erosca@DE.ADIT-JV.COM" <erosca@DE.ADIT-JV.COM>
-CC:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        "VenkataRajesh.Kalakodima@in.bosch.com" 
-        <VenkataRajesh.Kalakodima@in.bosch.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        KOJI MATSUOKA <koji.matsuoka.xm@renesas.com>,
-        "muroya@ksk.co.jp" <muroya@ksk.co.jp>,
-        "Harsha.ManjulaMallikarjun@in.bosch.com" 
-        <Harsha.ManjulaMallikarjun@in.bosch.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Dege <michael.dege@renesas.com>,
-        "REE efriedrich@DE.ADIT-JV.COM" <efriedrich@DE.ADIT-JV.COM>,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        "ChaitanyaKumar.Borah@in.bosch.com" 
-        <ChaitanyaKumar.Borah@in.bosch.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Hien Dang <hien.dang.eb@renesas.com>,
-        Michael Klein <michael.klein@renesas.com>
-Subject: RE: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Thread-Topic: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
-Thread-Index: AQHWM/az9Wj0IB2es0azt72Olaa0j6i7ipYAgAABNVA=
-Date:   Wed, 27 May 2020 07:40:14 +0000
-Message-ID: <OSAPR01MB2114E435BCF6B1F47F331F298BB10@OSAPR01MB2114.jpnprd01.prod.outlook.com>
-References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
- <20200527071555.GA23912@lxhi-065.adit-jv.com>
- <CAMuHMdVGcFGL6V6_zDCPQA66VFyqM9bQ6choWs8eYfOieFu1ZQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVGcFGL6V6_zDCPQA66VFyqM9bQ6choWs8eYfOieFu1ZQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linux-m68k.org; dkim=none (message not signed)
- header.d=none;linux-m68k.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 13638679-aa40-44ac-8ba5-08d8021131dc
-x-ms-traffictypediagnostic: OSAPR01MB2179:
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <OSAPR01MB2179312E6709C83FCF4D01F98BB10@OSAPR01MB2179.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 04163EF38A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ridWxV1DJh4hWQaJz/QvB2smLZbzqRS+ZEnU2TDRtir07BYalPD7ig7zrfXlXWJYXDCp7RJaqjV10lU3uH71fWyygLNbErsebe6wARuNRrHSQFB9j4jyZS3tYhx6zPluP3MqtTZKm4Sov/7u4SrwewtBoXrqtH0Mh1iz/Vbkoxn46jEC+vJpBRUrk8f1a285COac7zsHWNLRTfyle4WlS8r5/B8ZfbR50A2o+ydjiw5HKPeIZaZRE0VeBLA+MXGtDq1tlxb+Sw0Zs5DhcYdDhGIdOdzdIe9WQXXGvPL5Vajw9/NgEGDuyfZzIuDlXavGnF00VFS+XTPjuiIr8Oplpw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2114.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(6506007)(64756008)(44832011)(66946007)(66446008)(66556008)(66476007)(33656002)(76116006)(8936002)(4326008)(54906003)(83380400001)(110136005)(7696005)(107886003)(316002)(52536014)(8676002)(478600001)(186003)(53546011)(7416002)(55016002)(86362001)(2906002)(9686003)(26005)(5660300002)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 41w9GU2X+UqhIdldCAAmROuZHLJbqyD6LiVoE2IJir6/1Mf7SAYawBCmkRjvRTS2yO+CsaGJHpM0luWPAyqytIhf1AR/sJ9JdfSE1P4oaI80syX51067GwzbsAUfsWIj+tOLUGaWdydaDjGqw0vk5TvB9myTM94UmFoE9kAIqtFLR823ce9c24xS7NxZBCVgfVxLmq6UAyEziq42DpM7hmdzghHuaXih6uzTqSyNOuvPZYQEpjzXZuLL9DM9qvA8GiwdV4gI7G3hXoXxgO1C4mncxyb6y6pyY1MlaModBalDtpBYQJBlNaND2f0kHulUpa/QR9WBadRtWNz3lOpAYcGRRTH9j4SCZWVbjxtr8TiCOFGUjPF5TYCkw9OFbWMOTC/aZPCVfQdnKcvTbeZdi/VhnBP1Q6AtA9CxuassXZziSxW/0gsI57ZhQ8DrzFuH3CpBYYVmz47zS7sQ/17S4nNm39AhUexS8mJJiiNZ+IyyiO2PQkqd6Kfcz8DhiF2x
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kbqsurmeGLoVyf5mF7tu7XoYvXzvCVwzyWVmHlzPe4E=;
+        b=Si4JZhkimRq0tm+S0xBFFj9UQR6H01BCBFEX58SlSkt5NhQYq8WpbbQ90ZS7sRbvdt
+         UYnqEkjXiB6si4N9NAzLEMhzZyuVY7gvJeAt7d+DjGLHfv1NhV9Upw+h7FjdRkO2Beff
+         7p5n177dMKgrOdFHMhvbTEWdJkrGdALSltOsLOhB4HjGcvk7I9jiSFIayoAvpDguYPp0
+         NbvXfL0oDukqvn/TZCrF3Nzqs7hr1e25krg9N9OnWi3Ca9Hb3lX3Sq8HzOlYXMQ29u/a
+         mLlihKNHaG+an3SMm8nZXq48K/CffY1MuI5fiUcM6atA6uenVJ0qKPiHl5yE/YMfJKq7
+         dxjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kbqsurmeGLoVyf5mF7tu7XoYvXzvCVwzyWVmHlzPe4E=;
+        b=j12Pd7343C3Rk0usUBAcyiL0AEFWf3XfIqjTKa+oWuF67dxtu/1ZcDINutgvRzToas
+         /Il592DXcrTEOp267YbdYUwnp5uS2L+UsR9GK9SiuOgavu6ns4So3J5tItUr7IDFfxkI
+         JgkJH14s7blg7iR+0BfjVLdlSuyDauxtBiQetb+cnHSpUsHbuQGZxiBqgh9ZmP1CoS+Q
+         o94F2quKE8CtR8TlKl22JUKrboSPzncTQoN7KrgddtZOcMV/ONgVKCPaO1Rj/rvEpfrp
+         KpKW64SxqEC9sUUEfWdxCOKQC+/wd99C59Up7DQ2IkJ+/b6ZqAeCMV+mob0b6Z3jNCH3
+         W3fw==
+X-Gm-Message-State: AOAM531w0WmpBSuerKpfEtm7kQE70qCEr0bP5pbDsIRRQ8sZgDXlkrlL
+        eGvwwk0amJ7xGXM5+LzKTGhlVYSK9zkVoyO9aFgklQ==
+X-Google-Smtp-Source: ABdhPJyYrXJaC6POxy5xkphIQg0LBSVr4X8J7p+I+CM9XauuFUaPtouHy9vmThZMgRn/CIU3XZZNYGTGnswZvhTDLCY=
+X-Received: by 2002:a67:690e:: with SMTP id e14mr3917779vsc.34.1590565226286;
+ Wed, 27 May 2020 00:40:26 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13638679-aa40-44ac-8ba5-08d8021131dc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2020 07:40:14.2294
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UVB/JSFfC7rA5UoSbAVYbZKxkw5yB65xe6+bhopZMwkmqwueHlQ7srfs64WrVfGQdOJNEJfUpMQSamGSPlHio4iEJptUMdEkBih1EopLBaM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2179
+References: <20200526154334.21222-1-pali@kernel.org> <20200526154334.21222-2-pali@kernel.org>
+In-Reply-To: <20200526154334.21222-2-pali@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 27 May 2020 09:39:50 +0200
+Message-ID: <CAPDyKFq4KxT+m6nZbi9fM0Pf=JYkT7TTfERDxtUVX5qAiLAQBQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mmc: core: Export device/vendor ids from Common CIS
+ for SDIO cards
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkZWQgSGllbi1zYW4sIE1pY2hhZWwgSy4gZnJvbSBSZW5lc2FzLg0KDQotLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhr
-Lm9yZz4NClNlbnQ6IE1pdHR3b2NoLCAyNy4gTWFpIDIwMjAgMDk6MzUNClRvOiBSRUUgZXJvc2Nh
-QERFLkFESVQtSlYuQ09NIDxlcm9zY2FAREUuQURJVC1KVi5DT00+DQpDYzogSmFjb3BvIE1vbmRp
-IDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPjsgTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5w
-aW5jaGFydEBpZGVhc29uYm9hcmQuY29tPjsgS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFt
-K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0
-LmF1PjsgVWxyaWNoIEhlY2h0IDx1bGkrcmVuZXNhc0BmcG9uZC5ldT47IFZlbmthdGFSYWplc2gu
-S2FsYWtvZGltYUBpbi5ib3NjaC5jb207IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT47
-IERhbmllbCBWZXR0ZXIgPGRhbmllbEBmZndsbC5jaD47IEtPSkkgTUFUU1VPS0EgPGtvamkubWF0
-c3Vva2EueG1AcmVuZXNhcy5jb20+OyBtdXJveWFAa3NrLmNvLmpwOyBIYXJzaGEuTWFuanVsYU1h
-bGxpa2FyanVuQGluLmJvc2NoLmNvbTsgRXplcXVpZWwgR2FyY2lhIDxlemVxdWllbEBjb2xsYWJv
-cmEuY29tPjsgU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+OyBMaW51eC1SZW5lc2Fz
-IDxsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmc+OyBEUkkgRGV2ZWxvcG1lbnQgPGRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGluZyBMaXN0
-IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgTWljaGFlbCBEZWdlIDxtaWNoYWVsLmRl
-Z2VAcmVuZXNhcy5jb20+OyBHb3R0aGFyZCBWb2VsbG1la2UgPGdvdHRoYXJkLnZvZWxsbWVrZUBy
-ZW5lc2FzLmNvbT47IFJFRSBlZnJpZWRyaWNoQERFLkFESVQtSlYuQ09NIDxlZnJpZWRyaWNoQERF
-LkFESVQtSlYuQ09NPjsgTWljaGFlbCBSb2RpbiA8bXJvZGluQGRlLmFkaXQtanYuY29tPjsgQ2hh
-aXRhbnlhS3VtYXIuQm9yYWhAaW4uYm9zY2guY29tOyBFdWdlbml1IFJvc2NhIDxyb3NjYWV1Z2Vu
-aXVAZ21haWwuY29tPg0KU3ViamVjdDogUmU6IFtQQVRDSCB2NSAwLzhdIGRybTogcmNhci1kdTog
-QWRkIENvbG9yIE1hbmFnZW1lbnQgTW9kdWxlIChDTU0pDQoNCkhpIEV1Z2VuaXUsDQoNCk9uIFdl
-ZCwgTWF5IDI3LCAyMDIwIGF0IDk6MTYgQU0gRXVnZW5pdSBSb3NjYSA8ZXJvc2NhQGRlLmFkaXQt
-anYuY29tPiB3cm90ZToNCj4gT24gVHVlLCBPY3QgMTUsIDIwMTkgYXQgMTI6NDY6MTNQTSArMDIw
-MCwgSmFjb3BvIE1vbmRpIHdyb3RlOg0KPiA+IENNTSBmdW5jdGlvbmFsaXRpZXMgYXJlIHJldGFp
-bmVkIGJldHdlZW4gc3VzcGVuZC9yZXN1bWUgY3ljbGVzICh0ZXN0ZWQgd2l0aA0KPiA+IHN1c3Bl
-bmQtdG8taWRsZSkgd2l0aG91dCByZXF1aXJpbmcgYSByZS1wcm9ncmFtbWluZyBvZiB0aGUgTFVU
-IHRhYmxlcy4NCj4NCj4gSG1tLiBJcyB0aGlzIGJhY2tlZCB1cCBieSBhbnkgc3RhdGVtZW50IGlu
-IHRoZSBIVyBVc2VyJ3MgbWFudWFsPw0KPiBUaGlzIGNvbWVzIGluIGNvbnRyYXN0IHdpdGggdGhl
-IG9yaWdpbmFsIFJlbmVzYXMgQ01NIGltcGxlbWVudGF0aW9uIFsqKl0NCj4gd2hpY2ggZG9lcyBt
-YWtlIHVzZSBvZiBzdXNwZW5kICh3aGVyZSB0aGUgZnJlZXplIGFjdHVhbGx5IGhhcHBlbnMpLg0K
-Pg0KPiBDYW4gd2UgaW5mZXIsIGJhc2VkIG9uIHlvdXIgc3RhdGVtZW50LCB0aGF0IHdlIGNvdWxk
-IGFsc28gZ2V0IHJpZCBvZg0KPiB0aGUgc3VzcGVuZCBjYWxsYmFjayBpbiBbKipdPw0KDQpXaGls
-ZSB0aGUgQ01NIHN0YXRlIHdpbGwgYmUgcmV0YWluZWQgYWNyb3NzIHN1c3BlbmQtdG8taWRsZSwg
-SSdtIHF1aXRlDQpzdXJlIGl0IHdpbGwgYmUgbG9zdCBieSBzdXNwZW5kLXRvLVJBTSwgYXQgbGVh
-c3Qgb24gdGhlIFNhbHZhdG9yLVgoUyksDQpVTENCLCBhbmQgRWJpc3UgZGV2ZWxvcG1lbnQgYm9h
-cmRzLCBhcyBQU0NJIHdpbGwgYXNrIHRoZSBCRDk1NzFXTVYNCnJlZ3VsYXRvciB0byBwb3dlciBk
-b3duIHRoZSBSLUNhciBTb0MuDQoNClNvIElNSE8gd2UgZG8gbmVlZCBzdXNwZW5kL3Jlc3VtZSBo
-YW5kbGluZy4NCg0KR3J7b2V0amUsZWV0aW5nfXMsDQoNCiAgICAgICAgICAgICAgICAgICAgICAg
-IEdlZXJ0DQoNCi0tDQpHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4
-IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQoNCkluIHBlcnNvbmFsIGNvbnZl
-cnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBC
-dXQNCndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1l
-ciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBHbWJI
-LCBHZXNjaGFlZnRzZnVlaHJlci9QcmVzaWRlbnQ6IENhcnN0ZW4gSmF1Y2gsIFNpdHogZGVyIEdl
-c2VsbHNjaGFmdC9SZWdpc3RlcmVkIG9mZmljZTogRHVlc3NlbGRvcmYsIEFyY2FkaWFzdHJhc3Nl
-IDEwLCA0MDQ3MiBEdWVzc2VsZG9yZiwgR2VybWFueSwgSGFuZGVsc3JlZ2lzdGVyL0NvbW1lcmNp
-YWwgUmVnaXN0ZXI6IER1ZXNzZWxkb3JmLCBIUkIgMzcwOCBVU3QtSUROci4vVGF4IGlkZW50aWZp
-Y2F0aW9uIG5vLjogREUgMTE5MzUzNDA2IFdFRUUtUmVnLi1Oci4vV0VFRSByZWcuIG5vLjogREUg
-MTQ5Nzg2NDcNCg==
+On Tue, 26 May 2020 at 17:43, Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>
+> Device/vendor ids from Common CIS (Card Information Structure) may be
+> different as device/vendor ids from CIS on particular SDIO function.
+>
+> Export these "main" device/vendor ids for SDIO and SD combo cards at top
+> level mmc device in sysfs so userspace can do better identification of
+> connected SDIO and SD combo cards.
+
+What would userspace do with this information, more exactly?
+
+Isn't it just sufficient to give events per SDIO func, as we already
+do in sdio_bus_uevent()?
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
+> ---
+>  drivers/mmc/core/bus.c  |  7 +++++++
+>  drivers/mmc/core/sd.c   | 26 +++++++++++++++++++++++++-
+>  drivers/mmc/core/sdio.c | 20 +++++++++++++++++++-
+>  3 files changed, 51 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+> index 103eea7cd..5d4b28b29 100644
+> --- a/drivers/mmc/core/bus.c
+> +++ b/drivers/mmc/core/bus.c
+> @@ -93,6 +93,13 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_=
+env *env)
+>                         return retval;
+>         }
+>
+> +       if (card->type =3D=3D MMC_TYPE_SDIO || card->type =3D=3D MMC_TYPE=
+_SD_COMBO) {
+> +               retval =3D add_uevent_var(env, "SDIO_ID=3D%04X:%04X",
+> +                                       card->cis.vendor, card->cis.devic=
+e);
+> +               if (retval)
+> +                       return retval;
+> +       }
+> +
+>         if (card->type !=3D MMC_TYPE_SDIO) {
+>                 retval =3D add_uevent_var(env, "MMC_NAME=3D%s", mmc_card_=
+name(card));
+>                 if (retval)
+> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+> index 76c7add36..ee1a51ff6 100644
+> --- a/drivers/mmc/core/sd.c
+> +++ b/drivers/mmc/core/sd.c
+> @@ -707,7 +707,12 @@ static ssize_t mmc_dsr_show(struct device *dev,
+>
+>  static DEVICE_ATTR(dsr, S_IRUGO, mmc_dsr_show, NULL);
+>
+> +MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
+> +MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
+> +
+>  static struct attribute *sd_std_attrs[] =3D {
+> +       &dev_attr_vendor.attr,
+> +       &dev_attr_device.attr,
+>         &dev_attr_cid.attr,
+>         &dev_attr_csd.attr,
+>         &dev_attr_scr.attr,
+> @@ -726,7 +731,26 @@ static struct attribute *sd_std_attrs[] =3D {
+>         &dev_attr_dsr.attr,
+>         NULL,
+>  };
+> -ATTRIBUTE_GROUPS(sd_std);
+> +
+> +static umode_t sd_std_is_visible(struct kobject *kobj, struct attribute =
+*attr,
+> +                                int index)
+> +{
+> +       struct device *dev =3D container_of(kobj, struct device, kobj);
+> +       struct mmc_card *card =3D mmc_dev_to_card(dev);
+> +
+> +       /* CIS vendor and device ids are available only for Combo cards *=
+/
+> +       if ((attr =3D=3D &dev_attr_vendor.attr || attr =3D=3D &dev_attr_d=
+evice.attr) &&
+> +           card->type !=3D MMC_TYPE_SD_COMBO)
+> +               return 0;
+> +
+> +       return attr->mode;
+> +}
+> +
+> +static const struct attribute_group sd_std_group =3D {
+> +       .attrs =3D sd_std_attrs,
+> +       .is_visible =3D sd_std_is_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(sd_std);
+>
+>  struct device_type sd_type =3D {
+>         .groups =3D sd_std_groups,
+> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+> index ebb387aa5..d708e0fbc 100644
+> --- a/drivers/mmc/core/sdio.c
+> +++ b/drivers/mmc/core/sdio.c
+> @@ -27,6 +27,24 @@
+>  #include "sdio_ops.h"
+>  #include "sdio_cis.h"
+>
+> +MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
+> +MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
+> +MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
+> +MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
+> +
+> +static struct attribute *sdio_std_attrs[] =3D {
+> +       &dev_attr_vendor.attr,
+> +       &dev_attr_device.attr,
+> +       &dev_attr_ocr.attr,
+> +       &dev_attr_rca.attr,
+> +       NULL,
+> +};
+> +ATTRIBUTE_GROUPS(sdio_std);
+> +
+> +struct device_type sdio_type =3D {
+> +       .groups =3D sdio_std_groups,
+> +};
+> +
+>  static int sdio_read_fbr(struct sdio_func *func)
+>  {
+>         int ret;
+> @@ -598,7 +616,7 @@ static int mmc_sdio_init_card(struct mmc_host *host, =
+u32 ocr,
+>         /*
+>          * Allocate card structure.
+>          */
+> -       card =3D mmc_alloc_card(host, NULL);
+> +       card =3D mmc_alloc_card(host, &sdio_type);
+>         if (IS_ERR(card)) {
+>                 err =3D PTR_ERR(card);
+>                 goto err;
+> --
+> 2.20.1
+>
