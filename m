@@ -6,25 +6,24 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F84AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 198ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC982071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA2862071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391528AbgE0Qqg (ORCPT
+        id S2391548AbgE0Qqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:46:36 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:63309 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389014AbgE0Qqe (ORCPT
+        Wed, 27 May 2020 12:46:38 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:57893 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391512AbgE0Qqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:46:34 -0400
-X-Originating-IP: 90.76.143.236
+        Wed, 27 May 2020 12:46:36 -0400
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 2F65240012;
-        Wed, 27 May 2020 16:46:30 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id EA141100004;
+        Wed, 27 May 2020 16:46:32 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -32,9 +31,9 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next 1/8] net: phy: add support for a common probe between shared PHYs
-Date:   Wed, 27 May 2020 18:41:51 +0200
-Message-Id: <20200527164158.313025-2-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next 2/8] net: phy: mscc: fix copyright and author information in MACsec
+Date:   Wed, 27 May 2020 18:41:52 +0200
+Message-Id: <20200527164158.313025-3-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527164158.313025-1-antoine.tenart@bootlin.com>
 References: <20200527164158.313025-1-antoine.tenart@bootlin.com>
@@ -45,60 +44,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared PHYs (PHYs in the same hardware package) may have shared
-registers and their drivers would usually need to share information.
-There is currently a way to have a shared (part of the) init, by using
-phy_package_init_once(). This patch extends the logic to share parts of
-the probe to allow sharing the initialization of locks or resources
-retrieval.
+All headers in the MSCC PHY driver have been copied and pasted from the
+original mscc.c file. However the information is not necessarily
+correct, as in the MACsec support. Fix this.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- include/linux/phy.h | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/phy/mscc/mscc_fc_buffer.h | 2 +-
+ drivers/net/phy/mscc/mscc_mac.h       | 2 +-
+ drivers/net/phy/mscc/mscc_macsec.c    | 6 +++---
+ drivers/net/phy/mscc/mscc_macsec.h    | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 8c05d0fb5c00..058219b6441f 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -244,7 +244,8 @@ struct phy_package_shared {
- };
- 
- /* used as bit number in atomic bitops */
--#define PHY_SHARED_F_INIT_DONE 0
-+#define PHY_SHARED_F_INIT_DONE  0
-+#define PHY_SHARED_F_PROBE_DONE 1
- 
+diff --git a/drivers/net/phy/mscc/mscc_fc_buffer.h b/drivers/net/phy/mscc/mscc_fc_buffer.h
+index 3803e826c37d..399e803395a5 100644
+--- a/drivers/net/phy/mscc/mscc_fc_buffer.h
++++ b/drivers/net/phy/mscc/mscc_fc_buffer.h
+@@ -2,7 +2,7 @@
  /*
-  * The Bus class for PHYs.  Devices which provide access to
-@@ -1554,14 +1555,25 @@ static inline int __phy_package_write(struct phy_device *phydev,
- 	return __mdiobus_write(phydev->mdio.bus, shared->addr, regnum, val);
- }
+  * Driver for Microsemi VSC85xx PHYs
+  *
+- * Copyright (C) 2019 Microsemi Corporation
++ * Copyright (C) 2020 Microsemi Corporation
+  */
  
--static inline bool phy_package_init_once(struct phy_device *phydev)
-+static inline bool __phy_package_set_once(struct phy_device *phydev,
-+					  unsigned int b)
- {
- 	struct phy_package_shared *shared = phydev->shared;
+ #ifndef _MSCC_PHY_FC_BUFFER_H_
+diff --git a/drivers/net/phy/mscc/mscc_mac.h b/drivers/net/phy/mscc/mscc_mac.h
+index 59b6837c60b3..8dd38dc6edbf 100644
+--- a/drivers/net/phy/mscc/mscc_mac.h
++++ b/drivers/net/phy/mscc/mscc_mac.h
+@@ -2,7 +2,7 @@
+ /*
+  * Driver for Microsemi VSC85xx PHYs
+  *
+- * Copyright (c) 2017 Microsemi Corporation
++ * Copyright (c) 2020 Microsemi Corporation
+  */
  
- 	if (!shared)
- 		return false;
+ #ifndef _MSCC_PHY_LINE_MAC_H_
+diff --git a/drivers/net/phy/mscc/mscc_macsec.c b/drivers/net/phy/mscc/mscc_macsec.c
+index b4d3dc4068e2..c0eeb62cb940 100644
+--- a/drivers/net/phy/mscc/mscc_macsec.c
++++ b/drivers/net/phy/mscc/mscc_macsec.c
+@@ -1,10 +1,10 @@
+ // SPDX-License-Identifier: (GPL-2.0 OR MIT)
+ /*
+- * Driver for Microsemi VSC85xx PHYs
++ * Driver for Microsemi VSC85xx PHYs - MACsec support
+  *
+- * Author: Nagaraju Lakkaraju
++ * Author: Antoine Tenart
+  * License: Dual MIT/GPL
+- * Copyright (c) 2016 Microsemi Corporation
++ * Copyright (c) 2020 Microsemi Corporation
+  */
  
--	return !test_and_set_bit(PHY_SHARED_F_INIT_DONE, &shared->flags);
-+	return !test_and_set_bit(b, &shared->flags);
-+}
-+
-+static inline bool phy_package_init_once(struct phy_device *phydev)
-+{
-+	return __phy_package_set_once(phydev, PHY_SHARED_F_INIT_DONE);
-+}
-+
-+static inline bool phy_package_probe_once(struct phy_device *phydev)
-+{
-+	return __phy_package_set_once(phydev, PHY_SHARED_F_PROBE_DONE);
- }
+ #include <linux/phy.h>
+diff --git a/drivers/net/phy/mscc/mscc_macsec.h b/drivers/net/phy/mscc/mscc_macsec.h
+index d751f2946b79..9c6d25e36de2 100644
+--- a/drivers/net/phy/mscc/mscc_macsec.h
++++ b/drivers/net/phy/mscc/mscc_macsec.h
+@@ -2,7 +2,7 @@
+ /*
+  * Driver for Microsemi VSC85xx PHYs
+  *
+- * Copyright (c) 2018 Microsemi Corporation
++ * Copyright (c) 2020 Microsemi Corporation
+  */
  
- extern struct bus_type mdio_bus_type;
+ #ifndef _MSCC_PHY_MACSEC_H_
 -- 
 2.26.2
 
