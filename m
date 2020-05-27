@@ -2,115 +2,123 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2495EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A26208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794742084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CN7jmiIU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/mH86Zc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389144AbgE0OVx (ORCPT
+        id S2389155AbgE0OWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:21:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34912 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389135AbgE0OVw (ORCPT
+        Wed, 27 May 2020 10:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389103AbgE0OWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:21:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590589310;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+qKyyBRTH3XVnPxCnLL3xw/KfsJfCnDk6EWAHME3F1E=;
-        b=CN7jmiIUd2q9HmDO/it777cjDn083BHbK+gtcwYo5HKoR7S2DsNIRHUVLKeXz/WFBacgPy
-        EsJwRCECuhCW1aI1OXdGu4W3pfCCkql8oYNyEge/5fvwW8WJYxXIvfY7Floml3EMlc25KI
-        M0im/JY9kfaT0Wr6ewgRkW4fbXRc884=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216-p--wzi_mP8Odmny0Lkzj_g-1; Wed, 27 May 2020 10:21:49 -0400
-X-MC-Unique: p--wzi_mP8Odmny0Lkzj_g-1
-Received: by mail-qv1-f71.google.com with SMTP id da20so13086691qvb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:21:49 -0700 (PDT)
+        Wed, 27 May 2020 10:22:00 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ACB3C08C5C2;
+        Wed, 27 May 2020 07:22:00 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id u5so11832905pgn.5;
+        Wed, 27 May 2020 07:22:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CJWWlFowHHNM256k17yETc+XHlbxbBX4AAuZRvOBnEA=;
+        b=H/mH86Zc+uqXPHsur/+idcfytxqQuoLsEYM/GP0wDJaNuH0KuMM/hmfRnLtE6eWILQ
+         IdNBX/+t/EN+cKNLe9p2ngYcFcNzJQf45k6sQRYlE+HVUUe2vqS+j9VvjTFTaMGaNLXD
+         DbmN49q6cujvyx5MAACH6Oost4PvqRfkPMCw8oxggWFKxFcxwTq6gpJTEfDdGZwryDS7
+         N1gESVq7py8B9b1nZT+ggOaVJKAZypEyYGduUmc3ecR5BmZWtRTbGelW7dGcliKq6zQF
+         pS74cKtx2WqJKqjR7aZhqsDCn9ntBx56I9VgPAdu9W0kTadoSYLLnn4mF8NTowC2u4DY
+         hIgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+qKyyBRTH3XVnPxCnLL3xw/KfsJfCnDk6EWAHME3F1E=;
-        b=BT9BwtZrif+9mSmg5cr7z0XwSqkMSifsGTTTn6LqD54WFkgbDrrLzeGbnjJNLpz/Vm
-         Zkz4aDKR0suJvfpLGHAJ1FsGSSqz/rtataSrY+Mn+XQhzwnM1TNQJg0vgTp5kQK2N2Xf
-         jwlGlLct8e2ZT+NVR/38zTQbqjYjmfneAEwLqJ+td3hiSJFeRqKCQI9JUsZou53haYj8
-         UgkYmT5Jd1As5wKXLHM43slnAs+UQKN2N6swuaef/eqqNQJLRxdqWWrVSgWN+SBBTyx6
-         oEn9hvXCRiZViuoqAx4IIVZzRL3Ly6K22D4Dyiw0W0P12YtHU7uUlFlZeuk7Oj8jpR1Y
-         w04g==
-X-Gm-Message-State: AOAM530DRfYPSVwhznSoVX1oGgJ/d89LZTIZ2z/btxCtzgWpDy7wsA0s
-        4H/xI2Ziqp0fbBLURmLrY1ZkYVn8gtCfKr3O+53bqw+QirD+Gbry0ubOJvHl6JmogOt8s48mrX0
-        fy8UmuF4u1zDptYM4w27E/DED
-X-Received: by 2002:aed:3789:: with SMTP id j9mr4285362qtb.91.1590589308514;
-        Wed, 27 May 2020 07:21:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwihHLn0ti/EItryQRylb806cTWUWIhBXutkjRQ5eKo3P4M2NgCdZYYiE+bYtZk1b3gfqoEHQ==
-X-Received: by 2002:aed:3789:: with SMTP id j9mr4285327qtb.91.1590589308223;
-        Wed, 27 May 2020 07:21:48 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id 88sm2618476qth.9.2020.05.27.07.21.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 07:21:45 -0700 (PDT)
-Date:   Wed, 27 May 2020 10:21:43 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     aarcange@redhat.com, akpm@linux-foundation.org, cracauer@cons.org,
-        dplotnikov@virtuozzo.com, gokhale2@llnl.gov, hannes@cmpxchg.org,
-        hughd@google.com, jglisse@redhat.com, kirill@shutemov.name,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        maxime.coquelin@redhat.com, mcfadden8@llnl.gov, mcgrof@kernel.org,
-        mgorman@suse.de, mike.kravetz@oracle.com, pbonzini@redhat.com,
-        rppt@linux.vnet.ibm.com, xemul@virtuozzo.com, keescook@chromium.org
-Subject: Re: [PATCH v2 1/1] userfaultfd/sysctl: add
- vm.unprivileged_userfaultfd
-Message-ID: <20200527142143.GC1194141@xz-x1>
-References: <3b64de85-beb4-5a07-0093-cad6e8f2a8d8@huawei.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CJWWlFowHHNM256k17yETc+XHlbxbBX4AAuZRvOBnEA=;
+        b=CamilqAwvVpR/6dV7badrIIMeWpufzxUFzOYWF8BKhCtlIwGzmYKq+8HoVNvkYvLxt
+         JgEu4sVi+ppIQzEcUWkx4Tmo85jT7Bllslicmeoi5qZ7dCFyJxq9S+SSoZkaPgKyRAxv
+         9zgytfR7ClxQNGrTpx057wKlhlVJNDhIms5eejUbrQrF6lbSIovphwknltYsbBJc4KPw
+         Scy42KILuz4ut6TIEWchTLOKgSb55ZiyNFWNkcrYGUpJSoOZCUVdRp9rNm1LEN/e6n1/
+         26kPXqx1Xba9ixxvF3tSaE9JAfVMnj3prmpwkdiyfa7H/eEMh2LYsYlXrzdpPF9XPISM
+         l+AQ==
+X-Gm-Message-State: AOAM5315exFFy2eZKR/h1Q99WyDA7HnsIE6iUlQNYUCGngXXDQ4tsY/9
+        jf1q/PJJLcRgiejmQyA2+Wk=
+X-Google-Smtp-Source: ABdhPJz+x5u0WY6FQMlMKbfoixKcK/iAmz/7r51nMPJKL9jhfw9HM0ZDj76SUy33XYN0RBLzXKNOhg==
+X-Received: by 2002:a62:b40b:: with SMTP id h11mr4042841pfn.183.1590589319773;
+        Wed, 27 May 2020 07:21:59 -0700 (PDT)
+Received: from localhost ([144.34.194.82])
+        by smtp.gmail.com with ESMTPSA id c2sm3045711pjg.51.2020.05.27.07.21.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 07:21:59 -0700 (PDT)
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     corbet@lwn.net, gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
+        paul@crapouillou.net, shawnguo@kernel.org,
+        linus.walleij@linaro.org, linux-doc@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Dejin Zheng <zhengdejin5@gmail.com>
+Subject: [PATCH v3 0/2] drivers: provide devm_platform_request_irq()
+Date:   Wed, 27 May 2020 22:21:44 +0800
+Message-Id: <20200527142146.8940-1-zhengdejin5@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3b64de85-beb4-5a07-0093-cad6e8f2a8d8@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 02:54:13PM +0800, Xiaoming Ni wrote:
-> 
-> On Tue, Mar 19, 2019 at 11:07:22AM +0800, Peter Xu wrote:
-> > Add a global sysctl knob "vm.unprivileged_userfaultfd" to control
-> > whether userfaultfd is allowed by unprivileged users.  When this is
-> > set to zero, only privileged users (root user, or users with the
-> > CAP_SYS_PTRACE capability) will be able to use the userfaultfd
-> > syscalls.
-> 
-> Hello
+It will call devm_request_irq() after platform_get_irq() function
+in many drivers, sometimes, it is not right for the error handling
+of these two functions in some drivers. so provide this function
+to simplify the driver.
 
-Hi, Xiaoming,
+the first patch will provide devm_platform_request_irq(), and the
+other patch will convert to devm_platform_request_irq() in some
+i2c bus dirver.
 
-> I am a bit confused about this patch, can you help to answer it.
-> 
-> Why the sysctl interface of fs/userfaultfd.c belongs to vm_table instead of
-> fs_table ?
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=cefdca0a86be517bc390fc4541e3674b8e7803b0
+v2 -> v3:
+	- add devm_platform_request_irq() to devres.rst by Grygorii's
+	  suggestion.
+	- And also Thanks Michal, Wolfram and Linus's review and
+	  comments.
+v1 -> v2:
+	- I give up this series of patches in v1 version. I resend this
+	  patches v2 by that discussion:
+	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+	  The patch content has not changed.
 
-Because I think it makes more sense to put the new key into where it suites
-better, irrelevant to which directory the variable is declared.  To me,
-unprivileged_userfaultfd is definitely more suitable for vm rather than fs,
-because userfaultfd is really about memory management rather than file system.
+Dejin Zheng (2):
+  drivers: provide devm_platform_request_irq()
+  i2c: busses: convert to devm_platform_request_irq()
 
-Thanks,
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/base/platform.c                       | 33 +++++++++++++++++++
+ drivers/i2c/busses/i2c-bcm-kona.c             | 16 ++-------
+ drivers/i2c/busses/i2c-cadence.c              | 10 ++----
+ drivers/i2c/busses/i2c-digicolor.c            | 10 ++----
+ drivers/i2c/busses/i2c-emev2.c                |  5 ++-
+ drivers/i2c/busses/i2c-jz4780.c               |  5 ++-
+ drivers/i2c/busses/i2c-meson.c                | 13 +++-----
+ drivers/i2c/busses/i2c-mxs.c                  |  9 ++---
+ drivers/i2c/busses/i2c-pnx.c                  |  9 ++---
+ drivers/i2c/busses/i2c-rcar.c                 |  9 ++---
+ drivers/i2c/busses/i2c-rk3x.c                 | 14 ++------
+ drivers/i2c/busses/i2c-sirf.c                 | 10 ++----
+ drivers/i2c/busses/i2c-stu300.c               |  4 +--
+ drivers/i2c/busses/i2c-synquacer.c            | 12 ++-----
+ include/linux/platform_device.h               |  4 +++
+ 16 files changed, 73 insertions(+), 91 deletions(-)
 
 -- 
-Peter Xu
+2.25.0
 
