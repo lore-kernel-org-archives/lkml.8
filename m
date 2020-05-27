@@ -2,258 +2,188 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7096DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA09C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF55208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oap9h53I"
+	by mail.kernel.org (Postfix) with ESMTP id D2E47206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389523AbgE0PaL (ORCPT
+        id S2389581AbgE0Pa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729416AbgE0PaL (ORCPT
+        Wed, 27 May 2020 11:30:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39185 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388145AbgE0Pa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:30:11 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0968AC05BD1E;
-        Wed, 27 May 2020 08:30:11 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id h9so9256963qtj.7;
-        Wed, 27 May 2020 08:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zkunrZ0oeTCMztxG/OegBl2pml7XGAS8duP4C52EX6I=;
-        b=Oap9h53IlxWOHi0RDCE66AdYN29wfAsbfyk1QJ8LaluzX9rvKMepwlSxjc73mIDafz
-         70p2spgj38vRS+A7COVFSdEnfquX4eT2K1O+d9J5DHQsDd42rCDKqkvBpPZJoPL0oM+8
-         eFsL1Kuklf2RdebuF6n8QOK76x6Rx5oQn7ITcZdgt7v7vLgXQIJalvgup7hOwdVPebRK
-         jWpSbb7AFjdj5pA9koQuF6Umyp3MisLlDy4qw5QuUd4AcckwSIGvuy6ssY/Rf4R/zg1L
-         SGO4P/6OFpvNxXznbm4ydRYLwBTlnzyO4qmfpQNj5y8gUsXVOP02M7EzPkZweaDWwjb/
-         Cz3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zkunrZ0oeTCMztxG/OegBl2pml7XGAS8duP4C52EX6I=;
-        b=qszY34hWm1gjn1UrBD5YFVOkqDj+V0DG1zT64cXbREbKsoILhdiQ1EchoyYi4T88Ao
-         zAuZ5egL9Q1xrvlU6mLtp3PUbD6AVjy55S9JUUz5OLe+cnMHXmCYscXLSPAbSBVvXOyv
-         3D064SUZ46cSRy95fI558GEh/FZwPAEOaMxl1tMBzrZos3TzOARn1Sn2ITh8K50mAwSt
-         O6Sl8xXjjrv/S9vwEAok/YJ2L9yUoxBZRL/I3CHGF7ku1YA5eJAsgKbDTuxK0LiEy+go
-         GT456IPNFzxb6gQ+3shU/emu2asHxNaT9CB5lK1WnngHmsHAEdG0SzPXrMC6RQI6lLdu
-         JTvw==
-X-Gm-Message-State: AOAM532A0jhEat4upnDmOLJsNcCB/p+PTsO8Y6KrMGWqjMyKyBsxync8
-        Kc9wUxcF+pIxmasuf43tpFg=
-X-Google-Smtp-Source: ABdhPJy7Aid9jgwaunjEzd/i0WniQ3PXIiToFKc9WwZdimCPt06wxXiwafiDs+QXwN+BKXf7pwycGA==
-X-Received: by 2002:ac8:710f:: with SMTP id z15mr4782320qto.71.1590593409980;
-        Wed, 27 May 2020 08:30:09 -0700 (PDT)
-Received: from ict14-OptiPlex-980 ([178.23.248.46])
-        by smtp.gmail.com with ESMTPSA id c186sm1744441qkd.102.2020.05.27.08.30.07
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 08:30:09 -0700 (PDT)
-Date:   Wed, 27 May 2020 17:29:58 +0200
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 2/5] dt-bindings: iio: magnetometer: ak8975: convert
- format to yaml, add maintainer
-Message-ID: <20200527152958.GA21548@ict14-OptiPlex-980>
-References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
- <20200525151117.32540-3-jonathan.albrieux@gmail.com>
- <20200526222847.GA492828@bogus>
+        Wed, 27 May 2020 11:30:26 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jdy0C-00055J-VY; Wed, 27 May 2020 15:29:57 +0000
+Date:   Wed, 27 May 2020 17:29:55 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
+Message-ID: <20200527152955.jbbipgb6icb4nwgv@wittgenstein>
+References: <20200522055350.806609-1-areber@redhat.com>
+ <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
+ <20200525080541.GF104922@dcbz.redhat.com>
+ <877dwybxvi.fsf@x220.int.ebiederm.org>
+ <20200527141403.GC250149@dcbz.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200526222847.GA492828@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200527141403.GC250149@dcbz.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 04:28:47PM -0600, Rob Herring wrote:
-> On Mon, May 25, 2020 at 05:10:36PM +0200, Jonathan Albrieux wrote:
-> > Converts documentation from txt format to yaml.
-> 
-> I would have converted to yaml and do any re-formatting/wording, then 
-> added 'interrupts', but this is fine.
->
-
-Thank you, I'll keep that in mind for future works like this one
- 
-> 
-> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > ---
-> >  .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
-> >  .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 78 +++++++++++++++++++
-> >  2 files changed, 78 insertions(+), 37 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+On Wed, May 27, 2020 at 04:14:03PM +0200, Adrian Reber wrote:
+> On Tue, May 26, 2020 at 08:59:29AM -0500, Eric W. Biederman wrote:
+> > Adrian Reber <areber@redhat.com> writes:
 > > 
-> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> > deleted file mode 100644
-> > index 0576b9df0bf2..000000000000
-> > --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> > +++ /dev/null
-> > @@ -1,37 +0,0 @@
-> > -* AsahiKASEI AK8975 magnetometer sensor
-> > -
-> > -Required properties:
-> > -
-> > -  - compatible : should be "asahi-kasei,ak8975".
-> > -  - reg : the I2C address of the magnetometer.
-> > -
-> > -Optional properties:
-> > -
-> > -  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
-> > -      is ready to be read and is possible to listen on it. If used,
-> > -      this should be active high. Prefer interrupt over this.
-> > -
-> > -  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
-> > -
-> > -  - vdd-supply: an optional regulator that needs to be on to provide VDD.
-> > -
-> > -  - mount-matrix: an optional 3x3 mounting rotation matrix.
-> > -
-> > -Example:
-> > -
-> > -ak8975@c {
-> > -        compatible = "asahi-kasei,ak8975";
-> > -        reg = <0x0c>;
-> > -        interrupt-parent = <&gpio6>;
-> > -        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-> > -        vdd-supply = <&ldo_3v3_gnss>;
-> > -        mount-matrix = "-0.984807753012208",  /* x0 */
-> > -                       "0",                   /* y0 */
-> > -                       "-0.173648177666930",  /* z0 */
-> > -                       "0",                   /* x1 */
-> > -                       "-1",                  /* y1 */
-> > -                       "0",                   /* z1 */
-> > -                       "-0.173648177666930",  /* x2 */
-> > -                       "0",                   /* y2 */
-> > -                       "0.984807753012208";   /* z2 */
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-> > new file mode 100644
-> > index 000000000000..a603659d5fa5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
-> > @@ -0,0 +1,78 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: AsahiKASEI AK8975 magnetometer sensor
-> > +
-> > +maintainers:
-> > +  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - const: asahi-kasei,ak8975
-> > +      - const: asahi-kasei,ak8963
-> > +      - const: asahi-kasei,ak09911
-> > +      - const: asahi-kasei,ak09912
-> 
-> These 4 can be an enum.
-> 
-> > +      - const: ak8975
-> > +        deprecated: true
-> > +      - const: ak8963
-> > +        deprecated: true
-> > +      - const: ak09911
-> > +        deprecated: true
-> > +      - const: ak09912
-> > +        deprecated: true
-> 
-> And these 4 can be an enum+deprecated.
-> 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +    description: the I2C address of the magnetometer.
-> 
-> Don't need a description.
-> 
-> > +
-> > +  gpios:
-> > +    description: |
-> > +      AK8975 has a "Data ready" pin (DRDY) which informs that data
-> > +      is ready to be read and is possible to listen on it. If used,
-> > +      this should be active high. Prefer interrupt over this.
-> 
-> Need to define how many GPIOs (maxItems: 1).
-> 
-
-Ok, I'll edit those fields as soon as possible, thank you,
-
-Best regards,
-Jonathan Albrieux
-
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: interrupt for DRDY pin. Triggered on rising edge.
-> > +
-> > +  vdd-supply:
-> > +    maxItems: 1
-> > +    description: |
-> > +      an optional regulator that needs to be on to provide VDD power to
-> > +      the sensor.
-> > +
-> > +  mount-matrix:
-> > +    description: an optional 3x3 mounting rotation matrix.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/irq.h>
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        magnetometer@c {
-> > +            compatible = "asahi-kasei,ak8975";
-> > +            reg = <0x0c>;
-> > +            interrupt-parent = <&gpio6>;
-> > +            interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-> > +            vdd-supply = <&ldo_3v3_gnss>;
-> > +            mount-matrix = "-0.984807753012208",  /* x0 */
-> > +                           "0",                   /* y0 */
-> > +                           "-0.173648177666930",  /* z0 */
-> > +                           "0",                   /* x1 */
-> > +                           "-1",                  /* y1 */
-> > +                           "0",                   /* z1 */
-> > +                           "-0.173648177666930",  /* x2 */
-> > +                           "0",                   /* y2 */
-> > +                           "0.984807753012208";   /* z2 */
-> > +        };
-> > +    };
-> > -- 
-> > 2.17.1
+> > > On Fri, May 22, 2020 at 09:40:37AM -0700, Casey Schaufler wrote:
 > > 
+> > >> What are the other blockers? Are you going to suggest additional new
+> > >> capabilities to clear them?
+> > >
+> > > As mentioned somewhere else access to /proc/<pid>/map_files/ would be
+> > > helpful. Right now I am testing with a JVM and it works without root
+> > > just with the attached patch. Without access to /proc/<pid>/map_files/
+> > > not everything CRIU can do will actually work, but we are a lot closer
+> > > to what our users have been asking for.
+> > 
+> > The current permission checks on /proc/<pid>/map_files/ are simply
+> > someone being over-cautious.
+> > 
+> > Someone needs to think through the threat landscape and figure out what
+> > permission checks are actually needed.
+> > 
+> > Making the permission check ns_capable instead of capable is a
+> > no-brainer.  Figuring out which user_ns to test against might be a
+> > we bit harder.
+> > 
+> > We could probably even allow the owner of the process to open the files
+> > but that requires someone doing the work of thinking through how
+> > being able to opening files that you have mmaped might be a problem.
+> 
+> As mentioned in the other thread, CRIU can work with read access to
+> map_files.
+> 
+> > >> > There are probably a few more things guarded by CAP_SYS_ADMIN required
+> > >> > to run checkpoint/restore as non-root,
+> > >> 
+> > >> If you need CAP_SYS_ADMIN anyway you're not gaining anything by
+> > >> separating out CAP_RESTORE.
+> > >
+> > > No, as described we can checkpoint and restore a JVM with this patch and
+> > > it also solves the problem the set_ns_last_pid fork() loop daemon tries
+> > > to solve. It is not enough to support the full functionality of CRIU as
+> > > map_files is also important, but we do not need CAP_SYS_ADMIN and
+> > > CAP_RESTORE. Only CAP_RESTORE would be necessary.
+> > >
+> > > With a new capability users can enable checkpoint/restore as non-root
+> > > without giving CRIU access to any of the other possibilities offered by
+> > > CAP_SYS_ADMIN. Setting a PID and map_files have been introduced for CRIU
+> > > and used to live behind CONFIG_CHECKPOINT_RESTORE. Having a capability
+> > > for checkpoint/restore would make it easier for CRIU users to run it as
+> > > non-root and make it very clear what is possible when giving CRIU the
+> > > new capability. No other things would be allowed than necessary for
+> > > checkpoint/restore. Setting a PID is most important for the restore part
+> > > and reading map_files would be helpful during checkpoint. So it actually
+> > > should be called CAP_CHECKPOINT_RESTORE as Christian mentioned in
+> > > another email.
+> > 
+> > Please if one is for checkpoint and one is for restore asking for a pair
+> > of capabilities is probably more appropriate.
+> 
+> I will send out a v2 with a renamed capability soon and also include
+> map_files to be readable with that capability.
+> 
+> > >> >  but by applying this patch I can
+> > >> > already checkpoint and restore processes as non-root. As there are
+> > >> > already multiple workarounds I would prefer to do it correctly in the
+> > >> > kernel to avoid that CRIU users are starting to invent more workarounds.
+> > >> 
+> > >> You've presented a couple of really inappropriate implementations
+> > >> that would qualify as workarounds. But the other two are completely
+> > >> appropriate within the system security policy. They don't "get around"
+> > >> the problem, they use existing mechanisms as they are intended.
+> > >
+> > > I agree with the user namespace approach to be appropriate, but not the
+> > > CAP_SYS_ADMIN approach as CRIU only needs a tiny subset (2 things) of
+> > > what CAP_SYS_ADMIN allows.
+> > 
+> > 
+> > If we are only talking 2 things can you please include in your patchset
+> > a patch enabling those 2 things?
+> 
+> The two things are setting a PID via ns_last_pid/clone3() and reading
+> map_files.
+> 
+> > But even more than this we need a request that asks not for the least
+> > you can possibly ask for but asks for what you need to do a good job.
+> 
+> Also in this thread Kamil mentioned that they also need calling prctl
+> with PR_SET_MM during restore in their production setup.
+
+We're using that as well but it really feels like this:
+
+	prctl_map = (struct prctl_mm_map){
+	    .start_code = start_code,
+	    .end_code = end_code,
+	    .start_stack = start_stack,
+	    .start_data = start_data,
+	    .end_data = end_data,
+	    .start_brk = start_brk,
+	    .brk = brk_val,
+	    .arg_start = arg_start,
+	    .arg_end = arg_end,
+	    .env_start = env_start,
+	    .env_end = env_end,
+	    .auxv = NULL,
+	    .auxv_size = 0,
+	    .exe_fd = -1,
+	};
+
+should belong under ns_capable(CAP_SYS_ADMIN). Why is that necessary to
+relax?
+
+> 
+> > I am having visions of a recurring discussion that says can we add one
+> > more permission check to CAP_RESTORE or CAP_CHECKPOINT when they are
+> > things we could know today.
+> 
+> I will prepare a new version of this patch using CAP_CHECKPOINT_RESTORE
+> for ns_last_pid/clone3(), map_files, and prctl with PR_SET_MM.
+> 
+> 		Adrian
+> 
