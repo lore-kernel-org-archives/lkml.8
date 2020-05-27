@@ -2,75 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7116C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE6420835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5ED420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:40:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jGVYMQdT"
+	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="B3Jk1Hud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbgE0Rj1 (ORCPT
+        id S2390957AbgE0RkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:39:27 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35794 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbgE0Rj1 (ORCPT
+        Wed, 27 May 2020 13:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387564AbgE0RkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:39:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=u5GDconUS+H3K1ww0DFY/n5/LgHvK82xPWYPy4Flo1Y=; b=jGVYMQdT4x67xlPFbhHlvpGZ5k
-        8WQX87mcGowLUv584ELtR331KxeMWHSYHJUN5Y1XrNML4/yk7fgNhrx4jWSH4RXpaLzlUyR/j5396
-        RIkoMA1ZnnpuoaZS9NMapkBF2VyCBdc8HX1EHb0MwLZw+qO+Pl7gGueLfi52B69YJ9EMaXxg6p0dR
-        tUD/dfQ8F4bB3uOb5vgtD75qNTw0l67YBhhPA5/FVslBGG6gLcutU260z1rdReFy9EhfQirmg5/Fu
-        TpxwtUorI3V79vS4IbOilmBXd7Bc6deTfMiKnZrgcmttAlJISwyHyp9TRrx+litPzLGQd0vhUfoX2
-        xxykKVcA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1je01Q-0004Up-Ho; Wed, 27 May 2020 17:39:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 08AA8307770;
-        Wed, 27 May 2020 19:39:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B6DBF2024926D; Wed, 27 May 2020 19:39:18 +0200 (CEST)
-Date:   Wed, 27 May 2020 19:39:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org, bigeasy@linutronix.de
-Subject: Re: [PATCH 2/6] lockdep: Change hardirq{s_enabled,_context} to
- per-cpu variables
-Message-ID: <20200527173918.GD706495@hirez.programming.kicks-ass.net>
-References: <20200527154527.233385756@infradead.org>
- <20200527155003.202732880@infradead.org>
+        Wed, 27 May 2020 13:40:16 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447FEC03E97D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:40:16 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k22so10380064pls.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=posk.io; s=google;
+        h=message-id:subject:from:to:date:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Rk1xhV7XufxkO/E1iLQ3yEa3ALqyATLWKjuDwexe4Yg=;
+        b=B3Jk1Hud+b+F59wbna0Yyx92ZDbqgoGy+IywWGh/04Vvc78f8fVPMvcBEfH/Top/q3
+         KxCxyEdfGGUaYF5vbk6B2eeHP9wQdhP3E/h/sxJ/XoKYjr2WLVFi1gFMPWr5RLHjJCLV
+         L+HmYXaMSDWQpcLgOuRnO2cV++BAhRsQHZ8gkfRJ+ArNvmmi+FrDii7LZHGkwVON08CO
+         o6r1diaC8v8ohqR5s+vLFuxkirwOF9TKuRDUv/7goVceeRPWuEwbJZw/rRUo9yPuViHZ
+         nXOWr0qGm87Y1DvGkFdr8c/FlIPpULSYp2u0WY6k7/aP/79f4N2oi4J3Q+f0+FsI2o+k
+         NVZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=Rk1xhV7XufxkO/E1iLQ3yEa3ALqyATLWKjuDwexe4Yg=;
+        b=nIEyCgKbJVtuVI9anMhlvbf2NeXilpShowR8jmLPDFygsFnB4RA7lZw83z/700k3HT
+         P4+N3nO9A0qnjAFz0d9B3WPiQ6LzZb0jCzQEBUVIIBAStlJ8rzD7yvPLF5/qZN1MSwn0
+         yWNtf69lLfvfC07G2jUI3OQBmtpvQ1diG1Bkx2ckHS7T8e82CjKxWfq6p2piKZ71+/JP
+         e49zPFM4Tq04LW6cH/nTKde71rt9uftKO9fChKw6jrYBfgfILUybqUH71oO0HCclTf99
+         IPUGtxnrwTSqcda83wrAPudTBIX7Gbp07TRc2+MIr/aLBwkplSM/A96nsboaHA5paQTW
+         CD4w==
+X-Gm-Message-State: AOAM531HRugQP+ji1PzXfc9peYlL1+L/f8H+e3R7kA/3uoKtmtXlDzWZ
+        mTIwFQW9X5E1SuiWBTZGyjogeJKtJXXHlw==
+X-Google-Smtp-Source: ABdhPJxzjZxL86XD8n5itdGJFpoSmpa+c/9aBh1Q5bl5oLm/WDw+b2+84UNvphC7GfTOcDb949OKPg==
+X-Received: by 2002:a17:90b:110d:: with SMTP id gi13mr6419016pjb.173.1590601215584;
+        Wed, 27 May 2020 10:40:15 -0700 (PDT)
+Received: from posk-x1c (c-73-202-129-89.hsd1.ca.comcast.net. [73.202.129.89])
+        by smtp.gmail.com with ESMTPSA id w190sm2505061pfw.35.2020.05.27.10.40.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 10:40:15 -0700 (PDT)
+Message-ID: <58974e229908b22f5a2e6c52a21ae63149300049.camel@posk.io>
+Subject: [PATCH] smp: fix a comment typo.
+From:   Peter Oskolkov <posk@posk.io>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Wed, 27 May 2020 10:40:14 -0700
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527155003.202732880@infradead.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 05:45:29PM +0200, Peter Zijlstra wrote:
-> -do {						\
-> -	if (!current->hardirq_context++)	\
-> -		current->hardirq_threaded = 0;	\
-> +# define lockdep_hardirq_enter()			\
-> +do {							\
-> +	if (!this_cpu_inc_return(hardirq_context))	\
+From b93e86294d30f58440762106e517d9467f4f3b69 Mon Sep 17 00:00:00 2001
+From: Peter Oskolkov <posk@posk.io>
+Date: Wed, 27 May 2020 10:23:07 -0700
+Subject: [PATCH] smp: fix a comment typo.
 
-	this_cpu_inc_return(hardirq_context) == 1
+Fix a typo in a comment.
 
-or this_cpu_fetch_inc(), which we don't have.
+Signed-off-by: Peter Oskolkov <posk@posk.io>
+---
+ include/linux/smp.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +		current->hardirq_threaded = 0;		\
+diff --git a/include/linux/smp.h b/include/linux/smp.h
+index cbc9162689d0..bb25075a981d 100644
+--- a/include/linux/smp.h
++++ b/include/linux/smp.h
+@@ -182,7 +182,7 @@ static inline int get_boot_cpu_id(void)
+ /**
+  * raw_processor_id() - get the current (unstable) CPU id
+  *
+- * For then you know what you are doing and need an unstable
++ * For when you know what you are doing and need an unstable
+  * CPU id.
+  */
+ 
+-- 
+2.25.1
+
+
