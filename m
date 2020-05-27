@@ -2,98 +2,97 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4767C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A98C2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590587185;
-	bh=MJ9yVu+LQJWOECG83nq4TKSzcsgZCr2pXWfVvL/h188=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ElHv0U5/mKaO1zawAXLxxligWh498MJJ9tiVZSKRoorHSYAyqJeBo+OA7h2GTGTVX
-	 WgzTxqXk1sWt5/L0QbA4auKXRMzELZVvn2Xf2UiPBiL1DTG5QLyG8YV0oP5i4krdn5
-	 EnrpxFjgLFODurNCZ3vAGl7m7Ma6MvzC2smhbWbk=
+	by mail.kernel.org (Postfix) with ESMTP id 06EC92078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388696AbgE0NqY convert rfc822-to-8bit (ORCPT
+        id S2388697AbgE0NrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:46:24 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34445 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388082AbgE0NqY (ORCPT
+        Wed, 27 May 2020 09:47:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:38093 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388082AbgE0NrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:46:24 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r7so7377184wro.1;
-        Wed, 27 May 2020 06:46:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qON6LSJtVCq7nI+6x1yYZ2+6ycr/GduPskOQfhEOUPE=;
-        b=kKuOyHxksmpn2viYDm6uBBYiVdhn1GauaVhRQ+yX5DeZnOEhWdoEme0j9Xby4PhXks
-         mg7qKwWiv7MFQUHzqZZ/FtiHttTg+213ZYNzix2twb4MW53K5L+G7rG+838qst8umNrU
-         JG+w8w8Ts6HYugA05UH0RnbRJeYXS7gdOGfDse6n9goRq2FVBy5wx7aK3jfjj3wKqd0P
-         lOVxKx03CbbZtRHLtrUb1NyMPOIPSI57GHsEG+PAnbJrN9VSrinUdrwxU1KbNQeTGbWT
-         OuU78RJspm8VZ4Q9nlzJuWLtl+hXmR6giwG4qestZt51Pi80nhngFNphnheRZCCpiAij
-         ngrA==
-X-Gm-Message-State: AOAM530vmzqydJgQbXcPPfQO42QMYjMYatyj/YItGiZ4bL2FwqQvT2DW
-        +R+4sXx+SrJwvcruSNZPiJ52Kxzv
-X-Google-Smtp-Source: ABdhPJz/NrNXnuz9gbxIl7rNWK4SnmfMhnN0Rx90dURWqV1qjuX/JkBxGOaGNKZ0A4lQiWmWSWSHFA==
-X-Received: by 2002:adf:f389:: with SMTP id m9mr4002908wro.195.1590587181794;
-        Wed, 27 May 2020 06:46:21 -0700 (PDT)
-Received: from pi3 ([194.230.155.118])
-        by smtp.googlemail.com with ESMTPSA id p1sm2989229wrx.44.2020.05.27.06.46.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 06:46:20 -0700 (PDT)
-Date:   Wed, 27 May 2020 15:46:18 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     georgi.djakov@linaro.org, a.swigon@samsung.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] interconnect: Allow inter-provider pairs to be
- configured
-Message-ID: <20200527134618.GA4857@pi3>
-References: <20200521122841.8867-1-s.nawrocki@samsung.com>
- <CGME20200521122857eucas1p1db29d5dd09e801ca22214e94022a951b@eucas1p1.samsung.com>
- <20200521122841.8867-4-s.nawrocki@samsung.com>
+        Wed, 27 May 2020 09:47:23 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MlfCk-1jD5sb39N4-00ili0; Wed, 27 May 2020 15:46:31 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Richard Henderson <rth@twiddle.net>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cpumask: guard cpumask_of_node() macro argument
+Date:   Wed, 27 May 2020 15:46:08 +0200
+Message-Id: <20200527134623.930247-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200521122841.8867-4-s.nawrocki@samsung.com>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:IPQ9B4qOEDeVAT6zCkUFk/+6gE2JJSw998N7HuX7io/aAOYDheD
+ X7YwErGg89se16bhTbTpYxiVy/sw26V0IO/Cfn4vsmDbUr0Mb24lIdcaqoqoY7c4003P+DK
+ YHN04TmVug/66eTQdd3ev9jx1nEETULaY0f+ly7FgTxV1G9cqhn9D0+bToxd4kFFn/L3GaI
+ +UIcf3wttnFElnuPeAO/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:K+yJ/bPAuoE=:EInc6+3xGy+xs6R42Qb+42
+ YeCHSr7b/3wnG5P+D8owS3CVbIA16q8f/9rY3+UtseNBx4ByBki8PhZRrxXJoFNxe/QxQYEXP
+ JjZbBuCPkTbiGH3Fx1rKtd3sUv8INsHrO1G4diNJqPGQIrFeAPXcljY4WlqZYugGM/m7p4p+h
+ 6xVSRMRJ7MI8szHGihSUT8KybBiDftBRbeLfdWX4c2XArLyH0j0r+XGkhor/Zztm4uJqJKWEI
+ QZjlQ1nDYkmDAc0W4qiqtt7MlrBxmEGscfev2FnmXA0jRY78aRKbbWPJ8FvOx78vNlZyhJ/1h
+ 2d3sj7z52hGAquNP3Yafpz8oyUgcVpFK0p63kCnv3Izzfp8F+DBeRVX+mJi7jt2NAa8CvtCb+
+ yQhp8XUFFjEnTpIr1HtDH9e3VNpyl8gmi1dTwaibVMRcsnqRgYHewjpZi90hWh7BH5AvhJ7vn
+ fgD6WTVKRtH9dDNQQLhWag05DDop4Awos1EpLIfqcvMJFk0xGNAn+yy192lRk2LRIqz8sUENc
+ mO+7Gs6PcSqTYr20bRM+HqazeUSi+zZTCzMZ4oUKsO1MoOLtiOyWLVVRzVqpr/GLm6G2psafE
+ H8bo9D0rQMvkpLc9COWHKcCYSQAunKF6gygRO0tdW3Z8HqitPCEPq+YAiWNSnpLsb1BE6rq4N
+ NizITXqEZsm818NveA0i9kdB8vCDAU41M92Pxz4Z1+OX295FjCqN2V8O8nnSNFItNuDhfuKCU
+ 6uRnOn/hTQIeVl6nj38ZppcZguMuccYIdsuAcyJe0ivCdnRR86m4lCos/KctzdahU+l3rFF9c
+ w3r7W1yOkLLU2BdN8fExQuGlAlyXRKhDwA4TOZqHDFfhX/KktU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 02:28:41PM +0200, Sylwester Nawrocki wrote:
-> From: Artur Świgoń <a.swigon@samsung.com>
-> 
-> This patch adds support for a new boolean 'inter_set' field in struct
-> icc_provider. Setting it to 'true' enables calling '->set' for
-> inter-provider node pairs. All existing users of the interconnect
-> framework allocate this structure with kzalloc, and are therefore
-> unaffected by this change.
-> 
-> This makes it easier for hierarchies like exynos-bus, where every bus
-> is probed separately and registers a separate interconnect provider, to
-> model constraints between buses.
-> 
-> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  drivers/interconnect/core.c           | 11 +++++------
->  include/linux/interconnect-provider.h |  2 ++
->  2 files changed, 7 insertions(+), 6 deletions(-)
+drivers/hwmon/amd_energy.c:195:15: error: invalid operands to binary expression ('void' and 'int')
+                                        (channel - data->nr_cpus));
+                                        ~~~~~~~~~^~~~~~~~~~~~~~~~~
+include/asm-generic/topology.h:51:42: note: expanded from macro 'cpumask_of_node'
+    #define cpumask_of_node(node)       ((void)node, cpu_online_mask)
+                                               ^~~~
+include/linux/cpumask.h:618:72: note: expanded from macro 'cpumask_first_and'
+ #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
+                                                                       ^~~~~
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: f0b848ce6fe9 ("cpumask: Introduce cpumask_of_{node,pcibus} to replace {node,pcibus}_to_cpumask")
+Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/asm-generic/topology.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
+index 238873739550..5aa8705df87e 100644
+--- a/include/asm-generic/topology.h
++++ b/include/asm-generic/topology.h
+@@ -48,7 +48,7 @@
+   #ifdef CONFIG_NEED_MULTIPLE_NODES
+     #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
+   #else
+-    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
++    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
+   #endif
+ #endif
+ #ifndef pcibus_to_node
+-- 
+2.26.2
+
