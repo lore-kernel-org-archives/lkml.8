@@ -2,105 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90860C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8547A207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7335420873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730081AbgE0Lif (ORCPT
+        id S1728126AbgE0Li6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:38:35 -0400
-Received: from elvis.franken.de ([193.175.24.41]:41050 "EHLO elvis.franken.de"
+        Wed, 27 May 2020 07:38:58 -0400
+Received: from elvis.franken.de ([193.175.24.41]:41068 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbgE0Li2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:38:28 -0400
+        id S1730063AbgE0Lia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:38:30 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jduO3-00011U-02; Wed, 27 May 2020 13:38:19 +0200
+        id 1jduO3-00011U-00; Wed, 27 May 2020 13:38:19 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id A0EB8C0594; Wed, 27 May 2020 13:34:29 +0200 (CEST)
-Date:   Wed, 27 May 2020 13:34:29 +0200
+        id 3E183C04CD; Wed, 27 May 2020 13:32:56 +0200 (CEST)
+Date:   Wed, 27 May 2020 13:32:56 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Huacai Chen <chenhc@lemote.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Paul Burton <paulburton@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH v10 5/5] MIPS: Loongson64: Switch to generic PCI driver
-Message-ID: <20200527113429.GC13537@alpha.franken.de>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200514131650.3587281-1-jiaxun.yang@flygoat.com>
- <20200514131650.3587281-5-jiaxun.yang@flygoat.com>
- <20200522142550.GB15261@alpha.franken.de>
- <20200522152210.GA15567@e121166-lin.cambridge.arm.com>
- <20200522223656.GA22313@alpha.franken.de>
- <20200526091227.GB19547@e121166-lin.cambridge.arm.com>
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v7 0/4] MIPS: page fault handling optimization
+Message-ID: <20200527113256.GA13537@alpha.franken.de>
+References: <1590546320-21814-1-git-send-email-maobibo@loongson.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526091227.GB19547@e121166-lin.cambridge.arm.com>
+In-Reply-To: <1590546320-21814-1-git-send-email-maobibo@loongson.cn>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 10:12:27AM +0100, Lorenzo Pieralisi wrote:
-> On Sat, May 23, 2020 at 12:36:56AM +0200, Thomas Bogendoerfer wrote:
-> > On Fri, May 22, 2020 at 04:22:11PM +0100, Lorenzo Pieralisi wrote:
-> > > On Fri, May 22, 2020 at 04:25:50PM +0200, Thomas Bogendoerfer wrote:
-> > > > On Thu, May 14, 2020 at 09:16:41PM +0800, Jiaxun Yang wrote:
-> > > > > We can now enable generic PCI driver in Kconfig, and remove legacy
-> > > > > PCI driver code.
-> > > > > 
-> > > > > Radeon vbios quirk is moved to the platform folder to fit the
-> > > > > new structure.
-> > > > > 
-> > > > > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> > > > > --
-> > > > > v9: Fix licenses tag
-> > > > > ---
-> > > > >  arch/mips/Kconfig                  |   1 +
-> > > > >  arch/mips/loongson64/Makefile      |   2 +-
-> > > > >  arch/mips/loongson64/vbios_quirk.c |  29 ++++++++
-> > > > >  arch/mips/pci/Makefile             |   1 -
-> > > > >  arch/mips/pci/fixup-loongson3.c    |  71 ------------------
-> > > > >  arch/mips/pci/ops-loongson3.c      | 116 -----------------------------
-> > > > >  6 files changed, 31 insertions(+), 189 deletions(-)
-> > > > >  create mode 100644 arch/mips/loongson64/vbios_quirk.c
-> > > > >  delete mode 100644 arch/mips/pci/fixup-loongson3.c
-> > > > >  delete mode 100644 arch/mips/pci/ops-loongson3.c
-> > > > 
-> > > > Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > > 
-> > > This patch (so the series) does not apply to v5.7-rc1 which is our
-> > > baseline. I reiterate the point, isn't it better to take the whole
-> > > series through the MIPS tree ?
-> > 
-> > sounds better then
-> > 
-> > > Failing that, the series has to
-> > > be rebased (or split differently so that it can be taken through
-> > > different trees), just let me know.
-> > 
-> > so let's take via mips-next. So can I add your Acked-by to the
-> > first three patches ?
+On Wed, May 27, 2020 at 10:25:16AM +0800, Bibo Mao wrote:
+> V7:
+> - define function flush_tlb_fix_spurious_fault as inline rather
+>   than macro
+> V6:
+> - Add update_mmu_tlb function as empty on all platform except mips
+>   system, we use this function to update local tlb for page fault
+>   smp-race handling
+> V5:
+> - define update_mmu_cache function specified on MIPS platform, and
+>   add page fault smp-race stats info
+> V4:
+> - add pte_sw_mkyoung function to implement readable privilege, and
+>   this function is  only in effect on MIPS system.
+> - add page valid bit judgement in function pte_modify
+> V3:
+> - add detailed changelog, modify typo issue in patch V2
+> v2:
+> - split flush_tlb_fix_spurious_fault and tlb update into two patches
+> - comments typo modification
+> - separate tlb update and add pte readable privilege into two patches
 > 
-> I have acked patch 2, you have all required ACKs to get this series via
-> the MIPS tree now, apologies for the delay.
+> Bibo Mao (4):
+>   MIPS: Do not flush tlb page when updating PTE entry
+>   mm/memory.c: Update local TLB if PTE entry exists
+>   mm/memory.c: Add memory read privilege on page fault handling
+>   MIPS: mm: add page valid judgement in function pte_modify
+> 
+>  arch/mips/include/asm/pgtable.h | 37 +++++++++++++++++++++++++++++++++++--
+>  include/asm-generic/pgtable.h   | 33 +++++++++++++++++++++++++++++++++
+>  mm/memory.c                     | 30 ++++++++++++++++++++++--------
+>  3 files changed, 90 insertions(+), 10 deletions(-)
 
-perfect, thanks.
+series applied to mips-next.
 
 Thomas.
-
 
 -- 
 Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
