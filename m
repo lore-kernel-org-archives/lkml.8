@@ -2,65 +2,151 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BABDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2363C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC28208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:15:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590567317;
-	bh=IeNNmPjcTgw7gsx+2CfxhulT1t+d85+ymfBAlrXmt2M=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=glgrXSvs3WDGzgJU8T95UtU7u69aNt3OksiiNXcTZMuuI5amlSGbdC/6Feoz2Zbfa
-	 BiWmbS1dP1RNMocE6p6VEJToFPF+hEafHyyBY7uwAkOo8Umq+Z6bozdvwFCqDzHK/y
-	 3HblJjjoMEVy0N3ykm4Ew1cP4MXfOHV2kSikBHIY=
+	by mail.kernel.org (Postfix) with ESMTP id 76B4E208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="VdrkliPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387771AbgE0IPP (ORCPT
+        id S2388067AbgE0IPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387552AbgE0IPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:15:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7DAA21531;
-        Wed, 27 May 2020 08:15:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590567313;
-        bh=IeNNmPjcTgw7gsx+2CfxhulT1t+d85+ymfBAlrXmt2M=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ZYY6vnEV9kajxAkUARYha4A5QVEJ+Bth2Nr/ZyVfWBsCPJUstx2JO2wDFIbHBOKU6
-         PfiItLUs2FJWoTrCqcLqIqugLsoZkkgVxIR5H/W7LeIjGa7B/LReGAiKRFd7LIhCDM
-         DbYOfpppu4aS9seOltHF4HnvG19LMYaDbFV5FfAQ=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200408203616.4031-1-eajames@linux.ibm.com>
-References: <20200408203616.4031-1-eajames@linux.ibm.com>
-Subject: Re: [PATCH] clk: ast2600: Fix AHB clock divider for A1
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        joel@jms.id.au, Eddie James <eajames@linux.ibm.com>
-To:     Eddie James <eajames@linux.ibm.com>, linux-clk@vger.kernel.org
-Date:   Wed, 27 May 2020 01:15:13 -0700
-Message-ID: <159056731319.88029.1548166710007070918@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Wed, 27 May 2020 04:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387796AbgE0IPQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:15:16 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC38C03E97C
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:15:16 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c12so13930642lfc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=IMgjWilr9oZ9iDIRuPwSPN6NiHr6WddYNQXqrrKqO5E=;
+        b=VdrkliPQ9A8myqx8xMTEpUvvGryh9+5hiiCdvddlHerpe0rwKujSebDZMTmzFCuHPn
+         /Dbx0YSB9v1s3F6uKNrg2CB2kKK5DcZlsoM3Dk5LRCPkg1Ujqe0jl7W4UMwIIHYJvu5e
+         O7ZBXIR+YquL7keHElSgFWD9iyWe/IhCJCtGIjKW4gpUU6bwiUGgzqUObno1dnxetDoB
+         neiLXwEA1M8wK8rEcOo3CACbKozNa2rGxSmgutAn5r7BqaPeqxSPs+aqWsLsVn8sUmRb
+         5JCOOrIJ7+/zgfSukvEq4j238kjro6gSqFeN/W+arT2HKkwRY0hSdERrTLEt3sANUksU
+         OJnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IMgjWilr9oZ9iDIRuPwSPN6NiHr6WddYNQXqrrKqO5E=;
+        b=c2qqDDIIVdIAk5SFZSwuvPFdRZv5d3uf5e/XWJHFVo5JfXl97ZOZ/KZt/Z1j0Rb4Fx
+         G6yl30ikexmqHerWwIjclWfJJAT6iReya7ITdVPeHJkCuKKtaCMxe2xhzxZOmqYdgjSB
+         u+l/Ch+EqEPJq+971V+rq/nJZZiDFZ8YT2aHhEVEaDR02kZhBNmGLKZJLMdmfBQU9F/X
+         jGAEodJ0KyyFwJ0oXpDNjOyE7OTZSUZB/kgTE4Uokh9Jay7zj9CFdns7b0ntCMs/vSO8
+         encPZJfEug8mi35Ui1L/A1QKDXcQLg9ucZYyLwk8kEv8idDppkbg/Rq2IPQ1HSR0Z+kd
+         wsgQ==
+X-Gm-Message-State: AOAM5306d4ArOZ+f3a+HD4gsup7Gw9SpRCTjdet31l+NJgVzU8R1i2e2
+        PSrybES8q6DAaJfYNo5InftMdg==
+X-Google-Smtp-Source: ABdhPJz8IMKoC6RWx7FjoLpP0lCd1gN1p6czuZcswHsxWLkZVvftbtqCPywjBYDAfHXpsCT6z1dzZQ==
+X-Received: by 2002:a19:987:: with SMTP id 129mr2541695lfj.8.1590567313739;
+        Wed, 27 May 2020 01:15:13 -0700 (PDT)
+Received: from localhost.localdomain ([109.204.235.119])
+        by smtp.googlemail.com with ESMTPSA id n26sm533761ljc.42.2020.05.27.01.15.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 01:15:12 -0700 (PDT)
+From:   john mathew <john.mathew@unikie.com>
+X-Google-Original-From: john mathew <John.Mathew@unikie.com>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@gmail.com, willy@infradead.org,
+        valentin.schneider@arm.com, srikar@linux.vnet.ibm.com,
+        john mathew <John.Mathew@unikie.com>
+Subject: [RFC PATCH v6 0/3] Add scheduler overview documentation
+Date:   Wed, 27 May 2020 11:15:02 +0300
+Message-Id: <20200527081505.1783-1-John.Mathew@unikie.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Eddie James (2020-04-08 13:36:16)
-> The latest specs for the AST2600 A1 chip include some different bit
-> definitions for calculating the AHB clock divider. Implement these in
-> order to get the correct AHB clock value in Linux.
->=20
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+This patch series updates the scheduler documentation to add more topics
+wrt to scheduler overview. New sections are added to provide a brief
+overview of the kernel structs used by the scheduler, scheduler invocation,
+context switch and Capacity Aware Scheduling. Previous version of
+the patch was reviewed at:
+https://lore.kernel.org/lkml/20200514092637.15684-1-John.Mathew@unikie.com/
 
-Any Fixes tag for this patch? Seems like it is fixing something.
+version 6:
+ -Fix typos.
+
+version 5:
+ -Fix description error on CAS
+
+version 4:
+ -Added section on Capacity-Aware Scheduling
+ -Reworded CFS recently added features.
+ -Removed vruntime description from scheduler structs
+ -Added description of idle and stopper sched classses
+
+version 3:
+ -Fix spelling, spacing and typo errors.
+
+version 2:
+- Remove :c:func: directive as it was redundant
+- Limit document width (line symbol count) to 75
+- Replace dot file with ASCII art
+- Describe prepare_task_switch(), ASID use, 
+  kernel/user transtion, MIPS FPU affinity correctly
+- Add missing references to files
+- Removed internal APIs from scheduler API reference
+- Described rq struct member as kernel-doc comments
+- Replaced CFS history with CFS current status
+- Added documentation for sched_class fields
+- Refined explanation of context swtich functionality
+- Replace CFS history with recent changes
+- Added kernel-doc comments for struct rq
+
+John Mathew (3):
+  docs: scheduler: Restructure scheduler documentation.
+  docs: scheduler: Add scheduler overview documentation
+  docs: scheduler: Add introduction to scheduler context-switch
+
+ Documentation/scheduler/arch-specific.rst     |  14 +
+ Documentation/scheduler/cfs-overview.rst      | 102 ++++++
+ Documentation/scheduler/context-switching.rst | 125 ++++++++
+ Documentation/scheduler/index.rst             |  33 +-
+ .../scheduler/mips-context-switch.rst         |  89 ++++++
+ Documentation/scheduler/overview.rst          | 293 ++++++++++++++++++
+ Documentation/scheduler/sched-cas.rst         |  92 ++++++
+ .../scheduler/sched-data-structs.rst          | 182 +++++++++++
+ Documentation/scheduler/sched-debugging.rst   |  14 +
+ Documentation/scheduler/sched-features.rst    |  21 ++
+ Documentation/scheduler/scheduler-api.rst     |  31 ++
+ .../scheduler/x86-context-switch.rst          |  65 ++++
+ kernel/sched/core.c                           |  28 +-
+ kernel/sched/sched.h                          | 169 +++++++++-
+ 14 files changed, 1238 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/scheduler/arch-specific.rst
+ create mode 100644 Documentation/scheduler/cfs-overview.rst
+ create mode 100644 Documentation/scheduler/context-switching.rst
+ create mode 100644 Documentation/scheduler/mips-context-switch.rst
+ create mode 100644 Documentation/scheduler/overview.rst
+ create mode 100644 Documentation/scheduler/sched-cas.rst
+ create mode 100644 Documentation/scheduler/sched-data-structs.rst
+ create mode 100644 Documentation/scheduler/sched-debugging.rst
+ create mode 100644 Documentation/scheduler/sched-features.rst
+ create mode 100644 Documentation/scheduler/scheduler-api.rst
+ create mode 100644 Documentation/scheduler/x86-context-switch.rst
+
+-- 
+2.17.1
+
