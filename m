@@ -2,143 +2,350 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77798C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E614207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590614531;
-	bh=ZfN6TjCih4KRWkakKKG5b5uklqfy1UErCB1lMEJOcfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b2LvdttafVILakx1CHF66MrCBVDU9tD1Nq+Z37PNuwNtxmkf/jXkcXG2YV1nUnOtn
-	 zDOrltekfQvXLLoONA/0Gy5lzYClE/sNJ7MNA/Sr0uNS2bKDh7GI3sip00E8J157Ph
-	 XfsCGz00klLyakzBI4xvxhaG8XqDbnxiuG8jBg3w=
+	by mail.kernel.org (Postfix) with ESMTP id 4F2392078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:27:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk/1i9OD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgE0VWK (ORCPT
+        id S2387653AbgE0V11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 17:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgE0VWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 17:22:10 -0400
-Received: from kernel.org (unknown [87.71.78.142])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 612E52078C;
-        Wed, 27 May 2020 21:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590614529;
-        bh=ZfN6TjCih4KRWkakKKG5b5uklqfy1UErCB1lMEJOcfo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j2ZgK8EwwFrGozUSttXAmBtw0/ayQsFW5FCRyot+Db9RnnnICgh26zIKdwlOtXgep
-         2EUvcj6Zr4e0h0wGRqXx9com35n6GlA4rF8kTsDjfz5KwKqryTTeihjFRrSjvVfgCF
-         Q6EnS/w7tfSWhWnJJg4ICc5DWPCfTn2ITCaFND10=
-Date:   Thu, 28 May 2020 00:22:00 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [RFC 00/16] KVM protected memory extension
-Message-ID: <20200527212200.GH48741@kernel.org>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <42685c32-a7a9-b971-0cf4-e8af8d9a40c6@oracle.com>
- <20200526061721.GB48741@kernel.org>
- <8866ff79-e8fd-685d-9a1d-72acff5bf6bb@oracle.com>
- <20200526113844.GC48741@kernel.org>
- <b616bed6-9be2-0e79-86cc-0d571417bc71@intel.com>
+        Wed, 27 May 2020 17:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgE0V11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 17:27:27 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E3BC05BD1E;
+        Wed, 27 May 2020 14:27:27 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id d1so3077340ila.8;
+        Wed, 27 May 2020 14:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qt1Mul8KqCpRASljdw4+T2e5cAgm9DFXJi0Zu76Fifo=;
+        b=Lk/1i9ODwRn8NFZPKwkFUvH4pwFFT3OsdKCUn4JM5bCAqX4gVkdlHfqqwoOdtv+Ruz
+         C16rjr73Zi8/rLigpq55sQ2hpVpRGTm/zI0/FXGjaht1yDydzANY5DxD29WK9SeQkO+3
+         ZkV4vgk+AzI9hClzECQs7hirLVcqHTQ0LcN/Sr1ucGccSSYuPvNoYk0uhCW1TnEqvALX
+         GgA+xcJbvO0bkbi8SfRIEEpdyb2hI6JC3LsbJuN4zIarXadMjgek1tBcTQvDWsIC8VgH
+         MI7TghjySqDSI7R1y/BTy94avGTA/I5X217KMd8HBpiW4Y5LYLZlqmlYDCixGbbMwcfX
+         lnfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qt1Mul8KqCpRASljdw4+T2e5cAgm9DFXJi0Zu76Fifo=;
+        b=rGzuUl5/jnOxq5id8UEnKC54vMn3GxeBDfxKqRClBiODuCOxwDvJCSL+Mhd3m+4Hzt
+         QbaQizAXIS/ltbFEyfQszKqLQk/+cCi+DJK2KnxOf9YErw++Ph0kt3OxY5kHLYjoLbLG
+         kQ7rn93UTXzGkuU1fRIKeGWA9EIhPvhCNyd/gVgo/dr5BXCKGtQFegP800rIuyHCyV7y
+         VKiINSoAY8Sfspnk2ZyjaY2htAedHPvo11tRz1gMBSxaw3Cd2pEBUvw/0/mKqoUsAxNB
+         7sGL/NVHrQeddr2ib2wUUDGqFrT075odWdznuMnNBXIyjC61pP1afs8TECkY6XrB++1/
+         WWZA==
+X-Gm-Message-State: AOAM533roqTkkpmOudCDoTuDB0CTAeKa8l2Zkw0mZpQB93/VDPja2P8Y
+        4SdlX/+8L4qUbLBBR4XYQhwAdfgs7HfospYX8mg=
+X-Google-Smtp-Source: ABdhPJyFHNWLZhiyPwSxpttmcpH6F6nQy403W21Ub5Mxl4ERQoXnSo5CQa8WUb4oEksJiKTonOasELLRe73HFcOjlaY=
+X-Received: by 2002:a92:5f46:: with SMTP id t67mr274324ilb.64.1590614846260;
+ Wed, 27 May 2020 14:27:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b616bed6-9be2-0e79-86cc-0d571417bc71@intel.com>
+References: <20200527173608.2885243-1-daniel.m.jordan@oracle.com> <20200527173608.2885243-7-daniel.m.jordan@oracle.com>
+In-Reply-To: <20200527173608.2885243-7-daniel.m.jordan@oracle.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 27 May 2020 14:27:15 -0700
+Message-ID: <CAKgT0UcT7JuJcM3iG2ZhMDj32wz4KTgH2sv-jdyfhR0_jy85iA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] mm: parallelize deferred_init_memmap()
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Robert Elliott <elliott@hpe.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-s390@vger.kernel.org,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
+        <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:45:33AM -0700, Dave Hansen wrote:
-> On 5/26/20 4:38 AM, Mike Rapoport wrote:
-> > On Tue, May 26, 2020 at 01:16:14PM +0300, Liran Alon wrote:
-> >> On 26/05/2020 9:17, Mike Rapoport wrote:
-> >>> On Mon, May 25, 2020 at 04:47:18PM +0300, Liran Alon wrote:
-> >>>> On 22/05/2020 15:51, Kirill A. Shutemov wrote:
-> >>>>
-> >>> Out of curiosity, do we actually have some numbers for the "non-trivial
-> >>> performance cost"? For instance for KVM usecase?
-> >>>
-> >> Dig into XPFO mailing-list discussions to find out...
-> >> I just remember that this was one of the main concerns regarding XPFO.
-> >
-> > The XPFO benchmarks measure total XPFO cost, and huge share of it comes
-> > from TLB shootdowns.
-> 
-> Yes, TLB shootdown when pages transition between owners is huge.  The
-> XPFO folks did a lot of work to try to optimize some of this overhead
-> away.  But, it's still a concern.
-> 
-> The concern with XPFO was that it could affect *all* application page
-> allocation.  This approach cheats a bit and only goes after guest VM
-> pages.  It's significantly more work to allocate a page and map it into
-> a guest than it is to, for instance, allocate an anonymous user page.
-> That means that the *additional* overhead of things like this for guest
-> memory matter a lot less.
-> 
-> > It's not exactly measurement of the imapct of the direct map
-> > fragmentation to workload running inside a vitrual machine.
-> 
-> While the VM *itself* is running, there is zero overhead.  The host
-> direct map is not used at *all*.  The guest and host TLB entries share
-> the same space in the TLB so there could be some increased pressure on
-> the TLB, but that's a really secondary effect.  It would also only occur
-> if the guest exits and the host runs and starts evicting TLB entries.
-> 
-> The other effects I could think of would be when the guest exits and the
-> host is doing some work for the guest, like emulation or something.  The
-> host would see worse TLB behavior because the host is using the
-> (fragmented) direct map.
-> 
-> But, both of those things require VMEXITs.  The more exits, the more
-> overhead you _might_ observe.  What I've been hearing from KVM folks is
-> that exits are getting more and more rare and the hardware designers are
-> working hard to minimize them.
+On Wed, May 27, 2020 at 10:37 AM Daniel Jordan
+<daniel.m.jordan@oracle.com> wrote:
+>
+> Deferred struct page init is a significant bottleneck in kernel boot.
+> Optimizing it maximizes availability for large-memory systems and allows
+> spinning up short-lived VMs as needed without having to leave them
+> running.  It also benefits bare metal machines hosting VMs that are
+> sensitive to downtime.  In projects such as VMM Fast Restart[1], where
+> guest state is preserved across kexec reboot, it helps prevent
+> application and network timeouts in the guests.
+>
+> Multithread to take full advantage of system memory bandwidth.
+>
+> The maximum number of threads is capped at the number of CPUs on the
+> node because speedups always improve with additional threads on every
+> system tested, and at this phase of boot, the system is otherwise idle
+> and waiting on page init to finish.
+>
+> Helper threads operate on section-aligned ranges to both avoid false
+> sharing when setting the pageblock's migrate type and to avoid accessing
+> uninitialized buddy pages, though max order alignment is enough for the
+> latter.
+>
+> The minimum chunk size is also a section.  There was benefit to using
+> multiple threads even on relatively small memory (1G) systems, and this
+> is the smallest size that the alignment allows.
+>
+> The time (milliseconds) is the slowest node to initialize since boot
+> blocks until all nodes finish.  intel_pstate is loaded in active mode
+> without hwp and with turbo enabled, and intel_idle is active as well.
+>
+>     Intel(R) Xeon(R) Platinum 8167M CPU @ 2.00GHz (Skylake, bare metal)
+>       2 nodes * 26 cores * 2 threads = 104 CPUs
+>       384G/node = 768G memory
+>
+>                    kernel boot                 deferred init
+>                    ------------------------    ------------------------
+>     node% (thr)    speedup  time_ms (stdev)    speedup  time_ms (stdev)
+>           (  0)         --   4089.7 (  8.1)         --   1785.7 (  7.6)
+>        2% (  1)       1.7%   4019.3 (  1.5)       3.8%   1717.7 ( 11.8)
+>       12% (  6)      34.9%   2662.7 (  2.9)      79.9%    359.3 (  0.6)
+>       25% ( 13)      39.9%   2459.0 (  3.6)      91.2%    157.0 (  0.0)
+>       37% ( 19)      39.2%   2485.0 ( 29.7)      90.4%    172.0 ( 28.6)
+>       50% ( 26)      39.3%   2482.7 ( 25.7)      90.3%    173.7 ( 30.0)
+>       75% ( 39)      39.0%   2495.7 (  5.5)      89.4%    190.0 (  1.0)
+>      100% ( 52)      40.2%   2443.7 (  3.8)      92.3%    138.0 (  1.0)
+>
+>     Intel(R) Xeon(R) CPU E5-2699C v4 @ 2.20GHz (Broadwell, kvm guest)
+>       1 node * 16 cores * 2 threads = 32 CPUs
+>       192G/node = 192G memory
+>
+>                    kernel boot                 deferred init
+>                    ------------------------    ------------------------
+>     node% (thr)    speedup  time_ms (stdev)    speedup  time_ms (stdev)
+>           (  0)         --   1988.7 (  9.6)         --   1096.0 ( 11.5)
+>        3% (  1)       1.1%   1967.0 ( 17.6)       0.3%   1092.7 ( 11.0)
+>       12% (  4)      41.1%   1170.3 ( 14.2)      73.8%    287.0 (  3.6)
+>       25% (  8)      47.1%   1052.7 ( 21.9)      83.9%    177.0 ( 13.5)
+>       38% ( 12)      48.9%   1016.3 ( 12.1)      86.8%    144.7 (  1.5)
+>       50% ( 16)      48.9%   1015.7 (  8.1)      87.8%    134.0 (  4.4)
+>       75% ( 24)      49.1%   1012.3 (  3.1)      88.1%    130.3 (  2.3)
+>      100% ( 32)      49.5%   1004.0 (  5.3)      88.5%    125.7 (  2.1)
+>
+>     Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz (Haswell, bare metal)
+>       2 nodes * 18 cores * 2 threads = 72 CPUs
+>       128G/node = 256G memory
+>
+>                    kernel boot                 deferred init
+>                    ------------------------    ------------------------
+>     node% (thr)    speedup  time_ms (stdev)    speedup  time_ms (stdev)
+>           (  0)         --   1680.0 (  4.6)         --    627.0 (  4.0)
+>        3% (  1)       0.3%   1675.7 (  4.5)      -0.2%    628.0 (  3.6)
+>       11% (  4)      25.6%   1250.7 (  2.1)      67.9%    201.0 (  0.0)
+>       25% (  9)      30.7%   1164.0 ( 17.3)      81.8%    114.3 ( 17.7)
+>       36% ( 13)      31.4%   1152.7 ( 10.8)      84.0%    100.3 ( 17.9)
+>       50% ( 18)      31.5%   1150.7 (  9.3)      83.9%    101.0 ( 14.1)
+>       75% ( 27)      31.7%   1148.0 (  5.6)      84.5%     97.3 (  6.4)
+>      100% ( 36)      32.0%   1142.3 (  4.0)      85.6%     90.0 (  1.0)
+>
+>     AMD EPYC 7551 32-Core Processor (Zen, kvm guest)
+>       1 node * 8 cores * 2 threads = 16 CPUs
+>       64G/node = 64G memory
+>
+>                    kernel boot                 deferred init
+>                    ------------------------    ------------------------
+>     node% (thr)    speedup  time_ms (stdev)    speedup  time_ms (stdev)
+>           (  0)         --   1029.3 ( 25.1)         --    240.7 (  1.5)
+>        6% (  1)      -0.6%   1036.0 (  7.8)      -2.2%    246.0 (  0.0)
+>       12% (  2)      11.8%    907.7 (  8.6)      44.7%    133.0 (  1.0)
+>       25% (  4)      13.9%    886.0 ( 10.6)      62.6%     90.0 (  6.0)
+>       38% (  6)      17.8%    845.7 ( 14.2)      69.1%     74.3 (  3.8)
+>       50% (  8)      16.8%    856.0 ( 22.1)      72.9%     65.3 (  5.7)
+>       75% ( 12)      15.4%    871.0 ( 29.2)      79.8%     48.7 (  7.4)
+>      100% ( 16)      21.0%    813.7 ( 21.0)      80.5%     47.0 (  5.2)
+>
+> Server-oriented distros that enable deferred page init sometimes run in
+> small VMs, and they still benefit even though the fraction of boot time
+> saved is smaller:
+>
+>     AMD EPYC 7551 32-Core Processor (Zen, kvm guest)
+>       1 node * 2 cores * 2 threads = 4 CPUs
+>       16G/node = 16G memory
+>
+>                    kernel boot                 deferred init
+>                    ------------------------    ------------------------
+>     node% (thr)    speedup  time_ms (stdev)    speedup  time_ms (stdev)
+>           (  0)         --    716.0 ( 14.0)         --     49.7 (  0.6)
+>       25% (  1)       1.8%    703.0 (  5.3)      -4.0%     51.7 (  0.6)
+>       50% (  2)       1.6%    704.7 (  1.2)      43.0%     28.3 (  0.6)
+>       75% (  3)       2.7%    696.7 ( 13.1)      49.7%     25.0 (  0.0)
+>      100% (  4)       4.1%    687.0 ( 10.4)      55.7%     22.0 (  0.0)
+>
+>     Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz (Haswell, kvm guest)
+>       1 node * 2 cores * 2 threads = 4 CPUs
+>       14G/node = 14G memory
+>
+>                    kernel boot                 deferred init
+>                    ------------------------    ------------------------
+>     node% (thr)    speedup  time_ms (stdev)    speedup  time_ms (stdev)
+>           (  0)         --    787.7 (  6.4)         --    122.3 (  0.6)
+>       25% (  1)       0.2%    786.3 ( 10.8)      -2.5%    125.3 (  2.1)
+>       50% (  2)       5.9%    741.0 ( 13.9)      37.6%     76.3 ( 19.7)
+>       75% (  3)       8.3%    722.0 ( 19.0)      49.9%     61.3 (  3.2)
+>      100% (  4)       9.3%    714.7 (  9.5)      56.4%     53.3 (  1.5)
+>
+> On Josh's 96-CPU and 192G memory system:
+>
+>     Without this patch series:
+>     [    0.487132] node 0 initialised, 23398907 pages in 292ms
+>     [    0.499132] node 1 initialised, 24189223 pages in 304ms
+>     ...
+>     [    0.629376] Run /sbin/init as init process
+>
+>     With this patch series:
+>     [    0.231435] node 1 initialised, 24189223 pages in 32ms
+>     [    0.236718] node 0 initialised, 23398907 pages in 36ms
+>
+> [1] https://static.sched.com/hosted_files/kvmforum2019/66/VMM-fast-restart_kvmforum2019.pdf
+>
+> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Tested-by: Josh Triplett <josh@joshtriplett.org>
+> ---
+>  mm/Kconfig      |  6 +++---
+>  mm/page_alloc.c | 46 ++++++++++++++++++++++++++++++++++++++++------
+>  2 files changed, 43 insertions(+), 9 deletions(-)
+>
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index c1acc34c1c358..04c1da3f9f44c 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -750,13 +750,13 @@ config DEFERRED_STRUCT_PAGE_INIT
+>         depends on SPARSEMEM
+>         depends on !NEED_PER_CPU_KM
+>         depends on 64BIT
+> +       select PADATA
+>         help
+>           Ordinarily all struct pages are initialised during early boot in a
+>           single thread. On very large machines this can take a considerable
+>           amount of time. If this option is set, large machines will bring up
+> -         a subset of memmap at boot and then initialise the rest in parallel
+> -         by starting one-off "pgdatinitX" kernel thread for each node X. This
+> -         has a potential performance impact on processes running early in the
+> +         a subset of memmap at boot and then initialise the rest in parallel.
+> +         This has a potential performance impact on tasks running early in the
+>           lifetime of the system until these kthreads finish the
+>           initialisation.
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d64f3027fdfa6..1d47016849531 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -68,6 +68,7 @@
+>  #include <linux/lockdep.h>
+>  #include <linux/nmi.h>
+>  #include <linux/psi.h>
+> +#include <linux/padata.h>
+>
+>  #include <asm/sections.h>
+>  #include <asm/tlbflush.h>
+> @@ -1814,6 +1815,26 @@ deferred_init_maxorder(u64 *i, struct zone *zone, unsigned long *start_pfn,
+>         return nr_pages;
+>  }
+>
+> +static void __init
+> +deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
+> +                          void *arg)
+> +{
+> +       unsigned long spfn, epfn;
+> +       struct zone *zone = arg;
+> +       u64 i;
+> +
+> +       deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn, start_pfn);
+> +
+> +       /*
+> +        * Initialize and free pages in MAX_ORDER sized increments so that we
+> +        * can avoid introducing any issues with the buddy allocator.
+> +        */
+> +       while (spfn < end_pfn) {
+> +               deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +               cond_resched();
+> +       }
+> +}
+> +
+>  /* Initialise remaining memory on a node */
+>  static int __init deferred_init_memmap(void *data)
+>  {
+> @@ -1823,7 +1844,7 @@ static int __init deferred_init_memmap(void *data)
+>         unsigned long first_init_pfn, flags;
+>         unsigned long start = jiffies;
+>         struct zone *zone;
+> -       int zid;
+> +       int zid, max_threads;
+>         u64 i;
+>
+>         /* Bind memory initialisation thread to a local node if possible */
+> @@ -1863,13 +1884,26 @@ static int __init deferred_init_memmap(void *data)
+>                 goto zone_empty;
+>
+>         /*
+> -        * Initialize and free pages in MAX_ORDER sized increments so
+> -        * that we can avoid introducing any issues with the buddy
+> -        * allocator.
+> +        * More CPUs always led to greater speedups on tested systems, up to
+> +        * all the nodes' CPUs.  Use all since the system is otherwise idle now.
+>          */
+> +       max_threads = max(cpumask_weight(cpumask), 1u);
+> +
+>         while (spfn < epfn) {
+> -               deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> -               cond_resched();
+> +               unsigned long epfn_align = ALIGN(epfn, PAGES_PER_SECTION);
+> +               struct padata_mt_job job = {
+> +                       .thread_fn   = deferred_init_memmap_chunk,
+> +                       .fn_arg      = zone,
+> +                       .start       = spfn,
+> +                       .size        = epfn_align - spfn,
+> +                       .align       = PAGES_PER_SECTION,
+> +                       .min_chunk   = PAGES_PER_SECTION,
+> +                       .max_threads = max_threads,
+> +               };
+> +
+> +               padata_do_multithreaded(&job);
+> +               deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
+> +                                                   epfn_align);
+>         }
+>  zone_empty:
+>         /* Sanity check that the next zone really is unpopulated */
 
-Right, when guest stays in the guest mode, there is no overhead. But
-guests still exit sometimes and I was wondering if anybody had measured
-difference in the overhead with different page size used for the host's
-direct map. 
+So I am not a huge fan of using deferred_init_mem_pfn_range_in zone
+simply for the fact that we end up essentially discarding the i value
+and will have to walk the list repeatedly. However I don't think the
+overhead will be that great as I suspect there aren't going to be
+systems with that many ranges. So this is probably fine.
 
-My guesstimate is that the overhead will not differ much for most
-workloads. But still, it's still interesting to *know* what is it.
-
-> That's especially good news because it means that even if the
-> situation
-> isn't perfect, it's only bound to get *better* over time, not worse.
-
-The processors have been aggressively improving performance for decades
-and see where are we know because of it ;-)
-
--- 
-Sincerely yours,
-Mike.
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
