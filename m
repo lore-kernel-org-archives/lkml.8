@@ -2,85 +2,128 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E464C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B055020888
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590580093;
-	bh=QV9YmA6SLCzz+5if2UqnhgkHN5mAKCnPWg4ZiKOEg/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wPWUaS2CD5IvhvRfsEpqbJyxk7C8xCSz0/ZPXngHkgoEdkMm4buFAfBSlABDwaVDb
-	 DPy5CGkZX3IC4/yQugJadyOAJuRCyMFUAp3NaRBX39Wi5sHPfS7g8I4pm0kBSR898i
-	 2EiYjc+AFSygs0Y6hCZ5Y3DPvc7NJoMQUHBNxFKI=
+	by mail.kernel.org (Postfix) with ESMTP id 116A320888
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="idCOZA7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgE0LsN (ORCPT
+        id S1728125AbgE0LtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:48:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgE0LsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:48:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B4220873;
-        Wed, 27 May 2020 11:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590580091;
-        bh=QV9YmA6SLCzz+5if2UqnhgkHN5mAKCnPWg4ZiKOEg/Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zXCBCW6qIcmZ4Y2iFDXDiZF/+H9GK4B2LTJlVTupGlzKmpniLBXlP3UiSPNzkh6MG
-         aFdXQOL73lGYFhYcFUYvqhgdHCMJ6x9cdI6/bPLvzSOIEiMwuQ0UKldTe/9C824LgV
-         pkBX++0+HlwRf3kp988OaJ6czzajUPlAycy04V/Y=
-Date:   Wed, 27 May 2020 13:48:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chris Paterson <Chris.Paterson2@renesas.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 00/81] 4.19.125-rc1 review
-Message-ID: <20200527114808.GA385991@kroah.com>
-References: <20200526183923.108515292@linuxfoundation.org>
- <OSAPR01MB238593B39F13AA0669A5CD11B7B10@OSAPR01MB2385.jpnprd01.prod.outlook.com>
+        Wed, 27 May 2020 07:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgE0LtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:49:09 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD0CC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:49:09 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id a14so23655827ilk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=P8PTwzFzeBrMUylfPlK6w5QdgJqQqN0ShMTZV+S777s=;
+        b=idCOZA7Jer7/khj6oT5n+RXA3MUeC4xabBa2DnpNqo4bRw4q5FfizSKagPdtLXaGt2
+         +cLFBmH6D73ncH5MHDbLo7dLii+KP9GYujT8xVp+8Qtf+Q+43pOg1Kpk5JlqGNGFFOK3
+         Or8Ok8yZ5v53V2VrvqfyG3Zvf9UlXR7742SY0ob9QdAZ6WAvxD6qJQ4sgwlRrL5wM+Gk
+         WrbeD47V5MtrNgv1E0hgvh0Bo6zbre9MXmdv8fPgr3I+v/D3R0Un0MmKj+nw73OgONnv
+         uOhkecfpiu8P+4anG7oFMWDnDG9C3C0Ccod44fhP+jaMXsL9zDvmvftECD8HlNht6Gr2
+         V7UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=P8PTwzFzeBrMUylfPlK6w5QdgJqQqN0ShMTZV+S777s=;
+        b=m0n+GnEUd0jbUeqaNEmVSPq8TLOFjIRYNo33SAfW085roxTfpG7i1zj4M+tyLchhj1
+         9saqc+16WC8s/Ph1VuzlJgWsP2tBjkUl+fo7CgD2u0S3OhHgdp06ltmLHUqlse/RT2Dt
+         JRE0kampkWIufYL2wbV8AWGy0ntmH3F5nj6niE/BJIt79eXoQ2OkKwu3utFq+eg+NR5g
+         tQoQY7TfNobRyGFMvVHzpAq0fgvw4LTXC7KXQ0bOxqqtg7/xMOwxF4NqwIrUiX5yK6WD
+         TNYx6iWd0JhD92mAP4a89msfEbu1QAc/swmcwSa6gAFQXDRY4W0vHytyWQNlNvGsF5ZE
+         wYWA==
+X-Gm-Message-State: AOAM531FcgJ+7hWSs56p++SpfRxLKGBJa11xDZzFqIBQtB3hierfcrss
+        MxIXlzTFhhHeouUdSeHQMJY79t/1A+4D9q+/FWZRLg==
+X-Google-Smtp-Source: ABdhPJzOr8AK3ftkfELinUKS0OcMPJwZ5irSDBy6AtSymxKhk9eJ8/5fPkT1KSwP9yyzC0KfwMBGAIvKmGDKk2XSqvw=
+X-Received: by 2002:a92:de10:: with SMTP id x16mr2425173ilm.6.1590580148751;
+ Wed, 27 May 2020 04:49:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSAPR01MB238593B39F13AA0669A5CD11B7B10@OSAPR01MB2385.jpnprd01.prod.outlook.com>
+References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
+ <20200527073150.GA3384158@ubuntu-s3-xlarge-x86> <CAMRc=MevVsYZFDQif+8Zyv41sSkbS8XqWbKGdCvHooneXz88hg@mail.gmail.com>
+ <CAK8P3a3WXGZpeX0E8Kyuo5Rkv5acdkZN6_HNS61Y1=Jh+G+pRQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3WXGZpeX0E8Kyuo5Rkv5acdkZN6_HNS61Y1=Jh+G+pRQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 27 May 2020 13:48:57 +0200
+Message-ID: <CAMRc=Md1w_6+dU9gCwiiB5R+dMcYMPFLPrA++RBkKp5zaY6Riw@mail.gmail.com>
+Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:29:00AM +0000, Chris Paterson wrote:
-> Good morning Greg,
-> 
-> > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> > Behalf Of Greg Kroah-Hartman
-> > 
-> > This is the start of the stable review cycle for the 4.19.125 release.
-> > There are 81 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> 
-> No build/boot issues seen for CIP configs for Linux 4.19.125-rc1 (59438eb2aa12).
-> 
-> Build/test pipeline/logs: https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/pipelines/149870026
-> GitLab CI pipeline: https://gitlab.com/cip-project/cip-testing/linux-cip-pipelines/-/blob/master/trees/linux-4.19.y.yml
-> Relevant LAVA jobs: https://lava.ciplatform.org/scheduler/alljobs?length=25&search=59438e#table
+=C5=9Br., 27 maj 2020 o 13:33 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a)=
+:
+>
+> On Wed, May 27, 2020 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+>
+> > > I don't know if there should be a new label that excludes that
+> > > assignment for those particular gotos or if new_dma_addr should
+> > > be initialized to something at the top. Please take a look at
+> > > addressing this when you get a chance.
+> > >
+> > > Cheers,
+> > > Nathan
+> >
+> > Hi Nathan,
+> >
+> > Thanks for reporting this! I have a fix ready and will send it shortly.
+>
+> I already have a workaround for this bug as well as another one
+> in my tree that I'll send later today after some more testing.
+>
+> Feel free to wait for that, or just ignore mine if you already have a fix=
+.
+>
+>        Arnd
 
-Great, thanks for testing two of these and letting me know.
+Hi Arnd!
 
-greg k-h
+I already posted a fix[1]. Sorry for omitting you, but somehow your
+name didn't pop up in get_maintainers.pl.
+
+Bartosz
+
+[1] https://lkml.org/lkml/2020/5/27/378
