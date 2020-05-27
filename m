@@ -2,168 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48125C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 278C72078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9A0207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590587267;
+	bh=qYSYXseydU1Jl/FMCMZsu00a3c88OPa9IaYxEBjkW44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZX1gChCYK/t8UXegUya3vGeH6LQhUeQxLxS7RIORTUVP+wWL84UD/JAOzk+8tPvKR
+	 c/ev76MKIGfd3/G2tdj7PEfpwkhdw9q1RsLHe9wW4oF7xBVhcFiU/6TIoKtJZHpv5L
+	 TeIHr+CnayPPVD3ScJ48ZU7BNA2CbIjUrv/UIG7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388722AbgE0Nrh (ORCPT
+        id S2388731AbgE0Nrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:47:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:36665 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388082AbgE0Nrf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:47:35 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N0nzR-1iqnfB1yGD-00wljD; Wed, 27 May 2020 15:47:20 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vitaly Lifshits <vitaly.lifshits@intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Sasha Neftin <sasha.neftin@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Detlev Casanova <detlev.casanova@gmail.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] [net-next] e1000e: fix unused-function warning
-Date:   Wed, 27 May 2020 15:47:00 +0200
-Message-Id: <20200527134716.948148-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388082AbgE0Nrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:47:46 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92C882078C;
+        Wed, 27 May 2020 13:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590587266;
+        bh=qYSYXseydU1Jl/FMCMZsu00a3c88OPa9IaYxEBjkW44=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eyo9QQOpWhRfR0asYM+i5Txt1or/d7KRnBjpggOx5OgZH0GO2KTu0oxSC6GNNHFp/
+         qrKuUj/lWKiq7FUDDHXBkQydTuSyv0FC+3lN5K+UDDtG7V+hR/uu5gMjRVUXOUSfnE
+         0aR0jbD0hH0UVzXytvukYJs/6JRmGJZHb+N4Y4x4=
+Date:   Wed, 27 May 2020 14:47:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: amd: rt5682: fix soundwire dependencies
+Message-ID: <20200527134743.GH5308@sirena.org.uk>
+References: <20200527134151.834555-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:U0mKtKTjWJcCkHiwKPi9Mh65377Hpmc77oEjPdqAFTu1tfJI3j5
- tQ6qhoFQt3VrltJF1OQAZvSCEi5jiXDLXneeEtt2tYoGulYW/CDGQtb89g2bHJUJ/w1LAik
- vIs2GxtV6aTDuWMBLBgIGK5xEW1J7i/jAm9wYXcKSEyCbp7nrbd8Rty5jSQY+5hArziNzw3
- jy7nL7AY5luwKFm7YGBUA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fVIXS7/sr1M=:7+CEaDh/RQcJZ9+oHHDRCA
- jGgnId2Eh18Nx4Vc2d9p2ntA3gVJoJC13L9xRw+3ALBvTKDImWYcrAvVM2skxYOUcmBIsk/15
- ykarw3foUHHsbo5uxQhoF2/FDKLf04cgrW7yVLTuKX6a1F7Qy6xEH9GL9W7wu3MPCxjo7wfqu
- 4i+RxGc+in1TayP2yisk1FswPj83O49YHoWV/XjbaqaxI76R47bKs6RYUQC0spixKJV3eDRkF
- UjKJRlHKhjY48Z6xvWggE2ckNMeE33kQBjsX/DbCW0tvFzeKfq6DrwxhEQzdLFdOnxry8MFlk
- D3hmE5yukdvkligEfgciGCgyYHINbBIL1WkAjok7DZFj5SiQFRcPIkJFKDeL0tsihQxvNiHJ8
- s1hEhMHSdhA5MQanrvjhcKGL5fb5nyqCUs6HICiQtlDTLBUImIApNtoPl7Ai6uP7ESBkoFvHb
- YScFHKzepRUhzSa7E7wIijOk2OCqFHKEQBWchcP5tpdsAaLb0X/Jx4bwglGBRKsi2jYHGDd00
- 0ypJAuKP+cjgSdbVBa78G7FFgYgj68X2GQojBh5yZZVjtA5d8dR6Ko8g0wbeSa7IWKT109FJ1
- mhG9xQsenBnIVzqqVV8MQutz50mCLvuH4HLCKQppguZg7un/uMCSdZB/m9gCUEwOXjqxxsPwa
- 9CiQAzzIZ/397cEH5q4bNOg+KIQ1ZR+kQACyN/ggykcUqN0bnGuIHxki8G6g15FAWLOlGRPbb
- j31v+NBus5GeRoBJ39ulocxn9VMzJBqaJND9StWQVB1fRSje3AcQ/+IejDuvREnOVJBbZAwEm
- ZUJIw+8x5FMAZQV+3MLJqTbcK0D1h04UY+JPHp3K4ZP9p0htwU=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nFBW6CQlri5Qm8JQ"
+Content-Disposition: inline
+In-Reply-To: <20200527134151.834555-1-arnd@arndb.de>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CONFIG_PM_SLEEP #ifdef checks in this file are inconsistent,
-leading to a warning about sometimes unused function:
 
-drivers/net/ethernet/intel/e1000e/netdev.c:137:13: error: unused function 'e1000e_check_me' [-Werror,-Wunused-function]
+--nFBW6CQlri5Qm8JQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rather than adding more #ifdefs, just remove them completely
-and mark the PM functions as __maybe_unused to let the compiler
-work it out on it own.
+On Wed, May 27, 2020 at 03:41:26PM +0200, Arnd Bergmann wrote:
 
-Fixes: e086ba2fccda ("e1000e: disable s0ix entry and exit flows for ME systems")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/intel/e1000e/netdev.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+> Maybe the SND_SOC_RT5682 driver itself can be reworked so that
+> the common part depends on neither soundwire nor i2c and the two
+> bus specific options can be loadable modules when the common part
+> is built-in.
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 9cc8ec5421d5..66ca083b95f9 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -6351,7 +6351,6 @@ static void e1000e_flush_lpic(struct pci_dev *pdev)
- 	pm_runtime_put_sync(netdev->dev.parent);
- }
- 
--#ifdef CONFIG_PM_SLEEP
- /* S0ix implementation */
- static void e1000e_s0ix_entry_flow(struct e1000_adapter *adapter)
- {
-@@ -6573,7 +6572,6 @@ static void e1000e_s0ix_exit_flow(struct e1000_adapter *adapter)
- 	mac_data &= ~E1000_CTRL_EXT_FORCE_SMBUS;
- 	ew32(CTRL_EXT, mac_data);
- }
--#endif /* CONFIG_PM_SLEEP */
- 
- static int e1000e_pm_freeze(struct device *dev)
- {
-@@ -6871,7 +6869,6 @@ static int e1000e_pm_thaw(struct device *dev)
- 	return rc;
- }
- 
--#ifdef CONFIG_PM
- static int __e1000_resume(struct pci_dev *pdev)
- {
- 	struct net_device *netdev = pci_get_drvdata(pdev);
-@@ -6937,8 +6934,7 @@ static int __e1000_resume(struct pci_dev *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int e1000e_pm_suspend(struct device *dev)
-+static __maybe_unused int e1000e_pm_suspend(struct device *dev)
- {
- 	struct net_device *netdev = pci_get_drvdata(to_pci_dev(dev));
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
-@@ -6962,7 +6958,7 @@ static int e1000e_pm_suspend(struct device *dev)
- 	return rc;
- }
- 
--static int e1000e_pm_resume(struct device *dev)
-+static __maybe_unused int e1000e_pm_resume(struct device *dev)
- {
- 	struct net_device *netdev = pci_get_drvdata(to_pci_dev(dev));
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
-@@ -6981,9 +6977,8 @@ static int e1000e_pm_resume(struct device *dev)
- 
- 	return e1000e_pm_thaw(dev);
- }
--#endif /* CONFIG_PM_SLEEP */
- 
--static int e1000e_pm_runtime_idle(struct device *dev)
-+static __maybe_unused int e1000e_pm_runtime_idle(struct device *dev)
- {
- 	struct net_device *netdev = dev_get_drvdata(dev);
- 	struct e1000_adapter *adapter = netdev_priv(netdev);
-@@ -6999,7 +6994,7 @@ static int e1000e_pm_runtime_idle(struct device *dev)
- 	return -EBUSY;
- }
- 
--static int e1000e_pm_runtime_resume(struct device *dev)
-+static __maybe_unused int e1000e_pm_runtime_resume(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct net_device *netdev = pci_get_drvdata(pdev);
-@@ -7016,7 +7011,7 @@ static int e1000e_pm_runtime_resume(struct device *dev)
- 	return rc;
- }
- 
--static int e1000e_pm_runtime_suspend(struct device *dev)
-+static __maybe_unused int e1000e_pm_runtime_suspend(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct net_device *netdev = pci_get_drvdata(pdev);
-@@ -7041,7 +7036,6 @@ static int e1000e_pm_runtime_suspend(struct device *dev)
- 
- 	return 0;
- }
--#endif /* CONFIG_PM */
- 
- static void e1000_shutdown(struct pci_dev *pdev)
- {
--- 
-2.26.2
+Yes, please do that.
 
+--nFBW6CQlri5Qm8JQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Ob34ACgkQJNaLcl1U
+h9Au/Af/ToAlo8MIFiY0pB1HedOb/UPzvkcA2KB3IzxEpvf6D/CM9anQAjdbDqYv
+RdpDzNNKLxv5msIIMdK2k+T0kRTIaYwCNcqj2n3N3QQrqB2EkneZ8++/J14Sydkc
+cZSRseQFFvGOcXkzQE9IKwTUp9b4pkwZ1DlUS+ZUcHtrQIp7EsqK1ji8mtRCzAM1
+sK+MNyknZ+mnPgHHEYkjWq1v8lJCID+RQ2HqLZmAiaGbtfb+xM4+GRrQuFPfM1Wq
+P6PuCDeIWw0ypRcY702tt2KEoYw7ztu0jER0jpkunDYOybDBStZfOG42+lbsgB94
+IsODB/lf4WgAsdbGTa+RT0EZs9NfaQ==
+=oGtp
+-----END PGP SIGNATURE-----
+
+--nFBW6CQlri5Qm8JQ--
