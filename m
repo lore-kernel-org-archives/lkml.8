@@ -2,192 +2,357 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B59C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B749C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 287BA21531
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+OBuTNL"
+	by mail.kernel.org (Postfix) with ESMTP id 3F19D216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387972AbgE0INr (ORCPT
+        id S1729469AbgE0ILx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42532 "EHLO
+        Wed, 27 May 2020 04:11:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387948AbgE0INn (ORCPT
+        with ESMTP id S1729424AbgE0ILs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:13:43 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BE0C061A0F;
-        Wed, 27 May 2020 01:13:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id u5so11443345pgn.5;
-        Wed, 27 May 2020 01:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1Pvjwk/n6XpSKsFU1yL/UyqSsSwArACV6a9IFuCvWoI=;
-        b=g+OBuTNL+ZECp7gRenSfzoC/L0SIFQs2wUNgQ5XneQ49ve7MCXLFqHyaI1J9HP8hFF
-         xZFvHdBiADmGYGqBL80SR5GtgLTUbXo9d3UfqDFFj0SLN/B5WFfGMlNyWLAR+tVbvYCz
-         C4EDVhl4IEpe78El/g9Nz+dJDWkO/ABrWAn818mbecK+TzsU4h/qWOTh9KLV22jXIyGm
-         SrUEFGzeyILWXpcIFBAIOJnIMer+3w8CniZCi5TVTCW1nLLYmDQxBwulWUNK49ca4BOt
-         f5OAT0gMgdznpvyOENVsocczF2HFLHy6Oq37nWMHgKTV2N1Nl/lqod7kwe1GiYzM7JwH
-         lhVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1Pvjwk/n6XpSKsFU1yL/UyqSsSwArACV6a9IFuCvWoI=;
-        b=CXUBJSGpWgJeJ6a8EpV59EnrPC/772tdAEk75UNmc1vfxW/0ZK0Qwo4Qfu2k1nngOV
-         +sx6mTU1n79x2TPPEU5EGsHWbMGhZP7kJ/W9fY7jxs5/c/qN6YrDKnaj3a34IEgUItqU
-         LCYVwXIEshq1zvXGjZ6pU7RibTlBpIXjMwag39PNpz8Yk+LlJkLpoSLLCdLIkFepoTzh
-         9JdXdDE3a0sT4DQg+cpOz4B/UOUSQ3/Pc8GIBlC4Uv4YP6nJciK4GdOaxzCsQFRJHJFW
-         05lH80oY2XWTdjuYYyN78+eikHB5Sbo43it7IS1u1t80n9K3mqAKkMovHCyXplhMIWk0
-         hGsg==
-X-Gm-Message-State: AOAM5319miEgfaEWyJ0lROWGS39riThwJl/qp+I5r/jpIQY1DsLqQ3rt
-        +MTtVba3WfQ8GIyjPAiSfa0=
-X-Google-Smtp-Source: ABdhPJzbLRuMmxwJUPY5sv1El/ZdSk39d9IjzJRaDZ9+OJbVht9mTOUgNcWeTP5sLyuANVdm7nAJ8g==
-X-Received: by 2002:a63:554e:: with SMTP id f14mr2850561pgm.191.1590567223153;
-        Wed, 27 May 2020 01:13:43 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id gz19sm1568851pjb.33.2020.05.27.01.13.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 01:13:42 -0700 (PDT)
-Date:   Wed, 27 May 2020 01:13:37 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Roman Zippel <zippel@linux-m68k.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        linux-riscv@lists.infradead.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-c6x-dev@linux-c6x.org,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>, Arnd Bergmann <arnd@arndb.de>,
-        alpha <linux-alpha@vger.kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] media: omap3isp: Shuffle cacheflush.h and include mm.h
-Message-ID: <20200527081337.GA3506499@ubuntu-s3-xlarge-x86>
-References: <20200515143646.3857579-7-hch@lst.de>
- <20200527043426.3242439-1-natechancellor@gmail.com>
- <CAMuHMdVSduTOi5bUgF9sLQdGADwyL1+qALWsKgin1TeOLGhAKQ@mail.gmail.com>
+        Wed, 27 May 2020 04:11:48 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56C9C061A0F;
+        Wed, 27 May 2020 01:11:48 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jdrAB-0002Ud-3W; Wed, 27 May 2020 10:11:47 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A27E01C00ED;
+        Wed, 27 May 2020 10:11:46 +0200 (CEST)
+Date:   Wed, 27 May 2020 08:11:46 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/entry: Remove the apic/BUILD interrupt leftovers
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200521202119.927433002@linutronix.de>
+References: <20200521202119.927433002@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVSduTOi5bUgF9sLQdGADwyL1+qALWsKgin1TeOLGhAKQ@mail.gmail.com>
+Message-ID: <159056710651.17951.10117822810854579691.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+The following commit has been merged into the x86/entry branch of tip:
 
-On Wed, May 27, 2020 at 09:02:51AM +0200, Geert Uytterhoeven wrote:
-> Hi Nathan,
-> 
-> CC Laurent
-> 
-> On Wed, May 27, 2020 at 6:37 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> > After mm.h was removed from the asm-generic version of cacheflush.h,
-> > s390 allyesconfig shows several warnings of the following nature:
-> >
-> > In file included from ./arch/s390/include/generated/asm/cacheflush.h:1,
-> >                  from drivers/media/platform/omap3isp/isp.c:42:
-> > ./include/asm-generic/cacheflush.h:16:42: warning: 'struct mm_struct'
-> > declared inside parameter list will not be visible outside of this
-> > definition or declaration
-> >
-> > cacheflush.h does not include mm.h nor does it include any forward
-> > declaration of these structures hence the warning. To avoid this,
-> > include mm.h explicitly in this file and shuffle cacheflush.h below it.
-> >
-> > Fixes: 19c0054597a0 ("asm-generic: don't include <linux/mm.h> in cacheflush.h")
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> 
-> Thanks for your patch!
-> 
-> > I am aware the fixes tag is kind of irrelevant because that SHA will
-> > change in the next linux-next revision and this will probably get folded
-> > into the original patch anyways but still.
-> >
-> > The other solution would be to add forward declarations of these structs
-> > to the top of cacheflush.h, I just chose to do what Christoph did in the
-> > original patch. I am happy to do that instead if you all feel that is
-> > better.
-> 
-> That actually looks like a better solution to me, as it would address the
-> problem for all users.
-> 
-> >  drivers/media/platform/omap3isp/isp.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-> > index a4ee6b86663e..54106a768e54 100644
-> > --- a/drivers/media/platform/omap3isp/isp.c
-> > +++ b/drivers/media/platform/omap3isp/isp.c
-> > @@ -39,8 +39,6 @@
-> >   *     Troy Laramy <t-laramy@ti.com>
-> >   */
-> >
-> > -#include <asm/cacheflush.h>
-> > -
-> >  #include <linux/clk.h>
-> >  #include <linux/clkdev.h>
-> >  #include <linux/delay.h>
-> > @@ -49,6 +47,7 @@
-> >  #include <linux/i2c.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/mfd/syscon.h>
-> > +#include <linux/mm.h>
-> >  #include <linux/module.h>
-> >  #include <linux/omap-iommu.h>
-> >  #include <linux/platform_device.h>
-> > @@ -58,6 +57,8 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/vmalloc.h>
-> >
-> > +#include <asm/cacheflush.h>
-> > +
-> >  #ifdef CONFIG_ARM_DMA_USE_IOMMU
-> >  #include <asm/dma-iommu.h>
-> >  #endif
-> 
-> Why does this file need <asm/cacheflush.h> at all?
-> It doesn't call any of the flush_*() functions, and seems to compile fine
-> without (on arm32).
-> 
-> Perhaps it was included at the top intentionally, to override the definitions
-> of copy_{to,from}_user_page()? Fortunately that doesn't seem to be the
-> case, from a quick look at the assembler output.
-> 
-> So let's just remove the #include instead?
+Commit-ID:     cdafb7e8e71cf6567ff26e42c4c9d8b88374a1cb
+Gitweb:        https://git.kernel.org/tip/cdafb7e8e71cf6567ff26e42c4c9d8b88374a1cb
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 21 May 2020 22:05:46 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 May 2020 19:06:29 +02:00
 
-Sounds good to me. I can send a patch if needed or I suppose Andrew can
-just make a small fixup patch for it. Let me know what I should do.
+x86/entry: Remove the apic/BUILD interrupt leftovers
 
-Cheers,
-Nathan
+Remove all the code which was there to emit the system vector stubs. All
+users are gone.
+
+Move the now unused GET_CR2_INTO macro muck to head_64.S where the last
+user is. Fixup the eye hurting comment there while at it.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lore.kernel.org/r/20200521202119.927433002@linutronix.de
+---
+ arch/x86/entry/calling.h          |  20 +----
+ arch/x86/entry/entry_32.S         |  18 +----
+ arch/x86/entry/entry_64.S         | 143 +-----------------------------
+ arch/x86/include/asm/entry_arch.h |  12 +--
+ arch/x86/kernel/head_64.S         |   7 +-
+ 5 files changed, 4 insertions(+), 196 deletions(-)
+ delete mode 100644 arch/x86/include/asm/entry_arch.h
+
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 98da0d3..4208c1e 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -351,23 +351,3 @@ For 32-bit we have the following conventions - kernel is built with
+ 	call stackleak_erase
+ #endif
+ .endm
+-
+-/*
+- * This does 'call enter_from_user_mode' unless we can avoid it based on
+- * kernel config or using the static jump infrastructure.
+- */
+-.macro CALL_enter_from_user_mode
+-#ifdef CONFIG_CONTEXT_TRACKING
+-#ifdef CONFIG_JUMP_LABEL
+-	STATIC_JUMP_IF_FALSE .Lafter_call_\@, context_tracking_key, def=0
+-#endif
+-	call enter_from_user_mode
+-.Lafter_call_\@:
+-#endif
+-.endm
+-
+-#ifdef CONFIG_PARAVIRT_XXL
+-#define GET_CR2_INTO(reg) GET_CR2_INTO_AX ; _ASM_MOV %_ASM_AX, reg
+-#else
+-#define GET_CR2_INTO(reg) _ASM_MOV %cr2, reg
+-#endif
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index e034b56..4a4f34b 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -1233,24 +1233,6 @@ SYM_FUNC_END(entry_INT80_32)
+ #endif
+ .endm
+ 
+-#define BUILD_INTERRUPT3(name, nr, fn)			\
+-SYM_FUNC_START(name)					\
+-	ASM_CLAC;					\
+-	pushl	$~(nr);					\
+-	SAVE_ALL switch_stacks=1;			\
+-	ENCODE_FRAME_POINTER;				\
+-	TRACE_IRQS_OFF					\
+-	movl	%esp, %eax;				\
+-	call	fn;					\
+-	jmp	ret_from_intr;				\
+-SYM_FUNC_END(name)
+-
+-#define BUILD_INTERRUPT(name, nr)		\
+-	BUILD_INTERRUPT3(name, nr, smp_##name);	\
+-
+-/* The include is where all of the SMP etc. interrupts come from */
+-#include <asm/entry_arch.h>
+-
+ #ifdef CONFIG_PARAVIRT
+ SYM_CODE_START(native_iret)
+ 	iret
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 9c0722e..389f97f 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -658,108 +658,7 @@ SYM_CODE_END(\asmsym)
+  */
+ #include <asm/idtentry.h>
+ 
+-/*
+- * Interrupt entry helper function.
+- *
+- * Entry runs with interrupts off. Stack layout at entry:
+- * +----------------------------------------------------+
+- * | regs->ss						|
+- * | regs->rsp						|
+- * | regs->eflags					|
+- * | regs->cs						|
+- * | regs->ip						|
+- * +----------------------------------------------------+
+- * | regs->orig_ax = ~(interrupt number)		|
+- * +----------------------------------------------------+
+- * | return address					|
+- * +----------------------------------------------------+
+- */
+-SYM_CODE_START(interrupt_entry)
+-	UNWIND_HINT_IRET_REGS offset=16
+-	ASM_CLAC
+-	cld
+-
+-	testb	$3, CS-ORIG_RAX+8(%rsp)
+-	jz	1f
+-	SWAPGS
+-	FENCE_SWAPGS_USER_ENTRY
+-	/*
+-	 * Switch to the thread stack. The IRET frame and orig_ax are
+-	 * on the stack, as well as the return address. RDI..R12 are
+-	 * not (yet) on the stack and space has not (yet) been
+-	 * allocated for them.
+-	 */
+-	pushq	%rdi
+-
+-	/* Need to switch before accessing the thread stack. */
+-	SWITCH_TO_KERNEL_CR3 scratch_reg=%rdi
+-	movq	%rsp, %rdi
+-	movq	PER_CPU_VAR(cpu_current_top_of_stack), %rsp
+-
+-	 /*
+-	  * We have RDI, return address, and orig_ax on the stack on
+-	  * top of the IRET frame. That means offset=24
+-	  */
+-	UNWIND_HINT_IRET_REGS base=%rdi offset=24
+-
+-	pushq	7*8(%rdi)		/* regs->ss */
+-	pushq	6*8(%rdi)		/* regs->rsp */
+-	pushq	5*8(%rdi)		/* regs->eflags */
+-	pushq	4*8(%rdi)		/* regs->cs */
+-	pushq	3*8(%rdi)		/* regs->ip */
+-	UNWIND_HINT_IRET_REGS
+-	pushq	2*8(%rdi)		/* regs->orig_ax */
+-	pushq	8(%rdi)			/* return address */
+-
+-	movq	(%rdi), %rdi
+-	jmp	2f
+-1:
+-	FENCE_SWAPGS_KERNEL_ENTRY
+-2:
+-	PUSH_AND_CLEAR_REGS save_ret=1
+-	ENCODE_FRAME_POINTER 8
+-
+-	testb	$3, CS+8(%rsp)
+-	jz	1f
+-
+-	/*
+-	 * IRQ from user mode.
+-	 *
+-	 * We need to tell lockdep that IRQs are off.  We can't do this until
+-	 * we fix gsbase, and we should do it before enter_from_user_mode
+-	 * (which can take locks).  Since TRACE_IRQS_OFF is idempotent,
+-	 * the simplest way to handle it is to just call it twice if
+-	 * we enter from user mode.  There's no reason to optimize this since
+-	 * TRACE_IRQS_OFF is a no-op if lockdep is off.
+-	 */
+-	TRACE_IRQS_OFF
+-
+-	CALL_enter_from_user_mode
+-
+-1:
+-	ENTER_IRQ_STACK old_rsp=%rdi save_ret=1
+-	/* We entered an interrupt context - irqs are off: */
+-	TRACE_IRQS_OFF
+-
+-	ret
+-SYM_CODE_END(interrupt_entry)
+-_ASM_NOKPROBE(interrupt_entry)
+-
+ SYM_CODE_START_LOCAL(common_interrupt_return)
+-ret_from_intr:
+-	DISABLE_INTERRUPTS(CLBR_ANY)
+-	TRACE_IRQS_OFF
+-
+-	LEAVE_IRQ_STACK
+-
+-	testb	$3, CS(%rsp)
+-	jz	retint_kernel
+-
+-	/* Interrupt came from user space */
+-.Lretint_user:
+-	mov	%rsp,%rdi
+-	call	prepare_exit_to_usermode
+-
+ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
+ 	/* Assert that pt_regs indicates user mode. */
+@@ -802,23 +701,6 @@ SYM_INNER_LABEL(swapgs_restore_regs_and_return_to_usermode, SYM_L_GLOBAL)
+ 	INTERRUPT_RETURN
+ 
+ 
+-/* Returning to kernel space */
+-retint_kernel:
+-#ifdef CONFIG_PREEMPTION
+-	/* Interrupts are off */
+-	/* Check if we need preemption */
+-	btl	$9, EFLAGS(%rsp)		/* were interrupts off? */
+-	jnc	1f
+-	cmpl	$0, PER_CPU_VAR(__preempt_count)
+-	jnz	1f
+-	call	preempt_schedule_irq
+-1:
+-#endif
+-	/*
+-	 * The iretq could re-enable interrupts:
+-	 */
+-	TRACE_IRQS_IRETQ
+-
+ SYM_INNER_LABEL(restore_regs_and_return_to_kernel, SYM_L_GLOBAL)
+ #ifdef CONFIG_DEBUG_ENTRY
+ 	/* Assert that pt_regs indicates kernel mode. */
+@@ -932,31 +814,6 @@ SYM_CODE_END(common_interrupt_return)
+ _ASM_NOKPROBE(common_interrupt_return)
+ 
+ /*
+- * APIC interrupts.
+- */
+-.macro apicinterrupt3 num sym do_sym
+-SYM_CODE_START(\sym)
+-	UNWIND_HINT_IRET_REGS
+-	pushq	$~(\num)
+-	call	interrupt_entry
+-	UNWIND_HINT_REGS indirect=1
+-	call	\do_sym	/* rdi points to pt_regs */
+-	jmp	ret_from_intr
+-SYM_CODE_END(\sym)
+-_ASM_NOKPROBE(\sym)
+-.endm
+-
+-/* Make sure APIC interrupt handlers end up in the irqentry section: */
+-#define PUSH_SECTION_IRQENTRY	.pushsection .irqentry.text, "ax"
+-#define POP_SECTION_IRQENTRY	.popsection
+-
+-.macro apicinterrupt num sym do_sym
+-PUSH_SECTION_IRQENTRY
+-apicinterrupt3 \num \sym \do_sym
+-POP_SECTION_IRQENTRY
+-.endm
+-
+-/*
+  * Reload gs selector with exception handling
+  * edi:  new selector
+  *
+diff --git a/arch/x86/include/asm/entry_arch.h b/arch/x86/include/asm/entry_arch.h
+deleted file mode 100644
+index 3e841ed..0000000
+--- a/arch/x86/include/asm/entry_arch.h
++++ /dev/null
+@@ -1,12 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * This file is designed to contain the BUILD_INTERRUPT specifications for
+- * all of the extra named interrupt vectors used by the architecture.
+- * Usually this is the Inter Process Interrupts (IPIs)
+- */
+-
+-/*
+- * The following vectors are part of the Linux architecture, there
+- * is no hardware IRQ pin equivalent for them, they are triggered
+- * through the ICC by us (IPIs)
+- */
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 4bbc770..5ad0217 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -29,15 +29,16 @@
+ #ifdef CONFIG_PARAVIRT_XXL
+ #include <asm/asm-offsets.h>
+ #include <asm/paravirt.h>
++#define GET_CR2_INTO(reg) GET_CR2_INTO_AX ; _ASM_MOV %_ASM_AX, reg
+ #else
+ #define INTERRUPT_RETURN iretq
++#define GET_CR2_INTO(reg) _ASM_MOV %cr2, reg
+ #endif
+ 
+-/* we are not able to switch in one step to the final KERNEL ADDRESS SPACE
++/*
++ * We are not able to switch in one step to the final KERNEL ADDRESS SPACE
+  * because we need identity-mapped pages.
+- *
+  */
+-
+ #define l4_index(x)	(((x) >> 39) & 511)
+ #define pud_index(x)	(((x) >> PUD_SHIFT) & (PTRS_PER_PUD-1))
+ 
