@@ -2,121 +2,185 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 476FFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 257F92088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DB920787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DOPnF2Ut"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mu8S9a3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgE0Q5m (ORCPT
+        id S2390081AbgE0Q6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39394 "EHLO
+        Wed, 27 May 2020 12:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgE0Q5m (ORCPT
+        with ESMTP id S2387954AbgE0Q6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:57:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AF7AC03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:57:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 5so1740248pjd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:57:42 -0700 (PDT)
+        Wed, 27 May 2020 12:58:03 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C62CC03E97D;
+        Wed, 27 May 2020 09:58:03 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id n15so12081036pfd.0;
+        Wed, 27 May 2020 09:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=DWPRa3kcV7dHK3sr3IH2Glel3aMfKYoMnIduKqYeTNo=;
-        b=DOPnF2Ut7cEJ7K2Xb6Y2Hq4IuCooIbhfWPKf+5i+gas4rdLOhy10q+Pogvx8rAtXOk
-         alWAH5LdFykoexEfG0SZYyJkILeAkNuJAB/duRacHeHIzoFLkckdsksSNgbCYHwnPB/m
-         v5y7siWrfi4mcTKLakMGlDHY5NQjySa22V3Jg=
+        bh=vEZ5Sil7dAFPcsB6vg5ELG1EVw5OWJYqnN8faDzvGTM=;
+        b=mu8S9a3aG4qnaDjuWDUj+TNOFNtnHmw30/IMMDISHFBftI8Aanb/po//yzzITc6Xb3
+         fTCbRGOtT25lYE7F2qb00A89DuG6L8MC2usOvPvk4Zh0c1Kl9sD34M/zOzcyUqktgJ9g
+         ZDa3HKemQ8DVHfeLVnLgf64Lxiw90AQBsLrkxwLVNHg4dGAyhyK3icZvs2mx9/ESEgX7
+         Uo4x+L/acxnDcDgciSHH8EWHmsB5JRMtDEf+b3EFMlDnTjEZjKqfbQ/jBwrErL3y28rL
+         +didquQxXpR3tCBd0m/DF+uVn8wSheV70BsAv6qtGzGgWHoH+66Orkbp5R5TqSxtahbo
+         aUqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DWPRa3kcV7dHK3sr3IH2Glel3aMfKYoMnIduKqYeTNo=;
-        b=GPeRJIfciuAo7l0XdetK2Dy5/dI0kErBSFIV/nZBhlyKIYO1H0qEXDiiMCnraqy86M
-         SoAXVWovrVf0PsXLfi1LmKx9YsoMutYv5f2GfCH+0ln9I9tuZVGtgQWvlwarhyswc486
-         16t77vF70UsVqegg8u2apQ8EjslckAFpmvHjDc7hmYgMHRoA06APMHJk+1ekLHI4kvUj
-         oZsqnYmshI4PcHI5mZoVomNQpp68YQN0rc6+Pg+A5aMK22jDVIXbPi6l19RAR8MHqKED
-         8NRtD+yrzIkBPfx8XHXx/caApW9Op2m5lcVnikkju7vPi1KJGLS+TnZTLGbU401U6PXZ
-         JvXQ==
-X-Gm-Message-State: AOAM533N5yPrczDq7oQXbrwibcee/7QYXygvTEdxSCuPNzaaZPSOUBQw
-        mZSjwZHkr9eerpNUkloL1zvQwA==
-X-Google-Smtp-Source: ABdhPJzZCdWzARlTkkKCwUXMyf44S8pb9ACQrw4RiO+5MwqURsgvVmvJ0u5JwwN7oRQazLF1sJlpsA==
-X-Received: by 2002:a17:90a:4e07:: with SMTP id n7mr6410317pjh.34.1590598661609;
-        Wed, 27 May 2020 09:57:41 -0700 (PDT)
-Received: from smtp.gmail.com ([2620:15c:202:1:534:b7c0:a63c:460c])
-        by smtp.gmail.com with ESMTPSA id x12sm2601829pfo.72.2020.05.27.09.57.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 09:57:40 -0700 (PDT)
-From:   Brian Norris <briannorris@chromium.org>
-To:     ath10k@lists.infradead.org
-Cc:     linux-wireless@vger.kernel.org, <linux-kernel@vger.kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        stable@vger.kernel.org, Wen Gong <wgong@codeaurora.org>
-Subject: [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-Date:   Wed, 27 May 2020 09:57:18 -0700
-Message-Id: <20200527165718.129307-1-briannorris@chromium.org>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vEZ5Sil7dAFPcsB6vg5ELG1EVw5OWJYqnN8faDzvGTM=;
+        b=E6YAl/g4ZJV/VCSI4AfW4jTH70N02lq7gVzSEfNsuGX31R/rABhyl6QIkNaAX+fD5I
+         7LRs6NbB9i1Jk83q9BJICDiRHSVbyJnUxDE+bdi/Lns1Z6Jk/y12Jw92N5Ii0MmOLpze
+         9egcbKjziL5ECTP0VOrgpO57mVFghFxbhDwFupLSEXEAE6bxmQByW8+dVmQ8P2BrZt4a
+         eLXH5xa/NN6zEDoZxaakHQCb9hyryMkIQOTTxKzay6pURpBQcB2RMbbaHX5G/aHdkFfy
+         ANJyUPR/OwkKQZxXW2yMYT828fiTqlmRv7ouyAZ65KmwXv/oQg/djWiX8VmFmZmO0aaz
+         0VvQ==
+X-Gm-Message-State: AOAM5324vR53gZAcRLTLByhW9cRjpDsqtuC5KJiP5WgO3dK5W3QuedJn
+        GtsdzEj7/roSGj+CfHese3eJnY8n
+X-Google-Smtp-Source: ABdhPJynBEJL6DWQ6MKZVyUvuSQl6qyERBNiyMlfW8w/VBIkogVfCDDiqLDc7xr63vJ5qF3uEGXO8g==
+X-Received: by 2002:a62:ed10:: with SMTP id u16mr4973605pfh.0.1590598682380;
+        Wed, 27 May 2020 09:58:02 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 65sm2558617pfy.219.2020.05.27.09.58.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 09:58:01 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] hwmon: Add Baikal-T1 PVT sensor driver
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
+ <20200527162549.GA225240@roeck-us.net>
+ <20200527165205.5krrdahiup3i2oq3@mobilestation>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <14256f0f-2977-4a54-cf01-ae7e684d10c2@roeck-us.net>
+Date:   Wed, 27 May 2020 09:58:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200527165205.5krrdahiup3i2oq3@mobilestation>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 2dc016599cfa9672a147528ca26d70c3654a5423.
+On 5/27/20 9:52 AM, Serge Semin wrote:
+> On Wed, May 27, 2020 at 09:25:49AM -0700, Guenter Roeck wrote:
+>> On Tue, May 26, 2020 at 04:38:23PM +0300, Serge Semin wrote:
+> 
+> [nip]
+> 
+>>> +
+>>> +=============================== ======= =======================================
+>>> +Name				Perm	Description
+>>> +=============================== ======= =======================================
+>>> +update_interval			RW	Measurements update interval per
+>>> +					sensor.
+>>> +temp1_type			RO	Sensor type (always 1 as CPU embedded
+>>> +					diode).
+>>> +temp1_label			RO	CPU Core Temperature sensor.
+>>> +temp1_input			RO	Measured temperature in millidegree
+>>> +					Celsius.
+>>> +temp1_min			RW	Low limit for temp input.
+>>> +temp1_max			RW	High limit for temp input.
+>>> +temp1_min_alarm			RO	Temperature input alarm. Returns 1 if
+>>> +					temperature input went below min limit,
+>>> +					0 otherwise.
+>>> +temp1_max_alarm			RO	Temperature input alarm. Returns 1 if
+>>> +					temperature input went above max limit,
+>>> +					0 otherwise.
+>>> +temp1_trim			RW	Temperature sensor trimming factor in
+>>> +					millidegree Celsius. It can be used to
+>>> +					manually adjust the temperature
+>>> +					measurements within 7.130 degrees
+>>> +					Celsius.
+>>
+>> vs. standard ABI:
+>>
+>> temp[1-*]_offset`
+>>                 Temperature offset which is added to the temperature reading
+>>                 by the chip.
+>>
+>>                 Unit: millidegree Celsius
+>>
+>> If you really think this is necessary, why not use the standard ABI ?
+> 
+> That would have made much more sense.) I'll replace the handwritten temp1_trim
+> with the standard temp1_offset attribute in v4 shortly today. Thanks for pointing
+> this out.
+> 
 
-Users are reporting regressions in regulatory domain detection and
-channel availability.
+Sorry for not realizing this earlier. The added explanation
+made all the difference.
 
-The problem this was trying to resolve was fixed in firmware anyway:
-
-    QCA6174 hw3.0: sdio-4.4.1: add firmware.bin_WLAN.RMH.4.4.1-00042
-    https://github.com/kvalo/ath10k-firmware/commit/4d382787f0efa77dba40394e0bc604f8eff82552
-
-Link: https://bbs.archlinux.org/viewtopic.php?id=254535
-Link: http://lists.infradead.org/pipermail/ath10k/2020-April/014871.html
-Link: http://lists.infradead.org/pipermail/ath10k/2020-May/015152.html
-Fixes: 2dc016599cfa ("ath: add support for special 0x0 regulatory domain")
-Cc: <stable@vger.kernel.org>
-Cc: Wen Gong <wgong@codeaurora.org>
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
- drivers/net/wireless/ath/regd.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/regd.c b/drivers/net/wireless/ath/regd.c
-index bee9110b91f3..20f4f8ea9f89 100644
---- a/drivers/net/wireless/ath/regd.c
-+++ b/drivers/net/wireless/ath/regd.c
-@@ -666,14 +666,14 @@ ath_regd_init_wiphy(struct ath_regulatory *reg,
- 
- /*
-  * Some users have reported their EEPROM programmed with
-- * 0x8000 or 0x0 set, this is not a supported regulatory
-- * domain but since we have more than one user with it we
-- * need a solution for them. We default to 0x64, which is
-- * the default Atheros world regulatory domain.
-+ * 0x8000 set, this is not a supported regulatory domain
-+ * but since we have more than one user with it we need
-+ * a solution for them. We default to 0x64, which is the
-+ * default Atheros world regulatory domain.
-  */
- static void ath_regd_sanitize(struct ath_regulatory *reg)
- {
--	if (reg->current_rd != COUNTRY_ERD_FLAG && reg->current_rd != 0)
-+	if (reg->current_rd != COUNTRY_ERD_FLAG)
- 		return;
- 	printk(KERN_DEBUG "ath: EEPROM regdomain sanitized\n");
- 	reg->current_rd = 0x64;
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+Guenter
