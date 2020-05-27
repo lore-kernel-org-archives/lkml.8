@@ -2,99 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B206C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 040EA2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B812071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bdCwamy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgE0BWW (ORCPT
+        id S1728388AbgE0BWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:22:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31175 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgE0BWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:22:22 -0400
-IronPort-SDR: mQnuGc8LlECincjJ1+OZUQ2f/nb5K2KIzUuKxhCWkyRhvm/a45asmcKwjTZ1GzZmHSKZpU3KiQ
- /xxZuy/HhL7A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 18:22:21 -0700
-IronPort-SDR: gCUxA0G7yFZXUpIXPty0nBc+CNACAi2vwP3mxMfn1+fRBJc+Ozg4rCrJq62wlXsH70ZzuG6jbG
- EC+YLIFh1J2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="442317355"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga005.jf.intel.com with ESMTP; 26 May 2020 18:22:21 -0700
-Date:   Tue, 26 May 2020 18:22:21 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tao Xu <tao3.xu@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jingqi Liu <jingqi.liu@intel.com>
-Subject: Re: [PATCH 0/2] Fix issue with not starting nesting guests on my
- system
-Message-ID: <20200527012221.GE31696@linux.intel.com>
-References: <20200523161455.3940-1-mlevitsk@redhat.com>
- <d80609d2-ca7b-feea-cb5e-6e45d2116eae@oracle.com>
+        Tue, 26 May 2020 21:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbgE0BWt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:22:49 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6E3C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 18:22:48 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b27so12872172qka.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 18:22:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lfaYQxAvjEIlf4eTifAP04WQLIjbuEqWZK7YVJA2P8E=;
+        b=bdCwamy6l5y36tWaBAzw2jsOMRDVBFifmX0OhKp5L2f5ScxkRWlrKyoQKiqD4EeJKV
+         r+6FDToY923n0az0tXSPj3wsGp8copRiOZkLeDF23sQ+QpMMHNroqCBKC4N86cfu2+pE
+         gRdAk3lFfu8cKsuCTWNl38G8C5Toaqo8iPC8JRJQTeT/TJD29zkYEdZWCjpGUaKsvExt
+         Kgexof+updggUzQv3Hh5nwcCouAWGuH4y0cvBuPKaep20bdhYpSNeVaEiycuBhe/Q/cP
+         WmDx9CVktclY7TJzbk7DtYAwo5yxGuvOGVb6xy40yatS8SOR2vr/6Vo0E0NQI1wRWObQ
+         xn2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lfaYQxAvjEIlf4eTifAP04WQLIjbuEqWZK7YVJA2P8E=;
+        b=SWl6tsqYoD1mDZbFr0FOdQKkRut86JZ7SV4rlfViXG8gYol5lCdBb6HprDbH1hwxPQ
+         CJFuDVah3MLOGT3krlRSGv6f8PCAH4tQW09ZiXragLczpToG+IsnOYD9VlMwhOHM1lOQ
+         3b4wAVbH8B4tQ2vWTbd2fpfc5tGH2JSJ86zvqK3FYe9nRQrZbK1PHojnatrtE/ZpGgeG
+         XESNc0x9Z5mZ7OReEMRuH8TRWkb0B4x3/vnSS5tlMsRLWpWH/VhsLZXpQSJOybgV/238
+         msTwRpnXd2vjgyG2fs4q5oewR93VJpNsbT8FCfoo5mldVMJ1S+K5CuYNGWgH8uLmknBT
+         l38Q==
+X-Gm-Message-State: AOAM532iMqQJS5xi7iwKxRz57sl1TElhsLisZmKXzlxLQrqxvYvUDnhf
+        Hfy7/qxXYsro16TFuoe3LRizDA==
+X-Google-Smtp-Source: ABdhPJwVgOsRZKK7L4GJOZmoCuR0CuYBMeqWZSLSs2+BbpvtTBspMPRVLYX3X/faUhr8Z3IcSE8AVw==
+X-Received: by 2002:a37:9586:: with SMTP id x128mr1790368qkd.312.1590542568200;
+        Tue, 26 May 2020 18:22:48 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id x41sm1286992qtb.76.2020.05.26.18.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 18:22:47 -0700 (PDT)
+Date:   Tue, 26 May 2020 21:22:45 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, aik@ozlabs.ru,
+        paulmck@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/kvm/book3s64/vio: fix some RCU-list locks
+Message-ID: <20200527012245.GJ991@lca.pw>
+References: <20200510051834.2011-1-cai@lca.pw>
+ <20200527011323.GA293451@thinks.paulus.ozlabs.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d80609d2-ca7b-feea-cb5e-6e45d2116eae@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200527011323.GA293451@thinks.paulus.ozlabs.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 06:03:32PM -0700, Krish Sadhukhan wrote:
+On Wed, May 27, 2020 at 11:13:23AM +1000, Paul Mackerras wrote:
+> On Sun, May 10, 2020 at 01:18:34AM -0400, Qian Cai wrote:
+> > It is unsafe to traverse kvm->arch.spapr_tce_tables and
+> > stt->iommu_tables without the RCU read lock held. Also, add
+> > cond_resched_rcu() in places with the RCU read lock held that could take
+> > a while to finish.
 > 
-> On 5/23/20 9:14 AM, Maxim Levitsky wrote:
-> >On my AMD machine I noticed that I can't start any nested guests,
-> >because nested KVM (everything from master git branches) complains
-> >that it can't find msr MSR_IA32_UMWAIT_CONTROL which my system doesn't support
-> >at all anyway.
-> >
-> >I traced it to the recently added UMWAIT support to qemu and kvm.
-> >The kvm portion exposed the new MSR in KVM_GET_MSR_INDEX_LIST without
-> >checking that it the underlying feature is supported in CPUID.
-> >It happened to work when non nested because as a precation kvm,
-> >tries to read each MSR on host before adding it to that list,
-> >and when read gets a #GP it ignores it.
-> >
-> >When running nested, the L1 hypervisor can be set to ignore unknown
-> >msr read/writes (I need this for some other guests), thus this safety
-> >check doesn't work anymore.
-> >
-> >V2: * added a patch to setup correctly the X86_FEATURE_WAITPKG kvm capability
-> >     * dropped the cosmetic fix patch as it is now fixed in kvm/queue
-> >
-> >Best regards,
-> >	Maxim Levitsky
-> >
-> >Maxim Levitsky (2):
-> >   kvm/x86/vmx: enable X86_FEATURE_WAITPKG in KVM capabilities
-> >   kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL unconditionally
-> >
-> >  arch/x86/kvm/vmx/vmx.c | 3 +++
-> >  arch/x86/kvm/x86.c     | 4 ++++
-> >  2 files changed, 7 insertions(+)
-> >
-> Nit: The added 'break' statement in patch# 2 is not required.
+> This mostly looks fine.  The cond_resched_rcu() in kvmppc_tce_validate
+> doesn't seem necessary (the list would rarely have more than a few
+> dozen entries) and could be a performance problem given that TCE
+> validation is a hot-path.
+> 
+> Are you OK with me modifying the patch to take out that
+> cond_resched_rcu(), or is there some reason why it's essential that it
+> be there?
 
-It is unless you want to add a fallthrough annotation.
+Feel free to take out that cond_resched_rcu(). Your reasoning makes
+sense.
