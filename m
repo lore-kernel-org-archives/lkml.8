@@ -2,135 +2,143 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79796C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D06820787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BFB20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qTa4zg/k"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tLnG5r3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgE0GYh (ORCPT
+        id S1728327AbgE0GZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:24:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgE0GYh (ORCPT
+        Wed, 27 May 2020 02:25:34 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37805 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728007AbgE0GZe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:24:37 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E252EC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:24:36 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id p20so11287416iop.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:24:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=LKkJBDDmDnUelXQ6SdnZ3yjotczg+ijTtnQ1G5n/CZI=;
-        b=qTa4zg/kB8RUMV6+ZrT87sAhVt0VKd/pe5awQVBeSnQNe+hXtvbc47KeuQ4Ra55ips
-         cLQDye/ZnBjLNphTPjLu/vO02z/qBHuE6uLEsnS/nVbpN6qVx91OwWNcTQO26dfwSAjr
-         I+I228+hogx9XQRdfPLbXb5hJv/nXcX0qZiv5sQv6yRnP58NW4MpAwQlCvNiS90FqP8z
-         4SLKJGHRd9bAoqbqlfkuGhKtKCsWQ/yofXzegcSeUllfPbTSlA9U1lAfEfEx36oMJLOA
-         tJIMkc2bBztsLzh5o+auXTj/26URwHSRShn2+xIowzj9kqTqbIUaaj3SsObYFnhdbIB9
-         /BJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=LKkJBDDmDnUelXQ6SdnZ3yjotczg+ijTtnQ1G5n/CZI=;
-        b=FzLDWJBT3EaUkkuFbubsu99mwfuG1OdCLVlJcaxtDUpVykMsvg5+w3Z/B75Qg3qQAJ
-         kG4EtoQCTPAeYLL3wnw5pQ5Kzsfi9atv0Z/pJs/jFu0/1FXrrlZZzMq7t148WnvsTPmI
-         rrXvD1GiUcdJg2tKIKPovdW6gfmEW7FNBGQEWIXBvRk96qfC2PqSuwbLAiAusvWoeEJI
-         nrZL0I1faEhTpNmFLEfyiMPrgvY207giP/TEHWzBn4d+LdPsLUd/e7BG+ERbTS0QC5s4
-         qwdInbD20jEZyHkW4ZFFNfT9ub9SwoN7IkfuCbg5k1JkFpsqnXwmwuZwsQr4Gsol9X7D
-         8kjg==
-X-Gm-Message-State: AOAM5330LS9jENFSb68HGEKQ79zAucn4dtJRU/TMfu9dSWtRQkSq9uzu
-        yeX4XVDLXzjFxhmbjeJkHteZYH0PodGng6ShKKI=
-X-Google-Smtp-Source: ABdhPJxqpy9fr4YgzdFZPoW85wjj4f3FVV5gKI8JezQjtXRzE5yjML78Xrs2My8MAN62PI5W2P3Xrasd+Fe3j/je1Rg=
-X-Received: by 2002:a02:ca18:: with SMTP id i24mr4295860jak.70.1590560676311;
- Tue, 26 May 2020 23:24:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200524212816.243139-1-nivedita@alum.mit.edu>
- <20200525225918.1624470-1-nivedita@alum.mit.edu> <CA+icZUVa8FhhwHgXn1o_hFmgqFG6-KE1F+qvkdCzQjmSSSDWDw@mail.gmail.com>
- <CAMj1kXHVFgRsbssJQD2C0GZnOgG=rMYbPGJQtiKhSw6sZj5PaA@mail.gmail.com>
- <CA+icZUWyFDgieQswvfhWemzymDh_UiVqH2uH52a+0otcr2Pd4w@mail.gmail.com>
- <CA+icZUVKRZPFX_Q8RRJnFsHrkM5VbiWUEam+6O5XSzgNaqAzPg@mail.gmail.com>
- <CA+icZUWTKJ=-OGJPzqm6HNQMkB1uS_B0ydU-9Xa035wB7vA4iw@mail.gmail.com>
- <CA+icZUU54K8z2--6fS=LEaMJGgeWfudViT7ETMsSYF1i59_4mg@mail.gmail.com>
- <CA+icZUWH9fFURgbiCuRr5-mc5s=Ft97_TMP4YofDMX5zEu4_eA@mail.gmail.com> <20200526153104.GC2190602@rani.riverdale.lan>
-In-Reply-To: <20200526153104.GC2190602@rani.riverdale.lan>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 27 May 2020 08:24:26 +0200
-Message-ID: <CA+icZUWzfOnaSL2vOB+UdiXZQe-Ywn9RVpdFkbHqozcDzcyo2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] x86/boot: Remove runtime relocations from
- compressed kernel
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 May 2020 02:25:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590560733; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=jh63g7zVfWyaLq4vPu9kEFHYtKDWPkdQ7ls9thvyg1Y=; b=tLnG5r3zqoOxUUZZx5EParrDKHJV3yYNsg4ANZDWIe+lbOPssQSBQ2y3pmMYR3LFDO8MLuKO
+ +g/2jR82RF6hbfPycEmFkhgcFGRBkkoqor4WbST34vEGKWi0shXyGKqEAfRT5w/yMskHNfPx
+ U9YADv16bkvJqbEILUYYtyXPS0I=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ece07bf27386861267c2265 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 06:25:03
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C7B16C433CB; Wed, 27 May 2020 06:25:02 +0000 (UTC)
+Received: from vjitta-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 03CC2C433C9;
+        Wed, 27 May 2020 06:24:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 03CC2C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
+From:   vjitta@codeaurora.org
+To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     vinmenon@codeaurora.org, kernel-team@android.com,
+        vjitta@codeaurora.org
+Subject: [PATCH] iommu/iova: Free global iova rcache on iova alloc failure
+Date:   Wed, 27 May 2020 11:54:39 +0530
+Message-Id: <1590560679-11927-1-git-send-email-vjitta@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 5:31 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Tue, May 26, 2020 at 05:07:24PM +0200, Sedat Dilek wrote:
-> > > >
-> > >
-> > > Maybe this should be:
-> > >
-> > > [ arch/x86/boot/compressed/Makefile ]
-> > >
-> > > -KBUILD_CFLAGS += -include hidden.h
-> > > +KBUILD_CFLAGS += -include ./hidden.h
-> > >
-> >
-> > NOPE.
-> >
-> > This works:
-> >
-> > [ arch/x86/boot/compressed/Makefile ]
-> >
-> > -KBUILD_CFLAGS += -include hidden.h
-> > +KBUILD_CFLAGS += -include ./arch/x86/boot/compressed/hidden.h
-> >
-> > $ ll arch/x86/boot/bzImage arch/x86/boot/compressed/vmlinux
-> > -rw-r--r-- 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/bzImage
-> > -rwxr-xr-x 1 dileks dileks 6,5M Mai 26 17:05 arch/x86/boot/compressed/vmlinux
-> >
-> > - Sedat -
->
-> It needs to either be $(srctree)/$(src)/hidden.h, or we should add
-> -I $(srctree)/$(src) to the KBUILD_CFLAGS. The latter option is added
-> automatically when building in a separate builddir with O=${KOBJ} (which
-> is how I, and I assume Ard, was testing), but for some reason is not
-> added when building in-tree. The -include option doesn't automatically
-> search the directory of the source file.
->
-> -include file Process file as if "#include "file"" appeared as the first
-> line of the primary source file.  However, the first directory searched
-> for file is the preprocessor's working directory instead of the
-> directory containing the main source file.  If not found there, it is
-> searched for in the remainder of the "#include "..."" search chain as
-> normal.
+From: Vijayanand Jitta <vjitta@codeaurora.org>
 
-Will you send a follow-up or a v3 for this?
+When ever an iova alloc request fails we free the iova
+ranges present in the percpu iova rcaches and then retry
+but the global iova rcache is not freed as a result we
+could still see iova alloc failure even after retry as
+global rcache is still holding the iova's which can cause
+fragmentation. So, free the global iova rcache as well
+and then go for the retry.
 
-- Sedat -
+Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
+---
+ drivers/iommu/iova.c | 22 ++++++++++++++++++++++
+ include/linux/iova.h |  6 ++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 0e6a953..5ae0328 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -431,6 +431,7 @@ struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn)
+ 		flush_rcache = false;
+ 		for_each_online_cpu(cpu)
+ 			free_cpu_cached_iovas(cpu, iovad);
++		free_global_cached_iovas(iovad);
+ 		goto retry;
+ 	}
+ 
+@@ -1044,5 +1045,26 @@ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad)
+ 	}
+ }
+ 
++/*
++ * free all the IOVA ranges of global cache
++ */
++void free_global_cached_iovas(struct iova_domain *iovad)
++{
++	struct iova_rcache *rcache;
++	int i, j;
++
++	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
++		rcache = &iovad->rcaches[i];
++		spin_lock(&rcache->lock);
++		for (j = 0; j < rcache->depot_size; ++j) {
++			iova_magazine_free_pfns(rcache->depot[j], iovad);
++			iova_magazine_free(rcache->depot[j]);
++			rcache->depot[j] = NULL;
++		}
++		rcache->depot_size = 0;
++		spin_unlock(&rcache->lock);
++	}
++}
++
+ MODULE_AUTHOR("Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>");
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/iova.h b/include/linux/iova.h
+index a0637ab..a905726 100644
+--- a/include/linux/iova.h
++++ b/include/linux/iova.h
+@@ -163,6 +163,7 @@ int init_iova_flush_queue(struct iova_domain *iovad,
+ struct iova *split_and_remove_iova(struct iova_domain *iovad,
+ 	struct iova *iova, unsigned long pfn_lo, unsigned long pfn_hi);
+ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad);
++void free_global_cached_iovas(struct iova_domain *iovad);
+ #else
+ static inline int iova_cache_get(void)
+ {
+@@ -270,6 +271,11 @@ static inline void free_cpu_cached_iovas(unsigned int cpu,
+ 					 struct iova_domain *iovad)
+ {
+ }
++
++static inline void free_global_cached_iovas(struct iova_domain *iovad)
++{
++}
++
+ #endif
+ 
+ #endif
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
