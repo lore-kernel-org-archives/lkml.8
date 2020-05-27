@@ -2,99 +2,159 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA53C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE80C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C575208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590620267;
-	bh=D7Z47XdXCd8usmwGeOPgUCeB9bacDk/hJaO5p9C3cdQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UH2Aq+81202e5yUJ3Nuo2Fm2I9o9vruU25Z80EmL0DAd8OUHvM8ir7kCz6FQph2Ys
-	 v1ixJam24IVHcBXo/E6VjISXdYEo45kI9yy69JoWpvPMqP+zxifMkQggNd+4zBTkdy
-	 iuTJyqUsaeL5nSp/xuDRlUogUtn/+vEIHFozTyI4=
+	by mail.kernel.org (Postfix) with ESMTP id 44C5E2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:02:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShneLxh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725937AbgE0W5q (ORCPT
+        id S1725832AbgE0XCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39026 "EHLO
+        Wed, 27 May 2020 19:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0W5p (ORCPT
+        with ESMTP id S1725385AbgE0XCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:57:45 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B012C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:57:45 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id w15so15401837lfe.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:57:45 -0700 (PDT)
+        Wed, 27 May 2020 19:02:14 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE961C08C5C1;
+        Wed, 27 May 2020 16:02:13 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q8so1321779qkm.12;
+        Wed, 27 May 2020 16:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1o9yH8PwCtYCZb1G6vqgxvTofHUhlST2MYbKWRNoUMc=;
-        b=HJOClZU9Jx692wWjV8dAK8qoBQJOIp6cV3W4aTmRDleA0DLGpZ0/7ohIQvhQcSZtBP
-         qAaK65Tj3bYm0tp4mKn9acDv9Z1M77mKGuP+zaU5pDUpGpXeMRPqv5MJ4y3FUkhKNxpy
-         CL/breuu+UzCxEeS1sVIBcEjnwVSSqwCXFsbE=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qYOUMbGRbXoFBwjaad5Ny0vONPBdfJSQTLm2Tk6FIJg=;
+        b=ShneLxh9Xe9PgyCQYJk9ewv0cbYYri4qqOAfyLHE3O8XDTR4LdyEmeOYfQude2nzG/
+         05NAmFVV1NLJ5X86wQ0WGNVV9V1E+1m8syCcrsNPTCKGUH8uvDXF/Myx61TCLP3Y/G81
+         yX9EcTD0Xjw9Dr4Q0F4aFdQeybiAI34Lb/+4KBQYWjajSAwvygB6+PYFZzNIr6e72kFJ
+         CvQ8RTBPWZxRTQcxgVYZaDIsY83wpvwB+8O3XW2ZD5Kp5GVGOYlEBJuhuj5zIHbi8yIb
+         b6Z3eHSIKTL51Twfg+xWed+eNBnQGCRp8Wc1IfwGkB3fgXXk4X6qX01tCFQxVXMt4YqR
+         6gnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1o9yH8PwCtYCZb1G6vqgxvTofHUhlST2MYbKWRNoUMc=;
-        b=BFyUyaSAkrxqhcovWPW+mj0Xfk9tsJ/sDHDIZPAhzyb9fxiYLaUy9BEcPk/qRWQ6b3
-         js9R48StYIpqEuBPe9KHEsfKEYcLg/Ob6RfZGYQyMRpSGhL2OYg49gkVyOgIA+Hz1Wcp
-         tz2OwchfO6KGKVl9iicWvlj1UAfadNdtN1Txf9nx6PZjY1NlBYbHUOFbsFwOORCZ6AVh
-         ekIeKSAPgzwDV4fJvQpEvaSBWNtgozXwgiDYAniTZXnhrEMbobDClkmxGde61dm0PRMo
-         6xTWEcuTLApYeuVotWSfoL6gB2JVcJXuqZ/nedibZoOyt2kpl0FEkE2DbpjBPd04QaB/
-         BeDA==
-X-Gm-Message-State: AOAM530AwP1b0xSgS7NY74lsLrv48FamOilUCDBYg29gDf/JeQKTYxNt
-        WI2l5HAqa9RbMJ1fE2wvLeeLlVBNs1E=
-X-Google-Smtp-Source: ABdhPJyh2ygfb8uA1z46x++1e1fLtP78VEvPxmMkO+ZPrjZUS8RijK+3EEeBHHct5ZwFxvV70gde6w==
-X-Received: by 2002:ac2:5324:: with SMTP id f4mr135744lfh.209.1590620263567;
-        Wed, 27 May 2020 15:57:43 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id 21sm357922ljr.16.2020.05.27.15.57.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 15:57:42 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id l15so30658801lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:57:42 -0700 (PDT)
-X-Received: by 2002:a2e:8090:: with SMTP id i16mr1028ljg.421.1590620262429;
- Wed, 27 May 2020 15:57:42 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=qYOUMbGRbXoFBwjaad5Ny0vONPBdfJSQTLm2Tk6FIJg=;
+        b=HzR8R53gNteJSjGoL1IuRmTlZrHK91dO0JsAMqduWgIsT/Z9k36DQEh5xAx9fPra5u
+         FybnBMCKgQ3lVo6JIANgCPAc5KFfiylN4APHr10dp5tctkYrdjBsZhAaZrvVUcH7ulv5
+         7jdmQ1iwodFe8vV8s7BwNnjrzoHdDhpom4eFjGslcw4jnGwaxeBpXj7lefIPPj2bubDZ
+         Z0C+r7ZjDpYeVKk5VqQOMkedDCaHLeCyLCMqeco5rEqt/EIJpFN21upf82a8ctDIEQu3
+         u93SrG3gaDeqtzfNP3obLSuLmxqqAAslHI6WuZW3OQf7CzI/MbHtWuJ+YefV7ZJB+A6z
+         5CYQ==
+X-Gm-Message-State: AOAM531RWn7PJPHJ3AMlJ3FoCRuW4bzCu+lHES382hLi/lhOCjCNRR/y
+        THnrciT3mwyb62wxbeSlgFCo1jtP
+X-Google-Smtp-Source: ABdhPJxMk1bgFZVPt3++Ket2S3kFyFHSTmpmLoobwtt2X5j9BweaNuqR0TO7eg1VL7+NltlB63poJw==
+X-Received: by 2002:a37:a74a:: with SMTP id q71mr166810qke.446.1590620532632;
+        Wed, 27 May 2020 16:02:12 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x14sm3559390qkb.67.2020.05.27.16.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 16:02:11 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 27 May 2020 19:02:09 -0400
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "joe@perches.com" <joe@perches.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH 08/15] efi/x86: Move command-line initrd loading to
+ efi_main
+Message-ID: <20200527230209.GA3575079@rani.riverdale.lan>
+References: <20200508180157.1816-1-ardb@kernel.org>
+ <20200508180157.1816-9-ardb@kernel.org>
+ <10a1c7fcea861f5d45dff81cba673e970d686bc2.camel@intel.com>
+ <20200527224657.GA3568142@rani.riverdale.lan>
+ <CAPcyv4jOCY=kxeZVWsS0Xc36jmPr7DSR_sFrsMeoiEs+iEfbEA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200527194633.1660952-1-bigeasy@linutronix.de>
-In-Reply-To: <20200527194633.1660952-1-bigeasy@linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 27 May 2020 15:57:26 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi76nv2co86p6qtBbwiardqcZu3xOHWwPqEt-_P+p==0A@mail.gmail.com>
-Message-ID: <CAHk-=wi76nv2co86p6qtBbwiardqcZu3xOHWwPqEt-_P+p==0A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] workqueue: Make the workqueue code PREEMPT_RT safe
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jOCY=kxeZVWsS0Xc36jmPr7DSR_sFrsMeoiEs+iEfbEA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:47 PM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> v1=E2=80=A6v2: Use rcuwait instead of swait.
+On Wed, May 27, 2020 at 03:56:45PM -0700, Dan Williams wrote:
+> On Wed, May 27, 2020 at 3:47 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Wed, May 27, 2020 at 10:30:18PM +0000, Williams, Dan J wrote:
+> > > On Fri, 2020-05-08 at 20:01 +0200, Ard Biesheuvel wrote:
+> > > > From: Arvind Sankar <nivedita@alum.mit.edu>
+> > > >
+> > > > Consolidate the initrd loading in efi_main.
+> > > >
+> > > > The command line options now need to be parsed only once.
+> > > >
+> > > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > > > Link:
+> > > > https://lore.kernel.org/r/20200430182843.2510180-9-nivedita@alum.mit.edu
+> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > >
+> > > Hi,
+> > >
+> > > This patch patch in tip/master as:
+> > >
+> > > 987053a30016 efi/x86: Move command-line initrd loading to efi_main
+> > >
+> > > ...regresses my nfs root configuration. It hangs trying to mount the
+> > > nfs root filesystem "root=/dev/nfs ip=dhcp".
+> > >
+> > > It does not revert cleanly.
+> > >
+> > >
+> >
+> > Does this fix it?
+> >
+> > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> > index defeb6035109..f53362efef84 100644
+> > --- a/drivers/firmware/efi/libstub/x86-stub.c
+> > +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> > @@ -771,10 +771,12 @@ unsigned long efi_main(efi_handle_t handle,
+> >                         efi_err("Failed to load initrd!\n");
+> >                         goto fail;
+> >                 }
+> > -               efi_set_u64_split(addr, &hdr->ramdisk_image,
+> > -                                 &boot_params->ext_ramdisk_image);
+> > -               efi_set_u64_split(size, &hdr->ramdisk_size,
+> > -                                 &boot_params->ext_ramdisk_size);
+> > +               if (size > 0) {
+> > +                       efi_set_u64_split(addr, &hdr->ramdisk_image,
+> > +                                         &boot_params->ext_ramdisk_image);
+> > +                       efi_set_u64_split(size, &hdr->ramdisk_size,
+> > +                                         &boot_params->ext_ramdisk_size);
+> > +               }
+> 
+> I'll give it a shot, but my guess would have been something related to
+> the fact that this patch moves the initrd loading relative to when the
+> command line is being parsed. In this case it's a dracut initrd built
+> by:
+> 
+>     dracut -m "nfs network base"
+> 
+> ...with a kernel built with:
+> 
+> CONFIG_IP_PNP_DHCP=y
+> 
+> ...and a built-in network interface. The behavior seems to be that the
+> kernel gets an IP address just fine, but there's no initrd userspace
+> to mount nfs and the kernel eventually gives up looking for root.
 
-Thanks, both series look sane to me.
-
-I only scanned the other one, but I didn't see anything that made me go "Hm=
-m".
-
-                Linus
+It's an oversight in this patch: I set addr/size to 0 in the case where
+the EFI stub is not supposed to handle the initrd loading (because a
+bootloader ran before it and was responsible for handling the loading),
+but then those 0's get written into the bootparams structure anyway,
+blowing away whatever the bootloader had loaded.
