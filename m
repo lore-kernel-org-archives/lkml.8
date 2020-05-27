@@ -2,113 +2,86 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE25AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4AC8207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB889207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:30:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590600636;
+	bh=uCheWP0RRdcKgswz2mo82OhL1DROGME9HKnFGxF7iEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AJ0TTAUHE9Y3Ecild/4p2n+I3N/lhyEvvbR0w837w4JsrLrn4vXGXh7iDMO+ZgRnI
+	 HkRnIe0sFo9eLBVI3ZOpuc10GmVyebOxMJLZCsOutjGqWS/Ph1vd3KhCDPtDa381T6
+	 8QZHCDoApO3Ccmbo+E3KdkSlqOknHRCd+wehly+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgE0RaW (ORCPT
+        id S1729196AbgE0Rag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:30:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:42900 "EHLO foss.arm.com"
+        Wed, 27 May 2020 13:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbgE0RaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:30:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DCB31B;
-        Wed, 27 May 2020 10:30:19 -0700 (PDT)
-Received: from [10.57.2.168] (unknown [10.57.2.168])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D2B73F305;
-        Wed, 27 May 2020 10:30:17 -0700 (PDT)
-Subject: Re: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
- address
-To:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
-Date:   Wed, 27 May 2020 18:30:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726487AbgE0Rag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:30:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32DA22075A;
+        Wed, 27 May 2020 17:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590600635;
+        bh=uCheWP0RRdcKgswz2mo82OhL1DROGME9HKnFGxF7iEs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PtHD1zEQEGidw92ybPOQEyLX1Au+AklTvp69WTUKLRcKbKsTYBKuMrBfzoMXmSRA0
+         /wtvAV7ZLLCPpo9okeUF1o3YiHGIil9hQ8T6+zcIm6fFlJlXfcMRlKQCvdr0nAFZOr
+         UQfSU17pN2QlNwxhjuEqPhovHGD5mYOQP5wyszM0=
+Date:   Wed, 27 May 2020 19:30:33 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.6 000/126] 5.6.15-rc1 review
+Message-ID: <20200527173033.GA933114@kroah.com>
+References: <20200526183937.471379031@linuxfoundation.org>
+ <7cb6fb39-5161-4111-8626-746eff5405ce@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7cb6fb39-5161-4111-8626-746eff5405ce@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-27 17:03, Srinath Mannam wrote:
-> This patch gives the provision to change default value of MSI IOVA base
-> to platform's suitable IOVA using module parameter. The present
-> hardcoded MSI IOVA base may not be the accessible IOVA ranges of platform.
-
-That in itself doesn't seem entirely unreasonable; IIRC the current 
-address is just an arbitrary choice to fit nicely into Qemu's memory 
-map, and there was always the possibility that it wouldn't suit everything.
-
-> Since commit aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible
-> DMA address"), inaccessible IOVA address ranges parsed from dma-ranges
-> property are reserved.
-
-That, however, doesn't seem to fit here; iommu-dma maps MSI doorbells 
-dynamically, so they aren't affected by reserved regions any more than 
-regular DMA pages are. In fact, it explicitly ignores the software MSI 
-region, since as the comment says, it *is* the software that manages those.
-
-The MSI_IOVA_BASE region exists for VFIO, precisely because in that case 
-the kernel *doesn't* control the address space, but still needs some way 
-to steal a bit of it for MSIs that the guest doesn't necessarily know 
-about, and give userspace a fighting chance of knowing what it's taken. 
-I think at the time we discussed the idea of adding something to the 
-VFIO uapi such that userspace could move this around if it wanted or 
-needed to, but decided we could live without that initially. Perhaps now 
-the time has come?
-
-Robin.
-
-> If any platform has the limitaion to access default MSI IOVA, then it can
-> be changed using "arm-smmu.msi_iova_base=0xa0000000" command line argument.
+On Wed, May 27, 2020 at 10:28:00AM -0600, shuah wrote:
+> On 5/26/20 12:52 PM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.15 release.
+> > There are 126 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.15-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> ---
->   drivers/iommu/arm-smmu.c | 5 ++++-
->   1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 4f1a350..5e59c9d 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -72,6 +72,9 @@ static bool disable_bypass =
->   module_param(disable_bypass, bool, S_IRUGO);
->   MODULE_PARM_DESC(disable_bypass,
->   	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
-> +static unsigned long msi_iova_base = MSI_IOVA_BASE;
-> +module_param(msi_iova_base, ulong, S_IRUGO);
-> +MODULE_PARM_DESC(msi_iova_base, "msi iova base address.");
->   
->   struct arm_smmu_s2cr {
->   	struct iommu_group		*group;
-> @@ -1566,7 +1569,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
->   	struct iommu_resv_region *region;
->   	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
->   
-> -	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
-> +	region = iommu_alloc_resv_region(msi_iova_base, MSI_IOVA_LENGTH,
->   					 prot, IOMMU_RESV_SW_MSI);
->   	if (!region)
->   		return;
-> 
+> Compiled and booted on my test system. No dmesg regressions.
+
+Great, thanks for testing all of these and letting me know.
+
+greg k-h
