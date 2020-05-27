@@ -2,95 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2070CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02507C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E987820835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="khOZm8Fb"
+	by mail.kernel.org (Postfix) with ESMTP id C89C72088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590612412;
+	bh=WtewfCOjGK26oPHbewPKO/Ed9S5SuwHAhFqHb/iW9lI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=y/ltjyWXRx+0XRHRIuJVp7yu0Uv/gC12Att7MfX4kf/yHdnzvY8Hp3TgXV3NTBOlM
+	 me+OfK5+gkxHpy/GRYlgyibDwZ1Eon1SFoGQnv4qMPpILXF4kGeH7XIeBK+mJ8W2VN
+	 a1Nrsk8duZRqmA94Ogsx2np+NmSWAcJjNqIMq/Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgE0Uqq (ORCPT
+        id S1728589AbgE0Uqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:46:46 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51886 "EHLO mail.skyhub.de"
+        Wed, 27 May 2020 16:46:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgE0Uqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:46:45 -0400
-Received: from zn.tnic (p200300ec2f0b8700952f735680ed3731.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:952f:7356:80ed:3731])
+        id S1726129AbgE0Uqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:46:51 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2F68F1EC02CF;
-        Wed, 27 May 2020 22:46:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590612404;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=jDfc3rtizFtHZ71v7Qy79JRVRQqWPpw5tOmQip8jpdI=;
-        b=khOZm8FbSs3x1599c83biUD6tMakTCnT75zyU4V4dPMXsFGjC/tIABhzNv8/1MVEp7qCoH
-        +mN+lYGGeSqyLOtkPPbNXVIi6HgHSl0zz3d6jVG0O+0F74ZNNYx80gzltm9R8Gd25KZWuh
-        B8xuN/q0Gy6cIwVqAI6mV0Qu8PqMn+k=
-Date:   Wed, 27 May 2020 22:46:38 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com, puiterwijk@redhat.com,
-        Jethro Beekman <jethro@fortanix.com>
-Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
- EPC pages
-Message-ID: <20200527204638.GG1721@zn.tnic>
-References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
- <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
- <20200526125207.GE28228@zn.tnic>
- <20200527042111.GI31696@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200527042111.GI31696@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        by mail.kernel.org (Postfix) with ESMTPSA id A40DF20835;
+        Wed, 27 May 2020 20:46:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590612411;
+        bh=WtewfCOjGK26oPHbewPKO/Ed9S5SuwHAhFqHb/iW9lI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NO0SQ8+GOeQNww2TBIOhZ3ZJW+IHvsP/vDuNS/adxh1+oPqQk5DDLFkJzMHP16SeD
+         haki2yvy9WB+YElCIlr8hWG110jeYwuA0PmIYUQfa1umaWAdHakBpokJrnU+vrMiHN
+         AqtAQIhm7u7Zu/mXSsJhv6nTrkx5Q5NqHu7d9k2g=
+Date:   Wed, 27 May 2020 13:46:50 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Shakeel Butt <shakeelb@google.com>, Mel Gorman <mgorman@suse.de>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH resend 3/3] mm: fix LRU balancing effect of new
+ transparent huge pages
+Message-Id: <20200527134650.18b3fb3f0be85bb73037da20@linux-foundation.org>
+In-Reply-To: <20200527194148.GA47905@cmpxchg.org>
+References: <20200527182958.252402-1-shakeelb@google.com>
+        <20200527194148.GA47905@cmpxchg.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:21:11PM -0700, Sean Christopherson wrote:
-> In other words, sgx_alloc_epc_section() is poorly named.  It doesn't
-> actually allocate EPC, it allocates kernel structures to map and track EPC.
-> sgx_(un)map_epc_section() would be more accurate and would hopefully
-> alleviate some of the confusion.
+On Wed, 27 May 2020 15:41:48 -0400 Johannes Weiner <hannes@cmpxchg.org> wrote:
 
-Makes sense.
+> On Wed, May 27, 2020 at 11:29:58AM -0700, Shakeel Butt wrote:
+> > From: Johannes Weiner <hannes@cmpxchg.org>
+> > 
+> > Currently, THP are counted as single pages until they are split right
+> > before being swapped out. However, at that point the VM is already in
+> > the middle of reclaim, and adjusting the LRU balance then is useless.
+> > 
+> > Always account THP by the number of basepages, and remove the fixup
+> > from the splitting path.
+> > 
+> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> 
+> This is now already in mm as part of the "mm: balance LRU lists based
+> on relative thrashing" series that I sent out last week and where it
+> was originally from.
 
-> I have no objection to renaming __sgx_alloc_try_alloc_page() to something
-> like sgx_alloc_epc_page_section or whatever, but IMO using get/put will be
-> horrendously confusing.
+Yup.  I hope [1/3] and [2/3] weren't urgent?  Due to a horrid merge
+mismatchmishmashmess I've staged them behind lots of other things,
+notably
 
-Ok. My only issue is that the naming nomenclature sounds strange and
-confusing as it is. "try" in an "alloc" function is kinda tautological -
-of course the function will try to do its best. :)
+thp/khugepaged improvements and CoW semantics
+http://lkml.kernel.org/r/20200416160026.16538-1-kirill.shutemov@linux.intel.com
 
-And there are three functions having "alloc" in the name so I can
-imagine someone getting very confused when having to stare at that code.
+and mm: memcontrol: charge swapin pages on instantiation
+http://lkml.kernel.org/r/20200508183105.225460-1-hannes@cmpxchg.org
 
-So at least naming them in a way so that it is clear what kind of pages
-they "allocate" - i.e., what they actually do - would be a step in the
-right direction...
+and mm: balance LRU lists based on relative thrashing
+http://lkml.kernel.org/r/20200520232525.798933-1-hannes@cmpxchg.org
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
