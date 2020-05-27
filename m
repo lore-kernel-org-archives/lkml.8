@@ -2,104 +2,110 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B417C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78588C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D07207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D437207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4KWr1Ka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388818AbgE0Nt6 (ORCPT
+        id S2388822AbgE0NuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:49:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:51029 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388607AbgE0Nt5 (ORCPT
+        Wed, 27 May 2020 09:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388603AbgE0NuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:49:57 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MeToK-1j3mD13omq-00aStF; Wed, 27 May 2020 15:49:47 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nathan Huckleberry <nhuck15@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: pass -msoft-float to gcc earlier
-Date:   Wed, 27 May 2020 15:49:34 +0200
-Message-Id: <20200527134946.1034391-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:50:11 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB67C08C5C1;
+        Wed, 27 May 2020 06:50:11 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id 23so20540274oiq.8;
+        Wed, 27 May 2020 06:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a1TUEw5/JsL8gsEryhTxvgCweegsIr/EsyDfyV7zWRU=;
+        b=E4KWr1Kau5Hs04onkGjtjlT4R9Jjt7r1vDz7F0LoI6WqRXl6lu4jovEXkZucrcd+jh
+         5zbo9UbDZWxm3LFBVtxlUUpHdjpYSttORWN07WVTZ1RaVDDx651Eqfh9jXXrOz2l2AG5
+         fo5aIn7gF1Hhig7C1AzXQLfuK6BzoD1QlifSNtI8aUVw5jzG/4wSrmYMc181bG/bq+QN
+         mO6h00F6dZXNWCS2C5k6MBLL0JLy1Hflz0lm/eSFTJXFGC4XTBHF305y8hyimyul0UEo
+         FH8Xe2MBSogrEhjjUoj9C+4xyxrrkfNPz9SPUR4a4CDqWU+3sRebKP0bkjDb2FntZSuA
+         gQeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a1TUEw5/JsL8gsEryhTxvgCweegsIr/EsyDfyV7zWRU=;
+        b=JpxvcbQMUGzgnfnhbe0t5JU2YGSn5JQhGPfE0dlP+4pLBUgnnBhcOAjNaibybpTgKM
+         6af8+ESfj5Pp8QfyXyYEWcP/Y2lRFMRCz9OGSjFf9I7or3ocRwEEP0q+KXtg7X94pXQL
+         lBcr3qhK4y5ZPtqMP3DDuYQroA/pIUXBzaejiH6tfOFMGJGrDBUl9bvSY778cOceyVJx
+         pGVkG+5/KSRv2H2AlWxzHREvGZqbLXowHf/Cs+F/Z89e1W2h7r4cPr2yNjuB6XwsJ54U
+         ZLjd5bwghZ6k6/+xWDcx5bQuPH/pb85QJe+L9R2JhDYAvtNTW3UQhQqqJNuvBMCQBGLC
+         z87Q==
+X-Gm-Message-State: AOAM533D2/7ey8WGyrB6LcAY0Wi5zwNNS3UrjsZsh61ZFl6AOQpdacDp
+        05dM/AMpLRVlUozeWVmvP4o=
+X-Google-Smtp-Source: ABdhPJz65Q2NTQJ4atIhwWi87TRdmRTdbuEf2CHdPJZDlL4vao7TDLPuo0VowaBDj4b05oR35IMqmg==
+X-Received: by 2002:aca:ba86:: with SMTP id k128mr2884972oif.60.1590587411208;
+        Wed, 27 May 2020 06:50:11 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:85b5:c99:767e:c12? ([2601:282:803:7700:85b5:c99:767e:c12])
+        by smtp.googlemail.com with ESMTPSA id w8sm828792oie.12.2020.05.27.06.50.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 06:50:10 -0700 (PDT)
+Subject: Re: [PATCH] [net-next] nexthop: fix enum type confusion
+To:     Arnd Bergmann <arnd@arndb.de>, David Ahern <dsahern@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Stephen Worley <sworley@cumulusnetworks.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+References: <20200527134755.978758-1-arnd@arndb.de>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <3722aa2b-667d-eef2-b901-ef0ae943f8f2@gmail.com>
+Date:   Wed, 27 May 2020 07:50:09 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:G5fO0GvXqQ7URCOK275565svfOfjD5zjWbghoAyYqsXD61NGPPV
- K3P+UcFTh2o/d8MI/VsrOcbfFksMEw7u1v2KFJI6nP+xf/v/qOU6RVa+Pu5ZZg2ZtebjVaW
- tsb2V6RQplKSQTiTvuvi5WkDqZy6qzEGPwloEkwqKHfbICW6mNJObm/mwqBT1AGpuNNM43i
- vEz1YQwWcfzoziXlzOepQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F/gBf8yOHW8=:5cuOcmDhdtzCJCm0zoNZgt
- ZtF8+oGlZwNWTXQJqiHCMjNXmEsfdwmft9cA4rbnXJs9aM7km6WYRsyc6oz9js5S1d3sh/aye
- xnogOzfSLlw+BYYo/c4AzbyxQgxv4OKSMa+RisnP8LfBCwUO980XTUQV5zRKqWw8IZn+FMPmB
- WtZhDlM9utEQyHFrPLej3hA/59gBS9ly0J0hXKZJRAvsykz8CzxVdtB639NywEP24FtN7cth6
- bWHBzJeTfzu/4dB6UWULId8FwI0XShfSfurO6JXs7gLBUJMruxzK9t8Y7WnCWnJY5e6q+GtOv
- +Mv0p6hs0+HsDU1jJRyQXtAbdAWJ92FMIaBptBuDogpASSMz2MwT2XeL6XXFAwJ+ndY/WBfbz
- SP3HS5MpUbA06oumhVdpuZR2WY8I3DxrmL5XYz9SXyJrr9PnEvcyrUwVjyK9dYSVvQhiLKfi1
- szwpcnObSPKcbdjQkxZSQ6WNJ73zQxmBtiqUjSZoy3FAxEvaGu23bH6+gRn2oFkkd0/M5R7UC
- Gs8rPkNeFdnDTpOeJOUXlD4t/AbqNafO0auZuWwnmvA9dRBiJfVj/Y63/XIkstvjBbTWx9GjG
- aUoPZpu+wffPiTB/0WCY3K4EQn5S0XwRXYYKHfypFtctx52XbI9G2utzxW4henz2dE4/gvxFa
- +3ZNgLhUBk1iDMWpzcERcAgRiGTX+Uxwk9yimIb1V6k4SUnoH6rKXG91EPLsNHPr54fMeJvF5
- 3lu5tOCJzhS33qiU2PAupR2XFh93FPWVYvs55jwY0OiFTlqbH9DoBINICzuivzM3NVBPRryvJ
- KywP/UlNgPerwZHcHme3CXB1FxX6+wGwHYyoiXy3Lac0wX7lfM=
+In-Reply-To: <20200527134755.978758-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Szabolcs Nagy ran into a kernel build failure with a custom gcc
-toochain that sets -mfpu=auto -mfloat-abi-hard:
+On 5/27/20 7:47 AM, Arnd Bergmann wrote:
+> Clang points out a mismatch between function arguments
+> using a different enum type:
+> 
+> net/ipv4/nexthop.c:841:30: error: implicit conversion from enumeration type 'enum nexthop_event_type' to different enumeration type 'enum fib_event_type' [-Werror,-Wenum-conversion]
+>         call_nexthop_notifiers(net, NEXTHOP_EVENT_DEL, nh);
+>         ~~~~~~~~~~~~~~~~~~~~~~      ^~~~~~~~~~~~~~~~~
+> 
+> This looks like a copy-paste error, so just use the intended
+> type instead.
+> 
+> Fixes: 8590ceedb701 ("nexthop: add support for notifiers")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  net/ipv4/nexthop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
- /tmp/ccmNdcdf.s:1898: Error: selected processor does not support `cpsid i' in ARM mode
-
-The problem is that $(call cc-option, -march=armv7-a) fails before the
-kernel overrides the gcc options to also pass -msoft-float.
-
-Move the option to the beginning the Makefile, before we call
-cc-option for the first time.
-
-Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87302
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index fcd40c5bfd94..9804f8f61e67 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -16,6 +16,8 @@ LDFLAGS_vmlinux	+= --be8
- KBUILD_LDFLAGS_MODULE	+= --be8
- endif
- 
-+KBUILD_CFLAGS	+= -msoft-float
-+
- ifeq ($(CONFIG_CPU_32v4),y)
- LDFLAGS_vmlinux	+= $(call ld-option,--fix-v4bx)
- LDFLAGS_MODULE	+= $(call ld-option,--fix-v4bx)
-@@ -138,7 +140,7 @@ AFLAGS_ISA	:=$(CFLAGS_ISA)
- endif
- 
- # Need -Uarm for gcc < 3.x
--KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
-+KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -Uarm
- KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
- 
- CHECKFLAGS	+= -D__arm__
--- 
-2.26.2
+Nate sent a fix a few hours ago:
+https://lore.kernel.org/netdev/20200527080019.3489332-1-natechancellor@gmail.com/T/#u
 
