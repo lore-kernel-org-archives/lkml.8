@@ -2,153 +2,139 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB34C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F13C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC68E2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mOMM9cG2"
+	by mail.kernel.org (Postfix) with ESMTP id 015F620C56
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590597479;
+	bh=1ElavpxIOb162jTK3qnHRLYZHlidGmYNpnubB2FcWVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GYjC1EamsekOdaiBpsW7TI2BtVMqbBOgEUNgFMDwwUlZW6JI8Uipaq3ci1zRiV6ND
+	 s4ZbIB44gQlqDajySV1m8sviNp/ZRi6Z9UsE3cHdbdQ9Y7bp1AFInQGfFPyu5dn/tV
+	 nwSuBZP4B1XOU/HxqQKRIxGuGBCVgDvBcYQs2pFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391266AbgE0QgJ (ORCPT
+        id S2391290AbgE0Qh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:36:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58444 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388698AbgE0QgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:36:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3SwWv1b1ZZ0d4qKk4MUGy+soL9XW1X7q0hmvw8xul90=; b=mOMM9cG2XuJFDBG+fyrTTt8Gd/
-        9/AQlxNVJTeLpT1Aqthkwtrr7sxOOarLnF0AmOHigdFz7jenleaQS/Iqv8ykne0lZjoVXaM7w8f/6
-        Bp2Uzf06E/YkIhWdLz0SZq0K3IJG3oyombnNucT8PKzTIMYVcHRhymEyJvOY5yTtr8s1p2xS5OCOn
-        9Oc14s9FeGx2IhU6V0r86h1We/4XTeoJ1fdJeWuhG90/hSRmKQszcoGsgsnLyWyZwqygzApAWXkil
-        QFj8gUle2Sr6ecnxSycKwKWm38PNyNKMBNhF017oQMYd6vCW/QFCN2fJqQ2CzLk/AJyRfc3SnsXvB
-        OtWjTnOw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdz1u-0002oU-0o; Wed, 27 May 2020 16:35:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B6C30300478;
-        Wed, 27 May 2020 18:35:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9033A2B9C7024; Wed, 27 May 2020 18:35:43 +0200 (CEST)
-Date:   Wed, 27 May 2020 18:35:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     tglx@linutronix.de, frederic@kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
-        mgorman@techsingularity.net, joel@joelfernandes.org
-Subject: Re: [RFC][PATCH 4/7] smp: Optimize send_call_function_single_ipi()
-Message-ID: <20200527163543.GA706478@hirez.programming.kicks-ass.net>
-References: <20200526161057.531933155@infradead.org>
- <20200526161907.953304789@infradead.org>
- <20200527095645.GH325280@hirez.programming.kicks-ass.net>
- <20200527101513.GJ325303@hirez.programming.kicks-ass.net>
- <20200527155656.GU2869@paulmck-ThinkPad-P72>
+        Wed, 27 May 2020 12:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388698AbgE0Qh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:37:58 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E6E420C56;
+        Wed, 27 May 2020 16:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590597477;
+        bh=1ElavpxIOb162jTK3qnHRLYZHlidGmYNpnubB2FcWVo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CSc6KbFP5IFSMVcU25BkGBaUGo+R9FqeOUCt0o2DX9mgcvg9JruRp4Qn39hDf4q0i
+         qVL3+P2ip5hAxLC9gyhnXqNnQsMatS0i6bSAKMCmov1ZykA8eVNixPS2WD7udS6r79
+         jzeA3QvVJfUAzMRLrHRZJGYtHCoTKuSbOuKSzCpY=
+Received: by mail-ot1-f50.google.com with SMTP id o13so49841otl.5;
+        Wed, 27 May 2020 09:37:57 -0700 (PDT)
+X-Gm-Message-State: AOAM533hGsrLGktGZHWCHsNJKYbPWWGHxCzLDRHIUnh0XfBROLtkf0xt
+        RqKoCUEC5KojnsSjn6jJBXiwK/wut8ktQA6+WQ==
+X-Google-Smtp-Source: ABdhPJypzvc3q05z4AIUaGBF+aU21FPPXvUjMSTRC9ZOMkYJnnpBx8mSfd2Yxm6R6AYCBI8u4iJP95DuhMIdrGo2nfU=
+X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr4952847ote.107.1590597476323;
+ Wed, 27 May 2020 09:37:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527155656.GU2869@paulmck-ThinkPad-P72>
+References: <20200522033631.32574-1-kishon@ti.com> <20200522033631.32574-4-kishon@ti.com>
+ <CAL_JsqJjXUUgTbSAi83w4Eie-sVTrkLLMGh_PRQsd8k2vuua4Q@mail.gmail.com>
+ <df29309d-8401-4040-eb1e-90bb3af93a82@ti.com> <CAL_JsqLy9T8O81stSW8RHpsUXFFjon80VG9-Jgync1eVR4iTew@mail.gmail.com>
+ <b3663862-44df-867f-0824-28802909f224@ti.com>
+In-Reply-To: <b3663862-44df-867f-0824-28802909f224@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 27 May 2020 10:37:44 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
+Message-ID: <CAL_JsqJMZxOFw-kn5_9bNTPzJuwHybJAi6iQyBq=6BrKSvfTqA@mail.gmail.com>
+Subject: Re: [PATCH v5 03/14] PCI: cadence: Convert all r/w accessors to
+ perform only 32-bit accesses
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        linux-omap <linux-omap@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:56:56AM -0700, Paul E. McKenney wrote:
-> On Wed, May 27, 2020 at 12:15:13PM +0200, Peter Zijlstra wrote:
+On Wed, May 27, 2020 at 4:49 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Hi Rob,
+>
+> On 5/26/2020 8:42 PM, Rob Herring wrote:
+> > On Sun, May 24, 2020 at 9:30 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>
+> >> Hi Rob,
+> >>
+> >> On 5/22/2020 9:24 PM, Rob Herring wrote:
+> >>> On Thu, May 21, 2020 at 9:37 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >>>>
+> >>>> Certain platforms like TI's J721E using Cadence PCIe IP can perform only
+> >>>> 32-bit accesses for reading or writing to Cadence registers. Convert all
+> >>>> read and write accesses to 32-bit in Cadence PCIe driver in preparation
+> >>>> for adding PCIe support in TI's J721E SoC.
+> >>>
+> >>> Looking more closely I don't think cdns_pcie_ep_assert_intx is okay
+> >>> with this and never can be given the PCI_COMMAND and PCI_STATUS
+> >>> registers are in the same word (IIRC, that's the main reason 32-bit
+> >>> config space accesses are broken). So this isn't going to work at
+> >>
+> >> right, PCI_STATUS has write '1' to clear bits and there's a chance that it
+> >> could be reset while raising legacy interrupt. While this cannot be avoided for
+> >> TI's J721E, other platforms doesn't have to have this limitation.
+> >>> least for EP accesses. And maybe you need a custom .raise_irq() hook
+> >>> to minimize any problems (such as making the RMW atomic at least from
+> >>> the endpoint's perspective).
+> >>
+> >> This is to make sure EP doesn't update in-consistent state when RC is updating
+> >> the PCI_STATUS register? Since this involves two different systems, how do we
+> >> make this atomic?
+> >
+> > You can't make it atomic WRT both systems, but is there locking around
+> > each RMW? Specifically, are preemption and interrupts disabled to
+> > ensure time between a read and write are minimized? You wouldn't want
+> > interrupts disabled during the delay too though (i.e. around
+> > .raise_irq()).
+>
+> Okay, I'll add spin spin_lock_irqsave() in cdns_pcie_write_sz(). As you also
+> pointed below that delay for legacy interrupt is wrong and it has to be fixed
+> (with a later series).
 
-> > At first glance, something like the below could work. But obviously I
-> > might have overlooked something more subtle than a brick :-)
-> 
-> This can work, but only if the call from the idle loop is a place where
-> either RCU isn't watching on the one hand or that cannot be in an RCU
-> read-side critical section on the other. 
+But you don't need a lock everywhere. You need locks in the callers
+(and only sometimes).
 
-Guaranteed no RCU read side, although the call is in a place where RCU
-is active again, is that a problem? I think with a bit of work I can
-move it to where RCU is still idle.
+> How do you want to handle cdns_pcie_ep_fn_writew() now? Because now we are
+> changing the default implementation to perform only 32-bit access (used for
+> legacy interrupt, msi-x interrupt and while writing standard headers) and it's
+> not okay only for legacy interrupts for platforms other than TI.
 
-> Because rcu_exp_handler() assumes that if this function returns true,
-> we are not in an RCU read-side critical section.  (I would expect this
-> to be the case, but I figured that I should make it explicit.)
+Now I'm wondering how set_msi is not racy in the current code with the
+host setting/clearing PCI_MSI_FLAGS_ENABLE? Maybe that bit is RO from
+the EP side?
 
-Indeed, I shall put a comment in the idle look to make sure it stays that way.
+Ultimately I think you're going to have to provide your own endpoint
+functions or you need accessors for specific registers like
+PCI_MSI_FLAGS. Then for example, you just rely on the 2 bytes before
+PCI_MSI_FLAGS being reserved and do a 32-bit access without a RMW.
+Trying to abstract this at the register read/write level is going to
+be fragile.
 
-> > ---
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 90c8be22d57a..0792c032a972 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -426,8 +426,11 @@ EXPORT_SYMBOL_GPL(rcu_momentary_dyntick_idle);
-> >   */
-> 
-> Could we please have a comment noting the change in semantics and
-> the reason?
-
-A Changelog you mean? Sure, I can do, but I wasn't nowhere confident
-enough in the change to even bother trying to write one.
-
-> >  static int rcu_is_cpu_rrupt_from_idle(void)
-> >  {
-> > -	/* Called only from within the scheduling-clock interrupt */
-> > -	lockdep_assert_in_irq();
-> > +	/*
-> > +	 * Usually called from the tick; but also used from smp_call_function()
-> > +	 * for expedited grace periods.
-> > +	 */
-> > +	lockdep_assert_irqs_disabled();
-> >  
-> >  	/* Check for counter underflows */
-> >  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
-> > @@ -435,8 +438,11 @@ static int rcu_is_cpu_rrupt_from_idle(void)
-> >  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 0,
-> >  			 "RCU dynticks_nmi_nesting counter underflow/zero!");
-> >  
-> > -	/* Are we at first interrupt nesting level? */
-> > -	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-> > +	/*
-> > +	 * Are we at first interrupt nesting level? -- or below, when running
-> > +	 * directly from the idle loop itself.
-> > +	 */
-> > +	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) > 1)
-> 
-> Wouldn't it also be a good idea to check that we are in the context of
-> an idle thread?  Just in case some idiot like me drops a call to this
-> function in the wrong place, for example, if I were to mistakenly remember
-> the old semantics where it would return false from process context?
-> 
-> Maybe something like this?
-> 
-> 	nesting = __this_cpu_read(rcu_data.dynticks_nmi_nesting;
-> 	if (nesting > 1)
-> 		return false;
-> 	WARN_ON_ONCE(!nesting && !is_idle_task(current));
-
-Yep, that should do.
-
-> >  		return false;
-> >  
-> >  	/* Does CPU appear to be idle from an RCU standpoint? */
-> 
-> And let's check the other callers:
-> 
-> rcu_sched_clock_irq():  This will always be called from IRQ (right?), so
-> 	no problem.
-> 
-> rcu_pending():  Only called from rcu_sched_clock_irq(), so still no problem.
-> 
-> rcu_flavor_sched_clock_irq(): Ditto for both definitions.
-
-Right, I went though them, didn't find anything obvious amiss. OK, let
-me do a nicer patch.
+Rob
