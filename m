@@ -2,109 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35694C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77197C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1637C2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jBKa01d6"
+	by mail.kernel.org (Postfix) with ESMTP id 580552084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389001AbgE0OR5 (ORCPT
+        id S2389049AbgE0OSo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:17:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387800AbgE0OR5 (ORCPT
+        Wed, 27 May 2020 10:18:44 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:51389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388854AbgE0OSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:17:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C42EC08C5C3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:17:57 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k26so2735484wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YH1v8wKe1VUKWAjGTwnWnKdT9B4ah56ml0/ndiIz5io=;
-        b=jBKa01d6epycwm2tJPgKP5MJmpfECW/858iC9R+HX+08ZSdRe1VOune12GU5FSK6jL
-         9ch+4WqcdFqtQm1Uw+0hpM8lDcfTvLDZZoF4N/Nxuz5BB5rrZjHqDr6pE2iuPToiG2h7
-         Z5zDJ2TE/ReBM6Aoi/RDfJTpsoxuPWS1pwkhI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YH1v8wKe1VUKWAjGTwnWnKdT9B4ah56ml0/ndiIz5io=;
-        b=a4VfYHu/41Un2FBibw5B/0hJGH8z1SaGiLD177d4ChlCpIgml94qcBsLjNOYnI7uVj
-         A0GJXz5t/Rpc6qgn8TivXTsRR1K8Y5kaLZEm5CT/sh2G3nCGyl0U7R6lu9dmSRV7odm/
-         +W1HiAsuMuVTaVYnP8ZZ9bMtkTZRgm9yem1FpFwn87PS4u92xe6WRlDzGBpl/uPdbTmF
-         +v3XRFN/1W71K6eMJIcJoIz3HTuE/eqJV0FEHAYzVIXqJ++R/Veev3aixPE6J2DLfB4S
-         R5a71Bp7B68TNtcUUQ1vE3I8cqPMrUtry58B8OQBmdTx52o2Ty/QpLhrq9rT7fm7+weO
-         Pcbw==
-X-Gm-Message-State: AOAM533auvH5KyR7Ny65u5pixfYTGPGf7D18fwdTvtfs2G7L6ZDQrXO/
-        4ckg+wSLCDXQ9WkIcvEYm1V9TcZtzuc=
-X-Google-Smtp-Source: ABdhPJwWguHm0Lnqvgwm14E6sIExIuStJrZLuVvOVvX+cd+cFq+0BnVHHJ+F5pSSo7Tq7jwp6YH5nA==
-X-Received: by 2002:a05:600c:2256:: with SMTP id a22mr4092817wmm.18.1590589075512;
-        Wed, 27 May 2020 07:17:55 -0700 (PDT)
-Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id o15sm3026908wrv.48.2020.05.27.07.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 07:17:55 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Brendan Jackman <jackmanb@chromium.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH] fs: Add an explicit might_sleep() to iput
-Date:   Wed, 27 May 2020 16:17:53 +0200
-Message-Id: <20200527141753.101163-1-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+        Wed, 27 May 2020 10:18:44 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N3KgE-1ivQwf2h9O-010IcZ; Wed, 27 May 2020 16:17:59 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Tim Chen <tim.c.chen@linux.intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] x86: crypto: fix building crc32c with clang ias
+Date:   Wed, 27 May 2020 16:17:40 +0200
+Message-Id: <20200527141754.1850968-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:HhqJ2SV7RLSWCbDR/hTyZUI75A0ol3DrkPR+HKRt8s2B+uKPzr5
+ sGoQbkyCOlcIasQJ4GxCZxVJVCybUkZrIKlLy9IDynmJxpbIr6jtpJwOIoBO7FElWCEZyX0
+ PVTkdYDcAY6ovzIwph/0l4Pa5R7bYypb4vviB8FW3s/p3tFLishxI/6QBcuV2p/+K6l/MrR
+ vuKeLGO1IwcOUFrRIWiYQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:WHbYaBFBR0Q=:+FS4KQXcRW9hNJM+f4Yhoc
+ n7YjB7WfPFDkXieTES6QHnUzoXVQgicGfYasQXOkI0naBVDmtab6F8J2wJ9b/WrpeTPt9GeJx
+ N+NN5PuTK+3GH9+WTU72Q3WxfbiV2M+3TG2amqi/CAfUfbREAVuYK2UktObbKQcBJdmEdFfCD
+ 7cJg17qONdtGsnYZoP9aBD50gP3Hm87AkpyeA40eangIsOP0IsA62Zc/alJLCF7Bxfl7THjb/
+ 3dyiw+ZDfqQCyvK7udDzfcvUQL38j4zha+eR4b0c1DuW5iRBy8/RHsR1g89eH/pKTENxL+vXj
+ 6S1p/TQ0pOrXha961k3Rrhup86FKDBLVJBmGUoLRgi/XrdWX3z5fYz1uDX7jgN2Gm0ShyNI5X
+ vuwdwEkgkb1saDGQakKt2PfuFK9KNrRsV9jGLkgy08R39JXGy5Mr2+qn9sccEC0E1S281xf+g
+ LEBttLehbAFaAxj592jr8sQnx2nl8hWsB1KKVaGtvWhibTBddCIFv7Mni1SjitLM4FGDp5lCB
+ M+PusVi3dzep3k3HoN2DIt08B9p4gkLoaRRDg/65UF9heSYNwSnJX5FYhytxG38geSEQNibmT
+ wfgpMfweD0FiIJHjtl2mC5FRhDOuukSstWXKrFJxl5Iyt4xeDphu/O5t0QFG9nEKcdM0+v4F6
+ Sxc5qLI6cVDIAs2siPjM21Rb1k1b3ki9XjG5E2erMW3CucqQyHE/ZGBN32UPWtrPI+BTxiZR/
+ kiB9nqxEDB7bYW1QXrNk5U2pAX5PLlL7lDJZD1ubhQ9irJy4svx/8ZtWLoWbNsnwrOlKFvnuR
+ QxAf3V9rznLeg8bTkUgDclELrfx/8c4blhvV269am2Il/pZhh8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+The clang integrated assembler complains about movzxw:
 
-It is currently mentioned in the comments to the function that iput
-might sleep when the inode is destroyed. Have it call might_sleep, as
-dput already does.
+arch/x86/crypto/crc32c-pcl-intel-asm_64.S:173:2: error: invalid instruction mnemonic 'movzxw'
 
-Adding an explicity might_sleep() would help in quickly realizing that
-iput is called from a place where sleeping is not allowed when
-CONFIG_DEBUG_ATOMIC_SLEEP is enabled as noticed in the dicussion:
+It seems that movzwq is the mnemonic that it expects instead,
+and this is what objdump prints when disassembling the file.
 
-  https://lore.kernel.org/bpf/20200527021111.GA197666@google.com/
-
-Signed-off-by: KP Singh <kpsingh@google.com>
-Reviewed-by: Brendan Jackman <jackmanb@chromium.org>
+Fixes: 6a8ce1ef3940 ("crypto: crc32c - Optimize CRC32C calculation with PCLMULQDQ instruction")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/inode.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/crypto/crc32c-pcl-intel-asm_64.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index cc6e701b7e5d..f55e72e76266 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1583,6 +1583,7 @@ static void iput_final(struct inode *inode)
-  */
- void iput(struct inode *inode)
- {
-+	might_sleep();
- 	if (!inode)
- 		return;
- 	BUG_ON(inode->i_state & I_CLEAR);
+diff --git a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+index 8501ec4532f4..442599cbe796 100644
+--- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
++++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
+@@ -170,7 +170,7 @@ continue_block:
+ 
+ 	## branch into array
+ 	lea	jump_table(%rip), %bufp
+-	movzxw  (%bufp, %rax, 2), len
++	movzwq  (%bufp, %rax, 2), len
+ 	lea	crc_array(%rip), %bufp
+ 	lea     (%bufp, len, 1), %bufp
+ 	JMP_NOSPEC bufp
 -- 
-2.27.0.rc0.183.gde8f92d652-goog
+2.26.2
 
