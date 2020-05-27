@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D75C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA40C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44719207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222E8207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387731AbgE0Lzs (ORCPT
+        id S2387708AbgE0Lzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:55:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42080 "EHLO mx2.suse.de"
+        Wed, 27 May 2020 07:55:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41872 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388011AbgE0LzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:55:03 -0400
+        id S1728313AbgE0LzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:55:07 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 568A3AE44;
-        Wed, 27 May 2020 11:55:04 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id D415AAE2D;
+        Wed, 27 May 2020 11:55:06 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+        Scott Branden <sbranden@broadcom.com>
 Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-Subject: [RFC 48/50] staging: vchiq: Use vchiq.h as the main header file for services
-Date:   Wed, 27 May 2020 13:53:53 +0200
-Message-Id: <20200527115400.31391-49-nsaenzjulienne@suse.de>
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC 50/50] staging: vchiq: Move vchiq.h into include directory
+Date:   Wed, 27 May 2020 13:53:55 +0200
+Message-Id: <20200527115400.31391-51-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527115400.31391-1-nsaenzjulienne@suse.de>
 References: <20200527115400.31391-1-nsaenzjulienne@suse.de>
@@ -47,318 +47,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This used to be vchiq_if.h but vchiq.h is more concise for an include
-file that will hopefully be in the future in the includes directory.
+To make the separation clear between vchiq's header files and vchiq.h,
+which is to be used by services and is the 'public' API, move it into a
+dedicated includes directory.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- .../vc04_services/bcm2835-audio/bcm2835.h     |   2 +-
- .../vc04_services/interface/vchiq_arm/vchiq.h | 107 ++++++++++++++++-
- .../interface/vchiq_arm/vchiq_if.h            | 109 ------------------
- .../interface/vchiq_arm/vchiq_ioctl.h         |   2 +-
- .../staging/vc04_services/vc-sm-cma/vc_sm.c   |   2 +-
- .../vc04_services/vc-sm-cma/vc_sm_cma_vchi.c  |   2 +-
- .../vc04_services/vchiq-mmal/mmal-vchiq.c     |   2 +-
- 7 files changed, 108 insertions(+), 118 deletions(-)
- delete mode 100644 drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
+ drivers/staging/vc04_services/Makefile                         | 2 +-
+ drivers/staging/vc04_services/bcm2835-audio/Makefile           | 2 +-
+ drivers/staging/vc04_services/bcm2835-audio/bcm2835.h          | 2 +-
+ .../{interface/vchiq_arm => include/linux/raspberrypi}/vchiq.h | 0
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h | 2 +-
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h    | 2 +-
+ drivers/staging/vc04_services/vc-sm-cma/Makefile               | 1 -
+ drivers/staging/vc04_services/vc-sm-cma/vc_sm.c                | 2 +-
+ drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c       | 2 +-
+ drivers/staging/vc04_services/vchiq-mmal/Makefile              | 1 +
+ drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c          | 3 +--
+ 11 files changed, 9 insertions(+), 10 deletions(-)
+ rename drivers/staging/vc04_services/{interface/vchiq_arm => include/linux/raspberrypi}/vchiq.h (100%)
 
+diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
+index e32c0744e7fc..e1de39303ffe 100644
+--- a/drivers/staging/vc04_services/Makefile
++++ b/drivers/staging/vc04_services/Makefile
+@@ -14,5 +14,5 @@ obj-$(CONFIG_VIDEO_ISP_BCM2835)		+= bcm2835-isp/
+ obj-$(CONFIG_BCM_VC_SM_CMA) 		+= vc-sm-cma/
+ obj-$(CONFIG_BCM2835_VCHIQ_MMAL)	+= vchiq-mmal/
+ 
+-ccflags-y += -D__VCCOREVER__=0x04000000
++ccflags-y += -I $(srctree)/$(src)/include  -D__VCCOREVER__=0x04000000
+ 
+diff --git a/drivers/staging/vc04_services/bcm2835-audio/Makefile b/drivers/staging/vc04_services/bcm2835-audio/Makefile
+index 13fa6d7d9745..d59fe4dde615 100644
+--- a/drivers/staging/vc04_services/bcm2835-audio/Makefile
++++ b/drivers/staging/vc04_services/bcm2835-audio/Makefile
+@@ -2,4 +2,4 @@
+ obj-$(CONFIG_SND_BCM2835)	+= snd-bcm2835.o
+ snd-bcm2835-objs		:= bcm2835.o bcm2835-ctl.o bcm2835-pcm.o bcm2835-vchiq.o
+ 
+-ccflags-y += -I $(srctree)/$(src)/.. -D__VCCOREVER__=0x04000000
++ccflags-y += -I $(srctree)/$(src)/../include -D__VCCOREVER__=0x04000000
 diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-index a15f251033ac..ca220f5230ec 100644
+index ca220f5230ec..1b36475872d6 100644
 --- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
 +++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-@@ -9,7 +9,7 @@
+@@ -6,10 +6,10 @@
+ 
+ #include <linux/device.h>
+ #include <linux/wait.h>
++#include <linux/raspberrypi/vchiq.h>
  #include <sound/core.h>
  #include <sound/pcm.h>
  #include <sound/pcm-indirect.h>
--#include "interface/vchiq_arm/vchiq_if.h"
-+#include "interface/vchiq_arm/vchiq.h"
+-#include "interface/vchiq_arm/vchiq.h"
  
  #define MAX_SUBSTREAMS   (8)
  #define AVAIL_SUBSTREAMS_MASK  (0xff)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-index 57fe7d5e9a85..04b7ff41a025 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-@@ -1,9 +1,108 @@
- /* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
- /* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h b/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
+similarity index 100%
+rename from drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
+rename to drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
+index 8a27f3d7217e..e67692879249 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
+@@ -10,10 +10,10 @@
+ #include <linux/kref.h>
+ #include <linux/rcupdate.h>
+ #include <linux/wait.h>
++#include <linux/raspberrypi/vchiq.h>
  
--#ifndef VCHIQ_VCHIQ_H
--#define VCHIQ_VCHIQ_H
-+#ifndef VCHIQ_H
-+#define VCHIQ_H
+ #include "vchiq_cfg.h"
  
--#include "vchiq_if.h"
-+#define VCHIQ_SERVICE_HANDLE_INVALID 0
+-#include "vchiq.h"
  
--#endif
-+#define VCHIQ_SLOT_SIZE     4096
-+#define VCHIQ_MAX_MSG_SIZE  (VCHIQ_SLOT_SIZE - sizeof(struct vchiq_header))
-+
-+#define VCHIQ_MAKE_FOURCC(x0, x1, x2, x3) \
-+			(((x0) << 24) | ((x1) << 16) | ((x2) << 8) | (x3))
-+
-+enum vchiq_reason {
-+	VCHIQ_SERVICE_OPENED,         /* service, -, -             */
-+	VCHIQ_SERVICE_CLOSED,         /* service, -, -             */
-+	VCHIQ_MESSAGE_AVAILABLE,      /* service, header, -        */
-+	VCHIQ_BULK_TRANSMIT_DONE,     /* service, -, bulk_userdata */
-+	VCHIQ_BULK_RECEIVE_DONE,      /* service, -, bulk_userdata */
-+	VCHIQ_BULK_TRANSMIT_ABORTED,  /* service, -, bulk_userdata */
-+	VCHIQ_BULK_RECEIVE_ABORTED    /* service, -, bulk_userdata */
-+};
-+
-+enum vchiq_status {
-+	VCHIQ_ERROR   = -1,
-+	VCHIQ_SUCCESS = 0,
-+	VCHIQ_RETRY   = 1
-+};
-+
-+enum vchiq_bulk_mode {
-+	VCHIQ_BULK_MODE_CALLBACK,
-+	VCHIQ_BULK_MODE_BLOCKING,
-+	VCHIQ_BULK_MODE_NOCALLBACK,
-+	VCHIQ_BULK_MODE_WAITING		/* Reserved for internal use */
-+};
-+
-+enum vchiq_service_option {
-+	VCHIQ_SERVICE_OPTION_AUTOCLOSE,
-+	VCHIQ_SERVICE_OPTION_SLOT_QUOTA,
-+	VCHIQ_SERVICE_OPTION_MESSAGE_QUOTA,
-+	VCHIQ_SERVICE_OPTION_SYNCHRONOUS,
-+	VCHIQ_SERVICE_OPTION_TRACE
-+};
-+
-+struct vchiq_header {
-+	/* The message identifier - opaque to applications. */
-+	int msgid;
-+
-+	/* Size of message data. */
-+	unsigned int size;
-+
-+	char data[0];           /* message */
-+};
-+
-+struct vchiq_element {
-+	const void __user *data;
-+	unsigned int size;
-+};
-+
-+struct vchiq_service_base {
-+	int fourcc;
-+	enum vchiq_status (*callback)(enum vchiq_reason reason,
-+				      struct vchiq_header *header,
-+				      unsigned int handle,
-+				      void *bulk_userdata);
-+	void *userdata;
-+};
-+
-+struct vchiq_service_params {
-+	int fourcc;
-+	enum vchiq_status (*callback)(enum vchiq_reason reason,
-+				      struct vchiq_header *header,
-+				      unsigned int handle,
-+				      void *bulk_userdata);
-+	void *userdata;
-+	short version;       /* Increment for non-trivial changes */
-+	short version_min;   /* Update for incompatible changes */
-+};
-+
-+struct vchiq_instance;
-+
-+extern enum vchiq_status vchiq_initialise(struct vchiq_instance **pinstance);
-+extern enum vchiq_status vchiq_shutdown(struct vchiq_instance *instance);
-+extern enum vchiq_status vchiq_connect(struct vchiq_instance *instance);
-+extern enum vchiq_status vchiq_open_service(struct vchiq_instance *instance,
-+	const struct vchiq_service_params *params,
-+	unsigned int *pservice);
-+extern enum vchiq_status vchiq_close_service(unsigned int service);
-+extern enum vchiq_status vchiq_use_service(unsigned int service);
-+extern enum vchiq_status vchiq_release_service(unsigned int service);
-+extern void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header);
-+extern void           vchiq_release_message(unsigned int service,
-+	struct vchiq_header *header);
-+extern int vchiq_queue_kernel_message(unsigned handle, void *data,
-+				      unsigned size);
-+extern enum vchiq_status vchiq_bulk_transmit(unsigned int service,
-+	const void *data, unsigned int size, void *userdata,
-+	enum vchiq_bulk_mode mode);
-+extern enum vchiq_status vchiq_bulk_receive(unsigned int service,
-+	void *data, unsigned int size, void *userdata,
-+	enum vchiq_bulk_mode mode);
-+extern void *vchiq_get_service_userdata(unsigned int service);
-+extern enum vchiq_status vchiq_get_peer_version(unsigned int handle,
-+      short *peer_version);
-+extern struct vchiq_header *vchiq_msg_hold(unsigned handle);
-+
-+#endif /* VCHIQ_H */
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-deleted file mode 100644
-index 6374eda4ea0c..000000000000
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
-+++ /dev/null
-@@ -1,109 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause */
--/* Copyright (c) 2010-2012 Broadcom. All rights reserved. */
--
--#ifndef VCHIQ_IF_H
--#define VCHIQ_IF_H
--
--#define VCHIQ_SERVICE_HANDLE_INVALID 0
--
--#define VCHIQ_SLOT_SIZE     4096
--#define VCHIQ_MAX_MSG_SIZE  (VCHIQ_SLOT_SIZE - sizeof(struct vchiq_header))
--
--#define VCHIQ_MAKE_FOURCC(x0, x1, x2, x3) \
--			(((x0) << 24) | ((x1) << 16) | ((x2) << 8) | (x3))
--
--enum vchiq_reason {
--	VCHIQ_SERVICE_OPENED,         /* service, -, -             */
--	VCHIQ_SERVICE_CLOSED,         /* service, -, -             */
--	VCHIQ_MESSAGE_AVAILABLE,      /* service, header, -        */
--	VCHIQ_BULK_TRANSMIT_DONE,     /* service, -, bulk_userdata */
--	VCHIQ_BULK_RECEIVE_DONE,      /* service, -, bulk_userdata */
--	VCHIQ_BULK_TRANSMIT_ABORTED,  /* service, -, bulk_userdata */
--	VCHIQ_BULK_RECEIVE_ABORTED    /* service, -, bulk_userdata */
--};
--
--enum vchiq_status {
--	VCHIQ_ERROR   = -1,
--	VCHIQ_SUCCESS = 0,
--	VCHIQ_RETRY   = 1
--};
--
--enum vchiq_bulk_mode {
--	VCHIQ_BULK_MODE_CALLBACK,
--	VCHIQ_BULK_MODE_BLOCKING,
--	VCHIQ_BULK_MODE_NOCALLBACK,
--	VCHIQ_BULK_MODE_WAITING		/* Reserved for internal use */
--};
--
--enum vchiq_service_option {
--	VCHIQ_SERVICE_OPTION_AUTOCLOSE,
--	VCHIQ_SERVICE_OPTION_SLOT_QUOTA,
--	VCHIQ_SERVICE_OPTION_MESSAGE_QUOTA,
--	VCHIQ_SERVICE_OPTION_SYNCHRONOUS,
--	VCHIQ_SERVICE_OPTION_TRACE
--};
--
--struct vchiq_header {
--	/* The message identifier - opaque to applications. */
--	int msgid;
--
--	/* Size of message data. */
--	unsigned int size;
--
--	char data[0];           /* message */
--};
--
--struct vchiq_element {
--	const void __user *data;
--	unsigned int size;
--};
--
--struct vchiq_service_base {
--	int fourcc;
--	enum vchiq_status (*callback)(enum vchiq_reason reason,
--				      struct vchiq_header *header,
--				      unsigned int handle,
--				      void *bulk_userdata);
--	void *userdata;
--};
--
--struct vchiq_service_params {
--	int fourcc;
--	enum vchiq_status (*callback)(enum vchiq_reason reason,
--				      struct vchiq_header *header,
--				      unsigned int handle,
--				      void *bulk_userdata);
--	void *userdata;
--	short version;       /* Increment for non-trivial changes */
--	short version_min;   /* Update for incompatible changes */
--};
--
--struct vchiq_instance;
--
--extern enum vchiq_status vchiq_initialise(struct vchiq_instance **pinstance);
--extern enum vchiq_status vchiq_shutdown(struct vchiq_instance *instance);
--extern enum vchiq_status vchiq_connect(struct vchiq_instance *instance);
--extern enum vchiq_status vchiq_open_service(struct vchiq_instance *instance,
--	const struct vchiq_service_params *params,
--	unsigned int *pservice);
--extern enum vchiq_status vchiq_close_service(unsigned int service);
--extern enum vchiq_status vchiq_use_service(unsigned int service);
--extern enum vchiq_status vchiq_release_service(unsigned int service);
--extern int vchiq_queue_kernel_message(unsigned handle, void *data,
--				      unsigned size);
--extern void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header);
--extern void           vchiq_release_message(unsigned int service,
--	struct vchiq_header *header);
--extern enum vchiq_status vchiq_bulk_transmit(unsigned int service,
--	const void *data, unsigned int size, void *userdata,
--	enum vchiq_bulk_mode mode);
--extern enum vchiq_status vchiq_bulk_receive(unsigned int service,
--	void *data, unsigned int size, void *userdata,
--	enum vchiq_bulk_mode mode);
--extern void *vchiq_get_service_userdata(unsigned int service);
--extern enum vchiq_status vchiq_get_peer_version(unsigned int handle,
--      short *peer_version);
--extern void vchiq_msg_queue_push(unsigned handle, struct vchiq_header *header);
--extern struct vchiq_header *vchiq_msg_hold(unsigned handle);
--
--#endif /* VCHIQ_IF_H */
+ /* Do this so that we can test-build the code on non-rpi systems */
+ #if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-index 202889b3774f..f285d754ad28 100644
+index f285d754ad28..3653fd99d8a1 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
 @@ -5,7 +5,7 @@
  #define VCHIQ_IOCTLS_H
  
  #include <linux/ioctl.h>
--#include "vchiq_if.h"
-+#include "vchiq.h"
+-#include "vchiq.h"
++#include <linux/raspberrypi/vchiq.h>
  
  #define VCHIQ_IOC_MAGIC 0xc4
  #define VCHIQ_INVALID_HANDLE (~0)
+diff --git a/drivers/staging/vc04_services/vc-sm-cma/Makefile b/drivers/staging/vc04_services/vc-sm-cma/Makefile
+index 77d173694fbf..c92a5775c62e 100644
+--- a/drivers/staging/vc04_services/vc-sm-cma/Makefile
++++ b/drivers/staging/vc04_services/vc-sm-cma/Makefile
+@@ -1,6 +1,5 @@
+ ccflags-y += \
+ 	-I$(srctree)/$(src)/../ \
+-	-I$(srctree)/$(src)/../interface/vchi \
+ 	-I$(srctree)/$(src)/../interface/vchiq_arm\
+ 	-I$(srctree)/$(src)/../include
+ 
 diff --git a/drivers/staging/vc04_services/vc-sm-cma/vc_sm.c b/drivers/staging/vc04_services/vc-sm-cma/vc_sm.c
-index 572068538a4c..e4f7bdeef66d 100644
+index e4f7bdeef66d..cc69ce932317 100644
 --- a/drivers/staging/vc04_services/vc-sm-cma/vc_sm.c
 +++ b/drivers/staging/vc04_services/vc-sm-cma/vc_sm.c
-@@ -48,7 +48,7 @@
+@@ -46,9 +46,9 @@
+ #include <linux/seq_file.h>
+ #include <linux/syscalls.h>
  #include <linux/types.h>
++#include <linux/raspberrypi/vchiq.h>
  #include <asm/cacheflush.h>
  
--#include "vchiq_if.h"
-+#include "vchiq.h"
+-#include "vchiq.h"
  #include "vchiq_connected.h"
  #include "vc_sm_cma_vchi.h"
  
 diff --git a/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c b/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c
-index 1ff165c05706..2c65416cd331 100644
+index 2c65416cd331..8d8eda1a8142 100644
 --- a/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c
 +++ b/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c
-@@ -19,7 +19,7 @@
+@@ -18,8 +18,8 @@
+ #include <linux/semaphore.h>
  #include <linux/slab.h>
  #include <linux/types.h>
++#include <linux/raspberrypi/vchiq.h>
  
--#include "interface/vchiq_arm/vchiq_if.h"
-+#include "vchiq.h"
+-#include "vchiq.h"
  #include "vc_sm_cma_vchi.h"
  
  #define VC_SM_VER  1
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/Makefile b/drivers/staging/vc04_services/vchiq-mmal/Makefile
+index f8164c33aec3..b2a830f48acc 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/Makefile
++++ b/drivers/staging/vc04_services/vchiq-mmal/Makefile
+@@ -5,4 +5,5 @@ obj-$(CONFIG_BCM2835_VCHIQ_MMAL) += bcm2835-mmal-vchiq.o
+ 
+ ccflags-y += \
+ 	-I$(srctree)/$(src)/.. \
++	-I$(srctree)/$(src)/../include \
+ 	-D__VCCOREVER__=0x04000000
 diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index c5f59d71badf..2101b79780eb 100644
+index 2101b79780eb..e057e21961d5 100644
 --- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
 +++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -32,7 +32,7 @@
+@@ -23,6 +23,7 @@
+ #include <linux/slab.h>
+ #include <linux/completion.h>
+ #include <linux/vmalloc.h>
++#include <linux/raspberrypi/vchiq.h>
+ #include <media/videobuf2-vmalloc.h>
+ 
+ #include "mmal-common.h"
+@@ -32,8 +33,6 @@
  
  #include "vc-sm-cma/vc_sm_knl.h"
  
--#include "interface/vchiq_arm/vchiq_if.h"
-+#include "interface/vchiq_arm/vchiq.h"
- 
+-#include "interface/vchiq_arm/vchiq.h"
+-
  /*
   * maximum number of components supported.
+  * This matches the maximum permitted by default on the VPU
 -- 
 2.26.2
 
