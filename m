@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E76C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2883C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3AE920776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09AB20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Y7g8Yr+2";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FRp4on9b"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qgIQRMim";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1mQDffBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbgE0Pvt (ORCPT
+        id S2390547AbgE0PyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:51:49 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55453 "EHLO
+        Wed, 27 May 2020 11:54:24 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:53257 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389820AbgE0PvA (ORCPT
+        by vger.kernel.org with ESMTP id S1730686AbgE0Pvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:51:00 -0400
+        Wed, 27 May 2020 11:51:47 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 1A5545820DD;
-        Wed, 27 May 2020 11:50:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:59 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id C2538582101;
+        Wed, 27 May 2020 11:51:46 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:51:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=ounqDkKyB9FLa
-        CDv2YNyzZ5BItMJjprgBr0/54Ryzxs=; b=Y7g8Yr+2xMKAOZQ8bzPpv/1tMXBiR
-        AeyNgtwN9vLgyXFKq9IqmhXZusMdMggLEXnwiR/XUo01f8xFt3EZKZG7uzR8XWLC
-        kpERJdh9mp9FImjNIeYVAyNsmCog/2jxStbBP5nqqsQdFSSGb7ZUcM01D0LcHlmX
-        p5hnnqzxkydwLWZqBL4rE3VnNf9njKM8yPcNMdVlk6wJcxoG1Dv2Qt0h21LxcPAJ
-        xbeEEoEHSUGhzedVxhnaASVcbqpbphsP8yzXYS5NDjwiKzE2Uy60Vc9hqmJKiR2A
-        eCM6A9iuMwe+yrsHQ91yor82jnGj1OwO1sdn+xxgqHtVcUaGX4jFv/quA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=w9X7BF4nMd1nQ
+        c/IzGAPERlbj1jfgqvltCeOfK66pKY=; b=qgIQRMimoBVH2IAS/AkkUDxzQ59uk
+        Con0+f2IRGcdM1tEQ5My5bRPNjZ6851/Y4X8i36NcPh2Hh180l+/Ab2HsRT5GvSJ
+        kFwgBcvlaSg/ko9XJM3R6aUpUFetvZBxq3k7xIjeADUbSuDr6IdtjsCcyz15B1V8
+        CzdG1VmsgWxQQ1W5YZkVeKFea4FT8IAha7rY2FAmi06sZ3LgK07SRxYK3e+bntmx
+        WlxJCrxlDVuEtnI4ZpMXsIiJywAc8B6KznppVbSs7ab3FuVsKi99GLVeiyn5tkBV
+        LdO+HfNgo2t/hwyRrqxVNhNEPiOEd1ez6X7wDPIxop/Zc1V4lWQlPKl0Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ounqDkKyB9FLaCDv2YNyzZ5BItMJjprgBr0/54Ryzxs=; b=FRp4on9b
-        c9xGZztCjLa2tvjA4sKtG+SqJVXDrbFz/32ipl8piNlf/mQSCinb4ugs3hI51vvZ
-        mayd6YXFHCkiq2hTdgdDBRIRHEDogjgw9FCxMUvan+FFBeunYMkHiq78iiHa5JQD
-        D0pfOSNKeXCrqg+vL4HHIvwnY8CySBlNqC73LVqGY1CXJW4R75vNlMCPFxKOC/JO
-        J3tT4wxNOKtLbudR/ucpst/x3OWQcr8mOw2jOaDcKVFE48fuXkCXHpWZI5D44OZL
-        6stis0HkAmjown4AiPrNlkfe401Z8Q1kikP5h5N8pgAEhBesnaeQLAs6onjUn+by
-        reRL7eG2pd1o5g==
-X-ME-Sender: <xms:YozOXk8kDZnEoD_cS6SMfqHa789Nd4FCN3x7AOh1i9dZBNlffhAxng>
+        fm2; bh=w9X7BF4nMd1nQc/IzGAPERlbj1jfgqvltCeOfK66pKY=; b=1mQDffBz
+        lvS5Z0EYIS3v8NUVXEK54eDW1WPjuc6NVy1/RN5D0AreJ7pOknkJvag9qYzsH906
+        SJWiaugeR9pf2TL4mXYo3gWnfjEG6p9gxrwvYiWe8ZTJzsWPAO507Jvqen3il5NN
+        UKav5h0zelR0qVn+A2UHgjiLLhhHQaXbeWtQyaGxZt96lH0oZjspxcSWikyreqih
+        GJ6F9ZscI6XkbbwhAQhM9gEAVWOSMT6aT7fcLWIPgp90FaUzPPP87jIQ3H+i2umU
+        X6KXZvTBPJ6HxM4otN5seZQUS+3mEpz0hWh9i1nyoC85fgMYKWWK7pDUj+nxzhHm
+        vBQWp4AuvyI12w==
+X-ME-Sender: <xms:kozOXtEzFzM2WIJE-mWhje2IgacN9asU8APCcwgB102MVcNObIu9YQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepgeegne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepjedune
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:YozOXsuLATyAfm73AxzeblL0V3Ou0iKSSt-8vfhnAQZ5Lt1igTCAHQ>
-    <xmx:YozOXqA_xdCAYYcGKM8tlKN1xlE_me93MPd6nLA-sHhn-11iQIkAEg>
-    <xmx:YozOXkdDicfZUJPRYPH7yQjFpI5A4aE2WnZYgGEmdE0aFD4H4JVM4g>
-    <xmx:Y4zOXsee4amgMUSkSNr_-HVAcyaxVn3ve8-l71OnX7AkcQPh1nGeVw>
+X-ME-Proxy: <xmx:kozOXiXyEOTR2XcuqCdfQUUlA5KtPUOdjdshIIgzC8AGw5iO7gsGVw>
+    <xmx:kozOXvKvQJyGI1fPPulJ9xi4kzmmHKAiYTquKqAW4oNjNYe3viTLZg>
+    <xmx:kozOXjHCmflnyseM9oCaYy2ktVwGestzHYCDR2gqmDmc1kQbAVcKHQ>
+    <xmx:kozOXqFPX5VNlEJvphdcMcnpAJyi71bbAIbU-nNfhQt_Q_cjm-MuVw>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B22CC3280059;
-        Wed, 27 May 2020 11:50:58 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 66E2330624E4;
+        Wed, 27 May 2020 11:51:46 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 064/105] drm/vc4: crtc: Change the HVS5 test for of_device_is_compatible
-Date:   Wed, 27 May 2020 17:48:34 +0200
-Message-Id: <2165607ede34d229d0cbce916c70c7fb6c0337be.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 095/105] drm/vc4: hdmi: Set the b-frame marker to the match ALSA's default.
+Date:   Wed, 27 May 2020 17:49:05 +0200
+Message-Id: <0a8b22baf15ca5c7a3c5bbb6516db17d470ea6de.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,37 +89,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The TXP probes before the HVS, so testing the hvs5 flag in the hvs pointer
-of the main device structure won't work and result in a null pointer
-dereference.
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
 
-Let's test for the main device compatible instead so that it can work.
+ALSA's iec958 plugin by default sets the block start preamble
+to 8, whilst this driver was programming the hardware to expect
+0xF.
+Amend the hardware config to match ALSA.
 
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 6d7799ff8f87..d284596ec048 100644
---- a/drivers/gpu/drm/vc4/vc4_crtc.c
-+++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -1055,7 +1055,6 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
- 		  const struct drm_crtc_funcs *crtc_funcs,
- 		  const struct drm_crtc_helper_funcs *crtc_helper_funcs)
- {
--	struct vc4_dev *vc4 = to_vc4_dev(drm);
- 	struct drm_crtc *crtc = &vc4_crtc->base;
- 	struct drm_plane *primary_plane;
- 	unsigned int i;
-@@ -1076,7 +1075,7 @@ int vc4_crtc_init(struct drm_device *drm, struct vc4_crtc *vc4_crtc,
- 				  crtc_funcs, NULL);
- 	drm_crtc_helper_add(crtc, crtc_helper_funcs);
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+index dcac5e77d2ab..afa71580bfce 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.c
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+@@ -754,10 +754,11 @@ static int vc4_hdmi_audio_hw_params(struct snd_pcm_substream *substream,
  
--	if (!vc4->hvs->hvs5) {
-+	if (!of_device_is_compatible(drm->dev->of_node, "brcm,bcm2711-vc5")) {
- 		drm_mode_crtc_set_gamma_size(crtc, ARRAY_SIZE(vc4_crtc->lut_r));
+ 	vc4_hdmi_audio_set_mai_clock(vc4_hdmi);
  
- 		/* We support CTM, but only for one CRTC at a
++	/* The B frame identifier should match the value used by alsa-lib (8) */
+ 	audio_packet_config =
+ 		VC4_HDMI_AUDIO_PACKET_ZERO_DATA_ON_SAMPLE_FLAT |
+ 		VC4_HDMI_AUDIO_PACKET_ZERO_DATA_ON_INACTIVE_CHANNELS |
+-		VC4_SET_FIELD(0xf, VC4_HDMI_AUDIO_PACKET_B_FRAME_IDENTIFIER);
++		VC4_SET_FIELD(0x8, VC4_HDMI_AUDIO_PACKET_B_FRAME_IDENTIFIER);
+ 
+ 	channel_mask = GENMASK(vc4_hdmi->audio.channels - 1, 0);
+ 	audio_packet_config |= VC4_SET_FIELD(channel_mask,
 -- 
 git-series 0.9.1
