@@ -2,118 +2,116 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD448C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0CB20723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2652A20DD4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaXhb5mJ"
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="yRGF/20U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgE0IAc (ORCPT
+        id S1729391AbgE0IAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbgE0IAb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:00:31 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 969D2C061A0F;
-        Wed, 27 May 2020 01:00:31 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q24so1173751pjd.1;
-        Wed, 27 May 2020 01:00:31 -0700 (PDT)
+        Wed, 27 May 2020 04:00:45 -0400
+Received: from mail-eopbgr70137.outbound.protection.outlook.com ([40.107.7.137]:3719
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729102AbgE0IAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:00:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oaR0m3JEhgNCiQu2TKnMvPuqesHbkoFVygDoRts0az3eFV4/FXLt72vbig9W3r0ANPmUeYv7j6YTi5GHjc1aeHUNOYQMfhHrCLrfFXelb+pNAaVhvufsy+BO7YPzvOf3srh3ay3gRYXLZoOzrtBZ0zyc2ZiDgRe/9lqc259OYH8RL/glJNRZoGwWZcyzmPNHY1O6NYL4xjF7JZPYxkElxJoXizBxIxbdmhDo/P0VjtOW4Vx68yHC0kQvBPnRlcOna+8MCAVsnFW4tP0g/vii9fyZEaZ6pXigMalvGhwF6CHHWJbkVznMhl2yCOgZtG5CKtZBQH8bLP3YJ830kHHknQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MwgQXCSXKLNI1WWkRJRG3q6vpwY7955PidULhvCKtAs=;
+ b=nR5mifx/e4P7N1nzaIjl5W6gslrOnZBHAhJShmWwUpXeXWCnpknAc54rJvqkoyx1YJoZ9WOoCg4t51DoFmJSh6rcZ6KtFX/7shV0nBjh9+B44q06rbnKRyCdtt+b6Vvri2M+xc/JqKV5gYq2qSu3jGZgfGo4MCKiw1QiTUfzYOMLOB+xOK+7axW6rHOZfsb+HvWBdhixpO2fvYtFNkbnWFGn7LVicNxoS0XkdiY6PYuMAXgd4CVdCPl4NFEyTe5/ETLv09qhhsSM6mrLREwky23HOEMc/6rpREMPie6BrZqJKG1SdXS6vCLyVvLf3sUy9K1e3lfUx2cXy/JPGYR5Hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dfrIIAJU41ZKt+X45ZinqHgh7bx7zJkQ64xHPADTvf0=;
-        b=BaXhb5mJnK0NjrPZhuUxxXz89orbu+Wkv61EJ6GEYRQugVl7LNxBOfeHji3+zD7RHa
-         0EHTmmMwHicTjIx4pLJKUJ60xs9na8tvx4I8bZwbY32tavaODIaWccL7+Qn19pUpmuVe
-         VMFh3ndArJ2WtfBEPYvwnSVPDp+GhHBlH05dgzip7BzTAPFlPwKvQ3hfCgAfy6Zu/Oum
-         0ktwJbdBSnbl8LkGswMFnWfiCDqqquh5TSgSMLD3EwHpLwxhuJrv18ibRTSum3KSTu2i
-         z0rCWoalSGqdtuZKKS0Z7o3hEjsTPVSWcRfFs9Qj7iIsB1EQUnJnnZIaJC8LrfxH9zf3
-         8/Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dfrIIAJU41ZKt+X45ZinqHgh7bx7zJkQ64xHPADTvf0=;
-        b=CRmmiSDrJC/OO7uWIaUakqebbo3PzDvaBZCODuXjcfjdlHd6jIB2dc695+1PIvLW4J
-         xGGn29v1BBlNMCKmONKtlmAC54IbM8pHhjow1T8cqIF61ZeC8d8At//r8x0bHsZdsdbd
-         /G/A1yVJROaIE+ZOT17ttvRtZ9+uwwvWfkgVaCC2ygsmrX3r/CskXNXXzsogATqRCiJR
-         YXkItQr/n85GW85Cdgjp77In+OinpiwtMsfnJW7BWSEhLuP3ineqDovRr8OBb1scMQN/
-         yyyx1D5tOxn+7g39dQzHQFg889Up9ECPsEg9XdUn0UEXGGUvKC6gAmcruC1QuFH0Ap8G
-         G5pA==
-X-Gm-Message-State: AOAM532hCerVHsVEm9Nca4rlarfwEt1u0f0qEP45/DfOqtEtDKZV++Yd
-        kBeFZzNURQ0mdZdf5Xd/yaU=
-X-Google-Smtp-Source: ABdhPJyTaS//jEU45/EluPP6BSlEDDe80kP/OQ7JvaKH2Ti00Y0GGog5m2XXJ6sSFY1agVB9EVrWLw==
-X-Received: by 2002:a17:902:d90c:: with SMTP id c12mr4730110plz.113.1590566430970;
-        Wed, 27 May 2020 01:00:30 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id z16sm1439038pfq.125.2020.05.27.01.00.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 01:00:30 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Roopa Prabhu <roopa@cumulusnetworks.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH net-next] nexthop: Fix type of event_type in call_nexthop_notifiers
-Date:   Wed, 27 May 2020 01:00:20 -0700
-Message-Id: <20200527080019.3489332-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MwgQXCSXKLNI1WWkRJRG3q6vpwY7955PidULhvCKtAs=;
+ b=yRGF/20Ub3+OLPpSx1CYxMK2BVx8KGJYNieui2PLFiSmRvIbTmastxQ8LPgUblSFmhSINmWJnI9PIWbOUeYQrHk/7jFFeagf1KHCAzL02dCh6fQHSy7w2DLXerudY7c5or10pjZ9cNJOtz5wKDQDKDbV0C7K7IzqwQJFHB/six8=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
+ by DB8PR02MB5402.eurprd02.prod.outlook.com (2603:10a6:10:bf::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Wed, 27 May
+ 2020 08:00:39 +0000
+Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::207a:b49c:79e1:d713]) by DB8PR02MB5468.eurprd02.prod.outlook.com
+ ([fe80::207a:b49c:79e1:d713%6]) with mapi id 15.20.3045.018; Wed, 27 May 2020
+ 08:00:39 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     oded.gabbay@gmail.com, SW_Drivers@habana.ai
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] habanalabs: Fix static analysis error
+Date:   Wed, 27 May 2020 11:00:29 +0300
+Message-Id: <20200527080029.28989-1-ttayar@habana.ai>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: FR2P281CA0035.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:14::22) To DB8PR02MB5468.eurprd02.prod.outlook.com
+ (2603:10a6:10:ef::22)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ttayar-VM.habana-labs.com (31.154.190.6) by FR2P281CA0035.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:14::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Wed, 27 May 2020 08:00:39 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [31.154.190.6]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 36c48c97-4174-4b5f-dbe1-08d802140be7
+X-MS-TrafficTypeDiagnostic: DB8PR02MB5402:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR02MB54023C6297AA1E3E48D693CFD2B10@DB8PR02MB5402.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-Forefront-PRVS: 04163EF38A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IeBvADB2uuV/NTwfOsKsLJX5ajAUW6p6ZNGZFKKPCeLVB+vthWN6cRx4JlP6Eu1i3xoldJ2VzAI08T9L01Xv9Bmu83iWoODHNXo+lVFgQyym/goOfpDYSp8kuDYvlmtke3XSDtAfw2inUaubaWfG4UjPVGtZxvWsyE+dmmqUU1d62Wg0IwrGtoWm/o0+w6mX59q0Si4PYNYNAY2Tkp3wLZhMajMNFPKvrQY8ivmM2ZOr5z/XPQpR91mJJrbpf17xCHn922+Z3auLu/PrEJq208yvRqkTE54ibx3MbyL9p8KnqYxpIKOOI0/X2ZRvw5FGGR8hq0VHe9P0EOf13qIeOw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(39850400004)(376002)(396003)(136003)(366004)(26005)(52116002)(6506007)(16526019)(186003)(66476007)(66556008)(66946007)(5660300002)(86362001)(83380400001)(2906002)(316002)(4326008)(4744005)(8936002)(1076003)(8676002)(6512007)(478600001)(6486002)(956004)(2616005)(6666004)(6636002)(36756003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ercmpD9Rl7P90xdi0xcwn6i4yXrbV29RlJ6kks8xVJMf2BeDjVviFFgCw8PVJtoPEnn20hH89Ee/pQPJ05PUgi/sbO5hKZ+mSwDd/rNBkPMMLIuHQWzPlI8DcUxv46VYj0f+NwyUyiS9T4xNfNi88OlmAbw9lE8Z56JQbhC2tK1wFcj3o6udcDhF3aK2MOFZaF0VgpCtlTLWY/iNM81fbr6v/tloPYW9+uhVGQLOlhmUEZHtMdzfHYzhVnnPLF/59X3g5an3R7f2Il+ogpi7ZvaO+is9IxVM39kX2dTx9kN53qDGYcD3K5YVmJ8bn8uH1an3zJb4haBni/ddKje59Ji6bVJeV1o9rRd3ZyjMTrTgaAQdPdYhW6w8pHU94mRCk2hmrC/wC++VETlNUCwVvKV5v9NsBWET2k/Ze7O0jXQgaCTURcwL/q0rRYg6vRH8iAc9IIGLGWFIa44obV+cuPowhS3x0noRrJ8VbATdI1k=
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36c48c97-4174-4b5f-dbe1-08d802140be7
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 08:00:39.7679
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zwg/L2OGoo3lra8JhwCm4yilFSbaMU79NeZhqAhe9eNq5NZAsnH15pG00Yo7zaDfD+/ZbQfjvTshwBkGySR4kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR02MB5402
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+Fix the following smatch error in unmap_device_va():
+error: uninitialized symbol 'rc'.
 
-net/ipv4/nexthop.c:841:30: warning: implicit conversion from enumeration
-type 'enum nexthop_event_type' to different enumeration type 'enum
-fib_event_type' [-Wenum-conversion]
-        call_nexthop_notifiers(net, NEXTHOP_EVENT_DEL, nh);
-        ~~~~~~~~~~~~~~~~~~~~~~      ^~~~~~~~~~~~~~~~~
-1 warning generated.
-
-Use the right type for event_type so that clang does not warn.
-
-Fixes: 8590ceedb701 ("nexthop: add support for notifiers")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1038
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Tomer Tayar <ttayar@habana.ai>
 ---
- net/ipv4/nexthop.c | 2 +-
+ drivers/misc/habanalabs/memory.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
-index 143011f9b580..ec1282858cb7 100644
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -37,7 +37,7 @@ static const struct nla_policy rtm_nh_policy[NHA_MAX + 1] = {
- };
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index 4b8eed1ca513..47da84a17719 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -1023,7 +1023,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr, bool ctx_free)
+ 	struct hl_va_range *va_range;
+ 	enum vm_type_t *vm_type;
+ 	bool is_userptr;
+-	int rc;
++	int rc = 0;
  
- static int call_nexthop_notifiers(struct net *net,
--				  enum fib_event_type event_type,
-+				  enum nexthop_event_type event_type,
- 				  struct nexthop *nh)
- {
- 	int err;
-
-base-commit: dc0f3ed1973f101508957b59e529e03da1349e09
+ 	/* protect from double entrance */
+ 	mutex_lock(&ctx->mem_hash_lock);
 -- 
-2.27.0.rc0
+2.17.1
 
