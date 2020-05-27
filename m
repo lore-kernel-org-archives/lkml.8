@@ -2,125 +2,141 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF61C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA792071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C482071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="XVLU5JS4"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="KSvS6x9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgE0W4B (ORCPT
+        id S1725882AbgE0W47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:56:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
+        Wed, 27 May 2020 18:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0W4A (ORCPT
+        with ESMTP id S1725267AbgE0W46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:56:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA68C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:56:00 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cx22so2239314pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:56:00 -0700 (PDT)
+        Wed, 27 May 2020 18:56:58 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E511C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:56:58 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id nr22so13633316ejb.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:56:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PI2C96+3H6gIr9QJOVWp15+V0aH+BRuKNRaFs+DeBrE=;
-        b=XVLU5JS4PFZ1+641xJQKCy+0a8KVBDdRwl4Dbp9YR4WGmAjr3Ni+MyKkpE5whw2SHY
-         iPduvkSjiJe1YZ3ssvpu4kaGT857K4A1OBHBWd+VWmlOnJbQJYfx7RKSN4nQRAtbz4zd
-         1wkp+drkbkadfk+Cl18tryoukg/3NQhWhi9Bhl17hL7M4j7e0GmLUEQL7KXPNAGK+VMA
-         EqSJRZMN3qf5nw6ryczH8SmA1EYaetP+eQOSuOh5pWF6otfHvDItD9JtpPxzgEvCbnhT
-         TrpwS5AtbcB7zKEY+ETAUpTUT+3FywPbYYOLWw1IJ9tepUgZBp+jjjn3vBKlpvrDZFRb
-         eASg==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fwGU2uQiVzC2IW1d4XSgnAmDLz6dVOd0vO60zHVlzOo=;
+        b=KSvS6x9pGnU336XAjSEy2Gk8ZiLnXQf+5DAP7Svh82mYjA1dYIGgElASJQZ12fQTI0
+         njv6EpY0sGtmVzQuWlZAv/DApYjfP9FJH4pTeQYSZbDxLJvoeOy9VJsuU8jYZshthfLV
+         oW+b9h7z5MNMzG+ZXEbPbQ8zV+q6B/HysBpenZGULORU5qsQ/D0hw+8lSgGTJPG53DAj
+         ncwpjAHUWdIS05VTTosKfSEwLAxMmYOKrNoa6v4tUOIDRiySFpHVzBqwpJFDo2P2zOfF
+         l27BHoULc166seGg+/gnS+F4Ie2SU9aLgyYxOMIpnSFp5W5PVqZdOuGKBYq48im1D9z1
+         nRPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PI2C96+3H6gIr9QJOVWp15+V0aH+BRuKNRaFs+DeBrE=;
-        b=AIGIzVYlclpkPtYBmbwMAeziUCxQme0LoD2aaq6l6TOcTUWuxIUd0m2QTQAYA1FcGZ
-         NFBaLVAbGgcmbH93p06w0wovF5SSOpTuJu5zc0fJ6+iRRnqJnliR3AIb2qXI9VBU5Wl8
-         DokSbJVt4hAfWu9fPINs15xiKRyITt1j8aT/8APnrtS9xlOMVRnz+sK4uzEVyxDbmCsl
-         L1eMEnNqwJe5V84P7Iviwvwy/dl//IeHoG5xtzphX+8gQ4tF0y4zJWiy3tHVK7cAyQce
-         t2HmEHyPO6D54PYUM5BeB93ZIYNTjxMse/mJZRfoO5tMhyltQpKV4j48j8LS1YLKLaPP
-         sEEA==
-X-Gm-Message-State: AOAM530Fitqwc90srxxr52vK+vXTSjqCYOnZf8knS5sfMKfbjU+PD2F+
-        op1kFMW9uGIDNdTQPF8/Z1/DdA==
-X-Google-Smtp-Source: ABdhPJxJxFgWdftTPh49uH2OQXb4hplDrr5r41mtwat8UDNThFr8ByxDio8jyIPAGR9Wj/ZXs07d0Q==
-X-Received: by 2002:a17:90a:db0f:: with SMTP id g15mr715025pjv.8.1590620160180;
-        Wed, 27 May 2020 15:56:00 -0700 (PDT)
-Received: from cisco ([2001:420:c0c8:1003::948])
-        by smtp.gmail.com with ESMTPSA id q4sm3048352pfu.42.2020.05.27.15.55.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 15:55:59 -0700 (PDT)
-Date:   Wed, 27 May 2020 16:56:00 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
-Message-ID: <20200527225600.GF4153131@cisco>
-References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
- <202005271408.58F806514@keescook>
- <20200527215203.GE4153131@cisco>
- <202005271457.CF4BBB47@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fwGU2uQiVzC2IW1d4XSgnAmDLz6dVOd0vO60zHVlzOo=;
+        b=oo/9sCHrvyqCkGS9hV2F1NwSaY+GEhxMOObG0MuiTN9Atzr1eSDwWXfcWJ0eCkZNIh
+         lLi/Pb/1grdJPPeCIAhUzrLSU2PGxYfJZJQL9tQhjcdUgL9Xj21DkR/OYsEvaTPDnPJf
+         PsNmkwWg2Bs6reZDshYDZEaGaoNRKvJX5FOob3djgYDpshkwL/UR8ZlYc7FTW2onR4kq
+         iLA8a7pnr5oFhm6mQjsd1zYJGTLLmSUSArDSRz9M5S3lfjvBT6lHMwOQrfTQYUQBeahh
+         3STaJRz2FEmEDgnQC6yb7LI8hcxA/4RN7npGtq89dqxlkJhN63fyhzEv0WT7nbd7CUPx
+         guhw==
+X-Gm-Message-State: AOAM532dxKHntrV/oQTLgiO6xCcKw5+3ijUW44Eognu9BQRfytfs2NNt
+        9CtYL1a8OIel/a85fbKyzA+mUERc+x/jswHIA4aAkQ==
+X-Google-Smtp-Source: ABdhPJzifeTbqLEgFw8mAxsZqyIiMiAysH0JILvagDOdSAmeTZcZsPKvsacGAbZ5HtpGbNjkqmFFEIQEKYYEmRknmzk=
+X-Received: by 2002:a17:906:fb0e:: with SMTP id lz14mr491849ejb.237.1590620216822;
+ Wed, 27 May 2020 15:56:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202005271457.CF4BBB47@keescook>
+References: <20200508180157.1816-1-ardb@kernel.org> <20200508180157.1816-9-ardb@kernel.org>
+ <10a1c7fcea861f5d45dff81cba673e970d686bc2.camel@intel.com> <20200527224657.GA3568142@rani.riverdale.lan>
+In-Reply-To: <20200527224657.GA3568142@rani.riverdale.lan>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 27 May 2020 15:56:45 -0700
+Message-ID: <CAPcyv4jOCY=kxeZVWsS0Xc36jmPr7DSR_sFrsMeoiEs+iEfbEA@mail.gmail.com>
+Subject: Re: [PATCH 08/15] efi/x86: Move command-line initrd loading to efi_main
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "joe@perches.com" <joe@perches.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:36:09PM -0700, Kees Cook wrote:
-> On Wed, May 27, 2020 at 03:52:03PM -0600, Tycho Andersen wrote:
-> > On Wed, May 27, 2020 at 02:43:49PM -0700, Kees Cook wrote:
-> > > (While I'm here -- why can there be only one listener per task? The
-> > > notifications are filter-specific, not task-specific?)
-> > 
-> > Not sure what you mean here?
-> 
-> tatic struct file *init_listener(struct seccomp_filter *filter)
-> {
->         struct file *ret = ERR_PTR(-EBUSY);
->         struct seccomp_filter *cur;
-> 
->         for (cur = current->seccomp.filter; cur; cur = cur->prev) {
->                 if (cur->notif)
->                         goto out;
->         }
-> 
-> ...
-> 
->         /* Installing a second listener in the chain should EBUSY */
->         EXPECT_EQ(user_trap_syscall(__NR_getpid,
->                                     SECCOMP_FILTER_FLAG_NEW_LISTENER),
->                   -1);
->         EXPECT_EQ(errno, EBUSY);
-> 
-> 
-> Why does this limit exist? Since the fd is tied to a specific filter,
-> I don't see conflicts about having multiple USER_NOTIF filters on one
-> task -- the monitor's response will either fake it or continue it, so
-> there is no "composition" needed? I must be missing something.
+On Wed, May 27, 2020 at 3:47 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Wed, May 27, 2020 at 10:30:18PM +0000, Williams, Dan J wrote:
+> > On Fri, 2020-05-08 at 20:01 +0200, Ard Biesheuvel wrote:
+> > > From: Arvind Sankar <nivedita@alum.mit.edu>
+> > >
+> > > Consolidate the initrd loading in efi_main.
+> > >
+> > > The command line options now need to be parsed only once.
+> > >
+> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > > Link:
+> > > https://lore.kernel.org/r/20200430182843.2510180-9-nivedita@alum.mit.edu
+> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Hi,
+> >
+> > This patch patch in tip/master as:
+> >
+> > 987053a30016 efi/x86: Move command-line initrd loading to efi_main
+> >
+> > ...regresses my nfs root configuration. It hangs trying to mount the
+> > nfs root filesystem "root=/dev/nfs ip=dhcp".
+> >
+> > It does not revert cleanly.
+> >
+> >
+>
+> Does this fix it?
+>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index defeb6035109..f53362efef84 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -771,10 +771,12 @@ unsigned long efi_main(efi_handle_t handle,
+>                         efi_err("Failed to load initrd!\n");
+>                         goto fail;
+>                 }
+> -               efi_set_u64_split(addr, &hdr->ramdisk_image,
+> -                                 &boot_params->ext_ramdisk_image);
+> -               efi_set_u64_split(size, &hdr->ramdisk_size,
+> -                                 &boot_params->ext_ramdisk_size);
+> +               if (size > 0) {
+> +                       efi_set_u64_split(addr, &hdr->ramdisk_image,
+> +                                         &boot_params->ext_ramdisk_image);
+> +                       efi_set_u64_split(size, &hdr->ramdisk_size,
+> +                                         &boot_params->ext_ramdisk_size);
+> +               }
 
-It exists because Andy asked for it :)
+I'll give it a shot, but my guess would have been something related to
+the fact that this patch moves the initrd loading relative to when the
+command line is being parsed. In this case it's a dracut initrd built
+by:
 
-I agree that there's no technical reason for it to be there. I think
-it's just that the semantics were potentially confusing, and it wasn't
-a requirement anyone had to have multiples attached.
+    dracut -m "nfs network base"
 
-Tycho
+...with a kernel built with:
+
+CONFIG_IP_PNP_DHCP=y
+
+...and a built-in network interface. The behavior seems to be that the
+kernel gets an IP address just fine, but there's no initrd userspace
+to mount nfs and the kernel eventually gives up looking for root.
