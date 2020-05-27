@@ -2,126 +2,141 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB15D207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78C0207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389510AbgE0PBh (ORCPT
+        id S2389520AbgE0PCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:01:37 -0400
-Received: from mga05.intel.com ([192.55.52.43]:39575 "EHLO mga05.intel.com"
+        Wed, 27 May 2020 11:02:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:39702 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389419AbgE0PBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:01:37 -0400
-IronPort-SDR: VBMFms1icsPTldew0BTCObFkBZuuyDJtw609JqnJnSne7lwwLN5KjYRNOdyHivCbvsJ7CrLcc1
- ysG9PdbzvCmQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:01:36 -0700
-IronPort-SDR: +t/xX0Z/yYqy4caKhAxF3sBUghHe7W8udi9gBSgGLfbZ3iEBtCgNCeNiJ+Lb9tECaWUzihktoA
- N77ntZe8G30A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="284829491"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 08:01:35 -0700
-Received: from [10.251.8.26] (kliang2-mobl.ccr.corp.intel.com [10.251.8.26])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id B10FE5805EF;
-        Wed, 27 May 2020 08:01:34 -0700 (PDT)
-Subject: Re: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
- events on some TGL
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
- <869fafc80da84d188678c1cbb0267a0b@AcuMS.aculab.com>
- <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
- <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <9f0ed889-590e-6f7a-85bd-c4be43e993f3@linux.intel.com>
-Date:   Wed, 27 May 2020 11:01:22 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S2389400AbgE0PCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:02:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC9AB30E;
+        Wed, 27 May 2020 08:02:44 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A25323F52E;
+        Wed, 27 May 2020 08:02:42 -0700 (PDT)
+References: <20200526151619.8779-1-benjamin.gaignard@st.com> <jhjk10xu1tq.mognet@arm.com> <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com> <jhjwo4xinhb.mognet@arm.com> <099f5b6c-aa81-be4a-19bf-52a2fff7b3db@st.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "rjw\@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar\@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab\@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32\@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel\@ucw.cz" <pavel@ucw.cz>,
+        "len.brown\@intel.com" <len.brown@intel.com>,
+        "vincent.guittot\@linaro.org" <vincent.guittot@linaro.org>,
+        "linux-pm\@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media\@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32\@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+In-reply-to: <099f5b6c-aa81-be4a-19bf-52a2fff7b3db@st.com>
+Date:   Wed, 27 May 2020 16:02:37 +0100
+Message-ID: <jhjv9khifoy.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 27/05/20 14:11, Benjamin GAIGNARD wrote:
+> On 5/27/20 2:14 PM, Valentin Schneider wrote:
+>> On 27/05/20 12:17, Benjamin GAIGNARD wrote:
+>>> On 5/27/20 12:09 PM, Valentin Schneider wrote:
+>>>> Hi Benjamin,
+>>>>
+>>>> On 26/05/20 16:16, Benjamin Gaignard wrote:
+>>>>> A first round [1] of discussions and suggestions have already be done on
+>>>>> this series but without found a solution to the problem. I resend it to
+>>>>> progress on this topic.
+>>>>>
+>>>> Apologies for sleeping on that previous thread.
+>>>>
+>>>> So what had been suggested over there was to use uclamp to boost the
+>>>> frequency of the handling thread; however if you use threaded IRQs you
+>>>> get RT threads, which already get the max frequency by default (at least
+>>>> with schedutil).
+>>>>
+>>>> Does that not work for you, and if so, why?
+>>> That doesn't work because almost everything is done by the hardware blocks
+>>> without charge the CPU so the thread isn't running.
+>> I'm not sure I follow; the frequency of the CPU doesn't matter while
+>> your hardware blocks are spinning, right? AIUI what matters is running
+>> your interrupt handler / action at max freq, which you get if you use
+>> threaded IRQs and schedutil.
+> Yes but not limited to schedutil.
+> Given the latency needed to change of frequencies I think it could
+> already too late
+> to change the CPU frequency when handling the threaded interrupt.
 
-On 5/27/2020 10:51 AM, David Laight wrote:
-> From: Liang, Kan
->> Sent: 27 May 2020 15:47
->> On 5/27/2020 8:59 AM, David Laight wrote:
->>> From: kan.liang@linux.intel.com
->>>> Sent: 27 May 2020 13:31
->>>>
->>>> From: Kan Liang <kan.liang@linux.intel.com>
->>>>
->>>> When counting IMC uncore events on some TGL machines, an oops will be
->>>> triggered.
->>>>     [ 393.101262] BUG: unable to handle page fault for address:
->>>>     ffffb45200e15858
->>>>     [ 393.101269] #PF: supervisor read access in kernel mode
->>>>     [ 393.101271] #PF: error_code(0x0000) - not-present page
->>>>
->>>> Current perf uncore driver still use the IMC MAP SIZE inherited from
->>>> SNB, which is 0x6000.
->>>> However, the offset of IMC uncore counters for some TGL machines is
->>>> larger than 0x6000, e.g. 0xd8a0.
->>>>
->>>> Enlarge the IMC MAP SIZE for TGL to 0xe000.
->>>
->>> Replacing one 'random' constant with a different one
->>> doesn't seem like a proper fix.
->>>
->>> Surely the actual bounds of the 'memory' area are properly
->>> defined somewhere.
->>> Or at least should come from a table.
->>>
->>> You also need to verify that the offsets are within the mapped area.
->>> An unexpected offset shouldn't try to access an invalid address.
+Right, on my Juno the transition latency (i.e. worse case) is about
+1.2ms; I can see that eating into your time budget, depending on the
+framerate you're going for.
+
+Vincent's got a point, if you can limit that max-freq-hold to a single
+frequency domain, that would probably be a tad better.
+
+Thanks for persisting through my questioning :-)
+
 >>
->> Thanks for the review.
+>> I think it would help if you could clarify which tasks / parts of your
+>> pipeline you need running at high frequencies. The point is that setting
+>> a QoS request affects all tasks, whereas we could be smarter and only
+>> boost the required tasks.
+> What make us drop frames is that the threaded IRQ is scheduled too late.
+> The not thread part of the interrupt handler where we clear the
+> interrupt flags
+> is going fine but the thread part not.
 >>
->> I agree that we should add a check before mapping the area to prevent
->> the issue happens again.
->>
->> I think the check should be a generic check for all platforms which try
->> to map an area, not just for TGL. I will submit a separate patch for the
->> check.
-> 
-> You need a check that the actual access is withing the mapped area.
-> So instead of getting an OOPS you get a error.
-> 
-> This is after you've mapped it.
-
-Sure. Will add a WARN_ONCE() before the actual access.
-
-Thanks,
-Kan
-
-> 
-> 	David
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
+>>> I have done the
+>>> tests with schedutil
+>>> and ondemand scheduler (which is the one I'm targeting). I have no
+>>> issues when using
+>>> performance scheduler because it always keep the highest frequencies.
+>>>
+>>>
+>>>>> When start streaming from the sensor the CPU load could remain very low
+>>>>> because almost all the capture pipeline is done in hardware (i.e. without
+>>>>> using the CPU) and let believe to cpufreq governor that it could use lower
+>>>>> frequencies. If the governor decides to use a too low frequency that
+>>>>> becomes a problem when we need to acknowledge the interrupt during the
+>>>>> blanking time.
+>>>>> The delay to ack the interrupt and perform all the other actions before
+>>>>> the next frame is very short and doesn't allow to the cpufreq governor to
+>>>>> provide the required burst of power. That led to drop the half of the frames.
+>>>>>
+>>>>> To avoid this problem, DCMI driver informs the cpufreq governors by adding
+>>>>> a cpufreq minimum load QoS resquest.
+>>>>>
+>>>>> Benjamin
+>>>>>
+>>>>> [1] https://lkml.org/lkml/2020/4/24/360
+>>>>>
+>>>>> Benjamin Gaignard (3):
+>>>>>     PM: QoS: Introduce cpufreq minimum load QoS
+>>>>>     cpufreq: governor: Use minimum load QoS
+>>>>>     media: stm32-dcmi: Inform cpufreq governors about cpu load needs
+>>>>>
+>>>>>    drivers/cpufreq/cpufreq_governor.c        |   5 +
+>>>>>    drivers/media/platform/stm32/stm32-dcmi.c |   8 ++
+>>>>>    include/linux/pm_qos.h                    |  12 ++
+>>>>>    kernel/power/qos.c                        | 213 ++++++++++++++++++++++++++++++
+>>>>>    4 files changed, 238 insertions(+)
