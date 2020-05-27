@@ -2,155 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFF6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC10C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4117720873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EE821534
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wr9R8e/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390849AbgE0QIu (ORCPT
+        id S2390840AbgE0QIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:08:50 -0400
-Received: from mga09.intel.com ([134.134.136.24]:48017 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390821AbgE0QIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 12:08:49 -0400
-IronPort-SDR: rl6bj2TZU2y64w58BZiAUwGzRe08jyJexVvzqffRVLZyQRq2JzPH9Lm3YRPVBAODvzhdnpyezj
- s/mxxqzgl/LA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 09:08:48 -0700
-IronPort-SDR: GLj7EsKjyewMncPHiLc/NW2LjMqqCe7uZenxifraMrHWobqYOVhH5Kcp5JLoQMiVTOvNgGl9of
- rh2zTL+lF2GA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="310620754"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 27 May 2020 09:08:44 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdybn-009FzY-Bo; Wed, 27 May 2020 19:08:47 +0300
-Date:   Wed, 27 May 2020 19:08:47 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/11] i2c: designeware: Add Baikal-T1 System I2C
- support
-Message-ID: <20200527160847.GN1634618@smile.fi.intel.com>
-References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390822AbgE0QIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:08:49 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35216C03E97D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:08:48 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so19569078qts.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w8h0j9dH4yYJY4/vfPJevkjnamNxkzeTwIjaJ077JR0=;
+        b=wr9R8e/kt+6YZN51MgGSrgrQKN+iV0+U0w3YDiUZds+tcdj7UMMAPuL2YRAryMtohX
+         VNKbvNrG4bIjPWETOEhzA2c4U/E+X4CVY2EgJ/5ySPQ3LlqJidyQIRGPfTzASiiFnl+S
+         uHmbW0X2xvXgxyXg4abfE1eHxfYdyOP2KHd5y4aqtb2dKO5FWfHDDlvh4G4leXuoDM2X
+         6k6SD1XYo3XXhbqc/Ijv/Mz+1Egec9v2tRNzcTRPdOlPecpv6ZUeA9Eni8M8qGoWVGYI
+         25JlCJx5lZcI/qzgwceu2T05yXTObMsf3EZfQHFHZ6afE2C5Lsf9qFojbh1qNErXd8RZ
+         b0/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=w8h0j9dH4yYJY4/vfPJevkjnamNxkzeTwIjaJ077JR0=;
+        b=M71WRA4YM3CJQZGux5zl13T0E4+9sWEVz0ZioH1Egg7nqKSzJW9zZqToUsCdY0ZtHt
+         JK7RuQcu6xNjHPvC/RsghXJ8Kku6+W5VpDkSAY9ZWJ9ZACIwjWYn58KounR44SqNvgO+
+         BB2zF4r5loh/kvW6V0oCSc7rE6lX/yREJydEZ0Ey0KqLCLidhAME+ZNfeC6LLl3/7cUy
+         /csH1Cr+1fDRdYcxY8MyjKzeBrrNEtlLO8OH2QPJ0O3Ck1CTclzOrCDaPWDVEvbZzr2O
+         fyyEvOxCGnEsIFwP+AeItVyJzqUhCRUIxj7+rFaGw9WwHUVdis1l/QtXUqbEvbvPPkc6
+         ibpw==
+X-Gm-Message-State: AOAM530qT2yCbkYhCvYz3H3Fb13vGkEGK2iU22v7iR8W8mvzDzkSHPCI
+        aGoJCn4tbWDrCdA3jPEj0wKdoL+YUw4=
+X-Google-Smtp-Source: ABdhPJy5UGsbDyy2tFB1CZRSSq0mPUHmpiz0WO0wsfMt60nuAnhNi+TNUDnh/WaDsCnTkdOrWSy7Rg==
+X-Received: by 2002:ac8:42ce:: with SMTP id g14mr4989535qtm.117.1590595727478;
+        Wed, 27 May 2020 09:08:47 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2535])
+        by smtp.gmail.com with ESMTPSA id f14sm2558579qka.70.2020.05.27.09.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 09:08:46 -0700 (PDT)
+Date:   Wed, 27 May 2020 12:08:21 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Boris Burkov <boris@bur.io>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH cgroup/for-5.8] cgroup: add cpu.stat file to root cgroup
+Message-ID: <20200527160821.GC42293@cmpxchg.org>
+References: <20200526200800.3969430-1-boris@bur.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200526200800.3969430-1-boris@bur.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:30:35PM +0300, Serge Semin wrote:
-> Jarkko, Wolfram, the merge window is upon us, please review/merge in/whatever
-> the patchset.
+On Tue, May 26, 2020 at 01:08:00PM -0700, Boris Burkov wrote:
+> Currently, the root cgroup does not have a cpu.stat file. Add one which
+> is consistent with /proc/stat to capture global cpu statistics that
+> might not fall under cgroup accounting.
 > 
-> Initially this has been a small patchset which embedded the Baikal-T1
-> System I2C support into the DW APB I2C driver as is by using a simplest
-> way. After a short discussion with Andy we decided to implement what he
-> suggested (introduce regmap-based accessors and create a glue driver) and
-> even more than that to provide some cleanups of the code. So here is what
-> this patchset consists of.
+> We haven't done this in the past because the data are already presented
+> in /proc/stat and we didn't want to add overhead from collecting root
+> cgroup stats when cgroups are configured, but no cgroups have been
+> created.
 > 
-> First of all we've found out that current implementation of scripts/dtc
-> didn't support i2c dt nodes with 10bit and slave flags set in the
-> reg property. You'll see an error if you try to dt_binding_check it.
-> So the very first patch fixes the problem by adding these flags support
-> into the check_i2c_bus_reg() method.
+> By keeping the data consistent with /proc/stat, I think we avoid the
+> first problem, while improving the usability of cgroups stats.
+> We avoid the second problem by computing the contents of cpu.stat from
+> existing data collected for /proc/stat anyway.
 > 
-> Traditionally we converted the plain text-based DT binding to the DT schema
-> and added Baikal-T1 System I2C device support there. This required to mark
-> the reg property redundant for Baikal-T1 I2C since its reg-space is
-> indirectly accessed by means of the System Controller cmd/read/write
-> registers.
-> 
-> Then as Andy suggested we replaced the Synopsys DW APB I2C common driver
-> registers IO accessors into the regmap API methods. This doesn't change
-> the code logic much, though in two places we managed to replace some bulky
-> peaces of code with a ready-to-use regmap methods.
-> 
-> Additionally before adding the glue layer API we initiated a set of cleanups:
-> - Define components of the multi-object drivers (like i2c-designware-core.o
->   and i2c-designware-paltform.o) with using `-y` suffixed makefile
->   variables instead of `-objs` suffixed one. This is encouraged by
->   Documentation/kbuild/makefiles.rst text since `-objs` is supposed to be used
->   to build host programs.
-> - Make DW I2C slave driver depended on the DW I2C core code instead of the
->   platform one, which it really is.
-> - Move Intel Baytrail semaphore feature to the platform if-clause of the
->   kernel config.
-> 
-> After this we finally can introduce the glue layer API for the DW APB I2C
-> platform driver. So there are three methods exported from the driver:
-> i2c_dw_plat_setup(), i2c_dw_plat_clear(), &i2c_dw_plat_dev_pm_ops to
-> setup, cleanup and add PM operations to the glue driven I2C device. Before
-> setting the platform DW I2C device up the glue probe code is supposed to
-> create an instance of DW I2C device generic object and pre-initialize
-> its `struct device` pointer together with optional platform-specific
-> flags. In addition to that we converted the MSCC Ocelot SoC I2C specific
-> code into the glue layer seeing it's really too specific and, which is more
-> important, isn't that complicated so we could unpin it without much of
-> worrying to break something.
-> 
-> Meanwhile we discovered that MODEL_CHERRYTRAIL and MODEL_MASK actually
-> were no longer used in the code. MODEL_MSCC flag has been discarded since
-> the MSCC Ocelot I2C code conversion to the glue driver. So now we can get
-> rid of all the MODEL-specific flags.
-> 
-> Finally we introduced a glue driver with Baikal-T1 System I2C device
-> support. The driver probe tries to find a syscon regmap, creates the DW
-> APB I2C regmap based on it and passes it further to the DW I2C device
-> descriptor. Then it does normal DW APB I2C platform setup by calling a
-> generic setup method. Cleanup is straightforward. It's just calling a
-> generic DW APB I2C clean method.
+> Signed-off-by: Boris Burkov <boris@bur.io>
+> Suggested-by: Tejun Heo <tj@kernel.org>
 
-Thank you for an update.
+Looks good to me, but Boris can you please update
+Documentation/admin-guide/cgroup-v2.rst as well in this patch?
 
-> This patchset is rebased and tested on the i2c/for-next (5.7-rc7):
+  cpu.stat
+        A read-only flat-keyed file which exists on non-root cgroups.
 
-Hmm...
-
-> base-commit: 228f95c14949 ("Merge remote-tracking branch 'spi/for-5.8' into spi-next")
-
-...this is strange.
-
-> Changelog v5:
-> - Replace or-assignment with just assignment operator when getting
->   the quirk flags.
-> - Keep alphabetical order of the include statements.
-> - Discard explicit u16-type cast in the dw_reg_write_word() method.
-
-Patches 8 and 11 have been commented solely due to previous comments for
-patches 6 and 7, which I think should be addressed.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks!
