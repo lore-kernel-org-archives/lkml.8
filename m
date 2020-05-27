@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E234C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A7B2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072DA2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgE0ULb (ORCPT
+        id S1728635AbgE0ULd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41432 "EHLO
+        Wed, 27 May 2020 16:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbgE0UL2 (ORCPT
+        with ESMTP id S1728588AbgE0ULb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:11:28 -0400
+        Wed, 27 May 2020 16:11:31 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFEBC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:11:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC9B2C03E97D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:11:30 -0700 (PDT)
 Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <bigeasy@linutronix.de>)
-        id 1je2Oa-0005ku-R8; Wed, 27 May 2020 22:11:24 +0200
+        id 1je2Ob-0005ku-Hc; Wed, 27 May 2020 22:11:25 +0200
 From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 To:     linux-kernel@vger.kernel.org
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -37,10 +37,11 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v3 1/7] locking: Introduce local_lock()
-Date:   Wed, 27 May 2020 22:11:13 +0200
-Message-Id: <20200527201119.1692513-2-bigeasy@linutronix.de>
+Subject: [PATCH v3 3/7] mm/swap: Use local_lock for protection
+Date:   Wed, 27 May 2020 22:11:15 +0200
+Message-Id: <20200527201119.1692513-4-bigeasy@linutronix.de>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200527201119.1692513-1-bigeasy@linutronix.de>
 References: <20200527201119.1692513-1-bigeasy@linutronix.de>
@@ -51,517 +52,367 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Ingo Molnar <mingo@kernel.org>
 
-preempt_disable() and local_irq_disable/save() are in principle per CPU big
-kernel locks. This has several downsides:
+The various struct pagevec per CPU variables are protected by disabling
+either preemption or interrupts across the critical sections. Inside
+these sections spinlocks have to be acquired.
 
-  - The protection scope is unknown
+These spinlocks are regular spinlock_t types which are converted to
+"sleeping" spinlocks on PREEMPT_RT enabled kernels. Obviously sleeping
+locks cannot be acquired in preemption or interrupt disabled sections.
 
-  - Violation of protection rules is hard to detect by instrumentation
+local locks provide a trivial way to substitute preempt and interrupt
+disable instances. On a non PREEMPT_RT enabled kernel local_lock() maps
+to preempt_disable() and local_lock_irq() to local_irq_disable().
 
-  - For PREEMPT_RT such sections, unless in low level critical code, can
-    violate the preemptability constraints.
+Create lru_rotate_pvecs containing the pagevec and the locallock.
+Create lru_pvecs containing the remaining pagevecs and the locallock.
+Add lru_add_drain_cpu_zone() which is used from compact_zone() to avoid
+exporting the pvec structure.
 
-To address this PREEMPT_RT introduced the concept of local_locks which are
-strictly per CPU.
+Change the relevant call sites to acquire these locks instead of using
+preempt_disable() / get_cpu() / get_cpu_var() and local_irq_disable() /
+local_irq_save().
 
-The lock operations map to preempt_disable(), local_irq_disable/save() and
-the enabling counterparts on non RT enabled kernels.
+There is neither a functional change nor a change in the generated
+binary code for non PREEMPT_RT enabled non-debug kernels.
 
-If lockdep is enabled local locks gain a lock map which tracks the usage
-context. This will catch cases where an area is protected by
-preempt_disable() but the access also happens from interrupt context. local
-locks have identified quite a few such issues over the years, the most
-recent example is:
+When lockdep is enabled local locks have lockdep maps embedded. These
+allow lockdep to validate the protections, i.e. inappropriate usage of a
+preemption only protected sections would result in a lockdep warning
+while the same problem would not be noticed with a plain
+preempt_disable() based protection.
 
-  b7d5dc21072cd ("random: add a spinlock_t to struct batched_entropy")
+local locks also improve readability as they provide a named scope for
+the protections while preempt/interrupt disable are opaque scopeless.
 
-Aside of the lockdep coverage this also improves code readability as it
-precisely annotates the protection scope.
+Finally local locks allow PREEMPT_RT to substitute them with real
+locking primitives to ensure the correctness of operation in a fully
+preemptible kernel.
 
-PREEMPT_RT substitutes these local locks with 'sleeping' spinlocks to
-protect such sections while maintaining preemtability and CPU locality.
+[ bigeasy: Adopted to use local_lock ]
 
-local locks can replace:
-
-  - preempt_enable()/disable() pairs
-  - local_irq_disable/enable() pairs
-  - local_irq_save/restore() pairs
-
-They are also used to replace code which implicitly disables preemption
-like:
-
-  - get_cpu()/put_cpu()
-  - get_cpu_var()/put_cpu_var()
-
-with PREEMPT_RT friendly constructs.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- Documentation/locking/locktypes.rst | 215 ++++++++++++++++++++++++++--
- include/linux/local_lock.h          |  54 +++++++
- include/linux/local_lock_internal.h |  90 ++++++++++++
- 3 files changed, 348 insertions(+), 11 deletions(-)
- create mode 100644 include/linux/local_lock.h
- create mode 100644 include/linux/local_lock_internal.h
+ include/linux/swap.h |   1 +
+ mm/compaction.c      |   6 +--
+ mm/swap.c            | 118 +++++++++++++++++++++++++++++--------------
+ 3 files changed, 82 insertions(+), 43 deletions(-)
 
-diff --git a/Documentation/locking/locktypes.rst b/Documentation/locking/lo=
-cktypes.rst
-index 09f45ce38d262..1b577a8bf9829 100644
---- a/Documentation/locking/locktypes.rst
-+++ b/Documentation/locking/locktypes.rst
-@@ -13,6 +13,7 @@ The kernel provides a variety of locking primitives which=
- can be divided
- into two categories:
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index e1bbf7a16b276..25181d2dd0b9f 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -337,6 +337,7 @@ extern void activate_page(struct page *);
+ extern void mark_page_accessed(struct page *);
+ extern void lru_add_drain(void);
+ extern void lru_add_drain_cpu(int cpu);
++extern void lru_add_drain_cpu_zone(struct zone *zone);
+ extern void lru_add_drain_all(void);
+ extern void rotate_reclaimable_page(struct page *page);
+ extern void deactivate_file_page(struct page *page);
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 46f0fcc93081e..c9d659e6a02c5 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2243,15 +2243,11 @@ compact_zone(struct compact_control *cc, struct cap=
+ture_control *capc)
+ 		 * would succeed.
+ 		 */
+ 		if (cc->order > 0 && last_migrated_pfn) {
+-			int cpu;
+ 			unsigned long current_block_start =3D
+ 				block_start_pfn(cc->migrate_pfn, cc->order);
 =20
-  - Sleeping locks
-+ - CPU local locks
-  - Spinning locks
+ 			if (last_migrated_pfn < current_block_start) {
+-				cpu =3D get_cpu();
+-				lru_add_drain_cpu(cpu);
+-				drain_local_pages(cc->zone);
+-				put_cpu();
++				lru_add_drain_cpu_zone(cc->zone);
+ 				/* No more flushing until we migrate again */
+ 				last_migrated_pfn =3D 0;
+ 			}
+diff --git a/mm/swap.c b/mm/swap.c
+index bf9a79fed62d7..0ac463d44cff4 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -35,6 +35,7 @@
+ #include <linux/uio.h>
+ #include <linux/hugetlb.h>
+ #include <linux/page_idle.h>
++#include <linux/local_lock.h>
 =20
- This document conceptually describes these lock types and provides rules
-@@ -44,9 +45,23 @@ other contexts unless there is no other option.
+ #include "internal.h"
 =20
- On PREEMPT_RT kernels, these lock types are converted to sleeping locks:
+@@ -44,14 +45,32 @@
+ /* How many pages do we try to swap or page in/out together? */
+ int page_cluster;
 =20
-+ - local_lock
-  - spinlock_t
-  - rwlock_t
-=20
+-static DEFINE_PER_CPU(struct pagevec, lru_add_pvec);
+-static DEFINE_PER_CPU(struct pagevec, lru_rotate_pvecs);
+-static DEFINE_PER_CPU(struct pagevec, lru_deactivate_file_pvecs);
+-static DEFINE_PER_CPU(struct pagevec, lru_deactivate_pvecs);
+-static DEFINE_PER_CPU(struct pagevec, lru_lazyfree_pvecs);
++/* Protecting only lru_rotate.pvec which requires disabling interrupts */
++struct lru_rotate {
++	local_lock_t lock;
++	struct pagevec pvec;
++};
++static DEFINE_PER_CPU(struct lru_rotate, lru_rotate) =3D {
++	.lock =3D INIT_LOCAL_LOCK(lock),
++};
 +
-+CPU local locks
-+---------------
-+
-+ - local_lock
-+
-+On non-PREEMPT_RT kernels, local_lock functions are wrappers around
-+preemption and interrupt disabling primitives. Contrary to other locking
-+mechanisms, disabling preemption or interrupts are pure CPU local
-+concurrency control mechanisms and not suited for inter-CPU concurrency
-+control.
-+
-+
- Spinning locks
- --------------
-=20
-@@ -67,6 +82,7 @@ Spinning locks implicitly disable preemption and the lock=
- / unlock functions
-  _irqsave/restore()   Save and disable / restore interrupt disabled state
-  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-+
- Owner semantics
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-@@ -139,6 +155,56 @@ PREEMPT_RT kernels map rw_semaphore to a separate rt_m=
-utex-based
-  writer from starving readers.
-=20
-=20
-+local_lock
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+local_lock provides a named scope to critical sections which are protected
-+by disabling preemption or interrupts.
-+
-+On non-PREEMPT_RT kernels local_lock operations map to the preemption and
-+interrupt disabling and enabling primitives:
-+
-+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+ local_lock(&llock)          preempt_disable()
-+ local_unlock(&llock)        preempt_enable()
-+ local_lock_irq(&llock)      local_irq_disable()
-+ local_unlock_irq(&llock)    local_irq_enable()
-+ local_lock_save(&llock)     local_irq_save()
-+ local_lock_restore(&llock)  local_irq_save()
-+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+The named scope of local_lock has two advantages over the regular
-+primitives:
-+
-+  - The lock name allows static analysis and is also a clear documentation
-+    of the protection scope while the regular primitives are scopeless and
-+    opaque.
-+
-+  - If lockdep is enabled the local_lock gains a lockmap which allows to
-+    validate the correctness of the protection. This can detect cases where
-+    e.g. a function using preempt_disable() as protection mechanism is
-+    invoked from interrupt or soft-interrupt context. Aside of that
-+    lockdep_assert_held(&llock) works as with any other locking primitive.
-+
-+local_lock and PREEMPT_RT
-+-------------------------
-+
-+PREEMPT_RT kernels map local_lock to a per-CPU spinlock_t, thus changing
-+semantics:
-+
-+  - All spinlock_t changes also apply to local_lock.
-+
-+local_lock usage
-+----------------
-+
-+local_lock should be used in situations where disabling preemption or
-+interrupts is the appropriate form of concurrency control to protect
-+per-CPU data structures on a non PREEMPT_RT kernel.
-+
-+local_lock is not suitable to protect against preemption or interrupts on a
-+PREEMPT_RT kernel due to the PREEMPT_RT specific spinlock_t semantics.
-+
-+
- raw_spinlock_t and spinlock_t
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-=20
-@@ -258,10 +324,82 @@ PREEMPT_RT kernels map rwlock_t to a separate rt_mute=
-x-based
- PREEMPT_RT caveats
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-+local_lock on RT
-+----------------
-+
-+The mapping of local_lock to spinlock_t on PREEMPT_RT kernels has a few
-+implications. For example, on a non-PREEMPT_RT kernel the following code
-+sequence works as expected::
-+
-+  local_lock_irq(&local_lock);
-+  raw_spin_lock(&lock);
-+
-+and is fully equivalent to::
-+
-+   raw_spin_lock_irq(&lock);
-+
-+On a PREEMPT_RT kernel this code sequence breaks because local_lock_irq()
-+is mapped to a per-CPU spinlock_t which neither disables interrupts nor
-+preemption. The following code sequence works perfectly correct on both
-+PREEMPT_RT and non-PREEMPT_RT kernels::
-+
-+  local_lock_irq(&local_lock);
-+  spin_lock(&lock);
-+
-+Another caveat with local locks is that each local_lock has a specific
-+protection scope. So the following substitution is wrong::
-+
-+  func1()
-+  {
-+    local_irq_save(flags);    -> local_lock_irqsave(&local_lock_1, flags);
-+    func3();
-+    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock_1, flag=
-s);
-+  }
-+
-+  func2()
-+  {
-+    local_irq_save(flags);    -> local_lock_irqsave(&local_lock_2, flags);
-+    func3();
-+    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock_2, flag=
-s);
-+  }
-+
-+  func3()
-+  {
-+    lockdep_assert_irqs_disabled();
-+    access_protected_data();
-+  }
-+
-+On a non-PREEMPT_RT kernel this works correctly, but on a PREEMPT_RT kernel
-+local_lock_1 and local_lock_2 are distinct and cannot serialize the callers
-+of func3(). Also the lockdep assert will trigger on a PREEMPT_RT kernel
-+because local_lock_irqsave() does not disable interrupts due to the
-+PREEMPT_RT-specific semantics of spinlock_t. The correct substitution is::
-+
-+  func1()
-+  {
-+    local_irq_save(flags);    -> local_lock_irqsave(&local_lock, flags);
-+    func3();
-+    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock, flags);
-+  }
-+
-+  func2()
-+  {
-+    local_irq_save(flags);    -> local_lock_irqsave(&local_lock, flags);
-+    func3();
-+    local_irq_restore(flags); -> local_lock_irqrestore(&local_lock, flags);
-+  }
-+
-+  func3()
-+  {
-+    lockdep_assert_held(&local_lock);
-+    access_protected_data();
-+  }
-+
-+
- spinlock_t and rwlock_t
- -----------------------
-=20
--These changes in spinlock_t and rwlock_t semantics on PREEMPT_RT kernels
-+The changes in spinlock_t and rwlock_t semantics on PREEMPT_RT kernels
- have a few implications.  For example, on a non-PREEMPT_RT kernel the
- following code sequence works as expected::
-=20
-@@ -282,9 +420,61 @@ local_lock mechanism.  Acquiring the local_lock pins t=
-he task to a CPU,
- allowing things like per-CPU interrupt disabled locks to be acquired.
- However, this approach should be used only where absolutely necessary.
-=20
-+A typical scenario is protection of per-CPU variables in thread context::
-=20
--raw_spinlock_t
----------------
-+  struct foo *p =3D get_cpu_ptr(&var1);
-+
-+  spin_lock(&p->lock);
-+  p->count +=3D this_cpu_read(var2);
-+
-+This is correct code on a non-PREEMPT_RT kernel, but on a PREEMPT_RT kernel
-+this breaks. The PREEMPT_RT-specific change of spinlock_t semantics does
-+not allow to acquire p->lock because get_cpu_ptr() implicitly disables
-+preemption. The following substitution works on both kernels::
-+
-+  struct foo *p;
-+
-+  migrate_disable();
-+  p =3D this_cpu_ptr(&var1);
-+  spin_lock(&p->lock);
-+  p->count +=3D this_cpu_read(var2);
-+
-+On a non-PREEMPT_RT kernel migrate_disable() maps to preempt_disable()
-+which makes the above code fully equivalent. On a PREEMPT_RT kernel
-+migrate_disable() ensures that the task is pinned on the current CPU which
-+in turn guarantees that the per-CPU access to var1 and var2 are staying on
-+the same CPU.
-+
-+The migrate_disable() substitution is not valid for the following
-+scenario::
-+
-+  func()
-+  {
-+    struct foo *p;
-+
-+    migrate_disable();
-+    p =3D this_cpu_ptr(&var1);
-+    p->val =3D func2();
-+
-+While correct on a non-PREEMPT_RT kernel, this breaks on PREEMPT_RT because
-+here migrate_disable() does not protect against reentrancy from a
-+preempting task. A correct substitution for this case is::
-+
-+  func()
-+  {
-+    struct foo *p;
-+
-+    local_lock(&foo_lock);
-+    p =3D this_cpu_ptr(&var1);
-+    p->val =3D func2();
-+
-+On a non-PREEMPT_RT kernel this protects against reentrancy by disabling
-+preemption. On a PREEMPT_RT kernel this is achieved by acquiring the
-+underlying per-CPU spinlock.
-+
-+
-+raw_spinlock_t on RT
-+--------------------
-=20
- Acquiring a raw_spinlock_t disables preemption and possibly also
- interrupts, so the critical section must avoid acquiring a regular
-@@ -325,22 +515,25 @@ Lock type nesting rules
-=20
- The most basic rules are:
-=20
--  - Lock types of the same lock category (sleeping, spinning) can nest
--    arbitrarily as long as they respect the general lock ordering rules to
--    prevent deadlocks.
-+  - Lock types of the same lock category (sleeping, CPU local, spinning)
-+    can nest arbitrarily as long as they respect the general lock ordering
-+    rules to prevent deadlocks.
-=20
--  - Sleeping lock types cannot nest inside spinning lock types.
-+  - Sleeping lock types cannot nest inside CPU local and spinning lock typ=
-es.
-=20
--  - Spinning lock types can nest inside sleeping lock types.
-+  - CPU local and spinning lock types can nest inside sleeping lock types.
-+
-+  - Spinning lock types can nest inside all lock types
-=20
- These constraints apply both in PREEMPT_RT and otherwise.
-=20
- The fact that PREEMPT_RT changes the lock category of spinlock_t and
--rwlock_t from spinning to sleeping means that they cannot be acquired while
--holding a raw spinlock.  This results in the following nesting ordering:
-+rwlock_t from spinning to sleeping and substitutes local_lock with a
-+per-CPU spinlock_t means that they cannot be acquired while holding a raw
-+spinlock.  This results in the following nesting ordering:
-=20
-   1) Sleeping locks
--  2) spinlock_t and rwlock_t
-+  2) spinlock_t, rwlock_t, local_lock
-   3) raw_spinlock_t and bit spinlocks
-=20
- Lockdep will complain if these constraints are violated, both in
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-new file mode 100644
-index 0000000000000..e55010fa73296
---- /dev/null
-+++ b/include/linux/local_lock.h
-@@ -0,0 +1,54 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_LOCAL_LOCK_H
-+#define _LINUX_LOCAL_LOCK_H
-+
-+#include <linux/local_lock_internal.h>
-+
-+/**
-+ * local_lock_init - Runtime initialize a lock instance
++/*
++ * The following struct pagevec are grouped together because they are prot=
+ected
++ * by disabling preemption (and interrupts remain enabled).
 + */
-+#define local_lock_init(lock)		__local_lock_init(lock)
++struct lru_pvecs {
++	local_lock_t lock;
++	struct pagevec lru_add;
++	struct pagevec lru_deactivate_file;
++	struct pagevec lru_deactivate;
++	struct pagevec lru_lazyfree;
+ #ifdef CONFIG_SMP
+-static DEFINE_PER_CPU(struct pagevec, activate_page_pvecs);
++	struct pagevec activate_page;
+ #endif
++};
++static DEFINE_PER_CPU(struct lru_pvecs, lru_pvecs) =3D {
++	.lock =3D INIT_LOCAL_LOCK(lock),
++};
+=20
+ /*
+  * This path almost never happens for VM activity - pages are normally
+@@ -254,11 +273,11 @@ void rotate_reclaimable_page(struct page *page)
+ 		unsigned long flags;
+=20
+ 		get_page(page);
+-		local_irq_save(flags);
+-		pvec =3D this_cpu_ptr(&lru_rotate_pvecs);
++		local_lock_irqsave(&lru_rotate.lock, flags);
++		pvec =3D this_cpu_ptr(&lru_rotate.pvec);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+ 			pagevec_move_tail(pvec);
+-		local_irq_restore(flags);
++		local_unlock_irqrestore(&lru_rotate.lock, flags);
+ 	}
+ }
+=20
+@@ -293,7 +312,7 @@ static void __activate_page(struct page *page, struct l=
+ruvec *lruvec,
+ #ifdef CONFIG_SMP
+ static void activate_page_drain(int cpu)
+ {
+-	struct pagevec *pvec =3D &per_cpu(activate_page_pvecs, cpu);
++	struct pagevec *pvec =3D &per_cpu(lru_pvecs.activate_page, cpu);
+=20
+ 	if (pagevec_count(pvec))
+ 		pagevec_lru_move_fn(pvec, __activate_page, NULL);
+@@ -301,19 +320,21 @@ static void activate_page_drain(int cpu)
+=20
+ static bool need_activate_page_drain(int cpu)
+ {
+-	return pagevec_count(&per_cpu(activate_page_pvecs, cpu)) !=3D 0;
++	return pagevec_count(&per_cpu(lru_pvecs.activate_page, cpu)) !=3D 0;
+ }
+=20
+ void activate_page(struct page *page)
+ {
+ 	page =3D compound_head(page);
+ 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
+-		struct pagevec *pvec =3D &get_cpu_var(activate_page_pvecs);
++		struct pagevec *pvec;
+=20
++		local_lock(&lru_pvecs.lock);
++		pvec =3D this_cpu_ptr(&lru_pvecs.activate_page);
+ 		get_page(page);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+ 			pagevec_lru_move_fn(pvec, __activate_page, NULL);
+-		put_cpu_var(activate_page_pvecs);
++		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+=20
+@@ -335,9 +356,12 @@ void activate_page(struct page *page)
+=20
+ static void __lru_cache_activate_page(struct page *page)
+ {
+-	struct pagevec *pvec =3D &get_cpu_var(lru_add_pvec);
++	struct pagevec *pvec;
+ 	int i;
+=20
++	local_lock(&lru_pvecs.lock);
++	pvec =3D this_cpu_ptr(&lru_pvecs.lru_add);
 +
-+/**
-+ * local_lock - Acquire a per CPU local lock
-+ * @lock:	The lock variable
-+ */
-+#define local_lock(lock)		__local_lock(lock)
+ 	/*
+ 	 * Search backwards on the optimistic assumption that the page being
+ 	 * activated has just been added to this pagevec. Note that only
+@@ -357,7 +381,7 @@ static void __lru_cache_activate_page(struct page *page)
+ 		}
+ 	}
+=20
+-	put_cpu_var(lru_add_pvec);
++	local_unlock(&lru_pvecs.lock);
+ }
+=20
+ /*
+@@ -385,7 +409,7 @@ void mark_page_accessed(struct page *page)
+ 	} else if (!PageActive(page)) {
+ 		/*
+ 		 * If the page is on the LRU, queue it for activation via
+-		 * activate_page_pvecs. Otherwise, assume the page is on a
++		 * lru_pvecs.activate_page. Otherwise, assume the page is on a
+ 		 * pagevec, mark it active and it'll be moved to the active
+ 		 * LRU on the next drain.
+ 		 */
+@@ -404,12 +428,14 @@ EXPORT_SYMBOL(mark_page_accessed);
+=20
+ static void __lru_cache_add(struct page *page)
+ {
+-	struct pagevec *pvec =3D &get_cpu_var(lru_add_pvec);
++	struct pagevec *pvec;
+=20
++	local_lock(&lru_pvecs.lock);
++	pvec =3D this_cpu_ptr(&lru_pvecs.lru_add);
+ 	get_page(page);
+ 	if (!pagevec_add(pvec, page) || PageCompound(page))
+ 		__pagevec_lru_add(pvec);
+-	put_cpu_var(lru_add_pvec);
++	local_unlock(&lru_pvecs.lock);
+ }
+=20
+ /**
+@@ -593,30 +619,30 @@ static void lru_lazyfree_fn(struct page *page, struct=
+ lruvec *lruvec,
+  */
+ void lru_add_drain_cpu(int cpu)
+ {
+-	struct pagevec *pvec =3D &per_cpu(lru_add_pvec, cpu);
++	struct pagevec *pvec =3D &per_cpu(lru_pvecs.lru_add, cpu);
+=20
+ 	if (pagevec_count(pvec))
+ 		__pagevec_lru_add(pvec);
+=20
+-	pvec =3D &per_cpu(lru_rotate_pvecs, cpu);
++	pvec =3D &per_cpu(lru_rotate.pvec, cpu);
+ 	if (pagevec_count(pvec)) {
+ 		unsigned long flags;
+=20
+ 		/* No harm done if a racing interrupt already did this */
+-		local_irq_save(flags);
++		local_lock_irqsave(&lru_rotate.lock, flags);
+ 		pagevec_move_tail(pvec);
+-		local_irq_restore(flags);
++		local_unlock_irqrestore(&lru_rotate.lock, flags);
+ 	}
+=20
+-	pvec =3D &per_cpu(lru_deactivate_file_pvecs, cpu);
++	pvec =3D &per_cpu(lru_pvecs.lru_deactivate_file, cpu);
+ 	if (pagevec_count(pvec))
+ 		pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, NULL);
+=20
+-	pvec =3D &per_cpu(lru_deactivate_pvecs, cpu);
++	pvec =3D &per_cpu(lru_pvecs.lru_deactivate, cpu);
+ 	if (pagevec_count(pvec))
+ 		pagevec_lru_move_fn(pvec, lru_deactivate_fn, NULL);
+=20
+-	pvec =3D &per_cpu(lru_lazyfree_pvecs, cpu);
++	pvec =3D &per_cpu(lru_pvecs.lru_lazyfree, cpu);
+ 	if (pagevec_count(pvec))
+ 		pagevec_lru_move_fn(pvec, lru_lazyfree_fn, NULL);
+=20
+@@ -641,11 +667,14 @@ void deactivate_file_page(struct page *page)
+ 		return;
+=20
+ 	if (likely(get_page_unless_zero(page))) {
+-		struct pagevec *pvec =3D &get_cpu_var(lru_deactivate_file_pvecs);
++		struct pagevec *pvec;
 +
-+/**
-+ * local_lock_irq - Acquire a per CPU local lock and disable interrupts
-+ * @lock:	The lock variable
-+ */
-+#define local_lock_irq(lock)		__local_lock_irq(lock)
-+
-+/**
-+ * local_lock_irqsave - Acquire a per CPU local lock, save and disable
-+ *			 interrupts
-+ * @lock:	The lock variable
-+ * @flags:	Storage for interrupt flags
-+ */
-+#define local_lock_irqsave(lock, flags)				\
-+	__local_lock_irqsave(lock, flags)
-+
-+/**
-+ * local_unlock - Release a per CPU local lock
-+ * @lock:	The lock variable
-+ */
-+#define local_unlock(lock)		__local_unlock(lock)
-+
-+/**
-+ * local_unlock_irq - Release a per CPU local lock and enable interrupts
-+ * @lock:	The lock variable
-+ */
-+#define local_unlock_irq(lock)		__local_unlock_irq(lock)
-+
-+/**
-+ * local_unlock_irqrestore - Release a per CPU local lock and restore
-+ *			      interrupt flags
-+ * @lock:	The lock variable
-+ * @flags:      Interrupt flags to restore
-+ */
-+#define local_unlock_irqrestore(lock, flags)			\
-+	__local_unlock_irqrestore(lock, flags)
-+
-+#endif
-diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock=
-_internal.h
-new file mode 100644
-index 0000000000000..4a8795b21d774
---- /dev/null
-+++ b/include/linux/local_lock_internal.h
-@@ -0,0 +1,90 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_LOCAL_LOCK_H
-+# error "Do not include directly, include linux/local_lock.h"
-+#endif
-+
-+#include <linux/percpu-defs.h>
-+#include <linux/lockdep.h>
-+
-+typedef struct {
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+	struct lockdep_map	dep_map;
-+	struct task_struct	*owner;
-+#endif
-+} local_lock_t;
-+
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+# define LL_DEP_MAP_INIT(lockname)			\
-+	.dep_map =3D {					\
-+		.name =3D #lockname,			\
-+		.wait_type_inner =3D LD_WAIT_CONFIG,	\
-+	}
-+#else
-+# define LL_DEP_MAP_INIT(lockname)
-+#endif
-+
-+#define INIT_LOCAL_LOCK(lockname)	{ LL_DEP_MAP_INIT(lockname) }
-+
-+#define __local_lock_init(lock)					\
-+do {								\
-+	static struct lock_class_key __key;			\
-+								\
-+	debug_check_no_locks_freed((void *)lock, sizeof(*lock));\
-+	lockdep_init_map_wait(&(lock)->dep_map, #lock, &__key, 0, LD_WAIT_CONFIG)=
-;\
-+} while (0)
-+
-+#ifdef CONFIG_DEBUG_LOCK_ALLOC
-+static inline void local_lock_acquire(local_lock_t *l)
-+{
-+	lock_map_acquire(&l->dep_map);
-+	DEBUG_LOCKS_WARN_ON(l->owner);
-+	l->owner =3D current;
++		local_lock(&lru_pvecs.lock);
++		pvec =3D this_cpu_ptr(&lru_pvecs.lru_deactivate_file);
+=20
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+ 			pagevec_lru_move_fn(pvec, lru_deactivate_file_fn, NULL);
+-		put_cpu_var(lru_deactivate_file_pvecs);
++		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+=20
+@@ -660,12 +689,14 @@ void deactivate_file_page(struct page *page)
+ void deactivate_page(struct page *page)
+ {
+ 	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
+-		struct pagevec *pvec =3D &get_cpu_var(lru_deactivate_pvecs);
++		struct pagevec *pvec;
+=20
++		local_lock(&lru_pvecs.lock);
++		pvec =3D this_cpu_ptr(&lru_pvecs.lru_deactivate);
+ 		get_page(page);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+ 			pagevec_lru_move_fn(pvec, lru_deactivate_fn, NULL);
+-		put_cpu_var(lru_deactivate_pvecs);
++		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+=20
+@@ -680,19 +711,30 @@ void mark_page_lazyfree(struct page *page)
+ {
+ 	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+ 	    !PageSwapCache(page) && !PageUnevictable(page)) {
+-		struct pagevec *pvec =3D &get_cpu_var(lru_lazyfree_pvecs);
++		struct pagevec *pvec;
+=20
++		local_lock(&lru_pvecs.lock);
++		pvec =3D this_cpu_ptr(&lru_pvecs.lru_lazyfree);
+ 		get_page(page);
+ 		if (!pagevec_add(pvec, page) || PageCompound(page))
+ 			pagevec_lru_move_fn(pvec, lru_lazyfree_fn, NULL);
+-		put_cpu_var(lru_lazyfree_pvecs);
++		local_unlock(&lru_pvecs.lock);
+ 	}
+ }
+=20
+ void lru_add_drain(void)
+ {
+-	lru_add_drain_cpu(get_cpu());
+-	put_cpu();
++	local_lock(&lru_pvecs.lock);
++	lru_add_drain_cpu(smp_processor_id());
++	local_unlock(&lru_pvecs.lock);
 +}
 +
-+static inline void local_lock_release(local_lock_t *l)
++void lru_add_drain_cpu_zone(struct zone *zone)
 +{
-+	DEBUG_LOCKS_WARN_ON(l->owner !=3D current);
-+	l->owner =3D NULL;
-+	lock_map_release(&l->dep_map);
-+}
-+
-+#else /* CONFIG_DEBUG_LOCK_ALLOC */
-+static inline void local_lock_acquire(local_lock_t *l) { }
-+static inline void local_lock_release(local_lock_t *l) { }
-+#endif /* !CONFIG_DEBUG_LOCK_ALLOC */
-+
-+#define __local_lock(lock)					\
-+	do {							\
-+		preempt_disable();				\
-+		local_lock_acquire(this_cpu_ptr(lock));		\
-+	} while (0)
-+
-+#define __local_lock_irq(lock)					\
-+	do {							\
-+		local_irq_disable();				\
-+		local_lock_acquire(this_cpu_ptr(lock));		\
-+	} while (0)
-+
-+#define __local_lock_irqsave(lock, flags)			\
-+	do {							\
-+		local_irq_save(flags);				\
-+		local_lock_acquire(this_cpu_ptr(lock));		\
-+	} while (0)
-+
-+#define __local_unlock(lock)					\
-+	do {							\
-+		local_lock_release(this_cpu_ptr(lock));		\
-+		preempt_enable();				\
-+	} while (0)
-+
-+#define __local_unlock_irq(lock)				\
-+	do {							\
-+		local_lock_release(this_cpu_ptr(lock));		\
-+		local_irq_enable();				\
-+	} while (0)
-+
-+#define __local_unlock_irqrestore(lock, flags)			\
-+	do {							\
-+		local_lock_release(this_cpu_ptr(lock));		\
-+		local_irq_restore(flags);			\
-+	} while (0)
++	local_lock(&lru_pvecs.lock);
++	lru_add_drain_cpu(smp_processor_id());
++	drain_local_pages(zone);
++	local_unlock(&lru_pvecs.lock);
+ }
+=20
+ #ifdef CONFIG_SMP
+@@ -743,11 +785,11 @@ void lru_add_drain_all(void)
+ 	for_each_online_cpu(cpu) {
+ 		struct work_struct *work =3D &per_cpu(lru_add_drain_work, cpu);
+=20
+-		if (pagevec_count(&per_cpu(lru_add_pvec, cpu)) ||
+-		    pagevec_count(&per_cpu(lru_rotate_pvecs, cpu)) ||
+-		    pagevec_count(&per_cpu(lru_deactivate_file_pvecs, cpu)) ||
+-		    pagevec_count(&per_cpu(lru_deactivate_pvecs, cpu)) ||
+-		    pagevec_count(&per_cpu(lru_lazyfree_pvecs, cpu)) ||
++		if (pagevec_count(&per_cpu(lru_pvecs.lru_add, cpu)) ||
++		    pagevec_count(&per_cpu(lru_rotate.pvec, cpu)) ||
++		    pagevec_count(&per_cpu(lru_pvecs.lru_deactivate_file, cpu)) ||
++		    pagevec_count(&per_cpu(lru_pvecs.lru_deactivate, cpu)) ||
++		    pagevec_count(&per_cpu(lru_pvecs.lru_lazyfree, cpu)) ||
+ 		    need_activate_page_drain(cpu)) {
+ 			INIT_WORK(work, lru_add_drain_per_cpu);
+ 			queue_work_on(cpu, mm_percpu_wq, work);
 --=20
 2.27.0.rc0
 
