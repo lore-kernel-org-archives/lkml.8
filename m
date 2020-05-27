@@ -2,178 +2,142 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE61BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE80EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA20820FC3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC7F220899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:17:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ntTTyD9q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QW+CYypi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389495AbgE0PQc (ORCPT
+        id S2389565AbgE0PRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:16:32 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2642 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388922AbgE0PQb (ORCPT
+        Wed, 27 May 2020 11:17:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28489 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389447AbgE0PQ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:16:31 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RF88gA021896;
-        Wed, 27 May 2020 17:16:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=P+9oKFVvctxteNakurd2HftE8vay3BJJGfZ7uNvjGoY=;
- b=ntTTyD9qpXKInxrhvJk9S0iljCU5qaI/yKj0KgZiYEeLnCyFOQq7bNPzi7WTnSYeIqUY
- JL/Cs06ovMR0iYAJamwO8dho58HQvPXgRyGoXkMqSDNSIaJsCH9PN2WBPYaLRJ/ZWTpq
- 6+FyEbEKTaV2esxVpQgIP0srJ5IxP5mQ2yFc3LymRYnsfLFqiSbShD+kYH2KIiFuljjn
- NdkYWFLsiPqZR6UjjvwqZDak7641YTf5dcceMCOAMW8loK3M4jsA/w0Tk97WdQKRhgwR
- q5OdvXy8enpe8dfCjdW8Lx1ccbEPKtcPAUUqhlLOTOxm/i/NJ3ddBNCQtHhv3VOJP8vL 1w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 319mfaj603-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 17:16:18 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B2F4D100034;
-        Wed, 27 May 2020 17:16:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 99EAE2C02D7;
-        Wed, 27 May 2020 17:16:16 +0200 (CEST)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 27 May 2020 17:16:15
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <hugues.fruchet@st.com>, <mchehab@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <linux-media@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <vincent.guittot@linaro.org>,
-        <valentin.schneider@arm.com>, <rjw@rjwysocki.net>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] media: stm32-dcmi: Set minimum cpufreq requirement
-Date:   Wed, 27 May 2020 17:16:13 +0200
-Message-ID: <20200527151613.16083-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Wed, 27 May 2020 11:16:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590592618;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VVDQvFJrgkWSz8/ikl8zaz7psPPU6nwXpgVWbhjxY/A=;
+        b=QW+CYypiY6rpNEISyGoTqYN8+viS3sVz1WUgt5ED5jO3sDQgnpQWuysOG66T1rfgAeMGxY
+        7h2/+er8SSmGGOAKG5PxPXnynmHj6sNyntD8cknsVhtbYQgligtM+r3rspV8PqVq8pm1pn
+        k1bKJ7bxqgXWXKMKFgh10bc2zYRD0MA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-R7kKTjP5PX6oBfqiP1ZHrQ-1; Wed, 27 May 2020 11:16:54 -0400
+X-MC-Unique: R7kKTjP5PX6oBfqiP1ZHrQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1F6D107ACCD;
+        Wed, 27 May 2020 15:16:52 +0000 (UTC)
+Received: from starship (unknown [10.35.206.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F26519D82;
+        Wed, 27 May 2020 15:16:48 +0000 (UTC)
+Message-ID: <6d6d38a6f62e0d6d093713703e9f0e183c7eda13.camel@redhat.com>
+Subject: Re: [PATCH 1/2] kvm/x86/vmx: enable X86_FEATURE_WAITPKG in KVM
+ capabilities
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tao Xu <tao3.xu@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jingqi Liu <jingqi.liu@intel.com>
+Date:   Wed, 27 May 2020 18:16:47 +0300
+In-Reply-To: <20200527012039.GC31696@linux.intel.com>
+References: <20200523161455.3940-1-mlevitsk@redhat.com>
+         <20200523161455.3940-2-mlevitsk@redhat.com>
+         <20200527012039.GC31696@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before start streaming set cpufreq minimum frequency requirement.
-The cpufreq governor will adapt the frequencies and we will have
-no latency for handling interrupts.
+On Tue, 2020-05-26 at 18:20 -0700, Sean Christopherson wrote:
+> On Sat, May 23, 2020 at 07:14:54PM +0300, Maxim Levitsky wrote:
+> > Even though we might not allow the guest to use
+> > WAITPKG's new instructions, we should tell KVM
+> > that the feature is supported by the host CPU.
+> > 
+> > Note that vmx_waitpkg_supported checks that WAITPKG
+> > _can_ be set in secondary execution controls as specified
+> > by VMX capability MSR, rather that we actually enable it for a
+> > guest.
+> 
+> These line wraps are quite weird and inconsistent.
+Known issue for me, I usually don't have line wrapping enabled,
+and I wrap the lines a bit earlier that 72 character limit. 
+I'll re-formatted the commit message to be on 72 line format and I will
+try now to pay much more attention to that.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/media/platform/stm32/stm32-dcmi.c | 29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> > Fixes: e69e72faa3a0 KVM: x86: Add support for user wait
+> > instructions
+> 
+> Checkpatch doesn't complain,  but the preferred Fixes format is
+> 
+>   Fixes: e69e72faa3a07 ("KVM: x86: Add support for user wait
+> instructions")
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index b8931490b83b..97c342351569 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/clk.h>
- #include <linux/completion.h>
-+#include <linux/cpufreq.h>
- #include <linux/delay.h>
- #include <linux/dmaengine.h>
- #include <linux/init.h>
-@@ -99,6 +100,8 @@ enum state {
- 
- #define OVERRUN_ERROR_THRESHOLD	3
- 
-+#define DCMI_MIN_FREQ	650000 /* in KHz */
-+
- struct dcmi_graph_entity {
- 	struct v4l2_async_subdev asd;
- 
-@@ -173,6 +176,10 @@ struct stm32_dcmi {
- 	struct media_device		mdev;
- 	struct media_pad		vid_cap_pad;
- 	struct media_pipeline		pipeline;
-+
-+	/* CPU freq contraint */
-+	struct cpufreq_policy		*policy;
-+	struct freq_qos_request		qos_req;
- };
- 
- static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
-@@ -736,11 +743,20 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 		goto err_release_buffers;
- 	}
- 
-+	if (dcmi->policy) {
-+		ret = freq_qos_add_request(&dcmi->policy->constraints,
-+					   &dcmi->qos_req, FREQ_QOS_MIN,
-+					   DCMI_MIN_FREQ);
-+
-+		if (ret < 0)
-+			goto err_pm_put;
-+	}
-+
- 	ret = media_pipeline_start(&dcmi->vdev->entity, &dcmi->pipeline);
- 	if (ret < 0) {
- 		dev_err(dcmi->dev, "%s: Failed to start streaming, media pipeline start error (%d)\n",
- 			__func__, ret);
--		goto err_pm_put;
-+		goto err_drop_qos;
- 	}
- 
- 	ret = dcmi_pipeline_start(dcmi);
-@@ -835,6 +851,9 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- err_media_pipeline_stop:
- 	media_pipeline_stop(&dcmi->vdev->entity);
- 
-+err_drop_qos:
-+	if (dcmi->policy)
-+		freq_qos_remove_request(&dcmi->qos_req);
- err_pm_put:
- 	pm_runtime_put(dcmi->dev);
- 
-@@ -863,6 +882,9 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
- 
- 	media_pipeline_stop(&dcmi->vdev->entity);
- 
-+	if (dcmi->policy)
-+		freq_qos_remove_request(&dcmi->qos_req);
-+
- 	spin_lock_irq(&dcmi->irqlock);
- 
- 	/* Disable interruptions */
-@@ -2020,6 +2042,8 @@ static int dcmi_probe(struct platform_device *pdev)
- 		goto err_cleanup;
- 	}
- 
-+	dcmi->policy = cpufreq_cpu_get(0);
-+
- 	dev_info(&pdev->dev, "Probe done\n");
- 
- 	platform_set_drvdata(pdev, dcmi);
-@@ -2049,6 +2073,9 @@ static int dcmi_remove(struct platform_device *pdev)
- 
- 	pm_runtime_disable(&pdev->dev);
- 
-+	if (dcmi->policy)
-+		cpufreq_cpu_put(dcmi->policy);
-+
- 	v4l2_async_notifier_unregister(&dcmi->notifier);
- 	v4l2_async_notifier_cleanup(&dcmi->notifier);
- 	media_entity_cleanup(&dcmi->vdev->entity);
--- 
-2.15.0
+
+> 
+> e.g.
+> 
+>   git show -s --pretty='tformat:%h ("%s")'
+
+Got it, and added to git aliases :-)
+
+> 
+> For the code itself:
+> 
+> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Thank you!
+
+> 
+> > Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  arch/x86/kvm/vmx/vmx.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 55712dd86bafa..fca493d4517c5 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -7298,6 +7298,9 @@ static __init void vmx_set_cpu_caps(void)
+> >  	/* CPUID 0x80000001 */
+> >  	if (!cpu_has_vmx_rdtscp())
+> >  		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
+> > +
+> > +	if (vmx_waitpkg_supported())
+> > +		kvm_cpu_cap_check_and_set(X86_FEATURE_WAITPKG);
+> >  }
+> >  
+> >  static void vmx_request_immediate_exit(struct kvm_vcpu *vcpu)
+> > -- 
+> > 2.26.2
+> > 
 
