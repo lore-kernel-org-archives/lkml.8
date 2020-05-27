@@ -2,137 +2,97 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71CC220776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272AC20C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390044AbgE0PsS convert rfc822-to-8bit (ORCPT
+        id S1729090AbgE0Psz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:48:18 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:59829 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728427AbgE0PsQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:48:16 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 21311397-1500050 
-        for multiple; Wed, 27 May 2020 16:47:55 +0100
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 11:48:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61105 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727772AbgE0Psz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:48:55 -0400
+IronPort-SDR: XjWgDcJbBdd84zEbqVX5GtDKCi+419nPwSJi0kjlDMiWkR8XEtX53QCZyJH2HKm3eT3WEZmKzl
+ TnGAyzZUagnw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:48:54 -0700
+IronPort-SDR: yMq0JANO0NTOgaujZjyd6x0sLdGSGLW5UxxZzucb/ttmr+YPkiZ5py6rIygbmfEyXZvihvz5KR
+ j2aIU/dAa9uQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="414248082"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 08:48:51 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdyIY-009FpD-KG; Wed, 27 May 2020 18:48:54 +0300
+Date:   Wed, 27 May 2020 18:48:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 07/11] i2c: designware: Discard Cherry Trail model flag
+Message-ID: <20200527154854.GH1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-8-Sergey.Semin@baikalelectronics.ru>
+ <20200527134339.GY1634618@smile.fi.intel.com>
+ <20200527142902.2xpteguuotsl3z7y@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200527140526.1458215-3-arnd@arndb.de>
-References: <20200527140526.1458215-1-arnd@arndb.de> <20200527140526.1458215-3-arnd@arndb.de>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     Andi Shyti <andi.shyti@intel.com>, Arnd Bergmann <arnd@arndb.de>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Matthew Auld <matthew.auld@intel.com>
-Subject: Re: [PATCH 3/3] drm/i915/selftests: avoid bogus maybe-uninitialized warning
-Message-ID: <159059447457.30979.14504945135116433938@build.alporthouse.com>
-User-Agent: alot/0.8.1
-Date:   Wed, 27 May 2020 16:47:54 +0100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527142902.2xpteguuotsl3z7y@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Arnd Bergmann (2020-05-27 15:05:10)
-> gcc has a problem following values through IS_ERR/PTR_ERR macros,
-> leading to a false-positive warning in allmodconfig, with any
-> compiler version:
+On Wed, May 27, 2020 at 05:29:02PM +0300, Serge Semin wrote:
+> On Wed, May 27, 2020 at 04:43:39PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 03:01:07PM +0300, Serge Semin wrote:
+> > > A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+> > > since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+> > > bus pm_disabled workaround"), but the flag most likely by mistake has been
+> > > left in the Dw I2C drivers. Let's remove it.
+> > 
+> > ...
+> > 
+> > > -#define MODEL_MSCC_OCELOT	0x00000200
+> > > +#define MODEL_MSCC_OCELOT	0x00000100
+> > 
+> > But why?
+> > 
+> > Does 0x200 work or not? I didn't see this in commit message.
 > 
-> In file included from drivers/gpu/drm/i915/gt/intel_lrc.c:5892:
-> drivers/gpu/drm/i915/gt/selftest_lrc.c: In function 'create_gpr_client.isra.0':
-> drivers/gpu/drm/i915/gt/selftest_lrc.c:2902:23: error: 'rq' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-> 
-> This one is hard to avoid without impairing readability or adding a
-> bugus NULL pointer.
-> 
-> Fixes: c92724de6db1 ("drm/i915/selftests: Try to detect rollback during batchbuffer preemption")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/i915/gt/selftest_lrc.c | 21 +++++++++++++--------
->  1 file changed, 13 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gt/selftest_lrc.c b/drivers/gpu/drm/i915/gt/selftest_lrc.c
-> index 824f99c4cc7c..933c3f5adf0a 100644
-> --- a/drivers/gpu/drm/i915/gt/selftest_lrc.c
-> +++ b/drivers/gpu/drm/i915/gt/selftest_lrc.c
-> @@ -2908,23 +2908,25 @@ create_gpr_client(struct intel_engine_cs *engine,
->  
->         vma = i915_vma_instance(global->obj, ce->vm, NULL);
->         if (IS_ERR(vma)) {
-> -               err = PTR_ERR(vma);
-> +               rq = ERR_CAST(vma);
->                 goto out_ce;
->         }
->  
->         err = i915_vma_pin(vma, 0, 0, PIN_USER);
-> -       if (err)
-> +       if (err) {
-> +               rq = ERR_PTR(err);
->                 goto out_ce;
-> +       }
->  
->         batch = create_gpr_user(engine, vma, offset);
->         if (IS_ERR(batch)) {
-> -               err = PTR_ERR(batch);
-> +               rq = ERR_CAST(batch);
->                 goto out_vma;
->         }
->  
->         rq = intel_context_create_request(ce);
->         if (IS_ERR(rq)) {
-> -               err = PTR_ERR(rq);
-> +               rq = ERR_CAST(rq);
->                 goto out_batch;
->         }
->  
-> @@ -2946,17 +2948,20 @@ create_gpr_client(struct intel_engine_cs *engine,
->         i915_vma_unlock(batch);
->         i915_vma_unpin(batch);
->  
-> -       if (!err)
-> +       if (!err) {
->                 i915_request_get(rq);
-> -       i915_request_add(rq);
-> -
-> +               i915_request_add(rq);
-> +       } else {
-> +               i915_request_add(rq);
-> +               rq = ERR_PTR(err);
-> +       }
->  out_batch:
->         i915_vma_put(batch);
->  out_vma:
->         i915_vma_unpin(vma);
->  out_ce:
->         intel_context_put(ce);
-> -       return err ? ERR_PTR(err) : rq;
-> +       return rq;
+> I removed the MODEL_CHERRYTRAIL flag and redefined the only left
+> MODEL_MSCC_OCELOT flag to set the very first bit allocated for the model
+> flags. Isn't that obvious?
 
-Hmm, I've used this style a few times, so could do with some syntactic
-refinement.
+Yes, but how it's related to the MSCC_OCELOT?
 
-drivers/gpu/drm/i915/gem/i915_gem_userptr.c:    return err ? ERR_PTR(err) : mm->mn;
-drivers/gpu/drm/i915/gt/selftest_hangcheck.c:   return err ? ERR_PTR(err) : rq;
-drivers/gpu/drm/i915/gt/selftest_lrc.c: return err ? ERR_PTR(err) : rq;
-drivers/gpu/drm/i915/selftests/i915_gem_gtt.c:  return err ? ERR_PTR(err) : rq;
-drivers/gpu/drm/i915/selftests/i915_request.c:  return err ? ERR_PTR(err) : request;
-drivers/gpu/drm/i915/selftests/igt_spinner.c:   return err ? ERR_PTR(err) : rq;
--Chris
+Can't you simple put your define later to that number if absence of 0x100
+provokes an exception when reading this code.
+
+Again, unneeded churn.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
