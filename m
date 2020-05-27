@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB850C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29D820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBA22088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rcQNup5j";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FGZHADj/"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ykc/dTT2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vrUPWg4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390708AbgE0P4d (ORCPT
+        id S1729139AbgE0P4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:56:33 -0400
+        Wed, 27 May 2020 11:56:37 -0400
 Received: from new1-smtp.messagingengine.com ([66.111.4.221]:36569 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390223AbgE0PuM (ORCPT
+        by vger.kernel.org with ESMTP id S2390211AbgE0PuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:50:12 -0400
+        Wed, 27 May 2020 11:50:09 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D6B79582063;
-        Wed, 27 May 2020 11:50:11 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id C72CE58205A;
+        Wed, 27 May 2020 11:50:08 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:11 -0400
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=5LdLUQabqGwWb
-        iAk4R0m424dN93YdWZ308LsyWjEzJ4=; b=rcQNup5j+9gf+s2I8Zo4FY5IAxew3
-        WtyIYJgDAOHFpPj6shWMDxMiGWHlplDGUPbZ3Z0lBCb+7FkMXa+75hK4T1hk0c1U
-        PJhP2LDXQ6wdH/95oro0kjUhpDE2+t3g8TcunMqESLowDqOVc38/b+u06VIzsX52
-        DPfnUZ9clFtj2choArX6P1cACe8k0yO0U56to21g98eSPGKe511bNyKMNhlHUsEH
-        UOhn0IZFujc9nJsKc/oAa1y5GJzv1JuSWccCz58OGJBOnGi3g+Jqu7vYU2CP9cIk
-        DuT0V5f9BoO9v5mj2QDRhhGun9T30lSjPrMqPbp/QC1CwmpDtApwohW4A==
+        :mime-version:content-transfer-encoding; s=fm2; bh=o8UH7HzUq+ZuB
+        7eeWpTyi1/5ijSzp/Ve3XF+alFUSno=; b=ykc/dTT25h7h/eP9V+5ggPXGVmC5x
+        6lhfqyDmTakBlsHr5JaoT/rhmLsVZ7UvuG9TxemYd+o3qeTqwoWjHaWr/NKBoKD7
+        KvHfH4cAxZDixcR+Ocr2jGMFzOzrvJ42ZM800UezDJoz75mf7qTEaKSDbaxZPGto
+        UucHudoXslnbAzpUnf0aWsoq+6rOPZKmx5veW1GbiJhCZmBfmtKInRXMTITLzjEJ
+        mTmNn0aqy6PLTu7sPus6lL1ippVrd7HOJuCf1GgZZDYleGAoIFLX0tnpjx/OQi4c
+        aXCZHDz0ZrMoxUMV/br7r32q9DsF0qyfEmyUwuGW53nJZNPIZWjB8mdkQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=5LdLUQabqGwWbiAk4R0m424dN93YdWZ308LsyWjEzJ4=; b=FGZHADj/
-        YaCs+l0nB69zXfgZypqcEWcI0VQg9K44ELWQkelB2dYAIRhMWcH/wrzJKZXQUzAl
-        QE1LMyE75gmwADZCr/4yofwklF05S01NOuYAwgiW19e8TmfeBsNMnc5xVqYF5pu3
-        0WdxteK1OT71o4FVOP2fu4mRf2uxocTDoNldK+mcXR3LdLwjGxWc2xM9YlZ4Gx7H
-        IZXEPux9m5KuMDjte6vSSji1qNsfmx7e5jC/4TnNyCboITE9QSbR9aiDh0CQKrdQ
-        nvuPbmjrNf6eiOZsGnJ+E4romHVG4AzioTFesvDrlCO/8N1LRudcct/CVsQNArq7
-        aqy1BUlELabAXQ==
-X-ME-Sender: <xms:M4zOXmKEksacRhu0T2f_-atKZJfNZY4SWjdiTRXxcRDdeX0KcWBL_g>
+        fm2; bh=o8UH7HzUq+ZuB7eeWpTyi1/5ijSzp/Ve3XF+alFUSno=; b=vrUPWg4U
+        AMSXAwJCK1VtZckICLRMMJD5S6Z32YF6B/HJvK7T/P5oVjyODVvJHX96Yvyo/U/h
+        0VF31+SDissv+2OHmkPcUGzp10DiCmw3vxjGQyEcvuxKt0huU/qDZrFfVuCxUAY1
+        botNWHEmCz70vIbg7iFumlk620a24Y3GjrHcR5HBAX6f50/e+l5l8mZguJblhOoZ
+        zR4aE00SFwzeaNhiN1d9HnD2nUM1icj/MtVkwG9Da+T1ZYWD2aYSSRrjhKhoxNSV
+        MO7f319nI4x81daMhWKMg9V2+1/WNCVdpAdQe3AC1J6YObg7VI8z2Y1+XC1vDQpr
+        cjRfE66cljsXRA==
+X-ME-Sender: <xms:MIzOXvUG3egGiiXZlNpuoGmwjmYKVWzHKF8o63QV_PzA-nzJtB5JiQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudegne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:M4zOXuKFoH0YWf74QoYg5Wpo7kaPwa9UuV2KJwQV44ZNwdHwOLXaqw>
-    <xmx:M4zOXmtlWhUV8-3BssCgObReUHpoTkmsC1iNe0OTCl3ZSuntsjC1qA>
-    <xmx:M4zOXra8Ity52vDLDgOq5OmMAw1kGaDHjeWJ3Xl_ZSiJdfG2nEIVYg>
-    <xmx:M4zOXp5Mn4OfxWXjvVwvlj4ZPWUD0WcioFiMjxxEbssnXPx-lFT6TQ>
+X-ME-Proxy: <xmx:MIzOXnkwLuLQhGFUD2O4znoupvYEPB6kSQSRS5lVMbZAipFsUIbpEQ>
+    <xmx:MIzOXraxI2LrSMENMoLe54JvvJtWAK-I0grLlV05-GTlLK4xHvV8QA>
+    <xmx:MIzOXqWah8dCI5B_GqMeXSpLitonqTtqhxTsnUnQSG_Uzq2JICUG2Q>
+    <xmx:MIzOXvXKWBMQ4T-p20Ob07R5FiZrbU-poEKyD_KrRx8OYmMTcDyv6g>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 783F93280064;
-        Wed, 27 May 2020 11:50:11 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5FD703280064;
+        Wed, 27 May 2020 11:50:08 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 034/105] drm/vc4: crtc: Add FIFO depth to vc4_crtc_data
-Date:   Wed, 27 May 2020 17:48:04 +0200
-Message-Id: <a213ce2bc6a4147506ce61f70dc2e388db54021c.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 032/105] drm/vc4: crtc: Enable and disable the PV in atomic_enable / disable
+Date:   Wed, 27 May 2020 17:48:02 +0200
+Message-Id: <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,89 +89,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all pixelvalve FIFOs in vc5 have the same depth, so we need to add that
-to our vc4_crtc_data structure to be able to compute the fill level
-properly later on.
+The VIDEN bit in the pixelvalve currently being used to enable or disable
+the pixelvalve seems to not be enough in some situations, which whill end
+up with the pixelvalve stalling.
+
+In such a case, even re-enabling VIDEN doesn't bring it back and we need to
+clear the FIFO. This can only be done if the pixelvalve is disabled though.
+
+In order to overcome this, we can configure the pixelvalve during
+mode_set_no_fb, but only enable it in atomic_enable and flush the FIFO
+there, and in atomic_disable disable the pixelvalve again.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 19 ++++++++++++++++---
- drivers/gpu/drm/vc4/vc4_drv.h  |  3 +++
- 2 files changed, 19 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index a6c3f2f907bd..e25e81bf64e7 100644
+index 15c72afb226f..580b37ad514d 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -248,10 +248,20 @@ vc4_crtc_update_gamma_lut(struct drm_crtc *crtc)
- 	vc4_crtc_lut_load(crtc);
+@@ -372,9 +372,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
+ 		   PV_CONTROL_TRIGGER_UNDERFLOW |
+ 		   PV_CONTROL_WAIT_HSTART |
+ 		   VC4_SET_FIELD(vc4_encoder->clock_select,
+-				 PV_CONTROL_CLK_SELECT) |
+-		   PV_CONTROL_FIFO_CLR |
+-		   PV_CONTROL_EN);
++				 PV_CONTROL_CLK_SELECT));
  }
  
--static u32 vc4_get_fifo_full_level(u32 format)
-+static u32 vc4_get_fifo_full_level(struct vc4_crtc *vc4_crtc, u32 format)
- {
--	static const u32 fifo_len_bytes = 64;
-+	u32 fifo_len_bytes = vc4_crtc->data->fifo_depth;
+ static void vc4_crtc_mode_set_nofb(struct drm_crtc *crtc)
+@@ -465,6 +463,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
+ 	WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
  
-+	/*
-+	 * Pixels are pulled from the HVS if the number of bytes is
-+	 * lower than the FIFO full level.
-+	 *
-+	 * The latency of the pixel fetch mechanism is 6 pixels, so we
-+	 * need to convert those 6 pixels in bytes, depending on the
-+	 * format, and then subtract that from the length of the FIFO
-+	 * to make sure we never end up in a situation where the FIFO
-+	 * is full.
-+	 */
- 	switch (format) {
- 	case PV_CONTROL_FORMAT_DSIV_16:
- 	case PV_CONTROL_FORMAT_DSIC_16:
-@@ -367,7 +377,7 @@ static void vc4_crtc_config_pv(struct drm_crtc *crtc)
- 
- 	CRTC_WRITE(PV_CONTROL,
- 		   VC4_SET_FIELD(format, PV_CONTROL_FORMAT) |
--		   VC4_SET_FIELD(vc4_get_fifo_full_level(format),
-+		   VC4_SET_FIELD(vc4_get_fifo_full_level(vc4_crtc, format),
- 				 PV_CONTROL_FIFO_LEVEL) |
- 		   VC4_SET_FIELD(pixel_rep - 1, PV_CONTROL_PIXEL_REP) |
- 		   PV_CONTROL_CLR_AT_START |
-@@ -1066,6 +1076,7 @@ static const struct vc4_crtc_data bcm2835_pv0_data = {
- 	.hvs_available_channels = BIT(0),
- 	.hvs_output = 0,
- 	.debugfs_name = "crtc0_regs",
-+	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
- 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI0,
-@@ -1077,6 +1088,7 @@ static const struct vc4_crtc_data bcm2835_pv1_data = {
- 	.hvs_available_channels = BIT(2),
- 	.hvs_output = 2,
- 	.debugfs_name = "crtc1_regs",
-+	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
- 		[PV_CONTROL_CLK_SELECT_DSI] = VC4_ENCODER_TYPE_DSI1,
-@@ -1088,6 +1100,7 @@ static const struct vc4_crtc_data bcm2835_pv2_data = {
- 	.hvs_available_channels = BIT(1),
- 	.hvs_output = 1,
- 	.debugfs_name = "crtc2_regs",
-+	.fifo_depth = 64,
- 	.pixels_per_clock = 1,
- 	.encoder_types = {
- 		[PV_CONTROL_CLK_SELECT_DPI_SMI_HDMI] = VC4_ENCODER_TYPE_HDMI,
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 73156a53822f..1f62dffd6676 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -450,6 +450,9 @@ to_vc4_encoder(struct drm_encoder *encoder)
- }
- 
- struct vc4_crtc_data {
-+	/* Depth of the PixelValve FIFO in bytes */
-+	unsigned int fifo_depth;
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) & ~PV_CONTROL_EN);
 +
- 	/* Which channels of the HVS can the output source from */
- 	unsigned int hvs_available_channels;
+ 	if (HVS_READ(SCALER_DISPCTRLX(chan)) &
+ 	    SCALER_DISPCTRLX_ENABLE) {
+ 		HVS_WRITE(SCALER_DISPCTRLX(chan),
+@@ -552,6 +552,10 @@ static void vc4_crtc_atomic_enable(struct drm_crtc *crtc,
  
+ 	require_hvs_enabled(dev);
+ 
++	/* Reset the PV fifo. */
++	CRTC_WRITE(PV_CONTROL, CRTC_READ(PV_CONTROL) |
++		   PV_CONTROL_FIFO_CLR | PV_CONTROL_EN);
++
+ 	/* Enable vblank irq handling before crtc is started otherwise
+ 	 * drm_crtc_get_vblank() fails in vc4_crtc_update_dlist().
+ 	 */
 -- 
 git-series 0.9.1
