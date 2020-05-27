@@ -2,96 +2,87 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2475C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B57C2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:57:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="W5rQ36Je"
+	by mail.kernel.org (Postfix) with ESMTP id 9082A208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgE0C5S (ORCPT
+        id S1728321AbgE0C5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:57:18 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:52702 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728177AbgE0C5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:57:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590548236; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=6Ift2CZ2f8hYhU8lvSz1kq7TxcCrUamQ2r8BuaLxoas=; b=W5rQ36JejQBoh5If7AxN/ZwPCofQ7hWsbi6BR/UgkUcN6rpBUBbf/6Y0bER8N4QTyNf/vxmG
- sqAPuINc2n4whobb+NKh8ss2ANZ0Rah52ZZR9CjgKSHdM0WeulZpGoxKhTgPPVdcJ/YvZufv
- iM5Frebq2iYPVJnJBjNqhCAKsdo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5ecdd70b2dd9e15ae3d5383f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 02:57:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 81085C433C6; Wed, 27 May 2020 02:57:14 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E50E7C433C9;
-        Wed, 27 May 2020 02:57:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E50E7C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v2] Bluetooth: hci_qca: Improve controller ID info log level
-Date:   Wed, 27 May 2020 10:57:09 +0800
-Message-Id: <1590548229-17812-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 26 May 2020 22:57:34 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5286 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725948AbgE0C5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:57:34 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6ABE37498ABE6535058E;
+        Wed, 27 May 2020 10:57:32 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 27 May 2020 10:57:25 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Daniel Mack <daniel@zonque.org>,
+        Haojian Zhuang <haojian.zhuang@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Jaroslav Kysela" <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] ASoC: mmp-sspa: Fix return value check in asoc_mmp_sspa_probe()
+Date:   Wed, 27 May 2020 03:02:10 +0000
+Message-ID: <20200527030210.124393-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Controller ID info got by VSC EDL_PATCH_GETVER is very
-important, so improve its log level from DEBUG to INFO.
+In case of error, the function devm_ioremap() returns NULL pointer not
+ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 ---
- drivers/bluetooth/btqca.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ sound/soc/pxa/mmp-sspa.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 3ea866d..94d8e15 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -74,10 +74,14 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
+diff --git a/sound/soc/pxa/mmp-sspa.c b/sound/soc/pxa/mmp-sspa.c
+index 3e37ab625f8d..4255851c71c1 100644
+--- a/sound/soc/pxa/mmp-sspa.c
++++ b/sound/soc/pxa/mmp-sspa.c
+@@ -493,13 +493,13 @@ static int asoc_mmp_sspa_probe(struct platform_device *pdev)
+ 			return -ENODEV;
  
- 	ver = (struct qca_btsoc_version *)(edl->data);
+ 		sspa->rx_base = devm_ioremap(&pdev->dev, res->start, 0x30);
+-		if (IS_ERR(sspa->rx_base))
+-			return PTR_ERR(sspa->rx_base);
++		if (!sspa->rx_base)
++			return -ENOMEM;
  
--	BT_DBG("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
--	BT_DBG("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
--	BT_DBG("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
--	BT_DBG("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
-+	bt_dev_info(hdev, "QCA Product ID   :0x%08x",
-+			le32_to_cpu(ver->product_id));
-+	bt_dev_info(hdev, "QCA SOC Version  :0x%08x",
-+			le32_to_cpu(ver->soc_id));
-+	bt_dev_info(hdev, "QCA ROM Version  :0x%08x",
-+			le16_to_cpu(ver->rom_ver));
-+	bt_dev_info(hdev, "QCA Patch Version:0x%08x",
-+			le16_to_cpu(ver->patch_ver));
+ 		sspa->tx_base = devm_ioremap(&pdev->dev,
+ 					     res->start + 0x80, 0x30);
+-		if (IS_ERR(sspa->tx_base))
+-			return PTR_ERR(sspa->tx_base);
++		if (!sspa->tx_base)
++			return -ENOMEM;
  
- 	/* QCA chipset version can be decided by patch and SoC
- 	 * version, combination with upper 2 bytes from SoC
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+ 		sspa->clk = devm_clk_get(&pdev->dev, NULL);
+ 		if (IS_ERR(sspa->clk))
+
+
+
+
 
