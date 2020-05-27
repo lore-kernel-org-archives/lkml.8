@@ -6,56 +6,74 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B53C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C584C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6F2207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56863208B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="NvjFzCgo"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="HacLDlq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgE0EVP (ORCPT
+        id S1728827AbgE0EVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 00:21:15 -0400
-Received: from ozlabs.org ([203.11.71.1]:46085 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgE0EVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 00:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbgE0EVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 00:21:03 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 483AEC061A0F;
+        Tue, 26 May 2020 21:21:03 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1003)
-        id 49WyLj0Yf1z9sPF; Wed, 27 May 2020 14:21:00 +1000 (AEST)
+        id 49WyLj24ZLz9sSk; Wed, 27 May 2020 14:21:00 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1590553261; bh=eCU8X9wRDZzbEoypesdQISc5J/H8gswzhje60culhhQ=;
+        t=1590553261; bh=G+QgS0qcNXOLEKAmCyU//vqicLF4pKGtu1284W9SPQ4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NvjFzCgoGwZfWfZdWhowsFPcEgbAthogqz43Wu55JJek+CecgA1Vm1V0OyMsEhwGg
-         k5nfMcfDV1cr/Jmias9LVJGbLcBNwdX9ZzEIuPp5CEiYbxj5B3AsCb+Zn5Cl9rvHQn
-         uMYjYkkrMzGQEyjHsnf62EZl9xNQxr+kdUW9B2gq6ufLlBJv8frN3XRCBb5OU43KuA
-         MW18mCF3nStwTN5fhg/CtZbxa/yrCRAc7FfeyCepzs7O2gft4INYZ7HY+VnKfUHZdY
-         dCMm83AVzDA2vXCaCkSo4a2yra4j7f75PeuBZLfmmwYYcImvBu0zmZsnpnGE0BpDC9
-         skr0LlwvVdzWA==
-Date:   Wed, 27 May 2020 14:15:30 +1000
+        b=HacLDlq4cEW9mRq5Epu7LBXDTYHh562uIVB4NcCHS72K7f+p0nPG30FusxcRsi/rP
+         ZrpLNbsFpBUoa5fBK/q9q1Ph+3l+diJxt7YNSN9ZO5kEStK1cOex/aVl+63iIAnAV6
+         81zfOTK5liGI/8ROoI1BoWkHGtFBDjekFaoiCBAiBA/TOT8TPmMStZdjmsocz8M+z1
+         e7G3jn4kiPnysiktau650QdENmiy7zwC0Om0O6Uxzi7dWPY38pc1wIJDU0++O+x2xz
+         jrq1yr6CfwonY8LwvuxPRV7SME6th0pqavPWBDnyBf57CggTButADyikorWWJ4GTDt
+         HaCvipkquX5yw==
+Date:   Wed, 27 May 2020 14:20:55 +1000
 From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     benh@kernel.crashing.org, mpe@ellerman.id.au,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] KVM: PPC: Book3S HV: remove redundant NULL check
-Message-ID: <20200527041530.GB293451@thinks.paulus.ozlabs.org>
-References: <20200401130903.6576-1-chenzhou10@huawei.com>
+Subject: Re: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
+Message-ID: <20200527042055.GG293451@thinks.paulus.ozlabs.org>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200401130903.6576-1-chenzhou10@huawei.com>
+In-Reply-To: <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 09:09:03PM +0800, Chen Zhou wrote:
-> Free function kfree() already does NULL check, so the additional
-> check is unnecessary, just remove it.
+On Mon, Apr 27, 2020 at 12:35:10PM +0800, Tianjia Zhang wrote:
+> The 'kvm_run' field already exists in the 'vcpu' structure, which
+> is the same structure as the 'kvm_run' in the 'vcpu_arch' and
+> should be deleted.
 > 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-Thanks, applied to my kvm-ppc-next branch.
+Thanks, patches 3 and 4 of this series applied to my kvm-ppc-next branch.
 
 Paul.
