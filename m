@@ -2,92 +2,99 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FD4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC3412084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED55207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y0NJAacY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725841AbgE0XQu (ORCPT
+        id S1725937AbgE0XSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:16:50 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53028 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0XQt (ORCPT
+        Wed, 27 May 2020 19:18:53 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41104 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0XSw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:16:49 -0400
-Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1je5Hy-0005uN-T4; Wed, 27 May 2020 23:16:47 +0000
-Date:   Thu, 28 May 2020 01:16:46 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
-Message-ID: <20200527231646.4v743erjpzh6qe5f@wittgenstein>
-References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
- <202005271408.58F806514@keescook>
- <20200527220532.jplypougn3qzwrms@wittgenstein>
- <202005271537.75548B6@keescook>
- <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
+        Wed, 27 May 2020 19:18:52 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RNIoeK082840;
+        Wed, 27 May 2020 18:18:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590621530;
+        bh=lNhA+E2fd/RxBR6mEdxlKPJRrv3x5UmqnhFIGQavOu4=;
+        h=From:To:CC:Subject:Date;
+        b=Y0NJAacYGFh9kJP8IThabkaeO+jmIxx5m3ZUhjip4Mc40H8duj0XeZlzrekx62o00
+         8r9b5MYE4V+estYS4vtvpEoFoaqPGAd/jzErddPdWWnsS2deIj8pqrdkjEtiH1xlAH
+         Hf9giWwP6+Nm9EoRWd5aXGdrviMq/Uf9K8CifXyo=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RNIok3088667
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 18:18:50 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 18:18:50 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 18:18:50 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RNIoxW052642;
+        Wed, 27 May 2020 18:18:50 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>
+Subject: [PATCH v10 0/4] Add JEITA properties and introduce the bq2515x charger
+Date:   Wed, 27 May 2020 18:17:39 -0500
+Message-ID: <20200527231743.18066-1-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:45:02AM +0200, Christian Brauner wrote:
-> On Wed, May 27, 2020 at 03:37:58PM -0700, Kees Cook wrote:
-> > On Thu, May 28, 2020 at 12:05:32AM +0200, Christian Brauner wrote:
-> > > The main question also is, is there precedence where the kernel just
-> > > closes the file descriptor for userspace behind it's back? I'm not sure
-> > > I've heard of this before. That's not how that works afaict; it's also
-> > > not how we do pidfds. We don't just close the fd when the task
-> > > associated with it goes away, we notify and then userspace can close.
-> > 
-> > But there's a mapping between pidfd and task struct that is separate
-> > from task struct itself, yes? I.e. keeping a pidfd open doesn't pin
-> > struct task in memory forever, right?
-> 
-> No, but that's an implementation detail and we discussed that. It pins
-> struct pid instead of task_struct. Once the process is fully gone you
-> just get ESRCH.
-> For example, fds to /proc/<pid>/<tid>/ fds aren't just closed once the
-> task has gone away, userspace will just get ESRCH when it tries to open
-> files under there but the fd remains valid until close() is called.
-> 
-> In addition, of all the anon inode fds, none of them have the "close the
-> file behind userspace back" behavior: io_uring, signalfd, timerfd, btf,
-> perf_event, bpf-prog, bpf-link, bpf-map, pidfd, userfaultfd, fanotify,
-> inotify, eventpoll, fscontext, eventfd. These are just core kernel ones.
-> I'm pretty sure that it'd be very odd behavior if we did that. I'd
-> rather just notify userspace and leave the close to them. But maybe I'm
-> missing something.
+Hello,
 
-I'm also starting to think this isn't even possible or currently doable
-safely.
-The fdtable in the kernel would end up with a dangling pointer, I would
-think. Unless you backtrack all fds that still have a reference into the
-fdtable and refer to that file and close them all in the kernel which I
-don't think is possible and also sounds very dodgy. This also really
-seems like we would be breaking a major contract, namely that fds stay
-valid until userspace calls close, execve(), or exits.
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-Christian
+Dan Murphy (2):
+  power_supply: Add additional health properties to the header
+  dt-bindings: power: Convert battery.txt to battery.yaml
+
+Ricardo Rivera-Matos (2):
+  dt-bindings: power: Add the bindings for the bq2515x family of
+    chargers.
+  power: supply: bq25150 introduce the bq25150
+
+ Documentation/ABI/testing/sysfs-class-power   |    2 +-
+ .../bindings/power/supply/battery.txt         |   82 +-
+ .../bindings/power/supply/battery.yaml        |  143 ++
+ .../bindings/power/supply/bq2515x.yaml        |   91 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1159 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    2 +-
+ include/linux/power_supply.h                  |    3 +
+ 9 files changed, 1413 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
+
+-- 
+2.26.2
+
