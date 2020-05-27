@@ -2,104 +2,131 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC413C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 895272078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:52:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590587539;
-	bh=P1fXzehRUxYttHKGmyhAdhyhRlmS5Hp/HQQW6zPByp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cc4JCcpMVxsH441KNbpiTQJJmnalr58XcxKUYdBNZSP8wC4uKpNnd5TdivNglpvYV
-	 W0YgeRL7RHBZNsvNT3M0rKXSQR6WRmJHIeZQL2UiKPq1FurPsJrYVT34CkRGvf7sIe
-	 mQ4dipNV+VLYK/zPfm5EtYEWOqjNEqc8wOp519eM=
+	by mail.kernel.org (Postfix) with ESMTP id B4C03207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbgE0NwT (ORCPT
+        id S2388924AbgE0Nwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388899AbgE0NwS (ORCPT
+        Wed, 27 May 2020 09:52:39 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:46157 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388713AbgE0Nwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:52:18 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44241C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:52:18 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id dh1so11123694qvb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:52:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yCfXCQLnkmmliUl6o46VN/g4F3+m5D5qyYWprcFsdzw=;
-        b=ILvc1MCIouRXqf4iMkoTsgwlu7e2DkUvMWMjEiGuqm1VIwOM0WBU6DMMVW9Od645rK
-         /pZeylfCuKv6HIpwvfz8wkiIxqofuIV4vkyNmTXa4TuVCj0mUjuytwisQHxAYT9VTyZ2
-         FejPrUZdNHX1fz1DbokFY43xQ358a9FOE6/UFU7QeajQcP5c4NK4S7lfpGBgV+tnvMwI
-         37Bv7D7l1v1XM8RSMRKx4bJUYmrcbS2LsVeQ9wkbeMGQehTPMpG6olFCP6kjJeWUedgg
-         umqBLiHNNsQejZmSjAR96NKgjbDKZSKTkEcbfWpQEogzYiYgG1eCIVa22CY7nyEEeD/l
-         KfCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=yCfXCQLnkmmliUl6o46VN/g4F3+m5D5qyYWprcFsdzw=;
-        b=lNNduU6fGEwqFOj6sYZa/DE0SoWKEnPsrn0zA3fWJL3XEjl2IS5aCJaMo7hRSd5jKs
-         ngefj3uLOhuEJc3zX+/eIZvU2W9AmGVI04I8oaz5WlZYBCNSVjXQpty5MNNLG/dWCsqG
-         0b8rFv1pP3ecTfPn0yMkz7hfPa4IpXuwKIvTJS5dFif/vFE1W7rmifUk9OkXYgy0Mrjf
-         HkvY5+XqZY+GDTOAx3ExXt6j8QeO9HY1pkQ6JmOYvkJsffwLwvdMXxadb91sd+AlpFNJ
-         7PVbSMFfyIPxooaa8FzvCiJbyRLqyJr49OEGOzy2dBSO5Y7Wj2wQsXkBzEaHkBR6Okc/
-         5jSw==
-X-Gm-Message-State: AOAM533iKqU3xknHDM0PE+8AC7RL3IPbEmc1CkYwtCsykXfk2AwnCngU
-        hAJZW1DD12GO1l6r1OhFmCZqKVfO
-X-Google-Smtp-Source: ABdhPJzr/BZ/dF51pigBmbkNJyTIcg4vbPHWZn0hbMeMyd7Ix1aB8FmUHZYfNi6GTwNirRW3pqagGg==
-X-Received: by 2002:a0c:fe03:: with SMTP id x3mr24456859qvr.18.1590587537097;
-        Wed, 27 May 2020 06:52:17 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:74a])
-        by smtp.gmail.com with ESMTPSA id 5sm2337501qko.14.2020.05.27.06.52.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 06:52:16 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:52:14 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     qiang.zhang@windriver.com
-Cc:     jiangshanlai@gmail.com, markus.elfring@web.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] workqueue: Remove unnecessary kfree() call in
- rcu_free_wq()
-Message-ID: <20200527135214.GI83516@mtj.thefacebook.com>
-References: <20200527075715.36849-1-qiang.zhang@windriver.com>
+        Wed, 27 May 2020 09:52:38 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MMoXE-1jLBAj349U-00Ik9A; Wed, 27 May 2020 15:52:09 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Henrik Rydberg <rydberg@bitmath.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] hwmon: applesmc: avoid overlong udelay()
+Date:   Wed, 27 May 2020 15:51:57 +0200
+Message-Id: <20200527135207.1118624-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527075715.36849-1-qiang.zhang@windriver.com>
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:2aeiuLmb1dLgi7CFDVrF6BpL6xMbUnnyYn6LzeFFcrLYkjJvi4Q
+ zhD/aywWrEhjJlMHVsHJ9H7RZOXfvz03y1zixMWfLDaXmhdSdKAvA4vYOKPIR62dhsnjkRy
+ PQrRhFB59J5Und0uBufrL1DUUZzgFupAr/+RKvLvmrr1sx8KERP0XOu019Q/Z/YD4ZqDQrj
+ tJDlSk7aHf8ZJFFvcIIqg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hEZH9Fbdx2c=:+3IXxtfC8iBrYIC5IMAbAL
+ IfcqYO18TfCSdLwMOX5M4EoxfNKL38Q6LZ+VQ53ouFfTaNeoEbPXjj/cn4MnhhiCHJHBiefGD
+ LrXWuSY7swE7VrFupA9C1T1qEwe5+4T9+XZ12s9YlyLdMZd1pq9sv+stsjNfdQIdr2VQgGS0z
+ 11gSNAA6zFDw51Imzg3t0+3O5iyS7sKZ1B/hZYJEmEcj5JL1lRrkQxFPezYLZN4zJwyZm6VAp
+ wxsPeAObWQBmQofDe4yc0NjWlFNMbcPlw2/TLUN1v5XdgYzehEizJvEcIiJdvSwI8vcPt5hGB
+ j3ASbQXrw1tQOopjyEMkZZRYjYubdG4ZUmMKMYlf2Rf59pqiNpnGMU0MaGHk5dgn6RM8+WvoY
+ sl4e61i95h64RUMy9r33AscEvfhujA/w3eiuTSs/NLgkgwapB6Qpwfyjc9fKkDFj3Kuy5adKN
+ /pMQjL9FryH5lPG6WrBPOwPQI/1gXZOmZPDbTIKZOL5eesEI0YqcMjP+PakK1xuwZguobzW+6
+ 7RFxuP/50rrZTRuvmO8BporZEkrXmOxX00UB7uNindyP8QeLer70ZmxsQlGAYDt3GgULswENs
+ DSx6ZdyVZN8jnUeMR/QdkVL1gU8bHXpF2Ayqzeq7GP1+vnkc6EFyR2K8gv6+VBmWkgEJXPYlQ
+ ZpaQKHDjPsO+laLtGlBXUYP6qVE15MozwBFTDFo3IZ8sY9wApFqL4u1F/Gad8Sp0I+lRg/2nS
+ ZOuCBjo0tUFJ5A0mL/1NCUht0H09dxg+KMPuKIwXX0cXMVDbW2MGYupu3+lHMpTbTwTJ79GWZ
+ 4QcDUy7nZTynb+OYFvXnRovk4F0CQk/rH80IU19F7qcd4chv5s=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:57:15PM +0800, qiang.zhang@windriver.com wrote:
-> From: Zhang Qiang <qiang.zhang@windriver.com>
-> 
-> The data structure member "wq->rescuer" was reset to a null pointer
-> in one if branch. It was passed to a call of the function "kfree"
-> in the callback function "rcu_free_wq" (which was eventually executed).
-> The function "kfree" does not perform more meaningful data processing
-> for a passed null pointer (besides immediately returning from such a call).
-> Thus delete this function call which became unnecessary with the referenced
-> software update.
-> 
-> Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
-> 
-> Suggested-by: Markus Elfring <Markus.Elfring@web.de> 
-> Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+Building this driver with "clang -O3" produces a link error
+after the compiler partially unrolls the loop and 256ms
+becomes a compile-time constant that triggers the check
+in udelay():
 
-Applied to wq/for-5.8.
+ld.lld: error: undefined symbol: __bad_udelay
+>>> referenced by applesmc.c
+>>>               hwmon/applesmc.o:(read_smc) in archive drivers/built-in.a
 
-Thanks.
+I can see no reason against using a sleeping function here,
+as no part of the driver runs in atomic context, so instead use
+usleep_range() with a wide range and use jiffies for the
+end condition.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/hwmon/applesmc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
+index ec93b8d673f5..316618409315 100644
+--- a/drivers/hwmon/applesmc.c
++++ b/drivers/hwmon/applesmc.c
+@@ -156,14 +156,19 @@ static struct workqueue_struct *applesmc_led_wq;
+  */
+ static int wait_read(void)
+ {
++	unsigned long end = jiffies + (APPLESMC_MAX_WAIT * HZ) / USEC_PER_SEC;
+ 	u8 status;
+ 	int us;
++
+ 	for (us = APPLESMC_MIN_WAIT; us < APPLESMC_MAX_WAIT; us <<= 1) {
+-		udelay(us);
++		usleep_range(us, us * 16);
+ 		status = inb(APPLESMC_CMD_PORT);
+ 		/* read: wait for smc to settle */
+ 		if (status & 0x01)
+ 			return 0;
++		/* timeout: give up */
++		if (time_after(jiffies, end))
++			break;
+ 	}
+ 
+ 	pr_warn("wait_read() fail: 0x%02x\n", status);
+@@ -178,10 +183,11 @@ static int send_byte(u8 cmd, u16 port)
+ {
+ 	u8 status;
+ 	int us;
++	unsigned long end = jiffies + (APPLESMC_MAX_WAIT * HZ) / USEC_PER_SEC;
+ 
+ 	outb(cmd, port);
+ 	for (us = APPLESMC_MIN_WAIT; us < APPLESMC_MAX_WAIT; us <<= 1) {
+-		udelay(us);
++		usleep_range(us, us * 16);
+ 		status = inb(APPLESMC_CMD_PORT);
+ 		/* write: wait for smc to settle */
+ 		if (status & 0x02)
+@@ -190,7 +196,7 @@ static int send_byte(u8 cmd, u16 port)
+ 		if (status & 0x04)
+ 			return 0;
+ 		/* timeout: give up */
+-		if (us << 1 == APPLESMC_MAX_WAIT)
++		if (time_after(jiffies, end))
+ 			break;
+ 		/* busy: long wait and resend */
+ 		udelay(APPLESMC_RETRY_WAIT);
 -- 
-tejun
+2.26.2
+
