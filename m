@@ -2,133 +2,115 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94166C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDF1520899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FFE207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CV2ucSIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgE0FIw (ORCPT
+        id S1728331AbgE0FJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42192 "EHLO
+        Wed, 27 May 2020 01:09:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgE0FIv (ORCPT
+        with ESMTP id S1725379AbgE0FJY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:08:51 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE7AC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:08:51 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jdoJ7-00026L-0G; Wed, 27 May 2020 07:08:49 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1jdoJ2-0000EW-A6; Wed, 27 May 2020 07:08:44 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v2] net: phy: at803x: add cable diagnostics support for ATH9331 and ATH8032
-Date:   Wed, 27 May 2020 07:08:43 +0200
-Message-Id: <20200527050843.843-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 01:09:24 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C961CC061A0F;
+        Tue, 26 May 2020 22:09:22 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id n11so17766473qkn.8;
+        Tue, 26 May 2020 22:09:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iTJZDY5H/dFxsdNEjr0CYs0oWVGjpyqAezVJ96AZYfc=;
+        b=CV2ucSIXe0MdSExnbrnR5g8LCcsNtUBsRqlV7OJ81wsKo/I80iYTbnje8gCPtLzotg
+         O/YpGSdI8XfPKAPb/VIKE7fe8oTuueeMQ7uKoV92WBfrYFyWnPMG4zmoqCexfLkeJRAd
+         tUxqBCvupS1Oibc9N4FogsLIC8iHxjVSDb6m2q+k19yvZXY5AStxX63XSFxZB0Rparq9
+         yBERo1OiS8WKvUEvXOrpVPrn7zJ9Qn64oDkfiPEpTeGPJniEF79Gyk/QiV8wnd61UihC
+         mP9T8z8kzMwvuo9IMPUu2wIe9knSTIMZ60oKMD5iWKGZgbYYZ82o/5CasO2jj8s4L2MK
+         dzMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iTJZDY5H/dFxsdNEjr0CYs0oWVGjpyqAezVJ96AZYfc=;
+        b=sgXgyTXrGUAQD+v5hTjVxnxMI4zxFL1lGsKuv+0d4ZaUl93gKB7PWQs5enyxLcmO5D
+         n/FSK13VpgC9Op8tym8d3BI+1JWLjyT9bzo+ZoyxCh5Y5/b+dIcxonfToRcWqD1DBMAW
+         2/v02FPyQfbhFumPVBlURIPExNnRaibnhq2eGfcNMCoQZJeRiVvMpnmKZwrlTP0Qu7Rh
+         pn1IDxc5/S/xeft0oMD4bGXCIavGfMLx7zbYP8qIhSm/oUoWRB0ZEZSGcMQc9y8Q5h78
+         J7PNreaIKVY8WGHsqhXz1sV1UNbPYRIpL3E5y9YF+Ep2csvBzTii0z9bbgeis9mB6Wt7
+         lIBA==
+X-Gm-Message-State: AOAM532coFs+vFKmG3ZPr9ylee3ApV7nDEQQXSYDF9RxUrYHFc8kowsW
+        wsuzxnhZXJocMbs1Pgs+WYE9sd3MWVEmahUIX/B6j0ovQKo=
+X-Google-Smtp-Source: ABdhPJz2hDPmT8O5VsGbH8yEh55w28aOevI54yyqsu2GyAFXInQi43st7eNYjtxellJx6xBU+/QQkEMLYA8BcdzN+ys=
+X-Received: by 2002:a37:a89:: with SMTP id 131mr2339534qkk.92.1590556162058;
+ Tue, 26 May 2020 22:09:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20200527015704.2294223-1-dxu@dxuuu.xyz>
+In-Reply-To: <20200527015704.2294223-1-dxu@dxuuu.xyz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 26 May 2020 22:09:11 -0700
+Message-ID: <CAEf4BzbR+7X-boCBC-f60jugp8xWKVTeFTyUmrcv8Qy4iKsvjg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] libbpf: Export bpf_object__load_vmlinux_btf
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Atheros 100Base-T PHYs. The only difference seems to be
-the ability to test 2 pairs instead of 4 and the lack of 1000Base-T
-specific register.
+On Tue, May 26, 2020 at 7:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Right now the libbpf model encourages loading the entire object at once.
+> In this model, libbpf handles loading BTF from vmlinux for us. However,
+> it can be useful to selectively load certain maps and programs inside an
+> object without loading everything else.
 
-Only the ATH9331 was tested with this patch.
+There is no way to selectively load or not load a map. All maps are
+created, unless they are reusing map FD or pinned instances. See
+below, I'd like to understand the use case better.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/phy/at803x.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+>
+> In the latter model, there was perviously no way to load BTF on-demand.
+> This commit exports the bpf_object__load_vmlinux_btf such that we are
+> able to load BTF on demand.
+>
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index acd51b29a476..4b9dd43b5b5b 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -920,10 +920,16 @@ static int at803x_cable_test_one_pair(struct phy_device *phydev, int pair)
- static int at803x_cable_test_get_status(struct phy_device *phydev,
- 					bool *finished)
- {
--	unsigned long pair_mask = 0xf;
-+	unsigned long pair_mask;
- 	int retries = 20;
- 	int pair, ret;
- 
-+	if (phydev->phy_id == ATH9331_PHY_ID ||
-+	    phydev->phy_id == ATH8032_PHY_ID)
-+		pair_mask = 0x3;
-+	else
-+		pair_mask = 0xf;
-+
- 	*finished = false;
- 
- 	/* According to the datasheet the CDT can be performed when
-@@ -958,7 +964,9 @@ static int at803x_cable_test_start(struct phy_device *phydev)
- 	 */
- 	phy_write(phydev, MII_BMCR, BMCR_ANENABLE);
- 	phy_write(phydev, MII_ADVERTISE, ADVERTISE_CSMA);
--	phy_write(phydev, MII_CTRL1000, 0);
-+	if (phydev->phy_id != ATH9331_PHY_ID &&
-+	    phydev->phy_id != ATH8032_PHY_ID)
-+		phy_write(phydev, MII_CTRL1000, 0);
- 
- 	/* we do all the (time consuming) work later */
- 	return 0;
-@@ -1032,6 +1040,7 @@ static struct phy_driver at803x_driver[] = {
- 	.name			= "Qualcomm Atheros AR8032",
- 	.probe			= at803x_probe,
- 	.remove			= at803x_remove,
-+	.flags			= PHY_POLL_CABLE_TEST,
- 	.config_init		= at803x_config_init,
- 	.link_change_notify	= at803x_link_change_notify,
- 	.set_wol		= at803x_set_wol,
-@@ -1041,15 +1050,20 @@ static struct phy_driver at803x_driver[] = {
- 	/* PHY_BASIC_FEATURES */
- 	.ack_interrupt		= at803x_ack_interrupt,
- 	.config_intr		= at803x_config_intr,
-+	.cable_test_start	= at803x_cable_test_start,
-+	.cable_test_get_status	= at803x_cable_test_get_status,
- }, {
- 	/* ATHEROS AR9331 */
- 	PHY_ID_MATCH_EXACT(ATH9331_PHY_ID),
- 	.name			= "Qualcomm Atheros AR9331 built-in PHY",
- 	.suspend		= at803x_suspend,
- 	.resume			= at803x_resume,
-+	.flags			= PHY_POLL_CABLE_TEST,
- 	/* PHY_BASIC_FEATURES */
- 	.ack_interrupt		= &at803x_ack_interrupt,
- 	.config_intr		= &at803x_config_intr,
-+	.cable_test_start	= at803x_cable_test_start,
-+	.cable_test_get_status	= at803x_cable_test_get_status,
- } };
- 
- module_phy_driver(at803x_driver);
--- 
-2.26.2
+Let's start with the real problem, not a solution. Do you have
+specific use case where you need bpf_object__load_vmlinux_btf()? It
+might not do anything if none of BPF programs in the object requires
+BTF, because it's very much tightly coupled with loading bpf_object as
+a whole model. I'd like to understand what you are after with this,
+before exposing internal implementation details as an API.
 
+> Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+> ---
+>  tools/lib/bpf/libbpf.c   | 2 +-
+>  tools/lib/bpf/libbpf.h   | 1 +
+>  tools/lib/bpf/libbpf.map | 1 +
+>  3 files changed, 3 insertions(+), 1 deletion(-)
+>
+
+[...]
