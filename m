@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D73C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E618CC433E0
 	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379592088E
+	by mail.kernel.org (Postfix) with ESMTP id C3E4D20873
 	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="kU53pVLD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gIeMrltU"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="fYBAxbLd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S50iwG11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgE0PuU (ORCPT
+        id S1729338AbgE0PuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:50:20 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:34339 "EHLO
+        Wed, 27 May 2020 11:50:13 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:38329 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728482AbgE0PuI (ORCPT
+        by vger.kernel.org with ESMTP id S2390190AbgE0PuA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:50:08 -0400
+        Wed, 27 May 2020 11:50:00 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 08300582057;
-        Wed, 27 May 2020 11:50:07 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id F391A582047;
+        Wed, 27 May 2020 11:49:58 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:07 -0400
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=paZ0RrmilrGG7
-        YJ5JlbhmJJvPjMtrxilkOsZzdPjgeQ=; b=kU53pVLDVbRXSBOmIpvll7/uZ1CuX
-        xOA8EfJyzJy58Bza36fy3hQbZza45vTqS0y/bwwiVUz6xVgjxRP2OxizIXr/2cES
-        lpJuaFjG9605jGUCr+PkatjuxcJ9Y1hIGO/WDd0sNGed4VstGvu9vswyKjHhH/lz
-        kNUqJjMON3pK9bOuxeMS37ZhZG8HxQi0nbYJ03JgxVRcmKipHPLvZQqPgumKJaxY
-        hrk+RrMI4nPH65UlIIoVVEEfLhn28kiYmCmI6eOciixe/XSzT7AvzjqR2h5VNuLp
-        N/Tjqv1/ocYpMtxa66IPOw3uQBqP19I4k4M0QuUYaIMO8Ca1l63dSjSjA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=Pxu7vA5Ztijwd
+        iw3yLEGYhK1l1UJ+hr3CS6N4Y76y48=; b=fYBAxbLd98sy8dK67SHNOEzOO077K
+        UzkZGNQZTYfiR8bpvhKS1EzxRbEgATF5KbBjqt48Lsj9Vc8rKBphZ+jPkZ6WtSik
+        SYumh3bPHig18CVgoxuBPf7hbpNob1NuzFgKsN9oTL+WTdR1OleVXOF26zQp8Xp2
+        VsruCU+gnly9kLlmZRJlQy+K+jwmlNQWoaasXVGKtgXtcjot/CU/7i+2uVf0e6PO
+        LR9Bs/6MX6Nfmd56UdiOGeo9NrewKCsMGSSmUWd5G8MA6Uchz1TyfYt3xJTpnItT
+        zXvIBjQYAoeG2nU7QjXCZnXtas4ry9ZAp+iOBfO7lIZVsRIy9mi5x6+Fw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=paZ0RrmilrGG7YJ5JlbhmJJvPjMtrxilkOsZzdPjgeQ=; b=gIeMrltU
-        Bar33w0GjeLohFIGazwEQnhrF16Ll+Jdh5tkGfrtcPFOPp8712+gpDzotnFmqPEf
-        cJ1VWEbk/cB72SnN+ehbBazRyYNuNAbqaJDJDE17E7Ah4JlEBzlKcLK7jXrp3LkH
-        MQ2txVqjAEQP8/y6VkfdkkxWTh8v09U7Cp39zjgVCzHY+sPnyw4FS3gbGFPK1NrT
-        b5tvL3F4ReHijvw79A72nOVVhJMJdAmzj3VG1v3pKMzEcty3+/LTS+F/rFJPGxMM
-        fA4FU5UohOLmpsy0s0hsYcG3MYClw783z79jLNLoxGBlrA94XW9ZudEBgMMfrcZY
-        XmjUtwfTdG5/kw==
-X-ME-Sender: <xms:LozOXuaQmhi5rpslCkWyB0KCzn8Riwxn8rtdpJX_fy0ox74Z85Bb4A>
+        fm2; bh=Pxu7vA5Ztijwdiw3yLEGYhK1l1UJ+hr3CS6N4Y76y48=; b=S50iwG11
+        xmYOc8ssPxOQL/ispbjNy4wwvKOVG67Ji/LBVK/q906PgkrEahq/ny1YTUPmZLmG
+        RCsDXTMb2Xt1cw5OfBAPz+r8JukKpcA+J0td75VPiUXcaV72hGn2JzeVN+eDrrLl
+        ibdkKSTTQQ5yW2yqwnGf6G4zeiago+u+ieuXoJdhdKqkd+VeTljHOf0/xfguNwyy
+        HvuY/ztFNqUde44v01APswKhNN5dZX5QU7qCr0yf/40PqMQVwBwvzO8KAoz28q0W
+        KB32TLlmrPOpy66UbWvuL7fwlcBXJW7gJEGRj3tOYdp5UmdSpBB9TeV34UqZ2vdr
+        DiblzDH02BKXCA==
+X-ME-Sender: <xms:JozOXi9BDjxQEewzf0thTjoo-yLetDggu2LkItqM2uXScH0NxBijwQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepuddune
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:LozOXhZy_KewNMpe1KRxmxWl0kwp2Rt9fa2_0sYCNQVsF5eqI95rLg>
-    <xmx:LozOXo-vpIyh9-yN3lmyh6iohyy-i6epB_n7YTldEx5QJgrB40_kpw>
-    <xmx:LozOXgqmkPYQPDWEeicWIkK8Baib3fLpcaR9sSS7V9UcCZ1B2jF7PQ>
-    <xmx:L4zOXtKtXoQVojan8JBWtPmM7udX9k1eHXT2QZaUkb9J7SxO-wDfkg>
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepjeenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:JozOXisX7IGRjnvn5m6xH4oYzbmnp9HSF09dYFoGOfI7h5JjebPizQ>
+    <xmx:JozOXoDXWgvgXS2umQAck0Vvw2ntE-Ed0dbTc7JNmDMF-6u62G578w>
+    <xmx:JozOXqctLmLyK19jIqq6QtFkRHPL6J3zuqnaEzXj0uGu-30B9H5D4w>
+    <xmx:JozOXifCBWe1my8-h0gaJgxDXlkrhGqgnmMVeAkKtE0WuwHSfQvMgg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9DD713061856;
-        Wed, 27 May 2020 11:50:06 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 957AC3061856;
+        Wed, 27 May 2020 11:49:58 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 031/105] drm/vc4: crtc: Use local chan variable
-Date:   Wed, 27 May 2020 17:48:01 +0200
-Message-Id: <e899798e17c22cad7358178f5129d4ffef7cbb41.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 027/105] drm/vc4: crtc: Turn static const variable into a define
+Date:   Wed, 27 May 2020 17:47:57 +0200
+Message-Id: <8535c679f79af8abaa1b7796261bfeda11f874fd.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,26 +89,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vc4_crtc_handle_page_flip already has a local variable holding the
-value of vc4_crtc->channel, so let's use it instead.
+The hvs_latency_pix variable doesn't need to be a variable and can just be
+defined.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index 14e3a962d8a7..15c72afb226f 100644
+index fd248ee546e8..8dbf06cdb069 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -813,7 +813,7 @@ static void vc4_crtc_handle_page_flip(struct vc4_crtc *vc4_crtc)
- 		 * the CRTC and encoder already reconfigured, leading to
- 		 * underruns. This can be seen when reconfiguring the CRTC.
- 		 */
--		vc4_hvs_unmask_underrun(dev, vc4_crtc->channel);
-+		vc4_hvs_unmask_underrun(dev, chan);
+@@ -44,6 +44,8 @@
+ #include "vc4_drv.h"
+ #include "vc4_regs.h"
+ 
++#define HVS_FIFO_LATENCY_PIX	6
++
+ #define CRTC_WRITE(offset, val) writel(val, vc4_crtc->regs + (offset))
+ #define CRTC_READ(offset) readl(vc4_crtc->regs + (offset))
+ 
+@@ -231,18 +233,17 @@ vc4_crtc_update_gamma_lut(struct drm_crtc *crtc)
+ static u32 vc4_get_fifo_full_level(u32 format)
+ {
+ 	static const u32 fifo_len_bytes = 64;
+-	static const u32 hvs_latency_pix = 6;
+ 
+ 	switch (format) {
+ 	case PV_CONTROL_FORMAT_DSIV_16:
+ 	case PV_CONTROL_FORMAT_DSIC_16:
+-		return fifo_len_bytes - 2 * hvs_latency_pix;
++		return fifo_len_bytes - 2 * HVS_FIFO_LATENCY_PIX;
+ 	case PV_CONTROL_FORMAT_DSIV_18:
+ 		return fifo_len_bytes - 14;
+ 	case PV_CONTROL_FORMAT_24:
+ 	case PV_CONTROL_FORMAT_DSIV_24:
+ 	default:
+-		return fifo_len_bytes - 3 * hvs_latency_pix;
++		return fifo_len_bytes - 3 * HVS_FIFO_LATENCY_PIX;
  	}
- 	spin_unlock_irqrestore(&dev->event_lock, flags);
  }
+ 
 -- 
 git-series 0.9.1
