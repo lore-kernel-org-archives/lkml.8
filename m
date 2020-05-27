@@ -2,126 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAC5C20888
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0556A207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaFdGMKG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PZdwrY6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgE0KZB (ORCPT
+        id S1729030AbgE0KZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbgE0KY7 (ORCPT
+        Wed, 27 May 2020 06:25:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52307 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725747AbgE0KZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:24:59 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3B0C061A0F;
-        Wed, 27 May 2020 03:24:58 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o15so6072296ejm.12;
-        Wed, 27 May 2020 03:24:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cL2REwYbuiFQw9+7Sm4ybcaJkH87SCGRTJq5l7sNJ/M=;
-        b=iaFdGMKGMz7aAp7G1jJxCPjb0Gv51q3YGSDlxlmJkrsD1vzbAYHRfvLl8x9l9L/I9s
-         sVBIhuBi/9emvqE6GU71ZMQaAGnqX2LhkmLjOy//hCyqZ+CXfrE/GpDmn3JL5E7a+4LV
-         a4hF20BGQS1cS+HwhCSEYhmFT8+03/ltaMV60OW8fjEkkqfjbbhunh0NHmBMoTBryGDZ
-         RbKH61dh0TVD2eCevZtDYyXGmYzlhFSiAE2f67w7Hz08rCAa57p7wNMq4Bv3V8uJHCD7
-         21llwM8BN6Ka01Hqowks9kMiqe4SPuiwE0De1gw8fjdtdWkzt5UL7XD0/TI8KfvN2CSd
-         Os7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cL2REwYbuiFQw9+7Sm4ybcaJkH87SCGRTJq5l7sNJ/M=;
-        b=DxhdJbWaA0r4JJVnCxv8K4ThFb2WlYjJh2d15ZUZA6LPvN2c0sbRD769CDm1qr62ho
-         xMyCtdgzYi2JnCQQVuxK716UN1HHoSJVuZkWDlztI6j7aKh+9yeuQAUj8eWjui38dgfl
-         oRCqDG5loklwSzBZqYw6KmpUmHxulTF4wbtUcimoC6j2U5DUWdPT5VGxZhgMkRSxFxI8
-         SUXYK8UicVOUcaB6OhfZTgYJ5o/smEVv0PhcJJn+HW3+RUaU5+oaSqlasdC1DHxjgzKg
-         74KK/xigESnasocEU6t5MOtz85OOI1mvZ/29W7LeSofwt+gN9H3l96s7eS+W+/l1Ukb/
-         jj/Q==
-X-Gm-Message-State: AOAM533YMxpcfceYPzLqw622jRotmA2njLE09LRD+eb7DOSHr0SrEkxI
-        ZCtkfR484NQdqtUaFlLNEhA=
-X-Google-Smtp-Source: ABdhPJy+ANuYRzBdhIovooVjPDuPCs0ZWfGw+3AoWhJM2BQGHx5HTBFyifvtaKMhWRjuZSlsHI795A==
-X-Received: by 2002:a17:907:1189:: with SMTP id uz9mr5170829ejb.53.1590575096781;
-        Wed, 27 May 2020 03:24:56 -0700 (PDT)
-Received: from localhost.localdomain ([5.100.193.151])
-        by smtp.gmail.com with ESMTPSA id k27sm2407608eji.18.2020.05.27.03.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 03:24:56 -0700 (PDT)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Wed, 27 May 2020 06:25:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590575138;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pCH+Sehu6P7XqS4qbiCktbpA1kblie/UDIy1mCh/XtA=;
+        b=PZdwrY6LFBx4DWyMbPaSkE912d3rbRtgtlYuhILyvCb2Gf0h9hTZBPWMmANEro5fG8JvRZ
+        JKvHy5lKt5ndVZibKHYgrWZts99cT9DaMYTTGJOQBx6/INLj6L+ktTIBDF12TkjGx5qMA5
+        X4xu+/WrmCvIJAtkyaMYwLcNiOqx16U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-GRmnCcb5OGOHh0N_94S4EA-1; Wed, 27 May 2020 06:25:36 -0400
+X-MC-Unique: GRmnCcb5OGOHh0N_94S4EA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 32B8EEC1B5;
+        Wed, 27 May 2020 10:25:35 +0000 (UTC)
+Received: from krava (unknown [10.40.195.83])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 227ED60C05;
+        Wed, 27 May 2020 10:25:33 +0000 (UTC)
+Date:   Wed, 27 May 2020 12:25:33 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Matt Fleming <matt@codeblueprint.co.uk>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io_uring: fix overflowed reqs cancellation
-Date:   Wed, 27 May 2020 13:23:33 +0300
-Message-Id: <7acb1a15ee5a79103d71372d6330b19c5397a482.1590574948.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+Subject: Re: [PATCH v2] perf ordered_events: Optimise event object reuse
+Message-ID: <20200527102533.GG350217@krava>
+References: <20200526135928.946-1-matt@codeblueprint.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526135928.946-1-matt@codeblueprint.co.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Overflowed requests in io_uring_cancel_files() should be shed only of
-inflight and overflowed refs. All other left references are owned by
-someone else. E.g. a submission ref owned by __io_queue_sqe() but not
-yet reached the point of releasing it.
+On Tue, May 26, 2020 at 02:59:28PM +0100, Matt Fleming wrote:
 
-However, if an overflowed request in io_uring_cancel_files() had extra
-refs, after refcount_sub_and_test(2) check fails, it
+SNIP
 
-- tries to cancel the req, which is already going away. That's pointless,
-just go for the next lap of inflight waiting.
+> +
+> +/*
+> + * Allocate a new event object from the free event cache.
+> + *
+> + * Find the first address range in the cache and carve out enough bytes
+> + * for an ordered_event objects. The object with the lowest address is
+> + * always returned so that subsequent allocations benefit from
+> + * contiguous memory accesses (spatial locality).
+> + */
+> +static struct ordered_event *free_event_get_tree(struct ordered_events *oe)
+> +{
+> +	struct interval_tree_node *it;
+> +	struct ordered_event *new;
+> +	size_t bytes = sizeof(*new);
+> +
+> +	it = interval_tree_iter_first(&oe->cache.rb, 0, ULONG_MAX);
+> +	if (!it)
+> +		return NULL;
+> +
+> +	/* Has the cache memory been exhausted? */
+> +	assert(cache_region_size(it) >= bytes);
+> +
+> +	new = (void *)it->start;
+> +
+> +	if (cache_region_size(it) == bytes) {
+> +		interval_tree_remove(it, &oe->cache.rb);
+> +		free(it);
+> +	}
+> +
+> +	it->start += bytes;
 
-- io_put_req() underflowing req->refs of a potentially freed request.
+this does not look right.. should this go to else path in above condition?
 
-Fixes: 2ca10259b418 ("io_uring: prune request from overflow list on flush")
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- fs/io_uring.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+jirka
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index de6547e68626..01851a74bb12 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -7483,19 +7483,13 @@ static void io_uring_cancel_files(struct io_ring_ctx *ctx,
- 			WRITE_ONCE(ctx->rings->cq_overflow,
- 				atomic_inc_return(&ctx->cached_cq_overflow));
- 
--			/*
--			 * Put inflight ref and overflow ref. If that's
--			 * all we had, then we're done with this request.
--			 */
--			if (refcount_sub_and_test(2, &cancel_req->refs)) {
--				io_free_req(cancel_req);
--				finish_wait(&ctx->inflight_wait, &wait);
--				continue;
--			}
-+			/* Put inflight ref and overflow ref. */
-+			io_double_put_req(cancel_req);
-+		} else {
-+			io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
-+			io_put_req(cancel_req);
- 		}
- 
--		io_wq_cancel_work(ctx->io_wq, &cancel_req->work);
--		io_put_req(cancel_req);
- 		schedule();
- 		finish_wait(&ctx->inflight_wait, &wait);
- 	}
--- 
-2.24.0
+> +	return new;
+> +}
+> +
+
+SNIP
 
