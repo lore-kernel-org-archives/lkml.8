@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2500C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD729C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:37:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C65CD207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C69C2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:37:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aE6EHnMD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qMIbafpg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbgE0FhA (ORCPT
+        id S1725988AbgE0FhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46542 "EHLO
+        Wed, 27 May 2020 01:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725265AbgE0Fg7 (ORCPT
+        with ESMTP id S1725265AbgE0FhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:36:59 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32281C061A0F;
-        Tue, 26 May 2020 22:36:59 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x13so11324621pfn.11;
-        Tue, 26 May 2020 22:36:59 -0700 (PDT)
+        Wed, 27 May 2020 01:37:04 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F01C061A0F;
+        Tue, 26 May 2020 22:37:03 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id f21so8270155pgg.12;
+        Tue, 26 May 2020 22:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Uwxa46CvTM5ECW30BkNGZjhjXbVyQcR87+DO9oGqllg=;
-        b=aE6EHnMDX0JmXCER9fDCEscMHHLDDsA6R8dZthc158qDWpdhrVsngKgncts3+asDmM
-         aoedTuUdhSySOOujiix+w+/hWay3IfsuGWPDpq0wDP5NIInlZY0y1ibj//519/cbkd4f
-         ONncQAroZ/yjSExwCYRFnUpuf55InNb6KhQGKTGTOA9a2oQxRau2SnLPgkz6dz0E1bTj
-         S7p234icghEOr7f9d2uhApNiw/4x6qrMp7HZWpYXkny2LNY93If1pzY4/qAOkDlY5/3F
-         UizXy/Y9uwBkEdWdoTrIPZOIlipaEd9RaA6yjELdpqmYG+GYNZpj4o7FTNkeOqP5qUy/
-         hQ1A==
+        bh=Yq44qY1NsSkf+l5SZ0WYBQFjUQwT8TcW89f6+pzAZf0=;
+        b=qMIbafpgUwhgraLG1IhrKxw833gXIe7a+o+OUXBo1IcpvK9PUCOzpFjTMNxLD8E3ZO
+         HnOfDSv9/TLkAr+jVdEHGFshSqb7xgm3jy2X9NX+biZJnpSMws7ywcnfZ9Nd51x4+7C9
+         lzXSFZv+uiNFJMN3tonD8KOhmo/qjskRAvNo3EU46DtP8nCDgZbzah8CuUQu06666sRR
+         b6VcE/R+paid0CZsmGh/put267CbEL60D3k4QJ1TCT2sddJfKYYUKiS6Y15fvb1lFkEq
+         Qh0qwjqQocvd4tCrIGBMsQJz290c/X+15rUIW6wsL64tI46bgyzbTbD23TRuVmkVlDUM
+         jRDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Uwxa46CvTM5ECW30BkNGZjhjXbVyQcR87+DO9oGqllg=;
-        b=qnGenva9KYBdPOlR8WsCgViwIAUNzV5Yra+nfjV1T9V/VsDF6tbLNePHApu+Dn4d+6
-         7kddEcNSvYUBSoCTiR3IUugexeGAmlpp5K6VRm1BpmKF9//ehBrRv1nXt+EFd1GLNzfg
-         uLXoQjJTFg0k6X7JnhX4tv4b1Do065svbMRdYVtyaz4eiqByO9MhTdvywLrYI74IBEiK
-         DnX2IscLvf/3lfsJSwZsNM//wgPJQBEpBZRUwB5s2fNafEzq1LmJ6pESrCxkbRmG3Pp3
-         WUjnp2/or1g56rP3SRa0IyP6ArbaAbf/KSHDzzlYhhMfUsfWy7i+inOOEp2Vj3U4LvjO
-         ueEQ==
-X-Gm-Message-State: AOAM5333uiPewiBC7vHNvaRUeFL0G1pVd4VLQydwP5CYnRxNrSaJOQ7z
-        70dEq7PSEazKiC6eWTr0/+4=
-X-Google-Smtp-Source: ABdhPJxqytUB8SfBGZSchfvYEIX2fWnykNTsva1POvkE4JkhGNDXruBrvH15uiFtHv26S0jwqUBfXQ==
-X-Received: by 2002:a63:214d:: with SMTP id s13mr2233129pgm.277.1590557818829;
-        Tue, 26 May 2020 22:36:58 -0700 (PDT)
+        bh=Yq44qY1NsSkf+l5SZ0WYBQFjUQwT8TcW89f6+pzAZf0=;
+        b=Umx7ZdEmlL5GaTJsbT2fmVJSPYnN/Gptaa2VqUPqgxy3txLSGnsZqn5OPczqlqwcIE
+         gW6AFWvKztc25iGQipwZ0wGWN3IRdWziBPxiFfHl9J4ZwQXmiNgOvDNLgEFzs0VQWGH7
+         Ym68t8E74/mwuj768QPBL8sBGkOSCreGQocKFjs3hHSbqH/cXtIMWiRY5jq9R7ZygheO
+         GVPWbmneHnmWEIhfKRGTh+/ODysS1vutkDkfnKlC0I40Sa7e0floAuTs3I7nAvVQKkX3
+         Hd2RFPMH+uBjTrbeOfF9beWViVQbz3odoX3JrKV03jfitsS2z1XVj6PG+pRpBWEx7N5S
+         BHdg==
+X-Gm-Message-State: AOAM531jX1yALsF/HFaB86/9PwI1YrPB5btqCM9k9D/z2qLnLUTUrfyF
+        8g2UiY46BuWiwg14Ih0DfEr1cSADzNs=
+X-Google-Smtp-Source: ABdhPJyh4sRwQt7JEbcdHwajRq7Swr6f3jbuPbXSa0TX3DPjdqVFqxwqpM1cs/hr16I6N7e8EFVkMw==
+X-Received: by 2002:a62:a50a:: with SMTP id v10mr2392629pfm.134.1590557821917;
+        Tue, 26 May 2020 22:37:01 -0700 (PDT)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id r34sm1092406pgl.38.2020.05.26.22.36.55
+        by smtp.gmail.com with ESMTPSA id r34sm1092406pgl.38.2020.05.26.22.36.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 22:36:58 -0700 (PDT)
+        Tue, 26 May 2020 22:37:01 -0700 (PDT)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Stephen Boyd <sboyd@kernel.org>
 Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -67,9 +67,9 @@ Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [RESEND PATCH v2 1/4] clk: sprd: check its parent status before reading gate clock
-Date:   Wed, 27 May 2020 13:36:35 +0800
-Message-Id: <20200527053638.31439-2-zhang.lyra@gmail.com>
+Subject: [RESEND PATCH v2 2/4] dt-bindings: clk: sprd: add mipi_csi_xx clocks for SC9863A
+Date:   Wed, 27 May 2020 13:36:36 +0800
+Message-Id: <20200527053638.31439-3-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200527053638.31439-1-zhang.lyra@gmail.com>
 References: <20200527053638.31439-1-zhang.lyra@gmail.com>
@@ -82,56 +82,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Some clocks only can be accessed if their parent is enabled. mipi_csi_xx
-clocks on SC9863A are an examples. We have to ensure the parent clock is
-enabled when reading those clocks.
+mipi_csi_xx clocks are used by camera sensors.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/sprd/gate.c | 7 +++++++
- drivers/clk/sprd/gate.h | 9 +++++++++
- 2 files changed, 16 insertions(+)
+ Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
-index 574cfc116bbc..56e1714b541e 100644
---- a/drivers/clk/sprd/gate.c
-+++ b/drivers/clk/sprd/gate.c
-@@ -94,8 +94,15 @@ static int sprd_gate_is_enabled(struct clk_hw *hw)
- {
- 	struct sprd_gate *sg = hw_to_sprd_gate(hw);
- 	struct sprd_clk_common *common = &sg->common;
-+	struct clk_hw *parent;
- 	unsigned int reg;
+diff --git a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+index bb3a78d8105e..87e8349a539a 100644
+--- a/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
++++ b/Documentation/devicetree/bindings/clock/sprd,sc9863a-clk.yaml
+@@ -28,6 +28,7 @@ properties:
+       - sprd,sc9863a-rpll
+       - sprd,sc9863a-dpll
+       - sprd,sc9863a-mm-gate
++      - sprd,sc9863a-mm-clk
+       - sprd,sc9863a-apapb-gate
  
-+	if (sg->flags & SPRD_GATE_NON_AON) {
-+		parent = clk_hw_get_parent(hw);
-+		if (!parent || !clk_hw_is_enabled(parent))
-+			return 0;
-+	}
-+
- 	regmap_read(common->regmap, common->reg, &reg);
- 
- 	if (sg->flags & CLK_GATE_SET_TO_DISABLE)
-diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
-index b55817869367..e738dafa4fe9 100644
---- a/drivers/clk/sprd/gate.h
-+++ b/drivers/clk/sprd/gate.h
-@@ -19,6 +19,15 @@ struct sprd_gate {
- 	struct sprd_clk_common	common;
- };
- 
-+/*
-+ * sprd_gate->flags is used for:
-+ * CLK_GATE_SET_TO_DISABLE	BIT(0)
-+ * CLK_GATE_HIWORD_MASK		BIT(1)
-+ * CLK_GATE_BIG_ENDIAN		BIT(2)
-+ * so we define new flags from	BIT(3)
-+ */
-+#define SPRD_GATE_NON_AON BIT(3) /* not alway powered on, check before read */
-+
- #define SPRD_SC_GATE_CLK_HW_INIT_FN(_struct, _name, _parent, _reg,	\
- 				    _sc_offset, _enable_mask, _flags,	\
- 				    _gate_flags, _udelay, _ops, _fn)	\
+   clocks:
 -- 
 2.20.1
 
