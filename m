@@ -2,96 +2,112 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B206C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73281C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B812071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42123208A7
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:24:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="bdCwamy6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RX2mmeg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgE0BWt (ORCPT
+        id S1728395AbgE0BYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgE0BWt (ORCPT
+        Tue, 26 May 2020 21:24:43 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:53710 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0BYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:22:49 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF6E3C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 18:22:48 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b27so12872172qka.4
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 18:22:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lfaYQxAvjEIlf4eTifAP04WQLIjbuEqWZK7YVJA2P8E=;
-        b=bdCwamy6l5y36tWaBAzw2jsOMRDVBFifmX0OhKp5L2f5ScxkRWlrKyoQKiqD4EeJKV
-         r+6FDToY923n0az0tXSPj3wsGp8copRiOZkLeDF23sQ+QpMMHNroqCBKC4N86cfu2+pE
-         gRdAk3lFfu8cKsuCTWNl38G8C5Toaqo8iPC8JRJQTeT/TJD29zkYEdZWCjpGUaKsvExt
-         Kgexof+updggUzQv3Hh5nwcCouAWGuH4y0cvBuPKaep20bdhYpSNeVaEiycuBhe/Q/cP
-         WmDx9CVktclY7TJzbk7DtYAwo5yxGuvOGVb6xy40yatS8SOR2vr/6Vo0E0NQI1wRWObQ
-         xn2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lfaYQxAvjEIlf4eTifAP04WQLIjbuEqWZK7YVJA2P8E=;
-        b=SWl6tsqYoD1mDZbFr0FOdQKkRut86JZ7SV4rlfViXG8gYol5lCdBb6HprDbH1hwxPQ
-         CJFuDVah3MLOGT3krlRSGv6f8PCAH4tQW09ZiXragLczpToG+IsnOYD9VlMwhOHM1lOQ
-         3b4wAVbH8B4tQ2vWTbd2fpfc5tGH2JSJ86zvqK3FYe9nRQrZbK1PHojnatrtE/ZpGgeG
-         XESNc0x9Z5mZ7OReEMRuH8TRWkb0B4x3/vnSS5tlMsRLWpWH/VhsLZXpQSJOybgV/238
-         msTwRpnXd2vjgyG2fs4q5oewR93VJpNsbT8FCfoo5mldVMJ1S+K5CuYNGWgH8uLmknBT
-         l38Q==
-X-Gm-Message-State: AOAM532iMqQJS5xi7iwKxRz57sl1TElhsLisZmKXzlxLQrqxvYvUDnhf
-        Hfy7/qxXYsro16TFuoe3LRizDA==
-X-Google-Smtp-Source: ABdhPJwVgOsRZKK7L4GJOZmoCuR0CuYBMeqWZSLSs2+BbpvtTBspMPRVLYX3X/faUhr8Z3IcSE8AVw==
-X-Received: by 2002:a37:9586:: with SMTP id x128mr1790368qkd.312.1590542568200;
-        Tue, 26 May 2020 18:22:48 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id x41sm1286992qtb.76.2020.05.26.18.22.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 18:22:47 -0700 (PDT)
-Date:   Tue, 26 May 2020 21:22:45 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, aik@ozlabs.ru,
-        paulmck@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] powerpc/kvm/book3s64/vio: fix some RCU-list locks
-Message-ID: <20200527012245.GJ991@lca.pw>
-References: <20200510051834.2011-1-cai@lca.pw>
- <20200527011323.GA293451@thinks.paulus.ozlabs.org>
+        Tue, 26 May 2020 21:24:43 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04R1OeNe063851;
+        Tue, 26 May 2020 20:24:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590542680;
+        bh=ADdbGb/hIBjYZiW4ec9QCkuMgaagk2p6/g+owkkLpUA=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=RX2mmeg7ubG+IMbmQBaha0GNc/WJk/VMEX/58PNCKR2ZGK6I/dpduz+TFtCWMcUis
+         OI3v1xX0S40zey47iTCjeaoSk527MAqQ4EpMxNqdVz3YXAF8LIHUwr7s02Yr9568yc
+         q+a1YrHQ6hQgF9B12xY8JDftowLp8lFDrENe+JMA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04R1Oen7069277
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 26 May 2020 20:24:40 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 26
+ May 2020 20:24:39 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 26 May 2020 20:24:40 -0500
+Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04R1OdmM119336;
+        Tue, 26 May 2020 20:24:39 -0500
+Subject: Re: [PATCH 1/2] power: supply: bq27xxx_battery: Notify about all
+ battery changes
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+References: <20200525141200.17199-1-krzk@kernel.org>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
+Date:   Tue, 26 May 2020 21:24:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527011323.GA293451@thinks.paulus.ozlabs.org>
+In-Reply-To: <20200525141200.17199-1-krzk@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:13:23AM +1000, Paul Mackerras wrote:
-> On Sun, May 10, 2020 at 01:18:34AM -0400, Qian Cai wrote:
-> > It is unsafe to traverse kvm->arch.spapr_tce_tables and
-> > stt->iommu_tables without the RCU read lock held. Also, add
-> > cond_resched_rcu() in places with the RCU read lock held that could take
-> > a while to finish.
+On 5/25/20 10:11 AM, Krzysztof Kozlowski wrote:
+> All battery related data could be important for user-space.  For example
+> time-to-full could be shown to user on the screen or health could be
+> monitored for any issues.  Instead of comparing few selected old/new
+> values, just check if anything changed in the cache.
 > 
-> This mostly looks fine.  The cond_resched_rcu() in kvmppc_tce_validate
-> doesn't seem necessary (the list would rarely have more than a few
-> dozen entries) and could be a performance problem given that TCE
-> validation is a hot-path.
-> 
-> Are you OK with me modifying the patch to take out that
-> cond_resched_rcu(), or is there some reason why it's essential that it
-> be there?
 
-Feel free to take out that cond_resched_rcu(). Your reasoning makes
-sense.
+
+At least some value will change every time we poll the battery, are we
+okay with having power_supply_changed() called every time?
+
+Andrew
+
+
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/power/supply/bq27xxx_battery.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+> index 942c92127b6d..33c26d42cd02 100644
+> --- a/drivers/power/supply/bq27xxx_battery.c
+> +++ b/drivers/power/supply/bq27xxx_battery.c
+> @@ -1612,12 +1612,10 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
+>  			di->charge_design_full = bq27xxx_battery_read_dcap(di);
+>  	}
+>  
+> -	if ((di->cache.capacity != cache.capacity) ||
+> -	    (di->cache.flags != cache.flags))
+> +	if (memcmp(&di->cache, &cache, sizeof(cache)) != 0) {
+>  		power_supply_changed(di->bat);
+> -
+> -	if (memcmp(&di->cache, &cache, sizeof(cache)) != 0)
+>  		di->cache = cache;
+> +	}
+>  
+>  	di->last_update = jiffies;
+>  }
+> 
