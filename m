@@ -2,83 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7986C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE7BB208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEEC720C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389119AbgE0N6v (ORCPT
+        id S1730267AbgE0OAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:58:51 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49730 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388989AbgE0N6u (ORCPT
+        Wed, 27 May 2020 10:00:34 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:35962 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730223AbgE0OAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:58:50 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id ACF451C0300; Wed, 27 May 2020 15:58:48 +0200 (CEST)
-Date:   Wed, 27 May 2020 15:58:48 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
- family of RGB drivers
-Message-ID: <20200527135848.GB5011@amd>
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-4-dmurphy@ti.com>
+        Wed, 27 May 2020 10:00:32 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 545F18030834;
+        Wed, 27 May 2020 14:00:28 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id LZtLme4p0vqb; Wed, 27 May 2020 17:00:27 +0300 (MSK)
+Date:   Wed, 27 May 2020 17:00:27 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        <devicetree-compiler@vger.kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] check: Add 10bit/slave i2c reg flags support
+Message-ID: <20200527140027.elc4vkbrzjrq4gqh@mobilestation>
+References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527133656.GV1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200526164652.2331-4-dmurphy@ti.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200527133656.GV1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 04:36:56PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 03:25:25PM +0300, Serge Semin wrote:
+> > Recently the I2C-controllers slave interface support was added to the
+> > kernel I2C subsystem. In this case Linux can be used as, for example,
+> > a I2C EEPROM machine. See [1] for details. Other than instantiating
+> > the EEPROM-slave device from user-space there is a way to declare the
+> > device in dts. In this case firstly the I2C bus controller must support
+> > the slave interface. Secondly I2C-slave sub-node of that controller
+> > must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> > declared in [2]). That flag is declared as (1 << 30), which when set
+> > makes dtc unhappy about too big address set for a I2C-slave:
+> > 
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > 
+> > Similar problem would have happened if we had set the 10-bit address
+> > flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+> > 
+> > In order to fix the problem we suggest to alter the I2C-bus reg-check
+> > algorithm, so one would be aware of the upper bits set. Normally if no
+> > flag specified, the 7-bit address is expected in the "reg"-property.
+> > If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> > performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+> > 
+> > [1] kernel/Documentation/i2c/slave-interface.rst
+> > [2] kernel/include/dt-bindings/i2c/i2c.h
+> 
+> ...
+> 
 
---bCsyhTFzCvuiizWE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > +		addr = reg & 0x3FFFFFFFU;
+> > +		if ((reg & (1 << 31)) && addr > 0x3ff)
+> >  			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+> > -				  reg);
+> > -
+> > +				  addr);
+> > +		else if (!(reg & (1 << 31)) && addr > 0x7f)
+> > +			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
+> > +				  addr);
+> 
+> 1 << 31 is UB.
 
-Hi!
+Good point. Thanks.
 
+-Sergey
 
-> +          There can only be one instance of the ti,led-bank
-> +          property for each device node.  This is a required node is the=
- LED
-> +          modules are to be backed.
-
-I don't understand the second sentence. Pretty sure it is not valid
-english.
-
-Best regards,
-								Pavel
-							=09
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bCsyhTFzCvuiizWE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7OchgACgkQMOfwapXb+vJN4wCgqTGudnsYl/ewRIsVi9XZkP6I
-jM8AoLKtiC+mvdIBJtq12SDgoq9//j4V
-=y5Pw
------END PGP SIGNATURE-----
-
---bCsyhTFzCvuiizWE--
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
