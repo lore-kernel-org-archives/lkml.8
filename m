@@ -2,175 +2,524 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F12320899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4A120899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K56l5RKg"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DjC09TBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387627AbgE0NXI (ORCPT
+        id S2387771AbgE0NYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:23:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730212AbgE0NXC (ORCPT
+        Wed, 27 May 2020 09:24:01 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36088 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387581AbgE0NYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:23:02 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E99C08C5C1;
-        Wed, 27 May 2020 06:23:01 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y11so1839858plt.12;
-        Wed, 27 May 2020 06:23:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WMCAGgctWQCI4EOH1o7VYJ6D7UfFFBGz8Ga+d8PohkQ=;
-        b=K56l5RKgeNZ4eDsd1Kt3Osm1mrwCSi5hQWk/fmWaC9bVi9wN8SP34jato8aOnPrAFv
-         HYRh1X2i9I1a/pxLHv/g230yf9Pkd4h2sNxfWVH7wcDEcI+DSkdOX3SmoQ9ZcnjMyn4A
-         fP0IdneURtjwmjpicPR8LwaRrOecY9sn6R+RP4q58zJHOY5b6eydLFEzI+cwePgKIH0G
-         E3AMCy2QrnMt59AuPheZQhzwKoxPX9VPCgwV8QPb63D0jw/mantJtrGp8dfAaByxqLSQ
-         B/shyDbp7EDtskpxrG8Lz0HNGeGhG9jgAJdLQTj1JQD7QQjQRDcy6WOK/wT14IEsMKJ6
-         NUug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WMCAGgctWQCI4EOH1o7VYJ6D7UfFFBGz8Ga+d8PohkQ=;
-        b=RGocqUK41wb0AuhqYMqYhG/yGu+uysm/3WhaC927nnrk2wxfbIFA6O2TGqtgOCYkqO
-         cFBJ4R4DxDVAcZ15O5+j9QAGE8RwU4RlNZ8TZ4GPN6ZNcpriUtX1gYHA9dHzLwZCSLeH
-         jAbbzH6QOn1YW0Gp3igqY5wF0e1HHQQ4Kb42IBEOpQdKZ8xS8CiM0g521G8dDqaphR0M
-         Zz79n4qVkVoQe5XVu9ajMib7Bf42W04O9y0e8g9ZUhb5USf3zdCyUwv3JqhGv+m8osNQ
-         hDHu/RhVdqVzsrzTrA4Sv6d5dJH57f1uC4pKvVElAVyAmaUM1Jr7dmkKV5WF/rYmhzzv
-         PdgQ==
-X-Gm-Message-State: AOAM532w42OqxxZQYIGV/eO+kxtDlzZCE5x5Yz6tkVYmaeoqHhTP6sBq
-        UzI+jtgVDqd+rv/aM8uFcjtaQQr8
-X-Google-Smtp-Source: ABdhPJy1YQFXp2/h3iVVskQ03PN/RmwLpTuks7RWeVmcCu95CWIOO1Z5NGQeqY8fAfJYyrXXkqWAmA==
-X-Received: by 2002:a17:90b:ed2:: with SMTP id gz18mr5123782pjb.22.1590585780415;
-        Wed, 27 May 2020 06:23:00 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j18sm694072pfd.91.2020.05.27.06.22.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 06:22:59 -0700 (PDT)
-Subject: Re: [PATCH -next] hwmon: (amd_energy) Fix build error
-To:     YueHaibing <yuehaibing@huawei.com>, nchatrad@amd.com,
-        jdelvare@suse.com
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200527130241.58468-1-yuehaibing@huawei.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <bfcd6504-c717-8e60-a1ad-d173f3bea02f@roeck-us.net>
-Date:   Wed, 27 May 2020 06:22:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 09:24:01 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B06ABA3C;
+        Wed, 27 May 2020 15:23:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590585837;
+        bh=ccL7lFOWmVadayKZJr9QvwOk55pxnfp1u48HZhwkuJI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DjC09TBYc1PyHkWoCy6U8PtP7goKkQi9hQCHLOoMv/h9KQg8WmobggFOPe1n6BfT/
+         Aq80hrS9f8pfzHL6m4fGAu1xSTTJz9xbsdgOvcf8knIx33B4gk7YyVD0TKFc6ElD+5
+         jKwF35aTuGTi9kHBXPRBTz9NAcsifcrd/+YDcxNg=
+Date:   Wed, 27 May 2020 16:23:44 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vishal Sagar <vsagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v13 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20200527132344.GC6171@pendragon.ideasonboard.com>
+References: <20200512151947.120348-1-vishal.sagar@xilinx.com>
+ <20200512151947.120348-2-vishal.sagar@xilinx.com>
+ <20200524020214.GB6026@pendragon.ideasonboard.com>
+ <DM6PR02MB68762DFB8F24E485B9B302B6A7B10@DM6PR02MB6876.namprd02.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527130241.58468-1-yuehaibing@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <DM6PR02MB68762DFB8F24E485B9B302B6A7B10@DM6PR02MB6876.namprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 6:02 AM, YueHaibing wrote:
-> If CONFIG_NEED_MULTIPLE_NODES is n, building fails:
+Hi Vishal,
+
+On Wed, May 27, 2020 at 11:53:01AM +0000, Vishal Sagar wrote:
+> On Sunday, May 24, 2020 7:32 AM, Laurent Pinchart wrote:
+> > On Tue, May 12, 2020 at 08:49:46PM +0530, Vishal Sagar wrote:
+> > > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> > >
+> > > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller,
+> > > a D-PHY in Rx mode and a Video Format Bridge.
+> > >
+> > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > ---
+> > > v13
+> > > - Based on Laurent's suggestions
+> > > - Fixed the datatypes values as minimum and maximum
+> > > - condition added for en-vcx property
+> > >
+> > > v12
+> > > - Moved to yaml format
+> > > - Update CSI-2 and D-PHY
+> > > - Mention that bindings for D-PHY not here
+> > > - reset -> video-reset
+> > >
+> > > v11
+> > > - Modify compatible string from 4.0 to 5.0
+> > >
+> > > v10
+> > > - No changes
+> > >
+> > > v9
+> > > - Fix xlnx,vfb description.
+> > > - s/Optional/Required endpoint property.
+> > > - Move data-lanes description from Ports to endpoint property section.
+> > >
+> > > v8
+> > > - Added reset-gpios optional property to assert video_aresetn
+> > >
+> > > v7
+> > > - Removed the control name from dt bindings
+> > > - Updated the example dt node name to csi2rx
+> > >
+> > > v6
+> > > - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as
+> > > suggested by Luca
+> > > - Added reviewed by Rob Herring
+> > >
+> > > v5
+> > > - Incorporated comments by Luca Cersoli
+> > > - Removed DPHY clock from description and example
+> > > - Removed bayer pattern from device tree MIPI CSI IP
+> > >   doesn't deal with bayer pattern.
+> > >
+> > > v4
+> > > - Added reviewed by Hyun Kwon
+> > >
+> > > v3
+> > > - removed interrupt parent as suggested by Rob
+> > > - removed dphy clock
+> > > - moved vfb to optional properties
+> > > - Added required and optional port properties section
+> > > - Added endpoint property section
+> > >
+> > > v2
+> > > - updated the compatible string to latest version supported
+> > > - removed DPHY related parameters
+> > > - added CSI v2.0 related property (including VCX for supporting upto 16
+> > >   virtual channels).
+> > > - modified csi-pxl-format from string to unsigned int type where the value
+> > >   is as per the CSI specification
+> > > - Defined port 0 and port 1 as sink and source ports.
+> > > - Removed max-lanes property as suggested by Rob and Sakari
+> > > .../bindings/media/xilinx/xlnx,csi2rxss.yaml  | 226 ++++++++++++++++++
+> > >  1 file changed, 226 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> > >
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> > > b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> > > new file mode 100644
+> > > index 000000000000..b0885f461785
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yam
+> > > +++ l
+> > > @@ -0,0 +1,226 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/xilinx/xlnx,csi2rxss.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Xilinx MIPI CSI-2 Receiver Subsystem
+> > > +
+> > > +maintainers:
+> > > +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> > > +
+> > > +description: |
+> > > +  The Xilinx MIPI CSI-2 Receiver Subsystem is used to capture MIPI
+> > > +CSI-2
+> > > +  traffic from compliant camera sensors and send the output as AXI4
+> > > +Stream
+> > > +  video data for image processing.
+> > > +  The subsystem consists of a MIPI D-PHY in slave mode which captures
+> > > +the
+> > > +  data packets. This is passed along the MIPI CSI-2 Rx IP which
+> > > +extracts the
+> > > +  packet data. The optional Video Format Bridge (VFB) converts this
+> > > +data to
+> > > +  AXI4 Stream video data.
+> > > +  For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver
+> > Subsystem.
+> > > +  Please note that this bindings includes only the MIPI CSI-2 Rx
+> > > +controller
+> > > +  and Video Format Bridge and not D-PHY.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +        - xlnx,mipi-csi2-rx-subsystem-5.0
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  clocks:
+> > > +    description: List of clock specifiers
+> > > +    items:
+> > > +      - description: AXI Lite clock
+> > > +      - description: Video clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: lite_aclk
+> > > +      - const: video_aclk
+> > > +
+> > > +  xlnx,csi-pxl-format:
+> > > +    description: |
+> > > +      This denotes the CSI Data type selected in hw design.
+> > > +      Packets other than this data type (except for RAW8 and
+> > > +      User defined data types) will be filtered out.
+> > > +      Possible values are as below -
+> > > +      0x1e - YUV4228B
+> > > +      0x1f - YUV42210B
+> > > +      0x20 - RGB444
+> > > +      0x21 - RGB555
+> > > +      0x22 - RGB565
+> > > +      0x23 - RGB666
+> > > +      0x24 - RGB888
+> > > +      0x28 - RAW6
+> > > +      0x29 - RAW7
+> > > +      0x2a - RAW8
+> > > +      0x2b - RAW10
+> > > +      0x2c - RAW12
+> > > +      0x2d - RAW14
+> > > +      0x2e - RAW16
+> > > +      0x2f - RAW20
+> > > +    allOf:
+> > > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +      - anyOf:
+> > > +        - minimum: 0x1e
+> > > +        - maximum: 0x24
+> > > +        - minimum: 0x28
+> > > +        - maximum: 0x2f
+> > > +
+> > > +  xlnx,vfb:
+> > > +    type: boolean
+> > > +    description: Present when Video Format Bridge is enabled in IP
+> > > + configuration
+> > > +
+> > > +  xlnx,en-csi-v2-0:
+> > > +    type: boolean
+> > > +    description: Present if CSI v2 is enabled in IP configuration.
+> > > +
+> > > +  xlnx,en-vcx:
+> > > +    type: boolean
+> > > +    description: |
+> > > +      When present, there are maximum 16 virtual channels, else only 4.
+> > > +
+> > > +  xlnx,en-active-lanes:
+> > > +    type: boolean
+> > > +    description: |
+> > > +      Present if the number of active lanes can be re-configured at
+> > > +      runtime in the Protocol Configuration Register. Otherwise all lanes,
+> > > +      as set in IP configuration, are always active.
+> > > +
+> > > +  video-reset-gpios:
+> > > +    description: Optional specifier for a GPIO that asserts video_aresetn.
+> > > +    maxItems: 1
+> > > +
+> > > +  ports:
+> > > +    type: object
+> > > +
+> > > +    properties:
+> > > +      port@0:
+> > > +        type: object
+> > > +        description: |
+> > > +          Input / sink port node, single endpoint describing the
+> > > +          CSI-2 transmitter.
+> > > +
+> > > +        properties:
+> > > +          reg:
+> > > +            const: 0
+> > > +
+> > > +          endpoint:
+> > > +            type: object
+> > > +
+> > > +            properties:
+> > > +
+> > > +              data-lanes:
+> > > +                description: |
+> > > +                  This is required only in the sink port 0 endpoint which
+> > > +                  connects to MIPI CSI-2 source like sensor.
+> > > +                  The possible values are -
+> > > +                  1       - For 1 lane enabled in IP.
+> > > +                  1 2     - For 2 lanes enabled in IP.
+> > > +                  1 2 3   - For 3 lanes enabled in IP.
+> > > +                  1 2 3 4 - For 4 lanes enabled in IP.
+> > > +                items:
+> > > +                  - const: 1
+> > > +                  - const: 2
+> > > +                  - const: 3
+> > > +                  - const: 4
+> > > +
+> > > +              remote-endpoint: true
+> > > +
+> > > +            required:
+> > > +              - data-lanes
+> > > +              - remote-endpoint
+> > > +
+> > > +            additionalProperties: false
+> > > +
+> > > +        additionalProperties: false
+> > > +
+> > > +      port@1:
+> > > +        type: object
+> > > +        description: |
+> > > +          Output / source port node, endpoint describing modules
+> > > +          connected the CSI-2 receiver.
+> > > +
+> > > +        properties:
+> > > +
+> > > +          reg:
+> > > +            const: 1
+> > > +
+> > > +          endpoint:
+> > > +            type: object
+> > > +
+> > > +            properties:
+> > > +
+> > > +              remote-endpoint: true
+> > > +
+> > > +            required:
+> > > +              - remote-endpoint
+> > > +
+> > > +            additionalProperties: false
+> > > +
+> > > +        additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - interrupts
+> > > +  - clocks
+> > > +  - clock-names
+> > > +  - xlnx,csi-pxl-format
+> > > +  - ports
+> > > +
+> > > +if:
+> > > +  not:
+> > > +    required:
+> > > +      - xlnx,en-csi-v2-0
+> > > +then:
+> > > +  properties:
+> > > +    xlnx,en-vcx: false
+> > 
+> > As I've just commented on v12, I think we should condition the xlnx,csi-pxl-
+> > format property to xlnx,vfb being set. xlnx,csi-pxl-format should be removed
+> > from the required properties above, and the following conditions added:
+> > 
+> > allOf:
+> >   - if:
+> >       required:
+> >         - xlnx,vfb
+> >     then:
+> >       required:
+> >         - xlnx,csi-pxl-format
+> >     else:
+> >       properties:
+> >         xlnx,csi-pxl-format: false
+> > 
+> >   - if:
+> >       not:
+> >         required:
+> >           - xlnx,en-csi-v2-0
+> >     then:
+> >       properties:
+> >         xlnx,en-vcx: false
+> > 
+> > The 'allOf' is needed as you can't have two 'if' constructs at the top level.
+> > 
+> Thanks for sharing the explanation for this.
+> Can you please share where I can get this info?
+
+The json-schema specification is available at
+https://json-schema.org/specification.html. allOf is defined in
+https://json-schema.org/draft/2019-09/json-schema-core.html#allOf.
+
+JSON schemas are expressed in JSON format, and YAML is a (more readable)
+superset syntax of JSON. A YAML document contains lists and objects:
+
+- this
+- is
+- a
+- list
+
+object:
+  can: have
+  properties:
+    that: can
+    be: other
+    objects
+
+An object is similar to a Python dictionary, it can't have multiple
+entries with the same key. So having
+
+if:
+  required:
+    - xlnx,vfb
+then:
+  required:
+    - xlnx,csi-pxl-format
+else:
+  properties:
+    xlnx,csi-pxl-format: false
+
+if:
+  not:
+    required:
+      - xlnx,en-csi-v2-0
+then:
+  properties:
+    xlnx,en-vcx: false
+
+at the top level is not valid, the same way that
+
+properties:
+  reg:
+    maxItems: 1
+  reg:
+    maxItems: 1
+
+wouldn't be valid. The allOf object has a value that is a list of
+schemas:
+
+allOf:
+  - schema1
+  - schema2
+  - schema3
+
+and in this case, we use it with a if...then...else for each of the
+schemas. As documented in the spec, "An instance validates successfully
+against [allOf] if it validates successfully against all schemas defined
+by [allOf]'s value".
+
+allOf is also used to include sub-schemas, as explained in
+Documentation/devicetree/bindings/example-schema.yaml.
+
+  vendor,int-property:
+    description: Vendor specific properties must have a description
+    # 'allOf' is the json-schema way of subclassing a schema. Here the base
+    # type schema is referenced and then additional constraints on the values
+    # are added.
+    allOf:
+      - $ref: /schemas/types.yaml#/definitions/uint32
+      - enum: [2, 4, 6, 8, 10]
+
+If this was written
+
+  vendor,int-property:
+    $ref: /schemas/types.yaml#/definitions/uint32
+    enum: [2, 4, 6, 8, 10]
+
+we would have an issue (among other problems) if
+/schemas/types.yaml#/definitions/uint32 contained an enum, as there
+would be two enum properties for vendor,int-property.
+
+> > Please however let me know if my understanding is wrong and xlnx,csi-pxl-
+> > format is needed even when xlnx,vfb is not set. In that case please ignore this
+> > change (but please add the ... below).
 > 
-> drivers/hwmon/amd_energy.c: In function ‘amd_energy_read’:
-> ./include/asm-generic/topology.h:51:36: error: void value not ignored as it ought to be
->      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
-> ./include/linux/cpumask.h:618:72: note: in definition of macro ‘cpumask_first_and’
->  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
->                                                                         ^~~~~
-> drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro ‘cpumask_of_node’
->       cpumask_of_node
->       ^~~~~~~~~~~~~~~
-> ./include/asm-generic/topology.h:51:46: warning: left-hand operand of comma expression has no effect [-Wunused-value]
->      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
->                                               ^
-> ./include/linux/cpumask.h:618:72: note: in definition of macro ‘cpumask_first_and’
->  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
->                                                                         ^~~~~
-> drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro ‘cpumask_of_node’
->       cpumask_of_node
->       ^~~~~~~~~~~~~~~
+> Ok. I will add ... in the end.
 > 
-> Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/hwmon/amd_energy.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +    xcsi2rxss_1: csi2rx@a0020000 {
+> > > +        compatible = "xlnx,mipi-csi2-rx-subsystem-5.0";
+> > > +        reg = <0x0 0xa0020000 0x0 0x10000>;
+> > > +        interrupt-parent = <&gic>;
+> > > +        interrupts = <0 95 4>;
+> > > +        xlnx,csi-pxl-format = <0x2a>;
+> > > +        xlnx,vfb;
+> > > +        xlnx,en-active-lanes;
+> > > +        xlnx,en-csi-v2-0;
+> > > +        xlnx,en-vcx;
+> > > +        clock-names = "lite_aclk", "video_aclk";
+> > > +        clocks = <&misc_clk_0>, <&misc_clk_1>;
+> > > +        video-reset-gpios = <&gpio 86 GPIO_ACTIVE_LOW>;
+> > > +
+> > > +        ports {
+> > > +            #address-cells = <1>;
+> > > +            #size-cells = <0>;
+> > > +
+> > > +            port@0 {
+> > > +                /* Sink port */
+> > > +                reg = <0>;
+> > > +                csiss_in: endpoint {
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    /* MIPI CSI-2 Camera handle */
+> > > +                    remote-endpoint = <&camera_out>;
+> > > +                };
+> > > +            };
+> > > +            port@1 {
+> > > +                /* Source port */
+> > > +                reg = <1>;
+> > > +                csiss_out: endpoint {
+> > > +                    remote-endpoint = <&vproc_in>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > 
+> > YAML files usually end with
+> > 
+> > ...
+> > 
+> > on the last line to mark the end of file.
+> > 
 > 
-> diff --git a/drivers/hwmon/amd_energy.c b/drivers/hwmon/amd_energy.c
-> index bc8b643a37d5..9d5cd3057866 100644
-> --- a/drivers/hwmon/amd_energy.c
-> +++ b/drivers/hwmon/amd_energy.c
-> @@ -192,7 +192,7 @@ static int amd_energy_read(struct device *dev,
->  	if (channel >= data->nr_cpus) {
->  		cpu = cpumask_first_and(cpu_online_mask,
->  					cpumask_of_node
-> -					(channel - data->nr_cpus));
-> +					((channel - data->nr_cpus)));
-
-Wrong fix. The correct fix is to fix the macro, not its caller.
-A patch to fix the macro has been submitted.
-
-Guenter
-
-
->  		amd_add_delta(data, channel, cpu, val, false);
->  	} else {
->  		cpu = channel;
+> Ok I will add this to the end of the file.
 > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+-- 
+Regards,
+
+Laurent Pinchart
