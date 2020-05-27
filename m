@@ -2,128 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C0F2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yl2Parc3"
+	by mail.kernel.org (Postfix) with ESMTP id 905D92078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:17:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389598AbgE0PRN (ORCPT
+        id S2389624AbgE0PR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:17:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30835 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389447AbgE0PRN (ORCPT
+        Wed, 27 May 2020 11:17:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:41705 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387760AbgE0PR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:17:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590592632;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jxeEDhzgrLh/X883Y6dHJor3hgYqo4NWCe2gqfOAWXs=;
-        b=Yl2Parc39dhRPdkobJCGIMr85hx7C1zEolGNnimonR+kbwPnu8rj00TXpELFc+uUWdt35+
-        7EJDzmBeL9S+FC8L+wJ9xr1Irl33cChnFPs7NOIqig7d2aCtNnOnyiukwNucIV9B9d2HcO
-        ch8lcQM9tmhYVmyDpPfIoYDSgl6eZyU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77--3CiTK6XMtSG5BRCYO9Ubw-1; Wed, 27 May 2020 11:17:08 -0400
-X-MC-Unique: -3CiTK6XMtSG5BRCYO9Ubw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A137107ACF6;
-        Wed, 27 May 2020 15:17:06 +0000 (UTC)
-Received: from starship (unknown [10.35.206.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C0805D9E5;
-        Wed, 27 May 2020 15:17:01 +0000 (UTC)
-Message-ID: <69386188ba90a8852525f1c984d5df57c21ee2e7.camel@redhat.com>
-Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL
- unconditionally
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tao Xu <tao3.xu@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jingqi Liu <jingqi.liu@intel.com>
-Date:   Wed, 27 May 2020 18:17:00 +0300
-In-Reply-To: <20200527012140.GD31696@linux.intel.com>
-References: <20200523161455.3940-1-mlevitsk@redhat.com>
-         <20200523161455.3940-3-mlevitsk@redhat.com>
-         <20200527012140.GD31696@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Wed, 27 May 2020 11:17:27 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-108-6dEhZDTeOT-9ivl6WFz16Q-1; Wed, 27 May 2020 16:17:23 +0100
+X-MC-Unique: 6dEhZDTeOT-9ivl6WFz16Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 27 May 2020 16:17:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 27 May 2020 16:17:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Liang, Kan'" <kan.liang@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
+ events on some TGL
+Thread-Topic: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
+ events on some TGL
+Thread-Index: AQHWNCLukMKeXYb1T0G/ZA+cFsVVx6i75DXQgAAOAgCAABGM4P//8pEAgAAVAHA=
+Date:   Wed, 27 May 2020 15:17:22 +0000
+Message-ID: <a891f75d599c4978ba941de73c6a667b@AcuMS.aculab.com>
+References: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
+ <869fafc80da84d188678c1cbb0267a0b@AcuMS.aculab.com>
+ <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
+ <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
+ <9f0ed889-590e-6f7a-85bd-c4be43e993f3@linux.intel.com>
+In-Reply-To: <9f0ed889-590e-6f7a-85bd-c4be43e993f3@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 18:21 -0700, Sean Christopherson wrote:
-> On Sat, May 23, 2020 at 07:14:55PM +0300, Maxim Levitsky wrote:
-> > This msr is only available when the host supports WAITPKG feature.
-> > 
-> > This breaks a nested guest, if the L1 hypervisor is set to ignore
-> > unknown msrs, because the only other safety check that the
-> > kernel does is that it attempts to read the msr and
-> > rejects it if it gets an exception.
-> > 
-> > Fixes: 6e3ba4abce KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-> 
-> Same comments on the line wraps and Fixes tag.
-I rewrote the commit message and I hope that the new version
-is better. I fixed the 'fixes' message as well.
-
-> 
-> For the code:
-> 
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Thank you!
-
-Best regards,
-	Maxim Levitsky
-
-
-> 
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  arch/x86/kvm/x86.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index b226fb8abe41b..4752293312947 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -5316,6 +5316,10 @@ static void kvm_init_msr_list(void)
-> >  			    min(INTEL_PMC_MAX_GENERIC,
-> > x86_pmu.num_counters_gp))
-> >  				continue;
-> >  			break;
-> > +		case MSR_IA32_UMWAIT_CONTROL:
-> > +			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
-> > +				continue;
-> > +			break;
-> >  		default:
-> >  			break;
-> >  		}
-> > -- 
-> > 2.26.2
-> > 
+RnJvbTogTGlhbmcsIEthbg0KPiBTZW50OiAyNyBNYXkgMjAyMCAxNjowMQ0KPiBPbiA1LzI3LzIw
+MjAgMTA6NTEgQU0sIERhdmlkIExhaWdodCB3cm90ZToNCj4gPiBGcm9tOiBMaWFuZywgS2FuDQo+
+ID4+IFNlbnQ6IDI3IE1heSAyMDIwIDE1OjQ3DQo+ID4+IE9uIDUvMjcvMjAyMCA4OjU5IEFNLCBE
+YXZpZCBMYWlnaHQgd3JvdGU6DQo+ID4+PiBGcm9tOiBrYW4ubGlhbmdAbGludXguaW50ZWwuY29t
+DQo+ID4+Pj4gU2VudDogMjcgTWF5IDIwMjAgMTM6MzENCj4gPj4+Pg0KPiA+Pj4+IEZyb206IEth
+biBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT4NCj4gPj4+Pg0KPiA+Pj4+IFdoZW4g
+Y291bnRpbmcgSU1DIHVuY29yZSBldmVudHMgb24gc29tZSBUR0wgbWFjaGluZXMsIGFuIG9vcHMg
+d2lsbCBiZQ0KPiA+Pj4+IHRyaWdnZXJlZC4NCj4gPj4+PiAgICAgWyAzOTMuMTAxMjYyXSBCVUc6
+IHVuYWJsZSB0byBoYW5kbGUgcGFnZSBmYXVsdCBmb3IgYWRkcmVzczoNCj4gPj4+PiAgICAgZmZm
+ZmI0NTIwMGUxNTg1OA0KPiA+Pj4+ICAgICBbIDM5My4xMDEyNjldICNQRjogc3VwZXJ2aXNvciBy
+ZWFkIGFjY2VzcyBpbiBrZXJuZWwgbW9kZQ0KPiA+Pj4+ICAgICBbIDM5My4xMDEyNzFdICNQRjog
+ZXJyb3JfY29kZSgweDAwMDApIC0gbm90LXByZXNlbnQgcGFnZQ0KPiA+Pj4+DQo+ID4+Pj4gQ3Vy
+cmVudCBwZXJmIHVuY29yZSBkcml2ZXIgc3RpbGwgdXNlIHRoZSBJTUMgTUFQIFNJWkUgaW5oZXJp
+dGVkIGZyb20NCj4gPj4+PiBTTkIsIHdoaWNoIGlzIDB4NjAwMC4NCj4gPj4+PiBIb3dldmVyLCB0
+aGUgb2Zmc2V0IG9mIElNQyB1bmNvcmUgY291bnRlcnMgZm9yIHNvbWUgVEdMIG1hY2hpbmVzIGlz
+DQo+ID4+Pj4gbGFyZ2VyIHRoYW4gMHg2MDAwLCBlLmcuIDB4ZDhhMC4NCj4gPj4+Pg0KPiA+Pj4+
+IEVubGFyZ2UgdGhlIElNQyBNQVAgU0laRSBmb3IgVEdMIHRvIDB4ZTAwMC4NCj4gPj4+DQo+ID4+
+PiBSZXBsYWNpbmcgb25lICdyYW5kb20nIGNvbnN0YW50IHdpdGggYSBkaWZmZXJlbnQgb25lDQo+
+ID4+PiBkb2Vzbid0IHNlZW0gbGlrZSBhIHByb3BlciBmaXguDQo+ID4+Pg0KPiA+Pj4gU3VyZWx5
+IHRoZSBhY3R1YWwgYm91bmRzIG9mIHRoZSAnbWVtb3J5JyBhcmVhIGFyZSBwcm9wZXJseQ0KPiA+
+Pj4gZGVmaW5lZCBzb21ld2hlcmUuDQo+ID4+PiBPciBhdCBsZWFzdCBzaG91bGQgY29tZSBmcm9t
+IGEgdGFibGUuDQo+ID4+Pg0KPiA+Pj4gWW91IGFsc28gbmVlZCB0byB2ZXJpZnkgdGhhdCB0aGUg
+b2Zmc2V0cyBhcmUgd2l0aGluIHRoZSBtYXBwZWQgYXJlYS4NCj4gPj4+IEFuIHVuZXhwZWN0ZWQg
+b2Zmc2V0IHNob3VsZG4ndCB0cnkgdG8gYWNjZXNzIGFuIGludmFsaWQgYWRkcmVzcy4NCj4gPj4N
+Cj4gPj4gVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KPiA+Pg0KPiA+PiBJIGFncmVlIHRoYXQgd2Ug
+c2hvdWxkIGFkZCBhIGNoZWNrIGJlZm9yZSBtYXBwaW5nIHRoZSBhcmVhIHRvIHByZXZlbnQNCj4g
+Pj4gdGhlIGlzc3VlIGhhcHBlbnMgYWdhaW4uDQo+ID4+DQo+ID4+IEkgdGhpbmsgdGhlIGNoZWNr
+IHNob3VsZCBiZSBhIGdlbmVyaWMgY2hlY2sgZm9yIGFsbCBwbGF0Zm9ybXMgd2hpY2ggdHJ5DQo+
+ID4+IHRvIG1hcCBhbiBhcmVhLCBub3QganVzdCBmb3IgVEdMLiBJIHdpbGwgc3VibWl0IGEgc2Vw
+YXJhdGUgcGF0Y2ggZm9yIHRoZQ0KPiA+PiBjaGVjay4NCj4gPg0KPiA+IFlvdSBuZWVkIGEgY2hl
+Y2sgdGhhdCB0aGUgYWN0dWFsIGFjY2VzcyBpcyB3aXRoaW5nIHRoZSBtYXBwZWQgYXJlYS4NCj4g
+PiBTbyBpbnN0ZWFkIG9mIGdldHRpbmcgYW4gT09QUyB5b3UgZ2V0IGEgZXJyb3IuDQo+ID4NCj4g
+PiBUaGlzIGlzIGFmdGVyIHlvdSd2ZSBtYXBwZWQgaXQuDQo+IA0KPiBTdXJlLiBXaWxsIGFkZCBh
+IFdBUk5fT05DRSgpIGJlZm9yZSB0aGUgYWN0dWFsIGFjY2Vzcy4NCg0KTm8gdGhhdCB3aWxsIHN0
+aWxsIHBhbmljIHNvbWUgc3lzdGVtcy4NCnByX3dhcm4oKSBpcyBhbGwgeW91IG5lZWQuDQoNCglE
+YXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91
+bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5
+NzM4NiAoV2FsZXMpDQo=
 
