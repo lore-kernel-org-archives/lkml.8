@@ -2,118 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6435C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6E8207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590620559;
-	bh=74TO1RGMg81O6r2d7CQjDhADvcSRIb+eipXPQYo/VzA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=J6cR1XZHUckr15PYZw4A5vA4af1qC4qmaITw1Ohi+MCzRN0a0jkEr0l9WaxggARSs
-	 nL79+QPNTXq0jaj7XBdnY4aga+Vmk507/J1wcbiaciPlS8RSh8pdHtLHn2/VWSOYj7
-	 x4FnuRH/UqcRycObEmtxAdKVnCr53yl5dPiIa+uY=
+	by mail.kernel.org (Postfix) with ESMTP id ED4D42084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725900AbgE0XCi (ORCPT
+        id S1725966AbgE0XDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgE0XCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:02:38 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA6902075F;
-        Wed, 27 May 2020 23:02:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590620558;
-        bh=74TO1RGMg81O6r2d7CQjDhADvcSRIb+eipXPQYo/VzA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jvd3ntDzRZbS5wbSBVyse0QhFGTYxu/Qjw7I5KSJcEpBwnDj0gaQXqteVTvY1G7+a
-         7hTtqa6xgB6pE0+xkQrnBEduPAuyPZUAEXh8wq4eBsusYZtk9OyA83KtPvzLPLLdiF
-         A8cB53XcpH9jYN+fiHq1jpMsdtldnz0yMr/AzO8o=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH] selftests/x86: Add a syscall_arg_fault_64 test for negative GSBASE
-Date:   Wed, 27 May 2020 16:02:36 -0700
-Message-Id: <f4f71efc91b9eae5e3dae21c9aee1c70cf5f370e.1590620529.git.luto@kernel.org>
-X-Mailer: git-send-email 2.25.4
+        Wed, 27 May 2020 19:03:01 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38430 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0XDB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 19:03:01 -0400
+Received: by mail-il1-f196.google.com with SMTP id q18so4673014ilm.5;
+        Wed, 27 May 2020 16:03:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IY5UsUVweat3Yf12W30ICZIuRx4S2mbmL7ClK7BMyrw=;
+        b=J7cDrOivt2j0zcmNs+z/bjiLR4Lp86/1w0fclgQTzKBHiNVoYGOVyzeRtcCQBuyga4
+         8YRZrjYMI/IERzkHAeB9ZkySYtj+NIZF7zlK1gBv+8JIKNEMS4FX7caSZ1j5UlcK0Cs4
+         E+HsGvoj7JLIpqtwanwelfDuuNStdPKx2tUiq0398plODLiGv4icoAY5w7CLcA3/wJgv
+         bt0kevJP82Zt6u8WucpkRI4LmvH/0wV3bZgloV3q6jScDiIjG+IWUm9lj8eD9+jNCGnf
+         m75qxHzwRoxEHzYIVEav3L4quMaofliyZO8lynbIBhj7HDdjZBdBRrzZ1y7r493V+Xqd
+         Zs+A==
+X-Gm-Message-State: AOAM530ywgklvxkxl1WAGPSAXlFQVUBr4X9YQ7NCYTJOJ4tk55Bl4hoW
+        d2hFoNWRm9prBFqzJQXuGSVzLVZX
+X-Google-Smtp-Source: ABdhPJxy2S4snQ2BTCS83PVr9ySoTiZECKOCqgYlcTd32Ji0zMNdH2YOj1RGz9aC/BuNYPnKZKzy0A==
+X-Received: by 2002:a05:6e02:6cd:: with SMTP id p13mr526519ils.188.1590620579642;
+        Wed, 27 May 2020 16:02:59 -0700 (PDT)
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
+        by smtp.gmail.com with ESMTPSA id e13sm2215588ils.27.2020.05.27.16.02.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 16:02:58 -0700 (PDT)
+Received: by mail-il1-f179.google.com with SMTP id d1so3280302ila.8;
+        Wed, 27 May 2020 16:02:58 -0700 (PDT)
+X-Received: by 2002:a05:6e02:54b:: with SMTP id i11mr596533ils.50.1590620578431;
+ Wed, 27 May 2020 16:02:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200527034228.23793-1-biwen.li@oss.nxp.com>
+In-Reply-To: <20200527034228.23793-1-biwen.li@oss.nxp.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 27 May 2020 18:02:29 -0500
+X-Gmail-Original-Message-ID: <CADRPPNRS59MQ47Be5xuzLCBLJ_77UYMRbMtAUQbXjir6d7jykw@mail.gmail.com>
+Message-ID: <CADRPPNRS59MQ47Be5xuzLCBLJ_77UYMRbMtAUQbXjir6d7jykw@mail.gmail.com>
+Subject: Re: [v3 1/2] dts: ppc: t4240rdb: remove interrupts property
+To:     Biwen Li <biwen.li@oss.nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        a.zummo@towertech.it,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        lkml <linux-kernel@vger.kernel.org>, Biwen Li <biwen.li@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the kernel erroneously allows WRGSBASE and user code writes a
-negative value, paranoid_entry will get confused.  Check for this by
-writing a negative value to GSBASE and doing SYSENTER with TF set.
-A successful run looks like:
+On Tue, May 26, 2020 at 10:49 PM Biwen Li <biwen.li@oss.nxp.com> wrote:
+>
+> From: Biwen Li <biwen.li@nxp.com>
+>
+> Since the interrupt pin for RTC DS1374 is not connected
+> to the CPU on T4240RDB, remove the interrupt property
+> from the device tree.
+>
+> This also fix the following warning for hwclock.util-linux:
+> $ hwclock.util-linux
+> hwclock.util-linux: select() to /dev/rtc0
+> to wait for clock tick timed out
+>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 
-    [RUN]	SYSENTER with TF, invalid state, and GSBASE < 0
-    [SKIP]	Illegal instruction
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-A failed run causes a kernel hang, and I believe it's because we
-double-fault and then get a never ending series of page faults and,
-when we exhaust the double fault stack we double fault again,
-starting the process over.
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- .../testing/selftests/x86/syscall_arg_fault.c | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
-index bc0ecc2e862e..62fba40866d5 100644
---- a/tools/testing/selftests/x86/syscall_arg_fault.c
-+++ b/tools/testing/selftests/x86/syscall_arg_fault.c
-@@ -72,6 +72,7 @@ static void sigsegv_or_sigbus(int sig, siginfo_t *info, void *ctx_void)
- 	if (ax != -EFAULT && ax != -ENOSYS) {
- 		printf("[FAIL]\tAX had the wrong value: 0x%lx\n",
- 		       (unsigned long)ax);
-+		printf("\tIP = 0x%lx\n", (unsigned long)ctx->uc_mcontext.gregs[REG_IP]);
- 		n_errs++;
- 	} else {
- 		printf("[OK]\tSeems okay\n");
-@@ -226,5 +227,30 @@ int main()
- 	}
- 	set_eflags(get_eflags() & ~X86_EFLAGS_TF);
- 
-+#ifdef __x86_64__
-+	printf("[RUN]\tSYSENTER with TF, invalid state, and GSBASE < 0\n");
-+
-+	if (sigsetjmp(jmpbuf, 1) == 0) {
-+		sigtrap_consecutive_syscalls = 0;
-+
-+		asm volatile ("wrgsbase %%rax\n\t"
-+			      :: "a" (0xffffffffffff0000UL));
-+
-+		set_eflags(get_eflags() | X86_EFLAGS_TF);
-+		asm volatile (
-+			"movl $-1, %%eax\n\t"
-+			"movl $-1, %%ebx\n\t"
-+			"movl $-1, %%ecx\n\t"
-+			"movl $-1, %%edx\n\t"
-+			"movl $-1, %%esi\n\t"
-+			"movl $-1, %%edi\n\t"
-+			"movl $-1, %%ebp\n\t"
-+			"movl $-1, %%esp\n\t"
-+			"sysenter"
-+			: : : "memory", "flags");
-+	}
-+	set_eflags(get_eflags() & ~X86_EFLAGS_TF);
-+#endif
-+
- 	return 0;
- }
--- 
-2.25.4
-
+> ---
+>  arch/powerpc/boot/dts/fsl/t4240rdb.dts | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+> index a56a705d41f7..145896f2eef6 100644
+> --- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+> +++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
+> @@ -144,7 +144,6 @@
+>                         rtc@68 {
+>                                 compatible = "dallas,ds1374";
+>                                 reg = <0x68>;
+> -                               interrupts = <0x1 0x1 0 0>;
+>                         };
+>                 };
+>
+> --
+> 2.17.1
+>
