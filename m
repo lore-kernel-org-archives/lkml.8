@@ -2,161 +2,92 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE207C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F02D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7642F207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="I3g72xvE"
+	by mail.kernel.org (Postfix) with ESMTP id BC3412084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgE0XNU (ORCPT
+        id S1725841AbgE0XQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgE0XNU (ORCPT
+        Wed, 27 May 2020 19:16:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53028 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0XQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:13:20 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD38CC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 16:13:19 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id x1so30007966ejd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 16:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Owh+wprAucDYqiOwYs5g0rV2VPgaJE9GgJPCRAVHdsw=;
-        b=I3g72xvEhhITHxZc2UHaYQN/usQC0wOCPCnpF16NVNIU5DBpl39GXcvas43iU0S3XG
-         9ySrZNrMYRz0/EFfzB0HMkiLOxhTNaJjlaLGlse5vSm5g+mzxbmceHAmv98POnyIBEeL
-         XTUUSRfhuRp2ao1WBadscbA7vfh5cZR6hDnBfKsRXU/U36Hv67xk1KfAtp5nXND57Uvy
-         VRh0yLByIu2DH7FSvWJ8CUDio/Ozvwlq6MrMEiBwAnFM5D15za6cINGe+E4t7on81hb9
-         bnnJTA8lMZwbXLHdYqdfFM+Tl2pPBMqMOGkfrMOQNolrEShXX4NYDFYHozAwCAFTlEBk
-         YTnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Owh+wprAucDYqiOwYs5g0rV2VPgaJE9GgJPCRAVHdsw=;
-        b=PNmRDVeUfeJLcG3P01R9CUwKQT65pbN6/7Zy/R/OToR9UoCJcZVfKsHwB49BZEeqUZ
-         +Xo3UtkRkgbzuKDlx3FR9PVXdij2QVMvN9J8O5XcmCEQxkXzKTr7tBYYRnbbcxfFu36h
-         Jv0YzZykA2/BtrKF48tIoqJPPhZzW2N9+7N5aeCDoLRp1KfNfnLRj389fc8EVeLYDgo2
-         mdUBH4PDDH/rwSLtvVEJt9m/6bff+TGUz7eGmJN4xHsbTuG37nkj6I5/uRw2+C2nxZ7E
-         taNuC/GnXR9aqOZZO5PCzsjf50Wkh6fWZRu7105WYXuByTtcuueO3xX190CTk39rJ6Cy
-         2F6g==
-X-Gm-Message-State: AOAM530kDt9+M9DwVo9NQM36ik1B4WEla3TF6hUmrIqQoqNWhVcJkIYx
-        Bkw4kLdavM5hnOY2Ld9WNXdW6ih8UESyUmEED/iwCg==
-X-Google-Smtp-Source: ABdhPJwGbkITXD+BOo5VJ+vb7qsNmF+rr8ZBOowDK5CfcTxnwszC+JkEbF88xZKm11qTOoMPkI2OhQRwK5juWeZei08=
-X-Received: by 2002:a17:906:468e:: with SMTP id a14mr607322ejr.124.1590621198526;
- Wed, 27 May 2020 16:13:18 -0700 (PDT)
+        Wed, 27 May 2020 19:16:49 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1je5Hy-0005uN-T4; Wed, 27 May 2020 23:16:47 +0000
+Date:   Thu, 28 May 2020 01:16:46 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200527231646.4v743erjpzh6qe5f@wittgenstein>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+ <202005271408.58F806514@keescook>
+ <20200527220532.jplypougn3qzwrms@wittgenstein>
+ <202005271537.75548B6@keescook>
+ <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
 MIME-Version: 1.0
-References: <20200508180157.1816-1-ardb@kernel.org> <20200508180157.1816-9-ardb@kernel.org>
- <10a1c7fcea861f5d45dff81cba673e970d686bc2.camel@intel.com>
- <20200527224657.GA3568142@rani.riverdale.lan> <CAPcyv4jOCY=kxeZVWsS0Xc36jmPr7DSR_sFrsMeoiEs+iEfbEA@mail.gmail.com>
- <20200527230209.GA3575079@rani.riverdale.lan>
-In-Reply-To: <20200527230209.GA3575079@rani.riverdale.lan>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 27 May 2020 16:13:07 -0700
-Message-ID: <CAPcyv4hO1XEMHPLY-W6g_=TK2Dv=rLgJoVeKrBEHP63zTeq-sA@mail.gmail.com>
-Subject: Re: [PATCH 08/15] efi/x86: Move command-line initrd loading to efi_main
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "joe@perches.com" <joe@perches.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 4:02 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, May 27, 2020 at 03:56:45PM -0700, Dan Williams wrote:
-> > On Wed, May 27, 2020 at 3:47 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Wed, May 27, 2020 at 10:30:18PM +0000, Williams, Dan J wrote:
-> > > > On Fri, 2020-05-08 at 20:01 +0200, Ard Biesheuvel wrote:
-> > > > > From: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > >
-> > > > > Consolidate the initrd loading in efi_main.
-> > > > >
-> > > > > The command line options now need to be parsed only once.
-> > > > >
-> > > > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > > Link:
-> > > > > https://lore.kernel.org/r/20200430182843.2510180-9-nivedita@alum.mit.edu
-> > > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > >
-> > > > Hi,
-> > > >
-> > > > This patch patch in tip/master as:
-> > > >
-> > > > 987053a30016 efi/x86: Move command-line initrd loading to efi_main
-> > > >
-> > > > ...regresses my nfs root configuration. It hangs trying to mount the
-> > > > nfs root filesystem "root=/dev/nfs ip=dhcp".
-> > > >
-> > > > It does not revert cleanly.
-> > > >
-> > > >
-> > >
-> > > Does this fix it?
-> > >
-> > > diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> > > index defeb6035109..f53362efef84 100644
-> > > --- a/drivers/firmware/efi/libstub/x86-stub.c
-> > > +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> > > @@ -771,10 +771,12 @@ unsigned long efi_main(efi_handle_t handle,
-> > >                         efi_err("Failed to load initrd!\n");
-> > >                         goto fail;
-> > >                 }
-> > > -               efi_set_u64_split(addr, &hdr->ramdisk_image,
-> > > -                                 &boot_params->ext_ramdisk_image);
-> > > -               efi_set_u64_split(size, &hdr->ramdisk_size,
-> > > -                                 &boot_params->ext_ramdisk_size);
-> > > +               if (size > 0) {
-> > > +                       efi_set_u64_split(addr, &hdr->ramdisk_image,
-> > > +                                         &boot_params->ext_ramdisk_image);
-> > > +                       efi_set_u64_split(size, &hdr->ramdisk_size,
-> > > +                                         &boot_params->ext_ramdisk_size);
-> > > +               }
-> >
-> > I'll give it a shot, but my guess would have been something related to
-> > the fact that this patch moves the initrd loading relative to when the
-> > command line is being parsed. In this case it's a dracut initrd built
-> > by:
-> >
-> >     dracut -m "nfs network base"
-> >
-> > ...with a kernel built with:
-> >
-> > CONFIG_IP_PNP_DHCP=y
-> >
-> > ...and a built-in network interface. The behavior seems to be that the
-> > kernel gets an IP address just fine, but there's no initrd userspace
-> > to mount nfs and the kernel eventually gives up looking for root.
->
-> It's an oversight in this patch: I set addr/size to 0 in the case where
-> the EFI stub is not supposed to handle the initrd loading (because a
-> bootloader ran before it and was responsible for handling the loading),
-> but then those 0's get written into the bootparams structure anyway,
-> blowing away whatever the bootloader had loaded.
+On Thu, May 28, 2020 at 12:45:02AM +0200, Christian Brauner wrote:
+> On Wed, May 27, 2020 at 03:37:58PM -0700, Kees Cook wrote:
+> > On Thu, May 28, 2020 at 12:05:32AM +0200, Christian Brauner wrote:
+> > > The main question also is, is there precedence where the kernel just
+> > > closes the file descriptor for userspace behind it's back? I'm not sure
+> > > I've heard of this before. That's not how that works afaict; it's also
+> > > not how we do pidfds. We don't just close the fd when the task
+> > > associated with it goes away, we notify and then userspace can close.
+> > 
+> > But there's a mapping between pidfd and task struct that is separate
+> > from task struct itself, yes? I.e. keeping a pidfd open doesn't pin
+> > struct task in memory forever, right?
+> 
+> No, but that's an implementation detail and we discussed that. It pins
+> struct pid instead of task_struct. Once the process is fully gone you
+> just get ESRCH.
+> For example, fds to /proc/<pid>/<tid>/ fds aren't just closed once the
+> task has gone away, userspace will just get ESRCH when it tries to open
+> files under there but the fd remains valid until close() is called.
+> 
+> In addition, of all the anon inode fds, none of them have the "close the
+> file behind userspace back" behavior: io_uring, signalfd, timerfd, btf,
+> perf_event, bpf-prog, bpf-link, bpf-map, pidfd, userfaultfd, fanotify,
+> inotify, eventpoll, fscontext, eventfd. These are just core kernel ones.
+> I'm pretty sure that it'd be very odd behavior if we did that. I'd
+> rather just notify userspace and leave the close to them. But maybe I'm
+> missing something.
 
-Ah, ok.
+I'm also starting to think this isn't even possible or currently doable
+safely.
+The fdtable in the kernel would end up with a dangling pointer, I would
+think. Unless you backtrack all fds that still have a reference into the
+fdtable and refer to that file and close them all in the kernel which I
+don't think is possible and also sounds very dodgy. This also really
+seems like we would be breaking a major contract, namely that fds stay
+valid until userspace calls close, execve(), or exits.
 
-...and yes, it works. You can add:
-
-Tested-by: Dan Williams <dan.j.williams@intel.com>
-
-Thanks for the lightning quick turnaround!
+Christian
