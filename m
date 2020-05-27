@@ -2,164 +2,137 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74398C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5244120C56
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590608357;
-	bh=NYjYFRWuetYB9Od8nP9wiWBPb4skmdKoSCs7OaoHLEg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MLkQqxCmhLcLnIj9zF7VXXS6pyp5K0zbpaLU/9KVpiO4CSD4HlQCFttZb0xbPWi80
-	 xr/hvhwaZnOod6tttgjJh2WQOVftURmm7CQtxjrpiZuGRO/N0LL1dU0H4bWhchO/B+
-	 uTphFbpj0xhlmIFGmSqeHysKZ4a/NL17HNiQRxVE=
+	by mail.kernel.org (Postfix) with ESMTP id A4B8B2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:40:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="hPL8fiE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgE0TjQ (ORCPT
+        id S1727969AbgE0TkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:39:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgE0TjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:39:15 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F4C02089D;
-        Wed, 27 May 2020 19:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590608354;
-        bh=NYjYFRWuetYB9Od8nP9wiWBPb4skmdKoSCs7OaoHLEg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=jvUIALf9+RrftAxL1TGJe1MRf37O6szJEUVBZ2R5oVnWzYOOTNawv9kcv0rruCSIH
-         CDBX/0mWJ7sv3aKK8KDcOu9wb3vic7VzxpgsVh8wrYNis+xNNBHXCxZr+HTznNaDPr
-         Qtzas+Sbql95uoXeQm0Dtnomn7GugXx6L/eT6r5s=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2E197352283B; Wed, 27 May 2020 12:39:14 -0700 (PDT)
-Date:   Wed, 27 May 2020 12:39:14 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, frederic@kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
-        mgorman@techsingularity.net, joel@joelfernandes.org
-Subject: Re: [RFC][PATCH 4/7] smp: Optimize send_call_function_single_ipi()
-Message-ID: <20200527193914.GW2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200526161057.531933155@infradead.org>
- <20200526161907.953304789@infradead.org>
- <20200527095645.GH325280@hirez.programming.kicks-ass.net>
- <20200527101513.GJ325303@hirez.programming.kicks-ass.net>
- <20200527155656.GU2869@paulmck-ThinkPad-P72>
- <20200527163543.GA706478@hirez.programming.kicks-ass.net>
- <20200527171236.GC706495@hirez.programming.kicks-ass.net>
+        Wed, 27 May 2020 15:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbgE0TkQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:40:16 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B84EC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:40:15 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m12so28018322ljc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JoA+ltY04rTbNuPqoR5f7m96ZZzh4EiSS3yqsY7/Fkk=;
+        b=hPL8fiE399pTijYYRRViKesbZjUEdR+1xrxi15mivx2UishaS/MyGdfufOhOuh4nJC
+         9DUnu5lvoCIClNGhanYt78Spn/6lz6zJeb3f1R1yoUauNsfdQgAnT10eHlqd3dA2XxFA
+         Wg3afUHR2XHL8Zs4PeqBof/vcTQa6b4reFBUU69cmsy3v+WHduqyYbNr7/uT0POOWyIb
+         Pd9gtwh9o1vSLmlP5F8Wg9VveNOpMqacFmDDbP1kCj2b8X4Yz6f0DWDOd4IXybnXLHMc
+         rqQth6s35/EOBBV/PYDci0vcE4tOXgfTbpJtEYpdvdMfOxYYHPxZ/7V0n7zGJrXURm7J
+         siEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JoA+ltY04rTbNuPqoR5f7m96ZZzh4EiSS3yqsY7/Fkk=;
+        b=VUCupWIgnnbNHt+4n8zi/j8I3UJYVHrptz8uyPZmT4LCu/CDLreM/q6A8+k8SmhemU
+         w9xC4K+/dvg1OaFlxyuh0B2zONr+wkEk9M8n+wh9ifZWVynCfq1iZ0H0YOmMOwEaW/TH
+         rNlW+XWG3pqxs7rui33JLfybboeYriJwGShj6TU2d6j5nKP/fc1sKn3W12kmYJnsKD9D
+         rrs9k+PWvjmo72zn2wS1Ey2C2MwyJuAQg++aidzhY4DHLHXCDL8STttnkzy8tatoAjZy
+         +cgTbOFMC6CiR9LDNIrW9hZIhGn56CWBgsTyFATFUmu+nC1FVSOc1zWJDkmackQ/CNxp
+         CWNg==
+X-Gm-Message-State: AOAM531qMRbOCcVULaJJnm1uaunkUiYkkSomJAjlSYP0cZoalO4Nq3O0
+        aiOt5HbZ1wBoWXNxGMPDezYyW/g0XWG//G4e28rNiTNG
+X-Google-Smtp-Source: ABdhPJzvKaopQeuSH++NfG6+ePzdECIe55mSMz1vGorLjrgnNGhLypFBTCO3NOV35EuZEgNnmnk7AN6/T2UVknXBfxI=
+X-Received: by 2002:a2e:8ed3:: with SMTP id e19mr4027321ljl.367.1590608413785;
+ Wed, 27 May 2020 12:40:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527171236.GC706495@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <f1b1737fe0665e7191c3d2a3cd9bfafb831866be.1590594512.git-series.maxime@cerno.tech>
+In-Reply-To: <f1b1737fe0665e7191c3d2a3cd9bfafb831866be.1590594512.git-series.maxime@cerno.tech>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Wed, 27 May 2020 12:40:02 -0700
+Message-ID: <CADaigPUpH4DuK_FSVGmq-ZPPCtvxOcdq881h9h3NE1_ODJ6tuA@mail.gmail.com>
+Subject: Re: [PATCH v3 055/105] drm/vc4: hvs: Introduce a function to get the
+ assigned FIFO
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 07:12:36PM +0200, Peter Zijlstra wrote:
-> On Wed, May 27, 2020 at 06:35:43PM +0200, Peter Zijlstra wrote:
-> > Right, I went though them, didn't find anything obvious amiss. OK, let
-> > me do a nicer patch.
-> 
-> something like so then?
-> 
+On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> At boot time, if we detect that a pixelvalve has been enabled, we need to
+> be able to retrieve the HVS channel it has been assigned to so that we can
+> disable that channel too. Let's create that function that returns the FIFO
+> or an error from a given output.
+>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 > ---
-> Subject: rcu: Allow for smp_call_function() running callbacks from idle
-> 
-> Current RCU hard relies on smp_call_function() callbacks running from
-> interrupt context. A pending optimization is going to break that, it
-> will allow idle CPUs to run the callbacks from the idle loop. This
-> avoids raising the IPI on the requesting CPU and avoids handling an
-> exception on the receiving CPU.
-> 
-> Change rcu_is_cpu_rrupt_from_idle() to also accept task context,
-> provided it is the idle task.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Looks good to me!
-
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-
-> ---
->  kernel/rcu/tree.c   | 25 +++++++++++++++++++------
->  kernel/sched/idle.c |  4 ++++
->  2 files changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index d8e9dbbefcfa..c716eadc7617 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -418,16 +418,23 @@ void rcu_momentary_dyntick_idle(void)
->  EXPORT_SYMBOL_GPL(rcu_momentary_dyntick_idle);
->  
->  /**
-> - * rcu_is_cpu_rrupt_from_idle - see if interrupted from idle
-> + * rcu_is_cpu_rrupt_from_idle - see if 'interrupted' from idle
->   *
->   * If the current CPU is idle and running at a first-level (not nested)
-> - * interrupt from idle, return true.  The caller must have at least
-> - * disabled preemption.
-> + * interrupt, or directly, from idle, return true.
-> + *
-> + * The caller must have at least disabled IRQs.
->   */
->  static int rcu_is_cpu_rrupt_from_idle(void)
->  {
-> -	/* Called only from within the scheduling-clock interrupt */
-> -	lockdep_assert_in_irq();
-> +	long nesting;
+> +int vc4_hvs_get_fifo_from_output(struct drm_device *dev, unsigned int output)
+> +{
+> +       struct vc4_dev *vc4 = to_vc4_dev(dev);
+> +       u32 reg;
+> +       int ret;
 > +
-> +	/*
-> +	 * Usually called from the tick; but also used from smp_function_call()
-> +	 * for expedited grace periods. This latter can result in running from
-> +	 * the idle task, instead of an actual IPI.
-> +	 */
-> +	lockdep_assert_irqs_disabled();
->  
->  	/* Check for counter underflows */
->  	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
-> @@ -436,9 +443,15 @@ static int rcu_is_cpu_rrupt_from_idle(void)
->  			 "RCU dynticks_nmi_nesting counter underflow/zero!");
->  
->  	/* Are we at first interrupt nesting level? */
-> -	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-> +	nesting = __this_cpu_read(rcu_data.dynticks_nmi_nesting);
-> +	if (nesting > 1)
->  		return false;
->  
-> +	/*
-> +	 * If we're not in an interrupt, we must be in the idle task!
-> +	 */
-> +	WARN_ON_ONCE(!nesting && !is_idle_task(current));
+> +       switch (output) {
+> +       case 0:
+> +               return 0;
 > +
->  	/* Does CPU appear to be idle from an RCU standpoint? */
->  	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
->  }
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index e9cef84c2b70..05deb81bb3e3 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -289,6 +289,10 @@ static void do_idle(void)
->  	 */
->  	smp_mb__after_atomic();
->  
-> +	/*
-> +	 * RCU relies on this call to be done outside of an RCU read-side
-> +	 * critical section.
-> +	 */
->  	flush_smp_call_function_from_idle();
->  	schedule_idle();
->  
+> +       case 1:
+> +               return 1;
+> +
+> +       case 2:
+> +               reg = HVS_READ(SCALER_DISPECTRL);
+> +               ret = FIELD_GET(SCALER_DISPECTRL_DSP2_MUX_MASK, reg);
+> +               if (ret == 0)
+> +                       return 2;
+> +
+> +               return 0;
+> +
+> +       case 3:
+> +               reg = HVS_READ(SCALER_DISPCTRL);
+> +               ret = FIELD_GET(SCALER_DISPCTRL_DSP3_MUX_MASK, reg);
+> +               if (ret == 3)
+> +                       return -EPIPE;
+> +
+> +               return ret;
+> +
+> +       case 4:
+> +               reg = HVS_READ(SCALER_DISPEOLN);
+> +               ret = FIELD_GET(SCALER_DISPEOLN_DSP4_MUX_MASK, reg);
+> +               if (ret == 3)
+> +                       return -EPIPE;
+> +
+> +               return ret;
+> +
+> +       case 5:
+> +               reg = HVS_READ(SCALER_DISPDITHER);
+> +               ret = FIELD_GET(SCALER_DISPDITHER_DSP5_MUX_MASK, reg);
+> +               if (ret == 3)
+> +                       return -EPIPE;
+
+Oh, FIELD_GET is new to me.  Looks like we should replace
+VC4_GET_FIELD usage with just using that header, and also
+VC4_SET_FIELD with WARN_ON(!FIELD_FIT()); FIELD_PREP.
+
+Could you follow up with that?  Other than that, 54-67 r-b.
