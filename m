@@ -2,169 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C80CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB67C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 745E220721
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Im8qkxh1"
+	by mail.kernel.org (Postfix) with ESMTP id B202020721
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391395AbgE0Qo5 (ORCPT
+        id S2391440AbgE0QpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:44:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387969AbgE0Qo4 (ORCPT
+        Wed, 27 May 2020 12:45:04 -0400
+Received: from mxo1.dft.dmz.twosigma.com ([208.77.212.183]:39683 "EHLO
+        mxo1.dft.dmz.twosigma.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387952AbgE0QpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:44:56 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08C2C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:44:55 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n15so1718591pjt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:44:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X64+ppe+q0UNqqvojub0C2NL80dGaMETVbT2rPY1ums=;
-        b=Im8qkxh1Sn2M/k9QOosiF7M8y+EZGWRBKzEwgickzvAWQsO0qdxKCCYziWnQH2IZDv
-         98cC1QrXHaoXfvzOvquq0qL2AYdROiW9/vjK8+7UwmPWoseg/T0VWfKVI33FGAjmpopz
-         Q/TQbqUeduz4FZBP2tMTrmWgILT7RKPwDL2FfdbYZi/584J48q2EtpJ/6Hh8kAXd9QL/
-         iOb/7BXZzwHUfGNwHZxXDm01V59p0b+zJU7HSDCt553gKcRtzS43vHzi2j27pajsj7ZP
-         4xAW11oOhuYf3a2sfesfwqt0+TNh1+aJQEgtmLtg/5bMiEFji3dAHSEscBTWe7quPnI/
-         L7yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X64+ppe+q0UNqqvojub0C2NL80dGaMETVbT2rPY1ums=;
-        b=gZW/u6RKNycdIllRXVXz1QGk1kJBOIgTLQa7o8imNww/urWcseTjkk8aOoTbw3UA2l
-         VkWrYXyfbLcqrE/mMtxnADm1KDRAoeD+mhTBQp2wlC0otWWYS69lrUk+5Y9SVi1qG+u9
-         GDZDa32iDsMaDx1uuBzKCuMVTU3+PP1No1LwprFMKvJsyazIC0F2lMczsKR8FlEHFFTb
-         LZEBpDtXin7Rat2f4LTcUY82xBmaNFUVeth7eHNWi2qhmePqvs+UQerJu5SBrKXD992o
-         pCaClvB3T3QyEP9actpYXwyTgj4sH672d6MvUnuZQFLBLUp4cHe3TOiAIfFx3eIX6j/F
-         XYLw==
-X-Gm-Message-State: AOAM531NuYhcLlODz9RV0Y7m1iiJquHrezALwneXVF4NtuFUyY0ydyd0
-        u6FHqxdsSZ725iP4BzNk2eBDuQ==
-X-Google-Smtp-Source: ABdhPJz4Zze5uwlMQlM8QS2P8EVI0og3y/PQcOV3bGNjW8YShHlRWlsPUpoc6xp4xKZcyP0VVjVJtQ==
-X-Received: by 2002:a17:902:c686:: with SMTP id r6mr6969518plx.147.1590597895475;
-        Wed, 27 May 2020 09:44:55 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id d15sm3638917pjc.0.2020.05.27.09.44.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 09:44:54 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jdzAi-0001rU-T1; Wed, 27 May 2020 13:44:52 -0300
-Date:   Wed, 27 May 2020 13:44:52 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] IB/core: Use sizeof_field() helper
-Message-ID: <20200527164452.GQ744@ziepe.ca>
-References: <20200527144152.GA22605@embeddedor>
+        Wed, 27 May 2020 12:45:03 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.27 at vger.kernel.org; Wed, 27 May 2020 12:45:02 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mxo1.dft.dmz.twosigma.com (Postfix) with ESMTP id 49XGhW4ZTxz7t8v;
+        Wed, 27 May 2020 16:37:31 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at twosigma.com
+Received: from mxo1.dft.dmz.twosigma.com ([127.0.0.1])
+        by localhost (mxo1.dft.dmz.twosigma.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HfevtT7Awm11; Wed, 27 May 2020 16:37:31 +0000 (UTC)
+Received: from exmbdft5.ad.twosigma.com (exmbdft5.ad.twosigma.com [172.22.1.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxo1.dft.dmz.twosigma.com (Postfix) with ESMTPS id 49XGhW3mXNz3wZB;
+        Wed, 27 May 2020 16:37:31 +0000 (UTC)
+Received: from EXMBDFT11.ad.twosigma.com (172.23.162.14) by
+ exmbdft5.ad.twosigma.com (172.22.1.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 27 May 2020 16:37:31 +0000
+Received: from EXMBDFT11.ad.twosigma.com ([fe80::8d66:2326:5416:86a9]) by
+ EXMBDFT11.ad.twosigma.com ([fe80::8d66:2326:5416:86a9%19]) with mapi id
+ 15.00.1497.000; Wed, 27 May 2020 16:37:31 +0000
+From:   Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Adrian Reber <areber@redhat.com>
+CC:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        "Dirk Petersen" <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        "Cyrill Gorcunov" <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>
+Subject: RE: [PATCH] capabilities: Introduce CAP_RESTORE
+Thread-Topic: [PATCH] capabilities: Introduce CAP_RESTORE
+Thread-Index: AQHWL/2VaDM8D7CUOUK8NWcR6t6ZmKi0T3WAgAQnIICAALWDAIACzv0AgAAj3gCAAAp/wA==
+Date:   Wed, 27 May 2020 16:37:31 +0000
+Message-ID: <ac167440b8b64f02a034dd94687b8aee@EXMBDFT11.ad.twosigma.com>
+References: <20200522055350.806609-1-areber@redhat.com>
+ <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
+ <20200525080541.GF104922@dcbz.redhat.com>
+ <a75f3f71-66cf-e615-2cd5-86ac65a3bbdc@schaufler-ca.com>
+ <20200527134842.GA250149@dcbz.redhat.com>
+ <f43921ac-2e55-7d9d-406a-d0f4cfd8ff93@schaufler-ca.com>
+In-Reply-To: <f43921ac-2e55-7d9d-406a-d0f4cfd8ff93@schaufler-ca.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [192.168.118.183]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527144152.GA22605@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 09:41:52AM -0500, Gustavo A. R. Silva wrote:
-> Make use of the sizeof_field() helper instead of an open-coded version.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/infiniband/core/sa_query.c     | 8 ++++----
->  drivers/infiniband/core/uverbs_cmd.c   | 2 +-
->  drivers/infiniband/core/uverbs_ioctl.c | 2 +-
->  3 files changed, 6 insertions(+), 6 deletions(-)
-
-What kind of tool are you using for this? It seems to miss a lot, I
-added in a few others to this patch and applied it, thanks:
-
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 8f70c5c38ab7c3..a2ed09a3c714a9 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -420,7 +420,7 @@ static const struct ib_field opa_path_rec_table[] = {
- 
- #define MCMEMBER_REC_FIELD(field) \
- 	.struct_offset_bytes = offsetof(struct ib_sa_mcmember_rec, field),	\
--	.struct_size_bytes   = sizeof ((struct ib_sa_mcmember_rec *) 0)->field,	\
-+	.struct_size_bytes   = sizeof_field(struct ib_sa_mcmember_rec, field),	\
- 	.field_name          = "sa_mcmember_rec:" #field
- 
- static const struct ib_field mcmember_rec_table[] = {
-@@ -504,7 +504,7 @@ static const struct ib_field mcmember_rec_table[] = {
- 
- #define SERVICE_REC_FIELD(field) \
- 	.struct_offset_bytes = offsetof(struct ib_sa_service_rec, field),	\
--	.struct_size_bytes   = sizeof ((struct ib_sa_service_rec *) 0)->field,	\
-+	.struct_size_bytes   = sizeof_field(struct ib_sa_service_rec, field),	\
- 	.field_name          = "sa_service_rec:" #field
- 
- static const struct ib_field service_rec_table[] = {
-@@ -710,7 +710,7 @@ static const struct ib_field opa_classport_info_rec_table[] = {
- 
- #define GUIDINFO_REC_FIELD(field) \
- 	.struct_offset_bytes = offsetof(struct ib_sa_guidinfo_rec, field),	\
--	.struct_size_bytes   = sizeof((struct ib_sa_guidinfo_rec *) 0)->field,	\
-+	.struct_size_bytes   = sizeof_field(struct ib_sa_guidinfo_rec, field),	\
- 	.field_name          = "sa_guidinfo_rec:" #field
- 
- static const struct ib_field guidinfo_rec_table[] = {
-diff --git a/drivers/infiniband/core/ud_header.c b/drivers/infiniband/core/ud_header.c
-index 29a45d2f8898e1..d65d541b9a2587 100644
---- a/drivers/infiniband/core/ud_header.c
-+++ b/drivers/infiniband/core/ud_header.c
-@@ -41,7 +41,7 @@
- 
- #define STRUCT_FIELD(header, field) \
- 	.struct_offset_bytes = offsetof(struct ib_unpacked_ ## header, field),      \
--	.struct_size_bytes   = sizeof ((struct ib_unpacked_ ## header *) 0)->field, \
-+	.struct_size_bytes   = sizeof_field(struct ib_unpacked_ ## header, field), \
- 	.field_name          = #header ":" #field
- 
- static const struct ib_field lrh_table[]  = {
-diff --git a/include/rdma/uverbs_ioctl.h b/include/rdma/uverbs_ioctl.h
-index 5bd2b037e9147c..0418d7bddf3e0c 100644
---- a/include/rdma/uverbs_ioctl.h
-+++ b/include/rdma/uverbs_ioctl.h
-@@ -420,9 +420,9 @@ struct uapi_definition {
- 		.scope = UAPI_SCOPE_OBJECT,                                    \
- 		.needs_fn_offset =                                             \
- 			offsetof(struct ib_device_ops, ibdev_fn) +             \
--			BUILD_BUG_ON_ZERO(                                     \
--			    sizeof(((struct ib_device_ops *)0)->ibdev_fn) !=   \
--			    sizeof(void *)),				       \
-+			BUILD_BUG_ON_ZERO(sizeof_field(struct ib_device_ops,   \
-+						       ibdev_fn) !=            \
-+					  sizeof(void *)),                     \
- 	}
- 
- /*
-@@ -435,9 +435,9 @@ struct uapi_definition {
- 		.scope = UAPI_SCOPE_METHOD,                                    \
- 		.needs_fn_offset =                                             \
- 			offsetof(struct ib_device_ops, ibdev_fn) +             \
--			BUILD_BUG_ON_ZERO(                                     \
--			    sizeof(((struct ib_device_ops *)0)->ibdev_fn) !=   \
--			    sizeof(void *)),                                   \
-+			BUILD_BUG_ON_ZERO(sizeof_field(struct ib_device_ops,   \
-+						       ibdev_fn) !=            \
-+					  sizeof(void *)),                     \
- 	}
- 
- /* Call a function to determine if the entire object is supported or not */
+PiA+IElmIEkgdW5kZXJzdGFuZCBwYXJ0IG9mIENSSVUgY29ycmVjdGx5LCB0aGVuIHdlIG9ubHkg
+bmVlZCByZWFkLWFjY2VzcyANCj4gPiBmb3IgdGhlIGN1cnJlbnQgdXNlci4gSSBhbSBzdXJlIEFu
+ZHJlaSwgUGF2ZWwgb3IgQ3lyaWxsIHdpbGwgY29ycmVjdCANCj4gPiBtZSBpZiBJIGFtIHdyb25n
+IGNvbmNlcm5pbmcgbWFwX2ZpbGVzLg0KPiBJZiBJIGRvICJscyAtbCAvcHJvYy9zZWxmL21hcF9m
+aWxlcyIgSSBnZXQgdGhlIGxpbmsgbmFtZSBhbmQgbGluayBjb250ZW50Lg0KPiBXaGlsZSBJIGNh
+bid0IG9wZW4gL3Byb2Mvc2VsZi9tYXBfZmlsZXMvN2ZiZGUwYzMyMDAtN2ZiZGUwYzMzMDAgSSBj
+YW4gcmVhZCB0aGF0IGl0IHBvaW50cyB0byAvdXNyL2xpYjY0L2xkLTIuMzAuc28sIHdoaWNoIGlz
+IHNvbWV0aGluZyBJIGNhbiBvcGVuIGFuZCByZWFkLiBTdXJlLCBpdCdzIGFuIGV4dHJhIHN0ZXAs
+IGJ1dCBpdCdzIG5vIGJpZyBkZWFsLiBJdCBkb2VzIHJhaXNlIHRoZSBxdWVzdGlvbiBvZiB3aGF0
+IHZhbHVlIGNvbWVzIGZyb20gZGlzYWxsb3dpbmcgb3BlbiB2aWEgdGhlIHN5bWxpbmsuDQoNClJl
+YWRpbmcgdGhlIHN5bWxpbmsgZG9lc24ndCB3b3JrIGluIHR3byBjYXNlczoNCjEpIFRoZSBmaWxl
+IGhhcyBiZWVuIGRlbGV0ZWQNCjIpIFRoZSBmaWxlIGlzIGEgbWVtZmQgZmlsZQ0K
