@@ -2,144 +2,83 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD59C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7986C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01C5D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7BB208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389088AbgE0N6J (ORCPT
+        id S2389119AbgE0N6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:58:09 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26294 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389073AbgE0N6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:58:03 -0400
-IronPort-SDR: gIrL3P7GEFE96iy3vhq8XA+4CR7mFj2vVmApGDpe4SIh/JlQ43q/oJImQbtPMpguhQP4t7mddr
- kejcU+1CE0tg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:58:02 -0700
-IronPort-SDR: AHI0U6LHvGJCpd2TX1iZgKjsYxbJp3IWGbpDXjgNPljDufXMuXsTpbd+wbrwWrc2oZcW/PeYSE
- vj+ye+/bgxHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="442529663"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 06:57:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdwZF-009Eqw-S8; Wed, 27 May 2020 16:58:01 +0300
-Date:   Wed, 27 May 2020 16:58:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        Wed, 27 May 2020 09:58:51 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:49730 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388989AbgE0N6u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:58:50 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id ACF451C0300; Wed, 27 May 2020 15:58:48 +0200 (CEST)
+Date:   Wed, 27 May 2020 15:58:48 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, robh@kernel.org,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 10/11] i2c: designware: Move reg-space remapping into
- a dedicated function
-Message-ID: <20200527135801.GB1634618@smile.fi.intel.com>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-11-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+Message-ID: <20200527135848.GB5011@amd>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-4-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
 Content-Disposition: inline
-In-Reply-To: <20200527120111.5781-11-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200526164652.2331-4-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:01:10PM +0300, Serge Semin wrote:
-> This is a preparation patch before adding a quirk with custom registers
-> map creation required for the Baikal-T1 System I2C support.
 
-Looks good. Though one nit below.
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--bCsyhTFzCvuiizWE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch, which has been created due to declining the
->   glue-layer approach.
-> 
-> Changelog v4:
-> - Use PTR_ERR_OR_ZERO() helper in the bt1_i2c_request_regs() method.
-> - Discard devm_platform_get_and_ioremap_resource() utilization.
-> ---
->  drivers/i2c/busses/i2c-designware-platdrv.c | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index ad292de2d260..061c8d506c7c 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -108,6 +108,15 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
->  		pm_runtime_put_noidle(dev->dev);
->  }
->  
-> +static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev->dev);
-> +
-> +	dev->base = devm_platform_ioremap_resource(pdev, 0);
-> +
-> +	return PTR_ERR_OR_ZERO(dev->base);
-> +}
-> +
->  static int dw_i2c_plat_probe(struct platform_device *pdev)
->  {
->  	struct dw_i2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
-> @@ -125,15 +134,14 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
-
->  	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
-
-It's related to previous patch, but I just realized that '|' is not needed
-here. Care to amend in the previous patch?
-
-> -
-> -	dev->base = devm_platform_ioremap_resource(pdev, 0);
-> -	if (IS_ERR(dev->base))
-> -		return PTR_ERR(dev->base);
-> -
->  	dev->dev = &pdev->dev;
->  	dev->irq = irq;
->  	platform_set_drvdata(pdev, dev);
->  
-> +	ret = dw_i2c_plat_request_regs(dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	dev->rst = devm_reset_control_get_optional_exclusive(&pdev->dev, NULL);
->  	if (IS_ERR(dev->rst))
->  		return PTR_ERR(dev->rst);
-> -- 
-> 2.26.2
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hi!
 
 
+> +          There can only be one instance of the ti,led-bank
+> +          property for each device node.  This is a required node is the=
+ LED
+> +          modules are to be backed.
+
+I don't understand the second sentence. Pretty sure it is not valid
+english.
+
+Best regards,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bCsyhTFzCvuiizWE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7OchgACgkQMOfwapXb+vJN4wCgqTGudnsYl/ewRIsVi9XZkP6I
+jM8AoLKtiC+mvdIBJtq12SDgoq9//j4V
+=y5Pw
+-----END PGP SIGNATURE-----
+
+--bCsyhTFzCvuiizWE--
