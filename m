@@ -2,101 +2,173 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE43C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9B7020EDD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158A020899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbgE0N2e (ORCPT
+        id S2388062AbgE0N3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:28:34 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45518 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728723AbgE0N2e (ORCPT
+        Wed, 27 May 2020 09:29:09 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:24989 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387564AbgE0N3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:28:34 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 70D8D1C0300; Wed, 27 May 2020 15:28:32 +0200 (CEST)
-Date:   Wed, 27 May 2020 15:28:31 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Russell Currey <ruscur@russell.cc>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 49/81] powerpc: Remove STRICT_KERNEL_RWX
- incompatibility with RELOCATABLE
-Message-ID: <20200527132831.GA11424@amd>
-References: <20200526183923.108515292@linuxfoundation.org>
- <20200526183932.664564063@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
-Content-Disposition: inline
-In-Reply-To: <20200526183932.664564063@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 27 May 2020 09:29:08 -0400
+X-IronPort-AV: E=Sophos;i="5.73,441,1583161200"; 
+   d="scan'208";a="47945759"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 27 May 2020 22:29:07 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 732A142E07B9;
+        Wed, 27 May 2020 22:29:05 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] ARM: dts: r8a7742-iwg21d-q7-dbcm-ca: Add device tree for camera DB
+Date:   Wed, 27 May 2020 14:29:01 +0100
+Message-Id: <1590586141-21006-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support for the camera daughter board which is connected to
+iWave's RZ/G1H Qseven carrier board. Also enable ttySC[0135] and
+ethernet1 interfaces.
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+---
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts | 94 +++++++++++++++++++++++++
+ 2 files changed, 95 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
 
-On Tue 2020-05-26 20:53:24, Greg Kroah-Hartman wrote:
-> From: Russell Currey <ruscur@russell.cc>
->=20
-> [ Upstream commit c55d7b5e64265fdca45c85b639013e770bde2d0e ]
->=20
-> I have tested this with the Radix MMU and everything seems to work, and
-> the previous patch for Hash seems to fix everything too.
-> STRICT_KERNEL_RWX should still be disabled by default for now.
->=20
-> Please test STRICT_KERNEL_RWX + RELOCATABLE!
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ed3376c..118e35c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -918,6 +918,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
+ 	r8a73a4-ape6evm.dtb \
+ 	r8a7740-armadillo800eva.dtb \
+ 	r8a7742-iwg21d-q7.dtb \
++	r8a7742-iwg21d-q7-dbcm-ca.dtb \
+ 	r8a7743-iwg20d-q7.dtb \
+ 	r8a7743-iwg20d-q7-dbcm-ca.dtb \
+ 	r8a7743-sk-rzg1m.dtb \
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
+new file mode 100644
+index 0000000..857aab5
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7-dbcm-ca.dts
+@@ -0,0 +1,94 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the iWave-RZ/G1H Qseven board development
++ * platform with camera daughter board
++ *
++ * Copyright (C) 2020 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a7742-iwg21d-q7.dts"
++
++/ {
++	model = "iWave Systems RZ/G1H Qseven development platform with camera add-on";
++	compatible = "iwave,g21d", "iwave,g21m", "renesas,r8a7742";
++
++	aliases {
++		serial0 = &scif0;
++		serial1 = &scif1;
++		serial3 = &scifb1;
++		serial5 = &hscif0;
++		ethernet1 = &ether;
++	};
++};
++
++&avb {
++	/* Pins shared with VIN0, keep status disabled */
++	status = "disabled";
++};
++
++&ether {
++	pinctrl-0 = <&ether_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&phy1>;
++	renesas,ether-link-active-low;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++		micrel,led-mode = <1>;
++	};
++};
++
++&hscif0 {
++	pinctrl-0 = <&hscif0_pins>;
++	pinctrl-names = "default";
++	uart-has-rtscts;
++	status = "okay";
++};
++
++&pfc {
++	ether_pins: ether {
++		groups = "eth_mdio", "eth_rmii";
++		function = "eth";
++	};
++
++	hscif0_pins: hscif0 {
++		groups = "hscif0_data", "hscif0_ctrl";
++		function = "hscif0";
++	};
++
++	scif0_pins: scif0 {
++		groups = "scif0_data";
++		function = "scif0";
++	};
++
++	scif1_pins: scif1 {
++		groups = "scif1_data";
++		function = "scif1";
++	};
++
++	scifb1_pins: scifb1 {
++		groups = "scifb1_data";
++		function = "scifb1";
++	};
++};
++
++&scif0 {
++	pinctrl-0 = <&scif0_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&scif1 {
++	pinctrl-0 = <&scif1_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
++
++&scifb1 {
++	pinctrl-0 = <&scifb1_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++};
+-- 
+2.7.4
 
-I don't believe this is suitable for -stable. Yes, it is needed for
-the next patch, but doing the merge is right solution this time.
-
-Best regards,
-									Pavel
-
-
-> +++ b/arch/powerpc/Kconfig
-> @@ -139,7 +139,7 @@ config PPC
->  	select ARCH_HAS_MEMBARRIER_CALLBACKS
->  	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE
->  	select ARCH_HAS_SG_CHAIN
-> -	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELO=
-CATABLE && !HIBERNATION)
-> +	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !HIBE=
-RNATION)
->  	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
->  	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7Oav8ACgkQMOfwapXb+vKjXACfQVK1uiZM4nePNJR7Fc6mnHem
-EwMAn1KWNPbnwVNVzoT/C5KdynRt0uPi
-=BB0R
------END PGP SIGNATURE-----
-
---k1lZvvs/B4yU6o8G--
