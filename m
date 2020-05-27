@@ -2,116 +2,97 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12832C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB778207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A3920723
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388515AbgE0Njv (ORCPT
+        id S2388520AbgE0Nk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:39:51 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46978 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387682AbgE0Nju (ORCPT
+        Wed, 27 May 2020 09:40:28 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:53945 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388098AbgE0Nk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:39:50 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 2EB6E1C0300; Wed, 27 May 2020 15:39:49 +0200 (CEST)
-Date:   Wed, 27 May 2020 15:39:48 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
- documention
-Message-ID: <20200527133948.GA5011@amd>
-References: <20200526164652.2331-1-dmurphy@ti.com>
- <20200526164652.2331-2-dmurphy@ti.com>
- <20200527014902.GA859634@bogus>
+        Wed, 27 May 2020 09:40:27 -0400
+Received: from localhost.localdomain ([149.172.98.151]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MRTEr-1jPrFs1MOr-00NQt9; Wed, 27 May 2020 15:40:17 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] arm64: disable -fsanitize=shadow-call-stack for big-endian
+Date:   Wed, 27 May 2020 15:39:46 +0200
+Message-Id: <20200527134016.753354-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
-Content-Disposition: inline
-In-Reply-To: <20200527014902.GA859634@bogus>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:WMyBDjaVpnuIlG/nKy3Lfv0f53mC2eMeZk2hD1L4n7nGNgyw6xg
+ b3nnLX7RQgVMDLaEP8jeYPeAoZu/zF0+z/vVS6FlpSZ1SIFpVVgeTGlO1P3Ep0Lb6nJG0Zt
+ X7hH8s/zBBJhCqlR2UHeoEwOqmPu4huhF9KMCDNPoiOurHivHXkoO0/SR60IwHGXsXj/yAF
+ b2s7GbapOF9ubsY1p+h1w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F2IKGpPrHuM=:tVtK56yFtrrepWDvUzbOpT
+ 3us5e9MR1LU4mGSnKMn9Oify9OSZr+z1ryQsomr5xmHuXPTcDxkeL9FtQ6IIzaZK7M4TiGSfm
+ SrfknaWXsLAXdIE0avmvLV0juYDzTAcvZtb9k/8fuDk5WLk1Xzj03wmeX+2+GlE+zBu5Uxtly
+ 3R9vMAQ+KN6313tG9I0lsEvMPCLQoVMlkpm95g50p9vQzl9dxAcXxemJgg5SGc+kTmITf88fw
+ TzBvY2rXiGKyibM7Dok5SP7iaxP+NvipLQt1Ykwnqib722x77OfOGSRsjyyAi05G3a0HhkfLW
+ /qlIZ3cfZ8HwyXCftttGaI+tPf4INmvSHFJhcz3sp8T8zFr1DfksvLUXYM0yW2t/kSyUXAY6r
+ jqg7lgnshy4rjtPaSbqwns/ofBBDNm2riCNB1dm6j/QFwHquE7UuMkpmdNxd3Rhw355uhMZyG
+ 9WQzvmbaPYDkXMulDC/pFVUnnmk6JIMlNo7Lb4axzkRdQQrTE+TY5VKeSJqchQZ9k16DIJpfA
+ DdpLlaK3d2hiHZaGGzVGDVaOXEUcC76oIrpg0ytLJaoNLJeVdcqjcrWlm0URQKYw5ffGf8cAc
+ 554DdULyt0uYgJix3t8iQctDwx76HodgMDd3y8TrLOfz6t5g9HUTBgCA/CHd72mCM9OMNU/Sn
+ vh5Z1871+ipaobAjqACcsmCDRluu13MqfojKB79O1jaGP+0U5ndDp6R6JRAaiJnKMbYdxmimb
+ BmZNfm1gtJUlSBep2bkWn5rM/hFM9OhO5b2MYMJxNJwdy0tcIsr+uEsM+4EX8ZBMrkNJ/14MP
+ TsHpy/trLFTR2EQPAPCTZ2pxYPaGA3bxNgm8GAncGv7aa37U1Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+clang-11 and earlier do not support -fsanitize=shadow-call-stack
+in combination with -mbig-endian, but the Kconfig check does not
+pass the endianess flag, so building a big-endian kernel with
+this fails at build time:
 
---liOOAslEiF7prFVr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+clang: error: unsupported option '-fsanitize=shadow-call-stack' for target 'aarch64_be-unknown-linux'
 
-Hi!
+Change the Kconfig check to let Kconfig figure this out earlier
+and prevent the broken configuration. I assume this is a bug
+in clang that needs to be fixed, but we also have to work
+around existing releases.
 
-Thanks for reviews!
+Fixes: 5287569a790d ("arm64: Implement Shadow Call Stack")
+Link: https://bugs.llvm.org/show_bug.cgi?id=46076
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm64/Kconfig | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> > +additionalProperties: false
-> > +...
-> > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->=20
-> This isn't a binding file. Belongs in another patch.
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index a82441d6dc36..692e1575a6c8 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1031,7 +1031,9 @@ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+ 
+ # Supported by clang >= 7.0
+ config CC_HAVE_SHADOW_CALL_STACK
+-	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
++	bool
++	default $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18 -mbig-endian) if CPU_BIG_ENDIAN
++	default $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18 -mlittle-endian) if !CPU_BIG_ENDIAN
+ 
+ config SECCOMP
+ 	bool "Enable seccomp to safely compute untrusted bytecode"
+-- 
+2.26.2
 
-These constants are directly related to the binding. It makes sense to
-go in one patch...
-
-Best regards,
-								Pavel
-
-> > index f1f718dbe0f8..846248a0693d 100644
-> > --- a/drivers/leds/led-core.c
-> > +++ b/drivers/leds/led-core.c
-> > @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] =3D {
-> >  	[LED_COLOR_ID_VIOLET] =3D "violet",
-> >  	[LED_COLOR_ID_YELLOW] =3D "yellow",
-> >  	[LED_COLOR_ID_IR] =3D "ir",
-> > +	[LED_COLOR_ID_MULTI] =3D "multicolor",
-> >  };
-> >  EXPORT_SYMBOL_GPL(led_colors);
-> > =20
-> > diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/le=
-ds/common.h
-> > index 0ce7dfc00dcb..a463ce6a8794 100644
-> > --- a/include/dt-bindings/leds/common.h
-> > +++ b/include/dt-bindings/leds/common.h
-> > @@ -30,7 +30,8 @@
-> >  #define LED_COLOR_ID_VIOLET	5
-> >  #define LED_COLOR_ID_YELLOW	6
-> >  #define LED_COLOR_ID_IR		7
-> > -#define LED_COLOR_ID_MAX	8
-> > +#define LED_COLOR_ID_MULTI	8
-> > +#define LED_COLOR_ID_MAX	9
-> > =20
-> >  /* Standard LED functions */
-> >  /* Keyboard LEDs, usually it would be input4::capslock etc. */
-> > --=20
-> > 2.25.1
-> >=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---liOOAslEiF7prFVr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl7ObaQACgkQMOfwapXb+vKDUQCgvKwSBIpK3Ho7ZIPhCUNgU/kp
-toUAnjGIr5U3J+haA7vXpJm0QHecHNkG
-=Ow+v
------END PGP SIGNATURE-----
-
---liOOAslEiF7prFVr--
