@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43067C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA3B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3284220899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E2B208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391801AbgE0R7Z (ORCPT
+        id S2391867AbgE0R7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:59:25 -0400
-Received: from out28-51.mail.aliyun.com ([115.124.28.51]:45141 "EHLO
-        out28-51.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388711AbgE0R7V (ORCPT
+        Wed, 27 May 2020 13:59:48 -0400
+Received: from out28-121.mail.aliyun.com ([115.124.28.121]:42434 "EHLO
+        out28-121.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391778AbgE0R7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:59:21 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07486626|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.65544-0.000441388-0.344119;FP=12402340102660461614|1|1|7|0|-1|-1|-1;HT=e01a16368;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeTcPrZ_1590602337;
+        Wed, 27 May 2020 13:59:23 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2216236|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0106189-0.000383161-0.988998;FP=18363760306740780531|2|1|7|0|-1|-1|-1;HT=e02c03268;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeTcPrZ_1590602337;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeTcPrZ_1590602337)
           by smtp.aliyun-inc.com(10.147.43.95);
-          Thu, 28 May 2020 01:59:17 +0800
+          Thu, 28 May 2020 01:59:20 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-clk@vger.kernel.org
@@ -33,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
         rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v12 1/7] clk: Ingenic: Remove unnecessary spinlock when reading registers.
-Date:   Thu, 28 May 2020 01:56:29 +0800
-Message-Id: <20200527175635.5558-2-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v12 4/7] dt-bindings: clock: Add X1830 clock bindings.
+Date:   Thu, 28 May 2020 01:56:32 +0800
+Message-Id: <20200527175635.5558-5-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
 References: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
@@ -47,104 +47,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is not necessary to use spinlock when reading registers,
-so remove it from cgu.c.
+Add the clock bindings for the X1830 Soc from Ingenic.
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
-Suggested-by: Paul Burton <paulburton@kernel.org>
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 
 Notes:
-    v2:
-    New patch.
-    
-    v2->v3:
-    Adjust order from [5/5] in v2 to [1/5] in v3.
-    
-    v3->v4:
-    Remove the spinlock around ingenic_cgu_gate_get().
-    
-    v4->v5:
-    Rebase on top of kernel 5.6-rc1.
-    
-    v5->v6:
-    No change.
-    
-    v6->v7:
-    No change.
-    
-    v7->v8:
-    No change.
-    
-    v8->v9:
-    No change.
-    
-    v9->v10:
-    No change.
-    
-    v10->v11:
-    No change.
+    v11:
+    New patch, split from [3/6] in v10.
     
     v11->v12:
     No change.
 
- drivers/clk/ingenic/cgu.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ include/dt-bindings/clock/x1830-cgu.h | 55 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 include/dt-bindings/clock/x1830-cgu.h
 
-diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
-index 6e963031cd87..ab1302ad1450 100644
---- a/drivers/clk/ingenic/cgu.c
-+++ b/drivers/clk/ingenic/cgu.c
-@@ -76,16 +76,13 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
- 	const struct ingenic_cgu_pll_info *pll_info;
- 	unsigned m, n, od_enc, od;
- 	bool bypass;
--	unsigned long flags;
- 	u32 ctl;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 	BUG_ON(clk_info->type != CGU_CLK_PLL);
- 	pll_info = &clk_info->pll;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	m = (ctl >> pll_info->m_shift) & GENMASK(pll_info->m_bits - 1, 0);
- 	m += pll_info->m_offset;
-@@ -259,12 +256,9 @@ static int ingenic_pll_is_enabled(struct clk_hw *hw)
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
- 	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
--	unsigned long flags;
- 	u32 ctl;
- 
--	spin_lock_irqsave(&cgu->lock, flags);
- 	ctl = readl(cgu->base + pll_info->reg);
--	spin_unlock_irqrestore(&cgu->lock, flags);
- 
- 	return !!(ctl & BIT(pll_info->enable_bit));
- }
-@@ -562,16 +556,12 @@ static int ingenic_clk_is_enabled(struct clk_hw *hw)
- 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
- 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
- 	const struct ingenic_cgu_clk_info *clk_info;
--	unsigned long flags;
- 	int enabled = 1;
- 
- 	clk_info = &cgu->clock_info[ingenic_clk->idx];
- 
--	if (clk_info->type & CGU_CLK_GATE) {
--		spin_lock_irqsave(&cgu->lock, flags);
-+	if (clk_info->type & CGU_CLK_GATE)
- 		enabled = !ingenic_cgu_gate_get(cgu, &clk_info->gate);
--		spin_unlock_irqrestore(&cgu->lock, flags);
--	}
- 
- 	return enabled;
- }
+diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
+new file mode 100644
+index 000000000000..801e1d09c881
+--- /dev/null
++++ b/include/dt-bindings/clock/x1830-cgu.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides clock numbers for the ingenic,x1830-cgu DT binding.
++ *
++ * They are roughly ordered as:
++ *   - external clocks
++ *   - PLLs
++ *   - muxes/dividers in the order they appear in the x1830 programmers manual
++ *   - gates in order of their bit in the CLKGR* registers
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_X1830_CGU_H__
++#define __DT_BINDINGS_CLOCK_X1830_CGU_H__
++
++#define X1830_CLK_EXCLK			0
++#define X1830_CLK_RTCLK			1
++#define X1830_CLK_APLL			2
++#define X1830_CLK_MPLL			3
++#define X1830_CLK_EPLL			4
++#define X1830_CLK_VPLL			5
++#define X1830_CLK_OTGPHY		6
++#define X1830_CLK_SCLKA			7
++#define X1830_CLK_CPUMUX		8
++#define X1830_CLK_CPU			9
++#define X1830_CLK_L2CACHE		10
++#define X1830_CLK_AHB0			11
++#define X1830_CLK_AHB2PMUX		12
++#define X1830_CLK_AHB2			13
++#define X1830_CLK_PCLK			14
++#define X1830_CLK_DDR			15
++#define X1830_CLK_MAC			16
++#define X1830_CLK_LCD			17
++#define X1830_CLK_MSCMUX		18
++#define X1830_CLK_MSC0			19
++#define X1830_CLK_MSC1			20
++#define X1830_CLK_SSIPLL		21
++#define X1830_CLK_SSIPLL_DIV2	22
++#define X1830_CLK_SSIMUX		23
++#define X1830_CLK_EMC			24
++#define X1830_CLK_EFUSE			25
++#define X1830_CLK_OTG			26
++#define X1830_CLK_SSI0			27
++#define X1830_CLK_SMB0			28
++#define X1830_CLK_SMB1			29
++#define X1830_CLK_SMB2			30
++#define X1830_CLK_UART0			31
++#define X1830_CLK_UART1			32
++#define X1830_CLK_SSI1			33
++#define X1830_CLK_SFC			34
++#define X1830_CLK_PDMA			35
++#define X1830_CLK_TCU			36
++#define X1830_CLK_DTRNG			37
++#define X1830_CLK_OST			38
++
++#endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
 -- 
 2.11.0
 
