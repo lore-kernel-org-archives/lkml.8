@@ -2,90 +2,104 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C76C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D771EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21BC620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590601559;
-	bh=T1GjXLv+EZSRvqkwtSa3V7THEgYBBgtapp6alY6WhbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B7i4LPIOMczVO3lYCz7qxHROejoDj7u0mP/aC/zaAaKCcCWtZyozZI8FaaMw0ZFRP
-	 jtTKKL6768BKQW0hlRvqFZVKGO5zXEWxMCDrebGiT/LE/Ua1PleInfglB3a70Hl/TX
-	 qQtNj9n9dE71IDqDdzfCuflSyyv7omhoyICfefW4=
+	by mail.kernel.org (Postfix) with ESMTP id A7E0520663
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:46:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qkqM0MXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403913AbgE0Rp6 (ORCPT
+        id S2403927AbgE0RqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:45:58 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41494 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE0Rp5 (ORCPT
+        Wed, 27 May 2020 13:46:11 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36320 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403914AbgE0RqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:45:57 -0400
-Received: by mail-io1-f65.google.com with SMTP id o5so26967312iow.8;
-        Wed, 27 May 2020 10:45:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sVTzITm9fKAAnCNSpjrfLe6Kk44w4LPZfPBZk2o/PmQ=;
-        b=ElUhGVxiX2bqxCve/pSwIFA7UJJ1sR6VhTSaK+Q5gAfgyOah9cmHSUzynuDe9TdXaJ
-         PCiHTKf6yyYi5L1UFQohayDVuh1CL354FU+my3KzBC9Rw82FFCh/Fv2a2VTAWBXwSr9+
-         rMZb5kvH/RGq25Ymqs1U6UyNtHgjfxAQD99in99WnfWxqAguEuLchJde/KSAprRJI8bV
-         1YoeyTVIRJ50oNUK9lHh/x62+nyp/rzbXRZcFNzgZE7W3MdcdCRMeSnfqYcMottdmRqD
-         xWkpbUy7g6X+tCMyLoDCN2gSMm7JLb3v6xjoTDmxYPkUvp/oeCsvyqBOJIA6yv4iDwfX
-         L76A==
-X-Gm-Message-State: AOAM531Af0S0SEhBKq0DqI7FDzI94mbNDgZvMXHFNsBV8T8CYCtW+++3
-        SpgYStiiaMcMYVFLNU7eMQ==
-X-Google-Smtp-Source: ABdhPJzl5kwE2ktzrUqu8Vcb6SwnSrl21RCWKfYWJ4UxBbo1qDaM4Lp/9DCoplWj9snJ3bGnwpTKKw==
-X-Received: by 2002:a02:c88e:: with SMTP id m14mr6768762jao.5.1590601557242;
-        Wed, 27 May 2020 10:45:57 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x13sm1854475ilq.48.2020.05.27.10.45.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:45:56 -0700 (PDT)
-Received: (nullmailer pid 2438193 invoked by uid 1000);
-        Wed, 27 May 2020 17:45:55 -0000
-Date:   Wed, 27 May 2020 11:45:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        patches@opensource.cirrus.com, mturquette@baylibre.com,
-        lee.jones@linaro.org, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, sboyd@kernel.org, linux@roeck-us.net,
-        broonie@kernel.org, jdelvare@suse.com, robh+dt@kernel.org
-Subject: Re: [PATCH 2/5] ASoC: lochnagar: Move binding over to dtschema
-Message-ID: <20200527174555.GA2437570@bogus>
-References: <20200512152359.11839-1-ckeepax@opensource.cirrus.com>
- <20200512152359.11839-2-ckeepax@opensource.cirrus.com>
+        Wed, 27 May 2020 13:46:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/Kwhca5f0j/+vobW3PAuos+qjYBVCOWNbbK1BTow0MY=; b=qkqM0MXuiQS0ZY7SeOiMolGP+o
+        0mw5qXW9ubf1qN0WJA/ywlIhihp+/Cdv0wgSvKRCUiD9eDpJm6Zd905fEkj0CMpP8LrABKU4o7Ase
+        t00C9TrZpwe9G9Uh7A/jQ0pC/tVWShYhwvAJSWe/NqgkZGdiu/7j0DujwPr2H+m6yziNg1oxRH+fS
+        3x0GFeguB7hjI77HroTzDiUuPkctQos9Pg+0VtUvMwT8F7gSU2XMHYupwqcgR7Tq1b0lj6UsWcYzT
+        uobco3917ZInMTwwTTAQQY6a3jany1B9soFuPdQ7VpYDjV/W0rOTg7osRnBsRnh49wPTQHsgH8Poy
+        Np8C6lEw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1je05k-0004bh-EE; Wed, 27 May 2020 17:43:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6716D3060FC;
+        Wed, 27 May 2020 19:43:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5506D2023E7C7; Wed, 27 May 2020 19:43:45 +0200 (CEST)
+Date:   Wed, 27 May 2020 19:43:45 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V7 03/15] kprobes: Add symbols for kprobe insn pages
+Message-ID: <20200527174345.GB706478@hirez.programming.kicks-ass.net>
+References: <20200512121922.8997-1-adrian.hunter@intel.com>
+ <20200512121922.8997-4-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200512152359.11839-2-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20200512121922.8997-4-adrian.hunter@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 May 2020 16:23:55 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> No changes since v2.
-> 
-> Thanks,
-> Charles
-> 
->  .../devicetree/bindings/sound/cirrus,lochnagar.txt | 39 ----------------
->  .../bindings/sound/cirrus,lochnagar.yaml           | 52 ++++++++++++++++++++++
->  2 files changed, 52 insertions(+), 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/cirrus,lochnagar.yaml
-> 
+On Tue, May 12, 2020 at 03:19:10PM +0300, Adrian Hunter wrote:
+> @@ -2179,6 +2181,49 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+>  	return 0;
+>  }
+>  
+> +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
+> +			     unsigned long *value, char *type, char *sym)
+> +{
+> +	struct kprobe_insn_page *kip;
+> +	int ret = -ERANGE;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(kip, &c->pages, list) {
+> +		if ((*symnum)--)
+> +			continue;
+> +		strlcpy(sym, c->sym, KSYM_NAME_LEN);
+> +		*type = 't';
+> +		*value = (unsigned long)kip->insns;
+> +		ret = 0;
+> +		break;
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return ret;
+> +}
 
-Applied, thanks!
+This fails on sparc64-defconfig.
+
+In file included from ../include/linux/kprobes.h:19:0,
+                 from ../kernel/kprobes.c:21:
+../kernel/kprobes.c: In function 'kprobe_cache_get_kallsym':
+../include/linux/rculist.h:382:49: error: dereferencing pointer to incomplete type 'struct kprobe_insn_page'
+
+Please provide a new patch.
