@@ -2,86 +2,102 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8768C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CADC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 913A1206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C244B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:32:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zdeqej5Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN2mzep8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgE0LcL (ORCPT
+        id S1729253AbgE0Lc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:32:11 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20709 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725964AbgE0LcL (ORCPT
+        Wed, 27 May 2020 07:32:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgE0Lcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:32:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590579130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=L3VG+r4IL3PqDE0NrR8AJTqa7Bz6Bcn6dDbe0ZST8RI=;
-        b=Zdeqej5YIcLpUNlskfRACMBF4zIcuzBgzFm/o8+sFqQ1W2iIN52yznXAfhtQ+bNFVpFJrN
-        sMOF1LnlWhv7s7B76mVOb3t1+gu8lbjFpf+m4X/fk5Fq232PW1NBbxZWMqXApD4a8MMY4a
-        a2ngxFunoS407FRle+iLwx5as7PMiPI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-JcGnGmc4PV2vYDXpIgofAA-1; Wed, 27 May 2020 07:32:06 -0400
-X-MC-Unique: JcGnGmc4PV2vYDXpIgofAA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AA331461;
-        Wed, 27 May 2020 11:32:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.182])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 66FED12A4D;
-        Wed, 27 May 2020 11:32:00 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 27 May 2020 13:32:02 +0200 (CEST)
-Date:   Wed, 27 May 2020 13:31:59 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Vincent Chen <vincent.chen@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v4 01/13] ptrace: Use regset_size() for dynamic
- regset size.
-Message-ID: <20200527113158.GA9100@redhat.com>
-References: <cover.1590474856.git.greentime.hu@sifive.com>
- <3700190a602a6d30fcbf76e1eea667e29a65c4c9.1590474856.git.greentime.hu@sifive.com>
- <20200526140027.GC24212@redhat.com>
- <CAHCEehK7BnWUhjOAynCLP6puRo8EguMvf=N8iG5UMQmaD8ekCQ@mail.gmail.com>
+        Wed, 27 May 2020 07:32:55 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D425C061A0F;
+        Wed, 27 May 2020 04:32:55 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id c187so4922858ooc.2;
+        Wed, 27 May 2020 04:32:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LCm08sq66Q3U++l+V74WsB7Hkmk+EFqTJfvHJknMZU4=;
+        b=AN2mzep8xZkr/JRqPxTyR34FkdcROkPVXOMdrWjGCDE5MdlvyeFy/89eNu+FFYgNaJ
+         0O3zZCpub0fl1Qd+fkpWx+OYeAzC4QB5c5bMJgO1L9DjxiuPVNNQW62XYsimpE6xTHxF
+         XZEXc6/6+Ln/57fWjJzSyyzCWTCnZUtWCzefe6KL2fHnrp3vW8ZSJjPf7dWsUtcrA7fh
+         twyibzWV/U3IcEUCkjCvINUksHSqIyZnuRLPIoiNkSouJj4DwlSDNmmbMf2G4eoOtNHs
+         wRRkQZ50jLzVaxqeAL5LZC621iLjbukVTj3nSjySbtq7dLoaQ5gGIL26SU0ysfMsY3Pj
+         MxOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LCm08sq66Q3U++l+V74WsB7Hkmk+EFqTJfvHJknMZU4=;
+        b=rHHDnpnNr9P0dcKAvfqtnMQwS92i+Qd1hDoDXL5dhzOv+yIxIuimWXVRo50jksvceF
+         GaN+JD735/5c6Uim/eNz4wmuDCvTCO5OWWMguCq6mN8W96gywqnO0718J5kbMY+kwkm4
+         NPenya+7jG8sR6JTt3m7H3WXm5STDVmnNRFpxqMJXtyOaMoPXAUI0Q/ALNLpwSDCpMKr
+         nlZINHFvtyoXhpFi2wkQ7f0jNW1+vewBXfmIvfIKMFDFLRHosuJJi1Bf0tueB9dCrU9J
+         S7aBUOxO0tDiQpzB4QbNZzXMebX0pQraXcnd34sor9Ui9O762RJm11K2LSCW6m7xjIPK
+         fohg==
+X-Gm-Message-State: AOAM532Q0Dw99xDaR3KCrDkJFuKkJpHYzgypW+b4DUTTt070Y/fabhkk
+        m9zgZRoGPoh3r9R2MfdkpN86d++uN2Z4J+6Gzhk=
+X-Google-Smtp-Source: ABdhPJzjplcHCSKcgSqbLouxesEL59Ah0jAiA+aLZBUPeJrNy6hJ0Vv/xmju6otXj6ZALV+lhsBCAWTs4T/C+2XR4rU=
+X-Received: by 2002:a4a:bf14:: with SMTP id r20mr2745052oop.18.1590579174656;
+ Wed, 27 May 2020 04:32:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHCEehK7BnWUhjOAynCLP6puRo8EguMvf=N8iG5UMQmaD8ekCQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200527112548.GD5308@sirena.org.uk>
+In-Reply-To: <20200527112548.GD5308@sirena.org.uk>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 27 May 2020 12:32:28 +0100
+Message-ID: <CA+V-a8v0i71MCTNTPVD3XHuyGZiVjzuCkCUnvoUczeMr416ouQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/27, Greentime Hu wrote:
+Hi Mark,
+
+Thank you for the review.
+
+On Wed, May 27, 2020 at 12:25 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> It seems I only needs to update this line, right?
-> - kiov->iov_len = min(kiov->iov_len,  (__kernel_size_t) (regset->n *
-> regset->size));
-> + kiov->iov_len = min(kiov->iov_len,  (__kernel_size_t)
-> regset_size(task, regset));
+> On Tue, May 26, 2020 at 10:01:43PM +0100, Lad Prabhakar wrote:
+>
+> >                                 Examples with soctypes are:
+> > +                                 - "renesas,rcar_sound-r8a7742" (RZ/G1H)
+> >                                   - "renesas,rcar_sound-r8a7743" (RZ/G1M)
+> >                                   - "renesas,rcar_sound-r8a7744" (RZ/G1N)
+> >                                   - "renesas,rcar_sound-r8a7745" (RZ/G1E)
+>
+> I'd expect a matching patch adding this compatible to the driver.
 
-Yes, agreed.
+The Renesas R-Car sound for RZ/G1H is identical to the R-Car Gen2
+family. So no driver change is needed and  the fallback compatible
+value "renesas,rcar_sound-gen2" will be used in the SOC DT.
 
-Oleg.
-
+Cheers,
+--Prabhakar Lad
