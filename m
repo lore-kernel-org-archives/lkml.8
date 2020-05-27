@@ -2,205 +2,125 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCBCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF16D2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DV1QQCD7"
+	by mail.kernel.org (Postfix) with ESMTP id E170C20C09
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgE0JuU (ORCPT
+        id S1729385AbgE0Jug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:50:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32974 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728523AbgE0JuT (ORCPT
+        Wed, 27 May 2020 05:50:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31746 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725989AbgE0Juf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:50:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590573018;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wk7PTccOiB2D0BUxUJvJJDnS6DcmS8jIQiV2uW81594=;
-        b=DV1QQCD7r2pNe+JkRrgvaTFLfHn3mWKvAWSR7HKIzKNvXnrv4LsjHoqRSglS30lsQd5Fmu
-        soy8mtf33c3Y5XPxUHjc5prrs6JFxOabxYx3Q//Ib/bJDBugQRW8uS/Xx//87ntUcbCg7h
-        kMe7JdSi5NiXKx+UQhkDHqRbwVPXt8E=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-481-yumd-8pVPGCZu4U_qEskrA-1; Wed, 27 May 2020 05:50:14 -0400
-X-MC-Unique: yumd-8pVPGCZu4U_qEskrA-1
-Received: by mail-qv1-f71.google.com with SMTP id g16so22312985qvq.14
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 02:50:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wk7PTccOiB2D0BUxUJvJJDnS6DcmS8jIQiV2uW81594=;
-        b=DymCVjGMVBCoedcslIAcWcXokT/1NgErYYQXtwcMkaINWJRRFPbzWlgwf5vxZasTV7
-         chwsoDi+BTpKv9QOfuivdpqoWVn3+ebgwZjLm6DFsoHU1ikmIvfxyYB06oz0jcSWsRKq
-         YW7n+scpwC6FzQQuLLzePBzzU9icIJMnMtLpyvQYB2/MbaGLdA58dghgK/lQGgeZ95uh
-         MHzrsMgmkzTggJZEGl8n61UaOiUutIaML0z1OQ9ZUBIi1KdzfsVoBiZPqmpz3TV0bFBu
-         //cTkQF+A7xK3XLVJ1qysVIfwiUri/1qykBOiGB6j0s6b7+mWllGwIvd/8E8g7OMr0PI
-         HKBg==
-X-Gm-Message-State: AOAM53325ToGgRe/HE7sf3TVSL+0paxf5uesUncRkZ8OOArzgpza/pZ/
-        cJnooovoh0Q+pue8ix3uu7FqAPpgAmNC0XHjA33d9RYFp0hIDMZysjLqGbzX9uMXDYXtI+cdAlc
-        N0Puknhn+CDrs1MxZCzBRe5jPbPEy6ge8+HdLdlXx
-X-Received: by 2002:a37:8a42:: with SMTP id m63mr3071566qkd.230.1590573013530;
-        Wed, 27 May 2020 02:50:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx7RDV50fdD8q6d1cy2L1E3dJt81qR6UeDwFqEdUTY1cgMNDSGkK/Va8uOGegZ5bIh+cOKagjKwATfo9WDQI8g=
-X-Received: by 2002:a37:8a42:: with SMTP id m63mr3071544qkd.230.1590573013164;
- Wed, 27 May 2020 02:50:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
- <27B6F419-A68E-459D-AB6B-7BF2D935C6E0@canonical.com> <CAO-hwJLPF4pSHQqFp-ogZAxKu15nbuKULTRbudhD8L4RFv4w4g@mail.gmail.com>
-In-Reply-To: <CAO-hwJLPF4pSHQqFp-ogZAxKu15nbuKULTRbudhD8L4RFv4w4g@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 27 May 2020 11:50:02 +0200
-Message-ID: <CAO-hwJJE6_8j-XVjVskJwmHW=DM9i5aSZZ=35jLDfjf4E1spZQ@mail.gmail.com>
-Subject: Re: [PATCH] HID: multitouch: enable multi-input as a quirk for some devices
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:INTEL INTEGRATED SENSOR HUB DRIVER" 
-        <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 May 2020 05:50:35 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04R9X4RO186946;
+        Wed, 27 May 2020 05:50:25 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 316ytum6p5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 05:50:25 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04R9a0s0012244;
+        Wed, 27 May 2020 09:50:24 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 316uf8k35v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 09:50:23 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04R9oLYA56819920
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 09:50:21 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 943CF4C044;
+        Wed, 27 May 2020 09:50:21 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53F004C052;
+        Wed, 27 May 2020 09:50:19 +0000 (GMT)
+Received: from localhost.localdomain.localdomain (unknown [9.85.74.206])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 27 May 2020 09:50:19 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, ravi.bangoria@linux.ibm.com,
+        maddy@linux.vnet.ibm.com, acme@kernel.org, anju@linux.vnet.ibm.com,
+        jolsa@kernel.org, mpe@ellerman.id.au, atrajeev@linux.vnet.ibm.com
+Subject: [PATCH V4 0/2] powerpc/perf: Add support for perf extended regs in powerpc
+Date:   Wed, 27 May 2020 05:50:16 -0400
+Message-Id: <1590573018-5201-1-git-send-email-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-27_03:2020-05-26,2020-05-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ malwarescore=0 suspectscore=1 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=999 cotscore=-2147483648
+ spamscore=0 adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:22 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> On Wed, May 27, 2020 at 8:18 AM Kai-Heng Feng
-> <kai.heng.feng@canonical.com> wrote:
-> >
-> >
-> >
-> > > On May 26, 2020, at 23:07, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> > >
-> > > Two touchpad/trackstick combos are currently not behaving properly.
-> > > They define a mouse emulation collection, as per Win8 requirements,
-> > > but also define a separate mouse collection for the trackstick.
-> > >
-> > > The way the kernel currently treat the collections is that it
-> > > merges both in one device. However, given that the first mouse
-> > > collection already defines X,Y and left, right buttons, when
-> > > mapping the events from the second mouse collection, hid-multitouch
-> > > sees that these events are already mapped, and simply ignores them.
-> > >
-> > > To be able to report events from the tracktick, add a new quirked
-> > > class for it, and manually add the 2 devices we know about.
-> > >
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=207235
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> >
-> > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->
-> Thanks for the very fast testing :)
->
-> Pushed to for-5.8/multitouch given that we already are at 5.7-rc7, we
-> might as well postpone it for one week.
->
+Patch set to add support for perf extended register capability in
+powerpc. The capability flag PERF_PMU_CAP_EXTENDED_REGS, is used to
+indicate the PMU which support extended registers. The generic code
+define the mask of extended registers as 0 for non supported architectures.
 
-Apologies for the inconvenience, I hadn't noticed my master branch was
-not up to date with origin. I forced push the branch to have a better
-history.
+patch 1/2 defines this PERF_PMU_CAP_EXTENDED_REGS mask to output the
+values of mmcr0,mmcr1,mmcr2 for POWER9. Defines `PERF_REG_EXTENDED_MASK`
+at runtime which contains mask value of the supported registers under
+extended regs.
 
-Cheers,
-Benjamin
+Patch 2/2 adds extended regs to sample_reg_mask in the tool side to use
+with `-I?` option.
 
-> Cheers,
-> Benjamin
->
-> >
-> > > ---
-> > > drivers/hid/hid-multitouch.c | 26 ++++++++++++++++++++++++++
-> > > 1 file changed, 26 insertions(+)
-> > >
-> > > diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> > > index 03c720b47306..39e4da7468e1 100644
-> > > --- a/drivers/hid/hid-multitouch.c
-> > > +++ b/drivers/hid/hid-multitouch.c
-> > > @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
-> > > #define MT_QUIRK_ASUS_CUSTOM_UP               BIT(17)
-> > > #define MT_QUIRK_WIN8_PTP_BUTTONS     BIT(18)
-> > > #define MT_QUIRK_SEPARATE_APP_REPORT  BIT(19)
-> > > +#define MT_QUIRK_FORCE_MULTI_INPUT   BIT(20)
-> > >
-> > > #define MT_INPUTMODE_TOUCHSCREEN      0x02
-> > > #define MT_INPUTMODE_TOUCHPAD         0x03
-> > > @@ -189,6 +190,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
-> > > #define MT_CLS_WIN_8                          0x0012
-> > > #define MT_CLS_EXPORT_ALL_INPUTS              0x0013
-> > > #define MT_CLS_WIN_8_DUAL                     0x0014
-> > > +#define MT_CLS_WIN_8_FORCE_MULTI_INPUT               0x0015
-> > >
-> > > /* vendor specific classes */
-> > > #define MT_CLS_3M                             0x0101
-> > > @@ -279,6 +281,15 @@ static const struct mt_class mt_classes[] = {
-> > >                       MT_QUIRK_CONTACT_CNT_ACCURATE |
-> > >                       MT_QUIRK_WIN8_PTP_BUTTONS,
-> > >               .export_all_inputs = true },
-> > > +     { .name = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-> > > +             .quirks = MT_QUIRK_ALWAYS_VALID |
-> > > +                     MT_QUIRK_IGNORE_DUPLICATES |
-> > > +                     MT_QUIRK_HOVERING |
-> > > +                     MT_QUIRK_CONTACT_CNT_ACCURATE |
-> > > +                     MT_QUIRK_STICKY_FINGERS |
-> > > +                     MT_QUIRK_WIN8_PTP_BUTTONS |
-> > > +                     MT_QUIRK_FORCE_MULTI_INPUT,
-> > > +             .export_all_inputs = true },
-> > >
-> > >       /*
-> > >        * vendor specific classes
-> > > @@ -1714,6 +1725,11 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> > >       if (id->group != HID_GROUP_MULTITOUCH_WIN_8)
-> > >               hdev->quirks |= HID_QUIRK_MULTI_INPUT;
-> > >
-> > > +     if (mtclass->quirks & MT_QUIRK_FORCE_MULTI_INPUT) {
-> > > +             hdev->quirks &= ~HID_QUIRK_INPUT_PER_APP;
-> > > +             hdev->quirks |= HID_QUIRK_MULTI_INPUT;
-> > > +     }
-> > > +
-> > >       timer_setup(&td->release_timer, mt_expired_timeout, 0);
-> > >
-> > >       ret = hid_parse(hdev);
-> > > @@ -1926,6 +1942,11 @@ static const struct hid_device_id mt_devices[] = {
-> > >               MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-> > >                       USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
-> > >
-> > > +     /* Elan devices */
-> > > +     { .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-> > > +             HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-> > > +                     USB_VENDOR_ID_ELAN, 0x313a) },
-> > > +
-> > >       /* Elitegroup panel */
-> > >       { .driver_data = MT_CLS_SERIAL,
-> > >               MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
-> > > @@ -2056,6 +2077,11 @@ static const struct hid_device_id mt_devices[] = {
-> > >               MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
-> > >                       USB_DEVICE_ID_MTP_STM)},
-> > >
-> > > +     /* Synaptics devices */
-> > > +     { .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-> > > +             HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-> > > +                     USB_VENDOR_ID_SYNAPTICS, 0xce08) },
-> > > +
-> > >       /* TopSeed panels */
-> > >       { .driver_data = MT_CLS_TOPSEED,
-> > >               MT_USB_DEVICE(USB_VENDOR_ID_TOPSEED2,
-> > > --
-> > > 2.25.1
-> > >
-> >
+Anju T Sudhakar (2):
+  powerpc/perf: Add support for outputting extended regs in perf
+    intr_regs
+  tools/perf: Add perf tools support for extended register capability in
+    powerpc
+
+---
+Changes from v3 -> v4
+- Addressed the comments for new line/tab issue
+  and added "Reviewed-by" from Madhavan Srinivasn.
+
+Changes from v2 -> v3
+- Split kernel and tools side patches as suggested by Arnaldo
+- Addressed review comment from Madhavan Srinivasn
+
+Changes from v1 -> v2
+
+- PERF_REG_EXTENDED_MASK` is defined at runtime in the kernel
+based on platform. This will give flexibility in using extended
+regs for all processor versions where the supported registers may differ.
+- removed PERF_REG_EXTENDED_MASK from the perf tools side. Based on the
+processor version(from PVR value), tool side will return the appropriate
+extended mask
+- Since tool changes can handle without a "PERF_REG_EXTENDED_MASK" macro,
+dropped patch to set NO_AUXTRACE.
+- Addressed review comments from Ravi Bangoria for V1
+
+---
+
+ arch/powerpc/include/asm/perf_event_server.h    |  8 ++++
+ arch/powerpc/include/uapi/asm/perf_regs.h       | 14 ++++++-
+ arch/powerpc/perf/core-book3s.c                 |  1 +
+ arch/powerpc/perf/perf_regs.c                   | 34 +++++++++++++--
+ arch/powerpc/perf/power9-pmu.c                  |  6 +++
+ tools/arch/powerpc/include/uapi/asm/perf_regs.h | 14 ++++++-
+ tools/perf/arch/powerpc/include/perf_regs.h     |  5 ++-
+ tools/perf/arch/powerpc/util/perf_regs.c        | 55 +++++++++++++++++++++++++
+ 8 files changed, 131 insertions(+), 6 deletions(-)
+
+-- 
+1.8.3.1
 
