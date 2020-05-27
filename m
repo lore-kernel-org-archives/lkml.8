@@ -2,98 +2,88 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5953FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37B9D2065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC242065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590599755;
-	bh=DmkWu4p3uiFJtjCdJCSH3WMauJ+B8g0HGW0R5W/y3nw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CMswvzM1vvjr5idIktTmWp7wU5LHcD85vdLtSkszJEP48c4DL08a1keAafeAyvH74
-	 en8cvgg1rzTyiYRMxWp8g/Q9jyH32zp6WcRmR6yPD5xk1i3ya7CVIlHhci6Wg8CPT4
-	 RPHW5DEsJZ7kCSKKfqyGq5fvhMY9L0WTg37oQjWM=
+	s=default; t=1590599789;
+	bh=USWQvgszwfyCgModqIHqL/Z0eL2HLAXAsU/HevsGK/s=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=jO3/jvyYGGqLwSoGTecd/9RkN9kyKbtQGfSV2Mjfpa7FURofCc9waJovk0ang66SJ
+	 sRdynLPVHQSN08Hs9o8w9Fr417KfyuD5u2ZAFB6JgyYcac91UC5DqLnmMD/1ef8cK6
+	 5AxosUyLeHvnzmEQDUer9iqO0BcQjtiz729Ccd9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbgE0RPy (ORCPT
+        id S1731328AbgE0RQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:15:54 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:37202 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729913AbgE0RPx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:15:53 -0400
-Received: by mail-il1-f195.google.com with SMTP id r2so13639128ila.4;
-        Wed, 27 May 2020 10:15:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=99jkXJtnw0P2GQYZjU0aScSsUNY825EbLFpq6MuWBZM=;
-        b=gsK2/YiiuDQiYj2U23kEWnRx9vTN7MHgQYmT+E+G4Syje5gcrHrL9CRzLG6E6Hko1Y
-         5B5lKW5OJfV6n4nR9k3KlZq2oX++5i0f5Evuc9xzKr8MyyQ7WpeeGyuqa6qU7g5AXBgq
-         z5lULyBJGaqnfK0xiICXgXUWK5VZoFJTDlxXnGX62kwYtze3tSEdvh9UlEXP+Pu3wq85
-         17tzNsNlJgZyxfzNE9IoJogzTf9XXDcqtNAdoXyBAAd/GqtTaMHEJ7uv2sQovINAWg2O
-         r+TxFlyQhlQ0ibn98NKkceazfhmKNoEgpSJYcmmFJU6UggsPuTusjHLIVoSAtHb9MCVK
-         71/Q==
-X-Gm-Message-State: AOAM530pmrvwV3rpPeCYsMT2ziVgAXbfF05UF5+IfSmYiN5snmcIbnoU
-        HBk354kg7W5CPhfmax5/TkXTYOM=
-X-Google-Smtp-Source: ABdhPJwPTefjiDIOFvVJXCs7TY5ht51jwG0qsC72o6krduJg/Kg+szG4VgXRZmELzJcCA5WCHlNh1g==
-X-Received: by 2002:a92:d183:: with SMTP id z3mr7109934ilz.102.1590599752632;
-        Wed, 27 May 2020 10:15:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g6sm1881136ile.38.2020.05.27.10.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:15:52 -0700 (PDT)
-Received: (nullmailer pid 2365435 invoked by uid 1000);
-        Wed, 27 May 2020 17:15:51 -0000
-Date:   Wed, 27 May 2020 11:15:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: watchdog: renesas,wdt: Document r8a7742
- support
-Message-ID: <20200527171551.GA2365256@bogus>
-References: <1590596967-22973-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 27 May 2020 13:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731314AbgE0RQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:16:28 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 342A820C09;
+        Wed, 27 May 2020 17:16:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590599787;
+        bh=USWQvgszwfyCgModqIHqL/Z0eL2HLAXAsU/HevsGK/s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=F4cGybqmOOBfp6VV4o/ne71vpbS3UOE3RTZgu/0t3X7DAO9RB++WFoUzmiQdlhKh2
+         a7llCj0pWSNo3nh26O5GEyVSggPD51bLE2Z+Qfcv9vWWJoP+vl4AF5w3MyWsURJkRd
+         N1kKzGGLR/oXbaHAZTuld17ddPZvTOMoXGDFiZ9U=
+Subject: Re: [PATCH 4.4 00/65] 4.4.225-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200526183905.988782958@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <6caa83f3-fd15-1be0-5927-5390855ad4bc@kernel.org>
+Date:   Wed, 27 May 2020 11:16:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590596967-22973-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 17:29:27 +0100, Lad Prabhakar wrote:
-> RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
-> therefore add relevant documentation.
+On 5/26/20 12:52 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.225 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> Hi,
+> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> Anything received after that time might be too late.
 > 
-> This patch is part of series [1], as requested by Rob [1] I have
-> reabsed my changes on-top json-schema conversion patch.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.225-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
 > 
-> [1] https://www.spinics.net/lists/netdev/msg653258.html
-> [2] https://patchwork.kernel.org/patch/11552335/
+> thanks,
 > 
-> Cheers,
-> Prabhakar
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> greg k-h
 > 
 
-Applied, thanks!
+Compiled and booted on my test system. No dmesg regressions.
+
+thanks,
+-- Shuah
+
