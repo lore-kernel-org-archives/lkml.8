@@ -2,281 +2,179 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC23FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84388C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDEED20E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625C820E65
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:27:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLxklYnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgE0H0n (ORCPT
+        id S2387403AbgE0H1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:26:43 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7186 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgE0H0m (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:26:42 -0400
-IronPort-SDR: ekH/x4lUwyqbArEUHhH0Ex2IFsymaQxlE/fiOmNQS3t/Yxh6dcpHPzXDnfPXaQ+pEvGpip4LXr
- nzCZ1puij4Cw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 00:26:41 -0700
-IronPort-SDR: 9V7ogVoTODyRT2Nq47Vo9K+mkTl/APvqOomugdaO5MZ3zwoy42G2FST+8zRegV7NEDWgcFMSgW
- bFuKueoAis1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="375946941"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 00:26:39 -0700
-Subject: Re: [PATCH v2 1/2] perf evlist: Ensure grouped events with same cpu
- map
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200525065559.6422-1-yao.jin@linux.intel.com>
- <20200526115155.GE333164@krava>
- <32c4663a-6934-2a2d-79e2-7a335e3629a2@linux.intel.com>
- <d6986a15-1e21-3414-9d68-c265e7db03f4@linux.intel.com>
-Message-ID: <4c670bf6-c0e4-1f9d-455c-a4bf9fd005fc@linux.intel.com>
-Date:   Wed, 27 May 2020 15:26:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 27 May 2020 03:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgE0H1l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:27:41 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1450AC061A0F;
+        Wed, 27 May 2020 00:27:41 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id c75so11386662pga.3;
+        Wed, 27 May 2020 00:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8/pnqpOF5kxfkVhRDe0RiihBA49v54di4gIOur7X7TI=;
+        b=LLxklYnNzudxPlgcrT/fJNH2MPem+uGxJgHfy7oOISPLHa6ikpirtHb4EbdRGht7SY
+         WvJUMfY8ftB39R8dNXZmU0Tsi2+8gVyzbQCdw8JVrCCtOYOTkA4VPmul/BxC4cxSn7b2
+         pJcm00a/TAQ3Hkvjqm+ckwrHB8AcyPl9jNbg/EnnpbvIKqDkgcQMjJZnehn3ZjSV+LbB
+         YopiG1L1bRkwjA1To3JPFquX6uVMApyoXGMGTYtvF5qp8ill3bfFy8od9hHGwd+ADjFS
+         C4AH+ZC+zqbKPpKFcdUQ4GzSfrAoHBsQ5Drwozv/8sGHx5h3hzJvvdBCpRm14Hg22v5Q
+         a5Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8/pnqpOF5kxfkVhRDe0RiihBA49v54di4gIOur7X7TI=;
+        b=ltujOWTqbkJ7aXCuOVgK85f1s86baCew6Yxyjx2tmJCKanpIObHvMaA6YX9rVclbp/
+         G67Uekb3uXqtp+7sSEDHKZ9t71y3i21YrV2Ki/BPUMrWWBY4D/5KVlOaqmo5u2FwdpvB
+         nTzPwDTR/bLDEmnqUVPlutnRM6CLhnoKzMt/cr4Ug1BIwXidFK7poUS030DGAwKHuRqZ
+         mnmW3opoaDvHmgerxa4xQGS/Pte9mq3oQFER8ZkXYUDplrJW2akBRNtnamywJ1a0tS3h
+         W9AG4ynFvRPXzqN6Jry/p7qYN8qt1/acl5h1q0kg4fxSO0sfdiOR3+m/0Ptz+5ZwJeoW
+         Gheg==
+X-Gm-Message-State: AOAM531bwlbnxzrzTrWaXdYEHAJbOI0yxYLkEKxjnCZcf51EqYbSOAWt
+        jOe99hWulse+3RBnjIjlg6Q=
+X-Google-Smtp-Source: ABdhPJxTLPr+jP/ArwpWxHxmn/pRT0kb8dD0HedLtdqVNcsMKzf6roH/kNinnVypb58H7dXiI1M8vg==
+X-Received: by 2002:a63:fd57:: with SMTP id m23mr2859284pgj.325.1590564460640;
+        Wed, 27 May 2020 00:27:40 -0700 (PDT)
+Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.44])
+        by smtp.gmail.com with ESMTPSA id q201sm1371842pfq.40.2020.05.27.00.27.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 May 2020 00:27:40 -0700 (PDT)
+From:   dillon.minfei@gmail.com
+To:     robh+dt@kernel.org, p.zabel@pengutronix.de,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, mturquette@baylibre.com, sboyd@kernel.org,
+        andy.shevchenko@gmail.com, noralf@tronnes.org,
+        linus.walleij@linaro.org, broonie@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillonhua@gmail.com, dillon min <dillon.minfei@gmail.com>
+Subject: [PATCH v6 0/9] Enable ili9341 and l3gd20 on stm32f429-disco
+Date:   Wed, 27 May 2020 15:27:24 +0800
+Message-Id: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <d6986a15-1e21-3414-9d68-c265e7db03f4@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+From: dillon min <dillon.minfei@gmail.com>
 
-On 5/27/2020 2:31 PM, Jin, Yao wrote:
-> Hi Jiri,
-> 
-> On 5/27/2020 11:20 AM, Jin, Yao wrote:
->> Hi Jiri,
->>
->> On 5/26/2020 7:51 PM, Jiri Olsa wrote:
->>> On Mon, May 25, 2020 at 02:55:58PM +0800, Jin Yao wrote:
->>>
->>> SNIP
->>>
->>>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->>>> index 2a9de6491700..1161cffc0688 100644
->>>> --- a/tools/perf/util/evlist.c
->>>> +++ b/tools/perf/util/evlist.c
->>>> @@ -1704,3 +1704,52 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
->>>>       }
->>>>       return leader;
->>>>   }
->>>> +
->>>> +static bool cpus_map_matched(struct evsel *prev, struct evsel *evsel)
->>>> +{
->>>> +    if (evsel->core.cpus->nr != prev->core.cpus->nr)
->>>> +        return false;
->>>> +
->>>> +    for (int i = 0; i < evsel->core.cpus->nr; i++) {
->>>> +        if (evsel->core.cpus->map[i] != prev->core.cpus->map[i])
->>>> +            return false;
->>>> +    }
->>>> +
->>>> +    return true;
->>>> +}
->>>> +
->>>> +bool evlist__cpus_map_matched(struct evlist *evlist)
->>>> +{
->>>> +    struct evsel *prev = evlist__first(evlist), *evsel = prev;
->>>> +    int nr_members = prev->core.nr_members;
->>>> +
->>>> +    evlist__for_each_entry_continue(evlist, evsel) {
->>>> +        if (nr_members <= 1) {
->>>> +            prev = evsel;
->>>> +            nr_members = evsel->core.nr_members;
->>>> +            continue;
->>>> +        }
->>>> +
->>>> +        nr_members--;
->>>> +
->>>> +        if (!cpus_map_matched(prev, evsel))
->>>> +            return false;
->>>> +
->>>> +        prev = evsel;
->>>> +    }
->>>> +
->>>> +    return true;
->>>> +}
->>>> +
->>>> +void evlist__force_disable_group(struct evlist *evlist)
->>>> +{
->>>> +    struct evsel *evsel;
->>>> +
->>>> +    pr_warning("WARNING: event cpu maps are not fully matched, "
->>>> +           "stop event grouping\n");
->>>> +
->>>> +    evlist__for_each_entry(evlist, evsel) {
->>>> +        evsel->leader = evsel;
->>>> +        evsel->core.nr_members = 0;
->>>> +    }
->>>> +}
->>>
->>> I think this is too much, we need to disable only groups with not
->>> matching cpus, not all of them, how about something like this
->>>
->>
->> Yes, that's too much.
->>
->>>
->>>          struct evsel *pos;
->>>
->>>          evlist__for_each_entry(evlist, evsel) {
->>>                  if (evsel->leader == evsel)
->>>                          continue;
->>>                  if (!cpus_map_matched(evsel->leader, evsel))
->>>                          continue;
->>>                  pr_warn("Disabling group...
->>>
->>>                  for_each_group_member(pos, evsel->leader) {
->>>                          pos->leader = pos;
->>>                          evsel->core.nr_members = 0;
->>>                  }
->>>          }
->>>
->>> jirka
->>>
->>
->> Hmm, change "!cpus_map_matched()" to "cpus_map_matched()"? and use for_each_group_evsel() to 
->> replace for_each_group_member()?
->>
->> How about something like following?
->>
->> void evlist__check_cpu_maps(struct evlist *evlist)
->> {
->>      struct evsel *evsel, *pos;
->>
->>      evlist__for_each_entry(evlist, evsel) {
->>          if (evsel->leader == evsel)
->>              continue;
->>
->>          if (cpu_maps_matched(evsel->leader, evsel))
->>              continue;
->>
->>          pr_warning("WARNING: event cpu maps are not fully matched, "
->>                 "disable group\n");
->>
->>          for_each_group_evsel(pos, evsel->leader) {
->>              pos->leader = pos;
->>              pos->core.nr_members = 0;
->>          }
->>
->>          /*
->>           * For core & uncore mixed event group, for example,
->>           * '{cycles,unc_cbo_cache_lookup.any_i}',
->>           * In evlist:
->>           * cycles,
->>           * unc_cbo_cache_lookup.any_i,
->>           * unc_cbo_cache_lookup.any_i,
->>           * unc_cbo_cache_lookup.any_i,
->>           * unc_cbo_cache_lookup.any_i,
->>           *
->>           * cycles is leader and all unc_cbo_cache_lookup.any_i
->>           * point to this leader. But for_each_group_evsel can't
->>           * iterate all members from cycles. It only iterates
->>           * cycles and one unc_cbo_cache_lookup.any_i. So we
->>           * set extra evsel here.
->>           */
->>          evsel->leader = evsel;
->>          evsel->core.nr_members = 0;
->>      }
->> }
->>
->> Thanks
->> Jin Yao
-> 
-> Issue is found!
-> 
-> It looks we can't set "pos->leader = pos" in either for_each_group_member() or in 
-> for_each_group_evsel() because it may exit the iteration immediately.
-> 
->      evlist__for_each_entry(evlist, evsel) {
->          if (evsel->leader == evsel)
->              continue;
-> 
->          if (cpu_maps_matched(evsel->leader, evsel))
->              continue;
-> 
->          pr_warning("WARNING: event cpu maps are not fully matched, "
->                 "disable group\n");
-> 
->          for_each_group_member(pos, evsel->leader) {
->              pos->leader = pos;
->              pos->core.nr_members = 0;
->          }
-> 
-> Let me use the example of '{cycles,unc_cbo_cache_lookup.any_i}' again.
-> 
-> In evlist:
-> cycles,
-> unc_cbo_cache_lookup.any_i,
-> unc_cbo_cache_lookup.any_i,
-> unc_cbo_cache_lookup.any_i,
-> unc_cbo_cache_lookup.any_i,
-> 
-> When we reach the for_each_group_member at first time, evsel is the first unc_cbo_cache_lookup.any_i 
-> and evsel->leader is cycles. pos is same as the evsel (the first unc_cbo_cache_lookup.any_i).
-> 
-> Once we execute "pos->leader = pos;", it's actually "evsel->leader = evsel". So now evsel->leader is 
-> changed to the first unc_cbo_cache_lookup.any_i.
-> 
-> In next iteration, pos is the second unc_cbo_cache_lookup.any_i. pos->leader is cycles but 
-> unfortunately evsel->leader has been changed to the first unc_cbo_cache_lookup.any_i. So iteration 
-> stops immediately.
-> 
-> I'm now thinking if we can solve this issue by an easy way.
-> 
-> Thanks
-> Jin Yao
+V6:
+1 separate '[PATCH v5 5/8]' patchs to two, each one has a Fixes tags according
+  to Stephen Boyd's suggestion
+2 fix panel-ilitek-ili9341 compile warning 'warning: Function parameter or
+  member xxx not described in xxx' with W=1
 
-How about this fix?
+V5's update based on Mark Brown's suggestion, use 'SPI_MASTER_MUST_RX'
+for SPI_SIMPLEX_RX mode on stm32 spi controller.
 
-void evlist__check_cpu_maps(struct evlist *evlist)
-{
-	struct evsel *evsel, *pos, *tmp;
+V5:
+1 instead of add send dummy data out under SIMPLEX_RX mode,
+  add flags 'SPI_CONTROLLER_MUST_TX' for stm32 spi driver
+2 bypass 'SPI_CONTROLLER_MUST_TX' and 'SPI_CONTROLLER_MUST_RX' under
+  'SPI_3WIRE' mode
 
-	evlist__for_each_entry(evlist, evsel) {
-		if (evsel->leader == evsel)
-			continue;
+V4:
+  According to alexandre torgue's suggestion, combine ili9341 and
+  l3gd20's modification on stm32f429-disco board to one patchset.
 
-		if (cpu_maps_matched(evsel->leader, evsel))
-			continue;
+Changes:
 
-		pr_warning("WARNING: event cpu maps are not fully matched, "
-			   "disable group\n");
+ili9341:
 
-		for_each_group_member(pos, evsel->leader) {
-			if (pos != evsel) {
-				pos->leader = pos;
-				pos->core.nr_members = 0;
-			}
-		}
+1 update ili9341 panel driver according to Linus's suggestion
+2 drop V1's No.5 patch, sumbit new changes for clk-stm32f4
+3 merge l3gd20's change to this patchset
 
-		tmp = evsel->leader;
-		tmp->leader = tmp;
-		tmp->core.nr_members = 0;
+V3:
+1 merge original tiny/ili9341.c driver to panel/panel-ilitek-ili9341.c
+  to support serial spi & parallel rgb interface in one driver.
+2 update ilitek,ili9341.yaml dts binding documentation.
+3 update stm32f429-disco dts binding
 
-		evsel->leader = evsel;
-		evsel->core.nr_members = 0;
-	}
-}
+V2:
+1 verify ilitek,ili9341.yaml with make O=../linux-stm32
+  dt_binding_check
+  DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+  ilitek,ili9341.yaml
 
-Thanks
-Jin Yao
+V1:
+1 add ili9341 drm panel driver
+2 add ltdc, spi5 controller for stm32f429-disco
+3 add ltdc, spi5 pin map for stm32f429-disco
+4 add docs about ili9341
+5 fix ltdc driver loading hang in clk set rate bug
+
+
+L3gd20:
+
+V3:
+1 merge stm32f429-disco dtbs binding with ili9341 part
+
+V2:
+1 insert blank line at stm32f420-disco.dts line 143
+2 add more description for l3gd20 in commit message
+
+V1:
+1 enable spi5 controller on stm32f429-disco (dts)
+2 add spi5 pinmap for stm32f429-disco  (dts)
+3 add SPI_SIMPLEX_RX, SPI_3WIRE_RX support for stm32f4
+
+
+dillon min (9):
+  ARM: dts: stm32: Add dma config for spi5
+  ARM: dts: stm32: Add pin map for ltdc & spi5 on stm32f429-disco board
+  ARM: dts: stm32: enable ltdc binding with ili9341, gyro l3gd20 on    
+    stm32429-disco board
+  dt-bindings: display: panel: Add ilitek ili9341 panel bindings
+  clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate
+  clk: stm32: Fix ltdc's clock turn off by clk_disable_unused() after
+    kernel     startup
+  drm/panel: Add ilitek ili9341 panel driver
+  spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX' support for stm32f4
+  spi: flags 'SPI_CONTROLLER_MUST_RX' and 'SPI_CONTROLLER_MUST_TX' can't
+    be     coexit with 'SPI_3WIRE' mode
+
+ .../bindings/display/panel/ilitek,ili9341.yaml     |   69 ++
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |   67 +
+ arch/arm/boot/dts/stm32f429-disco.dts              |   48 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |    3 +
+ drivers/clk/clk-stm32f4.c                          |    7 +-
+ drivers/gpu/drm/panel/Kconfig                      |   12 +
+ drivers/gpu/drm/panel/Makefile                     |    1 +
+ drivers/gpu/drm/panel/panel-ilitek-ili9341.c       | 1288 ++++++++++++++++++++
+ drivers/spi/spi-stm32.c                            |   19 +-
+ drivers/spi/spi.c                                  |    3 +-
+ 10 files changed, 1508 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ilitek,ili9341.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-ilitek-ili9341.c
+
+-- 
+2.7.4
+
