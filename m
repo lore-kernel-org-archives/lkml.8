@@ -2,86 +2,64 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC718C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD190C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6AB82089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590611005;
-	bh=whd5ax6cW2yilyozMSk0cai8e9IPd9MC6dtkaAAIeaQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QSvU1mciZpnjJ1d1MOANwqzQgfF1X7DK9uQfUCgBPZfaF51pF0rNBSmzc1d58Cj3a
-	 glPmR+snEZzwLp8xwnzmDxrHh8hBUL+hprpAYRlxofcC9rIvbtbiJKFCWjP1DW2H1H
-	 47VXc13rwLPtVoCLS9eZh8FxXTgJFyNh8FwSrbrM=
+	by mail.kernel.org (Postfix) with ESMTP id AAA33207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgE0UXZ (ORCPT
+        id S1728871AbgE0UXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbgE0UXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:23:24 -0400
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B9B204EF;
-        Wed, 27 May 2020 20:23:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590611004;
-        bh=whd5ax6cW2yilyozMSk0cai8e9IPd9MC6dtkaAAIeaQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1W/ZagWcskvMfGNeYpwXDQ0E6cw7I2krExjORRNnbCOgfUxAw4U3PrBF9MAnP34QK
-         pGBpbqhl+ES8lchRtO5oY3o6gCS41OTUTqKpA/8o9HoS+BUrVVPD0eBOPbL4/f/6Pg
-         SdPtw4HHGHH8bwupYLAjAdJb8eiiaX6qju2hZUPI=
-Date:   Wed, 27 May 2020 13:23:21 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
- kernel statistics
-Message-ID: <20200527132321.54bcdf04@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
-References: <20200526110318.69006-1-eesposit@redhat.com>
-        <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-        <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 27 May 2020 16:23:51 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:1412 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728550AbgE0UXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:23:50 -0400
+X-IronPort-AV: E=Sophos;i="5.73,442,1583161200"; 
+   d="scan'208";a="48174858"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 28 May 2020 05:23:48 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9DF0040E1DA1;
+        Thu, 28 May 2020 05:23:46 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/3] iW-RainboW-G21D-Qseven enable HSUSB, USB2.0, XHCI and Sound
+Date:   Wed, 27 May 2020 21:23:30 +0100
+Message-Id: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 15:14:41 +0200 Emanuele Giuseppe Esposito wrote:
-> Regarding the config, as I said the idea is to gather multiple 
-> subsystems' statistics, therefore there wouldn't be a single 
-> configuration method like in netlink.
-> For example in kvm there are file descriptors for configuration, and 
-> creating them requires no privilege, contrary to the network interfaces.
+Hi All,
 
-Enumerating networking interfaces, addresses, and almost all of the
-configuration requires no extra privilege. In fact I'd hope that
-whatever daemon collects network stats doesn't run as root :)
+This patch series enables HSUSB, USB2.0 host mode, XHCI and sound support
+on iW-RainboW-G21D-Qseven develpoment board.
 
-I think enumerating objects is of primary importance, and statistics 
-of those objects are subordinate.
+Cheers,
+Prabhakar
 
-Again, I have little KVM knowledge, but BPF also uses a fd-based API,
-and carries stats over the same syscall interface.
+Lad Prabhakar (3):
+  ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0 and XHCI
+  ARM: dts: r8a7742-iwg21d-q7: Enable SGTL5000 audio codec
+  ARM: dts: r8a7742-iwg21d-q7: Sound DMA support via DVC on DTS
+
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 151 ++++++++++++++++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+
+-- 
+2.7.4
+
