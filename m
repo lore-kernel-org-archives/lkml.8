@@ -2,126 +2,136 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6904CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2813FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512FE206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D5E20888
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590570383;
+	bh=FAvCknzoTGPImAY3eT0P2nnO/0J1mHHX86dLH7iV/1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jv8gufJAN1l0WHxFAI8LOb8u0C9NfzB8zm4M+sntOHkC91rJKP2CqXasPJHpm6eHI
+	 xaSNxHC8hi95kOL/qsRHo7+iuX+TCDv5Py1bwkdOsGFAxRJDRDZuG4eCmJU+o8FTIp
+	 c3vMituoqDahs26pB8VfgDYjS9EzzUSaLRa0Bb5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388496AbgE0JFc (ORCPT
+        id S2388499AbgE0JGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:05:32 -0400
-Received: from out29-193.mail.aliyun.com ([115.124.29.193]:44000 "EHLO
-        out29-193.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388442AbgE0JFb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:05:31 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2253938|-1;CH=blue;DM=|OVERLOAD|false|;DS=CONTINUE|ham_regular_dialog|0.0106189-0.000383161-0.988998;FP=18364323256627092979|1|1|7|0|-1|-1|-1;HT=e02c03268;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeI09nX_1590570281;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeI09nX_1590570281)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Wed, 27 May 2020 17:05:08 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org,
-        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH RESEND v11 4/7] dt-bindings: clock: Add X1830 clock bindings.
-Date:   Wed, 27 May 2020 17:04:16 +0800
-Message-Id: <20200527090419.56213-5-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200527090419.56213-1-zhouyanjie@wanyeetech.com>
-References: <20200527090419.56213-1-zhouyanjie@wanyeetech.com>
+        Wed, 27 May 2020 05:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37790 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388268AbgE0JGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:06:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEB5620787;
+        Wed, 27 May 2020 09:06:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590570381;
+        bh=FAvCknzoTGPImAY3eT0P2nnO/0J1mHHX86dLH7iV/1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QDm8HrrC/9YB0B/oFjVIItGTyqhBTZraHt2UEFTqoRDF2OXZlnYtuMQ2/4Lj4PIVa
+         Drio0vQjl5sCV6qqPHsS8jdpUkMXkg51jL1Wzof8P5xUu6EDWLCuLDdR11NI5u0kNI
+         N4TmitUblhzBxyKwFqfpmdcTDDO0iyAPupBpvmS4=
+Date:   Wed, 27 May 2020 11:06:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Alexander Dahl <post@lespocky.de>
+Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org,
+        Alan Jenkins <alan.christopher.jenkins@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Florian Wolters <florian@florian-wolters.de>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v3] dma: Fix max PFN arithmetic overflow on 32 bit systems
+Message-ID: <20200527090618.GF179718@kroah.com>
+References: <20200526175749.20742-1-post@lespocky.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200526175749.20742-1-post@lespocky.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the clock bindings for the X1830 Soc from Ingenic.
+On Tue, May 26, 2020 at 07:57:49PM +0200, Alexander Dahl wrote:
+> The intermediate result of the old term (4UL * 1024 * 1024 * 1024) is
+> 4 294 967 296 or 0x100000000 which is no problem on 64 bit systems.  The
+> patch does not change the later overall result of 0x100000 for
+> MAX_DMA32_PFN.  The new calculation yields the same result, but does not
+> require 64 bit arithmetic.
+> 
+> On 32 bit systems the old calculation suffers from an arithmetic
+> overflow in that intermediate term in braces: 4UL aka unsigned long int
+> is 4 byte wide and an arithmetic overflow happens (the 0x100000000 does
+> not fit in 4 bytes), the in braces result is truncated to zero, the
+> following right shift does not alter that, so MAX_DMA32_PFN evaluates to
+> 0 on 32 bit systems.
+> 
+> That wrong value is a problem in a comparision against MAX_DMA32_PFN in
+> the init code for swiotlb in 'pci_swiotlb_detect_4gb()' to decide if
+> swiotlb should be active.  That comparison yields the opposite result,
+> when compiling on 32 bit systems.
+> 
+> This was not possible before 1b7e03ef7570 ("x86, NUMA: Enable emulation
+> on 32bit too") when that MAX_DMA32_PFN was first made visible to x86_32
+> (and which landed in v3.0).
+> 
+> In practice this wasn't a problem, unless you activated CONFIG_SWIOTLB
+> on x86 (32 bit).
+> 
+> However for ARCH=x86 (32 bit) and if you have set CONFIG_IOMMU_INTEL,
+> since c5a5dc4cbbf4 ("iommu/vt-d: Don't switch off swiotlb if bounce page
+> is used") there's a dependency on CONFIG_SWIOTLB, which was not
+> necessarily active before.  That landed in v5.4, where we noticed it in
+> the fli4l Linux distribution.  We have CONFIG_IOMMU_INTEL active on both
+> 32 and 64 bit kernel configs there (I could not find out why, so let's
+> just say historical reasons).
+> 
+> The effect is at boot time 64 MiB (default size) were allocated for
+> bounce buffers now, which is a noticeable amount of memory on small
+> systems like pcengines ALIX 2D3 with 256 MiB memory, which are still
+> frequently used as home routers.
+> 
+> We noticed this effect when migrating from kernel v4.19 (LTS) to v5.4
+> (LTS) in fli4l and got that kernel messages for example:
+> 
+>   Linux version 5.4.22 (buildroot@buildroot) (gcc version 7.3.0 (Buildroot 2018.02.8)) #1 SMP Mon Nov 26 23:40:00 CET 2018
+>   …
+>   Memory: 183484K/261756K available (4594K kernel code, 393K rwdata, 1660K rodata, 536K init, 456K bss , 78272K reserved, 0K cma-reserved, 0K highmem)
+>   …
+>   PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+>   software IO TLB: mapped [mem 0x0bb78000-0x0fb78000] (64MB)
+> 
+> The initial analysis and the suggested fix was done by user 'sourcejedi'
+> at stackoverflow and explicitly marked as GPLv2 for inclusion in the
+> Linux kernel:
+> 
+>   https://unix.stackexchange.com/a/520525/50007
+> 
+> The new calculation, which does not suffer from that overflow, is the
+> same as for arch/mips now as suggested by Robin Murphy.
+> 
+> The fix was tested by fli4l users on round about two dozen different
+> systems, including both 32 and 64 bit archs, bare metal and virtualized
+> machines.
+> 
+> Fixes: 1b7e03ef7570 ("x86, NUMA: Enable emulation on 32bit too")
+> Fixes: https://web.nettworks.org/bugs/browse/FFL-2560
+> Fixes: https://unix.stackexchange.com/q/520065/50007
+> Reported-by: Alan Jenkins <alan.christopher.jenkins@gmail.com>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Alexander Dahl <post@lespocky.de>
+> Cc: stable@vger.kernel.org
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-
-Notes:
-    v11:
-    New patch, split from [3/6] in v10.
-
- include/dt-bindings/clock/x1830-cgu.h | 55 +++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 include/dt-bindings/clock/x1830-cgu.h
-
-diff --git a/include/dt-bindings/clock/x1830-cgu.h b/include/dt-bindings/clock/x1830-cgu.h
-new file mode 100644
-index 000000000000..801e1d09c881
---- /dev/null
-+++ b/include/dt-bindings/clock/x1830-cgu.h
-@@ -0,0 +1,55 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * This header provides clock numbers for the ingenic,x1830-cgu DT binding.
-+ *
-+ * They are roughly ordered as:
-+ *   - external clocks
-+ *   - PLLs
-+ *   - muxes/dividers in the order they appear in the x1830 programmers manual
-+ *   - gates in order of their bit in the CLKGR* registers
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_X1830_CGU_H__
-+#define __DT_BINDINGS_CLOCK_X1830_CGU_H__
-+
-+#define X1830_CLK_EXCLK			0
-+#define X1830_CLK_RTCLK			1
-+#define X1830_CLK_APLL			2
-+#define X1830_CLK_MPLL			3
-+#define X1830_CLK_EPLL			4
-+#define X1830_CLK_VPLL			5
-+#define X1830_CLK_OTGPHY		6
-+#define X1830_CLK_SCLKA			7
-+#define X1830_CLK_CPUMUX		8
-+#define X1830_CLK_CPU			9
-+#define X1830_CLK_L2CACHE		10
-+#define X1830_CLK_AHB0			11
-+#define X1830_CLK_AHB2PMUX		12
-+#define X1830_CLK_AHB2			13
-+#define X1830_CLK_PCLK			14
-+#define X1830_CLK_DDR			15
-+#define X1830_CLK_MAC			16
-+#define X1830_CLK_LCD			17
-+#define X1830_CLK_MSCMUX		18
-+#define X1830_CLK_MSC0			19
-+#define X1830_CLK_MSC1			20
-+#define X1830_CLK_SSIPLL		21
-+#define X1830_CLK_SSIPLL_DIV2	22
-+#define X1830_CLK_SSIMUX		23
-+#define X1830_CLK_EMC			24
-+#define X1830_CLK_EFUSE			25
-+#define X1830_CLK_OTG			26
-+#define X1830_CLK_SSI0			27
-+#define X1830_CLK_SMB0			28
-+#define X1830_CLK_SMB1			29
-+#define X1830_CLK_SMB2			30
-+#define X1830_CLK_UART0			31
-+#define X1830_CLK_UART1			32
-+#define X1830_CLK_SSI1			33
-+#define X1830_CLK_SFC			34
-+#define X1830_CLK_PDMA			35
-+#define X1830_CLK_TCU			36
-+#define X1830_CLK_DTRNG			37
-+#define X1830_CLK_OST			38
-+
-+#endif /* __DT_BINDINGS_CLOCK_X1830_CGU_H__ */
--- 
-2.11.0
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
