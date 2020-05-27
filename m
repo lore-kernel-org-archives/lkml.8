@@ -2,193 +2,91 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE06C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A09322089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s5sgK5hV"
+	by mail.kernel.org (Postfix) with ESMTP id 7323F208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:47:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590605266;
+	bh=bZCmPc2USyfP4yx+lw2F42nqfj+D+VBXl/s9jzDLbNo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wUlpjBSL0MEriSHbIdBIyxOsEJsMHn0+8wWgRL8KkMJeO5VGelCtY1U1AW/2bp0Cd
+	 npAr5cHioz8T9OncnLV2LMi3xRJsWstT2RsFvCGg+bFANL6JIVvv2sATejAQrHngg1
+	 b13MXakATpkf6zpBrqCNVGewlygzy6//iMJIc0u0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgE0Srn (ORCPT
+        id S1726862AbgE0Sri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 14:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
+        Wed, 27 May 2020 14:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgE0Srg (ORCPT
+        with ESMTP id S1726519AbgE0Srg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 14:47:36 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EABC08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 11:28:49 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f21so9186454pgg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 11:28:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iA+KkSp+x1pCOvFG2laI62cGHgeFrOqb4fOzsNTxNXU=;
-        b=s5sgK5hVj6s8lKi3Rri8hD77o4Tgsh/f//XKeSLPPL6IoaX/9mCJYEHRJ32vVuTTGB
-         dFOJ6DX54r/GDHqGsERVaSkKn7VZP6w7vmoq01S+s7Vgp4NCjhtVzBjBz/ibFnvGcWta
-         mSfHvumiHewYuXpM4XZwLfp01LJYUKENxLfVUkXnOtA0BezWqdmG+dG9FruFxrFvx+z0
-         OLSDlugaSodJcE0avHyTiDxelPvs1YxJU3Ddg4TK5lzP7IpA32ZcQqmyQOKAlpQDiDDP
-         fF30dP0+KbJyDOf08di6glcZut8WphRJqfLPENPijbkDbzZ6pcV6gQGYyCj6OH9Rd9v6
-         fRqg==
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBF0C008633;
+        Wed, 27 May 2020 11:40:43 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id p20so13784543iop.11;
+        Wed, 27 May 2020 11:40:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=iA+KkSp+x1pCOvFG2laI62cGHgeFrOqb4fOzsNTxNXU=;
-        b=ubItvF1VL3SvZkCUPigJTxfVRdXh7PPsFLIa9NdYyAbZunQoVJBKEDbNzUvYUNGzTJ
-         8APFqK1OhPCDD1If/apibZNQP2kEEdJeO1qnVzTyqN5g8QLtwhjpGrCrdgzitz5hrZlv
-         uNU2n6covs+ELypQpMaaooYUPC/v3fQFgpDd+LsZkC5qw7Pm+455HepDKFnOgAlmJIAx
-         f0U3mE1j15XxsUF/DpgGFsksK2plimw8B8J6HgPQgjwbHFKxlBDEPPNKYYaNNbdGjuek
-         87yOmVN0r3MfGJX/3ArZEAToNJukcZpiDAlfUzOM+ZwKQzyoi0PCjK+F+eCwIgtqt7dV
-         IUAw==
-X-Gm-Message-State: AOAM5308tG4QbaOyk/juvh07TM7vWy75C8pcMpyZbcXH6clGxPwh1IBc
-        DERxyMi+eAJ8qsXeQPBRV5WXlf4YtN6ntg==
-X-Google-Smtp-Source: ABdhPJy79EBrfQSWmv0ROoxKkjCOvcXwdJtlDQLwN27cdTeaTy6nksFR7zHfbpPjZAN2LXNgjfyAZw==
-X-Received: by 2002:a63:e008:: with SMTP id e8mr5139090pgh.451.1590604128900;
-        Wed, 27 May 2020 11:28:48 -0700 (PDT)
-Received: from google.com ([2620:15c:2ce:0:9efe:9f1:9267:2b27])
-        by smtp.gmail.com with ESMTPSA id z8sm2517225pgc.80.2020.05.27.11.28.47
+        bh=Gmh7khEi867Q1p2K+E8wmj2hjP4yzjtOYXkIcMdbpVQ=;
+        b=I1As+XBMvRg9gijph5P2Lk7peH1/VQ9mvVuSVDYsQmZqW+g/qzOyBKyOuAY2ndgkK2
+         NQVHPFY8PUwD9B9OD/+ZgaSR0dLHqDZgi12+Hxn4OQ7ONBwQ8exV0/aFyFvg+6V7rVFH
+         PI1d94KghP3QGVxPiifi0PCP8QCAS+4NDbcw+dxRIzilsXkJVqXcm8ZWfr6bSrIvhJVO
+         zClTRJNP3dCaTgo25pyo6a6ExwHOgWBBhx/X7XUFr4bJJceDXjLsijyPvbtTd5cc2uSb
+         x8iObz5XCvqV7tDAz6qpH0KIT1eRo2zptXwPXXNs4XgunLFX9Dsz8Jb1Xo9uXaru8Vfp
+         M9jg==
+X-Gm-Message-State: AOAM533ClhfmymtKNPVEzxqf+Hjjm4ZAQE6LVI6a0/vJPeEC6RAmE/yZ
+        dNqDZgb5N3ECkskiUToFbw==
+X-Google-Smtp-Source: ABdhPJym2U/ruXzq2JydPVxf7p+4P3gKGasMHeicBfOWFBEuOBkVOSd/wSxZqTlL5k6KdoxnjRd20g==
+X-Received: by 2002:a02:a19d:: with SMTP id n29mr7072088jah.85.1590604843286;
+        Wed, 27 May 2020 11:40:43 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v15sm2040958ila.57.2020.05.27.11.40.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 11:28:48 -0700 (PDT)
-Date:   Wed, 27 May 2020 11:28:43 -0700
-From:   Fangrui Song <maskray@google.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Enrico Weigelt <info@metux.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Bill Wendling <morbo@google.com>, Jian Cai <jiancai@google.com>
-Subject: Re: [PATCH] arm64: fix clang integrated assembler build
-Message-ID: <20200527182843.g6tbow4lqsvwl2ah@google.com>
-References: <20200527141435.1716510-1-arnd@arndb.de>
- <CAKwvOdnNxj-MdKj3aWoefF2W9PPG-TSeNU4Ym-N8NODJB5Yw_w@mail.gmail.com>
+        Wed, 27 May 2020 11:40:41 -0700 (PDT)
+Received: (nullmailer pid 2529615 invoked by uid 1000);
+        Wed, 27 May 2020 18:40:40 -0000
+Date:   Wed, 27 May 2020 12:40:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: Fix a refcounting bug in __of_attach_node_sysfs()
+Message-ID: <20200527184040.GA2529559@bogus>
+References: <20200520120414.GE172354@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdnNxj-MdKj3aWoefF2W9PPG-TSeNU4Ym-N8NODJB5Yw_w@mail.gmail.com>
+In-Reply-To: <20200520120414.GE172354@mwanda>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 20 May 2020 15:04:14 +0300, Dan Carpenter wrote:
+> The problem in this code is that if kobject_add() fails, then it should
+> call of_node_put(np) to drop the reference count.  I've actually moved
+> the of_node_get(np) later in the function to avoid needing to do clean
+> up.
+> 
+> Fixes: 5b2c2f5a0ea3 ("of: overlay: add missing of_node_get() in __of_attach_node_sysfs")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> v2: move the of_node_get() instead of doing clean up.  Also the v1 had a
+>     confusing typo in the commit message.
+> 
+>  drivers/of/kobj.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
 
-On 2020-05-27, 'Nick Desaulniers' via Clang Built Linux wrote:
->On Wed, May 27, 2020 at 7:14 AM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> clang and gas seem to interpret the symbols in memmove.S and
->> memset.S differently, such that clang does not make them
->> 'weak' as expected, which leads to a linker error, with both
->> ld.bfd and ld.lld:
->>
->> ld.lld: error: duplicate symbol: memmove
->> >>> defined at common.c
->> >>>            kasan/common.o:(memmove) in archive mm/built-in.a
->> >>> defined at memmove.o:(__memmove) in archive arch/arm64/lib/lib.a
->>
->> ld.lld: error: duplicate symbol: memset
->> >>> defined at common.c
->> >>>            kasan/common.o:(memset) in archive mm/built-in.a
->> >>> defined at memset.o:(__memset) in archive arch/arm64/lib/lib.a
->>
->> Copy the exact way these are written in memcpy_64.S, which does
->> not have the same problem.
->>
->> I don't know why this makes a difference, and it would be good
->> to have someone with a better understanding of assembler internals
->> review it.
->>
->> It might be either a bug in the kernel or a bug in the assembler,
->> no idea which one. My patch makes it work with all versions of
->> clang and gcc, which is probably helpful even if it's a workaround
->> for a clang bug.
->
->+ Bill, Fangrui, Jian
->I think we saw this bug or a very similar bug internally around the
->ordering of .weak to .global.
-
-This may be another instance of
-https://sourceware.org/pipermail/binutils/2020-March/000299.html
-https://lore.kernel.org/linuxppc-dev/20200325164257.170229-1-maskray@google.com/
-
-I haven't checked but there may be both a .globl directive and a .weak
-directive
-
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->> ---
->>  arch/arm64/lib/memcpy.S  | 3 +--
->>  arch/arm64/lib/memmove.S | 3 +--
->>  arch/arm64/lib/memset.S  | 3 +--
->>  3 files changed, 3 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm64/lib/memcpy.S b/arch/arm64/lib/memcpy.S
->> index e0bf83d556f2..dc8d2a216a6e 100644
->> --- a/arch/arm64/lib/memcpy.S
->> +++ b/arch/arm64/lib/memcpy.S
->> @@ -56,9 +56,8 @@
->>         stp \reg1, \reg2, [\ptr], \val
->>         .endm
->>
->> -       .weak memcpy
->>  SYM_FUNC_START_ALIAS(__memcpy)
->> -SYM_FUNC_START_PI(memcpy)
->> +SYM_FUNC_START_WEAK_PI(memcpy)
->>  #include "copy_template.S"
->>         ret
->>  SYM_FUNC_END_PI(memcpy)
->> diff --git a/arch/arm64/lib/memmove.S b/arch/arm64/lib/memmove.S
->> index 02cda2e33bde..1035dce4bdaf 100644
->> --- a/arch/arm64/lib/memmove.S
->> +++ b/arch/arm64/lib/memmove.S
->> @@ -45,9 +45,8 @@ C_h   .req    x12
->>  D_l    .req    x13
->>  D_h    .req    x14
->>
->> -       .weak memmove
->>  SYM_FUNC_START_ALIAS(__memmove)
->> -SYM_FUNC_START_PI(memmove)
->> +SYM_FUNC_START_WEAK_PI(memmove)
->>         cmp     dstin, src
->>         b.lo    __memcpy
->>         add     tmp1, src, count
->> diff --git a/arch/arm64/lib/memset.S b/arch/arm64/lib/memset.S
->> index 77c3c7ba0084..a9c1c9a01ea9 100644
->> --- a/arch/arm64/lib/memset.S
->> +++ b/arch/arm64/lib/memset.S
->> @@ -42,9 +42,8 @@ dst           .req    x8
->>  tmp3w          .req    w9
->>  tmp3           .req    x9
->>
->> -       .weak memset
->>  SYM_FUNC_START_ALIAS(__memset)
->> -SYM_FUNC_START_PI(memset)
->> +SYM_FUNC_START_WEAK_PI(memset)
->>         mov     dst, dstin      /* Preserve return value.  */
->>         and     A_lw, val, #255
->>         orr     A_lw, A_lw, A_lw, lsl #8
->> --
->> 2.26.2
->
->-- 
->Thanks,
->~Nick Desaulniers
->
->-- 
->You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
->To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
->To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/CAKwvOdnNxj-MdKj3aWoefF2W9PPG-TSeNU4Ym-N8NODJB5Yw_w%40mail.gmail.com.
+Applied, thanks!
