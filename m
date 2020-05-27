@@ -2,149 +2,127 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D78C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1818C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 216592078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:52:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aP+vMyRD"
+	by mail.kernel.org (Postfix) with ESMTP id 944F62078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:52:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389369AbgE0OwI (ORCPT
+        id S2389381AbgE0Owf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:52:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56424 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388621AbgE0OwI (ORCPT
+        Wed, 27 May 2020 10:52:35 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:47516 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388621AbgE0Owe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:52:08 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04REq0wB049154;
-        Wed, 27 May 2020 09:52:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590591120;
-        bh=W9cUVgUiVlKpasnouxZe/jr55TOUx7dt8VfCWyPWOHU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=aP+vMyRDyKm9P2Sjpt7nL7wSiynvQE/OEyts1J6pxlgOCR5o47Do4Ebj10NYbNVU/
-         ggZ0dJaWn4ONiiuqVKkvgBAU7KAfamGpKvNcrvlVBDbzZ/kr75gYTnKU6yYj6uaykC
-         4odm5C5sFsiNEUHBBAASLICXvNfpQvZfKhodOAmk=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04REq0FV077131
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 09:52:00 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 09:52:00 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 09:52:00 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04REpvqM115260;
-        Wed, 27 May 2020 09:51:58 -0500
-Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200526174716.14116-1-dmurphy@ti.com>
- <20200526174716.14116-5-dmurphy@ti.com> <20200527005224.GF782807@lunn.ch>
- <c0867d48-6f04-104b-8192-d61d4464a65f@ti.com>
- <20200527131204.GB793752@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <bbbf2c2e-2238-3e53-08eb-9d7ad3fc785b@ti.com>
-Date:   Wed, 27 May 2020 09:51:57 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 10:52:34 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 41D0780512;
+        Wed, 27 May 2020 16:52:28 +0200 (CEST)
+Date:   Wed, 27 May 2020 16:52:26 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: pl111: add CONFIG_VEXPRESS_CONFIG dependency
+Message-ID: <20200527145226.GA91560@ravnborg.org>
+References: <20200527133158.462057-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20200527131204.GB793752@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527133158.462057-1-arnd@arndb.de>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=MOBOZvRl c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=kj9zAlcOel0A:10 a=6kCPPG7m61ZZewUP65gA:9 a=CjuIK1q_8ugA:10
+        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+Hi Arnd.
 
-On 5/27/20 8:12 AM, Andrew Lunn wrote:
->> If the dt defines rgmii-rx/tx-id then these values are required not
->> optional.  That was the discussion on the binding.
-> How many times do i need to say it. They are optional. If not
-> specified, default to 2ns.
+On Wed, May 27, 2020 at 03:31:42PM +0200, Arnd Bergmann wrote:
+> The vexpress_config code fails to link in some configurations:
+> 
+> drivers/gpu/drm/pl111/pl111_versatile.o: in function `pl111_versatile_init':
+> (.text+0x1f0): undefined reference to `devm_regmap_init_vexpress_config'
+> 
+> Add a dependency that links to this only if the dependency is there,
+> and prevent the configuration where the drm driver is built-in but
+> the config is a loadable module.
+> 
+> Fixes: 826fc86b5903 ("drm: pl111: Move VExpress setup into versatile init")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-OK.  I guess then the DP83867 driver is wrong because it specifically 
-states in bold
+Could this be another way to fix it:
 
-     /* RX delay *must* be specified if internal delay of RX is used. */
+diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
+index 64f01a4e6767..1c38d3bd2e84 100644
+--- a/drivers/gpu/drm/pl111/pl111_versatile.c
++++ b/drivers/gpu/drm/pl111/pl111_versatile.c
+@@ -379,7 +379,7 @@ static int pl111_vexpress_clcd_init(struct device *dev, struct device_node *np,
+        u32 val;
+        int ret;
 
-It was signed off in commit fafc5db28a2ff
+-       if (!IS_ENABLED(CONFIG_VEXPRESS_CONFIG))
++       if (!IS_REACHABLE(CONFIG_VEXPRESS_CONFIG))
+                return -ENODEV;
 
-
->>>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
->>>> +				   &dp83869->tx_id_delay);
->>>> +	if (ret) {
->>>> +		dp83869->tx_id_delay = ret;
->>>> +		ret = 0;
->>>> +	}
->>>> +
->>>>    	return ret;
->>>>    }
->>>>    #else
->>>> @@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
->>>>    	return ret;
->>>>    }
->>>> +static int dp83869_get_delay(struct phy_device *phydev)
->>>> +{
->>>> +	struct dp83869_private *dp83869 = phydev->priv;
->>>> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
->>>> +	int tx_delay = 0;
->>>> +	int rx_delay = 0;
->>>> +
->>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
->>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
->>>> +		tx_delay = phy_get_delay_index(phydev,
->>>> +					       &dp83869_internal_delay[0],
->>>> +					       delay_size, dp83869->tx_id_delay,
->>>> +					       false);
->>>> +		if (tx_delay < 0) {
->>>> +			phydev_err(phydev, "Tx internal delay is invalid\n");
->>>> +			return tx_delay;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
->>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
->>>> +		rx_delay = phy_get_delay_index(phydev,
->>>> +					       &dp83869_internal_delay[0],
->>>> +					       delay_size, dp83869->rx_id_delay,
->>>> +					       false);
->>>> +		if (rx_delay < 0) {
->>>> +			phydev_err(phydev, "Rx internal delay is invalid\n");
->>>> +			return rx_delay;
->>>> +		}
->>>> +	}
->>> So any PHY using these properties is going to pretty much reproduce
->>> this code. Meaning is should all be in a helper.
->> The issue here is that the phy_mode may only be rgmii-txid so you only want
->> to find the tx_delay and return.
->>
->> Same with the RXID.  How is the helper supposed to know what delay to return
->> and look for?
-> How does this code do it? It looks at the value of interface.
-
-Actually I will be removing this check with setting the delays to default.
-
-Dan
+        /*
 
 
->      Andrew
+Then we no longer have the whole driver depending on
+the value of VEXPRESS_CONFIG.
+Not that I like IS_REACHABLE() but we already had
+IS_ENABLED() to cover up here, and that was not enough.
+
+With your patch would we then need the IS_ENABLED()
+check?
+
+	Sam
+
+> ---
+>  drivers/gpu/drm/pl111/Kconfig           | 1 +
+>  drivers/gpu/drm/pl111/pl111_versatile.c | 3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/pl111/Kconfig b/drivers/gpu/drm/pl111/Kconfig
+> index 80f6748055e3..33a005816fdd 100644
+> --- a/drivers/gpu/drm/pl111/Kconfig
+> +++ b/drivers/gpu/drm/pl111/Kconfig
+> @@ -3,6 +3,7 @@ config DRM_PL111
+>  	tristate "DRM Support for PL111 CLCD Controller"
+>  	depends on DRM
+>  	depends on ARM || ARM64 || COMPILE_TEST
+> +	depends on VEXPRESS_CONFIG || !VEXPRESS_CONFIG
+>  	depends on COMMON_CLK
+>  	select DRM_KMS_HELPER
+>  	select DRM_KMS_CMA_HELPER
+> diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
+> index 64f01a4e6767..451d74205108 100644
+> --- a/drivers/gpu/drm/pl111/pl111_versatile.c
+> +++ b/drivers/gpu/drm/pl111/pl111_versatile.c
+> @@ -476,7 +476,8 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
+>  	versatile_clcd_type = (enum versatile_clcd)clcd_id->data;
+>  
+>  	/* Versatile Express special handling */
+> -	if (versatile_clcd_type == VEXPRESS_CLCD_V2M) {
+> +	if (IS_ENABLED(CONFIG_VEXPRESS_CONFIG) &&
+> +	    versatile_clcd_type == VEXPRESS_CLCD_V2M) {
+>  		int ret = pl111_vexpress_clcd_init(dev, np, priv);
+>  		of_node_put(np);
+>  		if (ret)
+> -- 
+> 2.26.2
