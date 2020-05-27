@@ -2,212 +2,124 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1056FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C74C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8B1E20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2029E20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590589266;
-	bh=DgOjfhqIFRNoImLgp3PyGdGgSwtVwPALyFaKrh2la24=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J91U/Q+iEdHOgCtMZEKXGr+dqG3FfKVXmgEeayhD28PQdQO7oQ3OLywMKLuQyTG+J
-	 kM2KIOC1UruzPvplwAREtJFjSsKenHyS7K0b8SHyh+VWhYqV6mXXU2FtHV4xD9HyUy
-	 0zD6Ci3fpXgDLdm848eGHNzwqe40dJf2993ykJG0=
+	s=default; t=1590589284;
+	bh=F6FDdgKEkoqZ2mz6I/gwsbVZQqzI+jue9A6aen5NkIE=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=grfYgzXvfSUusjimAlJLKUp/NQ3OEjKWPDB5R0oGuJXTCIEG7mWKXVZ8/ELO7a9dZ
+	 bV6trVpOD/K+2gMqSoxREesGw8fTJwzyvyJ5NB8II/RfFaLuN06I5zaz53pmXziiFb
+	 b1F10yVZl6I/dNOQNxJsiqrEQTvLcy95aSf2GqJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389068AbgE0OVG (ORCPT
+        id S2389101AbgE0OVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388841AbgE0OVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:21:05 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FD0C2084C;
-        Wed, 27 May 2020 14:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590589264;
-        bh=DgOjfhqIFRNoImLgp3PyGdGgSwtVwPALyFaKrh2la24=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SWny30Q0Sd+wQYpaYUbpsIKavVjh405V0Ux5Gzh0Pt99+7LLTt3gs4vTZ5QijjmL0
-         6MEEwk5aqfBu8Pt/uprH7CCt+RXEkkkbPeHJapnOizcKgA031yGZnZRApatgA3SoPL
-         Ia+4+6M2ZTyvwzJ3o6HsVmuq7tpGP8CQsQblL5n0=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7588640AFD; Wed, 27 May 2020 11:20:57 -0300 (-03)
-Date:   Wed, 27 May 2020 11:20:57 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Nick Gasson <nick.gasson@arm.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf jvmti: Fix demangling Java symbols
-Message-ID: <20200527142057.GF14219@kernel.org>
-References: <20200427061520.24905-1-nick.gasson@arm.com>
- <20200427061520.24905-4-nick.gasson@arm.com>
+        Wed, 27 May 2020 10:21:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389072AbgE0OVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:21:23 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0ABC08C5C1;
+        Wed, 27 May 2020 07:21:22 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c12so5560544qkk.13;
+        Wed, 27 May 2020 07:21:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=PmfbmDEwWXL4BvaLDwT2z4rZRjeL8v9u316orBCGPsE=;
+        b=DLCV/9qp/eo/ydm2hUV10ZlWLk6rheVtyjcRfQ+8f/LMjMkhpz22lWZg3MvQwxHhs3
+         CHOnqxsMW1BIGdZ94iLc0LS3sc5JXalpHzd4cF3cp9CRoHIpeC+gW/uyUxTJxfO8Ul4V
+         JVfrzYFZzKvBL8i6ZDDZH6H3rOlSXRc56iFSAvbsbXi59riI5jYGK3akTKSrsmErr/3L
+         rxAWXOu46hcqmboR1f1aK4GeJckXcTonukZOWfZs8jNdv1cGw91nHofl+lXy8bFjEqmN
+         j3tA9he2fixBEaLwxstJpyNbX0evnrPvVY1KrLt+BS4kr34o8Olnti7/MCLhB4E9PczS
+         PhDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=PmfbmDEwWXL4BvaLDwT2z4rZRjeL8v9u316orBCGPsE=;
+        b=rIxM1pL7M2b6df9z33C6Fz8VT06oW91lWiRH59OpH1c4/0AvN/WU9tzqmO5/awGqGa
+         85Ddm96Y7Z25ZLoczm98U7Q6ovZW97UmpQ6AJIRxTv50ukABP+ugDz3ktaTp6dBF46rb
+         Og3Z19eEROgQ3cMiwW/9QOzToyyspl2d1xFRWGo2+pzT2aL3OJoOqP00oVHu1NJcpqi6
+         gB3RRbNGIKb4aL7o3ZPSU/xKPWSZW4Gd2x8eTRbwrdwVRVOSov68mVM90ZpsgYVTixiG
+         WLSNfiR1jHpZcu0jl4i5H6GGbj/VC5D9dnL4ItpqrOseraA0YPv1XsKJSrACuwFVm7FS
+         kGUA==
+X-Gm-Message-State: AOAM5332MahYu7pL10+r15jhXAV4DX6qn0RWfEzDP05ToTFKaaHgKlzM
+        RzCDXGFaYB9Ob8GugmpcvG/96tOX
+X-Google-Smtp-Source: ABdhPJwJ5w0FMyPpjzMetGcGvVQO5ReWFBlW0ncrsM00xH/mx+qxCMHrGJdo8aivZzXQmO2COCyivQ==
+X-Received: by 2002:a37:64c6:: with SMTP id y189mr4300125qkb.353.1590589281745;
+        Wed, 27 May 2020 07:21:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:74a])
+        by smtp.gmail.com with ESMTPSA id w13sm2750212qtk.66.2020.05.27.07.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 07:21:21 -0700 (PDT)
+Date:   Wed, 27 May 2020 10:21:19 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Subject: [GIT PULL] cgroup fixes for v5.7-rc7
+Message-ID: <20200527142119.GJ83516@mtj.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200427061520.24905-4-nick.gasson@arm.com>
-X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Apr 27, 2020 at 02:15:16PM +0800, Nick Gasson escreveu:
-> For a Java method signature like:
-> 
->     Ljava/lang/AbstractStringBuilder;appendChars(Ljava/lang/String;II)V
-> 
-> The demangler produces:
-> 
->     void class java.lang.AbstractStringBuilder.appendChars(class java.lang., shorttring., int, int)
-> 
-> The arguments should be (java.lang.String, int, int) but the demangler
-> interprets the "S" in String as the type code for "short". Correct this
-> and two other minor things:
-> 
-> - There is no "bool" type in Java, should be "boolean".
-> 
-> - The demangler prepends "class" to every Java class name. This is not
->   standard Java syntax and it wastes a lot of horizontal space if the
->   signature is long. Remove this as there isn't any ambiguity between
->   class names and primitives.
-> 
-> Also added a test case.
+Hello, Linus.
 
-So, I took this and split into a patch for the new 'perf test java' and
-then the fix, so that we can see the problem being detected and then
-apply the fix and see it fixed, the last patch in this series thus
-became:
+* Reverted stricter synchronization for cgroup recursive stats which was
+  prepping it for event counter usage which never got merged. The change was
+  causing performation regressions in some cases.
 
+* Restore bpf-based device-cgroup operation even when cgroup1 device cgroup
+  is disabled.
 
-commit 341e11c1d445999932da3f5d626c9fe096949ae3
-Author: Nick Gasson <nick.gasson@arm.com>
-Date:   Mon Apr 27 14:15:16 2020 +0800
+* An out-param init fix.
 
-    perf jvmti: Fix demangling Java symbols
-    
-    For a Java method signature like:
-    
-        Ljava/lang/AbstractStringBuilder;appendChars(Ljava/lang/String;II)V
-    
-    The demangler produces:
-    
-        void class java.lang.AbstractStringBuilder.appendChars(class java.lang., shorttring., int, int)
-    
-    The arguments should be (java.lang.String, int, int) but the demangler
-    interprets the "S" in String as the type code for "short". Correct this
-    and two other minor things:
-    
-    - There is no "bool" type in Java, should be "boolean".
-    
-    - The demangler prepends "class" to every Java class name. This is not
-      standard Java syntax and it wastes a lot of horizontal space if the
-      signature is long. Remove this as there isn't any ambiguity between
-      class names and primitives.
-    
-    Committer notes:
-    
-    This was split from a larger patch that also added a java demangler
-    'perf test' entry, that, before this patch shows the error being fixed
-    by it:
-    
-      $ perf test java
-      65: Demangle Java                                         : FAILED!
-      $ perf test -v java
-      Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
-      65: Demangle Java                                         :
-      --- start ---
-      test child forked, pid 307264
-      FAILED: Ljava/lang/StringLatin1;equals([B[B)Z: bool class java.lang.StringLatin1.equals(byte[], byte[]) != boolean java.lang.StringLatin1.equals(byte[], byte[])
-      FAILED: Ljava/util/zip/ZipUtils;CENSIZ([BI)J: long class java.util.zip.ZipUtils.CENSIZ(byte[], int) != long java.util.zip.ZipUtils.CENSIZ(byte[], int)
-      FAILED: Ljava/util/regex/Pattern$BmpCharProperty;match(Ljava/util/regex/Matcher;ILjava/lang/CharSequence;)Z: bool class java.util.regex.Pattern$BmpCharProperty.match(class java.util.regex.Matcher., int, class java.lang., charhar, shortequence) != boolean java.util.regex.Pattern$BmpCharProperty.match(java.util.regex.Matcher, int, java.lang.CharSequence)
-      FAILED: Ljava/lang/AbstractStringBuilder;appendChars(Ljava/lang/String;II)V: void class java.lang.AbstractStringBuilder.appendChars(class java.lang., shorttring., int, int) != void java.lang.AbstractStringBuilder.appendChars(java.lang.String, int, int)
-      FAILED: Ljava/lang/Object;<init>()V: void class java.lang.Object<init>() != void java.lang.Object<init>()
-      test child finished with -1
-      ---- end ----
-      Demangle Java: FAILED!
-      $
-    
-    After applying this patch:
-    
-      $ perf test  java
-      65: Demangle Java                                         : Ok
-      $
-    
-    Signed-off-by: Nick Gasson <nick.gasson@arm.com>
-    Reviewed-by: Ian Rogers <irogers@google.com>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-    Tested-by: Ian Rogers <irogers@google.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Link: http://lore.kernel.org/lkml/20200427061520.24905-4-nick.gasson@arm.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thanks.
 
-diff --git a/tools/perf/util/demangle-java.c b/tools/perf/util/demangle-java.c
-index 6fb7f34c0814..39c05200ed65 100644
---- a/tools/perf/util/demangle-java.c
-+++ b/tools/perf/util/demangle-java.c
-@@ -15,7 +15,7 @@ enum {
- 	MODE_CLASS  = 1,
- 	MODE_FUNC   = 2,
- 	MODE_TYPE   = 3,
--	MODE_CTYPE  = 3, /* class arg */
-+	MODE_CTYPE  = 4, /* class arg */
- };
- 
- #define BASE_ENT(c, n)	[c - 'A']=n
-@@ -27,7 +27,7 @@ static const char *base_types['Z' - 'A' + 1] = {
- 	BASE_ENT('I', "int" ),
- 	BASE_ENT('J', "long" ),
- 	BASE_ENT('S', "short" ),
--	BASE_ENT('Z', "bool" ),
-+	BASE_ENT('Z', "boolean" ),
- };
- 
- /*
-@@ -59,15 +59,16 @@ __demangle_java_sym(const char *str, const char *end, char *buf, int maxlen, int
- 
- 		switch (*q) {
- 		case 'L':
--			if (mode == MODE_PREFIX || mode == MODE_CTYPE) {
--				if (mode == MODE_CTYPE) {
-+			if (mode == MODE_PREFIX || mode == MODE_TYPE) {
-+				if (mode == MODE_TYPE) {
- 					if (narg)
- 						rlen += scnprintf(buf + rlen, maxlen - rlen, ", ");
- 					narg++;
- 				}
--				rlen += scnprintf(buf + rlen, maxlen - rlen, "class ");
- 				if (mode == MODE_PREFIX)
- 					mode = MODE_CLASS;
-+				else
-+					mode = MODE_CTYPE;
- 			} else
- 				buf[rlen++] = *q;
- 			break;
-@@ -120,7 +121,7 @@ __demangle_java_sym(const char *str, const char *end, char *buf, int maxlen, int
- 			if (mode != MODE_CLASS && mode != MODE_CTYPE)
- 				goto error;
- 			/* safe because at least one other char to process */
--			if (isalpha(*(q + 1)))
-+			if (isalpha(*(q + 1)) && mode == MODE_CLASS)
- 				rlen += scnprintf(buf + rlen, maxlen - rlen, ".");
- 			if (mode == MODE_CLASS)
- 				mode = MODE_FUNC;
+The following changes since commit 87ebc45d2d32936fb1c8242032eb0b9bcd058858:
+
+  Merge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux (2020-04-09 11:04:16 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.7-fixes
+
+for you to fetch changes up to eec8fd0277e37cf447b88c6be181e81df867bcf1:
+
+  device_cgroup: Cleanup cgroup eBPF device filter code (2020-04-13 14:41:54 -0400)
+
+----------------------------------------------------------------
+Daniel Xu (1):
+      xattr: fix uninitialized out-param
+
+Odin Ugedal (1):
+      device_cgroup: Cleanup cgroup eBPF device filter code
+
+Tejun Heo (1):
+      Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
+
+ drivers/gpu/drm/amd/amdkfd/kfd_priv.h |  2 +-
+ fs/xattr.c                            |  6 +++---
+ include/linux/device_cgroup.h         | 14 +++++---------
+ kernel/cgroup/rstat.c                 | 16 +++-------------
+ security/Makefile                     |  2 +-
+ security/device_cgroup.c              | 19 ++++++++++++++++---
+ 6 files changed, 29 insertions(+), 30 deletions(-)
+
+-- 
+tejun
