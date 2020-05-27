@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A47C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 223D2208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7F02078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNNjsksJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0yHuXuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgE0GqC (ORCPT
+        id S1728921AbgE0GqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57228 "EHLO
+        Wed, 27 May 2020 02:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgE0GqA (ORCPT
+        with ESMTP id S1725613AbgE0GqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:46:00 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD80FC03E96F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:45:59 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bg4so4481969plb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:45:59 -0700 (PDT)
+        Wed, 27 May 2020 02:46:03 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103BDC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:03 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id ci21so1134160pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=4+7G4sF/LBY2T1Rcr4q2hABu3PPTL1U0eg/qjTVIM5Q=;
-        b=RNNjsksJBEQSxwRaNcnVBhv83AMTxB3wY3MlvdwSMKYgoPiK/kARvmuDjFJcftvh3S
-         79VFKJ+he2uzx32m5P5mHvnTDbrIZsBr90Ydysl3aebsb8+Dno7RZzjqNjEk3BvavEfY
-         Rg7oO+jPMM5Wccn1TjWZYOFdG7HmnG7yJFPhYN3xLOXUK5AaFZzSLdRzWe/OaIkFgRj2
-         mgrLhLJL5dbtN34btLxxUwRastIZdCY8rPbUFqyxn6GjzNoekeTGmIYxJcLn4tZyBuXQ
-         T+xFn7oBofObcYuB/UBtvXD1bFNQiY54+a80X2jrwjWK9FrWoP3jnt1//BwNA9flzbwi
-         5BDQ==
+        bh=DH1Hdew4VRZCZhJxkyQryefaoqzOycwYmvHf5lPUN74=;
+        b=Q0yHuXuLI71c7kOPwlXr4t8Ok3o0qsTJXGkXSY/LyuptMkVYki8i92yDxlVja+6Cx2
+         syU3Ry3ooaq1PJB9xEX7wVoGXTExvIfwtMRXIHLSzpdvYfi/5x5R/6kN/s7HuSwN1Yi1
+         1MM0d8k5TRhX3GI/TgygXGGqTIAbhato8S01QOHnNzfiYrBrqU3P4hA/cX7bi+rzdggM
+         a6r/chg95PsnR6sc9sS92doJZIH2Q9Dxf3ZiXzhZWlLl6gFzR7/xteGxdluPTAhjMfr8
+         eXEKJ2suLE1n7QhcCk7UGzsF8Tu6rHyvHfgNbK5FU7+5GKgO2QT5GhrdF16PbTcY94ZO
+         hSMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=4+7G4sF/LBY2T1Rcr4q2hABu3PPTL1U0eg/qjTVIM5Q=;
-        b=b5Lj+wsu1qLbztS2t8XvFB8tl69W/HMUr2TcdF3FtkStdoUDuDyu+tVHsa3v/oALSt
-         8zWd60BeGESMwpGTClDtTadYkn+e29zlFACI1ELwYLk2+up0vgprgH4XHB335W9a9p/M
-         RZUosr+TMDu2/GdxnHtlElKHUDa6mMBidsc5SgXEB5LQU4GP0Ra4IE3ZAVBR5nnojiOF
-         6L3by2GrLTHkA/quqAY0uYpwsY5yW5SVMvS3LOLdCDqAd2xFCz9rV4XhXN3hF90Nrc+6
-         swR0G9w1earwAjZ2NO3CpekYiphWD2V1sVx1kh+6vrayb/jfMRPqDlSxfxeS43ltBZAU
-         paFg==
-X-Gm-Message-State: AOAM5325YE18/GFzF2G6qaC7+hQ7rIiUIzxal2z3dv3EDzIrrLBhGRRT
-        Lq4ppQM8UYQSXwvSRnh14pY=
-X-Google-Smtp-Source: ABdhPJwb/bznyw4ccdgL1+FH7sh9R8l8nGE2XSUt8mY61KSL7oERqpos6LYIsBdJBtNARZkTPVr5JQ==
-X-Received: by 2002:a17:902:be09:: with SMTP id r9mr4508282pls.271.1590561959345;
-        Tue, 26 May 2020 23:45:59 -0700 (PDT)
+        bh=DH1Hdew4VRZCZhJxkyQryefaoqzOycwYmvHf5lPUN74=;
+        b=t8oOKlsUHeeRbRJKo3TdBjRdqAevxpAKrG5kRKB6h7nQDXfkfmM3N2oKOBnHxVfHdD
+         YmmAaOYl8a/ZZBueOb6IzmTLjVxJPMvKaSw62aM8nN689a5lxZcDHv0KUTvRHJzXJ2MO
+         xBT8klQxkpaov+iiR305n0uKxuLwBTlsQzDWalALKG7Z0cdoV4MV7w++PI7b+F+8tlIv
+         P5TMC0LILBl4IxQ1PFtiOAQ+2JTnTDkE8KWHjnNCmpM1WVuEjWY6s5KAsV7vq23Gt4DH
+         BHVeLCFQyvRHrbej3WDjlSoBoVOkQ2IP+F425Wfau/dIcfTCLa4ZZ1g19Kx5U5qfedy/
+         S9GQ==
+X-Gm-Message-State: AOAM5336l1vGd66nLwZe7oql/lp3u79GMT/RhUQuNQnIXRaLU1CEE4P/
+        9J1JBX3uCLHVINv/MIo4xRA=
+X-Google-Smtp-Source: ABdhPJyx0G41Rs4o8104XqHZYQ36JBYP1fUYGFzqqpMG0zG/bKxDfppyxVjKUtDKNinBCmUScK644w==
+X-Received: by 2002:a17:902:7e4e:: with SMTP id a14mr4452265pln.329.1590561962552;
+        Tue, 26 May 2020 23:46:02 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id r13sm443883pgv.50.2020.05.26.23.45.56
+        by smtp.gmail.com with ESMTPSA id r13sm443883pgv.50.2020.05.26.23.45.59
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 23:45:58 -0700 (PDT)
+        Tue, 26 May 2020 23:46:02 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -70,9 +70,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Michal Hocko <mhocko@suse.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 05/12] mm/hugetlb: unify hugetlb migration callback function
-Date:   Wed, 27 May 2020 15:44:56 +0900
-Message-Id: <1590561903-13186-6-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v2 06/12] mm/hugetlb: make hugetlb migration target allocation APIs CMA aware
+Date:   Wed, 27 May 2020 15:44:57 +0900
+Message-Id: <1590561903-13186-7-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -83,99 +83,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-There is no difference between two migration callback functions,
-alloc_huge_page_node() and alloc_huge_page_nodemask(), except
-__GFP_THISNODE handling. This patch moves this handling to
-alloc_huge_page_nodemask() and function caller. Then, remove
-alloc_huge_page_node().
+There is a user who do not want to use CMA memory for migration. Until
+now, it is implemented by caller side but it's not optimal since there
+is limited information on caller. This patch implements it on callee side
+to get better result.
 
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- include/linux/hugetlb.h |  8 --------
- mm/hugetlb.c            | 23 ++---------------------
- mm/mempolicy.c          |  3 ++-
- 3 files changed, 4 insertions(+), 30 deletions(-)
+ include/linux/hugetlb.h |  2 --
+ mm/gup.c                |  9 +++------
+ mm/hugetlb.c            | 21 +++++++++++++++++----
+ mm/internal.h           |  1 +
+ 4 files changed, 21 insertions(+), 12 deletions(-)
 
 diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 15c8fb8..f482563 100644
+index f482563..3d05f7d 100644
 --- a/include/linux/hugetlb.h
 +++ b/include/linux/hugetlb.h
-@@ -505,8 +505,6 @@ struct huge_bootmem_page {
+@@ -503,8 +503,6 @@ struct huge_bootmem_page {
+ 	struct hstate *hstate;
+ };
  
- struct page *alloc_migrate_huge_page(struct hstate *h,
- 				struct alloc_control *ac);
--struct page *alloc_huge_page_node(struct hstate *h,
+-struct page *alloc_migrate_huge_page(struct hstate *h,
 -				struct alloc_control *ac);
  struct page *alloc_huge_page_nodemask(struct hstate *h,
  				struct alloc_control *ac);
  struct page *alloc_huge_page_vma(struct hstate *h, struct vm_area_struct *vma,
-@@ -755,12 +753,6 @@ static inline void huge_ptep_modify_prot_commit(struct vm_area_struct *vma,
- struct hstate {};
- 
- static inline struct page *
--alloc_huge_page_node(struct hstate *h, struct alloc_control *ac)
--{
--	return NULL;
--}
--
--static inline struct page *
- alloc_huge_page_nodemask(struct hstate *h, struct alloc_control *ac)
- {
- 	return NULL;
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index dabe460..8132985 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1980,31 +1980,12 @@ struct page *alloc_buddy_huge_page_with_mpol(struct hstate *h,
- }
- 
- /* page migration callback function */
--struct page *alloc_huge_page_node(struct hstate *h,
--				struct alloc_control *ac)
--{
--	struct page *page = NULL;
--
--	ac->gfp_mask |= htlb_alloc_mask(h);
--	if (ac->nid != NUMA_NO_NODE)
--		ac->gfp_mask |= __GFP_THISNODE;
--
--	spin_lock(&hugetlb_lock);
--	if (h->free_huge_pages - h->resv_huge_pages > 0)
--		page = dequeue_huge_page_nodemask(h, ac);
--	spin_unlock(&hugetlb_lock);
--
--	if (!page)
--		page = alloc_migrate_huge_page(h, ac);
--
--	return page;
--}
--
--/* page migration callback function */
- struct page *alloc_huge_page_nodemask(struct hstate *h,
- 				struct alloc_control *ac)
- {
- 	ac->gfp_mask |= htlb_alloc_mask(h);
-+	if (ac->nid == NUMA_NO_NODE)
-+		ac->gfp_mask &= ~__GFP_THISNODE;
- 
- 	spin_lock(&hugetlb_lock);
- 	if (h->free_huge_pages - h->resv_huge_pages > 0) {
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 3b6b551..e705efd 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1073,9 +1073,10 @@ struct page *alloc_new_node_page(struct page *page, unsigned long node)
+diff --git a/mm/gup.c b/mm/gup.c
+index 6b78f11..87eca79 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1617,14 +1617,11 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
  		struct alloc_control ac = {
- 			.nid = node,
+ 			.nid = nid,
  			.nmask = NULL,
-+			.gfp_mask = __GFP_THISNODE,
+-			.gfp_mask = gfp_mask,
++			.gfp_mask = __GFP_NOWARN,
++			.skip_cma = true,
  		};
  
--		return alloc_huge_page_node(h, &ac);
+-		/*
+-		 * We don't want to dequeue from the pool because pool pages will
+-		 * mostly be from the CMA region.
+-		 */
+-		return alloc_migrate_huge_page(h, &ac);
 +		return alloc_huge_page_nodemask(h, &ac);
- 	} else if (PageTransHuge(page)) {
- 		struct page *thp;
+ 	}
  
+ 	if (PageTransHuge(page)) {
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 8132985..e465582 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1033,13 +1033,19 @@ static void enqueue_huge_page(struct hstate *h, struct page *page)
+ 	h->free_huge_pages_node[nid]++;
+ }
+ 
+-static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
++static struct page *dequeue_huge_page_node_exact(struct hstate *h,
++						int nid, bool skip_cma)
+ {
+ 	struct page *page;
+ 
+-	list_for_each_entry(page, &h->hugepage_freelists[nid], lru)
++	list_for_each_entry(page, &h->hugepage_freelists[nid], lru) {
++		if (skip_cma && is_migrate_cma_page(page))
++			continue;
++
+ 		if (!PageHWPoison(page))
+ 			break;
++	}
++
+ 	/*
+ 	 * if 'non-isolated free hugepage' not found on the list,
+ 	 * the allocation fails.
+@@ -1080,7 +1086,7 @@ static struct page *dequeue_huge_page_nodemask(struct hstate *h,
+ 			continue;
+ 		node = zone_to_nid(zone);
+ 
+-		page = dequeue_huge_page_node_exact(h, node);
++		page = dequeue_huge_page_node_exact(h, node, ac->skip_cma);
+ 		if (page)
+ 			return page;
+ 	}
+@@ -1937,7 +1943,7 @@ static struct page *alloc_surplus_huge_page(struct hstate *h, gfp_t gfp_mask,
+ 	return page;
+ }
+ 
+-struct page *alloc_migrate_huge_page(struct hstate *h,
++static struct page *alloc_migrate_huge_page(struct hstate *h,
+ 				struct alloc_control *ac)
+ {
+ 	struct page *page;
+@@ -1999,6 +2005,13 @@ struct page *alloc_huge_page_nodemask(struct hstate *h,
+ 	}
+ 	spin_unlock(&hugetlb_lock);
+ 
++	/*
++	 * clearing __GFP_MOVABLE flag ensure that allocated page
++	 * will not come from CMA area
++	 */
++	if (ac->skip_cma)
++		ac->gfp_mask &= ~__GFP_MOVABLE;
++
+ 	return alloc_migrate_huge_page(h, ac);
+ }
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index 6e613ce..159cfd6 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -618,6 +618,7 @@ struct alloc_control {
+ 	int nid;		/* preferred node id */
+ 	nodemask_t *nmask;
+ 	gfp_t gfp_mask;
++	bool skip_cma;
+ };
+ 
+ #endif	/* __MM_INTERNAL_H */
 -- 
 2.7.4
 
