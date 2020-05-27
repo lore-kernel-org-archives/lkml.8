@@ -2,175 +2,111 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1318C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13BCE208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8824B208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="B3+uwRjU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kNycR28Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ue2h3jU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390066AbgE0PtY (ORCPT
+        id S2389014AbgE0P6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:49:24 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:44381 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387987AbgE0PtV (ORCPT
+        Wed, 27 May 2020 11:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728241AbgE0P6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:49:21 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6F4BB581FEA;
-        Wed, 27 May 2020 11:49:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=r517+YT5Oy8Rd
-        MCEZLSTodi2E3DjytFc7pLa4aHgYec=; b=B3+uwRjUFw0LhBTnAodZo/G3rbFCX
-        NT43/84B+++BXF5lFHaNiqP6XKhtQsr/CJb5YLg5KYLn/SKM9bAvP1pYJghT/VHH
-        5zdedQfLbYFvm+kBE6pkwE2lNjsa28xB6IMcaAU25QvE2FB2fnBevnGbN2alHtKa
-        mSwtT/sac6F/DsUjT2c6W556NwL40OxQq+xIEN3TCdJ8WbfZOe2rQYaeH5I4wbz/
-        xkynXPFuLZHPoSXvmJ5AFBsKvjkuelj7wptiwNwxXonEn4E9xFJjVuWySP0WM7r0
-        zmI2mS2hOUIpsZ6/uqisxnX4YIfrq3zlsvbykAdiyc9IfAcqWEQd655tg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=r517+YT5Oy8RdMCEZLSTodi2E3DjytFc7pLa4aHgYec=; b=kNycR28Z
-        7D6BcoRgZMZ3U6qEsGmpfubqSUHn5YHXyMh2sUpixqBgNEVvYBfWi1mmdg33lbAY
-        03mu06/Xe1zFxjqooVTtcWdQruU5FYQZxRNIX5oOS+2IniDrmNZjizeIWK/auoRE
-        idWSI+3NVr8kT8JKlppy8bqFDnRN1P50s/8cqGnQUpCTWFuELBeHk6N/l/U2xrqf
-        eytKVrJsQTaTbKfDld62O7Vyy7qaayosOcMkigzbTpnmyxm5HckNqKCVn8K7Uq3Q
-        WBW7AAPEJZ03cW8m663tT1Ig5SfuQv/g6nOs+J7OGbxwg+LLTIVrR9oimqB5QI4j
-        u8ClrtBcBmbjYg==
-X-ME-Sender: <xms:AIzOXhmMi4GXrWugG91LG0_ks3rpNTTvIGkILZtxpMYat2PwekwfTA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdegne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:AIzOXs04S6Wf0hk6MrJypYq6nP7l71tlKPs6vAQLajlehsbgXPVdcg>
-    <xmx:AIzOXnq1axDSKndxbkNEUetAf5Ppsq28pjp1_DOw7kvB6osByyhz-Q>
-    <xmx:AIzOXhlNQyDnHW2sdaDfjlNNj-sOoWRnm_aTo1z5sXaslcb3DvH7Mw>
-    <xmx:AIzOXoLwujUJ5FR0CjLM-h-EIvnxfPzk6zgN0weuWxeGZrof0OpMyw>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0B61F328005E;
-        Wed, 27 May 2020 11:49:19 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 002/105] reset: simple: Add reset callback
-Date:   Wed, 27 May 2020 17:47:32 +0200
-Message-Id: <be2cecb2654e68385561a15df7967c7723d5531d.1590594512.git-series.maxime@cerno.tech>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+        Wed, 27 May 2020 11:58:16 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2054CC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:58:16 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id q8so25123805iow.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2KPqlFHIaFhXtFQPvI4kGCnPDvEbmm2Nd6KaCmQEOqI=;
+        b=Ue2h3jU4f/LBJYIl5gzQnW6cFNCOrZdqN7G+mrLx2xOGYGPx/CgSI78VNT8fRU9xq0
+         lkqDwqHymn6uTiXkL2sB3Jv/jYk+VIahOCjFbKqx8Se6imQdjZZUsQFWoJWcIDQeqDk5
+         /GnqOXT52GNJbnAJAVHjKsaA7r+TEhvfYyGLNjgh/ZMUanZ2wJ1iKUHTICzXVF7Kg0X3
+         gq28gtfdxSplbXNONiMr/re5nk3r/bGumjn/tgmz48H8r/lbMOrYi+fNZKL7nbkrscRw
+         ee3POVIFcVhS0M75LB0rtu5A2OAsHWylRbguOty3S23SpgXlSpQ6t0xRaprA1Kp3ZIS7
+         GMgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2KPqlFHIaFhXtFQPvI4kGCnPDvEbmm2Nd6KaCmQEOqI=;
+        b=GOR09HM0acRGsbuuJdCpbJjN7UFuql6/+ypV4OTQl4ox9z1LTO1B4XNR2ckmOuDRxd
+         AhNPtXd11gUQZoAHP0Er/iunqc6Tt4vvBJm/kVXyRrur1kQtQPqUHsXhGYZDUEpHWVsy
+         D894sxwInPr0VfJWZG3vy2NFEHKcY58qZkdxEx+bfvKZi7/H4/G2EFPrlhwqItk3QyD6
+         gZZ9qWKJh6A8yjoj/jh0vGiy2RFlB80JkKkILCaJPL/N+TK1Jdyzih+ni068Uv9EKvFH
+         tcBTXdOYupuxka+sRkyLhxUf3PkWJu9ZoZJXJTEhvbe0XBF2LcPpxhUa3T9LkzKSUJay
+         0l7Q==
+X-Gm-Message-State: AOAM5323gQT1+sXhZwVBD+JyBH4E/FNK42qGfxirTQkQXY5raksQrgm+
+        njqSmdvxI5O8Qy7cxVgA44dwMJaWq6MTW/zfcEAL8w==
+X-Google-Smtp-Source: ABdhPJwEacnpf6hd8M9CKQVk2EmgBvTRIgmuQRIOr4WGHoTCA7OXr3+tw4e5T7AV1FeZN+6cRErbAP2GfUUpHfxEDg0=
+X-Received: by 2002:a05:6602:2e96:: with SMTP id m22mr21995431iow.165.1590595095340;
+ Wed, 27 May 2020 08:58:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200526055241.2671-1-vulab@iscas.ac.cn>
+In-Reply-To: <20200526055241.2671-1-vulab@iscas.ac.cn>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 27 May 2020 09:58:04 -0600
+Message-ID: <CANLsYkxU-Srbu+-GT13cVfUqjE4GOGhtkxZgKfxGz+P=n1BB7A@mail.gmail.com>
+Subject: Re: [PATCH] coresight: Use devm_kcalloc() in coresight_alloc_conns()
+To:     Xu Wang <vulab@iscas.ac.cn>
+Cc:     "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reset-simple code lacks a reset callback that is still pretty easy to
-implement. The only real thing to consider is the delay needed for a device
-to be reset, so let's expose that as part of the reset-simple driver data.
+On Mon, 25 May 2020 at 23:53, Xu Wang <vulab@iscas.ac.cn> wrote:
+>
+> A multiplication for the size determination of a memory allocation
+> indicated that an array data structure should be processed.
+> Thus use the corresponding function "devm_kcalloc".
+>
+> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+> ---
+>  drivers/hwtracing/coresight/coresight-platform.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 43418a2126ff..6720049409f3 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -27,9 +27,8 @@ static int coresight_alloc_conns(struct device *dev,
+>                                  struct coresight_platform_data *pdata)
+>  {
+>         if (pdata->nr_outport) {
+> -               pdata->conns = devm_kzalloc(dev, pdata->nr_outport *
+> -                                           sizeof(*pdata->conns),
+> -                                           GFP_KERNEL);
+> +               pdata->conns = devm_kcalloc(dev, pdata->nr_outport,
+> +                                           sizeof(*pdata->conns), GFP_KERNEL);
 
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
----
- drivers/reset/reset-simple.c       | 20 ++++++++++++++++++++
- include/linux/reset/reset-simple.h |  7 +++++++
- 2 files changed, 27 insertions(+)
+I have applied your patch.
 
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index c854aa351640..e066614818a3 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -11,6 +11,7 @@
-  * Maxime Ripard <maxime.ripard@free-electrons.com>
-  */
- 
-+#include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/io.h>
-@@ -63,6 +64,24 @@ static int reset_simple_deassert(struct reset_controller_dev *rcdev,
- 	return reset_simple_update(rcdev, id, false);
- }
- 
-+static int reset_simple_reset(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct reset_simple_data *data = to_reset_simple_data(rcdev);
-+	int ret;
-+
-+	if (!data->reset_us)
-+		return -ENOTSUPP;
-+
-+	ret = reset_simple_assert(rcdev, id);
-+	if (ret)
-+		return ret;
-+
-+	usleep_range(data->reset_us, data->reset_us * 2);
-+
-+	return reset_simple_deassert(rcdev, id);
-+}
-+
- static int reset_simple_status(struct reset_controller_dev *rcdev,
- 			       unsigned long id)
- {
-@@ -80,6 +99,7 @@ static int reset_simple_status(struct reset_controller_dev *rcdev,
- const struct reset_control_ops reset_simple_ops = {
- 	.assert		= reset_simple_assert,
- 	.deassert	= reset_simple_deassert,
-+	.reset		= reset_simple_reset,
- 	.status		= reset_simple_status,
- };
- EXPORT_SYMBOL_GPL(reset_simple_ops);
-diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
-index 08ccb25a55e6..c3e44f45b0f7 100644
---- a/include/linux/reset/reset-simple.h
-+++ b/include/linux/reset/reset-simple.h
-@@ -27,6 +27,12 @@
-  * @status_active_low: if true, bits read back as cleared while the reset is
-  *                     asserted. Otherwise, bits read back as set while the
-  *                     reset is asserted.
-+ * @reset_us: Minimum delay in microseconds needed that needs to be
-+ *            waited for between an assert and a deassert to reset the
-+ *            device. If multiple consumers with different delay
-+ *            requirements are connected to this controller, it must
-+ *            be the largest minimum delay. 0 means that such a delay is
-+ *            unknown and the reset operation is unsupported.
-  */
- struct reset_simple_data {
- 	spinlock_t			lock;
-@@ -34,6 +40,7 @@ struct reset_simple_data {
- 	struct reset_controller_dev	rcdev;
- 	bool				active_low;
- 	bool				status_active_low;
-+	unsigned int			reset_us;
- };
- 
- extern const struct reset_control_ops reset_simple_ops;
--- 
-git-series 0.9.1
+Thanks,
+Mathieu
+
+>                 if (!pdata->conns)
+>                         return -ENOMEM;
+>         }
+> --
+> 2.17.1
+>
