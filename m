@@ -2,71 +2,66 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1318C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9329C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8824B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ue2h3jU4"
+	by mail.kernel.org (Postfix) with ESMTP id B9B4120FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590595106;
+	bh=rD9mTskK3vL3pwYc4og0qXmxHRe/BU/7741skVQKuN0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=glvstLNZmKtSUli3a87eDJ3YwtQF3a7Do1bmKQUHwjajmYSDNNRqHfPActOyAhoKs
+	 kUXiaRAGrwfloSN7FXE1PzIMit8Ua5o76Y8J1GGfYq391oT54DKPXrcfvoVWXdBuOT
+	 xU5509o5jjoWLRq2GzvzNf4oEXk1ErZqsYyzmUgg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389014AbgE0P6T (ORCPT
+        id S2389602AbgE0P60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbgE0P6Q (ORCPT
+        Wed, 27 May 2020 11:58:26 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35792 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730443AbgE0P6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:58:16 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2054CC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:58:16 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id q8so25123805iow.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2KPqlFHIaFhXtFQPvI4kGCnPDvEbmm2Nd6KaCmQEOqI=;
-        b=Ue2h3jU4f/LBJYIl5gzQnW6cFNCOrZdqN7G+mrLx2xOGYGPx/CgSI78VNT8fRU9xq0
-         lkqDwqHymn6uTiXkL2sB3Jv/jYk+VIahOCjFbKqx8Se6imQdjZZUsQFWoJWcIDQeqDk5
-         /GnqOXT52GNJbnAJAVHjKsaA7r+TEhvfYyGLNjgh/ZMUanZ2wJ1iKUHTICzXVF7Kg0X3
-         gq28gtfdxSplbXNONiMr/re5nk3r/bGumjn/tgmz48H8r/lbMOrYi+fNZKL7nbkrscRw
-         ee3POVIFcVhS0M75LB0rtu5A2OAsHWylRbguOty3S23SpgXlSpQ6t0xRaprA1Kp3ZIS7
-         GMgA==
+        Wed, 27 May 2020 11:58:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 69so19563657otv.2;
+        Wed, 27 May 2020 08:58:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2KPqlFHIaFhXtFQPvI4kGCnPDvEbmm2Nd6KaCmQEOqI=;
-        b=GOR09HM0acRGsbuuJdCpbJjN7UFuql6/+ypV4OTQl4ox9z1LTO1B4XNR2ckmOuDRxd
-         AhNPtXd11gUQZoAHP0Er/iunqc6Tt4vvBJm/kVXyRrur1kQtQPqUHsXhGYZDUEpHWVsy
-         D894sxwInPr0VfJWZG3vy2NFEHKcY58qZkdxEx+bfvKZi7/H4/G2EFPrlhwqItk3QyD6
-         gZZ9qWKJh6A8yjoj/jh0vGiy2RFlB80JkKkILCaJPL/N+TK1Jdyzih+ni068Uv9EKvFH
-         tcBTXdOYupuxka+sRkyLhxUf3PkWJu9ZoZJXJTEhvbe0XBF2LcPpxhUa3T9LkzKSUJay
-         0l7Q==
-X-Gm-Message-State: AOAM5323gQT1+sXhZwVBD+JyBH4E/FNK42qGfxirTQkQXY5raksQrgm+
-        njqSmdvxI5O8Qy7cxVgA44dwMJaWq6MTW/zfcEAL8w==
-X-Google-Smtp-Source: ABdhPJwEacnpf6hd8M9CKQVk2EmgBvTRIgmuQRIOr4WGHoTCA7OXr3+tw4e5T7AV1FeZN+6cRErbAP2GfUUpHfxEDg0=
-X-Received: by 2002:a05:6602:2e96:: with SMTP id m22mr21995431iow.165.1590595095340;
- Wed, 27 May 2020 08:58:15 -0700 (PDT)
+        bh=AQuabQyL0NgSQawHuCBbM06Uabm6iw+SZxZ1s5FLlmI=;
+        b=ADgKb0M1LMTLd2J7P5FDwQkUC4jZvTZSBEq9vaYT/2NoPMMavFSlnAdSTDX8Z0KpmD
+         UlT28gPqLSx/0HmfsYKL9WUvHngIwzS3EARQyiYrw9Do2BADkUX/5pu0PONh3VEJ+n8i
+         9POT/agPfyqanMg35yrDAfCQrF4UBkaXxJPcwRRcxroeyuY8ftIYsT0DP+GicHabyV/k
+         MF3faPCE86+yQndZTcEXePUCF/mwEd0H7BWBn0IWQFpuKSxv44RMZ8SOMuEvYpSReCum
+         70h20yUCi+unX80ARit3DnZGEV3f33HSDUtwK0phUoTMEYgc2kdJKSmZAuuvo6ynf/Nq
+         JFVw==
+X-Gm-Message-State: AOAM533EJgYwIvbUpuG6rgmIqATM+qGjlMKN2rR/0Bi/DnO638edQl3f
+        aSKISilHIZVCgColULKCiKJsFtUn45zsuqbRrT4=
+X-Google-Smtp-Source: ABdhPJxZVUkNZZJOj47bYNYMRKPYK5sTIzrR5L6ethTLfIfWOYb2kkqtX77sqotxWR7aaeZzl2Agv4JRbcsf2h3jXXw=
+X-Received: by 2002:a9d:3d05:: with SMTP id a5mr5178288otc.262.1590595103734;
+ Wed, 27 May 2020 08:58:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526055241.2671-1-vulab@iscas.ac.cn>
-In-Reply-To: <20200526055241.2671-1-vulab@iscas.ac.cn>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 27 May 2020 09:58:04 -0600
-Message-ID: <CANLsYkxU-Srbu+-GT13cVfUqjE4GOGhtkxZgKfxGz+P=n1BB7A@mail.gmail.com>
-Subject: Re: [PATCH] coresight: Use devm_kcalloc() in coresight_alloc_conns()
-To:     Xu Wang <vulab@iscas.ac.cn>
-Cc:     "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+References: <20200519181410.GA1963@dumbo> <CAJZ5v0jgA3hh3nB60ANKN1WG9py9BoBqp8N8BuM2W-gpcUaPpg@mail.gmail.com>
+ <20200526161932.GD252930@magnolia>
+In-Reply-To: <20200526161932.GD252930@magnolia>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 27 May 2020 17:58:12 +0200
+Message-ID: <CAJZ5v0giCLCqVCTNZW64UYnZvgmOd492YuwUH2KDaWyP4aX+TQ@mail.gmail.com>
+Subject: Re: [PATCH v2] PM: hibernate: restrict writes to the resume device
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Domenico Andreoli <domenico.andreoli@linux.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>, "Ted Ts'o" <tytso@mit.edu>,
+        Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,39 +69,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 25 May 2020 at 23:53, Xu Wang <vulab@iscas.ac.cn> wrote:
+On Tue, May 26, 2020 at 6:19 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
 >
-> A multiplication for the size determination of a memory allocation
-> indicated that an array data structure should be processed.
-> Thus use the corresponding function "devm_kcalloc".
+> On Mon, May 25, 2020 at 12:52:17PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, May 19, 2020 at 8:14 PM Domenico Andreoli
+> > <domenico.andreoli@linux.com> wrote:
+> > >
+> > > From: Domenico Andreoli <domenico.andreoli@linux.com>
+> > >
+> > > Hibernation via snapshot device requires write permission to the swap
+> > > block device, the one that more often (but not necessarily) is used to
+> > > store the hibernation image.
+> > >
+> > > With this patch, such permissions are granted iff:
+> > >
+> > > 1) snapshot device config option is enabled
+> > > 2) swap partition is used as resume device
+> > >
+> > > In other circumstances the swap device is not writable from userspace.
+> > >
+> > > In order to achieve this, every write attempt to a swap device is
+> > > checked against the device configured as part of the uswsusp API [0]
+> > > using a pointer to the inode struct in memory. If the swap device being
+> > > written was not configured for resuming, the write request is denied.
+> > >
+> > > NOTE: this implementation works only for swap block devices, where the
+> > > inode configured by swapon (which sets S_SWAPFILE) is the same used
+> > > by SNAPSHOT_SET_SWAP_AREA.
+> > >
+> > > In case of swap file, SNAPSHOT_SET_SWAP_AREA indeed receives the inode
+> > > of the block device containing the filesystem where the swap file is
+> > > located (+ offset in it) which is never passed to swapon and then has
+> > > not set S_SWAPFILE.
+> > >
+> > > As result, the swap file itself (as a file) has never an option to be
+> > > written from userspace. Instead it remains writable if accessed directly
+> > > from the containing block device, which is always writeable from root.
+> > >
+> > > [0] Documentation/power/userland-swsusp.rst
+> > >
+> > > v2:
+> > >  - rename is_hibernate_snapshot_dev() to is_hibernate_resume_dev()
+> > >  - fix description so to correctly refer to the resume device
+> > >
+> > > Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+> > > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > > Cc: Pavel Machek <pavel@ucw.cz>
+> > > Cc: Darrick J. Wong <darrick.wong@oracle.com>
+> > > Cc: Christoph Hellwig <hch@lst.de>
+> > > Cc: viro@zeniv.linux.org.uk
+> > > Cc: tytso@mit.edu
+> > > Cc: len.brown@intel.com
+> > > Cc: linux-pm@vger.kernel.org
+> > > Cc: linux-mm@kvack.org
+> > > Cc: linux-xfs@vger.kernel.org
+> > > Cc: linux-fsdevel@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > >
+> > > ---
+> > >  fs/block_dev.c          |    3 +--
+> > >  include/linux/suspend.h |    6 ++++++
+> > >  kernel/power/user.c     |   14 +++++++++++++-
+> > >  3 files changed, 20 insertions(+), 3 deletions(-)
+> > >
+> > > Index: b/include/linux/suspend.h
+> > > ===================================================================
+> > > --- a/include/linux/suspend.h
+> > > +++ b/include/linux/suspend.h
+> > > @@ -466,6 +466,12 @@ static inline bool system_entering_hiber
+> > >  static inline bool hibernation_available(void) { return false; }
+> > >  #endif /* CONFIG_HIBERNATION */
+> > >
+> > > +#ifdef CONFIG_HIBERNATION_SNAPSHOT_DEV
+> > > +int is_hibernate_resume_dev(const struct inode *);
+> > > +#else
+> > > +static inline int is_hibernate_resume_dev(const struct inode *i) { return 0; }
+> > > +#endif
+> > > +
+> > >  /* Hibernation and suspend events */
+> > >  #define PM_HIBERNATION_PREPARE 0x0001 /* Going to hibernate */
+> > >  #define PM_POST_HIBERNATION    0x0002 /* Hibernation finished */
+> > > Index: b/kernel/power/user.c
+> > > ===================================================================
+> > > --- a/kernel/power/user.c
+> > > +++ b/kernel/power/user.c
+> > > @@ -35,8 +35,14 @@ static struct snapshot_data {
+> > >         bool ready;
+> > >         bool platform_support;
+> > >         bool free_bitmaps;
+> > > +       struct inode *bd_inode;
+> > >  } snapshot_state;
+> > >
+> > > +int is_hibernate_resume_dev(const struct inode *bd_inode)
+> > > +{
+> > > +       return hibernation_available() && snapshot_state.bd_inode == bd_inode;
+> > > +}
+> > > +
+> > >  static int snapshot_open(struct inode *inode, struct file *filp)
+> > >  {
+> > >         struct snapshot_data *data;
+> > > @@ -95,6 +101,7 @@ static int snapshot_open(struct inode *i
+> > >         data->frozen = false;
+> > >         data->ready = false;
+> > >         data->platform_support = false;
+> > > +       data->bd_inode = NULL;
+> > >
+> > >   Unlock:
+> > >         unlock_system_sleep();
+> > > @@ -110,6 +117,7 @@ static int snapshot_release(struct inode
+> > >
+> > >         swsusp_free();
+> > >         data = filp->private_data;
+> > > +       data->bd_inode = NULL;
+> > >         free_all_swap_pages(data->swap);
+> > >         if (data->frozen) {
+> > >                 pm_restore_gfp_mask();
+> > > @@ -202,6 +210,7 @@ struct compat_resume_swap_area {
+> > >  static int snapshot_set_swap_area(struct snapshot_data *data,
+> > >                 void __user *argp)
+> > >  {
+> > > +       struct block_device *bdev;
+> > >         sector_t offset;
+> > >         dev_t swdev;
+> > >
+> > > @@ -232,9 +241,12 @@ static int snapshot_set_swap_area(struct
+> > >                 data->swap = -1;
+> > >                 return -EINVAL;
+> > >         }
+> > > -       data->swap = swap_type_of(swdev, offset, NULL);
+> > > +       data->swap = swap_type_of(swdev, offset, &bdev);
+> > >         if (data->swap < 0)
+> > >                 return -ENODEV;
+> > > +
+> > > +       data->bd_inode = bdev->bd_inode;
+> > > +       bdput(bdev);
+> > >         return 0;
+> > >  }
+> > >
+> > > Index: b/fs/block_dev.c
+> > > ===================================================================
+> > > --- a/fs/block_dev.c
+> > > +++ b/fs/block_dev.c
+> > > @@ -2023,8 +2023,7 @@ ssize_t blkdev_write_iter(struct kiocb *
+> > >         if (bdev_read_only(I_BDEV(bd_inode)))
+> > >                 return -EPERM;
+> > >
+> > > -       /* uswsusp needs write permission to the swap */
+> > > -       if (IS_SWAPFILE(bd_inode) && !hibernation_available())
+> > > +       if (IS_SWAPFILE(bd_inode) && !is_hibernate_resume_dev(bd_inode))
+> > >                 return -ETXTBSY;
+> > >
+> > >         if (!iov_iter_count(from))
+> > >
+> > > --
+> >
+> > The patch looks OK to me.
+> >
+> > Darrick, what do you think?
 >
-> Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-> ---
->  drivers/hwtracing/coresight/coresight-platform.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+> Looks fine to me too.
 >
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 43418a2126ff..6720049409f3 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -27,9 +27,8 @@ static int coresight_alloc_conns(struct device *dev,
->                                  struct coresight_platform_data *pdata)
->  {
->         if (pdata->nr_outport) {
-> -               pdata->conns = devm_kzalloc(dev, pdata->nr_outport *
-> -                                           sizeof(*pdata->conns),
-> -                                           GFP_KERNEL);
-> +               pdata->conns = devm_kcalloc(dev, pdata->nr_outport,
-> +                                           sizeof(*pdata->conns), GFP_KERNEL);
+> I kinda wonder how uswsusp prevents the bdev from being swapoff'd (or
+> just plain disappearing) such that bd_inode will never point to a
+> recycled inode, but I guess since we're only comparing pointer values
+> it's not a big deal for this patch...
+>
+> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-I have applied your patch.
+Thanks!
 
-Thanks,
-Mathieu
+So the patch has been applied as 5.8 material.
 
->                 if (!pdata->conns)
->                         return -ENOMEM;
->         }
-> --
-> 2.17.1
->
+Cheers!
