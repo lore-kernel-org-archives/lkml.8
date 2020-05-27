@@ -2,152 +2,141 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D820C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF224C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E45C214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="q+g9yyYA"
+	by mail.kernel.org (Postfix) with ESMTP id D7A9A2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbgE0OP7 (ORCPT
+        id S2388899AbgE0OQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387800AbgE0OP6 (ORCPT
+        Wed, 27 May 2020 10:16:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36084 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387722AbgE0OP7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:15:58 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15A0BC08C5C1;
-        Wed, 27 May 2020 07:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fUYUrCCcdXTrWp6s+3Qr43SGxV6xtJ+mBKuUSmw/8tU=; b=q+g9yyYAWMSo5KjyCTA+fX2BV
-        VbpeDnNqtwQNuGc+J/edYitpsmOhhrI6ZFJvFC1YTQMEnE6bfwqAj6MRPOy3jQdNoekctvTYTUtxy
-        L7w+3HbfWqNVgMyMz+42psOBq1+/FILaCfv3L+SPBZeSvXqk9kntukva7sRKZ62sjS/8MTEnoIlDC
-        1DumXhlScBDYkYsG5U+lQYaLZK/RTWpz5joDWoTxms/60VXsDsVs7RAxhTWS45D+pG/CJtIBmoqNG
-        Ct8K48x4JJs/KpD3r7DWWgx+nzIAaa8uiGOIv++BaWbZGY9/Z7+hHgvvLDye2OivL5IZjB+5w6jZF
-        +FImMoRnQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:45760)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jdwqO-0002gO-AM; Wed, 27 May 2020 15:15:44 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jdwqM-0006V2-BY; Wed, 27 May 2020 15:15:42 +0100
-Date:   Wed, 27 May 2020 15:15:42 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-Message-ID: <20200527141542.GP1551@shell.armlinux.org.uk>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
- <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
- <3efa1f69-1e1d-f919-d47e-b4c5c73532b7@xs4all.nl>
- <CACRpkdY3pJVvAi_a=pVVQQbQyA3_b=o2pJqb5W8Wivp-SSy+tA@mail.gmail.com>
+        Wed, 27 May 2020 10:15:59 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BFA048030835;
+        Wed, 27 May 2020 14:15:56 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id c7gPw8_tpttc; Wed, 27 May 2020 17:15:56 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     <devicetree-compiler@vger.kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] check: Add 10bit/slave i2c reg flags support
+Date:   Wed, 27 May 2020 17:15:17 +0300
+Message-ID: <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY3pJVvAi_a=pVVQQbQyA3_b=o2pJqb5W8Wivp-SSy+tA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:56:16PM +0200, Linus Walleij wrote:
-> On Wed, May 27, 2020 at 12:38 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> 
-> > However, I discovered that patch 256efaea1fdc ("gpiolib: fix up emulated
-> > open drain outputs") broke the cec-gpio driver on the Raspberry Pi starting
-> > with kernel v5.5.
-> >
-> > The CEC pin is an open drain pin that is used in both input and output
-> > directions and has an interrupt (which is of course disabled while in
-> > output mode).
-> >
-> > With this patch the interrupt can no longer be requested:
-> >
-> > [    4.157806] gpio gpiochip0: (pinctrl-bcm2835): gpiochip_lock_as_irq: tried to flag a GPIO set as output for IRQ
-> >
-> > [    4.168086] gpio gpiochip0: (pinctrl-bcm2835): unable to lock HW IRQ 7 for IRQ
-> > [    4.175425] genirq: Failed to request resources for cec-gpio@7 (irq 79) on irqchip pinctrl-bcm2835
-> > [    4.184597] cec-gpio: probe of cec-gpio@7 failed with error -5
-> 
-> There is nothing conceptually wrong with that patch so I think we
-> need to have the irqchip code check if it is input *OR* open drain.
+Recently the I2C-controllers slave interface support was added to the
+kernel I2C subsystem. In this case Linux can be used as, for example,
+a I2C EEPROM machine. See [1] for details. Other than instantiating
+the EEPROM-slave device from user-space there is a way to declare the
+device in dts. In this case firstly the I2C bus controller must support
+the slave interface. Secondly I2C-slave sub-node of that controller
+must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+declared in [2]). That flag is declared as (1 << 30), which when set
+makes dtc unhappy about too big address set for a I2C-slave:
 
-Right - because, before this patch:
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
 
-- if you have hardware that is capable of open-drain outputs, gpiolib
-  will report that the GPIO is in *output* mode.
-- if you have hardware that is not capable of open-drain outputs, and
-  gpiolib emulates the open-drain nature by switching the GPIO
-  direction, then gpiolib will report that the GPIO is in input mode.
+Similar problem would have happened if we had set the 10-bit address
+flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
 
-What my patch does is provide consistent behaviour across all cases
-by making open-drain outputs consistently report output mode
-irrespective of the underlying hardware.
+In order to fix the problem we suggest to alter the I2C-bus reg-check
+algorithm, so one would be aware of the upper bits set. Normally if no
+flag specified, the 7-bit address is expected in the "reg"-property.
+If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
 
-Whether an open-drain GPIO should be viewed as an input or as an output
-is an interesting question, but the important thing as far as this
-subsystem goes is to have consistent behaviour, otherwise having a
-subsystem is utterly pointless.  However, consider whether it is sane
-to request a change of state via gpiod_set_value() of a gpio that
-reports itself as input, and have that request honoured and cause a
-change of state of the "input" - clearly that is not sane.
+[1] kernel/Documentation/i2c/slave-interface.rst
+[2] kernel/include/dt-bindings/i2c/i2c.h
 
-In any case:
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree-compiler@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-        cec->cec_gpio = devm_gpiod_get(dev, "cec", GPIOD_OUT_HIGH_OPEN_DRAIN);
-        if (IS_ERR(cec->cec_gpio))
-                return PTR_ERR(cec->cec_gpio);
-        cec->cec_irq = gpiod_to_irq(cec->cec_gpio);
-...
-        ret = devm_request_irq(dev, cec->cec_irq, cec_gpio_irq_handler,
-                               IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-                               cec->adap->name, cec);
+---
 
-So, the GPIO is requested in an _output_ mode, so it would be weird if
-it were subsequently to be reported as an input just because it ended
-up being an emulated open-drain output.
+Changelog v2:
+- Use unsigned numeric literal in the left-shit operation to avoid UB.
+---
+ checks.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Hence, the above code would have failed if cec-gpio were used with
-hardware that had open-drain semantics without needing the gpiolib
-emulation for the same reason that's now triggering; such hardware
-would report that the pin is in output mode, and the interrupt
-allocation would fail.
-
-While it's regrettable that fixing the inconsistency has caused a
-regression, I think that has found another place where the semantics
-aren't entirely sane, and as Linus says, _that_ needs fixing.
-
+diff --git a/checks.c b/checks.c
+index 4b3c486f1399..7091d1bc38d2 100644
+--- a/checks.c
++++ b/checks.c
+@@ -1028,6 +1028,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	const char *unitname = get_unitname(node);
+ 	char unit_addr[17];
+ 	uint32_t reg = 0;
++	uint32_t addr;
+ 	int len;
+ 	cell_t *cells = NULL;
+ 
+@@ -1044,17 +1045,21 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	}
+ 
+ 	reg = fdt32_to_cpu(*cells);
+-	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
++	addr = reg & 0x3FFFFFFFU;
++	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
+ 		     unit_addr);
+ 
+ 	for (len = prop->val.len; len > 0; len -= 4) {
+ 		reg = fdt32_to_cpu(*(cells++));
+-		if (reg > 0x3ff)
++		addr = reg & 0x3FFFFFFFU;
++		if ((reg & (1U << 31)) && addr > 0x3ff)
+ 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+-				  reg);
+-
++				  addr);
++		else if (!(reg & (1U << 31)) && addr > 0x7f)
++			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
++				  addr);
+ 	}
+ }
+ WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+2.26.2
+
