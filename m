@@ -2,134 +2,116 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44746C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A41F20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590590221;
-	bh=ZKanhQJK0P/djH+WNpQI7TX6FSFCpbdAlBTPqGNAsog=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0y4V8CC6ccpqJn2OXvzi0yzf7KgijFiCiWPU1JD3ZEAw67PTXTB/FfyXSG9tcGKIP
-	 vAo5cg8W1WhJf3b+VeO9mDH0qr5HqoPcrGHGR6hIl0OrRdPplJSC2xjuz7ahY08lIx
-	 qBw14vPU688Rtt/BPH9BNeCh3SG5uVxkoEleQceE=
+	by mail.kernel.org (Postfix) with ESMTP id 244A920873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGIXthgP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389334AbgE0OhA (ORCPT
+        id S2389325AbgE0Og7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:37:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389308AbgE0Og6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:36:58 -0400
-Received: from embeddedor (unknown [189.207.59.248])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF662207D8;
-        Wed, 27 May 2020 14:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590590217;
-        bh=ZKanhQJK0P/djH+WNpQI7TX6FSFCpbdAlBTPqGNAsog=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YSD+ZGCItrXkd1UID3bNMcDqtjMYtcaWkWR/jbiZi+m6f00sd5fV2w2LtxMDmqNVx
-         nn9JF+KjKberrBy+2S0xaU79c9o95nS1uUTTAC8qQy7puJvTVh72gh1HgPweYrUXGQ
-         fG2LQN5mleXFZtua1j9s0LsOSQep5IedKWhcFSzc=
-Date:   Wed, 27 May 2020 09:41:52 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] IB/core: Use sizeof_field() helper
-Message-ID: <20200527144152.GA22605@embeddedor>
+        Wed, 27 May 2020 10:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389313AbgE0Og5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:36:57 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CB2C05BD1E;
+        Wed, 27 May 2020 07:36:53 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id l3so11234155qvo.7;
+        Wed, 27 May 2020 07:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M/Ui5N10MoWP25QkZD0joVeWRBDs+C5tf80CUmghzwI=;
+        b=PGIXthgPprHVZlHsny105w605Sd1gB4QZTpYrlxOq3UJ5SRdnxxv2HkC4XUz+sizjX
+         Lkpnq+1W5yP+SYim2ekNp+smjGuRwlgd3QovMAh/8UV61v8MH46E+TACFUI1+0E74nVG
+         EBRqzKaUxD2jctWZtSgKkdieSmSpXlJRVMwWW+tuCoXflNOT+3gbAYl1Ykt2kxwdyNIW
+         oEXwhTaL5S0dzKJyHZbuDeiNTU7YZb5zwAWbGGnLxmzyuqLPewIy41XKZDuNq6tp6jt2
+         a96Zw1DFViX0GKoUtQnOjxhQ7MvFHhWtxQVrK6Ws7L5tA7ZGL1Rs1VJ3ooFqlpGh9qYA
+         omEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=M/Ui5N10MoWP25QkZD0joVeWRBDs+C5tf80CUmghzwI=;
+        b=PX5PuwiDvc9Nt6WvQetptC16IaYMclvGpg3eUMgkdqjpgXWYu9lF/9PVR80DYc5/jY
+         T99tLw7Y9dkNEKr8Nk0Czg4bUdTg4yCAhTHwvkAYxwa3pa0yIRgsmfI55g95WF7IceBk
+         iiyTnYBr51JY73hxpVeUew1kB0XQWNG38rKZ8h+4CaQjVSQ5oatNopQ6Z0hXFUbyoujR
+         LNdrA7VjQNeeo1I9EktETFDTY7hAlZKjNdmMud7TzZst+h6BeF9hE2EuHfHf18kOhqiZ
+         XvXdmh9ZMccv2ZE86WmxAb2dS1uSo0ixdD57Vzmrs3QPKCQP894XXIlxneOnpY+wak1k
+         lUCg==
+X-Gm-Message-State: AOAM533L8uMGv4GTNm+iywcjj0zR5AH+9SfTdEzIiOTX5RrjvHZKw98+
+        re5UEC3L0FkZHPreWUVfc/n9Q/dQ
+X-Google-Smtp-Source: ABdhPJyMu12+V12ENpEF2IvmAVARuf8i7xe/1zWRe2s1RqcQQm7+ktBiyXEnpP/GhP3uGuwwJfYPfg==
+X-Received: by 2002:ad4:58cb:: with SMTP id dh11mr23547867qvb.211.1590590212778;
+        Wed, 27 May 2020 07:36:52 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l2sm2620918qth.47.2020.05.27.07.36.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 07:36:52 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 27 May 2020 10:36:50 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Subject: Re: [PATCH v2 2/3] x86/boot/compressed: force hidden visibility for
+ all symbol references
+Message-ID: <20200527143650.GA3103408@rani.riverdale.lan>
+References: <20200523120021.34996-1-ardb@kernel.org>
+ <20200523120021.34996-3-ardb@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200523120021.34996-3-ardb@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make use of the sizeof_field() helper instead of an open-coded version.
+On Sat, May 23, 2020 at 02:00:20PM +0200, Ard Biesheuvel wrote:
+> Eliminate all GOT entries in the decompressor binary, by forcing hidden
+> visibility for all symbol references, which informs the compiler that
+> such references will be resolved at link time without the need for
+> allocating GOT entries.
+> 
+> To ensure that no GOT entries will creep back in, add an assertion to
+> the decompressor linker script that will fire if the .got section has
+> a non-zero size.
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  arch/x86/boot/compressed/Makefile      |  1 +
+>  arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
+>  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
+>  3 files changed, 21 insertions(+)
+> 
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+> index 5f7c262bcc99..aa9ed814e5fa 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -40,6 +40,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+>  KBUILD_CFLAGS += -Wno-pointer-sign
+>  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+>  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+> +KBUILD_CFLAGS += -include hidden.h
+>  
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/infiniband/core/sa_query.c     | 8 ++++----
- drivers/infiniband/core/uverbs_cmd.c   | 2 +-
- drivers/infiniband/core/uverbs_ioctl.c | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Ard, from the other thread [1] in case you missed it -- the plain
+hidden.h fails to build in-tree. We need something like
+	KBUILD_CFLAGS += -include $(srctree)/$(src)/hidden.h
+instead.
 
-diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
-index 5c878646ff62a..8f70c5c38ab7c 100644
---- a/drivers/infiniband/core/sa_query.c
-+++ b/drivers/infiniband/core/sa_query.c
-@@ -190,7 +190,7 @@ static u32 tid;
- 
- #define PATH_REC_FIELD(field) \
- 	.struct_offset_bytes = offsetof(struct sa_path_rec, field),	\
--	.struct_size_bytes   = sizeof((struct sa_path_rec *)0)->field,	\
-+	.struct_size_bytes   = sizeof_field(struct sa_path_rec, field),	\
- 	.field_name          = "sa_path_rec:" #field
- 
- static const struct ib_field path_rec_table[] = {
-@@ -292,7 +292,7 @@ static const struct ib_field path_rec_table[] = {
- 	.struct_offset_bytes = \
- 		offsetof(struct sa_path_rec, field), \
- 	.struct_size_bytes   = \
--		sizeof((struct sa_path_rec *)0)->field,	\
-+		sizeof_field(struct sa_path_rec, field),	\
- 	.field_name          = "sa_path_rec:" #field
- 
- static const struct ib_field opa_path_rec_table[] = {
-@@ -552,7 +552,7 @@ static const struct ib_field service_rec_table[] = {
- 
- #define CLASSPORTINFO_REC_FIELD(field) \
- 	.struct_offset_bytes = offsetof(struct ib_class_port_info, field),	\
--	.struct_size_bytes   = sizeof((struct ib_class_port_info *)0)->field,	\
-+	.struct_size_bytes   = sizeof_field(struct ib_class_port_info, field),	\
- 	.field_name          = "ib_class_port_info:" #field
- 
- static const struct ib_field ib_classport_info_rec_table[] = {
-@@ -630,7 +630,7 @@ static const struct ib_field ib_classport_info_rec_table[] = {
- 	.struct_offset_bytes =\
- 		offsetof(struct opa_class_port_info, field),	\
- 	.struct_size_bytes   = \
--		sizeof((struct opa_class_port_info *)0)->field,	\
-+		sizeof_field(struct opa_class_port_info, field),	\
- 	.field_name          = "opa_class_port_info:" #field
- 
- static const struct ib_field opa_classport_info_rec_table[] = {
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-index 4859ac0df17c7..2067a939788bd 100644
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -3741,7 +3741,7 @@ static int ib_uverbs_ex_modify_cq(struct uverbs_attr_bundle *attrs)
- #define UAPI_DEF_WRITE_IO(req, resp)                                           \
- 	.write.has_resp = 1 +                                                  \
- 			  BUILD_BUG_ON_ZERO(offsetof(req, response) != 0) +    \
--			  BUILD_BUG_ON_ZERO(sizeof(((req *)0)->response) !=    \
-+			  BUILD_BUG_ON_ZERO(sizeof_field(req, response) !=    \
- 					    sizeof(u64)),                      \
- 	.write.req_size = sizeof(req), .write.resp_size = sizeof(resp)
- 
-diff --git a/drivers/infiniband/core/uverbs_ioctl.c b/drivers/infiniband/core/uverbs_ioctl.c
-index 42c5696f03bd7..2d882c02387c1 100644
---- a/drivers/infiniband/core/uverbs_ioctl.c
-+++ b/drivers/infiniband/core/uverbs_ioctl.c
-@@ -137,7 +137,7 @@ EXPORT_SYMBOL(_uverbs_alloc);
- static bool uverbs_is_attr_cleared(const struct ib_uverbs_attr *uattr,
- 				   u16 len)
- {
--	if (uattr->len > sizeof(((struct ib_uverbs_attr *)0)->data))
-+	if (uattr->len > sizeof_field(struct ib_uverbs_attr, data))
- 		return ib_is_buffer_cleared(u64_to_user_ptr(uattr->data) + len,
- 					    uattr->len - len);
- 
--- 
-2.26.2
-
+[1] https://lore.kernel.org/lkml/20200526153104.GC2190602@rani.riverdale.lan/
