@@ -6,67 +6,67 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0049C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7579C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC042078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59BE20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590561650;
-	bh=EZwP7lM7uW8E9faXfL+mfjk8mEB24LowJAd2r0TjsKw=;
+	s=default; t=1590561699;
+	bh=aV8A8sLjaDOj/7AanTn0RtlrOOIqsNKRPjRHYtq5vE0=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=T5s+zkzxwhkF5/HBaCEvypqqTcXGrFDy/l4Jycq4+m84/2q1DoMmE84JAqhwcxvef
-	 E74VMZjbG1xQiyhHGiCZ1lslFS7+uNF32GK8W6XTu44JERofD6UNQm97MnsU5GOpOd
-	 Vh2D7LoEamu5azJBFoa7xi6X+e3Xp0jvU0gR7/Ew=
+	b=ZFteWKDfw7gh72c8Z5uZX8LF2UrRN8ze2Xd2xLPk6XtTqT1R6ycTnFc5/OBLmi9CA
+	 4kzmfagOFXCxuCBPb2FRz05ZBSlsjKuaS/JUTmDFLpUAzN4xjwAh2iRqDRZhTabVfP
+	 YyshiABqh3vs66BvjlUqOFWmWkg5HJRyyulNK1EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgE0Gku (ORCPT
+        id S1728729AbgE0Glj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:40:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57990 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 02:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725613AbgE0Gkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:40:49 -0400
+        id S1725613AbgE0Gli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 02:41:38 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45BA320776;
-        Wed, 27 May 2020 06:40:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DA920776;
+        Wed, 27 May 2020 06:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590561649;
-        bh=EZwP7lM7uW8E9faXfL+mfjk8mEB24LowJAd2r0TjsKw=;
+        s=default; t=1590561698;
+        bh=aV8A8sLjaDOj/7AanTn0RtlrOOIqsNKRPjRHYtq5vE0=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=MH1cB4g5OtKBSVv3WSdi9m2jR9lhT/vmwZCONqPoMT3+Ce88BKvyOL+HVXmagezpm
-         wulNTl8dERmfVgt2aShrusAVGKgfQJY5UV0BqzBeQ8QA6VaRpmL71LNJBqFY98GSwj
-         4GQjpl2oUbMsjotc+GP51phe9+IIAHeGg6kdgfQc=
+        b=o2RaZcvLGicVzdZAfBKYyCE0fgf5suFvdUtUTwKyZ7ckeSIcUDkYS9LY7YIwgBIxD
+         HUEfkBOEtQbsQUFQFiIMPyyA/6q4t89VaDVJPT0YyS8qLgImWsmCfqdHiP3OF0AvFA
+         4ZAQGOB94XhgaH13WSXjll1GEF9o0BqY4Toy5CJ8=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200526224116.63549-1-colin.king@canonical.com>
-References: <20200526224116.63549-1-colin.king@canonical.com>
-Subject: Re: [PATCH] clk: versatile: remove redundant assignment to pointer clk
+In-Reply-To: <20200527053638.31439-2-zhang.lyra@gmail.com>
+References: <20200527053638.31439-1-zhang.lyra@gmail.com> <20200527053638.31439-2-zhang.lyra@gmail.com>
+Subject: Re: [RESEND PATCH v2 1/4] clk: sprd: check its parent status before reading gate clock
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Colin King <colin.king@canonical.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Date:   Tue, 26 May 2020 23:40:48 -0700
-Message-ID: <159056164860.88029.7554351167857846969@swboyd.mtv.corp.google.com>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Tue, 26 May 2020 23:41:37 -0700
+Message-ID: <159056169760.88029.12084641394538099454@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Colin King (2020-05-26 15:41:16)
-> From: Colin Ian King <colin.king@canonical.com>
+Quoting Chunyan Zhang (2020-05-26 22:36:35)
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 >=20
-> The pointer clk is being initialized with a value that is never read
-> and is being updated with a new value later on. The initialization
-> is redundant and can be removed.
+> Some clocks only can be accessed if their parent is enabled. mipi_csi_xx
+> clocks on SC9863A are an examples. We have to ensure the parent clock is
+> enabled when reading those clocks.
 >=20
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 > ---
 
 Applied to clk-next
