@@ -2,209 +2,126 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C369C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E729120890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697C72088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590612965;
-	bh=CZnp1dPscHvgEsASP4rO6RwpRosxd5cli/BtqtDHsvg=;
+	s=default; t=1590613022;
+	bh=PJaX6a/wG4EogZDDlFWqXVNgTe80YNLiDmSRl+38vz4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=svCD0Sq7sb5n3o6sReodOasnE8vd5BEovFw5vzwPtK3M9QTgMyNfwI9cr3KssbcVv
-	 fehcsO2hxs304vXTsOn3oKHv3oLN3HHbgjDYF3ilBabQdOGXRg/OSO9tmtl52UH1Gy
-	 pV6LIIEgV9Mm9kDJN1UWpI4iD6RMA3bYRr8bGDzs=
+	b=yiTqqBcA/TGnbh/A5WgnGUAjEbF/5FQL+KvlQ1YkSii7o7DLVg8WbSziqpfw2olcH
+	 LL5JOjY7L1jME9wBUupjDtOQgnTdXUvxW3UxgE1FjmVrl1Eakvyx3FnuEH9+7rEYJq
+	 OimAtEfGazqPQw7wV+FJEoYnPuzVX9+CG1ug9wIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728707AbgE0U4F (ORCPT
+        id S1728669AbgE0U5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:56:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57286 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 16:57:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgE0U4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:56:04 -0400
-Received: from localhost (unknown [104.132.1.66])
+        id S1726129AbgE0U5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:57:01 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB7EA2088E;
-        Wed, 27 May 2020 20:56:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5111320899;
+        Wed, 27 May 2020 20:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590612964;
-        bh=CZnp1dPscHvgEsASP4rO6RwpRosxd5cli/BtqtDHsvg=;
+        s=default; t=1590613020;
+        bh=PJaX6a/wG4EogZDDlFWqXVNgTe80YNLiDmSRl+38vz4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=h7dJMVmocSOm/m0XBFdUcedmtZdF03oRbNVu4aLVC37xHlvKTqCnNB0YS6INeGVwr
-         febkhyUGGwleQp5IIoEpKmcd7LHkdMLMyY7yNwrODe1+2GZRirg4lK7M6+77+sZadx
-         sGYaa13HokZGZGXzo59VeQdJcQ0Rf79KqRtu0OTM=
-Date:   Wed, 27 May 2020 13:56:03 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: avoid inifinite loop to wait for
- flushing node pages at cp_error
-Message-ID: <20200527205603.GB206249@google.com>
-References: <20200522144752.216197-1-jaegeuk@kernel.org>
- <20200522233243.GA94020@google.com>
- <20200525035655.GA135148@google.com>
- <565af47c-8364-d910-8d1c-93645c12e660@huawei.com>
- <20200525150608.GA55033@google.com>
- <92afae8b-2dd3-171a-562c-404a67f9aab2@huawei.com>
- <a44f9c2e-3859-6c5d-6f06-7c4c6b4c01c5@huawei.com>
- <20200526015650.GA207949@google.com>
- <765a1ac5-a318-14d6-666f-eab46f892d01@huawei.com>
+        b=tEierfJlg9cjxL5kZCo+ruC44RyQE9GccF6rbeEjdIDkyVyxkl5iLTG1UeskiTz1U
+         qsGoFAK/Rr0QPGHHpdbKOB0cjCpARvKOAYI6QPlfg4KVgAKiXLXeUjyusnJ2OuzyJB
+         wVoerKThgLwGnz4i9g5oRhiduWKlCufSs35IGBtc=
+Date:   Wed, 27 May 2020 21:56:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH] ASoC: rt5682: split i2c driver into separate module
+Message-ID: <20200527205658.GM5308@sirena.org.uk>
+References: <20200527193730.930412-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="37nyS7qXrnu4wN2o"
 Content-Disposition: inline
-In-Reply-To: <765a1ac5-a318-14d6-666f-eab46f892d01@huawei.com>
+In-Reply-To: <20200527193730.930412-1-arnd@arndb.de>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/27, Chao Yu wrote:
-> On 2020/5/26 9:56, Jaegeuk Kim wrote:
-> > On 05/26, Chao Yu wrote:
-> >> On 2020/5/26 9:11, Chao Yu wrote:
-> >>> On 2020/5/25 23:06, Jaegeuk Kim wrote:
-> >>>> On 05/25, Chao Yu wrote:
-> >>>>> On 2020/5/25 11:56, Jaegeuk Kim wrote:
-> >>>>>> Shutdown test is somtimes hung, since it keeps trying to flush dirty node pages
-> 
->     71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
->             |
->              --71.06%--wb_writeback
->                        |
->                        |--68.96%--__writeback_inodes_wb
->                        |          |
->                        |           --68.95%--writeback_sb_inodes
->                        |                     |
->                        |                     |--65.08%--__writeback_single_inode
->                        |                     |          |
->                        |                     |           --64.35%--do_writepages
->                        |                     |                     |
->                        |                     |                     |--59.83%--f2fs_write_node_pages
->                        |                     |                     |          |
->                        |                     |                     |           --59.74%--f2fs_sync_node_pages
->                        |                     |                     |                     |
->                        |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
->                        |                     |                     |                     |          |
->                        |                     |                     |                     |           --27.90%--find_get_pages_range_tag
-> 
-> Before umount, kworker will always hold one core, that looks not reasonable,
-> to avoid that, could we just allow node write, since it's out-place-update,
-> and cp is not allowed, we don't need to worry about its effect on data on
-> previous checkpoint, and it can decrease memory footprint cost by node pages.
 
-It can cause some roll-forward recovery?
+--37nyS7qXrnu4wN2o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> Thanks,
-> 
-> >>>>>
-> >>>>> IMO, for umount case, we should drop dirty reference and dirty pages on meta/data
-> >>>>> pages like we change for node pages to avoid potential dead loop...
-> >>>>
-> >>>> I believe we're doing for them. :P
-> >>>
-> >>> Actually, I mean do we need to drop dirty meta/data pages explicitly as below:
-> >>>
-> >>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> >>> index 3dc3ac6fe143..4c08fd0a680a 100644
-> >>> --- a/fs/f2fs/checkpoint.c
-> >>> +++ b/fs/f2fs/checkpoint.c
-> >>> @@ -299,8 +299,15 @@ static int __f2fs_write_meta_page(struct page *page,
-> >>>
-> >>>  	trace_f2fs_writepage(page, META);
-> >>>
-> >>> -	if (unlikely(f2fs_cp_error(sbi)))
-> >>> +	if (unlikely(f2fs_cp_error(sbi))) {
-> >>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
-> >>> +			ClearPageUptodate(page);
-> >>> +			dec_page_count(sbi, F2FS_DIRTY_META);
-> >>> +			unlock_page(page);
-> >>> +			return 0;
-> >>> +		}
-> >>>  		goto redirty_out;
-> >>> +	}
-> >>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> >>>  		goto redirty_out;
-> >>>  	if (wbc->for_reclaim && page->index < GET_SUM_BLOCK(sbi, 0))
-> >>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >>> index 48a622b95b76..94b342802513 100644
-> >>> --- a/fs/f2fs/data.c
-> >>> +++ b/fs/f2fs/data.c
-> >>> @@ -2682,6 +2682,12 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
-> >>>
-> >>>  	/* we should bypass data pages to proceed the kworkder jobs */
-> >>>  	if (unlikely(f2fs_cp_error(sbi))) {
-> >>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
-> >>> +			ClearPageUptodate(page);
-> >>> +			inode_dec_dirty_pages(inode);
-> >>> +			unlock_page(page);
-> >>> +			return 0;
-> >>> +		}
-> >>
-> >> Oh, I notice previously, we will drop non-directory inode's dirty pages directly,
-> >> however, during umount, we'd better drop directory inode's dirty pages as well, right?
-> > 
-> > Hmm, I remember I dropped them before. Need to double check.
-> > 
-> >>
-> >>>  		mapping_set_error(page->mapping, -EIO);
-> >>>  		/*
-> >>>  		 * don't drop any dirty dentry pages for keeping lastest
-> >>>
-> >>>>
-> >>>>>
-> >>>>> Thanks,
-> >>>>>
-> >>>>>> in an inifinite loop. Let's drop dirty pages at umount in that case.
-> >>>>>>
-> >>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>>>>> ---
-> >>>>>> v3:
-> >>>>>>  - fix wrong unlock
-> >>>>>>
-> >>>>>> v2:
-> >>>>>>  - fix typos
-> >>>>>>
-> >>>>>>  fs/f2fs/node.c | 9 ++++++++-
-> >>>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
-> >>>>>>
-> >>>>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> >>>>>> index e632de10aedab..e0bb0f7e0506e 100644
-> >>>>>> --- a/fs/f2fs/node.c
-> >>>>>> +++ b/fs/f2fs/node.c
-> >>>>>> @@ -1520,8 +1520,15 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
-> >>>>>>  
-> >>>>>>  	trace_f2fs_writepage(page, NODE);
-> >>>>>>  
-> >>>>>> -	if (unlikely(f2fs_cp_error(sbi)))
-> >>>>>> +	if (unlikely(f2fs_cp_error(sbi))) {
-> >>>>>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
-> >>>>>> +			ClearPageUptodate(page);
-> >>>>>> +			dec_page_count(sbi, F2FS_DIRTY_NODES);
-> >>>>>> +			unlock_page(page);
-> >>>>>> +			return 0;
-> >>>>>> +		}
-> >>>>>>  		goto redirty_out;
-> >>>>>> +	}
-> >>>>>>  
-> >>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
-> >>>>>>  		goto redirty_out;
-> >>>>>>
-> >>>> .
-> >>>>
-> >>>
-> >>>
-> >>> _______________________________________________
-> >>> Linux-f2fs-devel mailing list
-> >>> Linux-f2fs-devel@lists.sourceforge.net
-> >>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> >>> .
-> >>>
-> > .
-> > 
+On Wed, May 27, 2020 at 09:34:13PM +0200, Arnd Bergmann wrote:
+
+> index 000000000000..c891aa80757f
+> --- /dev/null
+> +++ b/sound/soc/codecs/rt5682-i2c.c
+> @@ -0,0 +1,341 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * rt5682.c  --  RT5682 ALSA SoC audio component driver
+> + *
+
+Please keep the entire comment C++ so things look more intentional.
+
+> +static const char *rt5682_supply_names[RT5682_NUM_SUPPLIES] = {
+> +	"AVDD",
+> +	"MICVDD",
+> +	"VBAT",
+> +};
+
+I'm *fairly* sure the device needs power even with Soundwire?
+
+> +static void rt5682_jd_check_handler(struct work_struct *work)
+> +{
+> +	struct rt5682_priv *rt5682 = container_of(work, struct rt5682_priv,
+> +		jd_check_work.work);
+
+> +static int rt5682_parse_dt(struct rt5682_priv *rt5682, struct device *dev)
+> +{
+> +
+> +	device_property_read_u32(dev, "realtek,dmic1-data-pin",
+> +		&rt5682->pdata.dmic1_data_pin);
+> +	device_property_read_u32(dev, "realtek,dmic1-clk-pin",
+> +		&rt5682->pdata.dmic1_clk_pin);
+
+This doesn't look very I2C specific either, nor do chunks of the rest of
+the code.  The usual pattern with this stuff is to have the bus specific
+code do bus specific stuff like setting up the regmap and then call into
+a common init function for the shared parts of the chip.  I'd expect a
+bit more unshared code here but not this much.
+
+--37nyS7qXrnu4wN2o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7O1BkACgkQJNaLcl1U
+h9A0nwf8D3oDJJ7yA5/9c9tZA3Ugn5+YbfRc5KWxk7tChsSTmOaXja9l3B3yoHEh
+FB0bDc5yyUL6+iQxUkNzGe9Q//DhUeJTnDYH+FaBS+YyG3NNSqaTlD1JCjC0de6g
+JMqaRXuOohN2sW2IX3fVcOnCUUfuJl0c7J6g64mxi/pv5LQTiUuuRWPz7DuIFSr7
+ZlqkxNLBnt/U5/kiCZY3RGu1Ol7vPXFQYCOeWnlx5G0q2yrng4/bxpeWxkS0tNUy
+SZY4IyOiT++Vqyj6JnPm/B7NQaWjs/xnl7JLKecmXDHmbPMNQUifdJw3+FzsvJwW
+4RD1aq7FoWTMXR/LdkmkSw+QhT3MMA==
+=1e2i
+-----END PGP SIGNATURE-----
+
+--37nyS7qXrnu4wN2o--
