@@ -5,71 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A302C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14F0320B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0815F208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAvssvWz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DM3vqxu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgE0HMT (ORCPT
+        id S1729175AbgE0HMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:12:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
+        Wed, 27 May 2020 03:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbgE0HMO (ORCPT
+        with ESMTP id S1729144AbgE0HMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:12:14 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 549F3C061A0F;
-        Wed, 27 May 2020 00:12:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id u5so11377230pgn.5;
-        Wed, 27 May 2020 00:12:13 -0700 (PDT)
+        Wed, 27 May 2020 03:12:20 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3BBC061A0F;
+        Wed, 27 May 2020 00:12:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ci23so1115115pjb.5;
+        Wed, 27 May 2020 00:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Qw/QOLBu9d2B+96STuqYNI0AftO5l6SG5yefrjTDHdQ=;
-        b=rAvssvWz49+fXzXPapINBcDmFBTZ01RO2hMId+vgCJN3AG63BmjX55x7SQCy71kRyl
-         Aq0VWotduyCwmPny7lrc0pWTiCgpE0weYmufy41TJVpo1hIV/C2GkMOzqcQzhjRhKz1+
-         r/3q1R8nKhc3wAdHpKSCi/CO48ZFFlGTCM2OUa+PNJbGUpzypAhFiqxYq7rnduqbTk4j
-         PJz2M1SmoOlh5WLkVTvtL/NyMWz2pHepmil5fNaJhItpgj4fT/Zb4biKCGcYNTRp32lA
-         tR+jWjuGDJ+jG9ggkd6y1wPjtHhMpR0j8LjE7SWvY/P4Xf3NvfZ4WG+bPRHcSt04qoZr
-         86SA==
+        bh=YnWT8s8ink/KeJFRPdHxxy0KnE9QXS2EIJkcc7O9gtk=;
+        b=DM3vqxu8dRtwoGww+IORQKfTTdW1nnuAvY8aRKzh62Cx8kqBbcP5lV1qm8URdE5NwI
+         c2s+2BV+jhzfiL+hWF6uvl3M3rc4SZRksRliKnmNBhwzO3LalGMUVe/pJ2seJegirKxY
+         3aOolQxZqc5UnpX0y292F3vEt7C88vjlI+mWd1ad8e7/AVNK0GAZHXd/EGkAQqw/UBTH
+         4FdXsSMJJ6gziYNmWfGWpUTvBl7utKor+c7qe3gR/aiDXEO/tQmdBPMArs0FI5akiEKH
+         M//WCYPyz0r/qDeJbXVWbWEsEqaiuJB+R7TwqXi3Sib+9NJec9jV4Mz0yT4Sowh2E8du
+         Rn4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Qw/QOLBu9d2B+96STuqYNI0AftO5l6SG5yefrjTDHdQ=;
-        b=GpQTR7+78/WT7niShc+vwd1HlMZ3SxvS9J04OwuMvVEYdaEhyTHtSDCEMJj8K5Enzt
-         yostugGE+dsoh48LbGTqcjAXgtgNJov1+hcOslifkT75/fsA1jp0ufek2H6/z9HzcjpX
-         tX4oDmsE3yEpvN/ghPIU6Y1noi/+V6DPXLyFXivxPRck1urkaOgcuQ0xD4zswC53xND4
-         1TpUBelTCx7mMe+fEUV9ER/ptTEbAo/xge6ETZVBte3AVPO7JaYPFooXPPfkIPPMQ7NO
-         dgCS4yWtvc2bysQOmG1c6RV46egt18itV3qZ3Ix4OffhE62Eocsw6d3CIbv5Alour/RV
-         bA0Q==
-X-Gm-Message-State: AOAM533tKtVMXTfHc4Hl6CENW2k95o2sIoo6IIJiWYf7UD6P11Da7rAv
-        cEbRiHvq/aAtdEqBK6q5EFA=
-X-Google-Smtp-Source: ABdhPJwiMdlTneuDy4qlJ6WknGzBgbOnwG5sxxkqaefuDqkk6jhGJu9u7DEVNg4VjcPowgRDxL0hMg==
-X-Received: by 2002:a63:3c0a:: with SMTP id j10mr2734873pga.35.1590563532903;
-        Wed, 27 May 2020 00:12:12 -0700 (PDT)
+        bh=YnWT8s8ink/KeJFRPdHxxy0KnE9QXS2EIJkcc7O9gtk=;
+        b=nxRNR9vv8F9+dHzen2skCCMM9jktoOhr+OCtbxX8mdtEzAEDXNxUMziKuz2JESqRSa
+         YnDWMOT5qrK6lwL6RNgy8pRYul+CB/TKrXa163p0XLFE6/BswNG09JtyZTMgBLF+CFLB
+         nrFJ4IUoemtVnK0d3NoIiu/bcRa/ptJqyTHeXPNv3DyvMB8pZjw1lfuGRcViDQ+vgbha
+         Xarzfc3fNr6gg9oIT1S9H+5Ss0Kx9bUSlCdHFPAbrzuuQafArNrXFaWSugLaP++HyCiU
+         OaG6w3LqgUNJuaogL8TFVepJ4DaOMRGjRSpwoyptRlab5HhLfiE3XH1HGkaTLJENnHW/
+         HGoQ==
+X-Gm-Message-State: AOAM532YUOiFuaDl/fPqd2PK5S98ORGh8B+toxQ8sKzuw09AlYhGtJ2U
+        1qe6fpTwpFEVcUsGmf5Gh73FpRQ+ywE=
+X-Google-Smtp-Source: ABdhPJyFCpOYMkAVV78W52jBC29vXxFB27ZW9sqjVDAn5HIxYxToCi4u+31xoW8h3BEW8uRCIWxYTw==
+X-Received: by 2002:a17:902:fe81:: with SMTP id x1mr4672432plm.239.1590563539414;
+        Wed, 27 May 2020 00:12:19 -0700 (PDT)
 Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 10sm1306431pfx.138.2020.05.27.00.12.11
+        by smtp.gmail.com with ESMTPSA id 10sm1306431pfx.138.2020.05.27.00.12.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 00:12:12 -0700 (PDT)
+        Wed, 27 May 2020 00:12:18 -0700 (PDT)
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH 2/7] media: atomisp: Remove second increment of count in atomisp_subdev_probe
-Date:   Wed, 27 May 2020 00:11:45 -0700
-Message-Id: <20200527071150.3381228-3-natechancellor@gmail.com>
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 5/7] media: atomisp: Remove unnecessary NULL check in atomisp_param
+Date:   Wed, 27 May 2020 00:11:48 -0700
+Message-Id: <20200527071150.3381228-6-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200527071150.3381228-1-natechancellor@gmail.com>
 References: <20200527071150.3381228-1-natechancellor@gmail.com>
@@ -83,33 +82,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Clang warns:
 
-../drivers/staging/media/atomisp/pci/atomisp_v4l2.c:1097:3: warning:
-variable 'count' is incremented both in the loop header and in the loop
-body [-Wfor-loop-analysis]
-                count++;
-                ^
+drivers/staging/media/atomisp/pci/atomisp_cmd.c:4278:17: warning:
+address of 'config->info' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+                if (!&config->info) {
+                    ~ ~~~~~~~~^~~~
 
-This was probably unintentional, remove it.
+config cannot be NULL because it comes from an ioctl, which ensures that
+the user is not giving us an invalid pointer through copy_from_user. If
+config is not NULL, info cannot be NULL. Remove this check.
 
 Link: https://github.com/ClangBuiltLinux/linux/issues/1036
-Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/staging/media/atomisp/pci/atomisp_cmd.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-index 694268d133c0..c42999a55303 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -1094,7 +1094,6 @@ static int atomisp_subdev_probe(struct atomisp_device *isp)
- 		if (camera_count)
- 			break;
- 		msleep(SUBDEV_WAIT_TIMEOUT);
--		count++;
- 	}
- 	/* Wait more time to give more time for subdev init code to finish */
- 	msleep(5 * SUBDEV_WAIT_TIMEOUT);
+diff --git a/drivers/staging/media/atomisp/pci/atomisp_cmd.c b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
+index 5be690f876c1..105c5aeb83ac 100644
+--- a/drivers/staging/media/atomisp/pci/atomisp_cmd.c
++++ b/drivers/staging/media/atomisp/pci/atomisp_cmd.c
+@@ -4264,7 +4264,6 @@ int atomisp_set_parameters(struct video_device *vdev,
+ int atomisp_param(struct atomisp_sub_device *asd, int flag,
+ 		  struct atomisp_parm *config)
+ {
+-	struct atomisp_device *isp = asd->isp;
+ 	struct ia_css_pipe_config *vp_cfg =
+ 		    &asd->stream_env[ATOMISP_INPUT_STREAM_GENERAL].
+ 		    pipe_configs[IA_CSS_PIPE_ID_VIDEO];
+@@ -4275,10 +4274,6 @@ int atomisp_param(struct atomisp_sub_device *asd, int flag,
+ 		    atomisp_css_get_dvs_grid_info(
+ 			&asd->params.curr_grid_info);
+ 
+-		if (!&config->info) {
+-			dev_err(isp->dev, "ERROR: NULL pointer in grid_info\n");
+-			return -EINVAL;
+-		}
+ 		atomisp_curr_user_grid_info(asd, &config->info);
+ 
+ 		/* We always return the resolution and stride even if there is
 -- 
 2.27.0.rc0
 
