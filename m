@@ -2,136 +2,315 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75578C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68254C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53F9220787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:58:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XUpTR3U9"
+	by mail.kernel.org (Postfix) with ESMTP id 411C220787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590544749;
+	bh=JagGB4pxmbyUDMUf2BOd0kDEpTmD5U6r+6s38bQJUwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E2lKim/Axpmh0RhNTSzDDlcnOf0fw2nAgbc26VGhtaEQOmVzvOd/rkkGL53ool4ts
+	 PSNPr6LPmcKHoNp3UVnax0P3aKcjzFN6Xs8L5XttW1t691THXFbBmqxiNpyV1xHhZE
+	 xDdqxQN3Qe4PfZOKx2sZQRmkUKNxbxHsGB/1JGJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgE0B57 (ORCPT
+        id S1728138AbgE0B7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:57:59 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:47631 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725271AbgE0B57 (ORCPT
+        Tue, 26 May 2020 21:59:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39280 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0B7I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:57:59 -0400
-X-UUID: 2d4d4ee9b12f44809e2b4bc452fe3a49-20200527
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ZKrqKJ1L5uEpCnzzklpqeT5Qk2zFyQCkc/heYv9ITnM=;
-        b=XUpTR3U9I2ql6YbBD1AN1sf+a1IszagSd55v/wuip50S9/YIF8rA9dVIwyETT7qsAB4UioxxjiJl2jorkFc3bTQscHdkOM5PYG3KJALZhcLw5rs7aCpEHTRlLV/5R55JuwVqICKGca09ozObWc59DmiNt3f5/kisqeSm05yxpfA=;
-X-UUID: 2d4d4ee9b12f44809e2b4bc452fe3a49-20200527
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 938018215; Wed, 27 May 2020 09:57:51 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 27 May
- 2020 09:53:46 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 27 May 2020 09:53:45 +0800
-Message-ID: <1590544320.12671.10.camel@mhfsdcap03>
-Subject: Re: [PATCH v8 06/14] media: platform: Improve the implementation of
- the system PM ops
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-CC:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        <srv_heupstream@mediatek.com>, <senozhatsky@chromium.org>,
-        <mojahsu@chromium.org>, <drinkcat@chromium.org>,
-        <maoguang.meng@mediatek.com>, <sj.huang@mediatek.com>
-Date:   Wed, 27 May 2020 09:52:00 +0800
-In-Reply-To: <20200521153257.GF209565@chromium.org>
-References: <20200403094033.8288-1-xia.jiang@mediatek.com>
-         <20200403094033.8288-7-xia.jiang@mediatek.com>
-         <20200521153257.GF209565@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 26 May 2020 21:59:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id c8so3895779iob.6;
+        Tue, 26 May 2020 18:59:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R+jzqtNB5xm+Ue2rdM+xkw/J/Y2layqw+i3JC1m8y3A=;
+        b=JM5pUwohrVsgvBRteM1yVcPdjxaoVnsJsSnPIWEpePqCknaANwhi818own9fYEomM/
+         jWGL83b3eX30wg/NT0F7mUE37RvPPnJcVyLBQTr2xs0pT2AoFzLsP4ARplrox4cFqR0o
+         eQDzCFPRxCSMNw4dSLirubNSOwfRaknkTFpjSpGf5F1jgeFdznBrpFVgkADo6Y02Tc/g
+         pmUDoLNWZXErcEA6yMcNfXkWy+8oBNXPKsB1/ZQKT5gNGX8WkmMu1cqP8sQ1TiLOclK9
+         EQNM/X2XGt3baJpipkdGJb6PFXRaZ2e35SY4NZeMBdyrxNnZ67TDE4BHEPZ3QeewEsoe
+         Hm/w==
+X-Gm-Message-State: AOAM533zIGpc6qnC4E39qdyaFfL30wwr1vmJyQXvhvVOsxHnMkKZYixg
+        HHHQGaIXM5krl88fTgd/cOxJ6Hw=
+X-Google-Smtp-Source: ABdhPJxt6tM3SKfxvvzsNk2fSThE+onTc7lraTfA1vFnx7JR9NSjWgV4NajWOz9SI46gdlbrZPzwhg==
+X-Received: by 2002:a02:8309:: with SMTP id v9mr1462161jag.71.1590544746878;
+        Tue, 26 May 2020 18:59:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u2sm606192ion.50.2020.05.26.18.59.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 18:59:06 -0700 (PDT)
+Received: (nullmailer pid 889963 invoked by uid 1000);
+        Wed, 27 May 2020 01:59:05 -0000
+Date:   Tue, 26 May 2020 19:59:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v25 03/16] dt: bindings: lp50xx: Introduce the lp50xx
+ family of RGB drivers
+Message-ID: <20200527015905.GA874676@bogus>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-4-dmurphy@ti.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 31B56BA102CB296BF42975F3308432FBE35B5776613BCF49476A31BDC9D305D32000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526164652.2331-4-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTIxIGF0IDE1OjMyICswMDAwLCBUb21hc3ogRmlnYSB3cm90ZToNCj4g
-SGkgWGlhLA0KPiANCj4gT24gRnJpLCBBcHIgMDMsIDIwMjAgYXQgMDU6NDA6MjVQTSArMDgwMCwg
-WGlhIEppYW5nIHdyb3RlOg0KPiA+IENhbmNlbCByZXNldCBodyBvcGVyYXRpb24gaW4gc3VzcGVu
-ZCBhbmQgcmVzdW1lIGZ1bmN0aW9uIGJlY2F1c2UgdGhpcw0KPiA+IHdpbGwgYmUgZG9uZSBpbiBk
-ZXZpY2VfcnVuKCkuDQo+IA0KPiBUaGlzIGFuZC4uLg0KPiANCj4gPiBBZGQgc3Bpbl9sb2NrIGFu
-ZCB1bmxvY2sgb3BlcmF0aW9uIGluIGlycSBhbmQgcmVzdW1lIGZ1bmN0aW9uIHRvIG1ha2UNCj4g
-PiBzdXJlIHRoYXQgdGhlIGN1cnJlbnQgZnJhbWUgaXMgcHJvY2Vzc2VkIGNvbXBsZXRlbHkgYmVm
-b3JlIHN1c3BlbmQuDQo+IA0KPiAuLi50aGlzIGFyZSB0d28gc2VwYXJhdGUgY2hhbmdlcy4gUGxl
-YXNlIHNwbGl0Lg0KPiANCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5q
-aWFuZ0BtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-bXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jIHwgMTEgKysrKysrKysrLS0NCj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMgYi9k
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX2NvcmUuYw0KPiA+IGluZGV4
-IGRkNWNhZGQxMDFlZi4uMmZhMzcxMWZkYzliIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbWVk
-aWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfY29yZS5jDQo+ID4gKysrIGIvZHJpdmVycy9t
-ZWRpYS9wbGF0Zm9ybS9tdGstanBlZy9tdGtfanBlZ19jb3JlLmMNCj4gPiBAQCAtOTExLDYgKzkx
-MSw4IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBtdGtfanBlZ19kZWNfaXJxKGludCBpcnEsIHZvaWQg
-KnByaXYpDQo+ID4gIAl1MzIgZGVjX3JldDsNCj4gPiAgCWludCBpOw0KPiA+ICANCj4gPiArCXNw
-aW5fbG9jaygmanBlZy0+aHdfbG9jayk7DQo+ID4gKw0KPiANCj4gbml0OiBGb3IgY29uc2lzdGVu
-Y3ksIGl0IGlzIHJlY29tbWVuZGVkIHRvIGFsd2F5cyB1c2UgdGhlIHNhbWUsIGkuZS4gdGhlDQo+
-IHN0cm9uZ2VzdCwgc3Bpbl8odW4pbG9ja18gcHJpbWl0aXZlcyB3aGVuIG9wZXJhdGluZyBvbiB0
-aGUgc2FtZSBzcGlubG9jay4NCj4gSW4gdGhpcyBjYXNlIGl0IHdvdWxkIGJlIHRoZSBpcnFzYXZl
-KHJlc3RvcmUpIHZhcmlhbnRzLg0KPiANCj4gPiAgCWRlY19yZXQgPSBtdGtfanBlZ19kZWNfZ2V0
-X2ludF9zdGF0dXMoanBlZy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAgCWRlY19pcnFfcmV0ID0gbXRr
-X2pwZWdfZGVjX2VudW1fcmVzdWx0KGRlY19yZXQpOw0KPiA+ICAJY3R4ID0gdjRsMl9tMm1fZ2V0
-X2N1cnJfcHJpdihqcGVnLT5tMm1fZGV2KTsNCj4gPiBAQCAtOTQxLDYgKzk0Myw3IEBAIHN0YXRp
-YyBpcnFyZXR1cm5fdCBtdGtfanBlZ19kZWNfaXJxKGludCBpcnEsIHZvaWQgKnByaXYpDQo+ID4g
-IAl2NGwyX20ybV9idWZfZG9uZShzcmNfYnVmLCBidWZfc3RhdGUpOw0KPiA+ICAJdjRsMl9tMm1f
-YnVmX2RvbmUoZHN0X2J1ZiwgYnVmX3N0YXRlKTsNCj4gPiAgCXY0bDJfbTJtX2pvYl9maW5pc2go
-anBlZy0+bTJtX2RldiwgY3R4LT5maC5tMm1fY3R4KTsNCj4gPiArCXNwaW5fdW5sb2NrKCZqcGVn
-LT5od19sb2NrKTsNCj4gPiAgCXBtX3J1bnRpbWVfcHV0X3N5bmMoY3R4LT5qcGVnLT5kZXYpOw0K
-PiA+ICAJcmV0dXJuIElSUV9IQU5ETEVEOw0KPiA+ICB9DQo+ID4gQEAgLTExOTEsNyArMTE5NCw2
-IEBAIHN0YXRpYyBfX21heWJlX3VudXNlZCBpbnQgbXRrX2pwZWdfcG1fc3VzcGVuZChzdHJ1Y3Qg
-ZGV2aWNlICpkZXYpDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBtdGtfanBlZ19kZXYgKmpwZWcgPSBk
-ZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gPiAgDQo+ID4gLQltdGtfanBlZ19kZWNfcmVzZXQoanBl
-Zy0+ZGVjX3JlZ19iYXNlKTsNCj4gPiAgCW10a19qcGVnX2Nsa19vZmYoanBlZyk7DQo+ID4gIA0K
-PiA+ICAJcmV0dXJuIDA7DQo+ID4gQEAgLTEyMDIsMTkgKzEyMDQsMjQgQEAgc3RhdGljIF9fbWF5
-YmVfdW51c2VkIGludCBtdGtfanBlZ19wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KPiA+
-ICAJc3RydWN0IG10a19qcGVnX2RldiAqanBlZyA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPiA+
-ICANCj4gPiAgCW10a19qcGVnX2Nsa19vbihqcGVnKTsNCj4gPiAtCW10a19qcGVnX2RlY19yZXNl
-dChqcGVnLT5kZWNfcmVnX2Jhc2UpOw0KPiA+ICANCj4gPiAgCXJldHVybiAwOw0KPiA+ICB9DQo+
-ID4gIA0KPiA+ICBzdGF0aWMgX19tYXliZV91bnVzZWQgaW50IG10a19qcGVnX3N1c3BlbmQoc3Ry
-dWN0IGRldmljZSAqZGV2KQ0KPiA+ICB7DQo+ID4gKwlzdHJ1Y3QgbXRrX2pwZWdfZGV2ICpqcGVn
-ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQo+ID4gKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiA+
-ICAJaW50IHJldDsNCj4gPiAgDQo+ID4gIAlpZiAocG1fcnVudGltZV9zdXNwZW5kZWQoZGV2KSkN
-Cj4gPiAgCQlyZXR1cm4gMDsNCj4gPiAgDQo+ID4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmanBlZy0+
-aHdfbG9jaywgZmxhZ3MpOw0KPiANCj4gV2hhdCBkb2VzIHRoaXMgc3BpbmxvY2sgcHJvdGVjdCB1
-cyBmcm9tPyBJIGNhbiBzZWUgdGhhdCBpdCB3b3VsZCBwcmV2ZW50DQo+IHRoZSBpbnRlcnJ1cHQg
-aGFuZGxlciBmcm9tIGJlaW5nIGNhbGxlZCwgYnV0IGlzIGl0IG9rYXkgdG8gc3VzcGVuZCB0aGUN
-Cj4gc3lzdGVtIHdpdGhvdXQgaGFuZGxpbmcgdGhlIGludGVycnVwdD8NCkRlYXIgVG9tYXN6LA0K
-SSBtZWFuIHRoYXQgaWYgY3VycmVudCBpbWFnZSBpcyBwcm9jZXNzZWQgaW4gaXJxIGhhbmRsZXIs
-c3VzcGVuZA0KZnVuY3Rpb24gY2FuIG5vdCBnZXQgdGhlIGxvY2soaXQgd2FzIGxvY2tlZCBpbiBp
-cnEgaGFuZGxlcikuU2hvdWxkIEkNCm1vdmUgdGhlIHNwaW5fbG9ja19pcnFzYXZlKCZqcGVnLT5o
-d19sb2NrLCBmbGFncykgdG8gdGhlIHN0YXJ0IGxvY2F0aW9uDQpvZiBzdXNwZW5kIGZ1bmN0aW9u
-IG9yIHVzZSB3YWl0X2V2ZW50X3RpbWVvdXQoKSB0byBoYW5kbGUgdGhlIGludGVycnVwdA0KYmVm
-b3JlIHN1c3BlbmQ/DQoNCkJlc3QgUmVnYXJkcywNClhpYSBKaWFuZw0KPiANCj4gPiArDQo+ID4g
-IAlyZXQgPSBtdGtfanBlZ19wbV9zdXNwZW5kKGRldik7DQo+ID4gKw0KPiANCj4gTG9va2luZyBh
-dCB0aGUgaW1wbGVtZW50YXRpb24gb2YgbXRrX2pwZWdfcG1fc3VzcGVuZCgpLCBhbGwgaXQgZG9l
-cyBpcw0KPiBkaXNhYmxpbmcgdGhlIGNsb2NrLiBIb3cgZG8gd2UgbWFrZSBzdXJlIHRoYXQgdGhl
-cmUgaXMgbm8gZnJhbWUgY3VycmVudGx5DQo+IGJlaW5nIHByb2Nlc3NlZCBieSB0aGUgaGFyZHdh
-cmU/DQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IFRvbWFzeg0KDQo=
+On Tue, May 26, 2020 at 11:46:39AM -0500, Dan Murphy wrote:
+> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
+> LP5018, LP5012 and LP5009 RGB LED device driver.  The LP5036/30/24/18/12/9
+> can control RGB LEDs individually or as part of a control bank group.
+> These devices have the ability to adjust the mixing control for the RGB
+> LEDs to obtain different colors independent of the overall brightness of
+> the LED grouping.
+> 
+> Datasheet:
+> http://www.ti.com/lit/ds/symlink/lp5012.pdf
+> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> 
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>  .../devicetree/bindings/leds/leds-lp50xx.yaml | 180 ++++++++++++++++++
+>  1 file changed, 180 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+> new file mode 100644
+> index 000000000000..a2ea03e07f6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.yaml
+> @@ -0,0 +1,180 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-lp50xx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LED driver for LP50XX RGB LED from Texas Instruments.
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
+> +  a LED group or control them individually.
+> +
+> +  The difference in these RGB LED drivers is the number of supported RGB
+> +  modules.
+> +
+> +  For more product information please see the link below:
+> +  http://www.ti.com/lit/ds/symlink/lp5012.pdf
+> +  http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> +  http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> +
+> +properties:
+> +  compatible:
+> +     oneOf:
+> +      - const: ti,lp5009
+> +      - const: ti,lp5012
+> +      - const: ti,lp5018
+> +      - const: ti,lp5024
+> +      - const: ti,lp5030
+> +      - const: ti,lp5036
 
+Use enum rather than oneOf+const.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description:
+> +      I2C slave address
+> +      lp5009/12 - 0x14, 0x15, 0x16, 0x17
+> +      lp5018/24 - 0x28, 0x29, 0x2a, 0x2b
+> +      lp5030/36 - 0x30, 0x31, 0x32, 0x33
+> +
+> +  enable-gpios:
+> +    description: GPIO pin to enable/disable the device.
+
+How many? (maxItems: 1)
+
+> +
+> +  vled-supply:
+> +    description: LED supply.
+> +
+> +  child-node:
+
+This literally requires a node called 'child-node'. Not what you want.
+
+You need a $ref to the multi-color schema in here and then only define 
+what's specific to this chip.
+
+> +    type: object
+> +    properties:
+> +      reg:
+> +        description: This is the LED module number.
+
+Constraints?
+
+> +
+> +      color:
+> +        description: Must be LED_COLOR_ID_MULTI
+> +
+> +      function:
+> +        description: see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +      ti,led-bank:
+> +        description:
+> +          This property denotes the LED module numbers that will be controlled as
+> +          a single RGB cluster.  Each LED module number will be controlled by a
+> +          single LED class instance.
+> +          There can only be one instance of the ti,led-bank
+> +          property for each device node.  This is a required node is the LED
+> +          modules are to be backed.
+> +        $ref: /schemas/types.yaml#definitions/uint32-array
+
+What is reg then? Some made up index? Can't you do:
+
+reg = <1 2 3>;
+led@1 {};
+led@2 {};
+led@2 {};
+
+> +
+> +    required:
+> +      - reg
+> +      - color
+> +      - function
+> +
+> +  grandchild-node:
+
+Again, no.
+
+> +    type: object
+> +    properties:
+> +      reg:
+> +        description:
+> +          A single entry denoting the LED output that controls the monochrome LED.
+
+Constraints?
+
+> +
+> +      color:
+> +        description:
+> +          see Documentation/devicetree/bindings/leds/common.txt
+
+Have you read this file recently? Don't add new references to it. (And 
+generally freeform references to other files are wrong with schemas).
+
+> +
+> +      led-sources:
+> +        description:
+> +          see Documentation/devicetree/bindings/leds/common.txt
+> +          The LED outputs associated with the LED modules are defined in Table 1
+> +          of the corresponding data sheets.
+> +          LP5009 - 3 Total RGB cluster LED outputs 0-2
+> +          LP5012 - 4 Total RGB cluster LED outputs 0-3
+> +          LP5018 - 6 Total RGB cluster LED outputs 0-5
+> +          LP5024 - 8 Total RGB cluster LED outputs 0-7
+> +          LP5030 - 10 Total RGB cluster LED outputs 0-9
+> +          LP5036 - 12 Total RGB cluster LED outputs 0-11
+> +
+> +      label:
+> +        description: |
+> +          Optional node - see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +      linux,default-trigger:
+> +        description: |
+> +          Optional node - see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +    required:
+> +      - reg
+> +      - color
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/leds/common.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        led-controller@14 {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          compatible = "ti,lp5009";
+> +          reg = <0x14>;
+> +          enable-gpios = <&gpio1 16>;
+> +          multi-led@1 {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            reg = <1>;
+> +            color = <LED_COLOR_ID_MULTI>;
+> +            function = LED_FUNCTION_CHARGING;
+> +
+> +            led@0 {
+> +              reg = <0>;
+> +              color = <LED_COLOR_ID_RED>;
+> +            };
+> +
+> +            led@1 {
+> +              reg = <1>;
+> +              color = <LED_COLOR_ID_GREEN>;
+> +            };
+> +
+> +            led@2 {
+> +              reg = <2>;
+> +              color = <LED_COLOR_ID_BLUE>;
+> +            };
+> +          };
+> +
+> +          multi-led@2 {
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            reg = <2>;
+> +            color = <LED_COLOR_ID_MULTI>;
+> +            function = LED_FUNCTION_STANDBY;
+> +            ti,led-bank = <2 3 5>;
+> +
+> +            led@6 {
+> +              reg = <0x6>;
+> +              color = <LED_COLOR_ID_RED>;
+> +              led-sources = <6 9 15>;
+> +            };
+> +
+> +            led@7 {
+> +              reg = <0x7>;
+> +              color = <LED_COLOR_ID_GREEN>;
+> +              led-sources = <7 10 16>;
+> +            };
+> +
+> +            led@8 {
+> +              reg = <0x8>;
+> +              color = <LED_COLOR_ID_BLUE>;
+> +              led-sources = <8 11 17>;
+> +            };
+> +         };
+> +       };
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
+> 
