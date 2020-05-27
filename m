@@ -2,94 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D1CC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9688A20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88C3C207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:38:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590590303;
+	bh=suJ353lRv1UQx7HSHjKB0euqpTIy3Nz0DHiPmdHpvHU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Mcsf7gF9MxZwHst9uc5Jf/pNOO1AsqyVJVJExJ3F3Ro2pczGKM0ER9aB9yvaUofED
+	 dRSTpZIdHlp1CZ9q4UyDmOMwETs/WYAg8G0bYKSmk9NWIgPahSXsM0pRvpKxxryqrB
+	 0WPqMKKQIBcLvf13yrz8OjBmwUiHhFA+8GDwavcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389339AbgE0Ohx (ORCPT
+        id S2389370AbgE0OiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:37:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:52715 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389198AbgE0Ohx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:37:53 -0400
-Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N5UoU-1ixc5l2DSE-016tEC for <linux-kernel@vger.kernel.org>; Wed, 27 May
- 2020 16:37:51 +0200
-Received: by mail-qv1-f43.google.com with SMTP id r16so2425734qvm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:37:51 -0700 (PDT)
-X-Gm-Message-State: AOAM532etWNip7WYtpK4rc2aQAdzFmUpO0dXdAnLlwZG9GRHQKSpQiG/
-        yne4/yjMKFzF/JsJtzF5Bc1Ns/dQky8PRWwcXH0=
-X-Google-Smtp-Source: ABdhPJyr//A2QIA6/VozIoK3hiWlXU4CoTxPNHDB40HBdX5R7LVfN9VrEtLqLnwnDTFroCXlHhy1X69ousiROtCYm50=
-X-Received: by 2002:a05:6214:370:: with SMTP id t16mr25364732qvu.197.1590590270488;
- Wed, 27 May 2020 07:37:50 -0700 (PDT)
+        Wed, 27 May 2020 10:38:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389341AbgE0OiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:38:21 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EBCF20C09;
+        Wed, 27 May 2020 14:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590590300;
+        bh=suJ353lRv1UQx7HSHjKB0euqpTIy3Nz0DHiPmdHpvHU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dz0t6hwefzpF3FUmlaHc8XA8cVnWy5nxuMwqo6MyQfhb9xnuOh25xZ5iEUMLyIraK
+         +i2k40cRkMt3FPAIXWsizHEIFFw0WHp53r2Sktwd72HtGOBbqLdNz6flS5gYvS4s3H
+         E8c8qsLiDCajLBRwCnN3Lstkh4l0DvqpsjkGPKjY=
+Received: by mail-ot1-f45.google.com with SMTP id d26so19301394otc.7;
+        Wed, 27 May 2020 07:38:20 -0700 (PDT)
+X-Gm-Message-State: AOAM533afaxOT08GXEm65d7/tfSCsCn8wb3x2opy1uFC+7mqBU84kPx9
+        xgrj9T74bDEf/TT3JlUcqDi2pVsjR9f1GkQOSA==
+X-Google-Smtp-Source: ABdhPJyp+iNzxT9P6anI85WQIrsM8pRrlKHEOY9o2oN/zH/c34nmR9QO5xYjGblk5qKho8HgjNiUwGAutpyoqXPmJrk=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr4930496ots.192.1590590299856;
+ Wed, 27 May 2020 07:38:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200527134210.847411-1-arnd@arndb.de> <20200527155304.0cf42848@xps13>
-In-Reply-To: <20200527155304.0cf42848@xps13>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 16:37:34 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2DKqO_LUCTpyRrow_9i5OudMdedjczbydrq+hC_CERmg@mail.gmail.com>
-Message-ID: <CAK8P3a2DKqO_LUCTpyRrow_9i5OudMdedjczbydrq+hC_CERmg@mail.gmail.com>
-Subject: Re: [PATCH] mtd: rawnand: arasan: select CONFIG_BCH
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-17-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200527013136.GA838011@bogus> <CA+V-a8t6mXkTUac69V=T8_27r_sdN+=MktDTM1mmtbXRn8SSQQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8t6mXkTUac69V=T8_27r_sdN+=MktDTM1mmtbXRn8SSQQ@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 27 May 2020 08:38:08 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJUn9iOy5FT6VRmsC-uAhSdN8_Sne0Vn_7Q1dHudbzopw@mail.gmail.com>
+Message-ID: <CAL_JsqJUn9iOy5FT6VRmsC-uAhSdN8_Sne0Vn_7Q1dHudbzopw@mail.gmail.com>
+Subject: Re: [PATCH 16/17] dt-bindings: watchdog: renesas,wdt: Document
+ r8a7742 support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jens Axboe <axboe@kernel.dk>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Y5zzUsXBCZ5TlQCEaV1lgiqbb1i/m6lCRIoUVKkqCNI9cZQ7X5r
- LXATm/xWTeevNIqXfWST0rqnKiW0vMNEgiPsXu/mx1SH5zqe3L96wv2g6rPyT6Z7fjYnkxV
- hk+51WNyJsAHq+Lf0twjgAvefx8eKPYfJM72jS26GDqnQ7EVl+0xY5Y2+dS1qrjzwGVCJcq
- +O8Pt1nC/9R665i0x5HqA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:cNIYvZO1Q6k=:pyhDIssDbo/7582d+gNkpm
- zUpZUWbwyE+TITZ6uuWkzdaXyrPQbAryNyna38fCXJ9k9CUmbrsLgTuwCBLXS6lZCar9ly0TY
- bs5jTn+XuVkswLs3j/q3oG1CI565UFCZJdZjqvAfL/DsTH9cS/Rl5cBn0dViz1Nl9pXzDybNL
- +bF0+P6OFk1fLZI9vQiCpADfwmkJWMUeVqgdAtbhB4KMzVj08cL5An+ca8VE66mRi6ySYIXho
- QcrH9uUi3n4bl6xYngMjbIqit/1uXrW+MDUvmTNI7ZfcsJDyNK/pm2bEgVm5I3bZdkGLtmwAb
- r99AKeotXvFpx31Vu4NuyKQJ/0k+zZiqDFkwYKvRySR6K3qK7iRjhZkDAW8rVvH61PG1YTIeY
- I3kaaVrbELq/Oi7vxpjdTqUUp9yXOlTd4YN0xAuXyIIndbGBU9g8QeN3Mxewb946U6xxvUK42
- izkMdEAam3Xohih3i+YK/1bA3Wm7z/UisEuchQCcTG3723i4Jz3GYCBFa19yml/xDQRZMFktn
- yLHrnzpHl8fsB7bFySyDPEnVykzWCZXY6uCakRS9Ay3wVQOwgBssejEgvGVMPy0NiyQHUQYxf
- 8dCtzgCwDCq9RVF0y0thn70rmO+ONrmSOq7dBlq2+NJpsflUrn4Tkexb5w4dNLmrkD7HCTMaf
- 7KJAbpZY2Fy9BRbAm2k2QuVnbagqgRW2Ycb/vWqSJduPcPVR2VwwVurVB8+k/quvu4b0KTqvz
- tJfru+0KYd2FUkGfHzfYpIkbfAMBXOpHdQ3TrRBsckO5UeamZpeeLCLlC8Jo/ebLtNj9RfAGO
- 87guyX8b5s7qg9QJAb0gAzB2OdMcrerp5bJstonDoAnRzzeEes=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:53 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Wed, May 27, 2020 at 5:23 AM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 >
-> Hi Arnd,
+> Hi Rob,
 >
-> Arnd Bergmann <arnd@arndb.de> wrote on Wed, 27 May 2020 15:42:03 +0200:
->
-> > Like several other nand flash drivers, this one requires the BCH
-> > library to be selected from Kconfig.
->
-> Actually most of the time these drivers do not depend on BCH directly.
-> Here it is a bit particular: the hardware ECC engine logic being
-> broken, I found a workaround by using BCH's library functions directly
-> to verify the hardware correctness.
->
-> Anyway, thank you very much for the fix but if I didn't make a mistake
-> it should have been fixed yesterday night already, so it's probably not
-> in linux-next yet.
+> On Wed, May 27, 2020 at 2:31 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, May 15, 2020 at 04:08:56PM +0100, Lad Prabhakar wrote:
+> > > RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
+> > > therefore add relevant documentation.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> >
+> > Meanwhile in the DT tree, converting this schema landed. Can you prepare
+> > a version based on the schema.
+> >
+> This was kindly taken care by Stephen during merge in linux-next [1].
 
-I'm still on yesterday's linux-next, so I was probably just a little late.
-Thanks for fixing it already.
+Yes, I'm aware of that. I was hoping for a better commit message which
+stands on its own (essentially the one here).
 
-      Arnd
+Rob
