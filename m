@@ -2,62 +2,109 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ECDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18FF2207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859BC207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="l0pnprYu"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="Uuow4kSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgE0EVI (ORCPT
+        id S1728769AbgE0EVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 00:21:08 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50487 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgE0EVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 00:21:06 -0400
+        Wed, 27 May 2020 00:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbgE0EVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 00:21:02 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE4AC061A0F;
+        Tue, 26 May 2020 21:21:02 -0700 (PDT)
 Received: by ozlabs.org (Postfix, from userid 1003)
-        id 49WyLj5P5vz9sSw; Wed, 27 May 2020 14:21:00 +1000 (AEST)
+        id 49WyLh5X25z9sSd; Wed, 27 May 2020 14:21:00 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
-        t=1590553261; bh=himyVK4/uAY65Rhi/04JhPo9XxPhlLv5LE5z8MhKESQ=;
+        t=1590553260; bh=cwG4p+fURpnXHo+TvskpLnMDdkg5NzfuxIxjhvAlZBs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l0pnprYuazQoMipYIrBZciz2+1zEE+BxE6jRcm0kQTRPwNwFkGTOi2YHj2M1JDBEF
-         OEb1M2PDC4VLWyOFIP6PEu4BUfg0yERObU1G0M0sSRMw1Nrp8a/P9GEGClYkP9st2H
-         5TfUkZe9YPBfWOBjJYI8Ii52W6rF3g+zK45nqg25Zyt2Am7BJ9jpYPsKBeU/iWS07Y
-         H2OzXMTxiv+JQfLLSDODG8PhLvKqnXHIkMzaDaWAOdLZ8FTscp5aG2Sh5933tdkT42
-         4Gz68BmOH4K9/68SPHTAH8FwecQRqbdFcv+53HXrTm90WqwWk60cv1gUS6QTyi6Xum
-         GdX51qdSv9A/w==
-Date:   Wed, 27 May 2020 14:16:05 +1000
+        b=Uuow4kSIZoBpudeIAEjeRUhg6WZ/qKlgzuTlrmt7o1LcuYWuviCtfSzgYEdaCVTDf
+         HAujJrHQXHdA0LzSL8BShz4enX0Vd4uuPREjUq+a+z0B/fgwO2PFq6AWXHr8Q5NDPq
+         lqZbFHZy4loznYFO8KrR6x4ud3PsAqRkMxXOJOHhdpYGqntmDbd9EsxLiCMkGbjIJ7
+         civPT9ubEaEe0bvn2Atua3R8FbSDPEPpOnnFiOjL9Q/Za6Mrzlmfuj3cG2FGUgJD6z
+         uR7jXTJwQnTnhXHn50MT6Df5rSaZMpV4OsQgdjlLJw/VPlTNhcuHiJzSB6Af23sprs
+         b/mgQEtnVQbOA==
+Date:   Wed, 27 May 2020 14:19:53 +1000
 From:   Paul Mackerras <paulus@ozlabs.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        mpe@ellerman.id.au, linux-kernel@vger.kernel.org,
-        Alexey Kardashevskiy <aik@ozlabs.ru>, benh@kernel.crashing.org
-Subject: Re: [PATCH] KVM: PPC: Book3S HV: read ibm,secure-memory nodes
-Message-ID: <20200527041605.GC293451@thinks.paulus.ozlabs.org>
-References: <20200416162715.45846-1-ldufour@linux.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org,
+        catalin.marinas@arm.com, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/kvm/radix: ignore kmemleak false positives
+Message-ID: <20200527041953.GF293451@thinks.paulus.ozlabs.org>
+References: <20200513133915.1040-1-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200416162715.45846-1-ldufour@linux.ibm.com>
+In-Reply-To: <20200513133915.1040-1-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 06:27:15PM +0200, Laurent Dufour wrote:
-> The newly introduced ibm,secure-memory nodes supersede the
-> ibm,uv-firmware's property secure-memory-ranges.
+On Wed, May 13, 2020 at 09:39:15AM -0400, Qian Cai wrote:
+> kvmppc_pmd_alloc() and kvmppc_pte_alloc() allocate some memory but then
+> pud_populate() and pmd_populate() will use __pa() to reference the newly
+> allocated memory.
 > 
-> Firmware will no more expose the secure-memory-ranges property so first
-> read the new one and if not found rollback to the older one.
+> Since kmemleak is unable to track the physical memory resulting in false
+> positives, silence those by using kmemleak_ignore().
 > 
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> unreferenced object 0xc000201c382a1000 (size 4096):
+>  comm "qemu-kvm", pid 124828, jiffies 4295733767 (age 341.250s)
+>  hex dump (first 32 bytes):
+>    c0 00 20 09 f4 60 03 87 c0 00 20 10 72 a0 03 87  .. ..`.... .r...
+>    c0 00 20 0e 13 a0 03 87 c0 00 20 1b dc c0 03 87  .. ....... .....
+>  backtrace:
+>    [<000000004cc2790f>] kvmppc_create_pte+0x838/0xd20 [kvm_hv]
+>    kvmppc_pmd_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:366
+>    (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:590
+>    [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+>    [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+>    [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+>    [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+>    [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+>    [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+>    [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+>    [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>    [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>    [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>    [<00000000fb70a873>] system_call_common+0xf0/0x278
+> unreferenced object 0xc0002001f0c03900 (size 256):
+>  comm "qemu-kvm", pid 124830, jiffies 4295735235 (age 326.570s)
+>  hex dump (first 32 bytes):
+>    c0 00 20 10 fa a0 03 87 c0 00 20 10 fa a1 03 87  .. ....... .....
+>    c0 00 20 10 fa a2 03 87 c0 00 20 10 fa a3 03 87  .. ....... .....
+>  backtrace:
+>    [<0000000023f675b8>] kvmppc_create_pte+0x854/0xd20 [kvm_hv]
+>    kvmppc_pte_alloc at arch/powerpc/kvm/book3s_64_mmu_radix.c:356
+>    (inlined by) kvmppc_create_pte at arch/powerpc/kvm/book3s_64_mmu_radix.c:593
+>    [<00000000d123c49a>] kvmppc_book3s_instantiate_page+0x2e0/0x8c0 [kvm_hv]
+>    [<00000000bb549087>] kvmppc_book3s_radix_page_fault+0x1b4/0x2b0 [kvm_hv]
+>    [<0000000086dddc0e>] kvmppc_book3s_hv_page_fault+0x214/0x12a0 [kvm_hv]
+>    [<000000005ae9ccc2>] kvmppc_vcpu_run_hv+0xc5c/0x15f0 [kvm_hv]
+>    [<00000000d22162ff>] kvmppc_vcpu_run+0x34/0x48 [kvm]
+>    [<00000000d6953bc4>] kvm_arch_vcpu_ioctl_run+0x314/0x420 [kvm]
+>    [<000000002543dd54>] kvm_vcpu_ioctl+0x33c/0x950 [kvm]
+>    [<0000000048155cd6>] ksys_ioctl+0xd8/0x130
+>    [<0000000041ffeaa7>] sys_ioctl+0x28/0x40
+>    [<000000004afc4310>] system_call_exception+0x114/0x1e0
+>    [<00000000fb70a873>] system_call_common+0xf0/0x278
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
 Thanks, applied to my kvm-ppc-next branch.
 
