@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8797C20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB80620873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:54:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="op1qkriE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VRXxfC+f"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="LrgeF09U";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0a4bM5Vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388687AbgE0Pyg (ORCPT
+        id S2390623AbgE0Pyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:54:36 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:39825 "EHLO
+        Wed, 27 May 2020 11:54:51 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46269 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730653AbgE0Pvg (ORCPT
+        by vger.kernel.org with ESMTP id S1729986AbgE0Pv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:51:36 -0400
+        Wed, 27 May 2020 11:51:26 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 6FDFC581510;
-        Wed, 27 May 2020 11:51:34 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 4D6D65814F4;
+        Wed, 27 May 2020 11:51:25 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:51:34 -0400
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:51:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=aGDNKgfbupEd2
-        0uOVjJDSIqtW5LOwu8lX9eYl16fpr0=; b=op1qkriEu8zYCZLR8dUCyi21wN4gW
-        oU3RkhbE+N+9HSwFyAuvWa1Og4/A/M8tttI6MmyT74td0GjXJ+zDQHizafhjYypa
-        +N1eKXdLwX1gdXc3bn6ezi3z6Ftn1VXJob0TqcvMHhfID1K7otn1T2/Wj7oVU07Z
-        PIaVeKjd72pr0KriFN2+h45USUTiFz7ZHqx6m+TqWUxX/5JKdwmOTd3y1XbJB0d9
-        8VQ/9uVj/kCmjlamfIok8dzyWsxpnXyc3AQzoFu244dIx+5UvHTNlruapAqnHUfp
-        ROO/8RaAwwrwl7jlQpYxPQ1GCy0j1sdF3pT2b84QClOaKH/wMKKWBQKsw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=IuU4CyqN1WTD2
+        W0jNMeAupQpwuiyhjcP/tC7268QG+E=; b=LrgeF09U5T9+MuSN6cTRJcoGpbLfG
+        qamBEaHvSSORb2kv6gnbY2KYIqvt3LEbk8YVGxmvDo+0ojJn9u19/nGFUPX/lGYI
+        LhXdCwYVa65AMZyuTUhwb/lAev/eV77jKhbfeBIZqcCNqt5/LWEGZNIAX4vxQ+x5
+        XxFcVXHpek1HTwCzhEhx8Kppxfvfm07nW8Fp0EEXz/ZUxcPnnqP5PqVD0hfNFXFt
+        KDhF+7Cu1gO85HTRlM2fvEFp/E+guayJkCA0ixaGrYKov8b2WWZco7cJOS0qY3jj
+        25YeKFygdD6es6rnLWLQH9P3agcUsFoCXCvWrpnr0SBq97gr9PJRPAwow==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=aGDNKgfbupEd20uOVjJDSIqtW5LOwu8lX9eYl16fpr0=; b=VRXxfC+f
-        TfE3b0mCozxBK+B0CCM7oBX+QzU8iVUV5waHllvUZDpG7oBY9sHtqD6Vtdgd32sF
-        3qJtVil8gcFp5NbhvS1s0v092QM5UVpd4uPSr+nUp1bHfFcYG5/hKNV1k9m1Q3Jr
-        C/vppRRsaz/ryH8gP69GnxydIF5LdNiZme6nzSMx3nWM70aYEwYVAmiPTQJ+85Q4
-        vL1VnvDCsUpI9G6dGHAONhhnd+KjgaN9MkTBYNYW40KWuInKo2T30gvXUvA3JYQM
-        GHoerLOAul1nsxzLnZQJQyl3FNpEa9pHsJWvLqgIK1rr+cgutEblpfLAKN68+akB
-        F/qC7PPhUB1+ow==
-X-ME-Sender: <xms:hozOXlkHeLltD6mKafGuRBnL6MiFo9jksHtkRz0hZbUJoJ23f8G6Ew>
+        fm2; bh=IuU4CyqN1WTD2W0jNMeAupQpwuiyhjcP/tC7268QG+E=; b=0a4bM5Vc
+        QTJwpp736BZUNNisnncdEBdhdag/OzYYomHLEOyEQorAGiR9N0+mmELPmuKAFrdk
+        T/fkQ5KWmtP8K8lhADm52LYkKSW/N+bl12CwWU9ZlcqaglTqwd2U0kTMHSR5Dce0
+        miZKexMQRQW9bTbmXDeLTa95XIKllUH79YMoqnIC25P10I1d2/dIRx88JKrwI7L+
+        r/T5l8fK2aP0x++7jHUMSEHBnIYl4x30bWu+6x0wGrgLj0VFtFEAyiVKWADD1X9g
+        uHobX3wVVXmpC7d7irhmr3IRuaijAruu96+PSkHx3iSxHQIb00jYYBN+ZRQsxjh3
+        d44CFAYrspCRyQ==
+X-ME-Sender: <xms:fYzOXsklk5C_8E-ib88-Qm00w6Bwf0oR5GIXj8F7ELlQVYkoZojYYg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepieefne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepheelne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:hozOXg0ztwryQZchw5eNPAx-0Qt9v4_urm0puEhKoAKI1Rn3babgNQ>
-    <xmx:hozOXrrCOnWUswKrJD_-YDYlzb_g2MClsc3FlKj94PEOYR5zoR_EOw>
-    <xmx:hozOXllxU8nHabz6JF3gDbvNVzNpFs5tBqWGmmf6lZnRsx3qyEhN4w>
-    <xmx:hozOXomaNxseSHH5qLFHI1xODo_fANSk85mkoZQrRoTV7-Uk4WnE0w>
+X-ME-Proxy: <xmx:fYzOXr3I2y0bbXEb_QjLnWZHf-wGVAenyTcQw_CVS5sTgMRSA-46PA>
+    <xmx:fYzOXqqeiuiwNQoqv-dkPl3LMuc_NIBXLTw3wOPwxtP1noABopBO1w>
+    <xmx:fYzOXom2LYOcoPO7vauftYCoohJYgSiQ7xTqh6OQee0r8q-tYdAs5g>
+    <xmx:fYzOXjn8bCQ0mHuxzoKHMPsCpOutoBy_ONFV8l_TT5HMua2t35cMDg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 200C830614FA;
-        Wed, 27 May 2020 11:51:34 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id E412A30618B7;
+        Wed, 27 May 2020 11:51:24 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 087/105] drm/vc4: hdmi: Move CEC init to its own function
-Date:   Wed, 27 May 2020 17:48:57 +0200
-Message-Id: <a054e42bfd4b913720d146b82e5aed1bb66b7dc4.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 081/105] drm/vc4: hdmi: Add reset callback
+Date:   Wed, 27 May 2020 17:48:51 +0200
+Message-Id: <1cbd5fcbc9b0bcc604990b61c8646a15cbba0c81.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,167 +89,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CEC init code was put directly into the bind function, which was quite
-inconsistent with how the audio support was done, and would prevent us from
-further changes to skip that initialisation entirely.
+The BCM2711 and BCM283x HDMI controllers use a slightly different reset
+sequence, so let's add a callback to reset the controller.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 108 +++++++++++++++++++++-------------
- 1 file changed, 67 insertions(+), 41 deletions(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 31 ++++++++++++++++++-------------
+ drivers/gpu/drm/vc4/vc4_hdmi.h |  3 +++
+ 2 files changed, 21 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 8a63ac3dd86b..7eb3cee25001 100644
+index aa7b24267a0b..dceff505c840 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -1170,6 +1170,67 @@ static const struct cec_adap_ops vc4_hdmi_cec_adap_ops = {
- 	.adap_log_addr = vc4_hdmi_cec_adap_log_addr,
- 	.adap_transmit = vc4_hdmi_cec_adap_transmit,
- };
-+
-+static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
-+{
-+	struct cec_connector_info conn_info;
-+	struct platform_device *pdev = vc4_hdmi->pdev;
-+	u32 value;
-+	int ret;
-+
-+	vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
-+						  vc4_hdmi, "vc4",
-+						  CEC_CAP_DEFAULTS |
-+						  CEC_CAP_CONNECTOR_INFO, 1);
-+	ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
-+	if (ret < 0)
-+		return ret;
-+
-+	cec_fill_conn_info_from_drm(&conn_info, &vc4_hdmi->connector);
-+	cec_s_conn_info(vc4_hdmi->cec_adap, &conn_info);
-+
-+	HDMI_WRITE(HDMI_CEC_CPU_MASK_SET, 0xffffffff);
-+	value = HDMI_READ(HDMI_CEC_CNTRL_1);
-+	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
-+	/*
-+	 * Set the logical address to Unregistered and set the clock
-+	 * divider: the hsm_clock rate and this divider setting will
-+	 * give a 40 kHz CEC clock.
-+	 */
-+	value |= VC4_HDMI_CEC_ADDR_MASK |
-+		 (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
-+	HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
-+	ret = devm_request_threaded_irq(&pdev->dev, platform_get_irq(pdev, 0),
-+					vc4_cec_irq_handler,
-+					vc4_cec_irq_handler_thread, 0,
-+					"vc4 hdmi cec", vc4_hdmi);
-+	if (ret)
-+		goto err_delete_cec_adap;
-+
-+	ret = cec_register_adapter(vc4_hdmi->cec_adap, &pdev->dev);
-+	if (ret < 0)
-+		goto err_delete_cec_adap;
-+
-+	return 0;
-+
-+err_delete_cec_adap:
-+	cec_delete_adapter(vc4_hdmi->cec_adap);
-+
-+	return ret;
-+}
-+
-+static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi)
-+{
-+	cec_unregister_adapter(vc4_hdmi->cec_adap);
-+}
-+#else
-+static int vc4_hdmi_cec_init(struct vc4_hdmi *vc4_hdmi)
-+{
-+	return 0;
-+}
-+
-+static void vc4_hdmi_cec_exit(struct vc4_hdmi *vc4_hdmi) {};
-+
- #endif
- 
- static int vc4_hdmi_build_regset(struct vc4_hdmi *vc4_hdmi,
-@@ -1247,9 +1308,6 @@ static int vc4_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
- 
- static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- {
--#ifdef CONFIG_DRM_VC4_HDMI_CEC
--	struct cec_connector_info conn_info;
--#endif
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct drm_device *drm = dev_get_drvdata(master);
- 	const struct vc4_hdmi_variant *variant;
-@@ -1328,43 +1386,13 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 	if (ret)
- 		goto err_destroy_encoder;
- 
--#ifdef CONFIG_DRM_VC4_HDMI_CEC
--	vc4_hdmi->cec_adap = cec_allocate_adapter(&vc4_hdmi_cec_adap_ops,
--						  vc4_hdmi, "vc4",
--						  CEC_CAP_DEFAULTS |
--						  CEC_CAP_CONNECTOR_INFO, 1);
--	ret = PTR_ERR_OR_ZERO(vc4_hdmi->cec_adap);
--	if (ret < 0)
--		goto err_destroy_conn;
--
--	cec_fill_conn_info_from_drm(&conn_info, &vc4_hdmi->connector);
--	cec_s_conn_info(vc4_hdmi->cec_adap, &conn_info);
--
--	HDMI_WRITE(HDMI_CEC_CPU_MASK_SET, 0xffffffff);
--	value = HDMI_READ(HDMI_CEC_CNTRL_1);
--	value &= ~VC4_HDMI_CEC_DIV_CLK_CNT_MASK;
--	/*
--	 * Set the logical address to Unregistered and set the clock
--	 * divider: the hsm_clock rate and this divider setting will
--	 * give a 40 kHz CEC clock.
--	 */
--	value |= VC4_HDMI_CEC_ADDR_MASK |
--		 (4091 << VC4_HDMI_CEC_DIV_CLK_CNT_SHIFT);
--	HDMI_WRITE(HDMI_CEC_CNTRL_1, value);
--	ret = devm_request_threaded_irq(dev, platform_get_irq(pdev, 0),
--					vc4_cec_irq_handler,
--					vc4_cec_irq_handler_thread, 0,
--					"vc4 hdmi cec", vc4_hdmi);
-+	ret = vc4_hdmi_cec_init(vc4_hdmi);
- 	if (ret)
--		goto err_delete_cec_adap;
--	ret = cec_register_adapter(vc4_hdmi->cec_adap, dev);
--	if (ret < 0)
--		goto err_delete_cec_adap;
--#endif
-+		goto err_destroy_conn;
- 
- 	ret = vc4_hdmi_audio_init(vc4_hdmi);
- 	if (ret)
--		goto err_destroy_encoder;
-+		goto err_free_cec;
- 
- 	vc4_debugfs_add_file(drm, variant->debugfs_name,
- 			     vc4_hdmi_debugfs_regs,
-@@ -1372,12 +1400,10 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
- 
+@@ -69,6 +69,21 @@ static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
  	return 0;
+ }
  
--#ifdef CONFIG_DRM_VC4_HDMI_CEC
--err_delete_cec_adap:
--	cec_delete_adapter(vc4_hdmi->cec_adap);
-+err_free_cec:
-+	vc4_hdmi_cec_exit(vc4_hdmi);
- err_destroy_conn:
- 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
--#endif
- err_destroy_encoder:
- 	drm_encoder_cleanup(encoder);
- err_unprepare_hsm:
-@@ -1402,7 +1428,7 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
- 	kfree(vc4_hdmi->hdmi_regset.regs);
- 	kfree(vc4_hdmi->hd_regset.regs);
++static void vc4_hdmi_reset(struct vc4_hdmi *vc4_hdmi)
++{
++	HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_SW_RST);
++	udelay(1);
++	HDMI_WRITE(HDMI_M_CTL, 0);
++
++	HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_ENABLE);
++
++	HDMI_WRITE(HDMI_SW_RESET_CONTROL,
++		   VC4_HDMI_SW_RESET_HDMI |
++		   VC4_HDMI_SW_RESET_FORMAT_DETECT);
++
++	HDMI_WRITE(HDMI_SW_RESET_CONTROL, 0);
++}
++
+ static enum drm_connector_status
+ vc4_hdmi_connector_detect(struct drm_connector *connector, bool force)
+ {
+@@ -363,11 +378,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 		return;
+ 	}
  
--	cec_unregister_adapter(vc4_hdmi->cec_adap);
-+	vc4_hdmi_cec_exit(vc4_hdmi);
- 	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
- 	drm_encoder_cleanup(&vc4_hdmi->encoder.base.base);
+-	HDMI_WRITE(HDMI_SW_RESET_CONTROL,
+-		   VC4_HDMI_SW_RESET_HDMI |
+-		   VC4_HDMI_SW_RESET_FORMAT_DETECT);
+-
+-	HDMI_WRITE(HDMI_SW_RESET_CONTROL, 0);
++	if (vc4_hdmi->variant->reset)
++		vc4_hdmi->variant->reset(vc4_hdmi);
  
+ 	/* PHY should be in reset, like
+ 	 * vc4_hdmi_encoder_disable() does.
+@@ -1289,14 +1301,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
+ 		vc4_hdmi->hpd_active_low = hpd_gpio_flags & OF_GPIO_ACTIVE_LOW;
+ 	}
+ 
+-	/* HDMI core must be enabled. */
+-	if (!(HDMI_READ(HDMI_M_CTL) & VC4_HD_M_ENABLE)) {
+-		HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_SW_RST);
+-		udelay(1);
+-		HDMI_WRITE(HDMI_M_CTL, 0);
+-
+-		HDMI_WRITE(HDMI_M_CTL, VC4_HD_M_ENABLE);
+-	}
+ 	pm_runtime_enable(dev);
+ 
+ 	drm_simple_encoder_init(drm, encoder, DRM_MODE_ENCODER_TMDS);
+@@ -1409,6 +1413,7 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
+ 	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
+ 
+ 	.init_resources		= vc4_hdmi_init_resources,
++	.reset			= vc4_hdmi_reset,
+ };
+ 
+ static const struct of_device_id vc4_hdmi_dt_match[] = {
+diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+index f7d0ca9447d2..93695674c2d3 100644
+--- a/drivers/gpu/drm/vc4/vc4_hdmi.h
++++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+@@ -35,6 +35,9 @@ struct vc4_hdmi_variant {
+ 	 * clocks, etc) for that variant.
+ 	 */
+ 	int (*init_resources)(struct vc4_hdmi *vc4_hdmi);
++
++	/* Callback to reset the HDMI block */
++	void (*reset)(struct vc4_hdmi *vc4_hdmi);
+ };
+ 
+ /* HDMI audio information */
 -- 
 git-series 0.9.1
