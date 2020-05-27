@@ -2,168 +2,119 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B77C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01159C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65CE32088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8E2B207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:22:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="wzuPb5He"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MeuuxtMK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728673AbgE0UTA (ORCPT
+        id S1728255AbgE0UWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:19:00 -0400
-Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:50148 "EHLO
-        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727090AbgE0UTA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:19:00 -0400
-Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
-        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RKBvet019670;
-        Wed, 27 May 2020 16:18:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=/SUvSUcYEZAaJQAoQa6QA7tQg6WWYeQ9EUOEJ0uc4v8=;
- b=wzuPb5HeYlYxp0nPSpjYE/98yXBgmiWMvM6veeoCjt9gH0SqH3rhAbYFMDQCZrUBVHYd
- gupLWusdsCzGr7Rd3xGS8dfiR0A9LL5iK14M1059TVPXgl7Ex365875SoVKuQY2xHwxf
- zjoHRwEmnVikrn4KGpVo1wzjtanqvOsGOwLXb8nEcka0z6SSicUB2pdMx9kG/jqvCIWt
- 9erQVKaPj+Oau1uTjet1/cQ2OExx7eR3UsZDluK7c11CgDNr4ldIdiE2UxIuh0SsrY3Q
- nv84q7vweH6mpmjG7iG3UirROzKrLubfkAiWJjkRr8vWboQezpj6CwW5Y3ULDuHSLc0x Zg== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0a-00154904.pphosted.com with ESMTP id 316xw4w8p6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 16:18:59 -0400
-Received: from pps.filterd (m0144104.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RKA9EA179873;
-        Wed, 27 May 2020 16:18:58 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0b-00154901.pphosted.com with ESMTP id 318rae73vx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 16:18:58 -0400
-X-LoopCount0: from 10.166.132.129
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
-   d="scan'208";a="1391851612"
-From:   <Mario.Limonciello@dell.com>
-To:     <jarkko.sakkinen@linux.intel.com>,
-        <James.Bottomley@HansenPartnership.com>, <peterhuewe@gmx.de>,
-        <jgg@ziepe.ca>
-CC:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jeffrin@rajagiritech.edu.in>, <alex@guzman.io>
-Subject: RE: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-Thread-Topic: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-Thread-Index: AQHWM4wIzxc0OpiDwkyMUhr0qx5qZ6i7EGkA//+sw5CAAFoVAIABmusA//+ulgA=
-Date:   Wed, 27 May 2020 20:18:56 +0000
-Message-ID: <4d1a53596af44c7b84f97aa4ce04a53c@AUSX13MPC105.AMER.DELL.COM>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
-         <1590521924.15108.1.camel@HansenPartnership.com>
- <37da2695fe6de09d69e27b77f3e29e068596205f.camel@linux.intel.com>
-In-Reply-To: <37da2695fe6de09d69e27b77f3e29e068596205f.camel@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2020-05-27T20:18:54.4742696Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_ActionId=796ffd79-2d4d-44fc-badf-ebe47214f41d;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [143.166.24.60]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 27 May 2020 16:22:22 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:26002 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727787AbgE0UWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:22:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590610941; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=G4owDA73rya93Iq5Ppovobk5IRWHk7KpXDDQCNQdgSI=; b=MeuuxtMKTQ1NAOTGLKbPxZBxQ6JT5TOrfwnYbgTeQ+loPl13UVjqVMmjyAxNjYn3KUrG1XqZ
+ et0vGBxw0hofgdNd/OsNRXTkQqIw+H92qW+QIcfpaUo20l1c6RG0FCjVAu/B1KB5BrBgQ/Nr
+ K4cY+yTW9HhU+v5RAVJL8Kmm5u4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5ececbfc76fccbb4c8d4a63c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 20:22:20
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5590AC4339C; Wed, 27 May 2020 20:22:19 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C2E6C433C9;
+        Wed, 27 May 2020 20:22:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C2E6C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     viresh.kumar@linaro.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org, saravanak@google.com, mka@chromium.org
+Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, lukasz.luba@arm.com,
+        sudeep.holla@arm.com, smasetty@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v5 0/5] DDR/L3 Scaling support on SDM845 and SC7180 SoCs
+Date:   Thu, 28 May 2020 01:51:48 +0530
+Message-Id: <20200527202153.11659-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- adultscore=0 suspectscore=0 clxscore=1015 malwarescore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
- cotscore=-2147483648 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270154
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- spamscore=0 adultscore=0 phishscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005270155
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKYXJra28gU2Fra2luZW4gPGph
-cmtrby5zYWtraW5lbkBsaW51eC5pbnRlbC5jb20+DQo+IFNlbnQ6IFdlZG5lc2RheSwgTWF5IDI3
-LCAyMDIwIDM6MDkgUE0NCj4gVG86IEphbWVzIEJvdHRvbWxleTsgTGltb25jaWVsbG8sIE1hcmlv
-OyBwZXRlcmh1ZXdlQGdteC5kZTsgamdnQHppZXBlLmNhDQo+IENjOiBhcm5kQGFybmRiLmRlOyBn
-cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsgbGludXgtaW50ZWdyaXR5QHZnZXIua2VybmVsLm9y
-ZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgamVmZnJpbkByYWphZ2lyaXRlY2gu
-ZWR1LmluOyBhbGV4QGd1em1hbi5pbw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSB0cG06IFJldmVy
-dCAidHBtOiBmaXggaW52YWxpZCBsb2NraW5nIGluIE5PTkJMT0NLSU5HIG1vZGUiDQo+IA0KPiAN
-Cj4gW0VYVEVSTkFMIEVNQUlMXQ0KPiANCj4gT24gVHVlLCAyMDIwLTA1LTI2IGF0IDEyOjM4IC0w
-NzAwLCBKYW1lcyBCb3R0b21sZXkgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDIwLTA1LTI2IGF0IDE5
-OjIzICswMDAwLCBNYXJpby5MaW1vbmNpZWxsb0BkZWxsLmNvbSB3cm90ZToNCj4gPiA+ID4gT24g
-VHVlLCAyMDIwLTA1LTI2IGF0IDEzOjMyIC0wNTAwLCBNYXJpbyBMaW1vbmNpZWxsbyB3cm90ZToN
-Cj4gPiA+ID4gPiBUaGlzIHJldmVydHMgY29tbWl0IGQyM2QxMjQ4NDMwN2I0MGVlYTU0OWI4YTg1
-OGY1ZmZmYWQ5MTM4OTcuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGlzIGNvbW1pdCBoYXMgY2F1
-c2VkIHJlZ3Jlc3Npb25zIGZvciB0aGUgWFBTIDk1NjAgY29udGFpbmluZw0KPiA+ID4gPiA+IGEg
-TnV2b3RvbiBUUE0uDQo+ID4gPiA+DQo+ID4gPiA+IFByZXN1bWFibHkgdGhpcyBpcyB1c2luZyB0
-aGUgdGlzIGRyaXZlcj8NCj4gPiA+DQo+ID4gPiBDb3JyZWN0Lg0KPiA+ID4NCj4gPiA+ID4gPiBB
-cyBtZW50aW9uZWQgYnkgdGhlIHJlcG9ydGVyIGFsbCBUUE0yIGNvbW1hbmRzIGFyZSBmYWlsaW5n
-IHdpdGg6DQo+ID4gPiA+ID4gICBFUlJPUjp0Y3RpOnNyYy90c3MyLXRjdGkvdGN0aS0NCj4gPiA+
-ID4gPiBkZXZpY2UuYzoyOTA6dGN0aV9kZXZpY2VfcmVjZWl2ZSgpDQo+ID4gPiA+ID4gICBGYWls
-ZWQgdG8gcmVhZCByZXNwb25zZSBmcm9tIGZkIDMsIGdvdCBlcnJubyAxOiBPcGVyYXRpb24gbm90
-DQo+ID4gPiA+ID4gcGVybWl0dGVkDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGUgcmVwb3J0ZXIg
-YmlzZWN0ZWQgdGhpcyBpc3N1ZSBiYWNrIHRvIHRoaXMgY29tbWl0IHdoaWNoIHdhcw0KPiA+ID4g
-PiA+IGJhY2twb3J0ZWQgdG8gc3RhYmxlIGFzIGNvbW1pdCA0ZDZlYmM0Lg0KPiA+ID4gPg0KPiA+
-ID4gPiBJIHRoaW5rIHRoZSBwcm9ibGVtIGlzIHJlcXVlc3RfbG9jYWxpdHkgLi4uIGZvciBzb21l
-IGluZXhwbGljYWJsZQ0KPiA+ID4gPiByZWFzb24gYSBmYWlsdXJlIHRoZXJlIHJldHVybnMgLTEs
-IHdoaWNoIGlzIEVQRVJNIHRvIHVzZXIgc3BhY2UuDQo+ID4gPiA+DQo+ID4gPiA+IFRoYXQgc2Vl
-bXMgdG8gYmUgYSBidWcgaW4gdGhlIGFzeW5jIGNvZGUgc2luY2UgZXZlcnl0aGluZyBlbHNlDQo+
-ID4gPiA+IGdpdmVzIGEgRVNQSVBFIGVycm9yIGlmIHRwbV90cnlfZ2V0X29wcyBmYWlscyAuLi4g
-YXQgbGVhc3Qgbm8tb25lDQo+ID4gPiA+IGFzc3VtZXMgaXQgZ2l2ZXMgYmFjayBhIHNlbnNpYmxl
-IHJldHVybiBjb2RlLg0KPiA+ID4gPg0KPiA+ID4gPiBXaGF0IEkgdGhpbmsgaXMgaGFwcGVuaW5n
-IGlzIHRoYXQgd2l0aCB0aGUgcGF0Y2ggdGhlIFRQTSBnb2VzDQo+ID4gPiA+IHRocm91Z2ggYSBx
-dWljayBzZXF1ZW5jZSBvZiByZXF1ZXN0LCByZWxpbnF1aXNoLCByZXF1ZXN0LA0KPiA+ID4gPiBy
-ZWxpbnF1aXNoIGFuZCBpdCdzIHRoZSB0aGlyZCByZXF1ZXN0IHdoaWNoIGlzIGZhaWxpbmcgKGxp
-a2VseQ0KPiA+ID4gPiB0aW1pbmcgb3V0KS4gIFdpdGhvdXQgdGhlIHBhdGNoLCB0aGUgcGF0Y2gg
-dGhlcmUncyBvbmx5IG9uZQ0KPiA+ID4gPiByZXF1ZXN0LHJlbGlucXVpc2ggY3ljbGUgYmVjYXVz
-ZSB0aGUgb3BzIGFyZSBoZWxkIHdoaWxlIHRoZSBhc3luYw0KPiA+ID4gPiB3b3JrIGlzIGV4ZWN1
-dGVkLiAgSSBoYXZlIGEgdmFndWUgcmVjb2xsZWN0aW9uIHRoYXQgdGhlcmUgaXMgYQ0KPiA+ID4g
-PiBwcm9ibGVtIHdpdGggdG9vIG1hbnkgbG9jYWxpdHkgcmVxdWVzdCBpbiBxdWljayBzdWNjZXNz
-aW9uLCBidXQNCj4gPiA+ID4gSSdsbCBkZWZlciB0byBKYXNvbiwgd2hvIEkgdGhpbmsgdW5kZXJz
-dGFuZHMgdGhlIGludHJpY2FjaWVzIG9mDQo+ID4gPiA+IGxvY2FsaXRpZXMgYmV0dGVyIHRoYW4g
-SSBkby4NCj4gPiA+DQo+ID4gPiBUaGFua3MsIEkgZG9uJ3QgcHJldGVuZCB0byB1bmRlcnN0YW5k
-IHRoZSBudWFuY2VzIG9mIHRoaXMgcGFydGljdWxhcg0KPiA+ID4gY29kZSwgYnV0IEkgd2FzIGhv
-cGluZyB0aGF0IHRoZSByZXF1ZXN0IHRvIHJldmVydCBnb3Qgc29tZSBhdHRlbnRpb24NCj4gPiA+
-IHNpbmNlIEFsZXgncyBrZXJuZWwgQnVnemlsbGEgYW5kIG1lc3NhZ2UgYSBmZXcgbW9udGhzIGFn
-byB0byBsaW51eA0KPiA+ID4gaW50ZWdyaXR5IHdlcmVuJ3QuDQo+ID4gPg0KPiA+ID4gPiBJZiB0
-aGF0J3MgdGhlIHByb2JsZW0sIHRoZSBzb2x1dGlvbiBsb29rcyBzaW1wbGUgZW5vdWdoOiBqdXN0
-IG1vdmUNCj4gPiA+ID4gdGhlIG9wcyBnZXQgZG93biBiZWNhdXNlIHRoZSBwcml2IHN0YXRlIGlz
-IGFscmVhZHkgcHJvdGVjdGVkIGJ5IHRoZQ0KPiA+ID4gPiBidWZmZXIgbXV0ZXgNCj4gPiA+DQo+
-ID4gPiBZZWFoLCBpZiB0aGF0IHdvcmtzIGZvciBBbGV4J3Mgc2l0dWF0aW9uIGl0IGNlcnRhaW5s
-eSBzb3VuZHMgbGlrZSBhDQo+ID4gPiBiZXR0ZXIgc29sdXRpb24gdGhhbiByZXZlcnRpbmcgdGhp
-cyBwYXRjaCBhcyB0aGlzIHBhdGNoIGFjdHVhbGx5IGRvZXMNCj4gPiA+IGZpeCBhIHByb2JsZW0g
-cmVwb3J0ZWQgYnkgSmVmZnJpbiBvcmlnaW5hbGx5Lg0KPiA+ID4NCj4gPiA+IENvdWxkIHlvdSBw
-cm9wb3NlIGEgc3BlY2lmaWMgcGF0Y2ggdGhhdCBBbGV4IGFuZCBKZWZmcmluIGNhbiBwZXJoYXBz
-DQo+ID4gPiBib3RoIHRyeT8NCj4gPg0KPiA+IFVtLCB3aGF0J3Mgd3Jvbmcgd2l0aCB0aGUgb25l
-IEkgb3JpZ2luYWxseSBhdHRhY2hlZCBhbmQgd2hpY2ggeW91IHF1b3RlDQo+ID4gYmVsb3c/ICBJ
-dCdzIG9ubHkgY29tcGlsZSB0ZXN0ZWQsIGJ1dCBJIHRoaW5rIGl0IHdpbGwgd29yaywgaWYgdGhl
-DQo+ID4gdGhlb3J5IGlzIGNvcnJlY3QuDQo+IA0KPiBQbGVhc2Ugc2VuZCBhIGxlZ2l0IHBhdGNo
-LCB0aGFua3MuDQo+IA0KPiAvSmFya2tvDQoNCkphcmtrbywNCg0KQWZ0ZXIgdGhlIGNvbmZpcm1h
-dGlvbiBmcm9tIEFsZXggdGhhdCB0aGlzIHBhdGNoIGF0dGFjaGVkIHRvIHRoZSBlbmQgb2YgdGhl
-IHRocmVhZA0Kd29ya2VkLCBKYW1lcyBkaWQgc2VuZCBhIHByb3BlciBwYXRjaCB0aGF0IGNhbiBi
-ZSBhY2Nlc3NlZCBoZXJlOg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtaW50ZWdyaXR5
-LzIwMjAwNTI3MTU1ODAwLnlhNDN4bTJsdHV3ZHV3amdAY2FudG9yL1QvI3QNCg0KVGhhbmtzLA0K
+This patch series aims to extend cpu based scaling support to L3/DDR on
+SDM845 and SC7180 SoCs.
+
+Patches [1-2] - Blacklist SDM845 and SC7180 in cpufreq-dt-platdev
+Patches [3-5] - Update bw levels based on cpu frequency change
+
+Based on the following series:
+https://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git/log/?h=opp/linux-next
+
+V5:
+ * Pick up R-bs from Amit
+ * Drop icc tag support/dt changes till the a consensus is achieved
+ * Use dev_pm_opp_adjust_voltage instead [Viresh]
+ * Drop dev_pm_opp_get_path_count [Saravana]
+ * Rework dev_pm_opp_set_bw
+
+V4:
+ * Migrate to using Georgi's new bindings
+ * Misc fixups based on Matthias comments
+ * API fixups based on Bjorn's comments on v2
+ * Picked up a few R-bs from Matthias
+
+v3:
+ * Migrated to using Saravana's opp-kBps bindings [1]
+ * Fixed some misc comments from Rajendra
+ * Added support for SC7180
+
+v2:
+ * Incorporated Viresh's comments from:
+ https://lore.kernel.org/lkml/20190410102429.r6j6brm5kspmqxc3@vireshk-i7/
+ https://lore.kernel.org/lkml/20190410112516.gnh77jcwawvld6et@vireshk-i7/
+ * Dropped cpufreq-map passive governor
+
+Sibi Sankar (5):
+  cpufreq: blacklist SDM845 in cpufreq-dt-platdev
+  cpufreq: blacklist SC7180 in cpufreq-dt-platdev
+  OPP: Add and export helper to set bandwidth
+  cpufreq: qcom: Update the bandwidth levels on frequency change
+  cpufreq: qcom: Disable fast switch when scaling DDR/L3
+
+ drivers/cpufreq/cpufreq-dt-platdev.c |  2 +
+ drivers/cpufreq/qcom-cpufreq-hw.c    | 81 ++++++++++++++++++++++++++--
+ drivers/opp/core.c                   | 31 +++++++++++
+ include/linux/pm_opp.h               |  6 +++
+ 4 files changed, 116 insertions(+), 4 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
