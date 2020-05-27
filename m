@@ -2,114 +2,92 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F03BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E351C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5362073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590564617;
-	bh=tabBBhS7t6j158A3jw2/4Nv+DoUYTP6Pp1Ez6k38dyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dqAl1UIDO49u6iR8Bakjwig8+BHZiaNbkqLEDxODO81AEHcRG+g+K5kym0UwPevD5
-	 WL1ena4Pro3C7ggmuKQZ5s8Idl50GhkrnbTszYAOtR3yySvmSILn1Cnj9d4yiE8JiN
-	 QVrUdIaY5qJpsQsh38r8cIji1lZ2BisbdzPjXsC8=
+	by mail.kernel.org (Postfix) with ESMTP id 2DC3D20C56
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgE0HaQ (ORCPT
+        id S1729294AbgE0HbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:30:16 -0400
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:55286 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728303AbgE0HaQ (ORCPT
+        Wed, 27 May 2020 03:31:16 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:38328 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728303AbgE0HbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:30:16 -0400
-Received: by mail-wm1-f41.google.com with SMTP id h4so2036376wmb.4;
-        Wed, 27 May 2020 00:30:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yXATUV2kmWVOj+bOGqsD/6QdFtMrMkN6a5cRn2rn+Rc=;
-        b=ZgesieiwpyHalzO5TUH7qUcXy14B+96aKZopS/5oLQRWZcAvkAbUjMiXcwL0u+xCfz
-         U0DgC6TWkwzFCbaH0bRhHuDUjON+e7IM9/KbYwYsXU4PNnIwdPiB6UBD91GdYsjMFjA6
-         EJOySgM6R741p9J4EFYDKzu1M7J8/C3PHfF4PiCT1tcGy1evPWoJHqEofHHImHuov/QR
-         0My5UI3RwR6NRdi4wF+FXClrrJqePYTUB44QRR/In3vcLaiMl7GuN3OEiFkqITsoc2pE
-         S0aFjtO/vtFDL/LodgZ0/8ubHl/iRNafUS0I0Y0LyTuHkLW9yzd5NUDiaxwrm1iFTnFd
-         5Etg==
-X-Gm-Message-State: AOAM531V9WxwKK7BvWgBZ/JElCBEQmV+kFFokJB+USG3XIhNlVIAXmiy
-        9IjeW3t9dFh8dnLerXSGdj0XAX9k
-X-Google-Smtp-Source: ABdhPJzO+L2ciScB/jcJnVz2CSF5gGGv1JX8spAkVEyXRDbttpKWZaHX3kqA+/fQrn4w52SZunBg/g==
-X-Received: by 2002:a1c:ed0b:: with SMTP id l11mr3131726wmh.31.1590564614363;
-        Wed, 27 May 2020 00:30:14 -0700 (PDT)
-Received: from pi3 ([194.230.155.118])
-        by smtp.googlemail.com with ESMTPSA id z6sm1980255wrh.79.2020.05.27.00.30.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 00:30:13 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:30:11 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 1/2] power: supply: bq27xxx_battery: Notify about all
- battery changes
-Message-ID: <20200527073011.GA4615@pi3>
-References: <20200525141200.17199-1-krzk@kernel.org>
- <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
- <20200527072218.GA4575@pi3>
+        Wed, 27 May 2020 03:31:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TzmxyRy_1590564671;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TzmxyRy_1590564671)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 27 May 2020 15:31:12 +0800
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: [PATCH 0/5] x86/entry: simply stack switching when exception on userspace
+Date:   Wed, 27 May 2020 07:31:02 +0000
+Message-Id: <20200527073107.2127-1-laijs@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200527072218.GA4575@pi3>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 09:22:24AM +0200, Krzysztof Kozlowski wrote:
-> On Tue, May 26, 2020 at 09:24:39PM -0400, Andrew F. Davis wrote:
-> > On 5/25/20 10:11 AM, Krzysztof Kozlowski wrote:
-> > > All battery related data could be important for user-space.  For example
-> > > time-to-full could be shown to user on the screen or health could be
-> > > monitored for any issues.  Instead of comparing few selected old/new
-> > > values, just check if anything changed in the cache.
-> > > 
-> > 
-> > 
-> > At least some value will change every time we poll the battery, are we
-> > okay with having power_supply_changed() called every time?
-> 
-> Hi,
-> 
-> Let me give few arguments:
-> 1. "Every time" means still once per poll interval or in case of many
->    get_property() calls, once per 5 seconds. In first case, if users
->    sets polling every 1 second, I expect he knows what he wants. I2C
->    will be busy anyway so uevents should not matter that much.
->    In second case, called through get_property(), once per 5 seconds is
->    not that frequent.
-> 
-> 2. Different drivers do it differently. Many chargers notify about
->    everything. Most fuel gauges only on status or capacity change (although
->    I am not sure if they measure more) but few FG send uevents about
->    everything (max17042_battery, sbs-battery, s3c_adc_battery).
-> 
-> 3. If drivers does not send notifications on changed properties of
->    battery, then basically the user-space has to poll every time for all
->    data which is not being a trigger.  The overhead for system would be
->    the same, I guess.
-> 
+7f2590a110b8("x86/entry/64: Use a per-CPU trampoline stack for IDT entries")
+has resulted that when exception on userspace, the kernel (error_entry)
+always push the pt_regs to entry stack(sp0), and then copy them to the
+kernel stack.
 
-And one more:
-4. I actually needed for my project. I have a user-space which
-   previously was polling the battery status but I converted it to udev
-   events.  The voltage, current and temperature are important for me as
-   well so I need all uevents.
+This is a hot path (for example page fault) and interrupt_entry
+directly switches to kernel stack and pushes pt_regs to kernel stack.
+We should do it for error_entry. This is the job of patch1,2.
 
-Best regards,
-Krzysztof
+Patch 3-5 simply stack switching for .Lerror_bad_iret by just doing
+all the work in one function (fixup_bad_iret()).
+
+The patch set is based on tip/master (c021d3d8fe45) (Mon May 25).
+
+The diffstat is "66 insertions(+), 66 deletions(-)", but actually
+it mainly adds comments and deletes code.
+
+Cc: Andy Lutomirski <luto@kernel.org>,
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+Cc: Ingo Molnar <mingo@redhat.com>,
+Cc: Borislav Petkov <bp@alien8.de>,
+Cc: x86@kernel.org,
+Cc: "H. Peter Anvin" <hpa@zytor.com>,
+Cc: Peter Zijlstra <peterz@infradead.org>,
+Cc: Alexandre Chartre <alexandre.chartre@oracle.com>,
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+Cc: Jann Horn <jannh@google.com>,
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+
+Lai Jiangshan (5):
+  x86/entry: introduce macro idtentry_swapgs_and_switch_to_kernel_stack
+  x86/entry: avoid calling into sync_regs() when entering from userspace
+  x86/entry: directly switch to kernel stack when .Lerror_bad_iret
+  x86/entry: remove unused sync_regs()
+  x86/entry: don't copy to tmp in fixup_bad_iret
+
+ arch/x86/entry/entry_64.S    | 89 ++++++++++++++++++++----------------
+ arch/x86/include/asm/traps.h |  1 -
+ arch/x86/kernel/traps.c      | 42 +++++++----------
+ 3 files changed, 66 insertions(+), 66 deletions(-)
+
+-- 
+2.20.1
+
