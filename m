@@ -2,174 +2,258 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00305C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7096DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD73208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF55208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C5MB/EUe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oap9h53I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388467AbgE0PaA (ORCPT
+        id S2389523AbgE0PaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53892 "EHLO
+        Wed, 27 May 2020 11:30:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgE0P37 (ORCPT
+        with ESMTP id S1729416AbgE0PaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:29:59 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF69C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:29:59 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id j21so11891646pgb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:29:59 -0700 (PDT)
+        Wed, 27 May 2020 11:30:11 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0968AC05BD1E;
+        Wed, 27 May 2020 08:30:11 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id h9so9256963qtj.7;
+        Wed, 27 May 2020 08:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EP0X4nrq+dBeA9FW2rwRe3EmgkIyPMB88g1VDoRBEaI=;
-        b=C5MB/EUelkHYaUnsRBjOFiGEnFs9PexgRwbAFOu9NpZvqnQr+OxqhDGySPF9bm49El
-         iKIZ+Se3vuVivuCerUxtMfmuC7tx4cF39KOt63DHgZujttsfjIPb6Mnx+abKbcukK/tW
-         6ZZmjmg4scX5Q31spyqNXoivNx4TkGpL/3wdpsGBCpRvUrmAAqLpRHwKGEfe/jWHXWoM
-         C25euxunkPqErY4dRJXhnJra4tBYqnZTuIxUQDQhEw9OUJfQVur5Oe/54q2tztPR2EJg
-         JULZoKVt36cfGvfD1e91Zk0dqlBE0PnFT/K0aYgp2t9C38mpUllXaXKtj3F7MrJZWdT3
-         Ir3Q==
+         :content-disposition:in-reply-to:user-agent;
+        bh=zkunrZ0oeTCMztxG/OegBl2pml7XGAS8duP4C52EX6I=;
+        b=Oap9h53IlxWOHi0RDCE66AdYN29wfAsbfyk1QJ8LaluzX9rvKMepwlSxjc73mIDafz
+         70p2spgj38vRS+A7COVFSdEnfquX4eT2K1O+d9J5DHQsDd42rCDKqkvBpPZJoPL0oM+8
+         eFsL1Kuklf2RdebuF6n8QOK76x6Rx5oQn7ITcZdgt7v7vLgXQIJalvgup7hOwdVPebRK
+         jWpSbb7AFjdj5pA9koQuF6Umyp3MisLlDy4qw5QuUd4AcckwSIGvuy6ssY/Rf4R/zg1L
+         SGO4P/6OFpvNxXznbm4ydRYLwBTlnzyO4qmfpQNj5y8gUsXVOP02M7EzPkZweaDWwjb/
+         Cz3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EP0X4nrq+dBeA9FW2rwRe3EmgkIyPMB88g1VDoRBEaI=;
-        b=ZROVzqnrx7bjZmsv6ufEkm86CYwbiqYY0WappGywQu04VWdXvpSP6u2/zwy08XCcXU
-         MycISxXlUonmFu5fjLajqtigR343xQ8lHaOPgww5iREst3ztj0qAOtZ2q4i3wApaLlpE
-         BZMFq9YHdXaILPzEJigxwA7bsUQJvI4Gav6YaWHg/jmk/d34G8Xn+cvLxiK/q9a9Od9Y
-         ffkWgJ+UmLUrIO6dAMrKkQZOhszx+H+L3WVpuJiwHYriVCToj8k0S7fCyNDf3msvaSGW
-         QMHrg5G49p9Xu91LIpyEpjNQEjtTESSPpFCf+MjMa54N5eecQPSKVDqunEFuFdeVO69e
-         3HHA==
-X-Gm-Message-State: AOAM53147cxPa5qZ+qEF06V/acmD4HZIgMs1VexrgE81NL2p8m5RdFqS
-        I1z/VLxkfuF3n8QaXxjU6s8=
-X-Google-Smtp-Source: ABdhPJwDttBOyVCfq4OlBeyoqxSHAOYDOt8XsvD/jBT8tm2CLHVlzanGk87BsK/8d9FCOu4FttEEyw==
-X-Received: by 2002:aa7:8c53:: with SMTP id e19mr4487122pfd.264.1590593398712;
-        Wed, 27 May 2020 08:29:58 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id d2sm2409483pfc.7.2020.05.27.08.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 08:29:58 -0700 (PDT)
-Date:   Wed, 27 May 2020 08:29:55 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Marco Elver <elver@google.com>
-Cc:     will@kernel.org, peterz@infradead.org, bp@alien8.de,
-        tglx@linutronix.de, mingo@kernel.org,
-        clang-built-linux@googlegroups.com, paulmck@kernel.org,
-        dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
- compilation time
-Message-ID: <20200527152955.GA3681123@ubuntu-s3-xlarge-x86>
-References: <20200527103236.148700-1-elver@google.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zkunrZ0oeTCMztxG/OegBl2pml7XGAS8duP4C52EX6I=;
+        b=qszY34hWm1gjn1UrBD5YFVOkqDj+V0DG1zT64cXbREbKsoILhdiQ1EchoyYi4T88Ao
+         zAuZ5egL9Q1xrvlU6mLtp3PUbD6AVjy55S9JUUz5OLe+cnMHXmCYscXLSPAbSBVvXOyv
+         3D064SUZ46cSRy95fI558GEh/FZwPAEOaMxl1tMBzrZos3TzOARn1Sn2ITh8K50mAwSt
+         O6Sl8xXjjrv/S9vwEAok/YJ2L9yUoxBZRL/I3CHGF7ku1YA5eJAsgKbDTuxK0LiEy+go
+         GT456IPNFzxb6gQ+3shU/emu2asHxNaT9CB5lK1WnngHmsHAEdG0SzPXrMC6RQI6lLdu
+         JTvw==
+X-Gm-Message-State: AOAM532A0jhEat4upnDmOLJsNcCB/p+PTsO8Y6KrMGWqjMyKyBsxync8
+        Kc9wUxcF+pIxmasuf43tpFg=
+X-Google-Smtp-Source: ABdhPJy7Aid9jgwaunjEzd/i0WniQ3PXIiToFKc9WwZdimCPt06wxXiwafiDs+QXwN+BKXf7pwycGA==
+X-Received: by 2002:ac8:710f:: with SMTP id z15mr4782320qto.71.1590593409980;
+        Wed, 27 May 2020 08:30:09 -0700 (PDT)
+Received: from ict14-OptiPlex-980 ([178.23.248.46])
+        by smtp.gmail.com with ESMTPSA id c186sm1744441qkd.102.2020.05.27.08.30.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 08:30:09 -0700 (PDT)
+Date:   Wed, 27 May 2020 17:29:58 +0200
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 2/5] dt-bindings: iio: magnetometer: ak8975: convert
+ format to yaml, add maintainer
+Message-ID: <20200527152958.GA21548@ict14-OptiPlex-980>
+References: <20200525151117.32540-1-jonathan.albrieux@gmail.com>
+ <20200525151117.32540-3-jonathan.albrieux@gmail.com>
+ <20200526222847.GA492828@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527103236.148700-1-elver@google.com>
+In-Reply-To: <20200526222847.GA492828@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:32:36PM +0200, 'Marco Elver' via Clang Built Linux wrote:
-> If the compiler supports C11's _Generic, use it to speed up compilation
-> times of __unqual_scalar_typeof(). GCC version 4.9 or later and
-> all supported versions of Clang support the feature (the oldest
-> supported compiler that doesn't support _Generic is GCC 4.8, for which
-> we use the slower alternative).
+On Tue, May 26, 2020 at 04:28:47PM -0600, Rob Herring wrote:
+> On Mon, May 25, 2020 at 05:10:36PM +0200, Jonathan Albrieux wrote:
+> > Converts documentation from txt format to yaml.
 > 
-> The non-_Generic variant relies on multiple expansions of
-> __pick_integer_type -> __pick_scalar_type -> __builtin_choose_expr,
-> which increases pre-processed code size, and can cause compile times to
-> increase in files with numerous expansions of READ_ONCE(), or other
-> users of __unqual_scalar_typeof().
+> I would have converted to yaml and do any re-formatting/wording, then 
+> added 'interrupts', but this is fine.
+>
+
+Thank you, I'll keep that in mind for future works like this one
+ 
 > 
-> Summary of compile-time benchmarking done by Arnd Bergmann [1]:
+> > Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > ---
+> >  .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
+> >  .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 78 +++++++++++++++++++
+> >  2 files changed, 78 insertions(+), 37 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > deleted file mode 100644
+> > index 0576b9df0bf2..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > +++ /dev/null
+> > @@ -1,37 +0,0 @@
+> > -* AsahiKASEI AK8975 magnetometer sensor
+> > -
+> > -Required properties:
+> > -
+> > -  - compatible : should be "asahi-kasei,ak8975".
+> > -  - reg : the I2C address of the magnetometer.
+> > -
+> > -Optional properties:
+> > -
+> > -  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
+> > -      is ready to be read and is possible to listen on it. If used,
+> > -      this should be active high. Prefer interrupt over this.
+> > -
+> > -  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
+> > -
+> > -  - vdd-supply: an optional regulator that needs to be on to provide VDD.
+> > -
+> > -  - mount-matrix: an optional 3x3 mounting rotation matrix.
+> > -
+> > -Example:
+> > -
+> > -ak8975@c {
+> > -        compatible = "asahi-kasei,ak8975";
+> > -        reg = <0x0c>;
+> > -        interrupt-parent = <&gpio6>;
+> > -        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> > -        vdd-supply = <&ldo_3v3_gnss>;
+> > -        mount-matrix = "-0.984807753012208",  /* x0 */
+> > -                       "0",                   /* y0 */
+> > -                       "-0.173648177666930",  /* z0 */
+> > -                       "0",                   /* x1 */
+> > -                       "-1",                  /* y1 */
+> > -                       "0",                   /* z1 */
+> > -                       "-0.173648177666930",  /* x2 */
+> > -                       "0",                   /* y2 */
+> > -                       "0.984807753012208";   /* z2 */
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> > new file mode 100644
+> > index 000000000000..a603659d5fa5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+> > @@ -0,0 +1,78 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: AsahiKASEI AK8975 magnetometer sensor
+> > +
+> > +maintainers:
+> > +  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - const: asahi-kasei,ak8975
+> > +      - const: asahi-kasei,ak8963
+> > +      - const: asahi-kasei,ak09911
+> > +      - const: asahi-kasei,ak09912
 > 
-> 	<baseline normalized time>  clang-11   gcc-9
-> 	this patch                      0.78    0.91
-> 	ideal                           0.76    0.86
+> These 4 can be an enum.
 > 
-> [1] https://lkml.kernel.org/r/CAK8P3a3UYQeXhiufUevz=rwe09WM_vSTCd9W+KvJHJcOeQyWVA@mail.gmail.com
+> > +      - const: ak8975
+> > +        deprecated: true
+> > +      - const: ak8963
+> > +        deprecated: true
+> > +      - const: ak09911
+> > +        deprecated: true
+> > +      - const: ak09912
+> > +        deprecated: true
 > 
-> Further compile-testing done with:
-> 	gcc 4.8, 4.9, 5.5, 6.4, 7.5, 8.4;
-> 	clang 9, 10.
+> And these 4 can be an enum+deprecated.
 > 
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Marco Elver <elver@google.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Paul E. McKenney <paulmck@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Will Deacon <will@kernel.org>
-> Link: https://lkml.kernel.org/r/CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com
-> ---
-> Same version as in:
-> https://lkml.kernel.org/r/20200526173312.GA30240@google.com
-> ---
->  include/linux/compiler_types.h | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +    description: the I2C address of the magnetometer.
 > 
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 5faf68eae204..a529fa263906 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -245,7 +245,9 @@ struct ftrace_likely_data {
->  /*
->   * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
->   *			       non-scalar types unchanged.
-> - *
-> + */
-> +#if defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900
-> +/*
->   * We build this out of a couple of helper macros in a vain attempt to
->   * help you keep your lunch down while reading it.
->   */
-> @@ -267,6 +269,24 @@ struct ftrace_likely_data {
->  			__pick_integer_type(x, int,				\
->  				__pick_integer_type(x, long,			\
->  					__pick_integer_type(x, long long, x))))))
-> +#else
-> +/*
-> + * If supported, prefer C11 _Generic for better compile-times. As above, 'char'
-> + * is not type-compatible with 'signed char', and we define a separate case.
-> + */
-> +#define __scalar_type_to_expr_cases(type)				\
-> +		type: (type)0, unsigned type: (unsigned type)0
-> +
-> +#define __unqual_scalar_typeof(x) typeof(				\
-> +		_Generic((x),						\
-> +			 __scalar_type_to_expr_cases(char),		\
-> +			 signed char: (signed char)0,			\
-> +			 __scalar_type_to_expr_cases(short),		\
-> +			 __scalar_type_to_expr_cases(int),		\
-> +			 __scalar_type_to_expr_cases(long),		\
-> +			 __scalar_type_to_expr_cases(long long),	\
-> +			 default: (x)))
-> +#endif
->  
->  /* Is this type a native word size -- useful for atomic operations */
->  #define __native_word(t) \
-> -- 
-> 2.27.0.rc0.183.gde8f92d652-goog
+> Don't need a description.
+> 
+> > +
+> > +  gpios:
+> > +    description: |
+> > +      AK8975 has a "Data ready" pin (DRDY) which informs that data
+> > +      is ready to be read and is possible to listen on it. If used,
+> > +      this should be active high. Prefer interrupt over this.
+> 
+> Need to define how many GPIOs (maxItems: 1).
 > 
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
+Ok, I'll edit those fields as soon as possible, thank you,
+
+Best regards,
+Jonathan Albrieux
+
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +    description: interrupt for DRDY pin. Triggered on rising edge.
+> > +
+> > +  vdd-supply:
+> > +    maxItems: 1
+> > +    description: |
+> > +      an optional regulator that needs to be on to provide VDD power to
+> > +      the sensor.
+> > +
+> > +  mount-matrix:
+> > +    description: an optional 3x3 mounting rotation matrix.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    i2c {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        magnetometer@c {
+> > +            compatible = "asahi-kasei,ak8975";
+> > +            reg = <0x0c>;
+> > +            interrupt-parent = <&gpio6>;
+> > +            interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+> > +            vdd-supply = <&ldo_3v3_gnss>;
+> > +            mount-matrix = "-0.984807753012208",  /* x0 */
+> > +                           "0",                   /* y0 */
+> > +                           "-0.173648177666930",  /* z0 */
+> > +                           "0",                   /* x1 */
+> > +                           "-1",                  /* y1 */
+> > +                           "0",                   /* z1 */
+> > +                           "-0.173648177666930",  /* x2 */
+> > +                           "0",                   /* y2 */
+> > +                           "0.984807753012208";   /* z2 */
+> > +        };
+> > +    };
+> > -- 
+> > 2.17.1
+> > 
