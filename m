@@ -2,184 +2,297 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D7FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6714E2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD582078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ONaHXwDo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFo4I+Ta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388296AbgE0Itg (ORCPT
+        id S2388301AbgE0IuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48180 "EHLO
+        Wed, 27 May 2020 04:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388113AbgE0Itg (ORCPT
+        with ESMTP id S2388075AbgE0IuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:49:36 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4CDC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:49:35 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w10so27973569ljo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:49:35 -0700 (PDT)
+        Wed, 27 May 2020 04:50:03 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35252C061A0F;
+        Wed, 27 May 2020 01:50:03 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t18so9112810wru.6;
+        Wed, 27 May 2020 01:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6esLd7lp43zEbTtvTec1bd3/AlFOraY5i1exF89Mlno=;
-        b=ONaHXwDokW3gMzPIntv8wF7r860aStv4oHwg88P4jPBk3VE9zjW66yGArwM9AMFolu
-         cfBa2ji46hO27uU7gaSsZDcfh2XUIWxA+AnLm2I9/sNLWYEg6Z4gtW7XM1ca6Wx+wrAS
-         62NDDGTLUURQZKfPCKNmAe6GkXcVxsaN/Z3yAkNjMFTMIPgYdb+ycVyr70HXj9YjJfDk
-         GPqz3HqEubVY7yfUgm68gBOU5Y7jB9YCRCUgQyvuUj7yytjzQQCzlKGsX1vlj+hk4HTH
-         Bah6PJX2N2PuF0WHz3Sf2JU18q0eTEr1XCqdZdvjxVOB2jOiQcauhlPPC1Ylib8gGlVO
-         0Etw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+9kBhKIDtW+ZxWUmIeYFLRWCnO57gv4RzLSn5WOvXRM=;
+        b=OFo4I+TaLb0OZtCkqTOcgtGy07oPtsd/ZuB00Kur6c1xaBXXekdDOB4Vnz+0G/OSq1
+         qYn6EShJr/P3GMU90WKQ5RH9aJh0UC5/BAr+htwHluFvCsFlWZE675Zp6mo1ClOcJG5s
+         bY4I1iUM74QpevBqDYtHozEp/wvFN4AFKwJULn5ETJDP+nmx1+o3Xbef46BY5jIgwvL8
+         C/TIc+VPXpldt9+jGieqiLCFLXr5lIYTEvJyJw7AjZmugxgBqfl91k8sbIVNVL4vp24I
+         jDQ7vp6WeXg/MePpvrtkeEsCJ8MAeozuEfbbbbF84dXI+OL+ASuHdwlbFFz6tDQc/OSh
+         qmuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6esLd7lp43zEbTtvTec1bd3/AlFOraY5i1exF89Mlno=;
-        b=dvkj11eHvtQKVXWTppdjM3nxhti7RLIUg5KrZZmKx1bWpm+3tG8lDh1v0i0sakDaW+
-         QzfU/HkNUWJcI4+gwNK/xsAiPxnstbDA1a2pMxj27jfCdrMXHgJuOupzwS9yjPSlPWAi
-         fTi2rNEB95Fu81Li1nYtt366dSedQrfc8OEiOM2m4Js/bQBzvKTdnWeMM6VVJ7YYzyyv
-         e8vPT61sqb0AH1a71HGJTP+pWXwaqR6mPpT35CrFWw2pqZc49xtc7kiPbvTnetFtrn4q
-         wGFFsZjtXszPAQ2B/kcnVh46puVTquMD6Q58WDB4wl5CgXvBBYITq2VP9F7Cms880fq7
-         Dupw==
-X-Gm-Message-State: AOAM531nhn7+hCNa01nH21C4O8bv2/AU313oxeYOocA0Kmm+72Ar0JMt
-        xC4pA8RJayZcodg1w8eRhXr9BQu0pOkQJDcvFEhYeQ==
-X-Google-Smtp-Source: ABdhPJzbmy1mlXsY4y9WFoe6kKvpUK3nRSEwZCtOU1yuiHIMN2c0HPpyDzsSaxeroW+9wQqD3ez18Gok8TI4iJxAbjk=
-X-Received: by 2002:a2e:89d9:: with SMTP id c25mr2747458ljk.366.1590569374271;
- Wed, 27 May 2020 01:49:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+9kBhKIDtW+ZxWUmIeYFLRWCnO57gv4RzLSn5WOvXRM=;
+        b=TgCu9kl0p+3ZO/5/bucMPd6bdzZh9xU+1GbfzeyusfCPn+tG36taJtgo2tDxq/vXox
+         f1FRDteWwvuC7mkqcBtTEYsARpK4kTilYm5f8gIefNh1lJiNf+H5Q8P4OmXAWG+xS8Fv
+         /4SV67MJttzN/lu2tePneoI6KjpitDeEMUo8wz42Np1F9OgBTwmx+eZjmfFvTB97zWJ2
+         TNVy5SoIKTTUqF80eD9u9bdnodUwH4STGEGouOAtMnbTCjIOH4Phlci2jHnvllyk0/TT
+         /seLq96sarqCrRaFPbBPHmV+8CKOg4WL1V/DawEeNSA6tyTqbJqm90ArT4StWDxM/23T
+         gFpw==
+X-Gm-Message-State: AOAM533YFjw/o+qBD02n3CIEjGbeBCdQMxgI9VGcsVl7sUAKm1kAd1XM
+        U1KexwTl1F+POc7qI3bW/Bk=
+X-Google-Smtp-Source: ABdhPJzNHB5+4AYdG1qbbHaXmHj9IE2XCiwvXkwA52VYJLKAFDe+Is5zLxb/qF26m34eLUMf98PQsA==
+X-Received: by 2002:a5d:4090:: with SMTP id o16mr12360488wrp.354.1590569401809;
+        Wed, 27 May 2020 01:50:01 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id b9sm2190368wrt.39.2020.05.27.01.50.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 01:50:00 -0700 (PDT)
+Date:   Wed, 27 May 2020 09:49:59 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Andra Paraschiv <andraprs@amazon.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>, kvm@vger.kernel.org,
+        ne-devel-upstream@amazon.com
+Subject: Re: [PATCH v3 01/18] nitro_enclaves: Add ioctl interface definition
+Message-ID: <20200527084959.GA29137@stefanha-x1.localdomain>
+References: <20200525221334.62966-1-andraprs@amazon.com>
+ <20200525221334.62966-2-andraprs@amazon.com>
 MIME-Version: 1.0
-References: <20200526183913.064413230@linuxfoundation.org>
-In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 27 May 2020 14:19:22 +0530
-Message-ID: <CA+G9fYuXKptEVL0mj_NKFxNtz43=KdpotC1EQ=WKDp2JvxuOeA@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/64] 4.9.225-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vkogqOf2sHV7VnPd"
+Content-Disposition: inline
+In-Reply-To: <20200525221334.62966-2-andraprs@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 00:29, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.225 release.
-> There are 64 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.225-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+--vkogqOf2sHV7VnPd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Summary
-------------------------------------------------------------------------
+On Tue, May 26, 2020 at 01:13:17AM +0300, Andra Paraschiv wrote:
+> The Nitro Enclaves driver handles the enclave lifetime management. This
+> includes enclave creation, termination and setting up its resources such
+> as memory and CPU.
+>=20
+> An enclave runs alongside the VM that spawned it. It is abstracted as a
+> process running in the VM that launched it. The process interacts with
+> the NE driver, that exposes an ioctl interface for creating an enclave
+> and setting up its resources.
+>=20
+> Include part of the KVM ioctls in the provided ioctl interface, with
+> additional NE ioctl commands that e.g. triggers the enclave run.
+>=20
+> Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
+> Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> ---
+> Changelog
+>=20
+> v2 -> v3
+>=20
+> * Remove the GPL additional wording as SPDX-License-Identifier is already=
+ in
+> place.
+>=20
+> v1 -> v2
+>=20
+> * Add ioctl for getting enclave image load metadata.
+> * Update NE_ENCLAVE_START ioctl name to NE_START_ENCLAVE.=20
+> * Add entry in Documentation/userspace-api/ioctl/ioctl-number.rst for NE =
+ioctls.
+> * Update NE ioctls definition based on the updated ioctl range for major =
+and
+> minor.
+> ---
+>  .../userspace-api/ioctl/ioctl-number.rst      |  5 +-
+>  include/linux/nitro_enclaves.h                | 11 ++++
+>  include/uapi/linux/nitro_enclaves.h           | 65 +++++++++++++++++++
+>  3 files changed, 80 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/nitro_enclaves.h
+>  create mode 100644 include/uapi/linux/nitro_enclaves.h
+>=20
+> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documen=
+tation/userspace-api/ioctl/ioctl-number.rst
+> index f759edafd938..8a19b5e871d3 100644
+> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+> @@ -325,8 +325,11 @@ Code  Seq#    Include File                          =
+                 Comments
+>  0xAC  00-1F  linux/raw.h
+>  0xAD  00                                                             Net=
+filter device in development:
+>                                                                       <ma=
+ilto:rusty@rustcorp.com.au>
+> -0xAE  all    linux/kvm.h                                             Ker=
+nel-based Virtual Machine
+> +0xAE  00-1F  linux/kvm.h                                             Ker=
+nel-based Virtual Machine
+>                                                                       <ma=
+ilto:kvm@vger.kernel.org>
+> +0xAE  40-FF  linux/kvm.h                                             Ker=
+nel-based Virtual Machine
+> +                                                                     <ma=
+ilto:kvm@vger.kernel.org>
+> +0xAE  20-3F  linux/nitro_enclaves.h                                  Nit=
+ro Enclaves
+>  0xAF  00-1F  linux/fsl_hypervisor.h                                  Fre=
+escale hypervisor
+>  0xB0  all                                                            RAT=
+IO devices in development:
+>                                                                       <ma=
+ilto:vgo@ratio.de>
 
-kernel: 4.9.225-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 9b4a11d53bee477ce44d3c4b703db7f5d756ca79
-git describe: v4.9.224-65-g9b4a11d53bee
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.224-65-g9b4a11d53bee
+Reusing KVM ioctls seems a little hacky. Even the ioctls that are used
+by this driver don't use all the fields or behave in the same way as
+kvm.ko.
 
-No regressions (compared to build v4.9.224)
+For example, the memory regions slot number is not used by Nitro
+Enclaves.
 
-No fixes (compared to build v4.9.224)
+It would be cleaner to define NE-specific ioctls instead.
 
-Ran 26523 total tests in the following environments and test suites.
+> diff --git a/include/linux/nitro_enclaves.h b/include/linux/nitro_enclave=
+s.h
+> new file mode 100644
+> index 000000000000..d91ef2bfdf47
+> --- /dev/null
+> +++ b/include/linux/nitro_enclaves.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserve=
+d.
+> + */
+> +
+> +#ifndef _LINUX_NITRO_ENCLAVES_H_
+> +#define _LINUX_NITRO_ENCLAVES_H_
+> +
+> +#include <uapi/linux/nitro_enclaves.h>
+> +
+> +#endif /* _LINUX_NITRO_ENCLAVES_H_ */
+> diff --git a/include/uapi/linux/nitro_enclaves.h b/include/uapi/linux/nit=
+ro_enclaves.h
+> new file mode 100644
+> index 000000000000..3413352baf32
+> --- /dev/null
+> +++ b/include/uapi/linux/nitro_enclaves.h
+> @@ -0,0 +1,65 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserve=
+d.
+> + */
+> +
+> +#ifndef _UAPI_LINUX_NITRO_ENCLAVES_H_
+> +#define _UAPI_LINUX_NITRO_ENCLAVES_H_
+> +
+> +#include <linux/kvm.h>
+> +#include <linux/types.h>
+> +
+> +/* Nitro Enclaves (NE) Kernel Driver Interface */
+> +
+> +/**
+> + * The command is used to get information needed for in-memory enclave i=
+mage
+> + * loading e.g. offset in enclave memory to start placing the enclave im=
+age.
+> + *
+> + * The image load metadata is an in / out data structure. It includes in=
+fo
+> + * provided by the caller - flags - and returns the offset in enclave me=
+mory
+> + * where to start placing the enclave image.
+> + */
+> +#define NE_GET_IMAGE_LOAD_METADATA _IOWR(0xAE, 0x20, struct image_load_m=
+etadata)
+> +
+> +/**
+> + * The command is used to trigger enclave start after the enclave resour=
+ces,
+> + * such as memory and CPU, have been set.
+> + *
+> + * The enclave start metadata is an in / out data structure. It includes=
+ info
+> + * provided by the caller - enclave cid and flags - and returns the slot=
+ uid
+> + * and the cid (if input cid is 0).
+> + */
+> +#define NE_START_ENCLAVE _IOWR(0xAE, 0x21, struct enclave_start_metadata)
+> +
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
+image_load_metadata->flags and enclave_start_metadata->flags constants
+are missing.
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* perf
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-open-posix-tests
-* ltp-sched-tests
-* v4l2-compliance
-* kvm-unit-tests
-* kselftest/net
-* kselftest/networking
+> +/* Metadata necessary for in-memory enclave image loading. */
+> +struct image_load_metadata {
+> +	/**
+> +	 * Flags to determine the enclave image type e.g. Enclave Image Format
+> +	 * (EIF) (in).
+> +	 */
+> +	__u64 flags;
+> +
+> +	/**
+> +	 * Offset in enclave memory where to start placing the enclave image
+> +	 * (out).
+> +	 */
+> +	__u64 memory_offset;
+> +};
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+What about feature bits or a API version number field? If you add
+features to the NE driver, how will userspace detect them?
+
+Even if you intend to always compile userspace against the exact kernel
+headers that the program will run on, it can still be useful to have an
+API version for informational purposes and to easily prevent user
+errors (running a new userspace binary on an old kernel where the API is
+different).
+
+Finally, reserved struct fields may come in handy in the future. That
+way userspace and the kernel don't need to explicitly handle multiple
+struct sizes.
+
+--vkogqOf2sHV7VnPd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl7OKbcACgkQnKSrs4Gr
+c8jJVAgAo7KasfyNLaEi6MJPaDQp8v3M/aDIOEGPQsQ7f9cGH63De1A98S9ZOa/s
+derpLcBDuMKFpTbU8QOUI4ihiiFRQR6KYRRsmvNkxWDi7bdF9NpNILhvN991gLQT
+ui6GfLtCSuYkhdYS5gxg6AQ2kEHT6eGqA/lmXDnfe5pmPg0rOZV+QhhSxq7i6THO
+UpnqPRAch2uA2TMRZfx6HX7tK+yUlPqlzS3lrxmzVVA3ixZY5uHgsAX0IvKLkUna
+T056VDXxl+B1O3GmxpfXEyw+TQee5nJG8D3xYs7+QTeIa9YDyfua3C0UsufxGZiT
+jv0DHwuj5R3uGbJTNwJ/hYeu5+9exg==
+=nwyo
+-----END PGP SIGNATURE-----
+
+--vkogqOf2sHV7VnPd--
