@@ -2,126 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F562089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 020F221531
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:48:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gT6d1H7M"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TnvOhSKl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgE0TsZ (ORCPT
+        id S1728481AbgE0Tsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:48:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37806 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgE0TsY (ORCPT
+        Wed, 27 May 2020 15:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgE0Tse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:48:24 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RJllua002046;
-        Wed, 27 May 2020 19:48:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=iOFWFzT/Y8/tUUAy74tEmOHpVPIVu/JZN3B4CWNmoFc=;
- b=gT6d1H7MgY2dPrU62J379tyWxzjCNMi6rd/JliS22w51oR7VrccOeuawOeT032H5UQXj
- u96XknxM+sL/+Os7zbLe+j/Mmxghu4Evwkim264LF15uUSyilJ35qrOdRPPwq1f6MPUG
- A0Molfq6IEu5jwpLkIQaZea0rkwvC9Hpnxsfr5ovMDScObpIJ1GdZq0I+0pawZHPtyCg
- PGYZnfwAoYEMxDDm24biJ1bQ/GNN0E6kGnr2kq4Bpxsj+ZGXwV+9j3d7Aj4JaChF/dzQ
- acjWq3cSkRKTbIH12tTU1JTl8Qe92Ds6pdsc2hgV9hSGgUbFSjigUKZ6fMnJejox37QJ AA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 318xbk1gf3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 19:48:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RJlZN1004381;
-        Wed, 27 May 2020 19:48:19 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 317j5stf3e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 19:48:19 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04RJmIUG021190;
-        Wed, 27 May 2020 19:48:18 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 May 2020 12:48:17 -0700
-Date:   Wed, 27 May 2020 22:48:11 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Pascal Terjan <pterjan@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: Use shared header constants
-Message-ID: <20200527194811.GF30374@kadam>
-References: <20200523212919.33181-1-pterjan@google.com>
+        Wed, 27 May 2020 15:48:34 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A70EC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:48:33 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id m18so30422911ljo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:48:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5aQnJXyiQA3IowsNfVoOSqHgT1OkRmP0E5K+YnP6bZ0=;
+        b=TnvOhSKlFxE31tFdDGs7QlyMOK6Y7cUfkHrTbOmzpDgDbGW+JPoveR4i0MYR41TeBh
+         z3XnFBVgJIiV5+i6dphaBvKpRVeqDNoT8mp9flwB3oLqK1X+fKUW4N0cq1KlbOxLaPD9
+         Oa23F4+5CyZa0ZuPBk7SL9bZg/5tT/T3VwRO4DQnpNMjhqK/pwF2PDzUOFa1n1wSpaeh
+         EwhNhB4cA+b/YBoGMYrYiD2SZEprrV0KkYUySrjMaaqPGLzkzYx+J+ACdgcVMl8lAxwC
+         0oA2BItbx/b+YNSeQcDZX1HHFzlW05hAPbrEyTQnb8VcyMMKWD1rAKGjasJC4kcIOcN/
+         ZeIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5aQnJXyiQA3IowsNfVoOSqHgT1OkRmP0E5K+YnP6bZ0=;
+        b=lQpR2X08XheWcLAjLEIxUJdEzU1yr5Vip8YRMiF/zgCE7YN4D2NMxWlm7IF+TeeF88
+         SyfsqWef4mGs5zscbWBCZsSDv6T0GvD2j9NiTH7OjDFXrYX5fYKSwDsdSGJ4/gurTbwZ
+         NesSPeRvMKAop7R7isJqlrFEunbJ0XVKmAUsdnas0XVA8tAvJW66QD9q3G7xJjMGF152
+         fjCO8r8Gxlgncyi21Icy8gljpmrgiP8wmGPJ9ZiPCyrgu7h/ln7ovq1FnZw35W+G9+Jz
+         mqviJu7nQPOWhn5rl240vRPHr0G4lJBQp9qdUO105T8cmBBrO1yfNNcdCp454XfouP/Y
+         n+Sg==
+X-Gm-Message-State: AOAM530el0J8GBStTHCntUm8yyk5C5vh5PZbFKlrT24ymZvWl/S5b2bS
+        RJqGR1vIZsYyrgBYin6Go3KEhWP9yZVi25zgxbpKBg==
+X-Google-Smtp-Source: ABdhPJyEZKW3APXVi32eLvyHMFmU9WePyudCh1ndYkbgbtfCupI8fzy9fNXJFu97bCHQmtzpSyDl6UVJ40xglAwJ4VY=
+X-Received: by 2002:a2e:8e79:: with SMTP id t25mr4050863ljk.446.1590608911447;
+ Wed, 27 May 2020 12:48:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200523212919.33181-1-pterjan@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
- suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005270151
+References: <20200520232525.798933-1-hannes@cmpxchg.org> <20200520232525.798933-2-hannes@cmpxchg.org>
+In-Reply-To: <20200520232525.798933-2-hannes@cmpxchg.org>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 27 May 2020 12:48:20 -0700
+Message-ID: <CALvZod5ayJ3UzuNw-a5cio3equRFaWGdLGxf+fxcokRx3mCJXQ@mail.gmail.com>
+Subject: Re: [PATCH 01/14] mm: fix LRU balancing effect of new transparent
+ huge pages
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Linux MM <linux-mm@kvack.org>, Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 10:29:19PM +0100, Pascal Terjan wrote:
-> This is one of the 9 drivers redefining rfc1042_header.
-> 
+On Wed, May 20, 2020 at 4:28 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>
+> Currently, THP are counted as single pages until they are split right
+> before being swapped out. However, at that point the VM is already in
+> the middle of reclaim, and adjusting the LRU balance then is useless.
+>
+> Always account THP by the number of basepages, and remove the fixup
+> from the splitting path.
+>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> Reviewed-by: Rik van Riel <riel@redhat.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Acked-by: Minchan Kim <minchan@kernel.org>
 
-This is how the patch looks like in my email client:
-
-https://marc.info/?l=linux-driver-devel&m=159026973821890&w=2
-
-Do you see how the subject is far away from the body of the commit
-message?  I normally only read the subject or the body when I'm
-reviewing patches so it's good if the body is clear on its own.  Maybe
-write something like:
-
-"This driver creates a local definitions of "rtw_rfc1042_header" and
-"rtw_bridge_tunnel_header" but it should just use the standard definitions
-from cfg80211.h."
-
->  void _rtw_init_sta_recv_priv(struct sta_recv_priv *psta_recvpriv)
-> @@ -1625,11 +1622,11 @@ sint wlanhdr_to_ethhdr(union recv_frame *precvframe)
->  	psnap_type = ptr+pattrib->hdrlen + pattrib->iv_len+SNAP_SIZE;
->  	/* convert hdr + possible LLC headers into Ethernet header */
->  	/* eth_type = (psnap_type[0] << 8) | psnap_type[1]; */
-> -	if ((!memcmp(psnap, rtw_rfc1042_header, SNAP_SIZE) &&
-> -		(memcmp(psnap_type, SNAP_ETH_TYPE_IPX, 2)) &&
-> -		(memcmp(psnap_type, SNAP_ETH_TYPE_APPLETALK_AARP, 2))) ||
-> -		/* eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) || */
-> -		 !memcmp(psnap, rtw_bridge_tunnel_header, SNAP_SIZE)) {
-> +	if ((!memcmp(psnap, rfc1042_header, SNAP_SIZE) &&
-> +	     memcmp(psnap_type, SNAP_ETH_TYPE_IPX, 2) &&
-> +	     memcmp(psnap_type, SNAP_ETH_TYPE_APPLETALK_AARP, 2)) ||
-> +	    /* eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) || */
-> +	    !memcmp(psnap, bridge_tunnel_header, SNAP_SIZE)) {
->  		/* remove RFC1042 or Bridge-Tunnel encapsulation and replace EtherType */
->  		bsnaphdr = true;
-
-Your indenting is correct, but I would probably do that in a separate
-patch.  It makes it harder to review.  Also probably delete the
-commented out code.  Do you see how if we don't touch the indenting then
-it doesn't raise the question about if we should delete the comments as
-well?
-
-regards,
-dan carpenter
-
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
