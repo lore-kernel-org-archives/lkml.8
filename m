@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E712088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4B120888
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgE0BAs (ORCPT
+        id S1727843AbgE0BAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:00:48 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5343 "EHLO huawei.com"
+        Tue, 26 May 2020 21:00:44 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5340 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727811AbgE0BAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:00:45 -0400
+        id S1727809AbgE0BAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:00:43 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DA0EFCB0F61D4C4A5F25;
+        by Forcepoint Email with ESMTP id CC9355B34488991F8AFE;
         Wed, 27 May 2020 09:00:41 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 27 May 2020 09:00:34 +0800
+ 14.3.487.0; Wed, 27 May 2020 09:00:33 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Yufeng Mo <moyufeng@huawei.com>,
+        Guangbin Huang <huangguangbin2@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 3/4] net: hns3: remove unnecessary MAC enable in app loopback
-Date:   Wed, 27 May 2020 08:59:16 +0800
-Message-ID: <1590541157-6803-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 1/4] net: hns3: add a resetting check in hclgevf_init_nic_client_instance()
+Date:   Wed, 27 May 2020 08:59:14 +0800
+Message-ID: <1590541157-6803-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590541157-6803-1-git-send-email-tanhuazhong@huawei.com>
 References: <1590541157-6803-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,31 +47,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Guangbin Huang <huangguangbin2@huawei.com>
 
-Packets will not pass through MAC during app loopback.
-Therefore, it is meaningless to enable MAC while doing
-app loopback. This patch removes this unnecessary action.
+To prevent from initializing VF NIC client in reset handling state,
+this patch adds resetting check in hclgevf_init_nic_client_instance().
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 6e1e2cf..7c9f2ba 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -6583,8 +6583,6 @@ static int hclge_set_app_loopback(struct hclge_dev *hdev, bool en)
- 	/* 2 Then setup the loopback flag */
- 	loop_en = le32_to_cpu(req->txrx_pad_fcs_loop_en);
- 	hnae3_set_bit(loop_en, HCLGE_MAC_APP_LP_B, en ? 1 : 0);
--	hnae3_set_bit(loop_en, HCLGE_MAC_TX_EN_B, en ? 1 : 0);
--	hnae3_set_bit(loop_en, HCLGE_MAC_RX_EN_B, en ? 1 : 0);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index 32341dc..59fcb80 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -2713,6 +2713,7 @@ static int hclgevf_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
+ 					    struct hnae3_client *client)
+ {
+ 	struct hclgevf_dev *hdev = ae_dev->priv;
++	int rst_cnt = hdev->rst_stats.rst_cnt;
+ 	int ret;
  
- 	req->txrx_pad_fcs_loop_en = cpu_to_le32(loop_en);
+ 	ret = client->ops->init_instance(&hdev->nic);
+@@ -2720,6 +2721,14 @@ static int hclgevf_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
+ 		return ret;
  
+ 	set_bit(HCLGEVF_STATE_NIC_REGISTERED, &hdev->state);
++	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state) ||
++	    rst_cnt != hdev->rst_stats.rst_cnt) {
++		clear_bit(HCLGEVF_STATE_NIC_REGISTERED, &hdev->state);
++
++		client->ops->uninit_instance(&hdev->nic, 0);
++		return -EBUSY;
++	}
++
+ 	hnae3_set_client_init_flag(client, ae_dev, 1);
+ 
+ 	if (netif_msg_drv(&hdev->nic))
 -- 
 2.7.4
 
