@@ -2,98 +2,80 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF44C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1273C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4638B2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:54:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590605697;
-	bh=buDzRBIkAkYDEh9lsYjrjDhRTyGGo4mtZJEWBxbG99A=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=AQ28NkXYMxjSfKyFXX+f2lBsveTIZyiDirMNSuscaa9rvqiE1BFvYt9Oh7N4axk+k
-	 vtY4lsOUVPPVQxDmIjgOWtHvxJUaA1R+AVMiJ6ncQ14lJyB3wa55RbfCeidCFxWPbS
-	 boA59GQNRXbUGIx+wZQ5jfPqIPfDa1hcIjGt11+I=
+	by mail.kernel.org (Postfix) with ESMTP id 8326F2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:55:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgE0Sy4 (ORCPT
+        id S1728434AbgE0SzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 14:54:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39940 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 14:55:15 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2321 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgE0Syz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 14:54:55 -0400
-Received: from localhost.localdomain (unknown [194.230.155.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A343E2073B;
-        Wed, 27 May 2020 18:54:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590605695;
-        bh=buDzRBIkAkYDEh9lsYjrjDhRTyGGo4mtZJEWBxbG99A=;
-        h=From:To:Subject:Date:From;
-        b=k4IB+QoZdhL1u7RYjM2DU/sQMyZcCeRoS2exnWppx9TQNN0jB9T097rKPIZZ5fXtu
-         rRlrJ4ktLRhJuLVEZuulhQNakAO31ViQ6L2Ue7bWkD5enTCCguKvQfs6xDODwdiTiJ
-         tTnIbi+gq5uqi+/DvqrQbnjlW/PDYhU/HU/2KDLo=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Guan Xuetao <gxt@pku.edu.cn>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] unicore32: defconfig: Cleanup from old Kconfig options
-Date:   Wed, 27 May 2020 20:54:51 +0200
-Message-Id: <20200527185451.13512-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        id S1725836AbgE0SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 14:55:15 -0400
+IronPort-SDR: Qs8/aBLzN6JTGMJXJ264P70K96skj7TptC1aJI3jRdePyYk8t+skRZVKXp3yYfpYQk4x+XdpR7
+ lCVRC+TpXoKA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 11:28:08 -0700
+IronPort-SDR: tKsjVEh3ZU7P2XLmx+VAu0BhXojIKhFHGwG0/drSmLISM9x6iAPrzIiBUgty6CCbj/6kUZ9t/8
+ oR2fMULD04uQ==
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="468840528"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 11:28:08 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Tony Luck <tony.luck@intel.com>, kbuild test robot <lkp@intel.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/mce/dev-mcelog: Fix "make W=1" warning about strncpy
+Date:   Wed, 27 May 2020 11:28:08 -0700
+Message-Id: <20200527182808.27737-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.21.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove old, dead Kconfig options (in order appearing in this commit):
- - EXPERIMENTAL is gone since v3.9;
- - MTD_PARTITIONS: commit 6a8a98b22b10 ("mtd: kill
-   CONFIG_MTD_PARTITIONS");
- - MTD_CHAR: commit 660685d9d1b4 ("mtd: merge mtdchar module with
-   mtdcore");
- - NETDEV_1000: commit f860b0522f65 ("drivers/net: Kconfig and Makefile
-   cleanup"); NET_ETHERNET should be replaced with just ETHERNET but
-   that is separate change;
+The kbuild test robot reported this warning:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+arch/x86/kernel/cpu/mce/dev-mcelog.c: In function 'dev_mcelog_init_device':
+arch/x86/kernel/cpu/mce/dev-mcelog.c:346:2: warning: 'strncpy' output truncated before terminating nul copying 12 bytes from a string of the same length [-Wstringop-truncation]
+
+This is accurate, but I don't care that the trailing NUL character isn't copied.
+The string being copied is just a magic number signature so that crash dump
+tools can be sure they are decoding the right blob of memory.
+
+Change to use memcpy() instead of strncpy()
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/unicore32/configs/defconfig | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/kernel/cpu/mce/dev-mcelog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/unicore32/configs/defconfig b/arch/unicore32/configs/defconfig
-index 360cc9abcdb0..511e216a2f13 100644
---- a/arch/unicore32/configs/defconfig
-+++ b/arch/unicore32/configs/defconfig
-@@ -1,5 +1,4 @@
- ### General setup
--CONFIG_EXPERIMENTAL=y
- CONFIG_LOCALVERSION="-unicore32"
- CONFIG_SWAP=y
- CONFIG_SYSVIPC=y
-@@ -75,8 +74,6 @@ CONFIG_PUV3_UART=n
- #	Memory Technology Device (MTD) support
- CONFIG_MTD=m
- CONFIG_MTD_UBI=m
--CONFIG_MTD_PARTITIONS=y
--CONFIG_MTD_CHAR=m
- CONFIG_MTD_BLKDEVS=m
- #	RAM/ROM/Flash chip drivers
- CONFIG_MTD_CFI=m
-@@ -101,7 +98,6 @@ CONFIG_SATA_VIA=y
- #	Network device support
- CONFIG_NETDEVICES=y
- CONFIG_NET_ETHERNET=y
--CONFIG_NETDEV_1000=y
- #	Wireless LAN
- CONFIG_WLAN_80211=n
- CONFIG_RT2X00=n
+diff --git a/arch/x86/kernel/cpu/mce/dev-mcelog.c b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+index d089567a9ce8..bcb379b2fd42 100644
+--- a/arch/x86/kernel/cpu/mce/dev-mcelog.c
++++ b/arch/x86/kernel/cpu/mce/dev-mcelog.c
+@@ -343,7 +343,7 @@ static __init int dev_mcelog_init_device(void)
+ 	if (!mcelog)
+ 		return -ENOMEM;
+ 
+-	strncpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
++	memcpy(mcelog->signature, MCE_LOG_SIGNATURE, sizeof(mcelog->signature));
+ 	mcelog->len = mce_log_len;
+ 	mcelog->recordlen = sizeof(struct mce);
+ 
 -- 
-2.17.1
+2.21.1
 
