@@ -2,65 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F9EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C473FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E584207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590545629;
-	bh=iFuTagTWg52kj6zbeQQp3N64aK9WbuOF+C+yXtxYXWY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=ChkFQtZRImXPBHt4jAP5/6bJ+DrkPmIeLphigXAf5dxk9nfXWsR2PxsMrTHxBP/jg
-	 RB3w4Ax7W+kooJz2VMc+wnbU0fSmTp4C+j0PCI0kCo/wbm9+eN9AAu6Ft0/bBaLHv8
-	 OIWekPa9iCgkhGMKvgqgGXIfkGVP1XTmVLg5KKvA=
+	by mail.kernel.org (Postfix) with ESMTP id 9D9312075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:13:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O6FlQD7L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgE0CNs (ORCPT
+        id S1727965AbgE0CNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727923AbgE0CNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:13:46 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D571C2075F;
-        Wed, 27 May 2020 02:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590545625;
-        bh=iFuTagTWg52kj6zbeQQp3N64aK9WbuOF+C+yXtxYXWY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ovHsAo64os4LiqNDkYMfU8ARlwTB64w/G2o7OHYKDK5mMT2HDGrN6M47hap9k2+Mx
-         6sprUNRedqnOH79YqNxDXD2RfQUkJk4ANOjQIB9VwNTWChOc6FDgqOssTLlnrwvYEl
-         nYbzoVYL92T6xxUY1nWylJqjWunR14/L59c1Ewp4=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 26 May 2020 22:13:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50224 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbgE0CNl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:13:41 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R2BwRM092146;
+        Wed, 27 May 2020 02:13:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=rchfVBrv2XYFl9MmizvD9dJ1b2qOdeSgyrQhOTaDICQ=;
+ b=O6FlQD7LCOtmjxuCWgoDu/2MFkC4IxdKNjo+d80OMt0t+wx5x8Yen25tfrQr4iKc1iJ8
+ +ppYG5p25/D/YH/P9uFn9n3f4dgBktBt42rtJoAMucxKOThl2hi7Cc5sa4xfB/eCKWxZ
+ SPyZ+iMC3vB1NMdQYlBUoFvxT9hIDqk5QEXDwHggxLXikVxo9VS58iacggPQTGf+yiZT
+ v3S8yAxD2CF1l07laLI4Uupi6zTaIAQw6UDr7SuMQoXBsUS4YVxrYgn+SzbxxDKUGQYy
+ HpVsEqhEGrge/zc4lN7KXUAJ/ZQ6VUe/MqJf2fcmeBYWkCKvsqDp3ktfqrLNhiX2MPJT Rg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 316u8qvxhy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 02:13:35 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R2DYA6035205;
+        Wed, 27 May 2020 02:13:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 317dkthek7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 02:13:35 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04R2DHbY020391;
+        Wed, 27 May 2020 02:13:18 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 May 2020 19:13:17 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>, jejb@linux.ibm.com
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-scsi@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: ufs: ti-j721e-ufs: Fix unwinding of pm_runtime changes
+Date:   Tue, 26 May 2020 22:13:02 -0400
+Message-Id: <159054550935.12032.792833550422424331.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200526100340.15032-1-vigneshr@ti.com>
+References: <20200526100340.15032-1-vigneshr@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200512181647.5071-5-dinguyen@kernel.org>
-References: <20200512181647.5071-1-dinguyen@kernel.org> <20200512181647.5071-5-dinguyen@kernel.org>
-Subject: Re: [RESEND PATCHv7 5/5] clk: socfpga: agilex: add clock driver for the Agilex platform
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dinguyen@kernel.org, linux-kernel@vger.kernel.org,
-        mturquette@baylibre.com
-To:     Dinh Nguyen <dinguyen@kernel.org>, linux-clk@vger.kernel.org
-Date:   Tue, 26 May 2020 19:13:45 -0700
-Message-ID: <159054562508.88029.1179994723271858871@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 bulkscore=0
+ spamscore=0 suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=924
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005270013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=973 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Dinh Nguyen (2020-05-12 11:16:47)
-> For the most part the Agilex clock structure is very similar to
-> Stratix10, so we re-use most of the Stratix10 clock driver.
->=20
-> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-> ---
+On Tue, 26 May 2020 15:33:40 +0530, Vignesh Raghavendra wrote:
 
-Applied to clk-next
+> Fix unwinding of pm_runtime changes when bailing out of driver probe due
+> to a failure and also on removal of driver.
+
+Applied to 5.8/scsi-queue, thanks!
+
+[1/1] scsi: ufs: ti-j721e-ufs: Fix unwinding of pm_runtime changes
+      https://git.kernel.org/mkp/scsi/c/22617e216331
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
