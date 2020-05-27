@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF621C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:51:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D0472088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8AF20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:51:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="enWpqU5L";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CkXK/ozQ"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Z4v6tZRq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wjtxiohL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgE0PvZ (ORCPT
+        id S2390326AbgE0Pv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:51:25 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55211 "EHLO
+        Wed, 27 May 2020 11:51:29 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60819 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730592AbgE0Pur (ORCPT
+        by vger.kernel.org with ESMTP id S1730599AbgE0Put (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:50:47 -0400
+        Wed, 27 May 2020 11:50:49 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D4E365820B3;
-        Wed, 27 May 2020 11:50:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:46 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id 61F185820C0;
+        Wed, 27 May 2020 11:50:48 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=Bt8lRxl4j58Jf
-        Ps2a5AygXRQeW3N7bjCgRjDpST9xfU=; b=enWpqU5LpSJ3fs2m07iFhnq3jv7ET
-        +NE1Sd3+zRcTpaV3G+jgUNiZYtYNrBW0KqE9Bes6vkyxUY+6XiTP5DUJ3I0C0SjA
-        d1hl1SQrFYtDZJCMEJSMs1PMhrlXQmoABpLkKpJm8gjdJFs1eTZEQ5NtGe/8DKLm
-        L9BOdKYdykev6BWmVOLK4/SWMXoJz1otgyaVE8AzqbjcSeKfA18qFJfVXQzen6aF
-        nadWz7rR04dfZdm56rIIb+JdvJJAGdQ87VnUkGokiBDDw5oEfg3sSy92fISnHrr5
-        4t8r6eU6u5UUeSIoBtmfHWJG8/iwWdI+wnz2b7vd3cqai3Fwy2KJ3NIzQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=gOeAEZiy0ED6T
+        5GShD115deUVvMwxSrZt/liqYgKRqg=; b=Z4v6tZRqcX97/1oXz1ZudyP3UukMi
+        V9DMKF96c9FPk5/tCR4mYBlffCKNQ71fyWKtru+Gl/KAau9PsLl1X+GUi6w9fx+f
+        qAHL1U/E2Ke+NOQmVvikCwrIfbEJiIkmPUbRSjzdDHhO4a5S/vVnY5TQULgWFMzX
+        sF+CUAtvLRr88KArw56+aPBMnDiGUmWvpFBWM1mDGCWLzCKu2l6QlFAP3qDeuGkv
+        7gUGa2zoTAdClqKlXsjNYrQCd7OaQFK2F2T/ZFXj3xJ7m1msBQFKqbR/7GGvNPOo
+        gFXlOu8B67Jc2x4O2JczcKcmkbqDp/4CYw8iTiw+n6Fe58/KGupxXLLCw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Bt8lRxl4j58JfPs2a5AygXRQeW3N7bjCgRjDpST9xfU=; b=CkXK/ozQ
-        hRZYyq5lmmW4d01vg2QSonAM21yQ38fXu2mUdofKeT858otn3bbWlIxgWKCZ40dX
-        Lta1xSeah/bzrLUangEn4YMmBe/syrt3BsOVZClgTIUoTBS7WTOpscWyDKD3wZYT
-        H72rhke10CrhJIalA8a5qIPRDLOFpknqJRO3Sz2sCEkjOfLgR10uHJvZeUL1Qg1A
-        TaitZong0i0HXxq6yl6kZnKw5gaVi0B4oIadTBLHkjoNYNqqGpc59M+FtL40Tqaf
-        1vGaqn702P8yoZ0XpL/LUIpBO9I7R/jfAZh9TAIffqXvEmtQ/tn3R2DgbWq20lwK
-        2WXipWmyihkrqg==
-X-ME-Sender: <xms:VozOXu-49Xc_B7a8JJxYWnEa_9_6qLsTJGqJdbkSmHuhCkUn1rM-iw>
+        fm2; bh=gOeAEZiy0ED6T5GShD115deUVvMwxSrZt/liqYgKRqg=; b=wjtxiohL
+        cI1fVAR/PBaFg59dXXHt7GSlBxrDjbc3jGPRgzRTZ3Mslfm230V/ARwmiudiDN8y
+        gjsPbUfS/Kcn+LP1JNn+H44IKCdjAzWwbcwuB3A/+iRnb6H65C0fwKP29LuzHBpV
+        xzdrU7MHUzifdngLmZTFHDx+WYwDMtDf/6bvdYUuqk7J/THdpeNh9T+3KR6uLvg1
+        u4pwUmqr/uYSDNNFKp6pV/YunQMvjhl7F3MYNVj6GWyku9tblI72sqpIaQuMNG2V
+        bLawlBlbp1A00/4wSnuQ4hX0t3YOcpiaRkSFibus55FX3p1/TMGTAzr4Wv17J507
+        YY0RyK/2yZiECA==
+X-ME-Sender: <xms:WIzOXqj2bFkc6vxAWMavjU6BriTtewkQRxJTtDUY29jpMYjgwIcs_A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepfeeine
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:VozOXuuTEN7kF5TjtebZUHD6hxJIE7ZncjVNyVc65Enbh_BY3osvkw>
-    <xmx:VozOXkB1-I_6Mf17CRlmJ-OdVyV2SPVAgMZjkgJwi2MdxLWJZPMniQ>
-    <xmx:VozOXmfYBGLvbvt_M_ED9VCAPmC30ARXg4v2ZghfbfmiwUpj-T3vnw>
-    <xmx:VozOXufuQpxWAYEo085XcXcPHWjCIcW1jfUupRWz1EHfpJt8vSLbyA>
+X-ME-Proxy: <xmx:WIzOXrAR1lMp5uEt2OAftQ2e4OCylBRczAzZGyYX05vgqyfj_77paA>
+    <xmx:WIzOXiEAqutDJre7MfieJMxAz3FKaL3qiKAENzRsbPy3uXyvPNJ1vA>
+    <xmx:WIzOXjQgzxQqbrkQUWblGDRT6Ut5B9XuOvkT1dBtyIZpDxJT9TgoFQ>
+    <xmx:WIzOXuxnp-s8QiZ-jDW7i02saqUn35vx4nEWTAlFc0vAs8vMb3jOGg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 759D83280059;
-        Wed, 27 May 2020 11:50:46 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 02F863061CCB;
+        Wed, 27 May 2020 11:50:47 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 056/105] drm/vc4: crtc: Move the CRTC disable out
-Date:   Wed, 27 May 2020 17:48:26 +0200
-Message-Id: <601527fea6bb226abd088a864e74b25368218e87.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 057/105] drm/vc4: drv: Disable the CRTC at boot time
+Date:   Wed, 27 May 2020 17:48:27 +0200
+Message-Id: <68bdae53a362e74f7e355fec1f18378c9e7fcaac.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,76 +89,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We'll need to reuse the part that disables the HVS and PixelValve during
-boot too, so let's create a separate function.
+In order to prevent issues during the firmware to KMS transition, we need
+to make sure the pixelvalve are disabled at boot time so that the DRM state
+matches the hardware state.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 23 +++++++++++++++++++++++
+ drivers/gpu/drm/vc4/vc4_drv.c  |  4 ++++
+ drivers/gpu/drm/vc4/vc4_drv.h  |  1 +
+ 3 files changed, 28 insertions(+)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index ecb3431470dd..3d2a31cad7fa 100644
+index 3d2a31cad7fa..9efd7cb25590 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -382,20 +382,14 @@ static void require_hvs_enabled(struct drm_device *dev)
- 		     SCALER_DISPCTRL_ENABLE);
+@@ -409,6 +409,29 @@ static int vc4_crtc_disable(struct drm_crtc *crtc, unsigned int channel)
+ 	return 0;
  }
  
--static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
--				    struct drm_crtc_state *old_state)
-+static int vc4_crtc_disable(struct drm_crtc *crtc, unsigned int channel)
- {
--	struct drm_device *dev = crtc->dev;
--	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
- 	struct drm_encoder *encoder = vc4_get_crtc_encoder(crtc);
- 	struct vc4_encoder *vc4_encoder = to_vc4_encoder(encoder);
-+	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++int vc4_crtc_disable_at_boot(struct drm_crtc *crtc)
++{
 +	struct drm_device *dev = crtc->dev;
- 	int ret;
- 
--	require_hvs_enabled(dev);
--
--	/* Disable vblank irq handling before crtc is disabled. */
--	drm_crtc_vblank_off(crtc);
--
- 	CRTC_WRITE(PV_V_CONTROL,
- 		   CRTC_READ(PV_V_CONTROL) & ~PV_VCONTROL_VIDEN);
- 	ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
-@@ -403,15 +397,31 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
- 
- 	mdelay(20);
- 
--	if (vc4_encoder->post_crtc_disable)
-+	if (vc4_encoder && vc4_encoder->post_crtc_disable)
- 		vc4_encoder->post_crtc_disable(encoder);
- 
- 	vc4_crtc_pixelvalve_reset(crtc);
--	vc4_hvs_atomic_disable(crtc, old_state);
-+	vc4_hvs_stop_channel(dev, channel);
- 
--	if (vc4_encoder->post_crtc_powerdown)
-+	if (vc4_encoder && vc4_encoder->post_crtc_powerdown)
- 		vc4_encoder->post_crtc_powerdown(encoder);
- 
-+	return 0;
++	struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
++	int channel;
++
++	if (of_device_is_compatible(vc4_crtc->pdev->dev.of_node,
++				    "brcm,bcm2835-txp"))
++		return 0;
++
++	if (!(CRTC_READ(PV_CONTROL) & PV_CONTROL_EN))
++		return 0;
++
++	if (!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN))
++		return 0;
++
++	channel = vc4_hvs_get_fifo_from_output(dev, vc4_crtc->data->hvs_output);
++	if (channel < 0)
++		return 0;
++
++	return vc4_crtc_disable(crtc, channel);
 +}
 +
-+static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
-+				    struct drm_crtc_state *old_state)
-+{
-+	struct vc4_crtc_state *old_vc4_state = to_vc4_crtc_state(old_state);
-+	struct drm_device *dev = crtc->dev;
+ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+ 				    struct drm_crtc_state *old_state)
+ {
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+index ed7893ee188a..ea082b9d3c90 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.c
++++ b/drivers/gpu/drm/vc4/vc4_drv.c
+@@ -252,6 +252,7 @@ static int vc4_drm_bind(struct device *dev)
+ 	struct drm_device *drm;
+ 	struct vc4_dev *vc4;
+ 	struct device_node *node;
++	struct drm_crtc *crtc;
+ 	int ret = 0;
+ 
+ 	dev->coherent_dma_mask = DMA_BIT_MASK(32);
+@@ -298,6 +299,9 @@ static int vc4_drm_bind(struct device *dev)
+ 	if (ret < 0)
+ 		goto unbind_all;
+ 
++	drm_for_each_crtc(crtc, drm)
++		vc4_crtc_disable_at_boot(crtc);
 +
-+	require_hvs_enabled(dev);
-+
-+	/* Disable vblank irq handling before crtc is disabled. */
-+	drm_crtc_vblank_off(crtc);
-+
-+	vc4_crtc_disable(crtc, old_vc4_state->assigned_channel);
-+
- 	/*
- 	 * Make sure we issue a vblank event after disabling the CRTC if
- 	 * someone was waiting it.
+ 	ret = drm_dev_register(drm, 0);
+ 	if (ret < 0)
+ 		goto unbind_all;
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index 99001f8783aa..32e9de15262a 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -797,6 +797,7 @@ void vc4_bo_remove_from_purgeable_pool(struct vc4_bo *bo);
+ 
+ /* vc4_crtc.c */
+ extern struct platform_driver vc4_crtc_driver;
++int vc4_crtc_disable_at_boot(struct drm_crtc *crtc);
+ void vc4_crtc_handle_vblank(struct vc4_crtc *crtc);
+ void vc4_crtc_txp_armed(struct drm_crtc_state *state);
+ void vc4_crtc_get_margins(struct drm_crtc_state *state,
 -- 
 git-series 0.9.1
