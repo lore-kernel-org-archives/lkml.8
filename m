@@ -2,130 +2,109 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C382C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35694C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346EB2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1637C2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jBKa01d6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388986AbgE0ORC (ORCPT
+        id S2389001AbgE0OR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:17:02 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:42241 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388141AbgE0ORC (ORCPT
+        Wed, 27 May 2020 10:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42652 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387800AbgE0OR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:17:02 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MPK73-1jNdyb1lNN-00PfUR; Wed, 27 May 2020 16:15:56 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Slaby <jslaby@suse.cz>,
-        Juergen Gross <jgross@suse.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] x86: fix clang integrated assembler build
-Date:   Wed, 27 May 2020 16:15:39 +0200
-Message-Id: <20200527141553.1768675-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 10:17:57 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C42EC08C5C3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:17:57 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k26so2735484wmi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YH1v8wKe1VUKWAjGTwnWnKdT9B4ah56ml0/ndiIz5io=;
+        b=jBKa01d6epycwm2tJPgKP5MJmpfECW/858iC9R+HX+08ZSdRe1VOune12GU5FSK6jL
+         9ch+4WqcdFqtQm1Uw+0hpM8lDcfTvLDZZoF4N/Nxuz5BB5rrZjHqDr6pE2iuPToiG2h7
+         Z5zDJ2TE/ReBM6Aoi/RDfJTpsoxuPWS1pwkhI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YH1v8wKe1VUKWAjGTwnWnKdT9B4ah56ml0/ndiIz5io=;
+        b=a4VfYHu/41Un2FBibw5B/0hJGH8z1SaGiLD177d4ChlCpIgml94qcBsLjNOYnI7uVj
+         A0GJXz5t/Rpc6qgn8TivXTsRR1K8Y5kaLZEm5CT/sh2G3nCGyl0U7R6lu9dmSRV7odm/
+         +W1HiAsuMuVTaVYnP8ZZ9bMtkTZRgm9yem1FpFwn87PS4u92xe6WRlDzGBpl/uPdbTmF
+         +v3XRFN/1W71K6eMJIcJoIz3HTuE/eqJV0FEHAYzVIXqJ++R/Veev3aixPE6J2DLfB4S
+         R5a71Bp7B68TNtcUUQ1vE3I8cqPMrUtry58B8OQBmdTx52o2Ty/QpLhrq9rT7fm7+weO
+         Pcbw==
+X-Gm-Message-State: AOAM533auvH5KyR7Ny65u5pixfYTGPGf7D18fwdTvtfs2G7L6ZDQrXO/
+        4ckg+wSLCDXQ9WkIcvEYm1V9TcZtzuc=
+X-Google-Smtp-Source: ABdhPJwWguHm0Lnqvgwm14E6sIExIuStJrZLuVvOVvX+cd+cFq+0BnVHHJ+F5pSSo7Tq7jwp6YH5nA==
+X-Received: by 2002:a05:600c:2256:: with SMTP id a22mr4092817wmm.18.1590589075512;
+        Wed, 27 May 2020 07:17:55 -0700 (PDT)
+Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id o15sm3026908wrv.48.2020.05.27.07.17.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 07:17:55 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     Brendan Jackman <jackmanb@chromium.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH] fs: Add an explicit might_sleep() to iput
+Date:   Wed, 27 May 2020 16:17:53 +0200
+Message-Id: <20200527141753.101163-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Uosxpj6yvjMCuoWo+Rtov8UwzN5IwYem5nwdvTWLIAVID8yaP/W
- x7ewGXWq/QM+I7P3RCxJYWFjpDQalR+YODvDhjI71RN1tJZP8geV47TJs5LVSF7p7vmPoXm
- qImyMgJGjmDeyS2NV4hdWnbJNcpxvHX0/3b8jp2OkQ3phuf5uluN+BUE0FMfsSyprNtQvnL
- fV00HYQaumDJaxj6QfpPg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GWnMZ0bR6yk=:0Y1nTwmFteYTcoIjQ40K3U
- cSlDlIO2MaEl7ZntvxtB1FiwS6sZj5h2Wg+YeSVHJJWLZhQIXpLujXfFgeCsDJdPdP4zf/tG+
- z3vjludYoIj/dSsu1DCKX7HKRRlmKIYylGoLzlP+MuZ1sPFCoUCafKtwamLGglgNZGGinSGGq
- L1vbbWJd6f1WpNSR9ORdxgFwNQHhK+uo6AllztWK76vGCAc/j8lXxkbtC3qKrPo2P1WpptWk5
- jkygJhIWjdiF2fLcgxOlge0rwyvXcUz5tTe+FrKYGH6yCfJREI3SqSKE3wQEuiTszKc8+xfvv
- MR6S28MzU+i5B7xWNneS8ed+VX4lLIaLNvTivoT5KkFO9oIed/dWF36QK6Mr/B18X0K7mXnCF
- A8C7hWSLo719jVIGoCZ5nmx4JUnICaW0NSFhkF108Ehn5KD31jXfYJ31FYtY2bvjz/GGRA31N
- rttY0nXn/FFJwP0pcT7RuYmHs4+WWv/3BqwURQa7ZNAoTvUtaXq0PcDwtxkLJVj3rnCsJQMAR
- Kuu5E+fWt5jFkCon4fRjZdu3DtMEKsSA23jsUwCLQHMPsNY7/qJ80O05GoPp8Uf69m6BiPVVi
- qggmvA7zKgPx6+pGVf2xZ4C+nsrulbKXXSdaycw9B56m9yssXSeKhVkx+np51y9bMD7jl+DAH
- qMPVpL/RBQBiU8cg20vCC+dyI5xv3jEQbdBbFg6r5fCtjqawk1CF9NgDV1Mo3nzu+bxn9Wicf
- LbA+0fiJ611f2RojqKBaHeqabSDVpZUeKPIF6dANGh7KANO3z2xyKj5HsQgPsLrk2VQi0rbrR
- LNUvfiZ7HNzDzeYD4csCPzFo1Q0czax1TFof2QNccYY3Pxn0+Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang and gas seem to interpret the symbols in memmove_64.S and
-memset_64.S differently, such that clang does not make them
-'weak' as expected, which leads to a linker error, with both
-ld.bfd and ld.lld:
+From: KP Singh <kpsingh@google.com>
 
-ld.lld: error: duplicate symbol: memmove
->>> defined at common.c
->>>            kasan/common.o:(memmove) in archive mm/built-in.a
->>> defined at memmove.o:(__memmove) in archive arch/arm64/lib/lib.a
+It is currently mentioned in the comments to the function that iput
+might sleep when the inode is destroyed. Have it call might_sleep, as
+dput already does.
 
-ld.lld: error: duplicate symbol: memset
->>> defined at common.c
->>>            kasan/common.o:(memset) in archive mm/built-in.a
->>> defined at memset.o:(__memset) in archive arch/arm64/lib/lib.a
+Adding an explicity might_sleep() would help in quickly realizing that
+iput is called from a place where sleeping is not allowed when
+CONFIG_DEBUG_ATOMIC_SLEEP is enabled as noticed in the dicussion:
 
-Copy the exact way these are written in memcpy_64.S, which does
-not have the same problem.
+  https://lore.kernel.org/bpf/20200527021111.GA197666@google.com/
 
-I don't know why this makes a difference, and it would be good
-to have someone with a better understanding of assembler internals
-review it.
-
-It might be either a bug in the kernel or a bug in the assembler,
-no idea which one. My patch makes it work with all versions of
-clang and gcc, which is probably helpful even if it's a workaround
-for a clang bug.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: KP Singh <kpsingh@google.com>
+Reviewed-by: Brendan Jackman <jackmanb@chromium.org>
 ---
- arch/x86/lib/memmove_64.S | 4 ++--
- arch/x86/lib/memset_64.S  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ fs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/lib/memmove_64.S b/arch/x86/lib/memmove_64.S
-index 7ff00ea64e4f..dcca01434be8 100644
---- a/arch/x86/lib/memmove_64.S
-+++ b/arch/x86/lib/memmove_64.S
-@@ -26,8 +26,8 @@
+diff --git a/fs/inode.c b/fs/inode.c
+index cc6e701b7e5d..f55e72e76266 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1583,6 +1583,7 @@ static void iput_final(struct inode *inode)
   */
- .weak memmove
- 
--SYM_FUNC_START_ALIAS(memmove)
--SYM_FUNC_START(__memmove)
-+SYM_FUNC_START_ALIAS(__memmove)
-+SYM_FUNC_START_LOCAL(memmove)
- 
- 	mov %rdi, %rax
- 
-diff --git a/arch/x86/lib/memset_64.S b/arch/x86/lib/memset_64.S
-index 9ff15ee404a4..a97f2ea4e0b2 100644
---- a/arch/x86/lib/memset_64.S
-+++ b/arch/x86/lib/memset_64.S
-@@ -19,8 +19,8 @@
-  *
-  * rax   original destination
-  */
--SYM_FUNC_START_ALIAS(memset)
--SYM_FUNC_START(__memset)
-+SYM_FUNC_START_ALIAS(__memset)
-+SYM_FUNC_START_LOCAL(memset)
- 	/*
- 	 * Some CPUs support enhanced REP MOVSB/STOSB feature. It is recommended
- 	 * to use it when possible. If not available, use fast string instructions.
+ void iput(struct inode *inode)
+ {
++	might_sleep();
+ 	if (!inode)
+ 		return;
+ 	BUG_ON(inode->i_state & I_CLEAR);
 -- 
-2.26.2
+2.27.0.rc0.183.gde8f92d652-goog
 
