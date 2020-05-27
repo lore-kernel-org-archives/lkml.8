@@ -2,141 +2,90 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF00C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ED9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFBB20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B74520899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:15:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="f2+bfCz5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiNqN3c2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgE0TO1 (ORCPT
+        id S1729298AbgE0TPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60854 "EHLO
+        Wed, 27 May 2020 15:15:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728025AbgE0TO1 (ORCPT
+        with ESMTP id S1728025AbgE0TO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:14:27 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E87C08C5C4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:14:26 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id 17so25263413ilj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:14:26 -0700 (PDT)
+        Wed, 27 May 2020 15:14:58 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9EFC08C5C1;
+        Wed, 27 May 2020 12:14:57 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z13so20654996ljn.7;
+        Wed, 27 May 2020 12:14:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6gQSEGMWPgkGGVyHG9Pe+5fUPTmNwG1QJK7jkF0ZgaY=;
-        b=f2+bfCz5l3s2mc0xZ3f2Pq3WNIRwZ8/K67kflMCF9lRfWG7wXe314goLmBz5B0Cd60
-         +5vJVT0dTUlySipyBR16irIcNP5wMDuUMy1RkgvXzms9Wb+oEtNLdKXLWMsusauMh+xZ
-         NvgnYCDf3lgOevnvYhzKPhv4lszdeNDNo4nIbGDDXy2uvj+nCnHj/hIGINnlzaHpVnXz
-         U2Mhbx0uzLlIHEMjPHZVWXi0epD+kk0mf41r3vnhMeWCo7aOEN2h0PZpzy6BNLO2CdJg
-         4CXuHrITF4Ep7CvoDtfk7R317k4qcgw8oCXy50U5YmzOtUeC08H68OHTNLpfOoE9BdNN
-         BAzw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vIHelVmHmpv+LPchrobAxBcJ2T90U0P8hBKPd9Ksmgg=;
+        b=RiNqN3c2HvT+2txBAfmbTApoxnsb7mk0xUeBZFU58WZ8NSgj7GzlH8TpsQv/C4KgE5
+         x+mCJ8QSF/uwcKBL2xBkFqvfPWaffY4xoHZaRH3mCRxGkpDpSFNYHEldTrsu/dOKygJu
+         M7J3EW956Lan7jiHkIGsimtGBjv4dzBOcyq8vwmorxyMQcPwh2HRce/yfO+NltX15781
+         /6r86+o7G0jwAB/vFsZgZII0B0HzBH5pnzoUXVE4O173qGJSe+zUoWbZG2fAjVZJfDmo
+         7yTBIYFH3kHBdq2wUen1+qJFUH9A8UrfCiuGCTY8aHBCtXMpqETny0CtZFA4tZ+GYhfx
+         3TsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6gQSEGMWPgkGGVyHG9Pe+5fUPTmNwG1QJK7jkF0ZgaY=;
-        b=PLH3JCte+ck7xg0f36oKIscb45N/jOuDkSF0Z2+5qWvfztdR4hwdfPtQYco6bVWXgh
-         ZxZrSrfTr6LFhe7KUQRbhUwNvuZ9cy8PgKx3OM8b0RbhPYmpTRkWvRvP1mRKmwL8DUgx
-         ISblc0B7TvXQcw9dbaEGyxen96+ayHdS7UMN9lbffgqwnSZ9wwS7fOiYQ4tfOQ8s73J7
-         U79rOMoshEmX4ZNMzTYyNSxe+dofW6tUhfCQsfiH5hPfoO5M+QA2u8jsyfrFG1aw59gW
-         yMDuMBuKRfXU0kqpbHA8qDFDaMBSY0LDKZRKRblmoSjwO3ApVN6IWGXbK1Hrww0RQNqq
-         YERw==
-X-Gm-Message-State: AOAM532RTGzfUH2fyfR1TZCnhvjK+huDCFX0Tl0mNfMEqOJHTYKFRaOo
-        6ejVX1I7uBiqR54xtWiAIPw8Fw==
-X-Google-Smtp-Source: ABdhPJygidZnbAa0eGY1UJRtoYPZNdP08x0hWzTxRx7yxq441Lory3g22et2VwaQetBDV6SZ86g0Yg==
-X-Received: by 2002:a92:d147:: with SMTP id t7mr4292743ilg.151.1590606865912;
-        Wed, 27 May 2020 12:14:25 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id g21sm666621ioc.14.2020.05.27.12.14.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 12:14:25 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1je1VQ-0005Pm-Hp; Wed, 27 May 2020 16:14:24 -0300
-Date:   Wed, 27 May 2020 16:14:24 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Danil Kipnis <danil.kipnis@cloud.ionos.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, rds-devel@oss.oracle.com,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        target-devel@vger.kernel.org
-Subject: Re: [PATCH rdma-next v3 0/6] Add Enhanced Connection Established
- (ECE)
-Message-ID: <20200527191424.GA20778@ziepe.ca>
-References: <20200526103304.196371-1-leon@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vIHelVmHmpv+LPchrobAxBcJ2T90U0P8hBKPd9Ksmgg=;
+        b=WgXShTtSzJ051hjBcC9sN6LVoeWNP9T4E3BUUnBuSfUdW3QkhoxjYR5oNp1i62OYQt
+         +f89znAUNrmrr4Jv8pTH0QmCvceIgd5rp7HGo2OJMVFQ3zJxUmvw7Wy+K5i1WvaKXgGT
+         gO19Rv7WScRaP91H/yrC/RKZnKy4C2PSXrzRx4qj97NHlzqpPolC0dFqg5adp3ucDHVb
+         5aXIxdGOwwJRZiOuy0vgWEmEqO+ZSQZYmIEWnXtiBJj7J1wi97NP0RbCXwL9CTLCVnDE
+         rK+TThVwZhRwwHCOGBJOHOFqlX7cQWu7tpj8LrlaYGn6QkRcOWhJPDSLzp+xhalelAU0
+         UJYg==
+X-Gm-Message-State: AOAM5312FDmYdI5f7W3t3tcdJOEtj/YVOHkZtDMnBBxw0Oa7t0jiFYZz
+        ynW6v98RTyrLsptSqPFVgUnDXryfz2awJA4e+rPR//zK
+X-Google-Smtp-Source: ABdhPJzG+P7meWe0LTEGaQLJTcvyJ54tgeEboR+VAW3PqoFGc2E/Q3mSFPXCYvEK3b0EJI1VO/Ry8s3DFVhZ3KO5P3g=
+X-Received: by 2002:a2e:8884:: with SMTP id k4mr3904355lji.170.1590606896315;
+ Wed, 27 May 2020 12:14:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526103304.196371-1-leon@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200515164640.97276-1-ramonreisfontes@gmail.com>
+ <ab7cac9c73dc8ef956a1719dc090167bcfc24b63.camel@sipsolutions.net>
+ <CAK8U23ZaUhoPVdWo-fkFpg4pGOcQQrk7oSbs9z1XPVE3cR_Jow@mail.gmail.com> <0131b3dbcb2f97b6a76ad5be0c50f26e11af1c5a.camel@sipsolutions.net>
+In-Reply-To: <0131b3dbcb2f97b6a76ad5be0c50f26e11af1c5a.camel@sipsolutions.net>
+From:   Ramon Fontes <ramonreisfontes@gmail.com>
+Date:   Wed, 27 May 2020 16:14:44 -0300
+Message-ID: <CAK8U23YFGaWrzXnHiMA5KDeSDFLO7F7c+Dgp8CDTTEM2VastLg@mail.gmail.com>
+Subject: Re: [PATCH] mac80211_hwsim: report the WIPHY_FLAG_SUPPORTS_5_10_MHZ capability
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        kvalo@codeaurora.org, davem@davemloft.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:32:58PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
-> 
-> Changelog:
->  v3:
->  * Rebased on top of ebd6e96b33a2 RDMA/ipoib: Remove can_sleep parameter from iboib_mcast_alloc
->  * Updated rdma_reject patch to include newly added RTR ulp
->  * Remove empty hunks added by rebase
->  * Changed signature of rdma_reject so kernel users will provide reason by themselves
->  * Squashed UAPI patch to other patches which add functionality
->  * Removed define of the IBTA reason from UAPI
->  v2: https://lore.kernel.org/linux-rdma/20200413141538.935574-1-leon@kernel.org/
->  * Rebased on latest rdma-next and removed already accepted patches.
->  * Updated all rdma_reject in-kernel users to provide reject reason.
->  v1: Dropped field_avail patch in favor of mass conversion to use function
->      which already exists in the kernel code.
->  https://lore.kernel.org/lkml/20200310091438.248429-1-leon@kernel.org
->  v0: https://lore.kernel.org/lkml/20200305150105.207959-1-leon@kernel.org
-> 
-> Enhanced Connection Established or ECE is new negotiation scheme
-> introduced in IBTA v1.4 to exchange extra information about nodes
-> capabilities and later negotiate them at the connection establishment
-> phase.
-> 
-> The RDMA-CM messages (REQ, REP, SIDR_REQ and SIDR_REP) were extended
-> to carry two fields, one new and another gained new functionality:
->  * VendorID is a new field that indicates that common subset of vendor
->    option bits are supported as indicated by that VendorID.
->  * AttributeModifier already exists, but overloaded to indicate which
->    vendor options are supported by this VendorID.
-> 
-> This is kernel part of such functionality which is responsible to get data
-> from librdmacm and properly create and handle RDMA-CM messages.
-> 
-> Thanks
-> 
-> Leon Romanovsky (6):
->   RDMA/cm: Add Enhanced Connection Establishment (ECE) bits
->   RDMA/ucma: Extend ucma_connect to receive ECE parameters
->   RDMA/ucma: Deliver ECE parameters through UCMA events
->   RDMA/cm: Send and receive ECE parameter over the wire
->   RDMA/cma: Connect ECE to rdma_accept
->   RDMA/cma: Provide ECE reject reason
+> Yeah, but wmediumd won't know that it's not 20 MHz, I guess :-)
 
-Applied to for-next, thanks
+Yes, I know. You're right! I hope advances in wmediumd in this regard :).
 
-Jason
+> Yeah, but which channels? I believe with 10 MHz you can also use channel
+> 175, for example, which doesn't exist in 20 MHz channelization.
+
+I'm doing some research with 802.11p and I could use all the channels
+between 171 and 185 with both 5 and 10MHz.
+
+> Anyway, I've applied it now, we can fix more later.
+Thanks!
+
+
+Ramon
