@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF35C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B45BB206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CEA206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgE0C0K (ORCPT
+        id S1728125AbgE0C0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:26:10 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:41668 "EHLO loongson.cn"
+        Tue, 26 May 2020 22:26:18 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:41682 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727837AbgE0C0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:26:09 -0400
+        id S1727876AbgE0C0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:26:10 -0400
 Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2uQz81e3nc5AA--.351S5;
-        Wed, 27 May 2020 10:25:21 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2uQz81e3nc5AA--.351S3;
+        Wed, 27 May 2020 10:25:20 +0800 (CST)
 From:   Bibo Mao <maobibo@loongson.cn>
 To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -39,120 +39,63 @@ Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
         Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
         "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
         David Hildenbrand <david@redhat.com>
-Subject: [PATCH v7 3/4] mm/memory.c: Add memory read privilege on page fault handling
-Date:   Wed, 27 May 2020 10:25:19 +0800
-Message-Id: <1590546320-21814-4-git-send-email-maobibo@loongson.cn>
+Subject: [PATCH v7 1/4] MIPS: Do not flush tlb page when updating PTE entry
+Date:   Wed, 27 May 2020 10:25:17 +0800
+Message-Id: <1590546320-21814-2-git-send-email-maobibo@loongson.cn>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1590546320-21814-1-git-send-email-maobibo@loongson.cn>
 References: <1590546320-21814-1-git-send-email-maobibo@loongson.cn>
-X-CM-TRANSID: AQAAf9Dxr2uQz81e3nc5AA--.351S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxZFy5uFW8JryUKFyfKr4UArb_yoW5Cr4rpF
-        Z7Cw1F9rsrXw1xAFWfCFn29r15ua1rKFW5uryFk3Wku3ZxJr15Wrs7Ga4FvrykJFWkK3Wr
-        Gr4jqr4UZayIvaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUPmb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF
-        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcV
-        CY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2
-        jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-        AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-        Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04
-        v7MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s02
-        6c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GF
-        v_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvE
-        c7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67
-        AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZE
-        Xa7IU56KZtUUUUU==
+X-CM-TRANSID: AQAAf9Dxr2uQz81e3nc5AA--.351S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruw1xtr4DAFW5ZFykZr1rtFb_yoWfurc_C3
+        WxXa1kWryFqrsrury7Jws3JryY9a1kGa4vvrn7W390ya4Yyw4DGayvvFsrJr45uFWvyr4k
+        CrZ5Cr1akFs2gjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbqAYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7
+        IE14v26r18M28IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CE
+        w4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6x
+        kF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv
+        6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
+        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvj
+        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxw
+        CY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+        x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
+        W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+        7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+        WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+        xs2-UUUUU
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here add pte_sw_mkyoung function to make page readable on MIPS
-platform during page fault handling. This patch improves page
-fault latency about 10% on my MIPS machine with lmbench
-lat_pagefault case.
+It is not necessary to flush tlb page on all CPUs if suitable PTE
+entry exists already during page fault handling, just updating
+TLB is fine.
 
-It is noop function on other arches, there is no negative
-influence on those architectures.
+Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- arch/mips/include/asm/pgtable.h |  2 ++
- include/asm-generic/pgtable.h   | 16 ++++++++++++++++
- mm/memory.c                     |  3 +++
- 3 files changed, 21 insertions(+)
+ arch/mips/include/asm/pgtable.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index 6f40612..d9772aff 100644
+index 9b01d2d..f8f48fc 100644
 --- a/arch/mips/include/asm/pgtable.h
 +++ b/arch/mips/include/asm/pgtable.h
-@@ -414,6 +414,8 @@ static inline pte_t pte_mkyoung(pte_t pte)
- 	return pte;
+@@ -478,6 +478,11 @@ static inline pgprot_t pgprot_writecombine(pgprot_t _prot)
+ 	return __pgprot(prot);
  }
  
-+#define pte_sw_mkyoung	pte_mkyoung
-+
- #ifdef CONFIG_MIPS_HUGE_TLB_SUPPORT
- static inline int pte_huge(pte_t pte)	{ return pte_val(pte) & _PAGE_HUGE; }
- 
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index fa5c73f..b5278ec 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -244,6 +244,22 @@ static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long addres
- }
- #endif
- 
-+/*
-+ * On some architectures hardware does not set page access bit when accessing
-+ * memory page, it is responsibilty of software setting this bit. It brings
-+ * out extra page fault penalty to track page access bit. For optimization page
-+ * access bit can be set during all page fault flow on these arches.
-+ * To be differentiate with macro pte_mkyoung, this macro is used on platforms
-+ * where software maintains page access bit.
-+ */
-+#ifndef pte_sw_mkyoung
-+static inline pte_t pte_sw_mkyoung(pte_t pte)
++static inline void flush_tlb_fix_spurious_fault(struct vm_area_struct *vma,
++						unsigned long address)
 +{
-+	return pte;
 +}
-+#define pte_sw_mkyoung	pte_sw_mkyoung
-+#endif
 +
- #ifndef pte_savedwrite
- #define pte_savedwrite pte_write
- #endif
-diff --git a/mm/memory.c b/mm/memory.c
-index 8bb31c4..c7c8960 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2704,6 +2704,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
- 		}
- 		flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
- 		entry = mk_pte(new_page, vma->vm_page_prot);
-+		entry = pte_sw_mkyoung(entry);
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
- 		/*
- 		 * Clear the pte entry and flush it first, before updating the
-@@ -3378,6 +3379,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	__SetPageUptodate(page);
- 
- 	entry = mk_pte(page, vma->vm_page_prot);
-+	entry = pte_sw_mkyoung(entry);
- 	if (vma->vm_flags & VM_WRITE)
- 		entry = pte_mkwrite(pte_mkdirty(entry));
- 
-@@ -3660,6 +3662,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
- 
- 	flush_icache_page(vma, page);
- 	entry = mk_pte(page, vma->vm_page_prot);
-+	entry = pte_sw_mkyoung(entry);
- 	if (write)
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
- 	/* copy-on-write page */
+ /*
+  * Conversion functions: convert a page and protection to a page entry,
+  * and a page entry and page directory to the page they refer to.
 -- 
 1.8.3.1
 
