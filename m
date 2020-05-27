@@ -2,75 +2,114 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1DDA2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:14:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590549268;
-	bh=PynX9X8Dg61OyKJvDmLbdZVz48aDooArvp0ns3vPzSg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=vz7Stlu2CBxC4bkRb/djSnySekVcjzy0oMuq9r+kN6KdLkk57pDQzpW9azSyNstSC
-	 gayE7dikbDLBqPcdBnkyuN4IJUC75mNMlpl/4OrFenddfOuYBiBP4GVb7L4GQg7c6D
-	 JT1NpigbkwDxfbsiEnRGN591+7zPuBX5l99r0ZlM=
+	by mail.kernel.org (Postfix) with ESMTP id 447EF2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O05Q0HMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728491AbgE0DO2 (ORCPT
+        id S1728495AbgE0DQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgE0DO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:14:26 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 26 May 2020 23:16:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53518 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725893AbgE0DQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 23:16:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590549364;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D/U30jq60+l+qSoKQaysERZKm3+QDoP2KNzgEBqE3b8=;
+        b=O05Q0HMdncPqAo5ZQD7XVR5LYJr8MYBVSPLZ/JMexyBNpYUqwBbrAroywGyzA3aXeHzRBC
+        +JtWXIZ0/0c2jdSxWzYDAmVHU+XWif/bkE9YDhFe9VeQ/IkqTxmmZ5hAdpYx0c1s05s7dH
+        BYlDlKdJ821gqFNlt0nwUh+kqVry8Qk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370-kriTgT6fMYigScKrfzBEzQ-1; Tue, 26 May 2020 23:16:01 -0400
+X-MC-Unique: kriTgT6fMYigScKrfzBEzQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8A04207D8;
-        Wed, 27 May 2020 03:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590549265;
-        bh=PynX9X8Dg61OyKJvDmLbdZVz48aDooArvp0ns3vPzSg=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hOBIAoy3bIBJHczZ/clkOzo2CfkLsCq4Y1psFWsx51T6Snwa0wL7/2e2Ugg4gRTyS
-         ynH8uUUUDajxsCvbwj/I2pENof4sl3sKeKfTGiLJlf8aOUYcaM93pP1ir9/RfXq0OK
-         t73eFYRHUErsXXfabQqpbOHuJto43yZ73cFKAcKI=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5331F835B42;
+        Wed, 27 May 2020 03:16:00 +0000 (UTC)
+Received: from [10.72.12.206] (ovpn-12-206.pek2.redhat.com [10.72.12.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C941F5C1B0;
+        Wed, 27 May 2020 03:15:53 +0000 (UTC)
+Subject: Re: [PATCH] kexec: Do not verify the signature without the lockdown
+ or mandatory signature
+To:     Jiri Bohac <jbohac@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        ebiederm@xmission.com, jmorris@namei.org, mjg59@google.com,
+        dyoung@redhat.com, bhe@redhat.com
+References: <20200525052351.24134-1-lijiang@redhat.com>
+ <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
+Date:   Wed, 27 May 2020 11:15:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200519030036.1785-2-zhang.lyra@gmail.com>
-References: <20200519030036.1785-1-zhang.lyra@gmail.com> <20200519030036.1785-2-zhang.lyra@gmail.com>
-Subject: Re: [PATCH 2/2] clk: sprd: return correct type of value for _sprd_pll_recalc_rate
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>
-Date:   Tue, 26 May 2020 20:14:25 -0700
-Message-ID: <159054926519.88029.994346075664159353@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chunyan Zhang (2020-05-18 20:00:36)
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
->=20
-> The function _sprd_pll_recalc_rate() defines return value to unsigned
-> long, but it would return a negative value when malloc fail, changing
-> to return its parent_rate makes more sense, since if the callback
-> .recalc_rate() is not set, the framework returns the parent_rate as
-> well.
->=20
-> Fixes: 3e37b005580b ("clk: sprd: add adjustable pll support")
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> ---
+在 2020年05月26日 21:59, Jiri Bohac 写道:
+> On Mon, May 25, 2020 at 01:23:51PM +0800, Lianbo Jiang wrote:
+>> So, here, let's simplify the logic to improve code readability. If the
+>> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
+>> is mandated. Otherwise, we lift the bar for any kernel image.
+> 
+> I agree completely; in fact that was my intention when
+> introducing the code, but I got overruled about the return codes:
+> https://lore.kernel.org/lkml/20180119125425.l72meyyc2qtrriwe@dwarf.suse.cz/
+> 
+> I like this simplification very much, except this part:
+> 
+>> +	if (ret) {
+>> +		pr_debug("kernel signature verification failed (%d).\n", ret);
+> 
+> ...
+> 
+>> -		pr_notice("kernel signature verification failed (%d).\n", ret);
+> 
+> I think the log level should stay at most PR_NOTICE when the
+> verification failure results in rejecting the kernel. Perhaps
+> even lower.
+> 
 
-Applied to clk-next
+Thank you for the comment, Jiri Bohac.
+
+I like the idea of staying at most PR_NOTICE, but the pr_notice() will output
+some messages that kernel could want to ignore, such as the case you mentioned
+below.
+
+> In case verification is not enforced and the failure is
+> ignored, KERN_DEBUG seems reasonable.
+> 
+
+Yes, good understanding. It seems that the pr_debug() is still a good option here?
+Any other thoughts?
+
+Thanks.
+Lianbo
+
+
+> Regards,
+> 
+
