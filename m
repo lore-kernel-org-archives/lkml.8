@@ -2,112 +2,143 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E30C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EED2207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCAD4207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:34:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GG3L+diV"
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="Fsp134TQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgE0Ad0 (ORCPT
+        id S1726961AbgE0Ae0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 20:33:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:50814 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbgE0AdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 20:33:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=8XQiPl3J4Z+p4woOPKcPHigRSA+YLSXLLEdL58R3tic=; b=GG3L+diVvZhRkr5tFVxVy5Rjv+
-        yF3z/M9pnQzAXSgseibShXFvWc4rlA9YMc25DJmBt8sNuKbLSHeWZAwHFBU0/x8UpJ0zM4OQRBknL
-        jaSNCRSo6D/elxX6SZ5pxP7otqifDPO5s7kv+qXFt18zC3WdnW37bbHt35p0KNu3PiNs=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1jdk0W-003L8I-Hv; Wed, 27 May 2020 02:33:20 +0200
-Date:   Wed, 27 May 2020 02:33:20 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>
-Subject: Re: [PATCH net-next v2 1/2] net: enetc: Initialize SerDes for SGMII
- and SXGMII protocols
-Message-ID: <20200527003320.GC782807@lunn.ch>
-References: <20200526225050.5997-1-michael@walle.cc>
- <20200526225050.5997-2-michael@walle.cc>
+        Tue, 26 May 2020 20:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbgE0AeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 20:34:25 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7317CC03E96F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:34:25 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id y1so7175853qtv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mq62GKb+a6uI+kRh3uk1w4mJxevGSsQXqoT6TNUJtKU=;
+        b=Fsp134TQ7ts6VmjtGPWLw/8pcYBl5mf3YGy3/ugLjZWeWLH9WV5b+ca9T9kOjAMf7a
+         sw5TPCeQE7mLzQU5m+epgt79iYBYCkzA6CDn2lD2ZKpD/CNQUiRC4/IK2cLOulw4IclN
+         ZB+GpDT/Qs9+fANsZGrmxiyChMn7WelXygAYfgtnEk6yVF14bOgtvMSUrWm9Z20zX9H0
+         MQb9zfjtYEUTRJV61OCuW1gZUCwGOWPv8B5whJDWlljeGzUbZ6UFjABYB9vk2izKWBly
+         QvmiWi+g3H2NEHGFKSxX8G6y656HaQCbz3VnQ3NyKPs4AxTf/+JCQ7CMH5kxGen1i6Zw
+         UhmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mq62GKb+a6uI+kRh3uk1w4mJxevGSsQXqoT6TNUJtKU=;
+        b=GDGKUBOyA5HiEGQkngGuSWzoWDHGWL3wPY4kO5p67s4Mfr06omRzQ/mqstRfk5X70T
+         sgZi1Z5b7loFQbkSzsKQuC8knSAPRfkjBDJuX0Ttl0qPnL+BzP8neRlNwHbLjOAOOY1T
+         gGnjf/xha3Xg7e0Ak03mrqoQZeijdfL+2FF3xr7W+LJ9h4CGm+7fEQrB1acKCK5EFLMZ
+         fQ87V7smfllHR66ihyBFnZeZxEzivPCYaAgyZHT4DLEPgeMNQj2uwh4TSt2natcZ00ew
+         H8WU13NZ1U/TtaSa5kEIiVHFdTeQ6NvDYcBbJXekFXuQMw8NiF0lUJyYBePLTWYfg5ur
+         BWsQ==
+X-Gm-Message-State: AOAM532Ur1SCl/jHEcv7jcpgmFQOPC0auoNb6YA0GNtp9zYSEsfirfrW
+        d3c0rpd86LA9cbDZBIRrPH/Yg7/HAmutYgtr
+X-Google-Smtp-Source: ABdhPJwJlQUfbYhgP9H9HncZXgvR0jCIXllQbBglRLefb6mmcd3qtbB+BjdM5ZoIFi76MyRNuAH6oQ==
+X-Received: by 2002:ac8:5045:: with SMTP id h5mr1641523qtm.259.1590539664497;
+        Tue, 26 May 2020 17:34:24 -0700 (PDT)
+Received: from bbking.lan ([2804:14c:4a5:36c::cd2])
+        by smtp.gmail.com with ESMTPSA id y185sm647153qkd.83.2020.05.26.17.34.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 17:34:23 -0700 (PDT)
+From:   Vitor Massaru Iha <vitor@massaru.org>
+To:     kunit-dev@googlegroups.com, skhan@linuxfoundation.org
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        brendanhiggins@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [fixup v2] kunit: use --build_dir=.kunit as default
+Date:   Tue, 26 May 2020 21:34:20 -0300
+Message-Id: <20200527003420.34790-1-vitor@massaru.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526225050.5997-2-michael@walle.cc>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:50:49AM +0200, Michael Walle wrote:
-> From: Claudiu Manoil <claudiu.manoil@nxp.com>
-> 
-> ENETC has ethernet MACs capable of SGMII and SXGMII but in order to use
-> these protocols some serdes configurations need to be performed. The
-> SerDes is configurable via an internal MDIO bus connected to an internal
-> PCS device, all reads/writes are performed at address 0.
-> 
-> This patch basically removes the dependency on bootloader regarding
-> SerDes initialization.
-> 
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../net/ethernet/freescale/enetc/enetc_hw.h   | 17 ++++
->  .../net/ethernet/freescale/enetc/enetc_pf.c   | 98 +++++++++++++++++++
->  .../net/ethernet/freescale/enetc/enetc_pf.h   |  1 +
->  3 files changed, 116 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-> index 6314051bc6c1..ee5851486388 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
-> @@ -224,6 +224,23 @@ enum enetc_bdr_type {TX, RX};
->  #define ENETC_PM0_MAXFRM	0x8014
->  #define ENETC_SET_TX_MTU(val)	((val) << 16)
->  #define ENETC_SET_MAXFRM(val)	((val) & 0xffff)
-> +
-> +#define ENETC_PM_IMDIO_BASE	0x8030
-> +/* PCS registers */
-> +#define ENETC_PCS_CR			0x0
-> +#define ENETC_PCS_CR_RESET_AN		0x1200
-> +#define ENETC_PCS_CR_DEF_VAL		0x0140
-> +#define ENETC_PCS_CR_LANE_RESET		0x8000
+To make KUnit easier to use, and to avoid overwriting object and
+.config files, the default KUnit build directory is set to .kunit
 
-Hi Michael
+Fixed up minor merge conflicts - Shuah Khan <skhan@linuxfoundation.org>
 
-This looks like a standard BMCR. I know Russell King has pushed for
-just using MII_BMCR, BMCR_ANENABLE | BMCR_ANRESTART, BMCR_FULLDPLX |
-BMCR_SPEED1000, etc, since people understand what they mean.
+Fixed this identation error exchanging spaces for tabs between lines
+248 and 252:
 
-> +#define ENETC_PCS_DEV_ABILITY		0x04
-> +#define ENETC_PCS_DEV_ABILITY_SGMII	0x4001
-> +#define ENETC_PCS_DEV_ABILITY_SXGMII	0x5001
-> +#define ENETC_PCS_LINK_TIMER1		0x12
-> +#define ENETC_PCS_LINK_TIMER1_VAL	0x06a0
-> +#define ENETC_PCS_LINK_TIMER2		0x13
-> +#define ENETC_PCS_LINK_TIMER2_VAL	0x0003
-> +#define ENETC_PCS_IF_MODE		0x14
-> +#define ENETC_PCS_IF_MODE_SGMII_AN	0x0003
+tools/testing/kunit/kunit.py run --defconfig
 
-It would be nice to document what these individual bits mean.
+  File "tools/testing/kunit/kunit.py", line 254
+    if not linux:
+                ^
+TabError: inconsistent use of tabs and spaces in indentation
 
-   Andrew
+Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=205221
+---
+version after merge on kunit brach:
+v1:
+ * fix identation (tabs instead of spaces)
+
+v2:
+ * fix v1 changelog description: fix identation
+   (spaces instead of tabs, lines 248-252);
+ * add python error message on commit message;
+ * fix Link tag on commit message.
+---
+ tools/testing/kunit/kunit.py | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index b01838b6f5f9..b3490271a103 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -169,7 +169,7 @@ def add_common_opts(parser):
+ 	parser.add_argument('--build_dir',
+ 			    help='As in the make command, it specifies the build '
+ 			    'directory.',
+-			    type=str, default='', metavar='build_dir')
++                            type=str, default='.kunit', metavar='build_dir')
+ 	parser.add_argument('--make_options',
+ 			    help='X=Y make option, can be repeated.',
+ 			    action='append')
+@@ -245,12 +245,11 @@ def main(argv, linux=None):
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
+-		if cli_args.build_dir:
+-			if not os.path.exists(cli_args.build_dir):
+-				os.mkdir(cli_args.build_dir)
+-			kunit_kernel.kunitconfig_path = os.path.join(
+-				cli_args.build_dir,
+-				kunit_kernel.kunitconfig_path)
++		if not os.path.exists(cli_args.build_dir):
++			os.mkdir(cli_args.build_dir)
++		kunit_kernel.kunitconfig_path = os.path.join(
++			cli_args.build_dir,
++			kunit_kernel.kunitconfig_path)
+ 
+ 		if not linux:
+ 			linux = kunit_kernel.LinuxSourceTree()
+-- 
+2.26.2
+
