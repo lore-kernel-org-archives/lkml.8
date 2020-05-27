@@ -2,134 +2,137 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 048342071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214E02084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:32:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="nn+hxfT7";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="T1Y/cKeW"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="sIAKCvc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgE0ASZ (ORCPT
+        id S1726917AbgE0Acc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 20:18:25 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42866 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726857AbgE0ASZ (ORCPT
+        Tue, 26 May 2020 20:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbgE0Acb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 20:18:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 3E16E8EE181;
-        Tue, 26 May 2020 17:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1590538704;
-        bh=qID++NqcCImhZsa5jpMl2xI3bNrObdcyNtPXj6J7vTA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nn+hxfT7PV/m8JO5KlzADc5duM37fIGlQITTf2WsHd2ZlK9ywTrkidZpOegr4aovL
-         f5DQCl2MH4e3UrZjKbQ3Ho5T83bGFI0meV/QpToT0SKIcpnV+aCpjLTa19QPw88r/b
-         uYRAXGTNlGfSWP1kvUOH2xt6e5PpCqDi8xHlHUG4=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nz4t2lLbttbW; Tue, 26 May 2020 17:18:24 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 7C57E8EE0D4;
-        Tue, 26 May 2020 17:18:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1590538703;
-        bh=qID++NqcCImhZsa5jpMl2xI3bNrObdcyNtPXj6J7vTA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=T1Y/cKeWxtbmbBUOm78QeCdLFUqn+xmpk6E3IRjgulQEmYpeh4x2z39psGk5tKD57
-         7KFJXTEEZ85zCawULY6iCjn4ZYT/RLCVybG9psE5iOdT6OKB2bZmmf3BqSDrwjr1U/
-         I8kAPCXNq7e9nWqSSgenBsf+5vP/vKzwqfUp3vs0=
-Message-ID: <1590538702.3576.2.camel@HansenPartnership.com>
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Alex Guzman <alex@guzman.io>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Date:   Tue, 26 May 2020 17:18:22 -0700
-In-Reply-To: <CAJ7-PMaoFyi89OFgYsNknc2d0Fr4RHLmmHo-puNiKchM=0mU6w@mail.gmail.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
-         <1590520454.11810.40.camel@HansenPartnership.com>
-         <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
-         <1590521924.15108.1.camel@HansenPartnership.com>
-         <da3027a2aa9d1b7110a65de919e88f42ef2e13bb.camel@guzman.io>
-         <1590534370.15108.17.camel@HansenPartnership.com>
-         <CAJ7-PMaoFyi89OFgYsNknc2d0Fr4RHLmmHo-puNiKchM=0mU6w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 26 May 2020 20:32:31 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0A8C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:32:31 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 185so2666260pgb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b3E7kBOAM2ew0xZ38kPv10y9VtHtStBNAPoFOCwdwzA=;
+        b=sIAKCvc0u5PTCAIepNUBqhcRsAcLBfmDxstjdS7VwkNKBZmUZ/E/X+L4tZTb4qX4xm
+         3Z5lRnZk7EVb9clRn8reNvvO0h1/HVu3xYL7LIMe37sTYQcVm3s0oCcOz2Q79T3f6iQ7
+         bA/CUUmuwqKc58s6BnXfGlwXQu4ABI6KYefld9YLsaL+xj0KvVHAX58vlT0XSV3t1FoB
+         mrNOy3QSZjkJP7SoFA5FToBJPK8dsa/xNpI/BCcGlfaQcs2yUt6PQ/oLDCSOI6KOnoT8
+         n8SQ16PWLOqtOTGi/h4fT1zexP+hvWlItmdC31or1jVbQhS8EJaVW5Ez4NYm/G8eGPxU
+         Fs1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=b3E7kBOAM2ew0xZ38kPv10y9VtHtStBNAPoFOCwdwzA=;
+        b=QX7Ii+CbCKbDiPwL0XWkf52vbEYx4L5hecjFjKD6KfwuOYumdImoJ4R5LzWuArNyee
+         bAQwGXnGDLjJpDkvaVJjOioDKzS1/ZlVxgaWQuz1VNpuiBco7pMxZUbXK46QcMvsbYzL
+         floC8+jGIA5azwOKYGacm0Dvt1qKqAGi1jZj9HbM+U1nYOa4v3EK+BP9GnbTdIKohuFm
+         4bgqLkHT4+sr8XEpVH5r0OhtFxINtz+iYh1QUavi3l/rbpH8mBIfsiHpw5/kFqYcGYnd
+         iRaUWQBDmJmd9eDaVmZg2Ci51XDOmMQY/AwxSNjEcA1ax/dOPlabNcQp6zoiiuI6dFxT
+         GtMw==
+X-Gm-Message-State: AOAM530OQ61a9qD6LsiEDdxYMh52BhUCR82+VT75fdO0845/voAATegD
+        p8d0qeUYllJ7Kb365lkSPz60cA==
+X-Google-Smtp-Source: ABdhPJyLyZQqJTK/aWjlOUiPRd4F92ADMhZZVfoxKIVjzzI0ER808j2pZAQdP72+g4iGhVujHr1P9g==
+X-Received: by 2002:a63:5763:: with SMTP id h35mr1353749pgm.98.1590539551005;
+        Tue, 26 May 2020 17:32:31 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id b23sm616219pgs.33.2020.05.26.17.32.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 17:32:30 -0700 (PDT)
+Date:   Tue, 26 May 2020 17:32:30 -0700 (PDT)
+X-Google-Original-Date: Tue, 26 May 2020 17:32:27 PDT (-0700)
+Subject:     Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
+In-Reply-To: <c0e9e625-daf8-b72f-2237-06018ff5d8a0@gmail.com>
+CC:     anup@brainfault.org, Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, tglx@linutronix.de,
+        devicetree@vger.kernel.org, Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     seanga2@gmail.com
+Message-ID: <mhng-0995a264-b39c-4790-9aa5-b8c598b43ffd@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 16:31 -0700, Alex Guzman wrote:
-> On Tue, May 26, 2020 at 4:06 PM James Bottomley
-> <James.Bottomley@hansenpartnership.com> wrote:
-> > 
-> > On Tue, 2020-05-26 at 15:19 -0700, Alex Guzman wrote:
-> > [...]
-> > > When using your patch, I get a hang when trying to use
-> > > tpm2_getcap, and dmesg shows some info.
-> > 
-> > Are you sure it's all applied?  This
-> > 
-> > > [  570.913803]  tpm_tcg_write_bytes+0x2f/0x40
-> > > [  570.913805]  release_locality+0x49/0x220
-> > > [  570.913807]  tpm_relinquish_locality+0x1f/0x40
-> > > [  570.913808]  tpm_chip_stop+0x21/0x40
-> > > [  570.913810]  tpm_put_ops+0x9/0x30
-> > > [  570.913811]  tpm_common_write+0x179/0x190
-> > > [  570.913813]  vfs_write+0xb1/0x1a0
-> > 
-> > Implies an unmatched tpm_put_ops() in the async write path, as
-> > though this hunk:
-> > 
-> > > @@ -211,11 +202,19 @@ ssize_t tpm_common_write(struct file *file,
-> > > const char __user *buf,
-> > >         if (file->f_flags & O_NONBLOCK) {
-> > >                 priv->command_enqueued = true;
-> > >                 queue_work(tpm_dev_wq, &priv->async_work);
-> > > -               tpm_put_ops(priv->chip);
-> > >                 mutex_unlock(&priv->buffer_mutex);
-> > >                 return size;
-> > >         }
-> > 
-> > Is missing.  I actually booted the patch in my TPM based VM and it
-> > all seems to work OK when I execute tpm2_getcap (I verified it's
-> > using O_NONBLOCK) and tssgetcapability in sync mode.
-> > 
-> > James
-> > 
-> 
-> Oh, I did miss that bit. The patch had issues applying for some
-> reason and I missed the single-line removal when I was looking at the
-> diff.
+On Thu, 21 May 2020 23:29:36 PDT (-0700), seanga2@gmail.com wrote:
+> On 5/22/20 1:54 AM, Anup Patel wrote:
+>> On Fri, May 22, 2020 at 1:35 AM Sean Anderson <seanga2@gmail.com> wrote:
+>>>
+>>> On 5/21/20 9:45 AM, Anup Patel wrote:
+>>>> +Required properties:
+>>>> +- compatible : "sifive,clint-1.0.0" and a string identifying the actual
+>>>> +  detailed implementation in case that specific bugs need to be worked around.
+>>>
+>>> Should the "riscv,clint0" compatible string be documented here? This
+>> 
+>> Yes, I forgot to add this compatible string. I will add in v2.
+>> 
+>>> peripheral is not really specific to sifive, as it is present in most
+>>> rocket-chip cores.
+>> 
+>> I agree that CLINT is present in a lot of non-SiFive RISC-V SOCs and
+>> FPGAs but this IP is only documented as part of SiFive FU540 SOC.
+>> (Refer, https://static.dev.sifive.com/FU540-C000-v1.0.pdf)
+>> 
+>> The RISC-V foundation should host the CLINT spec independently
+>> under https://github.com/riscv and make CLINT spec totally open.
+>> 
+>> For now, I have documented it just like PLIC DT bindings found at:
+>> Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
+>
+> The PLIC seems to have its own RISC-V-sponsored documentation [1] which
+> was split off from the older privileged specs. By your logic above,
+> should it be renamed to riscv,plic0.txt (with a corresponding change in
+> the documented compatible strings)?
+>
+> [1] https://github.com/riscv/riscv-plic-spec
 
-Sorry, that's likely my fault: I did it on top of my current TPM tree.
-I'll prepare a version against the vanilla kernel with a real
-changelog.
+Let's propose tagging that PLIC spec as v1.0.0 in the platform spec group, but
+I don't see a reason why that wouldn't be viable.  Assuming that's all OK, we
+can start calling this a RISC-V PLIC (in addition to a SiFive PLIC, as they'll
+be compatible).
 
-> I gave it a spin on my machine again. getcap seems to work correctly
-> with and without having the async config flag set for tpm2-tss. The
-> pkcs11 plugin seems to work correctly again too. :)
+>> 
+>> If RISC-V maintainers agree then I will document it as "RISC-V CLINT".
+>> 
+>> @Palmer ?? @Paul ??
 
-Great, thanks!  I'll add your tested-by to the above.
+The CLINT is a SiFive spec.  It has open source RTL so it's been implemented in
+other designs, but it's not a RISC-V spec.  The CLIC, which is a superset of
+the CLINT, is a RISC-V spec.  IIRC it's not finished yet (it's the fast
+interrupts task group), but presumably we should have a "riscv,clic-2.0.0" (or
+whatever it ends up being called) compat string to go along with the
+specification.
 
-James
-
+>> Regards,
+>> Anup
+>> 
+>
+> --Sean
