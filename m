@@ -2,131 +2,111 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD46520657
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B69207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbgE0MRb (ORCPT
+        id S1728501AbgE0MU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:17:31 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:5558 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727798AbgE0MR2 (ORCPT
+        Wed, 27 May 2020 08:20:28 -0400
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:52008 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726785AbgE0MU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:17:28 -0400
-X-IronPort-AV: E=Sophos;i="5.73,441,1583161200"; 
-   d="scan'208";a="47942591"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 27 May 2020 21:17:27 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 5B61142BA9F4;
-        Wed, 27 May 2020 21:17:26 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v5 2/3] media: rcar-vin: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
-Date:   Wed, 27 May 2020 13:16:49 +0100
-Message-Id: <1590581810-19317-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 27 May 2020 08:20:26 -0400
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 27 May 2020 17:49:42 +0530
+Received: from sartgarg-linux.qualcomm.com ([10.206.24.245])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 27 May 2020 17:49:29 +0530
+Received: by sartgarg-linux.qualcomm.com (Postfix, from userid 2339771)
+        id 215AC17B2; Wed, 27 May 2020 17:49:28 +0530 (IST)
+From:   Sarthak Garg <sartgarg@codeaurora.org>
+To:     stable@vger.kernel.org
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        vbadigan@codeaurora.org, stummala@codeaurora.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [4.19.124 V1] mmc: core: Fix recursive locking issue in CQE recovery path
+Date:   Wed, 27 May 2020 17:49:02 +0530
+Message-Id: <1590581942-24283-1-git-send-email-sartgarg@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590581810-19317-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1590581810-19317-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format in rcar-vin by setting
-format type to RAW8 in VNMC register and appropriately setting the bpp
-and bytesperline to enable V4L2_PIX_FMT_SRGGB8.
+[ Upstream commit 39a22f73744d5baee30b5f134ae2e30b668b66ed ]
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Consider the following stack trace
+
+-001|raw_spin_lock_irqsave
+-002|mmc_blk_cqe_complete_rq
+-003|__blk_mq_complete_request(inline)
+-003|blk_mq_complete_request(rq)
+-004|mmc_cqe_timed_out(inline)
+-004|mmc_mq_timed_out
+
+mmc_mq_timed_out acquires the queue_lock for the first
+time. The mmc_blk_cqe_complete_rq function also tries to acquire
+the same queue lock resulting in recursive locking where the task
+is spinning for the same lock which it has already acquired leading
+to watchdog bark.
+
+Fix this issue with the lock only for the required critical section.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 1e8e55b67030 ("mmc: block: Add CQE support")
+Suggested-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Sarthak Garg <sartgarg@codeaurora.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/1588868135-31783-1-git-send-email-vbadigan@codeaurora.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/media/platform/rcar-vin/rcar-dma.c  | 15 ++++++++++++++-
- drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ drivers/mmc/core/queue.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-index 2b26204910fd..a5dbb90c5210 100644
---- a/drivers/media/platform/rcar-vin/rcar-dma.c
-+++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-@@ -85,6 +85,7 @@
- #define VNMC_INF_YUV8_BT601	(1 << 16)
- #define VNMC_INF_YUV10_BT656	(2 << 16)
- #define VNMC_INF_YUV10_BT601	(3 << 16)
-+#define VNMC_INF_RAW8		(4 << 16)
- #define VNMC_INF_YUV16		(5 << 16)
- #define VNMC_INF_RGB888		(6 << 16)
- #define VNMC_VUP		(1 << 10)
-@@ -587,13 +588,19 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
- 	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
- 	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index 03f3d9c..2a78816 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -108,7 +108,7 @@ static enum blk_eh_timer_return mmc_cqe_timed_out(struct request *req)
+ 	case MMC_ISSUE_DCMD:
+ 		if (host->cqe_ops->cqe_timeout(host, mrq, &recovery_needed)) {
+ 			if (recovery_needed)
+-				__mmc_cqe_recovery_notifier(mq);
++				mmc_cqe_recovery_notifier(mrq);
+ 			return BLK_EH_RESET_TIMER;
+ 		}
+ 		/* The request has gone already */
+@@ -125,18 +125,13 @@ static enum blk_eh_timer_return mmc_mq_timed_out(struct request *req,
+ 	struct request_queue *q = req->q;
+ 	struct mmc_queue *mq = q->queuedata;
+ 	unsigned long flags;
+-	int ret;
++	bool ignore_tout;
  
+ 	spin_lock_irqsave(q->queue_lock, flags);
 -
- 	/* TODO: Add support for the UDS scaler. */
- 	if (vin->info->model != RCAR_GEN3)
- 		rvin_crop_scale_comp_gen2(vin);
+-	if (mq->recovery_needed || !mq->use_cqe)
+-		ret = BLK_EH_RESET_TIMER;
+-	else
+-		ret = mmc_cqe_timed_out(req);
+-
++	ignore_tout = mq->recovery_needed || !mq->use_cqe;
+ 	spin_unlock_irqrestore(q->queue_lock, flags);
  
- 	fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
- 	stride = vin->format.bytesperline / fmt->bpp;
-+
-+	/* For RAW8 format bpp is 1, but the hardware process RAW8
-+	 * format in 2 pixel unit hence configure VNIS_REG as stride / 2.
-+	 */
-+	if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
-+		stride /= 2;
-+
- 	rvin_write(vin, stride, VNIS_REG);
+-	return ret;
++	return ignore_tout ? BLK_EH_RESET_TIMER : mmc_cqe_timed_out(req);
  }
  
-@@ -676,6 +683,9 @@ static int rvin_setup(struct rvin_dev *vin)
- 
- 		input_is_yuv = true;
- 		break;
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+		vnmc |= VNMC_INF_RAW8;
-+		break;
- 	default:
- 		break;
- 	}
-@@ -737,6 +747,9 @@ static int rvin_setup(struct rvin_dev *vin)
- 	case V4L2_PIX_FMT_ABGR32:
- 		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
- 		break;
-+	case V4L2_PIX_FMT_SRGGB8:
-+		dmr = 0;
-+		break;
- 	default:
- 		vin_err(vin, "Invalid pixelformat (0x%x)\n",
- 			vin->format.pixelformat);
-diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-index d3b6a992b4a2..0e066bba747e 100644
---- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-+++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-@@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
- 		.fourcc			= V4L2_PIX_FMT_ABGR32,
- 		.bpp			= 4,
- 	},
-+	{
-+		.fourcc			= V4L2_PIX_FMT_SRGGB8,
-+		.bpp			= 1,
-+	},
- };
- 
- const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
+ static void mmc_mq_recovery_handler(struct work_struct *work)
 -- 
-2.17.1
+2.7.4
 
