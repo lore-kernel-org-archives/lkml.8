@@ -2,126 +2,80 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F6DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90902C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8EC82073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669292073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:31:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590564684;
+	bh=DHSJQq9ORTu72F3sjMypyGwq23tyM+Vnjd1t2ZURiFA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wt4IJHK5X6ilWfxwKVIQ6w3rBWncgYluxLh7aBEu7h8KZ6HCoil+jFvzUzYHyYuta
+	 LpCmtcx7RZzMf/AxYs5kTOKsuEfv1UTCGM4EZpk3xwPMoQy3EQ07dl6NtxfOXiKpa4
+	 hIW58WzlVqbTuZ92HPZ+uF9RS+xy+NsEMNl25rj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgE0HbV (ORCPT
+        id S1729315AbgE0HbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:31:21 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:43157 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728888AbgE0HbS (ORCPT
+        Wed, 27 May 2020 03:31:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42096 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729304AbgE0HbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:31:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TznDKwe_1590564675;
-Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TznDKwe_1590564675)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 27 May 2020 15:31:16 +0800
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 3/5] x86/entry: directly switch to kernel stack when .Lerror_bad_iret
-Date:   Wed, 27 May 2020 07:31:05 +0000
-Message-Id: <20200527073107.2127-4-laijs@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200527073107.2127-1-laijs@linux.alibaba.com>
-References: <20200527073107.2127-1-laijs@linux.alibaba.com>
+        Wed, 27 May 2020 03:31:19 -0400
+Received: by mail-lf1-f65.google.com with SMTP id x27so13848070lfg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:31:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NVPFO5jTSXVyfieNIZ6aF1nejaxIKxaWPNihWiOu9rQ=;
+        b=eNpK3K2/QICeoKYaVGngdK+Y0DvPJeCmiZTZfHKkims0+V4SqBnaIdwRZNgPL1bahm
+         nyKkOtoGpYDPuLU5IfGZ8YEl0B4qmRwtcDWjKkt/YbqX4eAd6o6uvbs3Mo1tvKHnfIC1
+         E/432SqNxxrhed9iFso0P2vFL50cqhkuH5KkdgqoTfmwgplKtjunx+EGuN3osvAA8IXo
+         MQiFhECaZsCXJaDhgZ8YF0W6CP4VE7CTMDyH1Hi51SyIUrbFPMyscyjMiUQ3zJfdbL+D
+         krKCZquDiWR28yiCLqwtHQL7iQtnmTjCmLJN8ubVrzp708ZwkFdXrwUfutsPCL0UWDMt
+         of9A==
+X-Gm-Message-State: AOAM5313Wd+iYdJKv7ZQ0l7vY/uFLRHw1DkFnW7YVpp4rSZ213c4rj4R
+        4qFhUFZNkbOPg5zkaaqtdIQ=
+X-Google-Smtp-Source: ABdhPJxAskCPTK99I5IrpLL4nKStzonimfUsm+hzeWWsWEGoa6FKOqqlQqt9KCTaiViqTEcx5bxJFQ==
+X-Received: by 2002:a05:6512:3208:: with SMTP id d8mr2455203lfe.38.1590564677228;
+        Wed, 27 May 2020 00:31:17 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id a7sm617349lfm.4.2020.05.27.00.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 00:31:16 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jdqWr-0003cc-5A; Wed, 27 May 2020 09:31:09 +0200
+Date:   Wed, 27 May 2020 09:31:09 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Daniele Palmas <dnlplm@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] USB: serial: option: add Telit LE910C1-EUX
+ compositions
+Message-ID: <20200527073109.GF5276@localhost>
+References: <20200525211106.27338-1-dnlplm@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200525211106.27338-1-dnlplm@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Directly copy pt_regs to kernel stack when .Lerror_bad_iret.
-Directly switch to kernel stack when .Lerror_bad_iret.
+On Mon, May 25, 2020 at 11:11:06PM +0200, Daniele Palmas wrote:
+> Add Telit LE910C1-EUX compositions:
+> 
+> 0x1031: tty, tty, tty, rmnet
+> 0x1033: tty, tty, tty, ecm
+> Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
 
-We can see that entry_64.S do the following things back to back
-when .Lerror_bad_iret:
-	call fixup_bad_iret(), switch to sp0 stack with pt_regs copied
-	call sync_regs(), switch to kernel stack with pt_regs copied
+Thanks, Daniele. Now applied.
 
-So we can do the all things together in fixup_bad_iret().
-
-After this patch, fixup_bad_iret() is restored to the behavior before
-7f2590a110b8("x86/entry/64: Use a per-CPU trampoline stack for IDT entries")
-
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
----
- arch/x86/entry/entry_64.S | 13 ++-----------
- arch/x86/kernel/traps.c   |  9 ++++-----
- 2 files changed, 6 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index e8817ae31390..c5db048e5bed 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1329,16 +1329,6 @@ SYM_CODE_START_LOCAL(error_entry)
- 	ENCODE_FRAME_POINTER 8
- 	ret
- 
--.Lerror_entry_from_usermode_after_swapgs:
--	/* Put us onto the real thread stack. */
--	popq	%r12				/* save return addr in %12 */
--	movq	%rsp, %rdi			/* arg0 = pt_regs pointer */
--	call	sync_regs
--	movq	%rax, %rsp			/* switch stack */
--	ENCODE_FRAME_POINTER
--	pushq	%r12
--	ret
--
- .Lerror_entry_done_lfence:
- 	FENCE_SWAPGS_KERNEL_ENTRY
- .Lerror_entry_done:
-@@ -1392,7 +1382,8 @@ SYM_CODE_START_LOCAL(error_entry)
- 	mov	%rsp, %rdi
- 	call	fixup_bad_iret
- 	mov	%rax, %rsp
--	jmp	.Lerror_entry_from_usermode_after_swapgs
-+	ENCODE_FRAME_POINTER 8
-+	ret
- SYM_CODE_END(error_entry)
- 
- SYM_CODE_START_LOCAL(error_exit)
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 9e5d81cb94ba..3bef95934644 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -666,13 +666,12 @@ struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s)
- 	/*
- 	 * This is called from entry_64.S early in handling a fault
- 	 * caused by a bad iret to user mode.  To handle the fault
--	 * correctly, we want to move our stack frame to where it would
--	 * be had we entered directly on the entry stack (rather than
--	 * just below the IRET frame) and we want to pretend that the
--	 * exception came from the IRET target.
-+	 * correctly, we want to move our stack frame to kernel stack
-+	 * (rather than just below the IRET frame) and we want to
-+	 * pretend that the exception came from the IRET target.
- 	 */
- 	struct bad_iret_stack tmp, *new_stack =
--		(struct bad_iret_stack *)__this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
-+		(struct bad_iret_stack *)__this_cpu_read(cpu_current_top_of_stack) - 1;
- 
- 	/* Copy the IRET target to the temporary storage. */
- 	memcpy(&tmp.regs.ip, (void *)s->regs.sp, 5*8);
--- 
-2.20.1
-
+Johan
