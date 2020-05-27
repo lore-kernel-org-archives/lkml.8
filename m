@@ -4,95 +4,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E07C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A3920723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C912078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388520AbgE0Nk2 (ORCPT
+        id S2388526AbgE0Nk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:40:28 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:53945 "EHLO
+        Wed, 27 May 2020 09:40:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:54367 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbgE0Nk1 (ORCPT
+        with ESMTP id S2387627AbgE0Nk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:40:27 -0400
+        Wed, 27 May 2020 09:40:56 -0400
 Received: from localhost.localdomain ([149.172.98.151]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MRTEr-1jPrFs1MOr-00NQt9; Wed, 27 May 2020 15:40:17 +0200
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MxHLs-1ipQ2O23r6-00xZeZ; Wed, 27 May 2020 15:40:44 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] arm64: disable -fsanitize=shadow-call-stack for big-endian
-Date:   Wed, 27 May 2020 15:39:46 +0200
-Message-Id: <20200527134016.753354-1-arnd@arndb.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: versatile: undo some dependency changes
+Date:   Wed, 27 May 2020 15:40:33 +0200
+Message-Id: <20200527134043.807045-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:WMyBDjaVpnuIlG/nKy3Lfv0f53mC2eMeZk2hD1L4n7nGNgyw6xg
- b3nnLX7RQgVMDLaEP8jeYPeAoZu/zF0+z/vVS6FlpSZ1SIFpVVgeTGlO1P3Ep0Lb6nJG0Zt
- X7hH8s/zBBJhCqlR2UHeoEwOqmPu4huhF9KMCDNPoiOurHivHXkoO0/SR60IwHGXsXj/yAF
- b2s7GbapOF9ubsY1p+h1w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F2IKGpPrHuM=:tVtK56yFtrrepWDvUzbOpT
- 3us5e9MR1LU4mGSnKMn9Oify9OSZr+z1ryQsomr5xmHuXPTcDxkeL9FtQ6IIzaZK7M4TiGSfm
- SrfknaWXsLAXdIE0avmvLV0juYDzTAcvZtb9k/8fuDk5WLk1Xzj03wmeX+2+GlE+zBu5Uxtly
- 3R9vMAQ+KN6313tG9I0lsEvMPCLQoVMlkpm95g50p9vQzl9dxAcXxemJgg5SGc+kTmITf88fw
- TzBvY2rXiGKyibM7Dok5SP7iaxP+NvipLQt1Ykwnqib722x77OfOGSRsjyyAi05G3a0HhkfLW
- /qlIZ3cfZ8HwyXCftttGaI+tPf4INmvSHFJhcz3sp8T8zFr1DfksvLUXYM0yW2t/kSyUXAY6r
- jqg7lgnshy4rjtPaSbqwns/ofBBDNm2riCNB1dm6j/QFwHquE7UuMkpmdNxd3Rhw355uhMZyG
- 9WQzvmbaPYDkXMulDC/pFVUnnmk6JIMlNo7Lb4axzkRdQQrTE+TY5VKeSJqchQZ9k16DIJpfA
- DdpLlaK3d2hiHZaGGzVGDVaOXEUcC76oIrpg0ytLJaoNLJeVdcqjcrWlm0URQKYw5ffGf8cAc
- 554DdULyt0uYgJix3t8iQctDwx76HodgMDd3y8TrLOfz6t5g9HUTBgCA/CHd72mCM9OMNU/Sn
- vh5Z1871+ipaobAjqACcsmCDRluu13MqfojKB79O1jaGP+0U5ndDp6R6JRAaiJnKMbYdxmimb
- BmZNfm1gtJUlSBep2bkWn5rM/hFM9OhO5b2MYMJxNJwdy0tcIsr+uEsM+4EX8ZBMrkNJ/14MP
- TsHpy/trLFTR2EQPAPCTZ2pxYPaGA3bxNgm8GAncGv7aa37U1Y=
+X-Provags-ID: V03:K1:oX8d96/3agk6HQYMnHtVprdFalOQlNymeCToneAXooVriuWLRR+
+ c/h+AwhIj6fC9vUzuz5Aa2eLCM3DNnwR+1QROcwAEUOdv4Lulkj+kNPH+g7+VS00QAnl+gr
+ c/dD0CTtn4iEhMxVhrytOTGK3BdJav61Y5VWmm06MbbfbRJF+wr0RM02TJCmEuNKu6GocqM
+ fVPA8dCdLvlOl5QyMJoIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8aMReIkVdqU=:yhFX2lu64OasDPFeHhky3H
+ IC/WFCqnWvNVHYf5ttpwJsFmp8RmKdFCdbWyOd18oY93TMgMHBSi8BG4PNcmAcoOCzQbTAjVe
+ 2n0FO4gp/b8z0cbzciNh1NhDV0DzamUtNPfAS8PAhkfrmKZw8elLwnUZMZOT7mBFEkOgGvNzZ
+ ThhEgJyTv2JKI3sgBiQKIbZb8GRfvZJ3uGyje0aDEnZvabf/qwD8lcTjl9Ke1tA3R3Uli1pIv
+ YoMV4J4lZrUpvBNy8Hszb8VvYzzsmcfUTxRdAdpHfd6a6WiVtbzPYQCTCu0UYPfSgoXCDkm6k
+ Bl9xZ1P2tqJTpSTlI7fKnvmoU/cyRIE/E3ra0bIx1xIbMaptle12QYTc16RCVzmhe62aBMJ7J
+ Ml2ZBk2UrFyq8fbq0BoH6b/xnigNotBVskzXNTlpg+GA5iAgAVBC468xVXlMixGq51OsYx4ur
+ ikKJLzdpwjh+l5Ci1t7KLGorX51y2xm09nP3NGro/PAOMBUOC8JaaVCUxTy5QkjoWIveWwXfv
+ f4Vh12dELsS0OTHvouycvZJ7B8ti+36fqacZ///KhnekwVAtgGhn4/3MJCplRbvNIPV9c8jfG
+ pAmlZjnk/57dsb0vHyc7IO4OW+Lm6F8ZoFYg6K+W66eZNwPy269MjncCjaCFa2B7xl+/Ys+ug
+ +mW0eawTP/R9H0IE7cOoAfPolwNq2bevSAywLpxhuuU/cgovHRbYKgMBRInSn2LkLb7YkIoPU
+ L7z0bsXHv515uZ0R8FsS5miYtqW8nxOfNOvXXjBtw9udx3Qz5UiemItenrFyhRpLkCQzgja/D
+ vToTOthP83fSoshZtvzcCxjjx3RTDLF3cS67SJ6JCc5FYsPm2E=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang-11 and earlier do not support -fsanitize=shadow-call-stack
-in combination with -mbig-endian, but the Kconfig check does not
-pass the endianess flag, so building a big-endian kernel with
-this fails at build time:
+SP810 and ICST are selected by a couple of platforms, most but
+not all in the versatile family:
 
-clang: error: unsupported option '-fsanitize=shadow-call-stack' for target 'aarch64_be-unknown-linux'
+WARNING: unmet direct dependencies detected for CLK_SP810
+  Depends on [n]: COMMON_CLK [=y] && COMMON_CLK_VERSATILE [=n]
+  Selected by [y]:
+  - ARCH_REALVIEW [=y] && (ARCH_MULTI_V5 [=n] || ARCH_MULTI_V6 [=n] ||
+ARCH_MULTI_V7 [=y])
 
-Change the Kconfig check to let Kconfig figure this out earlier
-and prevent the broken configuration. I assume this is a bug
-in clang that needs to be fixed, but we also have to work
-around existing releases.
+WARNING: unmet direct dependencies detected for ICST
+  Depends on [n]: COMMON_CLK [=y] && COMMON_CLK_VERSATILE [=n]
+  Selected by [y]:
+  - ARCH_REALVIEW [=y] && (ARCH_MULTI_V5 [=n] || ARCH_MULTI_V6 [=n] || ARCH_MULTI_V7 [=y])
+  - ARCH_VEXPRESS [=y] && ARCH_MULTI_V7 [=y]
+  - ARCH_ZYNQ [=y] && ARCH_MULTI_V7 [=y]
 
-Fixes: 5287569a790d ("arm64: Implement Shadow Call Stack")
-Link: https://bugs.llvm.org/show_bug.cgi?id=46076
+Change back the Kconfig logic to allow these to be selected
+without the main option.
+
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm64/Kconfig | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/clk/versatile/Kconfig | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index a82441d6dc36..692e1575a6c8 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1031,7 +1031,9 @@ config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
+index a0ed412e8396..a557886d813e 100644
+--- a/drivers/clk/versatile/Kconfig
++++ b/drivers/clk/versatile/Kconfig
+@@ -7,6 +7,18 @@ menuconfig COMMON_CLK_VERSATILE
  
- # Supported by clang >= 7.0
- config CC_HAVE_SHADOW_CALL_STACK
--	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-+	bool
-+	default $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18 -mbig-endian) if CPU_BIG_ENDIAN
-+	default $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18 -mlittle-endian) if !CPU_BIG_ENDIAN
+ if COMMON_CLK_VERSATILE
  
- config SECCOMP
- 	bool "Enable seccomp to safely compute untrusted bytecode"
++config CLK_VEXPRESS_OSC
++	tristate "Clock driver for Versatile Express OSC clock generators"
++	depends on VEXPRESS_CONFIG
++	select REGMAP_MMIO
++	default y if ARCH_VEXPRESS
++	---help---
++	  Simple regmap-based driver driving clock generators on Versatile
++	  Express platforms hidden behind its configuration infrastructure,
++	  commonly known as OSCs.
++
++endif
++
+ config ICST
+ 	bool "Clock driver for ARM Reference designs ICST"
+ 	select REGMAP_MMIO
+@@ -22,14 +34,4 @@ config CLK_SP810
+ 	  Supports clock muxing (REFCLK/TIMCLK to TIMERCLKEN0-3) capabilities
+ 	  of the ARM SP810 System Controller cell.
+ 
+-config CLK_VEXPRESS_OSC
+-	tristate "Clock driver for Versatile Express OSC clock generators"
+-	depends on VEXPRESS_CONFIG
+-	select REGMAP_MMIO
+-	default y if ARCH_VEXPRESS
+-	---help---
+-	  Simple regmap-based driver driving clock generators on Versatile
+-	  Express platforms hidden behind its configuration infrastructure,
+-	  commonly known as OSCs.
+ 
+-endif
 -- 
 2.26.2
 
