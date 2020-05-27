@@ -2,106 +2,82 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B62C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA9E2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ALBgDOjC"
+	by mail.kernel.org (Postfix) with ESMTP id DDFF120899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590589924;
+	bh=anqSJZFvrQGArvjH/LKrfSg/PVPsQ+kEocrkm3XnP7A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gOYwQ0PDiFVMv+Z8nZfNr2UDFC6XnRXTzwnEJEP1vwGh/sLEIfL+tFbgY4VhC2EAS
+	 uS1CDbX6lv+JUZnWr4AkTBwu5iJhvl5YXZDMHuMkyoeziCQsFCoEtdoXkK833GnCOq
+	 mwcNaX4vvlTOZQXQEQmeMrpdwztnpF7WN4dXXekk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389267AbgE0Oa4 (ORCPT
+        id S2389277AbgE0OcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:30:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389033AbgE0Oaz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:30:55 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325EDC05BD1E;
-        Wed, 27 May 2020 07:30:55 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0b870090dfd18f578962de.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:8700:90df:d18f:5789:62de])
+        Wed, 27 May 2020 10:32:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387732AbgE0OcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:32:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 77CFD1EC0318;
-        Wed, 27 May 2020 16:30:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590589852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=2LqA16cllcM9c+jwERRurW+RQE4oqz+AcFxnY1Ja6Rs=;
-        b=ALBgDOjCCDNNPxAuvrg15Iz6Xx0Qb1XkjF/HdK4hSLHLhTzg2V9sr4JF2PRPXfpLxANBCJ
-        9AajydRV7HDSivfoFQ9lSu/OKXe+Kth1J+xvSr78tXIBWUlieckIcX8bSkv4RI5V0BZxfv
-        YKcTlsPdylVRZL5SQWVkfPHfRHBn8sk=
-Date:   Wed, 27 May 2020 16:30:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 2/2] x86: Hide the archdata.iommu field behind generic
- IOMMU_API
-Message-ID: <20200527143046.GB1721@zn.tnic>
-References: <20200518120855.27822-1-krzk@kernel.org>
- <20200518120855.27822-2-krzk@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 293A92084C;
+        Wed, 27 May 2020 14:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590589922;
+        bh=anqSJZFvrQGArvjH/LKrfSg/PVPsQ+kEocrkm3XnP7A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2uhhEctTmIOv1tn9ojzu4Jxm2cef2z+VtSomvhui9hgNuCc0HgSim1K4aeboYPse/
+         ml2Fk5PR+BG+nE+St+/Kkyt28dQfs8MPWOwDvrspEQQEtE2tHHLQw+/GxvE2Xia2Hm
+         y+G17BTdASL8uyjhVF+ySTAO6CKxUIV3gujo5S14=
+Date:   Wed, 27 May 2020 16:32:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Russell Currey <ruscur@russell.cc>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 49/81] powerpc: Remove STRICT_KERNEL_RWX
+ incompatibility with RELOCATABLE
+Message-ID: <20200527143200.GA497846@kroah.com>
+References: <20200526183923.108515292@linuxfoundation.org>
+ <20200526183932.664564063@linuxfoundation.org>
+ <20200527132831.GA11424@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200518120855.27822-2-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200527132831.GA11424@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 18, 2020 at 02:08:55PM +0200, Krzysztof Kozlowski wrote:
-> There is a generic, kernel wide configuration symbol for enabling the
-> IOMMU specific bits: CONFIG_IOMMU_API.  Implementations (including
-> INTEL_IOMMU and AMD_IOMMU driver) select it so use it here as well.
+On Wed, May 27, 2020 at 03:28:31PM +0200, Pavel Machek wrote:
+> On Tue 2020-05-26 20:53:24, Greg Kroah-Hartman wrote:
+> > From: Russell Currey <ruscur@russell.cc>
+> > 
+> > [ Upstream commit c55d7b5e64265fdca45c85b639013e770bde2d0e ]
+> > 
+> > I have tested this with the Radix MMU and everything seems to work, and
+> > the previous patch for Hash seems to fix everything too.
+> > STRICT_KERNEL_RWX should still be disabled by default for now.
+> > 
+> > Please test STRICT_KERNEL_RWX + RELOCATABLE!
 > 
-> This makes the conditional archdata.iommu field consistent with other
-> platforms and also fixes any compile test builds of other IOMMU drivers,
-> when INTEL_IOMMU or AMD_IOMMU are not selected).
-> 
-> For the case when INTEL_IOMMU/AMD_IOMMU and COMPILE_TEST are not
-> selected, this should create functionally equivalent code/choice.  With
-> COMPILE_TEST this field could appear if other IOMMU drivers are chosen
-> but neither INTEL_IOMMU nor AMD_IOMMU are not.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/x86/include/asm/device.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/device.h b/arch/x86/include/asm/device.h
-> index 7e31f7f1bb06..49bd6cf3eec9 100644
-> --- a/arch/x86/include/asm/device.h
-> +++ b/arch/x86/include/asm/device.h
-> @@ -3,7 +3,7 @@
->  #define _ASM_X86_DEVICE_H
->  
->  struct dev_archdata {
-> -#if defined(CONFIG_INTEL_IOMMU) || defined(CONFIG_AMD_IOMMU)
-> +#ifdef CONFIG_IOMMU_API
->  	void *iommu; /* hook for IOMMU specific extension */
->  #endif
->  };
+> I don't believe this is suitable for -stable. Yes, it is needed for
+> the next patch, but doing the merge is right solution this time.
 
-Acked-by: Borislav Petkov <bp@suse.de>
+Why?  It's always best to keep things as they are in Linus's tree if at
+all possible.
 
--- 
-Regards/Gruss,
-    Boris.
+thanks,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
