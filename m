@@ -2,95 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E82C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E03F4207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9ADC207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388401AbgE0Nfu (ORCPT
+        id S2388150AbgE0Ng5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:35:50 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:44793 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387664AbgE0Nft (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:35:49 -0400
-Received: from localhost.localdomain ([149.172.98.151]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MTfgb-1jS00D30If-00TzYS; Wed, 27 May 2020 15:35:44 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm/dpu: avoid open-coded 64-bit division
-Date:   Wed, 27 May 2020 15:35:38 +0200
-Message-Id: <20200527133543.599948-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:36:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:32006 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387581AbgE0Ng4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:36:56 -0400
+IronPort-SDR: KEhTh1JpNi/U/YkWUhqnIblRjtOWypbT9abLQdWEyMKIpaheV+A4jZbJPajTGc/jKEBPrBC7r3
+ Rjl4wu0CN4Yw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:36:55 -0700
+IronPort-SDR: znFbgevaueWvVVuU1HEBaUyl6TZuapozyshN0ew9BhJ1e9rR1ruTKeC7m5B6UD4C+CgDk9UK78
+ +O5YpSRlwq/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="255468688"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 06:36:53 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdwEq-009Eh5-3x; Wed, 27 May 2020 16:36:56 +0300
+Date:   Wed, 27 May 2020 16:36:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     devicetree-compiler@vger.kernel.org,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] check: Add 10bit/slave i2c reg flags support
+Message-ID: <20200527133656.GV1634618@smile.fi.intel.com>
+References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mqnHLGtnwdSmTna9APPKP+9uliCpSII5zeeZjnDuho4W4vNK7nQ
- oLmnxdtfBfNu4AvFeP/z8xXgGIwR6KGBpoxrfH9m8s/WCmY4n5tTouYLWl4LDTXe3AeRR1F
- FSxKUCF69JY5QCbpT9sSuS2KFD5xH3HBR7kU2GuMW2Zmq9zzBgjaAa8nDJyFiCr9vzI2uhm
- hkld/BVyqXvcafGjQ9Uyw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:owMpeyhSvWY=:MMGYpVppPn0/vP5ID8hWFH
- yNjdAo4s0kI2qvRUluIAhC2kUJ6/LjFJ1AJRQrTevVbHs+c9REC7oo9kxbztUSKj3vK4XsPz0
- 5m6hhDzJjqHLdUjTPYVejmItjNaIjkrmNV+Kj5vlt9kifmV4/NmommriN/hPfbBHaOE++BWXF
- +I/ItYudsPEolW4zG7u6+fXIHmP0+c2T3AUwoxL47qk/g4fxCa3Z8LX4jDFUM1JTGfcXXSnWs
- ExasdGqWewPUPlI7eRl/epf9bjxt3j8sm+86lmSPQPFWsgJdNOa/CfkGyX2zXRMFOfSxBO0OQ
- JhLXoEwleGQM+bM18eu5XCws7DZ1AsFeOQd1Ipcsj1vWJG88NJmZTMV7q7IoDqg9oIuonT8nz
- dlQbZhxJxvai5Lnq74oxNGxvUQxLFn4O3TG1rFQU/3hE12FqQAbL49/6RNRENRlIHL2nJ96Nj
- a/5wi+bFf8qyAMOQa4/mmIv51egtF6sQQ9MGtLLKgusUiiwbZRh0lCe9pI0I5S/ZlkfjPzqU2
- J/lpqAzeF79pCNI/RkctvcUjj5blYw16xl1FEEy7fP3WF86nKCCiMGonbfCq4597tzz2jXLQR
- AYlevKQvHYiEnl3JJ1ttHoGw6zRqvwAWrNZz22Yi8+9izNnprjB9uNKIjE/cHSyjgGnKG98fx
- WzLdR+WIfQbaJ5121FC2Hst+8vkhfhv8j/92BPvhNBk4zODWIy8DPgoEUYGJABCS1n+/PcaD6
- WTAnhQKnprg1P2zAspok7PLv6T2OeLIwn41kGTAUmYV4+WTVrg5Yw/5yp3dI4gigMsR5vpztP
- Olr/1Sq+iqBX57qtbUOyfuD8SwG6bd2oRTKUGV3MNzlSqkXXJU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-64-bit integer division is normally not allowed in the kernel
-because of the large overhead on 32-bit machines:
+On Wed, May 27, 2020 at 03:25:25PM +0300, Serge Semin wrote:
+> Recently the I2C-controllers slave interface support was added to the
+> kernel I2C subsystem. In this case Linux can be used as, for example,
+> a I2C EEPROM machine. See [1] for details. Other than instantiating
+> the EEPROM-slave device from user-space there is a way to declare the
+> device in dts. In this case firstly the I2C bus controller must support
+> the slave interface. Secondly I2C-slave sub-node of that controller
+> must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
+> declared in [2]). That flag is declared as (1 << 30), which when set
+> makes dtc unhappy about too big address set for a I2C-slave:
+> 
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> 
+> Similar problem would have happened if we had set the 10-bit address
+> flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+> 
+> In order to fix the problem we suggest to alter the I2C-bus reg-check
+> algorithm, so one would be aware of the upper bits set. Normally if no
+> flag specified, the 7-bit address is expected in the "reg"-property.
+> If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
+> performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+> 
+> [1] kernel/Documentation/i2c/slave-interface.rst
+> [2] kernel/include/dt-bindings/i2c/i2c.h
 
-drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.o: in function `_dpu_core_perf_crtc_update_bus':
-dpu_core_perf.c:(.text+0x810): undefined reference to `__aeabi_uldivmod'
+...
 
-The function already contains a call to do_div(), so I assume this
-is never called in a performance critical context, and we can
-use div_u64 for the second one as well.
+> +		addr = reg & 0x3FFFFFFFU;
+> +		if ((reg & (1 << 31)) && addr > 0x3ff)
+>  			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+> -				  reg);
+> -
+> +				  addr);
+> +		else if (!(reg & (1 << 31)) && addr > 0x7f)
+> +			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
+> +				  addr);
 
-Fixes: 04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for display")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/interconnect.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+1 << 31 is UB.
 
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index 3a63d98613fc..8279fe9b2082 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -11,7 +11,7 @@
- #include <linux/types.h>
- 
- /* macros for converting to icc units */
--#define Bps_to_icc(x)	((x) / 1000)
-+#define Bps_to_icc(x)	div_u64((x), 1000)
- #define kBps_to_icc(x)	(x)
- #define MBps_to_icc(x)	((x) * 1000)
- #define GBps_to_icc(x)	((x) * 1000 * 1000)
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
