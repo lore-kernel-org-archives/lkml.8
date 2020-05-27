@@ -2,134 +2,142 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46115C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91BCC2100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590566989;
-	bh=75qOp4dQIOYfaLlRNroM43f7CQ5NQA6BK7Z1FNB3fWk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aeZLDoGAv8dq6GFLU3IZ1RaSE5Tk2vkPDROeDpTC3kGl1wuyFW/A3yEBVg4q/DCYd
-	 JtPG73NGGHYo4NBd7z029Gzzr7ySBJVpGqYTogAppQXlDJg8NWDkEDqOBEmblRDJ7z
-	 QMNwsqTscA/nETYzcF/45AbpGfrjLnMWB46PIrhA=
+	by mail.kernel.org (Postfix) with ESMTP id 16FE720FC3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S36TXPD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387663AbgE0IJt (ORCPT
+        id S1729392AbgE0ILW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729300AbgE0IJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:09:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CBFD20FC3;
-        Wed, 27 May 2020 08:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590566986;
-        bh=75qOp4dQIOYfaLlRNroM43f7CQ5NQA6BK7Z1FNB3fWk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q36g94b+zVXLZrH0uWcSYzYJlDbH8L9aPOmbwIyls5bsJVsKfl1HD2ek0r0oKABpg
-         xC6sAcqCDLSC6lplD/UDW94OZ7t1yR7Vh+T0+JCiBCnR1MyTR/5Dgm71WsDkCfFSH7
-         UU+p/B++1IEf5ly86njJAkEjs79l0v2dcIXHmwa0=
-Date:   Wed, 27 May 2020 10:09:44 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     nobuhiro1.iwamatsu@toshiba.co.jp
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        peterz@infradead.org, lvenanci@redhat.com,
-        torvalds@linux-foundation.org, efault@gmx.de, riel@redhat.com,
-        tglx@linutronix.de, lwang@redhat.com, mingo@kernel.org,
-        daniel.m.jordan@oracle.com, sashal@kernel.org
-Subject: Re: [PATCH 4.4 26/65] sched/fair, cpumask: Export for_each_cpu_wrap()
-Message-ID: <20200527080944.GB119903@kroah.com>
-References: <20200526183905.988782958@linuxfoundation.org>
- <20200526183915.976645661@linuxfoundation.org>
- <OSBPR01MB29836310986EC6E2E132A02F92B10@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+        Wed, 27 May 2020 04:11:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729300AbgE0ILV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:11:21 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98094C061A0F;
+        Wed, 27 May 2020 01:11:21 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q9so1183185pjm.2;
+        Wed, 27 May 2020 01:11:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HqOS3b0kz9buhGMAwpM1e//tKnAWm9QINLirTrl38pg=;
+        b=S36TXPD+KUZ9H8z+UDfCNsckNt2wGNaZtWoxpON/qzpyfONRP3RXBhjAv6r1vaD6VM
+         dZEpV09dFNbqdc1a0hwG6ffffnMqutBwx+7sFXtzlOlT3RGZ8+nabhTEpAE3DzpValbZ
+         SMLiJwVINacNSXmxnzvL/MItftqm4oEBkphZyOEZTVWqsZKoSh6EWfCEp6APirf+imvu
+         T23OdXZJWGzGjymlrSA6hzjKGNJ5W0sLoBjZjFaFbPJukBGESiorAy7MxkWchzXhudaO
+         HCNPCL3sVKvdyxYgUzeeVy8KTTW2NBvy6nC900yhwstIsArEcb+w2fuw71bS12fgJYu5
+         +Siw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HqOS3b0kz9buhGMAwpM1e//tKnAWm9QINLirTrl38pg=;
+        b=Z2Z8s0XKz5Cyj52iCZxeo7iWouYceqvCOEzyT/n2usN2sqixJzckW6znCBDURHEUES
+         eoeNrKCJUvZP2qVK/WLnZrMoMRkeTqGVS7beslChq0ZHEMYi8/1lLrj26aERNMLoQ5aN
+         6LzCIWxC0xfJOavCkwmrUmLrxTFCKxrFhQv9Gsi9X4HRwXq9i88OPd1Ockqg6UEQ6Kob
+         X3DagU4x3n6hXvPLpQ+pKMPD5xEuj/l8tlcfa5hMujAS0Y65waxKbM8lHEmKI+vormtG
+         iXGSlnPR/0E0QCIeFbmoAzCD1i+2Sug5D/lJCFRILskPHeg90R1VC2c/bn4w2ysQNJbH
+         2kjA==
+X-Gm-Message-State: AOAM531ehmpQ5TDjdQjVQKuOUNzkrH4w9dnyvq5iuyYbybnQIczP1mfm
+        IxGKXhM/OP6pEp7Ve94Iv58=
+X-Google-Smtp-Source: ABdhPJy19Y2TTdpBtx5Eq7lIRF3QDNKWjyEXuKGwJyCfDu3atCCpqNXEB6EYMRIiFklvx7jbAgyf5Q==
+X-Received: by 2002:a17:90a:7bcb:: with SMTP id d11mr3663001pjl.209.1590567080839;
+        Wed, 27 May 2020 01:11:20 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id v127sm1449496pfv.99.2020.05.27.01.11.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 01:11:20 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH net] netfilter: conntrack: Pass value of ctinfo to __nf_conntrack_update
+Date:   Wed, 27 May 2020 01:10:39 -0700
+Message-Id: <20200527081038.3506095-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB29836310986EC6E2E132A02F92B10@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 07:50:56AM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
-> Hi,
-> 
-> > -----Original Message-----
-> > From: stable-owner@vger.kernel.org [mailto:stable-owner@vger.kernel.org] On Behalf Of Greg Kroah-Hartman
-> > Sent: Wednesday, May 27, 2020 3:53 AM
-> > To: linux-kernel@vger.kernel.org
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; stable@vger.kernel.org; Peter Zijlstra (Intel)
-> > <peterz@infradead.org>; Lauro Ramos Venancio <lvenanci@redhat.com>; Linus Torvalds <torvalds@linux-foundation.org>;
-> > Mike Galbraith <efault@gmx.de>; Rik van Riel <riel@redhat.com>; Thomas Gleixner <tglx@linutronix.de>;
-> > lwang@redhat.com; Ingo Molnar <mingo@kernel.org>; Daniel Jordan <daniel.m.jordan@oracle.com>; Sasha Levin
-> > <sashal@kernel.org>
-> > Subject: [PATCH 4.4 26/65] sched/fair, cpumask: Export for_each_cpu_wrap()	
-> > 
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > 
-> > [ Upstream commit c743f0a5c50f2fcbc628526279cfa24f3dabe182 ]
-> > 
-> > More users for for_each_cpu_wrap() have appeared. Promote the construct
-> > to generic cpumask interface.
-> > 
-> > The implementation is slightly modified to reduce arguments.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Cc: Lauro Ramos Venancio <lvenanci@redhat.com>
-> > Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > Cc: Mike Galbraith <efault@gmx.de>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Rik van Riel <riel@redhat.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: lwang@redhat.com
-> > Link: http://lkml.kernel.org/r/20170414122005.o35me2h5nowqkxbv@hirez.programming.kicks-ass.net
-> > Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> > [dj: include only what's added to the cpumask interface, 4.4 doesn't
-> >      have them in the scheduler]
-> > Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  include/linux/cpumask.h | 17 +++++++++++++++++
-> >  lib/cpumask.c           | 32 ++++++++++++++++++++++++++++++++
-> >  2 files changed, 49 insertions(+)
-> 
-> This commit also needs the following commits:
-> 
-> commit d207af2eab3f8668b95ad02b21930481c42806fd
-> Author: Michael Kelley <mhkelley@outlook.com>
-> Date:   Wed Feb 14 02:54:03 2018 +0000
-> 
->     cpumask: Make for_each_cpu_wrap() available on UP as well
->     
->     for_each_cpu_wrap() was originally added in the #else half of a
->     large "#if NR_CPUS == 1" statement, but was omitted in the #if
->     half.  This patch adds the missing #if half to prevent compile
->     errors when NR_CPUS is 1.
->     
->     Reported-by: kbuild test robot <fengguang.wu@intel.com>
->     Signed-off-by: Michael Kelley <mhkelley@outlook.com>
->     Cc: Linus Torvalds <torvalds@linux-foundation.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Thomas Gleixner <tglx@linutronix.de>
->     Cc: kys@microsoft.com
->     Cc: martin.petersen@oracle.com
->     Cc: mikelley@microsoft.com
->     Fixes: c743f0a5c50f ("sched/fair, cpumask: Export for_each_cpu_wrap()")
->     Link: http://lkml.kernel.org/r/SN6PR1901MB2045F087F59450507D4FCC17CBF50@SN6PR1901MB2045.namprd19.prod.outlook.com
->     Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> 
-> Please apply this commit.
+Clang warns:
 
-Good catch, now queued up, thanks.
+net/netfilter/nf_conntrack_core.c:2068:21: warning: variable 'ctinfo' is
+uninitialized when used here [-Wuninitialized]
+        nf_ct_set(skb, ct, ctinfo);
+                           ^~~~~~
+net/netfilter/nf_conntrack_core.c:2024:2: note: variable 'ctinfo' is
+declared here
+        enum ip_conntrack_info ctinfo;
+        ^
+1 warning generated.
 
-greg k-h
+nf_conntrack_update was split up into nf_conntrack_update and
+__nf_conntrack_update, where the assignment of ctifno is in
+nf_conntrack_update but it is used in __nf_conntrack_update.
+
+Pass the value of ctinfo from nf_conntrack_update to
+__nf_conntrack_update so that uninitialized memory is not used
+and everything works properly.
+
+Fixes: ee04805ff54a ("netfilter: conntrack: make conntrack userspace helpers work again")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1039
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ net/netfilter/nf_conntrack_core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 08e0c19f6b39..e3b054a2f796 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -2017,11 +2017,11 @@ static void nf_conntrack_attach(struct sk_buff *nskb, const struct sk_buff *skb)
+ }
+ 
+ static int __nf_conntrack_update(struct net *net, struct sk_buff *skb,
+-				 struct nf_conn *ct)
++				 struct nf_conn *ct,
++				 enum ip_conntrack_info ctinfo)
+ {
+ 	struct nf_conntrack_tuple_hash *h;
+ 	struct nf_conntrack_tuple tuple;
+-	enum ip_conntrack_info ctinfo;
+ 	struct nf_nat_hook *nat_hook;
+ 	unsigned int status;
+ 	int dataoff;
+@@ -2146,7 +2146,7 @@ static int nf_conntrack_update(struct net *net, struct sk_buff *skb)
+ 		return 0;
+ 
+ 	if (!nf_ct_is_confirmed(ct)) {
+-		err = __nf_conntrack_update(net, skb, ct);
++		err = __nf_conntrack_update(net, skb, ct, ctinfo);
+ 		if (err < 0)
+ 			return err;
+ 	}
+
+base-commit: a4976a3ef844c510ae9120290b23e9f3f47d6bce
+-- 
+2.27.0.rc0
+
