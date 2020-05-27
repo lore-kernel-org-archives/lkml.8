@@ -2,83 +2,122 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5386320787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43782078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ma0FMBM6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ft1v+vt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388845AbgE0Nui (ORCPT
+        id S2388854AbgE0Nu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:50:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38320 "EHLO
+        Wed, 27 May 2020 09:50:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388516AbgE0Nuh (ORCPT
+        with ESMTP id S2388700AbgE0Nuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:50:37 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBFE4C08C5C1;
-        Wed, 27 May 2020 06:50:37 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id g25so19142139otp.13;
-        Wed, 27 May 2020 06:50:37 -0700 (PDT)
+        Wed, 27 May 2020 09:50:55 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 317B8C08C5C1;
+        Wed, 27 May 2020 06:50:55 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bg4so4850919plb.3;
+        Wed, 27 May 2020 06:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=c1yMGFc/Yll5Sz5MGXdvhG1FugIsGM9W+ytuc/q7G4Q=;
-        b=ma0FMBM6TOulssZLJOKChFLjqdDRS/WTu2agPcAhvqBzUtQ3cMhQakybz4wdiDwYVr
-         XvVV31eGWlqhGUZ0akT0oD28uzuZb4++ket+9Wu24g2pcLfKT/AU6tPC6IaFYYzo/wyN
-         d2sODLhOedCRfoLcuBPzMSfV2Khq0GpkeJaFdE0tAwSSSwfH8D9wQpHBC9YgvXTRcq8g
-         58WENqPRhCm1RoMPVNzR9+ooPgb/hXaaCm38lW+IIpmhD1Iv+9HrRSacHuktz9ZSOTHA
-         GPgvvHJm+8ZgWfdcjR/iRn+C97Xus5VS5nHzJiMXeqqYpY+kyuykqFA3U8pMCWW/HRNQ
-         FVEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=c1yMGFc/Yll5Sz5MGXdvhG1FugIsGM9W+ytuc/q7G4Q=;
-        b=K5nyRwey1DkpcStSJbq+GgrrIP5xZlv6/HW/Td2hcT3k+nTkVbERP+WfrToJo5QL5t
-         cGlMPtR18dBiTdihTgjSQvP9k0OJXGw1t4hGexUoZDlfmJdnQ3OILEMBehl6yjUNQZMR
-         Ucrb0pfZ6fYlpljf7J769JpmIMTUpIOnJgCKK5iSiOd8z8LeU96WZz5SZsEw5vjeWSeb
-         lEj4GzL/UAzXAqBG/4pECi9uFIPqDpPbwvRSS6otmcwdmQxMKcuwZAMN3DPpQm72DTd7
-         gBgTuhGJB/UdBnupjzKosZHUtHr2BPTmlnl6H9ek+/xxTRmNv6DiXOpshREx8lrzzY2i
-         qeTA==
-X-Gm-Message-State: AOAM530ij7kXDaJ14DY7RyF7MV5QXBSvsodqvomEoIVW2vt//uNcO6FJ
-        5gePeHK28Mztljax1C21/0hpJf7Q
-X-Google-Smtp-Source: ABdhPJyXfhc1ET4DwZfQZb1+KWAEECTnrOjE6+YNAs+r7ggG7n7CKsSqqBEx3Odtfn8LQ7TSio9TDA==
-X-Received: by 2002:a9d:23a6:: with SMTP id t35mr4652252otb.217.1590587437175;
-        Wed, 27 May 2020 06:50:37 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:85b5:c99:767e:c12? ([2601:282:803:7700:85b5:c99:767e:c12])
-        by smtp.googlemail.com with ESMTPSA id g10sm57046otn.34.2020.05.27.06.50.36
+        bh=W9C4Arorp+IzCYg0w1GehssUz0hytdbdzhvLXtXsQ3U=;
+        b=Ft1v+vt19DKyMlGpmPGYebBtKODGWts4U5i4a+4VGWnqjrQJ3WXSh9C3wr4qFXiNXS
+         4WOUwdiwwbPZYhwWYfhQd4HmZTsIR2NOG5FMlmKrpHybpOQmpVJ9PqM7cth5i7/1yYMo
+         D7W3rIqkWvAI4YajXFjY4Ze2aO2rfsJ4wnKjLizuwYYY5O+TI+VWY7HXrjizE/tIfGql
+         NiMHqhYCw6GUQ6mpQTx1Pof1Qux4cs2KCN+5t1JvQ67reCif5Y9Gubgg1nwvV7sfob01
+         BAOdGlz9i8P+muvchnllE1f0eKNXizevL2sMkTMdUXpf+MJajE4niR16+RDvufoDIluj
+         pCnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=W9C4Arorp+IzCYg0w1GehssUz0hytdbdzhvLXtXsQ3U=;
+        b=Rf2Wck70pQEUvMmTo2ab5XxObxMFjK2ClhHMIcIP028IvlRKV7ubM+v9Yv2GlD7lbQ
+         0pS+eXaWR13So/2MeCdXIFM+xV4yGsYN/NyUMfSSKuaxi1Cytu/mVs+qQFnJGB8uCrQP
+         ccd9F08YxJnRPZVzsdpHdX4C4mTDME87nQMEC5buW2PqK4htAr08SGylFpQTmlxyj2io
+         ldCw91g4nwgvHw6Ik9lbdFM1emjvuI791iLSUQG8NGAPI8373rHP70qlPx4annIk746g
+         oNaQZsuzH+Gq9Rextgr0QgfutoU9IlzVgDpXy8/7bgrZhTqMxZsqUwD32Uh26RbHa3DM
+         YbRQ==
+X-Gm-Message-State: AOAM532+97fmKf/N3MzjKG85F7BydPkwD5HxdaVlp7uzvkRK7XNSLLpR
+        CLOlhgIbLalL4XdTihW89vh36vMn
+X-Google-Smtp-Source: ABdhPJyqlPEcQi8v7mqyQ2zSSckOyos4LBevP3MBMlg+1CYAhCCvxxP0I0j/QHRKdUaaHhZC8M8+/g==
+X-Received: by 2002:a17:902:9f97:: with SMTP id g23mr6235349plq.30.1590587454449;
+        Wed, 27 May 2020 06:50:54 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u20sm2307097pfc.55.2020.05.27.06.50.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 06:50:36 -0700 (PDT)
-Subject: Re: [PATCH net-next] nexthop: Fix type of event_type in
- call_nexthop_notifiers
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Roopa Prabhu <roopa@cumulusnetworks.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200527080019.3489332-1-natechancellor@gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <37961e7c-3f71-a095-f2c4-bd9e768fc05b@gmail.com>
-Date:   Wed, 27 May 2020 07:50:35 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Wed, 27 May 2020 06:50:53 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/65] 4.4.225-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200526183905.988782958@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <f9ecb1d2-103c-70f2-4fc2-c7ec7ac1d52f@roeck-us.net>
+Date:   Wed, 27 May 2020 06:50:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200527080019.3489332-1-natechancellor@gmail.com>
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,24 +126,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 2:00 AM, Nathan Chancellor wrote:
-> Clang warns:
+On 5/26/20 11:52 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.225 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> net/ipv4/nexthop.c:841:30: warning: implicit conversion from enumeration
-> type 'enum nexthop_event_type' to different enumeration type 'enum
-> fib_event_type' [-Wenum-conversion]
->         call_nexthop_notifiers(net, NEXTHOP_EVENT_DEL, nh);
->         ~~~~~~~~~~~~~~~~~~~~~~      ^~~~~~~~~~~~~~~~~
-> 1 warning generated.
-> 
-> Use the right type for event_type so that clang does not warn.
-> 
-> Fixes: 8590ceedb701 ("nexthop: add support for notifiers")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1038
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  net/ipv4/nexthop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> Anything received after that time might be too late.
 > 
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Build results:
+	total: 169 pass: 169 fail: 0
+Qemu test results:
+	total: 332 pass: 332 fail: 0
+
+Guenter
