@@ -2,109 +2,86 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC69EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC718C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE10207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sR5+lYLv"
+	by mail.kernel.org (Postfix) with ESMTP id C6AB82089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590611005;
+	bh=whd5ax6cW2yilyozMSk0cai8e9IPd9MC6dtkaAAIeaQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=QSvU1mciZpnjJ1d1MOANwqzQgfF1X7DK9uQfUCgBPZfaF51pF0rNBSmzc1d58Cj3a
+	 glPmR+snEZzwLp8xwnzmDxrHh8hBUL+hprpAYRlxofcC9rIvbtbiJKFCWjP1DW2H1H
+	 47VXc13rwLPtVoCLS9eZh8FxXTgJFyNh8FwSrbrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgE0UXC (ORCPT
+        id S1728831AbgE0UXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:23:02 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26002 "EHLO m43-7.mailgun.net"
+        Wed, 27 May 2020 16:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728669AbgE0UXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:23:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590610981; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=pUCIYbPRVZUgve3cbw/4j/9bYTh8pYcYVgQsdofQzas=; b=sR5+lYLvulReiOH9wXfdAbF5dR0PMTojDX5OnScAdETYP3Avu0KVU72b8oJDzFJ1W6Ymveal
- 5B4OaYRuX84oiah+iFuyBleWVo9KPPRYojlZvEzZqDv0ZLG1H95GGTK8yJ1QUr2zSbjrHMVR
- ixeYNE0VJzTghMPAJDoMM8HBaYA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5ececc19c6d4683243f59d23 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 20:22:49
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1692AC433C9; Wed, 27 May 2020 20:22:49 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1728550AbgE0UXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:23:24 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 15589C433CA;
-        Wed, 27 May 2020 20:22:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 15589C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     viresh.kumar@linaro.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, saravanak@google.com, mka@chromium.org
-Cc:     nm@ti.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        rjw@rjwysocki.net, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dianders@chromium.org, vincent.guittot@linaro.org,
-        amit.kucheria@linaro.org, lukasz.luba@arm.com,
-        sudeep.holla@arm.com, smasetty@codeaurora.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 5/5] cpufreq: qcom: Disable fast switch when scaling DDR/L3
-Date:   Thu, 28 May 2020 01:51:53 +0530
-Message-Id: <20200527202153.11659-6-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200527202153.11659-1-sibis@codeaurora.org>
-References: <20200527202153.11659-1-sibis@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B9B204EF;
+        Wed, 27 May 2020 20:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590611004;
+        bh=whd5ax6cW2yilyozMSk0cai8e9IPd9MC6dtkaAAIeaQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1W/ZagWcskvMfGNeYpwXDQ0E6cw7I2krExjORRNnbCOgfUxAw4U3PrBF9MAnP34QK
+         pGBpbqhl+ES8lchRtO5oY3o6gCS41OTUTqKpA/8o9HoS+BUrVVPD0eBOPbL4/f/6Pg
+         SdPtw4HHGHH8bwupYLAjAdJb8eiiaX6qju2hZUPI=
+Date:   Wed, 27 May 2020 13:23:21 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
+ kernel statistics
+Message-ID: <20200527132321.54bcdf04@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
+References: <20200526110318.69006-1-eesposit@redhat.com>
+        <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+        <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable fast switch when the opp-tables required for scaling DDR/L3
-are populated.
+On Wed, 27 May 2020 15:14:41 +0200 Emanuele Giuseppe Esposito wrote:
+> Regarding the config, as I said the idea is to gather multiple 
+> subsystems' statistics, therefore there wouldn't be a single 
+> configuration method like in netlink.
+> For example in kvm there are file descriptors for configuration, and 
+> creating them requires no privilege, contrary to the network interfaces.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+Enumerating networking interfaces, addresses, and almost all of the
+configuration requires no extra privilege. In fact I'd hope that
+whatever daemon collects network stats doesn't run as root :)
 
-V5:
- * Drop dev_pm_opp_get_path_count [Saravana]
+I think enumerating objects is of primary importance, and statistics 
+of those objects are subordinate.
 
- drivers/cpufreq/qcom-cpufreq-hw.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index fbd73d106a3ae..ff6ad7ac38411 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -159,6 +159,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
- 	} else if (ret != -ENODEV) {
- 		dev_err(cpu_dev, "Invalid OPP table in Device tree\n");
- 		return ret;
-+	} else {
-+		policy->fast_switch_possible = true;
- 	}
- 
- 	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-@@ -308,8 +310,6 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
- 
- 	dev_pm_opp_of_register_em(policy->cpus);
- 
--	policy->fast_switch_possible = true;
--
- 	return 0;
- error:
- 	devm_iounmap(dev, base);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Again, I have little KVM knowledge, but BPF also uses a fd-based API,
+and carries stats over the same syscall interface.
