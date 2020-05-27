@@ -2,116 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44746C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244A920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGIXthgP"
+	by mail.kernel.org (Postfix) with ESMTP id 9688A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbgE0Og7 (ORCPT
+        id S2389339AbgE0Ohx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:36:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389313AbgE0Og5 (ORCPT
+        Wed, 27 May 2020 10:37:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52715 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389198AbgE0Ohx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:36:57 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CB2C05BD1E;
-        Wed, 27 May 2020 07:36:53 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id l3so11234155qvo.7;
-        Wed, 27 May 2020 07:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M/Ui5N10MoWP25QkZD0joVeWRBDs+C5tf80CUmghzwI=;
-        b=PGIXthgPprHVZlHsny105w605Sd1gB4QZTpYrlxOq3UJ5SRdnxxv2HkC4XUz+sizjX
-         Lkpnq+1W5yP+SYim2ekNp+smjGuRwlgd3QovMAh/8UV61v8MH46E+TACFUI1+0E74nVG
-         EBRqzKaUxD2jctWZtSgKkdieSmSpXlJRVMwWW+tuCoXflNOT+3gbAYl1Ykt2kxwdyNIW
-         oEXwhTaL5S0dzKJyHZbuDeiNTU7YZb5zwAWbGGnLxmzyuqLPewIy41XKZDuNq6tp6jt2
-         a96Zw1DFViX0GKoUtQnOjxhQ7MvFHhWtxQVrK6Ws7L5tA7ZGL1Rs1VJ3ooFqlpGh9qYA
-         omEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=M/Ui5N10MoWP25QkZD0joVeWRBDs+C5tf80CUmghzwI=;
-        b=PX5PuwiDvc9Nt6WvQetptC16IaYMclvGpg3eUMgkdqjpgXWYu9lF/9PVR80DYc5/jY
-         T99tLw7Y9dkNEKr8Nk0Czg4bUdTg4yCAhTHwvkAYxwa3pa0yIRgsmfI55g95WF7IceBk
-         iiyTnYBr51JY73hxpVeUew1kB0XQWNG38rKZ8h+4CaQjVSQ5oatNopQ6Z0hXFUbyoujR
-         LNdrA7VjQNeeo1I9EktETFDTY7hAlZKjNdmMud7TzZst+h6BeF9hE2EuHfHf18kOhqiZ
-         XvXdmh9ZMccv2ZE86WmxAb2dS1uSo0ixdD57Vzmrs3QPKCQP894XXIlxneOnpY+wak1k
-         lUCg==
-X-Gm-Message-State: AOAM533L8uMGv4GTNm+iywcjj0zR5AH+9SfTdEzIiOTX5RrjvHZKw98+
-        re5UEC3L0FkZHPreWUVfc/n9Q/dQ
-X-Google-Smtp-Source: ABdhPJyMu12+V12ENpEF2IvmAVARuf8i7xe/1zWRe2s1RqcQQm7+ktBiyXEnpP/GhP3uGuwwJfYPfg==
-X-Received: by 2002:ad4:58cb:: with SMTP id dh11mr23547867qvb.211.1590590212778;
-        Wed, 27 May 2020 07:36:52 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l2sm2620918qth.47.2020.05.27.07.36.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 07:36:52 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 27 May 2020 10:36:50 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Subject: Re: [PATCH v2 2/3] x86/boot/compressed: force hidden visibility for
- all symbol references
-Message-ID: <20200527143650.GA3103408@rani.riverdale.lan>
-References: <20200523120021.34996-1-ardb@kernel.org>
- <20200523120021.34996-3-ardb@kernel.org>
+        Wed, 27 May 2020 10:37:53 -0400
+Received: from mail-qv1-f43.google.com ([209.85.219.43]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N5UoU-1ixc5l2DSE-016tEC for <linux-kernel@vger.kernel.org>; Wed, 27 May
+ 2020 16:37:51 +0200
+Received: by mail-qv1-f43.google.com with SMTP id r16so2425734qvm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:37:51 -0700 (PDT)
+X-Gm-Message-State: AOAM532etWNip7WYtpK4rc2aQAdzFmUpO0dXdAnLlwZG9GRHQKSpQiG/
+        yne4/yjMKFzF/JsJtzF5Bc1Ns/dQky8PRWwcXH0=
+X-Google-Smtp-Source: ABdhPJyr//A2QIA6/VozIoK3hiWlXU4CoTxPNHDB40HBdX5R7LVfN9VrEtLqLnwnDTFroCXlHhy1X69ousiROtCYm50=
+X-Received: by 2002:a05:6214:370:: with SMTP id t16mr25364732qvu.197.1590590270488;
+ Wed, 27 May 2020 07:37:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200523120021.34996-3-ardb@kernel.org>
+References: <20200527134210.847411-1-arnd@arndb.de> <20200527155304.0cf42848@xps13>
+In-Reply-To: <20200527155304.0cf42848@xps13>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 May 2020 16:37:34 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2DKqO_LUCTpyRrow_9i5OudMdedjczbydrq+hC_CERmg@mail.gmail.com>
+Message-ID: <CAK8P3a2DKqO_LUCTpyRrow_9i5OudMdedjczbydrq+hC_CERmg@mail.gmail.com>
+Subject: Re: [PATCH] mtd: rawnand: arasan: select CONFIG_BCH
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Y5zzUsXBCZ5TlQCEaV1lgiqbb1i/m6lCRIoUVKkqCNI9cZQ7X5r
+ LXATm/xWTeevNIqXfWST0rqnKiW0vMNEgiPsXu/mx1SH5zqe3L96wv2g6rPyT6Z7fjYnkxV
+ hk+51WNyJsAHq+Lf0twjgAvefx8eKPYfJM72jS26GDqnQ7EVl+0xY5Y2+dS1qrjzwGVCJcq
+ +O8Pt1nC/9R665i0x5HqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cNIYvZO1Q6k=:pyhDIssDbo/7582d+gNkpm
+ zUpZUWbwyE+TITZ6uuWkzdaXyrPQbAryNyna38fCXJ9k9CUmbrsLgTuwCBLXS6lZCar9ly0TY
+ bs5jTn+XuVkswLs3j/q3oG1CI565UFCZJdZjqvAfL/DsTH9cS/Rl5cBn0dViz1Nl9pXzDybNL
+ +bF0+P6OFk1fLZI9vQiCpADfwmkJWMUeVqgdAtbhB4KMzVj08cL5An+ca8VE66mRi6ySYIXho
+ QcrH9uUi3n4bl6xYngMjbIqit/1uXrW+MDUvmTNI7ZfcsJDyNK/pm2bEgVm5I3bZdkGLtmwAb
+ r99AKeotXvFpx31Vu4NuyKQJ/0k+zZiqDFkwYKvRySR6K3qK7iRjhZkDAW8rVvH61PG1YTIeY
+ I3kaaVrbELq/Oi7vxpjdTqUUp9yXOlTd4YN0xAuXyIIndbGBU9g8QeN3Mxewb946U6xxvUK42
+ izkMdEAam3Xohih3i+YK/1bA3Wm7z/UisEuchQCcTG3723i4Jz3GYCBFa19yml/xDQRZMFktn
+ yLHrnzpHl8fsB7bFySyDPEnVykzWCZXY6uCakRS9Ay3wVQOwgBssejEgvGVMPy0NiyQHUQYxf
+ 8dCtzgCwDCq9RVF0y0thn70rmO+ONrmSOq7dBlq2+NJpsflUrn4Tkexb5w4dNLmrkD7HCTMaf
+ 7KJAbpZY2Fy9BRbAm2k2QuVnbagqgRW2Ycb/vWqSJduPcPVR2VwwVurVB8+k/quvu4b0KTqvz
+ tJfru+0KYd2FUkGfHzfYpIkbfAMBXOpHdQ3TrRBsckO5UeamZpeeLCLlC8Jo/ebLtNj9RfAGO
+ 87guyX8b5s7qg9QJAb0gAzB2OdMcrerp5bJstonDoAnRzzeEes=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 23, 2020 at 02:00:20PM +0200, Ard Biesheuvel wrote:
-> Eliminate all GOT entries in the decompressor binary, by forcing hidden
-> visibility for all symbol references, which informs the compiler that
-> such references will be resolved at link time without the need for
-> allocating GOT entries.
-> 
-> To ensure that no GOT entries will creep back in, add an assertion to
-> the decompressor linker script that will fire if the .got section has
-> a non-zero size.
-> 
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> ---
->  arch/x86/boot/compressed/Makefile      |  1 +
->  arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
->  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
->  3 files changed, 21 insertions(+)
-> 
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index 5f7c262bcc99..aa9ed814e5fa 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -40,6 +40,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
->  KBUILD_CFLAGS += -Wno-pointer-sign
->  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
->  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
-> +KBUILD_CFLAGS += -include hidden.h
->  
+On Wed, May 27, 2020 at 3:53 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>
+> Hi Arnd,
+>
+> Arnd Bergmann <arnd@arndb.de> wrote on Wed, 27 May 2020 15:42:03 +0200:
+>
+> > Like several other nand flash drivers, this one requires the BCH
+> > library to be selected from Kconfig.
+>
+> Actually most of the time these drivers do not depend on BCH directly.
+> Here it is a bit particular: the hardware ECC engine logic being
+> broken, I found a workaround by using BCH's library functions directly
+> to verify the hardware correctness.
+>
+> Anyway, thank you very much for the fix but if I didn't make a mistake
+> it should have been fixed yesterday night already, so it's probably not
+> in linux-next yet.
 
-Ard, from the other thread [1] in case you missed it -- the plain
-hidden.h fails to build in-tree. We need something like
-	KBUILD_CFLAGS += -include $(srctree)/$(src)/hidden.h
-instead.
+I'm still on yesterday's linux-next, so I was probably just a little late.
+Thanks for fixing it already.
 
-[1] https://lore.kernel.org/lkml/20200526153104.GC2190602@rani.riverdale.lan/
+      Arnd
