@@ -2,126 +2,134 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2375C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 697C72088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590613022;
-	bh=PJaX6a/wG4EogZDDlFWqXVNgTe80YNLiDmSRl+38vz4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yiTqqBcA/TGnbh/A5WgnGUAjEbF/5FQL+KvlQ1YkSii7o7DLVg8WbSziqpfw2olcH
-	 LL5JOjY7L1jME9wBUupjDtOQgnTdXUvxW3UxgE1FjmVrl1Eakvyx3FnuEH9+7rEYJq
-	 OimAtEfGazqPQw7wV+FJEoYnPuzVX9+CG1ug9wIE=
+	by mail.kernel.org (Postfix) with ESMTP id C56372088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:00:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DuAEPU1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgE0U5B (ORCPT
+        id S1728082AbgE0VAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:57:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57482 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726129AbgE0U5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:57:01 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5111320899;
-        Wed, 27 May 2020 20:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590613020;
-        bh=PJaX6a/wG4EogZDDlFWqXVNgTe80YNLiDmSRl+38vz4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tEierfJlg9cjxL5kZCo+ruC44RyQE9GccF6rbeEjdIDkyVyxkl5iLTG1UeskiTz1U
-         qsGoFAK/Rr0QPGHHpdbKOB0cjCpARvKOAYI6QPlfg4KVgAKiXLXeUjyusnJ2OuzyJB
-         wVoerKThgLwGnz4i9g5oRhiduWKlCufSs35IGBtc=
-Date:   Wed, 27 May 2020 21:56:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH] ASoC: rt5682: split i2c driver into separate module
-Message-ID: <20200527205658.GM5308@sirena.org.uk>
-References: <20200527193730.930412-1-arnd@arndb.de>
+        Wed, 27 May 2020 17:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgE0VAL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 17:00:11 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC070C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 14:00:09 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id p123so11692yba.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 14:00:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VbTGqBEAJn7vOUI10dzvBC6GCHW95GnJA8YOb9SAJqI=;
+        b=DuAEPU1cRI42BFnfXBzJAsWU1SICG9jB1tgTnRdUTLjbUdrAGZQIRRfIjyyb6rlaqd
+         fQt3r6qWCtxqTEzLIA06d0rHSIeDAM59sIIy4xC7lqe48Fth1EFvVQZ1oZZCWZUc2wVo
+         U1p06M58NHsCmXccWc7+OpTqVvMLfSx9E0zXXFIGw+rfyFyPxEaU4I4DZ9U1oYTWPQi6
+         FvzHAiezxHxgjWTBiTsaFW3+XgZpvkAiQSbkzBqK9/ofQjfus3EWvocbbU/dDRyLqRd4
+         mJDg+XWIUtWqbpIkaMNRgybB55pNMTydgGl3Pt30OLD42QultCXe86CGArrrE3ZUI38J
+         JbVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VbTGqBEAJn7vOUI10dzvBC6GCHW95GnJA8YOb9SAJqI=;
+        b=kn2Ln9ZHBq/kTiZI/EcIlF2EqF2iL6dExZjFJfhyXbxc3XEmFs2a5Z/9MZ9Nroxax2
+         KiCPuvnbBRDfoQc98uWKKHcOVyUK/uWdji6Vi2tfvmJwBBNZeqAtSvZWT/nVU25ar0P2
+         D287fPA8gD9d8BWG+sQpAgavtiBiOXcw+2frwNRkQ3qpYypzwhRw6jNxG25S2WdDWs4K
+         JNzSBeJ+rS/2M9cTuAlKHa3CpIe0tVsaVsCRxxk3bV7PXjx1AXuY8/amjfz11Hk6CyRS
+         IidhTHapzqLWBdrb5Kyw7c6rDXh24jAwjCUCc0mTf3vr2jkHGR3L0vEzZBz9tqIE3jly
+         Ujhg==
+X-Gm-Message-State: AOAM530Kf+F2Y8OkGq1F+ak1uhW+aBna1vpsTPB1l1ypWlzsNpDSEusR
+        I9tqPwRch3JXQaEHqW5DXGj31m6lLRu2f4m5cC5b6g==
+X-Google-Smtp-Source: ABdhPJwfUT80P1C1eVddhqIGXH//SB7SDbS1Mdcx8uANWd4Vl3oEHWLuHKIHTCsGWi0CKOT/oqs/55ytVSWBfPa7Dag=
+X-Received: by 2002:a25:5387:: with SMTP id h129mr145828ybb.47.1590613208522;
+ Wed, 27 May 2020 14:00:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="37nyS7qXrnu4wN2o"
-Content-Disposition: inline
-In-Reply-To: <20200527193730.930412-1-arnd@arndb.de>
-X-Cookie: Drop in any mailbox.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com>
+ <CAP-5=fXGXqkTbSwKv7eq9UkPvVqRJXDm3E-XNxD8+5fmQk3bpg@mail.gmail.com> <MN2PR21MB15185419971A29EF52B8138FF7B10@MN2PR21MB1518.namprd21.prod.outlook.com>
+In-Reply-To: <MN2PR21MB15185419971A29EF52B8138FF7B10@MN2PR21MB1518.namprd21.prod.outlook.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 27 May 2020 13:59:57 -0700
+Message-ID: <CAP-5=fVHo262Lo_Re31wM8Bt0soJ-m51J7MEnwvdTg5P8J6e6A@mail.gmail.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v4] perf inject --jit: Remove //anon mmap events
+To:     Steve MacLean <Steve.MacLean@microsoft.com>
+Cc:     Steve MacLean <steve.maclean@linux.microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 12:27 PM Steve MacLean
+<Steve.MacLean@microsoft.com> wrote:
+>
+> >> ** Implemented solution
+> >>
+> >> This patch solves the issue by removing // anon mmap events for any
+> >> process which has a valid jit-<pid>.dump file.
+> >>
+> >> It tracks on a per process basis to handle the case where some running
+> >> apps support jit-<pid>.dump, but some only support perf-<pid>.map.
+> >>
+> >> It adds new assumptions:
+> >> * // anon mmap events are only required for perf-<pid>.map support.
+> >> * An app that uses jit-<pid>.dump, no longer needs perf-<pid>.map
+> >> support. It assumes that any perf-<pid>.map info is inferior.
+> >>
+> >> *** Details
+> >>
+> >> Use thread->priv to store whether a jitdump file has been processed
+> >>
+> >> During "perf inject --jit", discard "//anon*" mmap events for any pid
+> >> which has sucessfully processed a jitdump file.
+> >
+> >
+> > Thanks Steve this is an important fix! As //anon could be for malloc or other uses, should the stripping behavior be behind a flag?
+> >
+> > Ian
+>
+> I hadn't anticipated a need to preserve the //anon mmap events when profiling JIT generated code.
+>
+> As far as I know mmap events are captured by perf only for mapping code to symbols.  File mappings are kept
+> by the change.  Only // anon mappings are stripped.  (Only for processes which emitted jitdump files.)
+> And these are stripped only during the `perf inject --jit` step. I believe the // Anon mapping are only
+> generally useful for mapping JIT code.
+>
+> I suppose if someone was trying to count mmap events it might be confusing, but `perf inject --jit` creates
+> synthetic mmap file events which would also make this scenario confusing.
+>
+> I personally don't see a good reason to add a flag.  I also don't see a simple way either.  Not running `perf inject --jit`
+> would preserve existing behavior w/o jitdump support.  Without stripping the anon events jitdump support is painfully
+> broken....
 
---37nyS7qXrnu4wN2o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Agreed that things are broken. In general only executable mappings are
+held onto by perf, so it could be I'm over worrying about //anon
+stripping breaking around memory allocations. We have some other use
+cases for //anon at Google but they aren't impacted by jitdump. We
+have also been trying to migrate jit caches to using memfd_create,
+which has the same problem that this patch fixes for //anon. Fixing
+memfd_create is a separate issue to //anon. I'll try to get a repro
+for Java that demonstrates the problem and then add a Tested-by.
 
-On Wed, May 27, 2020 at 09:34:13PM +0200, Arnd Bergmann wrote:
-
-> index 000000000000..c891aa80757f
-> --- /dev/null
-> +++ b/sound/soc/codecs/rt5682-i2c.c
-> @@ -0,0 +1,341 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * rt5682.c  --  RT5682 ALSA SoC audio component driver
-> + *
-
-Please keep the entire comment C++ so things look more intentional.
-
-> +static const char *rt5682_supply_names[RT5682_NUM_SUPPLIES] = {
-> +	"AVDD",
-> +	"MICVDD",
-> +	"VBAT",
-> +};
-
-I'm *fairly* sure the device needs power even with Soundwire?
-
-> +static void rt5682_jd_check_handler(struct work_struct *work)
-> +{
-> +	struct rt5682_priv *rt5682 = container_of(work, struct rt5682_priv,
-> +		jd_check_work.work);
-
-> +static int rt5682_parse_dt(struct rt5682_priv *rt5682, struct device *dev)
-> +{
-> +
-> +	device_property_read_u32(dev, "realtek,dmic1-data-pin",
-> +		&rt5682->pdata.dmic1_data_pin);
-> +	device_property_read_u32(dev, "realtek,dmic1-clk-pin",
-> +		&rt5682->pdata.dmic1_clk_pin);
-
-This doesn't look very I2C specific either, nor do chunks of the rest of
-the code.  The usual pattern with this stuff is to have the bus specific
-code do bus specific stuff like setting up the regmap and then call into
-a common init function for the shared parts of the chip.  I'd expect a
-bit more unshared code here but not this much.
-
---37nyS7qXrnu4wN2o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7O1BkACgkQJNaLcl1U
-h9A0nwf8D3oDJJ7yA5/9c9tZA3Ugn5+YbfRc5KWxk7tChsSTmOaXja9l3B3yoHEh
-FB0bDc5yyUL6+iQxUkNzGe9Q//DhUeJTnDYH+FaBS+YyG3NNSqaTlD1JCjC0de6g
-JMqaRXuOohN2sW2IX3fVcOnCUUfuJl0c7J6g64mxi/pv5LQTiUuuRWPz7DuIFSr7
-ZlqkxNLBnt/U5/kiCZY3RGu1Ol7vPXFQYCOeWnlx5G0q2yrng4/bxpeWxkS0tNUy
-SZY4IyOiT++Vqyj6JnPm/B7NQaWjs/xnl7JLKecmXDHmbPMNQUifdJw3+FzsvJwW
-4RD1aq7FoWTMXR/LdkmkSw+QhT3MMA==
-=1e2i
------END PGP SIGNATURE-----
-
---37nyS7qXrnu4wN2o--
+Thanks,
+Ian
