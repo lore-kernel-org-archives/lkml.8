@@ -2,159 +2,145 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9393C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EA0C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B8B208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4EC208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SD6qx4d3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GKbuSOFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbgE0NMa (ORCPT
+        id S2387897AbgE0NOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:12:30 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55041 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730223AbgE0NMa (ORCPT
+        Wed, 27 May 2020 09:14:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33456 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387722AbgE0NOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:12:30 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RD8AFR008753;
-        Wed, 27 May 2020 15:11:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=msqWAAt3W24QRgICYNWFWTZaQ/yQljeulY2121WBxwQ=;
- b=SD6qx4d3rijF6tZWnCcsYWW7jfmei4vLK6Z5aocb2/DoMgk19LbBCfF6kjgcCfGLiEvP
- wlM9t4PQePAVb/4x4hvxpvcVd8ir2/Fshu6uBUv8ga1NR3PG9OxktXqlrGFUNoBeDes0
- lksiyR29y/5FOCyN1llf0v7/4gAzHr3qVv4NTimBjFNNMwNxMbZ4PAeMGNcKJrwrnMjG
- jSJcF0bITSMQwLOdrx2xRe3zvSWU1MP5MXyV8W5rFd5uND4T29dQigUCDGhGuRojlkoo
- obhFVrsVydHxQ+sPQ6WYngGeTbSL1UndsdleKKRZy/0DJa94vpeJAYN5ZTCV83waGoyq lQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 316skwe06k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 15:11:43 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 80D2710002A;
-        Wed, 27 May 2020 15:11:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 668F82AC7CD;
-        Wed, 27 May 2020 15:11:43 +0200 (CEST)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 27 May
- 2020 15:11:42 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 27 May 2020 15:11:42 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
-Thread-Topic: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
-Thread-Index: AQHWM3CeA6bTrCFpTUymlrJxXTw8j6i7lUyAgAATBICAAA//AIAAEAGA
-Date:   Wed, 27 May 2020 13:11:42 +0000
-Message-ID: <099f5b6c-aa81-be4a-19bf-52a2fff7b3db@st.com>
-References: <20200526151619.8779-1-benjamin.gaignard@st.com>
- <jhjk10xu1tq.mognet@arm.com> <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
- <jhjwo4xinhb.mognet@arm.com>
-In-Reply-To: <jhjwo4xinhb.mognet@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.49]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <706816CEE5C22249B8804FAF19ABB7CF@st.com>
-Content-Transfer-Encoding: base64
+        Wed, 27 May 2020 09:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590585289;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xp4IU27b7aXZqohMpJFZPawUcolyfH/CQm0FvETLmFY=;
+        b=GKbuSOFwA4M4+1MFHVWM8sWZB6cZGYKaKIMmGO6M5EKsyVOPMt6E4jEQCMyFgU85YMfjvR
+        bClmprTRRYPDWnpafwpn07eHkMe433eIvy/b+7uyQOS9ViC/GLtM6ZLsTZgTIOrb51oJvE
+        3gbPfKlCJxnuTdMqO1KG7hFPqZywHi0=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-499-_ug3VhbQOrqzqVJ7fKfNhQ-1; Wed, 27 May 2020 09:14:45 -0400
+X-MC-Unique: _ug3VhbQOrqzqVJ7fKfNhQ-1
+Received: by mail-wm1-f72.google.com with SMTP id g84so833870wmf.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:14:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xp4IU27b7aXZqohMpJFZPawUcolyfH/CQm0FvETLmFY=;
+        b=QSRpTyKeCqSbhd0YY979hZyx56DpZ+yZfXSqhaBdz4NX9HUuaQuiUUyI5VhqlCLEhV
+         ancxNv/I7abaOsQSD1thkJvzIEBwANmaTiimht1pp4XRaGtZOvFuWnr9tA0sczMR94HX
+         dzw0DKnOe/3oMG/yC7rydTZIsK9JPgVhQchKDdShhwkyxSLyFpCUa4RH+UezVVJI+Qo2
+         Po3uYl8eGNYBf6HMpme6ui9fG7WVVf3pk7s7PEeyve5LAkdlqyiYqkfGN7siAye6uwja
+         XQkNvEYv/VSkhXnyU7eJ67xkMzv83cv7zDZPQd10HqaAa4iZcSXKeppdK6exESuy+DXe
+         jF2Q==
+X-Gm-Message-State: AOAM533R3Mu2eSHhkyHAUr7Pagta5q/Rm7bgbwo42cs5ZzcQGe0wpMXx
+        Wz60yea8CQ3kjcqnl0VFrdDWxOQJCzPwXz/NTtqCygcXrwwG2FQ8jhH11pZnY8DIbQ5rFjZKzd+
+        bVccK+NIXVe+T3DAdjfJQgh6n
+X-Received: by 2002:a1c:1b17:: with SMTP id b23mr4189542wmb.3.1590585284261;
+        Wed, 27 May 2020 06:14:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxXDD9pd6xDx85wKJ6DSUd0+jHdsTLXsbOgS1BfL3siVJ+UTokB2SEyRQkeYWpyFjB2Klsulg==
+X-Received: by 2002:a1c:1b17:: with SMTP id b23mr4189496wmb.3.1590585283890;
+        Wed, 27 May 2020 06:14:43 -0700 (PDT)
+Received: from localhost.localdomain ([194.230.155.225])
+        by smtp.gmail.com with ESMTPSA id r4sm2825862wro.32.2020.05.27.06.14.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 06:14:43 -0700 (PDT)
+Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
+ kernel statistics
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+References: <20200526110318.69006-1-eesposit@redhat.com>
+ <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Message-ID: <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
+Date:   Wed, 27 May 2020 15:14:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
+In-Reply-To: <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDUvMjcvMjAgMjoxNCBQTSwgVmFsZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPiBPbiAy
-Ny8wNS8yMCAxMjoxNywgQmVuamFtaW4gR0FJR05BUkQgd3JvdGU6DQo+PiBPbiA1LzI3LzIwIDEy
-OjA5IFBNLCBWYWxlbnRpbiBTY2huZWlkZXIgd3JvdGU6DQo+Pj4gSGkgQmVuamFtaW4sDQo+Pj4N
-Cj4+PiBPbiAyNi8wNS8yMCAxNjoxNiwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6DQo+Pj4+IEEg
-Zmlyc3Qgcm91bmQgWzFdIG9mIGRpc2N1c3Npb25zIGFuZCBzdWdnZXN0aW9ucyBoYXZlIGFscmVh
-ZHkgYmUgZG9uZSBvbg0KPj4+PiB0aGlzIHNlcmllcyBidXQgd2l0aG91dCBmb3VuZCBhIHNvbHV0
-aW9uIHRvIHRoZSBwcm9ibGVtLiBJIHJlc2VuZCBpdCB0bw0KPj4+PiBwcm9ncmVzcyBvbiB0aGlz
-IHRvcGljLg0KPj4+Pg0KPj4+IEFwb2xvZ2llcyBmb3Igc2xlZXBpbmcgb24gdGhhdCBwcmV2aW91
-cyB0aHJlYWQuDQo+Pj4NCj4+PiBTbyB3aGF0IGhhZCBiZWVuIHN1Z2dlc3RlZCBvdmVyIHRoZXJl
-IHdhcyB0byB1c2UgdWNsYW1wIHRvIGJvb3N0IHRoZQ0KPj4+IGZyZXF1ZW5jeSBvZiB0aGUgaGFu
-ZGxpbmcgdGhyZWFkOyBob3dldmVyIGlmIHlvdSB1c2UgdGhyZWFkZWQgSVJRcyB5b3UNCj4+PiBn
-ZXQgUlQgdGhyZWFkcywgd2hpY2ggYWxyZWFkeSBnZXQgdGhlIG1heCBmcmVxdWVuY3kgYnkgZGVm
-YXVsdCAoYXQgbGVhc3QNCj4+PiB3aXRoIHNjaGVkdXRpbCkuDQo+Pj4NCj4+PiBEb2VzIHRoYXQg
-bm90IHdvcmsgZm9yIHlvdSwgYW5kIGlmIHNvLCB3aHk/DQo+PiBUaGF0IGRvZXNuJ3Qgd29yayBi
-ZWNhdXNlIGFsbW9zdCBldmVyeXRoaW5nIGlzIGRvbmUgYnkgdGhlIGhhcmR3YXJlIGJsb2Nrcw0K
-Pj4gd2l0aG91dCBjaGFyZ2UgdGhlIENQVSBzbyB0aGUgdGhyZWFkIGlzbid0IHJ1bm5pbmcuDQo+
-IEknbSBub3Qgc3VyZSBJIGZvbGxvdzsgdGhlIGZyZXF1ZW5jeSBvZiB0aGUgQ1BVIGRvZXNuJ3Qg
-bWF0dGVyIHdoaWxlDQo+IHlvdXIgaGFyZHdhcmUgYmxvY2tzIGFyZSBzcGlubmluZywgcmlnaHQ/
-IEFJVUkgd2hhdCBtYXR0ZXJzIGlzIHJ1bm5pbmcNCj4geW91ciBpbnRlcnJ1cHQgaGFuZGxlciAv
-IGFjdGlvbiBhdCBtYXggZnJlcSwgd2hpY2ggeW91IGdldCBpZiB5b3UgdXNlDQo+IHRocmVhZGVk
-IElSUXMgYW5kIHNjaGVkdXRpbC4NClllcyBidXQgbm90IGxpbWl0ZWQgdG8gc2NoZWR1dGlsLg0K
-R2l2ZW4gdGhlIGxhdGVuY3kgbmVlZGVkIHRvIGNoYW5nZSBvZiBmcmVxdWVuY2llcyBJIHRoaW5r
-IGl0IGNvdWxkIA0KYWxyZWFkeSB0b28gbGF0ZQ0KdG8gY2hhbmdlIHRoZSBDUFUgZnJlcXVlbmN5
-IHdoZW4gaGFuZGxpbmcgdGhlIHRocmVhZGVkIGludGVycnVwdC4NCj4NCj4gSSB0aGluayBpdCB3
-b3VsZCBoZWxwIGlmIHlvdSBjb3VsZCBjbGFyaWZ5IHdoaWNoIHRhc2tzIC8gcGFydHMgb2YgeW91
-cg0KPiBwaXBlbGluZSB5b3UgbmVlZCBydW5uaW5nIGF0IGhpZ2ggZnJlcXVlbmNpZXMuIFRoZSBw
-b2ludCBpcyB0aGF0IHNldHRpbmcNCj4gYSBRb1MgcmVxdWVzdCBhZmZlY3RzIGFsbCB0YXNrcywg
-d2hlcmVhcyB3ZSBjb3VsZCBiZSBzbWFydGVyIGFuZCBvbmx5DQo+IGJvb3N0IHRoZSByZXF1aXJl
-ZCB0YXNrcy4NCldoYXQgbWFrZSB1cyBkcm9wIGZyYW1lcyBpcyB0aGF0IHRoZSB0aHJlYWRlZCBJ
-UlEgaXMgc2NoZWR1bGVkIHRvbyBsYXRlLg0KVGhlIG5vdCB0aHJlYWQgcGFydCBvZiB0aGUgaW50
-ZXJydXB0IGhhbmRsZXIgd2hlcmUgd2UgY2xlYXIgdGhlIA0KaW50ZXJydXB0IGZsYWdzDQppcyBn
-b2luZyBmaW5lIGJ1dCB0aGUgdGhyZWFkIHBhcnQgbm90Lg0KPg0KPj4gSSBoYXZlIGRvbmUgdGhl
-DQo+PiB0ZXN0cyB3aXRoIHNjaGVkdXRpbA0KPj4gYW5kIG9uZGVtYW5kIHNjaGVkdWxlciAod2hp
-Y2ggaXMgdGhlIG9uZSBJJ20gdGFyZ2V0aW5nKS4gSSBoYXZlIG5vDQo+PiBpc3N1ZXMgd2hlbiB1
-c2luZw0KPj4gcGVyZm9ybWFuY2Ugc2NoZWR1bGVyIGJlY2F1c2UgaXQgYWx3YXlzIGtlZXAgdGhl
-IGhpZ2hlc3QgZnJlcXVlbmNpZXMuDQo+Pg0KPj4NCj4+Pj4gV2hlbiBzdGFydCBzdHJlYW1pbmcg
-ZnJvbSB0aGUgc2Vuc29yIHRoZSBDUFUgbG9hZCBjb3VsZCByZW1haW4gdmVyeSBsb3cNCj4+Pj4g
-YmVjYXVzZSBhbG1vc3QgYWxsIHRoZSBjYXB0dXJlIHBpcGVsaW5lIGlzIGRvbmUgaW4gaGFyZHdh
-cmUgKGkuZS4gd2l0aG91dA0KPj4+PiB1c2luZyB0aGUgQ1BVKSBhbmQgbGV0IGJlbGlldmUgdG8g
-Y3B1ZnJlcSBnb3Zlcm5vciB0aGF0IGl0IGNvdWxkIHVzZSBsb3dlcg0KPj4+PiBmcmVxdWVuY2ll
-cy4gSWYgdGhlIGdvdmVybm9yIGRlY2lkZXMgdG8gdXNlIGEgdG9vIGxvdyBmcmVxdWVuY3kgdGhh
-dA0KPj4+PiBiZWNvbWVzIGEgcHJvYmxlbSB3aGVuIHdlIG5lZWQgdG8gYWNrbm93bGVkZ2UgdGhl
-IGludGVycnVwdCBkdXJpbmcgdGhlDQo+Pj4+IGJsYW5raW5nIHRpbWUuDQo+Pj4+IFRoZSBkZWxh
-eSB0byBhY2sgdGhlIGludGVycnVwdCBhbmQgcGVyZm9ybSBhbGwgdGhlIG90aGVyIGFjdGlvbnMg
-YmVmb3JlDQo+Pj4+IHRoZSBuZXh0IGZyYW1lIGlzIHZlcnkgc2hvcnQgYW5kIGRvZXNuJ3QgYWxs
-b3cgdG8gdGhlIGNwdWZyZXEgZ292ZXJub3IgdG8NCj4+Pj4gcHJvdmlkZSB0aGUgcmVxdWlyZWQg
-YnVyc3Qgb2YgcG93ZXIuIFRoYXQgbGVkIHRvIGRyb3AgdGhlIGhhbGYgb2YgdGhlIGZyYW1lcy4N
-Cj4+Pj4NCj4+Pj4gVG8gYXZvaWQgdGhpcyBwcm9ibGVtLCBEQ01JIGRyaXZlciBpbmZvcm1zIHRo
-ZSBjcHVmcmVxIGdvdmVybm9ycyBieSBhZGRpbmcNCj4+Pj4gYSBjcHVmcmVxIG1pbmltdW0gbG9h
-ZCBRb1MgcmVzcXVlc3QuDQo+Pj4+DQo+Pj4+IEJlbmphbWluDQo+Pj4+DQo+Pj4+IFsxXSBodHRw
-czovL2xrbWwub3JnL2xrbWwvMjAyMC80LzI0LzM2MA0KPj4+Pg0KPj4+PiBCZW5qYW1pbiBHYWln
-bmFyZCAoMyk6DQo+Pj4+ICAgICBQTTogUW9TOiBJbnRyb2R1Y2UgY3B1ZnJlcSBtaW5pbXVtIGxv
-YWQgUW9TDQo+Pj4+ICAgICBjcHVmcmVxOiBnb3Zlcm5vcjogVXNlIG1pbmltdW0gbG9hZCBRb1MN
-Cj4+Pj4gICAgIG1lZGlhOiBzdG0zMi1kY21pOiBJbmZvcm0gY3B1ZnJlcSBnb3Zlcm5vcnMgYWJv
-dXQgY3B1IGxvYWQgbmVlZHMNCj4+Pj4NCj4+Pj4gICAgZHJpdmVycy9jcHVmcmVxL2NwdWZyZXFf
-Z292ZXJub3IuYyAgICAgICAgfCAgIDUgKw0KPj4+PiAgICBkcml2ZXJzL21lZGlhL3BsYXRmb3Jt
-L3N0bTMyL3N0bTMyLWRjbWkuYyB8ICAgOCArKw0KPj4+PiAgICBpbmNsdWRlL2xpbnV4L3BtX3Fv
-cy5oICAgICAgICAgICAgICAgICAgICB8ICAxMiArKw0KPj4+PiAgICBrZXJuZWwvcG93ZXIvcW9z
-LmMgICAgICAgICAgICAgICAgICAgICAgICB8IDIxMyArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysNCj4+Pj4gICAgNCBmaWxlcyBjaGFuZ2VkLCAyMzggaW5zZXJ0aW9ucygrKQ0K
+
+>>
+>> The file system is mounted on /sys/kernel/stats and would be already used
+>> by kvm. Statsfs was initially introduced by Paolo Bonzini [1].
+> 
+> What's the direct motivation for this work? Moving KVM stats out of
+> debugfs?
+
+There's many reasons: one of these is not using debugfs for statistics, 
+but also (and mainly) to try and have a single tool that automatically 
+takes care and displays them, instead of leaving each subsystem "on its 
+own".
+
+Sure, everyone gathers and processes stats in different ways, and the 
+aim of this tool is to hopefully be extensible enough to cover all needs.
+> In my experience stats belong in the API used for creating/enumerating
+> objects, statsfs sounds like going in the exact opposite direction -
+> creating a parallel structure / hierarchy for exposing stats.
+
+  I know
+> nothing about KVM but are you sure all the info that has to be exposed
+> will be stats?I don't understand, what do you mean here?
+
+> 
+> In case of networking we have the basic stats in sysfs, under the
+> netdevice's kobject. But since we're not using sysfs much any more
+> for config, new stats are added in netlink APIs. Again - same APIs
+> used for enumeration and config.
+
+I don't really know a lot about the networking subsystem, and as it was 
+pointed out in another email on patch 7 by Andrew, networking needs to 
+atomically gather and display statistics in order to make them 
+consistent, and currently this is not supported by stats_fs but could be 
+added in future.
+
+In addition, right now it won't work properly if the networking 
+namespaces are enabled. That is another issue to take into 
+consideration. That's also why I marked patch 7 as "not for merge"
+
+Regarding the config, as I said the idea is to gather multiple 
+subsystems' statistics, therefore there wouldn't be a single 
+configuration method like in netlink.
+For example in kvm there are file descriptors for configuration, and 
+creating them requires no privilege, contrary to the network interfaces.
+
+Thank you,
+Emanuele
+
