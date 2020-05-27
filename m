@@ -2,43 +2,75 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED94AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 397D7207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0508208DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:08:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ka1XYDa8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgE0FGE (ORCPT
+        id S1727831AbgE0FIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:06:04 -0400
-Received: from verein.lst.de ([213.95.11.211]:48189 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbgE0FGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:06:04 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id B1A4368B02; Wed, 27 May 2020 07:06:00 +0200 (CEST)
-Date:   Wed, 27 May 2020 07:05:59 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me
-Subject: Re: [PATCH 1/1] nvme-pci: avoid race between
- nvme_reap_pending_cqes() and nvme_poll()
-Message-ID: <20200527050559.GA16317@lst.de>
-References: <20200527004955.19463-1-dongli.zhang@oracle.com>
+        Wed, 27 May 2020 01:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgE0FIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 01:08:30 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B56DFC061A0F;
+        Tue, 26 May 2020 22:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XC2Shs5lNCGSRyWc4oHtMietNdOJX+rOUehgxOJwmi0=; b=ka1XYDa8ifbdK426quZ1uqtWdj
+        Zi6vV97cDDIL4upmEch9K8LFoJFKV5fINg4EjpgJK0nqDSxSMk1q2rQtAwwC1uQIbiEzqnDI1z9Cn
+        qEFFnSP4My9HuxZ90+W9+Q5V2Ri5QzD6F9qSMSRE/UM5R1zqo4L7vgQvNEHf1XIc6MAcpysCeMmmN
+        agyuFe2MwhAFEbJx8U3BoE95NXZp/zvGVtGl1XPcjTZsfPtghEzMBhWgW+AcUXfATsY8Fu8NKiFh5
+        WU+KGw6JXidH38HMCImS3JbCxELvaKn/gwaFvoUHEs1G6en5TmZBTSHrHa+RPIgF6QgjFyggFuB4g
+        FKtMtTfw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jdoIh-0008P7-UA; Wed, 27 May 2020 05:08:23 +0000
+Date:   Tue, 26 May 2020 22:08:23 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Florent Revest <revest@chromium.org>
+Subject: Re: [PATCH bpf-next 2/4] bpf: Implement bpf_local_storage for inodes
+Message-ID: <20200527050823.GA31860@infradead.org>
+References: <20200526163336.63653-1-kpsingh@chromium.org>
+ <20200526163336.63653-3-kpsingh@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527004955.19463-1-dongli.zhang@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200526163336.63653-3-kpsingh@chromium.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can you add a Fixes tag so that this gets queued up for -stable properly?
+On Tue, May 26, 2020 at 06:33:34PM +0200, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> Similar to bpf_local_storage for sockets, add local storage for inodes.
+> The life-cycle of storage is managed with the life-cycle of the inode.
+> i.e. the storage is destroyed along with the owning inode.
+> 
+> Since, the intention is to use this in LSM programs, the destruction is
+> done after security_inode_free in __destroy_inode.
 
+NAK onbloating the inode structure.  Please find an out of line way
+to store your information.
