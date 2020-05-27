@@ -2,126 +2,92 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDFFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92123C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC0B2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590571061;
-	bh=uj+VcJwxkpklmPgy3gadF9fMpUuRFAx2IxDyKKwUYjQ=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=RNwE+vhQPRvnCzqK3ASNuje1qHonCsAQTrHeTNxKiblDnGddk3UvWKG4EbW1kalG5
-	 RpXB950wtHCNC1D/lP1Kd9YYYt2mnPTjS+HLoLYLoozHIfYuapmepM1b1Mae/xpAHJ
-	 F5h5X79m/4KvJUffyWpi0gR9gCpwv1XnmxCG7+/M=
+	by mail.kernel.org (Postfix) with ESMTP id 6B9352084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:17:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgE0JRk (ORCPT
+        id S1728509AbgE0JRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 05:17:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52630 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgE0JRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:17:40 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BFA02084C;
-        Wed, 27 May 2020 09:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590571059;
-        bh=uj+VcJwxkpklmPgy3gadF9fMpUuRFAx2IxDyKKwUYjQ=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=APTlp4+GzRdPiU2yOYmZla3pudgN/B7c+J6/X75D1qd8Y/R8dazrJCYwgjfc29RRX
-         n/kNkqW0mclE5s4i6PemxBK+65EqkcikWSRdofb7GJHWTyQVrW7/qgMzYD1tZQdxYL
-         EUUla8ViZtwvYMfirc04GcjZN7Oq7idq3JplCI+k=
-Content-Type: text/plain; charset="utf-8"
+        id S1725820AbgE0JRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:17:47 -0400
+IronPort-SDR: EPJim9tSr0LXmvlOxmZmWr+63LG0lBTy6x26zTWWoUioO5ZC7r6+uVzh1rAOnj047fct0ylO8Q
+ NPZeVYCquLMg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 02:17:46 -0700
+IronPort-SDR: 40oXLoq2PILk5e50dpXaB6hUneU0F+HlXUvD3DxEWqiiKhfzcf7eE1X1PvDXbUadDuvii9iRTR
+ PYV49oHaa5nA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
+   d="scan'208";a="414138598"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 02:17:44 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jdsBz-000Bjv-75; Wed, 27 May 2020 17:17:43 +0800
+Date:   Wed, 27 May 2020 17:16:46 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Zhu Lingshan <lingshan.zhu@intel.com>, mst@redhat.com,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        jasowang@redhat.com
+Cc:     kbuild-all@lists.01.org, lulu@redhat.com, dan.daly@intel.com,
+        cunming.liang@intel.com, Zhu Lingshan <lingshan.zhu@intel.com>
+Subject: [RFC PATCH] vdpa: vhost_vdpa_poll_stop() can be static
+Message-ID: <20200527091646.GA80910@369e1fe990b8>
+References: <1590471145-4436-1-git-send-email-lingshan.zhu@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200519170440.294601-1-jbrunet@baylibre.com>
-References: <20200519170440.294601-1-jbrunet@baylibre.com>
-Subject: Re: [PATCH] clk: add api to get clk consummer from clk_hw
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Wed, 27 May 2020 02:17:38 -0700
-Message-ID: <159057105860.88029.17177553048016076314@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590471145-4436-1-git-send-email-lingshan.zhu@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jerome Brunet (2020-05-19 10:04:40)
-> clk_register() is deprecated. Using 'clk' member of struct clk_hw is
-> discouraged. With this constrainst, it is difficult for driver to
 
-s/constrainst/constraint/
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ vdpa.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> register clocks using the clk_hw API and then use the clock with
-> the consummer API
-
-s/consummer/consumer/
-
->=20
-> This add a simple helper, clk_hw_get_clk(), to get a struct clk from
-> a struct clk_hw. Like other clk_get() variant, each call to this helper
-> must be balanced with a call to clk_put().
->=20
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-
-I like it!
-
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 6fd23ce3cb03..d9946e192cbc 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -3625,6 +3625,23 @@ struct clk *clk_hw_create_clk(struct device *dev, =
-struct clk_hw *hw,
->         return clk;
->  }
-> =20
-> +/**
-> + * clk_hw_get_clk: get clk consummer given an clk_hw
-
-s/consummer/consumer/
-
-> + * @hw: clk_hw associated with the clk being consumed
-> + *
-> + * Returns: new clk consummer
-> + * This is the function to be used by providers which need
-> + * to get a consummer clk and act on the clock element
-
-s/consummer/consumer/
-
-> + * Calls to this function must be balanced with calls clk_put()
-
-calls to clk_put()
-
-> + */
-> +struct clk *clk_hw_get_clk(struct clk_hw *hw)
-
-Can it also take a const char *id argument? That will let us "name" the
-clk structure for situations where we want to keep track of who is using
-the clk pointer for things. If that doesn't seem useful then I suppose
-we can pass a string like "clk_hw_get_clk" for con_id below and hope it
-doesn't become useful later.
-
-> +{
-> +       struct device *dev =3D hw->core->dev;
-> +
-> +       return clk_hw_create_clk(dev, hw, dev_name(dev), NULL);
-> +}
-> +EXPORT_SYMBOL(clk_hw_get_clk);
-> +
->  static int clk_cpy_name(const char **dst_p, const char *src, bool must_e=
-xist)
->  {
->         const char *dst;
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index d3a2acafedecd4..5037ce7f48cd42 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -287,12 +287,12 @@ static long vhost_vdpa_get_vring_num(struct vhost_vdpa *v, u16 __user *argp)
+ 
+ 	return 0;
+ }
+-void vhost_vdpa_poll_stop(struct vhost_virtqueue *vq)
++static void vhost_vdpa_poll_stop(struct vhost_virtqueue *vq)
+ {
+ 	vhost_poll_stop(&vq->poll);
+ }
+ 
+-int vhost_vdpa_poll_start(struct vhost_virtqueue *vq)
++static int vhost_vdpa_poll_start(struct vhost_virtqueue *vq)
+ {
+ 	struct vhost_poll *poll = &vq->poll;
+ 	struct file *file = vq->kick;
+@@ -747,7 +747,7 @@ static int vhost_vdpa_poll_worker(wait_queue_entry_t *wait, unsigned int mode,
+ 	return 0;
+ }
+ 
+-void vhost_vdpa_poll_init(struct vhost_dev *dev)
++static void vhost_vdpa_poll_init(struct vhost_dev *dev)
+ {
+ 	struct vhost_virtqueue *vq;
+ 	struct vhost_poll *poll;
