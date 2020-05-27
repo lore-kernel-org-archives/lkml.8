@@ -2,89 +2,103 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D732C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55DCF20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DA620B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729520AbgE0Jwk (ORCPT
+        id S1729584AbgE0JyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:52:40 -0400
-Received: from correo.us.es ([193.147.175.20]:45210 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726712AbgE0Jwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:52:40 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 39379F23B5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 11:52:38 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 27DACDA718
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 11:52:38 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 178A4DA715; Wed, 27 May 2020 11:52:38 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 2AD4BDA70F;
-        Wed, 27 May 2020 11:52:36 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Wed, 27 May 2020 11:52:36 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id ECBA542EE38F;
-        Wed, 27 May 2020 11:52:35 +0200 (CEST)
-Date:   Wed, 27 May 2020 11:52:35 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH net] netfilter: conntrack: Pass value of ctinfo to
- __nf_conntrack_update
-Message-ID: <20200527095235.GA399@salvia>
-References: <20200527081038.3506095-1-natechancellor@gmail.com>
+        Wed, 27 May 2020 05:54:08 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:32817 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgE0JyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:54:07 -0400
+Received: from mail-qv1-f47.google.com ([209.85.219.47]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MBltK-1jjLKT2c6m-00CDQl; Wed, 27 May 2020 11:54:05 +0200
+Received: by mail-qv1-f47.google.com with SMTP id dh1so10830611qvb.13;
+        Wed, 27 May 2020 02:54:05 -0700 (PDT)
+X-Gm-Message-State: AOAM533l6opv8qtsuRCknZJWxN9mxqkxakKQZXRox1ZB6l8pPY/cujqk
+        libGPswclU007e0F2M3O/sNDzmsOyV7OYa0nueM=
+X-Google-Smtp-Source: ABdhPJwFY+9e2QwGxBuOVJhyvZzHkmdup67C33Hon0tX+xYCanXD6siiWNyzzW3vpc4K6tTqx9WsMyOJzXh6HoLxoPA=
+X-Received: by 2002:a05:6214:370:: with SMTP id t16mr24222212qvu.197.1590573244279;
+ Wed, 27 May 2020 02:54:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527081038.3506095-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org> <20200527090007.GA179718@kroah.com>
+In-Reply-To: <20200527090007.GA179718@kroah.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 May 2020 11:53:48 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
+Message-ID: <CAK8P3a35fjXt1F2hJygup5gWfjPHZTuU+VD69K5uzrNhhgu0Pw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Introduce PCI_FIXUP_IOMMU
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Zhangfei Gao <zhangfei.gao@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:7K2loUdsuzT4IObBECaTn5y/oTwu9Qnf7fQGq3o3+5XHTkSeubV
+ RkTn504d1Z3tqqH5zotfEfCbYHNzcz7ngEoG4h5+ogwKwxhFOdzfXXT1uY0AWLucWB2PLHR
+ dqkjxVfhTidDANOLpVF1+u7kI0XC3zFrDVIpU5sBiApHBh/4OxfJ/bzSbYnmnvJuFl8225L
+ jAT9cXT8IQvkLTSHkfbQw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DbAEUAVsBkM=:7+j/lOP7swsqLFFxJSAwFf
+ ItEC3r0lBQC310bf0/c3QzQbF84sZuRnNiMCBE8TLhSAeUv8xxYikqgF650oIKqNymmHdt004
+ F08oVFVZ7aXRpfvfjzEqavIlw8j/Ba95gvaqi3+x/Ncc6rtSxY5xU7cOl9RynkZqVURxlYKLo
+ 4LH7Ws/t0aqA9WXGeQ3k1+u+lfkfcGVir/daeX3QTAXmKku/spJl4u1B+3c+clr1WnFVWg5ar
+ oLk9Ow3KVtUp+KvVJAcvYPa9FuuzDVkUWrgvKr0EwP02DFcRzAqBdIRfvTMw003Rq6+4BIXyM
+ am1JdeZ35CoJGUTxe538lEdwobpe8YPs8+jvs5R5+rqWmex/KC7FyTvX5WX6Gwu2+2v3aPQXj
+ ZiZ1Ik7xwSRDWe0DgulC3XwlE5EyI/Yp8Zxx/dt3ETB7WyDtIX5DFfxAX26bQnIi0kh1S1kkm
+ zJuSO4KrO8HvLJvF/BHhg5xEy1w03Mfq9JMNWZabgxKxd1+gnQw6QHxW3CElkr+t0N0nqD38R
+ xu1XrBBdgctMN74gdHWvaIsNDLVASuOOxKKZBmBwebuQ9twv9IJdWU49lUPxaLRPaAkUq8kpb
+ uP4EwQG4f7mreMQykVlroIbC+XRj3fdte3PFEs570mYw3gWbb2lsEmFtCV/0Hp+ndYulb/D58
+ JgQwRg7AASPjMOo1Aat8IywGuyGp+RxqwQbKsofsnCas2HojPD37fSuxyCGj8RGqiLbn+02EY
+ OQpuJmkC3a32velZ0MjS2ODlSOp8TPOGiGQhZsLoqwauWQCWJlkz9GL3Fzh4bHSiU5Q8VkJbg
+ UJYRC664fnWhVVjS/xKOLJofbn8Sr9EmixSWQ3D+C4mSpPjUjU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:10:39AM -0700, Nathan Chancellor wrote:
-> Clang warns:
-> 
-> net/netfilter/nf_conntrack_core.c:2068:21: warning: variable 'ctinfo' is
-> uninitialized when used here [-Wuninitialized]
->         nf_ct_set(skb, ct, ctinfo);
->                            ^~~~~~
-> net/netfilter/nf_conntrack_core.c:2024:2: note: variable 'ctinfo' is
-> declared here
->         enum ip_conntrack_info ctinfo;
->         ^
-> 1 warning generated.
-> 
-> nf_conntrack_update was split up into nf_conntrack_update and
-> __nf_conntrack_update, where the assignment of ctifno is in
-> nf_conntrack_update but it is used in __nf_conntrack_update.
-> 
-> Pass the value of ctinfo from nf_conntrack_update to
-> __nf_conntrack_update so that uninitialized memory is not used
-> and everything works properly.
+On Wed, May 27, 2020 at 11:00 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, May 26, 2020 at 07:49:07PM +0800, Zhangfei Gao wrote:
+> > Some platform devices appear as PCI but are actually on the AMBA bus,
+>
+> Why would these devices not just show up on the AMBA bus and use all of
+> that logic instead of being a PCI device and having to go through odd
+> fixes like this?
 
-Applied, thanks.
+There is a general move to having hardware be discoverable even with
+ARM processors. Having on-chip devices be discoverable using PCI config
+space is how x86 SoCs usually do it, and that is generally a good thing
+as it means we don't need to describe them in DT
+
+I guess as the hardware designers are still learning about it, this is not
+always done correctly. In general, we can also describe PCI devices on
+DT and do fixups during the probing there, but I suspect that won't work
+as easily using ACPI probing, so the fixup is keyed off the hardware ID,
+again as is common for x86 on-chip devices.
+
+      Arnd
