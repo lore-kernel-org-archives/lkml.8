@@ -2,88 +2,152 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88446C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6A020723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640B420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:44:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="olBkgcZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388186AbgE0IoR (ORCPT
+        id S2388196AbgE0Ioa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:44:17 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:41786 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387811AbgE0IoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:44:17 -0400
-Received: from localhost.localdomain (unknown [222.205.60.151])
-        by mail-app2 (Coremail) with SMTP id by_KCgBnEb0vKM5ey2AhAA--.8240S4;
-        Wed, 27 May 2020 16:43:31 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: img-spdif-in: Fix runtime PM imbalance on error
-Date:   Wed, 27 May 2020 16:43:24 +0800
-Message-Id: <20200527084326.4131-1-dinghao.liu@zju.edu.cn>
+        Wed, 27 May 2020 04:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388113AbgE0Ioa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:44:30 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1ACBC03E97C
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:44:29 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id k5so27866244lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unikie-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=MFoYK1tdyEHkeM2PPovQEs5479N+lz7pmFiM6Ih3uJk=;
+        b=olBkgcZifHmXXUqZg49Yy3KTfO3eNt/7yfrgYYlMTI1MOwKCCjQJcTtGjEoziZYMWQ
+         GQ8uG3CZ/H+3ToPlIJ1xPnu+pSE5SoVzE/IC4gm9MwOgvpY0f2/nQ7nAiujvzA7D3dIi
+         tON6zrDAE5nOO/NeSYpTx37GptVxr0vR8IsjIwcHBUjU7SQ/Yh3OLku8OeVJph2thdJB
+         qB/aE58oM0/96x1QT2+JYAYG8wZy4XWA9nHmQHr8/jTZMD9KgIrYJecQS7j9/DN4Om5O
+         +oY4upzrNgn7N3UBB3f98pydImVaxOylsOcasGl4Q3Y3jueTb5CzjR9dFKEFnaNPbzKv
+         xpaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MFoYK1tdyEHkeM2PPovQEs5479N+lz7pmFiM6Ih3uJk=;
+        b=jjhovzkPtsjvlOp/HkaXGqkol3bqYlVoKBi2qTT+/zavxc+lnFa3EUJ2EjAV0MPR53
+         oIdtFDVDy7x9juMA/SNa3/Kl/jO+8LKc2Z2QMzNzX7QxyyJ1H7YoXMzYnnfG8hkUilws
+         KN3pa7rxM2dnuGDVlXeSKT2DkgN3t7esbCqbbsiE0S4MKwdvnUVhfuiuoQ/rVfLFCN1B
+         rI/o0XzmirbTZeXeg1pme/M0QhJPUwSbHaN5IVpVz2h7+KuMfs6BWjye6CEHoBjgRyF4
+         hgaYV95HSr/FxNPeUsNKgwF8q9Djo81x7tS9/KYWGI8mEBSf6MpyYoeFi6uJHS/z6z7C
+         3DfQ==
+X-Gm-Message-State: AOAM5317PrCvcS9knqx00FnAyW0RxFTPZFvazsAYD+OnFC/IZyp9Gxu8
+        A2dd+7+MqsLWAv0sxqs3mG6JZg==
+X-Google-Smtp-Source: ABdhPJzDaH1iDFR+BxrddOsLDTpZzTIIxQ+A9Fc7OrKYAHgar8y5fyveSzDjW9XTJleFpiWHgJHSOw==
+X-Received: by 2002:a05:651c:2dc:: with SMTP id f28mr2450294ljo.36.1590569068041;
+        Wed, 27 May 2020 01:44:28 -0700 (PDT)
+Received: from localhost.localdomain ([109.204.235.119])
+        by smtp.googlemail.com with ESMTPSA id o4sm654925lff.78.2020.05.27.01.44.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 01:44:27 -0700 (PDT)
+From:   john mathew <john.mathew@unikie.com>
+X-Google-Original-From: john mathew <John.Mathew@unikie.com>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, tsbogend@alpha.franken.de,
+        lukas.bulwahn@gmail.com, x86@kernel.org,
+        linux-mips@vger.kernel.org, tglx@linutronix.de,
+        mostafa.chamanara@gmail.com, willy@infradead.org,
+        valentin.schneider@arm.com, srikar@linux.vnet.ibm.com,
+        john mathew <John.Mathew@unikie.com>
+Subject: [RFC PATCH v6 0/3] Add scheduler overview documentation
+Date:   Wed, 27 May 2020 11:44:18 +0300
+Message-Id: <20200527084421.4673-1-John.Mathew@unikie.com>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgBnEb0vKM5ey2AhAA--.8240S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWfWwcE9w
-        4kCws3W3yrCayIqrWDXa1YvrWrWrn7KFWUWF1Iyr1fK34Ykrs8X3ykJFn8ur45Wa18Xr1I
-        qry8urWfuryvkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
-        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJbIYCTnIWIevJa73UjIFyTuYvjfUeHUDDUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0MBlZdtOUT6wANsq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
+This patch series updates the scheduler documentation to add more topics
+wrt to scheduler overview. New sections are added to provide a brief
+overview of the kernel structs used by the scheduler, scheduler invocation,
+context switch and Capacity Aware Scheduling. Previous version of
+the patch was reviewed at:
+https://lore.kernel.org/lkml/20200514092637.15684-1-John.Mathew@unikie.com/
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- sound/soc/img/img-spdif-in.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+version 6:
+ -Fix typos.
 
-diff --git a/sound/soc/img/img-spdif-in.c b/sound/soc/img/img-spdif-in.c
-index fd639f4d082b..46ff8a3621d5 100644
---- a/sound/soc/img/img-spdif-in.c
-+++ b/sound/soc/img/img-spdif-in.c
-@@ -753,8 +753,10 @@ static int img_spdif_in_probe(struct platform_device *pdev)
- 			goto err_pm_disable;
- 	}
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto err_suspend;
-+	}
- 
- 	rst = devm_reset_control_get_exclusive(&pdev->dev, "rst");
- 	if (IS_ERR(rst)) {
+version 5:
+ -Fix description error on CAS
+
+version 4:
+ -Added section on Capacity-Aware Scheduling
+ -Reworded CFS recently added features.
+ -Removed vruntime description from scheduler structs
+ -Added description of idle and stopper sched classses
+
+version 3:
+ -Fix spelling, spacing and typo errors.
+
+version 2:
+- Remove :c:func: directive as it was redundant
+- Limit document width (line symbol count) to 75
+- Replace dot file with ASCII art
+- Describe prepare_task_switch(), ASID use, 
+  kernel/user transtion, MIPS FPU affinity correctly
+- Add missing references to files
+- Removed internal APIs from scheduler API reference
+- Described rq struct member as kernel-doc comments
+- Replaced CFS history with CFS current status
+- Added documentation for sched_class fields
+- Refined explanation of context swtich functionality
+- Replace CFS history with recent changes
+- Added kernel-doc comments for struct rq
+
+
+John Mathew (3):
+  docs: scheduler: Restructure scheduler documentation.
+  docs: scheduler: Add scheduler overview documentation
+  docs: scheduler: Add introduction to scheduler context-switch
+
+ Documentation/scheduler/arch-specific.rst     |  14 +
+ Documentation/scheduler/cfs-overview.rst      | 102 ++++++
+ Documentation/scheduler/context-switching.rst | 125 ++++++++
+ Documentation/scheduler/index.rst             |  33 +-
+ .../scheduler/mips-context-switch.rst         |  89 ++++++
+ Documentation/scheduler/overview.rst          | 293 ++++++++++++++++++
+ Documentation/scheduler/sched-cas.rst         |  92 ++++++
+ .../scheduler/sched-data-structs.rst          | 182 +++++++++++
+ Documentation/scheduler/sched-debugging.rst   |  14 +
+ Documentation/scheduler/sched-features.rst    |  21 ++
+ Documentation/scheduler/scheduler-api.rst     |  31 ++
+ .../scheduler/x86-context-switch.rst          |  65 ++++
+ kernel/sched/core.c                           |  28 +-
+ kernel/sched/sched.h                          | 169 +++++++++-
+ 14 files changed, 1238 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/scheduler/arch-specific.rst
+ create mode 100644 Documentation/scheduler/cfs-overview.rst
+ create mode 100644 Documentation/scheduler/context-switching.rst
+ create mode 100644 Documentation/scheduler/mips-context-switch.rst
+ create mode 100644 Documentation/scheduler/overview.rst
+ create mode 100644 Documentation/scheduler/sched-cas.rst
+ create mode 100644 Documentation/scheduler/sched-data-structs.rst
+ create mode 100644 Documentation/scheduler/sched-debugging.rst
+ create mode 100644 Documentation/scheduler/sched-features.rst
+ create mode 100644 Documentation/scheduler/scheduler-api.rst
+ create mode 100644 Documentation/scheduler/x86-context-switch.rst
+
 -- 
 2.17.1
 
