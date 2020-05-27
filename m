@@ -2,203 +2,103 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C668AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A54662075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF232075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DOuH2kP2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="f8qNoHcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgE0CLQ (ORCPT
+        id S1727061AbgE0CNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:11:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgE0CLP (ORCPT
+        Tue, 26 May 2020 22:13:23 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41414 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgE0CNW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:11:15 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2BDAC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 19:11:14 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id f5so1524101wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 19:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ipUdTLnpQOIojrMyR3JyiZnfjmcjJ5S3+vvLX0u1WTg=;
-        b=DOuH2kP2aeGP1W4uOzhBKrSoSzufsBnclYFQQFHRS9g2gBz9ORHxXyrcJmDgHCI+nd
-         lKZR3CxT8/SFUPl/0RSlQZoTAvQ2VoBGw5IJ03AscxowpPHOX45qQPtC3m1xh2vs5nBb
-         StR23Z28+tzSznWdX5y5wF+aiDvT1LQNmvQB4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ipUdTLnpQOIojrMyR3JyiZnfjmcjJ5S3+vvLX0u1WTg=;
-        b=IS/oOFrvHPpNtNXCWJB3mDEANoSRXeOqQ4hgBUX4FwpJJgv9fURaph1ONz6RSYp546
-         TLq8b5B82AhRJbW+BKXe/qy4Yu+rWysp+a7q9sGEOY/jS+suMrxkV/KQzaQTFihyqBGd
-         VjdVJWTWyzrVGvtncPZ0RPH5t6+JXQM5SNHXPEzJ//DjkxRrf9ccuY1UHfcPbsOXEEuF
-         KqgAkc1mdFeNwKLRZGI9+XZ8KadeqhLpPNmxODTKKMLHdpCOEifarFjq+yEkYNen75sj
-         NGPLCLpF8U/MjoRGVdi7NrEOTekDGiJQzd8AVv+9Exd+ASvy3G0KypoQhibHfz3sgUHC
-         Q0eQ==
-X-Gm-Message-State: AOAM5304mfDQk/Jrfkzmj87T6s/sNmDX9MXMfnxMrFNJ5wVBx0jzTEGI
-        AoPe8y69Ec6ZLPnTSeQyPFvAGg==
-X-Google-Smtp-Source: ABdhPJw2LdNhciHKkSNxeAMGIla1TaBk20r0eRoecZGPQSy8eengZqskOy+JhG0pZfQ9RCfwACNT2w==
-X-Received: by 2002:a1c:117:: with SMTP id 23mr1993725wmb.90.1590545473423;
-        Tue, 26 May 2020 19:11:13 -0700 (PDT)
-Received: from google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id l19sm1259285wmj.14.2020.05.26.19.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 19:11:12 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 27 May 2020 04:11:11 +0200
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH bpf-next 2/4] bpf: Implement bpf_local_storage for inodes
-Message-ID: <20200527021111.GA197666@google.com>
-References: <20200526163336.63653-1-kpsingh@chromium.org>
- <20200526163336.63653-3-kpsingh@chromium.org>
- <20200527004902.lo6c2efv5vix5nqq@ast-mbp.dhcp.thefacebook.com>
+        Tue, 26 May 2020 22:13:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R2BiS2057149;
+        Wed, 27 May 2020 02:13:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=YIyN4Qo606LJ4RFAc+vzNbDR934KRVMtW+N72kxxmv0=;
+ b=f8qNoHcPre7uK7Wq6gM8KVA72N+8BM3ORXTKXSYMaprmm+8eTEg/we6RskC0cqmZqWlr
+ 0oR8MQY1AMCKRhG2MitViTJegX44OUimvlW2QAidnr/ZnN7wkJH9Lq2TNmnuZ86nzzSY
+ B4DQLgZfrhFmvon9rUHK1mZSHWp9FiyuuO+Oyfa8NTwG8Fb9w/KyNlWMNGDamoBgYpwP
+ 0GYRmuSVurm/HTSYc2MPJ5s3nTKfPJNDe3XFFG/0S4SEKOn3AxtJK26rJENAKRlHYCuN
+ 6g0dHuNeFmkGHeo8gdIAcftk0VWTkRVlS4/1FmszLzlUfERfLDjkwMyY63/XT5VVQdPk hw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 318xbjvym6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 02:13:13 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R2D1Vn062744;
+        Wed, 27 May 2020 02:13:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 317ddpxqbr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 02:13:13 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04R2DBSB017236;
+        Wed, 27 May 2020 02:13:12 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 26 May 2020 19:13:11 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     agross@kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        avri.altman@wdc.com, venkatg@codeaurora.org,
+        bjorn.andersson@linaro.org, subhashj@codeaurora.org,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] scsi: ufs-qcom: Fix scheduling while atomic issue
+Date:   Tue, 26 May 2020 22:12:57 -0400
+Message-Id: <159054550934.12032.14920097484832266826.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200525204125.46171-1-jeffrey.l.hugo@gmail.com>
+References: <20200525204125.46171-1-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527004902.lo6c2efv5vix5nqq@ast-mbp.dhcp.thefacebook.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ phishscore=0 adultscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005270013
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
+ suspectscore=0 bulkscore=0 clxscore=1011 impostorscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005270013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for taking a look!
+On Mon, 25 May 2020 13:41:25 -0700, Jeffrey Hugo wrote:
 
-On 26-May 17:49, Alexei Starovoitov wrote:
-> On Tue, May 26, 2020 at 06:33:34PM +0200, KP Singh wrote:
-> >  
-> > +static struct bpf_local_storage_data *inode_storage_update(
-> > +	struct inode *inode, struct bpf_map *map, void *value, u64 map_flags)
-> > +{
-> > +	struct bpf_local_storage_data *old_sdata = NULL;
-> > +	struct bpf_local_storage_elem *selem;
-> > +	struct bpf_local_storage *local_storage;
-> > +	struct bpf_local_storage_map *smap;
-> > +	int err;
-> > +
-> > +	err = check_update_flags(map, map_flags);
-> > +	if (err)
-> > +		return ERR_PTR(err);
-> > +
-> > +	smap = (struct bpf_local_storage_map *)map;
-> > +	local_storage = rcu_dereference(inode->inode_bpf_storage);
-> > +
-> > +	if (!local_storage || hlist_empty(&local_storage->list)) {
-> > +		/* Very first elem for this inode */
-> > +		err = check_flags(NULL, map_flags);
-> > +		if (err)
-> > +			return ERR_PTR(err);
-> > +
-> > +		selem = selem_alloc(smap, value);
-> > +		if (!selem)
-> > +			return ERR_PTR(-ENOMEM);
-> > +
-> > +		err = inode_storage_alloc(inode, smap, selem);
+> ufs_qcom_dump_dbg_regs() uses usleep_range, a sleeping function, but can
+> be called from atomic context in the following flow:
 > 
-> inode_storage_update looks like big copy-paste except above one line.
-> pls consolidate.
-
-Sure.
-
+> ufshcd_intr -> ufshcd_sl_intr -> ufshcd_check_errors ->
+> ufshcd_print_host_regs -> ufshcd_vops_dbg_register_dump ->
+> ufs_qcom_dump_dbg_regs
 > 
-> > +BPF_CALL_4(bpf_inode_storage_get, struct bpf_map *, map, struct inode *, inode,
-> > +	   void *, value, u64, flags)
-> > +{
-> > +	struct bpf_local_storage_data *sdata;
-> > +
-> > +	if (flags > BPF_LOCAL_STORAGE_GET_F_CREATE)
-> > +		return (unsigned long)NULL;
-> > +
-> > +	sdata = inode_storage_lookup(inode, map, true);
-> > +	if (sdata)
-> > +		return (unsigned long)sdata->data;
-> > +
-> > +	if (flags == BPF_LOCAL_STORAGE_GET_F_CREATE &&
-> > +	    atomic_inc_not_zero(&inode->i_count)) {
-> > +		sdata = inode_storage_update(inode, map, value, BPF_NOEXIST);
-> > +		iput(inode);
-> > +		return IS_ERR(sdata) ?
-> > +			(unsigned long)NULL : (unsigned long)sdata->data;
-> > +	}
-> 
-> This is wrong. You cannot just copy paste the refcounting logic
-> from bpf_sk_storage_get(). sk->sk_refcnt is very different from inode->i_count.
-> To start, the inode->i_count cannot be incremented without lock.
+> [...]
 
-Good catch! Agreed, Jann pointed out that this can lead to bugs
-similar to https://crbug.com/project-zero/2015.
+Applied to 5.8/scsi-queue, thanks!
 
-> If you really need to do it you need igrab().
-> Secondly, the iput() is not possible to call from bpf prog yet, since
+[1/1] scsi: ufs-qcom: Fix scheduling while atomic issue
+      https://git.kernel.org/mkp/scsi/c/3be60b564de4
 
-> progs are not sleepable and iput() may call iput_final() which may sleep.
-
-Agreed, I will send a separate patch to add a might_sleep call to
-iput() which currently only has a "Consequently, iput() can sleep."
-warning in the comments so that this can be caught by
-CONFIG_DEBUG_ATOMIC_SLEEP.
-
-> But considering that only lsm progs from lsm hooks will call bpf_inode_storage_get()
-> the inode is not going to disappear while this function is running.
-
-If the inode pointer is an argument to the LSM hook, it won't
-disappear and yes this does hold generally true for the other
-use-cases as well.
-
-> So why touch i_count ?
-> 
-> > +
-> > +	return (unsigned long)NULL;
-> > +}
-> > +
-> >  BPF_CALL_2(bpf_sk_storage_delete, struct bpf_map *, map, struct sock *, sk)
-> >  {
-> >  	if (refcount_inc_not_zero(&sk->sk_refcnt)) {
-> > @@ -957,6 +1229,20 @@ BPF_CALL_2(bpf_sk_storage_delete, struct bpf_map *, map, struct sock *, sk)
-> >  	return -ENOENT;
-> >  }
-> >  
-> > +BPF_CALL_2(bpf_inode_storage_delete,
-> > +	   struct bpf_map *, map, struct inode *, inode)
-> > +{
-> > +	int err;
-> > +
-> > +	if (atomic_inc_not_zero(&inode->i_count)) {
-> > +		err = inode_storage_delete(inode, map);
-> > +		iput(inode);
-> > +		return err;
-> > +	}
-> 
-> ditto.
-> 
-> > +
-> > +	return inode_storage_delete(inode, map);
-> 
-> bad copy-paste from bpf_sk_storage_delete?
-> or what is this logic suppose to do?
-
-The former :) fixed...
-
-- KP
+-- 
+Martin K. Petersen	Oracle Linux Engineering
