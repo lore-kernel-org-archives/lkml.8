@@ -2,68 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9A9207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A082075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:35:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgmuK+af"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgE0Dcj (ORCPT
+        id S1728582AbgE0DfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:32:39 -0400
-Received: from m17616.mail.qiye.163.com ([59.111.176.16]:19320 "EHLO
-        m17616.mail.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgE0Dci (ORCPT
+        Tue, 26 May 2020 23:35:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgE0DfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:32:38 -0400
-Received: from ubuntu.localdomain (unknown [58.251.74.226])
-        by m17616.mail.qiye.163.com (Hmail) with ESMTPA id AB9831086E6;
-        Wed, 27 May 2020 11:32:34 +0800 (CST)
-From:   Wang Wenhu <wenhu.wang@vivo.com>
-To:     davem@davemloft.net, elder@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com, trivial@kernel.org,
-        Wang Wenhu <wenhu.wang@vivo.com>
-Subject: [PATCH] drivers: ipa: remove discription of nonexistent element
-Date:   Tue, 26 May 2020 20:32:22 -0700
-Message-Id: <20200527033222.34410-1-wenhu.wang@vivo.com>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUtXWQgYFAkeWUFZTVVITU9LS0tISUtPSE9OTFlXWShZQU
-        hPN1dZLVlBSVdZDwkaFQgSH1lBWRJOKzI4HD8VChITKEhDSh4pSRg6OjpWVlVITyhJWVdZCQ4XHg
-        hZQVk1NCk2OjckKS43PllXWRYaDxIVHRRZQVk0MFkG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NTo6Azo5STgzLyMjT0IfHQJR
-        LB0KFD1VSlVKTkJLTk5LSE5MSkxOVTMWGhIXVQweFRMOVQwaFRw7DRINFFUYFBZFWVdZEgtZQVlO
-        Q1VJTkpVTE9VSUlNWVdZCAFZQUpPQ0I3Bg++
-X-HM-Tid: 0a7254305c6b9374kuwsab9831086e6
+        Tue, 26 May 2020 23:35:19 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4338EC061A0F;
+        Tue, 26 May 2020 20:35:18 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id h10so24413268iob.10;
+        Tue, 26 May 2020 20:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mTw88palFD7+SjbmvqrQhtUBYE0y0z+9wugbJffOnsM=;
+        b=jgmuK+af4ey5mHa7nJqETfNgp4IoLT/AyXeGzZm+6Oo4QQ10env2fI2sARC4LowYfz
+         EMMj3MD1UCuqQVCsCqsR/LkA19r5SyjGgMDUkH8cjy93pFywkzMzKBYcxLNpMp6yoY/X
+         4cCif0OIVXqe16dHzhowIdkJ8BTHncYtmeLV87aoEFJR96jX9MfcakeWi13Foz5Ctois
+         3fWulGiU0uOkct07PQJ5Nwj9aCoNdMfhe2oZxYlSzACdDOBJ/vSyIr4wj9zDOuY587v+
+         9qqs8aOt0CCR8kKKuUrEhpf/UH8r+THMi3oFOohOXchE9p1hzXthqPl/UNg3SkEgKdvA
+         mQJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mTw88palFD7+SjbmvqrQhtUBYE0y0z+9wugbJffOnsM=;
+        b=Z8Wp94hA56YIB/NiymCWqcpuULQNXUuhROFVen6WoNWxDq+wBZ76HXsdrExF659C18
+         AHopkmxiJpUaXgWr+8rSDCWGysUrNZqiOdElvZqbBlLCBVuMSqTB65gsyfyjxiwf/kjG
+         8I5cbDaj4nQRInDDqUfyLlbpyUTx52stjfXZL8BdNogQzvRVCL+dSeHADZP7BZ9km6o8
+         B/csP606a4xhnLKIQHTTJLX5q5espFtwvsdJusuwUc86z6dyVBqj8bcmMD7bT1PRsio+
+         FXNuJjCW3ZW26xqGMLCZA+JC2y7Hiecd+89sA9ftM3ponuyph+5Ydveqm9inEf2CEgSP
+         81jQ==
+X-Gm-Message-State: AOAM533gI8ZjZYuqSzQt9YyzsmvTu+jsXGFuVEJ2Q0Tcv27MasMsr3Ej
+        KYLkXMs6+d5XIaazhIoOJGRrKhuK3OgDoL0ld74=
+X-Google-Smtp-Source: ABdhPJwRcRNaL9Cp/PHFR18M0JUnWOdsEr+fVxAXeWmuUAEkARK2erNRIf/01B7exkDIKFAEduWa1j4r3nZ1QgqKsnw=
+X-Received: by 2002:a6b:750c:: with SMTP id l12mr20150950ioh.66.1590550517652;
+ Tue, 26 May 2020 20:35:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <18609.1588812972@famine> <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com> <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com> <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+ <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com> <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
+ <CAOSf1CHTUyQ5o_ThkaPUkGjtTSK1UOkxSmKAWY3n3bdrVcjacA@mail.gmail.com> <55b3a469-c306-acf1-f97e-f07f40054974@linux.intel.com>
+In-Reply-To: <55b3a469-c306-acf1-f97e-f07f40054974@linux.intel.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 27 May 2020 13:35:06 +1000
+Message-ID: <CAOSf1CE00f_3KxWAPvWngsW8z_frw6=qB70H+VmdSULaspHWhQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Yicong Yang <yangyicong@hisilicon.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ashok.raj@intel.com, Sam Bobroff <sbobroff@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No element named "client" exists within "struct ipa_endpoint".
-It might be a heritage forgotten to be removed. Delete it now.
+On Wed, May 27, 2020 at 1:06 PM Kuppuswamy, Sathyanarayanan
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+> Yes, in case of DPC (Fatal errors) link is already reset. So we
+> don't need any special handling. This reset logic is mainly for
+> non-fatal errors.
 
-Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
----
- drivers/net/ipa/ipa_endpoint.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.h b/drivers/net/ipa/ipa_endpoint.h
-index 4b336a1f759d..bbee9535d4b2 100644
---- a/drivers/net/ipa/ipa_endpoint.h
-+++ b/drivers/net/ipa/ipa_endpoint.h
-@@ -41,7 +41,6 @@ enum ipa_endpoint_name {
- 
- /**
-  * struct ipa_endpoint - IPA endpoint information
-- * @client:	Client associated with the endpoint
-  * @channel_id:	EP's GSI channel
-  * @evt_ring_id: EP's GSI channel event ring
-  */
--- 
-2.17.1
-
+Why? In our experience most fatal errors aren't all that fatal and can
+be recovered by resetting the device. The base spec backs that up (see
+gen5 base, sec 6.2) too saying the main point of distinction between
+fatal and non-fatal errors is whether handling the error requires a
+reset or not. For EEH we always try to recover the device and only
+mark it as permanently failed once the devices goes over the max error
+threshold (5 errors per hour, by default). Doing something similar for
+(native) DPC would make sense IMO.
