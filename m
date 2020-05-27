@@ -2,71 +2,218 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54089C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4631BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A7020888
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F8A207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590544130;
-	bh=VZwcUR9cJJ5Xu2VihzOLcu/j5MKsW+XtUi/R0QgbwUw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=hIWET5qrlTSCJU4Fd3NGxbyu+UJO7YcHpX/v+sARAj0zmavVoJqvbqo12F203Yujj
-	 vAi20GGVp/xGrX3gRzv+e4KKTPoqL7aJH48GAskGdNrufWi+wbAUzWDj9Ut6JaMn4b
-	 GyH5JoX3iOz5VYPl7nMIs3+GCrrLZkj2Vj/6adlI=
+	s=default; t=1590544146;
+	bh=PRfGitUSrfn8k2Z4gRtjn++4ZGpMz0ywxN2UDzywaqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nPDsxO/47vnckH0SfIU9VKfnmrXArb8N3wOJOupCXTvQOBzr5HbN8LuLN1dW7EvlB
+	 cnsRdewEeabUKZ/qqka1oOqqoRpPo0eviHsjpCFGy2jTLTCmVHkpCGEYqSd0WtVD5U
+	 MisINk3L0uEU9SeMYNVVFRGi9qUlOJs85NePtzmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgE0Bst (ORCPT
+        id S1727098AbgE0BtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbgE0Bst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:48:49 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78235207CB;
-        Wed, 27 May 2020 01:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590544128;
-        bh=VZwcUR9cJJ5Xu2VihzOLcu/j5MKsW+XtUi/R0QgbwUw=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hk2+02Bi3/1PeI7+An0+K2JTNQSaqNnXeXmc24FjgomYp+FUKQfSUw6UGEd7oNxnE
-         D9Z/pUExuq9THOLTg9PAKUx3sU5T4/bq95CkfGVruMnIJbaqt4etVrkVZ7X+xgBcs2
-         61fQWm/nrfti/FenmV7aih1qvNA5eLusl7zBPQdw=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 26 May 2020 21:49:05 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35661 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgE0BtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:49:05 -0400
+Received: by mail-io1-f66.google.com with SMTP id s18so10297518ioe.2;
+        Tue, 26 May 2020 18:49:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NpFq0R0aWjAOVLGwhQJ2XIanByWj7TpCd6S10cJEALk=;
+        b=ehLhdobTilPxhRKmxjuoc82vpr/YACLkJRS9VQ6rineCgdisQmKDlKtCc8XIwwCo5L
+         +5kXdJB5o8toyHqyDngXAF6NzPtcAAGCHtWf/bXIW6KVfNAy5gtGEN/OoK0SDk0shMGV
+         bJ3OpRp3zdIcdUOzEyAudcJ4+0wIjHvaOLVyGLxJmFtKSZcoKcpr/r0F2vbT0Rw5JiEu
+         2mandnBPZc5tdPcwUAGQLzvXeMrRsayxK9Ac9eZtBGqwKGdVWCkyK8MCUmz19ragAvHj
+         8To4k12ii+TznF93il90DrMTlluk9E1UK7vBK16naLUN9afYU9QiEt6P8+yPFvggbSe2
+         3psw==
+X-Gm-Message-State: AOAM530ckeTaJlQtf7fF5+TvPuBWFTLH0mPZJznlPaLoFx/QjnHWEiz3
+        RaQ/Ady1lFATlOtcmp8gWZV2Cbk=
+X-Google-Smtp-Source: ABdhPJwnUd9gtPnPbiK2tnmPcj4pMtkePhPFVkdrcrLBI+LLU1Mcp7uTqwffmLKF1kyjD8RFzL2RBQ==
+X-Received: by 2002:a6b:5c19:: with SMTP id z25mr2942857ioh.119.1590544143956;
+        Tue, 26 May 2020 18:49:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h23sm633451ioj.39.2020.05.26.18.49.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 18:49:03 -0700 (PDT)
+Received: (nullmailer pid 874370 invoked by uid 1000);
+        Wed, 27 May 2020 01:49:02 -0000
+Date:   Tue, 26 May 2020 19:49:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200527014902.GA859634@bogus>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-2-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8dce2be13195aab20c6b11fca6af0fffe22d5241.1587102634.git.rahul.tanwar@linux.intel.com>
-References: <cover.1587102634.git.rahul.tanwar@linux.intel.com> <8dce2be13195aab20c6b11fca6af0fffe22d5241.1587102634.git.rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: clk: intel: Add bindings document & header file for CGU
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     robh@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        linux-clk@vger.kernel.org, mturquette@baylibre.com
-Date:   Tue, 26 May 2020 18:48:47 -0700
-Message-ID: <159054412768.88029.14426898331029456551@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526164652.2331-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rahul Tanwar (2020-04-16 22:54:46)
-> Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
-> Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
-> controller driver of LGM.
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+On Tue, May 26, 2020 at 11:46:37AM -0500, Dan Murphy wrote:
+> Add DT bindings for the LEDs multicolor class framework.
+> Add multicolor ID to the color ID list for device tree bindings.
+> 
+> CC: Rob Herring <robh@kernel.org>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
+>  .../bindings/leds/leds-class-multicolor.yaml  | 71 +++++++++++++++++++
+>  drivers/leds/led-core.c                       |  1 +
+>  include/dt-bindings/leds/common.h             |  3 +-
+>  3 files changed, 74 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> new file mode 100644
+> index 000000000000..fa6ea8e5c46b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.yaml
+> @@ -0,0 +1,71 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Applied to clk-next
+Dual license new bindings please.
+
+GPL-2.0-only OR BSD-2-Clause
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-class-multicolor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common properties for the multicolor LED class.
+> +
+> +maintainers:
+> +  - Dan Murphy <dmurphy@ti.com>
+> +
+> +description: |
+> +  Bindings for multi color LEDs show how to describe current outputs of
+> +  either integrated multi-color LED elements (like RGB, RGBW, RGBWA-UV
+> +  etc.) or standalone LEDs, to achieve logically grouped multi-color LED
+> +  modules. This is achieved by adding multi-led nodes layer to the
+> +  monochrome LED bindings.
+> +  The nodes and properties defined in this document are unique to the multicolor
+> +  LED class.  Common LED nodes and properties are inherited from the common.txt
+> +  within this documentation directory.
+> +
+> +properties:
+> +  color:
+> +    description: |
+> +      For multicolor LED support this property should be defined as
+> +      LED_COLOR_ID_MULTI and further definition can be found in
+> +      include/linux/leds/common.h.
+
+This should have:
+
+const: X  # LED_COLOR_ID_MULTI
+
+It can't use the define, so you have to use the value.
+
+> +
+> +required:
+> +  - color
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/leds/common.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        led-controller@14 {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          compatible = "ti,lp5009";
+> +          reg = <0x14>;
+> +
+> +          multi-led@1 {
+
+Define $nodename must be 'multi-led(@[0-9a-f]+)?'
+
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            reg = <1>;
+> +            color = <LED_COLOR_ID_MULTI>;
+> +            function = LED_FUNCTION_CHARGING;
+> +
+> +            led@0 {
+
+Then the schema should define child nodes named 'led'.
+
+> +              reg = <0>;
+> +              color = <LED_COLOR_ID_RED>;
+
+I assume in this case 'reg' and 'color' need to be defined as required?
+
+> +            };
+> +
+> +            led@1 {
+> +              reg = <1>;
+> +              color = <LED_COLOR_ID_GREEN>;
+> +            };
+> +
+> +            led@2 {
+> +              reg = <2>;
+> +              color = <LED_COLOR_ID_BLUE>;
+> +            };
+> +          };
+> +        };
+> +    };
+> +
+> +additionalProperties: false
+> +...
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+
+This isn't a binding file. Belongs in another patch.
+
+> index f1f718dbe0f8..846248a0693d 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] = {
+>  	[LED_COLOR_ID_VIOLET] = "violet",
+>  	[LED_COLOR_ID_YELLOW] = "yellow",
+>  	[LED_COLOR_ID_IR] = "ir",
+> +	[LED_COLOR_ID_MULTI] = "multicolor",
+>  };
+>  EXPORT_SYMBOL_GPL(led_colors);
+>  
+> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+> index 0ce7dfc00dcb..a463ce6a8794 100644
+> --- a/include/dt-bindings/leds/common.h
+> +++ b/include/dt-bindings/leds/common.h
+> @@ -30,7 +30,8 @@
+>  #define LED_COLOR_ID_VIOLET	5
+>  #define LED_COLOR_ID_YELLOW	6
+>  #define LED_COLOR_ID_IR		7
+> -#define LED_COLOR_ID_MAX	8
+> +#define LED_COLOR_ID_MULTI	8
+> +#define LED_COLOR_ID_MAX	9
+>  
+>  /* Standard LED functions */
+>  /* Keyboard LEDs, usually it would be input4::capslock etc. */
+> -- 
+> 2.25.1
+> 
