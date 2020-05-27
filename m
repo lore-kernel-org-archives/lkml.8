@@ -2,53 +2,73 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0472C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D791C2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549B22088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391650AbgE0QrA (ORCPT
+        id S2391592AbgE0Qqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:47:00 -0400
-Received: from muru.com ([72.249.23.125]:55884 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391543AbgE0Qq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:46:58 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2E7F080DB;
-        Wed, 27 May 2020 16:47:49 +0000 (UTC)
-Date:   Wed, 27 May 2020 09:46:56 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
-        kernel@pyra-handheld.com, letux-kernel@openphoenux.org,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH 4/4] w1: omap-hdq: print dev_err if irq flags are not
- cleared
-Message-ID: <20200527164656.GK37466@atomide.com>
-References: <cover.1590255176.git.hns@goldelico.com>
- <2de305d3046c7281a7123347899abbaa64c54fb8.1590255176.git.hns@goldelico.com>
+        Wed, 27 May 2020 12:46:47 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:43801 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391512AbgE0Qqk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:46:40 -0400
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 269A34000D;
+        Wed, 27 May 2020 16:46:38 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, richardcochran@gmail.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
+        foss@0leil.net, antoine.tenart@bootlin.com
+Subject: [PATCH net-next 4/8] net: phy: mscc: take into account the 1588 block in MACsec init
+Date:   Wed, 27 May 2020 18:41:54 +0200
+Message-Id: <20200527164158.313025-5-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200527164158.313025-1-antoine.tenart@bootlin.com>
+References: <20200527164158.313025-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2de305d3046c7281a7123347899abbaa64c54fb8.1590255176.git.hns@goldelico.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [200523 17:34]:
-> If irq flags are not cleared for certain operations we
-> print an error message.
-> 
-> Since this should never occur in normal operation, this
-> patch is an optional safety-net and debugging tool.
+This patch takes in account the use of the 1588 block in the MACsec
+initialization, as a conditional configuration has to be done (when the
+1588 block is used).
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/phy/mscc/mscc_macsec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/phy/mscc/mscc_macsec.c b/drivers/net/phy/mscc/mscc_macsec.c
+index c0eeb62cb940..713c62b1d1f0 100644
+--- a/drivers/net/phy/mscc/mscc_macsec.c
++++ b/drivers/net/phy/mscc/mscc_macsec.c
+@@ -285,7 +285,9 @@ static void vsc8584_macsec_mac_init(struct phy_device *phydev,
+ 				 MSCC_MAC_CFG_PKTINF_CFG_STRIP_PREAMBLE_ENA |
+ 				 MSCC_MAC_CFG_PKTINF_CFG_INSERT_PREAMBLE_ENA |
+ 				 (bank == HOST_MAC ?
+-				  MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0));
++				  MSCC_MAC_CFG_PKTINF_CFG_ENABLE_TX_PADDING : 0) |
++				 (IS_ENABLED(CONFIG_NETWORK_PHY_TIMESTAMPING) ?
++				  MSCC_MAC_CFG_PKTINF_CFG_MACSEC_BYPASS_NUM_PTP_STALL_CLKS(0x8) : 0));
+ 
+ 	val = vsc8584_macsec_phy_read(phydev, bank, MSCC_MAC_CFG_MODE_CFG);
+ 	val &= ~MSCC_MAC_CFG_MODE_CFG_DISABLE_DIC;
+-- 
+2.26.2
+
