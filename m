@@ -3,168 +3,169 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA088C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2F6D20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:30:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1052088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pTJE0ddM";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hfnbnhGH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b+lMbZsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391188AbgE0QaT (ORCPT
+        id S2391200AbgE0Qbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:30:19 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5650 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390102AbgE0QaS (ORCPT
+        Wed, 27 May 2020 12:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390648AbgE0Qbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:30:18 -0400
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RGPfw3022296;
-        Wed, 27 May 2020 09:30:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=I3/4bIpazbXbt82gceOhn2TPYFzYBya4We87w2nI3kc=;
- b=pTJE0ddMxPFcgkiCYAX/AUyYk2piDsd+kZccHYW4cgwlqKxtYNVYSjrcrKV5uk1J/8lx
- 8HUwA1f8TuohsMM6SoUEuruOGtKd5ht0hD/jBZrAqBiQmlgtHwFYd5+8sHobOTlx7k1i
- 9m7ZhzRXeFSfDSVX2ERNNHCwkpDtQaEosJY= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 317khdxcp4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 27 May 2020 09:30:05 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 09:30:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nW25c5powYfjfTrmZ0VzNJs5sQxVgr6hw58PnGA3IL0KorX1+isuPI24JQ8jPisDZvIDSkjZTJzd24griNFi5OP28IQhyLDSlN8oL2JIsvVNaAwrbzOWOHJWl7eWpNATTBgkzJKhMwBVhGaCIufDFiwV+VygjgjhpJXvjY6YIj18MjMAeQ3wLw0vc81q4Yq2PawZqUPowwDbFTdXi2wnLnfvt51lW2HbVnX5zRsjxJbjO2TBFz8x7W8Yg2ezb+a0Z96/P0X7wQzgBAkc3MuDBqM2LsTgN5fX4568eBKSsswG6CcV9i1gIbo/sW5Aa6AmnuMgpHjufpK1xGxxE/Aj5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I3/4bIpazbXbt82gceOhn2TPYFzYBya4We87w2nI3kc=;
- b=BRBDeRyPAKG3yuFbEAc77qxa1zjyQ8gKF80Y7+/5Ybq4M+oV5XCq3OmRq3V78YOX6T71ugOmj7CD2Zp93ApSyfENtUIuEljZuZ22OeUltAtawrEUyZvph+zyxAr7ObAVPvldHdFhO6Aj/PzstI5QFqyrkcz7TFNSGUPmBuqY8s+dxfXIWQb1rx3TjH1efqR0HwHQTHtwz8v04njlrywq4CSuDVibga5COPp2Y0H6RP7u1VuVyp7zR4K67seA2U7ZQVGoziiaSFPDrac1QvgPfGJOSqjaBvS//QozLHltrBT8go2jrqN+SrGTwa/SOtlMKpF8fWnd5xdswqqip6npZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I3/4bIpazbXbt82gceOhn2TPYFzYBya4We87w2nI3kc=;
- b=hfnbnhGH/WG7X7XLF6ivfpSnDHO+y+KuHafslbehbaxK0x9lzktw6v/xcKYjy56SrziW/+udxqCI1aDEARe9f36KSvQ6jOUE4Xl7UP3B+dGKLiLGP1vNxBc/KPMWo+WbZKp8AytX8H45A26bKCDRkz//WEYjyyJMiCQEYoiJHFY=
-Authentication-Results: suse.cz; dkim=none (message not signed)
- header.d=none;suse.cz; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Wed, 27 May
- 2020 16:30:00 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::48e3:c159:703d:a2f1%5]) with mapi id 15.20.3045.018; Wed, 27 May 2020
- 16:30:00 +0000
-Date:   Wed, 27 May 2020 09:29:56 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 12/19] mm: memcg/slab: use a single set of kmem_caches
- for all accounted allocations
-Message-ID: <20200527162956.GC396660@carbon.dhcp.thefacebook.com>
-References: <20200526214227.989341-1-guro@fb.com>
- <20200526214227.989341-13-guro@fb.com>
- <9a7726c8-ac3c-df5c-7409-16e6be22a923@suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a7726c8-ac3c-df5c-7409-16e6be22a923@suse.cz>
-X-ClientProxiedBy: BYAPR06CA0039.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::16) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Wed, 27 May 2020 12:31:40 -0400
+Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB25C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:31:39 -0700 (PDT)
+Received: by mail-oo1-xc32.google.com with SMTP id x17so1142533oog.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:31:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NxBsCG/ZBuR/tyqaxmR6a/8NFdkSmWg7ajuut4LGUfA=;
+        b=b+lMbZsTfHmILZwHDEtj1yw5O5x4XX8s8XDpQgw6wNybE3W4LYHAhyCF7+ColEcDPP
+         EMpWb/iriXb6UFyDBun0GZHcOX9dj5oZtlk/x3CfmrrFxUpUR4gQInaul157f1p0VAM2
+         ZzoG4NNhcOx5vebpK+p2ZCWLGrl2Zs/ikcDCyFgPdAkUUa1IizKTJZsCnFEZoeORqFRH
+         B1aJWppTBUxeJ30/7H+ilLGyRJ28SZxnH5gmxBTTsvU5ftLm1x6fxWn9snpQoLnQGlxD
+         AJiGz37SjZeKPKmZp2pZ9bepEp6aYhor5u8bWUeCmh6WRmlbdLuU+hV87tRQ3iDcywh0
+         zSXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NxBsCG/ZBuR/tyqaxmR6a/8NFdkSmWg7ajuut4LGUfA=;
+        b=LtM3U6ZMf/RaVe0mjSJeMy9RvNU19bqhos9EX3bG9hqHx1O7Ni92Ic46J20ty3YRov
+         30QZmfTESdCBS257XuEP81hHS6QnCJYuczDzCAQJUHgWjKBBQZu1sQp3Gp10VlZt4mwL
+         HsdVemERwgFgit0OtgA3U2mooNGn0wGCaM0R1vPNvuHcHWjqiuJPRW6ebQoM5PT1ModX
+         +K4l5y/czznYVDX6EqAdF0Gy/ERh2hV6Ed2L9W1z3P8xysRXAD33n8zyBXFpcy2lf2I4
+         vfrP9mEG0Q+nXa2rdSdGN9lTk2fBNmP58PrZIyuis+jRrpbMVhZ3sR6uEWzvPHbEi1iS
+         8duA==
+X-Gm-Message-State: AOAM531rnfamZsU+6xLzbRT6lepmdLz7tUHQjYUYdyT/vq7C4PZSXXJr
+        i+rC/u8rPtMk3aJlP0erMKbu00pWb4NJPSLa/16/cA==
+X-Google-Smtp-Source: ABdhPJxBq8QeDQCR39v9fZ3sYUGIbMy8dJJlxs9vQSgoBRg+s9wGSUND1yy0xbmGrnb1KxTaR3HXasfqVFSVK/OIfYQ=
+X-Received: by 2002:a4a:909a:: with SMTP id j26mr3710376oog.21.1590597098962;
+ Wed, 27 May 2020 09:31:38 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:bffd) by BYAPR06CA0039.namprd06.prod.outlook.com (2603:10b6:a03:14b::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Wed, 27 May 2020 16:29:59 +0000
-X-Originating-IP: [2620:10d:c090:400::5:bffd]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1d255478-9273-40b4-6670-08d8025b3354
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2999:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB299917472BD2449B258DE7D1BEB10@BYAPR15MB2999.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:1201;
-X-Forefront-PRVS: 04163EF38A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zAte4guMjEpHOdCilvC/XTrV2nib1uoj1Q30kNJvpvZHtTiJLn4WeB4zTjSkLZmye0ur2+9pAk6FvTLiGjVHcMPTKF/LET7c+0wnKYBG4/FBagktg9goVvABrERdgAPCxOmzpqFnA5AA0FQDptGBahFr1P2GswjqHDxM9pdLcW7hP3qdC0Axdnh4St0EqLtbuCd1XBxghLH4KKDrKcUfeYqmlUkcReGOQb7xGn5Jvwp0Q/O9OyFJtnLX7Nv7y1Ev5ut0eSb/MVWNPl/QIwpxRY1pVyv1QcoCyyr4qcwq1YQXO3NW+ogo+N88rnPsmw2d
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4136.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39860400002)(136003)(346002)(376002)(366004)(396003)(7696005)(66946007)(6666004)(1076003)(186003)(9686003)(53546011)(16526019)(6506007)(86362001)(316002)(54906003)(4326008)(8936002)(5660300002)(55016002)(52116002)(8676002)(6916009)(66556008)(478600001)(66476007)(33656002)(83380400001)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 8CNdk6W/6cTUgDP78RX94KgDdpRDhzGsfZ0fOtywIORZrLte/Uc3FsIIgpCvNmlBGdPJwYh7HKCDKMh0yzC1ilC63rPKQlBj78WnXpvkZNrT+gbohQHoXwGh+1bFGIdMBwnPiOioXAUqqHak3aEGOn13Uik6Ra7+eW6V9fGZMxWOrP6RMpig+YJRfxqmpnUQEchk6d+Fy9FAAGvYoxfE7BPSwM+b8Jm8KM1iIZFsXOmZ1JaB1fbVMLys4bsHvqUXkF3MO7DWdwKdgyB+23q2V3JDMMyDrp4x4QNk18dviASZBtfTy+gzpNXzHmVoOedwjIJeWpz2IKWiKXMI06sx7Z4XYLuJ2aqcjEGu5pv4AVqqfnH35S7PfB5ZaUf6JA0bp7+dOy8hQIVz8LAgriN1LTIvsosf5qDAzdTO1Daac3CLg3PWqlY/JLp0qs2cX1/EuGtu6pwvsQFCFR54SvJUetmIXs7LqA5PjdgjuhmScdYEpfSX5fJsge4i0EfWWRsOjFy5I0hVGOhHMR+cAKxb3w==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d255478-9273-40b4-6670-08d8025b3354
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 16:30:00.0403
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UMhO3aJ8o3lpT0Xde5WhhisxB7FB0WPgVdbhUDAQ30HcSnKj8yvp9/mFM4Q+Wms+
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2999
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=966
- cotscore=-2147483648 malwarescore=0 spamscore=0 suspectscore=5
- adultscore=0 phishscore=0 bulkscore=0 clxscore=1015 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270127
-X-FB-Internal: deliver
+References: <20200508204200.13481-1-sumit.semwal@linaro.org>
+ <20200508204200.13481-4-sumit.semwal@linaro.org> <20200511103937.GC8216@sirena.org.uk>
+ <CAO_48GFGpHeu_xb9XT9CFMOSUOJgRrb-z_KZ3-r3X78s-2ddjw@mail.gmail.com>
+In-Reply-To: <CAO_48GFGpHeu_xb9XT9CFMOSUOJgRrb-z_KZ3-r3X78s-2ddjw@mail.gmail.com>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 27 May 2020 22:01:27 +0530
+Message-ID: <CAO_48GF0tjZDmTS+Fa4fv+cfH4skFZP_a9A=P7D0b_si4AFj5A@mail.gmail.com>
+Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lgirdwood@gmail.com, robh+dt@kernel.org,
+        Nisha Kumari <nishakumari@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, kgunda@codeaurora.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:01:20PM +0200, Vlastimil Babka wrote:
-> On 5/26/20 11:42 PM, Roman Gushchin wrote:
-> 
-> > @@ -549,17 +503,14 @@ static __always_inline int charge_slab_page(struct page *page,
-> >  					    gfp_t gfp, int order,
-> >  					    struct kmem_cache *s)
-> >  {
-> > -#ifdef CONFIG_MEMCG_KMEM
-> >  	if (memcg_kmem_enabled() && !is_root_cache(s)) {
-> >  		int ret;
-> >  
-> >  		ret = memcg_alloc_page_obj_cgroups(page, s, gfp);
-> >  		if (ret)
-> >  			return ret;
-> > -
-> > -		percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
-> >  	}
-> > -#endif
-> > +
-> >  	mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
-> >  			    PAGE_SIZE << order);
-> >  	return 0;
-> > @@ -568,12 +519,9 @@ static __always_inline int charge_slab_page(struct page *page,
-> >  static __always_inline void uncharge_slab_page(struct page *page, int order,
-> >  					       struct kmem_cache *s)
-> >  {
-> > -#ifdef CONFIG_MEMCG_KMEM
-> >  	if (memcg_kmem_enabled() && !is_root_cache(s)) {
-> >  		memcg_free_page_obj_cgroups(page);
-> > -		percpu_ref_put_many(&s->memcg_params.refcnt, 1 << order);
-> > -	}
-> 
-> This now leaves the { bracket unterminated, breaking compilation.
+Hello Mark,
 
-Ah, indeed, thank you for noticing!
-It's fixed by later patches in the patchset, so this is how I missed it.
+On Thu, 14 May 2020 at 16:57, Sumit Semwal <sumit.semwal@linaro.org> wrote:
+>
+> Hello Mark,
+>
+> Thank you for your review comments!
+> On Mon, 11 May 2020 at 16:09, Mark Brown <broonie@kernel.org> wrote:
+> >
+> > On Sat, May 09, 2020 at 02:11:59AM +0530, Sumit Semwal wrote:
+> >
+> > > +     ret = regmap_bulk_read(reg->regmap, reg->base +
+> > > +                            REG_LABIBB_STATUS1, &val, 1);
+> > > +     if (ret < 0) {
+> > > +             dev_err(reg->dev, "Read register failed ret = %d\n", ret);
+> > > +             return ret;
+> > > +     }
+> >
+> > Why a bulk read of a single register?
+> Right, will change.
+> >
+> > > +static int _check_enabled_with_retries(struct regulator_dev *rdev,
+> > > +                     int retries, int enabled)
+> > > +{
+> >
+> > This is not retrying, this is polling to see if the regulator actually
+> > enabled.
+> Yes, will update accordingly.
+>
+> >
+> > > +static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+> > > +{
+> >
+> > > +     ret = _check_enabled_with_retries(rdev, retries, 1);
+> > > +     if (ret < 0) {
+> > > +             dev_err(reg->dev, "retries exhausted: enable %s regulator\n",
+> > > +                     reg->desc.name);
+> > > +             return ret;
+> > > +     }
+> >
+> > If this is useful factor it out into a helper or the core, other devices
+> > also have status bits saying if the regulator is enabled.  It looks like
+> > this may be mainly trying to open code something like enable_time, with
+> > possibly some issues where the time taken to enable varies a lot.
+> >
+> Makes sense; I am not terribly familiar with the regulator core and
+> helpers, so let me look and refactor accordingly.
+Does something like this make sense, or did I misunderstand your
+suggestion completely? I'll send the updated patches accordingly.
 
-Let me fix the build, add yours and Johannes's acks and send v5.
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2353,6 +2353,7 @@ static int _regulator_do_enable(struct
+regulator_dev *rdev)
++       /* If max_time_poll_enabled is set for the regulator,
++        * Poll upto max_time_poll_enabled time to see if the regulator
++        * actually got enabled.
++        * For each iteration, wait for the enable_time delay calculated
++        * above already.
++        * If the regulator isn't enabled after max_time_poll_enabled has
++        * expired, return -REG_ENABLED_CHECK_FAILED.
++        */
++       if (rdev->desc->max_time_poll_enabled) {
++               unsigned int remaining_time_to_poll =
+rdev->desc->max_time_poll_enabled;
++
++               while (remaining_time_to_poll > 0) {
++                       /* We've already waited for enable_time above;
++                        * so we can start with immediate check of the
++                        * status of the regulator.
++                        */
++                       if (rdev->desc->ops->is_enabled(rdev))
++                               break;
++
++                       _regulator_enable_delay(delay);
++                       remaining_time_to_poll -= delay;
++               }
++
++               if (remaining_time_to_poll <= 0) {
++                       rdev_err(rdev, "Enabled check failed.\n");
++                       return -REG_ENABLED_CHECK_FAILED;
++               }
++       }
++
 
-Thanks!
+Since atleast in my use case, the delay is really enable_time (time
+before we could check the status register), we could reuse the
+already-calculated 'delay' based on enable_time?
+>
+<snip>
+
+Best,
+Sumit.
