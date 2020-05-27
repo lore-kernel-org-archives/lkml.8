@@ -2,106 +2,134 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1C62088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806CC207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:04:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590591848;
+	bh=5Vx58Hq7sHLXBsQGSYl+3QZFOqiNWHmAX7GPof+o7eQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=enDS5qx5Cl3IupxkyMEuc2cbbgE+TU5sDxRfXoxkAWzXAbYqamk46UsMVEvfgU4Wu
+	 lcry7llPNStpMYhSj4Poj+zA4ch6wJxS4+UjQHvAC4dgwl00749mRbf7pkn4LywYWP
+	 m6iolpcDLbwHrUfacfwwY+jDiadmrr0pJLoNJIkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389523AbgE0PEE (ORCPT
+        id S2389535AbgE0PEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:04:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:39754 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388922AbgE0PED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:04:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5650D30E;
-        Wed, 27 May 2020 08:04:02 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.7.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F37C13F52E;
-        Wed, 27 May 2020 08:03:59 -0700 (PDT)
-Date:   Wed, 27 May 2020 16:03:57 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Jiping Ma <jiping.ma2@windriver.com>, zhe.he@windriver.com,
-        bruce.ashfield@gmail.com, yue.tao@windriver.com,
-        will.deacon@arm.com, linux-kernel@vger.kernel.org,
-        paul.gortmaker@windriver.com, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH][V3] arm64: perf: Get the wrong PC value in REGS_ABI_32
- mode
-Message-ID: <20200527150357.GB59947@C02TD0UTHF1T.local>
-References: <1589165527-188401-1-git-send-email-jiping.ma2@windriver.com>
- <20200526102611.GA1363@C02TD0UTHF1T.local>
- <20200526195419.GB2206@willie-the-truck>
+        Wed, 27 May 2020 11:04:08 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44167 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388922AbgE0PEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:04:05 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f18so19381794otq.11;
+        Wed, 27 May 2020 08:04:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Vx58Hq7sHLXBsQGSYl+3QZFOqiNWHmAX7GPof+o7eQ=;
+        b=RPNRGy3RVD/8p8fIS/e71D1IzKwwT4JtFTrm+9lC/39N5oDVv48rysacQmI6AmEc0m
+         3w5UTJ+iK/gdHOuIgFP/gtFpyWpP0wbVZCIbsEpT6UHN2M2vLki4/LyIBAVsP/0LsdsK
+         bAWezmc21ocmBiJRM12Zwxa8XKiFSovo1HnPZAmARVo/PJIB2GPTe4hCuFGiB1It6jKu
+         IeZN7xuwvAw5rSuUZVeDEEYZQKPgPxhkbpIemItMRjxrE/PUtos40b4sWDmJXNO9Knqt
+         Tzsk464l6sECog1uDQqAsyK5/tTyOzvSOpGG3jmKABi2ZeyfOIWFfOdl+Xffd1EIq57T
+         A27Q==
+X-Gm-Message-State: AOAM533q0gyFdGO7ekckdz3fm/enUSJCCyHIxy1XGwZFLpIag6VHdc3p
+        o2C66z/zAwxAkAGZ41kL5kH/uO0AQ2j97OcfaVM=
+X-Google-Smtp-Source: ABdhPJzwMPGSTgdrUYctj0XU40med+NR1Bq/ddfSHu6e0BLAm4f5O93pxTTndqvUHsxmhkX1InI0IHrV5NKDuiWzbv8=
+X-Received: by 2002:a9d:4713:: with SMTP id a19mr4711281otf.167.1590591844210;
+ Wed, 27 May 2020 08:04:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526195419.GB2206@willie-the-truck>
+References: <20200526151619.8779-1-benjamin.gaignard@st.com>
+ <jhjk10xu1tq.mognet@arm.com> <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
+ <CAKfTPtBt6Ju-CnETnn6_FkgR0CAJ+jYnySz9OHP9X2hmxWHM7w@mail.gmail.com>
+ <51917583-f8ff-3933-7783-2eedc91484a4@st.com> <fe69390f-ea8c-b6e3-7610-d6bd73e8500d@st.com>
+In-Reply-To: <fe69390f-ea8c-b6e3-7610-d6bd73e8500d@st.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 27 May 2020 17:03:52 +0200
+Message-ID: <CAJZ5v0h17aPe69KbZ6xVV4RiUKwSHWOQLycUFFNCprg5XPpN4g@mail.gmail.com>
+Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:54:19PM +0100, Will Deacon wrote:
-> On Tue, May 26, 2020 at 11:26:11AM +0100, Mark Rutland wrote:
-> > On Mon, May 11, 2020 at 10:52:07AM +0800, Jiping Ma wrote:
-> > > Modified the patch subject and the change description.
-> > > 
-> > > PC value is get from regs[15] in REGS_ABI_32 mode, but correct PC
-> > > is regs->pc(regs[PERF_REG_ARM64_PC]) in arm64 kernel, which caused
-> > > that perf can not parser the backtrace of app with dwarf mode in the 
-> > > 32bit system and 64bit kernel.
-> > > 
-> > > Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-> > 
-> > Thanks for this.
-> > 
-> > 
-> > > ---
-> > >  arch/arm64/kernel/perf_regs.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-> > > index 0bbac61..0ef2880 100644
-> > > --- a/arch/arm64/kernel/perf_regs.c
-> > > +++ b/arch/arm64/kernel/perf_regs.c
-> > > @@ -32,6 +32,10 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
-> > >  	if ((u32)idx == PERF_REG_ARM64_PC)
-> > >  		return regs->pc;
-> > >  
-> > > +	if (perf_reg_abi(current) == PERF_SAMPLE_REGS_ABI_32
-> > > +		&& idx == 15)
-> > > +		return regs->pc;
-> > 
-> > I think there are some more issues here, and we may need a more
-> > substantial rework. For a compat thread, we always expose
-> > PERF_SAMPLE_REGS_ABI_32 via per_reg_abi(), but for some reason
-> > perf_reg_value() also munges the compat SP/LR into their ARM64
-> > equivalents, which don't exist in the 32-bit sample ABI. We also don't
-> > zero the regs that don't exist in 32-bit (including the aliasing PC).
-> 
-> I think this was for the case where you have a 64-bit perf profiling a
-> 32-bit task, and it was passing the registers off to libunwind. Won't that
-> break if we follow your suggestion?
+On Wed, May 27, 2020 at 4:54 PM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
+>
+>
+>
+> On 5/27/20 2:48 PM, Benjamin GAIGNARD wrote:
+> >
+> >
+> > On 5/27/20 2:22 PM, Vincent Guittot wrote:
+> >> On Wed, 27 May 2020 at 13:17, Benjamin GAIGNARD
+> >> <benjamin.gaignard@st.com> wrote:
+> >>>
+> >>>
+> >>> On 5/27/20 12:09 PM, Valentin Schneider wrote:
+> >>>> Hi Benjamin,
+> >>>>
+> >>>> On 26/05/20 16:16, Benjamin Gaignard wrote:
+> >>>>> A first round [1] of discussions and suggestions have already be
+> >>>>> done on
+> >>>>> this series but without found a solution to the problem. I resend
+> >>>>> it to
+> >>>>> progress on this topic.
+> >>>>>
+> >>>> Apologies for sleeping on that previous thread.
+> >>>>
+> >>>> So what had been suggested over there was to use uclamp to boost the
+> >>>> frequency of the handling thread; however if you use threaded IRQs you
+> >>>> get RT threads, which already get the max frequency by default (at
+> >>>> least
+> >>>> with schedutil).
+> >>>>
+> >>>> Does that not work for you, and if so, why?
+> >>> That doesn't work because almost everything is done by the hardware
+> >>> blocks
+> >>> without charge the CPU so the thread isn't running. I have done the
+> >>> tests with schedutil
+> >>> and ondemand scheduler (which is the one I'm targeting). I have no
+> >>> issues when using
+> >>> performance scheduler because it always keep the highest frequencies.
+> >> IMHO, the only way to ensure a min frequency for anything else than a
+> >> thread is to use freq_qos_add_request() just like cpufreq cooling
+> >> device but for the opposite QoS. This can be applied only on the
+> >> frequency domain of the CPU which handles the interrupt.
+> > I will give a try with this idea.
+> > Thanks.
+>
+> Adding freq_qos_add_request(FREQ_QOS_MIN) when starting streaming frames
+> solve my problem. I remove the request at the end of the streaming to
+> restore
+> the default value.
 
-Oh yuck; have we messed up the ABI here, or have I misunderstood?
-
-Is arm64's PERF_SAMPLE_REGS_ABI_32 supposed to be the same as the 32-bit
-arm's PERF_SAMPLE_REGS_ABI_32?
-
-If yes, and the differences are being relied upon by 64-bit consumers,
-that's a nasty ABI issue we've introduced for compat tasks, and I don't
-think this patch alone is quite right.
-
-If no, then I don't see that any change is necessary, as we already
-expose the information, and it's a userspace bug to expect the PC in a
-place where the kernel has never exposed it.
-
-Thanks,
-Mark.
+You may as well add the request once at the init time with the request
+value set to PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE initially and update
+it as needed going forward.
