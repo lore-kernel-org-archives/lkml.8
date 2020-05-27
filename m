@@ -2,217 +2,98 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A7EC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 247B3208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A997208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590573660;
+	bh=Yg4do3QGiR/CHgycBhbn4KX2zuVwKpVFGhOD6UUqfeI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n51DWM/xSxrUSAbNkRZ7d1ai6jfeoolaxCJtXXoPXofLA4I8Wf77ny2y9G20FYUPu
+	 1RdmZsDk2DZa30MWUYikY8oqO9hB0JHixfnIGhvbiOBKIwJ8xRQZFj/G1hddiLkU7a
+	 GyqiV/NAtUOcOj9MRi4uXJuCGfR3ur5xJQjoe4Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgE0KAt (ORCPT
+        id S1729711AbgE0KA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:00:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:35084 "EHLO foss.arm.com"
+        Wed, 27 May 2020 06:00:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729645AbgE0KAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:00:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20DAC55D;
-        Wed, 27 May 2020 03:00:48 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D4713F6C4;
-        Wed, 27 May 2020 03:00:37 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v8 3/8] PM / EM: update callback structure and add device pointer
-Date:   Wed, 27 May 2020 10:58:49 +0100
-Message-Id: <20200527095854.21714-4-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200527095854.21714-1-lukasz.luba@arm.com>
-References: <20200527095854.21714-1-lukasz.luba@arm.com>
+        id S1728253AbgE0KA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:00:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97A202084C;
+        Wed, 27 May 2020 10:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590573659;
+        bh=Yg4do3QGiR/CHgycBhbn4KX2zuVwKpVFGhOD6UUqfeI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GGyW0GgfOsOdBoSDyPlJsal9a6oGDnIU+9qTn8AFs+YQcWcfbcUhshBK2rYsPcDBm
+         91QvCmPlA7F70PgeXYPBN1inZ0Z4/BiD58S90CQBpX3y5deoaGa68TtOfAwuBCcLg2
+         gnKfQLZ8B8eJLR/xCjiiDcIx0ERQFYNJdM0WWMKE=
+Date:   Wed, 27 May 2020 12:00:56 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 5.6 000/126] 5.6.15-rc1 review
+Message-ID: <20200527100056.GB277684@kroah.com>
+References: <20200526183937.471379031@linuxfoundation.org>
+ <d5c1dffe-98d3-d60e-669b-90277bbb0a03@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d5c1dffe-98d3-d60e-669b-90277bbb0a03@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Energy Model framework is going to support devices other that CPUs. In
-order to make this happen change the callback function and add pointer to
-a device as an argument.
+On Wed, May 27, 2020 at 09:34:24AM +0100, Jon Hunter wrote:
+> 
+> On 26/05/2020 19:52, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.6.15 release.
+> > There are 126 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.15-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.6:
+>     11 builds:	11 pass, 0 fail
+>     26 boots:	26 pass, 0 fail
+>     42 tests:	42 pass, 0 fail
+> 
+> Linux version:	5.6.15-rc1-g8f40203f4915
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra210-p3450-0000,
+>                 tegra30-cardhu-a04
 
-Update the related users to use new function and new callback from the
-Energy Model.
+Wonderful, thanks for testing all of these and letting me know.
 
-Acked-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/cpufreq/scmi-cpufreq.c | 11 +++--------
- drivers/opp/of.c               |  9 ++-------
- include/linux/energy_model.h   | 15 ++++++++-------
- kernel/power/energy_model.c    |  9 +++++----
- 4 files changed, 18 insertions(+), 26 deletions(-)
-
-diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-index 61623e2ff149..11ee24e06d12 100644
---- a/drivers/cpufreq/scmi-cpufreq.c
-+++ b/drivers/cpufreq/scmi-cpufreq.c
-@@ -103,17 +103,12 @@ scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
- }
- 
- static int __maybe_unused
--scmi_get_cpu_power(unsigned long *power, unsigned long *KHz, int cpu)
-+scmi_get_cpu_power(unsigned long *power, unsigned long *KHz,
-+		   struct device *cpu_dev)
- {
--	struct device *cpu_dev = get_cpu_device(cpu);
- 	unsigned long Hz;
- 	int ret, domain;
- 
--	if (!cpu_dev) {
--		pr_err("failed to get cpu%d device\n", cpu);
--		return -ENODEV;
--	}
--
- 	domain = handle->perf_ops->device_domain_id(cpu_dev);
- 	if (domain < 0)
- 		return domain;
-@@ -200,7 +195,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- 
- 	policy->fast_switch_possible = true;
- 
--	em_register_perf_domain(policy->cpus, nr_opp, &em_cb);
-+	em_dev_register_perf_domain(cpu_dev, nr_opp, &em_cb, policy->cpus);
- 
- 	return 0;
- 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 9cd8f0adacae..5b75829a915d 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -1047,9 +1047,8 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_get_of_node);
-  * calculation failed because of missing parameters, 0 otherwise.
-  */
- static int __maybe_unused _get_cpu_power(unsigned long *mW, unsigned long *kHz,
--					 int cpu)
-+					 struct device *cpu_dev)
- {
--	struct device *cpu_dev;
- 	struct dev_pm_opp *opp;
- 	struct device_node *np;
- 	unsigned long mV, Hz;
-@@ -1057,10 +1056,6 @@ static int __maybe_unused _get_cpu_power(unsigned long *mW, unsigned long *kHz,
- 	u64 tmp;
- 	int ret;
- 
--	cpu_dev = get_cpu_device(cpu);
--	if (!cpu_dev)
--		return -ENODEV;
--
- 	np = of_node_get(cpu_dev->of_node);
- 	if (!np)
- 		return -EINVAL;
-@@ -1128,6 +1123,6 @@ void dev_pm_opp_of_register_em(struct cpumask *cpus)
- 	if (ret || !cap)
- 		return;
- 
--	em_register_perf_domain(cpus, nr_opp, &em_cb);
-+	em_dev_register_perf_domain(cpu_dev, nr_opp, &em_cb, cpus);
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_of_register_em);
-diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
-index 7c048df98447..7076cb22b247 100644
---- a/include/linux/energy_model.h
-+++ b/include/linux/energy_model.h
-@@ -48,24 +48,25 @@ struct em_perf_domain {
- struct em_data_callback {
- 	/**
- 	 * active_power() - Provide power at the next performance state of
--	 *		a CPU
-+	 *		a device
- 	 * @power	: Active power at the performance state in mW
- 	 *		(modified)
- 	 * @freq	: Frequency at the performance state in kHz
- 	 *		(modified)
--	 * @cpu		: CPU for which we do this operation
-+	 * @dev		: Device for which we do this operation (can be a CPU)
- 	 *
--	 * active_power() must find the lowest performance state of 'cpu' above
-+	 * active_power() must find the lowest performance state of 'dev' above
- 	 * 'freq' and update 'power' and 'freq' to the matching active power
- 	 * and frequency.
- 	 *
--	 * The power is the one of a single CPU in the domain, expressed in
--	 * milli-watts. It is expected to fit in the [0, EM_MAX_POWER]
--	 * range.
-+	 * In case of CPUs, the power is the one of a single CPU in the domain,
-+	 * expressed in milli-watts. It is expected to fit in the
-+	 * [0, EM_MAX_POWER] range.
- 	 *
- 	 * Return 0 on success.
- 	 */
--	int (*active_power)(unsigned long *power, unsigned long *freq, int cpu);
-+	int (*active_power)(unsigned long *power, unsigned long *freq,
-+			    struct device *dev);
- };
- #define EM_DATA_CB(_active_power_cb) { .active_power = &_active_power_cb }
- 
-diff --git a/kernel/power/energy_model.c b/kernel/power/energy_model.c
-index 875b163e54ab..5b8a1566526a 100644
---- a/kernel/power/energy_model.c
-+++ b/kernel/power/energy_model.c
-@@ -78,8 +78,9 @@ core_initcall(em_debug_init);
- #else /* CONFIG_DEBUG_FS */
- static void em_debug_create_pd(struct em_perf_domain *pd, int cpu) {}
- #endif
--static struct em_perf_domain *em_create_pd(cpumask_t *span, int nr_states,
--						struct em_data_callback *cb)
-+static struct em_perf_domain *
-+em_create_pd(struct device *dev, int nr_states, struct em_data_callback *cb,
-+	     cpumask_t *span)
- {
- 	unsigned long opp_eff, prev_opp_eff = ULONG_MAX;
- 	unsigned long power, freq, prev_freq = 0;
-@@ -106,7 +107,7 @@ static struct em_perf_domain *em_create_pd(cpumask_t *span, int nr_states,
- 		 * lowest performance state of 'cpu' above 'freq' and updates
- 		 * 'power' and 'freq' accordingly.
- 		 */
--		ret = cb->active_power(&power, &freq, cpu);
-+		ret = cb->active_power(&power, &freq, dev);
- 		if (ret) {
- 			pr_err("pd%d: invalid perf. state: %d\n", cpu, ret);
- 			goto free_ps_table;
-@@ -237,7 +238,7 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
- 	}
- 
- 	/* Create the performance domain and add it to the Energy Model. */
--	pd = em_create_pd(span, nr_states, cb);
-+	pd = em_create_pd(dev, nr_states, cb, span);
- 	if (!pd) {
- 		ret = -EINVAL;
- 		goto unlock;
--- 
-2.17.1
-
+greg k-h
