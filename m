@@ -2,97 +2,190 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06EC92078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69FF7207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7wuBZLu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388697AbgE0NrY (ORCPT
+        id S2388709AbgE0Nrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:47:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:38093 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388082AbgE0NrX (ORCPT
+        Wed, 27 May 2020 09:47:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388082AbgE0Nrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:47:23 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MlfCk-1jD5sb39N4-00ili0; Wed, 27 May 2020 15:46:31 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Richard Henderson <rth@twiddle.net>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] cpumask: guard cpumask_of_node() macro argument
-Date:   Wed, 27 May 2020 15:46:08 +0200
-Message-Id: <20200527134623.930247-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:47:32 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C725C08C5C1;
+        Wed, 27 May 2020 06:47:32 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id n18so11846244pfa.2;
+        Wed, 27 May 2020 06:47:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e+LlzM8eRRXovrDneSFuJkBLmDZwpojAdLmJnEys/Lw=;
+        b=c7wuBZLu+ZvfRprjThesksjt1WuCEeFEQaTj53GZ55hX6AisYzy8NmW5x1JOjAhw8G
+         e2P6qbEzWfCAFVVJ540TBSWFil1agP2BgF4x/ou2r/qPC58u1kjDoqmJlU74jIT2fKuQ
+         M+63K/fuRwrxPZESK2m0Tnobl+Evn7gP5CkXjQOmepijiz9WxyL00fEUXVWVG0EQmo50
+         U3tLJvmx21wrspo6lsQMg5OIdysurU3lDpKoRxq0Y+8qTuz2aRmhEHOpTO51zriqx7bQ
+         483fNU4RHGYXqZQMlAlP0zEeXNlbU5EgdJpNA8xPqAdFrHYN2aYO0Ffxx0EKF+YlU9wo
+         0fjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e+LlzM8eRRXovrDneSFuJkBLmDZwpojAdLmJnEys/Lw=;
+        b=XSDx99ViC8enSOnmJq/wA643GNMRUcGhzspYKeGWK1kHOCV1R/iWi9tqDINs6kWkAQ
+         9ehzlQfHMussfgplVp3CJk4ns0mWnRbb4By1OQQUd1JSchDERyElWtRX++JTOJckYwD9
+         /aDBR0+4TRjMsxkWa7KJMQwFEhKc6gBqjtgn5m6boYFlOeBw3YMyxPy7N39R2zQD6KMO
+         LSw5czEATw4FV7btWxynGf5Xm3ytrHgbBxhaSwx7eW65d8dplF/FZ0JFcwt4kGfe5M5o
+         9s0c0DMa03MgYh/GpdiyN7MtLMol09uCAajOp7F+nWgCOj2U7ZHQtV57nDGmlYcwMDWB
+         XjHw==
+X-Gm-Message-State: AOAM531iKuBZn7Q+HWq4Xf5A7Eznvhu8GttCKOHxmAyHA1Ecs46HMwac
+        LiErx4jvqjUXeUIf/2v+U5Y=
+X-Google-Smtp-Source: ABdhPJxUkwmN6QnH52X0T6J4spSmP08lob0DVRsK8ZKWK3zAR5Qheiptq3GrbeAHU5Kkh3adpkxddQ==
+X-Received: by 2002:a62:ee07:: with SMTP id e7mr3956340pfi.42.1590587251985;
+        Wed, 27 May 2020 06:47:31 -0700 (PDT)
+Received: from localhost ([144.34.194.82])
+        by smtp.gmail.com with ESMTPSA id v197sm2320727pfc.4.2020.05.27.06.47.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 06:47:31 -0700 (PDT)
+Date:   Wed, 27 May 2020 21:47:26 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@kernel.org>, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] drivers: provide devm_platform_request_irq()
+Message-ID: <20200527134726.GD7143@nuc8i5>
+References: <20200523145157.16257-1-zhengdejin5@gmail.com>
+ <20200523160828.GE3459@ninjato>
+ <20200523170933.GA16771@nuc8i5>
+ <ad90d9b5-5906-fef3-85b8-00c7eff70e61@xilinx.com>
+ <52fdb5f6-2108-4857-8d0f-3f17ee863781@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:IPQ9B4qOEDeVAT6zCkUFk/+6gE2JJSw998N7HuX7io/aAOYDheD
- X7YwErGg89se16bhTbTpYxiVy/sw26V0IO/Cfn4vsmDbUr0Mb24lIdcaqoqoY7c4003P+DK
- YHN04TmVug/66eTQdd3ev9jx1nEETULaY0f+ly7FgTxV1G9cqhn9D0+bToxd4kFFn/L3GaI
- +UIcf3wttnFElnuPeAO/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:K+yJ/bPAuoE=:EInc6+3xGy+xs6R42Qb+42
- YeCHSr7b/3wnG5P+D8owS3CVbIA16q8f/9rY3+UtseNBx4ByBki8PhZRrxXJoFNxe/QxQYEXP
- JjZbBuCPkTbiGH3Fx1rKtd3sUv8INsHrO1G4diNJqPGQIrFeAPXcljY4WlqZYugGM/m7p4p+h
- 6xVSRMRJ7MI8szHGihSUT8KybBiDftBRbeLfdWX4c2XArLyH0j0r+XGkhor/Zztm4uJqJKWEI
- QZjlQ1nDYkmDAc0W4qiqtt7MlrBxmEGscfev2FnmXA0jRY78aRKbbWPJ8FvOx78vNlZyhJ/1h
- 2d3sj7z52hGAquNP3Yafpz8oyUgcVpFK0p63kCnv3Izzfp8F+DBeRVX+mJi7jt2NAa8CvtCb+
- yQhp8XUFFjEnTpIr1HtDH9e3VNpyl8gmi1dTwaibVMRcsnqRgYHewjpZi90hWh7BH5AvhJ7vn
- fgD6WTVKRtH9dDNQQLhWag05DDop4Awos1EpLIfqcvMJFk0xGNAn+yy192lRk2LRIqz8sUENc
- mO+7Gs6PcSqTYr20bRM+HqazeUSi+zZTCzMZ4oUKsO1MoOLtiOyWLVVRzVqpr/GLm6G2psafE
- H8bo9D0rQMvkpLc9COWHKcCYSQAunKF6gygRO0tdW3Z8HqitPCEPq+YAiWNSnpLsb1BE6rq4N
- NizITXqEZsm818NveA0i9kdB8vCDAU41M92Pxz4Z1+OX295FjCqN2V8O8nnSNFItNuDhfuKCU
- 6uRnOn/hTQIeVl6nj38ZppcZguMuccYIdsuAcyJe0ivCdnRR86m4lCos/KctzdahU+l3rFF9c
- w3r7W1yOkLLU2BdN8fExQuGlAlyXRKhDwA4TOZqHDFfhX/KktU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52fdb5f6-2108-4857-8d0f-3f17ee863781@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/hwmon/amd_energy.c:195:15: error: invalid operands to binary expression ('void' and 'int')
-                                        (channel - data->nr_cpus));
-                                        ~~~~~~~~~^~~~~~~~~~~~~~~~~
-include/asm-generic/topology.h:51:42: note: expanded from macro 'cpumask_of_node'
-    #define cpumask_of_node(node)       ((void)node, cpu_online_mask)
-                                               ^~~~
-include/linux/cpumask.h:618:72: note: expanded from macro 'cpumask_first_and'
- #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
-                                                                       ^~~~~
+On Tue, May 26, 2020 at 08:13:25PM +0300, Grygorii Strashko wrote:
+> 
+> 
+> On 25/05/2020 10:05, Michal Simek wrote:
+> > On 23. 05. 20 19:09, Dejin Zheng wrote:
+> > > On Sat, May 23, 2020 at 06:08:29PM +0200, Wolfram Sang wrote:
+> > > > On Sat, May 23, 2020 at 10:51:55PM +0800, Dejin Zheng wrote:
+> > > > > It will call devm_request_irq() after platform_get_irq() function
+> > > > > in many drivers, sometimes, it is not right for the error handling
+> > > > > of these two functions in some drivers. so provide this function
+> > > > > to simplify the driver.
+> > > > > 
+> > > > > the first patch will provide devm_platform_request_irq(), and the
+> > > > > other patch will convert to devm_platform_request_irq() in some
+> > > > > i2c bus dirver.
+> > > > > 
+> > > > > v1 -> v2:
+> > > > > 	- I give up this series of patches in v1 version. I resend this
+> > > > > 	  patches v2 by that discussion:
+> > > > > 	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+> > > > > 	  The patch content has not changed.
+> > > > 
+> > > > I don't understand. v1 has been nacked because of technical reasons. How
+> > > > did the discussion above change the situation? Am I missing something?
+> > > > 
+> > > No, you are not missing something. Maybe I did not explain clearly.
+> > > 
+> > > The v1 has been nacked because Grygorii told me that the
+> > > function platform_get_irq() should be done as early as possible to avoid
+> > > unnecessary initialization steps, and the function devm_request_irq()
+> > > should be done late in probe when driver and HW are actually ready to
+> > > handle IRQs. It can do the other things between the two funtions. I agree
+> > > with him that it may be necessary in some complex drives. So abandon the
+> > > patch v1.
+> > > 
+> > > Base on the discussion of you and Michal, I think maybe this patch is also
+> > > needed for the simple driver or the driver of already use it like that:
+> > > 	
+> > > 	irq = platform_get_irq(pdev, 0);
+> > > 	if (irq < 0)
+> > > 		return irq;
+> > > 	ret = devm_request_irq()
+> > > 
+> > > It provides a common error handling and reduce one function call for each
+> > > drivers, more easier to use and simplify code. So resend it.
+> > > 
+> > > BR,
+> > > Dejin
+> > > 
+> > > > > 
+> > > > > Dejin Zheng (2):
+> > > > >    drivers: provide devm_platform_request_irq()
+> > > > >    i2c: busses: convert to devm_platform_request_irq()
+> > > > > 
+> > > > >   drivers/base/platform.c            | 33 ++++++++++++++++++++++++++++++
+> > > > >   drivers/i2c/busses/i2c-bcm-kona.c  | 16 +++------------
+> > > > >   drivers/i2c/busses/i2c-cadence.c   | 10 +++------
+> > > > >   drivers/i2c/busses/i2c-digicolor.c | 10 +++------
+> > > > >   drivers/i2c/busses/i2c-emev2.c     |  5 ++---
+> > > > >   drivers/i2c/busses/i2c-jz4780.c    |  5 ++---
+> > > > >   drivers/i2c/busses/i2c-meson.c     | 13 ++++--------
+> > > > >   drivers/i2c/busses/i2c-mxs.c       |  9 +++-----
+> > > > >   drivers/i2c/busses/i2c-pnx.c       |  9 ++------
+> > > > >   drivers/i2c/busses/i2c-rcar.c      |  9 +++-----
+> > > > >   drivers/i2c/busses/i2c-rk3x.c      | 14 +++----------
+> > > > >   drivers/i2c/busses/i2c-sirf.c      | 10 ++-------
+> > > > >   drivers/i2c/busses/i2c-stu300.c    |  4 ++--
+> > > > >   drivers/i2c/busses/i2c-synquacer.c | 12 +++--------
+> > > > >   include/linux/platform_device.h    |  4 ++++
+> > > > >   15 files changed, 72 insertions(+), 91 deletions(-)
+> > 
+> > If you look at all driver except for cadence one it doesn't do any
+> > change and I can't see any issue with it because sequences are the same
+> > as were before.
+> > 
+> > Regarding Cadence and Grygorii's comments:
+> > We are not checking that id->irq is valid that's why even if that fails
+> > driver continues to work. Which means that this change doesn't increase
+> > boot time or change code flow.
+> > On Xilinx devices cadence i2c is connected to ARM GIC which is
+> > initialized very early and IRC controller should be up and running all
+> > the time.
+> > That's why I can't see any issue which this change on Cadence driver too.
+> 
+> 
+> My main point was to pay attention on changes, which may be risky
+> especially when they are part of bulk changes (such optimization tend to spread
+> fast and all over the kernel without proper review).
+> 
+> Sry, if i introduced some misunderstanding, but it seems worked and this patch has got more attention.
+> There are no objection from my side to use devm_platform_get_and_ioremap_resource() if driver
+> owners find it acceptable.
+>
+This should be my misunderstanding regarding your comment in patch v1,
+Anyway, thanks everyone for using your precious time to review my patch.
 
-Fixes: f0b848ce6fe9 ("cpumask: Introduce cpumask_of_{node,pcibus} to replace {node,pcibus}_to_cpumask")
-Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/asm-generic/topology.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And also I very sorry for the Gmail will prevent me sending messages to
+a large number of recipient, I had to reduce the number of recipients to
+send this email. so sorry!
 
-diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-index 238873739550..5aa8705df87e 100644
---- a/include/asm-generic/topology.h
-+++ b/include/asm-generic/topology.h
-@@ -48,7 +48,7 @@
-   #ifdef CONFIG_NEED_MULTIPLE_NODES
-     #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
-   #else
--    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
-+    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
-   #endif
- #endif
- #ifndef pcibus_to_node
--- 
-2.26.2
+BR,
+Dejin
 
+> -- 
+> Best regards,
+> grygorii
