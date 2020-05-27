@@ -2,78 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831E1207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590548624;
-	bh=m7G8bVXPasOMaR++DJe7lZii49I9nD8Tb7YpUdfuhJI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=p/sSDvKKEYnAF+N644ccAOxk/026DLPKxMrnm9uXtuSFPzUhUYikaJQ7XxDTqbqi/
-	 +hGi1h8SWC/7BPO1xTig6rEKQecjBg6YUZegPQbF6T3JPIlzi2paz2PsK+/dpj5tZi
-	 51GLZitLoRQoEigMSa0xRt4yfcalNlmJthCCQSh4=
+	by mail.kernel.org (Postfix) with ESMTP id 7AA8E2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:04:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgE0DDo (ORCPT
+        id S1728365AbgE0DEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51766 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 23:04:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:59766 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgE0DDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:03:43 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E84FC2075F;
-        Wed, 27 May 2020 03:03:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590548623;
-        bh=m7G8bVXPasOMaR++DJe7lZii49I9nD8Tb7YpUdfuhJI=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=oI/iQpeZGHI2zMqqxOvFK1+97dhtZX3g0tJZoVNEY/83dGBY3y4xmqOA5hujBoDFY
-         zoVEdWRYQzD7NM7FY6igMstuFT2jMKbqgrcmAw7JUoGCrQpOliQZkgtEBtfp6PYcjN
-         VewcAlvwSbqLGiD9lKY9DqG+9a67LRJ8uCJAsAuM=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200512224522.GA13463@bogus>
-References: <20200501223232.275800-1-konradybcio@gmail.com> <20200501223232.275800-5-konradybcio@gmail.com> <20200512224522.GA13463@bogus>
-Subject: Re: [PATCH 4/4] dt-bindings: soc: qcom: Document MSM8936 SMD RPM compatible
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org,
-        Vincent Knecht <vincent.knecht@mailoo.org>,
-        Andy Gross <agross@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-To:     Konrad Dybcio <konradybcio@gmail.com>,
-        Rob Herring <robh@kernel.org>
-Date:   Tue, 26 May 2020 20:03:42 -0700
-Message-ID: <159054862230.88029.9004999082945050815@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        id S1725893AbgE0DEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 23:04:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B9B030E;
+        Tue, 26 May 2020 20:04:39 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.76.100])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D387E3F6C4;
+        Tue, 26 May 2020 20:04:35 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        suzuki.poulose@arm.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Subject: [PATCH V5 0/4] arm64/cpufeature: Introduce ID_PFR2, ID_DFR1, ID_MMFR5 and other changes
+Date:   Wed, 27 May 2020 08:33:35 +0530
+Message-Id: <1590548619-3441-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Herring (2020-05-12 15:45:22)
-> On Sat,  2 May 2020 00:32:32 +0200, Konrad Dybcio wrote:
-> > From: Vincent Knecht <vincent.knecht@mailoo.org>
-> >=20
-> > Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
-> > ---
-> >  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >=20
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
+These are remaining patches from V4 series which had some pending reviews
+from Suzuki (https://patchwork.kernel.org/cover/11557333/). Also dropped
+[PATCH 15/17] as that will need some more investigation and rework.
 
-I picked these ones up actually, not the other ones, but my MUA totally
-failed to open anything because the patches weren't sent To: anyone. O
-well!
+This series applies on arm64/for-next/cpufeature.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com> 
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: kvmarm@lists.cs.columbia.edu
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Changes in V5:
+
+- Dropped TGRAN features along with it's macros from ID_AA64MMFR0 per Suzuki
+- Replaced with FTR_HIGHER_SAFE for SpecSEI feature in ID_AA64MMFR1 per Suzuki
+- Dropped patch "arm64/cpufeature: Add remaining feature bits in ID_AA64DFR0 register"
+
+Changes in V4: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=290085)
+
+- Updated ftr_id_dfr0[] with a documentation for now missing [31:28] Tracfilt per Will
+- Fixed erroneous bit width value from 28 to 4 for double lock feature per Will
+- Replaced ID_SANITIZED() with ID_HIDDEN() for SYS_ID_DFR1_EL1 per Suzuki
+- Fixed positions for register definitions as per new name based grouping per Will
+- Replaced FTR_VISIBLE with FTR_HIDDEN for TLB feature in ID_AA64ISAR0 per Suzuki
+- Replaced FTR_VISIBLE with FTR_HIDDEN for MPAM and SEL2 in ID_AA64PFR0 per Suzuki
+- Replaced FTR_VISIBLE with FTR_HIDDEN for MPAMFRAC and RASFRAC in ID_AA64PFR1 per Suzuki
+- Dropped both MTE and BT features from ftr_id_aa64pfr1[] to be added later per Suzuki
+- Added ID_MMFR4_EL1 into the cpuinfo_arm64 context per Will
+
+Changes in V3: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=281211)
+
+- Rebased on git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git (for-next/cpufeature)
+
+Changes in V2: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=270605)
+
+- Added Suggested-by tag from Mark Rutland for all changes he had proposed
+- Added comment for SpecSEI feature on why it is HIGHER_SAFE per Suzuki
+- Added a patch which makes ID_AA64DFR0_DOUBLELOCK a signed feature per Suzuki
+- Added ID_DFR1 and ID_MMFR5 system register definitions per Will
+- Added remaining features bits for relevant 64 bit system registers per Will
+- Changed commit message on [PATCH 5/7] regarding TraceFilt feature per Suzuki
+- Changed ID_PFR2.CSV3 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will
+- Changed ID_PFR0.CSV2 (FTR_STRICT -> FTR_NONSTRICT) as 64 bit registers per Will 
+- Changed some commit messages
+
+Changes in V1: (https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=234093)
+
+Anshuman Khandual (4):
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR0 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR1 register
+  arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR2 register
+  arm64/cpufeature: Replace all open bits shift encodings with macros
+
+ arch/arm64/include/asm/sysreg.h | 42 +++++++++++++++++++++
+ arch/arm64/kernel/cpufeature.c  | 67 ++++++++++++++++++++-------------
+ 2 files changed, 83 insertions(+), 26 deletions(-)
+
+-- 
+2.20.1
+
