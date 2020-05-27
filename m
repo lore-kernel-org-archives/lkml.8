@@ -2,143 +2,131 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8379C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90909C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB87B20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4E520776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAMb3Gig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390648AbgE0PzK (ORCPT
+        id S2388530AbgE0PzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:55:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40590 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390625AbgE0Pyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:54:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 21872AFD1;
-        Wed, 27 May 2020 15:54:54 +0000 (UTC)
-Subject: Re: [PATCH v4 10/19] mm: memcg/slab: deprecate memory.kmem.slabinfo
-To:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200526214227.989341-1-guro@fb.com>
- <20200526214227.989341-11-guro@fb.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <2dc94375-2ac6-9dd7-64e8-6e66aeb3a662@suse.cz>
-Date:   Wed, 27 May 2020 17:54:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 11:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390626AbgE0Pyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:54:52 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AC7C05BD1E;
+        Wed, 27 May 2020 08:54:52 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x10so10268752plr.4;
+        Wed, 27 May 2020 08:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nkIhbxtFT/sWyLG+CNPMvzFZfh5YwCelX3IPeKtDVng=;
+        b=PAMb3Gighhz0cCKhjZLQ89rDfM+umkVZTkpYgFwBdzZ9PIGR1KNuJfANRSBsICHGU1
+         9GFY4+NhktZozymnBZgQaGPkn8QdPxDOXGhFk13RvLQfW7JVN2KYbsdVXfBT1OinJLIp
+         zrRy0l+YVDGcMRQy8Ldm4ZecscejFQHzikG3HLWm++8UC3ai8KnWZCyKH6z7T/HA1xRI
+         Wp+WUBUbWpR2kBaZ0JpFXShORG+eXejQ1vCRS83kPuIkPDQqhhjsTVcFK0GFU7CbfTMs
+         dACufN3iOpLHsbWp1FGFQTUumq0BZHbJAIhG4FZ5GeQo+es6H96EK3UqJhZ/+Te+5OLe
+         Y23A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nkIhbxtFT/sWyLG+CNPMvzFZfh5YwCelX3IPeKtDVng=;
+        b=VTFzvqV8dkwr6K3401itxGBMTwC/kf60dgg1UExx0SDsciPoRL8jZsRcDUNi2ZPYqL
+         g4eNnaOBZwpzdA3A6AH42DXVzZ2pSuJR6+p8E4mVdL8h20Gea/3oY74RMAzOLSBVo6Np
+         e0MHf6VW07iMxisYI/HfLkuJfGWmqywdTKPF5eV6xD75APqL8IbmWkmOhHCkP/K0zaL3
+         JtZi8G2v1UTZfy4XIOKsijtNfO3BG+oEewqSikwPkM9MfhhfSuRwZAX6pH9Z6piKX7FX
+         6sYtrXbmEz1Udm6quaUCKI13Rm/wZsaCueVC4q5vKOlDx8Doq/K63eC5ftyILemkbFx3
+         jVQQ==
+X-Gm-Message-State: AOAM533JrVD2xKcTbGKafB6hE5xCQ+9xrvi2rGh4y2PSaCPzePXbXsTJ
+        yXCMvyvkhF67Y5+AKoRhet8=
+X-Google-Smtp-Source: ABdhPJxjWquEPV+JeRdzbhyTylh3GgQILPCaziRrufi5RFxgpIErfBy/fC56S/kQiDi7y42BfuoXZQ==
+X-Received: by 2002:a17:902:9882:: with SMTP id s2mr6368400plp.184.1590594891507;
+        Wed, 27 May 2020 08:54:51 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id q44sm3286859pja.2.2020.05.27.08.54.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 08:54:50 -0700 (PDT)
+Date:   Wed, 27 May 2020 08:54:47 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH] net: ethernet: mtk-star-emac: fix error path in RX
+ handling
+Message-ID: <20200527155447.GA568403@ubuntu-s3-xlarge-x86>
+References: <20200527092404.3567-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-In-Reply-To: <20200526214227.989341-11-guro@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527092404.3567-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 11:42 PM, Roman Gushchin wrote:
-> Deprecate memory.kmem.slabinfo.
+On Wed, May 27, 2020 at 11:24:04AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> An empty file will be presented if corresponding config options are
-> enabled.
+> The dma_addr field in desc_data must not be overwritten until after the
+> new skb is mapped. Currently we do replace it with uninitialized value
+> in error path. This change fixes it by moving the assignment before the
+> label to which we jump after mapping or allocation errors.
 > 
-> The interface is implementation dependent, isn't present in cgroup v2,
-> and is generally useful only for core mm debugging purposes. In other
-> words, it doesn't provide any value for the absolute majority of users.
-> 
-> A drgn-based replacement can be found in tools/cgroup/slabinfo.py .
-> It does support cgroup v1 and v2, mimics memory.kmem.slabinfo output
-> and also allows to get any additional information without a need
-> to recompile the kernel.
-> 
-> If a drgn-based solution is too slow for a task, a bpf-based tracing
-> tool can be used, which can easily keep track of all slab allocations
-> belonging to a memory cgroup.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Fixes: 8c7bd5a454ff ("net: ethernet: mtk-star-emac: new driver")
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Also there was a
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-for this patch.
-And here's mine:
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-Of course this depends on whether we break somebody's workflow and they complain.
+Tested-by: Nathan Chancellor <natechancellor@gmail.com> # build
 
 > ---
->  mm/memcontrol.c  |  3 ---
->  mm/slab_common.c | 31 ++++---------------------------
->  2 files changed, 4 insertions(+), 30 deletions(-)
+>  drivers/net/ethernet/mediatek/mtk_star_emac.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index ed12bff81ea5..eca03e13c7ec 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -5052,9 +5052,6 @@ static struct cftype mem_cgroup_legacy_files[] = {
->  	(defined(CONFIG_SLAB) || defined(CONFIG_SLUB_DEBUG))
->  	{
->  		.name = "kmem.slabinfo",
-> -		.seq_start = memcg_slab_start,
-> -		.seq_next = memcg_slab_next,
-> -		.seq_stop = memcg_slab_stop,
->  		.seq_show = memcg_slab_show,
->  	},
->  #endif
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index b578ae29c743..3c89c2adc930 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1523,35 +1523,12 @@ void dump_unreclaimable_slab(void)
->  }
+> diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+> index b74349cede28..72bb624a6a68 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
+> @@ -1308,6 +1308,8 @@ static int mtk_star_receive_packet(struct mtk_star_priv *priv)
+>  		goto push_new_skb;
+>  	}
 >  
->  #if defined(CONFIG_MEMCG_KMEM)
-> -void *memcg_slab_start(struct seq_file *m, loff_t *pos)
-> -{
-> -	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-> -
-> -	mutex_lock(&slab_mutex);
-> -	return seq_list_start(&memcg->kmem_caches, *pos);
-> -}
-> -
-> -void *memcg_slab_next(struct seq_file *m, void *p, loff_t *pos)
-> -{
-> -	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-> -
-> -	return seq_list_next(p, &memcg->kmem_caches, pos);
-> -}
-> -
-> -void memcg_slab_stop(struct seq_file *m, void *p)
-> -{
-> -	mutex_unlock(&slab_mutex);
-> -}
-> -
->  int memcg_slab_show(struct seq_file *m, void *p)
->  {
-> -	struct kmem_cache *s = list_entry(p, struct kmem_cache,
-> -					  memcg_params.kmem_caches_node);
-> -	struct mem_cgroup *memcg = mem_cgroup_from_seq(m);
-> -
-> -	if (p == memcg->kmem_caches.next)
-> -		print_slabinfo_header(m);
-> -	cache_show(s, m);
-> +	/*
-> +	 * Deprecated.
-> +	 * Please, take a look at tools/cgroup/slabinfo.py .
-> +	 */
->  	return 0;
->  }
->  #endif
+> +	desc_data.dma_addr = new_dma_addr;
+> +
+>  	/* We can't fail anymore at this point: it's safe to unmap the skb. */
+>  	mtk_star_dma_unmap_rx(priv, &desc_data);
+>  
+> @@ -1318,7 +1320,6 @@ static int mtk_star_receive_packet(struct mtk_star_priv *priv)
+>  	netif_receive_skb(desc_data.skb);
+>  
+>  push_new_skb:
+> -	desc_data.dma_addr = new_dma_addr;
+>  	desc_data.len = skb_tailroom(new_skb);
+>  	desc_data.skb = new_skb;
+>  
+> -- 
+> 2.25.0
 > 
-
