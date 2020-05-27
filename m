@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91DB4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AD0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6A62075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5C1B20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgE0DEo (ORCPT
+        id S1728414AbgE0DEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:04:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:59778 "EHLO foss.arm.com"
+        Tue, 26 May 2020 23:04:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:59790 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgE0DEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:04:43 -0400
+        id S1725893AbgE0DEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 23:04:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E781530E;
-        Tue, 26 May 2020 20:04:42 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EF1730E;
+        Tue, 26 May 2020 20:04:46 -0700 (PDT)
 Received: from p8cg001049571a15.arm.com (unknown [10.163.76.100])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 28A713F6C4;
-        Tue, 26 May 2020 20:04:39 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 85A5D3F6C4;
+        Tue, 26 May 2020 20:04:43 -0700 (PDT)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
         suzuki.poulose@arm.com,
         Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH V5 1/4] arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR0 register
-Date:   Wed, 27 May 2020 08:33:36 +0530
-Message-Id: <1590548619-3441-2-git-send-email-anshuman.khandual@arm.com>
+Subject: [PATCH V5 2/4] arm64/cpufeature: Add remaining feature bits in ID_AA64MMFR1 register
+Date:   Wed, 27 May 2020 08:33:37 +0530
+Message-Id: <1590548619-3441-3-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590548619-3441-1-git-send-email-anshuman.khandual@arm.com>
 References: <1590548619-3441-1-git-send-email-anshuman.khandual@arm.com>
@@ -42,8 +42,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable EVC, FGT, EXS features bits in ID_AA64MMFR0 register as per ARM DDI
-0487F.a specification.
+Enable ETS, TWED, XNX and SPECSEI features bits in ID_AA64MMFR1 register as
+per ARM DDI 0487F.a specification.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
@@ -54,38 +54,40 @@ Cc: linux-kernel@vger.kernel.org
 Suggested-by: Will Deacon <will@kernel.org>
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- arch/arm64/include/asm/sysreg.h | 3 +++
- arch/arm64/kernel/cpufeature.c  | 3 +++
- 2 files changed, 6 insertions(+)
+ arch/arm64/include/asm/sysreg.h | 4 ++++
+ arch/arm64/kernel/cpufeature.c  | 4 ++++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-index fa9d02ca4b25..cf983d03aa4c 100644
+index cf983d03aa4c..a798bb9c0845 100644
 --- a/arch/arm64/include/asm/sysreg.h
 +++ b/arch/arm64/include/asm/sysreg.h
-@@ -703,6 +703,9 @@
- #define ID_AA64ZFR0_SVEVER_SVE2		0x1
+@@ -731,6 +731,10 @@
+ #endif
  
- /* id_aa64mmfr0 */
-+#define ID_AA64MMFR0_ECV_SHIFT		60
-+#define ID_AA64MMFR0_FGT_SHIFT		56
-+#define ID_AA64MMFR0_EXS_SHIFT		44
- #define ID_AA64MMFR0_TGRAN4_SHIFT	28
- #define ID_AA64MMFR0_TGRAN64_SHIFT	24
- #define ID_AA64MMFR0_TGRAN16_SHIFT	20
+ /* id_aa64mmfr1 */
++#define ID_AA64MMFR1_ETS_SHIFT		36
++#define ID_AA64MMFR1_TWED_SHIFT		32
++#define ID_AA64MMFR1_XNX_SHIFT		28
++#define ID_AA64MMFR1_SPECSEI_SHIFT	24
+ #define ID_AA64MMFR1_PAN_SHIFT		20
+ #define ID_AA64MMFR1_LOR_SHIFT		16
+ #define ID_AA64MMFR1_HPD_SHIFT		12
 diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index ada9f6f9b0f6..feaa6dcd6f7b 100644
+index feaa6dcd6f7b..c2253fb3401e 100644
 --- a/arch/arm64/kernel/cpufeature.c
 +++ b/arch/arm64/kernel/cpufeature.c
-@@ -267,6 +267,9 @@ static const struct arm64_ftr_bits ftr_id_aa64zfr0[] = {
+@@ -295,6 +295,10 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
  };
  
- static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_ECV_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_FGT_SHIFT, 4, 0),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_EXS_SHIFT, 4, 0),
- 	/*
- 	 * We already refuse to boot CPUs that don't support our configured
- 	 * page size, so we can only detect mismatches for a page size other
+ static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_ETS_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_TWED_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_XNX_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_HIGHER_SAFE, ID_AA64MMFR1_SPECSEI_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_PAN_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_LOR_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR1_HPD_SHIFT, 4, 0),
 -- 
 2.20.1
 
