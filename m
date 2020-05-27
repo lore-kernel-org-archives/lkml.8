@@ -2,95 +2,84 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45461C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5534AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2982920899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AC5320899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgE0NAB convert rfc822-to-8bit (ORCPT
+        id S1730221AbgE0NA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:00:01 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2150 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730045AbgE0NAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:00:01 -0400
-Received: from DGGEML403-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 6274EA3AC46CB98C2FC5;
-        Wed, 27 May 2020 20:59:58 +0800 (CST)
-Received: from DGGEML523-MBX.china.huawei.com ([169.254.4.221]) by
- DGGEML403-HUB.china.huawei.com ([fe80::74d9:c659:fbec:21fa%31]) with mapi id
- 14.03.0487.000; Wed, 27 May 2020 20:59:52 +0800
-From:   Fengtiantian <fengtiantian@huawei.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING [GENERAL" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        "Jiri Pirko" <jiri@mellanox.com>, Arnd Bergmann <arnd@arndb.de>,
-        Hadar Hen Zion <hadarh@mellanox.com>
-CC:     "Huangweidong (C)" <weidong.huang@huawei.com>,
-        yuehaibing <yuehaibing@huawei.com>
-Subject: [patch] flow_dissector:  Fix wrong vlan header offset in
- __skb_flow_dissect
-Thread-Topic: [patch] flow_dissector:  Fix wrong vlan header offset in
- __skb_flow_dissect
-Thread-Index: AdY0IeXHJXIXgx+ATVmoGwihjqqNXQ==
-Date:   Wed, 27 May 2020 12:59:52 +0000
-Message-ID: <2A6E6328DF026B458DBF90B38941F981871A42F1@DGGEML523-MBX.china.huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.149.160]
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: 8BIT
+        Wed, 27 May 2020 09:00:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730045AbgE0NA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:00:27 -0400
+Received: from [10.44.0.192] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1438220873;
+        Wed, 27 May 2020 13:00:24 +0000 (UTC)
+Subject: Re: [PATCH 4/4] m68k: pass -D options to KBUILD_CPPFLAGS instead of
+ KBUILD_{A,C}FLAGS
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200526123810.301667-1-masahiroy@kernel.org>
+ <20200526123810.301667-4-masahiroy@kernel.org>
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Message-ID: <59d886a9-2ebd-8fab-9b42-f71808288968@linux-m68k.org>
+Date:   Wed, 27 May 2020 23:00:20 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200526123810.301667-4-masahiroy@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We use the openvswitch 2.7.0 and find the issue when ovs use the skb_get_hash() to get the hash of QinQ skb. Because the
-__skb_flow_dissect() get the wrong vlan protocol headers.
 
-Someone report bonding driver has the same issue use the
-__skb_flow_dissect() to count hash in bond_xmit_hash:
-https://lore.kernel.org/netdev/00a5d09f-a23e-661f-60c0-
-75fba6227451@huawei.com/T/.
+On 26/5/20 10:38 pm, Masahiro Yamada wrote:
+> Precisely, -D is a preprocessor option.
+> 
+> KBUILD_CPPFLAGS is passed to for compiling .c and .S files too.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Because in netif_receive_skb, the skb_network_header points to vlan head, but in dev_hard_start_xmit, the skb_network_header points to IP header. So use the skb_network_offset to get the vlan head is not reliable.
+Acked-by: Greg Ungerer <gerg@linux-m68k.org>
 
-Should we use the skb_mac_offset instead the skb_network_offset to get the vlan head when proto is ETH_P_8021AD or ETH_P_8021Q?
+Regards
+Greg
 
-Signed-off-by: Feng tiantian <fengtiantian@huawei.com>
----
- net/core/flow_dissector.c | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c index 415b95f..9a77d5d 100644
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -629,6 +629,13 @@ bool __skb_flow_dissect(const struct sk_buff *skb,
- 			 skb->vlan_proto : skb->protocol;
- 		nhoff = skb_network_offset(skb);
- 		hlen = skb_headlen(skb);
-+
-+		if (proto == htons(ETH_P_8021AD) ||
-+		    proto == htons(ETH_P_8021Q)) {
-+			if (skb_mac_header_was_set(skb))
-+				nhoff = skb_mac_offset(skb) + ETH_HLEN;
-+		}
-+
- #if IS_ENABLED(CONFIG_NET_DSA)
- 		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
- 			const struct dsa_device_ops *ops;
---
-1.8.3.1
-
+> ---
+> 
+>   arch/m68k/Makefile | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/m68k/Makefile b/arch/m68k/Makefile
+> index ae6e29da3a3e..c28f9f917ac0 100644
+> --- a/arch/m68k/Makefile
+> +++ b/arch/m68k/Makefile
+> @@ -70,9 +70,8 @@ ifdef CONFIG_MMU
+>   KBUILD_CFLAGS += -fno-strength-reduce -ffixed-a2
+>   else
+>   # we can use a m68k-linux-gcc toolchain with these in place
+> -KBUILD_CFLAGS += -DUTS_SYSNAME=\"uClinux\"
+> -KBUILD_CFLAGS += -D__uClinux__
+> -KBUILD_AFLAGS += -D__uClinux__
+> +KBUILD_CPPFLAGS += -DUTS_SYSNAME=\"uClinux\"
+> +KBUILD_CPPFLAGS += -D__uClinux__
+>   endif
+>   
+>   KBUILD_LDFLAGS := -m m68kelf
+> 
