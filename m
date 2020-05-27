@@ -2,112 +2,269 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE22C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC301C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A432E20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:02:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ea5b/yOr"
+	by mail.kernel.org (Postfix) with ESMTP id BF0E020776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725920AbgE0ECo (ORCPT
+        id S1726600AbgE0EEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 00:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgE0ECn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 00:02:43 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553E9C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 21:02:43 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id cx22so930163pjb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 21:02:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DyZwm58RJro1kic/9IoyyoaUkdPO3Lyg3bl6Kx/XiJU=;
-        b=Ea5b/yOr0ZEjDMlwSBwK+l5ZsIJ+PqMFEO5MA6TfdyDCcSENA+WOIflT3B1Cw10fPh
-         5sYGtgm8uMBE1czEC+5Q6RLS0zaBKiqdE9iidYWuF5MzBuNa/zGyLan6r6Yj7JOAul0o
-         8oxwT7bfUiv3s6hXNHqdx5Ww8LPIN2YGVVH1uF/Gcdf55Yl7252/xsI9umtSJKpEQVYF
-         ur+ZElsaZjcmPCG9nvmfFaIsBCOoo1mhZjc+RxnXlWXAb2ojz/40Kn7cb2Jfe1RI9VPG
-         UHwdBSuDqL3qhWbxHm9NMp3VZaSxzFJps7F/tY/jhPTW6pSWbxUw9m1Zu4Nw2QmiFX2n
-         6GRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DyZwm58RJro1kic/9IoyyoaUkdPO3Lyg3bl6Kx/XiJU=;
-        b=DhpYpJcoUU/HVIKNew2qPdrJu6hDi5GDCksxiTvIG5VX2fA5dntND0R0jG3WxOqA3J
-         HU3Z1XbZn6lR2EsLze45YWTghEperFM5sei2YrwQFCXQvtWAXoGT49Raky4mwjJO5nYa
-         tKdmJ6MXNic2GAJ0EaPlIgOuSKHtnA4XftFhHVrPOzYJv5/6bv0vR0llmUfGzxqo7FxK
-         6lEtFlmK4FRzZ8ocZTX2Z03NucvCbmwSeUK2bbW+nDvGqQbZAPhY4s7WKyyBOGGDmM+y
-         CXuycggbmKENGDKzhyV0roOPNRKufArTxU2YPLr8MN4WJZyi8AOVOvsLYvUmc9TnW1as
-         0XkA==
-X-Gm-Message-State: AOAM532R0Ja/0DGxhBwkWjda3tz3KRfzb+8GoDHS6HAB6ZOASvkDh9DJ
-        B3H5qYIX64QtR6WqzCfbU46VjJ7fil+yVFRX
-X-Google-Smtp-Source: ABdhPJysSqvqnQ/9Ue5bcz7zpgWjHw34v7o+0V7YTkhJb2z749Hqtu/41w7UlNOK9ngfynNsYL22Dw==
-X-Received: by 2002:a17:902:7c16:: with SMTP id x22mr4072964pll.244.1590552162218;
-        Tue, 26 May 2020 21:02:42 -0700 (PDT)
-Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:b8f4:bbde:37ba:20bd])
-        by smtp.gmail.com with ESMTPSA id e5sm797494pfe.121.2020.05.26.21.02.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 21:02:41 -0700 (PDT)
-From:   Daeho Jeong <daeho43@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: protect new segment allocation in expand_inode_data
-Date:   Wed, 27 May 2020 13:02:31 +0900
-Message-Id: <20200527040231.70891-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+        Wed, 27 May 2020 00:04:42 -0400
+Received: from mga12.intel.com ([192.55.52.136]:32217 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbgE0EEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 00:04:41 -0400
+IronPort-SDR: /NVJlxnNBbFHnHJW/r7+AjnF/nAMkUpr756xS/Y7eYLKW9Bn1n+uYvmAUpxhXC6t6DuBh8DWqp
+ pWObGSzKijUQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 21:04:33 -0700
+IronPort-SDR: OQFenHQWLl2Mv3DYbsE0buoii4AQpVuy0n994hHPWQ5PtsvM4U95BgVAoHTP3tEhNu/ORP2RHY
+ jTt8yvTAOZ7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
+   d="scan'208";a="270319625"
+Received: from zalvear-mobl.amr.corp.intel.com (HELO [10.254.67.58]) ([10.254.67.58])
+  by orsmga006.jf.intel.com with ESMTP; 26 May 2020 21:04:33 -0700
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
+Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+References: <18609.1588812972@famine>
+ <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
+ <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
+ <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+ <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
+ <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
+ <d59a5ec4-1a83-6cd4-805e-24e0a611cc3c@hisilicon.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <9b2aecd8-b474-31b7-7cd2-1a8633a2485d@linux.intel.com>
+Date:   Tue, 26 May 2020 21:04:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d59a5ec4-1a83-6cd4-805e-24e0a611cc3c@hisilicon.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daeho Jeong <daehojeong@google.com>
 
-Found a new segemnt allocation without f2fs_lock_op() in
-expand_inode_data(). So, when we do fallocate() for a pinned file
-and trigger checkpoint very frequently and simultaneously. F2FS gets
-stuck in the below code of do_checkpoint() forever.
 
-  f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
-  /* Wait for all dirty meta pages to be submitted for IO */
-                                                <= if fallocate() here,
-  f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META); <= it'll wait forever.
+On 5/26/20 8:50 PM, Yicong Yang wrote:
+> Hi,
+> 
+> 
+> On 2020/5/27 9:31, Kuppuswamy, Sathyanarayanan wrote:
+>> Hi,
+>>
+>> On 5/21/20 7:56 PM, Yicong Yang wrote:
+>>>
+>>>
+>>> On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
+>>>>
+>>>>
+>>>> On 5/21/20 3:58 AM, Yicong Yang wrote:
+>>>>> On 2020/5/21 1:04, Kuppuswamy, Sathyanarayanan wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 5/20/20 1:28 AM, Yicong Yang wrote:
+>>>>>>> On 2020/5/7 11:32, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>>>>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>>>>
+>>>>>>>> If there are non-hotplug capable devices connected to a given
+>>>>>>>> port, then during the fatal error recovery(triggered by DPC or
+>>>>>>>> AER), after calling reset_link() function, we cannot rely on
+>>>>>>>> hotplug handler to detach and re-enumerate the device drivers
+>>>>>>>> in the affected bus. Instead, we will have to let the error
+>>>>>>>> recovery handler call report_slot_reset() for all devices in
+>>>>>>>> the bus to notify about the reset operation. Although this is
+>>>>>>>> only required for non hot-plug capable devices, doing it for
+>>>>>>>> hotplug capable devices should not affect the functionality.
+>>>>>>>>
+>>>>>>>> Along with above issue, this fix also applicable to following
+>>>>>>>> issue.
+>>>>>>>>
+>>>>>>>> Commit 6d2c89441571 ("PCI/ERR: Update error status after
+>>>>>>>> reset_link()") added support to store status of reset_link()
+>>>>>>>> call. Although this fixed the error recovery issue observed if
+>>>>>>>> the initial value of error status is PCI_ERS_RESULT_DISCONNECT
+>>>>>>>> or PCI_ERS_RESULT_NO_AER_DRIVER, it also discarded the status
+>>>>>>>> result from report_frozen_detected. This can cause a failure to
+>>>>>>>> recover if _NEED_RESET is returned by report_frozen_detected and
+>>>>>>>> report_slot_reset is not invoked.
+>>>>>>>>
+>>>>>>>> Such an event can be induced for testing purposes by reducing the
+>>>>>>>> Max_Payload_Size of a PCIe bridge to less than that of a device
+>>>>>>>> downstream from the bridge, and then initiating I/O through the
+>>>>>>>> device, resulting in oversize transactions.  In the presence of DPC,
+>>>>>>>> this results in a containment event and attempted reset and recovery
+>>>>>>>> via pcie_do_recovery.  After 6d2c89441571 report_slot_reset is not
+>>>>>>>> invoked, and the device does not recover.
+>>>>>>>>
+>>>>>>>> [original patch is from jay.vosburgh@canonical.com]
+>>>>>>>> [original patch link https://lore.kernel.org/linux-pci/18609.1588812972@famine/]
+>>>>>>>> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+>>>>>>>> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+>>>>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>>>>>>> ---
+>>>>>>>>      drivers/pci/pcie/err.c | 19 +++++++++++++++----
+>>>>>>>>      1 file changed, 15 insertions(+), 4 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+>>>>>>>> index 14bb8f54723e..db80e1ecb2dc 100644
+>>>>>>>> --- a/drivers/pci/pcie/err.c
+>>>>>>>> +++ b/drivers/pci/pcie/err.c
+>>>>>>>> @@ -165,13 +165,24 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>>>>>>>>          pci_dbg(dev, "broadcast error_detected message\n");
+>>>>>>>>          if (state == pci_channel_io_frozen) {
+>>>>>>>>              pci_walk_bus(bus, report_frozen_detected, &status);
+>>>>>>>> -        status = reset_link(dev);
+>>>>>>>> -        if (status != PCI_ERS_RESULT_RECOVERED) {
+>>>>>>>> +        status = PCI_ERS_RESULT_NEED_RESET;
+>>>>>>>> +    } else {
+>>>>>>>> +        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>>>>> +    }
+>>>>>>>> +
+>>>>>>>> +    if (status == PCI_ERS_RESULT_NEED_RESET) {
+>>>>>>>> +        if (reset_link) {
+>>>>>>>> +            if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED)
+>>>>>>>
+>>>>>>> we'll call reset_link() only if link is frozen. so it may have problem here.
+>>>>>> you mean before this change right?
+>>>>>> After this change, reset_link() will be called as long as status is
+>>>>>> PCI_ERS_RESULT_NEED_RESET.
+>>>>>
+>>>>> Yes. I think we should reset the link only if the io is blocked as before. There's
+>>>>> no reason to reset a normal link.
+>>>> Currently, only AER and DPC driver uses pcie_do_recovery() call. So the
+>>>> possible reset_link options are dpc_reset_link() and aer_root_reset().
+>>>>
+>>>> In dpc_reset_link() case, the link is already disabled and hence we
+>>>> don't need to do another reset. In case of aer_root_reset() it
+>>>> uses pci_bus_error_reset() to reset the slot.
+>>>
+>>> Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
+>>> hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
+>>> reset for the bridge. That's what I think is unnecessary for a normal link,
+>>> and that's what reset link indicates us to do. The slot reset is introduced
+>>> in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
+>>
+>> IIUC, pci_bus_reset() will do slot reset if its supported (hot-plug
+>> capable slots). If its not supported then it will attempt secondary
+>> bus reset. So secondary bus reset will be attempted only if slot
+>> reset is not supported.
+>>
+>> Since reported_error_detected() requests us to do reset, we will have
+>> to attempt some kind of reset before we call ->slot_reset() right?
+>> What is the side effect in calling secondary bus reset?
+> 
+> I agree we should do a slot reset if driver required. The question is if we apply
+> the patch, think of a situation that the io is normal, the slot is not hotpluggable but
+> driver reports a reset, then:
+> -->aer_root_reset()
+> ----->pci_bus_error_reset()
+> ---------> pci_bridge_secondary_bus_reset()  // Is it necessary to reset if the link is not blocked?
+> 
+> Before commit (c4eed62a2143, PCI/ERR: Use slot reset if available), the reset_link() for aer is
+> -->aer_root_reset()
+> ----->pci_bridge_secondary_bus_reset()
+> 
+> As mentioned by the commit c4eed62a2143 "The secondary bus reset may have link side effects that a hotplug capable
+> port may incorrectly react to. Use the slot specific reset for hotplug ports, fixing the undesirable link
+> down-up handling during error recovering." So I assume it use hotplug slot reset rather than secondary
+> bus reset to recover the link. If the link is normal, it's unnecessary to do so. so we should add a check
+> before reset the link in the patch:
+> 
+> + if (status == PCI_ERS_RESULT_NEED_RESET &&
+> +      state == pci_channel_io_frozen) {
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- fs/f2fs/file.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> 
+> We should do slot reset if driver required, but it's different from the `slot reset` in pci_bus_error_reset().
+> Previously we don't do a slot reset and call ->slot_reset() directly, I don't know the certain reason.
+IIUC, your concern is whether it is correct to trigger reset for
+pci_channel_io_normal case right ? Please correct me if my
+assumption is incorrect.
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index f7de2a1da528..14ace885baa9 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1660,7 +1660,11 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
- 
- 		down_write(&sbi->pin_sem);
- 		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
-+
-+		f2fs_lock_op(sbi);
- 		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
-+		f2fs_unlock_op(sbi);
-+
- 		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
- 		up_write(&sbi->pin_sem);
- 
--- 
-2.27.0.rc0.183.gde8f92d652-goog
+If its true, then why would report_error_detected() will return
+PCI_ERS_*_NEED_RESET for pci_channel_io_normal case ? If
+report_error_detected() requests reset in pci_channel_io_normal
+case then I think we should give preference to it.
 
+Let me know your comments.
+> 
+> Thanks,
+> Yicong
+>>
+>>>
+>>> PCI_ERS_RESULT_NEED_RESET indicates that the driver
+>>> wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
+>>> I don't think it's same as slot reset mentioned above, which is only for hotpluggable
+>>> ones.
+>> What you think is the correct reset implementation ? Is it something
+>> like this?
+>>
+>> if (hotplug capable)
+>>     try_slot_reset()
+>> else
+>>     do_nothing()
+>>>
+>>> Previously, if link is normal and the driver reports PCI_ERS_RESULT_NEED_RESET,
+>>> we'll only call ->slot_reset() without slot reset in reset_link(). Maybe it's better
+>>> to perform just like before.
+>>>
+>>> Thanks.
+>>>
+>>>
+>>>>>
+>>>>> Furthermore, PCI_ERS_RESULT_NEED_RESET means device driver requires a slot reset rather
+>>>>> than a link reset, so it maybe improper to use it to judge whether a link reset is needed.
+>>>>> We decide whether to do a link reset only by the io state.
+>>>>>
+>>>>> Thanks,
+>>>>> Yicong
+>>>>>
+>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Yicong
+>>>>>>>
+>>>>>>>
+>>>>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>>>>> +        } else {
+>>>>>>>> +            if (pci_bus_error_reset(dev))
+>>>>>>>> +                status = PCI_ERS_RESULT_DISCONNECT;
+>>>>>>>> +        }
+>>>>>>>> +
+>>>>>>>> +        if (status == PCI_ERS_RESULT_DISCONNECT) {
+>>>>>>>>                  pci_warn(dev, "link reset failed\n");
+>>>>>>>>                  goto failed;
+>>>>>>>>              }
+>>>>>>>> -    } else {
+>>>>>>>> -        pci_walk_bus(bus, report_normal_detected, &status);
+>>>>>>>>          }
+>>>>>>>>            if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+>>>>>>>
+>>>>>> .
+>>>>>>
+>>>>>
+>>>> .
+>>>>
+>>>
+>> .
+>>
+> 
