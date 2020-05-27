@@ -2,101 +2,180 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39ED1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A941C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18A80208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1767B20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:45:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cEtxG1QB"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="K8tyyqP2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388660AbgE0Npo (ORCPT
+        id S2388686AbgE0Npt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388651AbgE0Npk (ORCPT
+        Wed, 27 May 2020 09:45:49 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:36630 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388603AbgE0Npp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:45:40 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E22C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:45:39 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x22so14495078lfd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:45:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pqMjF481/emegOTyAnp90i2QSPi+4HPq/HRpDph3sd4=;
-        b=cEtxG1QBb6k0/9pivnXsIM4fxxgTmO6eKy3cb4jjp5+kQNfHVlksx1KW++A7tdPXNv
-         oY2Ob0P9vNNprE6p4NGP04bu/InKQ/EF4F2+wJwW+oY9E8YyJqJNZGtPMuzc5qLL0HWI
-         fbhtYM7PcCz7DfVylsOzqby5Qs3IHhHLLbl9blKfUGBSf4zaaAgjnl5o0dbVSJ4DvPoW
-         Lx+VZEycnhRAGhdVQAj29L9RY0uZ6YY2m8X2b2LqnnTUPWNtVuoZ+MHCVqwRrOEjYOq/
-         EKnUL6kl2azL30dBaSZuMa/KxZcpN6UCJO8YV+KqgmxgC4f8GArCvy88KgPw8b2F4xLC
-         ixNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pqMjF481/emegOTyAnp90i2QSPi+4HPq/HRpDph3sd4=;
-        b=Xb9ngJ7tDiSOpsccAacB+5kXe4GVVWNaF+DmEZi5sQ1ws03J0vT2sS/EucH+04KIRz
-         W573pBbKjr76INzbCk49NfxQQobyI8oE2w1fzLjMorKraqxX8pBSm88m82KAuDYfRF8b
-         xQGhbTQSj0DA/JG0NNJR5pyght8QZ36bIGmKbDxRg90Y+96+i+E/lkJZq2kcIp6lxfGZ
-         20XPUXA/T+fjf7VNokgeA8LhyOeYI+IIB18lrtM7gUZfOwD1ike5cG4gUcS07QRq0bBo
-         sPpESaU7EXp1TGjrClRLN480fCxaj2YBQLVdQagi0Ku6TyI8OFzARz5OZkTC3UD16Eke
-         WnNQ==
-X-Gm-Message-State: AOAM5337CnrIWW9gkaqU+Sv/WoMe/vXzIq56AMMbMhRx4TOrwWUWQJ1R
-        kRc/JqdoX5sAisawoYwWvprlAtWcqSHwuxCVShkRvQ==
-X-Google-Smtp-Source: ABdhPJywnRjyy63BmYPCVd6xtABhxO8rvnbtGtftY9/L9Axjxr/II+eDgYpm5vNmJPSCVWS3wWgZuzCOQirdIHM52xc=
-X-Received: by 2002:ac2:5473:: with SMTP id e19mr3147605lfn.21.1590587138395;
- Wed, 27 May 2020 06:45:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200513141134.25819-1-lars.povlsen@microchip.com>
- <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com>
- <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com>
- <87r1v8oz9f.fsf@soft-dev15.microsemi.net> <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
- <87pnappzun.fsf@soft-dev15.microsemi.net>
-In-Reply-To: <87pnappzun.fsf@soft-dev15.microsemi.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 May 2020 15:45:27 +0200
-Message-ID: <CACRpkdbfNPWKDU5zDaKT0kvJhCpL3X=jvTpLpicm1yMD5brA8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Wed, 27 May 2020 09:45:45 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 18CCF5B4;
+        Wed, 27 May 2020 15:45:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1590587141;
+        bh=FOT36A7X8Hk3Rh2sgJfgv1jk67oSyBWaXMLvby3ZVn0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K8tyyqP2+EBqMtHIXAixv68AVoyRavwX2+DntbLh2vrjNKUdhw1kPp5L8v8XcEQke
+         5hoxdGk3u1oikaekAvVN79PzMi7aqfwFJI9F8IdAk1sxTLb8aiHOOnYPs49h177hrO
+         RBBxk1jZGiThAgDTQMwbMwsU3yghDgrHe9UIOuIk=
+Date:   Wed, 27 May 2020 16:45:27 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Roman Zippel <zippel@linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>, Arnd Bergmann <arnd@arndb.de>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Openrisc <openrisc@lists.librecores.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michal Simek <monstr@monstr.eu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org
+Subject: Re: [PATCH] media: omap3isp: Shuffle cacheflush.h and include mm.h
+Message-ID: <20200527134527.GD6171@pendragon.ideasonboard.com>
+References: <20200515143646.3857579-7-hch@lst.de>
+ <20200527043426.3242439-1-natechancellor@gmail.com>
+ <CAMuHMdVSduTOi5bUgF9sLQdGADwyL1+qALWsKgin1TeOLGhAKQ@mail.gmail.com>
+ <20200527081337.GA3506499@ubuntu-s3-xlarge-x86>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200527081337.GA3506499@ubuntu-s3-xlarge-x86>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:05 AM Lars Povlsen
-<lars.povlsen@microchip.com> wrote:
+Hi Nathan,
 
-> The only issue is that the gpios on the same "port" have restrictions on
-> their status - they can only be enabled "all" or "none" for gpios that
-> map to the same port. F.ex. gpio0, gpio32, gpio64 and gpio96 must all be
-> enabled or disabled because at the hardware level you control the
-> _port_.
+(CC'ing Sakari Ailus and the linux-media mailing list)
 
-This is fairly common. For example that an entire port/block share
-a clock.
+On Wed, May 27, 2020 at 01:13:37AM -0700, Nathan Chancellor wrote:
+> On Wed, May 27, 2020 at 09:02:51AM +0200, Geert Uytterhoeven wrote:
+> > On Wed, May 27, 2020 at 6:37 AM Nathan Chancellor wrote:
+> > > After mm.h was removed from the asm-generic version of cacheflush.h,
+> > > s390 allyesconfig shows several warnings of the following nature:
+> > >
+> > > In file included from ./arch/s390/include/generated/asm/cacheflush.h:1,
+> > >                  from drivers/media/platform/omap3isp/isp.c:42:
+> > > ./include/asm-generic/cacheflush.h:16:42: warning: 'struct mm_struct'
+> > > declared inside parameter list will not be visible outside of this
+> > > definition or declaration
+> > >
+> > > cacheflush.h does not include mm.h nor does it include any forward
+> > > declaration of these structures hence the warning. To avoid this,
+> > > include mm.h explicitly in this file and shuffle cacheflush.h below it.
+> > >
+> > > Fixes: 19c0054597a0 ("asm-generic: don't include <linux/mm.h> in cacheflush.h")
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > 
+> > Thanks for your patch!
+> > 
+> > > I am aware the fixes tag is kind of irrelevant because that SHA will
+> > > change in the next linux-next revision and this will probably get folded
+> > > into the original patch anyways but still.
+> > >
+> > > The other solution would be to add forward declarations of these structs
+> > > to the top of cacheflush.h, I just chose to do what Christoph did in the
+> > > original patch. I am happy to do that instead if you all feel that is
+> > > better.
+> > 
+> > That actually looks like a better solution to me, as it would address the
+> > problem for all users.
 
-> But as I noted earlier, that could just be the driver enforcing
-> this.
+Headers should be self-contained, so that would be the best fix in my
+opinion.
 
-Yeps.
+This being said, as cacheflush.h isn't needed in isp.c, I think we
+should also drop it. It seems to have been included there since the
+first driver version, and was likely a left-over from the out-of-tree
+development. Manual cache handling was part of
+drivers/media/platform/omap3isp/ispqueue.c and has been removed in
+commit fbac1400bd1a ("[media] omap3isp: Move to videobuf2").
 
-Yours,
-Linus Walleij
+cacheflush.h can also be dropped from ispvideo.c which suffers from the
+same issue.
+
+> > >  drivers/media/platform/omap3isp/isp.c | 5 +++--
+> > >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+> > > index a4ee6b86663e..54106a768e54 100644
+> > > --- a/drivers/media/platform/omap3isp/isp.c
+> > > +++ b/drivers/media/platform/omap3isp/isp.c
+> > > @@ -39,8 +39,6 @@
+> > >   *     Troy Laramy <t-laramy@ti.com>
+> > >   */
+> > >
+> > > -#include <asm/cacheflush.h>
+> > > -
+> > >  #include <linux/clk.h>
+> > >  #include <linux/clkdev.h>
+> > >  #include <linux/delay.h>
+> > > @@ -49,6 +47,7 @@
+> > >  #include <linux/i2c.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/mfd/syscon.h>
+> > > +#include <linux/mm.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/omap-iommu.h>
+> > >  #include <linux/platform_device.h>
+> > > @@ -58,6 +57,8 @@
+> > >  #include <linux/sched.h>
+> > >  #include <linux/vmalloc.h>
+> > >
+> > > +#include <asm/cacheflush.h>
+> > > +
+> > >  #ifdef CONFIG_ARM_DMA_USE_IOMMU
+> > >  #include <asm/dma-iommu.h>
+> > >  #endif
+> > 
+> > Why does this file need <asm/cacheflush.h> at all?
+> > It doesn't call any of the flush_*() functions, and seems to compile fine
+> > without (on arm32).
+> > 
+> > Perhaps it was included at the top intentionally, to override the definitions
+> > of copy_{to,from}_user_page()? Fortunately that doesn't seem to be the
+> > case, from a quick look at the assembler output.
+> > 
+> > So let's just remove the #include instead?
+> 
+> Sounds good to me. I can send a patch if needed or I suppose Andrew can
+> just make a small fixup patch for it. Let me know what I should do.
+
+-- 
+Regards,
+
+Laurent Pinchart
