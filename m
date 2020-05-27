@@ -2,124 +2,139 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C74C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2029E20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590589284;
-	bh=F6FDdgKEkoqZ2mz6I/gwsbVZQqzI+jue9A6aen5NkIE=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=grfYgzXvfSUusjimAlJLKUp/NQ3OEjKWPDB5R0oGuJXTCIEG7mWKXVZ8/ELO7a9dZ
-	 bV6trVpOD/K+2gMqSoxREesGw8fTJwzyvyJ5NB8II/RfFaLuN06I5zaz53pmXziiFb
-	 b1F10yVZl6I/dNOQNxJsiqrEQTvLcy95aSf2GqJs=
+	by mail.kernel.org (Postfix) with ESMTP id 86ACE2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:21:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389101AbgE0OVX (ORCPT
+        id S2389133AbgE0OVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389072AbgE0OVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:21:23 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0ABC08C5C1;
-        Wed, 27 May 2020 07:21:22 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c12so5560544qkk.13;
-        Wed, 27 May 2020 07:21:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=PmfbmDEwWXL4BvaLDwT2z4rZRjeL8v9u316orBCGPsE=;
-        b=DLCV/9qp/eo/ydm2hUV10ZlWLk6rheVtyjcRfQ+8f/LMjMkhpz22lWZg3MvQwxHhs3
-         CHOnqxsMW1BIGdZ94iLc0LS3sc5JXalpHzd4cF3cp9CRoHIpeC+gW/uyUxTJxfO8Ul4V
-         JVfrzYFZzKvBL8i6ZDDZH6H3rOlSXRc56iFSAvbsbXi59riI5jYGK3akTKSrsmErr/3L
-         rxAWXOu46hcqmboR1f1aK4GeJckXcTonukZOWfZs8jNdv1cGw91nHofl+lXy8bFjEqmN
-         j3tA9he2fixBEaLwxstJpyNbX0evnrPvVY1KrLt+BS4kr34o8Olnti7/MCLhB4E9PczS
-         PhDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=PmfbmDEwWXL4BvaLDwT2z4rZRjeL8v9u316orBCGPsE=;
-        b=rIxM1pL7M2b6df9z33C6Fz8VT06oW91lWiRH59OpH1c4/0AvN/WU9tzqmO5/awGqGa
-         85Ddm96Y7Z25ZLoczm98U7Q6ovZW97UmpQ6AJIRxTv50ukABP+ugDz3ktaTp6dBF46rb
-         Og3Z19eEROgQ3cMiwW/9QOzToyyspl2d1xFRWGo2+pzT2aL3OJoOqP00oVHu1NJcpqi6
-         gB3RRbNGIKb4aL7o3ZPSU/xKPWSZW4Gd2x8eTRbwrdwVRVOSov68mVM90ZpsgYVTixiG
-         WLSNfiR1jHpZcu0jl4i5H6GGbj/VC5D9dnL4ItpqrOseraA0YPv1XsKJSrACuwFVm7FS
-         kGUA==
-X-Gm-Message-State: AOAM5332MahYu7pL10+r15jhXAV4DX6qn0RWfEzDP05ToTFKaaHgKlzM
-        RzCDXGFaYB9Ob8GugmpcvG/96tOX
-X-Google-Smtp-Source: ABdhPJwJ5w0FMyPpjzMetGcGvVQO5ReWFBlW0ncrsM00xH/mx+qxCMHrGJdo8aivZzXQmO2COCyivQ==
-X-Received: by 2002:a37:64c6:: with SMTP id y189mr4300125qkb.353.1590589281745;
-        Wed, 27 May 2020 07:21:21 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:74a])
-        by smtp.gmail.com with ESMTPSA id w13sm2750212qtk.66.2020.05.27.07.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 07:21:21 -0700 (PDT)
-Date:   Wed, 27 May 2020 10:21:19 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
-Subject: [GIT PULL] cgroup fixes for v5.7-rc7
-Message-ID: <20200527142119.GJ83516@mtj.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Wed, 27 May 2020 10:21:45 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:41058 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389103AbgE0OVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:21:44 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf91jd85eYK85AA--.655S2;
+        Wed, 27 May 2020 22:21:23 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH v3 1/2] clk: hisilicon: Use correct return value about hisi_reset_init()
+Date:   Wed, 27 May 2020 22:21:22 +0800
+Message-Id: <1590589283-31412-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dxf91jd85eYK85AA--.655S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAFW3WFWfGrW8uw1rJryfXrb_yoW5Ar17pF
+        48JFW2ya4Yga17X3ZrX390yFy5Za42gayUGFW8Z3s8Zwn8JryDZr1fury8Xayqqrs3KFWa
+        9r40kr48ua1jyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+        6r4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xryl
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
+        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjtEf5UUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Linus.
+The return value about hisi_reset_init() is not correct, fix it.
 
-* Reverted stricter synchronization for cgroup recursive stats which was
-  prepping it for event counter usage which never got merged. The change was
-  causing performation regressions in some cases.
+Fixes: e9a2310fb689 ("reset: hisilicon: fix potential NULL pointer dereference")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-* Restore bpf-based device-cgroup operation even when cgroup1 device cgroup
-  is disabled.
+v2:
+  - No changes, just add "Fixes:" tag
 
-* An out-param init fix.
+v3:
+  - Use ERR_CAST(rstc->membase) to fix the sparse warning
 
-Thanks.
+ drivers/clk/hisilicon/clk-hi3519.c      | 4 ++--
+ drivers/clk/hisilicon/crg-hi3516cv300.c | 4 ++--
+ drivers/clk/hisilicon/crg-hi3798cv200.c | 4 ++--
+ drivers/clk/hisilicon/reset.c           | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-The following changes since commit 87ebc45d2d32936fb1c8242032eb0b9bcd058858:
-
-  Merge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux (2020-04-09 11:04:16 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.7-fixes
-
-for you to fetch changes up to eec8fd0277e37cf447b88c6be181e81df867bcf1:
-
-  device_cgroup: Cleanup cgroup eBPF device filter code (2020-04-13 14:41:54 -0400)
-
-----------------------------------------------------------------
-Daniel Xu (1):
-      xattr: fix uninitialized out-param
-
-Odin Ugedal (1):
-      device_cgroup: Cleanup cgroup eBPF device filter code
-
-Tejun Heo (1):
-      Revert "cgroup: Add memory barriers to plug cgroup_rstat_updated() race window"
-
- drivers/gpu/drm/amd/amdkfd/kfd_priv.h |  2 +-
- fs/xattr.c                            |  6 +++---
- include/linux/device_cgroup.h         | 14 +++++---------
- kernel/cgroup/rstat.c                 | 16 +++-------------
- security/Makefile                     |  2 +-
- security/device_cgroup.c              | 19 ++++++++++++++++---
- 6 files changed, 29 insertions(+), 30 deletions(-)
-
+diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
+index ad0c7f3..803fa66 100644
+--- a/drivers/clk/hisilicon/clk-hi3519.c
++++ b/drivers/clk/hisilicon/clk-hi3519.c
+@@ -149,8 +149,8 @@ static int hi3519_clk_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	crg->rstc = hisi_reset_init(pdev);
+-	if (!crg->rstc)
+-		return -ENOMEM;
++	if (IS_ERR(crg->rstc))
++		return PTR_ERR(crg->rstc);
+ 
+ 	crg->clk_data = hi3519_clk_register(pdev);
+ 	if (IS_ERR(crg->clk_data)) {
+diff --git a/drivers/clk/hisilicon/crg-hi3516cv300.c b/drivers/clk/hisilicon/crg-hi3516cv300.c
+index 5d4e61c..c2af03d 100644
+--- a/drivers/clk/hisilicon/crg-hi3516cv300.c
++++ b/drivers/clk/hisilicon/crg-hi3516cv300.c
+@@ -271,8 +271,8 @@ static int hi3516cv300_crg_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 
+ 	crg->rstc = hisi_reset_init(pdev);
+-	if (!crg->rstc)
+-		return -ENOMEM;
++	if (IS_ERR(crg->rstc))
++		return PTR_ERR(crg->rstc);
+ 
+ 	crg->clk_data = crg->funcs->register_clks(pdev);
+ 	if (IS_ERR(crg->clk_data)) {
+diff --git a/drivers/clk/hisilicon/crg-hi3798cv200.c b/drivers/clk/hisilicon/crg-hi3798cv200.c
+index 08a19ba..66fd6a9 100644
+--- a/drivers/clk/hisilicon/crg-hi3798cv200.c
++++ b/drivers/clk/hisilicon/crg-hi3798cv200.c
+@@ -354,8 +354,8 @@ static int hi3798cv200_crg_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 
+ 	crg->rstc = hisi_reset_init(pdev);
+-	if (!crg->rstc)
+-		return -ENOMEM;
++	if (IS_ERR(crg->rstc))
++		return PTR_ERR(crg->rstc);
+ 
+ 	crg->clk_data = crg->funcs->register_clks(pdev);
+ 	if (IS_ERR(crg->clk_data)) {
+diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
+index 93cee17..c733e2e 100644
+--- a/drivers/clk/hisilicon/reset.c
++++ b/drivers/clk/hisilicon/reset.c
+@@ -93,11 +93,11 @@ struct hisi_reset_controller *hisi_reset_init(struct platform_device *pdev)
+ 
+ 	rstc = devm_kmalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
+ 	if (!rstc)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	rstc->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(rstc->membase))
+-		return NULL;
++		return ERR_CAST(rstc->membase);
+ 
+ 	spin_lock_init(&rstc->lock);
+ 	rstc->rcdev.owner = THIS_MODULE;
 -- 
-tejun
+2.1.0
+
