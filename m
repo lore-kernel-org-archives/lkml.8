@@ -2,127 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA946C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD4F1208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875E320B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590573687;
+	bh=9wa7osKVq8G8KRV4UBClAM7K0DIQxJQ1DAeZp+MGtP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PYbraM7exrLz0Nguisg4bedS3tf1Wb0xz4kX4nf3B7/KTDZKucaFGZ282IXbhFLfD
+	 IoLgeJI4m3hMLenMp4A563UOYaTwUxAnNM/bx/Ppz75FP8MFCcXAZeZiaO6+S3j47G
+	 lFaYZv3uQZRWxJLqfJpF5iNJ2M1Tsd53/tnVKv1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbgE0KBV (ORCPT
+        id S1729752AbgE0KBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:01:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:35258 "EHLO foss.arm.com"
+        Wed, 27 May 2020 06:01:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgE0KBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:01:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 783D255D;
-        Wed, 27 May 2020 03:01:20 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.37.12.61])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3AF573F6C4;
-        Wed, 27 May 2020 03:01:09 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-imx@nxp.com
-Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
-        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
-        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
-        matthias.bgg@gmail.com, steven.price@arm.com,
-        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
-        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
-        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
-        patrick.bellasi@matbug.net, orjan.eide@arm.com,
-        rdunlap@infradead.org, mka@chromium.org
-Subject: [PATCH v8 6/8] PM / EM: change name of em_pd_energy to em_cpu_energy
-Date:   Wed, 27 May 2020 10:58:52 +0100
-Message-Id: <20200527095854.21714-7-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200527095854.21714-1-lukasz.luba@arm.com>
-References: <20200527095854.21714-1-lukasz.luba@arm.com>
+        id S1725848AbgE0KBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:01:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993F92084C;
+        Wed, 27 May 2020 10:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590573682;
+        bh=9wa7osKVq8G8KRV4UBClAM7K0DIQxJQ1DAeZp+MGtP0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AzPzZQw0Lu6ffUH+LzQ8WlnVeUShSkRaMiu1fnr9uTH86FvrFNodRcI3Dhr3+ciO2
+         DENjVdi1xDG9fYfKb/kQT/m0GCr+lhy0HwjpIAnnDXb2R3xMUmW2kMklAOWesQVi/m
+         NGBFEYsV/dHVLTD5gK0Lo5tzzpoLZtacGCllZE90=
+Date:   Wed, 27 May 2020 12:01:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 5.6 000/126] 5.6.15-rc1 review
+Message-ID: <20200527100119.GC277684@kroah.com>
+References: <20200526183937.471379031@linuxfoundation.org>
+ <CA+G9fYtbi+qgdu9ZeHPxKZyqON18WUdK1i=f9YpFQ2t58JCO-g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtbi+qgdu9ZeHPxKZyqON18WUdK1i=f9YpFQ2t58JCO-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Energy Model framework now supports other devices than CPUs. Refactor some
-of the functions in order to prevent wrong usage. The old function
-em_pd_energy has to generic name. It must not be used without proper
-cpumask pointer, which is possible only for CPU devices. Thus, rename it
-and add proper description to warn of potential wrong usage for other
-devices.
+On Wed, May 27, 2020 at 01:47:41PM +0530, Naresh Kamboju wrote:
+> On Wed, 27 May 2020 at 00:46, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.6.15 release.
+> > There are 126 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.6.15-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.6.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- include/linux/energy_model.h | 11 ++++++++---
- kernel/sched/fair.c          |  2 +-
- 2 files changed, 9 insertions(+), 4 deletions(-)
+Great!  That was fast, thanks for testing them all and letting me know.
 
-diff --git a/include/linux/energy_model.h b/include/linux/energy_model.h
-index 3aaa0bc43429..a0aff705b535 100644
---- a/include/linux/energy_model.h
-+++ b/include/linux/energy_model.h
-@@ -83,15 +83,20 @@ int em_dev_register_perf_domain(struct device *dev, unsigned int nr_states,
- void em_dev_unregister_perf_domain(struct device *dev);
- 
- /**
-- * em_pd_energy() - Estimates the energy consumed by the CPUs of a perf. domain
-+ * em_cpu_energy() - Estimates the energy consumed by the CPUs of a
-+		performance domain
-  * @pd		: performance domain for which energy has to be estimated
-  * @max_util	: highest utilization among CPUs of the domain
-  * @sum_util	: sum of the utilization of all CPUs in the domain
-  *
-+ * This function must be used only for CPU devices. There is no validation,
-+ * i.e. if the EM is a CPU type and has cpumask allocated. It is called from
-+ * the scheduler code quite frequently and that is why there is not checks.
-+ *
-  * Return: the sum of the energy consumed by the CPUs of the domain assuming
-  * a capacity state satisfying the max utilization of the domain.
-  */
--static inline unsigned long em_pd_energy(struct em_perf_domain *pd,
-+static inline unsigned long em_cpu_energy(struct em_perf_domain *pd,
- 				unsigned long max_util, unsigned long sum_util)
- {
- 	unsigned long freq, scale_cpu;
-@@ -196,7 +201,7 @@ static inline struct em_perf_domain *em_pd_get(struct device *dev)
- {
- 	return NULL;
- }
--static inline unsigned long em_pd_energy(struct em_perf_domain *pd,
-+static inline unsigned long em_cpu_energy(struct em_perf_domain *pd,
- 			unsigned long max_util, unsigned long sum_util)
- {
- 	return 0;
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 538ba5d94e99..c28f1de43f5e 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6489,7 +6489,7 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
- 		max_util = max(max_util, cpu_util);
- 	}
- 
--	return em_pd_energy(pd->em_pd, max_util, sum_util);
-+	return em_cpu_energy(pd->em_pd, max_util, sum_util);
- }
- 
- /*
--- 
-2.17.1
-
+greg k-h
