@@ -2,126 +2,138 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAA1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 461D5207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB3D208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590563175;
-	bh=Bnwio/T0f8/rO+4l0ETfUXCahBdmz6vzX2tvqweK3c4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=M+EDLXawP/CzvUrYJ/bOcr/axCxKBRYqJGj5pBkUJYfjklXxZEPWm7hAoqWrajMrv
-	 F+E9AoCF73dT8fPCzYHyssf0x7y2FXxXLEO4aPc5yiJXqC50BXw/3nNZtxB0Hb1f3D
-	 B/8MMG/jHZcW5tHd3AEhSJl9hlLhaVpr/b1lOPBo=
+	s=default; t=1590563279;
+	bh=KBsrsoQqY1mI119oVrtYJKQOJoFFOjrZYR+mbY5YiF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eBUMUczPMyw4czlIo6vJvdMIAKVbQyRxrg49Ik2aNWdjXsaO+URBSK/Ta8HbM2rQk
+	 qTizT8bL1++tCdApjqCOzZkcOl3Y8wi6kG6ttwpmA9p3EP/akQS6Pc3bzCiIivSLW7
+	 Un0j2Tik8lDFxoC0CRzYJ1ttPbYyGat4SVxjZ5eA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgE0HGO (ORCPT
+        id S1728969AbgE0HH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:06:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 03:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgE0HGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:06:14 -0400
-Received: from kernel.org (unknown [104.132.0.74])
+        id S1726025AbgE0HH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:07:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85A65206F1;
-        Wed, 27 May 2020 07:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E663A2078C;
+        Wed, 27 May 2020 07:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590563173;
-        bh=Bnwio/T0f8/rO+4l0ETfUXCahBdmz6vzX2tvqweK3c4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=oF/iNegV3lDmsHA8jl2XuOdgHsm3ArbmfhqDo4tj/ixgr/8+hjuVwgK2omrt1GHqK
-         lftYRB6EtnDGNvsW0OlYmy8Cp4c40r1rRUvQnh70Y1+AmlskJw2okPi3Ha7N8yyMaB
-         MuI4eAKk/rPw1yzcI9NKh9tcdk+KZvcMyWAF4ovE=
-Content-Type: text/plain; charset="utf-8"
+        s=default; t=1590563277;
+        bh=KBsrsoQqY1mI119oVrtYJKQOJoFFOjrZYR+mbY5YiF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IBKlwNNyb1qbUyCkXClSPffijI+PIWS6bf/lsfYJU/ZmdgDoNZR7mMR+VbsbcCNpH
+         kRkOr0bplJAad2U6nPkAmsuWnarKgoAdfYIIzRYApKHeNrM3QlASFNvsgZE5nTZ79t
+         +7BOMAvQJh6kSvrLNd/6dPd3fxKBAP0vrpvyYwYM=
+Date:   Wed, 27 May 2020 09:07:55 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Wojtek Porczyk <woju@invisiblethingslab.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Andi Kleen <andi@firstfloor.org>,
+        x86@kernel.org, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, sashal@kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
+Message-ID: <20200527070755.GB39696@kroah.com>
+References: <20200526052848.605423-1-andi@firstfloor.org>
+ <20200526065618.GC2580410@kroah.com>
+ <20200526154835.GW499505@tassilo.jf.intel.com>
+ <20200526163235.GA42137@kroah.com>
+ <20200526172403.GA14256@invisiblethingslab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech> <a1efabae8d7df30c987bff10544c2071e906e07a.1587742492.git-series.maxime@cerno.tech>
-Subject: Re: [PATCH v2 25/91] clk: bcm: Add BCM2711 DVP driver
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org
-To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date:   Wed, 27 May 2020 00:06:12 -0700
-Message-ID: <159056317280.88029.13256292035418533462@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526172403.GA14256@invisiblethingslab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maxime Ripard (2020-04-24 08:34:06)
-> The HDMI block has a block that controls clocks and reset signals to the
-> HDMI0 and HDMI1 controllers.
->=20
-> Let's expose that through a clock driver implementing a clock and reset
-> provider.
->=20
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
+On Tue, May 26, 2020 at 07:24:03PM +0200, Wojtek Porczyk wrote:
+> On Tue, May 26, 2020 at 06:32:35PM +0200, Greg KH wrote:
+> > On Tue, May 26, 2020 at 08:48:35AM -0700, Andi Kleen wrote:
+> > > On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
+> > > > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
+> > > > > From: Andi Kleen <ak@linux.intel.com>
+> > > > > 
+> > > > > Since there seem to be kernel modules floating around that set
+> > > > > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
+> > > > > CR4 pinning just checks that bits are set, this also checks
+> > > > > that the FSGSBASE bit is not set, and if it is clears it again.
+> > > > 
+> > > > So we are trying to "protect" ourselves from broken out-of-tree kernel
+> > > > modules now?  
+> > > 
+> > > Well it's a specific case where we know they're opening a root hole
+> > > unintentionally. This is just an pragmatic attempt to protect the users in the 
+> > > short term.
+> > 
+> > Can't you just go and fix those out-of-tree kernel modules instead?
+> > What's keeping you all from just doing that instead of trying to force
+> > the kernel to play traffic cop?
+> 
+> We'd very much welcome any help really, but we're under impression that this
+> couldn't be done correctly in a module, so this hack occured.
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Really?  How is this hack anything other than a "prevent a kernel module
+from doing something foolish" change?
 
-> diff --git a/drivers/clk/bcm/clk-bcm2711-dvp.c b/drivers/clk/bcm/clk-bcm2=
-711-dvp.c
-> new file mode 100644
-> index 000000000000..c1c4b5857d32
-> --- /dev/null
-> +++ b/drivers/clk/bcm/clk-bcm2711-dvp.c
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright 2020 Cerno
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-[...]
-> +
-> +static int clk_dvp_probe(struct platform_device *pdev)
-> +{
-> +       struct clk_hw_onecell_data *data;
-> +       struct resource *res;
-> +       struct clk_dvp *dvp;
-> +       void __iomem *base;
-> +       int ret;
-> +
-> +       dvp =3D devm_kzalloc(&pdev->dev, sizeof(*dvp), GFP_KERNEL);
-> +       if (!dvp)
-> +               return -ENOMEM;
-> +       platform_set_drvdata(pdev, dvp);
-> +
-> +       dvp->data =3D devm_kzalloc(&pdev->dev,
-> +                                struct_size(dvp->data, hws, NR_CLOCKS),
-> +                                GFP_KERNEL);
-> +       if (!dvp->data)
-> +               return -ENOMEM;
-> +       data =3D dvp->data;
-> +
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       base =3D devm_ioremap_resource(&pdev->dev, res);
+Why can't you just change the kernel module's code to not do this?  What
+prevents that from happening right now which would prevent the need to
+change a core api from being abused in such a way?
 
-devm_platform_ioremap_resource()?
+> This was written in 2015 as part of original (research) codebase for those
+> reasons:
+> - A module is easier to deploy by scientists, who are no kernel developers and
+>   no sysadmins either, so applying patchset and recompiling kernel is a big
+>   ask.
+> - It has no implications on security in SGX/Graphene threat model and in
+>   expected deployment scenario.
+> - This had no meaning to the actual research being done, so it wasn't cared
+>   about.
+> 
+> Let me expand the second point, because I understand both the module and the
+> explanation looks wrong.
+> 
+> Graphene is intended to be run in a cloud, where the CPU time is sold in
+> a form of virtual machine, so the VM kernel, which would load this module, is
+> not trusted by hardware owner, so s/he don't care. But the owner of the
+> enclave also doesn't care, because SGX' threat model assumes adversary who is
+> capable of arbitrary code execution in both kernel and userspace outside
+> enclave. So the kernel immediately outside the enclave is a no-man's land,
+> untrusted by both sides and forsaken, reduced to a compatibility layer
+> between x86 and ELF.
+> 
+> I acknowledge this is unusual threat model and certainly to mainline
+> developers, who rarely encounter userspace that is more trusted than kernel.
+> 
+> What we've failed at is to properly explain this, because if someone loads
+> this module outside of this expected scenario, will certainly be exposed to
+> a gaping root hole. Therefore we acknowledge this patch and as part of
+> Graphene we'll probably maintain a patchset, until the support is upstream.
+> Right now this will take us some time to change from our current kernel
+> interfaces.
 
-> +       if (IS_ERR(base))
-> +               return PTR_ERR(base);
-> +
+I'm sorry, but I still do not understand.  Your kernel module calls the
+core with this bit being set, and this new kernel patch is there to
+prevent the bit from being set and will WARN_ON() if it happens.  Why
+can't you just change your module code to not set the bit?
+
+Do you have a pointer to the kernel module code that does this operation
+which this core kernel change will try to prevent from happening?
+
+thanks,
+
+greg k-h
