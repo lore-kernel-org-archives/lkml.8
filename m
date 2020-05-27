@@ -2,131 +2,95 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B73CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFBFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2041C207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:05:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AW8Ue0LA"
+	by mail.kernel.org (Postfix) with ESMTP id 05C41207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgE0BFS (ORCPT
+        id S1728077AbgE0BG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:05:18 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36878 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgE0BFR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:05:17 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R0xDgx055249;
-        Wed, 27 May 2020 01:03:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=85pK4/81/vdgWfeIJ9uroYFrDxnQQi6IhHVRzvciCac=;
- b=AW8Ue0LA7LdmoDkdjWSZjA5spDniRFTQgW4ssrBQgJDwI8YIY2i1Y8PXWqEUsHlVjJwS
- nqYYyyhHmpoxXnqQOhdyAphWhvDOmWeQS67kKlZzMpDzWR4/c9Cui0h4ZA7jhZI6f4aU
- YbFwKxtwcg7oM6nKdKsBAaB2b44yW6d0bXBZ0jxQXj6B8yk25mu0I+6PS5a3WbetQ1MG
- CZAvuCZjaXHrtvKQH9MXiLkQ069OcqTZdJPEZJo5FulJpiTIlPvumEUI/jU3YOQGOtu1
- TWA6LmUxsd2s+4/l0FGWKsg/9B0hCDc+1vfcLpxLjQ1ncgC4eeJAH/Xe/xHuJrP0uS1N Yg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 318xe1cskk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 01:03:49 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R0vXX6129965;
-        Wed, 27 May 2020 01:03:48 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 317dktf6jn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 01:03:48 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04R13eJA007736;
-        Wed, 27 May 2020 01:03:40 GMT
-Received: from localhost.localdomain (/10.159.156.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 26 May 2020 18:03:40 -0700
-Subject: Re: [PATCH 0/2] Fix issue with not starting nesting guests on my
- system
-To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tao Xu <tao3.xu@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jingqi Liu <jingqi.liu@intel.com>
-References: <20200523161455.3940-1-mlevitsk@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <d80609d2-ca7b-feea-cb5e-6e45d2116eae@oracle.com>
-Date:   Tue, 26 May 2020 18:03:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 26 May 2020 21:06:27 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:53104 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727852AbgE0BG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:06:26 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2vlvM1eQnI5AA--.327S3;
+        Wed, 27 May 2020 09:05:41 +0800 (CST)
+Subject: Re: [PATCH v6 3/4] mm/memory.c: Add memory read privilege on page
+ fault handling
+To:     Andrew Morton <akpm@linux-foundation.org>
+References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
+ <1590375160-6997-3-git-send-email-maobibo@loongson.cn>
+ <20200525144413.8c13559ec87616aa2c77af41@linux-foundation.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <4ca3c5b8-f695-c011-7e00-ef884a1c3d84@loongson.cn>
+Date:   Wed, 27 May 2020 09:05:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <20200523161455.3940-1-mlevitsk@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200525144413.8c13559ec87616aa2c77af41@linux-foundation.org>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 bulkscore=0
- spamscore=0 suspectscore=0 mlxscore=0 adultscore=0 mlxlogscore=984
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270002
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
- priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
- clxscore=1011 impostorscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270002
+X-CM-TRANSID: AQAAf9Dxr2vlvM1eQnI5AA--.327S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7XF1fWFykAF1kWFy7Cr1rJFb_yoW3JrbE9F
+        43Ca93Can5Kr97XayrKw4aqF4fGFyFyw1vqrWUX3ZFyFy8t3yDWa1jkrZxCF18tr9Yyry7
+        Arn0qa13Cr4avjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbaAYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Xr0_Wr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z2
+        80aVCY1x0267AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
+        jI0SjxkI62AI1cAE67vIY487MxkIecxEwVCm-wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+        IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+        MI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+        WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3
+        Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+        UvcSsGvfC2KfnxnUUI43ZEXa7IU5q385UUUUU==
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 5/23/20 9:14 AM, Maxim Levitsky wrote:
-> On my AMD machine I noticed that I can't start any nested guests,
-> because nested KVM (everything from master git branches) complains
-> that it can't find msr MSR_IA32_UMWAIT_CONTROL which my system doesn't support
-> at all anyway.
->
-> I traced it to the recently added UMWAIT support to qemu and kvm.
-> The kvm portion exposed the new MSR in KVM_GET_MSR_INDEX_LIST without
-> checking that it the underlying feature is supported in CPUID.
-> It happened to work when non nested because as a precation kvm,
-> tries to read each MSR on host before adding it to that list,
-> and when read gets a #GP it ignores it.
->
-> When running nested, the L1 hypervisor can be set to ignore unknown
-> msr read/writes (I need this for some other guests), thus this safety
-> check doesn't work anymore.
->
-> V2: * added a patch to setup correctly the X86_FEATURE_WAITPKG kvm capability
->      * dropped the cosmetic fix patch as it is now fixed in kvm/queue
->
-> Best regards,
-> 	Maxim Levitsky
->
-> Maxim Levitsky (2):
->    kvm/x86/vmx: enable X86_FEATURE_WAITPKG in KVM capabilities
->    kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL unconditionally
->
->   arch/x86/kvm/vmx/vmx.c | 3 +++
->   arch/x86/kvm/x86.c     | 4 ++++
->   2 files changed, 7 insertions(+)
->
-Nit: The added 'break' statement in patch# 2 is not required.
 
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+On 05/26/2020 05:44 AM, Andrew Morton wrote:
+> On Mon, 25 May 2020 10:52:39 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+> 
+>> Here add pte_sw_mkyoung function to make page readable on MIPS
+>> platform during page fault handling. This patch improves page
+>> fault latency about 10% on my MIPS machine with lmbench
+>> lat_pagefault case.
+>>
+>> It is noop function on other arches, there is no negative
+>> influence on those architectures.
+> 
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
+> 
+> Should I take these, or would the mips tree be preferred?  I'm OK
+> either way, but probably the MIPS tree would be better?
+Thanks for reviewing again and again.
+This patch is based on mips-next, maybe MIPS tree will be better.
+
