@@ -2,230 +2,236 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D26BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787F22078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E53207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaUijIar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbgE0EOc (ORCPT
+        id S1728739AbgE0EQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 00:14:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26154 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgE0EOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 00:14:31 -0400
-IronPort-SDR: reh4vkFYmwtbEEqZz48gb0U4HufT1bviK4kuFCtX+7pb0382EbCdOVL2YnC7pGWLO/IeBnP0Z3
- zFSm9bWCQNkg==
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 21:13:59 -0700
-IronPort-SDR: d2faLfMjaLU3r2oYqsrmDtmzFm27RBkqiwqu0j1suKcPMQaoK+bVvu5OgeT4GyptyEcsyVoNQW
- ZKyM0xV3SFJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="gz'50?scan'50,208,50";a="414059562"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 26 May 2020 21:13:57 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jdnS1-000Frd-2T; Wed, 27 May 2020 12:13:57 +0800
-Date:   Wed, 27 May 2020 12:13:39 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     kbuild-all@lists.01.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH 2/2] clk: Remove CONFIG_ARCH_HISI check for subdir
- hisilicon
-Message-ID: <202005271255.gDGHLamZ%lkp@intel.com>
-References: <1590377516-32117-2-git-send-email-yangtiezhu@loongson.cn>
+        Wed, 27 May 2020 00:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgE0EQW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 00:16:22 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B13CC061A0F;
+        Tue, 26 May 2020 21:16:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 185so2969231pgb.10;
+        Tue, 26 May 2020 21:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YfVWxH/7ZrDB7heiLk3dCwVODao1Wqqpt1cV8H+cg68=;
+        b=FaUijIara42lM4nDTnWX3sphBCaHCAuoZdlC+HaJ1cKbufQCs6Gk/cd1fQDgYKpT5D
+         cWVglCWpr3Ot5OGBbSLeuZWSK8EAbMAp7cY+tiVaMO922pqVlzA/WJJnCWq25WaqhWle
+         1AK753xcvP3UL+Y1yYZNzo1pg2BbWOlEOoTJK8DCWmjIKUgjciPiNB4VPYaWsT8mVE+x
+         gengREQJ6aSKmX5yZFDm7T3isDqJIpxDtJqMPYAWHYBhgyc92G2PxOJ37uKZiNv+HO5s
+         3JTK88JwjB5zw4OENueKFBZx+VpFot+hxlp2NGZKH9nVGFd3xg81WyV8RZIlUCws8xGa
+         /uaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YfVWxH/7ZrDB7heiLk3dCwVODao1Wqqpt1cV8H+cg68=;
+        b=ApytGhboVFpt3qCh1HAn6azf/ESmInn5HEsgGmQXlXAnXP4UzbrPji7cju+8R2LO+B
+         Xb0XPZVlwAQBpdiEqwYQYnV9nLSZhZScUqirfscLfxPHIVv6E2JxPfS28j9G97VqcayW
+         9TpxOAMvy6RrwhuKEpGOZzXm2fapMrUShZ34zRajCuDoNs6VPL7iFx/9sXPBrdJHPUOR
+         cU1J3qrzn+h4TYnMaIpZY0QIjuOdfe2xOXYbjMIgrfnfaU8C1QSYUwppPmNbRkIFetoa
+         8+OIjoyLdvhavQeQ2rEb3oEyVUrjM3TFq/CJ2oqgCEFER9UbsiMV0hgb+c91JHF/gK0E
+         pxCA==
+X-Gm-Message-State: AOAM531VKGUiZHP92p8lHwoeovUBM2IrWAPwHyGC6OIM/KLqbnvR3RrN
+        bviw61F3dZUJoe+GVSyTrgA=
+X-Google-Smtp-Source: ABdhPJyR1l7RF+R12srzMpwvTN2eJyeK+/iJkmuz7eNbPO1J8aWbJygIKQjN5rOgaS3Tycz/J9wn3Q==
+X-Received: by 2002:a62:1b8f:: with SMTP id b137mr1997121pfb.119.1590552981392;
+        Tue, 26 May 2020 21:16:21 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id l9sm877902pfd.5.2020.05.26.21.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 21:16:20 -0700 (PDT)
+Date:   Tue, 26 May 2020 21:16:18 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>
+Subject: Re: inux-next: build failure after merge of the drm-msm tree
+Message-ID: <20200527041618.GA3137030@ubuntu-s3-xlarge-x86>
+References: <20200519150955.1667566a@canb.auug.org.au>
+ <20200526140841.0a1d5c7b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="pWyiEgJYm5f9v55/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590377516-32117-2-git-send-email-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200526140841.0a1d5c7b@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 26, 2020 at 02:08:41PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Tue, 19 May 2020 15:09:55 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> > 
+> > After merging the drm-msm tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> > 
+> > ERROR: modpost: "__aeabi_ldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
+> > ERROR: modpost: "__aeabi_uldivmod" [drivers/gpu/drm/msm/msm.ko] undefined!
+> > 
+> > Caused by commit
+> > 
+> >   04d9044f6c57 ("drm/msm/dpu: add support for clk and bw scaling for display")
+> > 
+> > I applied the following patch for today (this is mechanical, there may
+> > be a better way):
+> > 
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Tue, 19 May 2020 14:12:39 +1000
+> > Subject: [PATCH] drm/msm/dpu: fix up u64/u32 division for 32 bit architectures
+> > 
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c | 23 ++++++++++++++-----
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c     | 15 ++++++++----
+> >  2 files changed, 28 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> > index 9697abcbec3f..85c2a4190840 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/sort.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/bitmap.h>
+> > +#include <asm/div64.h>
+> >  
+> >  #include "dpu_kms.h"
+> >  #include "dpu_trace.h"
+> > @@ -53,8 +54,11 @@ static u64 _dpu_core_perf_calc_bw(struct dpu_kms *kms,
+> >  	}
+> >  
+> >  	bw_factor = kms->catalog->perf.bw_inefficiency_factor;
+> > -	if (bw_factor)
+> > -		crtc_plane_bw = mult_frac(crtc_plane_bw, bw_factor, 100);
+> > +	if (bw_factor) {
+> > +		u64 quot = crtc_plane_bw;
+> > +		u32 rem = do_div(quot, 100);
+> > +		crtc_plane_bw = (quot * bw_factor) + ((rem * bw_factor) / 100);
+> > +	}
+> >  
+> >  	return crtc_plane_bw;
+> >  }
+> > @@ -89,8 +93,11 @@ static u64 _dpu_core_perf_calc_clk(struct dpu_kms *kms,
+> >  	}
+> >  
+> >  	clk_factor = kms->catalog->perf.clk_inefficiency_factor;
+> > -	if (clk_factor)
+> > -		crtc_clk = mult_frac(crtc_clk, clk_factor, 100);
+> > +	if (clk_factor) {
+> > +		u64 quot = crtc_clk;
+> > +		u32 rem = do_div(quot, 100);
+> > +		crtc_clk = (quot * clk_factor) + ((rem * clk_factor) / 100);
+> > +	}
+> >  
+> >  	return crtc_clk;
+> >  }
+> > @@ -234,8 +241,12 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+> >  		}
+> >  	}
+> >  
+> > -	avg_bw = kms->num_paths ?
+> > -			perf.bw_ctl / kms->num_paths : 0;
+> > +	if (kms->num_paths) {
+> > +		avg_bw = perf.bw_ctl;
+> > +		do_div(avg_bw, kms->num_paths);
+> > +	} else {
+> > +		avg_bw = 0;
+> > +	}
+> >  
+> >  	for (i = 0; i < kms->num_paths; i++)
+> >  		icc_set_bw(kms->path[i],
+> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > index c2a6e3dacd68..ad95f32eac13 100644
+> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> > @@ -9,6 +9,7 @@
+> >  
+> >  #include <linux/debugfs.h>
+> >  #include <linux/dma-buf.h>
+> > +#include <asm/div64.h>
+> >  
+> >  #include <drm/drm_atomic_uapi.h>
+> >  #include <drm/drm_damage_helper.h>
+> > @@ -174,7 +175,11 @@ static void _dpu_plane_calc_bw(struct drm_plane *plane,
+> >  	plane_prefill_bw =
+> >  		src_width * hw_latency_lines * fps * fmt->bpp * scale_factor;
+> >  
+> > -	plane_prefill_bw = mult_frac(plane_prefill_bw, mode->vtotal, (vbp+vpw));
+> > +	{
+> > +		u64 quot = plane_prefill_bw;
+> > +		u32 rem = do_div(plane_prefill_bw, vbp + vpw);
+> > +		plane_prefill_bw = quot * mode->vtotal + rem * mode->vtotal / (vbp + vpw);
+> > +	}
+> >  
+> >  	pstate->plane_fetch_bw = max(plane_bw, plane_prefill_bw);
+> >  }
+> > @@ -204,9 +209,11 @@ static void _dpu_plane_calc_clk(struct drm_plane *plane)
+> >  	pstate->plane_clk =
+> >  		dst_width * mode->vtotal * fps;
+> >  
+> > -	if (src_height > dst_height)
+> > -		pstate->plane_clk = mult_frac(pstate->plane_clk,
+> > -					src_height, dst_height);
+> > +	if (src_height > dst_height) {
+> > +		u64 quot = pstate->plane_clk;
+> > +		u32 rem = do_div(quot, dst_height);
+> > +		pstate->plane_clk = quot * src_height + rem * src_height / dst_height;
+> > +	}
+> >  }
+> >  
+> >  /**
+> > -- 
+> > 2.26.2
+> 
+> I am still applying the above ...
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Additionally, I see a failure with clang due to the use of Bps_to_icc,
+which does a straight division by 1000, which is treated as an integer
+literal, with avg_bw as the dividend, which is a u64.
 
-Hi Tiezhu,
+Below is the "hack" in my tree.
 
-Thank you for the patch! Yet something to improve:
+Cheers,
+Nathan
 
-[auto build test ERROR on clk/clk-next]
-[also build test ERROR on v5.7-rc7 next-20200526]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Tiezhu-Yang/clk-hisilicon-Use-correct-return-value-about-hisi_reset_init/20200525-113342
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-config: m68k-allnoconfig (attached as .config)
-compiler: m68k-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kbuild test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hisi_clk_register_fixed_rate':
-clk.c:(.text+0xd0): undefined reference to `clk_register_fixed_rate'
->> m68k-linux-ld: clk.c:(.text+0x120): undefined reference to `clk_unregister_fixed_rate'
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hisi_clk_register_fixed_factor':
-clk.c:(.text+0x166): undefined reference to `clk_register_fixed_factor'
->> m68k-linux-ld: clk.c:(.text+0x1ba): undefined reference to `clk_unregister_fixed_factor'
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hisi_clk_register_mux':
-clk.c:(.text+0x208): undefined reference to `clk_register_mux_table'
->> m68k-linux-ld: clk.c:(.text+0x210): undefined reference to `clk_register_clkdev'
->> m68k-linux-ld: clk.c:(.text+0x2a8): undefined reference to `clk_unregister_mux'
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hisi_clk_register_divider':
-clk.c:(.text+0x360): undefined reference to `clk_register_divider_table'
-m68k-linux-ld: clk.c:(.text+0x366): undefined reference to `clk_register_clkdev'
->> m68k-linux-ld: clk.c:(.text+0x3f0): undefined reference to `clk_unregister_divider'
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hisi_clk_register_gate':
-clk.c:(.text+0x43c): undefined reference to `clk_register_gate'
-m68k-linux-ld: clk.c:(.text+0x442): undefined reference to `clk_register_clkdev'
->> m68k-linux-ld: clk.c:(.text+0x4c0): undefined reference to `clk_unregister_gate'
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hisi_clk_register_gate_sep':
-clk.c:(.text+0x510): undefined reference to `clk_register_clkdev'
-m68k-linux-ld: drivers/clk/hisilicon/clk.o: in function `hi6220_clk_register_divider':
-clk.c:(.init.text+0x16): undefined reference to `clk_register_clkdev'
-m68k-linux-ld: drivers/clk/hisilicon/clkgate-separated.o: in function `hisi_register_clkgate_sep':
-clkgate-separated.c:(.text+0x128): undefined reference to `clk_register'
->> m68k-linux-ld: clkgate-separated.c:(.text+0x176): undefined reference to `clk_register'
-m68k-linux-ld: drivers/clk/hisilicon/clkdivider-hi6220.o: in function `hi6220_clkdiv_set_rate':
-clkdivider-hi6220.c:(.text+0x26): undefined reference to `divider_get_val'
-m68k-linux-ld: drivers/clk/hisilicon/clkdivider-hi6220.o: in function `hi6220_clkdiv_round_rate':
-clkdivider-hi6220.c:(.text+0xa6): undefined reference to `clk_hw_get_parent'
->> m68k-linux-ld: clkdivider-hi6220.c:(.text+0xc0): undefined reference to `divider_round_rate_parent'
-m68k-linux-ld: drivers/clk/hisilicon/clkdivider-hi6220.o: in function `hi6220_clkdiv_recalc_rate':
-clkdivider-hi6220.c:(.text+0x10a): undefined reference to `divider_recalc_rate'
-m68k-linux-ld: drivers/clk/hisilicon/clkdivider-hi6220.o: in function `hi6220_register_clkdiv':
-clkdivider-hi6220.c:(.text+0x1f8): undefined reference to `clk_register'
-m68k-linux-ld: drivers/clk/hisilicon/clk-hisi-phase.o: in function `clk_register_hisi_phase':
-clk-hisi-phase.c:(.text+0x172): undefined reference to `devm_clk_register'
->> m68k-linux-ld: clk-hisi-phase.c:(.text+0x1e2): undefined reference to `devm_clk_register'
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-
---pWyiEgJYm5f9v55/
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-H4sICLXizV4AAy5jb25maWcAnVxbk9u4jn6fX6GaVG3NVCWZvuV2tvqBliibx7q1SNndeVE5
-trrjSrft9WUm2V9/AFKyKQl0spuaTDoErwAIfAChvPrtlccO+/XLbL+cz56ff3hP1arazvbV
-wntcPlf/7QWpl6TK44FQb6FztFwdvv/18v7jN+/d2w9vL95s55feuNquqmfPX68el08HGL1c
-r3579Rv89woaXzYw0fZfHg5684zj3zzN594fQ9//0/v09vrtBXT00yQUw9L3SyFLoNz+aJrg
-L+WE51Kkye2ni+uLi4YQBcf2q+ubC/3rOE/EkuGRfGFNP2KyZDIuh6lKT4tYBJFEIuE90pTl
-SRmzhwEvi0QkQgkWic88gI76nEPNt2dvV+0Pm9OBBnk65kmZJqWMs9OkOEHJk0nJcjiIiIW6
-vb5CbtVrpnEmIl4qLpW33Hmr9R4nPp489VnUHO7330/jbELJCpUSgweFAM5JFikcWjcGPGRF
-pMpRKlXCYn77+x+r9ar605pbPsiJyHx7xiOtkDwSA5ukeSLyO293+LL7sdtXLyeeDHnCcwGS
-zu9KOUqnwJZXXrVaeOvHzpDuCB8OOOYTnijZ8F0tX6rtjlpm9LnMYFQaCF+vUDcnKVJEEHHy
-KJpMUkZiOCpzLkslYmBxu0+9/d5ums1kOedxpmB6rVvHSZv2SRoViWL5A7l03avHYD8r/lKz
-3TdvD+t6M9jDbj/b77zZfL4+rPbL1dOJHUr44xIGlMz3U1hLJMPWRqQgT/QLS+it5H7hyb4Q
-YJmHEmj2UvDXkt+DbBS5Ynum0zAxNj/0uCDnX6vFAWyM91jN9odttdPN9XQE1bpowzwtMkky
-3R9xf5ylIlEodZXmtMJI6Bfoy6bnIvvkPGK0ZAfRGC7fRBuEPKC7pKkq+0c/mac0A40EW1SG
-aY4qD3/ELPFbetbtJuEHYrYRm4B9E8Hl+5OtMqKyJ4vBVAi48znNkCFXMZNjtBhgjiK604MM
-5dke4YglrkuapVLck/fweGFAbGOancWQbmcSWFO4dlMofk9SeJa6ziiGCYtCWqp68w6atnAO
-GhMp2S7SsoBD02djwUTA6Wp20yyLeTxgeS4cUh3jwIeYHjvIQkqWzXHiAQ8C7SpPAvIvL256
-N7kGElm1fVxvX2areeXxv6sVmBsGl9lHgwPm1b7dvzjitPAkNuwttRF06Q86YKbAe9M6JCM2
-IA4qo2JgH1JG6cA5HhieD3njed3dQrD9kZBghOA+pPEvdByxPACHSeuPHBVhCNAiY7A4yAsQ
-A5g2WiNiluku0zbkcdy4NBRRTwFrMbXRUcOv+P3HsQW0wDcNUF2SQLDEAoC18x9NOXhg1SeA
-2olBzhQyE+ws0UEW8akVb16JhwKrfmoFvy/SLM0VgDwLqH0Gf10GMTu1jD7fXp6AZjZUbADs
-jECpInl7ZXOv6Ol39jzbo54eUaJp3a7n1W633nrqx6Yyjv3EIICyUgqfUDc/jYJQ5C07H7+7
-unhPSxMpFTENEr535rj+7prj5pOL8s455sOlk3LlpLxzUT661rm++OCiXDnHfHBRbpyz3bjH
-OPd2c3P5va8OR8HLTTVfPi7nXrrB4Gl3AlBJGgDklCMRQohgXxUMSkBpB0KFgkeBbF+kmgqe
-OhCT9zeW+qKH9xmAllJmkbCukwbXaEXubi/f17+OND1AtBCFbqKNgaENUjXqnTmezb8uV5VW
-9V1zA5rG0+lPoQXCH3KRm7FUzB/L3hI5i715JxZtgBiL0c+fIkJoQCh0e/H9phVATrgPZrHd
-d8zzhEemDbvXq6X91U7Ar22wT4uauVqoOK0biQFCMjRCJcuEHSx1zIntQsMTEjaqtv4HEDA4
-yNlT9QL+0Vv3WZ3FpO12Dm3FvbMtiHBfzXHVN4tqA4PbyzRQJPdH5fUVqG2ZhmGpOpqJEXic
-BnUMaym1Hjdl4LghCAXvlQOeaULgbqyu9QIcktJCbGIuexlYwswoM+6LUFj5BiAVEVw5wLcl
-j0KN3c9Su3crzR5KNco5C0oVWSdIMewWQ1nAmklw3SMwX5nDdFGI4Ra6rZ6qD/108ubLbFct
-vG9G8Jvt+nH5bCK/k/s9163ro38iyWMeAfGyjAEf3F5als7wxxHrgIGhtFtnXEAUIgGgoa2Q
-yO/sZImma44a+jkaOXaaC8Vdg21iPVozj3+v5of97MtzpXNhnkaY+9aVGYgkjBXEgLnIqEyN
-1jFUybpjGLFWJGU1U6maExUTRZMMU0aZTiahhhMTxULSGRofwtegiDPyhrsOamxz9bLe/gAT
-TZiOJjiCDUL4cGKs3jF6Lowq2oBKO50yU5rZ4Knk7Sf9yzJDiExzjlisAycb2ywApSlwfUUL
-vwHgKmuUWqpcAM6/97mUoJ1NFw6BOsSy2kGO49ZNizhEzOi1SO59ztKUjvE+DwoHHuY5LgOC
-UvRtGBZZOeCJP4pZN8qoxeLmvJWu4v2sUFD9vYQ4KNgu/26ipWPU5bN2luFkwwF8mBGkFzYx
-04hHmSM+DPhExVlInxW4kAQsAjvsSm/p6QHMxlOWc5Oj7G0zXG5f/pltK+95PVtUW3t/4RQQ
-PQu6e6sZ2R1oBcY6usEEDH1BjocbFPD/XEycp9cd+CR32D7TAfO59TSg4XE6oXIwx6gF1Adm
-FL4OU9pmui8szY3BYecttPRb0otHAi8LyRt7iKWciXRkCRSt7mlIS5bleI97okwm4MzkYbNZ
-b/e2o2q1G/Oz3M2pM4Gs4ge01nQGJQE0KwtQJclzzUJaLxEqUoR7DGXvSxmE3GFPr8hzcZ4h
-5NtZJ2t2pCnlp2v//j1thNtDTXK7+j7beWK1228PLzqrsfsKerzw9tvZaof9vGfEzQtg0nKD
-P9rM/H+M1sPZ8x6AgBdmQwb+oL46i/U/K7w+3ssas6neH9vqfw5LQJieuPL/bGCmWO0BXMQQ
-rv6Xt62e9TsSwYxJmjkV8twUFjv9UUobTVtfWsBMBLzx7NKXou5kba9RCiAijrEvHTWgPvDm
-sO9PdUrLJVnRV5PRbLvQXBV/pR4Oaam2xFcL2mewmHf17rhHatITU4ltmjVBJWZzEDh1yZSi
-s9a4Q/CyaDd7YmwOnsWiNClc2mSOpucyWjA1QAcXaeyiKR9+O+KY/kmt4EvvBGBDAQYaI86+
-NzHivvJJKV/5tC5b3a3e17RNAQDsaI9pwqj7ZtNY3awfFGcq8+bP6/k3a//GZK008MtGD/iE
-hw88gCmmaT4uoUlHHeC94wyh2H4N81Xe/mvlzRaLJToeiBf0rLu3tuXpL2ZtTiS+yqkotwbL
-GEOBGEAcw0yk5cjK58HfYZO9hjJkUkGkNKqfUt9dXtnqgp4Xe/ZzEQZgvcw2GzAyusuiD5r0
-LoIpy+hcriY3PjsD4IvPL+6e8eDje/mBfkrQHYzrcdNZHJShP6KNn/tA5sBhYFqr7xuQdCeX
-TlC7mwfQ7njimtI5viydAtZhE8czjaYCZuJ0isfQZZFlEW2IRtM4TWhLMOI5BKf0XpnyR0FK
-xRZSDvB1SYpB1MqrQjsVoPkxI7sjoa9uh+f98vGwmuPFaYwxoXAgB4iZwPww+swK8x9S+Nc0
-QoPRYx5nEQ3U9OTq/fUnR3YTyDJ+d0FLkw3u311caKzsHv0gfYdMkKwEaPD19bv7UkmfBbQl
-1B3v4vuPNFQ6y0jLqPNhEblfN3ggmNYtCsgNt7PN1+V8R1n7oH2/DWaCNtuB1ju1m00Ms529
-VN6Xw+Mj+KGg73HDAXlicpiB/LP5t+fl09c9wKXID85AEaCW+jGhjiroHA3zxxE+s5zp2kQO
-P1n5GLB0WWndqrRIAuJeFXAL05EvwJ4rFfHekxDSa8nZtw6biygjgh2rA/yY9NyBRT+mbEZ+
-0Jm8J3Vs0zj6dIuP7dnXHzusqfKi2Q/EHP17ngAKxhXvfS4mzv1qwztxoeUzK3WmYcHQYWXV
-Q+aIcnBgnoIA5FSors9p7lHsuMM8llhzQhITDgE7D2gpMR/zNmIAjtCBP3PlG/2kASIaz17Q
-Z1IjMRsUIZX8lg+JX4bCUXBgxpUYsYPYlAjpfdXdRpx1a0pqcXXWt85c3AdCZq4yEZ3yMokD
-+szYAR00TwqaHmTsDBXrvnrkOv6eb9e79ePeG/3YVNs3E+/pUO32LQNzDL3Od7WYrdjQVasw
-1K+ackRcT4MNo3En4x7xIfMfaoIFDTCh3E05G5FraCrXh23HATeRAkW3NJuJaJDe96bNAX3t
-q812PaduO+Z7FMb4dKhADDaTbl52T+R8WSwbudMztkaauBcW/0PqwiovXUFEtNz86e2at8eg
-bcTYy/P6CZrl2qeYRJHNOJgQ0KdrWJ9q/Nh2PVvM1y+ucSTd5JLus7/CbVXtwARW3t16K+5c
-k/ysq+67fBvfuybo0TTx7jB7hq05907SbS/oAyzqqdM9vs98783ZzlBN/IIUPjX4mMz4JS2w
-UHiMMAAfhulc271yAj7QeUdJo3CkOLJpH1xhlm8Ou6SMTo9mLZEBmHFiAR11IBpQ4OEiItaH
-8LdV0XiyUE2wN3LU9PlxOU4Thu7zytkLo+vsnpVXH5MYI3nai7Z64XzOXiJRPCp5zx03IXnr
-NJ0Qy2d0UBf7dMybs75rZavFdr1c2IxiSZCnIiD303S3nCejo96kmwkyKbQppjHny9UThXWl
-okNwwyRFR8/ElBYwx2womZ0RKb1vGYnYmR3D0jNEotynMVldnUaDiPb7Tv02AgbNCLdlJiYs
-EgGWRoXSPJrTwRC/RywNffQbbZk6SmIRH2GR+djlvGEGnvj5Q4ZP2a4eAGJcwC44A66EoZXO
-wtOQnRl9V6SKFiCW7obypnS8XRmyixpiIYCDBmAxB0DXIRvpzOZfO4GfJJ4fGzxiehurtKsO
-i7V+pyXEjfDCtR1N80ciCnJOy0YX5TrUEf8g2NBYl/6uLCsipIHWML/ijhLSxFGWWiTCTwOa
-Ly2lNwCnmh+2y/0PCuGP+YPjFYj7BWokwHcutWNQYN4dJZl13zYfbDTaVF9qPdXFIMcqyxY8
-7Xajl1MMYijdJwYu9N9fj0lO8/3G6SjMKmmJZHz7O2JafMR5/WP2MnuNTzmb5er1bvZYwTzL
-xevlal89Ie9ef9k8/t4qJvo62y6qFdrFE1vtBOpytdwvZ8/L/+1UW+mvXHSpQu+7B03Cj1SQ
-N8ftO2xG0xkrXJ192ynQ7pY69cLEiY7oqKtC1i1Aw9ZPI0fLL9sZrLldH/bLVftaIwRxGUs/
-zQNBFXYeAYYvSpG2yieO387Uzdbe4HL7QjncSe5f0mWhOE5dXgSCfsBFslBF6Zz2mkYkQHl/
-46I4CXROMhIDvZDjJTb3PzpACr7pXF/BpYjC7pdUJxz9GTSKEgKmgIDLdlkLNrVqgY+5Ip09
-wAo9/LbCJB9s4dS1e+Yt4ozAwUjEwtflmiflz+9K9ycGCmv+HSesFbqnnu2rPf9misV062YL
-ZuCbfgVavFS7p36tD/whU40ChrrmubmPtx+cPe4KwdXtzbGEjkuJJT69GW5sTxQP0gg4wvMc
-v0cjD+bc7G/Wh4dv9HdL4D/n33a667z+IJFyEeatSCQhHZvwRNd6x/hIqL8OIkQZ5rBd/bXg
-7eXF1U1bVJmub3R+RoFVbHoF6EWn/jk+C4BeJmBVyW8tzAnADSAAQ88b41uHVX7VoZjvGtMk
-erB1zhxCf/t0tuAFtN2Hw3I2buqqaPzyq6JoVSPVGhpUXw5PT2iqrUqG1nMJG4KiALZw1ILU
-W3XAi4FktCP5pW202d4v6jXt3ao823ce5217DbgfEFfzRLpwtJkZO2oXSiM+nAakKNPE5YPM
-NOng36AX5yqXjBcv8OLShkh/BWd68SToX4/OfBPX2z4STS1fzodYAnymn0kvaHhAXIW6GHjM
-QMKNhT1dBNNs6igve/DhJJUeI0admqO65A76e+l6s3vtRQC0Dhuj4aPZ6qmDBwDPIpZJOzEW
-RcforbAK0A0Rn+TTQkGzlUEKdUFlkcEuTdWzg21ILEcF+AzFJC2g6R35QHp6LsAitoh4CT6G
-p+d48Vv7i822+vc+2XTLAbkw5jzrKLYBZJi+PV3YP3aAdHWRwmvv5bCvvlfwQ7Wfv3379s++
-9aeyxl29w48Bzxb65VPpCnRMB+PpSxnBEc50q2NtDR4aJ09Pq+N2kLvCojcn2plOzeZ/ghj+
-D/yz5kZPAsYIQjbJeQDm4Gx9jzaYxvC4QinTCX5DID1I5bF8y2hYXcm+mO1nHlrk+enT3zYP
-hYMZtQn9CV2eM5w64SBcjzLatCYQiymGYD8viLRI69I4jtRd1c+BvQkWOhMfv/gF7VPwq2v8
-ONitHNjjpxqkO+XM8XysP+2+k32g2/q6232rwfYYTJETaKIxdizOIuJtT/+jFOTRsaArY65a
-T/zml9hvo4hiODLfNjr/vQDj9svYoSmDIC4DIRHYkRzp7NtG56ra4Rf22nz667+r7eyp9X3g
-uOi4PmtbRjERQENIIpJ/G+DnSJxhQE32aftScJl+OjHyh+i09fkS/pMCsVEctFjOt0Zw2k7D
-c/bYvRDeRC7/AVAv4lfDRAAA
-
---pWyiEgJYm5f9v55/--
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+index 85c2a4190840..5ea725d8da6c 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c
+@@ -250,7 +250,7 @@ static int _dpu_core_perf_crtc_update_bus(struct dpu_kms *kms,
+ 
+ 	for (i = 0; i < kms->num_paths; i++)
+ 		icc_set_bw(kms->path[i],
+-			Bps_to_icc(avg_bw), (perf.max_per_pipe_ib));
++			div_u64(avg_bw, 1000), (perf.max_per_pipe_ib));
+ 
+ 	return ret;
+ }
