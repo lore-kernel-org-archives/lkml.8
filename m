@@ -4,40 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C77C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA020C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE2A207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CDF208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgE0LzZ (ORCPT
+        id S1729807AbgE0Lz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:55:25 -0400
+        Wed, 27 May 2020 07:55:29 -0400
 Received: from mx2.suse.de ([195.135.220.15]:41754 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387871AbgE0Lyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:54:52 -0400
+        id S2387907AbgE0Lyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:54:54 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 21A15AB7D;
-        Wed, 27 May 2020 11:54:53 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 1DA71AF38;
+        Wed, 27 May 2020 11:54:56 +0000 (UTC)
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 To:     bcm-kernel-feedback-list@broadcom.com,
         linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC 37/50] staging: vchiq: Unify fourcc definition mechanisms
-Date:   Wed, 27 May 2020 13:53:42 +0200
-Message-Id: <20200527115400.31391-38-nsaenzjulienne@suse.de>
+        gregkh@linuxfoundation.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devel@driverdev.osuosl.org
+Subject: [RFC 41/50] staging: vchiq: Make vchiq_add_service() local
+Date:   Wed, 27 May 2020 13:53:46 +0200
+Message-Id: <20200527115400.31391-42-nsaenzjulienne@suse.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527115400.31391-1-nsaenzjulienne@suse.de>
 References: <20200527115400.31391-1-nsaenzjulienne@suse.de>
@@ -48,116 +44,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is already enough duplication with regard to fourcc generation in
-the kernel. Let's at least use the same macro all over the vchiq
-ecosystem.
+The function is being exported although there is no use for it outside
+of vchiq's core code. Keep it local then.
 
 Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c  | 2 +-
- .../vc04_services/bcm2835-audio/vc_vchi_audioserv_defs.h     | 5 ++---
- drivers/staging/vc04_services/interface/vchi/vchi.h          | 3 ---
- drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c     | 2 +-
- drivers/staging/vc04_services/vc-sm-cma/vc_sm_defs.h         | 3 ---
- drivers/staging/vc04_services/vchiq-mmal/mmal-msg.h          | 1 -
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c        | 2 +-
- 7 files changed, 5 insertions(+), 13 deletions(-)
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c | 3 +--
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h  | 3 ---
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-index 18309578e9a2..55f1e684eef1 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
-@@ -125,7 +125,7 @@ vc_vchi_audio_init(struct vchiq_instance *vchiq_instance,
- 	struct vchiq_service_params params = {
- 		.version		= VC_AUDIOSERV_VER,
- 		.version_min		= VC_AUDIOSERV_MIN_VER,
--		.fourcc			= VC_AUDIO_SERVER_NAME,
-+		.fourcc			= VCHIQ_MAKE_FOURCC('A', 'U', 'D', 'S'),
- 		.callback		= audio_vchi_callback,
- 		.userdata		= instance,
- 	};
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/vc_vchi_audioserv_defs.h b/drivers/staging/vc04_services/bcm2835-audio/vc_vchi_audioserv_defs.h
-index d6401e914ac9..b4fa239c5ebe 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/vc_vchi_audioserv_defs.h
-+++ b/drivers/staging/vc04_services/bcm2835-audio/vc_vchi_audioserv_defs.h
-@@ -8,9 +8,8 @@
- #define VC_AUDIOSERV_VER 2
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+index 4230f33ac38a..4d98d4d3ee8a 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+@@ -277,7 +277,7 @@ enum vchiq_status vchiq_connect(struct vchiq_instance *instance)
+ }
+ EXPORT_SYMBOL(vchiq_connect);
  
- /* FourCC codes used for VCHI communication */
--#define VC_AUDIO_SERVER_NAME  MAKE_FOURCC("AUDS")
--#define VC_AUDIO_WRITE_COOKIE1 MAKE_FOURCC("BCMA")
--#define VC_AUDIO_WRITE_COOKIE2 MAKE_FOURCC("DATA")
-+#define VC_AUDIO_WRITE_COOKIE1 VCHIQ_MAKE_FOURCC('B', 'C', 'M', 'A')
-+#define VC_AUDIO_WRITE_COOKIE2 VCHIQ_MAKE_FOURCC('D', 'A', 'T', 'A')
+-enum vchiq_status vchiq_add_service(
++static enum vchiq_status vchiq_add_service(
+ 	struct vchiq_instance             *instance,
+ 	const struct vchiq_service_params *params,
+ 	unsigned int       *phandle)
+@@ -314,7 +314,6 @@ enum vchiq_status vchiq_add_service(
  
- /*
-  *  List of screens that are currently supported
-diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
-index 59559d4cd5f1..7108c254a38a 100644
---- a/drivers/staging/vc04_services/interface/vchi/vchi.h
-+++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
-@@ -8,9 +8,6 @@
-  * Global defs
-  *****************************************************************************/
+ 	return status;
+ }
+-EXPORT_SYMBOL(vchiq_add_service);
  
--// Macros to manipulate 'FOURCC' values
--#define MAKE_FOURCC(x) ((int32_t)((x[0] << 24) | (x[1] << 16) | (x[2] << 8) | x[3]))
--
- // Opaque handle for a VCHIQ instance
- struct vchiq_instance;
- 
-diff --git a/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c b/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c
-index 2de67ce18be2..0b1a510d6bab 100644
---- a/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c
-+++ b/drivers/staging/vc04_services/vc-sm-cma/vc_sm_cma_vchi.c
-@@ -294,7 +294,7 @@ struct sm_instance *vc_sm_cma_vchi_init(struct vchiq_instance *vchiq_instance,
- 	struct vchiq_service_params params = {
- 		.version = VC_SM_VER,
- 		.version_min = VC_SM_MIN_VER,
--		.fourcc = VC_SM_SERVER_NAME,
-+		.fourcc = VCHIQ_MAKE_FOURCC('S', 'M', 'E', 'M'),
- 		.callback = vc_sm_cma_vchi_callback,
- 		.userdata = NULL,
- 	};
-diff --git a/drivers/staging/vc04_services/vc-sm-cma/vc_sm_defs.h b/drivers/staging/vc04_services/vc-sm-cma/vc_sm_defs.h
-index 8a0d1f6dbfe8..4e6354000dfd 100644
---- a/drivers/staging/vc04_services/vc-sm-cma/vc_sm_defs.h
-+++ b/drivers/staging/vc04_services/vc-sm-cma/vc_sm_defs.h
-@@ -15,9 +15,6 @@
- #ifndef __VC_SM_DEFS_H__INCLUDED__
- #define __VC_SM_DEFS_H__INCLUDED__
- 
--/* FourCC code used for VCHI connection */
--#define VC_SM_SERVER_NAME MAKE_FOURCC("SMEM")
--
- /* Maximum message length */
- #define VC_SM_MAX_MSG_LEN (sizeof(union vc_sm_msg_union_t) + \
- 	sizeof(struct vc_sm_msg_hdr_t))
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-msg.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-msg.h
-index bd83159403e5..ab63835ce01c 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-msg.h
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-msg.h
-@@ -28,7 +28,6 @@
- 
- #define VC_MMAL_VER 15
- #define VC_MMAL_MIN_VER 10
--#define VC_MMAL_SERVER_NAME  MAKE_FOURCC("mmal")
- 
- /* max total message size is 512 bytes */
- #define MMAL_MSG_MAX_SIZE 512
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index 3707212d8e7e..d35d2b50991b 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -2097,7 +2097,7 @@ int vchiq_mmal_init(struct vchiq_mmal_instance **out_instance)
- 	struct vchiq_service_params params = {
- 		.version		= VC_MMAL_VER,
- 		.version_min		= VC_MMAL_MIN_VER,
--		.fourcc			= VC_MMAL_SERVER_NAME,
-+		.fourcc			= VCHIQ_MAKE_FOURCC('m', 'm', 'a', 'l'),
- 		.callback		= service_callback,
- 		.userdata		= NULL,
- 	};
+ enum vchiq_status vchiq_open_service(
+ 	struct vchiq_instance             *instance,
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
+index 407e7dc31108..b852980447dc 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_if.h
+@@ -94,9 +94,6 @@ struct vchiq_instance;
+ extern enum vchiq_status vchiq_initialise(struct vchiq_instance **pinstance);
+ extern enum vchiq_status vchiq_shutdown(struct vchiq_instance *instance);
+ extern enum vchiq_status vchiq_connect(struct vchiq_instance *instance);
+-extern enum vchiq_status vchiq_add_service(struct vchiq_instance *instance,
+-	const struct vchiq_service_params *params,
+-	unsigned int *pservice);
+ extern enum vchiq_status vchiq_open_service(struct vchiq_instance *instance,
+ 	const struct vchiq_service_params *params,
+ 	unsigned int *pservice);
 -- 
 2.26.2
 
