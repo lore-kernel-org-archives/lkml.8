@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7F620776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC8820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:47:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mKJOO2/b";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mDP8NOl4"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XjckTWmV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3K3sodad"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgE0PrH (ORCPT
+        id S2389888AbgE0PrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:47:07 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:34629 "EHLO
+        Wed, 27 May 2020 11:47:09 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:46999 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389793AbgE0Ppf (ORCPT
+        by vger.kernel.org with ESMTP id S2389790AbgE0Ppe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:45:35 -0400
+        Wed, 27 May 2020 11:45:34 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id A9A28581DC2;
-        Wed, 27 May 2020 11:45:34 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:45:34 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id 25BC1581DBE;
+        Wed, 27 May 2020 11:45:33 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:45:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=LSIsfiNq5IpAS
-        JINyuaxA/q7xkNPFUcq7XPKpT78W2w=; b=mKJOO2/bAUXe1b1kiUFbNvhIia3FO
-        xFI0szLda8wvBvsyVWRHyjWB+7LuB+/fge3TqBcCGpDGIjoM70HSh53bG0Vojebc
-        NRzzr692PINjjsmIUxqGqqWGv7ybJS711/eaeZfxIVgAf3L5MAyl/dUhjTZ7LW1G
-        zLgZxdCS+1QTibRQH0ycKtDpXJ++84JTiNA5oHYob+9FWmX2M+vzKokxqHib4txo
-        Z4xMQtxwuBPDRhfbreu1+nP6g1gok7ndkCpk4JtVD0LhNfqcXEME0TuVm/R9C6sS
-        RKz0Ag/Zj1dP551QDw9NmFzfdWwVoRFiU1C/caN0B6o1UvhTN/AFjMOPg==
+        :mime-version:content-transfer-encoding; s=fm2; bh=Fs62D7m8qEeAr
+        zhgkrU642z9hHS4Rj749FWecfiG/o4=; b=XjckTWmVA6AXaIlgfI9V+QFwJly7R
+        4UiZgG59MvYGw6CiErHPl/z9fd/W9e71PY/N68H3W4tnDQYwmg1nmaoEEzedwq4J
+        HW/cm5gmq2OD+VNCMyNsqsJPpKOsZsygfyxAGp12BKiWBu2l1bUDMiRZl9bpEsd2
+        FfXB8yJP9AHdIhmTwBoha9Aur7BJj4U2FjpOf6OG2SVqsNzzltIaW7e29tLesjXM
+        +epiKvwHMK7WK2hV1ignXsbzBS6g39YjHrr4DUIaZnlDqKRLXuBLIXvPfGx9o9O9
+        GhIleWg8VHxaWq11blCKGiEEga81NLpxvVvZUauMIgZnsWj2de4/y70Dg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=LSIsfiNq5IpASJINyuaxA/q7xkNPFUcq7XPKpT78W2w=; b=mDP8NOl4
-        b/upWAP7fi6qHQgsmL901ocbRkeRIy5quvNKYTrEG+jQ4nMi973cs8AryDw/IVLu
-        a2rDtOw8bJdm4+4hrUx5hFMiTiNJ4TKnu9O9AGH2cs5Bp+eiZqmxhevxraLPZduq
-        L94wGENQX0eIilqrOL2PL1FHv14ABcCu4TqeopPIbNKQ9tPkLNFWFcMZRSeq5flH
-        kUpU1YW7IYG/EkL/SDVC5tBKAI+Gl67kGudQGiRAqKxT/6pheJ4xuB1qN+zbZVAx
-        JrMAswsG63FUbeLnbJWO2KptpqaFDpPACGZK1Ua3lkqY2TcaRy8E7/tgDxOHmjmb
-        RhfIEgy1UqW+HQ==
-X-ME-Sender: <xms:HovOXrGWow-yut4TZNUArXeZMGGWuqeh80TIwotobhggYBQtBroKMg>
+        fm2; bh=Fs62D7m8qEeArzhgkrU642z9hHS4Rj749FWecfiG/o4=; b=3K3sodad
+        21MsV92ZB8yiWHKxwl1/j6ZB+uc1E2+IKMTH34+nxjVe09dGLzwM9Bz24Yu+7T4L
+        KyrY7uEkcM9TbYqd8Wa31fC6uh4yvq0SddiMI18rw5XNPVZYJWjY1N2ldTz2HMAE
+        T656jywveCIWWWFai1O7npnh1GhdZCWTwz2TxlTwPYB7Sq4fxyTNe9WZ/sXWfwV/
+        1YDBWiQrMx+Yz8LX9ieVchxCjemnl4bFpwFBiysTAkouwcvLctC/yi8qeW/4z7on
+        W1K9l2S61wsYqMt/gWOfcS66nsq+Yx4NTFUBhJva32qvISbw+LjbL+w/86+wIBPv
+        SiBn4nZzNC3XzQ==
+X-ME-Sender: <xms:HYvOXk2mREsszkBd7EIT862kgP7bk8QhLWEFv9WOcDbQnfWksMz7Pw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:HovOXoVLLFOzJUU-uqZ7DonH8f2Y7pGKesrZ0A4PR6-lojPebV9q8Q>
-    <xmx:HovOXtL9sSH11F9IG8-jCPSw_5lM-lztQW4tt-A10RGb2_K7Sopw2g>
-    <xmx:HovOXpEqT6G3HUCYiteANiFHI86Tq3Y1Iu52ayht79UTGyB8X3-hjQ>
-    <xmx:HovOXtr-A-03jTviwOXrggcGfc7rnT7ybkLI0KxN0OXtHz9-VRfFsg>
+X-ME-Proxy: <xmx:HYvOXvEYlhYkG05LbFMT835S4jQE1LQuyf_wFeuUYahlSU9gEExpDA>
+    <xmx:HYvOXs583WuM22YTAw0jRWwHrJ6wPrS_xysEqBuug5NP_gnvXi1OLw>
+    <xmx:HYvOXt2jOuKATwmt65KCo8NXtLZq67PzGXmDNDzMa0ayu12Sj6Yvvw>
+    <xmx:HYvOXtY0PSP1gcz2X6BhOa6AvV1Iwad68KutJpUq9WCqXEnP53AHlg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 49BCE30618B7;
-        Wed, 27 May 2020 11:45:34 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id B977A328005A;
+        Wed, 27 May 2020 11:45:32 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Cc:     linux-rpi-kernel@lists.infradead.org,
@@ -76,9 +76,9 @@ Cc:     linux-rpi-kernel@lists.infradead.org,
         Maxime Ripard <maxime@cerno.tech>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH v3 05/25] clk: bcm: rpi: Statically init clk_init_data
-Date:   Wed, 27 May 2020 17:45:01 +0200
-Message-Id: <0a5615fe97082eafb44221164cdefba48d38e654.1590594293.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 04/25] clk: bcm: rpi: Allow the driver to be probed by DT
+Date:   Wed, 27 May 2020 17:45:00 +0200
+Message-Id: <fa709f71b27aadf987685f7cae2a65cc3cef8e3d.1590594293.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
 References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
@@ -89,35 +89,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of declaring the clk_init_data and then calling memset on it, just
-initialise properly.
+The current firmware clock driver for the RaspberryPi can only be probed by
+manually registering an associated platform_device.
+
+While this works fine for cpufreq where the device gets attached a clkdev
+lookup, it would be tedious to maintain a table of all the devices using
+one of the clocks exposed by the firmware.
+
+Since the DT on the other hand is the perfect place to store those
+associations, make the firmware clocks driver probe-able through the device
+tree so that we can represent it as a node.
 
 Cc: Michael Turquette <mturquette@baylibre.com>
 Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: linux-clk@vger.kernel.org
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/clk/bcm/clk-raspberrypi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/clk/bcm/clk-raspberrypi.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
-index 8610355bda47..ddc72207212e 100644
+index 1654fd0eedc9..8610355bda47 100644
 --- a/drivers/clk/bcm/clk-raspberrypi.c
 +++ b/drivers/clk/bcm/clk-raspberrypi.c
-@@ -175,11 +175,10 @@ static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
- 
- static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
- {
-+	struct clk_init_data init = {};
- 	u32 min_rate = 0, max_rate = 0;
--	struct clk_init_data init;
+@@ -255,8 +255,16 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 	struct raspberrypi_clk *rpi;
  	int ret;
  
--	memset(&init, 0, sizeof(init));
+-	firmware_node = of_find_compatible_node(NULL, NULL,
+-					"raspberrypi,bcm2835-firmware");
++	/*
++	 * We can be probed either through the an old-fashioned
++	 * platform device registration or through a DT node that is a
++	 * child of the firmware node. Handle both cases.
++	 */
++	if (dev->of_node)
++		firmware_node = of_get_parent(dev->of_node);
++	else
++		firmware_node = of_find_compatible_node(NULL, NULL,
++							"raspberrypi,bcm2835-firmware");
+ 	if (!firmware_node) {
+ 		dev_err(dev, "Missing firmware node\n");
+ 		return -ENOENT;
+@@ -300,9 +308,16 @@ static int raspberrypi_clk_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 	/* All of the PLLs derive from the external oscillator. */
- 	init.parent_names = (const char *[]){ "osc" };
++static const struct of_device_id raspberrypi_clk_match[] = {
++	{ .compatible = "raspberrypi,firmware-clocks" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, raspberrypi_clk_match);
++
+ static struct platform_driver raspberrypi_clk_driver = {
+ 	.driver = {
+ 		.name = "raspberrypi-clk",
++		.of_match_table = raspberrypi_clk_match,
+ 	},
+ 	.probe          = raspberrypi_clk_probe,
+ 	.remove		= raspberrypi_clk_remove,
 -- 
 git-series 0.9.1
