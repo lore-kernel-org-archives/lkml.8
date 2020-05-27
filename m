@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59748C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFAEB2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BEB20B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:26:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IUG2VDZp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="A8UwiX4z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgE0B0c (ORCPT
+        id S1728414AbgE0B0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:26:32 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8781 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbgE0B0a (ORCPT
+        Tue, 26 May 2020 21:26:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13588 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgE0B0a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 21:26:30 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecdc1ba0000>; Tue, 26 May 2020 18:26:18 -0700
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecdc1730001>; Tue, 26 May 2020 18:25:07 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
   Tue, 26 May 2020 18:26:30 -0700
 X-PGP-Universal: processed;
         by hqpgpgate101.nvidia.com on Tue, 26 May 2020 18:26:30 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 May
- 2020 01:26:30 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 27 May 2020 01:26:30 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 May
+ 2020 01:26:29 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 27 May 2020 01:26:29 +0000
 Received: from sandstorm.nvidia.com (Not Verified[10.2.50.17]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5ecdc1c50006>; Tue, 26 May 2020 18:26:29 -0700
+        id <B5ecdc1c50004>; Tue, 26 May 2020 18:26:29 -0700
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 CC:     Souptick Joarder <jrdr.linux@gmail.com>,
@@ -48,9 +48,9 @@ CC:     Souptick Joarder <jrdr.linux@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Michal Simek <michal.simek@xilinx.com>,
         <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH 3/3] misc: xilinx-sdfec: convert get_user_pages() --> pin_user_pages()
-Date:   Tue, 26 May 2020 18:26:28 -0700
-Message-ID: <20200527012628.1100649-4-jhubbard@nvidia.com>
+Subject: [PATCH 1/3] misc: xilinx-sdfec: improve get_user_pages_fast() error handling
+Date:   Tue, 26 May 2020 18:26:26 -0700
+Message-ID: <20200527012628.1100649-2-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527012628.1100649-1-jhubbard@nvidia.com>
 References: <20200527012628.1100649-1-jhubbard@nvidia.com>
@@ -59,35 +59,36 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590542778; bh=pIs/SexR7/3J3Zjm6Xj7h9EQRh/1TTydznodYn91aGk=;
+        t=1590542707; bh=Z0H0NZ0azdDBw/pz6UaXScJeua7CgszsKUI21rNpIIc=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=IUG2VDZp6/dk88r0F4O3ym0mwyEuNNu0CeTrd1/j470r4ImZ6HD1mtRg/2AOizQqv
-         9nWKC3H+q29wkZ25dAd0b0swAgKQ88GWlqaK8RjHwFKND6qe0Bw0k/Uv9HssztrUkw
-         1T5u3wvw3yKBetOKp+aCtbahP0kv0l5WygMe7r1XfmvIQi709dq9H5CGw/MTi/gjFy
-         EurNZqrtpbtU3YupZp/E2yFAO/TSNPsqdFfCs+axZuRnYq0PWi/8AJVDhahN3F/0is
-         0YjoEL7EWKgFmcjV4cYAcHNE5GwjmGakNJiwJ8Dyz44GYDzqmXq4sU502j3R4NF/Ic
-         v6+Uuh8oBYr3A==
+        b=A8UwiX4zwnd0jIKivrFW1WRvjUMNk0bhMGLDQydxVtXYlh9U/1D/h8QUT4RVJSryq
+         BRY0WYKCu1Gcvx0n9z19TiS0jBZtZuVoHRyy+ZbyEQztjj66vY+dTPfRosbo2uSsgD
+         ADGiYR4EScHloc8SrbdXxAfUgtaQLNAxZHmtgVtnKtxAJINkGsx7qlqC3Gb4YP4/UD
+         aM+1SfGtF/Yy6j1DfnjNNcr+ASerSgFkpMfQsK/L6j4lztD5i8TOU4GShn8O8zWpab
+         VAgP6OLlntY0JSi0Se/r9D9Q9r8lE1kyIantgllKdq77Np8d8b+qgAZJEUufvH8Sqh
+         hRmQjiA9iUueg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This code was using get_user_pages*(), in approximately a "Case 1"
-scenario (Direct IO), using the categorization from [1]. That means
-that it's time to convert the get_user_pages*() + put_page() calls to
-pin_user_pages*() + unpin_user_pages() calls.
+This fixes the case of get_user_pages_fast() returning a -errno.
+The result needs to be stored in a signed integer. And for safe
+signed/unsigned comparisons, it's best to keep everything signed.
+And get_user_pages_fast() also expects a signed value for number
+of pages to pin.
 
-There is some helpful background in [2]: basically, this is a small
-part of fixing a long-standing disconnect between pinning pages, and
-file systems' use of those pages.
+Therefore, change most relevant variables, from u32 to int. Leave
+"n" unsigned, for convenience in checking for overflow. And provide
+a WARN_ON_ONCE() and early return, if overflow occurs.
 
-[1] Documentation/core-api/pin_user_pages.rst
+Also, as long as we're tidying up: rename the page array from page,
+to pages, in order to match the conventions used in most other call
+sites.
 
-[2] "Explicit pinning of user-space pages":
-    https://lwn.net/Articles/807108/
-
+Fixes: 20ec628e8007e ("misc: xilinx_sdfec: Add ability to configure LDPC")
 Cc: Derek Kiernan <derek.kiernan@xilinx.com>
 Cc: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -96,40 +97,67 @@ Cc: Michal Simek <michal.simek@xilinx.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/misc/xilinx_sdfec.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/misc/xilinx_sdfec.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-index 7e2ee3e547f2..cda3559025d5 100644
+index 71bbaa56bdb5..e2766aad9e14 100644
 --- a/drivers/misc/xilinx_sdfec.c
 +++ b/drivers/misc/xilinx_sdfec.c
-@@ -627,12 +627,11 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdf=
+@@ -602,10 +602,10 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdf=
 ec, u32 offset,
+ 			      const u32 depth)
+ {
+ 	u32 reg =3D 0;
+-	u32 res;
+-	u32 n, i;
++	int res, i, nr_pages;
++	u32 n;
+ 	u32 *addr =3D NULL;
+-	struct page *page[MAX_NUM_PAGES];
++	struct page *pages[MAX_NUM_PAGES];
 =20
- 	nr_pages =3D n;
+ 	/*
+ 	 * Writes that go beyond the length of
+@@ -622,15 +622,22 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdf=
+ec, u32 offset,
+ 	if ((len * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE)
+ 		n +=3D 1;
 =20
--	res =3D get_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
-+	res =3D pin_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
- 	if (res < nr_pages) {
--		if (res > 0) {
--			for (i =3D 0; i < res; i++)
--				put_page(pages[i]);
--		}
-+		if (res > 0)
-+			unpin_user_pages(pages, res);
+-	res =3D get_user_pages_fast((unsigned long)src_ptr, n, 0, page);
+-	if (res < n) {
+-		for (i =3D 0; i < res; i++)
+-			put_page(page[i]);
++	if (WARN_ON_ONCE(n > INT_MAX))
++		return -EINVAL;
 +
++	nr_pages =3D n;
++
++	res =3D get_user_pages_fast((unsigned long)src_ptr, nr_pages, 0, pages);
++	if (res < nr_pages) {
++		if (res > 0) {
++			for (i =3D 0; i < res; i++)
++				put_page(pages[i]);
++		}
  		return -EINVAL;
  	}
 =20
-@@ -646,7 +645,7 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec=
+-	for (i =3D 0; i < n; i++) {
+-		addr =3D kmap(page[i]);
++	for (i =3D 0; i < nr_pages; i++) {
++		addr =3D kmap(pages[i]);
+ 		do {
+ 			xsdfec_regwrite(xsdfec,
+ 					base_addr + ((offset + reg) *
+@@ -639,7 +646,7 @@ static int xsdfec_table_write(struct xsdfec_dev *xsdfec=
 , u32 offset,
  			reg++;
  		} while ((reg < len) &&
  			 ((reg * XSDFEC_REG_WIDTH_JUMP) % PAGE_SIZE));
--		put_page(pages[i]);
-+		unpin_user_page(pages[i]);
+-		put_page(page[i]);
++		put_page(pages[i]);
  	}
- 	return 0;
+ 	return reg;
  }
 --=20
 2.26.2
