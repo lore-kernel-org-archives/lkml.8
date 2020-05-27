@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30FEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2AD20776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D24420776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590593785;
-	bh=0chIcTzL9zF8Xj2Xy7CX8f0cZi2EEy6h0mItKk0tc1Q=;
+	s=default; t=1590593798;
+	bh=cecSALLvBvJ1FggwUep/fAFTiMxMgusJVUf4MRrCPbA=;
 	h=Subject:To:Cc:From:Date:List-ID:From;
-	b=ZvZmj1UgWrdBr0oCg9PPQ8/qH71zhogC3c+coKKU1KCJqxpVeOquTXf66WJ5W7Hr1
-	 MonGnL63N36Ym/wVIwV+0M3cI2lrkOzaO9+TfqhACQFd9+FlROmuiploToFZjYLSwK
-	 WNaNihrsWzH6R0JfTzPRGkO7687tYfP3HbmfpCoE=
+	b=c9qiBkNxD82Qtpd3uevyPmqmzrK2vvM/MDG4O0xUhhZLVjmDzrpkBKegiQPyiC5gk
+	 uBBuI96Yu6UlCL7F1wKkrswPHMm0GeStGO6u3l9v2p34UOPKyfv/sT2TEGe/vL+1up
+	 DyVBtFlpaUBjONiVZXf3zKMzbf+xboYJIghEm6NU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgE0PgY (ORCPT
+        id S1729693AbgE0Pgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 11:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726782AbgE0PgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:36:22 -0400
+        id S1726782AbgE0Pgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:36:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B5FC20776;
-        Wed, 27 May 2020 15:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11808212CC;
+        Wed, 27 May 2020 15:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590593781;
-        bh=0chIcTzL9zF8Xj2Xy7CX8f0cZi2EEy6h0mItKk0tc1Q=;
+        s=default; t=1590593795;
+        bh=cecSALLvBvJ1FggwUep/fAFTiMxMgusJVUf4MRrCPbA=;
         h=Subject:To:Cc:From:Date:From;
-        b=XZ++TF0AcZmzV3pcbbZB6T1YsVF27r9tKJyCzHD7SivTisTwgjujxha9R8QQawuqD
-         8uGA8b6P3HnfRvs/OGoAv7FiyrMj7+bb5rlPfZNm53olMHZtO68KCRKhche6bp27wb
-         rhPM5Fgylt7qtxDzWyQand9yizJZDZpwJECk9B/o=
-Subject: Linux 4.4.225
+        b=bmXJ1LHFvbrTllI/hYe+PeWAm0gF5Fnsv4tedxfXok/xNqTdpsDmvuiDbpy4SeWJU
+         SMpTf8h92hKjQCmEyucYFQlC5dXwrZgGKOpgq4B0WBRjai9hAXgPxolwyWAB51+inf
+         TOjDj6IJhMdAnjVCinKYOT6Jk+GSF4axLQuG2K2c=
+Subject: Linux 4.9.225
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Date:   Wed, 27 May 2020 17:36:16 +0200
-Message-ID: <159059377614465@kroah.com>
+Date:   Wed, 27 May 2020 17:36:28 +0200
+Message-ID: <15905937881675@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.4.225 kernel.
+I'm announcing the release of the 4.9.225 kernel.
 
-All users of the 4.4 kernel series must upgrade.
+All users of the 4.9 kernel series must upgrade.
 
-The updated 4.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+The updated 4.9.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.9.y
 and can be browsed at the normal kernel.org git web browser:
 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
@@ -66,49 +66,54 @@ greg k-h
 
 ------------
 
- Documentation/networking/l2tp.txt         |    8 
- Makefile                                  |    2 
- arch/arm/include/asm/futex.h              |    9 
- drivers/hid/hid-ids.h                     |    1 
- drivers/hid/hid-multitouch.c              |    3 
- drivers/i2c/i2c-dev.c                     |   60 +++--
- drivers/media/media-device.c              |   43 +++-
- drivers/media/media-devnode.c             |  168 +++++++++-------
- drivers/media/usb/uvc/uvc_driver.c        |    2 
- drivers/misc/mei/client.c                 |    2 
- drivers/net/ethernet/intel/igb/igb_main.c |    4 
- drivers/nvdimm/btt.c                      |    8 
- drivers/platform/x86/alienware-wmi.c      |   17 -
- drivers/platform/x86/asus-nb-wmi.c        |   24 ++
- drivers/staging/iio/accel/sca3000_ring.c  |    2 
- drivers/staging/iio/resolver/ad2s1210.c   |   17 +
- drivers/usb/core/message.c                |    4 
- fs/ceph/caps.c                            |    1 
- fs/ext4/xattr.c                           |   66 +++---
- fs/file.c                                 |    2 
- fs/gfs2/glock.c                           |    3 
- include/linux/cpumask.h                   |   19 +
- include/linux/net.h                       |    3 
- include/linux/padata.h                    |   13 -
- include/media/media-device.h              |    5 
- include/media/media-devnode.h             |   32 ++-
- include/net/ipv6.h                        |    2 
- include/uapi/linux/if_pppol2tp.h          |   13 -
- include/uapi/linux/l2tp.h                 |   17 +
- kernel/padata.c                           |   88 +++-----
- lib/cpumask.c                             |   32 +++
- net/ipv6/datagram.c                       |    4 
- net/l2tp/l2tp_core.c                      |  181 +++++------------
- net/l2tp/l2tp_core.h                      |   47 ++--
- net/l2tp/l2tp_eth.c                       |  216 ++++++++++++--------
- net/l2tp/l2tp_ip.c                        |   68 +++---
- net/l2tp/l2tp_ip6.c                       |   82 +++----
- net/l2tp/l2tp_netlink.c                   |  124 +++++++-----
- net/l2tp/l2tp_ppp.c                       |  309 +++++++++++++++++-------------
- net/socket.c                              |   46 ++++
- security/integrity/evm/evm_crypto.c       |    2 
- sound/core/pcm_lib.c                      |    1 
- 42 files changed, 1015 insertions(+), 735 deletions(-)
+ Documentation/networking/l2tp.txt                   |    8 
+ Makefile                                            |    2 
+ arch/arm/include/asm/futex.h                        |    9 
+ arch/arm64/kernel/machine_kexec.c                   |    3 
+ drivers/base/component.c                            |    8 
+ drivers/dma/tegra210-adma.c                         |    2 
+ drivers/hid/hid-ids.h                               |    1 
+ drivers/hid/hid-multitouch.c                        |    3 
+ drivers/i2c/i2c-dev.c                               |   48 +--
+ drivers/i2c/muxes/i2c-demux-pinctrl.c               |    1 
+ drivers/iio/dac/vf610_dac.c                         |    1 
+ drivers/iommu/amd_iommu_init.c                      |    9 
+ drivers/misc/mei/client.c                           |    2 
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c     |   13 
+ drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf_main.c |    6 
+ drivers/net/ethernet/intel/igb/igb_main.c           |    4 
+ drivers/net/gtp.c                                   |    9 
+ drivers/nvdimm/btt.c                                |    8 
+ drivers/platform/x86/alienware-wmi.c                |   17 -
+ drivers/platform/x86/asus-nb-wmi.c                  |   24 +
+ drivers/rapidio/devices/rio_mport_cdev.c            |    5 
+ drivers/staging/greybus/uart.c                      |    4 
+ drivers/staging/iio/accel/sca3000_ring.c            |    2 
+ drivers/staging/iio/resolver/ad2s1210.c             |   17 -
+ drivers/usb/core/message.c                          |    4 
+ drivers/watchdog/watchdog_dev.c                     |   67 +---
+ fs/ceph/caps.c                                      |    1 
+ fs/configfs/dir.c                                   |    1 
+ fs/file.c                                           |    2 
+ fs/gfs2/glock.c                                     |    3 
+ include/linux/net.h                                 |    3 
+ include/linux/padata.h                              |   13 
+ include/uapi/linux/if_pppol2tp.h                    |   13 
+ include/uapi/linux/l2tp.h                           |   17 +
+ kernel/padata.c                                     |   88 ++---
+ lib/Makefile                                        |    2 
+ net/l2tp/l2tp_core.c                                |  174 +++--------
+ net/l2tp/l2tp_core.h                                |   46 +-
+ net/l2tp/l2tp_eth.c                                 |  216 ++++++++-----
+ net/l2tp/l2tp_netlink.c                             |   79 ++---
+ net/l2tp/l2tp_ppp.c                                 |  309 +++++++++++---------
+ net/socket.c                                        |   46 ++
+ scripts/gcc-plugins/Makefile                        |    1 
+ scripts/gcc-plugins/gcc-common.h                    |    4 
+ security/integrity/evm/evm_crypto.c                 |    2 
+ security/integrity/ima/ima_fs.c                     |    3 
+ sound/core/pcm_lib.c                                |    1 
+ 47 files changed, 733 insertions(+), 568 deletions(-)
 
 Al Viro (1):
       fix multiplication overflow in copy_fdtable()
@@ -116,8 +121,18 @@ Al Viro (1):
 Alan Stern (1):
       USB: core: Fix misleading driver bug report
 
+Alexander Monakov (1):
+      iommu/amd: Fix over-read of ACPI UID from IVRS table
+
 Alexander Usyskin (1):
       mei: release me_cl object reference
+
+Arjun Vynipadath (2):
+      cxgb4: free mac_hlist properly
+      cxgb4/cxgb4vf: Fix mac_hlist initialization and free
+
+Arnd Bergmann (1):
+      ubsan: build ubsan.c more conservatively
 
 Asbjørn Sloth Tønnesen (3):
       net: l2tp: export debug flags to UAPI
@@ -133,14 +148,17 @@ Brent Lu (1):
 Cao jin (1):
       igb: use igb_adapter->io_addr instead of e1000_hw->hw_addr
 
-Christophe JAILLET (1):
+Christoph Hellwig (1):
+      arm64: fix the flush_icache_range arguments in machine_kexec
+
+Christophe JAILLET (4):
+      i2c: mux: demux-pinctrl: Fix an error handling path in 'i2c_demux_pinctrl_probe()'
+      dmaengine: tegra210-adma: Fix an error handling path in 'tegra_adma_probe()'
+      iio: dac: vf610: Fix an error handling path in 'vf610_dac_probe()'
       iio: sca3000: Remove an erroneous 'get_device()'
 
 Colin Ian King (1):
       platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
-
-Dan Carpenter (1):
-      i2c: dev: use after free in detach
 
 Daniel Jordan (2):
       padata: initialize pd->cpu with effective cpumask
@@ -149,18 +167,13 @@ Daniel Jordan (2):
 Dragos Bogdan (1):
       staging: iio: ad2s1210: Fix SPI reading
 
-Erico Nunes (1):
-      i2c: dev: switch from register_chrdev to cdev API
+Frédéric Pierret (fepitre) (1):
+      gcc-common.h: Update for GCC 10
 
 Greg Kroah-Hartman (1):
-      Linux 4.4.225
+      Linux 4.9.225
 
-Guillaume Nault (22):
-      l2tp: lock socket before checking flags in connect()
-      l2tp: fix racy socket lookup in l2tp_ip and l2tp_ip6 bind()
-      l2tp: hold session while sending creation notifications
-      l2tp: take a reference on sessions used in genetlink handlers
-      l2tp: don't use l2tp_tunnel_find() in l2tp_ip and l2tp_ip6
+Guillaume Nault (17):
       l2tp: remove useless duplicate session detection in l2tp_netlink
       l2tp: remove l2tp_session_find()
       l2tp: define parameters of l2tp_session_get*() as "const"
@@ -185,49 +198,41 @@ Hans de Goede (1):
 Herbert Xu (1):
       padata: Replace delayed timer with immediate workqueue in padata_reorder
 
+James Hilliard (1):
+      component: Silence bind error on -EPROBE_DEFER
+
 Jason A. Donenfeld (1):
       padata: get_next is never NULL
 
-Kevin Hao (1):
+John Hubbard (1):
+      rapidio: fix an error in get_user_pages_fast() error handling
+
+Kevin Hao (2):
       i2c: dev: Fix the race between the release of i2c_dev and cdev
+      watchdog: Fix the race between the release of watchdog_core_data and cdev
 
 Mathias Krause (3):
       padata: ensure the reorder timer callback runs on the correct CPU
       padata: ensure padata_do_serial() runs on the correct CPU
       padata: set cpu_index of unused CPUs to -1
 
-Mauro Carvalho Chehab (2):
-      media-devnode: fix namespace mess
-      media-device: dynamically allocate struct media_devnode
-
-Max Kellermann (2):
-      drivers/media/media-devnode: clear private_data before put_device()
-      media-devnode: add missing mutex lock in error handler
-
-Michael Kelley (1):
-      cpumask: Make for_each_cpu_wrap() available on UP as well
+Oscar Carter (1):
+      staging: greybus: Fix uninitialized scalar variable
 
 Peter Zijlstra (1):
-      sched/fair, cpumask: Export for_each_cpu_wrap()
+      x86/uaccess, ubsan: Fix UBSAN vs. SMAP
 
 R. Parameswaran (3):
       New kernel function to get IP overhead on a socket.
       L2TP:Adjust intf MTU, add underlay L3, L2 hdrs.
       l2tp: device MTU setup, tunnel socket needs a lock
 
-Roberto Sassu (1):
+Roberto Sassu (2):
       evm: Check also if *tfm is an error pointer in init_desc()
+      ima: Fix return value of ima_write_policy()
 
 Sebastian Reichel (1):
       HID: multitouch: add eGalaxTouch P80H84 support
-
-Shuah Khan (3):
-      media: Fix media_open() to clear filp->private_data in error leg
-      media: fix use-after-free in cdev_put() when app exits after driver unbind
-      media: fix media devnode ioctl/syscall and unregister race
-
-Theodore Ts'o (1):
-      ext4: lock the xattr block before checksuming it
 
 Thomas Gleixner (1):
       ARM: futex: Address build warning
@@ -238,12 +243,12 @@ Tobias Klauser (1):
 Vishal Verma (1):
       libnvdimm/btt: Remove unnecessary code in btt_freelist_init
 
-Wolfram Sang (1):
-      i2c: dev: don't start function name with 'return'
-
 Wu Bo (1):
       ceph: fix double unlock in handle_cap_export()
 
-viresh kumar (1):
-      i2c-dev: don't get i2c adapter via i2c_dev
+Xiyu Yang (1):
+      configfs: fix config_item refcnt leak in configfs_rmdir()
+
+Yoshiyuki Kurauchi (1):
+      gtp: set NLM_F_MULTI flag in gtp_genl_dump_pdp()
 
