@@ -4,85 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDECC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1564C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D66207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC4420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590547204;
-	bh=I7TqSAwfWBOpOAdgjioDZiBGAbGwtR4XDmYXXxOZd+4=;
+	s=default; t=1590547304;
+	bh=8pmFYGawYKquGFtp3cwkbNq/yJ/Z20y2pO5HiRcXK+k=;
 	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=AE0aDd4pgvc/QE07d8UTmfIL9lLPNtYbkzpjVafYjIud6GgtYdoSDqsjuwjcSnSFq
-	 Sx4x04J3yivJPH/Oz2K0SeG3+rxzW9E3rtR1xWeYXRGZI91dyU8ir135OqH6Tg8Npk
-	 /9HGzF1HWAUIaMLWdN2dGITnE+B0V6K+hrPiJsgU=
+	b=y9w4C0VFt6mPgvH/IuXuF7l2MiCH9agHNZLkKZNPYm9XR9HWBXzZnERGwOm3M0/yn
+	 SWfFln8Elr5rxZBL48c+0OCkLiyV3C2TbDbWNRpXYBvKG8VQmZ0HoRDE2ZuTfJTSY9
+	 yiQKFsWN0Q/jP6lR613PbV53HyaatdrYy6NTgR74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgE0CkD (ORCPT
+        id S1728194AbgE0Clo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:40:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44434 "EHLO mail.kernel.org"
+        Tue, 26 May 2020 22:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgE0CkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:40:02 -0400
+        id S1725601AbgE0Cln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:41:43 -0400
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3477E208FE;
-        Wed, 27 May 2020 02:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4222720787;
+        Wed, 27 May 2020 02:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590547202;
-        bh=I7TqSAwfWBOpOAdgjioDZiBGAbGwtR4XDmYXXxOZd+4=;
+        s=default; t=1590547303;
+        bh=8pmFYGawYKquGFtp3cwkbNq/yJ/Z20y2pO5HiRcXK+k=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=wYkTxuj0E7kfHRko5nK8495jKiVrJHVGwAuQPXqtpsBNdr8+y9lUEsi10cqk+RJQ4
-         PKoiAOGIOst33whMu0u1wj80Yh5vv2wvrrrmaxwZezGlOpq1OaE1fIhH3DsDudnKMF
-         snWim0ddSWFUllrh7HwS+h2Zm5wmPzAY2utqy6o8=
+        b=faSsfdcgDJiwhjCEqcWQDN0XrBY0c8h/+QO/0Z2mfLszFu+GZ/w0gY8gIw5QWOor2
+         wfaXzvVoqRurUsTq90UOn1CpdSzoiYJEvIua8hGKcUNO7T5Dt6KDx7sRizcndeloyp
+         GLH8qP4RTyVhPMuf3W8AvWHGpyeB5Ld+xI8RAA5Y=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200517131348.688405-3-bryan.odonoghue@linaro.org>
-References: <20200517131348.688405-1-bryan.odonoghue@linaro.org> <20200517131348.688405-3-bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v5 2/2] clk: qcom: gcc-msm8939: Add MSM8939 Generic Clock Controller
+In-Reply-To: <1588573803-3823-1-git-send-email-sivaprak@codeaurora.org>
+References: <1588573803-3823-1-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
 From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        shawn.guo@linaro.org, p.zabel@pengutronix.de,
-        vincent.knecht@mailoo.org, konradybcio@gmail.com,
-        bryan.odonoghue@linaro.org
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, mturquette@baylibre.com,
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
         robh+dt@kernel.org
-Date:   Tue, 26 May 2020 19:40:01 -0700
-Message-ID: <159054720157.88029.16736730681303391570@swboyd.mtv.corp.google.com>
+Date:   Tue, 26 May 2020 19:41:42 -0700
+Message-ID: <159054730255.88029.5143799149038084787@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bryan O'Donoghue (2020-05-17 06:13:48)
-> This patch adds support for the MSM8939 GCC. The MSM8939 is based on the
-> MSM8916. MSM8939 is compatible in several ways with MSM8916 but, has
-> additional functional blocks added which require additional PLL sources. =
-In
-> some cases functional blocks from the MSM8916 have different clock sources
-> or different supported frequencies.
+Quoting Sivaprakash Murugesan (2020-05-03 23:30:03)
+> This patch adds schema for primary CPU PLL found on few Qualcomm
+> platforms.
 >=20
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Co-developed-by: Shawn Guo <shawn.guo@linaro.org>
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> Tested-by: Vincent Knecht <vincent.knecht@mailoo.org>
-> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > ---
 
 Applied to clk-next
