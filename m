@@ -2,150 +2,184 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9352EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D15EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72A4820899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:22:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m/5Y8vGm"
+	by mail.kernel.org (Postfix) with ESMTP id 69BEA207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590582165;
+	bh=p2DrqgY25EEbGCylK1hOYEmGCh4GyjfDtY7J6BvROyU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=juHuAoPC0dfO4Zjk6e95jXjVUaLxf0bWMLkPa2+Q80y0msm+LrXX53WPI8o6BQEYK
+	 B0GzyZdlG0rXYemNw2ayPSNjbJ2x1skLCR7axp8Mu9pv06ySNEPp4Mr3Br0oLFzTmS
+	 vJTtSLryhpb7AaD9rPTbtkyGfD0yND8ZgQiGeO4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgE0MWl (ORCPT
+        id S1729008AbgE0MWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:22:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726644AbgE0MWk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:22:40 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26A32C08C5C3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:22:40 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v16so28679937ljc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9b4AFKGw4ZZqotl5s77CmzWTjWCoCCtFECSbH9IYsSA=;
-        b=m/5Y8vGmTNwpX4AY/6YSPBzyxbV9CKofpxuLOV0rT4OW1WUwRQh+L2hmPkrR89JHho
-         mp29JMpeTbkjSCFWI18PSTIgrgmgOjy6tersXf5zegumqtO4wPcztIOrlczKxAfBaip/
-         dkflMMQCcfol0dxbIx4Vta1k0hWUb/ffJAZUrQBY2F7BSIYH4RLzFuT9RagreGHhUs+E
-         3L0R+LudxVmrH/FaiNK0F4I8Vh+kXtqFQu+TEGgkAFqZTdN1Sg6Gr7h26V9rvn/PGWT1
-         Ny2xAtgPKwRyY+mbbM43KJUc8HGCnx2gqGjVEeQgynYclzEh+vg+qkDRfKBwTGMzbIHG
-         +zqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9b4AFKGw4ZZqotl5s77CmzWTjWCoCCtFECSbH9IYsSA=;
-        b=kve9g6eBl2NJz9oO9xw1W4l+2BJ8d6WlpZoL61sAAJ3uyNAQbTM/M+QUhYRWyKd/VK
-         O7197HUjFDJ3O80MvlnsGV6JdVb/TT3qM+StIJiW4Nu7LOCGPHp4gsV/eZ+eureXDJ9f
-         ZH3vdrxyrqq9f5o9ZUGAVO1wRpW/CvTdaxT9NhEi3T0fTEm1jx3/6RTxGRWVV5tqJR93
-         IeygpJfZxWzbjqAuZ39mNElOMfSBakhTPsR1wh8psPYj0yXU9aNMGnD5H8Qzx9XrT6FR
-         ibZ2nB/T7QobA9n9vRp5ZEape6AhS7AIeanuYhy5wKiQyeDL9o/u4PSOK46Foe968KD4
-         IQ+w==
-X-Gm-Message-State: AOAM533Rtb+BH7frKhq5j0/dhD9rVPB5kXXVEuuvoudXRGwsSJsDp36k
-        6qWT+UFJx3Kmkf9g/3rfKoCxIul6bg7AT/QapOBB9w==
-X-Google-Smtp-Source: ABdhPJxTsWDgeOe5Djkxbz5Vhm5vLbaAAlGQFkDtkkPWtJUSrez+RPSqeMSp1e9eKl58SCBsVQ5ilU3q78cT0eLqwnc=
-X-Received: by 2002:a2e:9510:: with SMTP id f16mr3179414ljh.111.1590582158421;
- Wed, 27 May 2020 05:22:38 -0700 (PDT)
+        Wed, 27 May 2020 08:22:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728583AbgE0MWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 08:22:42 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BAE6208DB;
+        Wed, 27 May 2020 12:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590582162;
+        bh=p2DrqgY25EEbGCylK1hOYEmGCh4GyjfDtY7J6BvROyU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OKKippJo7mc951M71C+pDN1YQmxMTwq3A1W/pbGKxgDZiWrSX13JXSBpyrrD/2MrU
+         PcXHuTJ9wXtwbDqP3yYnBTuI/jcqDlNv0s6SCxb1hvR0h2ahyZg/QHlN9dakaOP+Co
+         oTAENoTpVhWYGwTiwQkrvbUPMSrHUszPejdiWuMM=
+Date:   Wed, 27 May 2020 07:27:37 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2][net-next] ice: Replace one-element arrays with
+ flexible-arrays
+Message-ID: <20200527122737.GA18133@embeddedor>
 MIME-Version: 1.0
-References: <20200526151619.8779-1-benjamin.gaignard@st.com>
- <jhjk10xu1tq.mognet@arm.com> <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
-In-Reply-To: <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 27 May 2020 14:22:27 +0200
-Message-ID: <CAKfTPtBt6Ju-CnETnn6_FkgR0CAJ+jYnySz9OHP9X2hmxWHM7w@mail.gmail.com>
-Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Hugues FRUCHET <hugues.fruchet@st.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 13:17, Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
->
->
->
-> On 5/27/20 12:09 PM, Valentin Schneider wrote:
-> > Hi Benjamin,
-> >
-> > On 26/05/20 16:16, Benjamin Gaignard wrote:
-> >> A first round [1] of discussions and suggestions have already be done on
-> >> this series but without found a solution to the problem. I resend it to
-> >> progress on this topic.
-> >>
-> > Apologies for sleeping on that previous thread.
-> >
-> > So what had been suggested over there was to use uclamp to boost the
-> > frequency of the handling thread; however if you use threaded IRQs you
-> > get RT threads, which already get the max frequency by default (at least
-> > with schedutil).
-> >
-> > Does that not work for you, and if so, why?
-> That doesn't work because almost everything is done by the hardware blocks
-> without charge the CPU so the thread isn't running. I have done the
-> tests with schedutil
-> and ondemand scheduler (which is the one I'm targeting). I have no
-> issues when using
-> performance scheduler because it always keep the highest frequencies.
+The current codebase makes use of one-element arrays in the following
+form:
 
-IMHO, the only way to ensure a min frequency for anything else than a
-thread is to use freq_qos_add_request() just like cpufreq cooling
-device but for the opposite QoS. This can be applied only on the
-frequency domain of the CPU which handles the interrupt.
-Have you also checked the wakeup latency of your idle state ?
+struct something {
+    int length;
+    u8 data[1];
+};
 
->
->
-> >
-> >> When start streaming from the sensor the CPU load could remain very low
-> >> because almost all the capture pipeline is done in hardware (i.e. without
-> >> using the CPU) and let believe to cpufreq governor that it could use lower
-> >> frequencies. If the governor decides to use a too low frequency that
-> >> becomes a problem when we need to acknowledge the interrupt during the
-> >> blanking time.
-> >> The delay to ack the interrupt and perform all the other actions before
-> >> the next frame is very short and doesn't allow to the cpufreq governor to
-> >> provide the required burst of power. That led to drop the half of the frames.
-> >>
-> >> To avoid this problem, DCMI driver informs the cpufreq governors by adding
-> >> a cpufreq minimum load QoS resquest.
-> >>
-> >> Benjamin
-> >>
-> >> [1] https://lkml.org/lkml/2020/4/24/360
-> >>
-> >> Benjamin Gaignard (3):
-> >>    PM: QoS: Introduce cpufreq minimum load QoS
-> >>    cpufreq: governor: Use minimum load QoS
-> >>    media: stm32-dcmi: Inform cpufreq governors about cpu load needs
-> >>
-> >>   drivers/cpufreq/cpufreq_governor.c        |   5 +
-> >>   drivers/media/platform/stm32/stm32-dcmi.c |   8 ++
-> >>   include/linux/pm_qos.h                    |  12 ++
-> >>   kernel/power/qos.c                        | 213 ++++++++++++++++++++++++++++++
-> >>   4 files changed, 238 insertions(+)
+struct something *instance;
+
+instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
+instance->length = size;
+memcpy(instance->data, source, size);
+
+but the preferred mechanism to declare variable-length types such as
+these ones is a flexible array member[1][2], introduced in C99:
+
+struct foo {
+        int stuff;
+        struct boo array[];
+};
+
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on. So, replace
+the one-element array with a flexible-array member.
+
+Also, make use of the offsetof() helper in order to simplify the macros
+that calculate the size of the structures that contain flexible-array
+members.
+
+This issue was found with the help of Coccinelle and, audited _manually_.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use offsetof(struct ice_aqc_sw_rules_elem, pdata) instead of
+   sizeof(struct ice_aqc_sw_rules_elem) - sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata)
+ - Update changelog text. 
+
+ .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  6 ++---
+ drivers/net/ethernet/intel/ice/ice_switch.c   | 26 +++++++------------
+ 2 files changed, 13 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
+index 586d69491268a..faa21830e40d8 100644
+--- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
++++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
+@@ -570,7 +570,7 @@ struct ice_sw_rule_lkup_rx_tx {
+ 	 * lookup-type
+ 	 */
+ 	__le16 hdr_len;
+-	u8 hdr[1];
++	u8 hdr[];
+ } __packed;
+ 
+ /* Add/Update/Remove large action command/response entry
+@@ -580,7 +580,7 @@ struct ice_sw_rule_lkup_rx_tx {
+ struct ice_sw_rule_lg_act {
+ 	__le16 index; /* Index in large action table */
+ 	__le16 size;
+-	__le32 act[1]; /* array of size for actions */
++	__le32 act[]; /* array of size for actions */
+ 	/* Max number of large actions */
+ #define ICE_MAX_LG_ACT	4
+ 	/* Bit 0:1 - Action type */
+@@ -640,7 +640,7 @@ struct ice_sw_rule_lg_act {
+ struct ice_sw_rule_vsi_list {
+ 	__le16 index; /* Index of VSI/Prune list */
+ 	__le16 number_vsi;
+-	__le16 vsi[1]; /* Array of number_vsi VSI numbers */
++	__le16 vsi[]; /* Array of number_vsi VSI numbers */
+ };
+ 
+ /* Query VSI list command/response entry */
+diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
+index 0156b73df1b1f..df0ddffaf03a2 100644
+--- a/drivers/net/ethernet/intel/ice/ice_switch.c
++++ b/drivers/net/ethernet/intel/ice/ice_switch.c
+@@ -29,25 +29,19 @@ static const u8 dummy_eth_header[DUMMY_ETH_HDR_LEN] = { 0x2, 0, 0, 0, 0, 0,
+ 							0x81, 0, 0, 0};
+ 
+ #define ICE_SW_RULE_RX_TX_ETH_HDR_SIZE \
+-	(sizeof(struct ice_aqc_sw_rules_elem) - \
+-	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
+-	 sizeof(struct ice_sw_rule_lkup_rx_tx) + DUMMY_ETH_HDR_LEN - 1)
++	(offsetof(struct ice_aqc_sw_rules_elem, pdata) + \
++	 sizeof(struct ice_sw_rule_lkup_rx_tx) + DUMMY_ETH_HDR_LEN)
+ #define ICE_SW_RULE_RX_TX_NO_HDR_SIZE \
+-	(sizeof(struct ice_aqc_sw_rules_elem) - \
+-	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
+-	 sizeof(struct ice_sw_rule_lkup_rx_tx) - 1)
++	(offsetof(struct ice_aqc_sw_rules_elem, pdata) + \
++	 sizeof(struct ice_sw_rule_lkup_rx_tx))
+ #define ICE_SW_RULE_LG_ACT_SIZE(n) \
+-	(sizeof(struct ice_aqc_sw_rules_elem) - \
+-	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
+-	 sizeof(struct ice_sw_rule_lg_act) - \
+-	 sizeof(((struct ice_sw_rule_lg_act *)0)->act) + \
+-	 ((n) * sizeof(((struct ice_sw_rule_lg_act *)0)->act)))
++	(offsetof(struct ice_aqc_sw_rules_elem, pdata) + \
++	 offsetof(struct ice_sw_rule_lg_act, act) + \
++	 ((n) * sizeof(__le32)))
+ #define ICE_SW_RULE_VSI_LIST_SIZE(n) \
+-	(sizeof(struct ice_aqc_sw_rules_elem) - \
+-	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
+-	 sizeof(struct ice_sw_rule_vsi_list) - \
+-	 sizeof(((struct ice_sw_rule_vsi_list *)0)->vsi) + \
+-	 ((n) * sizeof(((struct ice_sw_rule_vsi_list *)0)->vsi)))
++	(offsetof(struct ice_aqc_sw_rules_elem, pdata) + \
++	 offsetof(struct ice_sw_rule_vsi_list, vsi) + \
++	 ((n) * sizeof(__le16)))
+ 
+ /**
+  * ice_init_def_sw_recp - initialize the recipe book keeping tables
+-- 
+2.26.2
+
