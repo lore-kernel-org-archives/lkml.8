@@ -2,124 +2,158 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9867C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EC220835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE162207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6LlhV+r1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiQHWCci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgE0VRj (ORCPT
+        id S2387508AbgE0VSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 17:17:39 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53148 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbgE0VRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 17:17:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=e7tiZMIiYuTbb+03A1KtQnZH+j3s8ttBBXpLw45dAS0=; b=6LlhV+r1K7qAycippK72vCEiPn
-        c0NM4ZjQCpKRVzGcyTa9buhlm2plrnI2+LoPj8rGLnzkAaEhBdDOH6GhSkIyt4RSrRmo2k/KhZwHP
-        m6wfFs/dCwrLP9yBfZx7nVTzQ9gsQi2SPB1cmp4AI3lsnCf4AM+6SZ+A19c0HtPu+LYk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1je3QV-003SEI-M8; Wed, 27 May 2020 23:17:27 +0200
-Date:   Wed, 27 May 2020 23:17:27 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-doc@vger.kernel.org, netdev@vger.kernel.org,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Jonathan Adams <jwadams@google.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        David Rientjes <rientjes@google.com>,
-        linux-fsdevel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
- kernel statistics
-Message-ID: <20200527211727.GB818296@lunn.ch>
-References: <20200526110318.69006-1-eesposit@redhat.com>
+        Wed, 27 May 2020 17:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387412AbgE0VSm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 17:18:42 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F59C05BD1E;
+        Wed, 27 May 2020 14:18:42 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id s18so13769364ioe.2;
+        Wed, 27 May 2020 14:18:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OQpIJWMudHYzeYVJAX5TAsaN7KlVrc6tTOWAA64PC+4=;
+        b=iiQHWCciz2fx1p5e3Ax1s0ebQUYscbu3DHxh5vhMTs51fzQY4eRqWuZwLGrNVO7ljo
+         A1gz+WbDPEL/vzgBc+W1Jp+YI86kaMBy6fQ1J8oQGAYP3jx3X/dydph7LHKsjZMcKQ7p
+         GoxlqkETGVhWIfEP3XOfTHoDM1dycQWH7SGh2nDHw2hZ4d/WD1wDiygoEzVbo43AYsaX
+         R044I8YtHcLpwGMc8PsH7MgGaZPi81X/3EASGPTwdlRu5NleQ+NFU/12tPOiBYFinBga
+         kxZ0Ue9uHcBfBJCgvTaMdwt0PpfJIPmKggXfx0aGdbRw7uOtm+vbPyRzlVOr8GeX610E
+         2P4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OQpIJWMudHYzeYVJAX5TAsaN7KlVrc6tTOWAA64PC+4=;
+        b=Rr/9m4tJ1eeRQn0QTSNY2bDBwpoHI9N6AnjvCC+9ehxzgPgqPHX7gxPiUXvkrJEfm8
+         jLmZTft9p4hLeLy8qzXrqEXgyqU+1100oP0IL+qMg7cMl2wCpvSlC+FnAhYBanz7SOmh
+         szdwZcRD+MWwfTD+Jv8iCIBrzQGBsjmnet9Bw3+Nwd84FFfN7pAWVsXFqzEDNQdzX39U
+         a8CM/9EEbzKJuqilEYe5JFBwaxd7sjCtWzQ7jA5EO8zDi0rnY1stRooixllSG1MpMGn7
+         3zzo6uM4SELP8qHeBYqp4kKfQHCHjBRJvB2fjy84YnOAincCCXsvzCPv0qrJgRNt1fph
+         4Hlw==
+X-Gm-Message-State: AOAM533OafVq3aIXgiuXIHBILaLoxpLAEZfLmDxGJzc0ORB0jVCzOrOX
+        Uo0LxFLXudlYEiDyzQfHelqvIQN6RaIWMj+eoeI=
+X-Google-Smtp-Source: ABdhPJzsosJVaGZxsaHbzCE+qheixFWw0db5wOKUZpRvaNa1fjVHnbvE40NI+t+uWx+U/K/yN8sWBICKzejoGyiO0mY=
+X-Received: by 2002:a6b:5f06:: with SMTP id t6mr12961446iob.88.1590614321551;
+ Wed, 27 May 2020 14:18:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200526110318.69006-1-eesposit@redhat.com>
+References: <20200527173608.2885243-1-daniel.m.jordan@oracle.com> <20200527173608.2885243-6-daniel.m.jordan@oracle.com>
+In-Reply-To: <20200527173608.2885243-6-daniel.m.jordan@oracle.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 27 May 2020 14:18:30 -0700
+Message-ID: <CAKgT0UcVRMWpaxYu9SQnTuQZm6ePBJkTStWPwekzkfRMnLvf1Q@mail.gmail.com>
+Subject: Re: [PATCH v3 5/8] mm: don't track number of pages during deferred initialization
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Robert Elliott <elliott@hpe.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
+        linux-crypto@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-s390@vger.kernel.org,
+        "open list:LINUX FOR POWERPC (32-BIT AND 64-BIT)" 
+        <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:03:10PM +0200, Emanuele Giuseppe Esposito wrote:
-> There is currently no common way for Linux kernel subsystems to expose
-> statistics to userspace shared throughout the Linux kernel; subsystems have
-> to take care of gathering and displaying statistics by themselves, for
-> example in the form of files in debugfs. For example KVM has its own code
-> section that takes care of this in virt/kvm/kvm_main.c, where it sets up
-> debugfs handlers for displaying values and aggregating them from various
-> subfolders to obtain information about the system state (i.e. displaying
-> the total number of exits, calculated by summing all exits of all cpus of
-> all running virtual machines).
-> 
-> Allowing each section of the kernel to do so has two disadvantages. First,
-> it will introduce redundant code. Second, debugfs is anyway not the right
-> place for statistics (for example it is affected by lockdown)
-> 
-> In this patch series I introduce statsfs, a synthetic ram-based virtual
-> filesystem that takes care of gathering and displaying statistics for the
-> Linux kernel subsystems.
-> 
-> The file system is mounted on /sys/kernel/stats and would be already used
-> by kvm. Statsfs was initially introduced by Paolo Bonzini [1].
-> 
-> Statsfs offers a generic and stable API, allowing any kind of
-> directory/file organization and supporting multiple kind of aggregations
-> (not only sum, but also average, max, min and count_zero) and data types
-> (boolean, unsigned/signed and custom types). The implementation, which is
-> a generalization of KVM’s debugfs statistics code, takes care of gathering
-> and displaying information at run time; users only need to specify the
-> values to be included in each source.
-> 
-> Statsfs would also be a different mountpoint from debugfs, and would not
-> suffer from limited access due to the security lock down patches. Its main
-> function is to display each statistics as a file in the desired folder
-> hierarchy defined through the API. Statsfs files can be read, and possibly
-> cleared if their file mode allows it.
-> 
-> Statsfs has two main components: the public API defined by
-> include/linux/statsfs.h, and the virtual file system which should end up in
-> /sys/kernel/stats.
-> 
+On Wed, May 27, 2020 at 10:37 AM Daniel Jordan
+<daniel.m.jordan@oracle.com> wrote:
+>
+> Deferred page init used to report the number of pages initialized:
+>
+>   node 0 initialised, 32439114 pages in 97ms
+>
+> Tracking this makes the code more complicated when using multiple
+> threads.  Given that the statistic probably has limited value,
+> especially since a zone grows on demand so that the page count can vary,
+> just remove it.
+>
+> The boot message now looks like
+>
+>   node 0 deferred pages initialised in 97ms
+>
+> Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+> Suggested-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Hi Emanuele
+This looks good to me.
 
-> The API has two main elements, values and sources. Kernel subsystems like
-> KVM can use the API to create a source, add child sources/values/aggregates
-> and register it to the root source (that on the virtual fs would be
-> /sys/kernel/statsfs).
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Another issue i see with networking is that statistic counters can be
-dynamic. They can come and go. One of the drivers i work on has extra
-statistics available when a fibre interface is used, compared to a
-copper interface. And this happens at run time. The netlink API has no
-problems with this. It is a snapshot of what counters are currently
-available. There is no state in the API.
-
-In my humble opinion, networking is unlikely to adopt your approach.
-You probably want to look around for other subsystems which have
-statistics, and see if you can cover their requirements, and get them
-on board.
-
-   Andrew
+> ---
+>  mm/page_alloc.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d0c0d9364aa6d..d64f3027fdfa6 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1819,7 +1819,7 @@ static int __init deferred_init_memmap(void *data)
+>  {
+>         pg_data_t *pgdat = data;
+>         const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+> -       unsigned long spfn = 0, epfn = 0, nr_pages = 0;
+> +       unsigned long spfn = 0, epfn = 0;
+>         unsigned long first_init_pfn, flags;
+>         unsigned long start = jiffies;
+>         struct zone *zone;
+> @@ -1868,15 +1868,15 @@ static int __init deferred_init_memmap(void *data)
+>          * allocator.
+>          */
+>         while (spfn < epfn) {
+> -               nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +               deferred_init_maxorder(&i, zone, &spfn, &epfn);
+>                 cond_resched();
+>         }
+>  zone_empty:
+>         /* Sanity check that the next zone really is unpopulated */
+>         WARN_ON(++zid < MAX_NR_ZONES && populated_zone(++zone));
+>
+> -       pr_info("node %d initialised, %lu pages in %ums\n",
+> -               pgdat->node_id, nr_pages, jiffies_to_msecs(jiffies - start));
+> +       pr_info("node %d deferred pages initialised in %ums\n",
+> +               pgdat->node_id, jiffies_to_msecs(jiffies - start));
+>
+>         pgdat_init_report_one_done();
+>         return 0;
+> --
+> 2.26.2
+>
+>
