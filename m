@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D741C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1781207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F4D20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BkiAWMaX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBwgNec4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgE0GqX (ORCPT
+        id S1729024AbgE0Gq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57290 "EHLO
+        Wed, 27 May 2020 02:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726337AbgE0GqU (ORCPT
+        with ESMTP id S1729009AbgE0GqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:46:20 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46985C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:19 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci21so1134430pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:19 -0700 (PDT)
+        Wed, 27 May 2020 02:46:22 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF1EC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:22 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y11so1497204plt.12
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LD4nOSV9Q5/nUL44C/nwA6um3iZn7Ive/+WUziLGPFQ=;
-        b=BkiAWMaX/I9ujMAoBo6t7L8zCNnJgSCLqQDS5vs1dQa0q9SDl25D+bxceT7rjR5cjk
-         420XJQJcVuy/uxn167AfLYIsdzCgKvIS3IpyKUYYPT6DiwXf+yk/jwjnQANKUX/L0j0/
-         PhTjmRaM/xBfHDmj7E9dD2lJJW6lS94kGRE7H1uq0fUKPfsMUjCkWGzKI2gTIGWnxWQ+
-         hsJcUW1nJIBHa28TjCjqtPRoaNaJrJKPMGqbG5z1jnKOYiJcf2T6jP8WrqvMAgz88edz
-         yJVVZGf6OaDp1SQ9Q95TJp/2rxxXBmA3gfQrEEqx7YdyXV7748BNQzA2EzPRpAbTeKfU
-         LiNw==
+        bh=aVdVVfxhZvfnyL0MAVnSG4rUWF/WkfXZ+WWr8J5EunM=;
+        b=WBwgNec4uNhh7ME9Y8eO7A+vnQ3wXjHclbvB0q51ijklLhHwIOkVoQZmY/T0+La8eA
+         rLf6rCdVKJIaXoS08XOuOqRx7XWzDrWMS2caaV4VLH5VTNwZLUScW9Nim5/9y2MIy80D
+         GxcDsz3hv1q8KVDPBwB+boOXsJKTBKgppy7iE+QPbzjsDjbES3pkUbUb1fBEUJtWulwx
+         Ppx8Lp5tDdW6QD6mfyjkx1LM+IYxxPH2b2vGZcVnV6jrjvI/vIu3vQ6r0EHlczw+sdBN
+         eyqKkWtqsUK9VGS5mIW2dS9bzNCkrXEWgro/Xc/G1vfvE6i/XV6KS3yQE3vkq1X1k2B2
+         EGfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=LD4nOSV9Q5/nUL44C/nwA6um3iZn7Ive/+WUziLGPFQ=;
-        b=X6o+tIm+NZSRDkQiEoubppBlJG74ZORQMlLWOgQet1ID0daDAD4L7jp7Qws3NKN04S
-         Tv6qTHiAwGGbILhdQemHcjF1Ni57y9Wl5NZEbbEYdw/nKTtGfQv8rymcybzXHGZ8wkst
-         oC8riy9mYi5RnZ1wFd8VVcdegFkUGOHxKG0/MmLPQYg0h+nAkQUEEHn9iPZtgzaa4YqI
-         FMDCb9VcZDO88MrMkLoVlrocFfuMWLEIwZq/7BL5XOAjwkFDMAUViFXwuC25ZeRe3LHX
-         TZIWpIXb298jUFJTTJQ0tm/mHrcyK4ZuxoNmPWdG4zhs1kblpsznEP6KPk9LGWjiisKP
-         iGaQ==
-X-Gm-Message-State: AOAM5337NYqNe8aH9y72vgI2TbtTm7kUqYkqgAy1HpmWT5VhH7qLNDui
-        cHIt6nUpAL8PqHAyVn3/2wE=
-X-Google-Smtp-Source: ABdhPJyLR8l4BwzvlTmK4b8Jrxc14GaH/BNezIXrH95OxJbBRsyD2RFAL0GVMEGmaMkAKJVTxuFWPw==
-X-Received: by 2002:a17:902:4b:: with SMTP id 69mr4196053pla.99.1590561978780;
-        Tue, 26 May 2020 23:46:18 -0700 (PDT)
+        bh=aVdVVfxhZvfnyL0MAVnSG4rUWF/WkfXZ+WWr8J5EunM=;
+        b=N57rzZCCoYDk/Ob57BAFg2VOVpPcD3bXTn0Ii/W9YbXfL1UQS9fS/KZ6c/l6C0ISqb
+         xiHEhA3ATvUAflOEIDX84RqqzT6RMT3qEN745/0ax4p9i0YFnkp+Itt21hqypxmlO+9n
+         yavj9SVkD7Dp5O3EPk+OqQyb1HkEJlQexeS2mFu8qdwLwb8ey/kG1Z6kWsiN79hbLhDQ
+         rapvznPHsLABjSK5vkTdztOjQD/Pv8tXh8+w9xrb6xWjNdeM1gz79EeRiK2OqSARy38o
+         jToHslPfXzWage6GaBA1khZ0H/oxhoH4kHc2dQRwRgy+5hiDaf68VkujOhCH1dewKGUe
+         bmAA==
+X-Gm-Message-State: AOAM531ZzzEa7+zm1FcWe8mXfvVh3c7wzl5ARLwcDPH2FJRGdwjnX6kf
+        97uxGuxE7DP5d2oD/GonpAM=
+X-Google-Smtp-Source: ABdhPJz7nYNIfgZiwi7ETzJTmgtEPvU+hH3xTK4PtfDi/TZOpiSqviLZpd0lF3u/LFynLmll3+kF7A==
+X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr4225057pll.75.1590561982027;
+        Tue, 26 May 2020 23:46:22 -0700 (PDT)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id r13sm443883pgv.50.2020.05.26.23.46.15
+        by smtp.gmail.com with ESMTPSA id r13sm443883pgv.50.2020.05.26.23.46.19
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 23:46:18 -0700 (PDT)
+        Tue, 26 May 2020 23:46:21 -0700 (PDT)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -70,9 +70,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
         Michal Hocko <mhocko@suse.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 11/12] mm/mempolicy: use standard migration target allocation function
-Date:   Wed, 27 May 2020 15:45:02 +0900
-Message-Id: <1590561903-13186-12-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v2 12/12] mm/page_alloc: use standard migration target allocation function directly
+Date:   Wed, 27 May 2020 15:45:03 +0900
+Message-Id: <1590561903-13186-13-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -83,103 +83,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-There is no reason to implement it's own function for migration
-target allocation. Use standard one.
+There is no need to make a function in order to call standard migration
+target allocation function. Use standard one directly.
 
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- mm/internal.h  |  3 ---
- mm/mempolicy.c | 32 +++-----------------------------
- mm/migrate.c   |  3 ++-
- 3 files changed, 5 insertions(+), 33 deletions(-)
+ include/linux/page-isolation.h |  2 --
+ mm/page_alloc.c                |  9 +++++++--
+ mm/page_isolation.c            | 11 -----------
+ 3 files changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 6f5d810..82495ee 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -612,9 +612,6 @@ static inline bool is_migrate_highatomic_page(struct page *page)
- }
+diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
+index 35e3bdb..20a4b63 100644
+--- a/include/linux/page-isolation.h
++++ b/include/linux/page-isolation.h
+@@ -62,6 +62,4 @@ undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
+ 			int isol_flags);
  
- void setup_zone_pageset(struct zone *zone);
--struct alloc_control;
--extern struct page *alloc_new_node_page(struct page *page,
--				struct alloc_control *ac);
- 
- struct alloc_control {
- 	int nid;		/* preferred node id */
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index e50c3eb..27329bdf 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -1065,33 +1065,6 @@ static int migrate_page_add(struct page *page, struct list_head *pagelist,
- 	return 0;
- }
- 
--/* page allocation callback for NUMA node migration */
--struct page *alloc_new_node_page(struct page *page, struct alloc_control *__ac)
--{
--	if (PageHuge(page)) {
--		struct hstate *h = page_hstate(compound_head(page));
--		struct alloc_control ac = {
--			.nid = __ac->nid,
--			.nmask = NULL,
--			.gfp_mask = __GFP_THISNODE,
--		};
+-struct page *alloc_migrate_target(struct page *page, struct alloc_control *ac);
 -
--		return alloc_huge_page_nodemask(h, &ac);
--	} else if (PageTransHuge(page)) {
--		struct page *thp;
--
--		thp = alloc_pages_node(__ac->nid,
--			(GFP_TRANSHUGE | __GFP_THISNODE),
--			HPAGE_PMD_ORDER);
--		if (!thp)
--			return NULL;
--		prep_transhuge_page(thp);
--		return thp;
--	} else
--		return __alloc_pages_node(__ac->nid, GFP_HIGHUSER_MOVABLE |
--						    __GFP_THISNODE, 0);
--}
--
- /*
-  * Migrate pages from one node to a target node.
-  * Returns error or the number of pages not migrated.
-@@ -1104,6 +1077,7 @@ static int migrate_to_node(struct mm_struct *mm, int source, int dest,
- 	int err = 0;
- 	struct alloc_control ac = {
- 		.nid = dest,
-+		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
- 	};
+ #endif
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 9803158..3f5cfab 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8359,6 +8359,11 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
+ 	unsigned long pfn = start;
+ 	unsigned int tries = 0;
+ 	int ret = 0;
++	struct alloc_control ac = {
++		.nid = zone_to_nid(cc->zone),
++		.nmask = &node_states[N_MEMORY],
++		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
++	};
  
- 	nodes_clear(nmask);
-@@ -1119,8 +1093,8 @@ static int migrate_to_node(struct mm_struct *mm, int source, int dest,
- 			flags | MPOL_MF_DISCONTIG_OK, &pagelist);
+ 	migrate_prep();
  
- 	if (!list_empty(&pagelist)) {
--		err = migrate_pages(&pagelist, alloc_new_node_page, NULL, &ac,
--					MIGRATE_SYNC, MR_SYSCALL);
-+		err = migrate_pages(&pagelist, alloc_migration_target, NULL,
-+					&ac, MIGRATE_SYNC, MR_SYSCALL);
- 		if (err)
- 			putback_movable_pages(&pagelist);
+@@ -8385,8 +8390,8 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
+ 							&cc->migratepages);
+ 		cc->nr_migratepages -= nr_reclaimed;
+ 
+-		ret = migrate_pages(&cc->migratepages, alloc_migrate_target,
+-				    NULL, NULL, cc->mode, MR_CONTIG_RANGE);
++		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
++				    NULL, &ac, cc->mode, MR_CONTIG_RANGE);
  	}
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 780135a..393f592 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1590,9 +1590,10 @@ static int do_move_pages_to_node(struct mm_struct *mm,
- 	int err;
- 	struct alloc_control ac = {
- 		.nid = node,
-+		.gfp_mask = GFP_HIGHUSER_MOVABLE | __GFP_THISNODE,
- 	};
+ 	if (ret < 0) {
+ 		putback_movable_pages(&cc->migratepages);
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index aba799d..03d6cad 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -297,14 +297,3 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
  
--	err = migrate_pages(pagelist, alloc_new_node_page, NULL, &ac,
-+	err = migrate_pages(pagelist, alloc_migration_target, NULL, &ac,
- 			MIGRATE_SYNC, MR_SYSCALL);
- 	if (err)
- 		putback_movable_pages(pagelist);
+ 	return pfn < end_pfn ? -EBUSY : 0;
+ }
+-
+-struct page *alloc_migrate_target(struct page *page, struct alloc_control *__ac)
+-{
+-	struct alloc_control ac = {
+-		.nid = page_to_nid(page),
+-		.nmask = &node_states[N_MEMORY],
+-		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
+-	};
+-
+-	return alloc_migration_target(page, &ac);
+-}
 -- 
 2.7.4
 
