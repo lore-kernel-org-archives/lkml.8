@@ -2,43 +2,43 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8334C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C8620776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A5820776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OhTmjQSR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b1nllpsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgE0FYw (ORCPT
+        id S1729044AbgE0FYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44648 "EHLO
+        Wed, 27 May 2020 01:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgE0FYm (ORCPT
+        with ESMTP id S1728333AbgE0FYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:24:42 -0400
+        Wed, 27 May 2020 01:24:47 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0253C03E96E;
-        Tue, 26 May 2020 22:24:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B43C03E96E;
+        Tue, 26 May 2020 22:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=vFOxaeomnXbJ8W08WAqr52lHk9RJsAZ/1N3x9Xkju10=; b=OhTmjQSRXVaxotYxGsOXSMHrQC
-        amZN/Dp3D9XGupkYbCp1d9amADvB7j8K16cmCS/ZwM10M9U4hHXJxdCHCwWzOwiiXzsl3lMBrPUnB
-        KPFAX6IE+Bqk2Sk3s1RJXUVzXR+iGPbtFC4DQwSMrrF+2BzArKyrjspmjB41GZ0DSyHvL62KbYhy7
-        8auUOJ0kW4ayFuHzKvodYui/yG6Kd2FTIMPuxZeKTLhpNHxc44kpLAErS4FPlGc/NDYSP1fr2XzEY
-        WVa8w2i1LCBGZhYK0djo3Ca6ifRi/SoC4tR+8CmE/HwU913N5aDuwK1AXwXG+oLebgQVcmqgm+qYV
-        4kA00gHA==;
+        bh=tYO/gDhBfCcsr0X6BnTt3DLrPKvKaNJnAYUJw8Z986o=; b=b1nllpsV/a54uoCmOngroSJuQa
+        VdtWl/+xyPwYLgDYCElFBCov9QFtKdlqgpSsTeZMZdY5tjWDspuLhwb8xH3IBfT7/Myrkba3SV1Rw
+        UUk44G6PQQVmP5kjd1ipNp3S92jY0f+Q6JXbR+qWNvfdV2UxcZ6bBHLvCJWY3hPK144wze9fdkCxT
+        eXMmmV38qrNHhPgrQn1yxU6gL80vU7ZrHx4mjzY0coEDkn53mAq9ldSkvl3ltLuGTUV4yyLzeqCeG
+        AeCxqW0IMayHOek2jmwnuKPsJSo6TChjmopqBwqRpwaxblDwX9LQX7vt2fiNYQ0o8lXOJ+4Q5GGkK
+        aVsO+GsQ==;
 Received: from [2001:4bb8:18c:5da7:8164:affc:3c20:853d] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdoYQ-0000oi-QS; Wed, 27 May 2020 05:24:39 +0000
+        id 1jdoYW-0000q0-6A; Wed, 27 May 2020 05:24:44 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
@@ -47,9 +47,9 @@ Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
         linux-bcache@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 06/16] dm: use bio_{start,end}_io_acct
-Date:   Wed, 27 May 2020 07:24:09 +0200
-Message-Id: <20200527052419.403583-7-hch@lst.de>
+Subject: [PATCH 08/16] zram: nvdimm: use bio_{start,end}_io_acct and disk_{start,end}_io_acct
+Date:   Wed, 27 May 2020 07:24:11 +0200
+Message-Id: <20200527052419.403583-9-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527052419.403583-1-hch@lst.de>
 References: <20200527052419.403583-1-hch@lst.de>
@@ -61,41 +61,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch dm to use the nicer bio accounting helpers.
+Switch zram to use the nicer bio accounting helpers, and as part of that
+ensure each bio is counted as a single I/O request.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- drivers/md/dm.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/block/zram/zram_drv.c | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index f215b86664484..3f39fa1ac756e 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -681,11 +681,7 @@ static void start_io_acct(struct dm_io *io)
- 	struct mapped_device *md = io->md;
- 	struct bio *bio = io->orig_bio;
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index ebb234f36909c..6e2ad90b17a37 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1510,13 +1510,8 @@ static void zram_bio_discard(struct zram *zram, u32 index,
+ static int zram_bvec_rw(struct zram *zram, struct bio_vec *bvec, u32 index,
+ 			int offset, unsigned int op, struct bio *bio)
+ {
+-	unsigned long start_time = jiffies;
+-	struct request_queue *q = zram->disk->queue;
+ 	int ret;
  
--	io->start_time = jiffies;
+-	generic_start_io_acct(q, op, bvec->bv_len >> SECTOR_SHIFT,
+-			&zram->disk->part0);
 -
--	generic_start_io_acct(md->queue, bio_op(bio), bio_sectors(bio),
--			      &dm_disk(md)->part0);
+ 	if (!op_is_write(op)) {
+ 		atomic64_inc(&zram->stats.num_reads);
+ 		ret = zram_bvec_read(zram, bvec, index, offset, bio);
+@@ -1526,8 +1521,6 @@ static int zram_bvec_rw(struct zram *zram, struct bio_vec *bvec, u32 index,
+ 		ret = zram_bvec_write(zram, bvec, index, offset, bio);
+ 	}
+ 
+-	generic_end_io_acct(q, op, &zram->disk->part0, start_time);
 -
-+	io->start_time = bio_start_io_acct(bio);
- 	if (unlikely(dm_stats_used(&md->stats)))
- 		dm_stats_account_io(&md->stats, bio_data_dir(bio),
- 				    bio->bi_iter.bi_sector, bio_sectors(bio),
-@@ -698,8 +694,7 @@ static void end_io_acct(struct dm_io *io)
- 	struct bio *bio = io->orig_bio;
- 	unsigned long duration = jiffies - io->start_time;
+ 	zram_slot_lock(zram, index);
+ 	zram_accessed(zram, index);
+ 	zram_slot_unlock(zram, index);
+@@ -1548,6 +1541,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 	u32 index;
+ 	struct bio_vec bvec;
+ 	struct bvec_iter iter;
++	unsigned long start_time;
  
--	generic_end_io_acct(md->queue, bio_op(bio), &dm_disk(md)->part0,
--			    io->start_time);
-+	bio_end_io_acct(bio, io->start_time);
+ 	index = bio->bi_iter.bi_sector >> SECTORS_PER_PAGE_SHIFT;
+ 	offset = (bio->bi_iter.bi_sector &
+@@ -1563,6 +1557,7 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 		break;
+ 	}
  
- 	if (unlikely(dm_stats_used(&md->stats)))
- 		dm_stats_account_io(&md->stats, bio_data_dir(bio),
++	start_time = bio_start_io_acct(bio);
+ 	bio_for_each_segment(bvec, bio, iter) {
+ 		struct bio_vec bv = bvec;
+ 		unsigned int unwritten = bvec.bv_len;
+@@ -1571,8 +1566,10 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 			bv.bv_len = min_t(unsigned int, PAGE_SIZE - offset,
+ 							unwritten);
+ 			if (zram_bvec_rw(zram, &bv, index, offset,
+-					 bio_op(bio), bio) < 0)
+-				goto out;
++					 bio_op(bio), bio) < 0) {
++				bio->bi_status = BLK_STS_IOERR;
++				break;
++			}
+ 
+ 			bv.bv_offset += bv.bv_len;
+ 			unwritten -= bv.bv_len;
+@@ -1580,12 +1577,8 @@ static void __zram_make_request(struct zram *zram, struct bio *bio)
+ 			update_position(&index, &offset, &bv);
+ 		} while (unwritten);
+ 	}
+-
++	bio_end_io_acct(bio, start_time);
+ 	bio_endio(bio);
+-	return;
+-
+-out:
+-	bio_io_error(bio);
+ }
+ 
+ /*
+@@ -1633,6 +1626,7 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
+ 	u32 index;
+ 	struct zram *zram;
+ 	struct bio_vec bv;
++	unsigned long start_time;
+ 
+ 	if (PageTransHuge(page))
+ 		return -ENOTSUPP;
+@@ -1651,7 +1645,9 @@ static int zram_rw_page(struct block_device *bdev, sector_t sector,
+ 	bv.bv_len = PAGE_SIZE;
+ 	bv.bv_offset = 0;
+ 
++	start_time = disk_start_io_acct(bdev->bd_disk, SECTORS_PER_PAGE, op);
+ 	ret = zram_bvec_rw(zram, &bv, index, offset, op, NULL);
++	disk_end_io_acct(bdev->bd_disk, op, start_time);
+ out:
+ 	/*
+ 	 * If I/O fails, just return error(ie, non-zero) without
 -- 
 2.26.2
 
