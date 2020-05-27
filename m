@@ -2,109 +2,135 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B75C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C054C20E65
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B6020EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590564049;
-	bh=xe0XCZfpz88ojVoEgE66/wE6fHWWqAyThRQDs0+/Qqs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eXeLN2UGTxyq8N1V8mgItsW/2TiB0dpc0doN+A1+2pDQES/3MisTFnL4WT+C88S6e
-	 cvP7tfxTQsXRXYewsaUp8T010yA7x3ODrgx9rDaBGrLR7PQvGOZTvKEXY+ALTmgZHf
-	 wzKqJyWnt0pfa7Sz6onazi8nuZFd3yH9TD4+KMb8=
+	s=default; t=1590564151;
+	bh=yUgVcaajNh76k94l53YOS2JLtqTDFoi3gEh1+zExAao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZwzhBJXgz6kqyn5WBwjz3TZb/lQyB2XJG0ZwybLRwvpWpL5KaH7DkslGX0Uvmjf1z
+	 3E/DqJqP0qnSaYUPdRjxNqsmylHYLToWWTR9siw0cBe7vts0eYy8MIzlnHRwWYrcIz
+	 Ti6DtI34y6vXho20QwH31kaaX2aksLWsaYJcCVOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgE0HUt (ORCPT
+        id S1729152AbgE0HWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:20:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728303AbgE0HUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:20:48 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A6AF20C56;
-        Wed, 27 May 2020 07:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590564047;
-        bh=xe0XCZfpz88ojVoEgE66/wE6fHWWqAyThRQDs0+/Qqs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WABS5Dro923F6hOOT4JBJX+vEWtTfPyhmyPMpL17+pe7WBLFPyN1uqVWT8Yn2Efr9
-         DBxfD2NPeacMwXgyDSaPXEiU3Hu3ZK2XxKea8S1z3IvQOKtyQtZm3BNal+JZ+UjWof
-         n4fDU940Js3kYZ7JYZ7CjmuUcxWBu3JqG9D+mJQQ=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jdqMn-00Fcxl-OC; Wed, 27 May 2020 08:20:45 +0100
+        Wed, 27 May 2020 03:22:30 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:33516 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgE0HWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:22:30 -0400
+Received: by mail-ej1-f66.google.com with SMTP id n24so26754958ejd.0;
+        Wed, 27 May 2020 00:22:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lasWSBfb6mgFf78Gxnts+qef209ryDGu3CxnF/TiDDE=;
+        b=rCsGapR6bcYHFwQtaEr1dged33NpAT69M5id38LlroKBtzAyYtnPFj7Vr3LK+WnK50
+         6FpJ4xPm19d9pDGEd40TXGdZ72ZZ5kpG8m96kTGaNQcpxHYm+LdI7YtAfRnMcsNSFuo8
+         JWp3Q9LH35hz1f8BJloxU5qEYGPC0wYXzY69UOn6cSMwHXvkDZeDwOHxD57NDWfwK37c
+         vZHY9C8jqkGn8Gg7qs7mKrOvz9HdYVDU3p6GWml2haUFIop/zazPMgiSruG58wpzdzJO
+         Gkl+7ndbf9s+79B+tadDdSBd2r8sXsOdgDuwf1TquBaVftagODS5bJtFJHI7wFg5CnPa
+         0ZnQ==
+X-Gm-Message-State: AOAM5306iaSO4N+HxgklY254rcw2hM2PnJOHj373bZKa52CyJV5dbjAB
+        Q0XmFPiBmXid+wQWoj2ivZU=
+X-Google-Smtp-Source: ABdhPJxlowvLH0ykXGFUiaA/mqY8Mnm9bubmK11e8sGoqjyknuCVoRNq9vyqJ5zaT9HMOXdW8wLdsg==
+X-Received: by 2002:a17:906:7855:: with SMTP id p21mr4707468ejm.257.1590564147700;
+        Wed, 27 May 2020 00:22:27 -0700 (PDT)
+Received: from pi3 ([194.230.155.118])
+        by smtp.googlemail.com with ESMTPSA id l29sm1541401edj.74.2020.05.27.00.22.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 00:22:26 -0700 (PDT)
+Date:   Wed, 27 May 2020 09:22:24 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@proceq.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] power: supply: bq27xxx_battery: Notify about all
+ battery changes
+Message-ID: <20200527072218.GA4575@pi3>
+References: <20200525141200.17199-1-krzk@kernel.org>
+ <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 May 2020 08:20:45 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Gavin Shan <gshan@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
-        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
-        aarcange@redhat.com, shan.gavin@gmail.com
-Subject: Re: [PATCH RFCv2 3/9] kvm/arm64: Rename kvm_vcpu_get_hsr() to
- kvm_vcpu_get_esr()
-In-Reply-To: <2e4dd03f-656a-c32b-5e87-ca28583999ef@redhat.com>
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-4-gshan@redhat.com>
- <20200526104249.GB1363@C02TD0UTHF1T.local>
- <2e4dd03f-656a-c32b-5e87-ca28583999ef@redhat.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <359dad5546a428ea963781f2728e70bf@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: gshan@redhat.com, mark.rutland@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com, aarcange@redhat.com, shan.gavin@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fc59bcd5-1868-8c7a-9fc9-67ad70b477f4@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-27 03:43, Gavin Shan wrote:
-> Hi Mark,
+On Tue, May 26, 2020 at 09:24:39PM -0400, Andrew F. Davis wrote:
+> On 5/25/20 10:11 AM, Krzysztof Kozlowski wrote:
+> > All battery related data could be important for user-space.  For example
+> > time-to-full could be shown to user on the screen or health could be
+> > monitored for any issues.  Instead of comparing few selected old/new
+> > values, just check if anything changed in the cache.
+> > 
 > 
-> On 5/26/20 8:42 PM, Mark Rutland wrote:
->> On Fri, May 08, 2020 at 01:29:13PM +1000, Gavin Shan wrote:
->>> Since kvm/arm32 was removed, this renames kvm_vcpu_get_hsr() to
->>> kvm_vcpu_get_esr() to it a bit more self-explaining because the
->>> functions returns ESR instead of HSR on aarch64. This shouldn't
->>> cause any functional changes.
->>> 
->>> Signed-off-by: Gavin Shan <gshan@redhat.com>
->> 
->> I think that this would be a nice cleanup on its own, and could be 
->> taken
->> independently of the rest of this series if it were rebased and sent 
->> as
->> a single patch.
->> 
 > 
-> Yeah, I'll see how PATCH[3,4,5] can be posted independently
-> as part of the preparatory work, which is suggested by you
-> in another reply.
+> At least some value will change every time we poll the battery, are we
+> okay with having power_supply_changed() called every time?
+
+Hi,
+
+Let me give few arguments:
+1. "Every time" means still once per poll interval or in case of many
+   get_property() calls, once per 5 seconds. In first case, if users
+   sets polling every 1 second, I expect he knows what he wants. I2C
+   will be busy anyway so uevents should not matter that much.
+   In second case, called through get_property(), once per 5 seconds is
+   not that frequent.
+
+2. Different drivers do it differently. Many chargers notify about
+   everything. Most fuel gauges only on status or capacity change (although
+   I am not sure if they measure more) but few FG send uevents about
+   everything (max17042_battery, sbs-battery, s3c_adc_battery).
+
+3. If drivers does not send notifications on changed properties of
+   battery, then basically the user-space has to poll every time for all
+   data which is not being a trigger.  The overhead for system would be
+   the same, I guess.
+
+Best regards,
+Krzysztof
+
+
+> Andrew
 > 
-> By the way, I assume the cleanup patches are good enough to
-> target 5.8.rc1/rc2 if you agree.
-
-It's fine to base them on -rc1 or -rc2. They will not be merged
-before 5.9 though.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  drivers/power/supply/bq27xxx_battery.c | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+> > index 942c92127b6d..33c26d42cd02 100644
+> > --- a/drivers/power/supply/bq27xxx_battery.c
+> > +++ b/drivers/power/supply/bq27xxx_battery.c
+> > @@ -1612,12 +1612,10 @@ void bq27xxx_battery_update(struct bq27xxx_device_info *di)
+> >  			di->charge_design_full = bq27xxx_battery_read_dcap(di);
+> >  	}
+> >  
+> > -	if ((di->cache.capacity != cache.capacity) ||
+> > -	    (di->cache.flags != cache.flags))
+> > +	if (memcmp(&di->cache, &cache, sizeof(cache)) != 0) {
+> >  		power_supply_changed(di->bat);
+> > -
+> > -	if (memcmp(&di->cache, &cache, sizeof(cache)) != 0)
+> >  		di->cache = cache;
+> > +	}
+> >  
+> >  	di->last_update = jiffies;
+> >  }
+> > 
