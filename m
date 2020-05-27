@@ -2,144 +2,62 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D56C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2579A207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:33:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqZp7hod"
+	by mail.kernel.org (Postfix) with ESMTP id 9E339207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgE0Vd1 (ORCPT
+        id S1728487AbgE0Vew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 17:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54208 "EHLO
+        Wed, 27 May 2020 17:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgE0Vd0 (ORCPT
+        with ESMTP id S1726129AbgE0Vev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 17:33:26 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B96C05BD1E;
-        Wed, 27 May 2020 14:33:24 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id g18so3656933qtu.13;
-        Wed, 27 May 2020 14:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fxtUP+fWIp3dwg1JcjyXsNPnXoOQD/0uIPaUAzDSEdI=;
-        b=lqZp7hodjNYIblf3qy9d8xKmhHMTYvlk5LCYpDH2tVMZM9eJIC8AbyI4e424EIJV1l
-         HmqzEvrubvGDkvDLfOsYsjxqMgF/vI3PxHjNf4g8vfKr9ZacU4K1SghxIyJtfvc+NFtM
-         DeG8pXyfgIFrSq9m3QZG+1SPkwyH3kOicG04naqhDeOgwkuUVoQOWPHSO8LBibLRa/a8
-         WPz4WboLv+g2/0eQ8CbL0jqZV0V7Um0nIDr6ZRGYzobKYGgK3AjAIgEfEK3XRiw9sE3P
-         a1wd9SIc+VscnMc/V8sfTvbuyUx7RJLvCOAV+erOOZtZJT/jgRIwoODVgDJO9fGYumQq
-         jsnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fxtUP+fWIp3dwg1JcjyXsNPnXoOQD/0uIPaUAzDSEdI=;
-        b=LVfaZPWW+m5/P39FgPRgRb5VpYqxOrD6TY9TC3f8eVxoVj8QD4SdcoJ957uJpH7bZN
-         FPQdimR6PhdwBhYSE+3Pru36SPcueWbyC7y4IumwBL5BVyoklVhMgFVCSBoGUHIDDgHn
-         +3noMOvygxv1ojxtKRekbrz3Uwgo9bAJUaVVtw5/zW2JiITaP9a9yFIw6ZLZYjGVfAgI
-         OjnnSUqasAtESHE1qA6LuSfnKTTQnJpnZxim94XHBNL7NAWHtB7rc26PmqwjW7VbKTYX
-         cslJ8Lq0dRcgmBJ5LliWGi8HdqvZ1KxHZi/B8U+Ua3et7gxXdB3NCqg98ezngBN8Ulrh
-         xf8Q==
-X-Gm-Message-State: AOAM530wAoECKSFE8Ri5Bvl/XG5FXTvtSv/BurknNZkStTEaJ+8MeNxm
-        fiWT2o/NcOWunGQL4Lu3IisEWYoykEJPIfzKmjk=
-X-Google-Smtp-Source: ABdhPJysT7IaBz2s6N7KxEiB3FydbmotssYLzUhVNjYk+ltaVr1JjXVXPOiUz4qTkVtrDUHeCvM6/jn/xurVMWsWknE=
-X-Received: by 2002:ac8:42ce:: with SMTP id g14mr6437895qtm.117.1590615203771;
- Wed, 27 May 2020 14:33:23 -0700 (PDT)
+        Wed, 27 May 2020 17:34:51 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49959C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 14:34:51 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1je3hH-00GVt8-Nv; Wed, 27 May 2020 21:34:47 +0000
+Date:   Wed, 27 May 2020 22:34:47 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [git pull] coredump infoleak fix
+Message-ID: <20200527213447.GH23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <CAEf4BzbR+7X-boCBC-f60jugp8xWKVTeFTyUmrcv8Qy4iKsvjg@mail.gmail.com>
- <C31OATROKNZK.27CUNDSXX9I4K@maharaja>
-In-Reply-To: <C31OATROKNZK.27CUNDSXX9I4K@maharaja>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 27 May 2020 14:33:12 -0700
-Message-ID: <CAEf4BzYP0gf9wKonV6vkXxR4c9dsVfqJr0-tCXU_3j_R98k9FA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] libbpf: Export bpf_object__load_vmlinux_btf
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:12 AM Daniel Xu <dxu@dxuuu.xyz> wrote:
->
-> Hi Andrii,
->
-> On Tue May 26, 2020 at 3:09 PM PST, Andrii Nakryiko wrote:
-> > On Tue, May 26, 2020 at 7:09 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> > >
-> > > Right now the libbpf model encourages loading the entire object at once.
-> > > In this model, libbpf handles loading BTF from vmlinux for us. However,
-> > > it can be useful to selectively load certain maps and programs inside an
-> > > object without loading everything else.
-> >
-> > There is no way to selectively load or not load a map. All maps are
-> > created, unless they are reusing map FD or pinned instances. See
-> > below, I'd like to understand the use case better.
-> >
-> > >
-> > > In the latter model, there was perviously no way to load BTF on-demand.
-> > > This commit exports the bpf_object__load_vmlinux_btf such that we are
-> > > able to load BTF on demand.
-> > >
-> >
-> > Let's start with the real problem, not a solution. Do you have
-> > specific use case where you need bpf_object__load_vmlinux_btf()? It
-> > might not do anything if none of BPF programs in the object requires
-> > BTF, because it's very much tightly coupled with loading bpf_object as
-> > a whole model. I'd like to understand what you are after with this,
-> > before exposing internal implementation details as an API.
->
-> If I try loading a program through the following sequence:
->
->     bpf_object__open_file()
->     bpf_object__find_program_by_name()
->     bpf_program__load()
->
+	xstate note on boxes with xsaves support can leak uninitialized data
+into coredumps
 
-bpf_program__load() is just broken and shouldn't have been ever
-exposed. It **might** work for trivial BPF programs not using maps,
-Kconfig and global variables, etc, but more by accident. I think the
-right fix for your use-case is to allow more control of which programs
-are auto-loaded. There was a patch by Eric Sage previously adding
-bpf_program__set_autoload(), but it never landed. We should actually
-do that approach instead.
+The following changes since commit 4e89b7210403fa4a8acafe7c602b6212b7af6c3b:
 
-> And the program require BTF (tp_btf), I get an unavoidable (to the best
-> of my knowledge) segfault in the following code path:
->
->     bpf_program__load()
->       libbpf_find_attach_btf_id()    <-- [0]
->         __find_vmlinx_btf_id()
->           find_btf_by_prefix_kind()
->             btf__find_by_name_kind() <-- boom (btf->nr_types)
->
-> because [0] passes prog->obj->btf_vmlinux which is still null. So the
-> solution I'm proposing is exporting bpf_object__load_vmlinux_btf() and
-> calling that on struct bpf_object before performing prog loads.
->
-> [...]
->
-> Thanks,
-> Daniel
+  fix multiplication overflow in copy_fdtable() (2020-05-19 18:29:36 -0400)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+
+for you to fetch changes up to 9e4636545933131de15e1ecd06733538ae939b2f:
+
+  copy_xstate_to_kernel(): don't leave parts of destination uninitialized (2020-05-27 17:06:31 -0400)
+
+----------------------------------------------------------------
+Al Viro (1):
+      copy_xstate_to_kernel(): don't leave parts of destination uninitialized
+
+ arch/x86/kernel/fpu/xstate.c | 86 ++++++++++++++++++++++++--------------------
+ 1 file changed, 48 insertions(+), 38 deletions(-)
