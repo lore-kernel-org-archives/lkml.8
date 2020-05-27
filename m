@@ -5,115 +5,202 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F18C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F91B2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF16D2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WeawMs02"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DV1QQCD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729349AbgE0Jre (ORCPT
+        id S1729357AbgE0JuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727800AbgE0Jre (ORCPT
+        Wed, 27 May 2020 05:50:20 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32974 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728523AbgE0JuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:47:34 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D51C03E979
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 02:47:34 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 185so3320759pgb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 02:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=OLF9lwE2e7f3o0945da1l86g58aoVITOUEe8pjdIEuE=;
-        b=WeawMs02Jy51FJdzoYqEttg8/jkn4FfmUv5EVDbRCdQOjiOEcKeQirpE1wqrdNxcwC
-         EEmb8GyzPBHsKwF9ew3PbKmO2LUc91/iwPVZbcCZip7ErnfaEN/GL7No/njB4E/BY9na
-         U90MwcpoxJsQlD7v7aWP0PfWzgzHGTq8VURtk=
+        Wed, 27 May 2020 05:50:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590573018;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Wk7PTccOiB2D0BUxUJvJJDnS6DcmS8jIQiV2uW81594=;
+        b=DV1QQCD7r2pNe+JkRrgvaTFLfHn3mWKvAWSR7HKIzKNvXnrv4LsjHoqRSglS30lsQd5Fmu
+        soy8mtf33c3Y5XPxUHjc5prrs6JFxOabxYx3Q//Ib/bJDBugQRW8uS/Xx//87ntUcbCg7h
+        kMe7JdSi5NiXKx+UQhkDHqRbwVPXt8E=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-481-yumd-8pVPGCZu4U_qEskrA-1; Wed, 27 May 2020 05:50:14 -0400
+X-MC-Unique: yumd-8pVPGCZu4U_qEskrA-1
+Received: by mail-qv1-f71.google.com with SMTP id g16so22312985qvq.14
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 02:50:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=OLF9lwE2e7f3o0945da1l86g58aoVITOUEe8pjdIEuE=;
-        b=dM/qFxtkFGwRSOIMk6fwijyjCUUvcFuheQMTpF52RE2doMCdfx6f0vY9muDzlOzomy
-         GRYrP9cegU3L3IANr4cjVahbCw7VzbRFAOM0gIJC4TzbZN9DA1dSS96uf3gcAfy3K7y3
-         btbEf5sFkVhTiCvweObjF4oNjaRlxmeDKLRs4xtI0f0sHM2EbQhkWh0vkkSLyH+lYHU5
-         eBcY9bsxLgd8jRfWDNhnuDBH0YeARAR5zJST6oMIld7WH5qsONA3RUGrh1N06okoAYCO
-         vfy+vZwu54zig6/amyV2DqlLkS+rVqgab/xk0OGN8ClF04pmnRGlO7RZm9rg8exd81Of
-         8wDQ==
-X-Gm-Message-State: AOAM533UpYsXgUxdwUJhdc5GeFBdicRX83qSeF/YxaSus+NuXEp9HpMd
-        9AA+qFk93vKwGPypaPbibjlHsSgSsbg=
-X-Google-Smtp-Source: ABdhPJwyjsJiyOwvaVNB+4wG3UIVuWYeMXY2/2AN1qH2vGamYlPhvf4//LLrFzBFd2CcXp/G4SbucA==
-X-Received: by 2002:a62:e419:: with SMTP id r25mr3178210pfh.82.1590572853451;
-        Wed, 27 May 2020 02:47:33 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id l25sm1731006pgn.19.2020.05.27.02.47.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 02:47:32 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wk7PTccOiB2D0BUxUJvJJDnS6DcmS8jIQiV2uW81594=;
+        b=DymCVjGMVBCoedcslIAcWcXokT/1NgErYYQXtwcMkaINWJRRFPbzWlgwf5vxZasTV7
+         chwsoDi+BTpKv9QOfuivdpqoWVn3+ebgwZjLm6DFsoHU1ikmIvfxyYB06oz0jcSWsRKq
+         YW7n+scpwC6FzQQuLLzePBzzU9icIJMnMtLpyvQYB2/MbaGLdA58dghgK/lQGgeZ95uh
+         MHzrsMgmkzTggJZEGl8n61UaOiUutIaML0z1OQ9ZUBIi1KdzfsVoBiZPqmpz3TV0bFBu
+         //cTkQF+A7xK3XLVJ1qysVIfwiUri/1qykBOiGB6j0s6b7+mWllGwIvd/8E8g7OMr0PI
+         HKBg==
+X-Gm-Message-State: AOAM53325ToGgRe/HE7sf3TVSL+0paxf5uesUncRkZ8OOArzgpza/pZ/
+        cJnooovoh0Q+pue8ix3uu7FqAPpgAmNC0XHjA33d9RYFp0hIDMZysjLqGbzX9uMXDYXtI+cdAlc
+        N0Puknhn+CDrs1MxZCzBRe5jPbPEy6ge8+HdLdlXx
+X-Received: by 2002:a37:8a42:: with SMTP id m63mr3071566qkd.230.1590573013530;
+        Wed, 27 May 2020 02:50:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx7RDV50fdD8q6d1cy2L1E3dJt81qR6UeDwFqEdUTY1cgMNDSGkK/Va8uOGegZ5bIh+cOKagjKwATfo9WDQI8g=
+X-Received: by 2002:a37:8a42:: with SMTP id m63mr3071544qkd.230.1590573013164;
+ Wed, 27 May 2020 02:50:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1590253873-11556-4-git-send-email-mkshah@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-4-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v2 3/4] pinctrl: qcom: Add msmgpio irqchip flags
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Wed, 27 May 2020 02:47:31 -0700
-Message-ID: <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
+ <27B6F419-A68E-459D-AB6B-7BF2D935C6E0@canonical.com> <CAO-hwJLPF4pSHQqFp-ogZAxKu15nbuKULTRbudhD8L4RFv4w4g@mail.gmail.com>
+In-Reply-To: <CAO-hwJLPF4pSHQqFp-ogZAxKu15nbuKULTRbudhD8L4RFv4w4g@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 27 May 2020 11:50:02 +0200
+Message-ID: <CAO-hwJJE6_8j-XVjVskJwmHW=DM9i5aSZZ=35jLDfjf4E1spZQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: multitouch: enable multi-input as a quirk for some devices
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:INTEL INTEGRATED SENSOR HUB DRIVER" 
+        <linux-input@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-05-23 10:11:12)
-> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
-> during suspend and mask before setting irq type.
+On Wed, May 27, 2020 at 11:22 AM Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> On Wed, May 27, 2020 at 8:18 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com> wrote:
+> >
+> >
+> >
+> > > On May 26, 2020, at 23:07, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
+> > >
+> > > Two touchpad/trackstick combos are currently not behaving properly.
+> > > They define a mouse emulation collection, as per Win8 requirements,
+> > > but also define a separate mouse collection for the trackstick.
+> > >
+> > > The way the kernel currently treat the collections is that it
+> > > merges both in one device. However, given that the first mouse
+> > > collection already defines X,Y and left, right buttons, when
+> > > mapping the events from the second mouse collection, hid-multitouch
+> > > sees that these events are already mapped, and simply ignores them.
+> > >
+> > > To be able to report events from the tracktick, add a new quirked
+> > > class for it, and manually add the 2 devices we know about.
+> > >
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=207235
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> >
+> > Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>
+> Thanks for the very fast testing :)
+>
+> Pushed to for-5.8/multitouch given that we already are at 5.7-rc7, we
+> might as well postpone it for one week.
+>
 
-Why do we need to mask before setting irq type? Does something go wrong?
-Can you explain in the commit text?
+Apologies for the inconvenience, I hadn't noticed my master branch was
+not up to date with origin. I forced push the branch to have a better
+history.
 
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Cheers,
+Benjamin
 
-Does this need a Fixes tag?
+> Cheers,
+> Benjamin
+>
+> >
+> > > ---
+> > > drivers/hid/hid-multitouch.c | 26 ++++++++++++++++++++++++++
+> > > 1 file changed, 26 insertions(+)
+> > >
+> > > diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> > > index 03c720b47306..39e4da7468e1 100644
+> > > --- a/drivers/hid/hid-multitouch.c
+> > > +++ b/drivers/hid/hid-multitouch.c
+> > > @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
+> > > #define MT_QUIRK_ASUS_CUSTOM_UP               BIT(17)
+> > > #define MT_QUIRK_WIN8_PTP_BUTTONS     BIT(18)
+> > > #define MT_QUIRK_SEPARATE_APP_REPORT  BIT(19)
+> > > +#define MT_QUIRK_FORCE_MULTI_INPUT   BIT(20)
+> > >
+> > > #define MT_INPUTMODE_TOUCHSCREEN      0x02
+> > > #define MT_INPUTMODE_TOUCHPAD         0x03
+> > > @@ -189,6 +190,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
+> > > #define MT_CLS_WIN_8                          0x0012
+> > > #define MT_CLS_EXPORT_ALL_INPUTS              0x0013
+> > > #define MT_CLS_WIN_8_DUAL                     0x0014
+> > > +#define MT_CLS_WIN_8_FORCE_MULTI_INPUT               0x0015
+> > >
+> > > /* vendor specific classes */
+> > > #define MT_CLS_3M                             0x0101
+> > > @@ -279,6 +281,15 @@ static const struct mt_class mt_classes[] = {
+> > >                       MT_QUIRK_CONTACT_CNT_ACCURATE |
+> > >                       MT_QUIRK_WIN8_PTP_BUTTONS,
+> > >               .export_all_inputs = true },
+> > > +     { .name = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
+> > > +             .quirks = MT_QUIRK_ALWAYS_VALID |
+> > > +                     MT_QUIRK_IGNORE_DUPLICATES |
+> > > +                     MT_QUIRK_HOVERING |
+> > > +                     MT_QUIRK_CONTACT_CNT_ACCURATE |
+> > > +                     MT_QUIRK_STICKY_FINGERS |
+> > > +                     MT_QUIRK_WIN8_PTP_BUTTONS |
+> > > +                     MT_QUIRK_FORCE_MULTI_INPUT,
+> > > +             .export_all_inputs = true },
+> > >
+> > >       /*
+> > >        * vendor specific classes
+> > > @@ -1714,6 +1725,11 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
+> > >       if (id->group != HID_GROUP_MULTITOUCH_WIN_8)
+> > >               hdev->quirks |= HID_QUIRK_MULTI_INPUT;
+> > >
+> > > +     if (mtclass->quirks & MT_QUIRK_FORCE_MULTI_INPUT) {
+> > > +             hdev->quirks &= ~HID_QUIRK_INPUT_PER_APP;
+> > > +             hdev->quirks |= HID_QUIRK_MULTI_INPUT;
+> > > +     }
+> > > +
+> > >       timer_setup(&td->release_timer, mt_expired_timeout, 0);
+> > >
+> > >       ret = hid_parse(hdev);
+> > > @@ -1926,6 +1942,11 @@ static const struct hid_device_id mt_devices[] = {
+> > >               MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
+> > >                       USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
+> > >
+> > > +     /* Elan devices */
+> > > +     { .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
+> > > +             HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> > > +                     USB_VENDOR_ID_ELAN, 0x313a) },
+> > > +
+> > >       /* Elitegroup panel */
+> > >       { .driver_data = MT_CLS_SERIAL,
+> > >               MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
+> > > @@ -2056,6 +2077,11 @@ static const struct hid_device_id mt_devices[] = {
+> > >               MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
+> > >                       USB_DEVICE_ID_MTP_STM)},
+> > >
+> > > +     /* Synaptics devices */
+> > > +     { .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
+> > > +             HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> > > +                     USB_VENDOR_ID_SYNAPTICS, 0xce08) },
+> > > +
+> > >       /* TopSeed panels */
+> > >       { .driver_data = MT_CLS_TOPSEED,
+> > >               MT_USB_DEVICE(USB_VENDOR_ID_TOPSEED2,
+> > > --
+> > > 2.25.1
+> > >
+> >
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pi=
-nctrl-msm.c
-> index 2419023..b909ffe 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->         pctrl->irq_chip.irq_release_resources =3D msm_gpio_irq_relres;
->         pctrl->irq_chip.irq_set_affinity =3D msm_gpio_irq_set_affinity;
->         pctrl->irq_chip.irq_set_vcpu_affinity =3D msm_gpio_irq_set_vcpu_a=
-ffinity;
-> +       pctrl->irq_chip.flags =3D IRQCHIP_MASK_ON_SUSPEND
-
-This is sort of sad. We have to set the IRQCHIP_MASK_ON_SUSPEND flag
-here so that genirq can call the mask op during suspend for the parent
-irqchip (pdc)? Is there some way to not need to do that and instead let
-genirq do mask on suspend at the chip level instead of the irq level?
-
-> +                               | IRQCHIP_SET_TYPE_MASKED;
-> =20
->         np =3D of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
->         if (np) {
