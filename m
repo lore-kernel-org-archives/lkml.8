@@ -2,76 +2,110 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A0C206A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E64F206A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:57:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="seQt8YDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725879AbgE0Xyw (ORCPT
+        id S1725900AbgE0X54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:54:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57812 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbgE0Xyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:54:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 32A3AAC11;
-        Wed, 27 May 2020 23:54:54 +0000 (UTC)
-Date:   Thu, 28 May 2020 01:54:42 +0200
-From:   Borislav Petkov <bp@suse.de>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Marco Elver <elver@google.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [tip:locking/kcsan 12/12] /bin/bash: line 1: 61526 Segmentation
- fault  sparse ...
-Message-ID: <20200527235442.GC1805@zn.tnic>
-References: <202005280727.lXn1VnTw%lkp@intel.com>
+        Wed, 27 May 2020 19:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbgE0X5y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 19:57:54 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F70FC08C5C1;
+        Wed, 27 May 2020 16:57:54 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x6so12417592wrm.13;
+        Wed, 27 May 2020 16:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yJsIOGrYqyMlsvGZvuDbQbpz5zHJ2Al+1mhnUHoBcsg=;
+        b=seQt8YDnOilGUARCihyoOHCAGFCt1PoRnotjOt68VWlMAGYTkZ97TNw3kUZ4L6Zeqw
+         7Z3jgRR7Ub8E1ls+7A/Lzs2hut49rXXD0RzwaFRW7ZeuNpuuOa6LD1RYSIwlgzEhC3vu
+         GNNPmaxCb50xP7fVb1E+NXrvQdqq6CP2qSbcMwvsyMzYsA6MtrsKhbKt1hRpyKLyD7hW
+         488L33dDlSmEngnC8vsdVHlVO39jvyU7QZ4+11N9zyaZtXFz88U5/s1Nv01VHAvxjkA2
+         zT8uPVPDmbkRvlggcL1sSQT6U3/BJpS+8d0izhc9Z3s6x4c3lX8t9QmHl28jkrogYmEg
+         Me6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yJsIOGrYqyMlsvGZvuDbQbpz5zHJ2Al+1mhnUHoBcsg=;
+        b=ahKpza7qAY7xPSDVEqOMY7rObPF70aNlzgqOEkybSHJFm6CmztkH+4M0rPJKmT6e4X
+         9mt743nyJ9uDXcjduYsqcn7/PozUm52LtyymmJGr7i+kmW9/Fdrel2VTM+EKsDWyJ0IU
+         2AJa6KF0RgyOYJOnRnxYY+4Th5BGoXcTcG6NOwHRuAWxt0WTGI3LDyaTeAT89gRS7K+O
+         SuMULy4g7xQ1hJD2Qfq1WYXB8ot+zCY+i264t5tQQ3xwi2r3GCD0wSThls3e84NURMJd
+         SRl5C95Qbo3h+vIAIOmNb78pw7h17UUAEvstOPxwSlJ2vpyoSuVd1vIVqax5ke3mJh/3
+         RwcA==
+X-Gm-Message-State: AOAM533fw4aWq5Y1Y+0HgXyA/PP80N1Gc+9aMyB8fBw+x2lRpuM8GuVC
+        J57Tks0Du2dIqKKHKwj14JT/p3iB
+X-Google-Smtp-Source: ABdhPJymbkfbuQSQVgegw9QxVZPM3gIUz9DOYYhBvFmcNqX4KpQy+La0Vqi9v2C/pyHSM/AXtB9miw==
+X-Received: by 2002:a5d:6789:: with SMTP id v9mr758483wru.124.1590623872596;
+        Wed, 27 May 2020 16:57:52 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id h196sm4445137wme.22.2020.05.27.16.57.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 16:57:51 -0700 (PDT)
+Subject: Re: [PATCH v2 02/14] ata: ahci_brcm: Fix use of BCM7216 reset
+ controller
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        linux-pci@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200526191303.1492-1-james.quinlan@broadcom.com>
+ <20200526191303.1492-3-james.quinlan@broadcom.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <7dc691ee-78cc-b6fd-78c2-567680e431c8@gmail.com>
+Date:   Wed, 27 May 2020 16:57:48 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.8.1
 MIME-Version: 1.0
+In-Reply-To: <20200526191303.1492-3-james.quinlan@broadcom.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202005280727.lXn1VnTw%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 07:39:31AM +0800, kbuild test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/kcsan
-> head:   a5dead405f6be1fb80555bdcb77c406bf133fdc8
-> commit: a5dead405f6be1fb80555bdcb77c406bf133fdc8 [12/12] compiler_types.h: Optimize __unqual_scalar_typeof compilation time
-> config: i386-randconfig-s002-20200527 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.1-240-gf0fe1cd9-dirty
->         git checkout a5dead405f6be1fb80555bdcb77c406bf133fdc8
->         # save the attached .config to linux build tree
->         make W=1 C=1 ARCH=i386 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+
+On 5/26/2020 12:12 PM, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
 > 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kbuild test robot <lkp@intel.com>
+> A reset controller "rescal" is shared between the AHCI driver and the PCIe
+> driver for the BrcmSTB 7216 chip.  The code is modified to allow this
+> sharing and to deassert() properly.
 > 
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 
-I'll say.
+This patch is actually a bug fix and should have:
 
-Looking at the subject, that broke the 0day bot too. :-)
+Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
+Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller
+name")
 
-/me trims it.
-
-Looks like we need __CHECKER__ ifdeffery somewhere but it is too late
-for me to think straight so tomorrow...
-
+and it could probably be merged out of this patch series I believe.
 -- 
-Regards/Gruss,
-    Boris.
-
-SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
+Florian
