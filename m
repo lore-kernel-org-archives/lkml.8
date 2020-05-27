@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F15C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3317520707
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61A09208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="V5t0pDlK"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MYVLkCRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726727AbgE0WeW (ORCPT
+        id S1726756AbgE0We0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:34:22 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:10906 "EHLO
+        Wed, 27 May 2020 18:34:26 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:18730 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726563AbgE0WeS (ORCPT
+        by vger.kernel.org with ESMTP id S1726635AbgE0WeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:34:18 -0400
+        Wed, 27 May 2020 18:34:19 -0400
 Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RMF8rb003190
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:17 -0700
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RMF8ri003190
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:19 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=PcKHh48klJGJru2b4wU2dVoKS4B4is1tLRqw5jMmaYE=;
- b=V5t0pDlK9CmVVUsHNspJgNDrDblrkQfXFWuhw/etxM1I9mhGOWNTzjvaz2liv6z6xkL3
- hbv+rdL/EVzZQnJcCstiAK+ahuk+mRyKIqhT3b63YfLZzltiaAYW0KZk9pCtoyALfGUp
- XDem8Km0+uuuQB/jG7hCyU31pO06pZW5e/w= 
+ bh=faF+7FLM4zfgJ684Xrz0yZYkzdADq7S20IJiu1ZZp1w=;
+ b=MYVLkCRK1fFp4tpqZf//87cDY4/SaX1ENxzcwmmHlhVFRS1NqaRyf/1SJVYcLWxHpqx5
+ RI5IOkn1uZby6oxGKf6QXQv5LXBcqF50MgurRjCNAWDAgznvWUosAQUhVbTy3bNNmv+N
+ V4T0UeJdqBKOvpqSnISVA43wxHvU5RP1UPo= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 317ktstmr3-1
+        by mx0a-00082601.pphosted.com with ESMTP id 317ktstmr3-8
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:17 -0700
-Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:208::f) by
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:18 -0700
+Received: from intmgw002.41.prn1.facebook.com (2620:10d:c085:108::8) by
  mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 15:34:14 -0700
+ 15.1.1979.3; Wed, 27 May 2020 15:34:15 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id C1F8C166902D; Wed, 27 May 2020 15:34:07 -0700 (PDT)
+        id B25E31669026; Wed, 27 May 2020 15:34:07 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v5 11/19] mm: memcg/slab: move memcg_kmem_bypass() to memcontrol.h
-Date:   Wed, 27 May 2020 15:33:56 -0700
-Message-ID: <20200527223404.1008856-12-guro@fb.com>
+Subject: [PATCH v5 08/19] mm: memcg/slab: save obj_cgroup for non-root slab objects
+Date:   Wed, 27 May 2020 15:33:53 -0700
+Message-ID: <20200527223404.1008856-9-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200527223404.1008856-1-guro@fb.com>
 References: <20200527223404.1008856-1-guro@fb.com>
@@ -68,8 +68,8 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
  cotscore=-2147483648 phishscore=0 impostorscore=0 adultscore=0
- mlxlogscore=978 clxscore=1015 bulkscore=0 spamscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 classifier=spam adjust=0
+ mlxlogscore=999 clxscore=1015 bulkscore=0 spamscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=2 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2005270170
 X-FB-Internal: deliver
@@ -78,57 +78,342 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To make the memcg_kmem_bypass() function available outside of
-the memcontrol.c, let's move it to memcontrol.h. The function
-is small and nicely fits into static inline sort of functions.
+Store the obj_cgroup pointer in the corresponding place of
+page->obj_cgroups for each allocated non-root slab object.
+Make sure that each allocated object holds a reference to obj_cgroup.
 
-It will be used from the slab code.
+Objcg pointer is obtained from the memcg->objcg dereferencing
+in memcg_kmem_get_cache() and passed from pre_alloc_hook to
+post_alloc_hook. Then in case of successful allocation(s) it's
+getting stored in the page->obj_cgroups vector.
+
+The objcg obtaining part look a bit bulky now, but it will be simplified
+by next commits in the series.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- include/linux/memcontrol.h | 7 +++++++
- mm/memcontrol.c            | 7 -------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ include/linux/memcontrol.h |  3 +-
+ mm/memcontrol.c            | 14 +++++++--
+ mm/slab.c                  | 18 +++++++-----
+ mm/slab.h                  | 60 ++++++++++++++++++++++++++++++++++----
+ mm/slub.c                  | 14 +++++----
+ 5 files changed, 88 insertions(+), 21 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 98239fdf9fee..2165470a2534 100644
+index ca2e71975581..98239fdf9fee 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -1442,6 +1442,13 @@ static inline bool memcg_kmem_enabled(void)
- 	return static_branch_unlikely(&memcg_kmem_enabled_key);
+@@ -1406,7 +1406,8 @@ static inline void memcg_set_shrinker_bit(struct me=
+m_cgroup *memcg,
  }
+ #endif
 =20
-+static inline bool memcg_kmem_bypass(void)
-+{
-+	if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
-+		return true;
-+	return false;
-+}
-+
- static inline int memcg_kmem_charge_page(struct page *page, gfp_t gfp,
- 					 int order)
- {
+-struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
++struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep,
++					struct obj_cgroup **objcgp);
+ void memcg_kmem_put_cache(struct kmem_cache *cachep);
+=20
+ #ifdef CONFIG_MEMCG_KMEM
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 56588677608e..314084e2e6e7 100644
+index 1c4d2462e867..a25bfc071416 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2893,13 +2893,6 @@ static void memcg_schedule_kmem_cache_create(struc=
-t mem_cgroup *memcg,
- 	queue_work(memcg_kmem_cache_wq, &cw->work);
+@@ -2916,7 +2916,8 @@ static inline bool memcg_kmem_bypass(void)
+  * done with it, memcg_kmem_put_cache() must be called to release the
+  * reference.
+  */
+-struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
++struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep,
++					struct obj_cgroup **objcgp)
+ {
+ 	struct mem_cgroup *memcg;
+ 	struct kmem_cache *memcg_cachep;
+@@ -2972,8 +2973,17 @@ struct kmem_cache *memcg_kmem_get_cache(struct kme=
+m_cache *cachep)
+ 	 */
+ 	if (unlikely(!memcg_cachep))
+ 		memcg_schedule_kmem_cache_create(memcg, cachep);
+-	else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt))
++	else if (percpu_ref_tryget(&memcg_cachep->memcg_params.refcnt)) {
++		struct obj_cgroup *objcg =3D rcu_dereference(memcg->objcg);
++
++		if (!objcg || !obj_cgroup_tryget(objcg)) {
++			percpu_ref_put(&memcg_cachep->memcg_params.refcnt);
++			goto out_unlock;
++		}
++
++		*objcgp =3D objcg;
+ 		cachep =3D memcg_cachep;
++	}
+ out_unlock:
+ 	rcu_read_unlock();
+ 	return cachep;
+diff --git a/mm/slab.c b/mm/slab.c
+index 9350062ffc1a..02b4363930c1 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -3222,9 +3222,10 @@ slab_alloc_node(struct kmem_cache *cachep, gfp_t f=
+lags, int nodeid,
+ 	unsigned long save_flags;
+ 	void *ptr;
+ 	int slab_node =3D numa_mem_id();
++	struct obj_cgroup *objcg =3D NULL;
+=20
+ 	flags &=3D gfp_allowed_mask;
+-	cachep =3D slab_pre_alloc_hook(cachep, flags);
++	cachep =3D slab_pre_alloc_hook(cachep, &objcg, 1, flags);
+ 	if (unlikely(!cachep))
+ 		return NULL;
+=20
+@@ -3260,7 +3261,7 @@ slab_alloc_node(struct kmem_cache *cachep, gfp_t fl=
+ags, int nodeid,
+ 	if (unlikely(slab_want_init_on_alloc(flags, cachep)) && ptr)
+ 		memset(ptr, 0, cachep->object_size);
+=20
+-	slab_post_alloc_hook(cachep, flags, 1, &ptr);
++	slab_post_alloc_hook(cachep, objcg, flags, 1, &ptr);
+ 	return ptr;
  }
 =20
--static inline bool memcg_kmem_bypass(void)
--{
--	if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
--		return true;
--	return false;
--}
--
- /**
-  * memcg_kmem_get_cache: select the correct per-memcg cache for allocati=
-on
-  * @cachep: the original global kmem cache
+@@ -3301,9 +3302,10 @@ slab_alloc(struct kmem_cache *cachep, gfp_t flags,=
+ unsigned long caller)
+ {
+ 	unsigned long save_flags;
+ 	void *objp;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+ 	flags &=3D gfp_allowed_mask;
+-	cachep =3D slab_pre_alloc_hook(cachep, flags);
++	cachep =3D slab_pre_alloc_hook(cachep, &objcg, 1, flags);
+ 	if (unlikely(!cachep))
+ 		return NULL;
+=20
+@@ -3317,7 +3319,7 @@ slab_alloc(struct kmem_cache *cachep, gfp_t flags, =
+unsigned long caller)
+ 	if (unlikely(slab_want_init_on_alloc(flags, cachep)) && objp)
+ 		memset(objp, 0, cachep->object_size);
+=20
+-	slab_post_alloc_hook(cachep, flags, 1, &objp);
++	slab_post_alloc_hook(cachep, objcg, flags, 1, &objp);
+ 	return objp;
+ }
+=20
+@@ -3439,6 +3441,7 @@ void ___cache_free(struct kmem_cache *cachep, void =
+*objp,
+ 		memset(objp, 0, cachep->object_size);
+ 	kmemleak_free_recursive(objp, cachep->flags);
+ 	objp =3D cache_free_debugcheck(cachep, objp, caller);
++	memcg_slab_free_hook(cachep, virt_to_head_page(objp), objp);
+=20
+ 	/*
+ 	 * Skip calling cache_free_alien() when the platform is not numa.
+@@ -3504,8 +3507,9 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp=
+_t flags, size_t size,
+ 			  void **p)
+ {
+ 	size_t i;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+-	s =3D slab_pre_alloc_hook(s, flags);
++	s =3D slab_pre_alloc_hook(s, &objcg, size, flags);
+ 	if (!s)
+ 		return 0;
+=20
+@@ -3528,13 +3532,13 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, g=
+fp_t flags, size_t size,
+ 		for (i =3D 0; i < size; i++)
+ 			memset(p[i], 0, s->object_size);
+=20
+-	slab_post_alloc_hook(s, flags, size, p);
++	slab_post_alloc_hook(s, objcg, flags, size, p);
+ 	/* FIXME: Trace call missing. Christoph would like a bulk variant */
+ 	return size;
+ error:
+ 	local_irq_enable();
+ 	cache_alloc_debugcheck_after_bulk(s, flags, i, p, _RET_IP_);
+-	slab_post_alloc_hook(s, flags, i, p);
++	slab_post_alloc_hook(s, objcg, flags, i, p);
+ 	__kmem_cache_free_bulk(s, i, p);
+ 	return 0;
+ }
+diff --git a/mm/slab.h b/mm/slab.h
+index a1633ea15fbf..8bca0cb4b928 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -438,6 +438,41 @@ static inline void memcg_free_page_obj_cgroups(struc=
+t page *page)
+ 	page->obj_cgroups =3D NULL;
+ }
+=20
++static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct obj_cgroup *objcg,
++					      size_t size, void **p)
++{
++	struct page *page;
++	unsigned long off;
++	size_t i;
++
++	for (i =3D 0; i < size; i++) {
++		if (likely(p[i])) {
++			page =3D virt_to_head_page(p[i]);
++			off =3D obj_to_index(s, page, p[i]);
++			obj_cgroup_get(objcg);
++			page_obj_cgroups(page)[off] =3D objcg;
++		}
++	}
++	obj_cgroup_put(objcg);
++	memcg_kmem_put_cache(s);
++}
++
++static inline void memcg_slab_free_hook(struct kmem_cache *s, struct pag=
+e *page,
++					void *p)
++{
++	struct obj_cgroup *objcg;
++	unsigned int off;
++
++	if (!memcg_kmem_enabled() || is_root_cache(s))
++		return;
++
++	off =3D obj_to_index(s, page, p);
++	objcg =3D page_obj_cgroups(page)[off];
++	page_obj_cgroups(page)[off] =3D NULL;
++	obj_cgroup_put(objcg);
++}
++
+ extern void slab_init_memcg_params(struct kmem_cache *);
+ extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *me=
+mcg);
+=20
+@@ -497,6 +532,17 @@ static inline void memcg_free_page_obj_cgroups(struc=
+t page *page)
+ {
+ }
+=20
++static inline void memcg_slab_post_alloc_hook(struct kmem_cache *s,
++					      struct obj_cgroup *objcg,
++					      size_t size, void **p)
++{
++}
++
++static inline void memcg_slab_free_hook(struct kmem_cache *s, struct pag=
+e *page,
++					void *p)
++{
++}
++
+ static inline void slab_init_memcg_params(struct kmem_cache *s)
+ {
+ }
+@@ -605,7 +651,8 @@ static inline size_t slab_ksize(const struct kmem_cac=
+he *s)
+ }
+=20
+ static inline struct kmem_cache *slab_pre_alloc_hook(struct kmem_cache *=
+s,
+-						     gfp_t flags)
++						     struct obj_cgroup **objcgp,
++						     size_t size, gfp_t flags)
+ {
+ 	flags &=3D gfp_allowed_mask;
+=20
+@@ -619,13 +666,14 @@ static inline struct kmem_cache *slab_pre_alloc_hoo=
+k(struct kmem_cache *s,
+=20
+ 	if (memcg_kmem_enabled() &&
+ 	    ((flags & __GFP_ACCOUNT) || (s->flags & SLAB_ACCOUNT)))
+-		return memcg_kmem_get_cache(s);
++		return memcg_kmem_get_cache(s, objcgp);
+=20
+ 	return s;
+ }
+=20
+-static inline void slab_post_alloc_hook(struct kmem_cache *s, gfp_t flag=
+s,
+-					size_t size, void **p)
++static inline void slab_post_alloc_hook(struct kmem_cache *s,
++					struct obj_cgroup *objcg,
++					gfp_t flags, size_t size, void **p)
+ {
+ 	size_t i;
+=20
+@@ -637,8 +685,8 @@ static inline void slab_post_alloc_hook(struct kmem_c=
+ache *s, gfp_t flags,
+ 					 s->flags, flags);
+ 	}
+=20
+-	if (memcg_kmem_enabled())
+-		memcg_kmem_put_cache(s);
++	if (memcg_kmem_enabled() && !is_root_cache(s))
++		memcg_slab_post_alloc_hook(s, objcg, size, p);
+ }
+=20
+ #ifndef CONFIG_SLOB
+diff --git a/mm/slub.c b/mm/slub.c
+index 601c0fc3c83a..82c87444409f 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2738,8 +2738,9 @@ static __always_inline void *slab_alloc_node(struct=
+ kmem_cache *s,
+ 	struct kmem_cache_cpu *c;
+ 	struct page *page;
+ 	unsigned long tid;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+-	s =3D slab_pre_alloc_hook(s, gfpflags);
++	s =3D slab_pre_alloc_hook(s, &objcg, 1, gfpflags);
+ 	if (!s)
+ 		return NULL;
+ redo:
+@@ -2815,7 +2816,7 @@ static __always_inline void *slab_alloc_node(struct=
+ kmem_cache *s,
+ 	if (unlikely(slab_want_init_on_alloc(gfpflags, s)) && object)
+ 		memset(object, 0, s->object_size);
+=20
+-	slab_post_alloc_hook(s, gfpflags, 1, &object);
++	slab_post_alloc_hook(s, objcg, gfpflags, 1, &object);
+=20
+ 	return object;
+ }
+@@ -3020,6 +3021,8 @@ static __always_inline void do_slab_free(struct kme=
+m_cache *s,
+ 	void *tail_obj =3D tail ? : head;
+ 	struct kmem_cache_cpu *c;
+ 	unsigned long tid;
++
++	memcg_slab_free_hook(s, page, head);
+ redo:
+ 	/*
+ 	 * Determine the currently cpus per cpu slab.
+@@ -3199,9 +3202,10 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gf=
+p_t flags, size_t size,
+ {
+ 	struct kmem_cache_cpu *c;
+ 	int i;
++	struct obj_cgroup *objcg =3D NULL;
+=20
+ 	/* memcg and kmem_cache debug support */
+-	s =3D slab_pre_alloc_hook(s, flags);
++	s =3D slab_pre_alloc_hook(s, &objcg, size, flags);
+ 	if (unlikely(!s))
+ 		return false;
+ 	/*
+@@ -3255,11 +3259,11 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, g=
+fp_t flags, size_t size,
+ 	}
+=20
+ 	/* memcg and kmem_cache debug support */
+-	slab_post_alloc_hook(s, flags, size, p);
++	slab_post_alloc_hook(s, objcg, flags, size, p);
+ 	return i;
+ error:
+ 	local_irq_enable();
+-	slab_post_alloc_hook(s, flags, i, p);
++	slab_post_alloc_hook(s, objcg, flags, i, p);
+ 	__kmem_cache_free_bulk(s, i, p);
+ 	return 0;
+ }
 --=20
 2.25.4
 
