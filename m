@@ -2,112 +2,90 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE572C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE963207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bgl06NX7"
+	by mail.kernel.org (Postfix) with ESMTP id 1A8C520873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgE0M26 (ORCPT
+        id S1730048AbgE0M3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:28:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32650 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728143AbgE0M25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:28:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590582536;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g9FxUpI3OzPM1e9gI4pX6q/XzrU1P17TZrLPSvSwy/4=;
-        b=bgl06NX7JFw6Oyrt3rS9fEIwh2v6pDOOQ3UXbwCMcY+loGcM9H+VgG0VncjtWKF71nceNW
-        RjuMQq0paj3/ya3PnoWEY4gTziKx0Ha2AjT/2YfPlmveXDnXEQ320TqPXIGljjFOsSh1eB
-        Pxea/daAgRcGLo0DdEQujRLFp+txrVM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-170-oAjDMN-xP067UrZLUINvoQ-1; Wed, 27 May 2020 08:28:54 -0400
-X-MC-Unique: oAjDMN-xP067UrZLUINvoQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 592A1107ACCA;
-        Wed, 27 May 2020 12:28:53 +0000 (UTC)
-Received: from starship (unknown [10.35.206.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC70C5D9E5;
-        Wed, 27 May 2020 12:28:51 +0000 (UTC)
-Message-ID: <7240b1f9ef497fd040c7315d90711c642f709d16.camel@redhat.com>
-Subject: Re: KVM broken after suspend in most recent kernels.
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Brad Campbell <lists2009@fnarfbargle.com>
-Cc:     kvm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 27 May 2020 15:28:50 +0300
-In-Reply-To: <20200527051354.GL31696@linux.intel.com>
-References: <1f7a85cc-38a6-2a2e-cbe3-a5b9970b7b92@fnarfbargle.com>
-         <f726be8c-c7ef-bf6a-f31e-394969d35045@fnarfbargle.com>
-         <1f7b1c9a8d9cbb6f82e97f8ba7a13ce5b773e16f.camel@redhat.com>
-         <a45bc9d7-ad0b-2ff0-edcc-5283f591bc10@fnarfbargle.com>
-         <20200527051354.GL31696@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+        Wed, 27 May 2020 08:29:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35712 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728661AbgE0M3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 08:29:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DE142AF4C;
+        Wed, 27 May 2020 12:29:13 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] powerpc/bpf: Enable bpf_probe_read{, str}() on powerpc again
+Date:   Wed, 27 May 2020 14:28:44 +0200
+Message-Id: <20200527122844.19524-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-26 at 22:13 -0700, Sean Christopherson wrote:
-> On Mon, May 25, 2020 at 09:15:57PM +0800, Brad Campbell wrote:
-> > > When you mean that KVM is broken after suspend, you mean that you
-> > > can't
-> > > start new VMs after suspend, or do VMs that were running before
-> > > suspend
-> > > break?  I see the later on my machine. I have AMD system though,
-> > > so most
-> > > likely this is another bug.
-> > > 
-> > > Looking at the commit, I suspect that we indeed should set the
-> > > IA32_FEAT_CTL
-> > > after resume from ram, since suspend to ram might count as a
-> > > complete CPU
-> > > reset.
-> > > 
-> > 
-> > One of those "I should have clarified that" moments immediately
-> > after I
-> > pressed send.  I've not tried suspending with a VM running. It's
-> > "can't start
-> > new VMs after suspend".
-> 
-> Don't bother testing suspending with a VM, the only thing that will
-> be
-> different is that your system will hang on resume instead when
-> running a
-> VM.  If there are active VMs, KVM automatically re-enables VMX via
-> VMXON
-> after resume, and VMXON is what's faulting.
-> 
-> Odds are good the firmware simply isn't initializing IA32_FEAT_CTL,
-> ever.
-> The kernel handles the boot-time case, but I (obviously) didn't
-> consider
-> the suspend case.  I'll work on a patch.
+The commit 0ebeea8ca8a4d1d453a ("bpf: Restrict bpf_probe_read{, str}() only
+to archs where they work") caused that bpf_probe_read{, str}() functions
+were not longer available on architectures where the same logical address
+might have different content in kernel and user memory mapping. These
+architectures should use probe_read_{user,kernel}_str helpers.
 
-This is exactly what I was thinking about this as well.
+For backward compatibility, the problematic functions are still available
+on architectures where the user and kernel address spaces are not
+overlapping. This is defined CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
 
-Best regards,
-	Maxim Levitsky
-> 
+At the moment, these backward compatible functions are enabled only
+on x86_64, arm, and arm64. Let's do it also on powerpc that has
+the non overlapping address space as well.
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>
+---
+ arch/powerpc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d13b5328ca10..b29d7cb38368 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -126,6 +126,7 @@ config PPC
+ 	select ARCH_HAS_MMIOWB			if PPC64
+ 	select ARCH_HAS_PHYS_TO_DMA
+ 	select ARCH_HAS_PMEM_API
++	select ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	select ARCH_HAS_PTE_DEVMAP		if PPC_BOOK3S_64
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_MEMBARRIER_CALLBACKS
+-- 
+2.26.2
 
