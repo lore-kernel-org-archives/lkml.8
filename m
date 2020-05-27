@@ -2,177 +2,118 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3455BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF900206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1263F206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgE0JkS convert rfc822-to-8bit (ORCPT
+        id S1728829AbgE0JkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56010 "EHLO
+        Wed, 27 May 2020 05:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgE0JkQ (ORCPT
+        with ESMTP id S1725882AbgE0JkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:40:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64F6C061A0F;
-        Wed, 27 May 2020 02:40:15 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jdsXl-0005YJ-CX; Wed, 27 May 2020 11:40:13 +0200
-Date:   Wed, 27 May 2020 11:40:13 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v5.6.14-rt7
-Message-ID: <20200527094013.u4awz6uv7ozw5p6o@linutronix.de>
+        Wed, 27 May 2020 05:40:25 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2087C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 02:40:24 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jdsXn-0005nV-PP; Wed, 27 May 2020 11:40:15 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1jdsXm-0000Kd-2L; Wed, 27 May 2020 11:40:14 +0200
+Date:   Wed, 27 May 2020 11:40:14 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     robh@kernel.org, kernel@puri.sm, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, mchehab@kernel.org, Anson.Huang@nxp.com,
+        agx@sigxcpu.org, angus@akkea.ca, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] MAINTAINERS: Add Purism Librem 5 section to the list
+Message-ID: <20200527094014.nn4cupjrvcceo5lv@pengutronix.de>
+References: <20200514155737.12160-1-martin.kepplinger@puri.sm>
+ <20200514155737.12160-2-martin.kepplinger@puri.sm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200514155737.12160-2-martin.kepplinger@puri.sm>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 11:38:12 up 194 days, 56 min, 195 users,  load average: 0.19, 0.17,
+ 0.11
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear RT folks!
+On 20-05-14 17:57, Martin Kepplinger wrote:
+> Add development information for the devicetree files for hardware
+> by Purism SPC.
+> 
+> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> ---
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0abba1aff1ae..176efec31010 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13775,6 +13775,14 @@ T:	git git://linuxtv.org/media_tree.git
+>  F:	Documentation/admin-guide/media/pulse8-cec.rst
+>  F:	drivers/media/cec/usb/pulse8/
+>  
+> +PURISM LIBREM 5
+> +M:	Purism Kernel Team <kernel@puri.sm>
+> +S:	Supported
+> +B:	https://source.puri.sm/Librem5/linux-next/issues
+> +T:	https://source.puri.sm/Librem5/linux-next
+> +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5.dts
 
-I'm pleased to announce the v5.6.14-rt7 patch set. 
+Is it okay to take care of all imx8mq-librem5* files? 
 
-Changes since v5.6.14-rt6:
+F:	arch/arm64/boot/dts/freescale/imx8mq-librem5*
 
-  - 汪勇 sent a patch to not lose a line break on pr_cont() if
-    requested.
+Regards,
+  Marco
 
-  - A few missing locking spots were identified in the zswap patch while
-    it was reworked for upstream. Changes have been integrated in the
-    original patch.
+> +
+>  PVRUSB2 VIDEO4LINUX DRIVER
+>  M:	Mike Isely <isely@pobox.com>
+>  L:	pvrusb2@isely.net	(subscribers-only)
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-Known issues
-     - It has been pointed out that due to changes to the printk code the
-       internal buffer representation changed. This is only an issue if tools
-       like `crash' are used to extract the printk buffer from a kernel memory
-       image.
-
-The delta patch against v5.6.14-rt6 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.6/incr/patch-5.6.14-rt6-rt7.patch.xz
-
-You can get this release via the git tree at:
-
-    git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v5.6.14-rt7
-
-The RT patch against v5.6.14 can be found here:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.6/older/patch-5.6.14-rt7.patch.xz
-
-The split quilt queue is available at:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.6/older/patches-5.6.14-rt7.tar.xz
-
-Sebastian
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 8bc683be08574..6296d348f3008 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1871,6 +1871,7 @@ static void cont_add(int ctx, int cpu, u32 caller_id, int facility, int level,
- 	// but later continuations can add a newline.
- 	if (flags & LOG_NEWLINE) {
- 		c->flags |= LOG_NEWLINE;
-+		cont_flush(ctx);
- 	}
- }
- 
-diff --git a/localversion-rt b/localversion-rt
-index 8fc605d806670..045478966e9f1 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt6
-+-rt7
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 1591b5d37f65d..51944e98c1249 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -391,6 +391,8 @@ static struct zswap_entry *zswap_entry_find_get(struct rb_root *root,
- * per-cpu code
- **********************************/
- static DEFINE_PER_CPU(u8 *, zswap_dstmem);
-+/* Used for zswap_dstmem and tfm */
-+static DEFINE_LOCAL_IRQ_LOCK(zswap_cpu_lock);
- 
- static int zswap_dstmem_prepare(unsigned int cpu)
- {
-@@ -920,10 +922,11 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 		dlen = PAGE_SIZE;
- 		src = (u8 *)zhdr + sizeof(struct zswap_header);
- 		dst = kmap_atomic(page);
--		tfm = *get_cpu_ptr(entry->pool->tfm);
-+		local_lock(zswap_cpu_lock);
-+		tfm = *this_cpu_ptr(entry->pool->tfm);
- 		ret = crypto_comp_decompress(tfm, src, entry->length,
- 					     dst, &dlen);
--		put_cpu_ptr(entry->pool->tfm);
-+		local_unlock(zswap_cpu_lock);
- 		kunmap_atomic(dst);
- 		BUG_ON(ret);
- 		BUG_ON(dlen != PAGE_SIZE);
-@@ -996,8 +999,6 @@ static void zswap_fill_page(void *ptr, unsigned long value)
- 	memset_l(page, value, PAGE_SIZE / sizeof(unsigned long));
- }
- 
--/* protect zswap_dstmem from concurrency */
--static DEFINE_LOCAL_IRQ_LOCK(zswap_dstmem_lock);
- /*********************************
- * frontswap hooks
- **********************************/
-@@ -1077,7 +1078,8 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	}
- 
- 	/* compress */
--	dst = get_locked_var(zswap_dstmem_lock, zswap_dstmem);
-+	local_lock(zswap_cpu_lock);
-+	dst = *this_cpu_ptr(&zswap_dstmem);
- 	tfm = *this_cpu_ptr(entry->pool->tfm);
- 	src = kmap_atomic(page);
- 	ret = crypto_comp_compress(tfm, src, PAGE_SIZE, dst, &dlen);
-@@ -1105,7 +1107,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	memcpy(buf, &zhdr, hlen);
- 	memcpy(buf + hlen, dst, dlen);
- 	zpool_unmap_handle(entry->pool->zpool, handle);
--	put_locked_var(zswap_dstmem_lock, zswap_dstmem);
-+	local_unlock(zswap_cpu_lock);
- 
- 	/* populate entry */
- 	entry->offset = offset;
-@@ -1133,7 +1135,7 @@ static int zswap_frontswap_store(unsigned type, pgoff_t offset,
- 	return 0;
- 
- put_dstmem:
--	put_locked_var(zswap_dstmem_lock, zswap_dstmem);
-+	local_unlock(zswap_cpu_lock);
- 	zswap_pool_put(entry->pool);
- freepage:
- 	zswap_entry_cache_free(entry);
-@@ -1178,9 +1180,10 @@ static int zswap_frontswap_load(unsigned type, pgoff_t offset,
- 	if (zpool_evictable(entry->pool->zpool))
- 		src += sizeof(struct zswap_header);
- 	dst = kmap_atomic(page);
--	tfm = *get_cpu_ptr(entry->pool->tfm);
-+	local_lock(zswap_cpu_lock);
-+	tfm = *this_cpu_ptr(entry->pool->tfm);
- 	ret = crypto_comp_decompress(tfm, src, entry->length, dst, &dlen);
--	put_cpu_ptr(entry->pool->tfm);
-+	local_unlock(zswap_cpu_lock);
- 	kunmap_atomic(dst);
- 	zpool_unmap_handle(entry->pool->zpool, entry->handle);
- 	BUG_ON(ret);
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
