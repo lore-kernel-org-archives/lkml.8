@@ -4,94 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47356208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39B02078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388747AbgE0NsJ (ORCPT
+        id S2388757AbgE0Ns0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:48:09 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:51201 "EHLO
+        Wed, 27 May 2020 09:48:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:55735 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388082AbgE0NsJ (ORCPT
+        with ESMTP id S2388082AbgE0NsZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:48:09 -0400
+        Wed, 27 May 2020 09:48:25 -0400
 Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MP2zs-1jNNUv2gma-00POkx; Wed, 27 May 2020 15:47:57 +0200
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MkpOZ-1jA3RJ26yV-00mKQD; Wed, 27 May 2020 15:48:22 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>
+To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Worley <sworley@cumulusnetworks.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] [net-next] nexthop: fix enum type confusion
-Date:   Wed, 27 May 2020 15:47:41 +0200
-Message-Id: <20200527134755.978758-1-arnd@arndb.de>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: include linux/pagemap.h
+Date:   Wed, 27 May 2020 15:48:08 +0200
+Message-Id: <20200527134821.1001856-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:n5qEtqFUXXj4zCm5zjHLPSjM3G1b9LQHX2qPlw6UHDY5j+eeoTt
- RZVjMN1E+TihYiBM1VrGlWrZfadBUWmEQXT17oY8cDNC8Z3OsN5DEOo6oYhFHCk5aUlvHCA
- lTkYegq9MeUrQfdhrM59VDRUWQt4AU312DjVElEYJQRTO92fjl88TlwXlru+3qg4u8HRQHY
- 4rn1m9//P8Y12puOmtDbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0vssRlZ1k7Y=:FW5nQtiKCgGw7l3TtxlrIB
- z5X3TPsAWxaRibqoS8sYLvmBKczlqGl87mf5Nkq17HYkf/Mhx4ZAqdURXaGGTXTN/sJIUmSR0
- YCgCHyvhsUt61uoYNNdFbCIaIePjRjLRdCIZHRK39MygPRYpfss1WqA7MEAQU2oB7ezqDSUIM
- KSX3x5Tu5lIAlFc2LmtETZIj7Evy3HiCopCV8OqC4/H4pAmanHvq4E5QvZUnHnk0GSWocFNkg
- +DdgKLyb+T15WJWzv2Nu5R0UJGxeoHJOh0ZWs6wtkdlclRv6XuFMNLon+ftDfNOMY1mceYD6e
- uDJ7OviiXknDsw/IUMgKslfAM4fsZzCDj37w6/cscxSZeYCgN0+oj1tBRk/UScOV6f6Rfu6F1
- 3Disro/0yQVHaJCB3Jf8fnh+ysExvNIheTwDs4QGQ954iNudvOZhMBGea4ohGSzZlpZCyvmOx
- qGaZmPcjxgV8xyxLUtDzZLMxrGOtElQuAOyc2KaS+ERdBoO015hgwxq6b4jnjd9o6B9En4CIk
- JAi35XTkp/Er0PymziPIBnnjymVjsVIoNCcusuf9QvkiSfT5LBKyv7o0wwtMXeL10wvGDJOca
- EmV3X8wL7zrfWnwRweZH79lYMoSY14YNqtGK5vyQSTwV8A4LJm45yHOHaNdi3LpObAOrllgyP
- MfoCP71BGbfwTJDkQdBYs6seNxm8SfSRTrnPtbW0a2ToeCf3jluGn454W2wBHf8b9OWDyQ2y5
- /O4xqMKkwCZTxSpKqTDNVrhaaoXOEzA7B3CQsmoAUSYnZjiKN6LEOw3CACu19ODaNmri8qtf/
- MgyKMgMwFo4ffznhqfLBTJhEEfGBF1EIOfIasw7KYYUz1ed01A=
+X-Provags-ID: V03:K1:AnkI1/UfaEFGuuR8lsmWfA+cClYJaFovoQxZjwHBUBeNDV1ahjf
+ qLXvGr/UxePgpPoq/+t2mGbqkfaheo9uVoLBmzedRhUYWCUK1zt2kE/lg/3YJ0tpIsd23QW
+ IngVAeSYbhPn8DNs+ychvJ0KMGIhJQZ7p6aTYnjMTJ1fN49PDw+Y9l+P7dfXkDfM6PNtnWi
+ oqyW4MPRJAhQKAng6kIUQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gK33T4nZbcg=:4i9fO+/F8DhO4VXyAzWfXw
+ whkM41Bswq1rWhra27aXsOYJKq/S2fL7K5f4KgkEuKFvZ4oOeXKl3Z6Sw3P3U8b0pXOjp1pOK
+ sKrTRndtpb9r+za1DsbTjwxcpkJwcTo758EZ8n0FRpKH5EnnQEjhw7kbRjOj+Iz60P66TtLZf
+ aEDd74dNLeWQcoQTx+h0EJCNjXZrR06p38eexslvi2kTQ++dJ5atQRw3RF6r1iHFouVELw2mU
+ OLsVeabPzX1hGsgMTGsVorENIA2qrSv8EpFzeKgcqSYL9taF92vr4Gf3t7IhAblvklQmD/Pax
+ ShxnxopSUhtjhRBrPcDBoFeC4ROak+kXgbcfxkRq6CmdkKJG9qUTKw/+D2wtSRA4IcYReDkci
+ tH9OAkC9OAgasXz3oFo0v+w3x/ltOAe9NQc2aWQz2UPWMqmxp3sWSresDYO6muIvnrdUhZhdT
+ +6v10eE/YjGgZrbx9CY5X/SJRl/N7iifxdi3SE34Q0YrUed6cBGNxf2HFFWqWQRkacqDfGcP7
+ 39BliEHewgrmaaqf2eIp/8+JmPjaaDWR/OA1KhMY+hKfAxKgdXa6Z/jUW7i0ZplM4MC9nX1bq
+ gxSa3ieQrGaapKVXlKQe7mDZsnGSV8rplzS+2tTtaMxfincOZMiEoDBSihmStkhy/+B71ewjp
+ 8/n2nmZUgWQSqZ7sNbSRjsfFZ0ifcqXZBybM6QnAQ5OvUUcb53ASfEn4ZEEvVNq+B4LzpB4QI
+ J6AfS/k6dEvP8vHdRKeXE7r0JNdSWe/gKz84e659q9nr/GcA41OupnDTtUClHjSpAoZLuNcbt
+ 4lB5fjDlnOhEhillDubQa8+pfhkdduq9HiHKUuDenHuIwjTiY4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang points out a mismatch between function arguments
-using a different enum type:
+I observed a build regression in ARM randconfig builds:
 
-net/ipv4/nexthop.c:841:30: error: implicit conversion from enumeration type 'enum nexthop_event_type' to different enumeration type 'enum fib_event_type' [-Werror,-Wenum-conversion]
-        call_nexthop_notifiers(net, NEXTHOP_EVENT_DEL, nh);
-        ~~~~~~~~~~~~~~~~~~~~~~      ^~~~~~~~~~~~~~~~~
+fs/io_uring.c:500:26: error: field has incomplete type 'struct wait_page_queue'
+        struct wait_page_queue          wpq;
 
-This looks like a copy-paste error, so just use the intended
-type instead.
+Include the missing header file that defines the structure
+to make it build again.
 
-Fixes: 8590ceedb701 ("nexthop: add support for notifiers")
+Fixes: ad9e8c18aaa2 ("io_uring: support true async buffered reads, if file provides it")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- net/ipv4/nexthop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
-index 143011f9b580..ec1282858cb7 100644
---- a/net/ipv4/nexthop.c
-+++ b/net/ipv4/nexthop.c
-@@ -37,7 +37,7 @@ static const struct nla_policy rtm_nh_policy[NHA_MAX + 1] = {
- };
- 
- static int call_nexthop_notifiers(struct net *net,
--				  enum fib_event_type event_type,
-+				  enum nexthop_event_type event_type,
- 				  struct nexthop *nh)
- {
- 	int err;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index d292b992f945..5e2a0a8809a5 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -55,6 +55,7 @@
+ #include <linux/fdtable.h>
+ #include <linux/mm.h>
+ #include <linux/mman.h>
++#include <linux/pagemap.h>
+ #include <linux/percpu.h>
+ #include <linux/slab.h>
+ #include <linux/kthread.h>
 -- 
 2.26.2
 
