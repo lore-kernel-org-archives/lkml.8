@@ -2,95 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C92C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED92320787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9576C20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="QS/DeL/4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SvQpnI9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbgE0Qy6 (ORCPT
+        id S1729914AbgE0Q4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38960 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgE0Qy5 (ORCPT
+        Wed, 27 May 2020 12:56:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35022 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731059AbgE0Q4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:54:57 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EADFC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:54:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z6so29758246ljm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LHmWtQ2TkLP6OGqb3OSxb7myh0DpkLphjU9/234BIPw=;
-        b=QS/DeL/4agLgqn43tz2d+1Pv+Wcw+zCxwuarjwcFOqdidEhljsODcljY+PQD4MZcez
-         6mcT5xo+Glj6Ozfyadq8H8umAzoBhXKuPdW8HcoZ043jES7AoSHHYu2QJvNfDbke8WKE
-         Sd1361f4h8VU3lrRB8HNQrWQJqedcEnX0V0GYfKC+d5yU8R52r3f8aEWrcwoJJo1Lrm1
-         rrlOSWgksgreXzlsXtCWma7ALPvRuCLrWDRnRqvsvYq0cqxGjb/3xHPbS33yS/6CjUiS
-         7Vbd2apZUjCw2NVUJTdQpNzUFRkW7nKRLrAvi1n05Ykl31i8DWeWBLHOOz7xf4ILLl7/
-         7SxQ==
+        Wed, 27 May 2020 12:56:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590598567;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=soqL+aLJQ94mC33SIvSHCVdyIZoJ3dhQDwVCjjCxaQQ=;
+        b=SvQpnI9tpwQ0tlRMgNaMn4WDuvMDDDoCbG//9qrBn+w2SflkJFa0yxzJR1jdVDmYx4FExc
+        dZqd8GzJOiKKjsgAaGvbHkIPKYguJKtf1h74woHckMPaKzS+m/e0+XfpVCNRgPzq0Mjn30
+        4U672neBbjgqlMLqnGIwIoZcdsNcGBM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-tLFKjfxQO8yFzCxE_Yb0UQ-1; Wed, 27 May 2020 12:56:05 -0400
+X-MC-Unique: tLFKjfxQO8yFzCxE_Yb0UQ-1
+Received: by mail-wr1-f72.google.com with SMTP id n6so3706511wrv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:56:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LHmWtQ2TkLP6OGqb3OSxb7myh0DpkLphjU9/234BIPw=;
-        b=h8QCnEPnhfEVhFxFbE+1kKqHdPIum/l/k4Qtcl/ou7iSq+kTzrQ9O7hoNskokNluNw
-         6IwanixO0rzLCX1d6Sb1vYj8uPzN0qFgexFyPurbO7Wvmzb4dq63x2YNQGszzGGSLMnD
-         +bOlwMsfAqFvavWYsxeQvxRz9HdQYoElF+DvTPC6prV5xdkpzv5326B2aOG2hDpn+71f
-         NFwObQch6/1Wv/RJ5rg6jq7fUVWNDri7hYqjouIC01RW+1NZi5e6P4V18C4qfhU1qgmR
-         Q1ZLqaKYiedJo8JURF9kMWYCA2scyhMHj0pwEjTZLfe1rsHz1OpdkU9vnvIMoTd+RjQ5
-         9coA==
-X-Gm-Message-State: AOAM531sX9CTagoq7feMGlBx8fuZ+oMRPcCFqaW8T+lIJIIjdSQdmrK1
-        G/lPhgBh4oB8fMZ+jzQC/QSzwY4xL0u1jmP5G174JQ==
-X-Google-Smtp-Source: ABdhPJzmJpMkCosVV6yjOyPlOezLCCBsNT9bqO2Vj1q1MAS7G8wJ94i7BKM7SJjLa8tONQ+EvxtbGKO7THS1xmZmk4Q=
-X-Received: by 2002:a2e:8186:: with SMTP id e6mr3672178ljg.252.1590598495776;
- Wed, 27 May 2020 09:54:55 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=soqL+aLJQ94mC33SIvSHCVdyIZoJ3dhQDwVCjjCxaQQ=;
+        b=DXV7WL3K5GOmfYyK0b72Ok2FYla/YH/ZvqRH+/9x48y0a4Y85s2/Zx2unCiKmrZUcK
+         6ARXfG2f3aodbSJdL2QQCznCleG3c8ozd5qQTVKnE4lWcFGbLrLg/7Tz4MtWLS1eZah7
+         pFVx4CtwBRPLaMENedjPj/56T8c4eJ5cIeo9L2UMLxVT8yFBRNDeA6VWeBimBjgzl8HG
+         bCcl+2bZpMBIqqOfpT/JdvddK3hfVYW0hKgNnurfOTS8LChRfuM6nHtJBsO0taBYFCRh
+         qScoDX52recJqXPuJFeHkmLTzU89+z16asemLb3C0qJIxqvXxhjMZcBjwdoxSNEbS3Op
+         ngZg==
+X-Gm-Message-State: AOAM5304X9M9EGl1koXTZ7IV3oG/rqYXbbBYnsS3NSAfLTBWyVNYoJLm
+        SZ6BWH8xCTGFH20eRwY4WaKxJYIfgiByVwE3uxjPWJHQdBkcDouEluGXuad7RDjXkmnYrKh6MZg
+        khtrIncyko9QdkPT1Iyn7NR4T
+X-Received: by 2002:adf:82d0:: with SMTP id 74mr23661151wrc.138.1590598564716;
+        Wed, 27 May 2020 09:56:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxN1ltZI5oKhQFxqvF5DXCav71j97g6FqnxePCMKk31xs5VPQBfCIzOpFoJ7nuCJZDpjSSiNQ==
+X-Received: by 2002:adf:82d0:: with SMTP id 74mr23661135wrc.138.1590598564454;
+        Wed, 27 May 2020 09:56:04 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
+        by smtp.gmail.com with ESMTPSA id d5sm3351651wrb.14.2020.05.27.09.56.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 09:56:03 -0700 (PDT)
+Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+904752567107eefb728c@syzkaller.appspotmail.com
+References: <20200527085400.23759-1-sean.j.christopherson@intel.com>
+ <875zch66fy.fsf@vitty.brq.redhat.com>
+ <c444fbcc-8ac3-2431-4cdb-2a37b93b1fa2@redhat.com>
+ <20200527162318.GD24461@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e2b9d767-df19-2974-8457-737b925749d3@redhat.com>
+Date:   Wed, 27 May 2020 18:56:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Wed, 27 May 2020 09:54:44 -0700
-Message-ID: <CADaigPU7c=1u47R9GzvGCH_Z2fywY1foGYEy=KbBikjUQpwUFg@mail.gmail.com>
-Subject: Re: [PATCH v3 032/105] drm/vc4: crtc: Enable and disable the PV in
- atomic_enable / disable
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200527162318.GD24461@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The VIDEN bit in the pixelvalve currently being used to enable or disable
-> the pixelvalve seems to not be enough in some situations, which whill end
-> up with the pixelvalve stalling.
->
-> In such a case, even re-enabling VIDEN doesn't bring it back and we need to
-> clear the FIFO. This can only be done if the pixelvalve is disabled though.
->
-> In order to overcome this, we can configure the pixelvalve during
-> mode_set_no_fb, but only enable it in atomic_enable and flush the FIFO
-> there, and in atomic_disable disable the pixelvalve again.
+On 27/05/20 18:23, Sean Christopherson wrote:
+> Hmm, one option would be to make .get_tdp_level() pure function by passing
+> in vcpu->arch.maxphyaddr.  That should make the comment redundant.  I don't
+> love bleeding VMX's implementation into the prototype, but that ship has
+> kinda already sailed.
 
-What displays has this been tested with?  Getting this sequencing
-right is so painful, and things like DSI are tricky to get to light
-up.
+Well, it's not bleeding the implementation that much, guest MAXPHYADDR
+is pretty much the only reason why it's a function and not a constant.
+
+Another possibility BTW is to make the callback get_max_tdp_level and
+make get_tdp_level a function in mmu.c.
+
+Paolo
+
