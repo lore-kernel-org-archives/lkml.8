@@ -2,200 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3614C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDFA20888
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CD2208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uvzkhJS0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CDrjnmob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgE0K62 (ORCPT
+        id S1729998AbgE0LA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:58:28 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:43599 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728830AbgE0K60 (ORCPT
+        Wed, 27 May 2020 07:00:59 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:13730 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728546AbgE0LA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:58:26 -0400
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 706CF1347;
-        Wed, 27 May 2020 06:58:25 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Wed, 27 May 2020 06:58:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zHqCS7
-        Z689pQF/3uanD+RlgrJXGmDAv4EXM9WKoGV58=; b=uvzkhJS0MYCw0v+kKU97jo
-        nHlDvFFAUglvwhMr8qDOohl2587Yot1xA4Hy4XzHyucaFML5dU3YX8AdE1NV7AvC
-        69GLnbvFpWtGzasA98uKm4gHCs5n7FyYL06k0NGk3AliER7bP/MuP1VRiRBDkJym
-        t3juWlOVo5ljLpF5VILmDLv2dVzshDdg5gOR67LYsvJcXqU353F2aetl75Fcc/Qd
-        epYBBX3X7WW0QHLgE3DYcd8RhH6TX4rkuGSZKPlSmUPpKArzDFE8+nYkrGHfH1Dh
-        Ux7nbyxrLHDeqrHui1pMvXNxNib1j7/AXhyYj+L8OOVj3nfpQlT54zCwSYWHrZ+g
-        ==
-X-ME-Sender: <xms:0EfOXhw4T8MIJEKAO8Jz7j9cN6FB3bw5bviuLFY__HiI-7qbdk__6A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgfeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesghdtreertdervdenucfhrhhomhephghojhht
-    vghkucfrohhrtgiihihkuceofihojhhusehinhhvihhsihgslhgvthhhihhnghhslhgrsg
-    drtghomheqnecuggftrfgrthhtvghrnhepueeuuedvvdeukefgheffhfetkeelhfekhfej
-    jeeigeejveevueeiueefleetkeelnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
-    fkphepledurddugeehrdduieelrdeiheenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpeifohhjuhesihhnvhhishhisghlvghthhhinhhgshhlrg
-    gsrdgtohhm
-X-ME-Proxy: <xmx:0EfOXhQo6p7W31mr52aneglNYzcm-R_yD3jsfp05FMjRNp8IIMF-3Q>
-    <xmx:0EfOXrVghUu4LbMj_MmqRg4sdICFTSnp-ieSlmtryzCjeZrsbruIsA>
-    <xmx:0EfOXjg3bF6D80J1JZDG9UNzg4dJrXbHiSAJY9v_qhILOpN_M1vLLQ>
-    <xmx:0UfOXqN3JsaZLzLD0W5mGDZ3xlyL5taH9Q0Svo4uwW9dXMmzpB6jXg>
-Received: from mail-itl.localdomain (91-145-169-65.internetia.net.pl [91.145.169.65])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6DB2D3280066;
-        Wed, 27 May 2020 06:58:24 -0400 (EDT)
-Received: by mail-itl.localdomain (Postfix, from userid 1000)
-        id A6AF55D3F2; Wed, 27 May 2020 12:58:19 +0200 (CEST)
-Date:   Wed, 27 May 2020 12:58:19 +0200
-From:   Wojtek Porczyk <woju@invisiblethingslab.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Andi Kleen <ak@linux.intel.com>, Andi Kleen <andi@firstfloor.org>,
-        x86@kernel.org, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, sashal@kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v1] x86: Pin cr4 FSGSBASE
-Message-ID: <20200527105819.GJ14256@invisiblethingslab.com>
-References: <20200526052848.605423-1-andi@firstfloor.org>
- <20200526065618.GC2580410@kroah.com>
- <20200526154835.GW499505@tassilo.jf.intel.com>
- <20200526163235.GA42137@kroah.com>
- <20200526172403.GA14256@invisiblethingslab.com>
- <20200527070755.GB39696@kroah.com>
+        Wed, 27 May 2020 07:00:58 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590577257; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: To:
+ Subject: Sender; bh=ymHDh98wpD0ql5S8OT+2qdYkMs5fUdlbcxfmzMaxXsQ=; b=CDrjnmobB1ARZBJ+b5ZwnX5owFY7MJd64rNwVf5mbx61PASw/X7LgqxZC9VgR2utdjr7yg6a
+ WGwHfCDtqClwwTRjEoOHF1p4E2ooWCzBrhgQaPOQqiAPy4whuE8fpEGK5ur6qprmUO07lSkE
+ qj/hM8UmLTsYJsmX3rK4spkkRwM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5ece4841bf0e32d254554d32 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 11:00:17
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E056AC433C6; Wed, 27 May 2020 11:00:16 +0000 (UTC)
+Received: from [192.168.0.104] (unknown [49.207.133.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sivaprak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69A12C433C9;
+        Wed, 27 May 2020 11:00:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 69A12C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sivaprak@codeaurora.org
+Subject: Re: [PATCH V5 4/8] clk: qcom: Add DT bindings for ipq6018 apss clock
+ controller
+To:     Stephen Boyd <sboyd@kernel.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+References: <1590314686-11749-1-git-send-email-sivaprak@codeaurora.org>
+ <1590314686-11749-5-git-send-email-sivaprak@codeaurora.org>
+ <159054661322.88029.16916819048155217664@swboyd.mtv.corp.google.com>
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Message-ID: <fc1a7c54-1c6f-2996-a610-4611e3788726@codeaurora.org>
+Date:   Wed, 27 May 2020 16:30:10 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sGwo475CiIwWEjLI"
-Content-Disposition: inline
-In-Reply-To: <20200527070755.GB39696@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <159054661322.88029.16916819048155217664@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---sGwo475CiIwWEjLI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, May 27, 2020 at 09:07:55AM +0200, Greg KH wrote:
-> On Tue, May 26, 2020 at 07:24:03PM +0200, Wojtek Porczyk wrote:
-> > On Tue, May 26, 2020 at 06:32:35PM +0200, Greg KH wrote:
-> > > On Tue, May 26, 2020 at 08:48:35AM -0700, Andi Kleen wrote:
-> > > > On Tue, May 26, 2020 at 08:56:18AM +0200, Greg KH wrote:
-> > > > > On Mon, May 25, 2020 at 10:28:48PM -0700, Andi Kleen wrote:
-> > > > > > From: Andi Kleen <ak@linux.intel.com>
-> > > > > >=20
-> > > > > > Since there seem to be kernel modules floating around that set
-> > > > > > FSGSBASE incorrectly, prevent this in the CR4 pinning. Currently
-> > > > > > CR4 pinning just checks that bits are set, this also checks
-> > > > > > that the FSGSBASE bit is not set, and if it is clears it again.
-> > > > >=20
-> > > > > So we are trying to "protect" ourselves from broken out-of-tree k=
-ernel
-> > > > > modules now? =20
-> > > >=20
-> > > > Well it's a specific case where we know they're opening a root hole
-> > > > unintentionally. This is just an pragmatic attempt to protect the u=
-sers in the=20
-> > > > short term.
-> > >=20
-> > > Can't you just go and fix those out-of-tree kernel modules instead?
-> > > What's keeping you all from just doing that instead of trying to force
-> > > the kernel to play traffic cop?
-> >=20
-> > We'd very much welcome any help really, but we're under impression that=
- this
-> > couldn't be done correctly in a module, so this hack occured.
->=20
-> Really?  How is this hack anything other than a "prevent a kernel module
-> from doing something foolish" change?
-
-By "this hack" I meant our module [1], which just enables FSGSBASE bit with=
-out
-doing everything else that Sasha's patchset does, and that "everything else"
-is there to prevent a gaping root hoole.
-
-Original author wanted module for the reason snipped below, but Sasha's
-patchset can't be packaged into module. I'll be happy to be corrected on
-this point, I personally have next to no kernel programming experience.
-
-This kernel change I think is correct, because if kernel assumes some
-invariants, it's a good idea to actually enforce them, isn't it? So we don't
-have anything against this kernel change. We'll have to live with it, with =
-our
-hand forced.
-
-> Why can't you just change the kernel module's code to not do this?  What
-> prevents that from happening right now which would prevent the need to
-> change a core api from being abused in such a way?
-[snip]
-> I'm sorry, but I still do not understand.  Your kernel module calls the
-> core with this bit being set, and this new kernel patch is there to
-> prevent the bit from being set and will WARN_ON() if it happens.  Why
-> can't you just change your module code to not set the bit?
-
-Because we need userspace access to wrfsbase, which this bit enables:
-
-https://github.com/oscarlab/graphene/blob/58c53ad747579225bf29e3506d883586f=
-f4b8eee/Pal/src/host/Linux-SGX/sgx_api.h#L94-L98
-https://github.com/oscarlab/graphene/blob/0dd84ddf943d256e5494f07cb41b1d0ec=
-e847c1a/Pal/src/host/Linux-SGX/enclave_entry.S#L675
-https://github.com/oscarlab/graphene/blob/e4e16aa10e3c2221170aee7da66370507=
-cc52428/Pal/src/host/Linux-SGX/db_misc.c#L69
-
-> Do you have a pointer to the kernel module code that does this operation
-> which this core kernel change will try to prevent from happening?
-
-Sure: https://github.com/oscarlab/graphene-sgx-driver/blob/a73de5fed96fc330=
-fc0417d262ba5e87fea128c2/gsgx.c#L32-L39
-
-The whole module is 86 sloc, and the sole purpose is to set this bit on load
-and clear on unload.
-
-[1] ^
-
-
---=20
-pozdrawiam / best regards
-Wojtek Porczyk
-Graphene / Invisible Things Lab
-=20
- I do not fear computers,
- I fear lack of them.
-    -- Isaac Asimov
-
---sGwo475CiIwWEjLI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEaO0VFfpr0tEF6hYkv2vZMhA6I1EFAl7OR8wACgkQv2vZMhA6
-I1FPXBAAlQEJ78hTB6bfoNWdD8JsbGMlglrky8HMVgdEO///gMx042JRPUfcJa2K
-kQGigRidOsF5iDYmGd7mp7LXHC/Mmp7CVh4B/JidUtZeyyhfr8xTTiib/xT8K4Fb
-QjHK9Az0TwB+E0iexSjLpxI8owWnlWL8DfZGxCk5AUPk8TBjTH2h6ajeG0NBzvh7
-Je8gbzCL9CWOqFouhHtbnEXEWF9uqOCvCSqKG+yuXZRjCaLti0R1N8FXNeLF6PxQ
-TsObfgyyILIDD0MPuM8ViyRXRx4dG6yFsglmzYONqweODGSltqbs1EAmn5X0tiE2
-L8oq2qcggCeDWN5NjiEr6U7Z/fyJ6/3gBGqT7n9ivk7YB5Fvytz73ueQEDjfQ/ZR
-gn8nOj4PAvxCMkmwdgMIaMotVEPZ7pTxrESPCAgtF6NXadpwN5fkt8wZwBQLZmXy
-qIneQfld5/xlUFETp5hCM6NDkDOG85vZKpjOEBQrq+J7xVcdUewuD8FOu28RmHP+
-WDQdHKrkvN9yoYUz+v6SD5XSZymIJMVeB+J7tBRSXXDtj0vWGEamgZ6jXVPzhVig
-4mOkfuzU36HUb45HA1W3WJW7B59hgEDs750ElMl/LrwRFxME87h/j33YxRMrsCxx
-m+gxFA76VYZXW8aOptf+fxF2olf3PafdHtxFOHOvpzEbS9yKRZg=
-=u6SW
------END PGP SIGNATURE-----
-
---sGwo475CiIwWEjLI--
+On 5/27/2020 8:00 AM, Stephen Boyd wrote:
+> Quoting Sivaprakash Murugesan (2020-05-24 03:04:42)
+>> add dt-binding for ipq6018 apss clock controller
+> Capitalize 'add' because it starts the sentence.
+ok.
+>
+>> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+>> ---
+>>   include/dt-bindings/clock/qcom,apss-ipq.h | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
+>>
+>> diff --git a/include/dt-bindings/clock/qcom,apss-ipq.h b/include/dt-bindings/clock/qcom,apss-ipq.h
+>> new file mode 100644
+>> index 0000000..77b6e05
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/qcom,apss-ipq.h
+>> @@ -0,0 +1,12 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
+>> +#define _DT_BINDINGS_CLOCK_QCA_APSS_IPQ6018_H
+>> +
+>> +#define APCS_ALIAS0_CLK_SRC                    0
+>> +#define APCS_ALIAS0_CORE_CLK                   1
+> Will this be extended in the future? I hope that this is the only two
+> clks we expect to see in this file.
+yes you're right. these are the only two clocks.
