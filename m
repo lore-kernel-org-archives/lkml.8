@@ -2,107 +2,104 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12555C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6164212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B44720EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590573074;
+	bh=0vToCKDKiiwhvCQ/ZH06T4deAF0FOse4LBq9EGr0Hdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zVGmKVQMTTNlTLSvYcSUhVRupD/snDtPTFZ++Hk6uUzJysR7880G4mR02zPuBryvg
+	 WJaqq5u7Gsc8C3sJQtLLoGd+KilxXi+0a7Icgr2RGd4+gBoLLC9BBZDry+nBPpiPe+
+	 Uyr+MfEOBPNpIHAZ4kzVm3V/EaXIJcs1bGDm3kXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgE0Jun (ORCPT
+        id S1729517AbgE0JvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:50:43 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34018 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729391AbgE0Juj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:50:39 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BDCD5803080A;
-        Wed, 27 May 2020 09:50:35 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id k5YrOO-wnkEP; Wed, 27 May 2020 12:50:35 +0300 (MSK)
-Date:   Wed, 27 May 2020 12:50:34 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/12] i2c: designware: Move reg-space remapping into
- a dedicated function
-Message-ID: <20200527095034.xd52qv45nzcnkbnz@mobilestation>
-References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
- <20200526215528.16417-12-Sergey.Semin@baikalelectronics.ru>
- <CAHp75Veygd2y8Tp28p+ZX8Hm_u975QdqatKbsNOG9tNz6HOCAg@mail.gmail.com>
+        Wed, 27 May 2020 05:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725822AbgE0JvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:51:12 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B3520B80;
+        Wed, 27 May 2020 09:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590573071;
+        bh=0vToCKDKiiwhvCQ/ZH06T4deAF0FOse4LBq9EGr0Hdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nVI+eY/sUvYRSX+c+Adp5mbuGsFalnf0pXTPCNoiZDzr18dCfz9a0UVW1SQjVdQOT
+         +GPqBAiQlp1MZCLnbvrTSC1VicjdfKmeCzHwVVwfMOOVW1nCw1H+fYqzrff1b1L/MY
+         tRakSOtkBjQYqVrvvfLbmRmqcEhRvThMG5/cDsK4=
+Date:   Wed, 27 May 2020 10:51:09 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     dillon.minfei@gmail.com
+Cc:     robh+dt@kernel.org, p.zabel@pengutronix.de,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        thierry.reding@gmail.com, sam@ravnborg.org, airlied@linux.ie,
+        daniel@ffwll.ch, mturquette@baylibre.com, sboyd@kernel.org,
+        andy.shevchenko@gmail.com, noralf@tronnes.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillonhua@gmail.com
+Subject: Re: [PATCH v6 8/9] spi: stm32: Add 'SPI_SIMPLEX_RX', 'SPI_3WIRE_RX'
+ support for stm32f4
+Message-ID: <20200527095109.GA5308@sirena.org.uk>
+References: <1590564453-24499-1-git-send-email-dillon.minfei@gmail.com>
+ <1590564453-24499-9-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
 Content-Disposition: inline
-In-Reply-To: <CAHp75Veygd2y8Tp28p+ZX8Hm_u975QdqatKbsNOG9tNz6HOCAg@mail.gmail.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <1590564453-24499-9-git-send-email-dillon.minfei@gmail.com>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:26:09PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 4:03 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > This is a preparation patch before adding a quirk with custom registers
-> > map creation required for the Baikal-T1 System I2C support. Since we've
-> > touched this code anyway let's replace
-> > platform_get_resource()-devm_ioremap_resource() tuple with ready-to-use
-> > helper devm_platform_get_and_ioremap_resource().
-> 
-> ...
-> 
-> > +static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
-> > +{
-> > +       struct platform_device *pdev = to_platform_device(dev->dev);
-> 
-> > +       int ret = 0;
-> 
-> Redundant.
-> 
-> > +       dev->base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-> 
-> What's the point of this API if you don't use resource parameter?
-> 
-> > +       if (IS_ERR(dev->base))
-> > +               ret = PTR_ERR(dev->base);
-> > +
-> > +       return ret;
-> 
-> return PTR_ERR_OR_ZERO(dev->base);
-> 
-> > +}
-> 
-> > -       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > -       dev->base = devm_ioremap_resource(&pdev->dev, mem);
-> > -       if (IS_ERR(dev->base))
-> > -               return PTR_ERR(dev->base);
-> 
-> Wolfram, did my last series make your tree? I think there was a patch
-> that touched this part...
 
-Right. It is there. I'll rebase the series on top of the i2c/for-next branch.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Serge
+On Wed, May 27, 2020 at 03:27:32PM +0800, dillon.minfei@gmail.com wrote:
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> in l3gd20 driver startup, there is a setup failed error return from
+> stm32 spi driver
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Please do not submit new versions of already applied patches, please
+submit incremental updates to the existing code.  Modifying existing
+commits creates problems for other users building on top of those
+commits so it's best practice to only change pubished git commits if
+absolutely essential.
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OOAkACgkQJNaLcl1U
+h9BjiAf9Ffv3ggcuNoWfvMQqMqMQaCF/81yq+JEuOCOw+nSFwBift/d6Q7Z7HWCh
+k0/gPFT+7ED90XyQWUYuDOrUuQWiqQn8UP5p2IhQDAbvY9Zr3jnDTScTPx4FSf9m
+xGGbKV0iWy7z78mHngcLf++zQtDzzZLjhK+U4CxVz5htfuOkTdDeIorLUZJnYdBH
+tZKEYJ92tDX3perBnTRtca5zIEIo7JWv6ITSh6UTFELxx0D44W6NOS7z2W3kZ7HO
+KeUa7lsUfxWs5hF11j959HVj5BG0CFVa/cA4o2dGd5aaDwXjeASUzngGM0DqNPhY
+KPzFjTZ70Yj4eNCZVnKrXNGoe9KAoQ==
+=8sEd
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
