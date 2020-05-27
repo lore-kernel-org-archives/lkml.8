@@ -2,195 +2,141 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE23C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63274C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54B35207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30EE4207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:37:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIu5+DdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgE0Cfi (ORCPT
+        id S1728106AbgE0ChS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:35:38 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5285 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725601AbgE0Cfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:35:38 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3A84687391F412890586;
-        Wed, 27 May 2020 10:35:36 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 27 May
- 2020 10:35:35 +0800
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: avoid inifinite loop to wait for
- flushing node pages at cp_error
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200522144752.216197-1-jaegeuk@kernel.org>
- <20200522233243.GA94020@google.com> <20200525035655.GA135148@google.com>
- <565af47c-8364-d910-8d1c-93645c12e660@huawei.com>
- <20200525150608.GA55033@google.com>
- <92afae8b-2dd3-171a-562c-404a67f9aab2@huawei.com>
- <a44f9c2e-3859-6c5d-6f06-7c4c6b4c01c5@huawei.com>
- <20200526015650.GA207949@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <765a1ac5-a318-14d6-666f-eab46f892d01@huawei.com>
-Date:   Wed, 27 May 2020 10:35:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 26 May 2020 22:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0ChR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:37:17 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7921EC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 19:37:17 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k26so1096960wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 19:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fo26F0NoW7UXAZI20P+HiT0dZgkQVqLV8VIU39gdYLc=;
+        b=RIu5+DdQ1VaplU0z7eJUcwrnEvkUPhv62+7muM9zNQ0E015+xMKbUgeS5ko57IQucf
+         FITrEU2ZXrPskZADXu/RIjwEUK6gSMkm+SSt/pCSVymTBZgzxlQuUBcEm8EkXU788H5C
+         MvSelDzU3ynksHlGQr25M+Px2uhaBkBfy93bR5mPlZteeXCrbZJhKjBVPOUQD2QPBUpk
+         ZmvPUDQdD9kjHT3FPrCkd6Gl/XIN+ucasRiVdW0181Zs2kD1or00i92mghg5vGLu2TBr
+         KPYM7bbLfbfx98KAPLVoxGLGJmNPJqhqAcuhi2/s66stfFP1bcvALS3r3ztmP/KwZspb
+         xNfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fo26F0NoW7UXAZI20P+HiT0dZgkQVqLV8VIU39gdYLc=;
+        b=FByKMlpZrEAUTeEiVZBtpHBDuAVWwgJRmOyWGl5HtlGwOMQ313FFDA/mRRqZaNCjBD
+         3n5FvQVOprnYS0B/no2EVWmzLelPvCrLYIltj9EdJZhnh8eqRLj3zZAX5b6w6hiBCTiL
+         7Go1LiPyiL9A/oeen8Le3f/uAz0IKh1rIc0TtomJ4KZADouZT1EvLbya3J1xbZCg8Qzb
+         VqOcyMBVwN1FUrIcvnreEyszVApxlkma694gjKCwsAchnf1HipMdg721Z5Emh6XQTbrN
+         vsMfiDhoHogA/4Hux/vPC/9Vem8FqGs880Jzcvhq7qRnl2APq6z7AAt2jQE3uqNQr5J9
+         V57w==
+X-Gm-Message-State: AOAM530nmpShmykkD/YHh31veT+tgMrbkJIXWhlxVnrrdfO2ara8kjD/
+        huH4wj3L531qBZ4Qkzi/xOKgci60jNog7AlqpP0=
+X-Google-Smtp-Source: ABdhPJxiWYpNJ1X2X+ovzubaN1Go7qWUFw+e2JFGNhptHPYwQune5xOXrRVPc3f0RMGFE7d445SPUhdRgsE5HvwDzcg=
+X-Received: by 2002:a05:600c:22c9:: with SMTP id 9mr1902422wmg.162.1590547036270;
+ Tue, 26 May 2020 19:37:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526015650.GA207949@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <20200527004955.19463-1-dongli.zhang@oracle.com>
+In-Reply-To: <20200527004955.19463-1-dongli.zhang@oracle.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Wed, 27 May 2020 10:37:05 +0800
+Message-ID: <CACVXFVOoJfyZ=H0A4kjUwCxbF24YWEMenNuny3MtXr=-aLbXDA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] nvme-pci: avoid race between nvme_reap_pending_cqes()
+ and nvme_poll()
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/5/26 9:56, Jaegeuk Kim wrote:
-> On 05/26, Chao Yu wrote:
->> On 2020/5/26 9:11, Chao Yu wrote:
->>> On 2020/5/25 23:06, Jaegeuk Kim wrote:
->>>> On 05/25, Chao Yu wrote:
->>>>> On 2020/5/25 11:56, Jaegeuk Kim wrote:
->>>>>> Shutdown test is somtimes hung, since it keeps trying to flush dirty node pages
+On Wed, May 27, 2020 at 8:57 AM Dongli Zhang <dongli.zhang@oracle.com> wrote:
+>
+> There may be a race between nvme_reap_pending_cqes() and nvme_poll(), e.g.,
+> when doing live reset while polling the nvme device.
+>
+>       CPU X                        CPU Y
+>                                nvme_poll()
+> nvme_dev_disable()
+> -> nvme_stop_queues()
+> -> nvme_suspend_io_queues()
+> -> nvme_suspend_queue()
+>                                -> spin_lock(&nvmeq->cq_poll_lock);
+> -> nvme_reap_pending_cqes()
+>    -> nvme_process_cq()        -> nvme_process_cq()
+>
+> In the above scenario, the nvme_process_cq() for the same queue may be
+> running on both CPU X and CPU Y concurrently.
+>
+> It is much more easier to reproduce the issue when CONFIG_PREEMPT is
+> enabled in kernel. When CONFIG_PREEMPT is disabled, it would take longer
+> time for nvme_stop_queues()-->blk_mq_quiesce_queue() to wait for grace
+> period.
+>
+> This patch protects nvme_process_cq() with nvmeq->cq_poll_lock in
+> nvme_reap_pending_cqes().
+>
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>  drivers/nvme/host/pci.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 3726dc780d15..cc46e250fcac 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -1382,16 +1382,19 @@ static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
+>
+>  /*
+>   * Called only on a device that has been disabled and after all other threads
+> - * that can check this device's completion queues have synced. This is the
+> - * last chance for the driver to see a natural completion before
+> - * nvme_cancel_request() terminates all incomplete requests.
+> + * that can check this device's completion queues have synced, except
+> + * nvme_poll(). This is the last chance for the driver to see a natural
+> + * completion before nvme_cancel_request() terminates all incomplete requests.
+>   */
+>  static void nvme_reap_pending_cqes(struct nvme_dev *dev)
+>  {
+>         int i;
+>
+> -       for (i = dev->ctrl.queue_count - 1; i > 0; i--)
+> +       for (i = dev->ctrl.queue_count - 1; i > 0; i--) {
+> +               spin_lock(&dev->queues[i].cq_poll_lock);
+>                 nvme_process_cq(&dev->queues[i]);
+> +               spin_unlock(&dev->queues[i].cq_poll_lock);
+> +       }
+>  }
 
-    71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
-            |
-             --71.06%--wb_writeback
-                       |
-                       |--68.96%--__writeback_inodes_wb
-                       |          |
-                       |           --68.95%--writeback_sb_inodes
-                       |                     |
-                       |                     |--65.08%--__writeback_single_inode
-                       |                     |          |
-                       |                     |           --64.35%--do_writepages
-                       |                     |                     |
-                       |                     |                     |--59.83%--f2fs_write_node_pages
-                       |                     |                     |          |
-                       |                     |                     |           --59.74%--f2fs_sync_node_pages
-                       |                     |                     |                     |
-                       |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
-                       |                     |                     |                     |          |
-                       |                     |                     |                     |           --27.90%--find_get_pages_range_tag
+Looks a real race, and the fix is fine:
 
-Before umount, kworker will always hold one core, that looks not reasonable,
-to avoid that, could we just allow node write, since it's out-place-update,
-and cp is not allowed, we don't need to worry about its effect on data on
-previous checkpoint, and it can decrease memory footprint cost by node pages.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Thanks,
 
->>>>>
->>>>> IMO, for umount case, we should drop dirty reference and dirty pages on meta/data
->>>>> pages like we change for node pages to avoid potential dead loop...
->>>>
->>>> I believe we're doing for them. :P
->>>
->>> Actually, I mean do we need to drop dirty meta/data pages explicitly as below:
->>>
->>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>> index 3dc3ac6fe143..4c08fd0a680a 100644
->>> --- a/fs/f2fs/checkpoint.c
->>> +++ b/fs/f2fs/checkpoint.c
->>> @@ -299,8 +299,15 @@ static int __f2fs_write_meta_page(struct page *page,
->>>
->>>  	trace_f2fs_writepage(page, META);
->>>
->>> -	if (unlikely(f2fs_cp_error(sbi)))
->>> +	if (unlikely(f2fs_cp_error(sbi))) {
->>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
->>> +			ClearPageUptodate(page);
->>> +			dec_page_count(sbi, F2FS_DIRTY_META);
->>> +			unlock_page(page);
->>> +			return 0;
->>> +		}
->>>  		goto redirty_out;
->>> +	}
->>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->>>  		goto redirty_out;
->>>  	if (wbc->for_reclaim && page->index < GET_SUM_BLOCK(sbi, 0))
->>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->>> index 48a622b95b76..94b342802513 100644
->>> --- a/fs/f2fs/data.c
->>> +++ b/fs/f2fs/data.c
->>> @@ -2682,6 +2682,12 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
->>>
->>>  	/* we should bypass data pages to proceed the kworkder jobs */
->>>  	if (unlikely(f2fs_cp_error(sbi))) {
->>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
->>> +			ClearPageUptodate(page);
->>> +			inode_dec_dirty_pages(inode);
->>> +			unlock_page(page);
->>> +			return 0;
->>> +		}
->>
->> Oh, I notice previously, we will drop non-directory inode's dirty pages directly,
->> however, during umount, we'd better drop directory inode's dirty pages as well, right?
-> 
-> Hmm, I remember I dropped them before. Need to double check.
-> 
->>
->>>  		mapping_set_error(page->mapping, -EIO);
->>>  		/*
->>>  		 * don't drop any dirty dentry pages for keeping lastest
->>>
->>>>
->>>>>
->>>>> Thanks,
->>>>>
->>>>>> in an inifinite loop. Let's drop dirty pages at umount in that case.
->>>>>>
->>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>>>> ---
->>>>>> v3:
->>>>>>  - fix wrong unlock
->>>>>>
->>>>>> v2:
->>>>>>  - fix typos
->>>>>>
->>>>>>  fs/f2fs/node.c | 9 ++++++++-
->>>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->>>>>> index e632de10aedab..e0bb0f7e0506e 100644
->>>>>> --- a/fs/f2fs/node.c
->>>>>> +++ b/fs/f2fs/node.c
->>>>>> @@ -1520,8 +1520,15 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
->>>>>>  
->>>>>>  	trace_f2fs_writepage(page, NODE);
->>>>>>  
->>>>>> -	if (unlikely(f2fs_cp_error(sbi)))
->>>>>> +	if (unlikely(f2fs_cp_error(sbi))) {
->>>>>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
->>>>>> +			ClearPageUptodate(page);
->>>>>> +			dec_page_count(sbi, F2FS_DIRTY_NODES);
->>>>>> +			unlock_page(page);
->>>>>> +			return 0;
->>>>>> +		}
->>>>>>  		goto redirty_out;
->>>>>> +	}
->>>>>>  
->>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
->>>>>>  		goto redirty_out;
->>>>>>
->>>> .
->>>>
->>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>> .
->>>
-> .
-> 
+thanks,
+Ming Lei
