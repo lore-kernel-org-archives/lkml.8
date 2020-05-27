@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2505AC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAFA32084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9A02084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="L5yCGBB7"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="YMOEM6eZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgE0WfA (ORCPT
+        id S1726928AbgE0We4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:35:00 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:61302 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726530AbgE0WeS (ORCPT
+        Wed, 27 May 2020 18:34:56 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57752 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726398AbgE0WeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 18:34:18 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 04RMIp3b024220
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RMFcVH001604
         for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:17 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=iRL+uSyt6foI7ReBZ2mz0Zh7nw7JAMHZmsXeznh0goI=;
- b=L5yCGBB7LJDJsdxA7O4yOImqzxMABYTc4eBamfliVAlRr6QEKIig/4Z3gO1hHccWl2BW
- xJQyKH+OJLaL63obUUrGphplB/m2zGCzWCxNK0hhrGjcd/TGGkHcvDIg5dmGCvAsbSEk
- KNQmFeR1AwvvZETUZhbVKf+bboBcK9PUa/w= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 319ybhh3s9-7
+ bh=Pt/ts2ijzFQVj0Xk6lUScmepxnjSrpYpkSTis8Lqt1o=;
+ b=YMOEM6eZTRGdUs7veZr5zhai9fxV4w1+lfbpJnv6Ju0GDJPys7l9Os1DKuKDhVCEawRU
+ EpAmSxwmqlXaxmM/sywZ8cp4ddjanMOYRLZG5CGTlLBYZ2JnLbofUc7Evlo6Vf9ZN8qV
+ 0eUtLxxecDtCyfTaT+WCbhqUQBePxaNCoxk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 317kp425qw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:17 -0700
-Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
+Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 15:34:14 -0700
+ 15.1.1979.3; Wed, 27 May 2020 15:34:16 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id A071B166901E; Wed, 27 May 2020 15:34:07 -0700 (PDT)
+        id D3F141669035; Wed, 27 May 2020 15:34:07 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v5 05/19] mm: memcontrol: decouple reference counting from page accounting
-Date:   Wed, 27 May 2020 15:33:50 -0700
-Message-ID: <20200527223404.1008856-6-guro@fb.com>
+Subject: [PATCH v5 14/19] mm: memcg/slab: remove memcg_kmem_get_cache()
+Date:   Wed, 27 May 2020 15:33:59 -0700
+Message-ID: <20200527223404.1008856-15-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200527223404.1008856-1-guro@fb.com>
 References: <20200527223404.1008856-1-guro@fb.com>
@@ -66,251 +66,133 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- clxscore=1015 priorityscore=1501 cotscore=-2147483648 spamscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270170
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ mlxlogscore=657 suspectscore=2 priorityscore=1501 cotscore=-2147483648
+ adultscore=0 malwarescore=0 phishscore=0 bulkscore=0 impostorscore=0
+ mlxscore=0 clxscore=1015 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270170
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+The memcg_kmem_get_cache() function became really trivial,
+so let's just inline it into the single call point:
+memcg_slab_pre_alloc_hook().
 
-The reference counting of a memcg is currently coupled directly to how
-many 4k pages are charged to it. This doesn't work well with Roman's
-new slab controller, which maintains pools of objects and doesn't want
-to keep an extra balance sheet for the pages backing those objects.
+It will make the code less bulky and can also help the compiler
+to generate a better code.
 
-This unusual refcounting design (reference counts usually track
-pointers to an object) is only for historical reasons: memcg used to
-not take any css references and simply stalled offlining until all
-charges had been reparented and the page counters had dropped to
-zero. When we got rid of the reparenting requirement, the simple
-mechanical translation was to take a reference for every charge.
-
-More historical context can be found in commit e8ea14cc6ead ("mm:
-memcontrol: take a css reference for each charged page"),
-commit 64f219938941 ("mm: memcontrol: remove obsolete kmemcg pinning
-tricks") and commit b2052564e66d ("mm: memcontrol: continue cache
-reclaim from offlined groups").
-
-The new slab controller exposes the limitations in this scheme, so
-let's switch it to a more idiomatic reference counting model based on
-actual kernel pointers to the memcg:
-
-- The per-cpu stock holds a reference to the memcg its caching
-
-- User pages hold a reference for their page->mem_cgroup. Transparent
-  huge pages will no longer acquire tail references in advance, we'll
-  get them if needed during the split.
-
-- Kernel pages hold a reference for their page->mem_cgroup
-
-- Pages allocated in the root cgroup will acquire and release css
-  references for simplicity. css_get() and css_put() optimize that.
-
-- The current memcg_charge_slab() already hacked around the per-charge
-  references; this change gets rid of that as well.
-
-Roman:
-1) Rebased on top of the current mm tree: added css_get() in
-   mem_cgroup_charge(), dropped mem_cgroup_try_charge() part
-2) I've reformatted commit references in the commit log to make
-   checkpatch.pl happy.
-
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/memcontrol.c | 37 +++++++++++++++++++++----------------
- mm/slab.h       |  2 --
- 2 files changed, 21 insertions(+), 18 deletions(-)
+ include/linux/memcontrol.h |  2 --
+ mm/memcontrol.c            | 25 +------------------------
+ mm/slab.h                  | 11 +++++++++--
+ mm/slab_common.c           |  2 +-
+ 4 files changed, 11 insertions(+), 29 deletions(-)
 
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 18ef6c85de5b..7a84d9164449 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1405,8 +1405,6 @@ static inline void memcg_set_shrinker_bit(struct me=
+m_cgroup *memcg,
+ }
+ #endif
+=20
+-struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep);
+-
+ #ifdef CONFIG_MEMCG_KMEM
+ int __memcg_kmem_charge(struct mem_cgroup *memcg, gfp_t gfp,
+ 			unsigned int nr_pages);
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b53dee2bb395..69705b2fa03f 100644
+index fca1bb7f8f7a..1f16a73ab744 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -2094,13 +2094,17 @@ static void drain_stock(struct memcg_stock_pcp *s=
-tock)
- {
- 	struct mem_cgroup *old =3D stock->cached;
+@@ -393,7 +393,7 @@ void memcg_put_cache_ids(void)
 =20
-+	if (!old)
-+		return;
-+
- 	if (stock->nr_pages) {
- 		page_counter_uncharge(&old->memory, stock->nr_pages);
- 		if (do_memsw_account())
- 			page_counter_uncharge(&old->memsw, stock->nr_pages);
--		css_put_many(&old->css, stock->nr_pages);
- 		stock->nr_pages =3D 0;
- 	}
-+
-+	css_put(&old->css);
- 	stock->cached =3D NULL;
- }
-=20
-@@ -2136,6 +2140,7 @@ static void refill_stock(struct mem_cgroup *memcg, =
-unsigned int nr_pages)
- 	stock =3D this_cpu_ptr(&memcg_stock);
- 	if (stock->cached !=3D memcg) { /* reset if necessary */
- 		drain_stock(stock);
-+		css_get(&memcg->css);
- 		stock->cached =3D memcg;
- 	}
- 	stock->nr_pages +=3D nr_pages;
-@@ -2566,12 +2571,10 @@ static int try_charge(struct mem_cgroup *memcg, g=
-fp_t gfp_mask,
- 	page_counter_charge(&memcg->memory, nr_pages);
- 	if (do_memsw_account())
- 		page_counter_charge(&memcg->memsw, nr_pages);
--	css_get_many(&memcg->css, nr_pages);
-=20
- 	return 0;
-=20
- done_restock:
--	css_get_many(&memcg->css, batch);
- 	if (batch > nr_pages)
- 		refill_stock(memcg, batch - nr_pages);
-=20
-@@ -2608,8 +2611,6 @@ static void cancel_charge(struct mem_cgroup *memcg,=
- unsigned int nr_pages)
- 	page_counter_uncharge(&memcg->memory, nr_pages);
- 	if (do_memsw_account())
- 		page_counter_uncharge(&memcg->memsw, nr_pages);
--
--	css_put_many(&memcg->css, nr_pages);
- }
-=20
- static void commit_charge(struct page *page, struct mem_cgroup *memcg)
-@@ -2909,6 +2910,7 @@ int __memcg_kmem_charge_page(struct page *page, gfp=
-_t gfp, int order)
- 		if (!ret) {
- 			page->mem_cgroup =3D memcg;
- 			__SetPageKmemcg(page);
-+			return 0;
- 		}
- 	}
- 	css_put(&memcg->css);
-@@ -2931,12 +2933,11 @@ void __memcg_kmem_uncharge_page(struct page *page=
-, int order)
- 	VM_BUG_ON_PAGE(mem_cgroup_is_root(memcg), page);
- 	__memcg_kmem_uncharge(memcg, nr_pages);
- 	page->mem_cgroup =3D NULL;
-+	css_put(&memcg->css);
-=20
- 	/* slab pages do not have PageKmemcg flag set */
- 	if (PageKmemcg(page))
- 		__ClearPageKmemcg(page);
--
--	css_put_many(&memcg->css, nr_pages);
- }
- #endif /* CONFIG_MEMCG_KMEM */
-=20
-@@ -2948,13 +2949,16 @@ void __memcg_kmem_uncharge_page(struct page *page=
-, int order)
+ /*
+  * A lot of the calls to the cache allocation functions are expected to =
+be
+- * inlined by the compiler. Since the calls to memcg_kmem_get_cache are
++ * inlined by the compiler. Since the calls to memcg_slab_pre_alloc_hook=
+() are
+  * conditional to this static branch, we'll have to allow modules that d=
+oes
+  * kmem_cache_alloc and the such to see this symbol as well
   */
- void mem_cgroup_split_huge_fixup(struct page *head)
- {
-+	struct mem_cgroup *memcg =3D head->mem_cgroup;
- 	int i;
-=20
- 	if (mem_cgroup_disabled())
- 		return;
-=20
--	for (i =3D 1; i < HPAGE_PMD_NR; i++)
--		head[i].mem_cgroup =3D head->mem_cgroup;
-+	for (i =3D 1; i < HPAGE_PMD_NR; i++) {
-+		css_get(&memcg->css);
-+		head[i].mem_cgroup =3D memcg;
-+	}
+@@ -2850,29 +2850,6 @@ static void memcg_free_cache_id(int id)
+ 	ida_simple_remove(&memcg_cache_ida, id);
  }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 =20
-@@ -5398,7 +5402,10 @@ static int mem_cgroup_move_account(struct page *pa=
-ge,
- 	 */
- 	smp_mb();
-=20
--	page->mem_cgroup =3D to; 	/* caller should have done css_get */
-+	css_get(&to->css);
-+	css_put(&from->css);
-+
-+	page->mem_cgroup =3D to;
-=20
- 	__unlock_page_memcg(from);
-=20
-@@ -6483,6 +6490,7 @@ int mem_cgroup_charge(struct page *page, struct mm_=
-struct *mm, gfp_t gfp_mask)
- 	if (ret)
- 		goto out_put;
-=20
-+	css_get(&memcg->css);
- 	commit_charge(page, memcg);
-=20
- 	local_irq_disable();
-@@ -6537,9 +6545,6 @@ static void uncharge_batch(const struct uncharge_ga=
-ther *ug)
- 	__this_cpu_add(ug->memcg->vmstats_percpu->nr_page_events, ug->nr_pages)=
-;
- 	memcg_check_events(ug->memcg, ug->dummy_page);
- 	local_irq_restore(flags);
+-/**
+- * memcg_kmem_get_cache: select memcg or root cache for allocation
+- * @cachep: the original global kmem cache
+- *
+- * Return the kmem_cache we're supposed to use for a slab allocation.
+- *
+- * If the cache does not exist yet, if we are the first user of it, we
+- * create it asynchronously in a workqueue and let the current allocatio=
+n
+- * go through with the original cache.
+- */
+-struct kmem_cache *memcg_kmem_get_cache(struct kmem_cache *cachep)
+-{
+-	struct kmem_cache *memcg_cachep;
 -
--	if (!mem_cgroup_is_root(ug->memcg))
--		css_put_many(&ug->memcg->css, ug->nr_pages);
- }
-=20
- static void uncharge_page(struct page *page, struct uncharge_gather *ug)
-@@ -6577,6 +6582,7 @@ static void uncharge_page(struct page *page, struct=
- uncharge_gather *ug)
-=20
- 	ug->dummy_page =3D page;
- 	page->mem_cgroup =3D NULL;
-+	css_put(&ug->memcg->css);
- }
-=20
- static void uncharge_list(struct list_head *page_list)
-@@ -6682,8 +6688,8 @@ void mem_cgroup_migrate(struct page *oldpage, struc=
-t page *newpage)
- 	page_counter_charge(&memcg->memory, nr_pages);
- 	if (do_memsw_account())
- 		page_counter_charge(&memcg->memsw, nr_pages);
--	css_get_many(&memcg->css, nr_pages);
-=20
-+	css_get(&memcg->css);
- 	commit_charge(newpage, memcg);
-=20
- 	local_irq_save(flags);
-@@ -6920,8 +6926,7 @@ void mem_cgroup_swapout(struct page *page, swp_entr=
-y_t entry)
- 	mem_cgroup_charge_statistics(memcg, page, -nr_entries);
- 	memcg_check_events(memcg, page);
-=20
--	if (!mem_cgroup_is_root(memcg))
--		css_put_many(&memcg->css, nr_entries);
-+	css_put(&memcg->css);
- }
-=20
+-	memcg_cachep =3D READ_ONCE(cachep->memcg_params.memcg_cache);
+-	if (unlikely(!memcg_cachep)) {
+-		queue_work(system_wq, &cachep->memcg_params.work);
+-		return cachep;
+-	}
+-
+-	return memcg_cachep;
+-}
+-
  /**
+  * __memcg_kmem_charge: charge a number of kernel pages to a memcg
+  * @memcg: memory cgroup to charge
 diff --git a/mm/slab.h b/mm/slab.h
-index 633eedb6bad1..8a574d9361c1 100644
+index c6c7987dfd85..f4033298a776 100644
 --- a/mm/slab.h
 +++ b/mm/slab.h
-@@ -373,9 +373,7 @@ static __always_inline int memcg_charge_slab(struct p=
-age *page,
- 	lruvec =3D mem_cgroup_lruvec(memcg, page_pgdat(page));
- 	mod_lruvec_state(lruvec, cache_vmstat_idx(s), nr_pages << PAGE_SHIFT);
+@@ -333,9 +333,16 @@ static inline struct kmem_cache *memcg_slab_pre_allo=
+c_hook(struct kmem_cache *s,
+ 	if (memcg_kmem_bypass())
+ 		return s;
 =20
--	/* transer try_charge() page references to kmem_cache */
- 	percpu_ref_get_many(&s->memcg_params.refcnt, nr_pages);
--	css_put_many(&memcg->css, nr_pages);
- out:
- 	css_put(&memcg->css);
- 	return ret;
+-	cachep =3D memcg_kmem_get_cache(s);
+-	if (is_root_cache(cachep))
++	cachep =3D READ_ONCE(s->memcg_params.memcg_cache);
++	if (unlikely(!cachep)) {
++		/*
++		 * If memcg cache does not exist yet, we schedule it's
++		 * asynchronous creation and let the current allocation
++		 * go through with the root cache.
++		 */
++		queue_work(system_wq, &s->memcg_params.work);
+ 		return s;
++	}
+=20
+ 	objcg =3D get_obj_cgroup_from_current();
+ 	if (!objcg)
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 10aa2acb84ca..f8874a159637 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -568,7 +568,7 @@ void memcg_create_kmem_cache(struct kmem_cache *root_=
+cache)
+ 	}
+=20
+ 	/*
+-	 * Since readers won't lock (see memcg_kmem_get_cache()), we need a
++	 * Since readers won't lock (see memcg_slab_pre_alloc_hook()), we need =
+a
+ 	 * barrier here to ensure nobody will see the kmem_cache partially
+ 	 * initialized.
+ 	 */
 --=20
 2.25.4
 
