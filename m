@@ -5,71 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D548C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7ACA20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734B92084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTxj59cR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTHq9CNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389640AbgE0PGO (ORCPT
+        id S2389654AbgE0PG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50236 "EHLO
+        Wed, 27 May 2020 11:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389316AbgE0PGM (ORCPT
+        with ESMTP id S2389316AbgE0PG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:06:12 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D737DC05BD1E;
-        Wed, 27 May 2020 08:06:12 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id n15so11950678pfd.0;
-        Wed, 27 May 2020 08:06:12 -0700 (PDT)
+        Wed, 27 May 2020 11:06:27 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A13C05BD1E;
+        Wed, 27 May 2020 08:06:27 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t11so11873937pgg.2;
+        Wed, 27 May 2020 08:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=sGrZKBWfZ9CzbVCqf0bzxeml/dCqTei6g4aLYiJ/QE4=;
-        b=MTxj59cROwN+53QYo4SSPVrpTjgGU1PkLYOSYGSCHQQSuo3EKGDjduRBdIVJd4yeUO
-         ykpuutiv1VYJx00VQ2a0UB6AVWfP/+CYxxDEsPAqb5HvAR9ZBNjI6okRkfJ1TXCNVsaq
-         q78/VzeQuwhteET3ohKSKEdMKpGa3Ky5nFYl3lwYs6aPP+NFRgA+0ozbwzryXYls1ayk
-         K1gNz+Tc8zZ2d1NYOrs1IRErPxA9uqksG2lhwYelhbmXm3+e8k7xvNtRW7+Bdl51fFnT
-         riWMwTbbtelwf8qBZPB6nQNr0W/iuIETaQtPDmDRxX28+OHSATPtH9CIIJ8iLVk1mbNU
-         sfAw==
+        bh=KoZe606OflP+pqwc544DH0O+4ssFpqgDgsR2zurkW6E=;
+        b=fTHq9CNaoO/Gi4/N0riUfko+pG34aq7YNbAwwUvsFRuBb5GAhsWZLr9xfV4mcZcRsU
+         QnglNUdToL3uMhDaPuOEy3wOxmwCTN5ogN4KlsGkmntq1LZFQlZyiCuy7YiUSvPrrsZe
+         pV7BSEcUNIO6NelYjVS62q5JL52V55lud3Yn3KMiQyVldN5CwsKtPPynE8Dc4LKOgAvQ
+         dGwJQRQCzdkPzOF7Gn3tEJhPNpcqNp2iiBwR7AIQS/TawJ38jZ1adMhcwl3f2OKkmd1K
+         EL1f9JSLCmIHUTI09LohN7PXo9o9L6P2YKhq+MjSPtUFEOqjqmmQ5QBbjn9bN/oysqgh
+         jpKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=sGrZKBWfZ9CzbVCqf0bzxeml/dCqTei6g4aLYiJ/QE4=;
-        b=XsC3eRBLpGnwnPo1cDSO59GdCTnN9o969ivzDRUTfwJH1Jf5EO8YmgbJ91N3saBZBR
-         R4tc3KNg/PTsqlXQ5tu3LC4CY1pFcITuRF3Udh+bOnsfwmHDeru7s7xz1Mpl0+iGWvaH
-         ehBcZikOM+yhrrp6vkFK5ajZsSHW9tVpOgoKs5p6Ltcot9+OZdwVm70EQe5WXNLF3pMJ
-         pTPmKQnKf0osn/+7DxMnRRZPeejz/vaY6DSyFtV/Cgd4St0jJj5jaknVD9KlIi6kOEDH
-         OJdZOWPHJT3RUAFxsS2S+NGnt9OAq/H/UeNDQmR/A8iSCKdw6Gsyhjbo1p8s4RwRCn2s
-         Xwkw==
-X-Gm-Message-State: AOAM533wVpH9YjHW5cMir0Xei5Yxofb2b+EPyrf2t5VWAB2dkabOC9Rt
-        7iY1vyZJ120vr3D8LElDz8Q=
-X-Google-Smtp-Source: ABdhPJx3z3qhHGI+z7lJTwJvKQ2pu9i5uE84i3LTWORyi9fzKV/Z1COWfzuoUQvUU5eziD6lGe6gmA==
-X-Received: by 2002:a05:6a00:1490:: with SMTP id v16mr4235765pfu.173.1590591972237;
-        Wed, 27 May 2020 08:06:12 -0700 (PDT)
+        bh=KoZe606OflP+pqwc544DH0O+4ssFpqgDgsR2zurkW6E=;
+        b=rpaLkRm8d884MSo8MrMoN38o07CjK3QO+0lEOzWwcyMYJhS+dPnA07DwikU1w1TjuG
+         uF9VoFKih7FeuwghkrZr7rzt9/kdzopmZarsSo3m4KdnF6QwKrVOua5sk3qBI5d8M+xe
+         lF4lIyareu5TLk9RWT0pLFra8medq8wkNEKZ2RfbpuCI+Idogldd2Ceg4bckXJjQzCe8
+         hufRgUoZcX7faxq853FM5+Z3KzKOs2cKvWWQ7Px7Da9ErE4ryMx6lYB5BGhSeFYSe688
+         XoThvUXWzLI5qafNCrd/cXY5mWpf40A+gnrrVddqPEFAjsqrp33MDf6b6CHBkMfleb8V
+         4vbA==
+X-Gm-Message-State: AOAM533R4iDu4Dq6Rl8KviMc6aJKPvP0coJipn1qP/l3sO7K9sDKYN4K
+        Y7flXniOgeKGNyoStjg169k=
+X-Google-Smtp-Source: ABdhPJxgEH3iDLHEIuRn42o6PH92ZI2uivVSnqhr8WUdlOF6ENTJ/r+yXck2jN01wrAUDOVHsdU/nA==
+X-Received: by 2002:aa7:8c53:: with SMTP id e19mr4381417pfd.264.1590591986809;
+        Wed, 27 May 2020 08:06:26 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id q18sm2214682pgt.74.2020.05.27.08.06.09
+        by smtp.gmail.com with ESMTPSA id a16sm2465326pfl.167.2020.05.27.08.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 08:06:11 -0700 (PDT)
+        Wed, 27 May 2020 08:06:26 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester95@gmail.com>,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] iio: mma8452: add missed iio_device_unregister in probe failure
-Date:   Wed, 27 May 2020 23:06:06 +0800
-Message-Id: <20200527150606.539130-1-hslester96@gmail.com>
+Subject: [PATCH] media: exynos4-is: add the missed check for pinctrl_lookup_state
+Date:   Wed, 27 May 2020 23:06:20 +0800
+Message-Id: <20200527150620.539247-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,33 +82,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mma8452_probe() calls iio_device_register() but misses to call
-iio_device_unregister() when probe fails.
-Add the missed call in error handler to fix it.
+From: Chuhong Yuan <hslester95@gmail.com>
+
+fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
+Add the missed check to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/iio/accel/mma8452.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/exynos4-is/media-dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 00e100fc845a..813bca7cfc3e 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -1685,10 +1685,13 @@ static int mma8452_probe(struct i2c_client *client,
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 9aaf3b8060d5..9c31d950cddf 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
  
- 	ret = mma8452_set_freefall_mode(data, false);
- 	if (ret < 0)
--		goto buffer_cleanup;
-+		goto unregister_device;
- 
- 	return 0;
- 
-+unregister_device:
-+	iio_device_unregister(indio_dev);
+ 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
+ 					PINCTRL_STATE_IDLE);
++	if (IS_ERR(pctl->state_idle))
++		return PTR_ERR(pctl->state_idle);
 +
- buffer_cleanup:
- 	iio_triggered_buffer_cleanup(indio_dev);
+ 	return 0;
+ }
  
 -- 
 2.26.2
