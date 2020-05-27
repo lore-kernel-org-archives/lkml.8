@@ -2,126 +2,149 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1728C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D78C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A71E02075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216592078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nvBQbKqu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aP+vMyRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389316AbgE0Ovl (ORCPT
+        id S2389369AbgE0OwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388621AbgE0Ovk (ORCPT
+        Wed, 27 May 2020 10:52:08 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56424 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388621AbgE0OwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:51:40 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A546C05BD1E;
-        Wed, 27 May 2020 07:51:40 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id fs4so1625397pjb.5;
-        Wed, 27 May 2020 07:51:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IYroLjMhHIVfp0Ps4FH2gR7ebtraWAtzjxwzzSb03/M=;
-        b=nvBQbKqu5uFlfoz4A5iT/BRqwAA8UHqKPLuPI5X+8dMcGD3yQs1GfpF8rFYMs8sIEZ
-         /zOmKsWnxre5wX15QnuVgq96cv7CKeVXGn/necTUqms/syMmCXlw7jNqUXJRh3xJvncE
-         3wpsv9RvAg4NSJrKGNi5T6iLJUJTfPyUaT1cU7raqBROg2rJXVHEIklC1euPIQHLgXiv
-         y4/sXdDpBDT9Wa+X32movpmy4qW5oM16GwBojVvG9+KyZcyVyuPRXymA1ATn7OSYgRtG
-         aLIp2/mLNbZhX1BicXG/LKRfBVktz2IK2vMLTis1ijqd3KRD44FYpN2GkH0VSkpOeFY8
-         d6QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IYroLjMhHIVfp0Ps4FH2gR7ebtraWAtzjxwzzSb03/M=;
-        b=jQCSjgl7Se9HroJXBIS61ojC+QKPHeqkF3Zp0agioAuOH0jK6RlNyOsWYDok1dIrt8
-         7rJnsTmoqMRA1fjf0fuMXWfIqlA529SlH+QsT5LO3HqguEjyZTqSRJfc8aWPD8wky/6g
-         4uTFMkWyR+cVi1//8MzcOzkwyiFnFAJw7xrcybk7pveG9tJD8ybW4c/gsovagb0E96+4
-         L6BVpTUTAgAI2mTGjemxR5WM2VWn92+PXVmQtvaDLPFOIvoIWm74ysClbjDxxzENpHL1
-         zb0MJmCp3wGGbO4NiqsV4dMq70Uac9RxrjL++9Ir1pY3CLAtBpe5rcealtDnllrbcdfn
-         ZzLg==
-X-Gm-Message-State: AOAM532oZfOL7o0zKyx4oODXb60efZdx00SKhc/ZKS+dkfV8Oz+Jdj2K
-        oOsbll2J1aSvh3RdaLm2UzjZfagy
-X-Google-Smtp-Source: ABdhPJzl1QaOIN8BcHat2UxwfnIUWt1l2rFunjdMaTopWGdypIXtikiuE4zr+Kn1y2hdOLqd5yS8bg==
-X-Received: by 2002:a17:902:6b4b:: with SMTP id g11mr2846536plt.9.1590591100154;
-        Wed, 27 May 2020 07:51:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f11sm2321239pfa.32.2020.05.27.07.51.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 07:51:39 -0700 (PDT)
-Date:   Wed, 27 May 2020 07:51:38 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Naveen Krishna Chatradhi <nchatrad@amd.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Richard Henderson <rth@twiddle.net>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpumask: guard cpumask_of_node() macro argument
-Message-ID: <20200527145138.GB209591@roeck-us.net>
-References: <20200527134623.930247-1-arnd@arndb.de>
+        Wed, 27 May 2020 10:52:08 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04REq0wB049154;
+        Wed, 27 May 2020 09:52:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590591120;
+        bh=W9cUVgUiVlKpasnouxZe/jr55TOUx7dt8VfCWyPWOHU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=aP+vMyRDyKm9P2Sjpt7nL7wSiynvQE/OEyts1J6pxlgOCR5o47Do4Ebj10NYbNVU/
+         ggZ0dJaWn4ONiiuqVKkvgBAU7KAfamGpKvNcrvlVBDbzZ/kr75gYTnKU6yYj6uaykC
+         4odm5C5sFsiNEUHBBAASLICXvNfpQvZfKhodOAmk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04REq0FV077131
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 09:52:00 -0500
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
+ May 2020 09:52:00 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 27 May 2020 09:52:00 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04REpvqM115260;
+        Wed, 27 May 2020 09:51:58 -0500
+Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200526174716.14116-1-dmurphy@ti.com>
+ <20200526174716.14116-5-dmurphy@ti.com> <20200527005224.GF782807@lunn.ch>
+ <c0867d48-6f04-104b-8192-d61d4464a65f@ti.com>
+ <20200527131204.GB793752@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <bbbf2c2e-2238-3e53-08eb-9d7ad3fc785b@ti.com>
+Date:   Wed, 27 May 2020 09:51:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527134623.930247-1-arnd@arndb.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200527131204.GB793752@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:46:08PM +0200, Arnd Bergmann wrote:
-> drivers/hwmon/amd_energy.c:195:15: error: invalid operands to binary expression ('void' and 'int')
->                                         (channel - data->nr_cpus));
->                                         ~~~~~~~~~^~~~~~~~~~~~~~~~~
-> include/asm-generic/topology.h:51:42: note: expanded from macro 'cpumask_of_node'
->     #define cpumask_of_node(node)       ((void)node, cpu_online_mask)
->                                                ^~~~
-> include/linux/cpumask.h:618:72: note: expanded from macro 'cpumask_first_and'
->  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
->                                                                        ^~~~~
-> 
-> Fixes: f0b848ce6fe9 ("cpumask: Introduce cpumask_of_{node,pcibus} to replace {node,pcibus}_to_cpumask")
-> Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Andrew
 
-Didn't I Cc: you on the same patch I sent out earlier ? Never mind, though.
+On 5/27/20 8:12 AM, Andrew Lunn wrote:
+>> If the dt defines rgmii-rx/tx-id then these values are required not
+>> optional.  That was the discussion on the binding.
+> How many times do i need to say it. They are optional. If not
+> specified, default to 2ns.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+OK.  I guess then the DP83867 driver is wrong because it specifically 
+states in bold
 
-Guenter
+     /* RX delay *must* be specified if internal delay of RX is used. */
 
-> ---
->  include/asm-generic/topology.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
-> index 238873739550..5aa8705df87e 100644
-> --- a/include/asm-generic/topology.h
-> +++ b/include/asm-generic/topology.h
-> @@ -48,7 +48,7 @@
->    #ifdef CONFIG_NEED_MULTIPLE_NODES
->      #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
->    #else
-> -    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
-> +    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
->    #endif
->  #endif
->  #ifndef pcibus_to_node
-> -- 
-> 2.26.2
-> 
+It was signed off in commit fafc5db28a2ff
+
+
+>>>> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+>>>> +				   &dp83869->tx_id_delay);
+>>>> +	if (ret) {
+>>>> +		dp83869->tx_id_delay = ret;
+>>>> +		ret = 0;
+>>>> +	}
+>>>> +
+>>>>    	return ret;
+>>>>    }
+>>>>    #else
+>>>> @@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>>>>    	return ret;
+>>>>    }
+>>>> +static int dp83869_get_delay(struct phy_device *phydev)
+>>>> +{
+>>>> +	struct dp83869_private *dp83869 = phydev->priv;
+>>>> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
+>>>> +	int tx_delay = 0;
+>>>> +	int rx_delay = 0;
+>>>> +
+>>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
+>>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
+>>>> +		tx_delay = phy_get_delay_index(phydev,
+>>>> +					       &dp83869_internal_delay[0],
+>>>> +					       delay_size, dp83869->tx_id_delay,
+>>>> +					       false);
+>>>> +		if (tx_delay < 0) {
+>>>> +			phydev_err(phydev, "Tx internal delay is invalid\n");
+>>>> +			return tx_delay;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
+>>>> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
+>>>> +		rx_delay = phy_get_delay_index(phydev,
+>>>> +					       &dp83869_internal_delay[0],
+>>>> +					       delay_size, dp83869->rx_id_delay,
+>>>> +					       false);
+>>>> +		if (rx_delay < 0) {
+>>>> +			phydev_err(phydev, "Rx internal delay is invalid\n");
+>>>> +			return rx_delay;
+>>>> +		}
+>>>> +	}
+>>> So any PHY using these properties is going to pretty much reproduce
+>>> this code. Meaning is should all be in a helper.
+>> The issue here is that the phy_mode may only be rgmii-txid so you only want
+>> to find the tx_delay and return.
+>>
+>> Same with the RXID.  How is the helper supposed to know what delay to return
+>> and look for?
+> How does this code do it? It looks at the value of interface.
+
+Actually I will be removing this check with setting the delays to default.
+
+Dan
+
+
+>      Andrew
