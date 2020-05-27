@@ -2,188 +2,95 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C87C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E0A207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:24:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GGpgcHcW"
+	by mail.kernel.org (Postfix) with ESMTP id 09FC9207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgE0MYE (ORCPT
+        id S1729538AbgE0MZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:24:04 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60570 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgE0MYD (ORCPT
+        Wed, 27 May 2020 08:25:02 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:38005 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726267AbgE0MZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:24:03 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RCNutA122607;
-        Wed, 27 May 2020 07:23:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590582236;
-        bh=Vpls28zqWFv+m2tzlLEDxZh3MhqxOrWIWFXc0hTbBhU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GGpgcHcWLWt8PBvTah72vKywx522Jzw48hhG1JEeoQ+fNenGAeln8FLJeKtSd6Gfo
-         WBbTppo0OfL9zlyCBy0VdjL7TPki1YJF34drqsG2Rv7D4bSwLN3Bws1geCjUD0nPOj
-         mE0nPw7SXb+xk9HPGwYLIjMbecUC2RM6yHP3rNfg=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RCNuQV039174
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 07:23:56 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 07:23:56 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 07:23:56 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RCNueD076213;
-        Wed, 27 May 2020 07:23:56 -0500
-Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
- configuration
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200526174716.14116-1-dmurphy@ti.com>
- <20200526174716.14116-5-dmurphy@ti.com> <20200527005224.GF782807@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c0867d48-6f04-104b-8192-d61d4464a65f@ti.com>
-Date:   Wed, 27 May 2020 07:23:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200527005224.GF782807@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 27 May 2020 08:25:01 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 27 May 2020 05:25:00 -0700
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 27 May 2020 05:24:57 -0700
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 21E4621800; Wed, 27 May 2020 17:54:56 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+Subject: [PATCH V6 0/5] Add APSS clock controller support for IPQ6018
+Date:   Wed, 27 May 2020 17:54:47 +0530
+Message-Id: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+The CPU on Qualcomm's IPQ6018 devices are primarily fed by APSS PLL and XO,
+these are connected to a clock mux and enable block.
 
-On 5/26/20 7:52 PM, Andrew Lunn wrote:
->> @@ -218,6 +224,7 @@ static int dp83869_of_init(struct phy_device *phydev)
->>   		ret = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
->>   		if (ret < 0)
->>   			return ret;
->> +
->>   		if (ret & DP83869_STRAP_MIRROR_ENABLED)
->>   			dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
->>   		else
-> This random white space change does not belong in this patch.
+This patch series adds support for these clocks and inturn enables clocks
+required for CPU freq.
 
-OK
+[V6]
+ * Split mailbox driver from this series, mailbox changes will sent as a
+   separate series
+ * Addressed review comments from Stephen
+[V5]
+ * Addressed Bjorn comments on apss clk and dt-bindings
+ * Patch 2 depends on a53 pll dt-bindings
+   https://www.spinics.net/lists/linux-clk/msg48358.html  
+[V4]
+ * Re-written PLL found on IPQ platforms as a separate driver
+ * Addressed stephen's comments on apss clock controller and pll
+ * Addressed Rob's review comments on bindings
+ * moved a53 pll binding from this series as it is not applicable, will send
+   it separately.
+[V3]
+ * Fixed dt binding check error in patch2
+   dt-bindings: clock: Add YAML schemas for QCOM A53 PLL
+[V2]
+ * Restructred the patch series as there are two different HW blocks,
+   the mux and enable belongs to the apcs block and PLL has a separate HW
+   block.
+ * Converted qcom mailbox and qcom a53 pll documentation to yaml.
+ * Addressed review comments from Stephen, Rob and Sibi where it is applicable.
+ * Changed this cover letter to state the purpose of this patch series
 
+Sivaprakash Murugesan (5):
+  dt-bindings: clock: add ipq6018 a53 pll compatible
+  clk: qcom: Add ipq apss pll driver
+  clk: qcom: Add DT bindings for ipq6018 apss clock controller
+  clk: qcom: Add ipq6018 apss clock controller
+  arm64: dts: ipq6018: Add support for apss pll
 
->> @@ -232,6 +239,20 @@ static int dp83869_of_init(struct phy_device *phydev)
->>   				 &dp83869->tx_fifo_depth))
->>   		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
->>   
->> +	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
->> +				   &dp83869->rx_id_delay);
->> +	if (ret) {
->> +		dp83869->rx_id_delay = ret;
->> +		ret = 0;
->> +	}
-> This looks odd.
->
-> If this optional property is not found, -EINVAL will be returned. It
-> could also return -ENODATA. You then assign this error value to
-> dp83869->rx_id_delay? I would of expected you to assign 2000, the
-> default value?
+ .../devicetree/bindings/clock/qcom,a53pll.yaml     |  18 ++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |   8 ++
+ drivers/clk/qcom/Kconfig                           |  19 ++++
+ drivers/clk/qcom/Makefile                          |   2 +
+ drivers/clk/qcom/apss-ipq-pll.c                    |  95 ++++++++++++++++++
+ drivers/clk/qcom/apss-ipq6018.c                    | 106 +++++++++++++++++++++
+ include/dt-bindings/clock/qcom,apss-ipq.h          |  12 +++
+ 7 files changed, 260 insertions(+)
+ create mode 100644 drivers/clk/qcom/apss-ipq-pll.c
+ create mode 100644 drivers/clk/qcom/apss-ipq6018.c
+ create mode 100644 include/dt-bindings/clock/qcom,apss-ipq.h
 
-Well the driver cannot assume this is the intended value.
+-- 
+2.7.4
 
-If the dt defines rgmii-rx/tx-id then these values are required not 
-optional.  That was the discussion on the binding.
-
-I set these to errno because when config_init is called the driver 
-verifies that the values are valid and present and if they
-
-are not then the PHY will fail to init.
-
-If we set the delay to default then the PHY may be programmed with the 
-wrong delay.
-
-
->> +
->> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
->> +				   &dp83869->tx_id_delay);
->> +	if (ret) {
->> +		dp83869->tx_id_delay = ret;
->> +		ret = 0;
->> +	}
->> +
->>   	return ret;
->>   }
->>   #else
->> @@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
->>   	return ret;
->>   }
->>   
->> +static int dp83869_get_delay(struct phy_device *phydev)
->> +{
->> +	struct dp83869_private *dp83869 = phydev->priv;
->> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
->> +	int tx_delay = 0;
->> +	int rx_delay = 0;
->> +
->> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
->> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
->> +		tx_delay = phy_get_delay_index(phydev,
->> +					       &dp83869_internal_delay[0],
->> +					       delay_size, dp83869->tx_id_delay,
->> +					       false);
->> +		if (tx_delay < 0) {
->> +			phydev_err(phydev, "Tx internal delay is invalid\n");
->> +			return tx_delay;
->> +		}
->> +	}
->> +
->> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
->> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
->> +		rx_delay = phy_get_delay_index(phydev,
->> +					       &dp83869_internal_delay[0],
->> +					       delay_size, dp83869->rx_id_delay,
->> +					       false);
->> +		if (rx_delay < 0) {
->> +			phydev_err(phydev, "Rx internal delay is invalid\n");
->> +			return rx_delay;
->> +		}
->> +	}
-> So any PHY using these properties is going to pretty much reproduce
-> this code. Meaning is should all be in a helper.
-
-The issue here is that the phy_mode may only be rgmii-txid so you only 
-want to find the tx_delay and return.
-
-Same with the RXID.  How is the helper supposed to know what delay to 
-return and look for?
-
-The PHY also only needs to use the helper if the PHY is in certain modes.
-
-And the decision to use the checks is really based on the PHY driver.
-
-Not sure if other PHYs delays require both delays to be set or if the 
-delays are independent.
-
-The helper cannot assume this.
-
-Dan
-
-
->
->       Andrew
