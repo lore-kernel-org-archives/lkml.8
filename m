@@ -2,156 +2,188 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34870C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B97BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D0D20890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JwVNJmUS"
+	by mail.kernel.org (Postfix) with ESMTP id DE59F20890
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590599705;
+	bh=bJ3FDgDnBbVw7rcRF4oMWfVS54hvwrs/zGRbWcr2GG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yrdkkFft/oIIJf49HdpYWAY449gcXYKJWbhrQVHNaCq8rgXtP3MO9oRyifbimgvp0
+	 n7rT1tt4Oc3uG4HcmN0l+fVA1eO0nFkqp4ayQV0d8dDUtZhTSFd5qlkeEkN1hwQzyC
+	 +6sK4vN6Cf6EBtCqjOwJz1BDpqtEK6E2/dQKZ8k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbgE0RMw (ORCPT
+        id S1731283AbgE0RPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:12:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:33918 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731166AbgE0RMv (ORCPT
+        Wed, 27 May 2020 13:15:05 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35477 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731265AbgE0RPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:12:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=c05Lfm3Bec2J6N5tWQ+oQ+j3MSCoOVsCuZaYYtchfGI=; b=JwVNJmUSKgvZVNsaisW2fEbw6U
-        ri7vNr1XSvAcpaS4UW2/jBVlVFWu7mDP2y2gyuTO4Av9n5R1rXelzsiWFbcNuBHZn+RWXyqCFJYqQ
-        qyfNxuVtUiN+RuwSel1vM5eHXFC+Mm6MEMFqk7cJNNPYuaF3rsHzAeI8vwCXeDOlzMcZI6hETB9R5
-        MoGjElj4puj8En4Ky7jBDDZ8ENNmKRKnS6puCwnUe8LGjF+6CpKnB6ZqyWDWCJ+FfDSkc5jF+9149
-        KmFpjWpRAhl3JotQs35u1VGuH4IdxQC3k8TftO1EXtIPCxv25Avjd6ks40b5phU5LVV8zBTSBRDGh
-        5qHEJJiQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdzba-0003uV-OZ; Wed, 27 May 2020 17:12:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73EBF304BDF;
-        Wed, 27 May 2020 19:12:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6B8F120D6F3AC; Wed, 27 May 2020 19:12:36 +0200 (CEST)
-Date:   Wed, 27 May 2020 19:12:36 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     tglx@linutronix.de, frederic@kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org, cai@lca.pw,
-        mgorman@techsingularity.net, joel@joelfernandes.org
-Subject: Re: [RFC][PATCH 4/7] smp: Optimize send_call_function_single_ipi()
-Message-ID: <20200527171236.GC706495@hirez.programming.kicks-ass.net>
-References: <20200526161057.531933155@infradead.org>
- <20200526161907.953304789@infradead.org>
- <20200527095645.GH325280@hirez.programming.kicks-ass.net>
- <20200527101513.GJ325303@hirez.programming.kicks-ass.net>
- <20200527155656.GU2869@paulmck-ThinkPad-P72>
- <20200527163543.GA706478@hirez.programming.kicks-ass.net>
+        Wed, 27 May 2020 13:15:03 -0400
+Received: by mail-il1-f196.google.com with SMTP id a14so24832550ilk.2;
+        Wed, 27 May 2020 10:15:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cUzyV2ffMQiKR0ssWs7eyow7JR4Jl831ooktar0LQs8=;
+        b=QgHA5BNG/I6hCqDTGqGvKRNS2bLKCnKlr/oDAoDmwrvbgK84LOjPgnMMkBc/nsgydf
+         o4XvDPtiLmywIp7OsSKYkvRSqoFuF3LRBMEFZMpwd7RgXTNMvWGC5gom+UvEuhX/D0K7
+         0DFCsS56fCkdII97OuekQGA4nYP5IE6RWGMNg9qh467w+lz9GzagGC0IdKJOn/XZik8c
+         fJhoQgUv2CSeM20FH+XwNGc+hqpOokoCaa4JnoFXY/I90ahpEsDxJCMOmbfooH7JH22/
+         ax6CfC4utXSr4B7+k+VBYnOTwvEa1G2eKRfIkKCWym2eoxgb1pg+KXwt3CnCcJgTk0rw
+         JzlA==
+X-Gm-Message-State: AOAM530IHlLlugXepexxuNZB1hjxdh5sLp4YFh+xVVQTUviEUi0nnrTa
+        iOBxQ0ECIdI7iuX9uIGRpw==
+X-Google-Smtp-Source: ABdhPJyMbZlW7pnwHQ6C5waz/unexLEaHdTcjFI8Zo6M8xBHeFoOJCORR1G1b9IprQ6sjolb1S7dSA==
+X-Received: by 2002:a92:8c4c:: with SMTP id o73mr6482499ild.172.1590599701983;
+        Wed, 27 May 2020 10:15:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id c7sm1419991ioa.38.2020.05.27.10.14.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 10:15:00 -0700 (PDT)
+Received: (nullmailer pid 2363073 invoked by uid 1000);
+        Wed, 27 May 2020 17:14:59 -0000
+Date:   Wed, 27 May 2020 11:14:59 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     laurent.pinchart@ideasonboard.com,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Michal Simek <michals@xilinx.com>,
+        linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>,
+        mchehab@kernel.org, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
+        Sandip Kothari <sandipk@xilinx.com>,
+        linux-media@vger.kernel.org, Hyun Kwon <hyunk@xilinx.com>
+Subject: Re: [PATCH v14 1/2] media: dt-bindings: media: xilinx: Add Xilinx
+ MIPI CSI-2 Rx Subsystem
+Message-ID: <20200527171459.GA2360474@bogus>
+References: <1590587839-129558-1-git-send-email-vishal.sagar@xilinx.com>
+ <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527163543.GA706478@hirez.programming.kicks-ass.net>
+In-Reply-To: <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 06:35:43PM +0200, Peter Zijlstra wrote:
-> Right, I went though them, didn't find anything obvious amiss. OK, let
-> me do a nicer patch.
+On Wed, 27 May 2020 19:27:18 +0530, Vishal Sagar wrote:
+> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> 
+> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+> D-PHY in Rx mode and a Video Format Bridge.
+> 
+> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> v14
+> - Removed xlnx,csi-pxl-format from required properties
+> - Added dependency of xlnx,csi-pxl-format on xlnx,vfb
+> - End the yaml file with ...
+> - Added Reviewed by Laurent
+> 
+> v13
+> - Based on Laurent's suggestions
+> - Fixed the datatypes values as minimum and maximum
+> - condition added for en-vcx property
+> 
+> v12
+> - Moved to yaml format
+> - Update CSI-2 and D-PHY
+> - Mention that bindings for D-PHY not here
+> - reset -> video-reset
+> 
+> v11
+> - Modify compatible string from 4.0 to 5.0
+> 
+> v10
+> - No changes
+> 
+> v9
+> - Fix xlnx,vfb description.
+> - s/Optional/Required endpoint property.
+> - Move data-lanes description from Ports to endpoint property section.
+> 
+> v8
+> - Added reset-gpios optional property to assert video_aresetn
+> 
+> v7
+> - Removed the control name from dt bindings
+> - Updated the example dt node name to csi2rx
+> 
+> v6
+> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
+> - Added reviewed by Rob Herring
+> 
+> v5
+> - Incorporated comments by Luca Cersoli
+> - Removed DPHY clock from description and example
+> - Removed bayer pattern from device tree MIPI CSI IP
+>   doesn't deal with bayer pattern.
+> 
+> v4
+> - Added reviewed by Hyun Kwon
+> 
+> v3
+> - removed interrupt parent as suggested by Rob
+> - removed dphy clock
+> - moved vfb to optional properties
+> - Added required and optional port properties section
+> - Added endpoint property section
+> 
+> v2
+> - updated the compatible string to latest version supported
+> - removed DPHY related parameters
+> - added CSI v2.0 related property (including VCX for supporting upto 16
+>   virtual channels).
+> - modified csi-pxl-format from string to unsigned int type where the value
+>   is as per the CSI specification
+> - Defined port 0 and port 1 as sink and source ports.
+> - Removed max-lanes property as suggested by Rob and Sakari
+> 
+>  .../bindings/media/xilinx/xlnx,csi2rxss.yaml       | 237 +++++++++++++++++++++
+>  1 file changed, 237 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> 
 
-something like so then?
 
----
-Subject: rcu: Allow for smp_call_function() running callbacks from idle
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Current RCU hard relies on smp_call_function() callbacks running from
-interrupt context. A pending optimization is going to break that, it
-will allow idle CPUs to run the callbacks from the idle loop. This
-avoids raising the IPI on the requesting CPU and avoids handling an
-exception on the receiving CPU.
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:0:if: None is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:1:if: None is not of type 'object', 'boolean'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:0: 'required' is not one of ['$ref', 'if', 'then', 'else']
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:1: 'not' is not one of ['$ref', 'if', 'then', 'else']
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: ignoring, error in schema: allOf: 0: if
+warning: no schema found in file: ./Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: ignoring, error in schema: allOf: 0: if
+warning: no schema found in file: ./Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+Makefile:1300: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-Change rcu_is_cpu_rrupt_from_idle() to also accept task context,
-provided it is the idle task.
+See https://patchwork.ozlabs.org/patch/1298945
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/rcu/tree.c   | 25 +++++++++++++++++++------
- kernel/sched/idle.c |  4 ++++
- 2 files changed, 23 insertions(+), 6 deletions(-)
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index d8e9dbbefcfa..c716eadc7617 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -418,16 +418,23 @@ void rcu_momentary_dyntick_idle(void)
- EXPORT_SYMBOL_GPL(rcu_momentary_dyntick_idle);
- 
- /**
-- * rcu_is_cpu_rrupt_from_idle - see if interrupted from idle
-+ * rcu_is_cpu_rrupt_from_idle - see if 'interrupted' from idle
-  *
-  * If the current CPU is idle and running at a first-level (not nested)
-- * interrupt from idle, return true.  The caller must have at least
-- * disabled preemption.
-+ * interrupt, or directly, from idle, return true.
-+ *
-+ * The caller must have at least disabled IRQs.
-  */
- static int rcu_is_cpu_rrupt_from_idle(void)
- {
--	/* Called only from within the scheduling-clock interrupt */
--	lockdep_assert_in_irq();
-+	long nesting;
-+
-+	/*
-+	 * Usually called from the tick; but also used from smp_function_call()
-+	 * for expedited grace periods. This latter can result in running from
-+	 * the idle task, instead of an actual IPI.
-+	 */
-+	lockdep_assert_irqs_disabled();
- 
- 	/* Check for counter underflows */
- 	RCU_LOCKDEP_WARN(__this_cpu_read(rcu_data.dynticks_nesting) < 0,
-@@ -436,9 +443,15 @@ static int rcu_is_cpu_rrupt_from_idle(void)
- 			 "RCU dynticks_nmi_nesting counter underflow/zero!");
- 
- 	/* Are we at first interrupt nesting level? */
--	if (__this_cpu_read(rcu_data.dynticks_nmi_nesting) != 1)
-+	nesting = __this_cpu_read(rcu_data.dynticks_nmi_nesting);
-+	if (nesting > 1)
- 		return false;
- 
-+	/*
-+	 * If we're not in an interrupt, we must be in the idle task!
-+	 */
-+	WARN_ON_ONCE(!nesting && !is_idle_task(current));
-+
- 	/* Does CPU appear to be idle from an RCU standpoint? */
- 	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
- }
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index e9cef84c2b70..05deb81bb3e3 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -289,6 +289,10 @@ static void do_idle(void)
- 	 */
- 	smp_mb__after_atomic();
- 
-+	/*
-+	 * RCU relies on this call to be done outside of an RCU read-side
-+	 * critical section.
-+	 */
- 	flush_smp_call_function_from_idle();
- 	schedule_idle();
- 
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
