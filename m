@@ -2,106 +2,123 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEC720C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D446C206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQ7o/CVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgE0OAe (ORCPT
+        id S1730294AbgE0OC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:00:34 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:35962 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730223AbgE0OAc (ORCPT
+        Wed, 27 May 2020 10:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40222 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730223AbgE0OC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:00:32 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 545F18030834;
-        Wed, 27 May 2020 14:00:28 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LZtLme4p0vqb; Wed, 27 May 2020 17:00:27 +0300 (MSK)
-Date:   Wed, 27 May 2020 17:00:27 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        <devicetree-compiler@vger.kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] check: Add 10bit/slave i2c reg flags support
-Message-ID: <20200527140027.elc4vkbrzjrq4gqh@mobilestation>
-References: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
- <20200527133656.GV1634618@smile.fi.intel.com>
+        Wed, 27 May 2020 10:02:27 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23A1C08C5C1;
+        Wed, 27 May 2020 07:02:27 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id l73so1131907pjb.1;
+        Wed, 27 May 2020 07:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7uwEzD/HWCPds3dRM6BjnO0kf4LNMewfvGxCPu1qZms=;
+        b=jQ7o/CVPWMv45D5ntz5OrfDwxQ4ADwJoiKFZ4pXty989UbswPKAS+EC6zYjk/oeY7O
+         p0uKRTBJrGsusvVJG5JS/72k8iZOU7fsh4wrEssatYx7/drmJkOkBLfGgMEypqR5o0VU
+         vGhsAurVvV7FJ2jracv5fsurwmMbwPp40mLPsb2CiRjez03b4V8LYJYCQuaps3bfpMCm
+         nLbIA4QwUUpXL8ED9IRsJQ/GdDQ3n6NjN3UJRt63JTbWvQlxqYuiUaoNnTqqYIFvgc7M
+         wzgrPXx7TAaAwv607yAMO8WpzhR/GIURKyFfCdFq8mOarGZYmE0wJNjXlp0nqfN9fBkz
+         gwkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7uwEzD/HWCPds3dRM6BjnO0kf4LNMewfvGxCPu1qZms=;
+        b=HStfp2T3zSP0CCcIjhLDbgk45I7Otbbcetezwv/julusW3JW5HoFLnkwE+OMe/QTuL
+         qp6wJyD0VT6vFVVlpQdfLnMvgP7ixwo5P03zfbUveUQTGjOtLVqVuHPswCvt5fg6Zlvc
+         BbphI/uIV1ckS85cUFEdH4apaCnPf3aVZYyI1R8wYq5hL5zFSx45jky3jRAsDj+/4A+z
+         ExGa56IPNiz2iKZNvr1B1MN8wu1HuACy8SQYAh5188UtRnDPthRRFAB03YJ7Gxi0OdVR
+         F3BNpE8269J1/1gMG4RAl3/eWTOv1kGMXi0g9C4qnKmFLvfzOrmNL1ZiUDecJY0UCYW7
+         cRMQ==
+X-Gm-Message-State: AOAM5305Akdt62PBd1SdFKf0VnNvM4/qRTonyXo3kpslMaQlsWR9EhOo
+        hzu6CJPwxvDeBYubJimOV8k=
+X-Google-Smtp-Source: ABdhPJwrpunqhiqIubL3gDTU9v4epZDlGYzSMJFRk0p6+g/cb0ckrIZAayc1xxklodbCuIJLAMRdNg==
+X-Received: by 2002:a17:90a:6b08:: with SMTP id v8mr4969897pjj.151.1590588147261;
+        Wed, 27 May 2020 07:02:27 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id gz19sm2488833pjb.33.2020.05.27.07.02.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 07:02:26 -0700 (PDT)
+Date:   Wed, 27 May 2020 07:02:25 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/81] 4.19.125-rc1 review
+Message-ID: <20200527140225.GA214763@roeck-us.net>
+References: <20200526183923.108515292@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527133656.GV1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200526183923.108515292@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:36:56PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 03:25:25PM +0300, Serge Semin wrote:
-> > Recently the I2C-controllers slave interface support was added to the
-> > kernel I2C subsystem. In this case Linux can be used as, for example,
-> > a I2C EEPROM machine. See [1] for details. Other than instantiating
-> > the EEPROM-slave device from user-space there is a way to declare the
-> > device in dts. In this case firstly the I2C bus controller must support
-> > the slave interface. Secondly I2C-slave sub-node of that controller
-> > must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
-> > declared in [2]). That flag is declared as (1 << 30), which when set
-> > makes dtc unhappy about too big address set for a I2C-slave:
-> > 
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > 
-> > Similar problem would have happened if we had set the 10-bit address
-> > flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
-> > 
-> > In order to fix the problem we suggest to alter the I2C-bus reg-check
-> > algorithm, so one would be aware of the upper bits set. Normally if no
-> > flag specified, the 7-bit address is expected in the "reg"-property.
-> > If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
-> > performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
-> > 
-> > [1] kernel/Documentation/i2c/slave-interface.rst
-> > [2] kernel/include/dt-bindings/i2c/i2c.h
+On Tue, May 26, 2020 at 08:52:35PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.125 release.
+> There are 81 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> ...
+> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> Anything received after that time might be too late.
 > 
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 421 pass: 390 fail: 31
+Failed tests:
+	<all alpha>
+	<all sh>
+	<all sheb>
 
-> > +		addr = reg & 0x3FFFFFFFU;
-> > +		if ((reg & (1 << 31)) && addr > 0x3ff)
-> >  			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
-> > -				  reg);
-> > -
-> > +				  addr);
-> > +		else if (!(reg & (1 << 31)) && addr > 0x7f)
-> > +			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
-> > +				  addr);
-> 
-> 1 << 31 is UB.
+Bisect log (for alpha) below. Reverting the offending patch fixes the
+problem. Note that the problematic patch is associated with several
+other patches in the upstream kernel. Not all of them have a Fixes: tag,
+and I am not sure if all of them reference the problematic patch.
 
-Good point. Thanks.
+Guenter
 
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+---
+# bad: [59438eb2aa125985caa11179358001f38df0bc7e] Linux 4.19.125-rc1
+# good: [1bab61d3e8cd96f2badf515dcb06e4e1029bc017] Linux 4.19.124
+git bisect start 'HEAD' 'v4.19.124'
+# good: [cf97abff88a2d1b1f6ce1cbde6e17133812b40ea] ALSA: hda/realtek - Add more fixup entries for Clevo machines
+git bisect good cf97abff88a2d1b1f6ce1cbde6e17133812b40ea
+# good: [14179ae15e2fd47223a6c05d4580def2c60869ab] cxgb4/cxgb4vf: Fix mac_hlist initialization and free
+git bisect good 14179ae15e2fd47223a6c05d4580def2c60869ab
+# good: [d314b90fcd2704c1c9babb4c35c0dc835c711e2f] ipack: tpci200: fix error return code in tpci200_register()
+git bisect good d314b90fcd2704c1c9babb4c35c0dc835c711e2f
+# good: [76955a85caf40f3edf72a5f346083c14ae3bf843] iio: adc: stm32-adc: fix device used to request dma
+git bisect good 76955a85caf40f3edf72a5f346083c14ae3bf843
+# good: [ff4ab7bb44c4b4007898be3d3a8e1ad51b1981eb] rxrpc: Trace discarded ACKs
+git bisect good ff4ab7bb44c4b4007898be3d3a8e1ad51b1981eb
+# bad: [dd2e65505bbed0631d642b0f2539ee7894494a9b] make 'user_access_begin()' do 'access_ok()'
+git bisect bad dd2e65505bbed0631d642b0f2539ee7894494a9b
+# good: [d25981b4d48f68871daf41bc0ca7f89c160a4b7c] rxrpc: Fix ack discard
+git bisect good d25981b4d48f68871daf41bc0ca7f89c160a4b7c
+# first bad commit: [dd2e65505bbed0631d642b0f2539ee7894494a9b] make 'user_access_begin()' do 'access_ok()'
