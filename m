@@ -2,81 +2,154 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2058DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21AB3207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590563416;
-	bh=5f88nzMEqPegezJKOkJqZXoqontH74AXnh+2bhAJsmo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=L8wqKBTNfXfa0dc4XLrBY3Sx0Oj2HU5HFQAuhGOz46MhnDZy/ha+/0GbeOlH5Tlwj
-	 O+EKkpePAhIeFa41MLZytrmJ79YSCeSKLv49a1PilgbAv7q9oeHV1fSBkJ6NFDQrDz
-	 LGV+aPYVgyGuqTJHiadjQWIwCO9mfyLe5OdUKROg=
+	by mail.kernel.org (Postfix) with ESMTP id E41DF2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktoSMEgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgE0HKP (ORCPT
+        id S1729047AbgE0HMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726025AbgE0HKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:10:15 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 879B22078C;
-        Wed, 27 May 2020 07:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590563414;
-        bh=5f88nzMEqPegezJKOkJqZXoqontH74AXnh+2bhAJsmo=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=t5cNX77+4RbiAEdrszt2vjDDTNux0be5OEVSAxqKUyMPYEKG6r+VUtx/2z9tO08B6
-         otpHXxk42k57ptJbk56rY8zXBpE+fImfz6Lz0Ir3aSShqx6hTwaG6hfuGw/GEhj5uI
-         F0Mpf+dwsLgmBUY6Q5bL2XeUP1Q3zkVIZZzLUtzg=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 03:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728303AbgE0HMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:12:09 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2DE8C061A0F;
+        Wed, 27 May 2020 00:12:08 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id m7so9814730plt.5;
+        Wed, 27 May 2020 00:12:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sCw1lGoEROKmEmhA5JVEoEjAugXh66VFW++dgNmaAuk=;
+        b=ktoSMEguPJ8tS33p/nXe54OWEs5xrsGaluX65sfrK1qZgEjolWUpZbQ/S7VI4s6oZ4
+         nA3+mHOUhZA3ZnCNQ0SJTs/GN5EWsYQlVzcg4VJA4awizjKbDq5MnPt9Vdy6MVyd3bZc
+         5iy5OHwyoVNF62TFO5iiYt9rzAGbk6rQXMQ+61QhD7fivlin/wC/iC90kq0MegokddOa
+         NKcvgvTgpfMoD94+VCqADurNp8HK+uxzZ0eQEf3Qs7sp3p9AGqMKqGAXMGASuWMNeFw0
+         +lVF+m5bmZvmK1VHBhqJxIMwGvqs3cleEoXElwbgiVtLwsDFy4wzyB+11GeqpQqzuzN1
+         U35w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sCw1lGoEROKmEmhA5JVEoEjAugXh66VFW++dgNmaAuk=;
+        b=kV6pVKuO8H/5R8g5cXYavl+HrQoJ/w6RWEdFg/vsJhNVqbLJX9FdpGu3zuRVboNb7l
+         wKTAxmjScK7c3T2t/qwLvWY9gnbm+Jueel5PvT+YhV1iP5hA+JuZqpBanpCJ8AEMObo7
+         L9E7b/2qUgdPR3Ilf/HZt7NEnR8DCIXLEAA+dXVkDFvxW15LTbnVK8IvigRfizuauEff
+         qxFsjv9A1B/Z/pDn8DJovzf72DNWxDCb+oCEJe6E6tmuuoHAOsJcAz1oBn4TzU4w3OXp
+         nRFOwZ/SzDEKggXyPOd1U/By3acDqyq51M3gW8k09vAZaQeOqH2Tf/ZJ2bTk67bpmkvr
+         To2g==
+X-Gm-Message-State: AOAM5303P+vvHpRHBMCkEjAWUQQ4JDRKyC9Cx2Mapcd5Omt+nWABKCAq
+        MrEt1c3WrvLmbvRBl8x2EHlcSq0BtjU=
+X-Google-Smtp-Source: ABdhPJzwIynGMI15C5qfyiQfZjRwRIe6ucirx2w/s3fNOvKzhAtovIMVsZLNyXAeslflPbOp07qhmQ==
+X-Received: by 2002:a17:90a:248c:: with SMTP id i12mr3442044pje.213.1590563528110;
+        Wed, 27 May 2020 00:12:08 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 10sm1306431pfx.138.2020.05.27.00.12.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 00:12:07 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH 0/7] media: atomisp: Address several clang warnings
+Date:   Wed, 27 May 2020 00:11:43 -0700
+Message-Id: <20200527071150.3381228-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.27.0.rc0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200508220238.4883-1-rikard.falkeborn@gmail.com>
-References: <20200508220238.4883-1-rikard.falkeborn@gmail.com>
-Subject: Re: [PATCH] clk: bcm2835: Constify struct debugfs_reg32
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>, eric@anholt.net,
-        f.fainelli@gmail.com, mturquette@baylibre.com,
-        nsaenzjulienne@suse.de, rjui@broadcom.com, sbranden@broadcom.com,
-        wahrenst@gmx.net
-Date:   Wed, 27 May 2020 00:10:13 -0700
-Message-ID: <159056341376.88029.8430380128281240784@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rikard Falkeborn (2020-05-08 15:02:38)
-> bcm2835_debugfs_clock_reg32 is never changed and can therefore be made
-> const.
->=20
-> This allows the compiler to put it in the text section instead of the
-> data section.
->=20
-> Before:
->    text    data     bss     dec     hex filename
->   26598   16088      64   42750    a6fe drivers/clk/bcm/clk-bcm2835.o
->=20
-> After:
->    text    data     bss     dec     hex filename
->   26662   16024      64   42750    a6fe drivers/clk/bcm/clk-bcm2835.o
->=20
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> ---
+Hi all,
 
-Applied to clk-next
+This series aims to clean up the code while addressing the majority of
+clang warnings in this driver, some found by the 0day bot and others
+found by me.
+
+There are several enum conversion warnings that happen, which I do not
+really know how to solve without understanding how exactly this driver
+works. I would appreciate some guidance or a solution. Below are the
+warnings, sorry for not wrapping them but they would be hard to read
+otherwise.
+
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:49:65: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, CSS_FRAME_FORMAT_NV21, 0, CSS_FRAME_FORMAT_NV21 },
+        ~                                                              ^~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat.h:101:32: note: expanded from macro 'CSS_FRAME_FORMAT_NV21'
+#define CSS_FRAME_FORMAT_NV21           CSS_ID(CSS_FRAME_FORMAT_NV21)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat_css20.h:117:22: note: expanded from macro 'CSS_ID'
+#define CSS_ID(val)     (IA_ ## val)
+                         ^~~~~~~~~~
+<scratch space>:69:1: note: expanded from here
+IA_CSS_FRAME_FORMAT_NV21
+^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:49:39: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, CSS_FRAME_FORMAT_NV21, 0, CSS_FRAME_FORMAT_NV21 },
+        ~                                    ^~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat.h:101:32: note: expanded from macro 'CSS_FRAME_FORMAT_NV21'
+#define CSS_FRAME_FORMAT_NV21           CSS_ID(CSS_FRAME_FORMAT_NV21)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat_css20.h:117:22: note: expanded from macro 'CSS_ID'
+#define CSS_ID(val)     (IA_ ## val)
+                         ^~~~~~~~~~
+<scratch space>:68:1: note: expanded from here
+IA_CSS_FRAME_FORMAT_NV21
+^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:48:65: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, CSS_FRAME_FORMAT_NV12, 0, CSS_FRAME_FORMAT_NV12 },
+        ~                                                              ^~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat.h:99:32: note: expanded from macro 'CSS_FRAME_FORMAT_NV12'
+#define CSS_FRAME_FORMAT_NV12           CSS_ID(CSS_FRAME_FORMAT_NV12)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat_css20.h:117:22: note: expanded from macro 'CSS_ID'
+#define CSS_ID(val)     (IA_ ## val)
+                         ^~~~~~~~~~
+<scratch space>:67:1: note: expanded from here
+IA_CSS_FRAME_FORMAT_NV12
+^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:48:39: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, CSS_FRAME_FORMAT_NV12, 0, CSS_FRAME_FORMAT_NV12 },
+        ~                                    ^~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat.h:99:32: note: expanded from macro 'CSS_FRAME_FORMAT_NV12'
+#define CSS_FRAME_FORMAT_NV12           CSS_ID(CSS_FRAME_FORMAT_NV12)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat_css20.h:117:22: note: expanded from macro 'CSS_ID'
+#define CSS_ID(val)     (IA_ ## val)
+                         ^~~~~~~~~~
+<scratch space>:66:1: note: expanded from here
+IA_CSS_FRAME_FORMAT_NV12
+^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:47:34: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { MEDIA_BUS_FMT_JPEG_1X8, 8, 8, CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
+        ~                               ^~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat.h:118:35: note: expanded from macro 'CSS_FRAME_FORMAT_BINARY_8'
+#define CSS_FRAME_FORMAT_BINARY_8       CSS_ID(CSS_FRAME_FORMAT_BINARY_8)
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp//pci/atomisp_compat_css20.h:117:22: note: expanded from macro 'CSS_ID'
+#define CSS_ID(val)     (IA_ ## val)
+                         ^~~~~~~~~~
+<scratch space>:65:1: note: expanded from here
+IA_CSS_FRAME_FORMAT_BINARY_8
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.
+
+Please let me know if there are any comments, cheers!
+Nathan
+
+
