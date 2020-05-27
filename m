@@ -2,188 +2,75 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9378C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 756A720707
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE6420835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:39:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KPhP5B3V"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jGVYMQdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391426AbgE0RjJ (ORCPT
+        id S2388233AbgE0Rj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:39:09 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52240 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387564AbgE0RjD (ORCPT
+        Wed, 27 May 2020 13:39:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35794 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387564AbgE0Rj1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:39:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RHbsA9183555;
-        Wed, 27 May 2020 17:38:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=Ve6Yl+N+FKzwOLaiMokVozZ/Xsbw/tJM0PDnM1M2bLw=;
- b=KPhP5B3VnbXMOtbNZ54G+vZILsYNlQp8UP60R5QsSphEho41GTVCzv2gZBwR3Q2cAM2J
- jWV5TLidJNGGMhuuZbXNYktjTfecnE3t6AuUHS0yHt2nIvrD7dzijDNTOkcp/7W+jdA6
- j1KaY+jka0JetgwQpY9rOESXuosDJIby3aijphchgW9NjJX55V10NWaCLgcN+4JXqfxn
- tc1lix3WUIzyHqY9IMFORc4wWPPeolL6d5/WPzmfQ8oEHGMAHUuVB7u22DuirIs5o3Q9
- C9eUmrrk0BdUi7FctPpsuUbfX/b44oUrfeS3deWK4CFXNU5WCEUZBJo/WrDTwCSB64Mu ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 316u8r0uaa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 17:38:34 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RHX4l4195469;
-        Wed, 27 May 2020 17:36:34 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 317ddr6jxm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 17:36:34 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04RHaViR013711;
-        Wed, 27 May 2020 17:36:32 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 May 2020 10:36:31 -0700
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Robert Elliott <elliott@hpe.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Tejun Heo <tj@kernel.org>, Zi Yan <ziy@nvidia.com>,
-        linux-crypto@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH v3 7/8] mm: make deferred init's max threads arch-specific
-Date:   Wed, 27 May 2020 13:36:07 -0400
-Message-Id: <20200527173608.2885243-8-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200527173608.2885243-1-daniel.m.jordan@oracle.com>
-References: <20200527173608.2885243-1-daniel.m.jordan@oracle.com>
+        Wed, 27 May 2020 13:39:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=u5GDconUS+H3K1ww0DFY/n5/LgHvK82xPWYPy4Flo1Y=; b=jGVYMQdT4x67xlPFbhHlvpGZ5k
+        8WQX87mcGowLUv584ELtR331KxeMWHSYHJUN5Y1XrNML4/yk7fgNhrx4jWSH4RXpaLzlUyR/j5396
+        RIkoMA1ZnnpuoaZS9NMapkBF2VyCBdc8HX1EHb0MwLZw+qO+Pl7gGueLfi52B69YJ9EMaXxg6p0dR
+        tUD/dfQ8F4bB3uOb5vgtD75qNTw0l67YBhhPA5/FVslBGG6gLcutU260z1rdReFy9EhfQirmg5/Fu
+        TpxwtUorI3V79vS4IbOilmBXd7Bc6deTfMiKnZrgcmttAlJISwyHyp9TRrx+litPzLGQd0vhUfoX2
+        xxykKVcA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1je01Q-0004Up-Ho; Wed, 27 May 2020 17:39:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 08AA8307770;
+        Wed, 27 May 2020 19:39:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B6DBF2024926D; Wed, 27 May 2020 19:39:18 +0200 (CEST)
+Date:   Wed, 27 May 2020 19:39:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        a.darwish@linutronix.de, rostedt@goodmis.org, bigeasy@linutronix.de
+Subject: Re: [PATCH 2/6] lockdep: Change hardirq{s_enabled,_context} to
+ per-cpu variables
+Message-ID: <20200527173918.GD706495@hirez.programming.kicks-ass.net>
+References: <20200527154527.233385756@infradead.org>
+ <20200527155003.202732880@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- phishscore=0 adultscore=0 suspectscore=2 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=2
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270137
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527155003.202732880@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using padata during deferred init has only been tested on x86, so for
-now limit it to this architecture.
+On Wed, May 27, 2020 at 05:45:29PM +0200, Peter Zijlstra wrote:
+> -do {						\
+> -	if (!current->hardirq_context++)	\
+> -		current->hardirq_threaded = 0;	\
+> +# define lockdep_hardirq_enter()			\
+> +do {							\
+> +	if (!this_cpu_inc_return(hardirq_context))	\
 
-If another arch wants this, it can find the max thread limit that's best
-for it and override deferred_page_init_max_threads().
+	this_cpu_inc_return(hardirq_context) == 1
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Tested-by: Josh Triplett <josh@joshtriplett.org>
----
- arch/x86/mm/init_64.c    | 12 ++++++++++++
- include/linux/memblock.h |  3 +++
- mm/page_alloc.c          | 13 ++++++++-----
- 3 files changed, 23 insertions(+), 5 deletions(-)
+or this_cpu_fetch_inc(), which we don't have.
 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 8b5f73f5e207c..2d749ec12ea8a 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1260,6 +1260,18 @@ void __init mem_init(void)
- 	mem_init_print_info(NULL);
- }
- 
-+#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-+int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask)
-+{
-+	/*
-+	 * More CPUs always led to greater speedups on tested systems, up to
-+	 * all the nodes' CPUs.  Use all since the system is otherwise idle
-+	 * now.
-+	 */
-+	return max_t(int, cpumask_weight(node_cpumask), 1);
-+}
-+#endif
-+
- int kernel_set_to_readonly;
- 
- void mark_rodata_ro(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 6bc37a731d27b..2b289df44194f 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -275,6 +275,9 @@ void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
- #define for_each_free_mem_pfn_range_in_zone_from(i, zone, p_start, p_end) \
- 	for (; i != U64_MAX;					  \
- 	     __next_mem_pfn_range_in_zone(&i, zone, p_start, p_end))
-+
-+int __init deferred_page_init_max_threads(const struct cpumask *node_cpumask);
-+
- #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
- 
- /**
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 1d47016849531..329fd1a809c59 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1835,6 +1835,13 @@ deferred_init_memmap_chunk(unsigned long start_pfn, unsigned long end_pfn,
- 	}
- }
- 
-+/* An arch may override for more concurrency. */
-+__weak int __init
-+deferred_page_init_max_threads(const struct cpumask *node_cpumask)
-+{
-+	return 1;
-+}
-+
- /* Initialise remaining memory on a node */
- static int __init deferred_init_memmap(void *data)
- {
-@@ -1883,11 +1890,7 @@ static int __init deferred_init_memmap(void *data)
- 						 first_init_pfn))
- 		goto zone_empty;
- 
--	/*
--	 * More CPUs always led to greater speedups on tested systems, up to
--	 * all the nodes' CPUs.  Use all since the system is otherwise idle now.
--	 */
--	max_threads = max(cpumask_weight(cpumask), 1u);
-+	max_threads = deferred_page_init_max_threads(cpumask);
- 
- 	while (spfn < epfn) {
- 		unsigned long epfn_align = ALIGN(epfn, PAGES_PER_SECTION);
--- 
-2.26.2
-
+> +		current->hardirq_threaded = 0;		\
