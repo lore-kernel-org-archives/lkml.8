@@ -2,101 +2,116 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12832C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F36A4207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB778207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388501AbgE0Njm (ORCPT
+        id S2388515AbgE0Njv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:39:42 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:54817 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387682AbgE0Njl (ORCPT
+        Wed, 27 May 2020 09:39:51 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46978 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387682AbgE0Nju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:39:41 -0400
-Received: from localhost.localdomain ([149.172.98.151]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MlsWZ-1jDMy53Blj-00j3fQ; Wed, 27 May 2020 15:39:26 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org, Jens Wiklander <jens.wiklander@linaro.org>,
-        =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= 
-        <vesa.jaaskelainen@vaisala.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Rijo Thomas <Rijo-john.Thomas@amd.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tee: fix crypto select
-Date:   Wed, 27 May 2020 15:39:16 +0200
-Message-Id: <20200527133924.724819-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:39:50 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 2EB6E1C0300; Wed, 27 May 2020 15:39:49 +0200 (CEST)
+Date:   Wed, 27 May 2020 15:39:48 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>, jacek.anaszewski@gmail.com,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v25 01/16] dt: bindings: Add multicolor class dt bindings
+ documention
+Message-ID: <20200527133948.GA5011@amd>
+References: <20200526164652.2331-1-dmurphy@ti.com>
+ <20200526164652.2331-2-dmurphy@ti.com>
+ <20200527014902.GA859634@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:P+KwTzBlyszTVG0EQVcxHYoNDDlR4ilvVgGJ8/tHgSBjq+KUIxk
- umhaGxlmmS5bsKk00Kwz/9SJNvdEN8zRjSDUwZ2aajPKqGo8xAkOLEAEyUvZwZuEOCJDMKB
- eoFmq2tbkVdKswWZ8yuSbeMxVfcg1ShQNhK7s54QUd8cQU7wlKJ3t/W8e+I2DJ5t8uex9/g
- AI7jafPdOimry8cHrF0Rw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:h0wYUygjUYk=:cYmYE7qDUtHD/uUeKqsj0V
- Dj9POsWkIWO1+pp7LH9oYcwyuei3rfrUjpaj8Z6DW0aycdDXKsimy76ZJ2C+vsmbPKD3rNajJ
- EQlszaBxxVlHupu1tSiWWkeS8E5tkfEeLrZLt+N9/fe1VP3ewEocRdv7ocRFVC7DPb8HqDqri
- 8BtKReRmxyoy4miQlxlb4RYRCgUspm9zLzHMDVzQeVZ/jvrw4ZPpnx5K6mVHlVl8CNHQNDgnf
- 2+KyrtwOBKqG9ebiEDYV6k5xjjSJyocy0PpbACKsUBlKzozG/pgsx1U2dnOAqoKXO2f4Vkh3Q
- z7UFRhVLHQqegaVdG+B/6PG4xI9PjnkM87DHwgLJDloF9ICJEZwDE/+DE6kOwGlvhSuKf/oLP
- tCgAsMQKRj9f6VrrUqMacXG0E26y3loAqKj9j4TR5tnzvdbEOPLOZj4kcNm50eaCAjp5xFLAJ
- CWgqlYawYeZpF+8jdtYFs7rwo94Dgs9Ucub35oR1Y7yxkrIPNDDUgnQbeG0y5orLlrAKxJ+Uc
- izWxMKT+fpfN1zing8AjDoDkoHRENbhFziv4lqF0Dv9lOovg8bMEcHqfuRRjhBlNZwdzydX5S
- 3jHDd9Qnya42xvLRGW93OqI5K3YoAYyBnLfV+sfDY8i79FsTLf6X4Lt75iaRlWoEHAFv/LIRx
- TggBXjlQuirAoRAc7pJ8mCg9djHtLw0TKvAnIdOGr1TbWTdpdphJG6I724clM4/BchHj1H+/P
- /Bt5u9x4xBQLR4VeoNl5vrZYdAqK8gv3zQNnnXulJtdk7j8zXRFgfdgHaMTwQ8yRJaOyOdBNf
- XufKNzcGopHz8Xp2g9CZt9+7tJGdG2repskAIpM//NyOqJwGF4=
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="liOOAslEiF7prFVr"
+Content-Disposition: inline
+In-Reply-To: <20200527014902.GA859634@bogus>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When selecting a crypto cipher, we also need to select the
-subsystem itself:
 
-WARNING: unmet direct dependencies detected for CRYPTO_SHA1
-  Depends on [m]: CRYPTO [=m]
-  Selected by [y]:
-  - TEE [=y] && (HAVE_ARM_SMCCC [=n] || COMPILE_TEST [=y] || CPU_SUP_AMD [=y])
-  Selected by [m]:
-  - CRYPTO_DEV_QAT [=m] && CRYPTO [=m] && CRYPTO_HW [=y]
-  - CRYPTO_DEV_MEDIATEK [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && (ARM && ARCH_MEDIATEK || COMPILE_TEST [=y])
-  - CRYPTO_DEV_SAFEXCEL [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && (OF [=y] || PCI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
-  - CRYPTO_DEV_CCREE [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && OF [=y] && HAS_DMA [=y]
-  - CRYPTO_DEV_SP_CCP [=y] && CRYPTO [=m] && CRYPTO_HW [=y] && CRYPTO_DEV_CCP [=y] && CRYPTO_DEV_CCP_DD [=m] && DMADEVICES [=y]
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: e33bcbab16d1 ("tee: add support for session's client UUID generation")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-The regression was introduced in the soc tree, I'd pick this patch
-up directly into that unless someone sees a problem
----
- drivers/tee/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Hi!
 
-diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
-index 806eb87d4da0..e99d840c2511 100644
---- a/drivers/tee/Kconfig
-+++ b/drivers/tee/Kconfig
-@@ -3,6 +3,7 @@
- config TEE
- 	tristate "Trusted Execution Environment support"
- 	depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
-+	select CRYPTO
- 	select CRYPTO_SHA1
- 	select DMA_SHARED_BUFFER
- 	select GENERIC_ALLOCATOR
--- 
-2.26.2
+Thanks for reviews!
 
+> > +additionalProperties: false
+> > +...
+> > diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>=20
+> This isn't a binding file. Belongs in another patch.
+
+These constants are directly related to the binding. It makes sense to
+go in one patch...
+
+Best regards,
+								Pavel
+
+> > index f1f718dbe0f8..846248a0693d 100644
+> > --- a/drivers/leds/led-core.c
+> > +++ b/drivers/leds/led-core.c
+> > @@ -34,6 +34,7 @@ const char * const led_colors[LED_COLOR_ID_MAX] =3D {
+> >  	[LED_COLOR_ID_VIOLET] =3D "violet",
+> >  	[LED_COLOR_ID_YELLOW] =3D "yellow",
+> >  	[LED_COLOR_ID_IR] =3D "ir",
+> > +	[LED_COLOR_ID_MULTI] =3D "multicolor",
+> >  };
+> >  EXPORT_SYMBOL_GPL(led_colors);
+> > =20
+> > diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/le=
+ds/common.h
+> > index 0ce7dfc00dcb..a463ce6a8794 100644
+> > --- a/include/dt-bindings/leds/common.h
+> > +++ b/include/dt-bindings/leds/common.h
+> > @@ -30,7 +30,8 @@
+> >  #define LED_COLOR_ID_VIOLET	5
+> >  #define LED_COLOR_ID_YELLOW	6
+> >  #define LED_COLOR_ID_IR		7
+> > -#define LED_COLOR_ID_MAX	8
+> > +#define LED_COLOR_ID_MULTI	8
+> > +#define LED_COLOR_ID_MAX	9
+> > =20
+> >  /* Standard LED functions */
+> >  /* Keyboard LEDs, usually it would be input4::capslock etc. */
+> > --=20
+> > 2.25.1
+> >=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--liOOAslEiF7prFVr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7ObaQACgkQMOfwapXb+vKDUQCgvKwSBIpK3Ho7ZIPhCUNgU/kp
+toUAnjGIr5U3J+haA7vXpJm0QHecHNkG
+=Ow+v
+-----END PGP SIGNATURE-----
+
+--liOOAslEiF7prFVr--
