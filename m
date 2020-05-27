@@ -2,188 +2,98 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B97BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5953FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE59F20890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B9D2065F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590599705;
-	bh=bJ3FDgDnBbVw7rcRF4oMWfVS54hvwrs/zGRbWcr2GG4=;
+	s=default; t=1590599755;
+	bh=DmkWu4p3uiFJtjCdJCSH3WMauJ+B8g0HGW0R5W/y3nw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yrdkkFft/oIIJf49HdpYWAY449gcXYKJWbhrQVHNaCq8rgXtP3MO9oRyifbimgvp0
-	 n7rT1tt4Oc3uG4HcmN0l+fVA1eO0nFkqp4ayQV0d8dDUtZhTSFd5qlkeEkN1hwQzyC
-	 +6sK4vN6Cf6EBtCqjOwJz1BDpqtEK6E2/dQKZ8k0=
+	b=CMswvzM1vvjr5idIktTmWp7wU5LHcD85vdLtSkszJEP48c4DL08a1keAafeAyvH74
+	 en8cvgg1rzTyiYRMxWp8g/Q9jyH32zp6WcRmR6yPD5xk1i3ya7CVIlHhci6Wg8CPT4
+	 RPHW5DEsJZ7kCSKKfqyGq5fvhMY9L0WTg37oQjWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731283AbgE0RPF (ORCPT
+        id S1731305AbgE0RPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:15:05 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35477 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731265AbgE0RPD (ORCPT
+        Wed, 27 May 2020 13:15:54 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:37202 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729913AbgE0RPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:15:03 -0400
-Received: by mail-il1-f196.google.com with SMTP id a14so24832550ilk.2;
-        Wed, 27 May 2020 10:15:02 -0700 (PDT)
+        Wed, 27 May 2020 13:15:53 -0400
+Received: by mail-il1-f195.google.com with SMTP id r2so13639128ila.4;
+        Wed, 27 May 2020 10:15:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cUzyV2ffMQiKR0ssWs7eyow7JR4Jl831ooktar0LQs8=;
-        b=QgHA5BNG/I6hCqDTGqGvKRNS2bLKCnKlr/oDAoDmwrvbgK84LOjPgnMMkBc/nsgydf
-         o4XvDPtiLmywIp7OsSKYkvRSqoFuF3LRBMEFZMpwd7RgXTNMvWGC5gom+UvEuhX/D0K7
-         0DFCsS56fCkdII97OuekQGA4nYP5IE6RWGMNg9qh467w+lz9GzagGC0IdKJOn/XZik8c
-         fJhoQgUv2CSeM20FH+XwNGc+hqpOokoCaa4JnoFXY/I90ahpEsDxJCMOmbfooH7JH22/
-         ax6CfC4utXSr4B7+k+VBYnOTwvEa1G2eKRfIkKCWym2eoxgb1pg+KXwt3CnCcJgTk0rw
-         JzlA==
-X-Gm-Message-State: AOAM530IHlLlugXepexxuNZB1hjxdh5sLp4YFh+xVVQTUviEUi0nnrTa
-        iOBxQ0ECIdI7iuX9uIGRpw==
-X-Google-Smtp-Source: ABdhPJyMbZlW7pnwHQ6C5waz/unexLEaHdTcjFI8Zo6M8xBHeFoOJCORR1G1b9IprQ6sjolb1S7dSA==
-X-Received: by 2002:a92:8c4c:: with SMTP id o73mr6482499ild.172.1590599701983;
-        Wed, 27 May 2020 10:15:01 -0700 (PDT)
+        bh=99jkXJtnw0P2GQYZjU0aScSsUNY825EbLFpq6MuWBZM=;
+        b=gsK2/YiiuDQiYj2U23kEWnRx9vTN7MHgQYmT+E+G4Syje5gcrHrL9CRzLG6E6Hko1Y
+         5B5lKW5OJfV6n4nR9k3KlZq2oX++5i0f5Evuc9xzKr8MyyQ7WpeeGyuqa6qU7g5AXBgq
+         z5lULyBJGaqnfK0xiICXgXUWK5VZoFJTDlxXnGX62kwYtze3tSEdvh9UlEXP+Pu3wq85
+         17tzNsNlJgZyxfzNE9IoJogzTf9XXDcqtNAdoXyBAAd/GqtTaMHEJ7uv2sQovINAWg2O
+         r+TxFlyQhlQ0ibn98NKkceazfhmKNoEgpSJYcmmFJU6UggsPuTusjHLIVoSAtHb9MCVK
+         71/Q==
+X-Gm-Message-State: AOAM530pmrvwV3rpPeCYsMT2ziVgAXbfF05UF5+IfSmYiN5snmcIbnoU
+        HBk354kg7W5CPhfmax5/TkXTYOM=
+X-Google-Smtp-Source: ABdhPJwPTefjiDIOFvVJXCs7TY5ht51jwG0qsC72o6krduJg/Kg+szG4VgXRZmELzJcCA5WCHlNh1g==
+X-Received: by 2002:a92:d183:: with SMTP id z3mr7109934ilz.102.1590599752632;
+        Wed, 27 May 2020 10:15:52 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id c7sm1419991ioa.38.2020.05.27.10.14.59
+        by smtp.gmail.com with ESMTPSA id g6sm1881136ile.38.2020.05.27.10.15.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:15:00 -0700 (PDT)
-Received: (nullmailer pid 2363073 invoked by uid 1000);
-        Wed, 27 May 2020 17:14:59 -0000
-Date:   Wed, 27 May 2020 11:14:59 -0600
+        Wed, 27 May 2020 10:15:52 -0700 (PDT)
+Received: (nullmailer pid 2365435 invoked by uid 1000);
+        Wed, 27 May 2020 17:15:51 -0000
+Date:   Wed, 27 May 2020 11:15:51 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     laurent.pinchart@ideasonboard.com,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Michal Simek <michals@xilinx.com>,
-        linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>,
-        mchehab@kernel.org, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, hans.verkuil@cisco.com,
-        Sandip Kothari <sandipk@xilinx.com>,
-        linux-media@vger.kernel.org, Hyun Kwon <hyunk@xilinx.com>
-Subject: Re: [PATCH v14 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Message-ID: <20200527171459.GA2360474@bogus>
-References: <1590587839-129558-1-git-send-email-vishal.sagar@xilinx.com>
- <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: watchdog: renesas,wdt: Document r8a7742
+ support
+Message-ID: <20200527171551.GA2365256@bogus>
+References: <1590596967-22973-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
+In-Reply-To: <1590596967-22973-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 19:27:18 +0530, Vishal Sagar wrote:
-> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+On Wed, 27 May 2020 17:29:27 +0100, Lad Prabhakar wrote:
+> RZ/G1H (R8A7742) watchdog implementation is compatible with R-Car Gen2,
+> therefore add relevant documentation.
 > 
-> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
-> D-PHY in Rx mode and a Video Format Bridge.
-> 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > ---
-> v14
-> - Removed xlnx,csi-pxl-format from required properties
-> - Added dependency of xlnx,csi-pxl-format on xlnx,vfb
-> - End the yaml file with ...
-> - Added Reviewed by Laurent
+> Hi,
 > 
-> v13
-> - Based on Laurent's suggestions
-> - Fixed the datatypes values as minimum and maximum
-> - condition added for en-vcx property
+> This patch is part of series [1], as requested by Rob [1] I have
+> reabsed my changes on-top json-schema conversion patch.
 > 
-> v12
-> - Moved to yaml format
-> - Update CSI-2 and D-PHY
-> - Mention that bindings for D-PHY not here
-> - reset -> video-reset
+> [1] https://www.spinics.net/lists/netdev/msg653258.html
+> [2] https://patchwork.kernel.org/patch/11552335/
 > 
-> v11
-> - Modify compatible string from 4.0 to 5.0
-> 
-> v10
-> - No changes
-> 
-> v9
-> - Fix xlnx,vfb description.
-> - s/Optional/Required endpoint property.
-> - Move data-lanes description from Ports to endpoint property section.
-> 
-> v8
-> - Added reset-gpios optional property to assert video_aresetn
-> 
-> v7
-> - Removed the control name from dt bindings
-> - Updated the example dt node name to csi2rx
-> 
-> v6
-> - Added "control" after V4L2_CID_XILINX_MIPICSISS_ACT_LANES as suggested by Luca
-> - Added reviewed by Rob Herring
-> 
-> v5
-> - Incorporated comments by Luca Cersoli
-> - Removed DPHY clock from description and example
-> - Removed bayer pattern from device tree MIPI CSI IP
->   doesn't deal with bayer pattern.
-> 
-> v4
-> - Added reviewed by Hyun Kwon
-> 
-> v3
-> - removed interrupt parent as suggested by Rob
-> - removed dphy clock
-> - moved vfb to optional properties
-> - Added required and optional port properties section
-> - Added endpoint property section
-> 
-> v2
-> - updated the compatible string to latest version supported
-> - removed DPHY related parameters
-> - added CSI v2.0 related property (including VCX for supporting upto 16
->   virtual channels).
-> - modified csi-pxl-format from string to unsigned int type where the value
->   is as per the CSI specification
-> - Defined port 0 and port 1 as sink and source ports.
-> - Removed max-lanes property as suggested by Rob and Sakari
-> 
->  .../bindings/media/xilinx/xlnx,csi2rxss.yaml       | 237 +++++++++++++++++++++
->  1 file changed, 237 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
+> Cheers,
+> Prabhakar
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:0:if: None is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:1:if: None is not of type 'object', 'boolean'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:0: 'required' is not one of ['$ref', 'if', 'then', 'else']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: allOf:1: 'not' is not one of ['$ref', 'if', 'then', 'else']
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: ignoring, error in schema: allOf: 0: if
-warning: no schema found in file: ./Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml: ignoring, error in schema: allOf: 0: if
-warning: no schema found in file: ./Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1298945
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Applied, thanks!
