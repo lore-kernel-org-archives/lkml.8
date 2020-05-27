@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 250A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 455BB2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03143207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nyd4q0kk"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Uwidm5gi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388393AbgE0LXz (ORCPT
+        id S2388415AbgE0LYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:23:55 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:15137 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387939AbgE0LXz (ORCPT
+        Wed, 27 May 2020 07:24:04 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:37203 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387939AbgE0LYE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:23:55 -0400
+        Wed, 27 May 2020 07:24:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590578635; x=1622114635;
+  t=1590578644; x=1622114644;
   h=from:to:cc:subject:date:message-id:in-reply-to;
-  bh=aSGAbbZ6MrjWpWJVHoh/BDwsMhfPsX7leLeYt2MGtFQ=;
-  b=nyd4q0kkj8a17MR2uKxdFILLKmSK5uhURXM4vDvGRKLFepqRc/uLfPC9
-   GvrJY8dDMRgfanoe84bfcVhlvC69zDk8ygz32+uOk5dbkT4aR45G4KVwF
-   metBbROkuA+VpS3S4xwzbkFVotfEloB6zcFOOkgqATkh/Wck3cd7qWRdH
-   M=;
-IronPort-SDR: e38Jv9GMufS/NfxDU2X0mIYzoy4Gb04ykr8SXT/W/n3NWmuNcECOZxB5pnRZkxcOlTna3rwezv
- DB0qoPEUuDJA==
+  bh=SkdBTkPCPw//6+7hB1TmldA7QK1WyjU32WH5kGThkZg=;
+  b=Uwidm5giGnOUVT9LYR1TwxCZRVSdpLB8aJEsUD0yn3e5gcHB4oCMT+NE
+   ui8dcJ2yV2XjQktsiGlIkRAp+/6FZ7+Fly52OyeGj+5aOSR9VdRUHyk0k
+   4tCVnnf+2SEx0mo6zWFTOEoL5fYCoDQvpSfOit4ld95ux57D0/Mj38zd+
+   8=;
+IronPort-SDR: ULXY+sQjRAGIg3KjwbDeavDGN2BDCGTjaN+5spJFUrnzsGMxqVRp/hvA/kB2mle1GBuaq8i8oW
+ UmZk2pPDMJeA==
 X-IronPort-AV: E=Sophos;i="5.73,441,1583193600"; 
-   d="scan'208";a="33842613"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 27 May 2020 11:23:40 +0000
-Received: from uc85b765ebdd8595b4b67.ant.amazon.com (pdx2-ws-svc-lb17-vlan3.amazon.com [10.247.140.70])
-        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 34E49A181A;
-        Wed, 27 May 2020 11:23:35 +0000 (UTC)
+   d="scan'208";a="46374162"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 27 May 2020 11:24:03 +0000
+Received: from uc85b765ebdd8595b4b67.ant.amazon.com (pdx2-ws-svc-lb17-vlan2.amazon.com [10.247.140.66])
+        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 311CCA1DED;
+        Wed, 27 May 2020 11:23:59 +0000 (UTC)
 Received: from uc85b765ebdd8595b4b67.ant.amazon.com (localhost [127.0.0.1])
-        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id 04RBNXIq027030;
-        Wed, 27 May 2020 13:23:33 +0200
+        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id 04RBNvc0027204;
+        Wed, 27 May 2020 13:23:57 +0200
 Received: (from foersleo@localhost)
-        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Submit) id 04RBNX0a027028;
-        Wed, 27 May 2020 13:23:33 +0200
+        by uc85b765ebdd8595b4b67.ant.amazon.com (8.15.2/8.15.2/Submit) id 04RBNvtd027203;
+        Wed, 27 May 2020 13:23:57 +0200
 From:   Leonard Foerster <foersleo@amazon.com>
 To:     SeongJae Park <sjpark@amazon.com>
 Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
@@ -64,35 +64,85 @@ Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
         vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
         ying.huang@intel.com, linux-damon@amazon.com, linux-mm@kvack.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 03/15] mm: Introduce Data Access MONitor (DAMON)
-Date:   Wed, 27 May 2020 13:23:31 +0200
-Message-Id: <1590578611-26983-1-git-send-email-foersleo@amazon.com>
+Subject: Re: [PATCH v13 05/15] mm/damon: Adaptively adjust regions
+Date:   Wed, 27 May 2020 13:23:56 +0200
+Message-Id: <1590578636-27155-1-git-send-email-foersleo@amazon.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200525091512.30391-4-sjpark@amazon.com>
+In-Reply-To: <20200525091512.30391-6-sjpark@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-25T11:15:00+02:00 SeongJae Park <sjpark@amazon.com> wrote:
+On 2020-05-25T11:15:02+02:00 SeongJae Park <sjpark@amazon.com> wrote:
 
 > From: SeongJae Park <sjpark@amazon.de>
 > 
-> This commit introduces a kernel module named DAMON.  Note that this
-> commit is implementing only the stub for the module load/unload, basic
-> data structures, and simple manipulation functions of the structures to
-> keep the size of commit small.  The core mechanisms of DAMON will be
-> implemented one by one by following commits.
+> At the beginning of the monitoring, DAMON constructs the initial regions
+> by evenly splitting the memory mapped address space of the process into
+> the user-specified minimal number of regions.  In this initial state,
+> the assumption of the regions (pages in same region have similar access
+> frequencies) is normally not kept and thus the monitoring quality could
+> be low.  To keep the assumption as much as possible, DAMON adaptively
+> merges and splits each region.
+> 
+> For each ``aggregation interval``, it compares the access frequencies of
+> adjacent regions and merges those if the frequency difference is small.
+> Then, after it reports and clears the aggregated access frequency of
+> each region, it splits each region into two regions if the total number
+> of regions is smaller than the half of the user-specified maximum number
+> of regions.
+> 
+> In this way, DAMON provides its best-effort quality and minimal overhead
+> while keeping the bounds users set for their trade-off.
 > 
 > Signed-off-by: SeongJae Park <sjpark@amazon.de>
 > ---
 > [...]
+> +/*
+> + * splits every target region into two randomly-sized regions
+> + *
+> + * This function splits every target region into two random-sized regions if
+> + * current total number of the regions is equal or smaller than half of the
+> + * user-specified maximum number of regions.  This is for maximizing the
+> + * monitoring accuracy under the dynamically changeable access patterns.  If a
+> + * split was unnecessarily made, later 'kdamond_merge_regions()' will revert
+> + * it.
+> + */
+> +static void kdamond_split_regions(struct damon_ctx *ctx)
+> +{
+> +	struct damon_task *t;
+> +	unsigned int nr_regions = 0;
+> +	static unsigned int last_nr_regions;
+> +	int nr_subregions = 2;
 > +
-> +/**
-> + * struct damon_ctx - Represents a context for each monitoring.
-> + * @tasks_list:		Head of monitring target tasks (&damon_task) list.
+> +	damon_for_each_task(t, ctx)
+> +		nr_regions += nr_damon_regions(t);
+> +
+> +	if (nr_regions > ctx->max_nr_regions / 2)
+> +		return;
+> +
+> +	/* If number of regions is not changed, we are maybe in corner case */
+> +	if (last_nr_regions == nr_regions &&
+> +			nr_regions < ctx->max_nr_regions / 3)
+> +		nr_subregions = 3;
+> +
+> +	damon_for_each_task(t, ctx)
+> +		damon_split_regions_of(ctx, t, nr_subregions);
+> +
+> +	if (!last_nr_regions)
+> +		last_nr_regions = nr_regions;
 
-nit: monitring -> monitoring
+So we are only setting last_nr_regions once when we first come along
+here (when last_nr_regions == 0). Thus we are checking from now on if
+nr_regions is the same as nr_regions was before the first ever split. So
+we are doing the three-way split whenever nr_regions has come to the
+initial number of regions. Is this actually what we want? The naming
+suggests that we want to check against the number before the last split
+to detect if we have moved into a spot where we are splitting and
+merging back and forth between two states (this is the corner case we
+are talking about?).
 
-Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+Or am I misunderstanding the intention here?
 
+Leonard
