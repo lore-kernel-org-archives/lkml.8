@@ -2,218 +2,152 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AD0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168562089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21293208FE
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jJTXjPkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbgE0BOO (ORCPT
+        id S1728214AbgE0BOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:14:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:39613 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbgE0BOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:14:14 -0400
-IronPort-SDR: lhVOyBQceW3wBkw86YPTxyv2cm7dBxVm9gBanXrUpdElQ24UWZsyKb+3yOZk7Xv8p70q4cIZui
- PwdhrCcL+TNA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 18:14:13 -0700
-IronPort-SDR: o3bZvcDVBDg4OA4aEw7eGTQPwT9QQ1XuhO1s0m7MrCsP/rbBo3mbjIWF2uVLBLjWseQdKsH2Zl
- DynLHB83T9gQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="310424757"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2020 18:14:13 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 321BD301C5F; Tue, 26 May 2020 18:14:13 -0700 (PDT)
-Date:   Tue, 26 May 2020 18:14:13 -0700
-From:   Andi Kleen <andi.kleen@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
-        dave.hansen@intel.com, ying.huang@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
- policy
-Message-ID: <20200527011413.GA610738@tassilo.jf.intel.com>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
- <20200526181459.GD991@lca.pw>
+        Tue, 26 May 2020 21:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728202AbgE0BOQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:14:16 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 002E2C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 18:14:14 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so17901377qts.9
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 18:14:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=NHzMNH28y/GXSoFOf1/NF/R2VMPDvKZxUdmkO5KBgxY=;
+        b=jJTXjPkgJLHrf2hO4j4PKGAsQ+OKm/7kMeoo0TXPZvOfXHeldzfY1lXSh+NwiaxTOw
+         ZKnc3V5UK9RskJaNiNhRroqXlInFVKOAbJ9njNeGK1woyD/fhwy2Lh2BzGuO3QqBKS49
+         Y6UzSbGFQwu17utdr39lsGrhkGKF4xP4O6twY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=NHzMNH28y/GXSoFOf1/NF/R2VMPDvKZxUdmkO5KBgxY=;
+        b=EKGkWeoQocMDVit7lYsT7RE4yAedA2cN4SI8+cauD54VZidEkSPSaN4zic94ITTgxS
+         ECm47azt2sLzW8MmldGTltQsTK6pDlwchVzVFRbNMXUdjQsgyUshi3a+RPixIQhL3OAc
+         GJ06/y7IfDPzxpvQcDYIIcP4SzRuVdCO1Ko5J9tJVMZQnmMmYsxam0yDRAu4Bx6gxJGn
+         sOVMxO56lZv2RmVft5UO/AjeUrhgPLXrswYBkbofBmSr4HqSXDo+5CMjDLa63btocSIG
+         U+Qw+Eh3vq9fP3aHLe+iVvJ/VcxyOsRlKrUlhNZPFaqptthIzhNPfUGIoUUngxcrUkRU
+         Cb7w==
+X-Gm-Message-State: AOAM533ZZivBPs5OnOlhX6K6WnVKmGqXoVfJqgfJrE0yS+7pMdw3iTFz
+        Bjy9SbWsj5ltcK2umVNmU5S7aw==
+X-Google-Smtp-Source: ABdhPJzpw4hOd5QOy5LX+F5XNYCN3BpbdALQEeniFIPQEU07Dr5VpM/Wwp+pQNuQicgRtYfXDVz0Tw==
+X-Received: by 2002:ac8:7b4c:: with SMTP id m12mr1627606qtu.97.1590542054136;
+        Tue, 26 May 2020 18:14:14 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o144sm1075774qke.126.2020.05.26.18.14.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 18:14:13 -0700 (PDT)
+Date:   Tue, 26 May 2020 21:14:13 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>
+Subject: Re: [PATCH] rcu/performance: Fix kfree_perf_init() build warning on
+ 32-bit kernels
+Message-ID: <20200527011413.GD149611@google.com>
+References: <158923078019.390.12609597570329519463.tip-bot2@tip-bot2>
+ <20200526182744.GA3722128@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200526181459.GD991@lca.pw>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200526182744.GA3722128@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 02:14:59PM -0400, Qian Cai wrote:
-> On Thu, May 21, 2020 at 05:27:26PM -0400, Qian Cai wrote:
-> > On Fri, May 08, 2020 at 03:25:14PM +0800, Feng Tang wrote:
-> > > When checking a performance change for will-it-scale scalability
-> > > mmap test [1], we found very high lock contention for spinlock of
-> > > percpu counter 'vm_committed_as':
-> > > 
-> > >     94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave
-> > >     48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;
-> > >     45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;
-> > > 
-> > > Actually this heavy lock contention is not always necessary. The
-> > > 'vm_committed_as' needs to be very precise when the strict
-> > > OVERCOMMIT_NEVER policy is set, which requires a rather small batch
-> > > number for the percpu counter.
-> > > 
-> > > So lift the batch number to 16X for OVERCOMMIT_ALWAYS and
-> > > OVERCOMMIT_GUESS policies, and add a sysctl handler to adjust it
-> > > when the policy is reconfigured.
-> > > 
-> > > Benchmark with the same testcase in [1] shows 53% improvement on a
-> > > 8C/16T desktop, and 2097%(20X) on a 4S/72C/144T server. And no change
-> > > for some platforms, due to the test mmap size of the case is bigger
-> > > than the batch number computed, though the patch will help mmap/munmap
-> > > generally.
-> > > 
-> > > [1] https://lkml.org/lkml/2020/3/5/57
-> > > 
-> > > There are some style complain from checkpatch for patch 3, as it
-> > > follows the similar format of sibling functions
-> > > 
-> > > patch1: a cleanup for /proc/meminfo
-> > > patch2: a preparation patch which also improve the accuracy of
-> > >         vm_memory_committed
-> > > patch3: the main change
-> > > 
-> > > Please help to review, thanks!
-> > 
-> > Reverted this series fixed a warning under memory pressue.
+On Tue, May 26, 2020 at 08:27:44PM +0200, Ingo Molnar wrote:
+[...]
+> ./include/linux/kern_levels.h:5:18: warning: format ‘%lu’ expects argument
+> of type ‘long unsigned int’, but argument 2 has type ‘unsigned int’
+> [-Wformat=] 5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */ |
+> ^~~~~~
+> ./include/linux/kern_levels.h:9:20: note: in expansion of macro ‘KERN_SOH’
+>     9 | #define KERN_ALERT KERN_SOH "1" /* action must be taken immediately */
+>       |                    ^~~~~~~~
+> ./include/linux/printk.h:295:9: note: in expansion of macro ‘KERN_ALERT’
+>   295 |  printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+>       |         ^~~~~~~~~~
+> kernel/rcu/rcuperf.c:726:2: note: in expansion of macro ‘pr_alert’
+>   726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+>       |  ^~~~~~~~
+> kernel/rcu/rcuperf.c:726:32: note: format string is defined here
+>   726 |  pr_alert("kfree object size=%lu\n", kfree_mult * sizeof(struct kfree_obj));
+>       |                              ~~^
+>       |                                |
+>       |                                long unsigned int
+>       |                              %u
 > 
-> Andrew, Stephen, can you drop this series?
+> 
+> The reason for the warning is that both kfree_mult and sizeof() are 
+> 'int' types on 32-bit kernels, while the format string expects a long.
+> 
+> Instead of casting the type to long or tweaking the format string, the 
+> most straightforward solution is to upgrade kfree_mult to a long. 
+> Since this depends on CONFIG_RCU_PERF_TEST
 
-Hope you're happy now.
+Thanks for fixing it.
 
-The warning is just not needed for the always case. The whole point
-of the patch was to maintain these counters only approximately.
-We could of course use _sum or _sum_positive in the warning, but that would
-just be unnecessary overhead in this moderately hot path.
+> BTW., could we please also rename this code from 'PERF_TEST'/'perf test'
+> to 'PERFORMANCE_TEST'/'performance test'? At first glance I always
+> mistakenly believe that it's somehow related to perf, while it isn't. =B-)
 
-So this patch should fix it: (untested)
+Would it be better to call it 'RCUPERF_TEST' instead of the
+'RCU_PERFORMANCE_TEST' you are proposing? I feel the word 'PERFORMANCE' is
+too long.  Also, 'rcuperf test' instead of the 'rcu performance test' you are
+proposing.  I am Ok with doing it however you and Paul want it though, let me
+know.
 
-Possibly might need to move it even further down because the patch
-also affected the _GUESS case.
+Paul, should I send you a renaming patch for the new performance tests as
+well (which I believe should be in the -dev branch).
 
+thanks,
 
-diff --git a/mm/util.c b/mm/util.c
-index 988d11e6c17c..fa78f90e29a1 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -798,10 +798,6 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- {
- 	long allowed;
- 
--	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
--			-(s64)vm_committed_as_batch * num_online_cpus(),
--			"memory commitment underflow");
--
- 	vm_acct_memory(pages);
- 
- 	/*
-@@ -810,6 +806,10 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
- 	if (sysctl_overcommit_memory == OVERCOMMIT_ALWAYS)
- 		return 0;
- 
-+	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
-+			-(s64)vm_committed_as_batch * num_online_cpus(),
-+			"memory commitment underflow");
-+
- 	if (sysctl_overcommit_memory == OVERCOMMIT_GUESS) {
- 		if (pages > totalram_pages() + total_swap_pages)
- 			goto error;
-
-
+ - Joel
 
 
 > 
-> > 
-> > [ 3319.257898] LTP: starting oom01
-> > [ 3319.284417] ------------[ cut here ]------------
-> > [ 3319.284439] memory commitment underflow
-> > [ 3319.284456] WARNING: CPU: 13 PID: 130949 at mm/util.c:835 __vm_enough_memory+0x1dc/0x1f0
-> > [ 3319.284485] Modules linked in: brd ext4 crc16 mbcache jbd2 loop kvm_hv kvm ip_tables x_tables xfs sd_mod ahci libahci bnx2x libata mdio tg3 libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod
-> > [ 3319.284538] CPU: 13 PID: 130949 Comm: oom01 Not tainted 5.7.0-rc6-next-20200521+ #115
-> > [ 3319.284551] NIP:  c00000000043027c LR: c000000000430278 CTR: c0000000007bd120
-> > [ 3319.284572] REGS: c00000064a42f710 TRAP: 0700   Not tainted  (5.7.0-rc6-next-20200521+)
-> > [ 3319.284602] MSR:  900000000282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28222422  XER: 20040000
-> > [ 3319.284638] CFAR: c000000000119098 IRQMASK: 0 
-> >                GPR00: c000000000430278 c00000064a42f9a0 c000000001765500 000000000000001b 
-> >                GPR04: c00000000179c3b0 000000000000000b 0000000066726564 c00000000429ac28 
-> >                GPR08: 0000000000000001 0000000000000000 0000000000000000 c000001301facc80 
-> >                GPR12: 0000000000002000 c000001fffff3d80 0000000000000000 0000000000000000 
-> >                GPR16: 0000000000000000 0000000000000000 c0000014f358dd60 fffffffffff7dfff 
-> >                GPR20: c0000003725a9128 c0000003725a3928 c000000b0a0c0670 c000000b0a0c0678 
-> >                GPR24: c000000b0a0c0660 c00000064a42fa58 c000000b0a0c0650 c0000003725a9080 
-> >                GPR28: 0000000000000001 0000000000000000 c000000001620178 0000000000000001 
-> > [ 3319.284825] NIP [c00000000043027c] __vm_enough_memory+0x1dc/0x1f0
-> > [ 3319.284853] LR [c000000000430278] __vm_enough_memory+0x1d8/0x1f0
-> > [ 3319.284872] Call Trace:
-> > [ 3319.284889] [c00000064a42f9a0] [c000000000430278] __vm_enough_memory+0x1d8/0x1f0 (unreliable)
-> > [ 3319.284930] [c00000064a42fa30] [c000000000114258] dup_mm+0x2a8/0x700
-> > [ 3319.284960] [c00000064a42fae0] [c000000000115c7c] copy_process+0xeac/0x1a00
-> > [ 3319.284981] [c00000064a42fbf0] [c000000000116b3c] _do_fork+0xac/0xce0
-> > [ 3319.285002] [c00000064a42fd00] [c000000000117928] __do_sys_clone+0x98/0xe0
-> > [ 3319.285032] [c00000064a42fdc0] [c000000000039e78] system_call_exception+0x108/0x1d0
-> > [ 3319.285064] [c00000064a42fe20] [c00000000000c9f0] system_call_common+0xf0/0x278
-> > [ 3319.285093] Instruction dump:
-> > [ 3319.285109] 60000000 73a90001 4182000c e8be0002 4bfffeb8 3c62ff51 39200001 3d42fff9 
-> > [ 3319.285142] 38636690 992a6ad6 4bce8dbd 60000000 <0fe00000> e8be0002 4bfffe90 60000000 
-> > [ 3319.285166] irq event stamp: 0
-> > [ 3319.285183] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-> > [ 3319.285195] hardirqs last disabled at (0): [<c0000000001154c8>] copy_process+0x6f8/0x1a00
-> > [ 3319.285216] softirqs last  enabled at (0): [<c0000000001154c8>] copy_process+0x6f8/0x1a00
-> > [ 3319.285238] softirqs last disabled at (0): [<0000000000000000>] 0x0
-> > [ 3319.285267] ---[ end trace 115e3f7fbb0653c2 ]---
-> > 
-> > > 
-> > > - Feng
-> > > 
-> > > ----------------------------------------------------------------
-> > > Changelog:
-> > >   v2:
-> > >      * add the sysctl handler to cover runtime overcommit policy
-> > >        change, as suggested by Andres Morton 
-> > >      * address the accuracy concern of vm_memory_committed()
-> > >        from Andi Kleen 
-> > > 
-> > > Feng Tang (3):
-> > >   proc/meminfo: avoid open coded reading of vm_committed_as
-> > >   mm/util.c: make vm_memory_committed() more accurate
-> > >   mm: adjust vm_committed_as_batch according to vm overcommit policy
-> > > 
-> > >  fs/proc/meminfo.c    |  2 +-
-> > >  include/linux/mm.h   |  2 ++
-> > >  include/linux/mman.h |  4 ++++
-> > >  kernel/sysctl.c      |  2 +-
-> > >  mm/mm_init.c         | 19 +++++++++++++++----
-> > >  mm/util.c            | 15 ++++++++++++++-
-> > >  6 files changed, 37 insertions(+), 7 deletions(-)
-> > > 
-> > > -- 
-> > > 2.7.4
-> > > 
-> > > 
+> Thanks,
+> 
+> 	Ingo
+> 
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> 
+>  kernel/rcu/rcuperf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+> index 16dd1e6b7c09..221a0a3810e4 100644
+> --- a/kernel/rcu/rcuperf.c
+> +++ b/kernel/rcu/rcuperf.c
+> @@ -88,7 +88,7 @@ torture_param(bool, shutdown, RCUPERF_SHUTDOWN,
+>  torture_param(int, verbose, 1, "Enable verbose debugging printk()s");
+>  torture_param(int, writer_holdoff, 0, "Holdoff (us) between GPs, zero to disable");
+>  torture_param(int, kfree_rcu_test, 0, "Do we run a kfree_rcu() perf test?");
+> -torture_param(int, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+> +torture_param(long, kfree_mult, 1, "Multiple of kfree_obj size to allocate.");
+>  
+>  static char *perf_type = "rcu";
+>  module_param(perf_type, charp, 0444);
