@@ -2,117 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F59C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2862071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967532071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391548AbgE0Qqi (ORCPT
+        id S2391568AbgE0Qqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:46:38 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:57893 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391512AbgE0Qqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:46:36 -0400
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id EA141100004;
-        Wed, 27 May 2020 16:46:32 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
-        foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next 2/8] net: phy: mscc: fix copyright and author information in MACsec
-Date:   Wed, 27 May 2020 18:41:52 +0200
-Message-Id: <20200527164158.313025-3-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200527164158.313025-1-antoine.tenart@bootlin.com>
-References: <20200527164158.313025-1-antoine.tenart@bootlin.com>
+        Wed, 27 May 2020 12:46:42 -0400
+Received: from muru.com ([72.249.23.125]:55860 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389014AbgE0Qqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:46:37 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id C200A80DB;
+        Wed, 27 May 2020 16:47:26 +0000 (UTC)
+Date:   Wed, 27 May 2020 09:46:33 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
+        kernel@pyra-handheld.com, letux-kernel@openphoenux.org,
+        linux-omap@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 3/4] w1: omap-hdq: fix interrupt handling which did show
+ spurious timeouts
+Message-ID: <20200527164633.GJ37466@atomide.com>
+References: <cover.1590255176.git.hns@goldelico.com>
+ <68fc8623ae741878beef049273696d2377526165.1590255176.git.hns@goldelico.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <68fc8623ae741878beef049273696d2377526165.1590255176.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All headers in the MSCC PHY driver have been copied and pasted from the
-original mscc.c file. However the information is not necessarily
-correct, as in the MACsec support. Fix this.
+* H. Nikolaus Schaller <hns@goldelico.com> [200523 17:34]:
+> Since
+> 
+> commit 27d13da8782a ("w1: omap-hdq: Simplify driver with PM runtime autosuspend")
+> 
+> was applied,
+> 
+> I did see timeouts and wrong values when reading a bq27000 connected
+> to hdq of the omap3. This occurred mainly after boot but remained and
+> only sometimes settled down after several reads.
+> 
+> root@letux:~# time cat /sys/class/power_supply/bq27000-battery/uevent
+> POWER_SUPPLY_NAME=bq27000-battery
+> POWER_SUPPLY_STATUS=Discharging
+> POWER_SUPPLY_PRESENT=1
+> POWER_SUPPLY_VOLTAGE_NOW=0
+> POWER_SUPPLY_CURRENT_NOW=0
+> POWER_SUPPLY_CAPACITY=0
+> POWER_SUPPLY_CAPACITY_LEVEL=Normal
+> POWER_SUPPLY_TEMP=-2731
+> POWER_SUPPLY_TIME_TO_EMPTY_NOW=0
+> POWER_SUPPLY_TIME_TO_EMPTY_AVG=0
+> POWER_SUPPLY_TIME_TO_FULL_NOW=0
+> POWER_SUPPLY_TECHNOLOGY=Li-ion
+> POWER_SUPPLY_CHARGE_FULL=0
+> POWER_SUPPLY_CHARGE_NOW=0
+> POWER_SUPPLY_CHARGE_FULL_DESIGN=0
+> POWER_SUPPLY_CYCLE_COUNT=0
+> POWER_SUPPLY_ENERGY_NOW=0
+> POWER_SUPPLY_POWER_AVG=0
+> POWER_SUPPLY_HEALTH=Good
+> POWER_SUPPLY_MANUFACTURER=Texas Instruments
+> 
+> real    0m15.761s
+> user    0m0.001s
+> sys     0m0.025s
+> root@letux:~#
+> 
+> Sometimes the effect did disappear after accessing
+> the device multiple times, speed went up and results
+> became correct.
+> 
+> All this indicates that some interrupts from the hdq
+> controller are lost by the driver.
+> 
+> Enabling debugging revealed that there were spurious tx
+> and rx timeouts, i.e. the driver does not always recognise
+> interrupts. The main problem is that rx and tx interrupts
+> share a single variable which was sometimes reset to
+> 0 wiping out other interrupts. And it was overwritten
+> by a second interrupt, independent of whether the
+> previous interrupt was already processed or not.
+> 
+> This patch improves interrupt handling to avoid such
+> races and loss of interrupt flags.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/phy/mscc/mscc_fc_buffer.h | 2 +-
- drivers/net/phy/mscc/mscc_mac.h       | 2 +-
- drivers/net/phy/mscc/mscc_macsec.c    | 6 +++---
- drivers/net/phy/mscc/mscc_macsec.h    | 2 +-
- 4 files changed, 6 insertions(+), 6 deletions(-)
+Good to hear you got it figured out :) Looks OK to me:
 
-diff --git a/drivers/net/phy/mscc/mscc_fc_buffer.h b/drivers/net/phy/mscc/mscc_fc_buffer.h
-index 3803e826c37d..399e803395a5 100644
---- a/drivers/net/phy/mscc/mscc_fc_buffer.h
-+++ b/drivers/net/phy/mscc/mscc_fc_buffer.h
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Microsemi VSC85xx PHYs
-  *
-- * Copyright (C) 2019 Microsemi Corporation
-+ * Copyright (C) 2020 Microsemi Corporation
-  */
- 
- #ifndef _MSCC_PHY_FC_BUFFER_H_
-diff --git a/drivers/net/phy/mscc/mscc_mac.h b/drivers/net/phy/mscc/mscc_mac.h
-index 59b6837c60b3..8dd38dc6edbf 100644
---- a/drivers/net/phy/mscc/mscc_mac.h
-+++ b/drivers/net/phy/mscc/mscc_mac.h
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Microsemi VSC85xx PHYs
-  *
-- * Copyright (c) 2017 Microsemi Corporation
-+ * Copyright (c) 2020 Microsemi Corporation
-  */
- 
- #ifndef _MSCC_PHY_LINE_MAC_H_
-diff --git a/drivers/net/phy/mscc/mscc_macsec.c b/drivers/net/phy/mscc/mscc_macsec.c
-index b4d3dc4068e2..c0eeb62cb940 100644
---- a/drivers/net/phy/mscc/mscc_macsec.c
-+++ b/drivers/net/phy/mscc/mscc_macsec.c
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: (GPL-2.0 OR MIT)
- /*
-- * Driver for Microsemi VSC85xx PHYs
-+ * Driver for Microsemi VSC85xx PHYs - MACsec support
-  *
-- * Author: Nagaraju Lakkaraju
-+ * Author: Antoine Tenart
-  * License: Dual MIT/GPL
-- * Copyright (c) 2016 Microsemi Corporation
-+ * Copyright (c) 2020 Microsemi Corporation
-  */
- 
- #include <linux/phy.h>
-diff --git a/drivers/net/phy/mscc/mscc_macsec.h b/drivers/net/phy/mscc/mscc_macsec.h
-index d751f2946b79..9c6d25e36de2 100644
---- a/drivers/net/phy/mscc/mscc_macsec.h
-+++ b/drivers/net/phy/mscc/mscc_macsec.h
-@@ -2,7 +2,7 @@
- /*
-  * Driver for Microsemi VSC85xx PHYs
-  *
-- * Copyright (c) 2018 Microsemi Corporation
-+ * Copyright (c) 2020 Microsemi Corporation
-  */
- 
- #ifndef _MSCC_PHY_MACSEC_H_
--- 
-2.26.2
-
+Acked-by: Tony Lindgren <tony@atomide.com>
