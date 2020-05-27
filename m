@@ -2,141 +2,202 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA89C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E343C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C645A2145D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W+3hnCfC"
+	by mail.kernel.org (Postfix) with ESMTP id 6831F2145D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgE0IMH (ORCPT
+        id S2387831AbgE0IMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:12:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42232 "EHLO
+        Wed, 27 May 2020 04:12:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729525AbgE0IMB (ORCPT
+        with ESMTP id S1729570AbgE0IMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:12:01 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C122EC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:11:59 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o15so5561363ejm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:11:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0v4FUUdOqnp7RuUd3enj3icuA3Tv1E+eMrUcax4ybiE=;
-        b=W+3hnCfCOEdWNjyHZKfqtTXWWAvcsc9X6JViElZFaf6JXTcTdJDeA2F8fNSV5tvTcT
-         xKmnm1BZ212eJIIbHKg/1Pzap8L/aN8QNvBe2z+8psEUJbvwLKXd2skAOhwb2q7hAo4S
-         1pYTZRzrmqkgWSVTVPHvK2HGF8vUbhCGAaixdnhcGOlC/fq2fiV7kmgo3juztV6Qa2Gt
-         iDM2dzf14TFCVqxLtuG0Zv3GU1m1c73EWzmDzgM0vPeVQihqPBn/QuMg3/cuET2lc/1s
-         sVigw7hp3G1JLqOVRcP1Lm5NbPjQay39nOaLgM8u2LUqXJcO/zfuQY9L7A3yZN63coqb
-         K6gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0v4FUUdOqnp7RuUd3enj3icuA3Tv1E+eMrUcax4ybiE=;
-        b=tvfCbKXAI6JXzQaxhdnVL9Ti5JUIG0a2/r6r7aO010DgTD+Ma8dWF6DVwfG1WKsC8l
-         KPiVRqiDpT5ZmAIt0Pes8unVjkjJILcCnLCaShiTTXUAC1IaGX2VkUXPvkBC0/xZ8x4L
-         FpV4WWk1kewK/SjhWGfcQge9Yew2rH89NUoL0pQsEclndE5bpzgmxrBk6XL97uoag2Q3
-         JEtO72YYnzzJmDlnHFpWwcbjswiPMO3oGcLIhVdRm7OIgyI+FrxBssWudsop5iXuyw5N
-         hfwU1aX4vE5Y9na7r8WVhjcrZoUFUkXhVcDCRY3Do/hpwA9xRNbw8HDIbdIVa8F3VM3L
-         P73g==
-X-Gm-Message-State: AOAM530HsySNl/xdodkUPcbStxh3epCmI3XrNoG8I9Ip9lg9Cy9dYwHs
-        pzY2wI0C5iIPzhIMTVHp9TbcRGD3CcI2NQ==
-X-Google-Smtp-Source: ABdhPJzw6zpLQcFWBHtAfTQmhIs1joyz3snPNSslBRSJqdi3yEGoxUHTg79dA7jWdpyt65HDHZIB2g==
-X-Received: by 2002:a17:906:1c10:: with SMTP id k16mr4564291ejg.511.1590567118159;
-        Wed, 27 May 2020 01:11:58 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id nj6sm2041629ejb.99.2020.05.27.01.11.55
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 May 2020 01:11:57 -0700 (PDT)
-Subject: Re: [PATCH V2] opp: Remove bandwidth votes when target_freq is zero
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
- <3aa3870d71b536127bb6af88c1dbfb4672ba4173.1590552778.git.viresh.kumar@linaro.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <a5e60c39-0a17-bc6a-6992-4b8b3991be52@linaro.org>
-Date:   Wed, 27 May 2020 11:11:54 +0300
+        Wed, 27 May 2020 04:12:07 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6F8C03E97C;
+        Wed, 27 May 2020 01:12:06 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jdrAQ-0002bV-47; Wed, 27 May 2020 10:12:02 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AC3831C00ED;
+        Wed, 27 May 2020 10:11:54 +0200 (CEST)
+Date:   Wed, 27 May 2020 08:11:54 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/entry] x86/entry: Remove the transition leftovers
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200521202118.331115895@linutronix.de>
+References: <20200521202118.331115895@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <3aa3870d71b536127bb6af88c1dbfb4672ba4173.1590552778.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <159056711458.17951.16458122101554477080.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 07:13, Viresh Kumar wrote:
-> We already drop several votes when target_freq is set to zero, drop
-> bandwidth votes as well.
-> 
-> Reported-by: Sibi Sankar <sibis@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+The following commit has been merged into the x86/entry branch of tip:
 
-Reviewed-by: Georgi Djakov <georgi.djakov@linaro.org>
-Tested-by: Georgi Djakov <georgi.djakov@linaro.org>
+Commit-ID:     ae8f8f2116d86618cf43be142c495906a17811ef
+Gitweb:        https://git.kernel.org/tip/ae8f8f2116d86618cf43be142c495906a17811ef
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Thu, 21 May 2020 22:05:29 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 26 May 2020 19:06:28 +02:00
 
-Thanks!
-Georgi
+x86/entry: Remove the transition leftovers
+
+Now that all exceptions are converted over the sane flag is not longer
+needed. Also the vector argument of idtentry_body on 64-bit is pointless
+now.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Link: https://lore.kernel.org/r/20200521202118.331115895@linutronix.de
+---
+ arch/x86/entry/entry_32.S       |  3 +--
+ arch/x86/entry/entry_64.S       | 26 ++++----------------------
+ arch/x86/include/asm/idtentry.h |  6 +++---
+ 3 files changed, 8 insertions(+), 27 deletions(-)
+
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 1674deb..8b29330 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -734,9 +734,8 @@
+  * @asmsym:		ASM symbol for the entry point
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+- * @sane:		Compatibility flag with 64bit
+  */
+-.macro idtentry vector asmsym cfunc has_error_code:req sane=0
++.macro idtentry vector asmsym cfunc has_error_code:req
+ SYM_CODE_START(\asmsym)
+ 	ASM_CLAC
+ 	cld
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 5789f76..2e476f4 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -496,27 +496,14 @@ SYM_CODE_END(spurious_entries_start)
+ 
+ /**
+  * idtentry_body - Macro to emit code calling the C function
+- * @vector:		Vector number
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+- * @sane:		Sane variant which handles irq tracing, context tracking in C
+  */
+-.macro idtentry_body vector cfunc has_error_code:req sane=0
++.macro idtentry_body cfunc has_error_code:req
+ 
+ 	call	error_entry
+ 	UNWIND_HINT_REGS
+ 
+-	.if \sane == 0
+-	TRACE_IRQS_OFF
+-
+-#ifdef CONFIG_CONTEXT_TRACKING
+-	testb	$3, CS(%rsp)
+-	jz	.Lfrom_kernel_no_ctxt_tracking_\@
+-	CALL_enter_from_user_mode
+-.Lfrom_kernel_no_ctxt_tracking_\@:
+-#endif
+-	.endif
+-
+ 	movq	%rsp, %rdi			/* pt_regs pointer into 1st argument*/
+ 
+ 	.if \has_error_code == 1
+@@ -526,11 +513,7 @@ SYM_CODE_END(spurious_entries_start)
+ 
+ 	call	\cfunc
+ 
+-	.if \sane == 0
+-	jmp	error_exit
+-	.else
+ 	jmp	error_return
+-	.endif
+ .endm
+ 
+ /**
+@@ -539,12 +522,11 @@ SYM_CODE_END(spurious_entries_start)
+  * @asmsym:		ASM symbol for the entry point
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+- * @sane:		Sane variant which handles irq tracing, context tracking in C
+  *
+  * The macro emits code to set up the kernel context for straight forward
+  * and simple IDT entries. No IST stack, no paranoid entry checks.
+  */
+-.macro idtentry vector asmsym cfunc has_error_code:req sane=0
++.macro idtentry vector asmsym cfunc has_error_code:req
+ SYM_CODE_START(\asmsym)
+ 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+ 	ASM_CLAC
+@@ -567,7 +549,7 @@ SYM_CODE_START(\asmsym)
+ .Lfrom_usermode_no_gap_\@:
+ 	.endif
+ 
+-	idtentry_body \vector \cfunc \has_error_code \sane
++	idtentry_body \cfunc \has_error_code
+ 
+ _ASM_NOKPROBE(\asmsym)
+ SYM_CODE_END(\asmsym)
+@@ -642,7 +624,7 @@ SYM_CODE_START(\asmsym)
+ 
+ 	/* Switch to the regular task stack and use the noist entry point */
+ .Lfrom_usermode_switch_stack_\@:
+-	idtentry_body vector noist_\cfunc, has_error_code=0 sane=1
++	idtentry_body noist_\cfunc, has_error_code=0
+ 
+ _ASM_NOKPROBE(\asmsym)
+ SYM_CODE_END(\asmsym)
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index 92054ff..53e7f14 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -283,10 +283,10 @@ __visible noinstr void func(struct pt_regs *regs,			\
+  * The ASM variants for DECLARE_IDTENTRY*() which emit the ASM entry stubs.
+  */
+ #define DECLARE_IDTENTRY(vector, func)					\
+-	idtentry vector asm_##func func has_error_code=0 sane=1
++	idtentry vector asm_##func func has_error_code=0
+ 
+ #define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
+-	idtentry vector asm_##func func has_error_code=1 sane=1
++	idtentry vector asm_##func func has_error_code=1
+ 
+ /* Special case for 32bit IRET 'trap'. Do not emit ASM code */
+ #define DECLARE_IDTENTRY_SW(vector, func)
+@@ -324,7 +324,7 @@ __visible noinstr void func(struct pt_regs *regs,			\
+ 
+ /* XEN NMI and DB wrapper */
+ #define DECLARE_IDTENTRY_XEN(vector, func)				\
+-	idtentry vector asm_exc_xen##func exc_##func has_error_code=0 sane=1
++	idtentry vector asm_exc_xen##func exc_##func has_error_code=0
+ 
+ #endif /* __ASSEMBLY__ */
+ 
