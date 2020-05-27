@@ -2,114 +2,167 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C6AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7648CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 447EF2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O05Q0HMd"
+	by mail.kernel.org (Postfix) with ESMTP id 4F9BE2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:19:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590549563;
+	bh=r0fSWXqa5KJb1mvRxjIjhQ4fZq/3ca2Tu4hvzfrUErg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V0iOQYiuRLgwSa+Fz64pmt9v5kp+23ljGYAjD+XCCLrnjUuOHzPVhEv++14MBoIZp
+	 69pCk8Ibw8xwTjUxKhk+pEfwqwDdth6o7g9WNtvBNTF46KMu/EnmS76yaMr9rypF/L
+	 FVF39QLHsIq3gCggqdjlKLG/2vylt7Z+NIoaBcZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgE0DQG (ORCPT
+        id S1728509AbgE0DTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:16:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53518 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725893AbgE0DQG (ORCPT
+        Tue, 26 May 2020 23:19:22 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35792 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgE0DTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:16:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590549364;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=D/U30jq60+l+qSoKQaysERZKm3+QDoP2KNzgEBqE3b8=;
-        b=O05Q0HMdncPqAo5ZQD7XVR5LYJr8MYBVSPLZ/JMexyBNpYUqwBbrAroywGyzA3aXeHzRBC
-        +JtWXIZ0/0c2jdSxWzYDAmVHU+XWif/bkE9YDhFe9VeQ/IkqTxmmZ5hAdpYx0c1s05s7dH
-        BYlDlKdJ821gqFNlt0nwUh+kqVry8Qk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-370-kriTgT6fMYigScKrfzBEzQ-1; Tue, 26 May 2020 23:16:01 -0400
-X-MC-Unique: kriTgT6fMYigScKrfzBEzQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5331F835B42;
-        Wed, 27 May 2020 03:16:00 +0000 (UTC)
-Received: from [10.72.12.206] (ovpn-12-206.pek2.redhat.com [10.72.12.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C941F5C1B0;
-        Wed, 27 May 2020 03:15:53 +0000 (UTC)
-Subject: Re: [PATCH] kexec: Do not verify the signature without the lockdown
- or mandatory signature
-To:     Jiri Bohac <jbohac@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        ebiederm@xmission.com, jmorris@namei.org, mjg59@google.com,
-        dyoung@redhat.com, bhe@redhat.com
-References: <20200525052351.24134-1-lijiang@redhat.com>
- <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
-Date:   Wed, 27 May 2020 11:15:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 26 May 2020 23:19:21 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q16so9564965plr.2;
+        Tue, 26 May 2020 20:19:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s1BKNsNjOLcUtv/AvsFQU2yBPI63llFtuSI9Z++rcXY=;
+        b=prTuxXXd3V8skITpe+TiD7sFWXlK8gI9Z7vgLkhw3hJlKCMkgrlO3t/FRTkyh+Dyfq
+         Yynw4U1ZEh44cMeLIa9xRNUOEgQRHZLmHz9nsWcmO0arz1rjrc7BpUSYAjjdgcnYQmRJ
+         v0XoUesBZ8jUm8ZaEc+4rchAjoxtTR8Q3RaKWkwDBjniHPF4ENXD8D7x7tfgGhLwSOzw
+         avT88CGoPUufSJpU2x3Klc5bqxBZw9i1JU7pNocEagcSRtxXYLwD7M0ErN9DraaIOLzP
+         hR6cNZy6Jpda9vArwQEsaAMvaRftVSrZEGuNWWCODUIcxvriV1fKkb7rIVMUz9BdjS/L
+         +IPQ==
+X-Gm-Message-State: AOAM532gkJY2S21IUg9YL89qbgTaZQ8D2eBPNu/9t/u4Mo6SMHlfq5cQ
+        5QxxdfaEsApg9jHON5JYFdQ=
+X-Google-Smtp-Source: ABdhPJxPiuBTiEGp03ZPKGbJP1hp5uzZav3b0+uqraW2RLF4L0e/sp97pDX4C6AOAmTyYBSQ7RrVHg==
+X-Received: by 2002:a17:90b:e84:: with SMTP id fv4mr2330480pjb.132.1590549560127;
+        Tue, 26 May 2020 20:19:20 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id m2sm751435pjk.52.2020.05.26.20.19.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 20:19:19 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 20B41419C3; Wed, 27 May 2020 03:19:18 +0000 (UTC)
+Date:   Wed, 27 May 2020 03:19:18 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     jeyu@kernel.org, davem@davemloft.net, michael.chan@broadcom.com,
+        dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
+        aelior@marvell.com, GR-everest-linux-l2@marvell.com,
+        kvalo@codeaurora.org, johannes@sipsolutions.net,
+        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
+        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
+        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
+        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
+        schlad@suse.de, andriy.shevchenko@linux.intel.com,
+        derosier@gmail.com, keescook@chromium.org, daniel.vetter@ffwll.ch,
+        will@kernel.org, mchehab+samsung@kernel.org, vkoul@kernel.org,
+        mchehab+huawei@kernel.org, robh@kernel.org, mhiramat@kernel.org,
+        sfr@canb.auug.org.au, linux@dominikbrodowski.net,
+        glider@google.com, paulmck@kernel.org, elver@google.com,
+        bauerman@linux.ibm.com, yamada.masahiro@socionext.com,
+        samitolvanen@google.com, yzaikin@google.com, dvyukov@google.com,
+        rdunlap@infradead.org, corbet@lwn.net, dianders@chromium.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] kernel: taint when the driver firmware crashes
+Message-ID: <20200527031918.GU11244@42.do-not-panic.com>
+References: <20200526145815.6415-1-mcgrof@kernel.org>
+ <20200526154606.6a2be01f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+ <20200526230748.GS11244@42.do-not-panic.com>
+ <20200526163031.5c43fc1d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
 MIME-Version: 1.0
-In-Reply-To: <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526163031.5c43fc1d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020年05月26日 21:59, Jiri Bohac 写道:
-> On Mon, May 25, 2020 at 01:23:51PM +0800, Lianbo Jiang wrote:
->> So, here, let's simplify the logic to improve code readability. If the
->> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
->> is mandated. Otherwise, we lift the bar for any kernel image.
+On Tue, May 26, 2020 at 04:30:31PM -0700, Jakub Kicinski wrote:
+> On Tue, 26 May 2020 23:07:48 +0000 Luis Chamberlain wrote:
+> > On Tue, May 26, 2020 at 03:46:06PM -0700, Jakub Kicinski wrote:
+> > > On Tue, 26 May 2020 14:58:07 +0000 Luis Chamberlain wrote:  
+> > > > To those new on CC -- this is intended to be a simple generic interface
+> > > > to the kernel to annotate when the firwmare has crashed leaving the
+> > > > driver or system in a questionable state, in the worst case requiring
+> > > > full system reboot. This series is first addressing only a few
+> > > > networking patches, however, I already have an idea of where such
+> > > > firmware crashes happen across the tree. The goal with this series then
+> > > > is to first introduce the simple framework, and only if that moves
+> > > > forward will I continue to chug on with the rest of the drivers /
+> > > > subsystems.
+> > > > 
+> > > > This is *not* a networking specific problem only.
+> > > > 
+> > > > This v3 augments the last series by introducing the uevent for panic
+> > > > events, one of them is during tainting. The uvent mechanism is
+> > > > independent from any of this firmware taint mechanism. I've also
+> > > > addressed Jessica Yu's feedback. Given I've extended the patches a bit
+> > > > with other minor cleanup which checkpatch.pl complains over, and since
+> > > > this infrastructure is still being discussed, I've trimmed the patch
+> > > > series size to only cover drivers for which I've received an Acked-by
+> > > > from the respective driver maintainer, or where we have bug reports to
+> > > > support such dire situations on the driver such as ath10k.
+> > > > 
+> > > > During the last v2 it was discussed that we should instead use devlink
+> > > > for this work, however the initial RFC patches produced by Jakub
+> > > > Kicinski [0] shows how devlink is networking specific, and the intent
+> > > > behind this series is to produce simple helpers which can be used by *any*
+> > > > device driver, for any subsystem, not just networking. Subsystem
+> > > > specific infrastructure to help address firwmare crashes may still make
+> > > > sense, however that does not mean we *don't* need something even more
+> > > > generic regardless of the subsystem the issue happens on. Since uevents
+> > > > for taints are exposed, we now expose these through uapi as well, and
+> > > > that was something which eventually had to happen given that the current
+> > > > scheme of relying on sensible character representations for each taint
+> > > > will not scale beyond the alphabet.  
+> > > 
+> > > Nacked-by: Jakub Kicinski <kuba@kernel.org>  
+> > 
+> > Care to elaborate?
 > 
-> I agree completely; in fact that was my intention when
-> introducing the code, but I got overruled about the return codes:
-> https://lore.kernel.org/lkml/20180119125425.l72meyyc2qtrriwe@dwarf.suse.cz/
-> 
-> I like this simplification very much, except this part:
-> 
->> +	if (ret) {
->> +		pr_debug("kernel signature verification failed (%d).\n", ret);
-> 
-> ...
-> 
->> -		pr_notice("kernel signature verification failed (%d).\n", ret);
-> 
-> I think the log level should stay at most PR_NOTICE when the
-> verification failure results in rejecting the kernel. Perhaps
-> even lower.
-> 
+> I elaborated in the previous thread
 
-Thank you for the comment, Jiri Bohac.
+No you didn't.
 
-I like the idea of staying at most PR_NOTICE, but the pr_notice() will output
-some messages that kernel could want to ignore, such as the case you mentioned
-below.
+> and told you I will nack this, 
 
-> In case verification is not enforced and the failure is
-> ignored, KERN_DEBUG seems reasonable.
+That's all you said.
+
+> but sure let's go over this again.
 > 
+> For the third time saying the devlink is networking specific is not
+> true. It was created as a netlink configuration channel for devices
+> when there is no networking reference that could be used. It can be
+> compiled in or out much like sysfs.
 
-Yes, good understanding. It seems that the pr_debug() is still a good option here?
-Any other thoughts?
+Perhaps I didn't get your email but this clarification was in no way
+shape or form present in your reply on that thread.
 
-Thanks.
-Lianbo
+> And as I've shown you devlink already has the uAPI for what you're
+> trying to achieve.
 
+I read your patch, and granted, I will accept I was under the incorrect
+assumption that this can only be used by networking devices, however it
+the devlink approach achieves getting userspace the ability with
+iproute2 devlink util to query a device health, on to which we can peg
+firmware health. But *this* patch series is not about health status and
+letting users query it, its about a *critical* situation which has come up
+with firmware requiring me to reboot my system, and the lack of *any*
+infrastructure in the kernel today to inform userspace about it.
 
-> Regards,
-> 
+So say we use netlink to report a critical health situation, how are we
+informing userspace with your patch series about requring a reboot?
 
+  Luis
