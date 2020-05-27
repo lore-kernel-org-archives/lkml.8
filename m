@@ -2,137 +2,82 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D69C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C23C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C0B207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6557E207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388601AbgE0Nnc (ORCPT
+        id S2388612AbgE0Nnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:43:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:39385 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387581AbgE0Nnb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:43:31 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MHVWT-1jrOix2p1t-00DWd3; Wed, 27 May 2020 15:43:22 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Al Cooper <alcooperx@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-usb@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        Wed, 27 May 2020 09:43:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11202 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387581AbgE0Nnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:43:40 -0400
+IronPort-SDR: b9ZxhJGH4GUhn0jve4kaJr13cJxWbR+w+zBRdmPiuH/lXDtdCao3rSW3ezwMaBy2OTFE4SbIxk
+ rPQI0VyczK3w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:43:39 -0700
+IronPort-SDR: dY6u9OQowCN3pIUwRqJi5VniyqdUtAkl4F8EPNniYD9miuGF/kA9RMEDzs7GXuacsiL5SBpssc
+ rzqqjOL/sWZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="468745133"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 27 May 2020 06:43:36 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdwLL-009EkK-MI; Wed, 27 May 2020 16:43:39 +0300
+Date:   Wed, 27 May 2020 16:43:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: ehci: add struct entry for broadcom insnreg
-Date:   Wed, 27 May 2020 15:43:04 +0200
-Message-Id: <20200527134320.869042-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+Subject: Re: [PATCH v4 07/11] i2c: designware: Discard Cherry Trail model flag
+Message-ID: <20200527134339.GY1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-8-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iTbJEaWywLf2mWLZVn8fMvVV4ZGFeQWRknpQL+LBsm8TuN1/Vy3
- PRdkOJArPLub4c5r7xCX6MDjcKaJr+OjIKhUim5J6EitfqibA9mja8GnHmjxjjluu9MRF8v
- 265pV1iMcHPkyrEnaDcCXGmuGF/kCt3/Un4genigI7B98lloWFWYKVNV6aDS7Y6zi419NkD
- AO8HomIG4+s0EIeb9zL+g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sRc5KvpM3r0=:OPRaEuFeB1zs97rG6nj3Gt
- ilk67Ulrv9ec7I6CHJYfDaAdth5yW2UMClZV4K53vqHrUfFkLCtAdBGQ31bGV1ngZ8mklzsKx
- q4SXvfQKtTUoEvrurbJZrudUrQvvwpJbl/4ynW33w2sztPlJ7SQHSYsvJ19SD1weYeO4haC58
- 12PrYVpuzOiJV009FCH4ynO15sfBNsuV/jzSMVlhf6/Pvlb9DPO0R11HMQU1vhxgGjj4ZBf17
- /edtTaCvSj1d0By1rwSjAWYWyhJM+lyDys2B7fSwCsOHtu08855hH/FM7aWWFAMVJvegTVCn0
- h4cIhEvthT5NONp3YiJ+q/jjCoCXYWLDyFA9uNMQxA1yOX0uel5zhn+F+1iY8oRrUajGnvSBa
- mgrutL3k0sOhq5HlSVIllB0NJlBnmA6RAo8TSm/DV9OvfauaKE6buwCucjrMNIZFbku88kvuP
- ndiF+mVhbeWKhRLulr4AfwOfgzCM0v0aQHf5HKw5KIwcNBCiRPJ33BvrZQEDLnKTN042sNlWT
- QsCa+w8iyd5e72/UfteHtr9u75qOipOvJOAFuBl2bp84qtCd2nlcsoRecFV9c0AB/dwxr9cMe
- lRr06y9ZeKNk/8M1tea2e3V/3bzptTSu+7s8GZBV+AoJf+ij1Ap1sBj4A8GyqN1m6Eq+wLplf
- MNKPhngdHqmJHlJ6lp2Lhb0+RzmMS+WHWteTn2t9RRPY0ybz6uIEIlBwjU7FljeEqktaK2aQ7
- RFKmXyOqlP46LRNiw9fZW0p1OloQAF6SRtHh1sq7zL7zwts9b/qr9MABYRysjdlm06cHs7N3/
- Oeug/YOnHMIFWqzPJGZt3zmDVPlsKsV6CLcR78ShsfIevO/9+s=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527120111.5781-8-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The newly added broadcom ehci driver triggered another array
-overflow warning after I had fixed up a bunch of others. In this
-case, the driver intentionally abuses the port_status[] array
-to access a register that does not have an official name:
+On Wed, May 27, 2020 at 03:01:07PM +0300, Serge Semin wrote:
+> A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+> since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+> bus pm_disabled workaround"), but the flag most likely by mistake has been
+> left in the Dw I2C drivers. Let's remove it.
 
-drivers/usb/host/ehci-brcm.c:113:33: error: array index 16 is past the end of the array (which contains 15 elements) [-Werror,-Warray-bounds]
-        ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
-                                       ^                       ~~~~
-include/linux/usb/ehci_def.h:131:3: note: array 'port_status' declared here
-                u32             port_status[15]; /* up to N_PORTS */
-                ^
+...
 
-There is already a hack for Intel specific registers at the same
-location, so extend that hack to also cover the Broadcom registers.
+> -#define MODEL_MSCC_OCELOT	0x00000200
+> +#define MODEL_MSCC_OCELOT	0x00000100
 
-I'm a little confused about the register offset, as the code comment
-says @0x90 while the actual offset seems to be at offset 0x84, please
-confirm that the behavior is still correct.
+But why?
 
-Fixes: 9df231511bd6 ("usb: ehci: Add new EHCI driver for Broadcom STB SoC's")
-Fixes: 88aa39691cea ("usb: ehci: avoid gcc-10 zero-length-bounds warning")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/usb/host/ehci-brcm.c | 13 ++++++-------
- include/linux/usb/ehci_def.h |  1 +
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Does 0x200 work or not? I didn't see this in commit message.
 
-diff --git a/drivers/usb/host/ehci-brcm.c b/drivers/usb/host/ehci-brcm.c
-index 3e0ebe8cc649..bafb3f4db170 100644
---- a/drivers/usb/host/ehci-brcm.c
-+++ b/drivers/usb/host/ehci-brcm.c
-@@ -108,10 +108,10 @@ static int ehci_brcm_reset(struct usb_hcd *hcd)
- 	/*
- 	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
- 	 *   bus usage
--	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
-+	 * Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
- 	 */
--	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
--	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
-+	ehci_writel(ehci, 0x00800040, &ehci->regs->brcm_insnreg[0]);
-+	ehci_writel(ehci, 0x00000001, &ehci->regs->brcm_insnreg[2]);
- 
- 	return ehci_setup(hcd);
- }
-@@ -223,11 +223,10 @@ static int __maybe_unused ehci_brcm_resume(struct device *dev)
- 	/*
- 	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
- 	 *   bus usage
--	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00
--	 * @ 0x90
-+	 * Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
- 	 */
--	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
--	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
-+	ehci_writel(ehci, 0x00800040, &ehci->regs->brcm_insnreg[0]);
-+	ehci_writel(ehci, 0x00000001, &ehci->regs->brcm_insnreg[2]);
- 
- 	ehci_resume(hcd, false);
- 
-diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
-index 99481bbcc8f7..cf4bfbbdc8a3 100644
---- a/include/linux/usb/ehci_def.h
-+++ b/include/linux/usb/ehci_def.h
-@@ -190,6 +190,7 @@ struct ehci_regs {
- #define HOSTPC_PHCD	(1<<22)		/* Phy clock disable */
- #define HOSTPC_PSPD	(3<<25)		/* Port speed detection */
- 
-+		u32		brcm_insnreg[3]; /* Broadcom specific */
- 		u32		reserved6[17];
- 	};
- 
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
