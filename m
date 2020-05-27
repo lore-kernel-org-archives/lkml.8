@@ -2,77 +2,61 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 778D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3D3207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B8820899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590556747;
+	bh=+Gu7Ms819qce1QK403qJCBSwes3RbCCCLDAY5Pq8X2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bXI1cR8yfYOTWkDfrp3ya1CWhXBovSLAqs/VdCLs5/cy2uFkCeEvZiAjYp6CLq+HW
+	 hvn/fA2xaQwLSY8DwPAcZRhI4fnx6nXRUNJhBoU8l46/KXTstOitohc91VGXRT/v5k
+	 fTG/5bMgfW/dFxO8/JWA0KlzykkeydUqvN8tHOKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgE0FN4 (ORCPT
+        id S1728439AbgE0FTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:13:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3798 "EHLO mga17.intel.com"
+        Wed, 27 May 2020 01:19:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725969AbgE0FNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:13:55 -0400
-IronPort-SDR: IjcWlCbiqXgTJoKu0wf/KWar0x7tikALWGy4P1nB07KDFtxAd/zN0Z8vuoA5k7pA2Wgvf3//I7
- 34+If4jgvuXg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 22:13:55 -0700
-IronPort-SDR: EZaFWLbW8btGXcoTvzeyQT6xjFbceGOJPwKLW6J7q51OFBid7lzF/JjZ5tQm4V+nRUhHp7EQ/B
- axatwRgBhKxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="414074697"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 26 May 2020 22:13:55 -0700
-Date:   Tue, 26 May 2020 22:13:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Brad Campbell <lists2009@fnarfbargle.com>
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: KVM broken after suspend in most recent kernels.
-Message-ID: <20200527051354.GL31696@linux.intel.com>
-References: <1f7a85cc-38a6-2a2e-cbe3-a5b9970b7b92@fnarfbargle.com>
- <f726be8c-c7ef-bf6a-f31e-394969d35045@fnarfbargle.com>
- <1f7b1c9a8d9cbb6f82e97f8ba7a13ce5b773e16f.camel@redhat.com>
- <a45bc9d7-ad0b-2ff0-edcc-5283f591bc10@fnarfbargle.com>
+        id S1725948AbgE0FTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 01:19:06 -0400
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87BE0207E8;
+        Wed, 27 May 2020 05:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590556745;
+        bh=+Gu7Ms819qce1QK403qJCBSwes3RbCCCLDAY5Pq8X2I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W7384c9qF9IFuyKS/iMi2tBagpNmaWjiDU1TY32lRPvM1CulVTZoqeY7zkRwEHesc
+         V44k6+Kvdw252EsRRXIt8MolSdYOGEg1KwjNWHuOQsIX9optA3gYpuMWEfj3p+bB30
+         aWKSYEGPAaVIA3MCWu73f6clJVTow1ynWJ9lRVD8=
+Date:   Wed, 27 May 2020 14:18:56 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dongli Zhang <dongli.zhang@oracle.com>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        axboe@fb.com, sagi@grimberg.me
+Subject: Re: [PATCH 1/1] nvme-pci: avoid race between
+ nvme_reap_pending_cqes() and nvme_poll()
+Message-ID: <20200527051856.GB24949@redsun51.ssa.fujisawa.hgst.com>
+References: <20200527004955.19463-1-dongli.zhang@oracle.com>
+ <20200527050559.GA16317@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a45bc9d7-ad0b-2ff0-edcc-5283f591bc10@fnarfbargle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200527050559.GA16317@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 09:15:57PM +0800, Brad Campbell wrote:
-> >When you mean that KVM is broken after suspend, you mean that you can't
-> >start new VMs after suspend, or do VMs that were running before suspend
-> >break?  I see the later on my machine. I have AMD system though, so most
-> >likely this is another bug.
-> >
-> >Looking at the commit, I suspect that we indeed should set the IA32_FEAT_CTL
-> >after resume from ram, since suspend to ram might count as a complete CPU
-> >reset.
-> >
-> 
-> One of those "I should have clarified that" moments immediately after I
-> pressed send.  I've not tried suspending with a VM running. It's "can't start
-> new VMs after suspend".
-
-Don't bother testing suspending with a VM, the only thing that will be
-different is that your system will hang on resume instead when running a
-VM.  If there are active VMs, KVM automatically re-enables VMX via VMXON
-after resume, and VMXON is what's faulting.
-
-Odds are good the firmware simply isn't initializing IA32_FEAT_CTL, ever.
-The kernel handles the boot-time case, but I (obviously) didn't consider
-the suspend case.  I'll work on a patch.
+Fixes: fa46c6fb5d61 ("nvme/pci: move cqe check after device shutdown")
