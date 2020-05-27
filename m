@@ -2,152 +2,90 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F62C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADD7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8D42078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AE420787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:49:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IHURO0ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbgE0FoU (ORCPT
+        id S1726482AbgE0FtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:44:20 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45294 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0FoU (ORCPT
+        Wed, 27 May 2020 01:49:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0FtW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:44:20 -0400
-Received: by mail-io1-f71.google.com with SMTP id r11so351ioa.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:44:18 -0700 (PDT)
+        Wed, 27 May 2020 01:49:22 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E28CAC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:49:20 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id k5so27343190lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6Ey3RUpCGa5Aox52KZ5G497GPuu8CFMaGOEj0YfbRCE=;
+        b=IHURO0exP8ThsysvtvUVDN5cTBjZW1A5ogekeUUqLNeYB2FGz4d/s/pWf9IREZvWh9
+         6f3oUSCkM5uanpvYDqHX3Mm1dW6YEvprJ2NdjOmDgkcMox49wszIokbgRyhNb/ash0mu
+         qYG2m30mWdIbE6HauFvsy7lUAeG0MY1Cm+vBQsDVjJpR9COGe8J5mWSqMVoOZlsvr2IP
+         oU15BvzZaVmPzyM5p78RnO4P8b+XQ8wJv69PMeJ0ggxtY8eq28DwZ3LeT+ptx8vU9z0A
+         KVTOsFtyrGmTzfq1xSBTHeSDuo80Ah7EpSzJJflNND68IyDuCgHx9iUdQKy9CgFuAM0I
+         +6vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Bgc0xyKMKmH4kXUgb0xUwmRShDBAHn+UVKmj3Ak5adw=;
-        b=MC7Ugzz52TtCf/xytq4qvqpZbsgv16/6ed8izXUy6Z4um7UAvxsBD8sTMvAXLJmi5V
-         inj3inH6AI//CnFhIBFOqm59+dF5aFdZ1K65iuT5xFZkuq7BU4OgVxHsNALhKI/HIvFF
-         mEzL8nNbnyI0KU6LB7aalrk1akitzEZSCVhhVQ+HA7AIUoWTekQqoRQ0b00OpiCwJMpf
-         3WhJuxP4oCVoZQiKiRC+7/bFao1Ze1aJD5CXxw5j0d0yO06KIREQd0wNg+2DvkZvp15o
-         24/zSbx9JybrEXIMNrBywqUVpPCALxRfaUNRkRNBVJPKTyOjG1lLM30Q85RQTvI811xW
-         PEFg==
-X-Gm-Message-State: AOAM531DRW5U4Neis4Gzl7mEvt4kTeeL30dktqN61xk4rThDI6SZXSfn
-        GF8zS+MrPcbYHn1wR4dI1nDO35wm4rM/1GDm7YuzevByDJtW
-X-Google-Smtp-Source: ABdhPJyRQx+VCNT1AAHzgYEbnMlG5JGfdWtKKqElQSKZh9lfzwSUvbiRMORMxEj6lF3a5ZG8K+H/7LBJXUeB2FptzhRwNy0iSn7m
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6Ey3RUpCGa5Aox52KZ5G497GPuu8CFMaGOEj0YfbRCE=;
+        b=UP8/COzWU4/j6IZqj3s44hjOip4Uqro5WUP3xTbn5QjP8i4muN6HOTO8YOPivOWPB7
+         Kneian+ZvyX8Fqdy/NgLYn1qkv/rKDASkLHHRxBheTv8CY+3EUi9Ds113K8UZsHSAp5V
+         fTJDf6TXSzlCjaOY5C1cGEN7tS6ivYsbSS6FKrGDwTR+V4OarhEbneBWrkT/z3ob+svf
+         qg1vXCcjXuV2GZPZ2Qfq+OEmGndN18shQgoybyvUn1VbH7Uno4Ld0lSmWvvZQ4Kw9BA3
+         A2aw+aOlnbfaRJI6CAJ4UzyR7GAw+uKQYA+sHceDVenlXhpg1gS+EPOGz1K78wf3JYB3
+         WTmw==
+X-Gm-Message-State: AOAM532/xIBvjmM/9Cu3kat6zOXr0dlmYKvoip2FYC1oB5DJjU3kWqKJ
+        3s2zbWM2kfT65wzAxDB5VDG3PuWq/iG/5e9N8KlV9Q==
+X-Google-Smtp-Source: ABdhPJwnO7GDTOtyL2kiFe3jVfkqBAg7nq2J7SDhBgiLgtUefNePgtYaoje9dfB2Zk33EfyfNamq1jgS7Fz6Jg4SKys=
+X-Received: by 2002:a2e:8e91:: with SMTP id z17mr2117948ljk.144.1590558559281;
+ Tue, 26 May 2020 22:49:19 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:5448:: with SMTP id t69mr4261710jaa.37.1590558257060;
- Tue, 26 May 2020 22:44:17 -0700 (PDT)
-Date:   Tue, 26 May 2020 22:44:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e8226505a69ab3c7@google.com>
-Subject: general protection fault in start_creating
-From:   syzbot <syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com>
-To:     eesposit@redhat.com, gregkh@linuxfoundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com
+References: <20200526224116.63549-1-colin.king@canonical.com>
+In-Reply-To: <20200526224116.63549-1-colin.king@canonical.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 27 May 2020 07:49:08 +0200
+Message-ID: <CACRpkdb7s77aOnQxMQ=Gi9zcy_fz37PZ5E3+vk0=P5N8wjA6sw@mail.gmail.com>
+Subject: Re: [PATCH] clk: versatile: remove redundant assignment to pointer clk
+To:     Colin King <colin.king@canonical.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, May 27, 2020 at 12:41 AM Colin King <colin.king@canonical.com> wrote:
 
-syzbot found the following crash on:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> The pointer clk is being initialized with a value that is never read
+> and is being updated with a new value later on. The initialization
+> is redundant and can be removed.
+>
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-HEAD commit:    c11d28ab Add linux-next specific files for 20200522
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=1135d53c100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3f6dbdea4159fb66
-dashboard link: https://syzkaller.appspot.com/bug?extid=705f4401d5a93a59b87d
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110448d2100000
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-The bug was bisected to:
-
-commit 63d04348371b7ea4a134bcf47c79763d969e9168
-Author: Paolo Bonzini <pbonzini@redhat.com>
-Date:   Tue Mar 31 22:42:22 2020 +0000
-
-    KVM: x86: move kvm_create_vcpu_debugfs after last failure point
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1366069a100000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=10e6069a100000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1766069a100000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+705f4401d5a93a59b87d@syzkaller.appspotmail.com
-Fixes: 63d04348371b ("KVM: x86: move kvm_create_vcpu_debugfs after last failure point")
-
-general protection fault, probably for non-canonical address 0xdffffc000000002a: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000150-0x0000000000000157]
-CPU: 0 PID: 8143 Comm: syz-executor.0 Not tainted 5.7.0-rc6-next-20200522-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__lock_acquire+0xe1b/0x48a0 kernel/locking/lockdep.c:4250
-Code: b6 0a 41 be 01 00 00 00 0f 86 ce 0b 00 00 89 05 ab 87 b6 0a e9 c3 0b 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 d2 48 c1 ea 03 <80> 3c 02 00 0f 85 e5 2c 00 00 49 81 3a 40 75 e5 8b 0f 84 b0 f2 ff
-RSP: 0018:ffffc900043cf7b8 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: 000000000000002a RSI: 0000000000000000 RDI: 0000000000000150
-RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000150 R11: 0000000000000001 R12: 0000000000000000
-R13: ffff8880966f8240 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007f6300c10700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6300bcbdb8 CR3: 0000000092f4d000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4959
- down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
- inode_lock include/linux/fs.h:801 [inline]
- start_creating+0xa8/0x250 fs/debugfs/inode.c:334
- __debugfs_create_file+0x62/0x400 fs/debugfs/inode.c:383
- kvm_arch_create_vcpu_debugfs+0x9f/0x200 arch/x86/kvm/debugfs.c:52
- kvm_create_vcpu_debugfs arch/x86/kvm/../../../virt/kvm/kvm_main.c:2998 [inline]
- kvm_vm_ioctl_create_vcpu arch/x86/kvm/../../../virt/kvm/kvm_main.c:3075 [inline]
- kvm_vm_ioctl+0x1c28/0x2460 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3603
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x45ca29
-Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f6300c0fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004e73c0 RCX: 000000000045ca29
-RDX: 0000000000000000 RSI: 000000000000ae41 RDI: 0000000000000005
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000396 R14: 00000000004c62c6 R15: 00007f6300c106d4
-Modules linked in:
----[ end trace b2ea4e12631736e7 ]---
-RIP: 0010:__lock_acquire+0xe1b/0x48a0 kernel/locking/lockdep.c:4250
-Code: b6 0a 41 be 01 00 00 00 0f 86 ce 0b 00 00 89 05 ab 87 b6 0a e9 c3 0b 00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 d2 48 c1 ea 03 <80> 3c 02 00 0f 85 e5 2c 00 00 49 81 3a 40 75 e5 8b 0f 84 b0 f2 ff
-RSP: 0018:ffffc900043cf7b8 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: 000000000000002a RSI: 0000000000000000 RDI: 0000000000000150
-RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000150 R11: 0000000000000001 R12: 0000000000000000
-R13: ffff8880966f8240 R14: 0000000000000000 R15: 0000000000000000
-FS:  00007f6300c10700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6300bcbdb8 CR3: 0000000092f4d000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Yours,
+Linus Walleij
