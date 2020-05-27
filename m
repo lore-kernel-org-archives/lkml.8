@@ -2,116 +2,165 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55350C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31456207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089E0207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:47:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="N/8M/e7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgE0Mp3 (ORCPT
+        id S1730100AbgE0MrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:45:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19046 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728513AbgE0Mp3 (ORCPT
+        Wed, 27 May 2020 08:47:12 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:51101 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728513AbgE0MrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:45:29 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RCWOgG067581;
-        Wed, 27 May 2020 08:45:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3170c72v4p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 08:45:16 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04RCX31u070298;
-        Wed, 27 May 2020 08:45:16 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3170c72v3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 08:45:16 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04RCiru1024551;
-        Wed, 27 May 2020 12:45:14 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma02dal.us.ibm.com with ESMTP id 316ufake6r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 May 2020 12:45:14 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04RCiCXO9372298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 12:44:12 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 256D26A051;
-        Wed, 27 May 2020 12:44:13 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02E9E6A04D;
-        Wed, 27 May 2020 12:44:10 +0000 (GMT)
-Received: from [9.211.128.7] (unknown [9.211.128.7])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 27 May 2020 12:44:10 +0000 (GMT)
-Subject: Re: [PATCH 0/4] kernfs: proposed locking and concurrency improvement
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Kent <raven@themaw.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <159038508228.276051.14042452586133971255.stgit@mickey.themaw.net>
- <20200525061616.GA57080@kroah.com>
-From:   Rick Lindsley <ricklind@linux.vnet.ibm.com>
-Message-ID: <1d185eb3-8a85-9138-9277-92400ba03e0a@linux.vnet.ibm.com>
-Date:   Wed, 27 May 2020 05:44:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 08:47:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1590583631; x=1622119631;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=ZpUgh+P6r6mxj1lydd2QIOZrB0EuK0mUcU82zaKuhF8=;
+  b=N/8M/e7tIR35MdNufIe4WGSpffrzyuU56selt0dYCYFhFmn1Az8lu6DA
+   Nuac4v48QQluPpMA7LC8DLwQMM5hN6+OHFgdK+u8EaiCAlo+Gb2gIwGd4
+   D9YO6gyBi5mB6z1jU8ndL2H9+oRDf/ANsVJP4DprFcJ4/pHUU+Fac86I+
+   g=;
+IronPort-SDR: AcgyTr3N5DPmtU9JSr4a2uBZjFAZVmeCfi5HmoNti3oUI4DFnAnVdtGUQeSWDCCnAzPcO3qFp4
+ bwmqOJ27fgTA==
+X-IronPort-AV: E=Sophos;i="5.73,441,1583193600"; 
+   d="scan'208";a="38101351"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 27 May 2020 12:47:10 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id EAEAFA23F8;
+        Wed, 27 May 2020 12:47:07 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 27 May 2020 12:47:07 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 27 May 2020 12:46:51 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Leonard Foerster <foersleo@amazon.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
+        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: Re: [PATCH v13 05/15] mm/damon: Adaptively adjust regions
+Date:   Wed, 27 May 2020 14:46:35 +0200
+Message-ID: <20200527124635.19577-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1590578636-27155-1-git-send-email-foersleo@amazon.com> (raw)
 MIME-Version: 1.0
-In-Reply-To: <20200525061616.GA57080@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- cotscore=-2147483648 priorityscore=1501 impostorscore=0 clxscore=1011
- suspectscore=0 spamscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
- phishscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270091
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D15UWA002.ant.amazon.com (10.43.160.218) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/24/20 11:16 PM, Greg Kroah-Hartman wrote:
+On Wed, 27 May 2020 13:23:56 +0200 Leonard Foerster <foersleo@amazon.com> wrote:
 
-> Independant of your kernfs changes, why do we really need to represent
-> all of this memory with that many different "memory objects"?  What is
-> that providing to userspace?
+> On 2020-05-25T11:15:02+02:00 SeongJae Park <sjpark@amazon.com> wrote:
 > 
-> I remember Ben Herrenschmidt did a lot of work on some of the kernfs and
-> other functions to make large-memory systems boot faster to remove some
-> of the complexity in our functions, but that too did not look into why
-> we needed to create so many objects in the first place.
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > At the beginning of the monitoring, DAMON constructs the initial regions
+> > by evenly splitting the memory mapped address space of the process into
+> > the user-specified minimal number of regions.  In this initial state,
+> > the assumption of the regions (pages in same region have similar access
+> > frequencies) is normally not kept and thus the monitoring quality could
+> > be low.  To keep the assumption as much as possible, DAMON adaptively
+> > merges and splits each region.
+> > 
+> > For each ``aggregation interval``, it compares the access frequencies of
+> > adjacent regions and merges those if the frequency difference is small.
+> > Then, after it reports and clears the aggregated access frequency of
+> > each region, it splits each region into two regions if the total number
+> > of regions is smaller than the half of the user-specified maximum number
+> > of regions.
+> > 
+> > In this way, DAMON provides its best-effort quality and minimal overhead
+> > while keeping the bounds users set for their trade-off.
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> > [...]
+> > +/*
+> > + * splits every target region into two randomly-sized regions
+> > + *
+> > + * This function splits every target region into two random-sized regions if
+> > + * current total number of the regions is equal or smaller than half of the
+> > + * user-specified maximum number of regions.  This is for maximizing the
+> > + * monitoring accuracy under the dynamically changeable access patterns.  If a
+> > + * split was unnecessarily made, later 'kdamond_merge_regions()' will revert
+> > + * it.
+> > + */
+> > +static void kdamond_split_regions(struct damon_ctx *ctx)
+> > +{
+> > +	struct damon_task *t;
+> > +	unsigned int nr_regions = 0;
+> > +	static unsigned int last_nr_regions;
+> > +	int nr_subregions = 2;
+> > +
+> > +	damon_for_each_task(t, ctx)
+> > +		nr_regions += nr_damon_regions(t);
+> > +
+> > +	if (nr_regions > ctx->max_nr_regions / 2)
+> > +		return;
+> > +
+> > +	/* If number of regions is not changed, we are maybe in corner case */
+> > +	if (last_nr_regions == nr_regions &&
+> > +			nr_regions < ctx->max_nr_regions / 3)
+> > +		nr_subregions = 3;
+> > +
+> > +	damon_for_each_task(t, ctx)
+> > +		damon_split_regions_of(ctx, t, nr_subregions);
+> > +
+> > +	if (!last_nr_regions)
+> > +		last_nr_regions = nr_regions;
+> 
+> So we are only setting last_nr_regions once when we first come along
+> here (when last_nr_regions == 0). Thus we are checking from now on if
+> nr_regions is the same as nr_regions was before the first ever split. So
+> we are doing the three-way split whenever nr_regions has come to the
+> initial number of regions. Is this actually what we want? The naming
+> suggests that we want to check against the number before the last split
+> to detect if we have moved into a spot where we are splitting and
+> merging back and forth between two states (this is the corner case we
+> are talking about?).
+> 
+> Or am I misunderstanding the intention here?
 
-That was my first choice too.  Unfortunately, I was not consulted on this design decision, however, and now it's out there.  It is, as you guessed, a hardware "feature".  The hw believes there is value in identifying memory in 256MB chunks.  There are, unfortunately, 2^18 or over 250,000 of those on a 64TB system, compared with dozens or maybe even hundreds of other devices.
+Oops, you're right, I made obvious mistake.  Thank you for finding this.  I
+will fix this in the next spin.
 
-We considered a revamping of the boot process - delaying some devices, reordering operations and such - but deemed that more dangerous to other architectures.  Although this change is driven by a particular architecture, the changes we've identified are architecture independent.  The risk of breaking something else is much lower than if we start reordering boot steps.
 
-> Also, why do you need to create the devices _when_ you create them?  Can
-> you wait until after init is up and running to start populating the
-> device tree with them?  That way boot can be moving on and disks can be
-> spinning up earlier?
+Thanks,
+SeongJae Park
 
-I'm not a systemd expert, unfortunately, so I don't know if it needs to happen *right* then or not.  I do know that upon successful boot, a ps reveals many systemd children still reporting in.  It's not that we're waiting on everybody; the contention is causing a delay in the discovery of key devices like disks, and *that* leads to timeouts firing in systemd rules.  Any workaround bent on dodging the problem tends to get exponentially worse when the numbers change.  We noticed this problem at 32TB, designed some timeout changes and udev options to improve it, only to have both fail at 64TB.  Worse, at 64TB, larger timeouts and udev options failed to work consistently anymore.
-
-There are two times we do coldplugs - once in the initramfs, and then again after we switch over to the actual root.  I did try omitting memory devices after the switchover.  Much faster!  So, why is the second one necessary?  Are there some architectures that need that?  I've not found anyone who can answer that, so going that route presents us with a different big risk.
-
-Rick
-
+> 
+> Leonard
