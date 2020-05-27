@@ -2,119 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C903B20C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:08:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I++iBdw/"
+	by mail.kernel.org (Postfix) with ESMTP id C5D5F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590574126;
+	bh=cc9QKr6LDeOCWWGhxNZw+5SMcN1zEav0lU2/Q6oBAUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c23e5AiStJ/4wnqUtIHBYQzEbi1jNgPsp0mQ0YdmvGkRUBYs3Wu1U+2W1WOdaqY9u
+	 Ai0VINsNtK1YdB8cWZH9YNaTNliH+EgL83X7WGfv2P8jTxR4w/+BH49TDTacXKVfgG
+	 k1Li/XHJLHBwuz8ufYdK0ByHEcCqmSIp30FbGxoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387761AbgE0KIC (ORCPT
+        id S1729653AbgE0KIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:08:02 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55268 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgE0KIB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:08:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RA7bN9029643;
-        Wed, 27 May 2020 10:07:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=Jgk+aa3gaSbaEJGRzqmUB4J/D3RcAW2mzmSgXwtDYpI=;
- b=I++iBdw/d6EbbsVc0QonMYtP9GdH7G9gqk7JTiB94+7WbFWe/ILrE7Z3/1Xou2AA/fj0
- XfiW1ia3B13QNes64K8EvFxGTdek2n1b1W/CZkKh0BNspXqu5WHk3CdXeMTM9mLZJxGW
- HOtff/B6xDcXoVujMkSWvLLR+R8xcPpBHqJLZ0kEdQhnfyRw8J6J6VCNosFSIaEu0thm
- Xz1cn4ch5LgZ1tUZIBA3t8NTvbbgSWEt29tV/Ak2G+yNA1HvzCz/bBs7k698p7fC90vO
- 0n/SEPzLJEx2JmH8cX0h5LZ95k2fkDoJBgdt9g4Ud68tggcn37DEw46UAI4yWToBi71J Lg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 316u8qxjjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 10:07:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04R9vY3D160684;
-        Wed, 27 May 2020 10:05:35 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 317j5rcya4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 May 2020 10:05:35 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04RA5XM3005085;
-        Wed, 27 May 2020 10:05:33 GMT
-Received: from dhcp-10-175-217-36.vpn.oracle.com (/10.175.217.36)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 27 May 2020 03:05:33 -0700
-Date:   Wed, 27 May 2020 11:05:23 +0100 (BST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-        brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com
-Subject: Re: [PATCH v3 3/7] kunit: tests for stats_fs API
-In-Reply-To: <20200526110318.69006-4-eesposit@redhat.com>
-Message-ID: <alpine.LRH.2.21.2005271054360.24819@localhost>
-References: <20200526110318.69006-1-eesposit@redhat.com> <20200526110318.69006-4-eesposit@redhat.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 27 May 2020 06:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729517AbgE0KIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:08:45 -0400
+Received: from localhost (p54b33011.dip0.t-ipconnect.de [84.179.48.17])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B892E20890;
+        Wed, 27 May 2020 10:08:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590574125;
+        bh=cc9QKr6LDeOCWWGhxNZw+5SMcN1zEav0lU2/Q6oBAUo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=je7gCL/kvV9fdSG4QNgHSmT1DVZAeSoGPX2aeaeWSsRv7V5eq72Gt10n+YVAh1VV+
+         1p/sYQqi7XyuLg5O1+pItyITy6bWUrrEXJ5FgQXdQC0TdqP1p+5hn65SiLBhBDPmas
+         cGUFmy8GJxeoBsbuR/hre9bG5QCXamghxvgybXkw=
+Date:   Wed, 27 May 2020 12:08:41 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
+Cc:     Ajay Gupta <ajayg@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: nvidia-gpu: Use PTR_ERR_OR_ZERO() to simplify code
+Message-ID: <20200527100841.GC1161@ninjato>
+References: <20200505145230.17251-1-aishwaryarj100@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=4
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005270072
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=4
- phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005270073
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="MnLPg7ZWsaic7Fhd"
+Content-Disposition: inline
+In-Reply-To: <20200505145230.17251-1-aishwaryarj100@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020, Emanuele Giuseppe Esposito wrote:
 
-> Add kunit tests to extensively test the stats_fs API functionality.
->
+--MnLPg7ZWsaic7Fhd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've added in the kunit-related folks.
- 
-> In order to run them, the kernel .config must set CONFIG_KUNIT=y
-> and a new .kunitconfig file must be created with CONFIG_STATS_FS=y
-> and CONFIG_STATS_FS_TEST=y
->
+On Tue, May 05, 2020 at 08:22:30PM +0530, Aishwarya Ramakrishnan wrote:
+> PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR.
+>=20
+> Generated by: scripts/coccinelle/api/ptr_ret.cocci
+>=20
+> Signed-off-by: Aishwarya Ramakrishnan <aishwaryarj100@gmail.com>
 
-It looks like CONFIG_STATS_FS is built-in, but it exports
-much of the functionality you are testing.  However could the
-tests also be built as a module (i.e. make CONFIG_STATS_FS_TEST
-a tristate variable)? To test this you'd need to specify
-CONFIG_KUNIT=m and CONFIG_STATS_FS_TEST=m, and testing would
-simply be a case of "modprobe"ing the stats fs module and collecting
-results in /sys/kernel/debug/kunit/<module_name> (rather 
-than running kunit.py). Are you relying on unexported internals in
-the the tests that would prevent building them as a module?
+Applied to for-next, thanks!
 
-Thanks!
 
-Alan
+--MnLPg7ZWsaic7Fhd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7OPCkACgkQFA3kzBSg
+KbbSpA/9FqBiC2UBTxstqlT/fYjokyTIjMrkNh5be/VjqFIbMqTJQwYegSVdJVsp
+zkO0QYVmp9yqWkPNN+4Aw2UMaLsEifK8OGnvm2Pwkmu7HiNbMzUeJmvmRoVZMJdC
+jLaG2LXw833unbp9WPefBne6KSlw24KXlAScISIvIicOW3Shprt4in8NIGfANGL2
+2uBknXRIAsd/8EiBuGzmzS6E6nXAB1ezpYMnEJfVWkcb+YydxWx/x1Bn2c4ETBSC
+K6MTV2jocNLITA/U+e/wrhxV6KumZO9ewU2j4eR+yxzimD4hKRWqRbhPpY+9LZns
++n2ZUw0OTfrpVegm5WQs+wR7Nddus0Udwqz6bfp+ufzFylfLmJWK5LU1jwGO2rgQ
+RXEC34loGfvmbPVXX2INOVA+r4Wo5zlkbIA9erW4ccEmTbR732vR0GRa8P9Sh3Gc
+wj+O/RqMUJVJrv2SbpoRjD81qOWPfn/0SBous13NOIcDuw5bdHLhy9sQCMjIL0Q7
+4E7ujIvV29Va7Xg7vKUI6ahOT0egKHDhTlkoBMlQ2atAUq0EXRBE0HOHgTzuxpw8
+ydiv++tj/zXl7e4lqUjwhZGCRV0tGg2c8A/qxuXEIxrRCuf0jwN5eJT8ZtAzu+4q
+yBtdbjBDTCNeoQBHfhMKD6+J4XEfxON4GRkPzjzCp+01A5t+juY=
+=+BuH
+-----END PGP SIGNATURE-----
+
+--MnLPg7ZWsaic7Fhd--
