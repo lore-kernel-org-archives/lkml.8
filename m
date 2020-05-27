@@ -2,128 +2,88 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB72C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66738C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 665D920899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:29:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BPdKIiqQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4D3472084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391161AbgE0Q3D (ORCPT
+        id S2391171AbgE0Q3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:29:03 -0400
-Received: from mail-eopbgr50060.outbound.protection.outlook.com ([40.107.5.60]:41478
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387775AbgE0Q3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:29:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dz0BMHRV4xhbcS9CYZNiFnarox3FO++Ur9og5bFXsZ3accu/cVnhFC55D8/yu6yssml6RfUN/+9PUeow1Bk8HdIKJ/gF8efdgGgriAyd1n51KjXahNAFtvhRLyFl7JG2GqrAp/oxLuI9ndu7JvPM5kTg6kqqIhdSIfJE6D0f1AZrx5NYj4Hfm2QAWNkXUFHd6D1Xxz3QPyaf0XL9Baj+F6xcOev+8GVZ9xZl80U0nLUTHrGBoXVMirg0oG3woy1mRd9DbPiuMRg7Vyif7U6PbKn0w+/GJnRL/aWQvSaTimvVVmqxKfXJmNe0v+29H/DuAdXVsZMsT97iT8TgZKad1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jtjmjoLemD5dILtAlznJFmS7F0DmmCjaj6pGgrdqOJU=;
- b=HystMcJ52kufftrNACNRBYP7suEJmkwPverCxXiX9Rc/bzitgJt5z2+Ol/kNyWveGI8eyDp54HOhXlrtXrS4ffTYBWnzQDADqElQPkC4DHcg0g0Dyx7bSUJe7fP46PZLsXq8jLhj6lJBQFTAP/MbTA4OypBRJoYvwUt34ZEmByZmllLPrhZtyB+lFNN0fodU9T5x46dorNqUfYqv+sI7FOr503yveX1vimt6Tbj8kHH0mtgeAkVPu74YE/RG6Mo9QWRJSHTsCHdfdSSf9Y5Fg2yhKHiHYA/ngYCQpmzt3gGmItkZS4FzDp3ILbvknlB5JL4rWHfwPRGT3JwuComIng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jtjmjoLemD5dILtAlznJFmS7F0DmmCjaj6pGgrdqOJU=;
- b=BPdKIiqQ4ZEsmQMjell9GJhG6F9IN5/NT0IIKaqgNQ4nbDJ1p6evu9Tiw6HKjvrpsg2WZfb/fG713NIfYIBuFyroomvyr6DwxaiGVrUfaOsLjnx4CTjj1Q3LP+yMGHnEP7EF0eEnpq5U8W+jgQgclwklaYiSR3NRcU3IvGUrQdg=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (2603:10a6:803:5e::23)
- by VI1PR05MB6895.eurprd05.prod.outlook.com (2603:10a6:800:180::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Wed, 27 May
- 2020 16:28:58 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::2405:4594:97a:13c]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::2405:4594:97a:13c%2]) with mapi id 15.20.3021.029; Wed, 27 May 2020
- 16:28:58 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "natechancellor@gmail.com" <natechancellor@gmail.com>,
-        "leon@kernel.org" <leon@kernel.org>
-CC:     "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx5e: Don't use err uninitialized in
- mlx5e_attach_decap
-Thread-Topic: [PATCH] net/mlx5e: Don't use err uninitialized in
- mlx5e_attach_decap
-Thread-Index: AQHWM/uW1M9R5MKUQ06oEOaaCPeIWai8H94A
-Date:   Wed, 27 May 2020 16:28:58 +0000
-Message-ID: <df7438fed1ee6a2829a3745068f0938a6f159fdf.camel@mellanox.com>
-References: <20200527075021.3457912-1-natechancellor@gmail.com>
-In-Reply-To: <20200527075021.3457912-1-natechancellor@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.2 (3.36.2-1.fc32) 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=mellanox.com;
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d61b0348-277a-4127-be13-08d8025b0e8c
-x-ms-traffictypediagnostic: VI1PR05MB6895:
-x-microsoft-antispam-prvs: <VI1PR05MB689583A3D18443E85993B4AABEB10@VI1PR05MB6895.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:350;
-x-forefront-prvs: 04163EF38A
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SlR5uwimAR1lLZcavCS3qXLDmwU3bOd6NaF5XiknJlG3mgORWtynTic83TTaXAKD7of4SLnSlViohRBYT8JDf3x2uYHuDeBtRdb1Wo+ZJjkZe/7pg74dlUQqlPfNv9DiG36TrHd3ZeWwTuhgfdm+E9Zv1cS1WnLld2KJWCGNUEST7XXbM9khQKtv8ahIKgBP6QQO4KNGseIpe4ZdQnMUJ/4DJFUrDtoGA1my3PZ4In7SK1rTjD0AwvWlv7F0AQhXW/RbnWfuAvCCq5GXAbZkelnOAE19vQHt0/r2gRd+OwKTZpXf/Oug7gVmgO/5huA1Yg8cc+KN9zmGCAQVJXLrm1weuIrq60/rA8BRMi0buDPHyMQndD63loCYdf2JMBOiqIUXDCYY31tfUvNgGqYxCw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB5102.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(86362001)(5660300002)(66446008)(66946007)(91956017)(66556008)(36756003)(478600001)(76116006)(66476007)(64756008)(2616005)(2906002)(71200400001)(110136005)(966005)(26005)(186003)(316002)(6486002)(6512007)(8676002)(6506007)(54906003)(8936002)(83380400001)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 15XUp+G4wTXK3i0a52JUj2JHXE84ZyAsgsDOvegfna6jV1RvPcbam3LLhshedkPMhXCI0EyCFER2P/CzouXQIGQQFng7Ib2RkrXMNDSvdQj8bOxByJ+agvvVdIvm4xWMTp/I943njHpPtTKahO+LD7PkI8tK+2CZU0UzUZzE5TenMmjB9CNGOxTKJ/SeBzRNU5mUMx0WHBQjZhf/AksP8kES6n+5Quis1vtHEi7BIcckNKbXGrxagyBDZ6f8tIo6YktjpR7ggjRLfiVMBDY77c6P7BQasJje2Agjy0omXC9lwLgcaScTxCN7B/vb9sRaGHpqyp0cdsFx75WiWLUdrOlNrR2+hLMb0IBfMRO1S8dt7KzZM+IWp3iTIJEqNfvmjrASzVnw/ltThPfWcl93XL5KkGna2aSzv+7dOkQh7hEBJ5/+RB9QXkvYcm7LyvUTjOLiusIxpD8Tp/XOD8s+5j93jTeRchf8RFAQ45LpgKY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <44C337C62E7DAD42AD04C573403D8AA8@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 27 May 2020 12:29:35 -0400
+Received: from mga03.intel.com ([134.134.136.65]:32426 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387775AbgE0Q3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:29:34 -0400
+IronPort-SDR: cExu4OzFYGI0fpFXu/ToVuk10SG2VS8DhZ++AUIkdFAm2c0bKUH1AHR62CnRDOxCiUyF41aAMT
+ a8NYlhXUx23g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 09:29:34 -0700
+IronPort-SDR: uh21u8SHV7+q14LtOyLYwOt+eGk8mVFEIiJNsa7gw/hjDS31OD/dq/jKYrBt7lKEEE55o6iz/G
+ PfL11Fs4E5GA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="291654118"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga004.fm.intel.com with ESMTP; 27 May 2020 09:29:34 -0700
+Date:   Wed, 27 May 2020 09:29:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+904752567107eefb728c@syzkaller.appspotmail.com
+Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
+Message-ID: <20200527162933.GE24461@linux.intel.com>
+References: <20200527085400.23759-1-sean.j.christopherson@intel.com>
+ <40800163-2b28-9879-f21b-687f89070c91@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d61b0348-277a-4127-be13-08d8025b0e8c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2020 16:28:58.0830
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zLGX8GZ3rQ6rkN1Dtn6qcYVtmVPaNTUOtIs1LdC3AEc1FInHIePZ+fkq17w+OVqiFKhAtyWWVZGf0LsgZAtAQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6895
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40800163-2b28-9879-f21b-687f89070c91@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTI3IGF0IDAwOjUwIC0wNzAwLCBOYXRoYW4gQ2hhbmNlbGxvciB3cm90
-ZToNCj4gQ2xhbmcgd2FybnM6DQo+IA0KPiBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9t
-bHg1L2NvcmUvZW5fdGMuYzozNzEyOjY6IHdhcm5pbmc6DQo+IHZhcmlhYmxlICdlcnInIGlzIHVz
-ZWQgdW5pbml0aWFsaXplZCB3aGVuZXZlciAnaWYnIGNvbmRpdGlvbiBpcyBmYWxzZQ0KPiBbLVdz
-b21ldGltZXMtdW5pbml0aWFsaXplZF0NCj4gICAgICAgICBpZiAoSVNfRVJSKGQtPnBrdF9yZWZv
-cm1hdCkpIHsNCj4gICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX3RjLmM6MzcxODo2OiBub3RlOg0K
-PiB1bmluaXRpYWxpemVkIHVzZSBvY2N1cnMgaGVyZQ0KPiAgICAgICAgIGlmIChlcnIpDQo+ICAg
-ICAgICAgICAgIF5+fg0KPiBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUv
-ZW5fdGMuYzozNzEyOjI6IG5vdGU6IHJlbW92ZQ0KPiB0aGUNCj4gJ2lmJyBpZiBpdHMgY29uZGl0
-aW9uIGlzIGFsd2F5cyB0cnVlDQo+ICAgICAgICAgaWYgKElTX0VSUihkLT5wa3RfcmVmb3JtYXQp
-KSB7DQo+ICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2VuX3RjLmM6MzY3MDo5OiBub3RlOg0KPiBp
-bml0aWFsaXplDQo+IHRoZSB2YXJpYWJsZSAnZXJyJyB0byBzaWxlbmNlIHRoaXMgd2FybmluZw0K
-PiAgICAgICAgIGludCBlcnI7DQo+ICAgICAgICAgICAgICAgIF4NCj4gICAgICAgICAgICAgICAg
-ID0gMA0KPiAxIHdhcm5pbmcgZ2VuZXJhdGVkLg0KPiANCj4gSXQgaXMgbm90IHdyb25nLCBlcnIg
-aXMgb25seSBldmVyIGluaXRpYWxpemVkIGluIGlmIHN0YXRlbWVudHMgYnV0DQo+IHRoaXMNCj4g
-b25lIGlzIG5vdCBpbiBvbmUuIEluaXRpYWxpemUgZXJyIHRvIDAgdG8gZml4IHRoaXMuDQo+IA0K
-PiBGaXhlczogMTRlNmIwMzhhZmEwICgibmV0L21seDVlOiBBZGQgc3VwcG9ydCBmb3IgaHcgZGVj
-YXBzdWxhdGlvbiBvZg0KPiBNUExTIG92ZXIgVURQIikNCj4gTGluazogaHR0cHM6Ly9naXRodWIu
-Y29tL0NsYW5nQnVpbHRMaW51eC9saW51eC9pc3N1ZXMvMTAzNw0KPiBTaWduZWQtb2ZmLWJ5OiBO
-YXRoYW4gQ2hhbmNlbGxvciA8bmF0ZWNoYW5jZWxsb3JAZ21haWwuY29tPg0KPiAtLS0NCg0KQXBw
-bGllZCB0byBuZXQtbmV4dC1tbHg1LCB3aWxsIHNlbmQgc2hvcnRseSB0byBuZXQtbmV4dA0KDQpU
-aGFua3MsDQpTYWVlZC4NCg==
+On Wed, May 27, 2020 at 06:17:57PM +0200, Paolo Bonzini wrote:
+> On 27/05/20 10:54, Sean Christopherson wrote:
+> > Initialize vcpu->arch.tdp_level during vCPU creation to avoid consuming
+> > garbage if userspace calls KVM_RUN without first calling KVM_SET_CPUID.
+> > 
+> > Fixes: e93fd3b3e89e9 ("KVM: x86/mmu: Capture TDP level when updating CPUID")
+> > Reported-by: syzbot+904752567107eefb728c@syzkaller.appspotmail.com
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kvm/x86.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index b226fb8abe41b..01a6304056197 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -9414,6 +9414,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+> >  	fx_init(vcpu);
+> >  
+> >  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+> > +	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
+> >  
+> >  	vcpu->arch.pat = MSR_IA32_CR_PAT_DEFAULT;
+> 
+> Queued, it is probably a good idea to add a selftests testcase for this
+> (it's even okay if it doesn't use the whole selftests infrastructure and
+> invokes KVM_CREATE_VM/KVM_CREATE_VCPU/KVM_RUN manually).
+
+Ya.  syzbot is hitting a #GP due to NULL pointer during debugfs on the exact
+same sequence.  I haven't been able to reproduce that one (have yet to try
+syzbot's exact config), but it's another example of a "dumb" test hitting
+meaningful bugs.
