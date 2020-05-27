@@ -2,186 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C08BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95755207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:37:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6l+HeyB"
+	by mail.kernel.org (Postfix) with ESMTP id EAE6920873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388238AbgE0Nh2 (ORCPT
+        id S2388401AbgE0Nhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387682AbgE0Nh2 (ORCPT
+        Wed, 27 May 2020 09:37:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:60557 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387682AbgE0Nhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:37:28 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7F0C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:37:28 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id y5so3102947iob.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:37:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=98asfAGM0k82DbjTjDjy1krArq/Ou3skB4zttUQk7aU=;
-        b=C6l+HeyBVKE+Cn6DaIhJIKh/dNr5LdcYYhXoLT9WlQDSymZTQI/b7tuo14PCxMri/k
-         87baw8GERGb+NhjRzujAHlogK5w2frPh8/BHj4a7ZKwZR2W0r69jAYT1YpVmOilxzG/c
-         BtLQGTURRpnGOtKzFpjP0NsWfCp+E1cSKcsOLhjKArAVCV/sjCpgO4hHUjVtkLp/wwL8
-         g74v/SIJAj9/qbZ0xjW69FubPUlOWBhc70jlyqyU2ImlR3IMNLRiicSsijyXgzUGMP83
-         OMD0/wTscBeC1ISxbSwnFi3y1CkzPNiaaUo3xqHOr7KKdpdurNfap9ZMKCrg+0Dczkbm
-         bH/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=98asfAGM0k82DbjTjDjy1krArq/Ou3skB4zttUQk7aU=;
-        b=exhK4+iSQvIqDO9Tz8KI0pJuxAP4dG6SCr6kDNueyGo7i4EnqmT+7C8qUUxywz5g1F
-         Z5o1y5sYE2gIYyNBjv8NTt9Mt6lXbgl/YnKO+zN0vLHjmj+jPaH9r+sPylee0s/OAhg5
-         7qmmWhDikADfo29FniTo5rJa8kYHTbAyOBKuaA4gppsbslQPvQwZXm+TWiS4ui3WL1WB
-         269RSu80G2MUvhSqZ4hAyZ6YD6qos4uC6UmTDFN818poLbC3KjlDnqQAubRw20p6wJS9
-         SB7ESrYiPRKTwikZo4yxITX4YcrJnN03MUd6wkE/bh0V6IrfZxOPPB+zkJRu6LHGN25U
-         idhA==
-X-Gm-Message-State: AOAM533yN1pS26GhoyX0VX+aag8K0wO82v6pTa0tXbEtqFsemqAnSkXU
-        vQDKeFCAn9u2Fk1Br3jFs1ZTFPx2JyCiG9uV6wM=
-X-Google-Smtp-Source: ABdhPJxW2UoMqnjfsrGgDV/9gBRaEZjtzrzmKnNlVoqkqbyWqngry2xkVOOf1yMNukt51VjsORYCBpDsn78sjWN8kpI=
-X-Received: by 2002:a02:b0d1:: with SMTP id w17mr5599803jah.75.1590586647220;
- Wed, 27 May 2020 06:37:27 -0700 (PDT)
+        Wed, 27 May 2020 09:37:31 -0400
+Received: from localhost.localdomain ([149.172.98.151]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MelWf-1j437k3y2n-00aqFI; Wed, 27 May 2020 15:36:58 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Chih-Min Chen <chih-min.chen@mediatek.com>,
+        Shihwei Lin <shihwei.lin@mediatek.com>,
+        Yiwei Chung <yiwei.chung@mediatek.com>,
+        YF Luo <yf.luo@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [wireless-next] mt75: fix enum type mismatch
+Date:   Wed, 27 May 2020 15:36:30 +0200
+Message-Id: <20200527133655.617357-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200527103236.148700-1-elver@google.com> <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
- <CA+icZUWtzu0ONUSy0E27Mq1BrdO79qNaY3Si-PDhHZyF8M4S5g@mail.gmail.com>
- <CAK8P3a04=mVQgSrvDhpVxQj50JEFDn_xMhYrvjmUnLYTWH3QXQ@mail.gmail.com>
- <CA+icZUXVSTxDYJwXLyAwZd91cjMPcPRpeAR72JKqkqa-wRNnWg@mail.gmail.com>
- <CAK8P3a3i0kPf8dRg7Ko-33hsb+LkP=P05uz2tGvg5B43O-hFvg@mail.gmail.com>
- <CA+icZUWr5xDz5ujBfsXjnDdiBuopaGE6xO5LJQP9_y=YoROb+Q@mail.gmail.com> <CANpmjNOtKQAB_3t1G5Da-J1k-9Dk6eQKP+xNozRbmHJXZqXGFw@mail.gmail.com>
-In-Reply-To: <CANpmjNOtKQAB_3t1G5Da-J1k-9Dk6eQKP+xNozRbmHJXZqXGFw@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 27 May 2020 15:37:19 +0200
-Message-ID: <CA+icZUWzPMOj+qsDz-5Z3tD-hX5gcowjBkwYyiy8SL36Jg+2Nw@mail.gmail.com>
-Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
- compilation time
-To:     Marco Elver <elver@google.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:2xsdauHeCgoTJqtAjoy1w439KhbI5AyVOuAxW1IHW47YA4Gorsi
+ Uh4YCVjbYsbddzHdqSL/9Nyka228g3hOyRaepN6TWoIe5HUzp67ihrRMluLbPYi2hFTnxyw
+ 1JRB8qLO9BliOGYOZdkWVaHW2CucwMbhaxuLQUo9QhEp3DP9AIG3a/U+jSsmX/6lg/tAn8j
+ 7jHNArva+RLoRfuAuh3Cw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FtVcgZauz7o=:scUFGVl1oIETlCqq2XG30+
+ BY+OSB/p/C2PHbQV8moxHzruH1uP9Hs2Cmkfuzt1pzAyXtW82VPL+i6XhfkL4Kzn7fV4xIawJ
+ A2HAq5Il64nn45Q6XqxowsRnC3JKSDVcU6+/hxjOI0t5GljWTrL92TJl527WU8NnDHJS4Tsmr
+ KsgZU4nD98sSiKPVkTHHG6nMcDBR3BIOtqB5sWIH6/bz3j+ogz/P1rSXjrKE0QGmIvpjlYWua
+ 3SS7ZaIIfPGwxYYgrFIJ+K+IdIdOXXvEY8bX+OteZNxdWkg2RjR6bBm/P/yo4S8qC8nEl6Bow
+ YJpUhM/w7lN9lF3hGTidifdzL9moxS+mjIcV6NaE77kl9pTr1m1pdb19VurLWicwiNgTE2fgG
+ 6wGAv4DAXmgkb6c6AwimTkBPyjXRsaK2gl5t/gWIv5dz++WZzoYVa+r+a2J4ZpwrK6K6pH5EU
+ Z5Dy7USzvBQWE/JgGDaFqcG+Zk8lbixikSTtHW+LPnfyiDbiKHjlimzlMGpd4+NVXmrgc8uJd
+ YgMB9mM3nsWcahk0NbkhXZsVMe14iaKWstbUlaF/zFJ1TnQC3bPfKIooWLd7eSJkNYMY6dJ41
+ zAneqRyKhsqVGB16LHOiS9GXVxbBwaemmq2+f9F08NizeJDLOrW4MAY0hLNAQ5WzoMC9RUliB
+ vSvJiyC5p01107GyNrmS7vC+Nfi31gg21wIlE8ej7ZltRD0sM09YzWVBnr5fkky8ZBGd4pQfE
+ YxO/L8TcnJlj9bmltBSZuOTgEL8rM/nVk034s2QC/YfSrq20qSaPTCrGtTgxQncP9Ds0LSwdn
+ lOjGQJNACJeHLPwBGXaDbUg2u7n3XaDiXVfLbhmQB6Wp7qadf4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:30 PM Marco Elver <elver@google.com> wrote:
->
-> On Wed, 27 May 2020 at 15:11, Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Wed, May 27, 2020 at 2:50 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >
-> > > On Wed, May 27, 2020 at 2:35 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > > > On Wed, May 27, 2020 at 2:31 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > On Wed, May 27, 2020 at 1:36 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > > > > > On Wed, May 27, 2020 at 1:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > On Wed, May 27, 2020 at 12:33 PM Marco Elver <elver@google.com> wrote:
-> > > > > > >
-> > > > > > > This gives us back 80% of the performance drop on clang, and 50%
-> > > > > > > of the drop I saw with gcc, compared to current mainline.
-> > > > > > >
-> > > > > > > Tested-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > > >
-> > > > > >
-> > > > > > Hi Arnd,
-> > > > > >
-> > > > > > with "mainline" you mean Linux-next aka Linux v5.8 - not v5.7?
-> > > > >
-> > > > > I meant v5.7.
-> > > > >
-> > > > > > I have not seen __unqual_scalar_typeof(x) in compiler_types.h in Linux v5.7.
-> > > > > >
-> > > > > > Is there a speedup benefit also for Linux v5.7?
-> > > > > > Which patches do I need?
-> > > > >
-> > > > > v5.7-rc is the baseline and is the fastest I currently see. On certain files,
-> > > > > I saw an intermittent 10x slowdown that was already fixed earlier, now
-> > > > > linux-next
-> > > > > is more like 2x slowdown for me and 1.2x with this patch on top, so we're
-> > > > > almost back to the speed of linux-5.7.
-> > > > >
-> > > >
-> > > > Which clang version did you use - and have you set KCSAN kconfigs -
-> > > > AFAICS this needs clang-11?
-> > >
-> > > I'm currently using clang-11, but I see the same problem with older
-> > > versions, and both with and without KCSAN enabled. I think the issue
-> > > is mostly the deep nesting of macros that leads to code bloat.
-> > >
-> >
-> > Thanks.
-> >
-> > With clang-10:
-> >
-> > $ scripts/diffconfig /boot/config-5.7.0-rc7-2-amd64-clang .config
-> >  BUILD_SALT "5.7.0-rc7-2-amd64-clang" -> "5.7.0-rc7-3-amd64-clang"
-> > +HAVE_ARCH_KCSAN y
->
-> Clang 10 doesn't support KCSAN (HAVE_KCSAN_COMPILER unset).
->
-> > With clang-11:
-> >
-> > $ scripts/diffconfig /boot/config-5.7.0-rc7-2-amd64-clang .config
-> >  BUILD_SALT "5.7.0-rc7-2-amd64-clang" -> "5.7.0-rc7-3-amd64-clang"
-> >  CLANG_VERSION 100001 -> 110000
-> > +CC_HAS_ASM_INLINE y
-> > +HAVE_ARCH_KCSAN y
-> > +HAVE_KCSAN_COMPILER y
-> > +KCSAN n
-> >
-> > Which KCSAN kconfigs did you enable?
->
-> To clarify: as said in [1], KCSAN (or any other instrumentation) is no
-> longer relevant to the issue here, and the compile-time regression is
-> observable with most configs. The problem is due to pre-processing and
-> parsing, which came about due to new READ_ONCE() and the
-> __unqual_scalar_typeof() macro (which this patch optimizes).
->
-> KCSAN and new ONCEs got tangled up because we first attempted to
-> annotate {READ,WRITE}_ONCE() with data_race(), but that turned out to
-> have all kinds of other issues (explanation in [2]). So we decided to
-> drop all the KCSAN-specific bits from ONCE, and require KCSAN to be
-> Clang 11. Those fixes were applied to the first version of new
-> {READ,WRITE}_ONCE() in -tip, which actually restored the new ONCEs to
-> the pre-KCSAN version (now that KCSAN can deal with them without
-> annotations).
->
-> Hope this makes more sense now.
->
-> [1] https://lore.kernel.org/lkml/CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com/
-> [2] https://lore.kernel.org/lkml/20200521142047.169334-1-elver@google.com/
->
+The __mt7915_mcu_msg_send() calls a generic function that expects a mt76_txq_id
+rather than mt7915_txq_id, and it also uses the values according to that
+type, which are different from the similarly named MT7915_TXQ_ constants:
 
-Thanks, Marco.
+drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:232:9: error: implicit conversion from enumeration type 'enum mt76_txq_id' to different enumeration type 'enum mt7915_txq_id' [-Werror,-Wenum-conversion]
+                txq = MT_TXQ_FWDL;
+                    ~ ^~~~~~~~~~~
+drivers/net/wireless/mediatek/mt76/mt7915/mcu.c:287:36: error: implicit conversion from enumeration type 'enum mt7915_txq_id' to different enumeration type 'enum mt76_txq_id' [-Werror,-Wenum-conversion]
+        return mt76_tx_queue_skb_raw(dev, txq, skb, 0);
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+drivers/net/wireless/mediatek/mt76/mt7915/../mt76.h:668:97: note: expanded from macro 'mt76_tx_queue_skb_raw'
 
-I pulled tip.git#locking/kcsan on top of Linux v5.7-rc7 and applied this patch.
-Just wanted to try KCSAN for the first time and it will also be my
-first building with clang-11.
-That's why I asked.
+Use the mt76 types consistently.
 
-- Sedat -
+Fixes: e57b7901469f ("mt76: add mac80211 driver for MT7915 PCIe-based chipsets")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/wireless/mediatek/mt76/mt7915/mcu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+index 99eeea42478f..001b3078c48e 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+@@ -220,7 +220,7 @@ static int __mt7915_mcu_msg_send(struct mt7915_dev *dev, struct sk_buff *skb,
+ {
+ 	struct mt7915_mcu_txd *mcu_txd;
+ 	u8 seq, pkt_fmt, qidx;
+-	enum mt7915_txq_id txq;
++	enum mt76_txq_id txq;
+ 	__le32 *txd;
+ 	u32 val;
+ 
+-- 
+2.26.2
+
