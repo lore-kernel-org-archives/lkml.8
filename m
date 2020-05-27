@@ -2,162 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B79C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A93C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD4420899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F07020B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590608146;
-	bh=fyfTwfnYczyhGudUu/tTRSlOPONlV1JmPl8Bq04dYlU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=B69MCTowFvi/911owD91cmRQJGyH9asOCIyy4jSn0NFOfhQ3gqITi/H0Zpp66JZUa
-	 51KKfgCbQ9Txkxo1mhGrmT5Rbef5Y4yxWriGJBxIlEt84hvgKoU+sUy/IeL75Ui0fF
-	 gPmQpGyCYtIjufkNUTR3iThdz87KJC/J+jTGdlyg=
+	s=default; t=1590608203;
+	bh=20ngQY8drqqEd7Q0YdanKFN2w4zrcB73OEFdthzGpOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z6FrNdapNJUHykB28wjs0lBltkKswrXBD8eYDVuS9c1UCuK6PQAPOZ2eBTQ/m4cpM
+	 4G1KzZxn9/Q6w3XJhgFqgSoJ1G626nyaANrzh3/v3HD60x0AXGJlOtjNtbk4jjFXyF
+	 FLOCzlE+jRmgumzNRvQCeY3g8DkKPJJma6LsVRpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgE0Tfp (ORCPT
+        id S1727090AbgE0Tgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:35:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56810 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbgE0Tfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:35:45 -0400
-Received: from localhost.localdomain (unknown [194.230.155.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BF72078B;
-        Wed, 27 May 2020 19:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590608144;
-        bh=fyfTwfnYczyhGudUu/tTRSlOPONlV1JmPl8Bq04dYlU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=H0l0W750dS/ExK3CPavpqtcEj9/eHkuYo2ijgilbuMwi+nu4aJy9fAxK4SOPs4aPx
-         xrzAVMxEQYsydkHIqq5hEuvWSteMApERMWyaSauJHZQtKcjDCXKU+r6ZJIG/r0Zoe4
-         eJ3Kl4RPtOwCZXydYdPwVdvcEs66ZNHReKYVKxKg=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND PATCH v4] ARM: dts: keystone: Rename "msmram" node to "sram"
-Date:   Wed, 27 May 2020 21:35:38 +0200
-Message-Id: <20200527193538.17424-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 May 2020 15:36:43 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38226 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgE0Tgm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:36:42 -0400
+Received: by mail-io1-f67.google.com with SMTP id d7so27457174ioq.5;
+        Wed, 27 May 2020 12:36:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=io7JL+6QWqwr5UMM9NElEX66dtm9kKXNvmpsHXQSLm8=;
+        b=l2gERoQnmyqHY8g+/VuMbG3/10li/MIaPvO/8px7BVVZWCEVDOBlMF2pEVD74TODpG
+         qGbW+IvIXcikiqr39TrQOrpGpBPF2BTBYp07rnWDuDG99Q1ufjf4A7OyR9slT68I6zb+
+         92HFVPP6kBot1Uh9xVuyLy7HGra6HpUv7XD2Dw9O0rLPSU71GCS4BuFUMQ0YAl0Db6LM
+         6QDC4M7sZFaMueMEJVVLWxIBHKrkhmQR2SHLAq4Lj+2jGNh7qazKcApN65MtgO6vKQlB
+         fjemnw+Cg/f4NJD9Cx0qqkxvSydyRYkWN2VdikOX+HnQNQ4yyhvOklcenbYwdFztUfbL
+         nDTw==
+X-Gm-Message-State: AOAM530JNaydLIhkgzGt6ELdQTT8Pj7SuB0/7sItLIo9XSuv+Aa4yzXS
+        x9e5SozDSSIDaKTr2X4kWA==
+X-Google-Smtp-Source: ABdhPJzja/44mLPDsRi9Us+9wAPvOQ/J+0Wdpj6Prbtm0EAoaesENU75sSr4Wx7bmnNEdQs7rA6GEg==
+X-Received: by 2002:a02:740d:: with SMTP id o13mr606075jac.42.1590608200163;
+        Wed, 27 May 2020 12:36:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id o70sm2146812ild.3.2020.05.27.12.36.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 12:36:39 -0700 (PDT)
+Received: (nullmailer pid 2608242 invoked by uid 1000);
+        Wed, 27 May 2020 19:36:38 -0000
+Date:   Wed, 27 May 2020 13:36:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     stanimir.varbanov@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org
+Subject: Re: [PATCH v2] dt-bindings: media: venus: Add an optional power
+ domain for perf voting
+Message-ID: <20200527193638.GA2604206@bogus>
+References: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589349807-10163-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device node name should reflect generic class of a device so rename
-the "msmram" node and its children to "sram".  This will be also in sync
-with upcoming DT schema.  No functional change.
+On Wed, May 13, 2020 at 11:33:27AM +0530, Rajendra Nayak wrote:
+> Add an optional power domain which when specified can be used for
+> setting the performance state of Venus.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml    | 6 +++++-
+>  Documentation/devicetree/bindings/media/qcom,sdm845-venus-v2.yaml | 6 +++++-
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+> index 764affa..ac1ed64 100644
+> --- a/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+> +++ b/Documentation/devicetree/bindings/media/qcom,sc7180-venus.yaml
+> @@ -25,12 +25,16 @@ properties:
+>      maxItems: 1
+>  
+>    power-domains:
+> -    maxItems: 2
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    power-domain-names:
+> +    minItems: 2
+> +    maxItems: 3
+>      items:
+>        - const: venus
+>        - const: vcodec0
+> +      - const: opp-pd
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Humm, looks suspicious. This is a phyical power island in this block? 
+Because that's what 'power-domains' are supposed to represent. Not $os 
+pm-domain construct.
 
----
-
-Changes since v3:
-1. Rename also children.
-
-v3 is here:
-https://lore.kernel.org/linux-arm-kernel/20191002164316.14905-7-krzk@kernel.org/
----
- arch/arm/boot/dts/keystone-k2e.dtsi  | 4 ++--
- arch/arm/boot/dts/keystone-k2g.dtsi  | 4 ++--
- arch/arm/boot/dts/keystone-k2hk.dtsi | 4 ++--
- arch/arm/boot/dts/keystone-k2l.dtsi  | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 085e7326ea8e..2d94faf31fab 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -86,14 +86,14 @@
- 			};
- 		};
- 
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x200000>;
- 			ranges = <0x0 0x0c000000 0x200000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@1f0000 {
-+			bm-sram@1f0000 {
- 				reg = <0x001f0000 0x8000>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 08ba31780baa..05a75019275e 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -95,14 +95,14 @@
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
- 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
- 
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x100000>;
- 			ranges = <0x0 0x0c000000 0x100000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@f7000 {
-+			bm-sram@f7000 {
- 				reg = <0x000f7000 0x8000>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/keystone-k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
-index ca0f198ba627..8a9447703310 100644
---- a/arch/arm/boot/dts/keystone-k2hk.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
-@@ -57,14 +57,14 @@
- &soc0 {
- 		/include/ "keystone-k2hk-clocks.dtsi"
- 
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x600000>;
- 			ranges = <0x0 0x0c000000 0x600000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@5f0000 {
-+			bm-sram@5f0000 {
- 				reg = <0x5f0000 0x8000>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
-index 374c80124c4e..dff5fea72b2f 100644
---- a/arch/arm/boot/dts/keystone-k2l.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2l.dtsi
-@@ -255,14 +255,14 @@
- 			};
- 		};
- 
--		msm_ram: msmram@c000000 {
-+		msm_ram: sram@c000000 {
- 			compatible = "mmio-sram";
- 			reg = <0x0c000000 0x200000>;
- 			ranges = <0x0 0x0c000000 0x200000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			sram-bm@1f8000 {
-+			bm-sram@1f8000 {
- 				reg = <0x001f8000 0x8000>;
- 			};
- 		};
--- 
-2.17.1
-
+Rob
