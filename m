@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29656C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 658532084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3752145D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lobxP1lq"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gdvJ87DQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgE0Weo (ORCPT
+        id S1726900AbgE0Weu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:34:44 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:4656 "EHLO
+        Wed, 27 May 2020 18:34:50 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:25000 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726759AbgE0We3 (ORCPT
+        by vger.kernel.org with ESMTP id S1726644AbgE0WeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:34:29 -0400
+        Wed, 27 May 2020 18:34:21 -0400
 Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 04RMIoj1024184
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:27 -0700
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 04RMIp3h024220
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:19 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=nQQxJsHflK4xxL/2789w7aBzVzx01mSeyt6hjHBk9UU=;
- b=lobxP1lqa2srHkQBypgP9F2cQEt5f2Yjh74lmFBEbTMZEr4Op1rJUPjsr6muju8QwOAR
- pndYgDiciwFP0FSRBXs7v6ezMcJtS7LGs0kqToXSs55+ICLipDXKTtgn5va2OKe69ICD
- Nc1u2nKi1QGsBtamrmtfc7B6wnFer7nEEPs= 
+ bh=jk1OeSv646R6XUzvQwnL6P+vokSYt5RUNg7R0pNdCqw=;
+ b=gdvJ87DQxXRIUKqZs6EqlZ4/XR/iG9KdI10ggBsLrNpWesKHA7KJjn5p3NA58txxl9RK
+ 3ZnaT1CZ3CmvcHPqwjmBSCxY0oes532FDR9Ylx3idppBBp0u+GiChoum2QSSKnfaDEoI
+ 6ECZJQ8jNTxmqqpn60h+qECnVhwSu7GP2fA= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 319ybhh3t4-9
+        by m0001303.ppops.net with ESMTP id 319ybhh3s9-12
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:27 -0700
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:19 -0700
 Received: from intmgw003.06.prn3.facebook.com (2620:10d:c085:208::f) by
  mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 15:34:16 -0700
+ 15.1.1979.3; Wed, 27 May 2020 15:34:14 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id D93FF1669037; Wed, 27 May 2020 15:34:07 -0700 (PDT)
+        id A62121669021; Wed, 27 May 2020 15:34:07 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v5 15/19] mm: memcg/slab: deprecate slab_root_caches
-Date:   Wed, 27 May 2020 15:34:00 -0700
-Message-ID: <20200527223404.1008856-16-guro@fb.com>
+Subject: [PATCH v5 06/19] mm: memcg/slab: obj_cgroup API
+Date:   Wed, 27 May 2020 15:33:51 -0700
+Message-ID: <20200527223404.1008856-7-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200527223404.1008856-1-guro@fb.com>
 References: <20200527223404.1008856-1-guro@fb.com>
@@ -69,7 +69,7 @@ X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
 X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
  clxscore=1015 priorityscore=1501 cotscore=-2147483648 spamscore=0
  impostorscore=0 bulkscore=0 suspectscore=2 malwarescore=0
- lowpriorityscore=0 mlxlogscore=678 adultscore=0 mlxscore=0 classifier=spam
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 classifier=spam
  adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2005270170
 X-FB-Internal: deliver
@@ -78,243 +78,532 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are two lists of kmem_caches:
-1) slab_caches, which contains all kmem_caches,
-2) slab_root_caches, which contains only root kmem_caches.
+Obj_cgroup API provides an ability to account sub-page sized kernel
+objects, which potentially outlive the original memory cgroup.
 
-And there is some preprocessor magic to have a single list
-if CONFIG_MEMCG_KMEM isn't enabled.
+The top-level API consists of the following functions:
+  bool obj_cgroup_tryget(struct obj_cgroup *objcg);
+  void obj_cgroup_get(struct obj_cgroup *objcg);
+  void obj_cgroup_put(struct obj_cgroup *objcg);
 
-It was required earlier because the number of non-root kmem_caches
-was proportional to the number of memory cgroups and could reach
-really big values. Now, when it cannot exceed the number of root
-kmem_caches, there is really no reason to maintain two lists.
+  int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)=
+;
+  void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size);
 
-We never iterate over the slab_root_caches list on any hot paths,
-so it's perfectly fine to iterate over slab_caches and filter out
-non-root kmem_caches.
+  struct mem_cgroup *obj_cgroup_memcg(struct obj_cgroup *objcg);
+  struct obj_cgroup *get_obj_cgroup_from_current(void);
 
-It allows to remove a lot of config-dependent code and two pointers
-from the kmem_cache structure.
+Object cgroup is basically a pointer to a memory cgroup with a per-cpu
+reference counter. It substitutes a memory cgroup in places where
+it's necessary to charge a custom amount of bytes instead of pages.
 
+All charged memory rounded down to pages is charged to the
+corresponding memory cgroup using __memcg_kmem_charge().
+
+It implements reparenting: on memcg offlining it's getting reattached
+to the parent memory cgroup. Each online memory cgroup has an
+associated active object cgroup to handle new allocations and the list
+of all attached object cgroups. On offlining of a cgroup this list is
+reparented and for each object cgroup in the list the memcg pointer is
+swapped to the parent memory cgroup. It prevents long-living objects
+from pinning the original memory cgroup in the memory.
+
+The implementation is based on byte-sized per-cpu stocks. A sub-page
+sized leftover is stored in an atomic field, which is a part of
+obj_cgroup object. So on cgroup offlining the leftover is automatically
+reparented.
+
+memcg->objcg is rcu protected.
+objcg->memcg is a raw pointer, which is always pointing at a memory
+cgroup, but can be atomically swapped to the parent memory cgroup. So
+the caller must ensure the lifetime of the cgroup, e.g. grab
+rcu_read_lock or css_set_lock.
+
+Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/slab.c        |  1 -
- mm/slab.h        | 17 -----------------
- mm/slab_common.c | 37 ++++++++-----------------------------
- mm/slub.c        |  1 -
- 4 files changed, 8 insertions(+), 48 deletions(-)
+ include/linux/memcontrol.h |  51 +++++++
+ mm/memcontrol.c            | 288 ++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 338 insertions(+), 1 deletion(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 7e8d0f62f30b..18a782bacd1b 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1239,7 +1239,6 @@ void __init kmem_cache_init(void)
- 				  nr_node_ids * sizeof(struct kmem_cache_node *),
- 				  SLAB_HWCACHE_ALIGN, 0, 0);
- 	list_add(&kmem_cache->list, &slab_caches);
--	memcg_link_cache(kmem_cache);
- 	slab_state =3D PARTIAL;
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 8e5a5445db54..ca2e71975581 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -23,6 +23,7 @@
+ #include <linux/page-flags.h>
+=20
+ struct mem_cgroup;
++struct obj_cgroup;
+ struct page;
+ struct mm_struct;
+ struct kmem_cache;
+@@ -191,6 +192,22 @@ struct memcg_cgwb_frn {
+ 	struct wb_completion done;	/* tracks in-flight foreign writebacks */
+ };
+=20
++/*
++ * Bucket for arbitrarily byte-sized objects charged to a memory
++ * cgroup. The bucket can be reparented in one piece when the cgroup
++ * is destroyed, without having to round up the individual references
++ * of all live memory objects in the wild.
++ */
++struct obj_cgroup {
++	struct percpu_ref refcnt;
++	struct mem_cgroup *memcg;
++	atomic_t nr_charged_bytes;
++	union {
++		struct list_head list;
++		struct rcu_head rcu;
++	};
++};
++
+ /*
+  * The memory controller data structure. The memory controller controls =
+both
+  * page cache and RSS per cgroup. We would eventually like to provide
+@@ -303,6 +320,8 @@ struct mem_cgroup {
+ 	int kmemcg_id;
+ 	enum memcg_kmem_state kmem_state;
+ 	struct list_head kmem_caches;
++	struct obj_cgroup __rcu *objcg;
++	struct list_head objcg_list;
+ #endif
+=20
+ #ifdef CONFIG_CGROUP_WRITEBACK
+@@ -418,6 +437,33 @@ struct mem_cgroup *mem_cgroup_from_css(struct cgroup=
+_subsys_state *css){
+ 	return css ? container_of(css, struct mem_cgroup, css) : NULL;
+ }
+=20
++static inline bool obj_cgroup_tryget(struct obj_cgroup *objcg)
++{
++	return percpu_ref_tryget(&objcg->refcnt);
++}
++
++static inline void obj_cgroup_get(struct obj_cgroup *objcg)
++{
++	percpu_ref_get(&objcg->refcnt);
++}
++
++static inline void obj_cgroup_put(struct obj_cgroup *objcg)
++{
++	percpu_ref_put(&objcg->refcnt);
++}
++
++/*
++ * After the initialization objcg->memcg is always pointing at
++ * a valid memcg, but can be atomically swapped to the parent memcg.
++ *
++ * The caller must ensure that the returned memcg won't be released:
++ * e.g. acquire the rcu_read_lock or css_set_lock.
++ */
++static inline struct mem_cgroup *obj_cgroup_memcg(struct obj_cgroup *obj=
+cg)
++{
++	return READ_ONCE(objcg->memcg);
++}
++
+ static inline void mem_cgroup_put(struct mem_cgroup *memcg)
+ {
+ 	if (memcg)
+@@ -1370,6 +1416,11 @@ void __memcg_kmem_uncharge(struct mem_cgroup *memc=
+g, unsigned int nr_pages);
+ int __memcg_kmem_charge_page(struct page *page, gfp_t gfp, int order);
+ void __memcg_kmem_uncharge_page(struct page *page, int order);
+=20
++struct obj_cgroup *get_obj_cgroup_from_current(void);
++
++int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size);
++void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size);
++
+ extern struct static_key_false memcg_kmem_enabled_key;
+ extern struct workqueue_struct *memcg_kmem_cache_wq;
+=20
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 69705b2fa03f..02716e553675 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -257,6 +257,98 @@ struct cgroup_subsys_state *vmpressure_to_css(struct=
+ vmpressure *vmpr)
+ }
+=20
+ #ifdef CONFIG_MEMCG_KMEM
++extern spinlock_t css_set_lock;
++
++static void obj_cgroup_release(struct percpu_ref *ref)
++{
++	struct obj_cgroup *objcg =3D container_of(ref, struct obj_cgroup, refcn=
+t);
++	struct mem_cgroup *memcg;
++	unsigned int nr_bytes;
++	unsigned int nr_pages;
++	unsigned long flags;
++
++	/*
++	 * At this point all allocated objects are freed, and
++	 * objcg->nr_charged_bytes can't have an arbitrary byte value.
++	 * However, it can be PAGE_SIZE or (x * PAGE_SIZE).
++	 *
++	 * The following sequence can lead to it:
++	 * 1) CPU0: objcg =3D=3D stock->cached_objcg
++	 * 2) CPU1: we do a small allocation (e.g. 92 bytes),
++	 *          PAGE_SIZE bytes are charged
++	 * 3) CPU1: a process from another memcg is allocating something,
++	 *          the stock if flushed,
++	 *          objcg->nr_charged_bytes =3D PAGE_SIZE - 92
++	 * 5) CPU0: we do release this object,
++	 *          92 bytes are added to stock->nr_bytes
++	 * 6) CPU0: stock is flushed,
++	 *          92 bytes are added to objcg->nr_charged_bytes
++	 *
++	 * In the result, nr_charged_bytes =3D=3D PAGE_SIZE.
++	 * This page will be uncharged in obj_cgroup_release().
++	 */
++	nr_bytes =3D atomic_read(&objcg->nr_charged_bytes);
++	WARN_ON_ONCE(nr_bytes & (PAGE_SIZE - 1));
++	nr_pages =3D nr_bytes >> PAGE_SHIFT;
++
++	spin_lock_irqsave(&css_set_lock, flags);
++	memcg =3D obj_cgroup_memcg(objcg);
++	if (nr_pages)
++		__memcg_kmem_uncharge(memcg, nr_pages);
++	list_del(&objcg->list);
++	mem_cgroup_put(memcg);
++	spin_unlock_irqrestore(&css_set_lock, flags);
++
++	percpu_ref_exit(ref);
++	kfree_rcu(objcg, rcu);
++}
++
++static struct obj_cgroup *obj_cgroup_alloc(void)
++{
++	struct obj_cgroup *objcg;
++	int ret;
++
++	objcg =3D kzalloc(sizeof(struct obj_cgroup), GFP_KERNEL);
++	if (!objcg)
++		return NULL;
++
++	ret =3D percpu_ref_init(&objcg->refcnt, obj_cgroup_release, 0,
++			      GFP_KERNEL);
++	if (ret) {
++		kfree(objcg);
++		return NULL;
++	}
++	INIT_LIST_HEAD(&objcg->list);
++	return objcg;
++}
++
++static void memcg_reparent_objcgs(struct mem_cgroup *memcg,
++				  struct mem_cgroup *parent)
++{
++	struct obj_cgroup *objcg, *iter;
++
++	objcg =3D rcu_replace_pointer(memcg->objcg, NULL, true);
++
++	spin_lock_irq(&css_set_lock);
++
++	/* Move active objcg to the parent's list */
++	xchg(&objcg->memcg, parent);
++	css_get(&parent->css);
++	list_add(&objcg->list, &parent->objcg_list);
++
++	/* Move already reparented objcgs to the parent's list */
++	list_for_each_entry(iter, &memcg->objcg_list, list) {
++		css_get(&parent->css);
++		xchg(&iter->memcg, parent);
++		css_put(&memcg->css);
++	}
++	list_splice(&memcg->objcg_list, &parent->objcg_list);
++
++	spin_unlock_irq(&css_set_lock);
++
++	percpu_ref_kill(&objcg->refcnt);
++}
++
+ /*
+  * This will be the memcg's index in each cache's ->memcg_params.memcg_c=
+aches.
+  * The main reason for not using cgroup id for this:
+@@ -2047,6 +2139,12 @@ EXPORT_SYMBOL(unlock_page_memcg);
+ struct memcg_stock_pcp {
+ 	struct mem_cgroup *cached; /* this never be root cgroup */
+ 	unsigned int nr_pages;
++
++#ifdef CONFIG_MEMCG_KMEM
++	struct obj_cgroup *cached_objcg;
++	unsigned int nr_bytes;
++#endif
++
+ 	struct work_struct work;
+ 	unsigned long flags;
+ #define FLUSHING_CACHED_CHARGE	0
+@@ -2054,6 +2152,22 @@ struct memcg_stock_pcp {
+ static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock);
+ static DEFINE_MUTEX(percpu_charge_mutex);
+=20
++#ifdef CONFIG_MEMCG_KMEM
++static void drain_obj_stock(struct memcg_stock_pcp *stock);
++static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
++				     struct mem_cgroup *root_memcg);
++
++#else
++static inline void drain_obj_stock(struct memcg_stock_pcp *stock)
++{
++}
++static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
++				     struct mem_cgroup *root_memcg)
++{
++	return false;
++}
++#endif
++
+ /**
+  * consume_stock: Try to consume stocked charge on this cpu.
+  * @memcg: memcg to consume from.
+@@ -2120,6 +2234,7 @@ static void drain_local_stock(struct work_struct *d=
+ummy)
+ 	local_irq_save(flags);
+=20
+ 	stock =3D this_cpu_ptr(&memcg_stock);
++	drain_obj_stock(stock);
+ 	drain_stock(stock);
+ 	clear_bit(FLUSHING_CACHED_CHARGE, &stock->flags);
+=20
+@@ -2179,6 +2294,8 @@ static void drain_all_stock(struct mem_cgroup *root=
+_memcg)
+ 		if (memcg && stock->nr_pages &&
+ 		    mem_cgroup_is_descendant(memcg, root_memcg))
+ 			flush =3D true;
++		if (obj_stock_flush_required(stock, root_memcg))
++			flush =3D true;
+ 		rcu_read_unlock();
+=20
+ 		if (flush &&
+@@ -2655,6 +2772,30 @@ struct mem_cgroup *mem_cgroup_from_obj(void *p)
+ 	return page->mem_cgroup;
+ }
+=20
++__always_inline struct obj_cgroup *get_obj_cgroup_from_current(void)
++{
++	struct obj_cgroup *objcg =3D NULL;
++	struct mem_cgroup *memcg;
++
++	if (unlikely(!current->mm))
++		return NULL;
++
++	rcu_read_lock();
++	if (unlikely(current->active_memcg))
++		memcg =3D rcu_dereference(current->active_memcg);
++	else
++		memcg =3D mem_cgroup_from_task(current);
++
++	for (; memcg !=3D root_mem_cgroup; memcg =3D parent_mem_cgroup(memcg)) =
+{
++		objcg =3D rcu_dereference(memcg->objcg);
++		if (objcg && obj_cgroup_tryget(objcg))
++			break;
++	}
++	rcu_read_unlock();
++
++	return objcg;
++}
++
+ static int memcg_alloc_cache_id(void)
+ {
+ 	int id, size;
+@@ -2939,6 +3080,140 @@ void __memcg_kmem_uncharge_page(struct page *page=
+, int order)
+ 	if (PageKmemcg(page))
+ 		__ClearPageKmemcg(page);
+ }
++
++static bool consume_obj_stock(struct obj_cgroup *objcg, unsigned int nr_=
+bytes)
++{
++	struct memcg_stock_pcp *stock;
++	unsigned long flags;
++	bool ret =3D false;
++
++	local_irq_save(flags);
++
++	stock =3D this_cpu_ptr(&memcg_stock);
++	if (objcg =3D=3D stock->cached_objcg && stock->nr_bytes >=3D nr_bytes) =
+{
++		stock->nr_bytes -=3D nr_bytes;
++		ret =3D true;
++	}
++
++	local_irq_restore(flags);
++
++	return ret;
++}
++
++static void drain_obj_stock(struct memcg_stock_pcp *stock)
++{
++	struct obj_cgroup *old =3D stock->cached_objcg;
++
++	if (!old)
++		return;
++
++	if (stock->nr_bytes) {
++		unsigned int nr_pages =3D stock->nr_bytes >> PAGE_SHIFT;
++		unsigned int nr_bytes =3D stock->nr_bytes & (PAGE_SIZE - 1);
++
++		if (nr_pages) {
++			rcu_read_lock();
++			__memcg_kmem_uncharge(obj_cgroup_memcg(old), nr_pages);
++			rcu_read_unlock();
++		}
++
++		/*
++		 * The leftover is flushed to the centralized per-memcg value.
++		 * On the next attempt to refill obj stock it will be moved
++		 * to a per-cpu stock (probably, on an other CPU), see
++		 * refill_obj_stock().
++		 *
++		 * How often it's flushed is a trade-off between the memory
++		 * limit enforcement accuracy and potential CPU contention,
++		 * so it might be changed in the future.
++		 */
++		atomic_add(nr_bytes, &old->nr_charged_bytes);
++		stock->nr_bytes =3D 0;
++	}
++
++	obj_cgroup_put(old);
++	stock->cached_objcg =3D NULL;
++}
++
++static bool obj_stock_flush_required(struct memcg_stock_pcp *stock,
++				     struct mem_cgroup *root_memcg)
++{
++	struct mem_cgroup *memcg;
++
++	if (stock->cached_objcg) {
++		memcg =3D obj_cgroup_memcg(stock->cached_objcg);
++		if (memcg && mem_cgroup_is_descendant(memcg, root_memcg))
++			return true;
++	}
++
++	return false;
++}
++
++static void refill_obj_stock(struct obj_cgroup *objcg, unsigned int nr_b=
+ytes)
++{
++	struct memcg_stock_pcp *stock;
++	unsigned long flags;
++
++	local_irq_save(flags);
++
++	stock =3D this_cpu_ptr(&memcg_stock);
++	if (stock->cached_objcg !=3D objcg) { /* reset if necessary */
++		drain_obj_stock(stock);
++		obj_cgroup_get(objcg);
++		stock->cached_objcg =3D objcg;
++		stock->nr_bytes =3D atomic_xchg(&objcg->nr_charged_bytes, 0);
++	}
++	stock->nr_bytes +=3D nr_bytes;
++
++	if (stock->nr_bytes > PAGE_SIZE)
++		drain_obj_stock(stock);
++
++	local_irq_restore(flags);
++}
++
++int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)
++{
++	struct mem_cgroup *memcg;
++	unsigned int nr_pages, nr_bytes;
++	int ret;
++
++	if (consume_obj_stock(objcg, size))
++		return 0;
++
++	/*
++	 * In theory, memcg->nr_charged_bytes can have enough
++	 * pre-charged bytes to satisfy the allocation. However,
++	 * flushing memcg->nr_charged_bytes requires two atomic
++	 * operations, and memcg->nr_charged_bytes can't be big,
++	 * so it's better to ignore it and try grab some new pages.
++	 * memcg->nr_charged_bytes will be flushed in
++	 * refill_obj_stock(), called from this function or
++	 * independently later.
++	 */
++	rcu_read_lock();
++	memcg =3D obj_cgroup_memcg(objcg);
++	css_get(&memcg->css);
++	rcu_read_unlock();
++
++	nr_pages =3D size >> PAGE_SHIFT;
++	nr_bytes =3D size & (PAGE_SIZE - 1);
++
++	if (nr_bytes)
++		nr_pages +=3D 1;
++
++	ret =3D __memcg_kmem_charge(memcg, gfp, nr_pages);
++	if (!ret && nr_bytes)
++		refill_obj_stock(objcg, PAGE_SIZE - nr_bytes);
++
++	css_put(&memcg->css);
++	return ret;
++}
++
++void obj_cgroup_uncharge(struct obj_cgroup *objcg, size_t size)
++{
++	refill_obj_stock(objcg, size);
++}
++
+ #endif /* CONFIG_MEMCG_KMEM */
+=20
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+@@ -3359,6 +3634,7 @@ static void memcg_flush_percpu_vmevents(struct mem_=
+cgroup *memcg)
+ #ifdef CONFIG_MEMCG_KMEM
+ static int memcg_online_kmem(struct mem_cgroup *memcg)
+ {
++	struct obj_cgroup *objcg;
+ 	int memcg_id;
+=20
+ 	if (cgroup_memory_nokmem)
+@@ -3371,6 +3647,14 @@ static int memcg_online_kmem(struct mem_cgroup *me=
+mcg)
+ 	if (memcg_id < 0)
+ 		return memcg_id;
+=20
++	objcg =3D obj_cgroup_alloc();
++	if (!objcg) {
++		memcg_free_cache_id(memcg_id);
++		return -ENOMEM;
++	}
++	objcg->memcg =3D memcg;
++	rcu_assign_pointer(memcg->objcg, objcg);
++
+ 	static_branch_inc(&memcg_kmem_enabled_key);
+ 	/*
+ 	 * A memory cgroup is considered kmem-online as soon as it gets
+@@ -3406,9 +3690,10 @@ static void memcg_offline_kmem(struct mem_cgroup *=
+memcg)
+ 		parent =3D root_mem_cgroup;
 =20
  	/*
-diff --git a/mm/slab.h b/mm/slab.h
-index f4033298a776..c49a863adb63 100644
---- a/mm/slab.h
-+++ b/mm/slab.h
-@@ -44,14 +44,12 @@ struct kmem_cache {
-  *
-  * @memcg_cache: pointer to memcg kmem cache, used by all non-root memor=
-y
-  *		cgroups.
-- * @root_caches_node: list node for slab_root_caches list.
-  * @work: work struct used to create the non-root cache.
-  */
- struct memcg_cache_params {
- 	struct kmem_cache *root_cache;
+-	 * Deactivate and reparent kmem_caches.
++	 * Deactivate and reparent kmem_caches and objcgs.
+ 	 */
+ 	memcg_deactivate_kmem_caches(memcg, parent);
++	memcg_reparent_objcgs(memcg, parent);
 =20
- 	struct kmem_cache *memcg_cache;
--	struct list_head __root_caches_node;
- 	struct work_struct work;
- };
- #endif /* CONFIG_SLOB */
-@@ -235,11 +233,6 @@ static inline int cache_vmstat_idx(struct kmem_cache=
- *s)
- }
-=20
+ 	kmemcg_id =3D memcg->kmemcg_id;
+ 	BUG_ON(kmemcg_id < 0);
+@@ -4978,6 +5263,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
+ 	memcg->socket_pressure =3D jiffies;
  #ifdef CONFIG_MEMCG_KMEM
--
--/* List of all root caches. */
--extern struct list_head		slab_root_caches;
--#define root_caches_node	memcg_params.__root_caches_node
--
- static inline bool is_root_cache(struct kmem_cache *s)
- {
- 	return !s->memcg_params.root_cache;
-@@ -415,14 +408,8 @@ static inline void memcg_slab_free_hook(struct kmem_=
-cache *s, struct page *page,
- }
-=20
- extern void slab_init_memcg_params(struct kmem_cache *);
--extern void memcg_link_cache(struct kmem_cache *s);
-=20
- #else /* CONFIG_MEMCG_KMEM */
--
--/* If !memcg, all caches are root. */
--#define slab_root_caches	slab_caches
--#define root_caches_node	list
--
- static inline bool is_root_cache(struct kmem_cache *s)
- {
- 	return true;
-@@ -491,10 +478,6 @@ static inline void slab_init_memcg_params(struct kme=
-m_cache *s)
- {
- }
-=20
--static inline void memcg_link_cache(struct kmem_cache *s)
--{
--}
--
- #endif /* CONFIG_MEMCG_KMEM */
-=20
- static inline struct kmem_cache *virt_to_cache(const void *obj)
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index f8874a159637..c045afb9724e 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -129,9 +129,6 @@ int __kmem_cache_alloc_bulk(struct kmem_cache *s, gfp=
-_t flags, size_t nr,
- }
-=20
- #ifdef CONFIG_MEMCG_KMEM
--
--LIST_HEAD(slab_root_caches);
--
- static void memcg_kmem_cache_create_func(struct work_struct *work)
- {
- 	struct kmem_cache *cachep =3D container_of(work, struct kmem_cache,
-@@ -154,27 +151,11 @@ static void init_memcg_params(struct kmem_cache *s,
- 	else
- 		slab_init_memcg_params(s);
- }
--
--void memcg_link_cache(struct kmem_cache *s)
--{
--	if (is_root_cache(s))
--		list_add(&s->root_caches_node, &slab_root_caches);
--}
--
--static void memcg_unlink_cache(struct kmem_cache *s)
--{
--	if (is_root_cache(s))
--		list_del(&s->root_caches_node);
--}
- #else
- static inline void init_memcg_params(struct kmem_cache *s,
- 				     struct kmem_cache *root_cache)
- {
- }
--
--static inline void memcg_unlink_cache(struct kmem_cache *s)
--{
--}
- #endif /* CONFIG_MEMCG_KMEM */
-=20
- /*
-@@ -251,7 +232,7 @@ struct kmem_cache *find_mergeable(unsigned int size, =
-unsigned int align,
- 	if (flags & SLAB_NEVER_MERGE)
- 		return NULL;
-=20
--	list_for_each_entry_reverse(s, &slab_root_caches, root_caches_node) {
-+	list_for_each_entry_reverse(s, &slab_caches, list) {
- 		if (slab_unmergeable(s))
- 			continue;
-=20
-@@ -310,7 +291,6 @@ static struct kmem_cache *create_cache(const char *na=
-me,
-=20
- 	s->refcount =3D 1;
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
- out:
- 	if (err)
- 		return ERR_PTR(err);
-@@ -505,7 +485,6 @@ static int shutdown_cache(struct kmem_cache *s)
- 	if (__kmem_cache_shutdown(s) !=3D 0)
- 		return -EBUSY;
-=20
--	memcg_unlink_cache(s);
- 	list_del(&s->list);
-=20
- 	if (s->flags & SLAB_TYPESAFE_BY_RCU) {
-@@ -749,7 +728,6 @@ struct kmem_cache *__init create_kmalloc_cache(const =
-char *name,
-=20
- 	create_boot_cache(s, name, size, flags, useroffset, usersize);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
- 	s->refcount =3D 1;
- 	return s;
- }
-@@ -1090,12 +1068,12 @@ static void print_slabinfo_header(struct seq_file=
- *m)
- void *slab_start(struct seq_file *m, loff_t *pos)
- {
- 	mutex_lock(&slab_mutex);
--	return seq_list_start(&slab_root_caches, *pos);
-+	return seq_list_start(&slab_caches, *pos);
- }
-=20
- void *slab_next(struct seq_file *m, void *p, loff_t *pos)
- {
--	return seq_list_next(p, &slab_root_caches, pos);
-+	return seq_list_next(p, &slab_caches, pos);
- }
-=20
- void slab_stop(struct seq_file *m, void *p)
-@@ -1148,11 +1126,12 @@ static void cache_show(struct kmem_cache *s, stru=
-ct seq_file *m)
-=20
- static int slab_show(struct seq_file *m, void *p)
- {
--	struct kmem_cache *s =3D list_entry(p, struct kmem_cache, root_caches_n=
-ode);
-+	struct kmem_cache *s =3D list_entry(p, struct kmem_cache, list);
-=20
--	if (p =3D=3D slab_root_caches.next)
-+	if (p =3D=3D slab_caches.next)
- 		print_slabinfo_header(m);
--	cache_show(s, m);
-+	if (is_root_cache(s))
-+		cache_show(s, m);
- 	return 0;
- }
-=20
-@@ -1254,7 +1233,7 @@ static int memcg_slabinfo_show(struct seq_file *m, =
-void *unused)
- 	mutex_lock(&slab_mutex);
- 	seq_puts(m, "# <name> <css_id[:dead|deact]> <active_objs> <num_objs>");
- 	seq_puts(m, " <active_slabs> <num_slabs>\n");
--	list_for_each_entry(s, &slab_root_caches, root_caches_node) {
-+	list_for_each_entry(s, &slab_caches, list) {
- 		/*
- 		 * Skip kmem caches that don't have the memcg cache.
- 		 */
-diff --git a/mm/slub.c b/mm/slub.c
-index 8b800a975f17..6e77a8d704b1 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4292,7 +4292,6 @@ static struct kmem_cache * __init bootstrap(struct =
-kmem_cache *static_cache)
- 	}
- 	slab_init_memcg_params(s);
- 	list_add(&s->list, &slab_caches);
--	memcg_link_cache(s);
- 	return s;
- }
-=20
+ 	memcg->kmemcg_id =3D -1;
++	INIT_LIST_HEAD(&memcg->objcg_list);
+ #endif
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 	INIT_LIST_HEAD(&memcg->cgwb_list);
 --=20
 2.25.4
 
