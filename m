@@ -2,51 +2,78 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D67C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78AB920776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF5520776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgE0FXp (ORCPT
+        id S1728938AbgE0FYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:23:45 -0400
-Received: from verein.lst.de ([213.95.11.211]:48261 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgE0FXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:23:44 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9937168B02; Wed, 27 May 2020 07:23:41 +0200 (CEST)
-Date:   Wed, 27 May 2020 07:23:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>, dm-devel@redhat.com,
-        linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-nvdimm@lists.01.org,
+        Wed, 27 May 2020 01:24:04 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:50813 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbgE0FYE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 01:24:04 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=37;SR=0;TI=SMTPD_---0TzmMcE-_1590557034;
+Received: from 30.27.118.64(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TzmMcE-_1590557034)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 27 May 2020 13:23:56 +0800
+Subject: Re: [PATCH v4 3/7] KVM: PPC: Remove redundant kvm_run from vcpu_arch
+To:     Paul Mackerras <paulus@ozlabs.org>
+Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
+        chenhuacai@gmail.com, kvm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/16] block: add disk/bio-based accounting helpers
-Message-ID: <20200527052341.GA17530@lst.de>
-References: <20200525113014.345997-1-hch@lst.de> <20200525113014.345997-2-hch@lst.de> <fafb94a9-cdce-5ea0-e73f-9463766a9f19@yandex-team.ru>
+References: <20200427043514.16144-1-tianjia.zhang@linux.alibaba.com>
+ <20200427043514.16144-4-tianjia.zhang@linux.alibaba.com>
+ <20200527042055.GG293451@thinks.paulus.ozlabs.org>
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Message-ID: <56064e35-583f-0dc8-9156-aabebdb8aff4@linux.alibaba.com>
+Date:   Wed, 27 May 2020 13:23:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fafb94a9-cdce-5ea0-e73f-9463766a9f19@yandex-team.ru>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200527042055.GG293451@thinks.paulus.ozlabs.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 03:28:07PM +0300, Konstantin Khlebnikov wrote:
-> I think it would be better to leave this jiffies legacy nonsense in
-> callers and pass here request duration in nanoseconds.
 
-jiffies is what the existing interfaces uses.  But now that they come
-from the start helper fixing this will become easier.  I'll do that
-as a follow on, as I'd rather not bloat this series even more.
+
+On 2020/5/27 12:20, Paul Mackerras wrote:
+> On Mon, Apr 27, 2020 at 12:35:10PM +0800, Tianjia Zhang wrote:
+>> The 'kvm_run' field already exists in the 'vcpu' structure, which
+>> is the same structure as the 'kvm_run' in the 'vcpu_arch' and
+>> should be deleted.
+>>
+>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> 
+> Thanks, patches 3 and 4 of this series applied to my kvm-ppc-next branch.
+> 
+> Paul.
+> 
+
+Thanks for your suggestion, for 5/7, I will submit a new version patch.
+
+Thanks,
+Tianjia
