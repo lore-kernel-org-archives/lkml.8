@@ -2,216 +2,114 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B0DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C17C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4278E20723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zv10UTO9"
+	by mail.kernel.org (Postfix) with ESMTP id 4DD992078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590569599;
+	bh=21T7sPdQCrYT7yx27IXVTIKRDL60nkltAXenV63O92M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cw5XV3Jtrg+vzWI32St+svwAuCOJm7ZRdj1bilV+FD6WJKZuXNazgxPf/vGVufAqU
+	 xmO1zBkX/1NzTCOIiphMBD5st5kZWRJ1YXwMQo2geLpmE4zuFqS4yhoLah1dqOM2Bl
+	 t1HtQiufV0BM2NZmulqxIpW/kNqwWkE1HEuz4Ytw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388313AbgE0IxH (ORCPT
+        id S2388327AbgE0IxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388188AbgE0IxH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:53:07 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA2EC03E97C
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:53:06 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w10so27984875ljo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VMYivybFR3qZWswQd+4Hh00wgkOlInWhi0WpQgvu6k8=;
-        b=Zv10UTO9QZf5MGO5WdogeLLqk0XLrBiu9u3HsCrO64WQ+KezlTbigGnhN5oDs+qjv8
-         9gU8XZFaiD+ewGxHa2IeSCW+4JgleH/Ztvv8Et/TuEHn9zFsRwZP6CDej6JUHpxexaxs
-         dHCYEhboBG86Nk22CdHzEeKg3/piogfA6xLLLmmqzZ3Eois+AhP2xdvk3hHBMycrxUKZ
-         3qSsCgoroLKbhrhBJy6aZ3sHm47OnEC9/RYfycB7b9SDyW4lK2aEDsz2NfdqDfBSQ+nG
-         tofQWOjFsnuf6njdOHl//svyuApUdwWBu3UluN8b6dQw/CZ+wczbwIXt6m5Wl56upN4O
-         YheA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VMYivybFR3qZWswQd+4Hh00wgkOlInWhi0WpQgvu6k8=;
-        b=fXuWpPe2zYAvxDVqFKfQNonXZCUdQS09C355MkyAgJvR/QFkhm9clXPHh4Gyro9aLJ
-         Ijy/2E6LKI1FAOpKWWl0n4Co8C6MTlwxWUdeAwfDjBUh1i0up2SZPgD5XkfmhZ7rklSZ
-         oO3HXxszpSVJ65/ppGriDeNbKjs9DFTLlf4HAuG3bwrXkg7dA9Knlv2jpT7gwcH6+FUM
-         vOtQcxHG2UeImcyBJb/6qhTLwZkxEsA6bsdpiDmrgAQHWCosekiRnikZEGKNZdXNFWqb
-         JWq4sHN6L4avZlb16OyEEkqeZfxMiPL8Jh9JHNISAxD8EBrQNKBO7c12R+R6L/ChAhPZ
-         Q7aA==
-X-Gm-Message-State: AOAM530hPckcOUM4p4Rsh037QrPFfzsmeByJJifwry35ykYe61ldfg/R
-        584Ice2p1hbM8oluVNG2W0xrptWkXeXAD+ZpGaWAUQ==
-X-Google-Smtp-Source: ABdhPJwwTJHa3rqeb8/G4wh2gtOFICQYxsYQiW2iM0wlhShazA9cZNim2OfJfYJQtgWFcSO0zM5ba/upU8fGpFSO1Pc=
-X-Received: by 2002:a2e:89d9:: with SMTP id c25mr2754030ljk.366.1590569585048;
- Wed, 27 May 2020 01:53:05 -0700 (PDT)
+        Wed, 27 May 2020 04:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388112AbgE0IxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:53:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AA9F20723;
+        Wed, 27 May 2020 08:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590569597;
+        bh=21T7sPdQCrYT7yx27IXVTIKRDL60nkltAXenV63O92M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jap5XRLqUYxuDAD+TFlFFCsHfOP1n3cKaPyUG1wx2aWwZQaFUekRMDW5RX+f7/9nm
+         whX6Bap6JcEsdXGAX8+ZaqqRHA3ogx/2NUaGIZYYi9y0L9B8LuYr7f7tH48GfX3we0
+         QoWeiz77MD8CnHHgOj5Uo7bFhFlrdURuXiqNDiGA=
+Date:   Wed, 27 May 2020 10:53:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     balbi@kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        hanjie.lin@amlogic.com, yue.wang@amlogic.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "kernelci.org bot" <bot@kernelci.org>
+Subject: Re: [PATCH for-5.8 2/2] usb: dwc3: meson-g12a: fix USB2 PHY
+ initialization on G12A and A1 SoCs
+Message-ID: <20200527085315.GA168054@kroah.com>
+References: <20200526202943.715220-1-martin.blumenstingl@googlemail.com>
+ <20200526202943.715220-3-martin.blumenstingl@googlemail.com>
+ <40a874eb-1a2b-533e-ee3e-bd90510abaf9@baylibre.com>
 MIME-Version: 1.0
-References: <20200526183905.988782958@linuxfoundation.org>
-In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 27 May 2020 14:22:53 +0530
-Message-ID: <CA+G9fYtqoHXXWq9+jb6-nN5Jvj7x8dryYK6ehTC2+8TRxCWsag@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/65] 4.4.225-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40a874eb-1a2b-533e-ee3e-bd90510abaf9@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 00:24, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.225 release.
-> There are 65 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.225-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, May 27, 2020 at 10:17:31AM +0200, Neil Armstrong wrote:
+> Hi Martin,
+> 
+> On 26/05/2020 22:29, Martin Blumenstingl wrote:
+> > dwc3_meson_g12a_usb2_init_phy() crashes with NULL pointer on an SM1
+> > board (which uses the same USB setup as G12A) dereference as reported
+> > by the Kernel CI bot. This is because of the following call flow:
+> >   dwc3_meson_g12a_probe
+> >     priv->drvdata->setup_regmaps
+> >       dwc3_meson_g12a_setup_regmaps
+> >         priv->usb2_ports is still 0 so priv->u2p_regmap[i] will be NULL
+> >     dwc3_meson_g12a_get_phys
+> >       initializes priv->usb2_ports
+> >     priv->drvdata->usb_init
+> >       dwc3_meson_g12a_usb_init
+> >         dwc3_meson_g12a_usb_init_glue
+> >           dwc3_meson_g12a_usb2_init
+> >             priv->drvdata->usb2_init_phy
+> >               dwc3_meson_g12a_usb2_init_phy
+> >                 dereferences priv->u2p_regmap[i]
+> > 
+> > Call priv->drvdata->setup_regmaps only after dwc3_meson_g12a_get_phys so
+> > priv->usb2_ports is initialized and the regmaps will be set up
+> > correctly. This fixes the NULL dereference later on.
+> > 
+> > Fixes: 013af227f58a97 ("usb: dwc3: meson-g12a: handle the phy and glue registers separately")
+> > Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  drivers/usb/dwc3/dwc3-meson-g12a.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> > index ce5388338389..1f7f4d88ed9d 100644
+> > --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
+> > +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> 
+> [...]
+> 
+> Fixes regression reported at [1] on SEI510 board based on Amlogic G12A.
+> 
+> Felipe, Greg, can this be queued on uxb-next for 5.8 ?
+> 
+> Acked-by: Neil Armstrong <narmstron@baylibre.com>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I can take this and patch 1/2 here if Felipe acks them.
 
-Summary
-------------------------------------------------------------------------
+thanks,
 
-kernel: 4.4.225-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 147ece171c0dc02b417f35088182a61e6dac368a
-git describe: v4.4.224-66-g147ece171c0d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.224-66-g147ece171c0d
-
-No regressions (compared to build v4.4.224)
-
-No fixes (compared to build v4.4.224)
-
-Ran 15012 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest/net
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.225-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.225-rc1-hikey-20200526-731
-git commit: f578d6e82f6756e9b9385131e4bef87a9fe5483f
-git describe: 4.4.225-rc1-hikey-20200526-731
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.225-rc1-hikey-20200526-731
-
-No regressions (compared to build 4.4.225-rc1-hikey-20200525-730)
-
-No fixes (compared to build 4.4.225-rc1-hikey-20200525-730)
-
-Ran 305 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-fcntl-locktests-tests
-* ltp-ipc-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* spectre-meltdown-checker-test
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+greg k-h
