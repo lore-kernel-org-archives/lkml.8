@@ -2,134 +2,216 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB45C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6477E2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4278E20723
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:53:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zv10UTO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbgE0IwP (ORCPT
+        id S2388313AbgE0IxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:52:15 -0400
-Received: from mga07.intel.com ([134.134.136.100]:8402 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388070AbgE0IwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:52:14 -0400
-IronPort-SDR: nSAUr2I8YR2pNQ161YXOcfaZO9jMc7IXHbF1FJ27YGZuJIqAXheMPDba4dc5yahZzAKnOlYqyL
- bnH3DJjxLm5Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 01:52:14 -0700
-IronPort-SDR: iEFBK9hw43SNyYE55/qG1GyBCco/ur0BvGwY2RTz4cHM3tJcOd6sfeM9yd3g9AojAeW0S1+lph
- ri5MUuys8bRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="414132602"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 01:52:14 -0700
-Date:   Wed, 27 May 2020 01:52:14 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        David Rientjes <rientjes@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [RFC 02/16] x86/kvm: Introduce KVM memory protection feature
-Message-ID: <20200527085214.GP31696@linux.intel.com>
-References: <20200522125214.31348-1-kirill.shutemov@linux.intel.com>
- <20200522125214.31348-3-kirill.shutemov@linux.intel.com>
- <87d06s83is.fsf@vitty.brq.redhat.com>
- <20200525151525.qmfvzxbl7sq46cdq@box>
- <20200527050350.GK31696@linux.intel.com>
- <87eer56abe.fsf@vitty.brq.redhat.com>
+        Wed, 27 May 2020 04:53:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388188AbgE0IxH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:53:07 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA2EC03E97C
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:53:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w10so27984875ljo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VMYivybFR3qZWswQd+4Hh00wgkOlInWhi0WpQgvu6k8=;
+        b=Zv10UTO9QZf5MGO5WdogeLLqk0XLrBiu9u3HsCrO64WQ+KezlTbigGnhN5oDs+qjv8
+         9gU8XZFaiD+ewGxHa2IeSCW+4JgleH/Ztvv8Et/TuEHn9zFsRwZP6CDej6JUHpxexaxs
+         dHCYEhboBG86Nk22CdHzEeKg3/piogfA6xLLLmmqzZ3Eois+AhP2xdvk3hHBMycrxUKZ
+         3qSsCgoroLKbhrhBJy6aZ3sHm47OnEC9/RYfycB7b9SDyW4lK2aEDsz2NfdqDfBSQ+nG
+         tofQWOjFsnuf6njdOHl//svyuApUdwWBu3UluN8b6dQw/CZ+wczbwIXt6m5Wl56upN4O
+         YheA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VMYivybFR3qZWswQd+4Hh00wgkOlInWhi0WpQgvu6k8=;
+        b=fXuWpPe2zYAvxDVqFKfQNonXZCUdQS09C355MkyAgJvR/QFkhm9clXPHh4Gyro9aLJ
+         Ijy/2E6LKI1FAOpKWWl0n4Co8C6MTlwxWUdeAwfDjBUh1i0up2SZPgD5XkfmhZ7rklSZ
+         oO3HXxszpSVJ65/ppGriDeNbKjs9DFTLlf4HAuG3bwrXkg7dA9Knlv2jpT7gwcH6+FUM
+         vOtQcxHG2UeImcyBJb/6qhTLwZkxEsA6bsdpiDmrgAQHWCosekiRnikZEGKNZdXNFWqb
+         JWq4sHN6L4avZlb16OyEEkqeZfxMiPL8Jh9JHNISAxD8EBrQNKBO7c12R+R6L/ChAhPZ
+         Q7aA==
+X-Gm-Message-State: AOAM530hPckcOUM4p4Rsh037QrPFfzsmeByJJifwry35ykYe61ldfg/R
+        584Ice2p1hbM8oluVNG2W0xrptWkXeXAD+ZpGaWAUQ==
+X-Google-Smtp-Source: ABdhPJwwTJHa3rqeb8/G4wh2gtOFICQYxsYQiW2iM0wlhShazA9cZNim2OfJfYJQtgWFcSO0zM5ba/upU8fGpFSO1Pc=
+X-Received: by 2002:a2e:89d9:: with SMTP id c25mr2754030ljk.366.1590569585048;
+ Wed, 27 May 2020 01:53:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87eer56abe.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200526183905.988782958@linuxfoundation.org>
+In-Reply-To: <20200526183905.988782958@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 27 May 2020 14:22:53 +0530
+Message-ID: <CA+G9fYtqoHXXWq9+jb6-nN5Jvj7x8dryYK6ehTC2+8TRxCWsag@mail.gmail.com>
+Subject: Re: [PATCH 4.4 00/65] 4.4.225-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:39:33AM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > On Mon, May 25, 2020 at 06:15:25PM +0300, Kirill A. Shutemov wrote:
-> >> On Mon, May 25, 2020 at 04:58:51PM +0200, Vitaly Kuznetsov wrote:
-> >> > > @@ -727,6 +734,15 @@ static void __init kvm_init_platform(void)
-> >> > >  {
-> >> > >  	kvmclock_init();
-> >> > >  	x86_platform.apic_post_init = kvm_apic_init;
-> >> > > +
-> >> > > +	if (kvm_para_has_feature(KVM_FEATURE_MEM_PROTECTED)) {
-> >> > > +		if (kvm_hypercall0(KVM_HC_ENABLE_MEM_PROTECTED)) {
-> >> > > +			pr_err("Failed to enable KVM memory protection\n");
-> >> > > +			return;
-> >> > > +		}
-> >> > > +
-> >> > > +		mem_protected = true;
-> >> > > +	}
-> >> > >  }
-> >> > 
-> >> > Personally, I'd prefer to do this via setting a bit in a KVM-specific
-> >> > MSR instead. The benefit is that the guest doesn't need to remember if
-> >> > it enabled the feature or not, it can always read the config msr. May
-> >> > come handy for e.g. kexec/kdump.
-> >> 
-> >> I think we would need to remember it anyway. Accessing MSR is somewhat
-> >> expensive. But, okay, I can rework it MSR if needed.
-> >
-> > I think Vitaly is talking about the case where the kernel can't easily get
-> > at its cached state, e.g. after booting into a new kernel.  The kernel would
-> > still have an X86_FEATURE bit or whatever, providing a virtual MSR would be
-> > purely for rare slow paths.
-> >
-> > That being said, a hypercall plus CPUID bit might be better, e.g. that'd
-> > allow the guest to query the state without risking a #GP.
-> 
-> We have rdmsr_safe() for that! :-) MSR (and hypercall to that matter)
-> should have an associated CPUID feature bit of course.
+On Wed, 27 May 2020 at 00:24, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.4.225 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.4.225-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-rdmsr_safe() won't fly in early boot, e.g. verify_cpu.  It probably doesn't
-matter for late enabling, but it might save some headache if there's ever a
-handoff from vBIOS.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> Yes, hypercall + CPUID would do but normally we treat CPUID data as
-> static and in this case we'll make it a dynamically flipping
+Summary
+------------------------------------------------------------------------
 
-There are multiple examples of dynamic CPUID, e.g. MWAIT and OSPKE.
+kernel: 4.4.225-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.4.y
+git commit: 147ece171c0dc02b417f35088182a61e6dac368a
+git describe: v4.4.224-66-g147ece171c0d
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
+ld/v4.4.224-66-g147ece171c0d
 
-> bit. Especially if we introduce 'KVM_HC_DISABLE_MEM_PROTECTED' later.
-> 
-> >
-> >> Note, that we can avoid the enabling algother, if we modify BIOS to deal
-> >> with private/shared memory. Currently BIOS get system crash if we enable
-> >> the feature from time zero.
-> >
-> > Which would mesh better with a CPUID feature bit.
-> >
-> 
-> And maybe even help us to resolve 'reboot' problem.
-> 
-> -- 
-> Vitaly
-> 
+No regressions (compared to build v4.4.224)
+
+No fixes (compared to build v4.4.224)
+
+Ran 15012 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest/net
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.225-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.225-rc1-hikey-20200526-731
+git commit: f578d6e82f6756e9b9385131e4bef87a9fe5483f
+git describe: 4.4.225-rc1-hikey-20200526-731
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
+-oe/build/4.4.225-rc1-hikey-20200526-731
+
+No regressions (compared to build 4.4.225-rc1-hikey-20200525-730)
+
+No fixes (compared to build 4.4.225-rc1-hikey-20200525-730)
+
+Ran 305 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* spectre-meltdown-checker-test
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
