@@ -2,133 +2,133 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06162C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20B1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD972078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAFD0207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:23:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXjJXfG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgE0PUH (ORCPT
+        id S1729461AbgE0PXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:20:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52376 "EHLO
+        Wed, 27 May 2020 11:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgE0PUG (ORCPT
+        with ESMTP id S1727017AbgE0PXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:20:06 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6169BC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:20:06 -0700 (PDT)
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1jdxqe-0006nB-Ed; Wed, 27 May 2020 17:20:04 +0200
-Date:   Wed, 27 May 2020 17:20:04 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tejun Heo <tj@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 0/3] workqueue: Make the workqueue code PREEMPT_RT safe
-Message-ID: <20200527152004.z3n5ccajp6stdcno@linutronix.de>
-References: <20200513162732.977489-1-bigeasy@linutronix.de>
- <20200526194641.GF83516@mtj.thefacebook.com>
- <CAHk-=wjHgkama3SYOcYCYt_F-sxV8h4+kQ5aQSMgK7PtiQ=Nkw@mail.gmail.com>
- <CAHk-=wgrG--AdCUBF9jR=zMm=cUn+6VaeOmmbbRFxx1YOx3RiA@mail.gmail.com>
+        Wed, 27 May 2020 11:23:44 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9ECC05BD1E;
+        Wed, 27 May 2020 08:23:44 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id z5so28602936ejb.3;
+        Wed, 27 May 2020 08:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sOraBazhvT2a0mZdINuhAPimqgAtYkj9MdJtgUZJzFA=;
+        b=nXjJXfG5ZIYYXzjKpVe0Ao5guKxaTq6eG1ms+swzDkTfYBMipFk9L6GsrvKFislxJs
+         dBIqxvOTsPbV0TTUjqpMCXCahV2uT2OMBmIjopMyLUpGgnN3dzgrX3K9ruMP7+zvWJHa
+         6Q9ESTx09Ghp2n8X9aWA8f0oq9k4DFfE668nw/6ESO0q1kCNk8QKWAeTx9jkANIQc5h7
+         v/HgPqlVJojQNOhVF4rWPXpYBh7sCOqWckXWaNkz1tRW4OVoMIM6t3KVhwqxSrMWEYuR
+         0Eq7ucpSbnC3F/NLXbJW47KZZ7LuMVM7Y9LqMRBaTegrqbGRgmxu1y7g6FfADkD02yN5
+         jJUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sOraBazhvT2a0mZdINuhAPimqgAtYkj9MdJtgUZJzFA=;
+        b=d26Mnrh13I084PkdvG2a5z6gi5ov5L3LyKsnct5kp54O2et1ugfmx/HHj3npWEA+V9
+         XMzf9a1l2MRbwdUsU8AafXIeeUI3VWB8ZWoocQuFf6OvLuPwO2OA/12HuxwV5GXJPZOR
+         91kdiCm9/7pegrsp3dmAbPbWjPXtzDuW+6tGLvgoekRhViZob0+vlXPxuJDU2fYO8qa4
+         VJXYkkyLorv4MUajlPNWYHMLn1dVIxZEwCxcCY3/yDO2JLEHS734ZD+rsHStKsuEd7Rh
+         6ZleVFrMKe4hnu5nndjR84oAxjsDP4acDDTBvOzBiZNnJxZX+IiW3ctxpuiOxYf8WkdS
+         /cMA==
+X-Gm-Message-State: AOAM5335zXrccktsbH8npKrdeBtR7b6Kl2xEkT6MWy6gsb8kcY2zPVps
+        jHfovtI0pJdbowqXh8T2RA==
+X-Google-Smtp-Source: ABdhPJzI8Z1ajzX61gxQw4uLhe7lK2uddCIzmaZ4nEH9DK6bQgMgfzSTmkBvrii4Sfm5dPEUTs3noA==
+X-Received: by 2002:a17:906:be2:: with SMTP id z2mr6458926ejg.169.1590593022923;
+        Wed, 27 May 2020 08:23:42 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.248.218])
+        by smtp.gmail.com with ESMTPSA id b15sm2436073edk.90.2020.05.27.08.23.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 08:23:42 -0700 (PDT)
+Date:   Wed, 27 May 2020 18:23:40 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kaitao Cheng <pilgrimtao@gmail.com>, christian@brauner.io,
+        akpm@linux-foundation.org, gladkov.alexey@gmail.com, guro@fb.com,
+        walken@google.com, avagin@gmail.com, khlebnikov@yandex-team.ru,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] proc/base: Skip assignment to len when there is no error
+ on d_path in do_proc_readlink.
+Message-ID: <20200527152340.GA19985@localhost.localdomain>
+References: <20200527141155.47554-1-pilgrimtao@gmail.com>
+ <87k10x5tji.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgrG--AdCUBF9jR=zMm=cUn+6VaeOmmbbRFxx1YOx3RiA@mail.gmail.com>
+In-Reply-To: <87k10x5tji.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-26 14:46:59 [-0700], Linus Torvalds wrote:
-> On Tue, May 26, 2020 at 2:41 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > Almost all users of swait have historically been buggy and/or
-> > pointless.
+On Wed, May 27, 2020 at 09:41:53AM -0500, Eric W. Biederman wrote:
+> Kaitao Cheng <pilgrimtao@gmail.com> writes:
 > 
-> Yeah, looking at this one, it really seems to fundamentally fall in
-> the "pointless" category.
+> > we don't need {len = PTR_ERR(pathname)} when IS_ERR(pathname) is false,
+> > it's better to move it into if(IS_ERR(pathname)){}.
 > 
-> So yeah - instead of extending swait with a new primitive that nobody
-> else wants than this pointless case, just don't use swait at all.
+> Please look at the generated code.
 > 
-> We have better models. We have "rcuwait", and we have
-> "wake_up_process()". Either of which is simpler and more efficient
-> than swait, and are actually useful. rcuwait isn't exactly widely
-> used, but it has very nice semantics for when that is what you want.
-> And wake_up_process() is both simple and straightforward, particularly
-> when you already have a spinlock for protecting whatever state it is
-> you're waking up on or waiting for.
+> I believe you will find that your change will generate worse assembly.
 
-rcuwait would be this:
+I think patch is good.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 891ccad5f2716..3259f52bfe765 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -301,7 +301,7 @@ static struct workqueue_attrs *wq_update_unbound_numa_attrs_buf;
- static DEFINE_MUTEX(wq_pool_mutex);	/* protects pools and workqueues list */
- static DEFINE_MUTEX(wq_pool_attach_mutex); /* protects worker attach/detach */
- static DEFINE_SPINLOCK(wq_mayday_lock);	/* protects wq->maydays list */
--static DECLARE_WAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to go away */
-+static struct rcuwait manager_wait;	/* wait for manager to go away */
- 
- static LIST_HEAD(workqueues);		/* PR: list of all workqueues */
- static bool workqueue_freezing;		/* PL: have wqs started freezing? */
-@@ -2140,7 +2140,7 @@ static bool manage_workers(struct worker *worker)
- 
- 	pool->manager = NULL;
- 	pool->flags &= ~POOL_MANAGER_ACTIVE;
--	wake_up(&wq_manager_wait);
-+	rcuwait_wake_up(&manager_wait);
- 	return true;
- }
- 
-@@ -3504,6 +3504,17 @@ static void rcu_free_pool(struct rcu_head *rcu)
- 	kfree(pool);
- }
- 
-+static bool wq_manager_inactive(struct worker_pool *pool)
-+{
-+	spin_lock_irq(&pool->lock);
-+
-+	if (pool->flags & POOL_MANAGER_ACTIVE) {
-+		spin_unlock_irq(&pool->lock);
-+		return false;
-+	}
-+	return true;
-+}
-+
- /**
-  * put_unbound_pool - put a worker_pool
-  * @pool: worker_pool to put
-@@ -3540,9 +3551,8 @@ static void put_unbound_pool(struct worker_pool *pool)
- 	 * @pool's workers from blocking on attach_mutex.  We're the last
- 	 * manager and @pool gets freed with the flag set.
- 	 */
--	spin_lock_irq(&pool->lock);
--	wait_event_lock_irq(wq_manager_wait,
--			    !(pool->flags & POOL_MANAGER_ACTIVE), pool->lock);
-+	rcuwait_wait_event(&manager_wait, wq_manager_inactive(pool),
-+			   TASK_UNINTERRUPTIBLE);
- 	pool->flags |= POOL_MANAGER_ACTIVE;
- 
- 	while ((worker = first_idle_worker(pool)))
+Super duper CPUs which speculate thousands instructions forward won't
+care but more embedded ones do. Or in other words 1 unnecessary instruction
+on common path is more important for slow CPUs than for fast CPUs.
 
-There is the unbalanced lock/unlock in wq_manager_inactive() which
-sparse complains about. Other than that it looks straight forward.
+This style separates common path from error path more cleanly.
 
->                  Linus
+And finally "len" here is local, so the issue barely deserves mention
+but if target is in memory code like this happens:
 
-Sebastian
+	static struct socket *sockfd_lookup_light(int fd, int *err, int *fput_needed)
+	{
+	        struct fd f = fdget(fd);
+	        struct socket *sock;
+	
+	        *err = -EBADF;
+	        if (f.file) {
+	
+			// unconditionally write to *err as well.
+
+	                sock = sock_from_file(f.file, err);
+	                if (likely(sock)) {
+	                        *fput_needed = f.flags;
+	                        return sock;
+	                }
+	                fdput(f);
+	        }
+	        return NULL;
+	}
+
+so current style promotes more memory dirtying than necessary.
+
+There is another place like this in sk_buff.c (search for ENOBUFS).
+
+> >  	pathname = d_path(path, tmp, PAGE_SIZE);
+> > -	len = PTR_ERR(pathname);
+> > -	if (IS_ERR(pathname))
+> > +	if (IS_ERR(pathname)) {
+> > +		len = PTR_ERR(pathname);
+> >  		goto out;
+> > +	}
