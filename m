@@ -2,165 +2,152 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 089E0207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E7D0207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:49:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="N/8M/e7t"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Y19tcPxK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbgE0MrM (ORCPT
+        id S1730117AbgE0MtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:47:12 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:51101 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728513AbgE0MrL (ORCPT
+        Wed, 27 May 2020 08:49:22 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:14046 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728964AbgE0MtW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:47:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1590583631; x=1622119631;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=ZpUgh+P6r6mxj1lydd2QIOZrB0EuK0mUcU82zaKuhF8=;
-  b=N/8M/e7tIR35MdNufIe4WGSpffrzyuU56selt0dYCYFhFmn1Az8lu6DA
-   Nuac4v48QQluPpMA7LC8DLwQMM5hN6+OHFgdK+u8EaiCAlo+Gb2gIwGd4
-   D9YO6gyBi5mB6z1jU8ndL2H9+oRDf/ANsVJP4DprFcJ4/pHUU+Fac86I+
-   g=;
-IronPort-SDR: AcgyTr3N5DPmtU9JSr4a2uBZjFAZVmeCfi5HmoNti3oUI4DFnAnVdtGUQeSWDCCnAzPcO3qFp4
- bwmqOJ27fgTA==
-X-IronPort-AV: E=Sophos;i="5.73,441,1583193600"; 
-   d="scan'208";a="38101351"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 27 May 2020 12:47:10 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id EAEAFA23F8;
-        Wed, 27 May 2020 12:47:07 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 27 May 2020 12:47:07 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 27 May 2020 12:46:51 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Leonard Foerster <foersleo@amazon.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
-        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
-        <irogers@google.com>, <jolsa@redhat.com>, <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, <mgorman@suse.de>, <minchan@kernel.org>,
-        <mingo@redhat.com>, <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rostedt@goodmis.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH v13 05/15] mm/damon: Adaptively adjust regions
-Date:   Wed, 27 May 2020 14:46:35 +0200
-Message-ID: <20200527124635.19577-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <1590578636-27155-1-git-send-email-foersleo@amazon.com> (raw)
+        Wed, 27 May 2020 08:49:22 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RCm1ie006236;
+        Wed, 27 May 2020 14:48:46 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=26IMlLvf/Y93jh9yA1Ns2+y1tGX2JVHjVd/Qs0j7tx0=;
+ b=Y19tcPxK/czXOsbRcP6sSkKPo3NkL5FNgJBrp8S/XYQ+NFurz30lZ4/GvLPUjWolo1rj
+ DfAOay8gU8SyqtKDzI1ZNDgmcmwYJWQBjmJc5SfnIr6bDJfgiLWC+DZ+xcKxDM2KXBea
+ uDPeOcvmgPLZti7JGTtcgRo6bk/qHvc5jB0ZlnIeaAKE6M2eCH/MxxeuCAJm2cbhNSSr
+ YCQ8JGYhdvmNRMe/8Bgwj46XYzOBX7DBOSbpcdTqa3uXKFE4ByeXqQhGbOiPzjWptEGK
+ hRNUip9zAnIGxdb3a/VMG1UYj6tsPqtFfnP5Qd9/ma5UGLllAkmC9BXmV9ILKwaHvf8p zQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316sa25rd5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 14:48:46 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5768910002A;
+        Wed, 27 May 2020 14:48:45 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1C95D2B7620;
+        Wed, 27 May 2020 14:48:45 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 27 May
+ 2020 14:48:44 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Wed, 27 May 2020 14:48:44 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+CC:     Valentin Schneider <valentin.schneider@arm.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+Thread-Topic: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+Thread-Index: AQHWM3CeA6bTrCFpTUymlrJxXTw8j6i7lUyAgAATBICAABI/gIAAB1gA
+Date:   Wed, 27 May 2020 12:48:44 +0000
+Message-ID: <51917583-f8ff-3933-7783-2eedc91484a4@st.com>
+References: <20200526151619.8779-1-benjamin.gaignard@st.com>
+ <jhjk10xu1tq.mognet@arm.com> <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
+ <CAKfTPtBt6Ju-CnETnn6_FkgR0CAJ+jYnySz9OHP9X2hmxWHM7w@mail.gmail.com>
+In-Reply-To: <CAKfTPtBt6Ju-CnETnn6_FkgR0CAJ+jYnySz9OHP9X2hmxWHM7w@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A1EFABD517AC9847AA7C19D754960F2E@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.53]
-X-ClientProxiedBy: EX13D15UWA002.ant.amazon.com (10.43.160.218) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 13:23:56 +0200 Leonard Foerster <foersleo@amazon.com> wrote:
-
-> On 2020-05-25T11:15:02+02:00 SeongJae Park <sjpark@amazon.com> wrote:
-> 
-> > From: SeongJae Park <sjpark@amazon.de>
-> > 
-> > At the beginning of the monitoring, DAMON constructs the initial regions
-> > by evenly splitting the memory mapped address space of the process into
-> > the user-specified minimal number of regions.  In this initial state,
-> > the assumption of the regions (pages in same region have similar access
-> > frequencies) is normally not kept and thus the monitoring quality could
-> > be low.  To keep the assumption as much as possible, DAMON adaptively
-> > merges and splits each region.
-> > 
-> > For each ``aggregation interval``, it compares the access frequencies of
-> > adjacent regions and merges those if the frequency difference is small.
-> > Then, after it reports and clears the aggregated access frequency of
-> > each region, it splits each region into two regions if the total number
-> > of regions is smaller than the half of the user-specified maximum number
-> > of regions.
-> > 
-> > In this way, DAMON provides its best-effort quality and minimal overhead
-> > while keeping the bounds users set for their trade-off.
-> > 
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> > [...]
-> > +/*
-> > + * splits every target region into two randomly-sized regions
-> > + *
-> > + * This function splits every target region into two random-sized regions if
-> > + * current total number of the regions is equal or smaller than half of the
-> > + * user-specified maximum number of regions.  This is for maximizing the
-> > + * monitoring accuracy under the dynamically changeable access patterns.  If a
-> > + * split was unnecessarily made, later 'kdamond_merge_regions()' will revert
-> > + * it.
-> > + */
-> > +static void kdamond_split_regions(struct damon_ctx *ctx)
-> > +{
-> > +	struct damon_task *t;
-> > +	unsigned int nr_regions = 0;
-> > +	static unsigned int last_nr_regions;
-> > +	int nr_subregions = 2;
-> > +
-> > +	damon_for_each_task(t, ctx)
-> > +		nr_regions += nr_damon_regions(t);
-> > +
-> > +	if (nr_regions > ctx->max_nr_regions / 2)
-> > +		return;
-> > +
-> > +	/* If number of regions is not changed, we are maybe in corner case */
-> > +	if (last_nr_regions == nr_regions &&
-> > +			nr_regions < ctx->max_nr_regions / 3)
-> > +		nr_subregions = 3;
-> > +
-> > +	damon_for_each_task(t, ctx)
-> > +		damon_split_regions_of(ctx, t, nr_subregions);
-> > +
-> > +	if (!last_nr_regions)
-> > +		last_nr_regions = nr_regions;
-> 
-> So we are only setting last_nr_regions once when we first come along
-> here (when last_nr_regions == 0). Thus we are checking from now on if
-> nr_regions is the same as nr_regions was before the first ever split. So
-> we are doing the three-way split whenever nr_regions has come to the
-> initial number of regions. Is this actually what we want? The naming
-> suggests that we want to check against the number before the last split
-> to detect if we have moved into a spot where we are splitting and
-> merging back and forth between two states (this is the corner case we
-> are talking about?).
-> 
-> Or am I misunderstanding the intention here?
-
-Oops, you're right, I made obvious mistake.  Thank you for finding this.  I
-will fix this in the next spin.
-
-
-Thanks,
-SeongJae Park
-
-> 
-> Leonard
+DQoNCk9uIDUvMjcvMjAgMjoyMiBQTSwgVmluY2VudCBHdWl0dG90IHdyb3RlOg0KPiBPbiBXZWQs
+IDI3IE1heSAyMDIwIGF0IDEzOjE3LCBCZW5qYW1pbiBHQUlHTkFSRA0KPiA8YmVuamFtaW4uZ2Fp
+Z25hcmRAc3QuY29tPiB3cm90ZToNCj4+DQo+Pg0KPj4gT24gNS8yNy8yMCAxMjowOSBQTSwgVmFs
+ZW50aW4gU2NobmVpZGVyIHdyb3RlOg0KPj4+IEhpIEJlbmphbWluLA0KPj4+DQo+Pj4gT24gMjYv
+MDUvMjAgMTY6MTYsIEJlbmphbWluIEdhaWduYXJkIHdyb3RlOg0KPj4+PiBBIGZpcnN0IHJvdW5k
+IFsxXSBvZiBkaXNjdXNzaW9ucyBhbmQgc3VnZ2VzdGlvbnMgaGF2ZSBhbHJlYWR5IGJlIGRvbmUg
+b24NCj4+Pj4gdGhpcyBzZXJpZXMgYnV0IHdpdGhvdXQgZm91bmQgYSBzb2x1dGlvbiB0byB0aGUg
+cHJvYmxlbS4gSSByZXNlbmQgaXQgdG8NCj4+Pj4gcHJvZ3Jlc3Mgb24gdGhpcyB0b3BpYy4NCj4+
+Pj4NCj4+PiBBcG9sb2dpZXMgZm9yIHNsZWVwaW5nIG9uIHRoYXQgcHJldmlvdXMgdGhyZWFkLg0K
+Pj4+DQo+Pj4gU28gd2hhdCBoYWQgYmVlbiBzdWdnZXN0ZWQgb3ZlciB0aGVyZSB3YXMgdG8gdXNl
+IHVjbGFtcCB0byBib29zdCB0aGUNCj4+PiBmcmVxdWVuY3kgb2YgdGhlIGhhbmRsaW5nIHRocmVh
+ZDsgaG93ZXZlciBpZiB5b3UgdXNlIHRocmVhZGVkIElSUXMgeW91DQo+Pj4gZ2V0IFJUIHRocmVh
+ZHMsIHdoaWNoIGFscmVhZHkgZ2V0IHRoZSBtYXggZnJlcXVlbmN5IGJ5IGRlZmF1bHQgKGF0IGxl
+YXN0DQo+Pj4gd2l0aCBzY2hlZHV0aWwpLg0KPj4+DQo+Pj4gRG9lcyB0aGF0IG5vdCB3b3JrIGZv
+ciB5b3UsIGFuZCBpZiBzbywgd2h5Pw0KPj4gVGhhdCBkb2Vzbid0IHdvcmsgYmVjYXVzZSBhbG1v
+c3QgZXZlcnl0aGluZyBpcyBkb25lIGJ5IHRoZSBoYXJkd2FyZSBibG9ja3MNCj4+IHdpdGhvdXQg
+Y2hhcmdlIHRoZSBDUFUgc28gdGhlIHRocmVhZCBpc24ndCBydW5uaW5nLiBJIGhhdmUgZG9uZSB0
+aGUNCj4+IHRlc3RzIHdpdGggc2NoZWR1dGlsDQo+PiBhbmQgb25kZW1hbmQgc2NoZWR1bGVyICh3
+aGljaCBpcyB0aGUgb25lIEknbSB0YXJnZXRpbmcpLiBJIGhhdmUgbm8NCj4+IGlzc3VlcyB3aGVu
+IHVzaW5nDQo+PiBwZXJmb3JtYW5jZSBzY2hlZHVsZXIgYmVjYXVzZSBpdCBhbHdheXMga2VlcCB0
+aGUgaGlnaGVzdCBmcmVxdWVuY2llcy4NCj4gSU1ITywgdGhlIG9ubHkgd2F5IHRvIGVuc3VyZSBh
+IG1pbiBmcmVxdWVuY3kgZm9yIGFueXRoaW5nIGVsc2UgdGhhbiBhDQo+IHRocmVhZCBpcyB0byB1
+c2UgZnJlcV9xb3NfYWRkX3JlcXVlc3QoKSBqdXN0IGxpa2UgY3B1ZnJlcSBjb29saW5nDQo+IGRl
+dmljZSBidXQgZm9yIHRoZSBvcHBvc2l0ZSBRb1MuIFRoaXMgY2FuIGJlIGFwcGxpZWQgb25seSBv
+biB0aGUNCj4gZnJlcXVlbmN5IGRvbWFpbiBvZiB0aGUgQ1BVIHdoaWNoIGhhbmRsZXMgdGhlIGlu
+dGVycnVwdC4NCkkgd2lsbCBnaXZlIGEgdHJ5IHdpdGggdGhpcyBpZGVhLg0KVGhhbmtzLg0KPiBI
+YXZlIHlvdSBhbHNvIGNoZWNrZWQgdGhlIHdha2V1cCBsYXRlbmN5IG9mIHlvdXIgaWRsZSBzdGF0
+ZSA/DQpJdCBqdXN0IGNvdWxkIGdvIGluIFdGSSBzbyBsYXRlbmN5IHNob3VsZCBiZSBtaW5pbWFs
+Lg0KPg0KPj4NCj4+Pj4gV2hlbiBzdGFydCBzdHJlYW1pbmcgZnJvbSB0aGUgc2Vuc29yIHRoZSBD
+UFUgbG9hZCBjb3VsZCByZW1haW4gdmVyeSBsb3cNCj4+Pj4gYmVjYXVzZSBhbG1vc3QgYWxsIHRo
+ZSBjYXB0dXJlIHBpcGVsaW5lIGlzIGRvbmUgaW4gaGFyZHdhcmUgKGkuZS4gd2l0aG91dA0KPj4+
+PiB1c2luZyB0aGUgQ1BVKSBhbmQgbGV0IGJlbGlldmUgdG8gY3B1ZnJlcSBnb3Zlcm5vciB0aGF0
+IGl0IGNvdWxkIHVzZSBsb3dlcg0KPj4+PiBmcmVxdWVuY2llcy4gSWYgdGhlIGdvdmVybm9yIGRl
+Y2lkZXMgdG8gdXNlIGEgdG9vIGxvdyBmcmVxdWVuY3kgdGhhdA0KPj4+PiBiZWNvbWVzIGEgcHJv
+YmxlbSB3aGVuIHdlIG5lZWQgdG8gYWNrbm93bGVkZ2UgdGhlIGludGVycnVwdCBkdXJpbmcgdGhl
+DQo+Pj4+IGJsYW5raW5nIHRpbWUuDQo+Pj4+IFRoZSBkZWxheSB0byBhY2sgdGhlIGludGVycnVw
+dCBhbmQgcGVyZm9ybSBhbGwgdGhlIG90aGVyIGFjdGlvbnMgYmVmb3JlDQo+Pj4+IHRoZSBuZXh0
+IGZyYW1lIGlzIHZlcnkgc2hvcnQgYW5kIGRvZXNuJ3QgYWxsb3cgdG8gdGhlIGNwdWZyZXEgZ292
+ZXJub3IgdG8NCj4+Pj4gcHJvdmlkZSB0aGUgcmVxdWlyZWQgYnVyc3Qgb2YgcG93ZXIuIFRoYXQg
+bGVkIHRvIGRyb3AgdGhlIGhhbGYgb2YgdGhlIGZyYW1lcy4NCj4+Pj4NCj4+Pj4gVG8gYXZvaWQg
+dGhpcyBwcm9ibGVtLCBEQ01JIGRyaXZlciBpbmZvcm1zIHRoZSBjcHVmcmVxIGdvdmVybm9ycyBi
+eSBhZGRpbmcNCj4+Pj4gYSBjcHVmcmVxIG1pbmltdW0gbG9hZCBRb1MgcmVzcXVlc3QuDQo+Pj4+
+DQo+Pj4+IEJlbmphbWluDQo+Pj4+DQo+Pj4+IFsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAy
+MC80LzI0LzM2MA0KPj4+Pg0KPj4+PiBCZW5qYW1pbiBHYWlnbmFyZCAoMyk6DQo+Pj4+ICAgICBQ
+TTogUW9TOiBJbnRyb2R1Y2UgY3B1ZnJlcSBtaW5pbXVtIGxvYWQgUW9TDQo+Pj4+ICAgICBjcHVm
+cmVxOiBnb3Zlcm5vcjogVXNlIG1pbmltdW0gbG9hZCBRb1MNCj4+Pj4gICAgIG1lZGlhOiBzdG0z
+Mi1kY21pOiBJbmZvcm0gY3B1ZnJlcSBnb3Zlcm5vcnMgYWJvdXQgY3B1IGxvYWQgbmVlZHMNCj4+
+Pj4NCj4+Pj4gICAgZHJpdmVycy9jcHVmcmVxL2NwdWZyZXFfZ292ZXJub3IuYyAgICAgICAgfCAg
+IDUgKw0KPj4+PiAgICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYyB8
+ICAgOCArKw0KPj4+PiAgICBpbmNsdWRlL2xpbnV4L3BtX3Fvcy5oICAgICAgICAgICAgICAgICAg
+ICB8ICAxMiArKw0KPj4+PiAgICBrZXJuZWwvcG93ZXIvcW9zLmMgICAgICAgICAgICAgICAgICAg
+ICAgICB8IDIxMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4+Pj4gICAgNCBmaWxl
+cyBjaGFuZ2VkLCAyMzggaW5zZXJ0aW9ucygrKQ0K
