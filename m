@@ -2,178 +2,69 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCE6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 968DA20723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0250D20723
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgE0GSV convert rfc822-to-8bit (ORCPT
+        id S1728098AbgE0GTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:18:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47639 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0GST (ORCPT
+        Wed, 27 May 2020 02:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0GTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:18:19 -0400
-Received: from mail-pf1-f198.google.com ([209.85.210.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jdpOK-0004W6-1W
-        for linux-kernel@vger.kernel.org; Wed, 27 May 2020 06:18:16 +0000
-Received: by mail-pf1-f198.google.com with SMTP id i6so18804922pfg.20
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:18:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=vyY8c2L/LhgRPKf+Jdno0CTyY7OpU2lIFU0hqsnB65Y=;
-        b=R4x7ujZidhQ9tSVjU7ZNajcxG1DKRs2ILHlFNUr3dsosLG1gbTBUSLMgmggWZAUtdH
-         HezCAzJtzNbnWZacu6JN+BzP6cVxrIN6t58MxDjAyQj6iYICf6eWGfJ9sBzMoI8lmGPt
-         Y8phA4BZ+pATyAo8Y8JZCSPQYtwfKRe7s1C9BlmzMV7WMbPHcuAvAxooRoLy72Fzj9EH
-         zEqcxtFk8InN1A1CVLycekIVZR1e1C1jc10yXUwbx+2rP29GVK4ctzQ40gepIHqcqEp2
-         P3DEu/tFj54SpWOBc2l1VnCuyQhYJccvqOerqps4D5COqWvBnoYKoTwGbS3Zf7E/5FjA
-         Xiwg==
-X-Gm-Message-State: AOAM533wvWakAEz7JYdkwFPhmz6p4swmYnLbtkd7ldBqd87zz8uYI21i
-        CBoL2LD6sPwCtECigtMH/LsERTHgsrXR+HcNrlBi2g2QKqxStGWxMarE+wzS/yVBSnxVCBX3CCT
-        yaTxpkBQ7VMP1wpSI9TLJifHdjvRNHrWgsXOoWk5NVw==
-X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr4462420plz.179.1590560294556;
-        Tue, 26 May 2020 23:18:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwazWv37SfcUrKOPhNN5aIAaxE6SHyIu4E4zHD4p5MX3syOTTwgsYE/LwqAmCBsDBLgEfTX2Q==
-X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr4462406plz.179.1590560294200;
-        Tue, 26 May 2020 23:18:14 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id v22sm1195350pfu.172.2020.05.26.23.18.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 23:18:13 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] HID: multitouch: enable multi-input as a quirk for some
- devices
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
-Date:   Wed, 27 May 2020 14:18:10 +0800
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:INTEL INTEGRATED SENSOR HUB DRIVER" 
-        <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <27B6F419-A68E-459D-AB6B-7BF2D935C6E0@canonical.com>
-References: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        Wed, 27 May 2020 02:19:01 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC09CC061A0F;
+        Tue, 26 May 2020 23:19:01 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9CD37127F35C6;
+        Tue, 26 May 2020 23:19:00 -0700 (PDT)
+Date:   Tue, 26 May 2020 23:18:59 -0700 (PDT)
+Message-Id: <20200526.231859.398097568630300979.davem@davemloft.net>
+To:     alexander.sverdlin@nokia.com
+Cc:     netdev@vger.kernel.org, edumazet@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] macvlan: Skip loopback packets in RX handler
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200526122751.409917-1-alexander.sverdlin@nokia.com>
+References: <20200526122751.409917-1-alexander.sverdlin@nokia.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 26 May 2020 23:19:00 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexander A Sverdlin <alexander.sverdlin@nokia.com>
+Date: Tue, 26 May 2020 14:27:51 +0200
 
+> From: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+> 
+> Ignore loopback-originatig packets soon enough and don't try to process L2
+> header where it doesn't exist. The very similar br_handle_frame() in bridge
+> code performs exactly the same check.
+> 
+> This is an example of such ICMPv6 packet:
+ ...
+> Call Trace, how it happens exactly:
+>  ...
+>  macvlan_handle_frame+0x321/0x425 [macvlan]
+>  ? macvlan_forward_source+0x110/0x110 [macvlan]
+>  __netif_receive_skb_core+0x545/0xda0
+ ...
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
 
-> On May 26, 2020, at 23:07, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> 
-> Two touchpad/trackstick combos are currently not behaving properly.
-> They define a mouse emulation collection, as per Win8 requirements,
-> but also define a separate mouse collection for the trackstick.
-> 
-> The way the kernel currently treat the collections is that it
-> merges both in one device. However, given that the first mouse
-> collection already defines X,Y and left, right buttons, when
-> mapping the events from the second mouse collection, hid-multitouch
-> sees that these events are already mapped, and simply ignores them.
-> 
-> To be able to report events from the tracktick, add a new quirked
-> class for it, and manually add the 2 devices we know about.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=207235
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
-Tested-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-> ---
-> drivers/hid/hid-multitouch.c | 26 ++++++++++++++++++++++++++
-> 1 file changed, 26 insertions(+)
-> 
-> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> index 03c720b47306..39e4da7468e1 100644
-> --- a/drivers/hid/hid-multitouch.c
-> +++ b/drivers/hid/hid-multitouch.c
-> @@ -69,6 +69,7 @@ MODULE_LICENSE("GPL");
-> #define MT_QUIRK_ASUS_CUSTOM_UP		BIT(17)
-> #define MT_QUIRK_WIN8_PTP_BUTTONS	BIT(18)
-> #define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
-> +#define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
-> 
-> #define MT_INPUTMODE_TOUCHSCREEN	0x02
-> #define MT_INPUTMODE_TOUCHPAD		0x03
-> @@ -189,6 +190,7 @@ static void mt_post_parse(struct mt_device *td, struct mt_application *app);
-> #define MT_CLS_WIN_8				0x0012
-> #define MT_CLS_EXPORT_ALL_INPUTS		0x0013
-> #define MT_CLS_WIN_8_DUAL			0x0014
-> +#define MT_CLS_WIN_8_FORCE_MULTI_INPUT		0x0015
-> 
-> /* vendor specific classes */
-> #define MT_CLS_3M				0x0101
-> @@ -279,6 +281,15 @@ static const struct mt_class mt_classes[] = {
-> 			MT_QUIRK_CONTACT_CNT_ACCURATE |
-> 			MT_QUIRK_WIN8_PTP_BUTTONS,
-> 		.export_all_inputs = true },
-> +	{ .name = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-> +		.quirks = MT_QUIRK_ALWAYS_VALID |
-> +			MT_QUIRK_IGNORE_DUPLICATES |
-> +			MT_QUIRK_HOVERING |
-> +			MT_QUIRK_CONTACT_CNT_ACCURATE |
-> +			MT_QUIRK_STICKY_FINGERS |
-> +			MT_QUIRK_WIN8_PTP_BUTTONS |
-> +			MT_QUIRK_FORCE_MULTI_INPUT,
-> +		.export_all_inputs = true },
-> 
-> 	/*
-> 	 * vendor specific classes
-> @@ -1714,6 +1725,11 @@ static int mt_probe(struct hid_device *hdev, const struct hid_device_id *id)
-> 	if (id->group != HID_GROUP_MULTITOUCH_WIN_8)
-> 		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
-> 
-> +	if (mtclass->quirks & MT_QUIRK_FORCE_MULTI_INPUT) {
-> +		hdev->quirks &= ~HID_QUIRK_INPUT_PER_APP;
-> +		hdev->quirks |= HID_QUIRK_MULTI_INPUT;
-> +	}
-> +
-> 	timer_setup(&td->release_timer, mt_expired_timeout, 0);
-> 
-> 	ret = hid_parse(hdev);
-> @@ -1926,6 +1942,11 @@ static const struct hid_device_id mt_devices[] = {
-> 		MT_USB_DEVICE(USB_VENDOR_ID_DWAV,
-> 			USB_DEVICE_ID_DWAV_EGALAX_MULTITOUCH_C002) },
-> 
-> +	/* Elan devices */
-> +	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-> +		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-> +			USB_VENDOR_ID_ELAN, 0x313a) },
-> +
-> 	/* Elitegroup panel */
-> 	{ .driver_data = MT_CLS_SERIAL,
-> 		MT_USB_DEVICE(USB_VENDOR_ID_ELITEGROUP,
-> @@ -2056,6 +2077,11 @@ static const struct hid_device_id mt_devices[] = {
-> 		MT_USB_DEVICE(USB_VENDOR_ID_STANTUM_STM,
-> 			USB_DEVICE_ID_MTP_STM)},
-> 
-> +	/* Synaptics devices */
-> +	{ .driver_data = MT_CLS_WIN_8_FORCE_MULTI_INPUT,
-> +		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-> +			USB_VENDOR_ID_SYNAPTICS, 0xce08) },
-> +
-> 	/* TopSeed panels */
-> 	{ .driver_data = MT_CLS_TOPSEED,
-> 		MT_USB_DEVICE(USB_VENDOR_ID_TOPSEED2,
-> -- 
-> 2.25.1
-> 
-
+Applied to net-next, thanks.
