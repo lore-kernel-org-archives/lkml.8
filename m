@@ -2,103 +2,74 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8444CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6075C206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590578938;
-	bh=9f/lRzafJFrJXPhrHpqb1P487oTDycX7ANTY/3w2low=;
-	h=In-Reply-To:References:From:Date:Subject:To:Cc:List-ID:From;
-	b=LooaggGUnyUpk7PzbqcqBHx4q+kexdiyGNqrBc84vtPfGc09HVkbfXW+lYF/7ALP9
-	 SI/4nmim3vw2u6yzZ7F+B6iX/CWxudZ5dT54VB0QViJEPhPQjdqGBV8VypbYdPJIC8
-	 U/aXHOboTy+hrrsDNMtJW4K1Wnls7uTjLqLMRXJU=
+	by mail.kernel.org (Postfix) with ESMTP id BAB9B207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgE0L25 (ORCPT
+        id S1728851AbgE0L3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725766AbgE0L25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:28:57 -0400
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80A27208C3;
-        Wed, 27 May 2020 11:28:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590578936;
-        bh=9f/lRzafJFrJXPhrHpqb1P487oTDycX7ANTY/3w2low=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=ZaN7XVSQ4RPZG0KbPIpeSN7Voo/9jycJMTHX6d9WR/iviuDdPQPGH1OyWXYQT792d
-         7aVYgRM7VtT6CDfUnIiCQDp2pYBrui++m6tCg3gkhfCv5Kv9ddxwYhzxptoWre91tt
-         nAp/cmgfRdHu5B8Azsxql6o3LKJjdnzWKVPT4xqY=
-Received: by mail-oo1-f42.google.com with SMTP id a83so4907403oob.9;
-        Wed, 27 May 2020 04:28:56 -0700 (PDT)
-X-Gm-Message-State: AOAM530dvrMVbD3PViuQ5YOy+8Bb4zvabJV8/NElnX15K7Gfn7bJgP9F
-        g4L5296ySwQER8bb6sGK2mDvb+xIdWfDB2xXibU=
-X-Google-Smtp-Source: ABdhPJxL4QyLSRiXgww4FQ3grAmkFtEQXMWXQUZG/8ZuPKRGO2M5716GycRTSDB51t/qlLqcd0i19z0MUC2gLIEpwQM=
-X-Received: by 2002:a05:6820:28a:: with SMTP id q10mr2723842ood.79.1590578935739;
- Wed, 27 May 2020 04:28:55 -0700 (PDT)
+        Wed, 27 May 2020 07:29:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57255 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbgE0L3b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:29:31 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jduFO-0000sM-Co; Wed, 27 May 2020 11:29:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ayush Sawal <ayush.sawal@chelsio.com>,
+        Vinay Kumar Yadav <vinay.yadav@chelsio.com>,
+        Rohit Maheshwari <rohitm@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: chelsio: remove redundant premature assignment to iv
+Date:   Wed, 27 May 2020 12:29:22 +0100
+Message-Id: <20200527112922.171745-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Received: by 2002:ac9:1d8:0:0:0:0:0 with HTTP; Wed, 27 May 2020 04:28:54 -0700 (PDT)
-In-Reply-To: <d0d2e4b3-436e-3bad-770c-21c9cbddf80e@gmail.com>
-References: <20200525115052.19243-1-kohada.t2@gmail.com> <CGME20200525115121epcas1p2843be2c4af35d5d7e176c68af95052f8@epcas1p2.samsung.com>
- <20200525115052.19243-4-kohada.t2@gmail.com> <00d301d6332f$d4a52300$7def6900$@samsung.com>
- <d0d2e4b3-436e-3bad-770c-21c9cbddf80e@gmail.com>
-From:   Namjae Jeon <linkinjeon@kernel.org>
-Date:   Wed, 27 May 2020 20:28:54 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
-Message-ID: <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
-Subject: Re: [PATCH 4/4] exfat: standardize checksum calculation
-To:     Tetsuhiro Kohada <kohada.t2@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
-        kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-05-27 16:39 GMT+09:00, Tetsuhiro Kohada <kohada.t2@gmail.com>:
-> Thank you for your comment.
->
->> I can not apply this patch to exfat dev tree. Could you please check it ?
->> patching file fs/exfat/dir.c
->> Hunk #1 succeeded at 491 (offset -5 lines).
->> Hunk #2 succeeded at 500 (offset -5 lines).
->> Hunk #3 succeeded at 508 (offset -5 lines).
->> Hunk #4 FAILED at 600.
->> Hunk #5 succeeded at 1000 (offset -47 lines).
->> 1 out of 5 hunks FAILED -- saving rejects to file fs/exfat/dir.c.rej
->> patching file fs/exfat/exfat_fs.h
->> Hunk #1 succeeded at 137 (offset -2 lines).
->> Hunk #2 succeeded at 512 (offset -3 lines).
->> patching file fs/exfat/misc.c
->> patching file fs/exfat/nls.c
->
-> II tried applying patch to dev-tree (4c4dbb6ad8e8).
-> -The .patch file I sent
-> -mbox file downloaded from archive
-> But I can't reproduce the error. (Both succeed)
-> How do you reproduce the error?
-I tried to appy your patches in the following order.
-1. [PATCH] exfat: optimize dir-cache
-2. [PATCH 1/4] exfat: redefine PBR as boot_sector
-3. [PATCH 2/4] exfat: separate the boot sector analysis
-4. [PATCH 3/4] exfat: add boot region verification
-5. [PATCH 4/4] exfat: standardize checksum calculation
+From: Colin Ian King <colin.king@canonical.com>
 
-Thanks!
->
-> BR
->
+Variable iv is being assigned twice with the same value, the first
+assignment is redundant and can be removed and instead keep the
+latter assignment of iv as it is closer to the point it is being
+used.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/crypto/chelsio/chcr_ipsec.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/crypto/chelsio/chcr_ipsec.c b/drivers/crypto/chelsio/chcr_ipsec.c
+index af961dcd317b..f9ad8c93e5ff 100644
+--- a/drivers/crypto/chelsio/chcr_ipsec.c
++++ b/drivers/crypto/chelsio/chcr_ipsec.c
+@@ -398,7 +398,6 @@ inline void *copy_esn_pktxt(struct sk_buff *skb,
+ 	memset(pos, 0, len);
+ 	aadiv = (struct chcr_ipsec_aadiv *)pos;
+ 	esphdr = (struct ip_esp_hdr *)skb_transport_header(skb);
+-	iv = skb_transport_header(skb) + sizeof(struct ip_esp_hdr);
+ 	xo = xfrm_offload(skb);
+ 
+ 	aadiv->spi = (esphdr->spi);
+-- 
+2.25.1
+
