@@ -2,103 +2,117 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B74C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9448F20EDD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F31E2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:57:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b+B6T+tB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388737AbgE0R4Z (ORCPT
+        id S2403902AbgE0R5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:56:25 -0400
-Received: from mga05.intel.com ([192.55.52.43]:56350 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387653AbgE0R4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:56:24 -0400
-IronPort-SDR: yy5htggTAGCEhGJELTFS7dIFq8V4VKvkHmfwz8su24INBMqkFXT+AGlHty+XZcjeEVNYgDGwmV
- emtC9qeIM3ZQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 10:56:24 -0700
-IronPort-SDR: BUCmUzmT5hqdJlG/DUNApFH70adMolehOUn/c+8TgUocuItasvW4AvY+/8Pri0JuJK2agIQ2qK
- 424U6mDOdreQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
-   d="scan'208";a="255540259"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 10:56:21 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1je0Hw-009GwD-0t; Wed, 27 May 2020 20:56:24 +0300
-Date:   Wed, 27 May 2020 20:56:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200527175624.GT1634618@smile.fi.intel.com>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
- <20200527171204.GA2348490@bogus>
- <20200527171841.am2iaynff243xoep@mobilestation>
+        Wed, 27 May 2020 13:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387653AbgE0R5G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:57:06 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104C9C03E97D;
+        Wed, 27 May 2020 10:57:06 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id z13so20366038ljn.7;
+        Wed, 27 May 2020 10:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=l4NpTDexV8NESh3eG0B8gFwKIHqu0TSUXXYRfhGYw7Y=;
+        b=b+B6T+tBvfzagYHPLXBQNz8SCjxiQkUWkDAaKG0p0w291UMQEAvZHxegetvnU3L7e+
+         B05xBzx9hfsr/9mYjUBl3SCsr4UsO4gBKG9HiLRBHerPk7RI+0YVH1nIfhvgZwqSV0gn
+         IWm0mzjFkedkZL8TjkmrIXq1Xow47cv6BtTlJlDhczotmg07MPPcXNKiA4vtl5H/gPeh
+         D06dSyaRBKsTEcLilqgxHYGw+y0ivMTHkKu4MPXa7fJmYW/9IgcwJAtoCJyvl3bOQCHb
+         vzXvrjLWQ6mx9XFAT4j45AkHTyVQLLZ3kP0wCCmydB9x1eO4pCU+ImVKjaebHXCvPjSu
+         rMOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=l4NpTDexV8NESh3eG0B8gFwKIHqu0TSUXXYRfhGYw7Y=;
+        b=CmblZwB2HwxXrK2vnf7/WVzeJiAF+JUOe0yh3x+KHaJN/7yq/bF0FHUNaApOdxa9Cf
+         QbIM8qZhDj+F/EcOqWDRMcGNmkeAp3eIYqR9+/yaxuBasjsRoMTeDhOOSN4KGrV5mPCQ
+         //+I9H5dH4sJDVNjUzhH/kYyeqqX5QXX8jBVUE01zgHbc9IBg2XS65XWqjPKQEmcEvZ5
+         MurKrn3I1ITyGlth5pGniuZfQCa8o+lDqqOwG+tcSMkMclbDAkUseLzcDzVA2qQaZBt/
+         zUPiCuS2twkOensfx76h7M6PsQ1yzbjUkY1aPKTYwB/IqoFBFGGN7xeGpLOLJsmLlNIK
+         brdQ==
+X-Gm-Message-State: AOAM531OgLOlt/1aH9tzzMXmIrivRIbFjNVrJpdQ2cJha32OKsLvCHjf
+        /LRxH/ny58TJD684vJ51JwpxpsKg
+X-Google-Smtp-Source: ABdhPJyqLNLcb7qoReLMeZMoVIOzAmQUlY1fXb7b0/Yec6i4WzKF+DVENYGIIo/mdHTuhx2vw5WHiA==
+X-Received: by 2002:a2e:860f:: with SMTP id a15mr3322870lji.197.1590602224226;
+        Wed, 27 May 2020 10:57:04 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
+        by smtp.googlemail.com with ESMTPSA id s9sm819212ljc.43.2020.05.27.10.57.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 10:57:03 -0700 (PDT)
+Subject: Re: [PATCH v1 2/5] clk: Introduce clk_round_rate_unboundly()
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200330231617.17079-1-digetx@gmail.com>
+ <20200330231617.17079-3-digetx@gmail.com>
+ <159055894944.88029.2029223648098859689@swboyd.mtv.corp.google.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3fcac59c-7a37-d4af-9d12-710d7af05845@gmail.com>
+Date:   Wed, 27 May 2020 20:57:01 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <159055894944.88029.2029223648098859689@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200527171841.am2iaynff243xoep@mobilestation>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
-> On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
-> > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
-> > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> > > i2c "reg" property. If it is the compiler will print a warning:
-> > > 
-> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > > 
-> > > In order to silence dtc up let's discard the flag from the DW I2C DT
-> > > binding example for now. Just revert this commit when dtc is fixed.
-
-> > >        eeprom@64 {
-> > >          compatible = "linux,slave-24c02";
-> > > -        reg = <0x40000064>;
-> > > +        reg = <0x64>;
-> > 
-> > But the compatible is a slave, so you need an example with a different 
-> > device.
+27.05.2020 08:55, Stephen Boyd пишет:
+> Quoting Dmitry Osipenko (2020-03-30 16:16:14)
+>> In same cases it may be desired to round clock's rate without taking into
+>> account current min/max requests made by the clock's users. One example is
+>> building up OPP table based on a possible clock rates.
 > 
+> Shouldn't the OPP table come from firmware/DT? I don't quite understand
+> why we're generating OPP tables on top of the rate rounding API.
+> clk_round_rate() is supposed to tell us what rate we'll get if we call
+> clk_set_rate() with the same arguments. An unboundly version of that
+> doesn't make sense. 
 
-> Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+The OPP should come from the DT, but unfortunately DT and Tegra's
+devfreq driver wasn't designed like that from the start, so it will take
+some extra effort to re-do it properly now. I wanted to postpone that
+effort a tad and get at least the basics upstreamed for the starter.
 
-But how it will be different to the another slave connected to the master?
+> I wonder if perhaps the clk provider should be populating OPP tables in
+> this case? Or basically anything besides adding another clk consumer API
+> to solve this problem. Who is the caller? Something later in this
+> series?
 
-This example is specifically to show that DesingWare I�C controller may be
-switched to slave mode.
+I'll try to add a proper OPP table with freqs and voltages, will see how
+it goes. We will need to do it sooner or later anyways. So perhaps it's
+fine to drop the current approach with the clk_round_rate_unboundly()
+and re-focus on a proper OPP implementation.
 
-> > >        };
-> > >      };
-> > >    - |
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thank you for getting back and replying to this topic :)
