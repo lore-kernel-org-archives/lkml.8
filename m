@@ -2,273 +2,128 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CACCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EFAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33CD720C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00BF2206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:04:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F+jm7JYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgE0ODL (ORCPT
+        id S1730332AbgE0OES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:03:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:22382 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbgE0ODL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:03:11 -0400
-IronPort-SDR: r/4ATgdkcr+ps5SIEpyqO27fq5WSHIVyU4BgjAHX8va7g/C1sMOeuefScOSM/PNe37b+HqNROX
- yTmM1vPhdQfw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 07:03:03 -0700
-IronPort-SDR: kVfTv44ByvoiRwTa9ezty4HukQfhnC4Cj0DDjAdOOFEVuPCx1YSoGBs80XDRBLcG6hd4Kd8HXV
- /q0Dm8tUY/hA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="345541183"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 07:03:00 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdwe7-009EtN-9L; Wed, 27 May 2020 17:03:03 +0300
-Date:   Wed, 27 May 2020 17:03:03 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 11/11] i2c: designware: Add Baikal-T1 System I2C
- support
-Message-ID: <20200527140303.GC1634618@smile.fi.intel.com>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-12-Sergey.Semin@baikalelectronics.ru>
+        Wed, 27 May 2020 10:04:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52786 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730245AbgE0OES (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:04:18 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RDvb2N196415;
+        Wed, 27 May 2020 14:03:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=Z8LSjtyRdkQJDOv1CQQhH2cz7RTrtGNgrKwq0zh9eJg=;
+ b=F+jm7JYqK+JTri+qgXMbnuD5RBtxa4/C5Oz9C4Yz6EoaSBWJit0+eiOsxQBSSEeO8x9d
+ PGgI7su4bw2GT9hSdOWgsqDNCZ6WmypKBLZbxeTxZ9ZLQZ10TzPfu+qNId/0jSVUBDqw
+ KOHwQRHqVxvoBGNABhEENWuASChrB/HFeTC35QTaDN4XJPW+0ok4WD6oj4gbEZlEgtf+
+ 81kVUkrBe29mRQ8iKHqhglk4/FymiaPgcRQpSiI9zpkTvzriJv59Gq9zj0vv6VzHNBSp
+ 8BRp8CumKkeuvVpYhdl8PNSebv4TFb3OUfmanhTPU9uZ52spA053ITjLhCuE04b8PON8 pA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 316u8qymjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 27 May 2020 14:03:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04RE3ZUx174350;
+        Wed, 27 May 2020 14:03:35 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 317j5rxyj4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 27 May 2020 14:03:21 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04RE3JDK007580;
+        Wed, 27 May 2020 14:03:19 GMT
+Received: from [192.168.1.68] (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 27 May 2020 07:03:18 -0700
+Subject: Re: [PATCH 4.4 26/65] sched/fair, cpumask: Export for_each_cpu_wrap()
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        nobuhiro1.iwamatsu@toshiba.co.jp
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        peterz@infradead.org, lvenanci@redhat.com,
+        torvalds@linux-foundation.org, efault@gmx.de, riel@redhat.com,
+        tglx@linutronix.de, lwang@redhat.com, mingo@kernel.org,
+        sashal@kernel.org
+References: <20200526183905.988782958@linuxfoundation.org>
+ <20200526183915.976645661@linuxfoundation.org>
+ <OSBPR01MB29836310986EC6E2E132A02F92B10@OSBPR01MB2983.jpnprd01.prod.outlook.com>
+ <20200527080944.GB119903@kroah.com>
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+Message-ID: <ee459439-7f33-162f-83de-5106d5125e63@oracle.com>
+Date:   Wed, 27 May 2020 10:03:16 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527120111.5781-12-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200527080944.GB119903@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=2
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005270107
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9633 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=2
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:01:11PM +0300, Serge Semin wrote:
-> Baikal-T1 System Controller is equipped with a dedicated I2C Controller
-> which functionality is based on the DW APB I2C IP-core, the only
-> difference in a way it' registers are accessed. There are three access
-> register provided in the System Controller registers map, which indirectly
-> address the normal DW APB I2C registers space. So in order to have the
-> Baikal-T1 System I2C Controller supported by the common DW APB I2C driver
-> we created a dedicated Dw I2C controller model quirk, which retrieves the
-> syscon regmap from the parental dt node and creates a new regmap based on
-> it.
-
-Yes, you see how cool it is now! FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
+On 5/27/20 4:09 AM, Greg KH wrote:
+> On Wed, May 27, 2020 at 07:50:56AM +0000, nobuhiro1.iwamatsu@toshiba.co.jp wrote:
+>>> Subject: [PATCH 4.4 26/65] sched/fair, cpumask: Export for_each_cpu_wrap()	
+...
+>>
+>> This commit also needs the following commits:
+>>
+>> commit d207af2eab3f8668b95ad02b21930481c42806fd
+>> Author: Michael Kelley <mhkelley@outlook.com>
+>> Date:   Wed Feb 14 02:54:03 2018 +0000
+>>
+>>     cpumask: Make for_each_cpu_wrap() available on UP as well
+>>     
+>>     for_each_cpu_wrap() was originally added in the #else half of a
+>>     large "#if NR_CPUS == 1" statement, but was omitted in the #if
+>>     half.  This patch adds the missing #if half to prevent compile
+>>     errors when NR_CPUS is 1.
+>>     
+>>     Reported-by: kbuild test robot <fengguang.wu@intel.com>
+>>     Signed-off-by: Michael Kelley <mhkelley@outlook.com>
+>>     Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>>     Cc: Peter Zijlstra <peterz@infradead.org>
+>>     Cc: Thomas Gleixner <tglx@linutronix.de>
+>>     Cc: kys@microsoft.com
+>>     Cc: martin.petersen@oracle.com
+>>     Cc: mikelley@microsoft.com
+>>     Fixes: c743f0a5c50f ("sched/fair, cpumask: Export for_each_cpu_wrap()")
+>>     Link: http://lkml.kernel.org/r/SN6PR1901MB2045F087F59450507D4FCC17CBF50@SN6PR1901MB2045.namprd19.prod.outlook.com
+>>     Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>>
+>> Please apply this commit.
 > 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch, which has been created due to declining the
->   glue-layer approach.
-> 
-> Changelog v4:
-> - Use PTR_ERR_OR_ZERO() helper in the bt1_i2c_request_regs() method.
-> ---
->  drivers/i2c/busses/Kconfig                  |  3 +-
->  drivers/i2c/busses/i2c-designware-core.h    |  3 +
->  drivers/i2c/busses/i2c-designware-platdrv.c | 78 ++++++++++++++++++++-
->  3 files changed, 81 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-> index 259e2325712a..0cf7aea30138 100644
-> --- a/drivers/i2c/busses/Kconfig
-> +++ b/drivers/i2c/busses/Kconfig
-> @@ -541,8 +541,9 @@ config I2C_DESIGNWARE_SLAVE
->  
->  config I2C_DESIGNWARE_PLATFORM
->  	tristate "Synopsys DesignWare Platform"
-> -	select I2C_DESIGNWARE_CORE
->  	depends on (ACPI && COMMON_CLK) || !ACPI
-> +	select I2C_DESIGNWARE_CORE
-> +	select MFD_SYSCON if MIPS_BAIKAL_T1
->  	help
->  	  If you say yes to this option, support will be included for the
->  	  Synopsys DesignWare I2C adapter.
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index f5bbe3d6bcf8..556673a1f61b 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -183,6 +183,7 @@ struct reset_control;
->   * struct dw_i2c_dev - private i2c-designware data
->   * @dev: driver model device node
->   * @map: IO registers map
-> + * @sysmap: System controller registers map
->   * @base: IO registers pointer
->   * @ext: Extended IO registers pointer
->   * @cmd_complete: tx completion indicator
-> @@ -235,6 +236,7 @@ struct reset_control;
->  struct dw_i2c_dev {
->  	struct device		*dev;
->  	struct regmap		*map;
-> +	struct regmap		*sysmap;
->  	void __iomem		*base;
->  	void __iomem		*ext;
->  	struct completion	cmd_complete;
-> @@ -290,6 +292,7 @@ struct dw_i2c_dev {
->  #define ACCESS_NO_IRQ_SUSPEND	0x00000002
->  
->  #define MODEL_MSCC_OCELOT	0x00000100
-> +#define MODEL_BAIKAL_BT1	0x00000200
->  #define MODEL_MASK		0x00000f00
->  
->  int i2c_dw_init_regmap(struct dw_i2c_dev *dev);
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index 061c8d506c7c..d9c5337bb22b 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -18,6 +18,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_data/i2c-designware.h>
-> @@ -25,6 +26,7 @@
->  #include <linux/pm.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/property.h>
-> +#include <linux/regmap.h>
->  #include <linux/reset.h>
->  #include <linux/sched.h>
->  #include <linux/slab.h>
-> @@ -58,6 +60,63 @@ MODULE_DEVICE_TABLE(acpi, dw_i2c_acpi_match);
->  #endif
->  
->  #ifdef CONFIG_OF
-> +#define BT1_I2C_CTL			0x100
-> +#define BT1_I2C_CTL_ADDR_MASK		GENMASK(7, 0)
-> +#define BT1_I2C_CTL_WR			BIT(8)
-> +#define BT1_I2C_CTL_GO			BIT(31)
-> +#define BT1_I2C_DI			0x104
-> +#define BT1_I2C_DO			0x108
-> +
-> +static int bt1_i2c_read(void *context, unsigned int reg, unsigned int *val)
-> +{
-> +	struct dw_i2c_dev *dev = context;
-> +	int ret;
-> +
-> +	/*
-> +	 * Note these methods shouldn't ever fail because the system controller
-> +	 * registers are memory mapped. We check the return value just in case.
-> +	 */
-> +	ret = regmap_write(dev->sysmap, BT1_I2C_CTL,
-> +			   BT1_I2C_CTL_GO | (reg & BT1_I2C_CTL_ADDR_MASK));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_read(dev->sysmap, BT1_I2C_DO, val);
-> +}
-> +
-> +static int bt1_i2c_write(void *context, unsigned int reg, unsigned int val)
-> +{
-> +	struct dw_i2c_dev *dev = context;
-> +	int ret;
-> +
-> +	ret = regmap_write(dev->sysmap, BT1_I2C_DI, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_write(dev->sysmap, BT1_I2C_CTL,
-> +		BT1_I2C_CTL_GO | BT1_I2C_CTL_WR | (reg & BT1_I2C_CTL_ADDR_MASK));
-> +}
-> +
-> +static struct regmap_config bt1_i2c_cfg = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-> +	.reg_read = bt1_i2c_read,
-> +	.reg_write = bt1_i2c_write,
-> +	.max_register = DW_IC_COMP_TYPE
-> +};
-> +
-> +static int bt1_i2c_request_regs(struct dw_i2c_dev *dev)
-> +{
-> +	dev->sysmap = syscon_node_to_regmap(dev->dev->of_node->parent);
-> +	if (IS_ERR(dev->sysmap))
-> +		return PTR_ERR(dev->sysmap);
-> +
-> +	dev->map = devm_regmap_init(dev->dev, NULL, dev, &bt1_i2c_cfg);
-> +	return PTR_ERR_OR_ZERO(dev->map);
-> +}
-> +
->  #define MSCC_ICPU_CFG_TWI_DELAY		0x0
->  #define MSCC_ICPU_CFG_TWI_DELAY_ENABLE	BIT(0)
->  #define MSCC_ICPU_CFG_TWI_SPIKE_FILTER	0x4
-> @@ -90,10 +149,16 @@ static int dw_i2c_of_configure(struct platform_device *pdev)
->  static const struct of_device_id dw_i2c_of_match[] = {
->  	{ .compatible = "snps,designware-i2c", },
->  	{ .compatible = "mscc,ocelot-i2c", .data = (void *)MODEL_MSCC_OCELOT },
-> +	{ .compatible = "baikal,bt1-sys-i2c", .data = (void *)MODEL_BAIKAL_BT1 },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dw_i2c_of_match);
->  #else
-> +static int bt1_i2c_request_regs(struct dw_i2c_dev *dev)
-> +{
-> +	return -ENODEV;
-> +}
-> +
->  static inline int dw_i2c_of_configure(struct platform_device *pdev)
->  {
->  	return -ENODEV;
-> @@ -111,10 +176,19 @@ static void dw_i2c_plat_pm_cleanup(struct dw_i2c_dev *dev)
->  static int dw_i2c_plat_request_regs(struct dw_i2c_dev *dev)
->  {
->  	struct platform_device *pdev = to_platform_device(dev->dev);
-> +	int ret;
->  
-> -	dev->base = devm_platform_ioremap_resource(pdev, 0);
-> +	switch (dev->flags & MODEL_MASK) {
-> +	case MODEL_BAIKAL_BT1:
-> +		ret = bt1_i2c_request_regs(dev);
-> +		break;
-> +	default:
-> +		dev->base = devm_platform_ioremap_resource(pdev, 0);
-> +		ret = PTR_ERR_OR_ZERO(dev->base);
-> +		break;
-> +	}
->  
-> -	return PTR_ERR_OR_ZERO(dev->base);
-> +	return ret;
->  }
->  
->  static int dw_i2c_plat_probe(struct platform_device *pdev)
-> -- 
-> 2.26.2
-> 
+> Good catch, now queued up, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I left this commit out because the 4.4 kernel only uses
+cpumask_next_wrap in padata, which is only enabled for SMP kernels, but
+it's probably best to be safe.
 
-
+Daniel
