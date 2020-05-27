@@ -2,123 +2,124 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CD5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153E3212CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:13:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lH7sDt/p"
+	by mail.kernel.org (Postfix) with ESMTP id 4241D208B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgE0MNl (ORCPT
+        id S1728721AbgE0MOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:13:41 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40240 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbgE0MNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:13:40 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RCDYOh076396;
-        Wed, 27 May 2020 07:13:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590581614;
-        bh=EVFnoxGA258/+n6npjncrYyKhF4lRgHR8Yo8mu8Xt4U=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lH7sDt/pF5/sxR2pGFMoTUAXRkXk4gyj4aogpyuWrqn8GEYeh+1sJ13m5B6ncnxKi
-         GBw3RWNe7riRzOlUZghc96uKd4z/B5l7UHneONp+AzJhT94q81MjGCtFLUEjL8TCtJ
-         3Y8VbUlHTdEZY1cqW4hlDAv67oBToMKMrpWbOAFY=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RCDYUU114149
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 07:13:34 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 07:13:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 07:13:33 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RCDXqB082658;
-        Wed, 27 May 2020 07:13:33 -0500
-Subject: Re: [PATCH net-next v3 2/4] net: phy: Add a helper to return the
- index for of the internal delay
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <robh@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200526174716.14116-1-dmurphy@ti.com>
- <20200526174716.14116-3-dmurphy@ti.com> <20200527004220.GE782807@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <629b3145-719b-08a6-b6f4-ece4d26fdbdb@ti.com>
-Date:   Wed, 27 May 2020 07:13:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 08:14:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:37600 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgE0MOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 08:14:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52F8755D;
+        Wed, 27 May 2020 05:14:33 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B21C3F305;
+        Wed, 27 May 2020 05:14:31 -0700 (PDT)
+References: <20200526151619.8779-1-benjamin.gaignard@st.com> <jhjk10xu1tq.mognet@arm.com> <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "rjw\@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar\@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab\@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32\@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel\@ucw.cz" <pavel@ucw.cz>,
+        "len.brown\@intel.com" <len.brown@intel.com>,
+        "vincent.guittot\@linaro.org" <vincent.guittot@linaro.org>,
+        "linux-pm\@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media\@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32\@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel\@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+In-reply-to: <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
+Date:   Wed, 27 May 2020 13:14:24 +0100
+Message-ID: <jhjwo4xinhb.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527004220.GE782807@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
 
-On 5/26/20 7:42 PM, Andrew Lunn wrote:
->> +/**
->> + * phy_get_delay_index - returns the index of the internal delay
->> + * @phydev: phy_device struct
->> + * @delay_values: array of delays the PHY supports
->> + * @size: the size of the delay array
->> + * @int_delay: the internal delay to be looked up
->> + * @descending: if the delay array is in descending order
->> + *
->> + * Returns the index within the array of internal delay passed in.
->> + * Return errno if the delay is invalid or cannot be found.
->> + */
->> +s32 phy_get_delay_index(struct phy_device *phydev, int *delay_values, int size,
->> +			int int_delay, bool descending)
->> +{
->> +	if (int_delay < 0)
->> +		return -EINVAL;
->> +
->> +	if (size <= 0)
->> +		return -EINVAL;
->> +
->> +	if (descending)
->> +		return phy_find_descending_delay(phydev, delay_values, size,
->> +						 int_delay);
->> +
->> +	return phy_find_ascending_delay(phydev, delay_values, size, int_delay);
->> +}
->> +EXPORT_SYMBOL(phy_get_delay_index);
-> Do we really need this ascending vs descending? This array is not
-> coming from device tree of anything, it is a static list in the PHY
-> driver. I would just define it needs to be ascending and be done.
+On 27/05/20 12:17, Benjamin GAIGNARD wrote:
+> On 5/27/20 12:09 PM, Valentin Schneider wrote:
+>> Hi Benjamin,
+>>
+>> On 26/05/20 16:16, Benjamin Gaignard wrote:
+>>> A first round [1] of discussions and suggestions have already be done on
+>>> this series but without found a solution to the problem. I resend it to
+>>> progress on this topic.
+>>>
+>> Apologies for sleeping on that previous thread.
+>>
+>> So what had been suggested over there was to use uclamp to boost the
+>> frequency of the handling thread; however if you use threaded IRQs you
+>> get RT threads, which already get the max frequency by default (at least
+>> with schedutil).
+>>
+>> Does that not work for you, and if so, why?
+>
+> That doesn't work because almost everything is done by the hardware blocks
+> without charge the CPU so the thread isn't running.
 
-I was thinking about the constraints of having just an ascending array 
-helper.
+I'm not sure I follow; the frequency of the CPU doesn't matter while
+your hardware blocks are spinning, right? AIUI what matters is running
+your interrupt handler / action at max freq, which you get if you use
+threaded IRQs and schedutil.
 
-If there is a PHY out there that has a descending delay array then this 
-function is not a helper.
+I think it would help if you could clarify which tasks / parts of your
+pipeline you need running at high frequencies. The point is that setting
+a QoS request affects all tasks, whereas we could be smarter and only
+boost the required tasks.
 
-Then the PHY driver now has to implement a descending search or extend 
-out this helper to do the same.
-
-I can just keep it ascending for now but this helper may need to be 
-updated in the future to accommodate any PHYs with descending delay arrays.
-
-Dan
-
-
-> 	Andrew
+> I have done the
+> tests with schedutil
+> and ondemand scheduler (which is the one I'm targeting). I have no
+> issues when using
+> performance scheduler because it always keep the highest frequencies.
+>
+>
+>>
+>>> When start streaming from the sensor the CPU load could remain very low
+>>> because almost all the capture pipeline is done in hardware (i.e. without
+>>> using the CPU) and let believe to cpufreq governor that it could use lower
+>>> frequencies. If the governor decides to use a too low frequency that
+>>> becomes a problem when we need to acknowledge the interrupt during the
+>>> blanking time.
+>>> The delay to ack the interrupt and perform all the other actions before
+>>> the next frame is very short and doesn't allow to the cpufreq governor to
+>>> provide the required burst of power. That led to drop the half of the frames.
+>>>
+>>> To avoid this problem, DCMI driver informs the cpufreq governors by adding
+>>> a cpufreq minimum load QoS resquest.
+>>>
+>>> Benjamin
+>>>
+>>> [1] https://lkml.org/lkml/2020/4/24/360
+>>>
+>>> Benjamin Gaignard (3):
+>>>    PM: QoS: Introduce cpufreq minimum load QoS
+>>>    cpufreq: governor: Use minimum load QoS
+>>>    media: stm32-dcmi: Inform cpufreq governors about cpu load needs
+>>>
+>>>   drivers/cpufreq/cpufreq_governor.c        |   5 +
+>>>   drivers/media/platform/stm32/stm32-dcmi.c |   8 ++
+>>>   include/linux/pm_qos.h                    |  12 ++
+>>>   kernel/power/qos.c                        | 213 ++++++++++++++++++++++++++++++
+>>>   4 files changed, 238 insertions(+)
