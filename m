@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD07C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 393D0216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2B54216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:12:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbgE0IMQ (ORCPT
+        id S2387744AbgE0IMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42282 "EHLO
+        Wed, 27 May 2020 04:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbgE0IMI (ORCPT
+        with ESMTP id S1729585AbgE0IMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:12:08 -0400
+        Wed, 27 May 2020 04:12:09 -0400
 Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F784C061A0F;
-        Wed, 27 May 2020 01:12:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A92DC061A0F;
+        Wed, 27 May 2020 01:12:09 -0700 (PDT)
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jdrAU-0002g7-UQ; Wed, 27 May 2020 10:12:07 +0200
+        id 1jdrAV-0002i5-GD; Wed, 27 May 2020 10:12:07 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0B7911C0481;
-        Wed, 27 May 2020 10:12:00 +0200 (CEST)
-Date:   Wed, 27 May 2020 08:11:59 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 618E11C04D6;
+        Wed, 27 May 2020 10:12:02 +0200 (CEST)
+Date:   Wed, 27 May 2020 08:12:02 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/idtentry: Switch to conditional RCU handling
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: x86/entry] rcu: Abstract out rcu_irq_enter_check_tick() from
+ rcu_nmi_enter()
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200521202117.382387286@linutronix.de>
-References: <20200521202117.382387286@linutronix.de>
+In-Reply-To: <20200521202116.996113173@linutronix.de>
+References: <20200521202116.996113173@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <159056711983.17951.10402741424912392408.tip-bot2@tip-bot2>
+Message-ID: <159056712225.17951.7903035443251882028.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,122 +62,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/entry branch of tip:
 
-Commit-ID:     77d7843297dfe3bbd997a46548c9cdd8047ecffe
-Gitweb:        https://git.kernel.org/tip/77d7843297dfe3bbd997a46548c9cdd8047ecffe
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 21 May 2020 22:05:19 +02:00
+Commit-ID:     aaf2bc50df1f4bfc6857fc601fc7b21d5a18c6a1
+Gitweb:        https://git.kernel.org/tip/aaf2bc50df1f4bfc6857fc601fc7b21d5a18c6a1
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Thu, 21 May 2020 22:05:15 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 26 May 2020 19:06:27 +02:00
+CommitterDate: Tue, 26 May 2020 19:04:18 +02:00
 
-x86/idtentry: Switch to conditional RCU handling
+rcu: Abstract out rcu_irq_enter_check_tick() from rcu_nmi_enter()
 
-Switch all idtentry_enter/exit() users over to the new conditional RCU
-handling scheme and make the user mode entries in #DB, #INT3 and #MCE use
-the user mode idtentry functions.
+There will likely be exception handlers that can sleep, which rules
+out the usual approach of invoking rcu_nmi_enter() on entry and also
+rcu_nmi_exit() on all exit paths.  However, the alternative approach of
+just not calling anything can prevent RCU from coaxing quiescent states
+from nohz_full CPUs that are looping in the kernel:  RCU must instead
+IPI them explicitly.  It would be better to enable the scheduler tick
+on such CPUs to interact with RCU in a lighter-weight manner, and this
+enabling is one of the things that rcu_nmi_enter() currently does.
 
+What is needed is something that helps RCU coax quiescent states while
+not preventing subsequent sleeps.  This commit therefore splits out the
+nohz_full scheduler-tick enabling from the rest of the rcu_nmi_enter()
+logic into a new function named rcu_irq_enter_check_tick().
+
+[ tglx: Renamed the function and made it a nop when context tracking is off ]
+[ mingo: Fixed a CONFIG_NO_HZ_FULL assumption, harmonized and fixed all the
+         comment blocks and cleaned up rcu_nmi_enter()/exit() definitions. ]
+
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Link: https://lore.kernel.org/r/20200521202117.382387286@linutronix.de
+Link: https://lore.kernel.org/r/20200521202116.996113173@linutronix.de
 ---
- arch/x86/include/asm/idtentry.h | 10 ++++++----
- arch/x86/kernel/cpu/mce/core.c  |  4 ++--
- arch/x86/kernel/traps.c         | 10 +++++-----
- 3 files changed, 13 insertions(+), 11 deletions(-)
+ include/linux/hardirq.h | 29 ++++++++------
+ kernel/rcu/tree.c       | 82 ++++++++++++++++++++++++++++++----------
+ 2 files changed, 79 insertions(+), 32 deletions(-)
 
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index b3aca72..0f974e5 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -61,11 +61,12 @@ static __always_inline void __##func(struct pt_regs *regs);		\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	idtentry_enter(regs);						\
-+	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+									\
- 	instrumentation_begin();					\
- 	__##func (regs);						\
- 	instrumentation_end();						\
--	idtentry_exit(regs);						\
-+	idtentry_exit_cond_rcu(regs, rcu_exit);				\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs)
-@@ -107,11 +108,12 @@ static __always_inline void __##func(struct pt_regs *regs,		\
- __visible noinstr void func(struct pt_regs *regs,			\
- 			    unsigned long error_code)			\
- {									\
--	idtentry_enter(regs);						\
-+	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+									\
- 	instrumentation_begin();					\
- 	__##func (regs, error_code);					\
- 	instrumentation_end();						\
--	idtentry_exit(regs);						\
-+	idtentry_exit_cond_rcu(regs, rcu_exit);				\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs,		\
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index a32a7e2..c47f004 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1929,11 +1929,11 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
+index 621556e..e07cf85 100644
+--- a/include/linux/hardirq.h
++++ b/include/linux/hardirq.h
+@@ -2,31 +2,28 @@
+ #ifndef LINUX_HARDIRQ_H
+ #define LINUX_HARDIRQ_H
  
- static __always_inline void exc_machine_check_user(struct pt_regs *regs)
++#include <linux/context_tracking_state.h>
+ #include <linux/preempt.h>
+ #include <linux/lockdep.h>
+ #include <linux/ftrace_irq.h>
+ #include <linux/vtime.h>
+ #include <asm/hardirq.h>
+ 
+-
+ extern void synchronize_irq(unsigned int irq);
+ extern bool synchronize_hardirq(unsigned int irq);
+ 
+-#if defined(CONFIG_TINY_RCU)
+-
+-static inline void rcu_nmi_enter(void)
+-{
+-}
++#ifdef CONFIG_NO_HZ_FULL
++void __rcu_irq_enter_check_tick(void);
++#else
++static inline void __rcu_irq_enter_check_tick(void) { }
++#endif
+ 
+-static inline void rcu_nmi_exit(void)
++static __always_inline void rcu_irq_enter_check_tick(void)
  {
--	idtentry_enter(regs);
-+	idtentry_enter_user(regs);
- 	instrumentation_begin();
- 	machine_check_vector(regs);
- 	instrumentation_end();
--	idtentry_exit(regs);
-+	idtentry_exit_user(regs);
++	if (context_tracking_enabled())
++		__rcu_irq_enter_check_tick();
  }
  
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 9e5d81c..f28be3e 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -619,18 +619,18 @@ DEFINE_IDTENTRY_RAW(exc_int3)
- 		return;
+-#else
+-extern void rcu_nmi_enter(void);
+-extern void rcu_nmi_exit(void);
+-#endif
+-
+ /*
+  * It is safe to do non-atomic ops on ->hardirq_context,
+  * because NMI handlers may not preempt and the ops are
+@@ -65,6 +62,14 @@ extern void irq_exit(void);
+ #define arch_nmi_exit()		do { } while (0)
+ #endif
  
- 	/*
--	 * idtentry_enter() uses static_branch_{,un}likely() and therefore
-+	 * idtentry_enter_user() uses static_branch_{,un}likely() and therefore
- 	 * can trigger INT3, hence poke_int3_handler() must be done
- 	 * before. If the entry came from kernel mode, then use nmi_enter()
- 	 * because the INT3 could have been hit in any context including
- 	 * NMI.
- 	 */
- 	if (user_mode(regs)) {
--		idtentry_enter(regs);
-+		idtentry_enter_user(regs);
++#ifdef CONFIG_TINY_RCU
++static inline void rcu_nmi_enter(void) { }
++static inline void rcu_nmi_exit(void) { }
++#else
++extern void rcu_nmi_enter(void);
++extern void rcu_nmi_exit(void);
++#endif
++
+ /*
+  * NMI vs Tracing
+  * --------------
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 90c8be2..b7f8c49 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -848,6 +848,67 @@ void noinstr rcu_user_exit(void)
+ {
+ 	rcu_eqs_exit(1);
+ }
++
++/**
++ * __rcu_irq_enter_check_tick - Enable scheduler tick on CPU if RCU needs it.
++ *
++ * The scheduler tick is not normally enabled when CPUs enter the kernel
++ * from nohz_full userspace execution.  After all, nohz_full userspace
++ * execution is an RCU quiescent state and the time executing in the kernel
++ * is quite short.  Except of course when it isn't.  And it is not hard to
++ * cause a large system to spend tens of seconds or even minutes looping
++ * in the kernel, which can cause a number of problems, include RCU CPU
++ * stall warnings.
++ *
++ * Therefore, if a nohz_full CPU fails to report a quiescent state
++ * in a timely manner, the RCU grace-period kthread sets that CPU's
++ * ->rcu_urgent_qs flag with the expectation that the next interrupt or
++ * exception will invoke this function, which will turn on the scheduler
++ * tick, which will enable RCU to detect that CPU's quiescent states,
++ * for example, due to cond_resched() calls in CONFIG_PREEMPT=n kernels.
++ * The tick will be disabled once a quiescent state is reported for
++ * this CPU.
++ *
++ * Of course, in carefully tuned systems, there might never be an
++ * interrupt or exception.  In that case, the RCU grace-period kthread
++ * will eventually cause one to happen.  However, in less carefully
++ * controlled environments, this function allows RCU to get what it
++ * needs without creating otherwise useless interruptions.
++ */
++void __rcu_irq_enter_check_tick(void)
++{
++	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
++
++	 // Enabling the tick is unsafe in NMI handlers.
++	if (WARN_ON_ONCE(in_nmi()))
++		return;
++
++	RCU_LOCKDEP_WARN(rcu_dynticks_curr_cpu_in_eqs(),
++			 "Illegal rcu_irq_enter_check_tick() from extended quiescent state");
++
++	if (!tick_nohz_full_cpu(rdp->cpu) ||
++	    !READ_ONCE(rdp->rcu_urgent_qs) ||
++	    READ_ONCE(rdp->rcu_forced_tick)) {
++		// RCU doesn't need nohz_full help from this CPU, or it is
++		// already getting that help.
++		return;
++	}
++
++	// We get here only when not in an extended quiescent state and
++	// from interrupts (as opposed to NMIs).  Therefore, (1) RCU is
++	// already watching and (2) The fact that we are in an interrupt
++	// handler and that the rcu_node lock is an irq-disabled lock
++	// prevents self-deadlock.  So we can safely recheck under the lock.
++	// Note that the nohz_full state currently cannot change.
++	raw_spin_lock_rcu_node(rdp->mynode);
++	if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
++		// A nohz_full CPU is in the kernel and RCU needs a
++		// quiescent state.  Turn on the tick!
++		WRITE_ONCE(rdp->rcu_forced_tick, true);
++		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
++	}
++	raw_spin_unlock_rcu_node(rdp->mynode);
++}
+ #endif /* CONFIG_NO_HZ_FULL */
+ 
+ /**
+@@ -894,26 +955,7 @@ noinstr void rcu_nmi_enter(void)
+ 		incby = 1;
+ 	} else if (!in_nmi()) {
  		instrumentation_begin();
- 		do_int3_user(regs);
+-		if (tick_nohz_full_cpu(rdp->cpu) &&
+-		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+-		    READ_ONCE(rdp->rcu_urgent_qs) &&
+-		    !READ_ONCE(rdp->rcu_forced_tick)) {
+-			// We get here only if we had already exited the
+-			// extended quiescent state and this was an
+-			// interrupt (not an NMI).  Therefore, (1) RCU is
+-			// already watching and (2) The fact that we are in
+-			// an interrupt handler and that the rcu_node lock
+-			// is an irq-disabled lock prevents self-deadlock.
+-			// So we can safely recheck under the lock.
+-			raw_spin_lock_rcu_node(rdp->mynode);
+-			if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+-				// A nohz_full CPU is in the kernel and RCU
+-				// needs a quiescent state.  Turn on the tick!
+-				WRITE_ONCE(rdp->rcu_forced_tick, true);
+-				tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+-			}
+-			raw_spin_unlock_rcu_node(rdp->mynode);
+-		}
++		rcu_irq_enter_check_tick();
  		instrumentation_end();
--		idtentry_exit(regs);
-+		idtentry_exit_user(regs);
- 	} else {
- 		nmi_enter();
- 		instrumentation_begin();
-@@ -877,7 +877,7 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- static __always_inline void exc_debug_user(struct pt_regs *regs,
- 					   unsigned long dr6)
- {
--	idtentry_enter(regs);
-+	idtentry_enter_user(regs);
- 	clear_thread_flag(TIF_BLOCKSTEP);
- 
- 	/*
-@@ -886,7 +886,7 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
- 	 * User wants a sigtrap for that.
- 	 */
- 	handle_debug(regs, dr6, !dr6);
--	idtentry_exit(regs);
-+	idtentry_exit_user(regs);
- }
- 
- #ifdef CONFIG_X86_64
+ 	}
+ 	instrumentation_begin();
