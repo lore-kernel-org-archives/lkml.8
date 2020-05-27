@@ -2,83 +2,134 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8D0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD90207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A41F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:37:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590590221;
+	bh=ZKanhQJK0P/djH+WNpQI7TX6FSFCpbdAlBTPqGNAsog=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=0y4V8CC6ccpqJn2OXvzi0yzf7KgijFiCiWPU1JD3ZEAw67PTXTB/FfyXSG9tcGKIP
+	 vAo5cg8W1WhJf3b+VeO9mDH0qr5HqoPcrGHGR6hIl0OrRdPplJSC2xjuz7ahY08lIx
+	 qBw14vPU688Rtt/BPH9BNeCh3SG5uVxkoEleQceE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389312AbgE0Ogr (ORCPT
+        id S2389334AbgE0OhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:36:47 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:46809 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389152AbgE0Ogr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:36:47 -0400
-Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MwxNF-1ip7fK26qx-00ySSH for <linux-kernel@vger.kernel.org>; Wed, 27 May
- 2020 16:36:45 +0200
-Received: by mail-qt1-f175.google.com with SMTP id j32so4369995qte.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:36:45 -0700 (PDT)
-X-Gm-Message-State: AOAM532zAwiZbeCqmBTkRbMEC0HFf8QFQmLNJGUJN6cCdL8npzv4AGec
-        Ftqlj04Bh2YscXQH5h/NMkrGcO0SHQ6UGQ4XfIs=
-X-Google-Smtp-Source: ABdhPJz5OgKXuoYgmUdLE+csUDsEEOEF0XSfC8Ij+VwLLkemZAcY7xiTkXrFOUDNARvgard005IXgUtkM4rz7IvR6EA=
-X-Received: by 2002:ac8:691:: with SMTP id f17mr4501313qth.204.1590590204402;
- Wed, 27 May 2020 07:36:44 -0700 (PDT)
+        Wed, 27 May 2020 10:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389308AbgE0Og6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:36:58 -0400
+Received: from embeddedor (unknown [189.207.59.248])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF662207D8;
+        Wed, 27 May 2020 14:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590590217;
+        bh=ZKanhQJK0P/djH+WNpQI7TX6FSFCpbdAlBTPqGNAsog=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YSD+ZGCItrXkd1UID3bNMcDqtjMYtcaWkWR/jbiZi+m6f00sd5fV2w2LtxMDmqNVx
+         nn9JF+KjKberrBy+2S0xaU79c9o95nS1uUTTAC8qQy7puJvTVh72gh1HgPweYrUXGQ
+         fG2LQN5mleXFZtua1j9s0LsOSQep5IedKWhcFSzc=
+Date:   Wed, 27 May 2020 09:41:52 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] IB/core: Use sizeof_field() helper
+Message-ID: <20200527144152.GA22605@embeddedor>
 MIME-Version: 1.0
-References: <20200527134254.854672-1-arnd@arndb.de> <CAKb7Uvhh2JKck524D9S14uNSLykFj+U48AgR+sd2uwchsH_wEQ@mail.gmail.com>
-In-Reply-To: <CAKb7Uvhh2JKck524D9S14uNSLykFj+U48AgR+sd2uwchsH_wEQ@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 16:36:28 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3kRP6Sg-An5szsN=4Pv1OsG+-YQYa1wgxJCi1c+uedPw@mail.gmail.com>
-Message-ID: <CAK8P3a3kRP6Sg-An5szsN=4Pv1OsG+-YQYa1wgxJCi1c+uedPw@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] nouveau: add fbdev dependency
-To:     Ilia Mirkin <imirkin@alum.mit.edu>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:IkTtRky3C2ijnqvAwwC/+tGbWXDIHPSww6i892k0Lnz51LcdXbh
- ZQdI0iNm4vgqvQ0o4RCc0LyWxF0ZuFHdEYmJn9aGPbOtfeNmgae2FIw6Q0IydcLcdjzPDc6
- Hm7LJt3ZT51zWo8Pu9BdpX3x6TgpASDhfAV7D+565LhFBx67r67kID0Is36fpWCOvuFiAtC
- t7FMGTDs3exdOLIxoNWAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZnalMiJdDrQ=:hqm6wrxMUmBXjlwTImbTVr
- R5eK6oRgBs7YRGHA21AWdAJ5ackmba4Ept/xwNYpoUZ8iRS9BA4MpPNZyFTBDRBq7aVFs6XwA
- mrcNosr3bOS7MwAcslCV2Uh37jhfyoBAI1AdtskxJsT+LzqnV5OBB+uOXGc9tKDHI795NSERa
- m6/xYdnyXmio8ZODvgxO0W9XD0r2yIrNHb5cnEdnqOzpyvvd9hLYKNmoHgiwLnibbAKDXlHxw
- LvfPqUFN3UfWOAcRDRYOkmBWepHgJycAG5iia6k5/DLkc5cIR32vCqVRXbdveLfaJNZ6v/UGs
- IJta6SQugFHzJcpY9BEFVoYhswzvn7E5msVXpIbnal2VHxq39KaCMvQTviihout8TLgfoch3U
- SD+uql5ymVGPGC7cWb3VYCS9FKeQGVY9Y2QonwoOL+e6xxkdNIKcyWg/dSSejS8Tt1FpMffr+
- gD6SWORbztUC+7ynurE6QtRFnr7fGr8JpsG5hCtW+1wcPBxlJVZ63fhPebWSOZufVk2991Fgx
- MdFPPDvpzgKf2pTVWKj/K52HBtXtNYM+ZxYIRX22u2Bjv9G+9odKOSPuwKnbQNBglKWV/ye13
- SrniUFa9tX1p9ImRzlVb4UsgLrKR0R/sEPqFPZAwXbDpY8Rolki96JzIhiP8SBDEzI+CqvRac
- r7HNFawN2ilA9GJ6hVzc2AwcLTX8VuMKtTAdVCP9gXrpYOKW4fnqBFDU6NnY0gbjs/zi3i8+G
- X/Vh36zKqcpPZh2/zWMhgkoGSIPO61ikeLmEDJe5tTUxnVvlhWTsc0UpzhjWC1a2qoznWpQvv
- fqwTUjZkk5gj0cMyEsNu1P5pcZn+/0VzKb9Mm5FuBNtmDfSMVo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 4:05 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
->
-> Isn't this already fixed by
->
-> https://cgit.freedesktop.org/drm/drm/commit/?id=7dbbdd37f2ae7dd4175ba3f86f4335c463b18403
+Make use of the sizeof_field() helper instead of an open-coded version.
 
-Ok, I see that fixes the link error, but I when I created my fix, that did
-not seem like the correct solution because it reverts part of the original
-patch without reverting the rest of it. Unfortunately there was no
-changelog text in the first patch to explain why this is safe.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/infiniband/core/sa_query.c     | 8 ++++----
+ drivers/infiniband/core/uverbs_cmd.c   | 2 +-
+ drivers/infiniband/core/uverbs_ioctl.c | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Could you double-check if the behavior is still correct after the two patches?
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index 5c878646ff62a..8f70c5c38ab7c 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -190,7 +190,7 @@ static u32 tid;
+ 
+ #define PATH_REC_FIELD(field) \
+ 	.struct_offset_bytes = offsetof(struct sa_path_rec, field),	\
+-	.struct_size_bytes   = sizeof((struct sa_path_rec *)0)->field,	\
++	.struct_size_bytes   = sizeof_field(struct sa_path_rec, field),	\
+ 	.field_name          = "sa_path_rec:" #field
+ 
+ static const struct ib_field path_rec_table[] = {
+@@ -292,7 +292,7 @@ static const struct ib_field path_rec_table[] = {
+ 	.struct_offset_bytes = \
+ 		offsetof(struct sa_path_rec, field), \
+ 	.struct_size_bytes   = \
+-		sizeof((struct sa_path_rec *)0)->field,	\
++		sizeof_field(struct sa_path_rec, field),	\
+ 	.field_name          = "sa_path_rec:" #field
+ 
+ static const struct ib_field opa_path_rec_table[] = {
+@@ -552,7 +552,7 @@ static const struct ib_field service_rec_table[] = {
+ 
+ #define CLASSPORTINFO_REC_FIELD(field) \
+ 	.struct_offset_bytes = offsetof(struct ib_class_port_info, field),	\
+-	.struct_size_bytes   = sizeof((struct ib_class_port_info *)0)->field,	\
++	.struct_size_bytes   = sizeof_field(struct ib_class_port_info, field),	\
+ 	.field_name          = "ib_class_port_info:" #field
+ 
+ static const struct ib_field ib_classport_info_rec_table[] = {
+@@ -630,7 +630,7 @@ static const struct ib_field ib_classport_info_rec_table[] = {
+ 	.struct_offset_bytes =\
+ 		offsetof(struct opa_class_port_info, field),	\
+ 	.struct_size_bytes   = \
+-		sizeof((struct opa_class_port_info *)0)->field,	\
++		sizeof_field(struct opa_class_port_info, field),	\
+ 	.field_name          = "opa_class_port_info:" #field
+ 
+ static const struct ib_field opa_classport_info_rec_table[] = {
+diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
+index 4859ac0df17c7..2067a939788bd 100644
+--- a/drivers/infiniband/core/uverbs_cmd.c
++++ b/drivers/infiniband/core/uverbs_cmd.c
+@@ -3741,7 +3741,7 @@ static int ib_uverbs_ex_modify_cq(struct uverbs_attr_bundle *attrs)
+ #define UAPI_DEF_WRITE_IO(req, resp)                                           \
+ 	.write.has_resp = 1 +                                                  \
+ 			  BUILD_BUG_ON_ZERO(offsetof(req, response) != 0) +    \
+-			  BUILD_BUG_ON_ZERO(sizeof(((req *)0)->response) !=    \
++			  BUILD_BUG_ON_ZERO(sizeof_field(req, response) !=    \
+ 					    sizeof(u64)),                      \
+ 	.write.req_size = sizeof(req), .write.resp_size = sizeof(resp)
+ 
+diff --git a/drivers/infiniband/core/uverbs_ioctl.c b/drivers/infiniband/core/uverbs_ioctl.c
+index 42c5696f03bd7..2d882c02387c1 100644
+--- a/drivers/infiniband/core/uverbs_ioctl.c
++++ b/drivers/infiniband/core/uverbs_ioctl.c
+@@ -137,7 +137,7 @@ EXPORT_SYMBOL(_uverbs_alloc);
+ static bool uverbs_is_attr_cleared(const struct ib_uverbs_attr *uattr,
+ 				   u16 len)
+ {
+-	if (uattr->len > sizeof(((struct ib_uverbs_attr *)0)->data))
++	if (uattr->len > sizeof_field(struct ib_uverbs_attr, data))
+ 		return ib_is_buffer_cleared(u64_to_user_ptr(uattr->data) + len,
+ 					    uattr->len - len);
+ 
+-- 
+2.26.2
 
-      Arnd
