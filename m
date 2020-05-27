@@ -2,120 +2,117 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1535EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73E62073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5ED207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:36:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="epsKr2KQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgE0Wfs (ORCPT
+        id S1727008AbgE0WgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE0Wfr (ORCPT
+        Wed, 27 May 2020 18:36:01 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:53082 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbgE0WgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:35:47 -0400
-Received: from omr2.cc.vt.edu (omr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:33:fb76:806e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEF2C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:35:46 -0700 (PDT)
-Received: from mr1.cc.vt.edu (mr1.cc.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 04RMZjSQ021662
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:35:45 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 04RMZePL002980
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:35:45 -0400
-Received: by mail-qt1-f200.google.com with SMTP id t24so3068778qtj.15
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:35:45 -0700 (PDT)
+        Wed, 27 May 2020 18:36:00 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 49XQf73sZYz9vLH8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 22:35:59 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 48o0YAEWfKgK for <linux-kernel@vger.kernel.org>;
+        Wed, 27 May 2020 17:35:59 -0500 (CDT)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 49XQf72CpHz9vLH0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 17:35:59 -0500 (CDT)
+DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p7.oit.umn.edu 49XQf72CpHz9vLH0
+DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p7.oit.umn.edu 49XQf72CpHz9vLH0
+Received: by mail-io1-f72.google.com with SMTP id v16so4741970ios.9
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=CpatvuW2oCiIL+IhriroImU7P7m/r0JsGdlS3UL0xRI=;
+        b=epsKr2KQQFASD91Q+FKeGYrbfnjMtu941ofPh58h1X3OFGvYwWvkA8DYxpICLP5JxL
+         igEof6dlVtyaEa7orVWfb0MHPf/bxadZ22yUFUi+7ueMlwvZa6uPRuW3DfRCwN3RgH2K
+         wi7mABV9A6aAXxxxN1tRUmwCBqxr4JXYffQ4XxwGwYRUXg45eLV5q55+tH0lMb6VVnE/
+         DDB3+SRCOfbmNyoWTy5LganvRCPg/iL97DftKHHR4Omxt/KHF4sduSDTBcbEz5TOYAWq
+         9JhrmkckVvHLMp72Xz3tBMfPH94dUU5G5TOoEBPvM7sHIHQvjFZlEpU74xwRkwiJ6mXX
+         Tmsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=wAfrgwiy8FRYZqVG4if/0XphI1xwoqduQ4nX1CyB3XQ=;
-        b=iwkaPL2Hh32pVcPWv/3SMe3jGTFknRGgrc2Aiz+ctsfKESsywJbnxa2Qlvhf0CX7IG
-         iD5CCFuaWtYgeaVwgfvz9vmGKn0vr3/khOGqhf7myBUccyUDmIGJnVb5OS45FD3j6O8R
-         CtE4YLwQEHJesXujtaIRFYkKD7IObMtenyKJw+yHavkP3RbDsDrzjl9kAuFFYyy1/uyB
-         aUWIRH1lDYwHiIFTE7C9YafdBUplEFuok31PYgLgOsXwquG54ud1mQ5ZxcGwUP/3mkoc
-         Mpf6E9Sop0lhgeebk5l9Ez4BPxOHLf7s1jUF8NYnKKKoHNdprPbRX72pBdlC1DONK7Zm
-         9Pxw==
-X-Gm-Message-State: AOAM5332yNqqbNmaw3kFShAC2kPscUgsqEygkGFmkBeZxUIKYwK3JhRs
-        +TBBo2GfMoXFTfghhAZbpATuvVfjrcysB212SRX9HjolT6xgZ5C10KXzE1f5Qu4dZ0t0KBDAdzW
-        LaQNnyJ+3KEht/xYXLWPfz5zpcq4g1+Xq4fU=
-X-Received: by 2002:ad4:5624:: with SMTP id cb4mr244722qvb.154.1590618940014;
-        Wed, 27 May 2020 15:35:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzvSOV04NC8GPpLZ3kCE1Jln8ku1I0WYDMmMd8SFB2kWTPSoZpLpaIek+ain75HZ4nTzoLQeQ==
-X-Received: by 2002:ad4:5624:: with SMTP id cb4mr244700qvb.154.1590618939680;
-        Wed, 27 May 2020 15:35:39 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id w3sm3519357qkb.85.2020.05.27.15.35.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CpatvuW2oCiIL+IhriroImU7P7m/r0JsGdlS3UL0xRI=;
+        b=gFarFUqi12e5kY/VJ2YcsvZbkJ6J4T1YPXO/6cy3B8pCV2qmQMkkGbmLMKGiACK2i+
+         XJ4NY7kaex5x+a7f1v9byth8SnW1iKirmhSJ1ZpR8RxlNeCinbyAubFA/uediaV3Xvft
+         V8PD+llIxONRolWMlHqBFnHImJWsi7pGe4oXoagMgKE2ITL0diH2DZMJzKWpIae5XULI
+         YDF3p1kdcRk8hOycz96MqgIMh61ESohIcvrAtxg7hM+ciEbK3mR77cZNsrDXeWPD+5dl
+         SHMLLdRToboRyZIbUpiifb66huKYGKDlJ6wf2Mm9G54lq9vmVb+nt6LsWJB7f8p6G6YV
+         s0aA==
+X-Gm-Message-State: AOAM532nuGWBVgcgIchhsk+bnQAqGsdE9oE0PRFjUcxX3VfSnsPnq+W4
+        2A4W6jymBbbZv1E6LUyqruU/KNB6Q+adaQf61gD+WnyZtUQIXPQks+dc5TgOrX2hvXh48PypmvL
+        gJ8g+b+iItM9tdKkec2HV6cgQBwqJ
+X-Received: by 2002:a05:6e02:e8c:: with SMTP id t12mr483784ilj.186.1590618958816;
+        Wed, 27 May 2020 15:35:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJywrYsi6lG1iitaeUz/omV2z7LDZxc73HSoMA4aAWYo8kzkH8F8jJi7zhm/0M8Fqsku4JWGqw==
+X-Received: by 2002:a05:6e02:e8c:: with SMTP id t12mr483768ilj.186.1590618958532;
+        Wed, 27 May 2020 15:35:58 -0700 (PDT)
+Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
+        by smtp.gmail.com with ESMTPSA id o70sm2368169ild.3.2020.05.27.15.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 15:35:38 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     ebiederm@xmission.com (Eric W. Biederman)
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] binfmt_elf_fdpic: fix execfd build regression
-In-Reply-To: <877dwx3u9y.fsf@x220.int.ebiederm.org>
-References: <20200527134911.1024114-1-arnd@arndb.de>
- <877dwx3u9y.fsf@x220.int.ebiederm.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1590618937_16657P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 27 May 2020 18:35:37 -0400
-Message-ID: <441347.1590618937@turing-police>
+        Wed, 27 May 2020 15:35:57 -0700 (PDT)
+From:   wu000273@umn.edu
+To:     kjlu@umn.edu
+Cc:     wu000273@umn.edu, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Prashanth Prakash <pprakash@codeaurora.org>,
+        Ashwin Chaugule <ashwin.chaugule@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: CPPC: Fix reference count leak in acpi_cppc_processor_probe.
+Date:   Wed, 27 May 2020 17:35:51 -0500
+Message-Id: <20200527223551.20156-1-wu000273@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1590618937_16657P
-Content-Type: text/plain; charset=us-ascii
+From: Qiushi Wu <wu000273@umn.edu>
 
-On Wed, 27 May 2020 17:08:57 -0500, Eric W. Biederman said:
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-> Is there an easy to build-test configuration that includes
-> binfmt_elf_fdpic?
+Fixes: 158c998ea44b ("ACPI / CPPC: add sysfs support to compute delivered performance")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+---
+ drivers/acpi/cppc_acpi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I tripped over it with a 'make ARM=arch allmodconfig', but any
-config that includes CONFIG_BINFMT_ELF_FDPIC should suffice.
-I haven't checked the 'depends' for that variable though...
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index 8b2e89c20c11..067067bc03d4 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -846,6 +846,7 @@ int acpi_cppc_processor_probe(struct acpi_processor *pr)
+ 			"acpi_cppc");
+ 	if (ret) {
+ 		per_cpu(cpc_desc_ptr, pr->id) = NULL;
++		kobject_put(&cpc_ptr->kobj);
+ 		goto out_free;
+ 	}
+ 
+-- 
+2.17.1
 
-> I have this sense that it might be smart to unify binfmt_elf
-> and binftm_elf_fdpic to the extent possible, and that will take build
-> tests.
-
-Bring it on! :)
-
-
---==_Exmh_1590618937_16657P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXs7rOAdmEQWDXROgAQKfFg/6A1io4tXqeORzdvfNlEZnJZC5ZT1M+b1V
-yC+vexxgJY/0oRN5y+76+hhBckAoacD4ABy9sH755aKwaPbsnmo9v3DCLK8W/Dxr
-taIQ7NlSDWm9F4gTo4nkiutbogP5QjYbAnJdO5h/TrUN/HzOvf2TrJ43WYBxGQrE
-4Tpy8knIfdZb/MNlSA0zbcqzzs3oZ4UxQvVs/xJ0NsLoR7FvVIELhEovxd+mpwLH
-/Ynf2K73gIHhamKCRvCA3YZuXX1qWZPAr0XjJ/FcIWc8LsQD4WDksPKzYJjHun0B
-sh/7aVPzd9HYcotsNamWAkdJL4wtH1LSItSS1TxX69FAN4OchXhiSZlHtPlJ1sI0
-US2WjWffW0xC9rzJFTNvhft4FuB2AJlP4bJmuH7QXyR2UH0IG51J2LhQkzBwb7EV
-bxa7pUV7lVrqEvB1nFc4nYC441kT8MlGF3AQh1W74InfeB7Os1nLrvVlzsoCXrFn
-l7WLHTgi9Vtb7DXDmQz76+cpdq35NMbQL3+Aiqv/SphmTDIt8ePQ0hgH/5p3snGf
-jh1zhjyQeRfgZj7cs0FpGtUhgO0cA1TcBhyPadUju1IVk5yut5hfPREd6dC2VmJS
-Il5MuZFGpGfXkaLnE2EgnEVNmzXDQi2TnYguqvhtOgJPn9dl+X4EeR7rpTERWlkH
-nBq+1ugzGtw=
-=ccnE
------END PGP SIGNATURE-----
-
---==_Exmh_1590618937_16657P--
