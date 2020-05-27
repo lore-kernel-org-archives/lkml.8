@@ -2,101 +2,71 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4422DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC08C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 143EF20704
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785E7207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590546783;
+	bh=gk+v1W3sTYJPEzW3+3ygR/9TYoYK2pJAj1PW78DaVuM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=qW3LvztAei70aslju4+ya6xI1fzBtdsL5LSCtGHe6bGXxLn2RJJo1qU45dVkofqHz
+	 uOJBtWB2mRw+DlGXjKCnCO7Xknh+eZd+C0CaVn0QfWoqza3P7n+F3wW4sXX+QTyGKe
+	 dDp73Hpc2PT1FYLS3zQsH3ng5lWREFvsZDq6KpJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgE0CcK (ORCPT
+        id S1728136AbgE0CdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:32:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44830 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725267AbgE0CcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:32:10 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C8BF9F07DF5CA9384084;
-        Wed, 27 May 2020 10:32:06 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 27 May 2020
- 10:31:58 +0800
-Subject: Re: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
-From:   tanhuazhong <tanhuazhong@huawei.com>
-To:     David Miller <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>
-References: <1590061105-36478-1-git-send-email-tanhuazhong@huawei.com>
- <20200521121707.6499ca6b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200521.143726.481524442371246082.davem@davemloft.net>
- <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
-Message-ID: <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
-Date:   Wed, 27 May 2020 10:31:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Tue, 26 May 2020 22:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728066AbgE0CdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:33:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05A4D20704;
+        Wed, 27 May 2020 02:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590546782;
+        bh=gk+v1W3sTYJPEzW3+3ygR/9TYoYK2pJAj1PW78DaVuM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=2nQt1LVAcYcVnZ9lRugFlh5sQH7zpKj709aMUZzOF3D8WtdIuSCk8otZ9/Dz0AObC
+         JgDxMzmaqcob+gBBhqSqx8DMxMHB0eiBxM+EAo3kegeNBQHK16rh2dK1UU0wBDE5Or
+         0/jxVUJCTjdv/WaxpFvC37MLQnMmvzs1ak4r030g=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590314686-11749-6-git-send-email-sivaprak@codeaurora.org>
+References: <1590314686-11749-1-git-send-email-sivaprak@codeaurora.org> <1590314686-11749-6-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH V5 5/8] clk: qcom: Add ipq6018 apss clock controller
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Tue, 26 May 2020 19:33:01 -0700
+Message-ID: <159054678130.88029.13011652297143700687@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Sivaprakash Murugesan (2020-05-24 03:04:43)
+> The CPU on Qualcomm ipq6018 devices are clocked primarily by a aplha PLL
+> and xo which are connected to a mux and enable block.
+>=20
+> Add support for the mux and enable block which feeds the CPU on ipq6018
+> devices.
+>=20
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> ---
 
-
-On 2020/5/22 17:35, tanhuazhong wrote:
-> 
-> 
-> On 2020/5/22 5:37, David Miller wrote:
->> From: Jakub Kicinski <kuba@kernel.org>
->> Date: Thu, 21 May 2020 12:17:07 -0700
->>
->>> On Thu, 21 May 2020 19:38:23 +0800 Huazhong Tan wrote:
->>>> This patchset adds two new VLAN feature.
->>>>
->>>> [patch 1] adds a new dynamic VLAN mode.
->>>> [patch 2] adds support for 'QoS' field to PVID.
->>>>
->>>> Change log:
->>>> V1->V2: modifies [patch 1]'s commit log, suggested by Jakub Kicinski.
->>>
->>> I don't like the idea that FW is choosing the driver behavior in a way
->>> that's not observable via standard Linux APIs. This is the second time
->>> a feature like that posted for a driver this week, and we should
->>> discourage it.
->>
->> Agreed, this is an unacceptable approach to driver features.
->>
-> 
-> Hi, Jakub & David.
-> 
-> As decribed in patch #1, there is a scenario which needs the dynamic
-> mode(port VLAN filter is always disabled, andVF VLAN filter is keep
-> disable until a non-zero VLAN ID being used for the function).
-> 
-> Is this mode selection provided through "ethtool --set-priv-flags"
-> more acceptable? Or is there any other better suggestion for this?
-> 
-> Thanks.
-> 
-
-Hi, Jakub & David.
-
-For patch#1, is it acceptable adding "ethtool --get-priv-flags"
-to query the VLAN. If yes, I will send a RFC for it.
-
-Best Regards.
-Thanks.
-
->> .
->>
-
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
