@@ -2,98 +2,126 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C31CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1728C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F35E22075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71E02075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nvBQbKqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389264AbgE0OvM (ORCPT
+        id S2389316AbgE0Ovl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:51:12 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:41481 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388871AbgE0OvK (ORCPT
+        Wed, 27 May 2020 10:51:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388621AbgE0Ovk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:51:10 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-169-m1cHcyVVPiChFSzhadPXzw-1; Wed, 27 May 2020 15:51:06 +0100
-X-MC-Unique: m1cHcyVVPiChFSzhadPXzw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 27 May 2020 15:51:05 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 27 May 2020 15:51:05 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'Liang, Kan'" <kan.liang@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
- events on some TGL
-Thread-Topic: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
- events on some TGL
-Thread-Index: AQHWNCLukMKeXYb1T0G/ZA+cFsVVx6i75DXQgAAOAgCAABGM4A==
-Date:   Wed, 27 May 2020 14:51:05 +0000
-Message-ID: <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
-References: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
- <869fafc80da84d188678c1cbb0267a0b@AcuMS.aculab.com>
- <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
-In-Reply-To: <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 27 May 2020 10:51:40 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A546C05BD1E;
+        Wed, 27 May 2020 07:51:40 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fs4so1625397pjb.5;
+        Wed, 27 May 2020 07:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IYroLjMhHIVfp0Ps4FH2gR7ebtraWAtzjxwzzSb03/M=;
+        b=nvBQbKqu5uFlfoz4A5iT/BRqwAA8UHqKPLuPI5X+8dMcGD3yQs1GfpF8rFYMs8sIEZ
+         /zOmKsWnxre5wX15QnuVgq96cv7CKeVXGn/necTUqms/syMmCXlw7jNqUXJRh3xJvncE
+         3wpsv9RvAg4NSJrKGNi5T6iLJUJTfPyUaT1cU7raqBROg2rJXVHEIklC1euPIQHLgXiv
+         y4/sXdDpBDT9Wa+X32movpmy4qW5oM16GwBojVvG9+KyZcyVyuPRXymA1ATn7OSYgRtG
+         aLIp2/mLNbZhX1BicXG/LKRfBVktz2IK2vMLTis1ijqd3KRD44FYpN2GkH0VSkpOeFY8
+         d6QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IYroLjMhHIVfp0Ps4FH2gR7ebtraWAtzjxwzzSb03/M=;
+        b=jQCSjgl7Se9HroJXBIS61ojC+QKPHeqkF3Zp0agioAuOH0jK6RlNyOsWYDok1dIrt8
+         7rJnsTmoqMRA1fjf0fuMXWfIqlA529SlH+QsT5LO3HqguEjyZTqSRJfc8aWPD8wky/6g
+         4uTFMkWyR+cVi1//8MzcOzkwyiFnFAJw7xrcybk7pveG9tJD8ybW4c/gsovagb0E96+4
+         L6BVpTUTAgAI2mTGjemxR5WM2VWn92+PXVmQtvaDLPFOIvoIWm74ysClbjDxxzENpHL1
+         zb0MJmCp3wGGbO4NiqsV4dMq70Uac9RxrjL++9Ir1pY3CLAtBpe5rcealtDnllrbcdfn
+         ZzLg==
+X-Gm-Message-State: AOAM532oZfOL7o0zKyx4oODXb60efZdx00SKhc/ZKS+dkfV8Oz+Jdj2K
+        oOsbll2J1aSvh3RdaLm2UzjZfagy
+X-Google-Smtp-Source: ABdhPJzl1QaOIN8BcHat2UxwfnIUWt1l2rFunjdMaTopWGdypIXtikiuE4zr+Kn1y2hdOLqd5yS8bg==
+X-Received: by 2002:a17:902:6b4b:: with SMTP id g11mr2846536plt.9.1590591100154;
+        Wed, 27 May 2020 07:51:40 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f11sm2321239pfa.32.2020.05.27.07.51.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 07:51:39 -0700 (PDT)
+Date:   Wed, 27 May 2020 07:51:38 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Naveen Krishna Chatradhi <nchatrad@amd.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Richard Henderson <rth@twiddle.net>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpumask: guard cpumask_of_node() macro argument
+Message-ID: <20200527145138.GB209591@roeck-us.net>
+References: <20200527134623.930247-1-arnd@arndb.de>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527134623.930247-1-arnd@arndb.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGlhbmcsIEthbg0KPiBTZW50OiAyNyBNYXkgMjAyMCAxNTo0Nw0KPiBPbiA1LzI3LzIw
-MjAgODo1OSBBTSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IGthbi5saWFuZ0BsaW51
-eC5pbnRlbC5jb20NCj4gPj4gU2VudDogMjcgTWF5IDIwMjAgMTM6MzENCj4gPj4NCj4gPj4gRnJv
-bTogS2FuIExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPg0KPiA+Pg0KPiA+PiBXaGVu
-IGNvdW50aW5nIElNQyB1bmNvcmUgZXZlbnRzIG9uIHNvbWUgVEdMIG1hY2hpbmVzLCBhbiBvb3Bz
-IHdpbGwgYmUNCj4gPj4gdHJpZ2dlcmVkLg0KPiA+PiAgICBbIDM5My4xMDEyNjJdIEJVRzogdW5h
-YmxlIHRvIGhhbmRsZSBwYWdlIGZhdWx0IGZvciBhZGRyZXNzOg0KPiA+PiAgICBmZmZmYjQ1MjAw
-ZTE1ODU4DQo+ID4+ICAgIFsgMzkzLjEwMTI2OV0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNz
-IGluIGtlcm5lbCBtb2RlDQo+ID4+ICAgIFsgMzkzLjEwMTI3MV0gI1BGOiBlcnJvcl9jb2RlKDB4
-MDAwMCkgLSBub3QtcHJlc2VudCBwYWdlDQo+ID4+DQo+ID4+IEN1cnJlbnQgcGVyZiB1bmNvcmUg
-ZHJpdmVyIHN0aWxsIHVzZSB0aGUgSU1DIE1BUCBTSVpFIGluaGVyaXRlZCBmcm9tDQo+ID4+IFNO
-Qiwgd2hpY2ggaXMgMHg2MDAwLg0KPiA+PiBIb3dldmVyLCB0aGUgb2Zmc2V0IG9mIElNQyB1bmNv
-cmUgY291bnRlcnMgZm9yIHNvbWUgVEdMIG1hY2hpbmVzIGlzDQo+ID4+IGxhcmdlciB0aGFuIDB4
-NjAwMCwgZS5nLiAweGQ4YTAuDQo+ID4+DQo+ID4+IEVubGFyZ2UgdGhlIElNQyBNQVAgU0laRSBm
-b3IgVEdMIHRvIDB4ZTAwMC4NCj4gPg0KPiA+IFJlcGxhY2luZyBvbmUgJ3JhbmRvbScgY29uc3Rh
-bnQgd2l0aCBhIGRpZmZlcmVudCBvbmUNCj4gPiBkb2Vzbid0IHNlZW0gbGlrZSBhIHByb3BlciBm
-aXguDQo+ID4NCj4gPiBTdXJlbHkgdGhlIGFjdHVhbCBib3VuZHMgb2YgdGhlICdtZW1vcnknIGFy
-ZWEgYXJlIHByb3Blcmx5DQo+ID4gZGVmaW5lZCBzb21ld2hlcmUuDQo+ID4gT3IgYXQgbGVhc3Qg
-c2hvdWxkIGNvbWUgZnJvbSBhIHRhYmxlLg0KPiA+DQo+ID4gWW91IGFsc28gbmVlZCB0byB2ZXJp
-ZnkgdGhhdCB0aGUgb2Zmc2V0cyBhcmUgd2l0aGluIHRoZSBtYXBwZWQgYXJlYS4NCj4gPiBBbiB1
-bmV4cGVjdGVkIG9mZnNldCBzaG91bGRuJ3QgdHJ5IHRvIGFjY2VzcyBhbiBpbnZhbGlkIGFkZHJl
-c3MuDQo+IA0KPiBUaGFua3MgZm9yIHRoZSByZXZpZXcuDQo+IA0KPiBJIGFncmVlIHRoYXQgd2Ug
-c2hvdWxkIGFkZCBhIGNoZWNrIGJlZm9yZSBtYXBwaW5nIHRoZSBhcmVhIHRvIHByZXZlbnQNCj4g
-dGhlIGlzc3VlIGhhcHBlbnMgYWdhaW4uDQo+IA0KPiBJIHRoaW5rIHRoZSBjaGVjayBzaG91bGQg
-YmUgYSBnZW5lcmljIGNoZWNrIGZvciBhbGwgcGxhdGZvcm1zIHdoaWNoIHRyeQ0KPiB0byBtYXAg
-YW4gYXJlYSwgbm90IGp1c3QgZm9yIFRHTC4gSSB3aWxsIHN1Ym1pdCBhIHNlcGFyYXRlIHBhdGNo
-IGZvciB0aGUNCj4gY2hlY2suDQoNCllvdSBuZWVkIGEgY2hlY2sgdGhhdCB0aGUgYWN0dWFsIGFj
-Y2VzcyBpcyB3aXRoaW5nIHRoZSBtYXBwZWQgYXJlYS4NClNvIGluc3RlYWQgb2YgZ2V0dGluZyBh
-biBPT1BTIHlvdSBnZXQgYSBlcnJvci4NCg0KVGhpcyBpcyBhZnRlciB5b3UndmUgbWFwcGVkIGl0
-Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJv
-YWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24g
-Tm86IDEzOTczODYgKFdhbGVzKQ0K
+On Wed, May 27, 2020 at 03:46:08PM +0200, Arnd Bergmann wrote:
+> drivers/hwmon/amd_energy.c:195:15: error: invalid operands to binary expression ('void' and 'int')
+>                                         (channel - data->nr_cpus));
+>                                         ~~~~~~~~~^~~~~~~~~~~~~~~~~
+> include/asm-generic/topology.h:51:42: note: expanded from macro 'cpumask_of_node'
+>     #define cpumask_of_node(node)       ((void)node, cpu_online_mask)
+>                                                ^~~~
+> include/linux/cpumask.h:618:72: note: expanded from macro 'cpumask_first_and'
+>  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
+>                                                                        ^~~~~
+> 
+> Fixes: f0b848ce6fe9 ("cpumask: Introduce cpumask_of_{node,pcibus} to replace {node,pcibus}_to_cpumask")
+> Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
+Didn't I Cc: you on the same patch I sent out earlier ? Never mind, though.
+
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+Guenter
+
+> ---
+>  include/asm-generic/topology.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/asm-generic/topology.h b/include/asm-generic/topology.h
+> index 238873739550..5aa8705df87e 100644
+> --- a/include/asm-generic/topology.h
+> +++ b/include/asm-generic/topology.h
+> @@ -48,7 +48,7 @@
+>    #ifdef CONFIG_NEED_MULTIPLE_NODES
+>      #define cpumask_of_node(node)	((node) == 0 ? cpu_online_mask : cpu_none_mask)
+>    #else
+> -    #define cpumask_of_node(node)	((void)node, cpu_online_mask)
+> +    #define cpumask_of_node(node)	((void)(node), cpu_online_mask)
+>    #endif
+>  #endif
+>  #ifndef pcibus_to_node
+> -- 
+> 2.26.2
+> 
