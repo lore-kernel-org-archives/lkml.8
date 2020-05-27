@@ -2,105 +2,107 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44959C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D771207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E451207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388179AbgE0NcW (ORCPT
+        id S2388209AbgE0Nck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:32:22 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:55211 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387730AbgE0NcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:32:21 -0400
-Received: from localhost.localdomain ([149.172.98.151]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MmUDf-1jDuoj0QoT-00iQ43; Wed, 27 May 2020 15:32:00 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: pl111: add CONFIG_VEXPRESS_CONFIG dependency
-Date:   Wed, 27 May 2020 15:31:42 +0200
-Message-Id: <20200527133158.462057-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:32:40 -0400
+Received: from mga01.intel.com ([192.55.52.88]:9462 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387730AbgE0Nck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:32:40 -0400
+IronPort-SDR: /k1OCIB27SeYHqVbfY3TcuJcuLXq6ZXxPJpRSvU5KEq5Sae4YrAEi907AmssbW7TTvWzl4Z8Ey
+ 0DeYw37lDnUw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:32:38 -0700
+IronPort-SDR: y3NspjWgFG1J+UZl/YxfmJ4wNPX09yXygA3E/BCkabYnk3lkK4EcGux5jegpuSDNaZunG3kwdy
+ IvYNfpQXDENw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="345532773"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 06:32:34 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1jdwAf-009Eer-Mb; Wed, 27 May 2020 16:32:37 +0300
+Date:   Wed, 27 May 2020 16:32:37 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 03/12] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200527133237.GU1634618@smile.fi.intel.com>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526215528.16417-4-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VdHC+fZNgc5oFbgYaNDebudDROcM_peRzOZpTVy55+tJg@mail.gmail.com>
+ <20200527120716.4dke6psqpw726wrd@mobilestation>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ldUeL/J8FW2oKcDogEl4FpPKkgKJzAP0nAa0Qp3NE/6Sp3ehAUK
- dkLxyyfABqgYzO9oQ2WwoarPv95MN2CkN2lCnhr63qu5mIUoJLMO5CerOu4QFzNttpk+IIg
- rDJVYuGto8DuSA+qtd2bymO1x+B9nhmIl0Qfu73WN1tEz9sy4XZcxiiHDgXP2E9yipr2dbJ
- AM6MqWeFGEXA4kTDlK8Aw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qaVK8ksw8ZY=:+BK2LBxQSOejB4O1cySgpZ
- 08ntmG637DghcP7N1jm096g10EjOUZlu6PkwFCYK5P+JAowP0QLlIjdIACmQDpaRFSguSkgGZ
- g+7YO+Sb+cX2ICd845JNHdo29ZWe8sPDE4sQ6G3Gnvq2tMnR4kCatmrgGw6a5VgDkG2dfEeLT
- y0HUiMw8TpwFkZ1bXyU0vZva/NYTT+qAIS761NETu0hrP1nRu2brTkMU9oEO1gPhGvMI9GJyi
- rs1qLBPqEhY9ywfhIxCC/6KMU+07OM1HVm8f6b2LNhg5Rv7i2SpymSMH0sqitiMjeDrzbT1Ct
- lmPX7yVGJbTTrSz4NMzrsncsGHyqaY1dehwD6hmPx3fdsiPMd9KJ8ljwk4QWI1Hfg2qpottxt
- 8q5Xjzhj9tlkJ7QSSHd6FLUlMwXtLBW/9yaj9/pyRhw5IufW0IcvGYH+8Z/OmHrq58nz7B8rX
- yKpR1tjYVPPgDdbtAOQ0dhDxUnX9gF28YMx7kpm3Y/BImDJQvKzRR5gmADwq+T9vaKMcWbrqX
- XImlpZCXqbNTu21RYe624IM4DDI1kmtPZX27fZNrZZkamJcD2RbohaQ0rGSlvfPtEzRnzZis0
- 20Qxq4hHlSuGQXQs3XFgZ8WZ9UagA3iPJc/k7zjw0BG4eS3EDmZcVI/qDZ0VrzR/w9lAnLLRQ
- uzZo6TcYUZ/YgEHgX8G9gsMZIxs66y7Rv7qEV+TKRFKzKiOEqTJTn4t/9l+sJb5ggeD5JqTex
- s/WCILNzoM35lvR4Nj7cicaR77pmnGvEaZKg4i+pgvJdQw3UoFH6wn6uYfl4lYipnNFXqExwx
- y7jJXkJOn7qpnUBGLL+BNUYQodYiMb4NwUl4oWjigAoX1E/7dA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527120716.4dke6psqpw726wrd@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vexpress_config code fails to link in some configurations:
+On Wed, May 27, 2020 at 03:07:16PM +0300, Serge Semin wrote:
+> On Wed, May 27, 2020 at 12:30:04PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 1:00 AM Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > > i2c "reg" property. If it is the compiler will print a warning:
+> > 
+> > Shouldn't be dtc whatever tools fixed?
+> 
+> See the first patch in the series.
 
-drivers/gpu/drm/pl111/pl111_versatile.o: in function `pl111_versatile_init':
-(.text+0x1f0): undefined reference to `devm_regmap_init_vexpress_config'
+I can't by the reason that I have no such. I also answered to cover letter
+about it.
 
-Add a dependency that links to this only if the dependency is there,
-and prevent the configuration where the drm driver is built-in but
-the config is a loadable module.
+> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > >
+> > > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > > binding example for now. Just revert this commit when dtc is fixed.
+> > 
+> > Doesn't sound like a good idea. If user happens in between of these
+> > ping-pong change, how they will know this subtle issue?
+> 
+> As I see it, there are three ways we can follow.
+> 1) Apply the patch and revert when dtc is fixed.
+> 2) Apply the patch, but add a comment above the property, that we need
+>    to get the 0x40000064 address back when dtc is dixed.
+> 3) Leave this ugly warning be until dtc is fixed.
+> 
+> In a comment to v2 Rob mentioned a solution like 1). Personally I am ok with
+> either, though I'd like to see a Rob's final comment about this.
 
-Fixes: 826fc86b5903 ("drm: pl111: Move VExpress setup into versatile init")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/pl111/Kconfig           | 1 +
- drivers/gpu/drm/pl111/pl111_versatile.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+Yes, let's follow what Rob proposes.
 
-diff --git a/drivers/gpu/drm/pl111/Kconfig b/drivers/gpu/drm/pl111/Kconfig
-index 80f6748055e3..33a005816fdd 100644
---- a/drivers/gpu/drm/pl111/Kconfig
-+++ b/drivers/gpu/drm/pl111/Kconfig
-@@ -3,6 +3,7 @@ config DRM_PL111
- 	tristate "DRM Support for PL111 CLCD Controller"
- 	depends on DRM
- 	depends on ARM || ARM64 || COMPILE_TEST
-+	depends on VEXPRESS_CONFIG || !VEXPRESS_CONFIG
- 	depends on COMMON_CLK
- 	select DRM_KMS_HELPER
- 	select DRM_KMS_CMA_HELPER
-diff --git a/drivers/gpu/drm/pl111/pl111_versatile.c b/drivers/gpu/drm/pl111/pl111_versatile.c
-index 64f01a4e6767..451d74205108 100644
---- a/drivers/gpu/drm/pl111/pl111_versatile.c
-+++ b/drivers/gpu/drm/pl111/pl111_versatile.c
-@@ -476,7 +476,8 @@ int pl111_versatile_init(struct device *dev, struct pl111_drm_dev_private *priv)
- 	versatile_clcd_type = (enum versatile_clcd)clcd_id->data;
- 
- 	/* Versatile Express special handling */
--	if (versatile_clcd_type == VEXPRESS_CLCD_V2M) {
-+	if (IS_ENABLED(CONFIG_VEXPRESS_CONFIG) &&
-+	    versatile_clcd_type == VEXPRESS_CLCD_V2M) {
- 		int ret = pl111_vexpress_clcd_init(dev, np, priv);
- 		of_node_put(np);
- 		if (ret)
 -- 
-2.26.2
+With Best Regards,
+Andy Shevchenko
+
 
