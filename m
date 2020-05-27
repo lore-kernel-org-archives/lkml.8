@@ -2,104 +2,114 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC31C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C328A2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590597550;
-	bh=dQEVqZqM5MONADQ+eSg4QugITFrmUEBdvD1ib7pMIwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OGDLWL8UY57Fdrqu1DVjy5flMNhcRYKdhoPqYAkLKXpFDicjcIUkkTR0h6ALlGDjj
-	 vjwGBr+v9tRM6lMdVEKfvSmvnKiBZbKmrSbJ+0INF/bkwUS1c86qfZ76zG5coS526w
-	 NRR9yaKEPrhVhq1plrjcsFzcjiXGvtzbZRfYV4zI=
+	by mail.kernel.org (Postfix) with ESMTP id 8A97E2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391319AbgE0QjK (ORCPT
+        id S2391321AbgE0QkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40286 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 12:40:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:42350 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388126AbgE0QjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:39:09 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113422084C;
-        Wed, 27 May 2020 16:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590597549;
-        bh=dQEVqZqM5MONADQ+eSg4QugITFrmUEBdvD1ib7pMIwc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DAwRKzYmwEM0N8/UH5HFsRhlYOawBQxwQ2USEGE9Ocwt9CwQDDp9+2/NujceFUr5r
-         IgB8Ph/ZqZwWc9hTTzjmAZXJAjVxwW0+R59OGnyLxL2J7IAmkJGnzaCSVZHyS1TSq1
-         1w0pVErfsXkozAxdfyph36TmYm9flXFhAGJjG7fg=
-Date:   Wed, 27 May 2020 17:39:06 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org,
-        Nisha Kumari <nishakumari@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, kgunda@codeaurora.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [v2 3/4] regulator: qcom: Add labibb driver
-Message-ID: <20200527163906.GI5308@sirena.org.uk>
-References: <20200508204200.13481-1-sumit.semwal@linaro.org>
- <20200508204200.13481-4-sumit.semwal@linaro.org>
- <20200511103937.GC8216@sirena.org.uk>
- <CAO_48GFGpHeu_xb9XT9CFMOSUOJgRrb-z_KZ3-r3X78s-2ddjw@mail.gmail.com>
- <CAO_48GF0tjZDmTS+Fa4fv+cfH4skFZP_a9A=P7D0b_si4AFj5A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SdaPbLtAangIkrMZ"
-Content-Disposition: inline
-In-Reply-To: <CAO_48GF0tjZDmTS+Fa4fv+cfH4skFZP_a9A=P7D0b_si4AFj5A@mail.gmail.com>
-X-Cookie: Drop in any mailbox.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S2388126AbgE0QkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:40:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C2E830E;
+        Wed, 27 May 2020 09:40:00 -0700 (PDT)
+Received: from e120877-lin.cambridge.arm.com (e120877-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3E2EC3F52E;
+        Wed, 27 May 2020 09:39:59 -0700 (PDT)
+From:   vincent.donnefort@arm.com
+To:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org
+Cc:     linux-kernel@vger.kernel.org, patrick.bellasi@matbug.net,
+        dietmar.eggemann@arm.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com, Vincent Donnefort <vincent.donnefort@arm.com>
+Subject: [PATCH] sched/debug: Add new tracepoints to track util_est
+Date:   Wed, 27 May 2020 17:39:14 +0100
+Message-Id: <1590597554-370150-1-git-send-email-vincent.donnefort@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vincent Donnefort <vincent.donnefort@arm.com>
 
---SdaPbLtAangIkrMZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The util_est signals are key elements for EAS task placement and
+frequency selection. Having tracepoints to track these signals enables
+load-tracking and schedutil testing and/or debugging by a toolkit.
 
-On Wed, May 27, 2020 at 10:01:27PM +0530, Sumit Semwal wrote:
-> On Thu, 14 May 2020 at 16:57, Sumit Semwal <sumit.semwal@linaro.org> wrote:
+Signed-off-by: Vincent Donnefort <vincent.donnefort@arm.com>
 
-> > > If this is useful factor it out into a helper or the core, other devices
-> > > also have status bits saying if the regulator is enabled.  It looks like
-> > > this may be mainly trying to open code something like enable_time, with
-> > > possibly some issues where the time taken to enable varies a lot.
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index ed168b0..04f9a4c 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -634,6 +634,14 @@ DECLARE_TRACE(sched_overutilized_tp,
+ 	TP_PROTO(struct root_domain *rd, bool overutilized),
+ 	TP_ARGS(rd, overutilized));
+ 
++DECLARE_TRACE(sched_util_est_cfs_tp,
++	TP_PROTO(struct cfs_rq *cfs_rq),
++	TP_ARGS(cfs_rq));
++
++DECLARE_TRACE(sched_util_est_se_tp,
++	TP_PROTO(struct sched_entity *se),
++	TP_ARGS(se));
++
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9228236..ecff02b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -35,6 +35,8 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_dl_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_irq_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+ 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 174d2df..cfc0e06 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3922,6 +3922,8 @@ static inline void util_est_enqueue(struct cfs_rq *cfs_rq,
+ 	enqueued  = cfs_rq->avg.util_est.enqueued;
+ 	enqueued += _task_util_est(p);
+ 	WRITE_ONCE(cfs_rq->avg.util_est.enqueued, enqueued);
++
++	trace_sched_util_est_cfs_tp(cfs_rq);
+ }
+ 
+ /*
+@@ -3952,6 +3954,8 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	ue.enqueued -= min_t(unsigned int, ue.enqueued, _task_util_est(p));
+ 	WRITE_ONCE(cfs_rq->avg.util_est.enqueued, ue.enqueued);
+ 
++	trace_sched_util_est_cfs_tp(cfs_rq);
++
+ 	/*
+ 	 * Skip update of task's estimated utilization when the task has not
+ 	 * yet completed an activation, e.g. being migrated.
+@@ -4017,6 +4021,8 @@ util_est_dequeue(struct cfs_rq *cfs_rq, struct task_struct *p, bool task_sleep)
+ 	ue.ewma >>= UTIL_EST_WEIGHT_SHIFT;
+ done:
+ 	WRITE_ONCE(p->se.avg.util_est, ue);
++
++	trace_sched_util_est_se_tp(&p->se);
+ }
+ 
+ static inline int task_fits_capacity(struct task_struct *p, long capacity)
+-- 
+2.7.4
 
-> > Makes sense; I am not terribly familiar with the regulator core and
-> > helpers, so let me look and refactor accordingly.
-
-> Does something like this make sense, or did I misunderstand your
-> suggestion completely? I'll send the updated patches accordingly.
-
-I guess.
-
---SdaPbLtAangIkrMZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7Ol6oACgkQJNaLcl1U
-h9BwiQf8DfPZbemPqe2sf2BseqmWV/yu1j0xZTqJz7syCgU8GM7tUyxrVe9kKQM5
-uFeI0A1gpwElsO/qsFza0s6ierGn915XyguVGG3TgyKZo4BvQxv798+9jYbeLrgR
-qew3Y9d7WHd8k1ozfzm9lRig28oGyD1c3dnXexh0MuEceX12H9mOmxuEX7Xgs1Z2
-DpAf9kMZzfFfHDPf0Mx7AQEO1ALZuIEOy0kbgBLcMQHVNFpusJFjwZ5Sc7BoJAJY
-IbwHFQ/5ai3xNYXf259wq9xEZ6eJfckrM5cd0HTsq7BEFvFs2045+P5u6g4CLrqd
-4cfaDfSm8Q4So3CSGalXhJhyFRam+w==
-=cox/
------END PGP SIGNATURE-----
-
---SdaPbLtAangIkrMZ--
