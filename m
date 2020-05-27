@@ -2,193 +2,139 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E83C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7732075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590577766;
-	bh=9fcnFlasW8TUPD1jxPuiN0oTUQFwr24T9kaWUNOT8ao=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SoU/Hx51Ge+dk4fxKwlT1vadlyn4pqYTeEXYUd8RNN3+/w+lsv1VZC//vF5lu6GaK
-	 13HuV4yA4Si/1+RCctrbCAdIata8sCLAIHjGVVZqSSvlfF0ez7iUL8Qmxjo20XEFRs
-	 DKE9mBy6JzfyT1pMGnO1LFg0VLwtKRsocZEDqZTs=
+	by mail.kernel.org (Postfix) with ESMTP id B60AE207E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rtJegCKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388095AbgE0LJZ (ORCPT
+        id S2388104AbgE0LRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49422 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387534AbgE0LJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:09:24 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEC402075A;
-        Wed, 27 May 2020 11:09:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590577760;
-        bh=9fcnFlasW8TUPD1jxPuiN0oTUQFwr24T9kaWUNOT8ao=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFd32wYNw1zd5ZosLr3p8o8FMTZ3S4IcBH7fHsLANne+C8oNJrbGV3PKm5WKXtgog
-         V4JNAcKWUn/ZX/gzGxvUizj4fVHgB0BLHhTN+rtRxQS9bremASwyyNYDlvsEbO/4Rp
-         G/fdjm6jDZNHLRhDC/QpGvZyCVuZ9kh1Z1ViwhXM=
-Received: by pali.im (Postfix)
-        id 0CFCBBF4; Wed, 27 May 2020 13:09:19 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v2 2/2] mmc: core: Export device/vendor ids from Common CIS for SDIO cards
-Date:   Wed, 27 May 2020 13:08:58 +0200
-Message-Id: <20200527110858.17504-2-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200527110858.17504-1-pali@kernel.org>
-References: <20200526154334.21222-2-pali@kernel.org>
+        Wed, 27 May 2020 07:17:35 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54360 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387397AbgE0LRe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:17:34 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RBBXim014001;
+        Wed, 27 May 2020 13:17:11 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=rr7ePK+lAdwpvBXNXavKI3R8C4Kk3NnESgyEf8criWw=;
+ b=rtJegCKLGvavFARM5Tsya5iX1vUKjOfVvlDqgiXKgSH2EczQYLVHm73X+qT0TgJGffee
+ zGjSVlLyKwR54Vwd4f2Ywmivh32IoRcyNUka5YTHXrMpWwsrEyi2EtZvglA7OVQasdkK
+ pvGUlrfBcUvBVP05+f/WyJCJfCB2lvq3JBnDBKEdWiIC6TtP6desLTJj+O3Gim2cVnK3
+ +gSCRncK1uiqJ5p61WCxSc4LOYdi9FjwowMyexgkB3IVgVjz2rKMMsYR4stRiqNMAtVe
+ fzUC+Fqf2LqZQ0mP5JfyaIl3mF0SloAovp4AOaty3AKt0Gn2dPtVCYs9MfX0VAAIu/Pm yw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 316tqh51y3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 27 May 2020 13:17:11 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 86F1010002A;
+        Wed, 27 May 2020 13:17:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 64AEC2A4D83;
+        Wed, 27 May 2020 13:17:10 +0200 (CEST)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE1.st.com
+ (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 May
+ 2020 13:17:09 +0200
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Wed, 27 May 2020 13:17:09 +0200
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        Hugues FRUCHET <hugues.fruchet@st.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+Thread-Topic: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+Thread-Index: AQHWM3CeA6bTrCFpTUymlrJxXTw8j6i7lUyAgAATBIA=
+Date:   Wed, 27 May 2020 11:17:09 +0000
+Message-ID: <ab4340c0-bda3-e752-9073-e162e6325bb1@st.com>
+References: <20200526151619.8779-1-benjamin.gaignard@st.com>
+ <jhjk10xu1tq.mognet@arm.com>
+In-Reply-To: <jhjk10xu1tq.mognet@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <39E329C3251EC747879CFC71C308FA00@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device/vendor ids from Common CIS (Card Information Structure) may be
-different as device/vendor ids from CIS on particular SDIO function.
-
-Kernel currently exports only device/vendor ids from SDIO functions and not
-"main" device/vendor ids from Common CIS.
-
-This patch exports "main" device/vendor ids for SDIO and SD combo cards at
-top level mmc device in sysfs hierarchy.
-
-Userspace can use e.g. udev rules to correctly match whole SDIO card based
-on Common CIS device/vendor id and not only one particular SDIO function.
-Having this information in userspace also helps developers to debug whole
-SDIO card as e.g. kernel mmc quirks use device/vendor ids from Common CIS
-and not from particular SDIO function. Also it allows to write userspace
-applications which list all connected SDIO cards based on CIS ids.
-
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <marek.behun@nic.cz>
-
----
-Changes in V2:
-* Make sd_std_group static
-* Put more information into commit message
----
- drivers/mmc/core/bus.c  |  7 +++++++
- drivers/mmc/core/sd.c   | 26 +++++++++++++++++++++++++-
- drivers/mmc/core/sdio.c | 20 +++++++++++++++++++-
- 3 files changed, 51 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-index b1cb447da..70207f11a 100644
---- a/drivers/mmc/core/bus.c
-+++ b/drivers/mmc/core/bus.c
-@@ -93,6 +93,13 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			return retval;
- 	}
- 
-+	if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
-+		retval = add_uevent_var(env, "SDIO_ID=%04X:%04X",
-+					card->cis.vendor, card->cis.device);
-+		if (retval)
-+			return retval;
-+	}
-+
- 	/*
- 	 * SDIO (non-combo) cards are not handled by mmc_block driver and do not
- 	 * have accessible CID register which used by mmc_card_name() function.
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 76c7add36..ee1a51ff6 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -707,7 +707,12 @@ static ssize_t mmc_dsr_show(struct device *dev,
- 
- static DEVICE_ATTR(dsr, S_IRUGO, mmc_dsr_show, NULL);
- 
-+MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
-+MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
-+
- static struct attribute *sd_std_attrs[] = {
-+	&dev_attr_vendor.attr,
-+	&dev_attr_device.attr,
- 	&dev_attr_cid.attr,
- 	&dev_attr_csd.attr,
- 	&dev_attr_scr.attr,
-@@ -726,7 +731,26 @@ static struct attribute *sd_std_attrs[] = {
- 	&dev_attr_dsr.attr,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(sd_std);
-+
-+static umode_t sd_std_is_visible(struct kobject *kobj, struct attribute *attr,
-+				 int index)
-+{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct mmc_card *card = mmc_dev_to_card(dev);
-+
-+	/* CIS vendor and device ids are available only for Combo cards */
-+	if ((attr == &dev_attr_vendor.attr || attr == &dev_attr_device.attr) &&
-+	    card->type != MMC_TYPE_SD_COMBO)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group sd_std_group = {
-+	.attrs = sd_std_attrs,
-+	.is_visible = sd_std_is_visible,
-+};
-+__ATTRIBUTE_GROUPS(sd_std);
- 
- struct device_type sd_type = {
- 	.groups = sd_std_groups,
-diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-index ebb387aa5..2d86a9db5 100644
---- a/drivers/mmc/core/sdio.c
-+++ b/drivers/mmc/core/sdio.c
-@@ -27,6 +27,24 @@
- #include "sdio_ops.h"
- #include "sdio_cis.h"
- 
-+MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
-+MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
-+MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
-+MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
-+
-+static struct attribute *sdio_std_attrs[] = {
-+	&dev_attr_vendor.attr,
-+	&dev_attr_device.attr,
-+	&dev_attr_ocr.attr,
-+	&dev_attr_rca.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(sdio_std);
-+
-+static struct device_type sdio_type = {
-+	.groups = sdio_std_groups,
-+};
-+
- static int sdio_read_fbr(struct sdio_func *func)
- {
- 	int ret;
-@@ -598,7 +616,7 @@ static int mmc_sdio_init_card(struct mmc_host *host, u32 ocr,
- 	/*
- 	 * Allocate card structure.
- 	 */
--	card = mmc_alloc_card(host, NULL);
-+	card = mmc_alloc_card(host, &sdio_type);
- 	if (IS_ERR(card)) {
- 		err = PTR_ERR(card);
- 		goto err;
--- 
-2.20.1
-
+DQoNCk9uIDUvMjcvMjAgMTI6MDkgUE0sIFZhbGVudGluIFNjaG5laWRlciB3cm90ZToNCj4gSGkg
+QmVuamFtaW4sDQo+DQo+IE9uIDI2LzA1LzIwIDE2OjE2LCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90
+ZToNCj4+IEEgZmlyc3Qgcm91bmQgWzFdIG9mIGRpc2N1c3Npb25zIGFuZCBzdWdnZXN0aW9ucyBo
+YXZlIGFscmVhZHkgYmUgZG9uZSBvbg0KPj4gdGhpcyBzZXJpZXMgYnV0IHdpdGhvdXQgZm91bmQg
+YSBzb2x1dGlvbiB0byB0aGUgcHJvYmxlbS4gSSByZXNlbmQgaXQgdG8NCj4+IHByb2dyZXNzIG9u
+IHRoaXMgdG9waWMuDQo+Pg0KPiBBcG9sb2dpZXMgZm9yIHNsZWVwaW5nIG9uIHRoYXQgcHJldmlv
+dXMgdGhyZWFkLg0KPg0KPiBTbyB3aGF0IGhhZCBiZWVuIHN1Z2dlc3RlZCBvdmVyIHRoZXJlIHdh
+cyB0byB1c2UgdWNsYW1wIHRvIGJvb3N0IHRoZQ0KPiBmcmVxdWVuY3kgb2YgdGhlIGhhbmRsaW5n
+IHRocmVhZDsgaG93ZXZlciBpZiB5b3UgdXNlIHRocmVhZGVkIElSUXMgeW91DQo+IGdldCBSVCB0
+aHJlYWRzLCB3aGljaCBhbHJlYWR5IGdldCB0aGUgbWF4IGZyZXF1ZW5jeSBieSBkZWZhdWx0IChh
+dCBsZWFzdA0KPiB3aXRoIHNjaGVkdXRpbCkuDQo+DQo+IERvZXMgdGhhdCBub3Qgd29yayBmb3Ig
+eW91LCBhbmQgaWYgc28sIHdoeT8NClRoYXQgZG9lc24ndCB3b3JrIGJlY2F1c2UgYWxtb3N0IGV2
+ZXJ5dGhpbmcgaXMgZG9uZSBieSB0aGUgaGFyZHdhcmUgYmxvY2tzDQp3aXRob3V0IGNoYXJnZSB0
+aGUgQ1BVIHNvIHRoZSB0aHJlYWQgaXNuJ3QgcnVubmluZy4gSSBoYXZlIGRvbmUgdGhlIA0KdGVz
+dHMgd2l0aCBzY2hlZHV0aWwNCmFuZCBvbmRlbWFuZCBzY2hlZHVsZXIgKHdoaWNoIGlzIHRoZSBv
+bmUgSSdtIHRhcmdldGluZykuIEkgaGF2ZSBubyANCmlzc3VlcyB3aGVuIHVzaW5nDQpwZXJmb3Jt
+YW5jZSBzY2hlZHVsZXIgYmVjYXVzZSBpdCBhbHdheXMga2VlcCB0aGUgaGlnaGVzdCBmcmVxdWVu
+Y2llcy4NCg0KDQo+DQo+PiBXaGVuIHN0YXJ0IHN0cmVhbWluZyBmcm9tIHRoZSBzZW5zb3IgdGhl
+IENQVSBsb2FkIGNvdWxkIHJlbWFpbiB2ZXJ5IGxvdw0KPj4gYmVjYXVzZSBhbG1vc3QgYWxsIHRo
+ZSBjYXB0dXJlIHBpcGVsaW5lIGlzIGRvbmUgaW4gaGFyZHdhcmUgKGkuZS4gd2l0aG91dA0KPj4g
+dXNpbmcgdGhlIENQVSkgYW5kIGxldCBiZWxpZXZlIHRvIGNwdWZyZXEgZ292ZXJub3IgdGhhdCBp
+dCBjb3VsZCB1c2UgbG93ZXINCj4+IGZyZXF1ZW5jaWVzLiBJZiB0aGUgZ292ZXJub3IgZGVjaWRl
+cyB0byB1c2UgYSB0b28gbG93IGZyZXF1ZW5jeSB0aGF0DQo+PiBiZWNvbWVzIGEgcHJvYmxlbSB3
+aGVuIHdlIG5lZWQgdG8gYWNrbm93bGVkZ2UgdGhlIGludGVycnVwdCBkdXJpbmcgdGhlDQo+PiBi
+bGFua2luZyB0aW1lLg0KPj4gVGhlIGRlbGF5IHRvIGFjayB0aGUgaW50ZXJydXB0IGFuZCBwZXJm
+b3JtIGFsbCB0aGUgb3RoZXIgYWN0aW9ucyBiZWZvcmUNCj4+IHRoZSBuZXh0IGZyYW1lIGlzIHZl
+cnkgc2hvcnQgYW5kIGRvZXNuJ3QgYWxsb3cgdG8gdGhlIGNwdWZyZXEgZ292ZXJub3IgdG8NCj4+
+IHByb3ZpZGUgdGhlIHJlcXVpcmVkIGJ1cnN0IG9mIHBvd2VyLiBUaGF0IGxlZCB0byBkcm9wIHRo
+ZSBoYWxmIG9mIHRoZSBmcmFtZXMuDQo+Pg0KPj4gVG8gYXZvaWQgdGhpcyBwcm9ibGVtLCBEQ01J
+IGRyaXZlciBpbmZvcm1zIHRoZSBjcHVmcmVxIGdvdmVybm9ycyBieSBhZGRpbmcNCj4+IGEgY3B1
+ZnJlcSBtaW5pbXVtIGxvYWQgUW9TIHJlc3F1ZXN0Lg0KPj4NCj4+IEJlbmphbWluDQo+Pg0KPj4g
+WzFdIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDIwLzQvMjQvMzYwDQo+Pg0KPj4gQmVuamFtaW4g
+R2FpZ25hcmQgKDMpOg0KPj4gICAgUE06IFFvUzogSW50cm9kdWNlIGNwdWZyZXEgbWluaW11bSBs
+b2FkIFFvUw0KPj4gICAgY3B1ZnJlcTogZ292ZXJub3I6IFVzZSBtaW5pbXVtIGxvYWQgUW9TDQo+
+PiAgICBtZWRpYTogc3RtMzItZGNtaTogSW5mb3JtIGNwdWZyZXEgZ292ZXJub3JzIGFib3V0IGNw
+dSBsb2FkIG5lZWRzDQo+Pg0KPj4gICBkcml2ZXJzL2NwdWZyZXEvY3B1ZnJlcV9nb3Zlcm5vci5j
+ICAgICAgICB8ICAgNSArDQo+PiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzIt
+ZGNtaS5jIHwgICA4ICsrDQo+PiAgIGluY2x1ZGUvbGludXgvcG1fcW9zLmggICAgICAgICAgICAg
+ICAgICAgIHwgIDEyICsrDQo+PiAgIGtlcm5lbC9wb3dlci9xb3MuYyAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgMjEzICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPj4gICA0IGZpbGVz
+IGNoYW5nZWQsIDIzOCBpbnNlcnRpb25zKCspDQo=
