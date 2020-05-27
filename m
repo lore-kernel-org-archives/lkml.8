@@ -2,128 +2,185 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF10EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B53207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10A2207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:31:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mNi677ae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbgE0NbI (ORCPT
+        id S2388150AbgE0NbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:31:08 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37540 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730207AbgE0NbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:31:08 -0400
-IronPort-SDR: cPr9QEJLajX/OmnHfYwi59HqP9Q4ImQD3cCisdynpcicI/5abbWh/CjhzaTQH5h/chdJg7htRU
- NjQcF5w1peOQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:31:07 -0700
-IronPort-SDR: 4g+EGdLViyE/BApCoQKwJjbe0Yuq38StjiFfHVLHkOPvOI/nr56g4SXtsrYICTFRC86UljUwFd
- do+tWTf2yXZw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="414204425"
-Received: from irsmsx104.ger.corp.intel.com ([163.33.3.159])
-  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 06:31:05 -0700
-Received: from irsmsx103.ger.corp.intel.com ([169.254.3.180]) by
- IRSMSX104.ger.corp.intel.com ([169.254.5.58]) with mapi id 14.03.0439.000;
- Wed, 27 May 2020 14:31:04 +0100
-From:   "Alessandrelli, Daniele" <daniele.alessandrelli@intel.com>
-To:     "pavel@ucw.cz" <pavel@ucw.cz>, "arnd@arndb.de" <arnd@arndb.de>
-CC:     "robh@kernel.org" <robh@kernel.org>,
-        "Murphy, Paul J" <paul.j.murphy@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniele.alessandrelli@linux.intel.com" 
-        <daniele.alessandrelli@linux.intel.com>
-Subject: Re: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-Thread-Topic: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
-Thread-Index: AQHWNCsR19Q+ykCgXk+PO11ypSMwbA==
-Date:   Wed, 27 May 2020 13:31:04 +0000
-Message-ID: <ac0534138facc25c4cbcbbff68fc0ba3c2de87b6.camel@linux.intel.com>
-References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
-         <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
-         <20200501081002.GA1055721@kroah.com>
-         <f60aece195cd0700728fc38b0398949a82b72fc3.camel@linux.intel.com>
-         <20200524212851.GG1192@bug>
-         <CAK8P3a225pqBfzQ19e6Gt0s_tYBp29xLb8EG==hhz=1wc7aVCA@mail.gmail.com>
-In-Reply-To: <CAK8P3a225pqBfzQ19e6Gt0s_tYBp29xLb8EG==hhz=1wc7aVCA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.252.23.181]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <429F807DF1B48F48800F02C228FD5FED@intel.com>
+        Wed, 27 May 2020 09:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730207AbgE0NbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:31:18 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9449BC08C5C1;
+        Wed, 27 May 2020 06:31:18 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id r10so11750024pgv.8;
+        Wed, 27 May 2020 06:31:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7UTCqkxw0E37ZcBKPLbqUR2FGWZfkP4x8wzUp0dtX/k=;
+        b=mNi677aeVfuSkx3f4deL/wnpijuZIzMsoVJWy5PShY7ns358wJ1GPJNbaVn57opoAA
+         O+5RWhEWaK87ucSC24X+AZnOWh2G4etnlDd+wpCLu4hu/TlwiAiZO1pDSGxeEI86fnLv
+         457ZunE4EkQPoK7e1AIPdlDvBaD09EltUWyPo09idX7ZsOHssLtjt1+EoQnxknff8BdK
+         Y07N6In5JMLvsbe/mTNFgY57PzSgiscV8wQJlzI9luqAJkpsBMSNQwl/PqHzhIvbLcJv
+         TL2N535JvGFddEk/o9+yP6JXfOBJzgY2pofYk+FORPYAHgJsuuOqqMi3IJQR3E8jOnpp
+         xodg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7UTCqkxw0E37ZcBKPLbqUR2FGWZfkP4x8wzUp0dtX/k=;
+        b=ZjMucQ6GhK/oK71737n3+5H5c7RMnJzlEx1U9IKQQMW0JZ05m04Wel9lIRC1s+8+o/
+         yDTX6MECwZhhUnZ40/YXoNQVK5zBJjQFnGlH/utaLNE8gn4/Mfnttp+wpz/ysOlp+Fpg
+         1I/LSyEr6p5I0jjolPzkj2MCS1n6sJ+TyhLfSuWZrVFmgbtOGqnGl6dSINwn9ZE9wQOP
+         GIeJriMRTgMa0QFvjcLJbEAulxTRIGALUc8WyGMbdr1QghJ+lMrnVtisV8ycHBVVjDOY
+         G/JpN2fDbEBFmk/Y9+P3fSINSfgLlbvNkc2nX21dzSZKEplvB+d3mkfIrBlLFYgeFljX
+         ySaw==
+X-Gm-Message-State: AOAM530V+vb07ZZ/qZ5+aKZ8CDiZ2FZe1E+NjV94cakYB8zUQKqTRfwk
+        yGjV8NcJgu9WWH+Fik3Ujng=
+X-Google-Smtp-Source: ABdhPJz5yLFPNCHcVWcWDooYr0nX5RkE2SOQd0yC+BEF25FOjka4n4MH0U+L8/94UrIJumh01jJ9+g==
+X-Received: by 2002:aa7:8691:: with SMTP id d17mr4033851pfo.308.1590586277744;
+        Wed, 27 May 2020 06:31:17 -0700 (PDT)
+Received: from localhost ([144.34.194.82])
+        by smtp.gmail.com with ESMTPSA id z8sm2099093pgc.80.2020.05.27.06.31.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 06:31:17 -0700 (PDT)
+Date:   Wed, 27 May 2020 21:31:12 +0800
+From:   Dejin Zheng <zhengdejin5@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     gregkh@linuxfoundation.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v2 1/2] drivers: provide devm_platform_request_irq()
+Message-ID: <20200527133112.GC7143@nuc8i5>
+References: <20200523145157.16257-1-zhengdejin5@gmail.com>
+ <20200523145157.16257-2-zhengdejin5@gmail.com>
+ <c280f421-fadf-41ab-3227-6377906f2a1c@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c280f421-fadf-41ab-3227-6377906f2a1c@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXJuZCwgUGF2ZWwsDQoNClRoYW5rcyBmb3IgeW91ciBmZWVkYmFjay4NCg0KPiA+ID4gDQo+
-ID4gPiBUaGUgcHJvYmxlbSBpcyB0aGF0IEkgbmVlZCB0aGlzIGNvZGUgdG8gYmUgcnVuIGVhcmx5
-IGF0IGJvb3QsIHNvDQo+ID4gPiBJDQo+ID4gPiBkb24ndCB0aGluayBJIGNhbiBtYWtlIHRoaXMg
-YSBtb2R1bGUuDQo+ID4gDQo+ID4gSG93IGVhcmx5IGlzIGVhcmx5IGVub3VnaD8NCg0KQmFzaWNh
-bGx5LCBiZWZvcmUgYW55IGRldmljZSB3aXRoIGRpcmVjdCBtZW1vcnkgYWNjZXNzIGlzIGFjdGl2
-YXRlZA0KKGJlY2F1c2UgaWYgYW55Ym9keSwgZXhjZXB0IHRoZSBBUk0gQ1BVLCB0cmllcyB0byBh
-Y2Nlc3MgdGhhdCBtZW1vcnksDQp0aGUgbWVtb3J5IHByb3RlY3Rpb24gbWVjaGFuaXNtIHdpbGwg
-YmUgdHJpZ2dlcmVkIGFuZCBhIHJlYm9vdCB3aWxsDQpoYXBwZW4pLg0KDQo+ID4gDQo+ID4gV2hh
-dCBib290bG9hZGVyIGFyZSB5b3UgdXNpbmc/DQoNClUtQm9vdA0KDQo+ID4gDQo+ID4gSSBiZWxp
-ZXZlIHlvdSBzaG91bGQgc2ltcGx5IGZpeCB5b3VyIGJvb3Rsb2FkZXIgbm90IHRvIHBhc3MgbG9j
-a2VkDQo+ID4gbWVtb3J5IHRvIHRoZSBrZXJuZWwuDQoNClRoZSBib290bG9hZGVyIGlzIGJlaGF2
-aW5nIGxpa2UgdGhhdCBmb3Igc2VjdXJpdHkgcmVhc29ucywgc28gd2UnZCBsaWtlDQp0byBhdm9p
-ZCBtb2RpZnlpbmcgaXQuIEknbGwgcHJvdmlkZSBtb3JlIGluZm9ybWF0aW9uIGJlbG93Lg0KDQo+
-ID4gDQo+ID4gQWx0ZXJuYXRpdmVseSwgdGFrZSB0aGF0IG1lbW9yeSBvZmYgdGhlICJtZW1vcnkg
-YXZhaWxhYmxlIiBtYXBzLA0KPiA+IGFuZCBvbmx5IHJlLWFkZCBpdCBvbmNlDQo+ID4gaXQgaXMg
-dXNhYmxlLg0KPiA+IA0KPiA+IEFueXRoaW5nIGVsc2UgaXMgZGFuZ2Vyb3VzLg0KDQpUaGF0IHNv
-dW5kcyBsaWtlIGFuIGludGVyZXN0aW5nIHNvbHV0aW9uLCB0aGFua3MhDQoNCkRvIHlvdSBrbm93
-IGFueSBjb2RlIHRoYXQgSSBjYW4gdXNlIGFzIGEgcmVmZXJlbmNlPw0KDQpTaW5jZSwgdGhlIHBy
-b3RlY3RlZCBtZW1vcnkgaXMganVzdCBhIGZldyBtZWdhYnl0ZXMgbGFyZ2UsIEkgZ3Vlc3MgdGhh
-dA0KaW4gdGhlb3J5IHdlIGNvdWxkIGp1c3QgaGF2ZSBVLUJvb3QgbWFyayBpdCBhcyByZXNlcnZl
-ZCBtZW1vcnkgYW5kDQpmb3JnZXQgYWJvdXQgaXQ7IGJ1dCBpZiB0aGVyZSdzIGEgd2F5IHRvIHJl
-LWFkZCBpdCBiYWNrIG9uY2UgaW4gTGludXgNCnRoYXQgd291bGQgYmUgZ3JlYXQuDQoNCj4gDQo+
-IEFncmVlZCwgdGhpcyBzb3VuZHMgbGlrZSBhbiBpbmNvbXBhdGlibGUgZXh0ZW5zaW9uIG9mIHRo
-ZSBib290DQo+IHByb3RvY29sDQo+IHRoYXQgd2Ugc2hvdWxkIG90aGVyd2lzZSBub3QgbWVyZ2Uu
-DQo+IA0KPiBIb3dldmVyLCB0aGVyZSBpcyBhbHNvIGEgbG90IG9mIG1pc3NpbmcgaW5mb3JtYXRp
-b24gaGVyZSwgYW5kIGl0IGlzDQo+IGFsd2F5cw0KPiBwb3NzaWJsZSB0aGV5IGFyZSB0cnlpbmcg
-dG8gc29tZXRoaW5nIGZvciBhIGdvb2QgcmVhc29uLiBBcyBsb25nIGFzDQo+IHRoZQ0KPiBwcm9i
-bGVtIHRoYXQgdGhlIGJvb3Rsb2FkZXIgaXMgdHJ5aW5nIHRvIHNvbHZlIGlzIGV4cGxhaW5lZCB3
-ZWxsDQo+IGVub3VnaA0KPiBpbiB0aGUgY2hhbmdlbG9nLCB3ZSBjYW4gZGlzY3VzcyBpdCB0byBz
-ZWUgaG93IGl0IHNob3VsZCBiZSBkb25lDQo+IHByb3Blcmx5Lg0KDQoNCkFwb2xvZ2llcywgSSBz
-aG91bGQgaGF2ZSBwcm92aWRlZCBtb3JlIGluZm9ybWF0aW9uLiBIZXJlIGl0IGlzIDopDQoNCkJh
-c2ljYWxseSwgYXQgYm9vdCB0aW1lIFUtQm9vdCBjb2RlIGFuZCBjb3JlIG1lbW9yeSAoLnRleHQs
-IC5kYXRhLA0KLmJzcywgZXRjLikgaXMgcHJvdGVjdGVkIGJ5IHRoaXMgSXNvbGF0ZWQgTWVtb3J5
-IFJlZ2lvbiAoSU1SKSB3aGljaA0KcHJldmVudHMgYW55IGRldmljZSBvciBwcm9jZXNzaW5nIHVu
-aXRzIG90aGVyIHRoYW4gdGhlIEFSTSBDUFUgdG8NCmFjY2Vzcy9tb2RpZnkgdGhlIG1lbW9yeS4N
-Cg0KVGhpcyBpcyBkb25lIGZvciBzZWN1cml0eSByZWFzb25zLCB0byByZWR1Y2UgdGhlIHJpc2tz
-IHRoYXQgYSBwb3RlbnRpYWwNCmF0dGFja2VyIGNhbiB1c2UgImhpamFja2VkIiBIVyBkZXZpY2Vz
-IHRvIGludGVyZmVyZSB3aXRoIHRoZSBib290DQpwcm9jZXNzIChhbmQgYnJlYWsgdGhlIHNlY3Vy
-ZSBib290IGZsb3cgaW4gcGxhY2UpLg0KDQpCZWZvcmUgYm9vdGluZyB0aGUgS2VybmVsLCBVLUJv
-b3Qgc2V0cyB1cCBhIG5ldyBJTVIgdG8gcHJvdGVjdCB0aGUNCktlcm5lbCBpbWFnZSAoc28gdGhh
-dCB0aGUga2VybmVsIGNhbiBiZW5lZml0IG9mIGEgc2ltaWxhciBwcm90ZWN0aW9uKQ0KYW5kIHRo
-ZW4gc3RhcnRzIHRoZSBrZXJuZWwsIGRlbGVnYXRpbmcgdG8gdGhlIGtlcm5lbCB0aGUgdGFzayBv
-Zg0Kc3dpdGNoaW5nIG9mZiB0aGUgVS1Cb290IElNUi4NCg0KVS1Cb290IGRvZXNuJ3QgdHVybiBv
-ZmYgaXRzIG93biBJTVIgYmVjYXVzZSBkb2luZyBzbyB3b3VsZCBsZWF2ZSBhDQoodGlueSkgd2lu
-ZG93IGluIHdoaWNoIHRoZSBib290IGV4ZWN1dGlvbiBmbG93IGlzIG5vdCBwcm90ZWN0ZWQuDQoN
-CklmIHlvdSBoYXZlIGFueSBhZGRpdGlvbmFsIHF1ZXN0aW9ucyBvciBmZWVkYmFjaywganVzdCBs
-ZXQgbWUga25vdy4NCg0KUmVnYXJkcywNCkRhbmllbGUNCg0KDQoNCg0KDQoNCg0KDQotLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJ
-bnRlbCBSZXNlYXJjaCBhbmQgRGV2ZWxvcG1lbnQgSXJlbGFuZCBMaW1pdGVkClJlZ2lzdGVyZWQg
-aW4gSXJlbGFuZApSZWdpc3RlcmVkIE9mZmljZTogQ29sbGluc3Rvd24gSW5kdXN0cmlhbCBQYXJr
-LCBMZWl4bGlwLCBDb3VudHkgS2lsZGFyZQpSZWdpc3RlcmVkIE51bWJlcjogMzA4MjYzCgoKVGhp
-cyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgbWF0
-ZXJpYWwgZm9yIHRoZSBzb2xlCnVzZSBvZiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50KHMpLiBBbnkg
-cmV2aWV3IG9yIGRpc3RyaWJ1dGlvbiBieSBvdGhlcnMgaXMKc3RyaWN0bHkgcHJvaGliaXRlZC4g
-SWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIGNvbnRhY3QgdGhl
-CnNlbmRlciBhbmQgZGVsZXRlIGFsbCBjb3BpZXMuCg==
+On Tue, May 26, 2020 at 08:11:22PM +0300, Grygorii Strashko wrote:
+> 
+> 
+> On 23/05/2020 17:51, Dejin Zheng wrote:
+> > It will call devm_request_irq() after platform_get_irq() function
+> > in many drivers, sometimes, it is not right for the error handling
+> > of these two functions in some drivers. so provide this function
+> > to simplify the driver.
+> > 
+> > Cc: Michal Simek <michal.simek@xilinx.com>
+> > Cc: Wolfram Sang <wsa@the-dreams.de>
+> > Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> > ---
+> > v1 -> v2:
+> > 	- The patch content has not changed. just resend it by this discussion:
+> > 	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+> > 
+> >   drivers/base/platform.c         | 33 +++++++++++++++++++++++++++++++++
+> >   include/linux/platform_device.h |  4 ++++
+> >   2 files changed, 37 insertions(+)
+> > 
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index c0d0a5490ac6..1d2fd1ea3bc5 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -275,6 +275,39 @@ int platform_irq_count(struct platform_device *dev)
+> >   }
+> >   EXPORT_SYMBOL_GPL(platform_irq_count);
+> > +/**
+> > + * devm_platform_request_irq - get an irq and allocate an interrupt
+> > + *				line for a managed device
+> > + * @pdev: platform device
+> > + * @num: IRQ number index
+> > + * @irq: get an IRQ for a device if irq != NULL
+> > + * @handler: function to be called when the IRQ occurs
+> > + * @irqflags: interrupt type flags
+> > + * @devname: an ascii name for the claiming device, dev_name(dev) if NULL
+> > + * @dev_id: a cookie passed back to the handler function
+> > + *
+> > + * Return: zero on success, negative error number on failure.
+> > + */
+> > +int devm_platform_request_irq(struct platform_device *pdev, unsigned int num,
+> > +		unsigned int *irq, irq_handler_t handler,
+> > +		unsigned long irqflags, const char *devname, void *dev_id)
+> > +{
+> > +	int tmp_irq, ret;
+> > +
+> > +	tmp_irq = platform_get_irq(pdev, num);
+> > +	if (tmp_irq < 0)
+> > +		return tmp_irq;
+> > +
+> > +	ret = devm_request_irq(&pdev->dev, tmp_irq, handler, irqflags,
+> > +				devname, dev_id);
+> > +	if (ret < 0)
+> > +		dev_err(&pdev->dev, "can't request IRQ\n");
+> > +	else if (irq != NULL)
+> > +		*irq = tmp_irq;
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(devm_platform_request_irq);
+> > +
+> >   /**
+> >    * platform_get_resource_byname - get a resource for a device by name
+> >    * @dev: platform device
+> > diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> > index 77a2aada106d..d94652deea5c 100644
+> > --- a/include/linux/platform_device.h
+> > +++ b/include/linux/platform_device.h
+> > @@ -11,6 +11,7 @@
+> >   #define _PLATFORM_DEVICE_H_
+> >   #include <linux/device.h>
+> > +#include <linux/interrupt.h>
+> >   #define PLATFORM_DEVID_NONE	(-1)
+> >   #define PLATFORM_DEVID_AUTO	(-2)
+> > @@ -70,6 +71,9 @@ devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+> >   extern int platform_get_irq(struct platform_device *, unsigned int);
+> >   extern int platform_get_irq_optional(struct platform_device *, unsigned int);
+> >   extern int platform_irq_count(struct platform_device *);
+> > +extern int devm_platform_request_irq(struct platform_device *pdev,
+> > +		unsigned int num, unsigned int *irq, irq_handler_t handler,
+> > +		unsigned long irqflags, const char *devname, void *dev_id);
+> 
+> 
+> it has to be documented in devres.rst
+>
+Grygorii, Thnaks! I will add it in patch v3.
 
+BTW, the Gmail will prevent me sending messages to a large number of
+recipients, So I reduced some recipients, but still retained i2c and
+linux kernel mail list. sorry!
+
+BR,
+Dejin
+
+> >   extern struct resource *platform_get_resource_byname(struct platform_device *,
+> >   						     unsigned int,
+> >   						     const char *);
+> > 
+> 
+> 
+> 
+> -- 
+> Best regards,
+> grygorii
