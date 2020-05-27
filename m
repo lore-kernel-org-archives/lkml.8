@@ -6,99 +6,132 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D69C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44CB207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C0B207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388594AbgE0NnE (ORCPT
+        id S2388601AbgE0Nnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:43:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53793 "EHLO
+        Wed, 27 May 2020 09:43:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:39385 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387682AbgE0NnD (ORCPT
+        with ESMTP id S2387581AbgE0Nnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:43:03 -0400
+        Wed, 27 May 2020 09:43:31 -0400
 Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N3bjH-1ivhXw2f9X-010grN; Wed, 27 May 2020 15:42:55 +0200
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MHVWT-1jrOix2p1t-00DWd3; Wed, 27 May 2020 15:43:22 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>, dri-devel@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nouveau: add fbdev dependency
-Date:   Wed, 27 May 2020 15:42:23 +0200
-Message-Id: <20200527134254.854672-1-arnd@arndb.de>
+To:     Al Cooper <alcooperx@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-usb@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: ehci: add struct entry for broadcom insnreg
+Date:   Wed, 27 May 2020 15:43:04 +0200
+Message-Id: <20200527134320.869042-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:UwRS52SKomS1dGxg/Cr8izduWX8ZD4LmV2z+vHIfJD0wpmnsWtB
- QsS+qAKdfR75PBtRiCiim1nlfytCKTLhu6JCbh4PrnV+FnERUpJOUQRYyQq4RJp3C9DiNIG
- 0xVNyeytj45f/FlCXkUhpuZF3JKkcmVsifwuOG52sLtCSYd5ofSlkPSaA8yVL02/yhRHvp5
- BNBjDEjhB8nkcGG87ChpQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sZgzWgmPFv0=:z9Y1bGS9xTuXxA3csoNcb1
- UZYKzg8vEU0M/l7zTe/VPttt95Av/k+Yn3Q41pSeJcoDFb4gSzkWi9fOLhOZjjGHkOngTp2fQ
- NUt+G+8tVnTxUc7wH5ZxMhEciPR3RYCdNj9JAYH3Lo029bfAxiP5M1XMbPB8hecIiFDE5qh1x
- qX4A/NCKQ62qjL8GSFCtI4jaeFzxkD4Mt+WgS5TG8RW7qRmdUZq7+apRDedRVIxUr58XA3L0y
- 8YZEzAR2nRfFGEgEGdVVaYEyjE+mdbPfeVQ0Hdzy/OvS6XXiy/wI9+SVnL6T76Qf6RUmM5wU2
- Vsycwf9eT9Yud5Qs0UL4MMs0cku4A88vyFFDoh5UG/D7rxBiYRapgml5ng77WQ1QERcmZUx+s
- KpS7DtQaVaq8ZffeajcOz2xzFgdbiCa2RYEzZs0bKoH6CB1yOjjNWg9DfESeZ8XgsL9razQEx
- h90Bo5yR/JzCwf4bRtQFKQ1ejV4vw8GMycx1xX9ehMX7W1hqa4HWCSo4P/iLEWMPlGU9EITcD
- HNIjyH5VHvidwy83N9lxY4PUmvlPYXUXcSy3N1zgzpO/pTZzJ+y6IxMpxCpcwNvjlnF//qEvr
- 747xwiisizEF+y+hTyBY10KDkxab0p7xor48HZ+5yZHP/sXer85v75hEVgZH3Rom6ykdGDeZ+
- EdXThkeQRUyiKh2u+IJIIRibInnf1NMjhBuZgTioJXngiNdzomYSmmvaIcXC2PqqO8jKopUfU
- KZKDByehOUjtvpO6Ev5i0Hg9ZV7G90Au1WN00d+bbW+HZc9Sy9rHhbSlo5hojoyiUe/Rf9N+Q
- J8N30rKh6plh6ZN/IZ+e+3SdoyfSH1XWuriqB1MdUfNDLSw2VI=
+X-Provags-ID: V03:K1:iTbJEaWywLf2mWLZVn8fMvVV4ZGFeQWRknpQL+LBsm8TuN1/Vy3
+ PRdkOJArPLub4c5r7xCX6MDjcKaJr+OjIKhUim5J6EitfqibA9mja8GnHmjxjjluu9MRF8v
+ 265pV1iMcHPkyrEnaDcCXGmuGF/kCt3/Un4genigI7B98lloWFWYKVNV6aDS7Y6zi419NkD
+ AO8HomIG4+s0EIeb9zL+g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sRc5KvpM3r0=:OPRaEuFeB1zs97rG6nj3Gt
+ ilk67Ulrv9ec7I6CHJYfDaAdth5yW2UMClZV4K53vqHrUfFkLCtAdBGQ31bGV1ngZ8mklzsKx
+ q4SXvfQKtTUoEvrurbJZrudUrQvvwpJbl/4ynW33w2sztPlJ7SQHSYsvJ19SD1weYeO4haC58
+ 12PrYVpuzOiJV009FCH4ynO15sfBNsuV/jzSMVlhf6/Pvlb9DPO0R11HMQU1vhxgGjj4ZBf17
+ /edtTaCvSj1d0By1rwSjAWYWyhJM+lyDys2B7fSwCsOHtu08855hH/FM7aWWFAMVJvegTVCn0
+ h4cIhEvthT5NONp3YiJ+q/jjCoCXYWLDyFA9uNMQxA1yOX0uel5zhn+F+1iY8oRrUajGnvSBa
+ mgrutL3k0sOhq5HlSVIllB0NJlBnmA6RAo8TSm/DV9OvfauaKE6buwCucjrMNIZFbku88kvuP
+ ndiF+mVhbeWKhRLulr4AfwOfgzCM0v0aQHf5HKw5KIwcNBCiRPJ33BvrZQEDLnKTN042sNlWT
+ QsCa+w8iyd5e72/UfteHtr9u75qOipOvJOAFuBl2bp84qtCd2nlcsoRecFV9c0AB/dwxr9cMe
+ lRr06y9ZeKNk/8M1tea2e3V/3bzptTSu+7s8GZBV+AoJf+ij1Ap1sBj4A8GyqN1m6Eq+wLplf
+ MNKPhngdHqmJHlJ6lp2Lhb0+RzmMS+WHWteTn2t9RRPY0ybz6uIEIlBwjU7FljeEqktaK2aQ7
+ RFKmXyOqlP46LRNiw9fZW0p1OloQAF6SRtHh1sq7zL7zwts9b/qr9MABYRysjdlm06cHs7N3/
+ Oeug/YOnHMIFWqzPJGZt3zmDVPlsKsV6CLcR78ShsfIevO/9+s=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Calling directly into the fbdev stack only works when the
-fbdev layer is built into the kernel as well, or both are
-loadable modules:
+The newly added broadcom ehci driver triggered another array
+overflow warning after I had fixed up a bunch of others. In this
+case, the driver intentionally abuses the port_status[] array
+to access a register that does not have an official name:
 
-drivers/gpu/drm/nouveau/nouveau_drm.o: in function `nouveau_drm_probe':
-nouveau_drm.c:(.text+0x1f90): undefined reference to `remove_conflicting_pci_framebuffers'
+drivers/usb/host/ehci-brcm.c:113:33: error: array index 16 is past the end of the array (which contains 15 elements) [-Werror,-Warray-bounds]
+        ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
+                                       ^                       ~~~~
+include/linux/usb/ehci_def.h:131:3: note: array 'port_status' declared here
+                u32             port_status[15]; /* up to N_PORTS */
+                ^
 
-The change seems to have been intentional, so add an explicit
-dependency here but allow it to still be compiled if FBDEV
-is completely disabled.
+There is already a hack for Intel specific registers at the same
+location, so extend that hack to also cover the Broadcom registers.
 
-Fixes: 2dd4d163cd9c ("drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()")
+I'm a little confused about the register offset, as the code comment
+says @0x90 while the actual offset seems to be at offset 0x84, please
+confirm that the behavior is still correct.
+
+Fixes: 9df231511bd6 ("usb: ehci: Add new EHCI driver for Broadcom STB SoC's")
+Fixes: 88aa39691cea ("usb: ehci: avoid gcc-10 zero-length-bounds warning")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/nouveau/Kconfig       | 1 +
- drivers/gpu/drm/nouveau/nouveau_drm.c | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/host/ehci-brcm.c | 13 ++++++-------
+ include/linux/usb/ehci_def.h |  1 +
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 980ed09bd7f6..8c640f003358 100644
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -18,6 +18,7 @@ config DRM_NOUVEAU
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
- 	select SND_HDA_COMPONENT if SND_HDA_CORE
-+	depends on FBDEV || !FBDEV
- 	help
- 	  Choose this option for open-source NVIDIA support.
+diff --git a/drivers/usb/host/ehci-brcm.c b/drivers/usb/host/ehci-brcm.c
+index 3e0ebe8cc649..bafb3f4db170 100644
+--- a/drivers/usb/host/ehci-brcm.c
++++ b/drivers/usb/host/ehci-brcm.c
+@@ -108,10 +108,10 @@ static int ehci_brcm_reset(struct usb_hcd *hcd)
+ 	/*
+ 	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
+ 	 *   bus usage
+-	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
++	 * Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
+ 	 */
+-	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
+-	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
++	ehci_writel(ehci, 0x00800040, &ehci->regs->brcm_insnreg[0]);
++	ehci_writel(ehci, 0x00000001, &ehci->regs->brcm_insnreg[2]);
  
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index eb10c80ed853..e8560444ab57 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -697,7 +697,8 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
- 	nvkm_device_del(&device);
+ 	return ehci_setup(hcd);
+ }
+@@ -223,11 +223,10 @@ static int __maybe_unused ehci_brcm_resume(struct device *dev)
+ 	/*
+ 	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
+ 	 *   bus usage
+-	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00
+-	 * @ 0x90
++	 * Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
+ 	 */
+-	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
+-	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
++	ehci_writel(ehci, 0x00800040, &ehci->regs->brcm_insnreg[0]);
++	ehci_writel(ehci, 0x00000001, &ehci->regs->brcm_insnreg[2]);
  
- 	/* Remove conflicting drivers (vesafb, efifb etc). */
--	ret = remove_conflicting_pci_framebuffers(pdev, "nouveaufb");
-+	if (IS_ENABLED(CONFIG_FBDEV))
-+		ret = remove_conflicting_pci_framebuffers(pdev, "nouveaufb");
- 	if (ret)
- 		return ret;
+ 	ehci_resume(hcd, false);
+ 
+diff --git a/include/linux/usb/ehci_def.h b/include/linux/usb/ehci_def.h
+index 99481bbcc8f7..cf4bfbbdc8a3 100644
+--- a/include/linux/usb/ehci_def.h
++++ b/include/linux/usb/ehci_def.h
+@@ -190,6 +190,7 @@ struct ehci_regs {
+ #define HOSTPC_PHCD	(1<<22)		/* Phy clock disable */
+ #define HOSTPC_PSPD	(3<<25)		/* Port speed detection */
+ 
++		u32		brcm_insnreg[3]; /* Broadcom specific */
+ 		u32		reserved6[17];
+ 	};
  
 -- 
 2.26.2
