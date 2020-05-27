@@ -2,100 +2,201 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01CAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58098C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE7E2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:01:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590570079;
-	bh=WaKZbkte9zWy+gFwJcABM4VB+ItBxdRy7nyXN7rBb3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zKEEqA9eA5ZzrEUz+Z1soJKp/wvyXc3cUegPWhDgSVJHfM5rxV5VvMIKPvY65Ebg9
-	 yVdqbm8zh4sMOr+Yiv3Uzuk8yvD/5jMENdCrJa7x8AZJyi+skfSd3XCahabGcM32Cw
-	 dc71HRZv3Q4BxqoGPObDCEG1mtkT6umD5OXsnvdA=
+	by mail.kernel.org (Postfix) with ESMTP id 3787820723
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388420AbgE0JBT (ORCPT
+        id S2388428AbgE0JBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388331AbgE0JBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:01:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1184920723;
-        Wed, 27 May 2020 09:01:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590570077;
-        bh=WaKZbkte9zWy+gFwJcABM4VB+ItBxdRy7nyXN7rBb3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mGy3UQlKkCSG671Ydi7G9PDHAXHw3tvtIYrcoZsk94xWH7NkmD8YF+mjSEFmwocHn
-         dx9nTApSCbCQ2C0rP4Wh0RmwLgzASHW4OVNvv0tAMviYc/4qJ0+c7Nh6YkoAjWCiYF
-         MbwANd2b+y59F8114ucQHxhJVnTvz7S8zkgTDHe8=
-Date:   Wed, 27 May 2020 11:01:15 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 2/2] iommu: calling pci_fixup_iommu in iommu_fwspec_init
-Message-ID: <20200527090115.GB179718@kroah.com>
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
- <1590493749-13823-3-git-send-email-zhangfei.gao@linaro.org>
+        Wed, 27 May 2020 05:01:23 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53836 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388333AbgE0JBU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:01:20 -0400
+Received: from 89-64-84-221.dynamic.chello.pl (89.64.84.221) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 432de8bab968cf95; Wed, 27 May 2020 11:01:17 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] kobject: send KOBJ_REMOVE uevent when the object is removed from sysfs
+Date:   Wed, 27 May 2020 11:01:16 +0200
+Message-ID: <2407984.idRd5kzSG0@kreacher>
+In-Reply-To: <CAJZ5v0h0Xjovm-eVyiOG+j7kNEPxB=PZF4rLVEgwUW+H+61DFg@mail.gmail.com>
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org> <20200527075048.GD3284396@kuha.fi.intel.com> <CAJZ5v0h0Xjovm-eVyiOG+j7kNEPxB=PZF4rLVEgwUW+H+61DFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590493749-13823-3-git-send-email-zhangfei.gao@linaro.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:49:09PM +0800, Zhangfei Gao wrote:
-> Calling pci_fixup_iommu in iommu_fwspec_init, which alloc
-> iommu_fwnode. Some platform devices appear as PCI but are
-> actually on the AMBA bus, and they need fixup in
-> drivers/pci/quirks.c handling iommu_fwnode.
-> So calling pci_fixup_iommu after iommu_fwnode is allocated.
+On Wednesday, May 27, 2020 10:34:51 AM CEST Rafael J. Wysocki wrote:
+> On Wed, May 27, 2020 at 9:50 AM Heikki Krogerus
+> <heikki.krogerus@linux.intel.com> wrote:
+> >
+> > On Tue, May 26, 2020 at 10:26:23AM +0200, Rafael J. Wysocki wrote:
+> > > On Tue, May 26, 2020 at 7:58 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Mon, May 25, 2020 at 03:49:01PM -0700, Dmitry Torokhov wrote:
+> > > > > On Sun, May 24, 2020 at 8:34 AM Greg Kroah-Hartman
+> > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > It is possible for a KOBJ_REMOVE uevent to be sent to userspace way
+> > > > > > after the files are actually gone from sysfs, due to how reference
+> > > > > > counting for kobjects work.  This should not be a problem, but it would
+> > > > > > be good to properly send the information when things are going away, not
+> > > > > > at some later point in time in the future.
+> > > > > >
+> > > > > > Before this move, if a kobject's parent was torn down before the child,
+> > > > >
+> > > > > ^^^^ And this is the root of the problem and what has to be fixed.
+> > > >
+> > > > I fixed that in patch one of this series.  Turns out the user of the
+> > > > kobject was not even expecting that to happen.
+> > > >
+> > > > > > when the call to kobject_uevent() happened, the parent walk to try to
+> > > > > > reconstruct the full path of the kobject could be a total mess and cause
+> > > > > > crashes.  It's not good to try to tear down a kobject tree from top
+> > > > > > down, but let's at least try to not to crash if a user does so.
+> > > > >
+> > > > > One can try, but if we keep proper reference counting then kobject
+> > > > > core should take care of actually releasing objects in the right
+> > > > > order. I do not think you should keep this patch, and instead see if
+> > > > > we can push call to kobject_put(kobj->parent) into kobject_cleanup().
+> > > >
+> > > > I tried that, but there was a _lot_ of underflow errors reported, so
+> > > > there's something else happening.  Or my attempt was incorrect :)
+> > >
+> > > So it looks like there is something in there that's been overlooked so far.
+> > >
+> > > I'll try to look at the Guenter's traces and figure out what went
+> > > wrong after the Heikki's patch.
+> >
+> > At least one problem with that patch was that I was releasing the
+> > parent reference unconditionally.
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  drivers/iommu/iommu.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 7b37542..fb84c42 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
->  	fwspec->iommu_fwnode = iommu_fwnode;
->  	fwspec->ops = ops;
->  	dev_iommu_fwspec_set(dev, fwspec);
-> +
-> +	if (dev_is_pci(dev))
-> +		pci_fixup_device(pci_fixup_iommu, to_pci_dev(dev));
+> That actually may be sufficient to explain all of the problems introduced by it.
 
-Why can't the caller do this as it "knows" it is a PCI device at that
-point in time, right?
+So Guenter, can you please test the patch below to see if it still introduces
+the problems seen by you on ARM?
 
-thanks,
+---
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH] kobject: Make sure the parent does not get released before its children
 
-greg k-h
+In the function kobject_cleanup(), kobject_del(kobj) is
+called before the kobj->release(). That makes it possible to
+release the parent of the kobject before the kobject itself.
+
+To fix that, adding function __kboject_del() that does
+everything that kobject_del() does except release the parent
+reference. kobject_cleanup() then calls __kobject_del()
+instead of kobject_del(), and separately decrements the
+reference count of the parent kobject after kobj->release()
+has been called.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+[ rjw: Drop parent reference only when called __kobject_del() ]
+Signed-off-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+---
+ lib/kobject.c |   34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
+
+Index: linux-pm/lib/kobject.c
+===================================================================
+--- linux-pm.orig/lib/kobject.c
++++ linux-pm/lib/kobject.c
+@@ -599,14 +599,7 @@ out:
+ }
+ EXPORT_SYMBOL_GPL(kobject_move);
+ 
+-/**
+- * kobject_del() - Unlink kobject from hierarchy.
+- * @kobj: object.
+- *
+- * This is the function that should be called to delete an object
+- * successfully added via kobject_add().
+- */
+-void kobject_del(struct kobject *kobj)
++static void __kobject_del(struct kobject *kobj)
+ {
+ 	struct kernfs_node *sd;
+ 	const struct kobj_type *ktype;
+@@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+ 
+ 	kobj->state_in_sysfs = 0;
+ 	kobj_kset_leave(kobj);
+-	kobject_put(kobj->parent);
+ 	kobj->parent = NULL;
+ }
++
++/**
++ * kobject_del() - Unlink kobject from hierarchy.
++ * @kobj: object.
++ *
++ * This is the function that should be called to delete an object
++ * successfully added via kobject_add().
++ */
++void kobject_del(struct kobject *kobj)
++{
++	struct kobject *parent = kobj->parent;
++
++	__kobject_del(kobj);
++	kobject_put(parent);
++}
+ EXPORT_SYMBOL(kobject_del);
+ 
+ /**
+@@ -663,7 +670,9 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+  */
+ static void kobject_cleanup(struct kobject *kobj)
+ {
++	struct kobject *parent = kobj->parent;
+ 	struct kobj_type *t = get_ktype(kobj);
++	bool state_in_sysfs = kobj->state_in_sysfs;
+ 	const char *name = kobj->name;
+ 
+ 	pr_debug("kobject: '%s' (%p): %s, parent %p\n",
+@@ -681,10 +690,10 @@ static void kobject_cleanup(struct kobje
+ 	}
+ 
+ 	/* remove from sysfs if the caller did not do it */
+-	if (kobj->state_in_sysfs) {
++	if (state_in_sysfs) {
+ 		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+ 			 kobject_name(kobj), kobj);
+-		kobject_del(kobj);
++		__kobject_del(kobj);
+ 	}
+ 
+ 	if (t && t->release) {
+@@ -698,6 +707,9 @@ static void kobject_cleanup(struct kobje
+ 		pr_debug("kobject: '%s': free name\n", name);
+ 		kfree_const(name);
+ 	}
++
++	if (state_in_sysfs)
++		kobject_put(parent);
+ }
+ 
+ #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+
+
+
