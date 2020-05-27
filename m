@@ -2,175 +2,148 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E3ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E734207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:30:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QbtHWfZ+"
+	by mail.kernel.org (Postfix) with ESMTP id 36412207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388076AbgE0NaW (ORCPT
+        id S2388118AbgE0Na3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387650AbgE0NaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:30:22 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DB9C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:30:20 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id y85so21620560oie.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:30:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AwQUYVAQCrlzegHmktwvd3qax/+buVYaETqLr5p2maM=;
-        b=QbtHWfZ+3Qn7pFIVdE8kootB1/hpqh6cfr1A6fbeIkZWk9X+jlCcUo+2S7UscWIQ8V
-         iLD2Eef7owQ6gimvFljcZvOj2M7Z2y7HkIhUKMt4riLH1kSKS7CeU2nNsquAO+Em8JbP
-         B1lH3ndXXUv6OdO5KkDbvUIpSRfAE1QAY25cACsl76HMTl38XidUpY1SnfS+nEJISJpi
-         2izV4yJqOPrbeRwgmQnC8UAeksSKJxh9qcb4DQdSup5X7bRP4/xQKFfM3cm8FFt56MqA
-         4lyeZAH8vk+N6eMdm2iI6hClLYVYa/cC4NoLmdHBiOYoqZwJ/o9ppqukrZRB6r95zWBt
-         YE4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AwQUYVAQCrlzegHmktwvd3qax/+buVYaETqLr5p2maM=;
-        b=qXU5juQSxt2APGHYorjFd4loCDqF4aC4wQ5eUz/VqIDDatQnGjBNVzHlkMUsNEt9eP
-         6jXqjjLL72eXPaLLwzGkC4KuZscrWX9WSl/vlFN2jToRXN9TrYodIBoMRfxzDiF622C+
-         GJ8hE0vlhaswSrqeXhlnONhsh5ONpXXgHlsMK7CbWyopK31fhNz/8+mhXdB1sFPJQ1rq
-         Q+bAd/c6UFXUg4bsKSVVtAXLy0KgpGKE+anV29caFrPpgjBH7O/bp04xOjmZcIHc7lJ2
-         dRg6XKMjBv03Pd6k6uZJEqdHrxegPcDygETaRVQxp4xR6JCM98PF3g2JJVUVTN8OxDrv
-         UT/Q==
-X-Gm-Message-State: AOAM530AlUzT3TJ62lbdBlT7bS4qDRRUbUelh4jMC6XKTIGKl2aoHQsx
-        vWxVAY9vCmfTEtXNS6AZSX1RXqP++GbkpYMkS0feCQ==
-X-Google-Smtp-Source: ABdhPJy4X1WIB3tj959tXszGJHTi8Phx43/8YCoDqZOWYB6XXjU0vFeFEmW/Hn6UYapKOgJoDaNwfu87Jo3Lb4T3Q5w=
-X-Received: by 2002:aca:d0d:: with SMTP id 13mr2676966oin.172.1590586219764;
- Wed, 27 May 2020 06:30:19 -0700 (PDT)
+        Wed, 27 May 2020 09:30:29 -0400
+Received: from mga07.intel.com ([134.134.136.100]:24606 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387650AbgE0Na2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:30:28 -0400
+IronPort-SDR: KqJ6YvlAHUplWnYUJ2epsV66h7xqsFpmK8lTORLNzj2Cy2PE/0Po7Zc9/c+UBAsJ1VM/BX6NBS
+ r93A3CGdIRgQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:30:27 -0700
+IronPort-SDR: G42sm5gZNR8bI25Za1GihKpgbVWEad9kvNaTVQfDPDHa1UKfiixpWUzOR0CT1u2y4rNulGACM/
+ eCYLAShPkrJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="442519950"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 06:30:23 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdw8Y-009EdR-CD; Wed, 27 May 2020 16:30:26 +0300
+Date:   Wed, 27 May 2020 16:30:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] i2c: designeware: Add Baikal-T1 System I2C
+ support
+Message-ID: <20200527133026.GT1634618@smile.fi.intel.com>
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200527103236.148700-1-elver@google.com> <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
- <CA+icZUWtzu0ONUSy0E27Mq1BrdO79qNaY3Si-PDhHZyF8M4S5g@mail.gmail.com>
- <CAK8P3a04=mVQgSrvDhpVxQj50JEFDn_xMhYrvjmUnLYTWH3QXQ@mail.gmail.com>
- <CA+icZUXVSTxDYJwXLyAwZd91cjMPcPRpeAR72JKqkqa-wRNnWg@mail.gmail.com>
- <CAK8P3a3i0kPf8dRg7Ko-33hsb+LkP=P05uz2tGvg5B43O-hFvg@mail.gmail.com> <CA+icZUWr5xDz5ujBfsXjnDdiBuopaGE6xO5LJQP9_y=YoROb+Q@mail.gmail.com>
-In-Reply-To: <CA+icZUWr5xDz5ujBfsXjnDdiBuopaGE6xO5LJQP9_y=YoROb+Q@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Wed, 27 May 2020 15:30:08 +0200
-Message-ID: <CANpmjNOtKQAB_3t1G5Da-J1k-9Dk6eQKP+xNozRbmHJXZqXGFw@mail.gmail.com>
-Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
- compilation time
-To:     sedat.dilek@gmail.com
-Cc:     Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 15:11, Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Wed, May 27, 2020 at 2:50 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Wed, May 27, 2020 at 2:35 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > > On Wed, May 27, 2020 at 2:31 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > On Wed, May 27, 2020 at 1:36 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > > > > On Wed, May 27, 2020 at 1:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > On Wed, May 27, 2020 at 12:33 PM Marco Elver <elver@google.com> wrote:
-> > > > > >
-> > > > > > This gives us back 80% of the performance drop on clang, and 50%
-> > > > > > of the drop I saw with gcc, compared to current mainline.
-> > > > > >
-> > > > > > Tested-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > >
-> > > > >
-> > > > > Hi Arnd,
-> > > > >
-> > > > > with "mainline" you mean Linux-next aka Linux v5.8 - not v5.7?
-> > > >
-> > > > I meant v5.7.
-> > > >
-> > > > > I have not seen __unqual_scalar_typeof(x) in compiler_types.h in Linux v5.7.
-> > > > >
-> > > > > Is there a speedup benefit also for Linux v5.7?
-> > > > > Which patches do I need?
-> > > >
-> > > > v5.7-rc is the baseline and is the fastest I currently see. On certain files,
-> > > > I saw an intermittent 10x slowdown that was already fixed earlier, now
-> > > > linux-next
-> > > > is more like 2x slowdown for me and 1.2x with this patch on top, so we're
-> > > > almost back to the speed of linux-5.7.
-> > > >
-> > >
-> > > Which clang version did you use - and have you set KCSAN kconfigs -
-> > > AFAICS this needs clang-11?
-> >
-> > I'm currently using clang-11, but I see the same problem with older
-> > versions, and both with and without KCSAN enabled. I think the issue
-> > is mostly the deep nesting of macros that leads to code bloat.
-> >
->
-> Thanks.
->
-> With clang-10:
->
-> $ scripts/diffconfig /boot/config-5.7.0-rc7-2-amd64-clang .config
->  BUILD_SALT "5.7.0-rc7-2-amd64-clang" -> "5.7.0-rc7-3-amd64-clang"
-> +HAVE_ARCH_KCSAN y
+On Wed, May 27, 2020 at 12:55:16AM +0300, Serge Semin wrote:
+> Jarkko, Wolfram, the merge window is upon us, please review/merge in/whatever
+> the patchset.
+> 
+> Initially this has been a small patchset which embedded the Baikal-T1
+> System I2C support into the DW APB I2C driver as is by using a simplest
+> way. After a short discussion with Andy we decided to implement what he
+> suggested (introduce regmap-based accessors and create a glue driver) and
+> even more than that to provide some cleanups of the code. So here is what
+> this patchset consists of.
+> 
+> First of all we've found out that current implementation of scripts/dtc
+> didn't support i2c dt nodes with 10bit and slave flags set in the
+> reg property. You'll see an error if you try to dt_binding_check it.
+> So the very first patch fixes the problem by adding these flags support
+> into the check_i2c_bus_reg() method.
+> 
+> Traditionally we converted the plain text-based DT binding to the DT schema
+> and added Baikal-T1 System I2C device support there. This required to mark
+> the reg property redundant for Baikal-T1 I2C since its reg-space is
+> indirectly accessed by means of the System Controller cmd/read/write
+> registers.
+> 
+> Then as Andy suggested we replaced the Synopsys DW APB I2C common driver
+> registers IO accessors into the regmap API methods. This doesn't change
+> the code logic much, though in two places we managed to replace some bulky
+> peaces of code with a ready-to-use regmap methods.
+> 
+> Additionally before adding the glue layer API we initiated a set of cleanups:
+> - Define components of the multi-object drivers (like i2c-designware-core.o
+>   and i2c-designware-paltform.o) with using `-y` suffixed makefile
+>   variables instead of `-objs` suffixed one. This is encouraged by
+>   Documentation/kbuild/makefiles.rst text since `-objs` is supposed to be used
+>   to build host programs.
+> - Make DW I2C slave driver depended on the DW I2C core code instead of the
+>   platform one, which it really is.
+> - Move Intel Baytrail semaphore feature to the platform if-clause of the
+>   kernel config.
+> 
+> After this we finally can introduce the glue layer API for the DW APB I2C
+> platform driver. So there are three methods exported from the driver:
+> i2c_dw_plat_setup(), i2c_dw_plat_clear(), &i2c_dw_plat_dev_pm_ops to
+> setup, cleanup and add PM operations to the glue driven I2C device. Before
+> setting the platform DW I2C device up the glue probe code is supposed to
+> create an instance of DW I2C device generic object and pre-initialize
+> its `struct device` pointer together with optional platform-specific
+> flags. In addition to that we converted the MSCC Ocelot SoC I2C specific
+> code into the glue layer seeing it's really too specific and, which is more
+> important, isn't that complicated so we could unpin it without much of
+> worrying to break something.
+> 
+> Meanwhile we discovered that MODEL_CHERRYTRAIL and MODEL_MASK actually
+> were no longer used in the code. MODEL_MSCC flag has been discarded since
+> the MSCC Ocelot I2C code conversion to the glue driver. So now we can get
+> rid of all the MODEL-specific flags.
+> 
+> Finally we introduced a glue driver with Baikal-T1 System I2C device
+> support. The driver probe tries to find a syscon regmap, creates the DW
+> APB I2C regmap based on it and passes it further to the DW I2C device
+> descriptor. Then it does normal DW APB I2C platform setup by calling a
+> generic setup method. Cleanup is straightforward. It's just calling a
+> generic DW APB I2C clean method.
+> 
+> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
+> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
+> tag: v5.7-rc4
+> 
+> Note new vendor prefix for Baikal-T1 System I2C device will be added in
+> the framework of the next patchset:
+> https://lkml.org/lkml/2020/5/6/1047
 
-Clang 10 doesn't support KCSAN (HAVE_KCSAN_COMPILER unset).
+>   scripts/dtc: check: Add 10bit/slave i2c reg flags support
 
-> With clang-11:
->
-> $ scripts/diffconfig /boot/config-5.7.0-rc7-2-amd64-clang .config
->  BUILD_SALT "5.7.0-rc7-2-amd64-clang" -> "5.7.0-rc7-3-amd64-clang"
->  CLANG_VERSION 100001 -> 110000
-> +CC_HAS_ASM_INLINE y
-> +HAVE_ARCH_KCSAN y
-> +HAVE_KCSAN_COMPILER y
-> +KCSAN n
->
-> Which KCSAN kconfigs did you enable?
+Hmm... I don't see this patch.
 
-To clarify: as said in [1], KCSAN (or any other instrumentation) is no
-longer relevant to the issue here, and the compile-time regression is
-observable with most configs. The problem is due to pre-processing and
-parsing, which came about due to new READ_ONCE() and the
-__unqual_scalar_typeof() macro (which this patch optimizes).
+-- 
+With Best Regards,
+Andy Shevchenko
 
-KCSAN and new ONCEs got tangled up because we first attempted to
-annotate {READ,WRITE}_ONCE() with data_race(), but that turned out to
-have all kinds of other issues (explanation in [2]). So we decided to
-drop all the KCSAN-specific bits from ONCE, and require KCSAN to be
-Clang 11. Those fixes were applied to the first version of new
-{READ,WRITE}_ONCE() in -tip, which actually restored the new ONCEs to
-the pre-KCSAN version (now that KCSAN can deal with them without
-annotations).
 
-Hope this makes more sense now.
-
-[1] https://lore.kernel.org/lkml/CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com/
-[2] https://lore.kernel.org/lkml/20200521142047.169334-1-elver@google.com/
-
-Thanks,
--- Marco
