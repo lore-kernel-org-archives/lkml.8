@@ -2,136 +2,101 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B099C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB8AC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F5ED207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B56207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgE0HP6 (ORCPT
+        id S1729253AbgE0HQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:15:58 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60396 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728821AbgE0HP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:15:57 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2ugE85eDIs5AA--.467S2;
-        Wed, 27 May 2020 15:15:44 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v2 1/2] clk: hisilicon: Use correct return value about hisi_reset_init()
-Date:   Wed, 27 May 2020 15:15:42 +0800
-Message-Id: <1590563743-30707-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxr2ugE85eDIs5AA--.467S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr1kZF4kKF13Ar18Xw4fKrg_yoW5WF1rpF
-        48JFW2ya4Yga17XFnrXrZ0yFy5Za42gayUGFW8Z3sxZwn8JrWUZr1fury8Xayqqrs3KFWa
-        9r40kr48uayjyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4x
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-        W8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
-        0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfpnQUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 27 May 2020 03:16:10 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:39294 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728611AbgE0HQJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:16:09 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E73953C0579;
+        Wed, 27 May 2020 09:16:05 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id aUYj8-iqg8eh; Wed, 27 May 2020 09:16:00 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id B81673C0022;
+        Wed, 27 May 2020 09:16:00 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.38) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 27 May
+ 2020 09:16:00 +0200
+Date:   Wed, 27 May 2020 09:15:55 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+CC:     <laurent.pinchart@ideasonboard.com>,
+        <kieran.bingham+renesas@ideasonboard.com>, <geert@linux-m68k.org>,
+        <horms@verge.net.au>, <uli+renesas@fpond.eu>,
+        <VenkataRajesh.Kalakodima@in.bosch.com>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>, <koji.matsuoka.xm@renesas.com>,
+        <muroya@ksk.co.jp>, <Harsha.ManjulaMallikarjun@in.bosch.com>,
+        <ezequiel@collabora.com>, <seanpaul@chromium.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <michael.dege@renesas.com>, <gotthard.voellmeke@renesas.com>,
+        <efriedrich@de.adit-jv.com>, <mrodin@de.adit-jv.com>,
+        <ChaitanyaKumar.Borah@in.bosch.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v5 0/8] drm: rcar-du: Add Color Management Module (CMM)
+Message-ID: <20200527071555.GA23912@lxhi-065.adit-jv.com>
+References: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191015104621.62514-1-jacopo+renesas@jmondi.org>
+X-Originating-IP: [10.72.94.38]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The return value about hisi_reset_init() is not correct, fix it.
+Hi Jacopo,
 
-Fixes: e9a2310fb689 ("reset: hisilicon: fix potential NULL pointer dereference")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+On Tue, Oct 15, 2019 at 12:46:13PM +0200, Jacopo Mondi wrote:
+ ----8<---
 
-v2:
-  - No changes, just add "Fixes:" tag
+> * Testing
+> I have tested by injecting a color inversion LUT table and enabling/disabling it
+> every 50 displayed frames:
+> https://jmondi.org/cgit/kmsxx/log/?h=gamma_lut
 
- drivers/clk/hisilicon/clk-hi3519.c      | 4 ++--
- drivers/clk/hisilicon/crg-hi3516cv300.c | 4 ++--
- drivers/clk/hisilicon/crg-hi3798cv200.c | 4 ++--
- drivers/clk/hisilicon/reset.c           | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+Could you kindly share the cross compilation steps for your kmsxx fork?
 
-diff --git a/drivers/clk/hisilicon/clk-hi3519.c b/drivers/clk/hisilicon/clk-hi3519.c
-index ad0c7f3..803fa66 100644
---- a/drivers/clk/hisilicon/clk-hi3519.c
-+++ b/drivers/clk/hisilicon/clk-hi3519.c
-@@ -149,8 +149,8 @@ static int hi3519_clk_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	crg->rstc = hisi_reset_init(pdev);
--	if (!crg->rstc)
--		return -ENOMEM;
-+	if (IS_ERR(crg->rstc))
-+		return PTR_ERR(crg->rstc);
- 
- 	crg->clk_data = hi3519_clk_register(pdev);
- 	if (IS_ERR(crg->clk_data)) {
-diff --git a/drivers/clk/hisilicon/crg-hi3516cv300.c b/drivers/clk/hisilicon/crg-hi3516cv300.c
-index 5d4e61c..c2af03d 100644
---- a/drivers/clk/hisilicon/crg-hi3516cv300.c
-+++ b/drivers/clk/hisilicon/crg-hi3516cv300.c
-@@ -271,8 +271,8 @@ static int hi3516cv300_crg_probe(struct platform_device *pdev)
- 		return -ENOENT;
- 
- 	crg->rstc = hisi_reset_init(pdev);
--	if (!crg->rstc)
--		return -ENOMEM;
-+	if (IS_ERR(crg->rstc))
-+		return PTR_ERR(crg->rstc);
- 
- 	crg->clk_data = crg->funcs->register_clks(pdev);
- 	if (IS_ERR(crg->clk_data)) {
-diff --git a/drivers/clk/hisilicon/crg-hi3798cv200.c b/drivers/clk/hisilicon/crg-hi3798cv200.c
-index 08a19ba..66fd6a9 100644
---- a/drivers/clk/hisilicon/crg-hi3798cv200.c
-+++ b/drivers/clk/hisilicon/crg-hi3798cv200.c
-@@ -354,8 +354,8 @@ static int hi3798cv200_crg_probe(struct platform_device *pdev)
- 		return -ENOENT;
- 
- 	crg->rstc = hisi_reset_init(pdev);
--	if (!crg->rstc)
--		return -ENOMEM;
-+	if (IS_ERR(crg->rstc))
-+		return PTR_ERR(crg->rstc);
- 
- 	crg->clk_data = crg->funcs->register_clks(pdev);
- 	if (IS_ERR(crg->clk_data)) {
-diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
-index 93cee17..f17d15f 100644
---- a/drivers/clk/hisilicon/reset.c
-+++ b/drivers/clk/hisilicon/reset.c
-@@ -93,11 +93,11 @@ struct hisi_reset_controller *hisi_reset_init(struct platform_device *pdev)
- 
- 	rstc = devm_kmalloc(&pdev->dev, sizeof(*rstc), GFP_KERNEL);
- 	if (!rstc)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	rstc->membase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(rstc->membase))
--		return NULL;
-+		return rstc->membase;
- 
- 	spin_lock_init(&rstc->lock);
- 	rstc->rcdev.owner = THIS_MODULE;
+Just out of curiosity, have you ever tried to pull the display's HDMI
+cable while reading from CM2_LUT_TBL?
+
+At least with the out-of-tree CMM implementation [*], this sends the
+R-Car3 reference targets into an unrecoverable freeze, with no lockup
+reported by the kernel (i.e. looks like an serious HW issue).
+
+> 
+> CMM functionalities are retained between suspend/resume cycles (tested with
+> suspend-to-idle) without requiring a re-programming of the LUT tables.
+
+Hmm. Is this backed up by any statement in the HW User's manual?
+This comes in contrast with the original Renesas CMM implementation [**]
+which does make use of suspend (where the freeze actually happens).
+
+Can we infer, based on your statement, that we could also get rid of
+the suspend callback in [**]?
+
+[*] https://github.com/renesas-rcar/du_cmm
+[**] https://github.com/renesas-rcar/du_cmm/blob/c393ed49834bdbc/meta-rcar-gen3/recipes-kernel/linux/linux-renesas/0001-drm-rcar-du-Add-DU-CMM-support.patch#L1912
+
 -- 
-2.1.0
-
+Best regards,
+Eugeniu Rosca
