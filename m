@@ -2,112 +2,99 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17420C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02CB9207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0F362078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388542AbgE0NlM (ORCPT
+        id S2388555AbgE0NlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:41:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:38676 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387627AbgE0NlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:41:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 163A755D;
-        Wed, 27 May 2020 06:41:11 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECA433F305;
-        Wed, 27 May 2020 06:41:09 -0700 (PDT)
-Date:   Wed, 27 May 2020 14:41:04 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     guohanjun@huawei.com, rjw@rjwysocki.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, ndesaulniers@google.com
-Subject: Re: arm64/acpi: NULL dereference reports from UBSAN at boot
-Message-ID: <20200527134104.GA16115@e121166-lin.cambridge.arm.com>
-References: <20200521100952.GA5360@willie-the-truck>
- <20200521173738.GA29590@e121166-lin.cambridge.arm.com>
- <20200526202157.GE2206@willie-the-truck>
+        Wed, 27 May 2020 09:41:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:43773 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbgE0NlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:41:23 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N7Qp3-1ixLzb0LZl-017j0Y; Wed, 27 May 2020 15:41:14 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "Alex Maftei (amaftei)" <amaftei@solarflare.com>,
+        Tom Zhao <tzhao@solarflare.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [net-next] sfc: avoid an unused-variable warning
+Date:   Wed, 27 May 2020 15:41:06 +0200
+Message-Id: <20200527134113.827128-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526202157.GE2206@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:2qV0ouQ231GRn5/kmWBmCmf9v/l6VkWkkO3TQdHRDfHjfMM+7ni
+ uNhtbVK3yyHkAKZcYRcmUOtm9iCNP0EJwVz8jtshL8KiO72f7c7oRw8njgaQMbX7LD3RmCt
+ 6eQMcNDRSdNV5euilakJ078ge8+A2zQrCjKcQ58RAv96TdUAmOUNyAptZy+nG254GOrDmIb
+ mWZ21CET7e5EYyb9j2RRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xyZRuz9UDIc=:ROAlNwSe1jkIIEWyvDI7sy
+ b4OxXNEOVdY3DzEPD+lC8Y4PLENkqKSEfAsl1yXE6SlNx0c2DQAa4coaw2TnbqwdQEXIOsa9h
+ oKwAAmbni18D996g/cKxF3OfljaLKdFUNWug0DLb+pIz9ryqJDd/qI1NmDwjFErNTBt/3xec1
+ dI+SwVJQsFGnuRR/pK1AtiisYgeD30kJQzUoKUF6fWFBWMi25gQw75g4MldGR9T/TbfWRT5Pl
+ diwIA+VkipOpLdYg09S0/yDFTaFIx4LaArr5vTY+cuRQTD9ddpGiNPsBYJz7utG7Icgf23KHz
+ 9Jfjir+liGxJt4vmZkS/a5CSMQTymez0JegbR5SqPD8Bg6ELX9SyXiKlSk+dszBuu05Cc4mBY
+ IbLWKF8W+WN8nuoUaUdLc2Bg6WC8gfCAuB6k7ln8Wk9l7uBP+m8RPpKlxuMfZ+lBm6Nl7kOuM
+ r+RACoXjZSCoAzuNp6vKd76UYy6PW+trZBWiV0Crv/dpGrkDIEFrXFA7tXgDzx+dzhGQWHmSO
+ hlDTUAEnmT5qZzugIC0XnyNbJJtHrn7B0lewu95cZ+7Rj8JCC6ZKd70KwCca2ScszqeGhBYNm
+ n+F0E8Q33P7pUCzs2Aka6Jnu5ZFRMs+NgrcClvG1HZ/MPkNca2h7tav7hJoG+2Rq6dzHeS8w6
+ Sk2stqiNbXXPWWXUS3eX4l2lezOC2izmSnmsLU8tHJTqwSwoIonw+Q+MnmNNutZ3ptbNhkVb1
+ jIMEjurL55VygZqdIKBeX+nz96Y7NIz6S062I0J8qrdVkyztSQ9iYd+ij9f1YGXqo3gvXNYZe
+ 1MGFsIy0OsZRBeS8bI0yCZ9IT5dSy92+ZnG8vX1hIBztW2OrhM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 09:21:57PM +0100, Will Deacon wrote:
-> Hi Lorenzo, Hanjun, [+Nick]
-> 
-> On Thu, May 21, 2020 at 06:37:38PM +0100, Lorenzo Pieralisi wrote:
-> > On Thu, May 21, 2020 at 11:09:53AM +0100, Will Deacon wrote:
-> > > Hi folks,
-> > > 
-> > > I just tried booting the arm64 for-kernelci branch under QEMU (version
-> > > 4.2.50 (v4.2.0-779-g4354edb6dcc7)) with UBSAN enabled, and I see a
-> > > couple of NULL pointer dereferences reported at boot. I think they're
-> > > both GIC related (log below). I don't see a panic with UBSAN disabled,
-> > > so something's fishy here.
-> > 
-> > May I ask you the QEMU command line please - just to make sure I can
-> > replicate it.
-> 
-> As it turns out, I'm only able to reproduce this when building with Clang,
-> but I don't know whether that's because GCC is missing something of Clang
-> is signalling a false positive. You also don't need all of those whacky
-> fuzzing options enabled.
-> 
-> Anyway, to reproduce:
-> 
->  $ git checkout for-next/kernelci
->  $ make ARCH=arm64  CC=clang CROSS_COMPILE=aarch64-linux-gnu- defconfig
->  <then do a menuconfig and enable UBSAN>
->  $ make ARCH=arm64  CC=clang CROSS_COMPILE=aarch64-linux-gnu- Image
-> 
-> I throw that at QEMU using:
-> 
-> qemu-system-aarch64 -M virt -machine virtualization=true \
-> 	-machine virt,gic-version=3 \
-> 	-cpu max,sve=off -smp 2 -m 4096 \
-> 	-drive if=pflash,format=raw,file=efi.img,readonly \
-> 	-drive if=pflash,format=raw,file=varstore.img \
-> 	-drive if=virtio,format=raw,file=disk.img \
-> 	-device virtio-scsi-pci,id=scsi0 \
-> 	-device virtio-rng-pci \
-> 	-device virtio-net-pci,netdev=net0 \
-> 	-netdev user,id=net0,hostfwd=tcp::8222-:22 \
-> 	-nographic \
-> 	-kernel ~/work/linux/arch/arm64/boot/Image \
-> 	-append "earlycon root=/dev/vda2"
-> 
-> I built QEMU a while ago according to:
-> 
-> https://mirrors.edge.kernel.org/pub/linux/kernel/people/will/docs/qemu/qemu-arm64-howto.html
-> 
-> and its version 4.2.50 (v4.2.0-779-g4354edb6dcc7).
-> 
-> My clang is version 11.0.1.
+'nic_data' is no longer used outside of the #ifdef block
+in efx_ef10_set_mac_address:
 
-Thanks a lot Will.
+drivers/net/ethernet/sfc/ef10.c:3231:28: error: unused variable 'nic_data' [-Werror,-Wunused-variable]
+        struct efx_ef10_nic_data *nic_data = efx->nic_data;
 
-I *think* I was right - it is the ACPI_OFFSET() macro:
+Move the variable into a local scope.
 
-#define ACPI_OFFSET(d, f)  ACPI_PTR_DIFF (&(((d *) 0)->f), (void *) 0)
+Fixes: dfcabb078847 ("sfc: move vport_id to struct efx_nic")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/sfc/ef10.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-that triggers the warnings (I suspected it because at least in one of
-the warnings I could not see any dereference of any dynamically
-allocated data).
+diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
+index e634e8110585..964c5e842cec 100644
+--- a/drivers/net/ethernet/sfc/ef10.c
++++ b/drivers/net/ethernet/sfc/ef10.c
+@@ -3228,7 +3228,6 @@ static int efx_ef10_vport_set_mac_address(struct efx_nic *efx)
+ static int efx_ef10_set_mac_address(struct efx_nic *efx)
+ {
+ 	MCDI_DECLARE_BUF(inbuf, MC_CMD_VADAPTOR_SET_MAC_IN_LEN);
+-	struct efx_ef10_nic_data *nic_data = efx->nic_data;
+ 	bool was_enabled = efx->port_enabled;
+ 	int rc;
+ 
+@@ -3256,6 +3255,7 @@ static int efx_ef10_set_mac_address(struct efx_nic *efx)
+ 
+ #ifdef CONFIG_SFC_SRIOV
+ 	if (efx->pci_dev->is_virtfn && efx->pci_dev->physfn) {
++		struct efx_ef10_nic_data *nic_data = efx->nic_data;
+ 		struct pci_dev *pci_dev_pf = efx->pci_dev->physfn;
+ 
+ 		if (rc == -EPERM) {
+-- 
+2.26.2
 
-Now on what to do with it - thoughts welcome.
-
-Lorenzo
