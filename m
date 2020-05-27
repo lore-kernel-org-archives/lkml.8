@@ -2,110 +2,131 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78588C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB2EC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D437207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4KWr1Ka"
+	by mail.kernel.org (Postfix) with ESMTP id 6778320787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388822AbgE0NuM (ORCPT
+        id S2388833AbgE0NuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:50:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388603AbgE0NuL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:50:11 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB67C08C5C1;
-        Wed, 27 May 2020 06:50:11 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id 23so20540274oiq.8;
-        Wed, 27 May 2020 06:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a1TUEw5/JsL8gsEryhTxvgCweegsIr/EsyDfyV7zWRU=;
-        b=E4KWr1Kau5Hs04onkGjtjlT4R9Jjt7r1vDz7F0LoI6WqRXl6lu4jovEXkZucrcd+jh
-         5zbo9UbDZWxm3LFBVtxlUUpHdjpYSttORWN07WVTZ1RaVDDx651Eqfh9jXXrOz2l2AG5
-         fo5aIn7gF1Hhig7C1AzXQLfuK6BzoD1QlifSNtI8aUVw5jzG/4wSrmYMc181bG/bq+QN
-         mO6h00F6dZXNWCS2C5k6MBLL0JLy1Hflz0lm/eSFTJXFGC4XTBHF305y8hyimyul0UEo
-         FH8Xe2MBSogrEhjjUoj9C+4xyxrrkfNPz9SPUR4a4CDqWU+3sRebKP0bkjDb2FntZSuA
-         gQeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a1TUEw5/JsL8gsEryhTxvgCweegsIr/EsyDfyV7zWRU=;
-        b=JpxvcbQMUGzgnfnhbe0t5JU2YGSn5JQhGPfE0dlP+4pLBUgnnBhcOAjNaibybpTgKM
-         6af8+ESfj5Pp8QfyXyYEWcP/Y2lRFMRCz9OGSjFf9I7or3ocRwEEP0q+KXtg7X94pXQL
-         lBcr3qhK4y5ZPtqMP3DDuYQroA/pIUXBzaejiH6tfOFMGJGrDBUl9bvSY778cOceyVJx
-         pGVkG+5/KSRv2H2AlWxzHREvGZqbLXowHf/Cs+F/Z89e1W2h7r4cPr2yNjuB6XwsJ54U
-         ZLjd5bwghZ6k6/+xWDcx5bQuPH/pb85QJe+L9R2JhDYAvtNTW3UQhQqqJNuvBMCQBGLC
-         z87Q==
-X-Gm-Message-State: AOAM533D2/7ey8WGyrB6LcAY0Wi5zwNNS3UrjsZsh61ZFl6AOQpdacDp
-        05dM/AMpLRVlUozeWVmvP4o=
-X-Google-Smtp-Source: ABdhPJz65Q2NTQJ4atIhwWi87TRdmRTdbuEf2CHdPJZDlL4vao7TDLPuo0VowaBDj4b05oR35IMqmg==
-X-Received: by 2002:aca:ba86:: with SMTP id k128mr2884972oif.60.1590587411208;
-        Wed, 27 May 2020 06:50:11 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:85b5:c99:767e:c12? ([2601:282:803:7700:85b5:c99:767e:c12])
-        by smtp.googlemail.com with ESMTPSA id w8sm828792oie.12.2020.05.27.06.50.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 06:50:10 -0700 (PDT)
-Subject: Re: [PATCH] [net-next] nexthop: fix enum type confusion
-To:     Arnd Bergmann <arnd@arndb.de>, David Ahern <dsahern@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Stephen Worley <sworley@cumulusnetworks.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200527134755.978758-1-arnd@arndb.de>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <3722aa2b-667d-eef2-b901-ef0ae943f8f2@gmail.com>
-Date:   Wed, 27 May 2020 07:50:09 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.0
+        Wed, 27 May 2020 09:50:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11641 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388516AbgE0NuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:50:24 -0400
+IronPort-SDR: tGAcWAIk7zdzhoykw2ighaaIoKnYlfM0ZV24KfHqrxV0IoRUh7Crg3sb9xAjlQCiVDXzoa2L36
+ uKTQNENQWsuA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:50:23 -0700
+IronPort-SDR: H0p5dRR8T13DBoId/dME1iuTy+t/Rp36eNRRIoaMXkmQhD3k8cz0gijFEGF1ho0R3hqSgIxSK9
+ Vv4gQQiL8hgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="284807538"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 06:50:20 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdwRr-009EnT-C5; Wed, 27 May 2020 16:50:23 +0300
+Date:   Wed, 27 May 2020 16:50:23 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/11] i2c: designware: Convert driver to using regmap
+ API
+Message-ID: <20200527135023.GZ1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-9-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200527134755.978758-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527120111.5781-9-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 7:47 AM, Arnd Bergmann wrote:
-> Clang points out a mismatch between function arguments
-> using a different enum type:
+On Wed, May 27, 2020 at 03:01:08PM +0300, Serge Semin wrote:
+> Seeing the DW I2C driver is using flags-based accessors with two
+> conditional clauses it would be better to replace them with the regmap
+> API IO methods and to initialize the regmap object with read/write
+> callbacks specific to the controller registers map implementation. This
+> will be also handy for the drivers with non-standard registers mapping
+> (like an embedded into the Baikal-T1 System Controller DW I2C block, which
+> glue-driver is a part of this series).
 > 
-> net/ipv4/nexthop.c:841:30: error: implicit conversion from enumeration type 'enum nexthop_event_type' to different enumeration type 'enum fib_event_type' [-Werror,-Wenum-conversion]
->         call_nexthop_notifiers(net, NEXTHOP_EVENT_DEL, nh);
->         ~~~~~~~~~~~~~~~~~~~~~~      ^~~~~~~~~~~~~~~~~
+> As before the driver tries to detect the mapping setup at probe stage and
+> creates a regmap object accordingly, which will be used by the rest of the
+> code to correctly access the controller registers. In two places it was
+> appropriate to convert the hand-written read-modify-write and
+> read-poll-loop design patterns to the corresponding regmap API
+> ready-to-use methods.
 > 
-> This looks like a copy-paste error, so just use the intended
-> type instead.
-> 
-> Fixes: 8590ceedb701 ("nexthop: add support for notifiers")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  net/ipv4/nexthop.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> Note the regmap IO methods return value is checked only at the probe
+> stage. The rest of the code won't do this because basically we have
+> MMIO-based regmap so non of the read/write methods can fail (this also
+> won't be needed for the Baikal-T1-specific I2C controller).
 
-Nate sent a fix a few hours ago:
-https://lore.kernel.org/netdev/20200527080019.3489332-1-natechancellor@gmail.com/T/#u
+Thanks! My comments below.
+
+...
+
+>  #include <linux/export.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+
+Please, keep ordered.
+
+...
+
+> +static int dw_reg_write_word(void *context, unsigned int reg, unsigned int val)
+> +{
+> +	struct dw_i2c_dev *dev = context;
+> +
+
+> +	writew_relaxed((u16)val, dev->base + reg);
+> +	writew_relaxed((u16)(val >> 16), dev->base + reg + 2);
+
+What does explicit casting here help to?
+I think you may drop it.
+
+> +	return 0;
+>  }
+
+...
+
+>  #include <linux/errno.h>
+>  #include <linux/i2c.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+
+Order?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
