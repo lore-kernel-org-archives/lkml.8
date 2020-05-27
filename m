@@ -2,111 +2,116 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B28E20C56
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jFu+fyWV"
+	by mail.kernel.org (Postfix) with ESMTP id C08D220899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgE0OEw (ORCPT
+        id S1730399AbgE0OFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:04:52 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56153 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730383AbgE0OEv (ORCPT
+        Wed, 27 May 2020 10:05:12 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:33692 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730268AbgE0OFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:04:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590588289;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vlVIr30v//g+9i0b5CXbC5CgscrkJJKNK4GDkeNGLN8=;
-        b=jFu+fyWVwT0C7TVVkqd7UZxOg7bX0YIiqINTi1HRCpEzxnNSkv0ezAdYksnUXXtO/6mAtP
-        BWaSOecFzOHCHDn+Kyh+dADfIVZ7W0s9oUjJ2kwVDhV0k1MQJEjyHRtLuEv6aBSONLdHK6
-        YvgTWrYDtznvEbrOZP1QxLIer3kd9sw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-E90PUzbCNjmMj-KVuivPGQ-1; Wed, 27 May 2020 10:04:46 -0400
-X-MC-Unique: E90PUzbCNjmMj-KVuivPGQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58431474;
-        Wed, 27 May 2020 14:04:44 +0000 (UTC)
-Received: from starship.f32vm (unknown [10.35.206.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4F2571A8EA;
-        Wed, 27 May 2020 14:04:37 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jingqi Liu <jingqi.liu@intel.com>, Tao Xu <tao3.xu@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Subject: [PATCH v3 2/2] KVM: x86: don't expose MSR_IA32_UMWAIT_CONTROL unconditionally
-Date:   Wed, 27 May 2020 17:04:25 +0300
-Message-Id: <20200527140425.3484-3-mlevitsk@redhat.com>
-In-Reply-To: <20200527140425.3484-1-mlevitsk@redhat.com>
-References: <20200527140425.3484-1-mlevitsk@redhat.com>
+        Wed, 27 May 2020 10:05:11 -0400
+Received: by mail-vs1-f67.google.com with SMTP id t4so11928104vsq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:05:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nj7qsg4lKpnXPmI42ZYb6Reb6qM87EHYaYTe65h4s+w=;
+        b=ZS5fiymfh9guG1y+Ntu3goKMlaSmcLckXyhvL/vC2a6vhdELLF8mhnHeBgOq8llJKM
+         NagHyEJwCcKD79U9bU29hgcmE4Xn02Yasf1C4zXok8SeKEeyXPWYADy4WQLVyX0//xyb
+         x8LjF5GRRRGWEaKXBjFtebkVqxR176++RsDLHwxyDmJwhGWAyblccNpIHJzhSQtv09kU
+         AUiu5D4e/afG2IPln8lqOQ0A8qTvx2x+ZJequMwt6H3HeX4/HtEzKy2gOJAfTzq66F2m
+         bdAGsQnFOVzSjvQlOtyIvBSItyP74nj+RnULUt9xpJYiPOxj3Xal1X3Od8XV3Us5mrN2
+         dTkQ==
+X-Gm-Message-State: AOAM531IJaC/15m6XRfgN9Ov0Id51jLa77Yl57xQxUIncfAT2KWf8lYi
+        XKVUXfhzs2QYnjYQpLCia8wZwYbSvyuWCIajCmSAPfLYB54=
+X-Google-Smtp-Source: ABdhPJzjUNA5cBcjelNudJyr52VcrEFlfHkWiSwTL0xX6LhIgjVleYcL1OkZCrnF9Q5f0ausMduTpZf0X77n+8opYSQ=
+X-Received: by 2002:a67:e9d3:: with SMTP id q19mr4667144vso.220.1590588310389;
+ Wed, 27 May 2020 07:05:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200527134254.854672-1-arnd@arndb.de>
+In-Reply-To: <20200527134254.854672-1-arnd@arndb.de>
+From:   Ilia Mirkin <imirkin@alum.mit.edu>
+Date:   Wed, 27 May 2020 10:04:59 -0400
+Message-ID: <CAKb7Uvhh2JKck524D9S14uNSLykFj+U48AgR+sd2uwchsH_wEQ@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH] nouveau: add fbdev dependency
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This MSR is only available when the host supports WAITPKG feature.
+Isn't this already fixed by
 
-This breaks a L2 guest, if the L0 is set to ignore the unknown MSRs,
-because the only other safety check that the L1 kernel  does is an attempt
-to read the MSR, and it succeeds since L0 ignores that read.
+https://cgit.freedesktop.org/drm/drm/commit/?id=7dbbdd37f2ae7dd4175ba3f86f4335c463b18403
 
-This makes L1 kernel to inform its qemu that MSR_IA32_UMWAIT_CONTROL
-is a supported MSR but later on when qemu attempts to set it in the
-host state this fails since it is not supported.
-
-Fixes: 6e3ba4abcea56 (KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL)
-
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
----
- arch/x86/kvm/x86.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b226fb8abe41b..4752293312947 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5316,6 +5316,10 @@ static void kvm_init_msr_list(void)
- 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
- 				continue;
- 			break;
-+		case MSR_IA32_UMWAIT_CONTROL:
-+			if (!kvm_cpu_cap_has(X86_FEATURE_WAITPKG))
-+				continue;
-+			break;
- 		default:
- 			break;
- 		}
--- 
-2.26.2
-
+On Wed, May 27, 2020 at 9:43 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> Calling directly into the fbdev stack only works when the
+> fbdev layer is built into the kernel as well, or both are
+> loadable modules:
+>
+> drivers/gpu/drm/nouveau/nouveau_drm.o: in function `nouveau_drm_probe':
+> nouveau_drm.c:(.text+0x1f90): undefined reference to `remove_conflicting_pci_framebuffers'
+>
+> The change seems to have been intentional, so add an explicit
+> dependency here but allow it to still be compiled if FBDEV
+> is completely disabled.
+>
+> Fixes: 2dd4d163cd9c ("drm/nouveau: remove open-coded version of remove_conflicting_pci_framebuffers()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/gpu/drm/nouveau/Kconfig       | 1 +
+>  drivers/gpu/drm/nouveau/nouveau_drm.c | 3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+> index 980ed09bd7f6..8c640f003358 100644
+> --- a/drivers/gpu/drm/nouveau/Kconfig
+> +++ b/drivers/gpu/drm/nouveau/Kconfig
+> @@ -18,6 +18,7 @@ config DRM_NOUVEAU
+>         select THERMAL if ACPI && X86
+>         select ACPI_VIDEO if ACPI && X86
+>         select SND_HDA_COMPONENT if SND_HDA_CORE
+> +       depends on FBDEV || !FBDEV
+>         help
+>           Choose this option for open-source NVIDIA support.
+>
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> index eb10c80ed853..e8560444ab57 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> @@ -697,7 +697,8 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+>         nvkm_device_del(&device);
+>
+>         /* Remove conflicting drivers (vesafb, efifb etc). */
+> -       ret = remove_conflicting_pci_framebuffers(pdev, "nouveaufb");
+> +       if (IS_ENABLED(CONFIG_FBDEV))
+> +               ret = remove_conflicting_pci_framebuffers(pdev, "nouveaufb");
+>         if (ret)
+>                 return ret;
+>
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
