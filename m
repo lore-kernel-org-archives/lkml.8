@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C341EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF7020707
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3317520707
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KiKH1jpd"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="V5t0pDlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgE0WeT (ORCPT
+        id S1726727AbgE0WeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:34:19 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32292 "EHLO
+        Wed, 27 May 2020 18:34:22 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:10906 "EHLO
         mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726445AbgE0WeO (ORCPT
+        by vger.kernel.org with ESMTP id S1726563AbgE0WeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:34:14 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RME0Kk016708
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:14 -0700
+        Wed, 27 May 2020 18:34:18 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RMF8rb003190
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:17 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding : content-type; s=facebook;
- bh=d6l00WkVLgtmYXyZnmkXhIoFuaUk1sBZ4g/dXP9ISL4=;
- b=KiKH1jpdQAbFjBCYFHSvKyAb5M5AGSBvM3W3OCuVe1POQniJMuBwijkRthuho1GIRf+K
- SjxC8Dv77fHUUd4K8nZCnU/qLcAnId+WBmpBVIfjKtNZVXpI2p5xNKzZGavL005ylwNL
- JLBlJeZehSf+0bZZnMroQuvD7WsekBqtX7s= 
+ bh=PcKHh48klJGJru2b4wU2dVoKS4B4is1tLRqw5jMmaYE=;
+ b=V5t0pDlK9CmVVUsHNspJgNDrDblrkQfXFWuhw/etxM1I9mhGOWNTzjvaz2liv6z6xkL3
+ hbv+rdL/EVzZQnJcCstiAK+ahuk+mRyKIqhT3b63YfLZzltiaAYW0KZk9pCtoyALfGUp
+ XDem8Km0+uuuQB/jG7hCyU31pO06pZW5e/w= 
 Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 317ktaj67e-5
+        by mx0a-00082601.pphosted.com with ESMTP id 317ktstmr3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:14 -0700
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:17 -0700
 Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:208::f) by
  mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 15:34:12 -0700
+ 15.1.1979.3; Wed, 27 May 2020 15:34:14 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 9A8E0166901C; Wed, 27 May 2020 15:34:07 -0700 (PDT)
+        id C1F8C166902D; Wed, 27 May 2020 15:34:07 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -54,9 +54,9 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v5 04/19] mm: slub: implement SLUB version of obj_to_index()
-Date:   Wed, 27 May 2020 15:33:49 -0700
-Message-ID: <20200527223404.1008856-5-guro@fb.com>
+Subject: [PATCH v5 11/19] mm: memcg/slab: move memcg_kmem_bypass() to memcontrol.h
+Date:   Wed, 27 May 2020 15:33:56 -0700
+Message-ID: <20200527223404.1008856-12-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200527223404.1008856-1-guro@fb.com>
 References: <20200527223404.1008856-1-guro@fb.com>
@@ -66,10 +66,10 @@ X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
- suspectscore=2 mlxlogscore=858 clxscore=1015 spamscore=0 adultscore=0
- bulkscore=0 mlxscore=0 cotscore=-2147483648 priorityscore=1501
- phishscore=0 malwarescore=0 impostorscore=0 classifier=spam adjust=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ cotscore=-2147483648 phishscore=0 impostorscore=0 adultscore=0
+ mlxlogscore=978 clxscore=1015 bulkscore=0 spamscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2005270170
 X-FB-Internal: deliver
@@ -78,142 +78,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit implements SLUB version of the obj_to_index() function,
-which will be required to calculate the offset of obj_cgroup in the
-obj_cgroups vector to store/obtain the objcg ownership data.
+To make the memcg_kmem_bypass() function available outside of
+the memcontrol.c, let's move it to memcontrol.h. The function
+is small and nicely fits into static inline sort of functions.
 
-To make it faster, let's repeat the SLAB's trick introduced by
-commit 6a2d7a955d8d ("[PATCH] SLAB: use a multiply instead of a
-divide in obj_to_index()") and avoid an expensive division.
-
-Vlastimil Babka noticed, that SLUB does have already a similar
-function called slab_index(), which is defined only if SLUB_DEBUG
-is enabled. The function does a similar math, but with a division,
-and it also takes a page address instead of a page pointer.
-
-Let's remove slab_index() and replace it with the new helper
-__obj_to_index(), which takes a page address. obj_to_index()
-will be a simple wrapper taking a page pointer and passing
-page_address(page) into __obj_to_index().
+It will be used from the slab code.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/slub_def.h | 16 ++++++++++++++++
- mm/slub.c                | 15 +++++----------
- 2 files changed, 21 insertions(+), 10 deletions(-)
+ include/linux/memcontrol.h | 7 +++++++
+ mm/memcontrol.c            | 7 -------
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
-index d2153789bd9f..30e91c83d401 100644
---- a/include/linux/slub_def.h
-+++ b/include/linux/slub_def.h
-@@ -8,6 +8,7 @@
-  * (C) 2007 SGI, Christoph Lameter
-  */
- #include <linux/kobject.h>
-+#include <linux/reciprocal_div.h>
-=20
- enum stat_item {
- 	ALLOC_FASTPATH,		/* Allocation from cpu slab */
-@@ -86,6 +87,7 @@ struct kmem_cache {
- 	unsigned long min_partial;
- 	unsigned int size;	/* The size of an object including metadata */
- 	unsigned int object_size;/* The size of an object without metadata */
-+	struct reciprocal_value reciprocal_size;
- 	unsigned int offset;	/* Free pointer offset */
- #ifdef CONFIG_SLUB_CPU_PARTIAL
- 	/* Number of per cpu partial objects to keep around */
-@@ -182,4 +184,18 @@ static inline void *nearest_obj(struct kmem_cache *c=
-ache, struct page *page,
- 	return result;
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 98239fdf9fee..2165470a2534 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -1442,6 +1442,13 @@ static inline bool memcg_kmem_enabled(void)
+ 	return static_branch_unlikely(&memcg_kmem_enabled_key);
  }
 =20
-+/* Determine object index from a given position */
-+static inline unsigned int __obj_to_index(const struct kmem_cache *cache=
-,
-+					  void *addr, void *obj)
++static inline bool memcg_kmem_bypass(void)
 +{
-+	return reciprocal_divide(kasan_reset_tag(obj) - addr,
-+				 cache->reciprocal_size);
++	if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
++		return true;
++	return false;
 +}
 +
-+static inline unsigned int obj_to_index(const struct kmem_cache *cache,
-+					const struct page *page, void *obj)
-+{
-+	return __obj_to_index(cache, page_address(page), obj);
-+}
-+
- #endif /* _LINUX_SLUB_DEF_H */
-diff --git a/mm/slub.c b/mm/slub.c
-index dbed2cfd2776..601c0fc3c83a 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -313,12 +313,6 @@ static inline void set_freepointer(struct kmem_cache=
- *s, void *object, void *fp)
- 		__p < (__addr) + (__objects) * (__s)->size; \
- 		__p +=3D (__s)->size)
+ static inline int memcg_kmem_charge_page(struct page *page, gfp_t gfp,
+ 					 int order)
+ {
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 56588677608e..314084e2e6e7 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2893,13 +2893,6 @@ static void memcg_schedule_kmem_cache_create(struc=
+t mem_cgroup *memcg,
+ 	queue_work(memcg_kmem_cache_wq, &cw->work);
+ }
 =20
--/* Determine object index from a given position */
--static inline unsigned int slab_index(void *p, struct kmem_cache *s, voi=
-d *addr)
+-static inline bool memcg_kmem_bypass(void)
 -{
--	return (kasan_reset_tag(p) - addr) / s->size;
+-	if (in_interrupt() || !current->mm || (current->flags & PF_KTHREAD))
+-		return true;
+-	return false;
 -}
 -
- static inline unsigned int order_objects(unsigned int order, unsigned in=
-t size)
- {
- 	return ((unsigned int)PAGE_SIZE << order) / size;
-@@ -461,7 +455,7 @@ static unsigned long *get_map(struct kmem_cache *s, s=
-truct page *page)
- 	bitmap_zero(object_map, page->objects);
-=20
- 	for (p =3D page->freelist; p; p =3D get_freepointer(s, p))
--		set_bit(slab_index(p, s, addr), object_map);
-+		set_bit(__obj_to_index(s, addr, p), object_map);
-=20
- 	return object_map;
- }
-@@ -3675,6 +3669,7 @@ static int calculate_sizes(struct kmem_cache *s, in=
-t forced_order)
- 	 */
- 	size =3D ALIGN(size, s->align);
- 	s->size =3D size;
-+	s->reciprocal_size =3D reciprocal_value(size);
- 	if (forced_order >=3D 0)
- 		order =3D forced_order;
- 	else
-@@ -3781,7 +3776,7 @@ static void list_slab_objects(struct kmem_cache *s,=
- struct page *page,
- 	map =3D get_map(s, page);
- 	for_each_object(p, s, addr, page->objects) {
-=20
--		if (!test_bit(slab_index(p, s, addr), map)) {
-+		if (!test_bit(__obj_to_index(s, addr, p), map)) {
- 			pr_err("INFO: Object 0x%p @offset=3D%tu\n", p, p - addr);
- 			print_tracking(s, p);
- 		}
-@@ -4506,7 +4501,7 @@ static void validate_slab(struct kmem_cache *s, str=
-uct page *page)
- 	/* Now we know that a valid freelist exists */
- 	map =3D get_map(s, page);
- 	for_each_object(p, s, addr, page->objects) {
--		u8 val =3D test_bit(slab_index(p, s, addr), map) ?
-+		u8 val =3D test_bit(__obj_to_index(s, addr, p), map) ?
- 			 SLUB_RED_INACTIVE : SLUB_RED_ACTIVE;
-=20
- 		if (!check_object(s, page, p, val))
-@@ -4697,7 +4692,7 @@ static void process_slab(struct loc_track *t, struc=
-t kmem_cache *s,
-=20
- 	map =3D get_map(s, page);
- 	for_each_object(p, s, addr, page->objects)
--		if (!test_bit(slab_index(p, s, addr), map))
-+		if (!test_bit(__obj_to_index(s, addr, p), map))
- 			add_location(t, s, get_track(s, p, alloc));
- 	put_map(map);
- }
+ /**
+  * memcg_kmem_get_cache: select the correct per-memcg cache for allocati=
+on
+  * @cachep: the original global kmem cache
 --=20
 2.25.4
 
