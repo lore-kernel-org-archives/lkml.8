@@ -2,137 +2,219 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF81C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6CE0207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E511B207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388221AbgE0Ndj (ORCPT
+        id S2388238AbgE0Ndk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:33:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:10478 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387650AbgE0Ndh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:33:37 -0400
-IronPort-SDR: 3QBb63cQmxayhPe23+Yhhp8Dstw/DvlHo7FHXlH5uA3wlsf0aT2cJ4SUEtaTJeERzIC8Rpai/N
- mPPdP8mVejww==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:33:37 -0700
-IronPort-SDR: Sp85A4i2kD1hIJeERk2+fDoPnHvu1ieNLHpHlYnUQoRo+UJZ+SVOZlsY8FKXyMSUVQx+2yYVDX
- C2fHseRFb0VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="291594465"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga004.fm.intel.com with ESMTP; 27 May 2020 06:33:34 -0700
-Date:   Wed, 27 May 2020 21:33:32 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
-        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
- policy
-Message-ID: <20200527133332.GA20232@shbuild999.sh.intel.com>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
- <20200526181459.GD991@lca.pw>
- <20200527014647.GB93879@shbuild999.sh.intel.com>
- <20200527022539.GK991@lca.pw>
- <20200527104606.GE93879@shbuild999.sh.intel.com>
- <20200527120549.GA741@lca.pw>
+        Wed, 27 May 2020 09:33:40 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46334 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387514AbgE0Ndi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:33:38 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 462FE1C0320; Wed, 27 May 2020 15:33:36 +0200 (CEST)
+Date:   Wed, 27 May 2020 15:33:35 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Pedro dAquino Filocre F S Barbuda 
+        <pbarbuda@microsoft.com>, Vishal Verma <vishal.l.verma@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 53/81] libnvdimm/btt: Fix LBA masking during free
+ list population
+Message-ID: <20200527133335.GB11424@amd>
+References: <20200526183923.108515292@linuxfoundation.org>
+ <20200526183932.993059888@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="aVD9QWMuhilNxW9f"
 Content-Disposition: inline
-In-Reply-To: <20200527120549.GA741@lca.pw>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200526183932.993059888@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
 
-On Wed, May 27, 2020 at 08:05:49AM -0400, Qian Cai wrote:
-> On Wed, May 27, 2020 at 06:46:06PM +0800, Feng Tang wrote:
-> > Hi Qian,
-> > 
-> > On Tue, May 26, 2020 at 10:25:39PM -0400, Qian Cai wrote:
-> > > > > > > [1] https://lkml.org/lkml/2020/3/5/57
-> > > > > > 
-> > > > > > Reverted this series fixed a warning under memory pressue.
-> > > > > 
-> > > > > Andrew, Stephen, can you drop this series?
-> > > > > 
-> > > > > > 
-> > > > > > [ 3319.257898] LTP: starting oom01
-> > > > > > [ 3319.284417] ------------[ cut here ]------------
-> > > > > > [ 3319.284439] memory commitment underflow
-> > > > 
-> > > > Thanks for the catch!
-> > > > 
-> > > > Could you share the info about the platform, like the CPU numbers
-> > > > and RAM size, and what's the mmap test size of your test program.
-> > > > It would be great if you can point me the link to the test program.
-> > > 
-> > > I have been reproduced this on both AMD and Intel. The test just
-> > > allocating memory and swapping.
-> > > 
-> > > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/oom/oom01.c
-> > > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/tunable/overcommit_memory.c
-> > > 
-> > > It might be better to run the whole LTP mm tests if none of the above
-> > > triggers it for you which has quite a few memory pressurers.
-> > > 
-> > > /opt/ltp/runltp -f mm
-> > 
-> > Thanks for sharing. I tried to reproduce this on 2 server plaforms,
-> > but can't reproduce it, and they are still under testing.
-> > 
-> > Meanwhile, could you help to try the below patch, which is based on
-> > Andi's suggestion and have some debug info. The warning is a little
-> > strange, as the condition is
-> > 
-> > 	(percpu_counter_read(&vm_committed_as) <
-> >                        -(s64)vm_committed_as_batch * num_online_cpus())
-> > 
-> > while for your platform (48 CPU + 128 GB RAM), the
-> > '-(s64)vm_committed_as_batch * num_online_cpus()'
-> > is a s64 value: '-32G', which makes the condition hard to be true,
-> > and when it is,  it could be triggered by some magic for s32/s64
-> > operations around the percpu-counter. 
-> 
-> Here is the information on AMD and powerpc below affected by this. It
-> could need a bit patient to reproduce, but our usual daily CI would
-> trigger it eventually after a few tries.
-> 
-> # git clone https://github.com/cailca/linux-mm.git
-> # cd linux-mm
-> # ./compile.sh
-> # systemctl reboot
-> # ./test.sh
+--aVD9QWMuhilNxW9f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I just downloaded it, and it failed on my desktop machine as it failed
-in 'yum' and 'grub2' setup. The difficulty for me to reproduce is the
-test platforms are behind the 0day framework, and I can hardly  setup
-external test suits, though I have been trying for all day today :) 
+Hi!
 
-So if possible, please help to try the patch in my last email. thanks!
+> If an implementation does happen to have it set, we would happily read
+> it in as the next block to write to for writes. Since a high bit is set,
+> it pushes the block number out of the range of an 'arena', and we fail
+> such a write with an EIO.
+>=20
+> Follow the robustness principle, and tolerate such implementations by
+> stripping out the zero flag when populating the free list during
+> initialization. Additionally, use the same stripped out entries for
+> detection of incomplete writes and map restoration that happens at this
+> stage.
 
-- Feng
+> Add a sysfs file 'log_zero_flags' that indicates the ability to accept
+> such a layout to userspace applications. This enables 'ndctl
+> check-namespace' to recognize whether the kernel is able to handle zero
+> flags, or whether it should attempt a fix-up under the --repair
+> option.
 
+Ok, so new /sys file is added; but that should have entry in
+Documentation/ and that one is not there AFAICT. (Not in -linus, so
+I assume not in -stable, either).
+
+Best regards,
+								Pavel
+
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Reported-by: Dexuan Cui <decui@microsoft.com>
+> Reported-by: Pedro d'Aquino Filocre F S Barbuda <pbarbuda@microsoft.com>
+> Tested-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/nvdimm/btt.c      | 25 +++++++++++++++++++------
+>  drivers/nvdimm/btt.h      |  2 ++
+>  drivers/nvdimm/btt_devs.c |  8 ++++++++
+>  3 files changed, 29 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+> index d78cfe82ad5c..1064a703ccec 100644
+> --- a/drivers/nvdimm/btt.c
+> +++ b/drivers/nvdimm/btt.c
+> @@ -542,8 +542,8 @@ static int arena_clear_freelist_error(struct arena_in=
+fo *arena, u32 lane)
+>  static int btt_freelist_init(struct arena_info *arena)
+>  {
+>  	int new, ret;
+> -	u32 i, map_entry;
+>  	struct log_entry log_new;
+> +	u32 i, map_entry, log_oldmap, log_newmap;
+> =20
+>  	arena->freelist =3D kcalloc(arena->nfree, sizeof(struct free_entry),
+>  					GFP_KERNEL);
+> @@ -555,16 +555,22 @@ static int btt_freelist_init(struct arena_info *are=
+na)
+>  		if (new < 0)
+>  			return new;
+> =20
+> +		/* old and new map entries with any flags stripped out */
+> +		log_oldmap =3D ent_lba(le32_to_cpu(log_new.old_map));
+> +		log_newmap =3D ent_lba(le32_to_cpu(log_new.new_map));
+> +
+>  		/* sub points to the next one to be overwritten */
+>  		arena->freelist[i].sub =3D 1 - new;
+>  		arena->freelist[i].seq =3D nd_inc_seq(le32_to_cpu(log_new.seq));
+> -		arena->freelist[i].block =3D le32_to_cpu(log_new.old_map);
+> +		arena->freelist[i].block =3D log_oldmap;
+> =20
+>  		/*
+>  		 * FIXME: if error clearing fails during init, we want to make
+>  		 * the BTT read-only
+>  		 */
+> -		if (ent_e_flag(log_new.old_map)) {
+> +		if (ent_e_flag(log_new.old_map) &&
+> +				!ent_normal(log_new.old_map)) {
+> +			arena->freelist[i].has_err =3D 1;
+>  			ret =3D arena_clear_freelist_error(arena, i);
+>  			if (ret)
+>  				dev_err_ratelimited(to_dev(arena),
+> @@ -572,7 +578,7 @@ static int btt_freelist_init(struct arena_info *arena)
+>  		}
+> =20
+>  		/* This implies a newly created or untouched flog entry */
+> -		if (log_new.old_map =3D=3D log_new.new_map)
+> +		if (log_oldmap =3D=3D log_newmap)
+>  			continue;
+> =20
+>  		/* Check if map recovery is needed */
+> @@ -580,8 +586,15 @@ static int btt_freelist_init(struct arena_info *aren=
+a)
+>  				NULL, NULL, 0);
+>  		if (ret)
+>  			return ret;
+> -		if ((le32_to_cpu(log_new.new_map) !=3D map_entry) &&
+> -				(le32_to_cpu(log_new.old_map) =3D=3D map_entry)) {
+> +
+> +		/*
+> +		 * The map_entry from btt_read_map is stripped of any flag bits,
+> +		 * so use the stripped out versions from the log as well for
+> +		 * testing whether recovery is needed. For restoration, use the
+> +		 * 'raw' version of the log entries as that captured what we
+> +		 * were going to write originally.
+> +		 */
+> +		if ((log_newmap !=3D map_entry) && (log_oldmap =3D=3D map_entry)) {
+>  			/*
+>  			 * Last transaction wrote the flog, but wasn't able
+>  			 * to complete the map write. So fix up the map.
+> diff --git a/drivers/nvdimm/btt.h b/drivers/nvdimm/btt.h
+> index db3cb6d4d0d4..ddff49c707b0 100644
+> --- a/drivers/nvdimm/btt.h
+> +++ b/drivers/nvdimm/btt.h
+> @@ -44,6 +44,8 @@
+>  #define ent_e_flag(ent) (!!(ent & MAP_ERR_MASK))
+>  #define ent_z_flag(ent) (!!(ent & MAP_TRIM_MASK))
+>  #define set_e_flag(ent) (ent |=3D MAP_ERR_MASK)
+> +/* 'normal' is both e and z flags set */
+> +#define ent_normal(ent) (ent_e_flag(ent) && ent_z_flag(ent))
+> =20
+>  enum btt_init_state {
+>  	INIT_UNCHECKED =3D 0,
+> diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+> index e341498876ca..9486acc08402 100644
+> --- a/drivers/nvdimm/btt_devs.c
+> +++ b/drivers/nvdimm/btt_devs.c
+> @@ -159,11 +159,19 @@ static ssize_t size_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(size);
+> =20
+> +static ssize_t log_zero_flags_show(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "Y\n");
+> +}
+> +static DEVICE_ATTR_RO(log_zero_flags);
+> +
+>  static struct attribute *nd_btt_attributes[] =3D {
+>  	&dev_attr_sector_size.attr,
+>  	&dev_attr_namespace.attr,
+>  	&dev_attr_uuid.attr,
+>  	&dev_attr_size.attr,
+> +	&dev_attr_log_zero_flags.attr,
+>  	NULL,
+>  };
+> =20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--aVD9QWMuhilNxW9f
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl7ObC8ACgkQMOfwapXb+vKI2QCgsQVbH25sPaT9obowvjG18XW2
+4bYAn0eM2z+qaiMlvYRCpnmbjp+K1r8Z
+=0FpG
+-----END PGP SIGNATURE-----
+
+--aVD9QWMuhilNxW9f--
