@@ -2,120 +2,124 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B13BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBBBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A60820899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 601AF207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:28:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590607703;
+	bh=Z2GGB6Wt+dGToaBaYkxOJDivct59R520WSiT9oG7HOA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nAr9Jrru7iMMnFVU7BdTtmeL1f/WPXYJLy75/b+wBdYNc11hWRakfM1AQVxX5GHYP
+	 rmaDwlsN+nUGwWU/SwpYy4lzv9Fnte4lRKNX9oVY6Q6sNqVsLWIMbZQdUSVhAwAVGz
+	 AFldtrgJfXvNMwPxStPp99qsI5dJDTYxCFLfMKYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbgE0T2R (ORCPT
+        id S1726398AbgE0T2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:28:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:43944 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgE0T2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:28:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFC2830E;
-        Wed, 27 May 2020 12:28:15 -0700 (PDT)
-Received: from [10.57.2.168] (unknown [10.57.2.168])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B4B843F305;
-        Wed, 27 May 2020 12:28:13 -0700 (PDT)
-Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20200526173117.155339-1-ndesaulniers@google.com>
- <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
- <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com>
-Date:   Wed, 27 May 2020 20:28:12 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 15:28:22 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35901 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbgE0T2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:28:21 -0400
+Received: by mail-io1-f65.google.com with SMTP id y18so6951703iow.3;
+        Wed, 27 May 2020 12:28:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bgk9XpqXSxucV5OMC4BoaIOWVkM3DvrsJIDo7nwW2GA=;
+        b=h6pSbWeXmTcoLy6Xah1Q2OBlmdmbgTl+hzps5MCINZD31132xk9WObg9EV5taIhJzA
+         /gnX5nVe7VGhxdz7+olrPf9xvAjp+pAZyqqIJ/GxbOLZ0C/ZGZxepVb0mNwYLx/mRHOz
+         btbjmwu18I3Au91kJpXVF177BUtfHV68otsZocHFXN8U0KQAPOjq1dhLY9rbIL75UEul
+         mMFzg9EDZLLNGsfIEvojwuTLAOWIbES+0ZAVYw3kf5eU7TLFiOcyYX8yzfSNQVFv3md8
+         iVytEb05A2BkvKPMy8n+4YWFXGIFLt8dZ+oJQo8ZdROEscJdVY+fPc4bKgBOq/dxYEYW
+         +yiA==
+X-Gm-Message-State: AOAM532ufOqeccsVwPmD1bUyXjfV9cWvNW3p7BQFNnglhtjK3vUagl5d
+        hF6WueRu8xg6umv/vQpPiA==
+X-Google-Smtp-Source: ABdhPJz2AR1rkipQGqnDMAjyexmb3CQOj9FvL6X/yiuBHdY+4XWSLol+S+ivS3k+KdxI0/RLJhY2Ww==
+X-Received: by 2002:a05:6602:2001:: with SMTP id y1mr12134767iod.94.1590607700123;
+        Wed, 27 May 2020 12:28:20 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j15sm1989870ilk.0.2020.05.27.12.28.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 12:28:19 -0700 (PDT)
+Received: (nullmailer pid 2597176 invoked by uid 1000);
+        Wed, 27 May 2020 19:28:17 -0000
+Date:   Wed, 27 May 2020 13:28:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 3/6] dt-bindings: serdev: ngsm: Add binding for GNSS
+ child node
+Message-ID: <20200527192817.GA2587830@bogus>
+References: <20200512214713.40501-1-tony@atomide.com>
+ <20200512214713.40501-4-tony@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512214713.40501-4-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-27 18:55, Nick Desaulniers wrote:
-> On Wed, May 27, 2020 at 6:45 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 2020-05-26 18:31, Nick Desaulniers wrote:
->>> Custom toolchains that modify the default target to -mthumb cannot
->>> compile the arm64 compat vdso32, as
->>> arch/arm64/include/asm/vdso/compat_gettimeofday.h
->>> contains assembly that's invalid in -mthumb.  Force the use of -marm,
->>> always.
->>
->> FWIW, this seems suspicious - the only assembly instructions I see there
->> are SWI(SVC), MRRC, and a MOV, all of which exist in Thumb for the
->> -march=armv7a baseline that we set.
->>
->> On a hunch, I've just bodged "VDSO_CFLAGS += -mthumb" into my tree and
->> built a Thumb VDSO quite happily with Ubuntu 19.04's
->> gcc-arm-linux-gnueabihf. What was the actual failure you saw?
+On Tue, May 12, 2020 at 02:47:10PM -0700, Tony Lindgren wrote:
+> For motorola modem case, we may have a GNSS device on channel 4.
+> Let's add that to the binding and example.
 > 
->  From the link in the commit message: `write to reserved register 'R7'`
-> https://godbolt.org/z/zwr7iZ
-> IIUC r7 is reserved for the frame pointer in THUMB?
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../devicetree/bindings/serdev/serdev-ngsm.yaml          | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> --- a/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> +++ b/Documentation/devicetree/bindings/serdev/serdev-ngsm.yaml
+> @@ -42,6 +42,10 @@ allOf:
+>            description: Name of the USB PHY
+>            const: usb
+>  
+> +        compatible:
+> +          description: GNSS receiver
+> +          const: motorola,mapphone-mdm6600-gnss
 
-It can be, if you choose to build with frame pointers and the common 
-frame pointer ABI for Thumb code that uses r7. However it can also be 
-for other things like the syscall number in the Arm syscall ABI too. I 
-take it Clang has decided that writing syscall wrappers with minimal 
-inline asm is not a thing people deserve to do without arbitrary other 
-restrictions?
+I'm not sure how this isn't failing on the example because it is wrong.
 
-> What is the implicit default of your gcc-arm-linux-gnueabihf at -O2?
-> -mthumb, or -marm?
+You're saying this compatible belongs at the same level as 
+phys/phy-names, but that would be the parent which already has a 
+compatible. You have to define a child node property (gnss@4) and have 
+'compatible' under it. At that point, this schema becomes very much 
+Motorola specific.
 
-As Dave pointed out, like the probable majority of users it's Thumb:
-
-$ arm-linux-gnueabihf-gcc -v
-Using built-in specs.
-COLLECT_GCC=arm-linux-gnueabihf-gcc
-COLLECT_LTO_WRAPPER=/usr/lib/gcc-cross/arm-linux-gnueabihf/8/lto-wrapper
-Target: arm-linux-gnueabihf
-Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 
-8.3.0-6ubuntu1' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs 
---enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr 
---with-gcc-major-version-only --program-suffix=-8 --enable-shared 
---enable-linker-build-id --libexecdir=/usr/lib 
---without-included-gettext --enable-threads=posix --libdir=/usr/lib 
---enable-nls --with-sysroot=/ --enable-clocale=gnu 
---enable-libstdcxx-debug --enable-libstdcxx-time=yes 
---with-default-libstdcxx-abi=new --enable-gnu-unique-object 
---disable-libitm --disable-libquadmath --disable-libquadmath-support 
---enable-plugin --enable-default-pie --with-system-zlib 
---with-target-system-zlib --enable-multiarch --enable-multilib 
---disable-sjlj-exceptions --with-arch=armv7-a --with-fpu=vfpv3-d16 
---with-float=hard --with-mode=thumb --disable-werror --enable-multilib 
---enable-checking=release --build=aarch64-linux-gnu 
---host=aarch64-linux-gnu --target=arm-linux-gnueabihf 
---program-prefix=arm-linux-gnueabihf- 
---includedir=/usr/arm-linux-gnueabihf/include
-Thread model: posix
-gcc version 8.3.0 (Ubuntu/Linaro 8.3.0-6ubuntu1)
-
-(yeah, I didn't actually need to hack my makefile at all)
-
-Robin.
+> +
+>        required:
+>          - phys
+>          - phy-names
+> @@ -61,4 +65,9 @@ examples:
+>        phy-names = "usb";
+>        #address-cells = <1>;
+>        #size-cells = <0>;
+> +
+> +      gnss@4 {
+> +         compatible = "motorola,mapphone-mdm6600-gnss";
+> +         reg = <4>;
+> +      };
+>      };
+> -- 
+> 2.26.2
