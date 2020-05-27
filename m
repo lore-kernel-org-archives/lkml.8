@@ -6,25 +6,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B85C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7E1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 017442088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 369F12071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:46:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391610AbgE0Qqt (ORCPT
+        id S2391626AbgE0Qqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:46:49 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52521 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391525AbgE0Qqh (ORCPT
+        Wed, 27 May 2020 12:46:51 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:36487 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391570AbgE0Qqq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:46:37 -0400
-X-Originating-IP: 90.76.143.236
+        Wed, 27 May 2020 12:46:46 -0400
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id D895540011;
-        Wed, 27 May 2020 16:46:34 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id C441110000C;
+        Wed, 27 May 2020 16:46:43 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
         hkallweit1@gmail.com, richardcochran@gmail.com,
@@ -32,9 +31,9 @@ To:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
         foss@0leil.net, antoine.tenart@bootlin.com
-Subject: [PATCH net-next 3/8] net: phy: mscc: remove the TR CLK disable magic value
-Date:   Wed, 27 May 2020 18:41:53 +0200
-Message-Id: <20200527164158.313025-4-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next 8/8] MIPS: dts: ocelot: describe the load/save GPIO
+Date:   Wed, 27 May 2020 18:41:58 +0200
+Message-Id: <20200527164158.313025-9-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527164158.313025-1-antoine.tenart@bootlin.com>
 References: <20200527164158.313025-1-antoine.tenart@bootlin.com>
@@ -47,78 +46,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-This patch adds a define for the 0x8000 magic value used to perform
-enable/disable actions on the "token ring clock". The patch is only
-cosmetic.
+This patch adds a description of the load/save GPIN pin, used in the
+VSC8584 PHY for timestamping operations. The related pinctrl description
+is also added.
 
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/phy/mscc/mscc.h      |  1 +
- drivers/net/phy/mscc/mscc_main.c | 10 +++++-----
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ arch/mips/boot/dts/mscc/ocelot_pcb120.dts | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/mscc/mscc.h b/drivers/net/phy/mscc/mscc.h
-index f828c917b9f7..54f1fcbdd9cf 100644
---- a/drivers/net/phy/mscc/mscc.h
-+++ b/drivers/net/phy/mscc/mscc.h
-@@ -252,6 +252,7 @@ enum rgmii_clock_delay {
- /* Test page Registers */
- #define MSCC_PHY_TEST_PAGE_5		  5
- #define MSCC_PHY_TEST_PAGE_8		  8
-+#define TR_CLK_DISABLE			  0x8000
- #define MSCC_PHY_TEST_PAGE_9		  9
- #define MSCC_PHY_TEST_PAGE_20		  20
- #define MSCC_PHY_TEST_PAGE_24		  24
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index 550acf547ced..40af506d973e 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -629,7 +629,7 @@ static int vsc8531_pre_init_seq_set(struct phy_device *phydev)
- 	if (rc < 0)
- 		return rc;
- 	rc = phy_modify_paged(phydev, MSCC_PHY_PAGE_TEST,
--			      MSCC_PHY_TEST_PAGE_8, 0x8000, 0x8000);
-+			      MSCC_PHY_TEST_PAGE_8, TR_CLK_DISABLE, TR_CLK_DISABLE);
- 	if (rc < 0)
- 		return rc;
+diff --git a/arch/mips/boot/dts/mscc/ocelot_pcb120.dts b/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
+index 33991fd209f5..897de5025d7f 100644
+--- a/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
++++ b/arch/mips/boot/dts/mscc/ocelot_pcb120.dts
+@@ -3,6 +3,7 @@
  
-@@ -1026,7 +1026,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
- 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_5, 0x1b20);
+ /dts-v1/;
  
- 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
--	reg |= 0x8000;
-+	reg |= TR_CLK_DISABLE;
- 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
++#include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/phy/phy-ocelot-serdes.h>
+ #include "ocelot.dtsi"
+@@ -25,6 +26,11 @@ phy_int_pins: phy_int_pins {
+ 		pins = "GPIO_4";
+ 		function = "gpio";
+ 	};
++
++	phy_load_save_pins: phy_load_save_pins {
++		pins = "GPIO_10";
++		function = "ptp2";
++	};
+ };
  
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
-@@ -1046,7 +1046,7 @@ static int vsc8574_config_pre_init(struct phy_device *phydev)
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
+ &mdio0 {
+@@ -34,27 +40,31 @@ &mdio0 {
+ &mdio1 {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&miim1>, <&phy_int_pins>;
++	pinctrl-0 = <&miim1>, <&phy_int_pins>, <&phy_load_save_pins>;
  
- 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
--	reg &= ~0x8000;
-+	reg &= ~TR_CLK_DISABLE;
- 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
+ 	phy7: ethernet-phy@0 {
+ 		reg = <0>;
+ 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gpio>;
++		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+ 	};
+ 	phy6: ethernet-phy@1 {
+ 		reg = <1>;
+ 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gpio>;
++		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+ 	};
+ 	phy5: ethernet-phy@2 {
+ 		reg = <2>;
+ 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gpio>;
++		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+ 	};
+ 	phy4: ethernet-phy@3 {
+ 		reg = <3>;
+ 		interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gpio>;
++		load-save-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+ 	};
+ };
  
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
-@@ -1196,7 +1196,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
- 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_5, 0x1f20);
- 
- 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
--	reg |= 0x8000;
-+	reg |= TR_CLK_DISABLE;
- 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
- 
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
-@@ -1225,7 +1225,7 @@ static int vsc8584_config_pre_init(struct phy_device *phydev)
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TEST);
- 
- 	reg = phy_base_read(phydev, MSCC_PHY_TEST_PAGE_8);
--	reg &= ~0x8000;
-+	reg &= ~TR_CLK_DISABLE;
- 	phy_base_write(phydev, MSCC_PHY_TEST_PAGE_8, reg);
- 
- 	phy_base_write(phydev, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_STANDARD);
 -- 
 2.26.2
 
