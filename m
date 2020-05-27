@@ -2,129 +2,320 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66854C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A60C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F772084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:46:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJQ2iAHV"
+	by mail.kernel.org (Postfix) with ESMTP id D9516207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgE0XqV (ORCPT
+        id S1725920AbgE0XuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725613AbgE0XqU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:46:20 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87622C08C5C1;
-        Wed, 27 May 2020 16:46:16 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id z5so30117870ejb.3;
-        Wed, 27 May 2020 16:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AdKVO2Q7xtOtZd00IpF5kdS9NRgMnyg+vSOXHZlKsRw=;
-        b=FJQ2iAHVdTtJGGfIpKgWMx6kF9SVLMHDrN3eCUSypHJSvqoSNr4fDZpN4U5KCSH4gb
-         /g0SmOtaTq8RD6zLQOXfl18Hd70vxFotKSO2VmSnkx/vLO/uzjaxpaxbhm/gYHErnzPK
-         OqAqvs4vxMj5UAIMrjeabActGqbeuDReP49RnAJAbTnyCr1f8bEGoJiV4GBYSsbpKIt/
-         pa9gxqtSvVYAaf3F3/wimrqrACRhMS91Vwe6+hHIaRFOgx7DuB0O3Z/DjQ9k91KG1uzi
-         VdIjcjNYbuX+i9vmteXDMC9wMjYzUH/ANOkCyEImJXc4mWrqtAVIMORrKy98SR4cD0He
-         K5vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AdKVO2Q7xtOtZd00IpF5kdS9NRgMnyg+vSOXHZlKsRw=;
-        b=rdyVU+1ny7uNKVfeHAzZrWftX97IMPDCzzmUw+UrDuWHe95lF+RMs5Uyj9dG8B5p1m
-         UnrMU5QQ5kyONJ2QfUkn+A1i64e0W+VhR9Is5YhK/ckJBYkFJ7bAPcx2t2TMHJ86R2C7
-         93AQJdG/LsP6OaTC3+ef9nRSITs03nRjztB0ZtaTu6XHXIwkDbD5nGmYue2LipAEsux2
-         JtiJLWLURdWGpBBh5SC0DZGPyWAO7AeXq773m5b5rluMalyXCEqzEQZq6fiswHdFwFZa
-         dROWY3RuN4RncBIWm4EetXhQMI5nKlbTGXVZwOuZgHawKTxZWahVqjW7NA0Uk96+M8ua
-         jP+w==
-X-Gm-Message-State: AOAM532b+f+4JnLtwcUet6PVMHP41HHwAum3iz6+lOuevlEuokKFXgPx
-        rYGj3DUdfqqIZmTVdY3aCd3Ie9PFdOY9kpr8nO0=
-X-Google-Smtp-Source: ABdhPJwjJaywda3/670EGBi9Gbl6rkX2/3ATn18lKzo7v3hZconRH62B7H2FE1ugyViMQT4N9qG5CHpPklncySUgfAI=
-X-Received: by 2002:a17:906:a0c2:: with SMTP id bh2mr661749ejb.406.1590623175261;
- Wed, 27 May 2020 16:46:15 -0700 (PDT)
+        Wed, 27 May 2020 19:50:04 -0400
+Received: from mga18.intel.com ([134.134.136.126]:54853 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725613AbgE0XuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 19:50:03 -0400
+IronPort-SDR: cU4XEzySn+9XOrwsXp8MbGUsU53rRepLM5LrjKAKe1LSOK29Y7lQT6A7aeVtbb5BJ5CkS7O/j+
+ XiccI3R5VZ1A==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 16:50:03 -0700
+IronPort-SDR: HtdcQ1lrFa717b7sYPNohKWgeTCLDj2OKc5kVkjlw04jtr5o9+mgwONWKO+0FbsyNFmk/rRQvG
+ n9NT/Dm2CO+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="270647096"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.147])
+  by orsmga006.jf.intel.com with ESMTP; 27 May 2020 16:50:02 -0700
+Date:   Wed, 27 May 2020 16:50:02 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 6/8] fs/ext4: Make DAX mount option a tri-state
+Message-ID: <20200527235002.GA725853@iweiny-DESK2.sc.intel.com>
+References: <20200521191313.261929-1-ira.weiny@intel.com>
+ <20200521191313.261929-7-ira.weiny@intel.com>
+ <5ECE00AE.3010802@cn.fujitsu.com>
 MIME-Version: 1.0
-References: <20200527234113.2491988-1-olteanv@gmail.com> <20200527234113.2491988-2-olteanv@gmail.com>
-In-Reply-To: <20200527234113.2491988-2-olteanv@gmail.com>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Thu, 28 May 2020 02:46:04 +0300
-Message-ID: <CA+h21hpdVuZXh38ZG-V6v745oNjo6BpiZtEdKookOn4FDeM0qg@mail.gmail.com>
-Subject: Re: [PATCH net-next 01/11] regmap: add helper for per-port regfield initialization
-To:     "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     netdev <netdev@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        "Allan W. Nielsen" <allan.nielsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
-        radu-andrei.bulie@nxp.com, fido_max@inbox.ru
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ECE00AE.3010802@cn.fujitsu.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 02:41, Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> From: Vladimir Oltean <vladimir.oltean@nxp.com>
->
-> Similar to the standalone regfields, add an initializer for the users
-> who need to set .id_size and .id_offset in order to use the
-> regmap_fields_update_bits_base API.
->
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
+On Wed, May 27, 2020 at 01:54:54PM +0800, Xiao Yang wrote:
+> On 2020/5/22 3:13, ira.weiny@intel.com wrote:
+> > From: Ira Weiny<ira.weiny@intel.com>
+> > 
+> > We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
+> > operate the same which is equivalent to 'always'.  This new
+> > functionality is limited to ext4 only.
+> > 
+> > Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
+> > it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
+> > 
+> > We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
+> > 
+> > Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
+> > specified that option for printing.
+> Hi Ira,
+> 
+> I have two questions when reviewing this patch:
+> 1) After doing mount with the same dax=inode option, ext4/xfs shows
+> differnt output(i.e. xfs doesn't print 'dax=inode'):
+> ---------------------------------------------------
+> # mount -o dax=inode /dev/pmem0 /mnt/xfstests/test/
+> # mount | grep pmem0
+> /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode)
+> 
+> # mount -odax=inode /dev/pmem1 /mnt/xfstests/scratch/
+> # mount | grep pmem1
+> /dev/pmem1 on /mnt/xfstests/scratch type xfs
+> (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+> ----------------------------------------------------
+> Is this expected output? why don't unify the output?
 
-Oops, looks like I forgot to copy Mark on this patch, sorry...
-Since you don't have this series in your inbox, here's the patchwork link to it:
-https://patchwork.ozlabs.org/project/netdev/cover/20200527234113.2491988-1-olteanv@gmail.com/
+Correct. dax=inode is the default.  xfs treats that default the same whether
+you specify it on the command line or not.
 
->  include/linux/regmap.h | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-> index 40b07168fd8e..87703d105191 100644
-> --- a/include/linux/regmap.h
-> +++ b/include/linux/regmap.h
-> @@ -1134,6 +1134,14 @@ struct reg_field {
->                                 .msb = _msb,    \
->                                 }
->
-> +#define REG_FIELD_ID(_reg, _lsb, _msb, _size, _offset) {       \
-> +                               .reg = _reg,                    \
-> +                               .lsb = _lsb,                    \
-> +                               .msb = _msb,                    \
-> +                               .id_size = _size,               \
-> +                               .id_offset = _offset,           \
-> +                               }
-> +
->  struct regmap_field *regmap_field_alloc(struct regmap *regmap,
->                 struct reg_field reg_field);
->  void regmap_field_free(struct regmap_field *field);
-> --
-> 2.25.1
->
+For ext4 Jan specifically asked that if the user specified dax=inode on the
+command line that it be printed on the mount options.  If you don't specify
+anything then dax=inode is in effect but ext4 will not print anything.
 
-Regards,
--Vladimir
+I had the behavior the same as XFS originally but Jan wanted it this way.  The
+XFS behavior is IMO better and is what the new mount infrastructure gives by
+default.
+
+> 
+> 2) Do mount without dax and mount with -odax=inode have the same behavior?
+
+Yes.
+
+> ---------------------------------------------------
+> # mount /dev/pmem0 /mnt/xfstests/test/
+> # mount | grep pmem0
+> /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel)
+> # umount /mnt/xfstests/test
+> # mount -odax=inode /dev/pmem0 /mnt/xfstests/test/
+> # mount | grep pmem0
+> /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode
+> ---------------------------------------------------
+
+These are the same behavior.  But because you specified the option it was
+echoed in the second output.
+
+> 
+> BTW: I focus on the support of per-file/directory DAX operations recently.
+> 
+> > 
+> > Reviewed-by: Jan Kara<jack@suse.cz>
+> > Signed-off-by: Ira Weiny<ira.weiny@intel.com>
+> > 
+> > ---
+> > Changes from V1:
+> > 	Fix up mounting options to only show an option if specified
+> > 	Fix remount to prevent dax changes
+> > 	Isolate behavior to ext4 only
+> > 
+> > Changes from RFC:
+> > 	Combine remount check for DAX_NEVER with DAX_ALWAYS
+> > 	Update ext4_should_enable_dax()
+> > ---
+> >   fs/ext4/ext4.h  |  2 ++
+> >   fs/ext4/inode.c |  2 ++
+> >   fs/ext4/super.c | 67 +++++++++++++++++++++++++++++++++++++++++--------
+> >   3 files changed, 61 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > index f5291693ce6e..65ffb831b2b9 100644
+> > --- a/fs/ext4/ext4.h
+> > +++ b/fs/ext4/ext4.h
+> > @@ -1168,6 +1168,8 @@ struct ext4_inode_info {
+> >   						      blocks */
+> >   #define EXT4_MOUNT2_HURD_COMPAT		0x00000004 /* Support HURD-castrated
+> >   						      file systems */
+> > +#define EXT4_MOUNT2_DAX_NEVER		0x00000008 /* Do not allow Direct Access */
+> > +#define EXT4_MOUNT2_DAX_INODE		0x00000010 /* For printing options only */
+> > 
+> >   #define EXT4_MOUNT2_EXPLICIT_JOURNAL_CHECKSUM	0x00000008 /* User explicitly
+> >   						specified journal checksum */
+> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> > index 01636cf5f322..68fac9289109 100644
+> > --- a/fs/ext4/inode.c
+> > +++ b/fs/ext4/inode.c
+> > @@ -4402,6 +4402,8 @@ static bool ext4_should_enable_dax(struct inode *inode)
+> >   {
+> >   	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+> > 
+> > +	if (test_opt2(inode->i_sb, DAX_NEVER))
+> > +		return false;
+> >   	if (!S_ISREG(inode->i_mode))
+> >   		return false;
+> >   	if (ext4_should_journal_data(inode))
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index 80eb814c47eb..5e056aa20ce9 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -1512,7 +1512,8 @@ enum {
+> >   	Opt_usrjquota, Opt_grpjquota, Opt_offusrjquota, Opt_offgrpjquota,
+> >   	Opt_jqfmt_vfsold, Opt_jqfmt_vfsv0, Opt_jqfmt_vfsv1, Opt_quota,
+> >   	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
+> > -	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version, Opt_dax,
+> > +	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version,
+> > +	Opt_dax, Opt_dax_always, Opt_dax_inode, Opt_dax_never,
+> >   	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
+> >   	Opt_nowarn_on_error, Opt_mblk_io_submit,
+> >   	Opt_lazytime, Opt_nolazytime, Opt_debug_want_extra_isize,
+> > @@ -1579,6 +1580,9 @@ static const match_table_t tokens = {
+> >   	{Opt_nobarrier, "nobarrier"},
+> >   	{Opt_i_version, "i_version"},
+> >   	{Opt_dax, "dax"},
+> > +	{Opt_dax_always, "dax=always"},
+> > +	{Opt_dax_inode, "dax=inode"},
+> > +	{Opt_dax_never, "dax=never"},
+> >   	{Opt_stripe, "stripe=%u"},
+> >   	{Opt_delalloc, "delalloc"},
+> >   	{Opt_warn_on_error, "warn_on_error"},
+> > @@ -1726,6 +1730,7 @@ static int clear_qf_name(struct super_block *sb, int qtype)
+> >   #define MOPT_NO_EXT3	0x0200
+> >   #define MOPT_EXT4_ONLY	(MOPT_NO_EXT2 | MOPT_NO_EXT3)
+> >   #define MOPT_STRING	0x0400
+> > +#define MOPT_SKIP	0x0800
+> > 
+> >   static const struct mount_opts {
+> >   	int	token;
+> > @@ -1775,7 +1780,13 @@ static const struct mount_opts {
+> >   	{Opt_min_batch_time, 0, MOPT_GTE0},
+> >   	{Opt_inode_readahead_blks, 0, MOPT_GTE0},
+> >   	{Opt_init_itable, 0, MOPT_GTE0},
+> > -	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET},
+> > +	{Opt_dax, EXT4_MOUNT_DAX_ALWAYS, MOPT_SET | MOPT_SKIP},
+> > +	{Opt_dax_always, EXT4_MOUNT_DAX_ALWAYS,
+> > +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> > +	{Opt_dax_inode, EXT4_MOUNT2_DAX_INODE,
+> > +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> > +	{Opt_dax_never, EXT4_MOUNT2_DAX_NEVER,
+> > +		MOPT_EXT4_ONLY | MOPT_SET | MOPT_SKIP},
+> >   	{Opt_stripe, 0, MOPT_GTE0},
+> >   	{Opt_resuid, 0, MOPT_GTE0},
+> >   	{Opt_resgid, 0, MOPT_GTE0},
+> > @@ -2084,13 +2095,32 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
+> >   		}
+> >   		sbi->s_jquota_fmt = m->mount_opt;
+> >   #endif
+> > -	} else if (token == Opt_dax) {
+> > +	} else if (token == Opt_dax || token == Opt_dax_always ||
+> > +		   token == Opt_dax_inode || token == Opt_dax_never) {
+> >   #ifdef CONFIG_FS_DAX
+> > -		ext4_msg(sb, KERN_WARNING,
+> > -		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> > -		sbi->s_mount_opt |= m->mount_opt;
+> > +		switch (token) {
+> > +		case Opt_dax:
+> > +		case Opt_dax_always:
+> > +			ext4_msg(sb, KERN_WARNING,
+> > +				"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+> > +			sbi->s_mount_opt |= EXT4_MOUNT_DAX_ALWAYS;
+> > +			sbi->s_mount_opt2&= ~EXT4_MOUNT2_DAX_NEVER;
+> > +			break;
+> > +		case Opt_dax_never:
+> > +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> > +			sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
+> > +			break;
+> > +		case Opt_dax_inode:
+> > +			sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
+> > +			sbi->s_mount_opt2&= ~EXT4_MOUNT2_DAX_NEVER;
+> > +			/* Strictly for printing options */
+> > +			sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_INODE;
+> > +			break;
+> > +		}
+> >   #else
+> >   		ext4_msg(sb, KERN_INFO, "dax option not supported");
+> > +		sbi->s_mount_opt2 |= EXT4_MOUNT2_DAX_NEVER;
+> > +		sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
+> >   		return -1;
+> >   #endif
+> 
+> For s_mount_opt/s_mount_opt2, could we make the code more readable by
+> using set_opt()/set_opt2()/clear_opt()/clear_opt2() macros?
+
+I could but it seems like there is a mixture of styles in that function/file...
+
+For me it is really a toss up which is more readable.  I'm inclined to keep it
+since it's been reviewed multiple times.  I was about to send V5 but I'll hold
+off a bit.  If you feel strongly about it I can change it.
+
+Thanks for the review!
+Ira
+
+> 
+> Thanks,
+> Xiao Yang
+> >   	} else if (token == Opt_data_err_abort) {
+> > @@ -2254,7 +2284,7 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+> >   	for (m = ext4_mount_opts; m->token != Opt_err; m++) {
+> >   		int want_set = m->flags&  MOPT_SET;
+> >   		if (((m->flags&  (MOPT_SET|MOPT_CLEAR)) == 0) ||
+> > -		    (m->flags&  MOPT_CLEAR_ERR))
+> > +		    (m->flags&  MOPT_CLEAR_ERR) || m->flags&  MOPT_SKIP)
+> >   			continue;
+> >   		if (!nodefs&&  !(m->mount_opt&  (sbi->s_mount_opt ^ def_mount_opt)))
+> >   			continue; /* skip if same as the default */
+> > @@ -2314,6 +2344,17 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+> >   	if (DUMMY_ENCRYPTION_ENABLED(sbi))
+> >   		SEQ_OPTS_PUTS("test_dummy_encryption");
+> > 
+> > +	if (test_opt(sb, DAX_ALWAYS)) {
+> > +		if (IS_EXT2_SB(sb))
+> > +			SEQ_OPTS_PUTS("dax");
+> > +		else
+> > +			SEQ_OPTS_PUTS("dax=always");
+> > +	} else if (test_opt2(sb, DAX_NEVER)) {
+> > +		SEQ_OPTS_PUTS("dax=never");
+> > +	} else if (test_opt2(sb, DAX_INODE)) {
+> > +		SEQ_OPTS_PUTS("dax=inode");
+> > +	}
+> > +
+> >   	ext4_show_quota_options(seq, sb);
+> >   	return 0;
+> >   }
+> > @@ -5436,10 +5477,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+> >   		goto restore_opts;
+> >   	}
+> > 
+> > -	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt)&  EXT4_MOUNT_DAX_ALWAYS) {
+> > +	if ((sbi->s_mount_opt ^ old_opts.s_mount_opt)&  EXT4_MOUNT_DAX_ALWAYS ||
+> > +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2)&  EXT4_MOUNT2_DAX_NEVER ||
+> > +	    (sbi->s_mount_opt2 ^ old_opts.s_mount_opt2)&  EXT4_MOUNT2_DAX_INODE) {
+> >   		ext4_msg(sb, KERN_WARNING, "warning: refusing change of "
+> > -			"dax flag with busy inodes while remounting");
+> > -		sbi->s_mount_opt ^= EXT4_MOUNT_DAX_ALWAYS;
+> > +			"dax mount option with busy inodes while remounting");
+> > +		sbi->s_mount_opt&= ~EXT4_MOUNT_DAX_ALWAYS;
+> > +		sbi->s_mount_opt |= old_opts.s_mount_opt&  EXT4_MOUNT_DAX_ALWAYS;
+> > +		sbi->s_mount_opt2&= ~(EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> > +		sbi->s_mount_opt2 |= old_opts.s_mount_opt2&
+> > +				     (EXT4_MOUNT2_DAX_NEVER | EXT4_MOUNT2_DAX_INODE);
+> >   	}
+> > 
+> >   	if (sbi->s_mount_flags&  EXT4_MF_FS_ABORTED)
+> 
+> 
+> 
