@@ -2,185 +2,120 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 888B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DB920787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mu8S9a3a"
+	by mail.kernel.org (Postfix) with ESMTP id 6810D2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590598690;
+	bh=Zgs3ccEsGbJs7QUjPvZSh9uNEyoqKDTE8+GbiCafCuw=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=mfhtggo2vwU4UdKF1VnNYIeRZqkcYT1dURd88o1C1CuqgdMuxLEhKlTF5y+dGDOqw
+	 Px2HGXMcJ5o6WubNwunMGN9YELUjvBGNW2w6t+CFHDVZGATYjVXrcANeyUscajllD0
+	 gbtUJt/LcToGcI1o22alJlKoB+Rv5NNN9C6iIq5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390081AbgE0Q6F (ORCPT
+        id S2390757AbgE0Q6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387954AbgE0Q6D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387913AbgE0Q6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 12:58:03 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C62CC03E97D;
-        Wed, 27 May 2020 09:58:03 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id n15so12081036pfd.0;
-        Wed, 27 May 2020 09:58:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vEZ5Sil7dAFPcsB6vg5ELG1EVw5OWJYqnN8faDzvGTM=;
-        b=mu8S9a3aG4qnaDjuWDUj+TNOFNtnHmw30/IMMDISHFBftI8Aanb/po//yzzITc6Xb3
-         fTCbRGOtT25lYE7F2qb00A89DuG6L8MC2usOvPvk4Zh0c1Kl9sD34M/zOzcyUqktgJ9g
-         ZDa3HKemQ8DVHfeLVnLgf64Lxiw90AQBsLrkxwLVNHg4dGAyhyK3icZvs2mx9/ESEgX7
-         Uo4x+L/acxnDcDgciSHH8EWHmsB5JRMtDEf+b3EFMlDnTjEZjKqfbQ/jBwrErL3y28rL
-         +didquQxXpR3tCBd0m/DF+uVn8wSheV70BsAv6qtGzGgWHoH+66Orkbp5R5TqSxtahbo
-         aUqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vEZ5Sil7dAFPcsB6vg5ELG1EVw5OWJYqnN8faDzvGTM=;
-        b=E6YAl/g4ZJV/VCSI4AfW4jTH70N02lq7gVzSEfNsuGX31R/rABhyl6QIkNaAX+fD5I
-         7LRs6NbB9i1Jk83q9BJICDiRHSVbyJnUxDE+bdi/Lns1Z6Jk/y12Jw92N5Ii0MmOLpze
-         9egcbKjziL5ECTP0VOrgpO57mVFghFxbhDwFupLSEXEAE6bxmQByW8+dVmQ8P2BrZt4a
-         eLXH5xa/NN6zEDoZxaakHQCb9hyryMkIQOTTxKzay6pURpBQcB2RMbbaHX5G/aHdkFfy
-         ANJyUPR/OwkKQZxXW2yMYT828fiTqlmRv7ouyAZ65KmwXv/oQg/djWiX8VmFmZmO0aaz
-         0VvQ==
-X-Gm-Message-State: AOAM5324vR53gZAcRLTLByhW9cRjpDsqtuC5KJiP5WgO3dK5W3QuedJn
-        GtsdzEj7/roSGj+CfHese3eJnY8n
-X-Google-Smtp-Source: ABdhPJynBEJL6DWQ6MKZVyUvuSQl6qyERBNiyMlfW8w/VBIkogVfCDDiqLDc7xr63vJ5qF3uEGXO8g==
-X-Received: by 2002:a62:ed10:: with SMTP id u16mr4973605pfh.0.1590598682380;
-        Wed, 27 May 2020 09:58:02 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 65sm2558617pfy.219.2020.05.27.09.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 09:58:01 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] hwmon: Add Baikal-T1 PVT sensor driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
- <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
- <20200527162549.GA225240@roeck-us.net>
- <20200527165205.5krrdahiup3i2oq3@mobilestation>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <14256f0f-2977-4a54-cf01-ae7e684d10c2@roeck-us.net>
-Date:   Wed, 27 May 2020 09:58:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200527165205.5krrdahiup3i2oq3@mobilestation>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: from localhost (unknown [137.135.114.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACDBF20C09;
+        Wed, 27 May 2020 16:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590598682;
+        bh=Zgs3ccEsGbJs7QUjPvZSh9uNEyoqKDTE8+GbiCafCuw=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=BpZGYzEU29cupZ5FK7KTZC2fWtXMgxUf5U2xAX0ntrVIV7RT9cno2tuJt0keiKe+c
+         VwZVwbS1nZweYAO+/GPOuEXb4H2zMckszbWYdMrfyZOnSoUNNQHSlf/PQAC5Hu+l5V
+         sp+d2285PwykdpMP5lQh/M2VUUUkYIXlyYapGMjs=
+Date:   Wed, 27 May 2020 16:58:01 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+To:     Jiri Kosina <jikos@kernel.org>, kai.heng.feng@canonical.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] HID: multitouch: enable multi-input as a quirk for some devices
+In-Reply-To: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
+References: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
+Message-Id: <20200527165802.ACDBF20C09@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 9:52 AM, Serge Semin wrote:
-> On Wed, May 27, 2020 at 09:25:49AM -0700, Guenter Roeck wrote:
->> On Tue, May 26, 2020 at 04:38:23PM +0300, Serge Semin wrote:
-> 
-> [nip]
-> 
->>> +
->>> +=============================== ======= =======================================
->>> +Name				Perm	Description
->>> +=============================== ======= =======================================
->>> +update_interval			RW	Measurements update interval per
->>> +					sensor.
->>> +temp1_type			RO	Sensor type (always 1 as CPU embedded
->>> +					diode).
->>> +temp1_label			RO	CPU Core Temperature sensor.
->>> +temp1_input			RO	Measured temperature in millidegree
->>> +					Celsius.
->>> +temp1_min			RW	Low limit for temp input.
->>> +temp1_max			RW	High limit for temp input.
->>> +temp1_min_alarm			RO	Temperature input alarm. Returns 1 if
->>> +					temperature input went below min limit,
->>> +					0 otherwise.
->>> +temp1_max_alarm			RO	Temperature input alarm. Returns 1 if
->>> +					temperature input went above max limit,
->>> +					0 otherwise.
->>> +temp1_trim			RW	Temperature sensor trimming factor in
->>> +					millidegree Celsius. It can be used to
->>> +					manually adjust the temperature
->>> +					measurements within 7.130 degrees
->>> +					Celsius.
->>
->> vs. standard ABI:
->>
->> temp[1-*]_offset`
->>                 Temperature offset which is added to the temperature reading
->>                 by the chip.
->>
->>                 Unit: millidegree Celsius
->>
->> If you really think this is necessary, why not use the standard ABI ?
-> 
-> That would have made much more sense.) I'll replace the handwritten temp1_trim
-> with the standard temp1_offset attribute in v4 shortly today. Thanks for pointing
-> this out.
-> 
+Hi
 
-Sorry for not realizing this earlier. The added explanation
-made all the difference.
+[This is an automated email]
 
-Guenter
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
+
+The bot has tested the following trees: v5.6.14, v5.4.42, v4.19.124, v4.14.181, v4.9.224, v4.4.224.
+
+v5.6.14: Build OK!
+v5.4.42: Build OK!
+v4.19.124: Failed to apply! Possible dependencies:
+    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
+    7ffa13be4945 ("HID: multitouch: simplify the application retrieval")
+
+v4.14.181: Failed to apply! Possible dependencies:
+    127e71bd462b ("HID: multitouch: Combine all left-button events in a frame")
+    29cc309d8bf1 ("HID: hid-multitouch: forward MSC_TIMESTAMP")
+    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
+    7f81c8db5489 ("HID: multitouch: simplify the settings of the various features")
+    abb36fe691b2 ("HID: multitouch: fix calculation of last slot field in multi-touch reports")
+    af8dc4d09490 ("HID: multitouch: Properly deal with Win8 PTP reports with 0 touches")
+    d9c57a7090ba ("HID: multitouch: export a quirk for the button handling of touchpads")
+    f146d1c4d7ea ("HID: multitouch: Store per collection multitouch data")
+
+v4.9.224: Failed to apply! Possible dependencies:
+    0485b1ec280c ("HID: asus: ignore declared dummy usages")
+    1caccc2565a8 ("HID: asus: support Republic of Gamers special keys")
+    4f4001bc76fd ("HID: multitouch: fix rare Win 8 cases when the touch up event gets missing")
+    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
+    76dd1fbebbae ("HID: asus: Add support for T100 keyboard")
+    957b8dffa4e3 ("HID: multitouch: Support Asus T304UA media keys")
+    9ce12d8be12c ("HID: asus: Add i2c touchpad support")
+    a93913e1496d ("HID: asus: fix and generalize ambiguous preprocessor macros")
+    af22a610bc38 ("HID: asus: support backlight on USB keyboards")
+    c8b1b3dd89ea ("HID: asus: Fix keyboard support")
+    d9c57a7090ba ("HID: multitouch: export a quirk for the button handling of touchpads")
+    e9d0a26d3481 ("HID: multitouch: change for touch height/width")
+    f3287a995ac3 ("HID: multitouch: fix LG Melfas touchscreen")
+    fd91189654a3 ("HID: multitouch: use BIT macro")
+
+v4.4.224: Failed to apply! Possible dependencies:
+    0485b1ec280c ("HID: asus: ignore declared dummy usages")
+    1caccc2565a8 ("HID: asus: support Republic of Gamers special keys")
+    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
+    76dd1fbebbae ("HID: asus: Add support for T100 keyboard")
+    957b8dffa4e3 ("HID: multitouch: Support Asus T304UA media keys")
+    9ce12d8be12c ("HID: asus: Add i2c touchpad support")
+    a93913e1496d ("HID: asus: fix and generalize ambiguous preprocessor macros")
+    af22a610bc38 ("HID: asus: support backlight on USB keyboards")
+    b94f7d5ddf1b ("HID: asus: add support for VivoBook E200HA")
+    c8b1b3dd89ea ("HID: asus: Fix keyboard support")
+    d9c57a7090ba ("HID: multitouch: export a quirk for the button handling of touchpads")
+    eeb01a57921a ("HID: Asus X205TA keyboard driver")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
