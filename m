@@ -2,190 +2,91 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F402C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00420C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0547120899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22BF20890
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590599100;
+	bh=QrRQgXxxJ63vZq31dxWJOpXXtjXrN47jMut59lAdhhE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uA0oz8H8oGopT+WOGQSAMx9noTfzVwTCpBVnmmTh91tsDMSyQP+2IYh1F+bbrovCe
+	 zVrBOFH/rvibi24JGvC2Q94g+0tNje7ds8NMQDFvqUsgylKAns7sjvJsNt46FghpMn
+	 2H9g158KnN6iYg2TGYJ5Z01DqhDkntxFyebIlK7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbgE0RBt (ORCPT
+        id S1731110AbgE0RFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:01:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55708 "EHLO mx2.suse.de"
+        Wed, 27 May 2020 13:05:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbgE0RBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:01:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6A074AC61;
-        Wed, 27 May 2020 17:01:49 +0000 (UTC)
-Message-ID: <c48ede24790b2e402ca47640ae9f1ea2a5b27530.camel@suse.de>
-Subject: Re: [PATCH v2 09/14] device core: Add ability to handle multiple
- dma offsets
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Corey Minyard <minyard@acm.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>
-Date:   Wed, 27 May 2020 19:01:43 +0200
-In-Reply-To: <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com>
-References: <20200526191303.1492-1-james.quinlan@broadcom.com>
-         <20200526191303.1492-10-james.quinlan@broadcom.com>
-         <59a0b4e1454a8ef4d3e4ebaf55dcbf3dcd2d73a2.camel@suse.de>
-         <CA+-6iNyOKvY-xNfXqDRa5_nJVJuqGKA-oe-ejNuJHUBt6ORu0A@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-zRgqKyYp8CMyrh28/srG"
-User-Agent: Evolution 3.36.2 
+        id S1726978AbgE0RE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:04:59 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C4220890;
+        Wed, 27 May 2020 17:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590599099;
+        bh=QrRQgXxxJ63vZq31dxWJOpXXtjXrN47jMut59lAdhhE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZELDOLFfWjUSMiPpsOIL+bfRkPqpUhd1RzHpynSc+IqAYV3B4TQzhBDh/hjNHlaER
+         zSCxTfrx+M48Wvhl+b1XI7Jog4/rPMJsw/8sd/+murItayBJzaSvAhIBcoezdlHEZV
+         bVZInSDO/RWrUu6s2ZDx2C3LmOn4xuoLQftDGM4s=
+Received: by mail-ot1-f42.google.com with SMTP id u23so100715otq.10;
+        Wed, 27 May 2020 10:04:59 -0700 (PDT)
+X-Gm-Message-State: AOAM531c5WLvn9nied//CGS5+x5A38pcl61X+eOrRkSrHgYQ6LjfZ09u
+        UxEf2MoJvUlLehWC/nVDQD702AqZhl+9gcAZIg==
+X-Google-Smtp-Source: ABdhPJxhrJavKUHM5x9pqsCda+ALmNJDjhk8EtNPXvR0b64+JsptO0YtuOMTTuRXh5oLXhzzBNvT36fiDwmer89Ghu0=
+X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr5433914ots.192.1590599098693;
+ Wed, 27 May 2020 10:04:58 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200511111128.16210-1-nikitos.tr@gmail.com> <20200518221435.GA6734@bogus>
+ <20200525105236.GB27989@amd>
+In-Reply-To: <20200525105236.GB27989@amd>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 27 May 2020 11:04:47 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJOMzjO_caip6-eXGWoPOWhPcyqfEpBXd2PLyH2OO7RAw@mail.gmail.com>
+Message-ID: <CAL_JsqJOMzjO_caip6-eXGWoPOWhPcyqfEpBXd2PLyH2OO7RAw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Shanghai Awinic
+ Technology Co., Ltd.
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     nikitos.tr@gmail.com, Dan Murphy <dmurphy@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-zRgqKyYp8CMyrh28/srG
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Jim,
-
-On Wed, 2020-05-27 at 11:43 -0400, Jim Quinlan wrote:
-> Hi Nicolas,
->=20
-> On Wed, May 27, 2020 at 11:00 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > Hi Jim,
-> > one thing comes to mind, there is a small test suite in
-> > drivers/of/unittest.c
-> > (specifically of_unittest_pci_dma_ranges()) you could extend it to incl=
-ude
-> > your
-> > use cases.
-> Sure, will check out.
-> > On Tue, 2020-05-26 at 15:12 -0400, Jim Quinlan wrote:
-> > > The new field in struct device 'dma_pfn_offset_map' is used to facili=
-tate
-> > > the use of multiple pfn offsets between cpu addrs and dma addrs.  It =
-is
-> > > similar to 'dma_pfn_offset' except that the offset chosen depends on =
-the
-> > > cpu or dma address involved.
-> > >=20
-> > > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+On Mon, May 25, 2020 at 4:52 AM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Mon 2020-05-18 16:14:35, Rob Herring wrote:
+> > On Mon, 11 May 2020 16:11:26 +0500,  wrote:
+> > > From: Nikita Travkin <nikitos.tr@gmail.com>
+> > >
+> > > Add the "awinic" vendor prefix for Shanghai Awinic Technology Co., Ltd.
+> > > Website: https://www.awinic.com/
+> > >
+> > > Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
 > > > ---
-> > >  drivers/of/address.c        | 65 +++++++++++++++++++++++++++++++++++=
---
-> > >  drivers/usb/core/message.c  |  3 ++
-> > >  drivers/usb/core/usb.c      |  3 ++
-> > >  include/linux/device.h      | 10 +++++-
-> > >  include/linux/dma-direct.h  | 10 ++++--
-> > >  include/linux/dma-mapping.h | 46 ++++++++++++++++++++++++++
-> > >  kernel/dma/Kconfig          | 13 ++++++++
-> > >  7 files changed, 144 insertions(+), 6 deletions(-)
-> > >=20
-> >=20
-> > [...]
-> >=20
-> > > @@ -977,10 +1020,19 @@ int of_dma_get_range(struct device *dev, struc=
-t
-> > > device_node *np, u64 *dma_addr,
-> > >               pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
-> > >                        range.bus_addr, range.cpu_addr, range.size);
-> > >=20
-> > > +             num_ranges++;
-> > >               if (dma_offset && range.cpu_addr - range.bus_addr !=3D
-> > > dma_offset)
-> > > {
-> > > -                     pr_warn("Can't handle multiple dma-ranges with
-> > > different
-> > > offsets on node(%pOF)\n", node);
-> > > -                     /* Don't error out as we'd break some existing =
-DTs
-> > > */
-> > > -                     continue;
-> > > +                     if (!IS_ENABLED(CONFIG_DMA_PFN_OFFSET_MAP)) {
-> > > +                             pr_warn("Can't handle multiple dma-rang=
-es
-> > > with
-> > > different offsets on node(%pOF)\n", node);
-> > > +                             pr_warn("Perhaps set
-> > > DMA_PFN_OFFSET_MAP=3Dy?\n");
-> > > +                             /*
-> > > +                              * Don't error out as we'd break some
-> > > existing
-> > > +                              * DTs that are using configs w/o
-> > > +                              * CONFIG_DMA_PFN_OFFSET_MAP set.
-> > > +                              */
-> > > +                             continue;
-> >=20
-> > dev->bus_dma_limit is set in of_dma_configure(), this function's caller=
-,
-> > based
-> > on dma_start's value (set after this continue). So you'd be effectively
-> > setting
-> > the dev->bus_dma_limit to whatever we get from the first dma-range.
-> I'm not seeing that at all.  On the  evaluation of each dma-range,
-> dma_start and dma_end are re-evaluated to be the lowest and highest
-> bus values of the  dma-ranges seen so far.  After all dma-ranges are
-> examined,  dev->bus_dma_limit being set to the highest.  In fact, the
-> current code -- ie before my commits -- already does this for multiple
-> dma-ranges as long as the cpu-bus offset is the same in the
-> dma-ranges.
+> > >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> I can take 2/ and 3/ of the series, but I believe we'll get conflicts
+> if I change vendor-prefixes.yaml in the LED tree. Can you take this
+> one?
 
-Sorry I got carried away, you're right.
+Okay, applied.
 
-So I understand there is an underlaying assumption that the non DMAble memo=
-ry
-space will always sit on top of the bus memory space, as intertwined as it
-might be, so as to every phys_to_dma() call on non DMAble memory to fall ab=
-ove
-bus_dma_limit.
-
-Regards,
-Nicolas
-
-
---=-zRgqKyYp8CMyrh28/srG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7OnPcACgkQlfZmHno8
-x/5FYQf9Hyg6r4xe2AQsd6Jy/LEHz47hHSEfbk6Zmqu1XLp6EQsPOCHEFLoCjExf
-aDe7lcONaDgfY45AEZOwP+W3gdL76lKuD+PIv1UP2M61toc9CkJ2MdOyzpcx+081
-g9rs8iR4JyZuGdPrIoF7gmRFQFuV54dNROs0cKTRe1BmErORF5We0IEaqhhOJ4iF
-DNKjYglQ/w2zskqEMsiN89kDjUpmWWvolH9SDIzoBYmfIfBQzQbsyiNpA0Chq9ul
-hWJwJq6uwXczXpwqWSDIoZX/DruOl5fAVLU/GZxdw7Yn3MJ5dtkDza3yRdg303JZ
-ejwGur84LCjY8lJnXEIz+VfX0wboSA==
-=CgTI
------END PGP SIGNATURE-----
-
---=-zRgqKyYp8CMyrh28/srG--
-
+Rob
