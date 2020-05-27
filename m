@@ -2,146 +2,88 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6003CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE3D20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIRb6dp5"
+	by mail.kernel.org (Postfix) with ESMTP id 33AD5208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgE0MPm (ORCPT
+        id S1728917AbgE0MQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:15:42 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:32875 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725900AbgE0MPm (ORCPT
+        Wed, 27 May 2020 08:16:58 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:48188 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725900AbgE0MQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:15:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590581740;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pLaVnDwpTclVIWI/rgksOsILd2LuGC5m7xWEfTbOfv0=;
-        b=NIRb6dp5jFFGAY1/wKKtauuxGjsL81PNuNAEPAF0/o9pY3ntyuV8w5tYXJ5W9D37Ga2d/L
-        j7R2kwK2bojbHrzZHLdYJ5U0XnC8Py2cOFTT8m2c+H1QNwayUjpEnxVFQ3WtSArGI3uJD6
-        brxkMqqBfQR7xMxmw4eH0ION56D1bLE=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-D-fdg9yXODKcmLohEEJn6g-1; Wed, 27 May 2020 08:15:39 -0400
-X-MC-Unique: D-fdg9yXODKcmLohEEJn6g-1
-Received: by mail-qt1-f197.google.com with SMTP id o11so9343328qtm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:15:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pLaVnDwpTclVIWI/rgksOsILd2LuGC5m7xWEfTbOfv0=;
-        b=L/8D8GB+Yt2o1JzeHwQTDcZyA7/Mqf577vndcLhopAeWsxFnsh8DTQr5UkY/Ct1qW2
-         fw45yqkPmzKxIsAE/OCvwiBpEg6aA01S8s6tZNDjTNdlngVPUjr/cGEUAUF6LAQD6L/Z
-         w/tN0IZsu617FSn1WHDfeWMlJAISFnRTHuHPZCLqKZnpvPFDdrwunvU1qx1H6BnbhM7t
-         6iHFUcbJaCnv97f5xscw7GR84RXoaF4mYjRY62OQWZbhVjx1Em6qaIR5Ztal/0HsRu12
-         3C9/vx/Y6IhcFh5twIPB4E1oIaPBcuXk7TGvjydQdijRPQNPyRyuwb53pt6UB31BqrGx
-         La3w==
-X-Gm-Message-State: AOAM531TSbjQajVLdHBQkPHRU4zXuX55MQXhuGykE5nvh7jp5qpkskTf
-        6w9ZoKCiALjy8llXT969T1Q3dzvoAFuEysjuO+pQYNqN9BMBsRk0KSpo1gY/G0rR423uPHpMmjp
-        3foSYVQK8dGcMw7VMNFpVAuFrls7UeUn/bpVuj+Wm
-X-Received: by 2002:a37:dc6:: with SMTP id 189mr3364746qkn.170.1590581738408;
-        Wed, 27 May 2020 05:15:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw+Ji08UDQyFXWdNpXtC/ZkjAzg125KVXNODa+psxX/r+DgVOPG5+j7SrMwt1aWWPoduOX3HOFR+lsLLBOmAUs=
-X-Received: by 2002:a37:dc6:: with SMTP id 189mr3364722qkn.170.1590581738123;
- Wed, 27 May 2020 05:15:38 -0700 (PDT)
+        Wed, 27 May 2020 08:16:58 -0400
+X-IronPort-AV: E=Sophos;i="5.73,441,1583161200"; 
+   d="scan'208";a="48154563"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 27 May 2020 21:16:56 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 22FED42BA9EB;
+        Wed, 27 May 2020 21:16:54 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v5 0/3] media: rcar-vin: Enable MEDIA_BUS_FMT_SRGGB8_1X8 format
+Date:   Wed, 27 May 2020 13:16:47 +0100
+Message-Id: <1590581810-19317-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200414091842.25972-1-kai.heng.feng@canonical.com>
- <nycvar.YFH.7.76.2005261023250.25812@cbobk.fhfr.pm> <CAO-hwJ+mTjVpBiY9vHXA2Y6D+cXYemixFJ++i+KwZZ25Z6LHHA@mail.gmail.com>
- <A51B9D28-88BF-42EB-9161-8E3081B128D2@canonical.com> <CAO-hwJJ=_2bn1BEshZ6URT813UAA6KRLaiEHt6bNPUcd9esskg@mail.gmail.com>
-In-Reply-To: <CAO-hwJJ=_2bn1BEshZ6URT813UAA6KRLaiEHt6bNPUcd9esskg@mail.gmail.com>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Wed, 27 May 2020 14:15:27 +0200
-Message-ID: <CAO-hwJJCQbGV3cYjHNmiEi7rgoC5U9uq2ugkNJtRv=Z0wHsuag@mail.gmail.com>
-Subject: Re: [PATCH] HID: multitouch: Remove MT_CLS_WIN_8_DUAL
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:24 AM Benjamin Tissoires
-<benjamin.tissoires@redhat.com> wrote:
->
-> On Wed, May 27, 2020 at 8:19 AM Kai-Heng Feng
-> <kai.heng.feng@canonical.com> wrote:
-> >
-> >
-> >
-> > > On May 26, 2020, at 16:43, Benjamin Tissoires <benjamin.tissoires@redhat.com> wrote:
-> > >
-> > > On Tue, May 26, 2020 at 10:24 AM Jiri Kosina <jikos@kernel.org> wrote:
-> > >>
-> > >> On Tue, 14 Apr 2020, Kai-Heng Feng wrote:
-> > >>
-> > >>> After commit c23e2043d5f7 ("HID: multitouch: do not filter mice nodes"),
-> > >>> MT_CLS_WIN_8 also supports mouse nodes, hence make MT_CLS_WIN_8_DUAL
-> > >>> redundant.
-> > >>>
-> > >>> Remove MT_CLS_WIN_8_DUAL accordingly.
-> > >>
-> > >> Benjamin, can I get your Ack on this one please?
-> > >
-> > > Heh, funny enough I was trying to fix
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=207235 and was pondering
-> > > this one too.
-> > >
-> > > To fix #207235, I'll likely need to add a new class and quirk in
-> > > hid-multitouch. I can't really find a generic solution for now, and we
-> > > better have a local quirk for the 2 devices we currently have and
-> > > backport those to stable. However, this patch will likely conflict
-> > > (trivially), with the new quirks, so I was thinking:
-> > > - submitting my quick and dirty quirk and mark it to stable
-> > > - apply this one on top of it (this one really doesn't need to go to stable)
-> > >
-> > > How does that sound?
-> >
-> > Sounds good. I'll resend this patch once your patch lands in the tree.
->
-> Great, thanks. Though I should be able to rebase it and push it
-> directly. I'll notify you if I can't get to it today.
+Hi,
 
-Alright, rebased and pushed to for-5.8/multitouch.
-
-Thanks a lot.
+This patch series adds support for MEDIA_BUS_FMT_SRGGB8_1X8 format for vin
 
 Cheers,
-Benjamin
+Prabhakar
 
->
-> Cheers,
-> Benjamin
->
-> >
-> > Kai-Heng
-> >
-> > >
-> > > Cheers,
-> > > Benjamin
-> > >
-> > >>
-> > >> Thanks,
-> > >>
-> > >> --
-> > >> Jiri Kosina
-> > >> SUSE Labs
-> > >>
-> > >
-> >
+Changes for v5:
+* Made sure raw mbus fmt results in raw pixel format for
+  MEDIA_BUS_FMT_SRGGB8_1X8
+
+Changed for v4:
+* patch 1/3 is new patch which adds a check for conversion from input to
+  output.
+* patch 2/3 added a comment while setting VNIS_REG for RAW format as
+  suggested by Niklas
+
+Changes for v3:
+* Dropped patch 1/1 from v2 as this handled neatly by patches
+  https://patchwork.linuxtv.org/project/linux-media/list/?series=1974
+* Included Ack from Niklas for patch 2/2
+* Updated commit message for patch 1/1.
+
+Changes for v2:
+* Added support for matching fwnode against endpoints/nodes.
+* Separated patch for rcar-vin and rcar-csi2.c which added
+  MEDIA_BUS_FMT_SRGGB8_1X8.
+
+Lad Prabhakar (3):
+  media: rcar-vin: Invalidate pipeline if conversion is not possible on
+    input formats
+  media: rcar-vin: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
+  media: rcar-csi2: Add support for MEDIA_BUS_FMT_SRGGB8_1X8 format
+
+ drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
+ drivers/media/platform/rcar-vin/rcar-dma.c  | 21 +++++++++++++++++++--
+ drivers/media/platform/rcar-vin/rcar-v4l2.c | 15 ++++++++++++---
+ 3 files changed, 32 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
 
