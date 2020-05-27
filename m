@@ -2,97 +2,89 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A47C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C115A20890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:42:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="RlxA8nhx"
+	by mail.kernel.org (Postfix) with ESMTP id 94F162088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590608601;
+	bh=L/KO5yVFOEuH17AbpSijDrxYCXQi8X7ApgmUy9GthUc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=KgMPbvp1Co9Ur7iIa62rxtP3Se7UB/3Yb1OXu7Vyz7XJq5TDnt1ySF4r5cT5EYzPj
+	 efhVMdvbc24O+W6BRYxGDeJqhzF7J9VrV2SHF3GbB1L9rvSjQfmuHTv+xch+KLi1oJ
+	 zsMyRNZHmMmJ8tUxiSQe7IKWnDtWIaL58BU88Clg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgE0TmS (ORCPT
+        id S1728082AbgE0TnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgE0TmP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:42:15 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 889B5C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:42:15 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id c12so10389615qtq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y/I/vYOeWDaLgdvChn7OrIXfp4eLue4GU8kN/nhBY2M=;
-        b=RlxA8nhxtnbe+M7ZmnAYSboT5jXDfDT3lRgHDb3QDO3TptnDvqzSH740c9GLdH/Y93
-         omLhViyqr9nb//4nmPJ4HJcm8/TnvQaL5CGLPvU4kkejJwSNUnm7Nz5t4S8CkrnHBIaA
-         +mWFD2PvRFwBkBvzsfrPIZWinsBvUkoMK5XF5BTr/bTLDk/PpGSjMiqrg5FyKiTCq28j
-         y3B1plMcOn7oSf1nhOTOzvoUBAgp11763/xU8eouz+Q6vV9EGtUYjyc32wepuZPMd8al
-         RWnsMFh8khsCbK8upqC1wfzet39Ti0hyVtDbH6wH+XPHilIv/Cfrn1EH+VwpxKfcsH9O
-         /ODw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y/I/vYOeWDaLgdvChn7OrIXfp4eLue4GU8kN/nhBY2M=;
-        b=tpPhfDBaHVvf8u9NohSUEXX6Lysa5LwjRaQQ2+VokXe1nabkpzZx+oD1hdSrGPnnOu
-         hZ5f6CuJ+RNXZwMlCNSeFzKmfwe/S7cRb1Xm8YbUSjSjI0WXSowDU3aBNRHBgUQyZ7PT
-         xVyDhIMhxhPl4rV0+5RefARbuFLHLSXB+CHbRdMOniUmvPqUgxdSCXAc61ZyEQsP5LQg
-         c7yYUdtCVK3otaSQsIKdid2XDSYJjiPCZbukxm2LFSEwpS6oK5Suz4fWlwMbiQwqAw98
-         Fu7ttA+t5QIYnCl/FLyjlbDCbuUNP/OEPvctv3w8Ra3SM5XEX2OwGZ2r158wxbuRFJKM
-         HjNg==
-X-Gm-Message-State: AOAM532SPw/ejkoUaoWq0oO9ftTm4Od4MHNlTdaidHPjqZLn3kT0E5B6
-        +WaXhguL68H/lvtdkjSp1TwGyg==
-X-Google-Smtp-Source: ABdhPJwkT/j72pG3A4CaMBtW17UHMziTMfasgq+/mkgPkKOHVgWgZr8k8tkH6Zt7dSQl+w/lh/x4+A==
-X-Received: by 2002:aed:3b56:: with SMTP id q22mr5925119qte.345.1590608534781;
-        Wed, 27 May 2020 12:42:14 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2535])
-        by smtp.gmail.com with ESMTPSA id m10sm3236312qtg.94.2020.05.27.12.42.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:42:13 -0700 (PDT)
-Date:   Wed, 27 May 2020 15:41:48 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Mel Gorman <mgorman@suse.de>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Rik van Riel <riel@surriel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend 3/3] mm: fix LRU balancing effect of new
- transparent huge pages
-Message-ID: <20200527194148.GA47905@cmpxchg.org>
-References: <20200527182958.252402-1-shakeelb@google.com>
+        Wed, 27 May 2020 15:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgE0TnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:43:20 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C9C52088E;
+        Wed, 27 May 2020 19:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590608600;
+        bh=L/KO5yVFOEuH17AbpSijDrxYCXQi8X7ApgmUy9GthUc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Z9BrtiM1ychzUVqZ3Ov/VVjldBDH+wUDMJ8sFEFVIz6fv9vuu0euFcMSJAs0M4G1p
+         HQB5Le3ABZtIBr9WWEINDdaipNMd2WTQT4M9FVINW9W+BpFnSvk2/KqBzy2AsbbG3O
+         ivNny1lRyOMDU7tSM2pk1oTFPOg2rhDbaZkxCT4g=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D1117352283B; Wed, 27 May 2020 12:43:19 -0700 (PDT)
+Date:   Wed, 27 May 2020 12:43:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.05.26b 51/70] powerpc64-linux-ld:
+ kernel/rcu/refperf.o:(.discard+0x0): multiple definition of
+ `__pcpu_unique_srcu_ctl_perf_srcu_data';
+ kernel/rcu/rcuperf.o:(.discard+0x0): first defined here
+Message-ID: <20200527194319.GX2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202005280021.c7upVLgc%lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527182958.252402-1-shakeelb@google.com>
+In-Reply-To: <202005280021.c7upVLgc%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 11:29:58AM -0700, Shakeel Butt wrote:
-> From: Johannes Weiner <hannes@cmpxchg.org>
+On Thu, May 28, 2020 at 12:17:23AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.26b
+> head:   795279db1396bf66621fa3f343fa990fe543b89e
+> commit: 786a25497743696d79592b864cafbfe48787e6e1 [51/70] refperf: Add a test to measure performance of read-side synchronization
+> config: powerpc-allyesconfig (attached as .config)
+> compiler: powerpc64-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 786a25497743696d79592b864cafbfe48787e6e1
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=powerpc 
 > 
-> Currently, THP are counted as single pages until they are split right
-> before being swapped out. However, at that point the VM is already in
-> the middle of reclaim, and adjusting the LRU balance then is useless.
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
 > 
-> Always account THP by the number of basepages, and remove the fixup
-> from the splitting path.
+> All errors (new ones prefixed by >>, old ones prefixed by <<):
 > 
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+> >> powerpc64-linux-ld: kernel/rcu/refperf.o:(.discard+0x0): multiple definition of `__pcpu_unique_srcu_ctl_perf_srcu_data'; kernel/rcu/rcuperf.o:(.discard+0x0): first defined here
 
-This is now already in mm as part of the "mm: balance LRU lists based
-on relative thrashing" series that I sent out last week and where it
-was originally from.
+Ah, yes, despite the "static" keyword, the names must be unique throughout
+the kernel.  Will fix!
+
+							Thanx, Paul
