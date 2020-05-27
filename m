@@ -2,195 +2,68 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E29EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E495B2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7E22084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590549695;
+	bh=0HJqmsukxEbasVpB0fF6u+rD8B57992xBAQgVKu4vos=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=F2h5oY80znLr3JbshpSgb7WVInxNO71S5vqB4S5QDDm2IcVIUp4cwb6fjtjYWS4Zx
+	 2t3WwCO3+2ArW0Yw50iBKHmI0GgZ3TPeIPS/cGtixuR0fn2sL+rgizHnfsd/5NZnno
+	 GLl3PvRzrH4BUhyONxFOMRte+kFdAy/E/oPMNBbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgE0DUr (ORCPT
+        id S1728503AbgE0DVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:20:47 -0400
-Received: from mga07.intel.com ([134.134.136.100]:30098 "EHLO mga07.intel.com"
+        Tue, 26 May 2020 23:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgE0DUq (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:20:46 -0400
-IronPort-SDR: ggVbxo1AGAtRZljSyyw1YWgxdzqUDWc8XmJIZDILRUI4bnnGJT3NVZHjxtkavtAHxZKSRp6ttp
- eRDRwmytByvg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 20:20:46 -0700
-IronPort-SDR: 0aMB3LKWY/hO5wWwA7c/OFfmFeaGUSsYhY3Bff8cmgtDPpyI0wVsftjF7LPi4MUfsPuHVQjiSU
- jjhvkP+HWjcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="375899075"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by fmsmga001.fm.intel.com with ESMTP; 26 May 2020 20:20:43 -0700
-Subject: Re: [PATCH v2 1/2] perf evlist: Ensure grouped events with same cpu
- map
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200525065559.6422-1-yao.jin@linux.intel.com>
- <20200526115155.GE333164@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <32c4663a-6934-2a2d-79e2-7a335e3629a2@linux.intel.com>
-Date:   Wed, 27 May 2020 11:20:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1725893AbgE0DVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 23:21:34 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 449D5207D8;
+        Wed, 27 May 2020 03:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590549694;
+        bh=0HJqmsukxEbasVpB0fF6u+rD8B57992xBAQgVKu4vos=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Mi2ISsnNU9VRd0oVowT29uMrvDgoQXlh6ejF5wBU8G0zam7mydG3ewqR1VOzSQzje
+         CCTsde1bR3zcyIiv1CxVKQINxSi76uvVOOWps6OFskQGFjDsTzP7jatk3KVMu+tU2Z
+         E5QEZxQnhI1T1+ni/FYMwVrT9td1xl3m7trLemxY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200526115155.GE333164@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200515142720.290206-1-codrin.ciubotariu@microchip.com>
+References: <20200515142720.290206-1-codrin.ciubotariu@microchip.com>
+Subject: Re: [PATCH] clk: at91: Add peripheral clock for PTC
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     mturquette@baylibre.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        eugen.hristev@microchip.com,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 26 May 2020 20:21:33 -0700
+Message-ID: <159054969349.88029.10932617999893578868@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Quoting Codrin Ciubotariu (2020-05-15 07:27:20)
+> PMC generates the peripheral clock for the PTC.
+>=20
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
 
-On 5/26/2020 7:51 PM, Jiri Olsa wrote:
-> On Mon, May 25, 2020 at 02:55:58PM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->> index 2a9de6491700..1161cffc0688 100644
->> --- a/tools/perf/util/evlist.c
->> +++ b/tools/perf/util/evlist.c
->> @@ -1704,3 +1704,52 @@ struct evsel *perf_evlist__reset_weak_group(struct evlist *evsel_list,
->>   	}
->>   	return leader;
->>   }
->> +
->> +static bool cpus_map_matched(struct evsel *prev, struct evsel *evsel)
->> +{
->> +	if (evsel->core.cpus->nr != prev->core.cpus->nr)
->> +		return false;
->> +
->> +	for (int i = 0; i < evsel->core.cpus->nr; i++) {
->> +		if (evsel->core.cpus->map[i] != prev->core.cpus->map[i])
->> +			return false;
->> +	}
->> +
->> +	return true;
->> +}
->> +
->> +bool evlist__cpus_map_matched(struct evlist *evlist)
->> +{
->> +	struct evsel *prev = evlist__first(evlist), *evsel = prev;
->> +	int nr_members = prev->core.nr_members;
->> +
->> +	evlist__for_each_entry_continue(evlist, evsel) {
->> +		if (nr_members <= 1) {
->> +			prev = evsel;
->> +			nr_members = evsel->core.nr_members;
->> +			continue;
->> +		}
->> +
->> +		nr_members--;
->> +
->> +		if (!cpus_map_matched(prev, evsel))
->> +			return false;
->> +
->> +		prev = evsel;
->> +	}
->> +
->> +	return true;
->> +}
->> +
->> +void evlist__force_disable_group(struct evlist *evlist)
->> +{
->> +	struct evsel *evsel;
->> +
->> +	pr_warning("WARNING: event cpu maps are not fully matched, "
->> +		   "stop event grouping\n");
->> +
->> +	evlist__for_each_entry(evlist, evsel) {
->> +		evsel->leader = evsel;
->> +		evsel->core.nr_members = 0;
->> +	}
->> +}
-> 
-> I think this is too much, we need to disable only groups with not
-> matching cpus, not all of them, how about something like this
-> 
-
-Yes, that's too much.
-
-> 
->          struct evsel *pos;
-> 
->          evlist__for_each_entry(evlist, evsel) {
->                  if (evsel->leader == evsel)
->                          continue;
->                  if (!cpus_map_matched(evsel->leader, evsel))
->                          continue;
->                          
->                  pr_warn("Disabling group...
-> 
->                  for_each_group_member(pos, evsel->leader) {
->                          pos->leader = pos;
->                          evsel->core.nr_members = 0;
->                  }
->          }
-> 
-> jirka
-> 
-
-Hmm, change "!cpus_map_matched()" to "cpus_map_matched()"? and use for_each_group_evsel() to replace 
-for_each_group_member()?
-
-How about something like following?
-
-void evlist__check_cpu_maps(struct evlist *evlist)
-{
-	struct evsel *evsel, *pos;
-
-	evlist__for_each_entry(evlist, evsel) {
-		if (evsel->leader == evsel)
-			continue;
-
-		if (cpu_maps_matched(evsel->leader, evsel))
-			continue;
-
-		pr_warning("WARNING: event cpu maps are not fully matched, "
-			   "disable group\n");
-
-		for_each_group_evsel(pos, evsel->leader) {
-			pos->leader = pos;
-			pos->core.nr_members = 0;
-		}
-
-		/*
-		 * For core & uncore mixed event group, for example,
-		 * '{cycles,unc_cbo_cache_lookup.any_i}',
-		 * In evlist:
-		 * cycles,
-		 * unc_cbo_cache_lookup.any_i,
-		 * unc_cbo_cache_lookup.any_i,
-		 * unc_cbo_cache_lookup.any_i,
-		 * unc_cbo_cache_lookup.any_i,
-		 *
-		 * cycles is leader and all unc_cbo_cache_lookup.any_i
-		 * point to this leader. But for_each_group_evsel can't
-		 * iterate all members from cycles. It only iterates
-		 * cycles and one unc_cbo_cache_lookup.any_i. So we
-		 * set extra evsel here.
-		 */
-		evsel->leader = evsel;
-		evsel->core.nr_members = 0;
-	}
-}
-
-Thanks
-Jin Yao
+Applied to clk-next
