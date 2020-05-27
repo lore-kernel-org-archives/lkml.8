@@ -2,112 +2,77 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DDDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6953420707
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A122073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590605416;
-	bh=yrp8btb31P5JNGINiPGR979o67FKKAt2YeeDUI67h0c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ubm6zrZOvtkJBUvE1D/wgSrtN97ZYLz4lekERAAiuKreE+dJAs0raj3kANrsG91ZM
-	 JYb7xwLPfkGFevxHgN2L8MxUhv2DlGRce6FQKYUxgVa5C5u5P927ED6XYCmoWs6E3m
-	 OgYHJLvK8czWpNIX4z4Nby/uZiZDMkpP57qx9q1M=
+	s=default; t=1590605465;
+	bh=NeNZBBEpgBxdxxRtK3QlUSh2OafwupclBD2H93fxlf8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=m3ahm5v7JO/ak/uerHgffoIXynpRB1IMYLInAXuI/1k5j4ZFf0F/A5tBYjx8dX3aS
+	 zQ3as2aipq7c4lzpiQf/66cAr6AyxjD1AclEP3qoGTDlqdsvwvef1XuhWt/0zLGDya
+	 JKSk82xEBDTzKKxAZI7bQaDvV1JdUqtBgzhyWjxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgE0SuQ (ORCPT
+        id S1728115AbgE0SvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 14:50:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38276 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 14:51:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726222AbgE0SuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 14:50:15 -0400
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+        id S1726222AbgE0SvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 14:51:03 -0400
+Received: from localhost.localdomain (unknown [194.230.155.118])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CC412073B;
-        Wed, 27 May 2020 18:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA0F92073B;
+        Wed, 27 May 2020 18:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590604235;
-        bh=yrp8btb31P5JNGINiPGR979o67FKKAt2YeeDUI67h0c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2UmN9xCpWx7rx2hJ6s4dj97SpOjwhvz/TXReiFd5aUbkZkhb2uhL78c+w1kKKUZoB
-         y5n/EV1O85qUsKgmnZEcoehf0tBGve3E61XfllQYkiIfhjyV0WV57veyexffD8WeY2
-         7usizsxWw2pgm9D5gqLZgL9eozpSMPHjyYRuA/vE=
-Received: by mail-il1-f173.google.com with SMTP id l20so25047079ilj.10;
-        Wed, 27 May 2020 11:30:35 -0700 (PDT)
-X-Gm-Message-State: AOAM530tP1y+8fmTodHKB92bOFSqLLHHFmY6+6m/7wLvHEl7/kMsh8BJ
-        v4E2BJjShFNmSKfwkUfLbkiN3xk6ZJQvhnUg0wU=
-X-Google-Smtp-Source: ABdhPJxaBgJdts/3rMVrWZXg7f3NCsaI5epY+iw+MqESNkB/2tqDRrOiEl5BHdcHm1cm9EFCAljU4lRJfdBVIlCCm04=
-X-Received: by 2002:a92:290c:: with SMTP id l12mr6720934ilg.279.1590604234737;
- Wed, 27 May 2020 11:30:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200523120021.34996-1-ardb@kernel.org> <20200523120021.34996-3-ardb@kernel.org>
- <20200527143650.GA3103408@rani.riverdale.lan> <CAMzpN2ikgiXdaJ8t2ivB90JhOQsa=ziV738wVsXo3JU4HjAbOw@mail.gmail.com>
-In-Reply-To: <CAMzpN2ikgiXdaJ8t2ivB90JhOQsa=ziV738wVsXo3JU4HjAbOw@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 27 May 2020 20:30:23 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFGzLRiioU=sqA0hhE1oJC5uxDg4GFcSr7eA1+HoqupGw@mail.gmail.com>
-Message-ID: <CAMj1kXFGzLRiioU=sqA0hhE1oJC5uxDg4GFcSr7eA1+HoqupGw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86/boot/compressed: force hidden visibility for
- all symbol references
-To:     Brian Gerst <brgerst@gmail.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1590605462;
+        bh=NeNZBBEpgBxdxxRtK3QlUSh2OafwupclBD2H93fxlf8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FNpWQuggYB7TKKQg9sx2bJ+sLFLIcXuhOaETAqndqCIj3dDS+lCXX/cnxEXsYzB45
+         /PPI7ECyG+9tM3n981KGYBnhBLsV7t3DvavPW9iqcdLgqo3syZfeULmpYcmA2Eg3gN
+         0VCoKZ5lf9zQ5bU/ceOIa+ZxdkD3youU1/TmJmJk=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RESEND PATCH] config: android: Remove left-over BACKLIGHT_LCD_SUPPORT
+Date:   Wed, 27 May 2020 20:50:57 +0200
+Message-Id: <20200527185057.13223-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 20:29, Brian Gerst <brgerst@gmail.com> wrote:
->
-> On Wed, May 27, 2020 at 2:08 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Sat, May 23, 2020 at 02:00:20PM +0200, Ard Biesheuvel wrote:
-> > > Eliminate all GOT entries in the decompressor binary, by forcing hidden
-> > > visibility for all symbol references, which informs the compiler that
-> > > such references will be resolved at link time without the need for
-> > > allocating GOT entries.
-> > >
-> > > To ensure that no GOT entries will creep back in, add an assertion to
-> > > the decompressor linker script that will fire if the .got section has
-> > > a non-zero size.
-> > >
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > >  arch/x86/boot/compressed/Makefile      |  1 +
-> > >  arch/x86/boot/compressed/hidden.h      | 19 +++++++++++++++++++
-> > >  arch/x86/boot/compressed/vmlinux.lds.S |  1 +
-> > >  3 files changed, 21 insertions(+)
-> > >
-> > > diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> > > index 5f7c262bcc99..aa9ed814e5fa 100644
-> > > --- a/arch/x86/boot/compressed/Makefile
-> > > +++ b/arch/x86/boot/compressed/Makefile
-> > > @@ -40,6 +40,7 @@ KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
-> > >  KBUILD_CFLAGS += -Wno-pointer-sign
-> > >  KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
-> > >  KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
-> > > +KBUILD_CFLAGS += -include hidden.h
-> > >
-> >
-> > Ard, from the other thread [1] in case you missed it -- the plain
-> > hidden.h fails to build in-tree. We need something like
-> >         KBUILD_CFLAGS += -include $(srctree)/$(src)/hidden.h
-> > instead.
-> >
-> > [1] https://lore.kernel.org/lkml/20200526153104.GC2190602@rani.riverdale.lan/
->
-> How about using -fvisibility=hidden instead of including this header?
->
+The CONFIG_BACKLIGHT_LCD_SUPPORT was removed in commit
+8c5dc8d9f19c ("video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT
+kernel symbol"). Options protected by CONFIG_BACKLIGHT_LCD_SUPPORT are
+now available directly.
 
-That only works for definitions, not for extern declarations.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ kernel/configs/android-recommended.config | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/configs/android-recommended.config b/kernel/configs/android-recommended.config
+index 81e9af7dcec2..c51f4c221ad6 100644
+--- a/kernel/configs/android-recommended.config
++++ b/kernel/configs/android-recommended.config
+@@ -7,7 +7,6 @@
+ # CONFIG_PM_WAKELOCKS_GC is not set
+ # CONFIG_VT is not set
+ CONFIG_ARM64_SW_TTBR0_PAN=y
+-CONFIG_BACKLIGHT_LCD_SUPPORT=y
+ CONFIG_BLK_DEV_DM=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+-- 
+2.17.1
+
