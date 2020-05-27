@@ -2,213 +2,259 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45112C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D4FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2234520EDD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98EE207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Si4JZhki"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h5bYfLWC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387639AbgE0Hk2 (ORCPT
+        id S2387645AbgE0HlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37358 "EHLO
+        Wed, 27 May 2020 03:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387630AbgE0Hk1 (ORCPT
+        with ESMTP id S2387487AbgE0HlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:40:27 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50293C03E97A
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:40:27 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id r10so859068vsa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:40:27 -0700 (PDT)
+        Wed, 27 May 2020 03:41:12 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A586C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:41:12 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id p5so17983790qkg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:41:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kbqsurmeGLoVyf5mF7tu7XoYvXzvCVwzyWVmHlzPe4E=;
-        b=Si4JZhkimRq0tm+S0xBFFj9UQR6H01BCBFEX58SlSkt5NhQYq8WpbbQ90ZS7sRbvdt
-         UYnqEkjXiB6si4N9NAzLEMhzZyuVY7gvJeAt7d+DjGLHfv1NhV9Upw+h7FjdRkO2Beff
-         7p5n177dMKgrOdFHMhvbTEWdJkrGdALSltOsLOhB4HjGcvk7I9jiSFIayoAvpDguYPp0
-         NbvXfL0oDukqvn/TZCrF3Nzqs7hr1e25krg9N9OnWi3Ca9Hb3lX3Sq8HzOlYXMQ29u/a
-         mLlihKNHaG+an3SMm8nZXq48K/CffY1MuI5fiUcM6atA6uenVJ0qKPiHl5yE/YMfJKq7
-         dxjw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=4ZgeB2AItrP9nS2Fq643R0Cpp2i+TEvZPbSBjX/I4FQ=;
+        b=h5bYfLWCLeXxVWptwcOnDYOOm4U6jo/JL6rx3b7UJpapgzSxe1G/H2zDmA6C2zuwLI
+         g/s3NTI82JvAROQ5OAQKbJrNSOzEPLsLjfSn+KEif+dEZOPRsnUzOst2hx5VTMCBvELQ
+         0kLwFAHpuSZKym0H/GV8f8aSp6+eWE/7rIFxmmMGiAmjlRUpADuqKLdVZnHA27tv32VD
+         aqbWkqUtB/2S20bSPMNV6MnFFbbvW7x1c6tjQndTS3XMIGzh4+C8PomUbEGF2epZgWc6
+         XEyAbjVp3zLUd3aYRH6EFTJ+T9sIvtn8bIAIJrha/1vrlwUVkREqqAXiq2cvGOLF1mev
+         7m7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kbqsurmeGLoVyf5mF7tu7XoYvXzvCVwzyWVmHlzPe4E=;
-        b=j12Pd7343C3Rk0usUBAcyiL0AEFWf3XfIqjTKa+oWuF67dxtu/1ZcDINutgvRzToas
-         /Il592DXcrTEOp267YbdYUwnp5uS2L+UsR9GK9SiuOgavu6ns4So3J5tItUr7IDFfxkI
-         JgkJH14s7blg7iR+0BfjVLdlSuyDauxtBiQetb+cnHSpUsHbuQGZxiBqgh9ZmP1CoS+Q
-         o94F2quKE8CtR8TlKl22JUKrboSPzncTQoN7KrgddtZOcMV/ONgVKCPaO1Rj/rvEpfrp
-         KpKW64SxqEC9sUUEfWdxCOKQC+/wd99C59Up7DQ2IkJ+/b6ZqAeCMV+mob0b6Z3jNCH3
-         W3fw==
-X-Gm-Message-State: AOAM531w0WmpBSuerKpfEtm7kQE70qCEr0bP5pbDsIRRQ8sZgDXlkrlL
-        eGvwwk0amJ7xGXM5+LzKTGhlVYSK9zkVoyO9aFgklQ==
-X-Google-Smtp-Source: ABdhPJyYrXJaC6POxy5xkphIQg0LBSVr4X8J7p+I+CM9XauuFUaPtouHy9vmThZMgRn/CIU3XZZNYGTGnswZvhTDLCY=
-X-Received: by 2002:a67:690e:: with SMTP id e14mr3917779vsc.34.1590565226286;
- Wed, 27 May 2020 00:40:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200526154334.21222-1-pali@kernel.org> <20200526154334.21222-2-pali@kernel.org>
-In-Reply-To: <20200526154334.21222-2-pali@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 27 May 2020 09:39:50 +0200
-Message-ID: <CAPDyKFq4KxT+m6nZbi9fM0Pf=JYkT7TTfERDxtUVX5qAiLAQBQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mmc: core: Export device/vendor ids from Common CIS
- for SDIO cards
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=4ZgeB2AItrP9nS2Fq643R0Cpp2i+TEvZPbSBjX/I4FQ=;
+        b=ooXnBABknAp/d6k2G9izjtq2XqttxgB+r19y8B1kN5ficfYWWxVuETl+2ppf/M7h5s
+         soAZZEcGejPA4YrIwET2I7XX18mz4wrHjGp4d2RwVa9Nc64lh+L1kfoyeQ8AKBPVaxel
+         JxWwpjhck7+Ip8vESzOnpHyiO9WEwRvr0zLXOJgpmRFRxBMSVjYEULL4roGIY8L0hnsy
+         /1YdLlXbhEQQjGHXRuH48YNcfo3u+ymdaWlbKE4ap8h9jGFviG1Cx6EPyuDYle6Znlhw
+         o8kazZAbL2stHHjb1lMO/RQgwShMjqHnlOeCaXheLncYCRlyS2csbi/mDepmiFT5QXnX
+         p7sQ==
+X-Gm-Message-State: AOAM532/zJPuJ48Oinr2yH3aV52+DfhszX7UWlhWqf0/YDL4akS+fZic
+        DzmMG197aJnyyUNss2HpbGQNadqz7m0aM0Q=
+X-Google-Smtp-Source: ABdhPJx3zH/Wsq+hDNYznjjmEJs1ire+kKNL/Cg4Wj6Dw9OQfXFEGZQgFi+jMYcI2m8XtPWxlCXF/rtEXy4T+xQ=
+X-Received: by 2002:ad4:43e3:: with SMTP id f3mr23491167qvu.115.1590565270119;
+ Wed, 27 May 2020 00:41:10 -0700 (PDT)
+Date:   Wed, 27 May 2020 00:40:56 -0700
+Message-Id: <20200527074057.246606-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH v1] regulator: Add support for sync_state() callbacks
+From:   Saravana Kannan <saravanak@google.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 at 17:43, Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> Device/vendor ids from Common CIS (Card Information Structure) may be
-> different as device/vendor ids from CIS on particular SDIO function.
->
-> Export these "main" device/vendor ids for SDIO and SD combo cards at top
-> level mmc device in sysfs so userspace can do better identification of
-> connected SDIO and SD combo cards.
+When a regulator is left on by the bootloader or anything else before
+the kernel starts (let's call this a "boot on" regulator), we need to
+keep it on till all the consumers of the regulator have probed. This is
+especially important for regulators that might be powering more than one
+consumer. Otherwise, when the first consumer probes, enables and then
+disables the "boot on" regulator, it'd turn off the power to rest of the
+consumers of the "boot on" regulator.
 
-What would userspace do with this information, more exactly?
+Also, if a regulator driver is loaded as a module and the regulator
+device has a few "boot on" regulators, we still want them to be turned
+off after all the consumers have probed (if none of them have requested
+for those regulators to stay on).
 
-Isn't it just sufficient to give events per SDIO func, as we already
-do in sdio_bus_uevent()?
+The sync_state() callback that's been added to drivers is meant for
+situations like this. It gets called when all the consumers of a device
+have probed successfully. To ease the transition to sync_state()
+callbacks, it is never called before late_initcall_sync().
 
-Kind regards
-Uffe
+sync_state() callbacks become even more useful when combined with
+fw_devlink.  If fw_devlink is off, sync_state() is called at
+late_initcall_sync() or the regulator device probing successfully --
+whichever is later. This is because, with fw_devlink off, there would be
+no consumers to the regulator device when it probes.
 
->
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> ---
->  drivers/mmc/core/bus.c  |  7 +++++++
->  drivers/mmc/core/sd.c   | 26 +++++++++++++++++++++++++-
->  drivers/mmc/core/sdio.c | 20 +++++++++++++++++++-
->  3 files changed, 51 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-> index 103eea7cd..5d4b28b29 100644
-> --- a/drivers/mmc/core/bus.c
-> +++ b/drivers/mmc/core/bus.c
-> @@ -93,6 +93,13 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_=
-env *env)
->                         return retval;
->         }
->
-> +       if (card->type =3D=3D MMC_TYPE_SDIO || card->type =3D=3D MMC_TYPE=
-_SD_COMBO) {
-> +               retval =3D add_uevent_var(env, "SDIO_ID=3D%04X:%04X",
-> +                                       card->cis.vendor, card->cis.devic=
-e);
-> +               if (retval)
-> +                       return retval;
-> +       }
-> +
->         if (card->type !=3D MMC_TYPE_SDIO) {
->                 retval =3D add_uevent_var(env, "MMC_NAME=3D%s", mmc_card_=
-name(card));
->                 if (retval)
-> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-> index 76c7add36..ee1a51ff6 100644
-> --- a/drivers/mmc/core/sd.c
-> +++ b/drivers/mmc/core/sd.c
-> @@ -707,7 +707,12 @@ static ssize_t mmc_dsr_show(struct device *dev,
->
->  static DEVICE_ATTR(dsr, S_IRUGO, mmc_dsr_show, NULL);
->
-> +MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
-> +MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
-> +
->  static struct attribute *sd_std_attrs[] =3D {
-> +       &dev_attr_vendor.attr,
-> +       &dev_attr_device.attr,
->         &dev_attr_cid.attr,
->         &dev_attr_csd.attr,
->         &dev_attr_scr.attr,
-> @@ -726,7 +731,26 @@ static struct attribute *sd_std_attrs[] =3D {
->         &dev_attr_dsr.attr,
->         NULL,
->  };
-> -ATTRIBUTE_GROUPS(sd_std);
-> +
-> +static umode_t sd_std_is_visible(struct kobject *kobj, struct attribute =
-*attr,
-> +                                int index)
-> +{
-> +       struct device *dev =3D container_of(kobj, struct device, kobj);
-> +       struct mmc_card *card =3D mmc_dev_to_card(dev);
-> +
-> +       /* CIS vendor and device ids are available only for Combo cards *=
-/
-> +       if ((attr =3D=3D &dev_attr_vendor.attr || attr =3D=3D &dev_attr_d=
-evice.attr) &&
-> +           card->type !=3D MMC_TYPE_SD_COMBO)
-> +               return 0;
-> +
-> +       return attr->mode;
-> +}
-> +
-> +static const struct attribute_group sd_std_group =3D {
-> +       .attrs =3D sd_std_attrs,
-> +       .is_visible =3D sd_std_is_visible,
-> +};
-> +__ATTRIBUTE_GROUPS(sd_std);
->
->  struct device_type sd_type =3D {
->         .groups =3D sd_std_groups,
-> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> index ebb387aa5..d708e0fbc 100644
-> --- a/drivers/mmc/core/sdio.c
-> +++ b/drivers/mmc/core/sdio.c
-> @@ -27,6 +27,24 @@
->  #include "sdio_ops.h"
->  #include "sdio_cis.h"
->
-> +MMC_DEV_ATTR(vendor, "0x%04x\n", card->cis.vendor);
-> +MMC_DEV_ATTR(device, "0x%04x\n", card->cis.device);
-> +MMC_DEV_ATTR(ocr, "0x%08x\n", card->ocr);
-> +MMC_DEV_ATTR(rca, "0x%04x\n", card->rca);
-> +
-> +static struct attribute *sdio_std_attrs[] =3D {
-> +       &dev_attr_vendor.attr,
-> +       &dev_attr_device.attr,
-> +       &dev_attr_ocr.attr,
-> +       &dev_attr_rca.attr,
-> +       NULL,
-> +};
-> +ATTRIBUTE_GROUPS(sdio_std);
-> +
-> +struct device_type sdio_type =3D {
-> +       .groups =3D sdio_std_groups,
-> +};
-> +
->  static int sdio_read_fbr(struct sdio_func *func)
->  {
->         int ret;
-> @@ -598,7 +616,7 @@ static int mmc_sdio_init_card(struct mmc_host *host, =
-u32 ocr,
->         /*
->          * Allocate card structure.
->          */
-> -       card =3D mmc_alloc_card(host, NULL);
-> +       card =3D mmc_alloc_card(host, &sdio_type);
->         if (IS_ERR(card)) {
->                 err =3D PTR_ERR(card);
->                 goto err;
-> --
-> 2.20.1
->
+If fw_devlink is not off (it's permissive by default now), then
+sync_state() is called when all the consumers of the regulator device
+have probed or at late_initcall_sync() -- whichever is later.
+
+This commit adds a regulator_sync_state() helper function that takes
+care of all the "boot on" regulator clean up for any regulator driver.
+All one needs to do is add the following line to the driver struct.
+
+.sync_state = regulator_sync_state,
+
+Once that's done, then for any device that's probed by the driver, all
+the "boot on" regulators supplied by the device will be kept on till all
+the consumers of the device have probed. Once the consumers have probed,
+the "boot on" regulators would be allowed to turn off if they are voted
+on by any of the consumers.
+
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+Mark,
+
+This is just a first cut RFC of how I think this could be handled.  I've
+implemented it based on my limited understanding of the regulator
+framework. So, I wouldn't be surprised if I've missed out on some corner
+(or not so corner) cases. But if you point out the issues, I'd be happy
+to try and address them.
+
+Ideally, we can just do this for all the regulators, but we can start
+with an "opt-in" scheme where the older behavior is still preserved if a
+driver doesn't opt in. I'd also like to remove the arbitrary time out
+that we use today, but that's a super long term goal because I know you
+have some use cases which might have time limits (and maybe, we'll just
+end up with only those drivers opting out of this scheme and sticking
+with timeouts).
+
+Also, with what I understand of the regulator code, I think we might be
+able to replace/drop the "supply enable propagation" code with a few
+tweaks to my patch. But I didn't want to do them in this patch.
+
+I've tested this patch on simple on/off regulators in real hardware with
+their drivers compiled as modules and it seems to work correctly. So it
+at least works on some level.
+
+Let me know what you think.
+
+Thanks,
+Saravana
+
+ drivers/regulator/core.c         | 64 ++++++++++++++++++++++++++++++++
+ include/linux/regulator/driver.h |  2 +
+ 2 files changed, 66 insertions(+)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 941783a14b45..373704b9014e 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1768,6 +1768,66 @@ static struct regulator_dev *regulator_dev_lookup(struct device *dev,
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++static void regulator_hold_state(struct regulator_dev *rdev)
++{
++	struct device *dev = rdev->dev.parent;
++	struct regulation_constraints *c = rdev->constraints;
++
++	if (!dev_has_sync_state(dev) || rdev->sync_supply)
++		return;
++
++	if (rdev->supply_name && !rdev->supply)
++		return;
++
++	if (c && c->always_on)
++		return;
++
++	if (!regulator_ops_is_valid(rdev, REGULATOR_CHANGE_STATUS))
++		return;
++
++	if (_regulator_is_enabled(rdev) <= 0)
++		return;
++
++	rdev->sync_supply = create_regulator(rdev, NULL, "SYNC-SUPPLY");
++	/*
++	 * At this point, we shouldn't have trouble getting a regulator. If we
++	 * do, give up.
++	 */
++	if (rdev->sync_supply == NULL) {
++		rdev->sync_supply = ERR_PTR(-EINVAL);
++		return;
++	}
++	rdev->open_count++;
++
++	if (regulator_enable(rdev->sync_supply)) {
++		regulator_put(rdev->sync_supply);
++		rdev->sync_supply = ERR_PTR(-EINVAL);
++	}
++}
++
++static int regulator_sync_state_release(struct device *dev, void *data)
++{
++	struct regulator_dev *rdev = dev_to_rdev(dev);
++
++	if (dev->parent != data)
++		return 0;
++
++	if (IS_ERR_OR_NULL(rdev->sync_supply))
++		return 0;
++
++	regulator_disable(rdev->sync_supply);
++	regulator_put(rdev->sync_supply);
++	rdev->sync_supply = NULL;
++	return 0;
++}
++
++void regulator_sync_state(struct device *dev)
++{
++	class_for_each_device(&regulator_class, NULL, dev,
++			      regulator_sync_state_release);
++}
++EXPORT_SYMBOL_GPL(regulator_sync_state);
++
+ static int regulator_resolve_supply(struct regulator_dev *rdev)
+ {
+ 	struct regulator_dev *r;
+@@ -1826,6 +1886,8 @@ static int regulator_resolve_supply(struct regulator_dev *rdev)
+ 		return ret;
+ 	}
+ 
++	regulator_hold_state(rdev);
++
+ 	/*
+ 	 * In set_machine_constraints() we may have turned this regulator on
+ 	 * but we couldn't propagate to the supply if it hadn't been resolved
+@@ -5188,6 +5250,8 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	    !rdev->desc->fixed_uV)
+ 		rdev->is_switch = true;
+ 
++	regulator_hold_state(rdev);
++
+ 	dev_set_drvdata(&rdev->dev, rdev);
+ 	ret = device_register(&rdev->dev);
+ 	if (ret != 0) {
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 7eb9fea8e482..2e2208e7b771 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -451,6 +451,7 @@ struct regulator_dev {
+ 	struct regulator *supply;	/* for tree */
+ 	const char *supply_name;
+ 	struct regmap *regmap;
++	struct regulator *sync_supply;
+ 
+ 	struct delayed_work disable_work;
+ 
+@@ -475,6 +476,7 @@ devm_regulator_register(struct device *dev,
+ 			const struct regulator_desc *regulator_desc,
+ 			const struct regulator_config *config);
+ void regulator_unregister(struct regulator_dev *rdev);
++void regulator_sync_state(struct device *dev);
+ void devm_regulator_unregister(struct device *dev, struct regulator_dev *rdev);
+ 
+ int regulator_notifier_call_chain(struct regulator_dev *rdev,
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
