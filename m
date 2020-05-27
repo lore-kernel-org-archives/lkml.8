@@ -2,75 +2,44 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55AE207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="VgXBx/n9"
+	by mail.kernel.org (Postfix) with ESMTP id E51A5207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgE0Lmj (ORCPT
+        id S1727075AbgE0LnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726600AbgE0Lmh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:42:37 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F5CC03E97A
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:42:36 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id y11so1757048plt.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:42:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sZeKxoqsJfHmJKWaGZ+FoPVmzG1uJu0Aa8XuYZUp/Ew=;
-        b=VgXBx/n9QvB+YvDn6NYJLz6oVH59pjcPxJRh65BhLU3L7ZuClmM3L2k6D/626PY954
-         QQyeqbu8PgPXQCenizXc2i0fC76rQLs8Wigkf4p7SMgbycDSZCVefXPmN+8UV1pawScy
-         A2EFa4ZQzatLH1XSkfSK5ym9JQ6jWznNerWZ2LgW+2s1KfuNPJGOAi6T/vXRasdxGG5O
-         KuIlKlb5pj0K1QBhbpZ77dep0qpYB5q901mYzXB6eaxxX+5v0gV/Js8+y+LOrYVQC57G
-         xNoyGX2CFF0yNvJxOJQSSqMfHZ+KtdVhLsAgGn6KSWyP6rnnd7SyNkWQQHHdVyiC4nC7
-         N0gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=sZeKxoqsJfHmJKWaGZ+FoPVmzG1uJu0Aa8XuYZUp/Ew=;
-        b=Ow0XhqKQgAWeDIVnF+KdhuMxVa+ZWiIA+0kACzZeXlGxysV78CGCGL7Hxi9tdqpwXf
-         THFQVrh4NblAkGxgvgM3PDd81mFGqYX35h63JvcRfmoiONn+hgiJuBotxB8YvIh/8xzx
-         XLg2oDUh6cWhVv4wioi/5rXVhE26DH/+uaZR+83WONHf/JmLu7V0bVW79ARFN1RBWhVP
-         naFyFjm4XeYE3UU0NmM9r0Kov4iORDybTc0oAYDW17kEUvFoiFDCgpMR/EEY2e1dF1ER
-         HAiPaQ58Hs/t48uUt13s8aU1NeHNh2tpe6PtQdUf2DYMTF5pJPhbfbSjZ1Yf349Hf4wa
-         fD6A==
-X-Gm-Message-State: AOAM5334m9uyIq8Uz1QlwyZHk1KnzRbYXPwMgx7Jkk5036lMVBtAxw82
-        Ogsu5zsj8sXTVe6paArTik/vN4rE05MpbQ==
-X-Google-Smtp-Source: ABdhPJxEIjzI7FCnmm+8XenXCkMLJM7xic+d04No6urE0jxruzEp+coK6xFyXzPHJohz4u+UUWTTdg==
-X-Received: by 2002:a17:90a:26a7:: with SMTP id m36mr4607945pje.28.1590579756112;
-        Wed, 27 May 2020 04:42:36 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:8c61:2cc3:8599:f649:862c? ([2605:e000:100e:8c61:2cc3:8599:f649:862c])
-        by smtp.gmail.com with ESMTPSA id v9sm1981838pgj.54.2020.05.27.04.42.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 04:42:35 -0700 (PDT)
-Subject: Re: [PATCH][next] block: blk-crypto-fallback: remove redundant
- initialization of variable err
-To:     Colin King <colin.king@canonical.com>, linux-block@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200526224902.63975-1-colin.king@canonical.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <feb4f798-ce3b-6a08-e462-ab23bd223b18@kernel.dk>
-Date:   Wed, 27 May 2020 05:42:33 -0600
+        Wed, 27 May 2020 07:43:19 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33688 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725550AbgE0LnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:43:18 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 45F3BB21C;
+        Wed, 27 May 2020 11:43:20 +0000 (UTC)
+Subject: Re: [PATCH v4 03/19] mm: memcg: convert vmstat slab counters to bytes
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+References: <20200526214227.989341-1-guro@fb.com>
+ <20200526214227.989341-4-guro@fb.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <a0a6c013-3a08-86f5-46a4-808a8c63a50a@suse.cz>
+Date:   Wed, 27 May 2020 13:43:16 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200526224902.63975-1-colin.king@canonical.com>
+In-Reply-To: <20200526214227.989341-4-guro@fb.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,15 +48,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 4:49 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 5/26/20 11:42 PM, Roman Gushchin wrote:
+> In order to prepare for per-object slab memory accounting, convert
+> NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE vmstat items to bytes.
 > 
-> The variable err is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
+> To make it obvious, rename them to NR_SLAB_RECLAIMABLE_B and
+> NR_SLAB_UNRECLAIMABLE_B (similar to NR_KERNEL_STACK_KB).
+> 
+> Internally global and per-node counters are stored in pages,
+> however memcg and lruvec counters are stored in bytes.
+> This scheme may look weird, but only for now. As soon as slab
+> pages will be shared between multiple cgroups, global and
+> node counters will reflect the total number of slab pages.
+> However memcg and lruvec counters will be used for per-memcg
+> slab memory tracking, which will take separate kernel objects
+> in the account. Keeping global and node counters in pages helps
+> to avoid additional overhead.
+> 
+> The size of slab memory shouldn't exceed 4Gb on 32-bit machines,
+> so it will fit into atomic_long_t we use for vmstats.
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Applied, thanks.
+You didn't add Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+( see 20200507204137.GC161043@cmpxchg.org )
+(Noticed thanks to the great 'b4 am' and 'git range-diff' tools)
 
--- 
-Jens Axboe
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
