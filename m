@@ -2,88 +2,95 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C92C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8531220C09
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590598414;
-	bh=cIwFA8tqxbQ9Ka3dv1HOl3Ql2ut/illfq2QRt+rUkaM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=AYBA0DCvFraSMk71pfsF9TmghJnL5bNt3pNBaknWMFw6xJPxFe424KqkITKgZ8qT8
-	 8rwL4U2gSBE3CtgRs+zzN8k3vyomRRPs9L74ftE8e/BYRpiXccyX8Nd60zVnTjU+1s
-	 2sR77IJ78I/fF3vO4GUATJpT6xudqBGx9gQEnRtA=
+	by mail.kernel.org (Postfix) with ESMTP id ED92320787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="QS/DeL/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbgE0Qxe (ORCPT
+        id S1731053AbgE0Qy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:53:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726644AbgE0Qxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:53:33 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 959E620787;
-        Wed, 27 May 2020 16:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590598413;
-        bh=cIwFA8tqxbQ9Ka3dv1HOl3Ql2ut/illfq2QRt+rUkaM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YtCruurnq4E1iPyZRZxuUfO9ZOU7AXWYFIEwNE4bi7G5DlK/njr8j0+DX1hE0JmVS
-         uGT4M5zxVsCfJ3coOALSpZWWM9xnHwbNsnCJhlrVCHbHCaIzDXtj+G1GC2UmkMoBPV
-         bpS2sPus0FSluD4P40nz2sN5p43+kBt4Sbi4DFok=
-Subject: Re: [PATCH 4.9 00/64] 4.9.225-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200526183913.064413230@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <854fcba7-4dcf-9904-95af-69544745c172@kernel.org>
-Date:   Wed, 27 May 2020 10:53:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 12:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgE0Qy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:54:57 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EADFC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:54:57 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id z6so29758246ljm.13
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LHmWtQ2TkLP6OGqb3OSxb7myh0DpkLphjU9/234BIPw=;
+        b=QS/DeL/4agLgqn43tz2d+1Pv+Wcw+zCxwuarjwcFOqdidEhljsODcljY+PQD4MZcez
+         6mcT5xo+Glj6Ozfyadq8H8umAzoBhXKuPdW8HcoZ043jES7AoSHHYu2QJvNfDbke8WKE
+         Sd1361f4h8VU3lrRB8HNQrWQJqedcEnX0V0GYfKC+d5yU8R52r3f8aEWrcwoJJo1Lrm1
+         rrlOSWgksgreXzlsXtCWma7ALPvRuCLrWDRnRqvsvYq0cqxGjb/3xHPbS33yS/6CjUiS
+         7Vbd2apZUjCw2NVUJTdQpNzUFRkW7nKRLrAvi1n05Ykl31i8DWeWBLHOOz7xf4ILLl7/
+         7SxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LHmWtQ2TkLP6OGqb3OSxb7myh0DpkLphjU9/234BIPw=;
+        b=h8QCnEPnhfEVhFxFbE+1kKqHdPIum/l/k4Qtcl/ou7iSq+kTzrQ9O7hoNskokNluNw
+         6IwanixO0rzLCX1d6Sb1vYj8uPzN0qFgexFyPurbO7Wvmzb4dq63x2YNQGszzGGSLMnD
+         +bOlwMsfAqFvavWYsxeQvxRz9HdQYoElF+DvTPC6prV5xdkpzv5326B2aOG2hDpn+71f
+         NFwObQch6/1Wv/RJ5rg6jq7fUVWNDri7hYqjouIC01RW+1NZi5e6P4V18C4qfhU1qgmR
+         Q1ZLqaKYiedJo8JURF9kMWYCA2scyhMHj0pwEjTZLfe1rsHz1OpdkU9vnvIMoTd+RjQ5
+         9coA==
+X-Gm-Message-State: AOAM531sX9CTagoq7feMGlBx8fuZ+oMRPcCFqaW8T+lIJIIjdSQdmrK1
+        G/lPhgBh4oB8fMZ+jzQC/QSzwY4xL0u1jmP5G174JQ==
+X-Google-Smtp-Source: ABdhPJzmJpMkCosVV6yjOyPlOezLCCBsNT9bqO2Vj1q1MAS7G8wJ94i7BKM7SJjLa8tONQ+EvxtbGKO7THS1xmZmk4Q=
+X-Received: by 2002:a2e:8186:: with SMTP id e6mr3672178ljg.252.1590598495776;
+ Wed, 27 May 2020 09:54:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526183913.064413230@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
+In-Reply-To: <d2c1850e38e14f3def4c0307240e6826e296c14b.1590594512.git-series.maxime@cerno.tech>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Wed, 27 May 2020 09:54:44 -0700
+Message-ID: <CADaigPU7c=1u47R9GzvGCH_Z2fywY1foGYEy=KbBikjUQpwUFg@mail.gmail.com>
+Subject: Re: [PATCH v3 032/105] drm/vc4: crtc: Enable and disable the PV in
+ atomic_enable / disable
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 12:52 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.225 release.
-> There are 64 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 28 May 2020 18:36:22 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.225-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Wed, May 27, 2020 at 8:50 AM Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> The VIDEN bit in the pixelvalve currently being used to enable or disable
+> the pixelvalve seems to not be enough in some situations, which whill end
+> up with the pixelvalve stalling.
+>
+> In such a case, even re-enabling VIDEN doesn't bring it back and we need to
+> clear the FIFO. This can only be done if the pixelvalve is disabled though.
+>
+> In order to overcome this, we can configure the pixelvalve during
+> mode_set_no_fb, but only enable it in atomic_enable and flush the FIFO
+> there, and in atomic_disable disable the pixelvalve again.
 
-Compiled and booted on my test system. No dmesg regressions.
-
-thanks,
--- Shuah
-
+What displays has this been tested with?  Getting this sequencing
+right is so painful, and things like DSI are tricky to get to light
+up.
