@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB34C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4B120888
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96AF22088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgE0BAo (ORCPT
+        id S1727909AbgE0BA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:00:44 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5340 "EHLO huawei.com"
+        Tue, 26 May 2020 21:00:59 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5342 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727809AbgE0BAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:00:43 -0400
+        id S1727813AbgE0BAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:00:44 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CC9355B34488991F8AFE;
+        by Forcepoint Email with ESMTP id C7A2858C2580136F5CA8;
         Wed, 27 May 2020 09:00:41 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 27 May 2020 09:00:33 +0800
+ 14.3.487.0; Wed, 27 May 2020 09:00:34 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guangbin Huang <huangguangbin2@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH V2 net-next 1/4] net: hns3: add a resetting check in hclgevf_init_nic_client_instance()
-Date:   Wed, 27 May 2020 08:59:14 +0800
-Message-ID: <1590541157-6803-2-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH V2 net-next 4/4] net: hns3: add a print for initializing CMDQ when reset pending
+Date:   Wed, 27 May 2020 08:59:17 +0800
+Message-ID: <1590541157-6803-5-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590541157-6803-1-git-send-email-tanhuazhong@huawei.com>
 References: <1590541157-6803-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,44 +47,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+When initializing CMDQ fails because of reset pending,
+there is no hint for debugging, so adds a log for it.
 
-To prevent from initializing VF NIC client in reset handling state,
-this patch adds resetting check in hclgevf_init_nic_client_instance().
-
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index 32341dc..59fcb80 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2713,6 +2713,7 @@ static int hclgevf_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
- 					    struct hnae3_client *client)
- {
- 	struct hclgevf_dev *hdev = ae_dev->priv;
-+	int rst_cnt = hdev->rst_stats.rst_cnt;
- 	int ret;
- 
- 	ret = client->ops->init_instance(&hdev->nic);
-@@ -2720,6 +2721,14 @@ static int hclgevf_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
- 		return ret;
- 
- 	set_bit(HCLGEVF_STATE_NIC_REGISTERED, &hdev->state);
-+	if (test_bit(HCLGEVF_STATE_RST_HANDLING, &hdev->state) ||
-+	    rst_cnt != hdev->rst_stats.rst_cnt) {
-+		clear_bit(HCLGEVF_STATE_NIC_REGISTERED, &hdev->state);
-+
-+		client->ops->uninit_instance(&hdev->nic, 0);
-+		return -EBUSY;
-+	}
-+
- 	hnae3_set_client_init_flag(client, ae_dev, 1);
- 
- 	if (netif_msg_drv(&hdev->nic))
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+index 7f509ef..64a1d0bd 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.c
+@@ -426,6 +426,9 @@ int hclge_cmd_init(struct hclge_dev *hdev)
+ 	 * reset may happen when lower level reset is being processed.
+ 	 */
+ 	if ((hclge_is_reset_pending(hdev))) {
++		dev_err(&hdev->pdev->dev,
++			"failed to init cmd since reset %#lx pending\n",
++			hdev->reset_pending);
+ 		ret = -EBUSY;
+ 		goto err_cmd_init;
+ 	}
 -- 
 2.7.4
 
