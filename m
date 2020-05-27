@@ -2,187 +2,145 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F993C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8B82084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:14:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DiVj9PJz"
+	by mail.kernel.org (Postfix) with ESMTP id 776C92073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388549AbgE0OOX (ORCPT
+        id S2388628AbgE0OOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:14:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42147 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388141AbgE0OOW (ORCPT
+        Wed, 27 May 2020 10:14:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:47377 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgE0OOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:14:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590588860;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dctxeA759qsefX6QIwxwGGafAWwHT3wkT86+72lNh4I=;
-        b=DiVj9PJz2FrhdZEB6DU9okHJSJgk8y31Tf10aqYNEZKjkxSWCG4uxgD5JcNLJFfr/IOXpa
-        Cw5DO96jjgDbzCTUp+63JXNxFsuqUCCHeWoKD12WfL5cLTDDclSJZNM+gKHm0vPfAkt77y
-        HJcg58R76qIJ3xbRmKi/4oLpN55QcUw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-cCwpMpz8MJGNDHIv5dmS8w-1; Wed, 27 May 2020 10:14:19 -0400
-X-MC-Unique: cCwpMpz8MJGNDHIv5dmS8w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7862C8018A7;
-        Wed, 27 May 2020 14:14:16 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-113-73.ams2.redhat.com [10.36.113.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A4C705C1B0;
-        Wed, 27 May 2020 14:14:05 +0000 (UTC)
+        Wed, 27 May 2020 10:14:52 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MPXxi-1jQ7At0vQY-00McXf; Wed, 27 May 2020 16:14:37 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] arm64: fix clang integrated assembler build
 Date:   Wed, 27 May 2020 16:14:03 +0200
-From:   Adrian Reber <areber@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
-        Kamil Yurtsever <kyurtsever@google.com>,
-        Dirk Petersen <dipeit@gmail.com>,
-        Christine Flood <chf@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Serge Hallyn <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-        Eric Paris <eparis@parisplace.org>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
-Message-ID: <20200527141403.GC250149@dcbz.redhat.com>
-References: <20200522055350.806609-1-areber@redhat.com>
- <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
- <20200525080541.GF104922@dcbz.redhat.com>
- <877dwybxvi.fsf@x220.int.ebiederm.org>
+Message-Id: <20200527141435.1716510-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877dwybxvi.fsf@x220.int.ebiederm.org>
-X-Operating-System: Linux (5.6.11-300.fc32.x86_64)
-X-Load-Average: 0.82 0.68 0.60
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-Organization: Red Hat
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:7D97oLdlne2qL09g2jgGMc+fbgxIgsEVGqtW3VCiQSLFiFZYW+g
+ fn2jFC8fox4CvFLOjk636cGCNApIdf+wHKZhqEFujfdqm2RA4gYBX6NwhZyD2COJG9mMmWc
+ hZsygdfgYo/BJ0Kpgn67wE5vUFZRUdL6nV85teYEDlb3akqK8j5BG/d4Xix3+ngCzx8f8Fk
+ QtdTh5UFRdMZ4v9ZxpTRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nopDGBtTCRY=:gmcT7aGMYwgi+osEwcoJQd
+ M7Gi+selGs6VVEavYYgErF6uTZ6bBgfdli88sKgqNPoV0LvojDp5VmIyj+rdciv7gMGj0A7yG
+ jsDiTtFH2SJfh7G9T0mVtBLKxjCxcwuRBA3IpHG0Ix0Mc69PlCAi/WhHLq+ulS4Lr2XGvHq+i
+ eA+ZilQHHREFYpRTpuJ9UzLbt3crO7IIwk+rIZuIFadfFGdEIrYcveNcP/Mx8s+rISZu+U6fJ
+ o966l0cWMOpV7uUKixyQJ0gMm+m68gva1gZofkGPUgIHSZaHr+APCqVB32JERs1Kxh694ljSD
+ jfg4u9GwJhba3Gqq0v3ZuyVcZA+bjVgkmONZpObxYgc+EMWanX2BG0+mRqhOR2UsifUB3KzUm
+ MAqbVfxh5u/+Yd/wIvs4YR0FaYOCZs2u7VqJhQk5GviOVbJwaxBNTBMUXaQQQVAIeu5e4+QGf
+ t9Vunr7FO6GBeg8gS+jJWKY1gpNoyF7sf9FLmbvnzDd9Av8oCauSMuRkkhOgeObnSI++XiJEE
+ qbNady/hj5hewA4LQ2EPTinkoYjYimoGhthiKhIWh7LA95VBplavcS1deQ7/kIXn+FDcxCQUK
+ 9t9W8JPchCM0Q5Cq67VWkxasU2WZJ6OeyGeGtFRh3pICiDj75iXYPhK5rWPROhou2rwiDod/a
+ AF5XVDZ6xPZOQcB3bPuIi1NpFtZVahogUzIPTLa7zYcHQYAuYyREDxOL+m1+FuPwuatMfZU8Y
+ DDCAknP3KxiYVzUCmkp/UY9UPUCIqRb43sIcaParqPIxnSOG348OK23sPnh9lbzh5HCA7ky13
+ hySQO9Htd477w1nEt4Lp3Ht6poAUlCheVhQ1ndjIPxQg+Cl5WU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 08:59:29AM -0500, Eric W. Biederman wrote:
-> Adrian Reber <areber@redhat.com> writes:
-> 
-> > On Fri, May 22, 2020 at 09:40:37AM -0700, Casey Schaufler wrote:
-> 
-> >> What are the other blockers? Are you going to suggest additional new
-> >> capabilities to clear them?
-> >
-> > As mentioned somewhere else access to /proc/<pid>/map_files/ would be
-> > helpful. Right now I am testing with a JVM and it works without root
-> > just with the attached patch. Without access to /proc/<pid>/map_files/
-> > not everything CRIU can do will actually work, but we are a lot closer
-> > to what our users have been asking for.
-> 
-> The current permission checks on /proc/<pid>/map_files/ are simply
-> someone being over-cautious.
-> 
-> Someone needs to think through the threat landscape and figure out what
-> permission checks are actually needed.
-> 
-> Making the permission check ns_capable instead of capable is a
-> no-brainer.  Figuring out which user_ns to test against might be a
-> we bit harder.
-> 
-> We could probably even allow the owner of the process to open the files
-> but that requires someone doing the work of thinking through how
-> being able to opening files that you have mmaped might be a problem.
+clang and gas seem to interpret the symbols in memmove.S and
+memset.S differently, such that clang does not make them
+'weak' as expected, which leads to a linker error, with both
+ld.bfd and ld.lld:
 
-As mentioned in the other thread, CRIU can work with read access to
-map_files.
+ld.lld: error: duplicate symbol: memmove
+>>> defined at common.c
+>>>            kasan/common.o:(memmove) in archive mm/built-in.a
+>>> defined at memmove.o:(__memmove) in archive arch/arm64/lib/lib.a
 
-> >> > There are probably a few more things guarded by CAP_SYS_ADMIN required
-> >> > to run checkpoint/restore as non-root,
-> >> 
-> >> If you need CAP_SYS_ADMIN anyway you're not gaining anything by
-> >> separating out CAP_RESTORE.
-> >
-> > No, as described we can checkpoint and restore a JVM with this patch and
-> > it also solves the problem the set_ns_last_pid fork() loop daemon tries
-> > to solve. It is not enough to support the full functionality of CRIU as
-> > map_files is also important, but we do not need CAP_SYS_ADMIN and
-> > CAP_RESTORE. Only CAP_RESTORE would be necessary.
-> >
-> > With a new capability users can enable checkpoint/restore as non-root
-> > without giving CRIU access to any of the other possibilities offered by
-> > CAP_SYS_ADMIN. Setting a PID and map_files have been introduced for CRIU
-> > and used to live behind CONFIG_CHECKPOINT_RESTORE. Having a capability
-> > for checkpoint/restore would make it easier for CRIU users to run it as
-> > non-root and make it very clear what is possible when giving CRIU the
-> > new capability. No other things would be allowed than necessary for
-> > checkpoint/restore. Setting a PID is most important for the restore part
-> > and reading map_files would be helpful during checkpoint. So it actually
-> > should be called CAP_CHECKPOINT_RESTORE as Christian mentioned in
-> > another email.
-> 
-> Please if one is for checkpoint and one is for restore asking for a pair
-> of capabilities is probably more appropriate.
+ld.lld: error: duplicate symbol: memset
+>>> defined at common.c
+>>>            kasan/common.o:(memset) in archive mm/built-in.a
+>>> defined at memset.o:(__memset) in archive arch/arm64/lib/lib.a
 
-I will send out a v2 with a renamed capability soon and also include
-map_files to be readable with that capability.
+Copy the exact way these are written in memcpy_64.S, which does
+not have the same problem.
 
-> >> >  but by applying this patch I can
-> >> > already checkpoint and restore processes as non-root. As there are
-> >> > already multiple workarounds I would prefer to do it correctly in the
-> >> > kernel to avoid that CRIU users are starting to invent more workarounds.
-> >> 
-> >> You've presented a couple of really inappropriate implementations
-> >> that would qualify as workarounds. But the other two are completely
-> >> appropriate within the system security policy. They don't "get around"
-> >> the problem, they use existing mechanisms as they are intended.
-> >
-> > I agree with the user namespace approach to be appropriate, but not the
-> > CAP_SYS_ADMIN approach as CRIU only needs a tiny subset (2 things) of
-> > what CAP_SYS_ADMIN allows.
-> 
-> 
-> If we are only talking 2 things can you please include in your patchset
-> a patch enabling those 2 things?
+I don't know why this makes a difference, and it would be good
+to have someone with a better understanding of assembler internals
+review it.
 
-The two things are setting a PID via ns_last_pid/clone3() and reading
-map_files.
+It might be either a bug in the kernel or a bug in the assembler,
+no idea which one. My patch makes it work with all versions of
+clang and gcc, which is probably helpful even if it's a workaround
+for a clang bug.
 
-> But even more than this we need a request that asks not for the least
-> you can possibly ask for but asks for what you need to do a good job.
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+---
+ arch/arm64/lib/memcpy.S  | 3 +--
+ arch/arm64/lib/memmove.S | 3 +--
+ arch/arm64/lib/memset.S  | 3 +--
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
-Also in this thread Kamil mentioned that they also need calling prctl
-with PR_SET_MM during restore in their production setup.
-
-> I am having visions of a recurring discussion that says can we add one
-> more permission check to CAP_RESTORE or CAP_CHECKPOINT when they are
-> things we could know today.
-
-I will prepare a new version of this patch using CAP_CHECKPOINT_RESTORE
-for ns_last_pid/clone3(), map_files, and prctl with PR_SET_MM.
-
-		Adrian
+diff --git a/arch/arm64/lib/memcpy.S b/arch/arm64/lib/memcpy.S
+index e0bf83d556f2..dc8d2a216a6e 100644
+--- a/arch/arm64/lib/memcpy.S
++++ b/arch/arm64/lib/memcpy.S
+@@ -56,9 +56,8 @@
+ 	stp \reg1, \reg2, [\ptr], \val
+ 	.endm
+ 
+-	.weak memcpy
+ SYM_FUNC_START_ALIAS(__memcpy)
+-SYM_FUNC_START_PI(memcpy)
++SYM_FUNC_START_WEAK_PI(memcpy)
+ #include "copy_template.S"
+ 	ret
+ SYM_FUNC_END_PI(memcpy)
+diff --git a/arch/arm64/lib/memmove.S b/arch/arm64/lib/memmove.S
+index 02cda2e33bde..1035dce4bdaf 100644
+--- a/arch/arm64/lib/memmove.S
++++ b/arch/arm64/lib/memmove.S
+@@ -45,9 +45,8 @@ C_h	.req	x12
+ D_l	.req	x13
+ D_h	.req	x14
+ 
+-	.weak memmove
+ SYM_FUNC_START_ALIAS(__memmove)
+-SYM_FUNC_START_PI(memmove)
++SYM_FUNC_START_WEAK_PI(memmove)
+ 	cmp	dstin, src
+ 	b.lo	__memcpy
+ 	add	tmp1, src, count
+diff --git a/arch/arm64/lib/memset.S b/arch/arm64/lib/memset.S
+index 77c3c7ba0084..a9c1c9a01ea9 100644
+--- a/arch/arm64/lib/memset.S
++++ b/arch/arm64/lib/memset.S
+@@ -42,9 +42,8 @@ dst		.req	x8
+ tmp3w		.req	w9
+ tmp3		.req	x9
+ 
+-	.weak memset
+ SYM_FUNC_START_ALIAS(__memset)
+-SYM_FUNC_START_PI(memset)
++SYM_FUNC_START_WEAK_PI(memset)
+ 	mov	dst, dstin	/* Preserve return value.  */
+ 	and	A_lw, val, #255
+ 	orr	A_lw, A_lw, A_lw, lsl #8
+-- 
+2.26.2
 
