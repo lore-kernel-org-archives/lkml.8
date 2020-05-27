@@ -2,72 +2,97 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E126CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA8E207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AC6207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="BETk0rSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbgE0Lwy (ORCPT
+        id S1728426AbgE0Lw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:52:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57742 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE0Lwt (ORCPT
+        Wed, 27 May 2020 07:52:59 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:41026 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgE0Lw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:52:49 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jduby-0002aZ-Sb; Wed, 27 May 2020 11:52:42 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     QLogic-Storage-Upstream@cavium.com,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: qedf: remove redundant initialization of variable rc
-Date:   Wed, 27 May 2020 12:52:42 +0100
-Message-Id: <20200527115242.172344-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 27 May 2020 07:52:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1590580367; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UvvvrXWRYDHu3UfDWTLrB6GvtVeps3r3Hz5jfYNCgNM=;
+        b=BETk0rSmUVWgGf8DbdbhV68+hbnghdRRuJiBQKcvnE4i0DS0ITfJ4neHWaddQH9wDILioS
+        ObkHGmYjJGKiBfDQM+thUHY3U2z/UlirrIJjJxJ8CMkag0ceYMKzskNoAO/cGJ4V9+xi7z
+        mT3BDxMc1I8lN/VVBS93fQuunVXTNuQ=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org
+Subject: [PATCH v3 2/4] pwm: jz4740: Enhance precision in calculation of duty cycle
+Date:   Wed, 27 May 2020 13:52:23 +0200
+Message-Id: <20200527115225.10069-2-paul@crapouillou.net>
+In-Reply-To: <20200527115225.10069-1-paul@crapouillou.net>
+References: <20200527115225.10069-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Calculating the hardware value for the duty from the hardware value of
+the period resulted in a precision loss versus calculating it from the
+clock rate directly.
 
-The variable rc is being initialized with a value that is never read
-and it is being updated later with a new value.  The initialization is
-redundant and can be removed.
+(Also remove a cast that doesn't really need to be here)
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Fixes: f6b8a5700057 ("pwm: Add Ingenic JZ4740 support")
+Cc: <stable@vger.kernel.org>
+Suggested-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/scsi/qedf/qedf_fip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qedf/qedf_fip.c b/drivers/scsi/qedf/qedf_fip.c
-index bb82f0875eca..ad6a56ce72a8 100644
---- a/drivers/scsi/qedf/qedf_fip.c
-+++ b/drivers/scsi/qedf/qedf_fip.c
-@@ -20,7 +20,7 @@ void qedf_fcoe_send_vlan_req(struct qedf_ctx *qedf)
- #define MY_FIP_ALL_FCF_MACS        ((__u8[6]) { 1, 0x10, 0x18, 1, 0, 2 })
- 	static u8 my_fcoe_all_fcfs[ETH_ALEN] = MY_FIP_ALL_FCF_MACS;
- 	unsigned long flags = 0;
--	int rc = -1;
-+	int rc;
+Notes:
+    v2: New patch. I don't consider this a fix but an enhancement, since the old
+    	behaviour was in place since the driver was born in ~2010, so no Fixes tag.
+    v3: Add Fixes tag and Uwe's Reviewed-by
+
+ drivers/pwm/pwm-jz4740.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
+index 3cd5c054ad9a..4fe9d99ac9a9 100644
+--- a/drivers/pwm/pwm-jz4740.c
++++ b/drivers/pwm/pwm-jz4740.c
+@@ -158,11 +158,11 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Calculate period value */
+ 	tmp = (unsigned long long)rate * state->period;
+ 	do_div(tmp, NSEC_PER_SEC);
+-	period = (unsigned long)tmp;
++	period = tmp;
  
- 	skb = dev_alloc_skb(sizeof(struct fip_vlan));
- 	if (!skb) {
+ 	/* Calculate duty value */
+-	tmp = (unsigned long long)period * state->duty_cycle;
+-	do_div(tmp, state->period);
++	tmp = (unsigned long long)rate * state->duty_cycle;
++	do_div(tmp, NSEC_PER_SEC);
+ 	duty = period - tmp;
+ 
+ 	if (duty >= period)
 -- 
-2.25.1
+2.26.2
 
