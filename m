@@ -6,69 +6,69 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A87C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E71CD21475
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC662078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QpCpctZf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJB55FZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgE0HMa (ORCPT
+        id S1729286AbgE0HMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:12:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33064 "EHLO
+        Wed, 27 May 2020 03:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729144AbgE0HMY (ORCPT
+        with ESMTP id S1729126AbgE0HMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:12:24 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD6FC061A0F;
-        Wed, 27 May 2020 00:12:24 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p30so11348056pgl.11;
-        Wed, 27 May 2020 00:12:24 -0700 (PDT)
+        Wed, 27 May 2020 03:12:18 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12F8FC03E979;
+        Wed, 27 May 2020 00:12:18 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k22so9806036pls.10;
+        Wed, 27 May 2020 00:12:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BtFr88iS5dYVk9M5situj/cALZfUmfJBkWJmVOPGwiA=;
-        b=QpCpctZfSnLodygNVJlSPBKkfII/mNnwqTkUPiqiLyWUfdkWaLBSnzHx/wkWxck/sr
-         Ea4ImcUsTN9O73vlU31Py0Lno77YlTqpgiQUGnGQoypdkLvlLAEAazyPBrVhqz1zK0YS
-         a/GdQnliziiDEZ23uu0dvDu2R8CwnWG91rb0ADbH83+3FeAFOYzRU7t46KYUswvh3g1V
-         bsqbHBrOJ/mb9LRdgiYOHrVETupl8qryK3Ayvh8rNES9NZooxr/ysSji89BodjEzPU5J
-         bNzyPtN36GPUjguXy8xoGGru+rhEGfIryQPVI2bHohuYltYUmSsDIyeB8pKud8TlKGxI
-         vgnw==
+        bh=o9MqodWCLjikP8AmTG/rqhpi4jiJNC1PbUROm6v1d2Y=;
+        b=cJB55FZzIe+wbZbOjO4+gkJQe15YMlmFQTxt+DZL0GpogJ10Wqsx3OHLygNdzhlD5t
+         qE7H8Jj4R+LviV2dMs8V7qO5bBlsYuG68ANB7g0XTKFzNNeT0SXRE6zDFXFCxmznfA0v
+         mN5KMi5gIwI48uC8b0Kcgk4k/59LITp4LV3NEwAqBrNzC7VqiBGxnIumjWCigThafMq3
+         B6nQmRcMCtEBFe8j8GqQkP9nw6oMqmMpWAHy/oAYFQnqJTvKLst21e2EXIA7wlvDmudE
+         U2eAYVMwlIYwiraTrd8FmigcrRtv/pRy5jFwCFoJ5eV++L8RCEmfTVmIq6A1BuASY/d+
+         6ORA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BtFr88iS5dYVk9M5situj/cALZfUmfJBkWJmVOPGwiA=;
-        b=gKW2SfVVPWqNbHNnCdYVrsBSTwvylBZncnoITXGzR0/6IOJ5/BfmM8WSUv7LmFQ0tQ
-         LTBd1pRBdmLPXoN8DDwep2s5o1DK1xQvCuGP4HYV3RnhrzUA5MqqGhXTBhiFAD6GDjFt
-         fIud1EofTQZuff6IctCqGnGkPs2IMCFKbAmH7zhG7QnTumSlmi9DWcE1qHfmey4BSBk4
-         JG4OQchfIGhsuA8s7wPUQjZ5bJSAyKNYCg5E4W+7wAkwe6LpUln+1cfuBpvmk2hRMy1Q
-         WNnLtPI3xXJzWQTFd2g2Ik1qkOvpAoKTdOiN2rdYKosOfI6AQO6nsJHy/tgJZ0hsdufD
-         Crbg==
-X-Gm-Message-State: AOAM531E0dX3NlXvYnNf9SlSECIozAQxt35GJDlR6t63ZPNOWtxg2EzF
-        KDcC/T8updYiQeNhqWwUL5A=
-X-Google-Smtp-Source: ABdhPJwrauMbNSEdWNH+N5a3rZnBfOIKgD1AmNbuhOdA/dbXFJh9XOpUE81ASBgklIFa4/rbx/Uoxg==
-X-Received: by 2002:a63:ad0b:: with SMTP id g11mr2665934pgf.275.1590563544076;
-        Wed, 27 May 2020 00:12:24 -0700 (PDT)
+        bh=o9MqodWCLjikP8AmTG/rqhpi4jiJNC1PbUROm6v1d2Y=;
+        b=htm1jZ9zFvSDzi85pUCoUDZB5aIAhaVh2/VJNwZ3N93vig+xomt0HOFk0uWiEn/DVR
+         HqiYiFZsdCAqK3YTDKvljqx53eEaC3w+REM7/SZeL2jXUccnIh9KGy6PK7z+e8m9Ql/f
+         HW3SxwLHdumgEbDV6udnciXYGMZ4m48VL3KZO9yzbKbmfXGEcmeGYzKxCPEvcil7Xd+b
+         c3zM9driQzbpLJhANsXzBiFW6mbIWxxO/A1m+4ZRolsUO4utH4bVT++rTTk43BcWG1K/
+         64I2kCAUz+fVWCBUzr9pM9rAcIlCcpFa7hSC1/0wud9VTHYDXB8EfyNrjdwmDFKSJbc3
+         ayIQ==
+X-Gm-Message-State: AOAM531XSKKDxShFU/IicWFxEzFoiptf4Ds1qysqESomZU2upjLgh6Mp
+        Zsy+tu3JcH63VxBpKCfxcYF4zcpnniY=
+X-Google-Smtp-Source: ABdhPJxoHRdGCzwo58GDaHJ6G/BJrSAN4ab49i2zjyZzqDrlxy7DIG+b4ZCydP80auPUjGxfCvGnNg==
+X-Received: by 2002:a17:902:8d8d:: with SMTP id v13mr4730527plo.67.1590563537552;
+        Wed, 27 May 2020 00:12:17 -0700 (PDT)
 Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 10sm1306431pfx.138.2020.05.27.00.12.22
+        by smtp.gmail.com with ESMTPSA id 10sm1306431pfx.138.2020.05.27.00.12.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 00:12:23 -0700 (PDT)
+        Wed, 27 May 2020 00:12:16 -0700 (PDT)
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
         Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 7/7] media: atomisp: Remove binary_supports_input_format
-Date:   Wed, 27 May 2020 00:11:50 -0700
-Message-Id: <20200527071150.3381228-8-natechancellor@gmail.com>
+Subject: [PATCH 4/7] media: atomisp: Remove unnecessary NULL checks in ia_css_pipe_load_extension
+Date:   Wed, 27 May 2020 00:11:47 -0700
+Message-Id: <20200527071150.3381228-5-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200527071150.3381228-1-natechancellor@gmail.com>
 References: <20200527071150.3381228-1-natechancellor@gmail.com>
@@ -82,66 +82,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Clang warns:
 
-drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c:1707:64:
-warning: implicit conversion from enumeration type 'const enum
-ia_css_frame_format' to different enumeration type 'enum
-atomisp_input_format' [-Wenum-conversion]
-        binary_supports_input_format(xcandidate, req_in_info->format));
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~             ~~~~~~~~~~~~~^~~~~~
+../drivers/staging/media/atomisp/pci/sh_css.c:8537:14: warning: address
+of 'pipe->output_stage' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+                if (&pipe->output_stage)
+                ~~   ~~~~~~^~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/sh_css.c:8545:14: warning: address
+of 'pipe->vf_stage' will always evaluate to 'true'
+[-Wpointer-bool-conversion]
+                if (&pipe->vf_stage)
+                ~~   ~~~~~~^~~~~~~~
 
-As it turns out, binary_supports_input_format only asserts that
-xcandidate is not NULL and just returns true so this call is never
-actually made.
-
-There are other functions that are called that assert info is not NULL
-so this function actually serves no purpose. Remove it. It can be
-brought back if needed later.
+output_stage and vf_stage are pointers in the middle of a struct, their
+addresses cannot be NULL if pipe is not NULL and pipe is already checked
+for NULL in this function. Simplify this if block.
 
 Link: https://github.com/ClangBuiltLinux/linux/issues/1036
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- .../atomisp/pci/runtime/binary/src/binary.c   | 21 -------------------
- 1 file changed, 21 deletions(-)
+ drivers/staging/media/atomisp/pci/sh_css.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
-index 2a23b7c6aeeb..0be2331c66cd 100644
---- a/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
-+++ b/drivers/staging/media/atomisp/pci/runtime/binary/src/binary.c
-@@ -857,18 +857,6 @@ binary_supports_output_format(const struct ia_css_binary_xinfo *info,
- 	return false;
- }
+diff --git a/drivers/staging/media/atomisp/pci/sh_css.c b/drivers/staging/media/atomisp/pci/sh_css.c
+index d77432254a2c..b8626cdb2436 100644
+--- a/drivers/staging/media/atomisp/pci/sh_css.c
++++ b/drivers/staging/media/atomisp/pci/sh_css.c
+@@ -8533,22 +8533,9 @@ ia_css_pipe_load_extension(struct ia_css_pipe *pipe,
+ 	}
  
--#ifdef ISP2401
--static bool
--binary_supports_input_format(const struct ia_css_binary_xinfo *info,
--			     enum atomisp_input_format format)
--{
--	assert(info);
--	(void)format;
--
--	return true;
--}
--#endif
--
- static bool
- binary_supports_vf_format(const struct ia_css_binary_xinfo *info,
- 			  enum ia_css_frame_format format)
-@@ -1699,15 +1687,6 @@ ia_css_binary_find(struct ia_css_binary_descr *descr,
- 					    binary_supports_output_format(xcandidate, req_bin_out_info->format));
- 			continue;
- 		}
--#ifdef ISP2401
--		if (!binary_supports_input_format(xcandidate, descr->stream_format)) {
--			ia_css_debug_dtrace(IA_CSS_DEBUG_TRACE,
--					    "ia_css_binary_find() [%d] continue: !%d\n",
--					    __LINE__,
--					    binary_supports_input_format(xcandidate, req_in_info->format));
--			continue;
+ 	if (firmware->info.isp.type == IA_CSS_ACC_OUTPUT)
+-	{
+-		if (&pipe->output_stage)
+-			append_firmware(&pipe->output_stage, firmware);
+-		else {
+-			IA_CSS_LEAVE_ERR_PRIVATE(IA_CSS_ERR_INTERNAL_ERROR);
+-			return IA_CSS_ERR_INTERNAL_ERROR;
 -		}
--#endif
- 		if (xcandidate->num_output_pins > 1 &&
- 		    /* in case we have a second output pin, */
- 		    req_vf_info                   && /* and we need vf output. */
+-	} else if (firmware->info.isp.type == IA_CSS_ACC_VIEWFINDER)
+-	{
+-		if (&pipe->vf_stage)
+-			append_firmware(&pipe->vf_stage, firmware);
+-		else {
+-			IA_CSS_LEAVE_ERR_PRIVATE(IA_CSS_ERR_INTERNAL_ERROR);
+-			return IA_CSS_ERR_INTERNAL_ERROR;
+-		}
+-	}
++		append_firmware(&pipe->output_stage, firmware);
++	else if (firmware->info.isp.type == IA_CSS_ACC_VIEWFINDER)
++		append_firmware(&pipe->vf_stage, firmware);
+ 	err = acc_load_extension(firmware);
+ 
+ 	IA_CSS_LEAVE_ERR_PRIVATE(err);
 -- 
 2.27.0.rc0
 
