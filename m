@@ -2,224 +2,100 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8209C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6891AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7644B20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F0D2075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="n5jA1URN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vhoXYIJy"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="K0O5AJ6m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgE0Vqs (ORCPT
+        id S1727847AbgE0Vr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 17:46:48 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:48525 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726787AbgE0Vqr (ORCPT
+        Wed, 27 May 2020 17:47:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbgE0Vrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 17:46:47 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id E0700AAA;
-        Wed, 27 May 2020 17:46:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 17:46:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=1uMfllCwGVRSV
-        eD897uL9SAlLt6bpaVgLEM5vf/6PXU=; b=n5jA1URN2O3JQQOPok0OlsSawfeLb
-        qbcVZyXyIOqc6v3EddUBeX2546X93UB6qLgI/tUrxtS7V7joMKVJch25KM6pi07J
-        2G4QRoB5Z5Gp6iLFfjIzZQgmBePIV+CiRnSljB8JMlMF8VryCaYpgdqvHH18HC2p
-        N9SfcT/g5sMGoAoJTlompcbWSatAW3SmDwAlwEqGhrZ2rb4h+ucztpJ7m+R/Y217
-        vD2l6OBFvxs3ylviaMh9x339IDg5qNBMRvKL0vW0qy8Kq/u6+YpzRcysjUnb6c23
-        oLZK0HZ1VskQV+FoPvUuwi6qoH4eYr22Dmn8DKgrQtCqsGkbBit2Y0Cdw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=1uMfllCwGVRSVeD897uL9SAlLt6bpaVgLEM5vf/6PXU=; b=vhoXYIJy
-        /3lxQnWiTue+356RJ4otCRAQYzaNChiU+HSGfGb3JVGdhIs6J6jBuZ3DPWPe444H
-        OpqQccWga+AETOEIZwyUEWEiH6sJrqkOsSvpY2DlSnbsm+RFqzvTjBgVfKKewHwV
-        1XMl++ndMIQr5BGrEeBBG8qZ2zPnhgH1MbJBQ3kqtQBUpVn4cVfvahqL0wBR2zcV
-        PwLWrqQ5tCe1cA5UHpI/EIfMfgxeKKg2k7P4wauR3jXRa2qdDApY0sjFusDBgn+7
-        Zzk0eMXCjxFgWcVTecs325j0DHqERu/P8Qzc5J3B/igvzH9jRXjt3dIi8pmioNyu
-        ZTa2649CKs8xlA==
-X-ME-Sender: <xms:w9_OXihbCd_T2cI525J_EuxTj3CfThoBndGDvD07xykf1PKJ31HMCA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvhedgtdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhrihhs
-    uceuuhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepie
-    euffeuvdeiueejhfehiefgkeevudejjeejffevvdehtddufeeihfekgeeuheelnecukfhp
-    peduieefrdduudegrddufedvrdefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghorhhishessghurhdrihho
-X-ME-Proxy: <xmx:w9_OXjDct1_DPzWmPDM8nOmLIsZk_q8ZQDxHzUBoVlvzM8ZmPvw7WQ>
-    <xmx:w9_OXqE4vIQU7lIpdphkuEZiXCEwRsUp-ya6HK3lEyxII_lhXUc7CQ>
-    <xmx:w9_OXrQuVLYJb0xRS0DX18E9ve8yUVTS-Fvixgrs81FBU0Z6Q5G3Mw>
-    <xmx:xd_OXmzSkHVYyo8lVCKGqV_RQ9cG495BkLBY6v8z7cupzCq6mlTciwx-djiOrpZYFkibbQ>
-Received: from localhost (unknown [163.114.132.3])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 111E23280060;
-        Wed, 27 May 2020 17:46:43 -0400 (EDT)
-From:   Boris Burkov <boris@bur.io>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Boris Burkov <boris@bur.io>
-Subject: [PATCH v2 cgroup/for-5.8] cgroup: add cpu.stat file to root cgroup
-Date:   Wed, 27 May 2020 14:43:19 -0700
-Message-Id: <20200527214316.524124-1-boris@bur.io>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200527160821.GC42293@cmpxchg.org>
-References: <20200527160821.GC42293@cmpxchg.org>
+        Wed, 27 May 2020 17:47:55 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E84AC05BD1E;
+        Wed, 27 May 2020 14:47:55 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XPZb4z9Rz9sRK;
+        Thu, 28 May 2020 07:47:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590616071;
+        bh=mXu9qxrrYhcMrslxtNTfDTi99hlgGhfPw1uSLhfYR00=;
+        h=Date:From:To:Cc:Subject:From;
+        b=K0O5AJ6mpaA0/hNQp3MM5lNC8locegVJUd0sBCWNx/eYI9gH1FkQncofC8loe8lbk
+         +xOy3F1UHC9HPmKcgvhV+HRwWPUPQ5xt4AsKZU8OFl5HSzgidg4fAfmDk3sjQJ1sXb
+         vAGkABj1iLPvUIgJEVUkHHTvkhTAFvFXtkbXqS8sNRCBMhGz8NMfAblZPwLOy9bufC
+         b15irLTRtrUSl7EFf5DaPokyu1dNWH2bmBE/CroMrueBnL7pzjZd6cA6kG81imsFZw
+         SHA+p8Sp4qGp1X9qJNeGHoEsCbP/tEnhE3Qd6gMEXmCwrnvsuMEO5XXejxIOJbnM2a
+         Z6qf9idIlGe3A==
+Date:   Thu, 28 May 2020 07:47:50 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the kvm-fixes tree
+Message-ID: <20200528074750.550f761b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/LyStz_oR44yVl+tok4Z2UQd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the root cgroup does not have a cpu.stat file. Add one which
-is consistent with /proc/stat to capture global cpu statistics that
-might not fall under cgroup accounting.
+--Sig_/LyStz_oR44yVl+tok4Z2UQd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-We haven't done this in the past because the data are already presented
-in /proc/stat and we didn't want to add overhead from collecting root
-cgroup stats when cgroups are configured, but no cgroups have been
-created.
+Hi all,
 
-By keeping the data consistent with /proc/stat, I think we avoid the
-first problem, while improving the usability of cgroups stats.
-We avoid the second problem by computing the contents of cpu.stat from
-existing data collected for /proc/stat anyway.
+In commit
 
-Signed-off-by: Boris Burkov <boris@bur.io>
-Suggested-by: Tejun Heo <tj@kernel.org>
----
- Documentation/admin-guide/cgroup-v2.rst |  6 +--
- kernel/cgroup/cgroup.c                  |  1 -
- kernel/cgroup/rstat.c                   | 60 +++++++++++++++++++++----
- 3 files changed, 54 insertions(+), 13 deletions(-)
+  f4cfcd2d5aea ("KVM: x86: don't expose MSR_IA32_UMWAIT_CONTROL uncondition=
+ally")
 
-diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-index fed4e1d2a343..fec2f13fe065 100644
---- a/Documentation/admin-guide/cgroup-v2.rst
-+++ b/Documentation/admin-guide/cgroup-v2.rst
-@@ -714,9 +714,7 @@ Conventions
- - Settings for a single feature should be contained in a single file.
- 
- - The root cgroup should be exempt from resource control and thus
--  shouldn't have resource control interface files.  Also,
--  informational files on the root cgroup which end up showing global
--  information available elsewhere shouldn't exist.
-+  shouldn't have resource control interface files.
- 
- - The default time unit is microseconds.  If a different unit is ever
-   used, an explicit unit suffix must be present.
-@@ -985,7 +983,7 @@ CPU Interface Files
- All time durations are in microseconds.
- 
-   cpu.stat
--	A read-only flat-keyed file which exists on non-root cgroups.
-+	A read-only flat-keyed file.
- 	This file exists whether the controller is enabled or not.
- 
- 	It always reports the following three stats:
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 557a9b9d2244..b8a75169c3e4 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -4881,7 +4881,6 @@ static struct cftype cgroup_base_files[] = {
- 	},
- 	{
- 		.name = "cpu.stat",
--		.flags = CFTYPE_NOT_ON_ROOT,
- 		.seq_show = cpu_stat_show,
- 	},
- #ifdef CONFIG_PSI
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index 41ca996568df..b6397a186ce9 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -389,18 +389,62 @@ void __cgroup_account_cputime_field(struct cgroup *cgrp,
- 	cgroup_base_stat_cputime_account_end(cgrp, rstatc);
- }
- 
-+/*
-+ * compute the cputime for the root cgroup by getting the per cpu data
-+ * at a global level, then categorizing the fields in a manner consistent
-+ * with how it is done by __cgroup_account_cputime_field for each bit of
-+ * cpu time attributed to a cgroup.
-+ */
-+static void root_cgroup_cputime(struct task_cputime *cputime)
-+{
-+	int i;
-+
-+	cputime->stime = 0;
-+	cputime->utime = 0;
-+	cputime->sum_exec_runtime = 0;
-+	for_each_possible_cpu(i) {
-+		struct kernel_cpustat kcpustat;
-+		u64 *cpustat = kcpustat.cpustat;
-+		u64 user = 0;
-+		u64 sys = 0;
-+
-+		kcpustat_cpu_fetch(&kcpustat, i);
-+
-+		user += cpustat[CPUTIME_USER];
-+		user += cpustat[CPUTIME_NICE];
-+		cputime->utime += user;
-+
-+		sys += cpustat[CPUTIME_SYSTEM];
-+		sys += cpustat[CPUTIME_IRQ];
-+		sys += cpustat[CPUTIME_SOFTIRQ];
-+		cputime->stime += sys;
-+
-+		cputime->sum_exec_runtime += user;
-+		cputime->sum_exec_runtime += sys;
-+		cputime->sum_exec_runtime += cpustat[CPUTIME_STEAL];
-+		cputime->sum_exec_runtime += cpustat[CPUTIME_GUEST];
-+		cputime->sum_exec_runtime += cpustat[CPUTIME_GUEST_NICE];
-+	}
-+}
-+
- void cgroup_base_stat_cputime_show(struct seq_file *seq)
- {
- 	struct cgroup *cgrp = seq_css(seq)->cgroup;
- 	u64 usage, utime, stime;
--
--	if (!cgroup_parent(cgrp))
--		return;
--
--	cgroup_rstat_flush_hold(cgrp);
--	usage = cgrp->bstat.cputime.sum_exec_runtime;
--	cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime, &utime, &stime);
--	cgroup_rstat_flush_release();
-+	struct task_cputime cputime;
-+
-+	if (cgroup_parent(cgrp)) {
-+		cgroup_rstat_flush_hold(cgrp);
-+		usage = cgrp->bstat.cputime.sum_exec_runtime;
-+		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
-+			       &utime, &stime);
-+		cgroup_rstat_flush_release();
-+	} else {
-+		root_cgroup_cputime(&cputime);
-+		usage = cputime.sum_exec_runtime;
-+		utime = cputime.utime;
-+		stime = cputime.stime;
-+	}
- 
- 	do_div(usage, NSEC_PER_USEC);
- 	do_div(utime, NSEC_PER_USEC);
--- 
-2.24.1
+Fixes tag
 
+  Fixes: 6e3ba4abce ("KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/LyStz_oR44yVl+tok4Z2UQd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7O4AYACgkQAVBC80lX
+0GwUfAf/T8bYGS2CZ+9VIOkE6z9xJC/K1D3t7G1kCaYHfHgaSkul3vExAeJDghwn
+WVN+mOVwu2QFyEZ6PUqX/hjJHmMiQs1Lvv4vULMVi3QI7xK/KKuXnqfuOfjQLJhI
+UyZKaa5jxhO484FylcmkGk9QtC0HWxmAXluxWSlBAaoFZHsbDSHP0vHdQVA6WPBx
+Opwd0JA5U6drlQ8cZ6EhJvXfk+eW5QaIK5SPYl/fhH/F0SRCA4EtTCEIpaNVC59g
+2Jr4vLnCAeBu7a9qG1FsdzgJG/Cj8s7m+AfsLCPjnTlZpRUMJAJS5jo8vwU4NukN
+sWQuAKaYyfXycc2Zf0UX4RF8V2y+Eg==
+=idU4
+-----END PGP SIGNATURE-----
+
+--Sig_/LyStz_oR44yVl+tok4Z2UQd--
