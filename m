@@ -2,82 +2,72 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C95B207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="apPwitTZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5DA8E207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgE0Lwt (ORCPT
+        id S1728353AbgE0Lwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:52:49 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40978 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbgE0Lws (ORCPT
+        Wed, 27 May 2020 07:52:54 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:57742 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgE0Lwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:52:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1590580366; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=IqxIovXkXF5KvrGaQQjnGpCpjH/yZ+vIdz9EwngjN20=;
-        b=apPwitTZICXjFI0gnegvuubDiXT1Tva1+gsHNIeDBNM+PL47BcP5kXyvoaoYKq5OGUMhXW
-        Q1trQpFgr3M6Hlx7+t1OfZm1lEQLePKLaMiB31v13H+zQyavELxEG1ci6cP+gTMae4Oxwh
-        jeoMp/0sDsxloRrVJZ1CA4niqADXoXI=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     od@zcrc.me, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 1/4] pwm: jz4740: Drop dependency on MACH_INGENIC
-Date:   Wed, 27 May 2020 13:52:22 +0200
-Message-Id: <20200527115225.10069-1-paul@crapouillou.net>
+        Wed, 27 May 2020 07:52:49 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jduby-0002aZ-Sb; Wed, 27 May 2020 11:52:42 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     QLogic-Storage-Upstream@cavium.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: qedf: remove redundant initialization of variable rc
+Date:   Wed, 27 May 2020 12:52:42 +0100
+Message-Id: <20200527115242.172344-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on MACH_INGENIC prevent us from creating a generic kernel that
-works on more than one MIPS board. Instead, we just depend on MIPS being
-set.
+From: Colin Ian King <colin.king@canonical.com>
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+The variable rc is being initialized with a value that is never read
+and it is being updated later with a new value.  The initialization is
+redundant and can be removed.
+
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-
-Notes:
-    v2: New patch. I don't consider this a fix but an enhancement, since the old
-    	behaviour was in place since the driver was born in ~2010, so no Fixes tag.
-    v3: Commit message changes (invert Acked-by / Signed-off-by)
-
- drivers/pwm/Kconfig | 2 +-
+ drivers/scsi/qedf/qedf_fip.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index eebbc917ac97..7814e5b2cad7 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -234,7 +234,7 @@ config PWM_IMX_TPM
+diff --git a/drivers/scsi/qedf/qedf_fip.c b/drivers/scsi/qedf/qedf_fip.c
+index bb82f0875eca..ad6a56ce72a8 100644
+--- a/drivers/scsi/qedf/qedf_fip.c
++++ b/drivers/scsi/qedf/qedf_fip.c
+@@ -20,7 +20,7 @@ void qedf_fcoe_send_vlan_req(struct qedf_ctx *qedf)
+ #define MY_FIP_ALL_FCF_MACS        ((__u8[6]) { 1, 0x10, 0x18, 1, 0, 2 })
+ 	static u8 my_fcoe_all_fcfs[ETH_ALEN] = MY_FIP_ALL_FCF_MACS;
+ 	unsigned long flags = 0;
+-	int rc = -1;
++	int rc;
  
- config PWM_JZ4740
- 	tristate "Ingenic JZ47xx PWM support"
--	depends on MACH_INGENIC
-+	depends on MIPS
- 	depends on COMMON_CLK
- 	select MFD_SYSCON
- 	help
+ 	skb = dev_alloc_skb(sizeof(struct fip_vlan));
+ 	if (!skb) {
 -- 
-2.26.2
+2.25.1
 
