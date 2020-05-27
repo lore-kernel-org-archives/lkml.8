@@ -2,278 +2,107 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC09C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA91C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B1C20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0562020835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="firhIcT7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aXTIpopG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391520AbgE0Ryt (ORCPT
+        id S2391739AbgE0Rzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:54:49 -0400
-Received: from mail-eopbgr680072.outbound.protection.outlook.com ([40.107.68.72]:29869
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388348AbgE0Rys (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:54:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lVur/ZHXj1aJIPRwp5u0TVGsLcIhSt3rRTxQ4VX/Lwn9F9XPwSQYVfgQalLMSYAXU+wv2fbOCsxPL8+Iq0npN++PiO0Bnysbbfz8OiD8szllF5wLDZ3nge5NFTtE9Zh4pEtwwsRptl0Ubq5MRdXSZ/enfFysKfxTuoYCSm3Peu9kYK9jfVzXsfc3mpaFnIaSlTF8v7YekKOM9zqFHSUfulTYUisKK839VGhQUa0lloKwL+Gf3zIJ0lmJFDK4qjmcAaTZxSx0uzt3inmY7vv+I8uKlYnXcOnEiTDQJgw78RkGLLsFqRVRSI2npHCG3LNjXhlyqMSDMwWojjcA52Ha3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kfXPXEBMXe5yjoBou2Bu91itLNWQoGcE9Yj3HbsI5hw=;
- b=nlklnIz6ibDPgmwAcLpMV5T6AxnycPebBS0tln6ItEyuGZFBO+IycgY1K7QxMfh5whuB+uQT8CORRfeGtOQM5tu34O8iuCik4ZUE1bk5/fMfjwZgPLqYQmw/4sBtnFN2zmNOChZb4TiSe611bVhSb6irJ3e4j5msEggpLMaQxvDSZr2ZP8yLZcr5moeUM2sc/0Hw3OoPStgmpoUjjMqJb1WjBJ9EMWIXeogEwKaDdA91nm7i0szGuh7x8cLJkE4yaocUyxhY3LaLZDJGil2Nu4j8y+ptxibjEpVp+yOtxbSw5nN4V5GG5XOEAL6x+1DWDLNuTWTOuOzAvsnBtDqiVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Wed, 27 May 2020 13:55:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387653AbgE0Rzh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:55:37 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4A1C03E97D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:55:36 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y11so2123335plt.12
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kfXPXEBMXe5yjoBou2Bu91itLNWQoGcE9Yj3HbsI5hw=;
- b=firhIcT70lrXnpbM4Qaq6xxpyKnpV04C2yXcYml9KWYFs31+Bz0hWuQk3sZb5vRZiy0IESCmKYRj1L9EQ3jPUDe2MrCIlzAirLchCFinCa9SiR6Co0k8h0AgOXrucoI4YchB8a13wJiE5gcVDZ54Kju/0c725ef3VwZvKKJgt+o=
-Received: from CY4PR02CA0003.namprd02.prod.outlook.com (2603:10b6:903:18::13)
- by MN2PR02MB6752.namprd02.prod.outlook.com (2603:10b6:208:198::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Wed, 27 May
- 2020 17:54:45 +0000
-Received: from CY1NAM02FT004.eop-nam02.prod.protection.outlook.com
- (2603:10b6:903:18:cafe::64) by CY4PR02CA0003.outlook.office365.com
- (2603:10b6:903:18::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.25 via Frontend
- Transport; Wed, 27 May 2020 17:54:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; ideasonboard.com; dkim=none (message not signed)
- header.d=none;ideasonboard.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT004.mail.protection.outlook.com (10.152.74.112) with Microsoft SMTP
- Server id 15.20.3045.17 via Frontend Transport; Wed, 27 May 2020 17:54:44
- +0000
-Received: from [149.199.38.66] (port=41822 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1je0Fj-0005Su-8c; Wed, 27 May 2020 10:54:07 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1je0GJ-0008MA-O3; Wed, 27 May 2020 10:54:43 -0700
-Received: from [172.19.2.244] (helo=localhost)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <hyun.kwon@xilinx.com>)
-        id 1je0GC-0008Kn-04; Wed, 27 May 2020 10:54:36 -0700
-Date:   Wed, 27 May 2020 10:54:35 -0700
-From:   Hyun Kwon <hyun.kwon@xilinx.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Venkateshwar Rao Gannavarapu <VGANNAVA@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sandip Kothari <sandipk@xilinx.com>
-Subject: Re: [RFC PATCH 2/2] drm: xlnx: driver for Xilinx DSI TX Subsystem
-Message-ID: <20200527175435.GA26381@smtp.xilinx.com>
-References: <1587417656-48078-1-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
- <1587417656-48078-3-git-send-email-venkateshwar.rao.gannavarapu@xilinx.com>
- <20200504184348.GA3095@smtp.xilinx.com>
- <20200524030813.GF6026@pendragon.ideasonboard.com>
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VJBYNC82NEK7x8dg+i0heBurZRdVbjA3vrgBU6V12M4=;
+        b=aXTIpopGmyddAjXhIqoKG+WhFjn8oDlcxZJA54zQq7ysZKo1Efm/lBVPNknrDfpFbE
+         tdjxJvEcB7VtuSIuFr8lrwXjv3t+M42UgIb7qKO3AP5eSqzEFAl3mKK65x+LRU3+5cFB
+         owtzO27omqQlHzQ93AqPLuiCYgqSVNpn6nsRVY2v+TrLVyAOeKg8DgMIWntL14c+svfu
+         42XE/24+FRgxOGUmfzcc20FRcrKrKz4Z9CGOcL4bfZTT2/z/sKipItoUpWwcOem0ItpY
+         kWfVuJHCPFkkZY21ascjp5VhGk9iTN0AFdap29/F54VByjmzHWgiuhY7q5j1HkOdsy+p
+         FJpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VJBYNC82NEK7x8dg+i0heBurZRdVbjA3vrgBU6V12M4=;
+        b=Iaf4uK5rIqd/isldslS+MqkxtCcLzssS6B78cferfOoRO3Go7swG2Xsq7lwcQTgpPm
+         fU0WcNU0KNzLFEib9iycJpt5JxcqrwBdkaFuvGgTrQA8OkuXYdmeWq1FH2NvIpxpUGru
+         frP+El47MnpwM4Upvu+XgEcw1AjA7bbM/FNBtRjzMuBuJfxEnkBWQlVaUHm0VQEdtSVG
+         8wect2Nvw3N3y6XS2TXy4aTIEGev3l/Gk5Tf2Qc8if+d0ekwW2ubf+2o/GS2CSNvD6aL
+         dm5aLtV1Mo8LZ1+V0YP0qSnzE38GvSBC6ej1w6DjP5n4vrwFcUp9W2WESSiKcKrPo/Rm
+         4Gkw==
+X-Gm-Message-State: AOAM533QBz/kjDK2dnJJud7nS2wJmdkm0wOl8Rt05dlIrfKV4rjTon0+
+        WeHjM/5T5FM/r4erfUrfMNwlGxHnQhvS9YlR7XNj4A==
+X-Google-Smtp-Source: ABdhPJyJQQ2c1D01xZIN8zVnubpyY/DMXiTEzIKKdFF28gU5xSU/7XCGzI6d/c9CFiYJSE0m6MbG1hDAZRiVQq6XR6U=
+X-Received: by 2002:a17:90b:4c47:: with SMTP id np7mr6497081pjb.101.1590602135592;
+ Wed, 27 May 2020 10:55:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200524030813.GF6026@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFTY:;SFS:(346002)(376002)(136003)(39860400002)(396003)(46966005)(6916009)(54906003)(70586007)(70206006)(81166007)(33656002)(356005)(82310400002)(316002)(83380400001)(426003)(5660300002)(336012)(44832011)(26005)(186003)(1076003)(47076004)(82740400003)(8676002)(9786002)(478600001)(2906002)(4326008)(8936002)(107886003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 815cecd2-ffcc-4ae5-587e-08d8026709b7
-X-MS-TrafficTypeDiagnostic: MN2PR02MB6752:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB6752D28B7E41257192FBE248D6B10@MN2PR02MB6752.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 04163EF38A
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1MWuiYcq7844ohiVS8uhW8hysCX4UI5LSPW2pQVJAn8PxW5P5+DML/896nYE/SlNodUa1QrTEsoU6ZWItawPGGQXoZxBYPdUJ0RaALZ0k0pGkmBi06qxfyqFCgAhbp7saRUnfHj2Yp4mcBeMqVE45+KnU1frCV9wq7Aa/5VGBskJNq3n0Shd4Ahd0ZlWYfkKRHRbvvjiqLE0r1WPSnGe9R/64cNK2riS3SOTr/PWU2Th745oELzNIIdfHY/wi4fazzqW2cVfsL/II+tFhQ9IRYu82l5GyosXeRXFVDYOXz6hQbLPVVwJ4aOkSoEDpxCgwAh9sheWEbK9dx2y4bw9cMewzFZU0mOQ9eN/fP1YQ+ZvY32KqGfgK7qTd2SKI8rUY63qZLj/Az+YmTzHYhWXPQ==
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 17:54:44.0742
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 815cecd2-ffcc-4ae5-587e-08d8026709b7
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6752
+References: <20200526173117.155339-1-ndesaulniers@google.com> <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
+In-Reply-To: <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 27 May 2020 10:55:24 -0700
+Message-ID: <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
+Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Stephen Boyd <swboyd@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+On Wed, May 27, 2020 at 6:45 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-05-26 18:31, Nick Desaulniers wrote:
+> > Custom toolchains that modify the default target to -mthumb cannot
+> > compile the arm64 compat vdso32, as
+> > arch/arm64/include/asm/vdso/compat_gettimeofday.h
+> > contains assembly that's invalid in -mthumb.  Force the use of -marm,
+> > always.
+>
+> FWIW, this seems suspicious - the only assembly instructions I see there
+> are SWI(SVC), MRRC, and a MOV, all of which exist in Thumb for the
+> -march=armv7a baseline that we set.
+>
+> On a hunch, I've just bodged "VDSO_CFLAGS += -mthumb" into my tree and
+> built a Thumb VDSO quite happily with Ubuntu 19.04's
+> gcc-arm-linux-gnueabihf. What was the actual failure you saw?
 
-On Sat, 2020-05-23 at 20:08:13 -0700, Laurent Pinchart wrote:
-> Hi GVRao,
-> 
-> Thank you for the patch.
-> 
-> On Mon, May 04, 2020 at 11:43:48AM -0700, Hyun Kwon wrote:
-> > On Mon, 2020-04-20 at 14:20:56 -0700, Venkateshwar Rao Gannavarapu wrote:
-> > > The Xilinx MIPI DSI Tx Subsystem soft IP is used to display video
-> > > data from AXI-4 stream interface.
-> > > 
-> > > It supports upto 4 lanes, optional register interface for the DPHY,
-> > 
-> > I don't see the register interface for dphy support.
-> 
-> I think the D-PHY should be supported through a PHY driver, as it seems
-> to be shared between different subsystems.
-> 
+From the link in the commit message: `write to reserved register 'R7'`
+https://godbolt.org/z/zwr7iZ
+IIUC r7 is reserved for the frame pointer in THUMB?
 
-Right, if the logic is shared across subsystems. I can't tell if that's
-the case as the IP comes as a single block. Maybe GVRao can confirm.
-
-> > > multiple RGB color formats, command mode and video mode.
-> > > This is a MIPI-DSI host driver and provides DSI bus for panels.
-> > > This driver also helps to communicate with its panel using panel
-> > > framework.
-> > > 
-> > > Signed-off-by: Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com>
-> > > ---
-> > >  drivers/gpu/drm/xlnx/Kconfig    |  11 +
-> > >  drivers/gpu/drm/xlnx/Makefile   |   2 +
-> > >  drivers/gpu/drm/xlnx/xlnx_dsi.c | 755 ++++++++++++++++++++++++++++++++++++++++
-> 
-> Daniel Vetter has recently expressed his opiion that bridge drivers
-> should go to drivers/gpu/drm/bridge/. It would then be
-> drivers/gpu/drm/bridge/xlnx/. I don't have a strong opinion myself.
-> 
-> > >  3 files changed, 768 insertions(+)
-> > >  create mode 100644 drivers/gpu/drm/xlnx/xlnx_dsi.c
-> > > 
-> > > diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
-> > > index aa6cd88..73873cf 100644
-> > > --- a/drivers/gpu/drm/xlnx/Kconfig
-> > > +++ b/drivers/gpu/drm/xlnx/Kconfig
-> > > @@ -11,3 +11,14 @@ config DRM_ZYNQMP_DPSUB
-> > >  	  This is a DRM/KMS driver for ZynqMP DisplayPort controller. Choose
-> > >  	  this option if you have a Xilinx ZynqMP SoC with DisplayPort
-> > >  	  subsystem.
-> > > +
-> > > +config DRM_XLNX_DSI
-> > > +        tristate "Xilinx DRM DSI Subsystem Driver"
-> > > +        select DRM_MIPI_DSI
-> > > +        select DRM_PANEL
-> > > +        select DRM_PANEL_SIMPLE
-> > > +        help
-> > > +	  This enables support for Xilinx MIPI-DSI.
-> > 
-> > This sentence is not needed with below. Could you please rephrase the whole?
-> > 
-> > > +	  This is a DRM/KMS driver for Xilinx programmable DSI controller.
-> > > +	  Choose this option if you have a Xilinx MIPI DSI-TX controller
-> > > +	  subsytem.
-> > 
-> > These seem incorrectly indented.
-> > 
-> > > diff --git a/drivers/gpu/drm/xlnx/Makefile b/drivers/gpu/drm/xlnx/Makefile
-> > > index 2b844c6..b7ee6ef 100644
-> > > --- a/drivers/gpu/drm/xlnx/Makefile
-> > > +++ b/drivers/gpu/drm/xlnx/Makefile
-> > > @@ -1,2 +1,4 @@
-> > >  zynqmp-dpsub-objs += zynqmp_disp.o zynqmp_dpsub.o zynqmp_dp.o
-> > >  obj-$(CONFIG_DRM_ZYNQMP_DPSUB) += zynqmp-dpsub.o
-> > > +
-> > > +obj-$(CONFIG_DRM_XLNX_DSI) += xlnx_dsi.o
-> > > diff --git a/drivers/gpu/drm/xlnx/xlnx_dsi.c b/drivers/gpu/drm/xlnx/xlnx_dsi.c
-> > > new file mode 100644
-> > > index 0000000..b8cae59
-> > > --- /dev/null
-> > > +++ b/drivers/gpu/drm/xlnx/xlnx_dsi.c
-> > > @@ -0,0 +1,755 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Xilinx FPGA MIPI DSI Tx Controller driver
-> > > + *
-> > > + * Copyright (C) 2017 - 2019 Xilinx, Inc.
-> > > + *
-> > > + * Authors:
-> > > + * - Saurabh Sengar <saurabhs@xilinx.com>
-> > > + * - Venkateshwar Rao Gannavarapu <venkateshwar.rao.gannavarapu@xilinx.com>
-> > > + */
-> > > +
-> > > +#include <drm/drm_atomic_helper.h>
-> > > +#include <drm/drm_connector.h>
-> > > +#include <drm/drm_crtc.h>
-> > > +#include <drm/drm_crtc_helper.h>
-> > > +#include <drm/drm_device.h>
-> > > +#include <drm/drm_encoder.h>
-> > > +#include <drm/drm_fourcc.h>
-> > > +#include <drm/drm_gem_cma_helper.h>
-> > > +#include <drm/drm_mipi_dsi.h>
-> > > +#include <drm/drm_panel.h>
-> > > +#include <drm/drm_probe_helper.h>
-> > > +
-> > > +#include <linux/clk.h>
-> > > +#include <linux/component.h>
-> > > +#include <linux/device.h>
-> > > +#include <linux/iopoll.h>
-> > > +#include <linux/of_device.h>
-> > > +#include <linux/of_graph.h>
-> > > +#include <linux/phy/phy.h>
-> > > +
-> > > +#include <video/mipi_display.h>
-> > > +#include <video/videomode.h>
-> > > +
-> > > +/* DSI Tx IP registers */
-> > > +#define XDSI_CCR			0x00
-> > > +#define XDSI_CCR_COREENB		BIT(0)
-> > > +#define XDSI_CCR_SOFTRST		BIT(1)
-> > > +#define XDSI_CCR_CRREADY		BIT(2)
-> > > +#define XDSI_CCR_CMDMODE		BIT(3)
-> > > +#define XDSI_CCR_DFIFORST		BIT(4)
-> > > +#define XDSI_CCR_CMDFIFORST		BIT(5)
-> > > +#define XDSI_PCR			0x04
-
-[snip]
-
-> > > +	}
-> > > +
-> > > +	ret = clk_prepare_enable(dsi->video_aclk);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "failed to enable video clk %d\n", ret);
-> > > +		goto err_disable_dphy_clk;
-> > > +	}
-> > > +
-> > > +	ret = component_add(dev, &xlnx_dsi_component_ops);
-> 
-> The driver should expose the DSI-TX as a drm_bridge instead of using the
-> component framework. You shouldn't register a drm_encoder, and I don't
-> think you should register a drm_connector either. Only bridge operations
-> should be exposed, and the drm_bridge .attach() operation should return
-> an error when DRM_BRIDGE_ATTACH_NO_CONNECTOR is not set. The top-level
-> driver using this bridge should create the drm_encoder and
-> drm_connector, most likely using drm_bridge_connector_init() to create
-> the connector.
-> 
-
-Not clear to me if this has to be a bridge, and then what it will be attached
-to. The IP block itself pretty much self-contains all functionalities already,
-just like any other drm encoder / connector, so it doesn't have to be wrapped
-around by any other layer. Please let me know your thought, so I can understand
-better. :-)
-
+What is the implicit default of your gcc-arm-linux-gnueabihf at -O2?
+-mthumb, or -marm?
+-- 
 Thanks,
--hyun
-
+~Nick Desaulniers
