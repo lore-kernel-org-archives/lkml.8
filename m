@@ -2,125 +2,98 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C067C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C31CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5602220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590590989;
-	bh=9QBFIZ7tMm3t2h8fOc4Ro7g4pDUA7x4zvv3HpsR2W48=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=celcV9BVZOkn2za4L51KSHtwxeRz6gkFdgkZN6VrzaZnf+V4ff5t3sjUlrCSe97ER
-	 k2L0E68ij7VL2iDsFAahNUO5pZ/cre4YsKyrJBcX3HCcClFXFsvbZWrpywGTyg+mig
-	 TaBZhEEtCtoEcFSzsyGUii0CFlgmP1DMyS8Dx6Po=
+	by mail.kernel.org (Postfix) with ESMTP id F35E22075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbgE0Ots (ORCPT
+        id S2389264AbgE0OvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387942AbgE0Ots (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:49:48 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD6EC207D8;
-        Wed, 27 May 2020 14:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590590987;
-        bh=9QBFIZ7tMm3t2h8fOc4Ro7g4pDUA7x4zvv3HpsR2W48=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hNdtzSApgRkxJv4p2WSM2Dopbs9pjHp8zXC85sqlwcGDDXabQdkgSQo90r9OpVW1Y
-         gVDxo+7vxCtCwFwDNS9LsBHyWemioRiCr19rUroWhvN4y8xF5cZahfILOcaUllDvjS
-         rRak0V+KDsxdCHrw2gD1wTjhfRTR6iDDdmi3rh4Q=
-Date:   Wed, 27 May 2020 23:49:41 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@elte.hu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ziqian SUN <zsun@redhat.com>, Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH -tip V6 0/6] kprobes: Fixes mutex, rcu-list warnings and
- cleanups
-Message-Id: <20200527234941.a15490ee50669812df8183dc@kernel.org>
-In-Reply-To: <158927054236.27680.18209720730136003586.stgit@devnote2>
-References: <158927054236.27680.18209720730136003586.stgit@devnote2>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 27 May 2020 10:51:12 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:41481 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388871AbgE0OvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:51:10 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-169-m1cHcyVVPiChFSzhadPXzw-1; Wed, 27 May 2020 15:51:06 +0100
+X-MC-Unique: m1cHcyVVPiChFSzhadPXzw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 27 May 2020 15:51:05 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 27 May 2020 15:51:05 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Liang, Kan'" <kan.liang@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
+ events on some TGL
+Thread-Topic: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
+ events on some TGL
+Thread-Index: AQHWNCLukMKeXYb1T0G/ZA+cFsVVx6i75DXQgAAOAgCAABGM4A==
+Date:   Wed, 27 May 2020 14:51:05 +0000
+Message-ID: <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
+References: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
+ <869fafc80da84d188678c1cbb0267a0b@AcuMS.aculab.com>
+ <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
+In-Reply-To: <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Oops, I missed Jiri in loop.)
+RnJvbTogTGlhbmcsIEthbg0KPiBTZW50OiAyNyBNYXkgMjAyMCAxNTo0Nw0KPiBPbiA1LzI3LzIw
+MjAgODo1OSBBTSwgRGF2aWQgTGFpZ2h0IHdyb3RlOg0KPiA+IEZyb206IGthbi5saWFuZ0BsaW51
+eC5pbnRlbC5jb20NCj4gPj4gU2VudDogMjcgTWF5IDIwMjAgMTM6MzENCj4gPj4NCj4gPj4gRnJv
+bTogS2FuIExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPg0KPiA+Pg0KPiA+PiBXaGVu
+IGNvdW50aW5nIElNQyB1bmNvcmUgZXZlbnRzIG9uIHNvbWUgVEdMIG1hY2hpbmVzLCBhbiBvb3Bz
+IHdpbGwgYmUNCj4gPj4gdHJpZ2dlcmVkLg0KPiA+PiAgICBbIDM5My4xMDEyNjJdIEJVRzogdW5h
+YmxlIHRvIGhhbmRsZSBwYWdlIGZhdWx0IGZvciBhZGRyZXNzOg0KPiA+PiAgICBmZmZmYjQ1MjAw
+ZTE1ODU4DQo+ID4+ICAgIFsgMzkzLjEwMTI2OV0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNz
+IGluIGtlcm5lbCBtb2RlDQo+ID4+ICAgIFsgMzkzLjEwMTI3MV0gI1BGOiBlcnJvcl9jb2RlKDB4
+MDAwMCkgLSBub3QtcHJlc2VudCBwYWdlDQo+ID4+DQo+ID4+IEN1cnJlbnQgcGVyZiB1bmNvcmUg
+ZHJpdmVyIHN0aWxsIHVzZSB0aGUgSU1DIE1BUCBTSVpFIGluaGVyaXRlZCBmcm9tDQo+ID4+IFNO
+Qiwgd2hpY2ggaXMgMHg2MDAwLg0KPiA+PiBIb3dldmVyLCB0aGUgb2Zmc2V0IG9mIElNQyB1bmNv
+cmUgY291bnRlcnMgZm9yIHNvbWUgVEdMIG1hY2hpbmVzIGlzDQo+ID4+IGxhcmdlciB0aGFuIDB4
+NjAwMCwgZS5nLiAweGQ4YTAuDQo+ID4+DQo+ID4+IEVubGFyZ2UgdGhlIElNQyBNQVAgU0laRSBm
+b3IgVEdMIHRvIDB4ZTAwMC4NCj4gPg0KPiA+IFJlcGxhY2luZyBvbmUgJ3JhbmRvbScgY29uc3Rh
+bnQgd2l0aCBhIGRpZmZlcmVudCBvbmUNCj4gPiBkb2Vzbid0IHNlZW0gbGlrZSBhIHByb3BlciBm
+aXguDQo+ID4NCj4gPiBTdXJlbHkgdGhlIGFjdHVhbCBib3VuZHMgb2YgdGhlICdtZW1vcnknIGFy
+ZWEgYXJlIHByb3Blcmx5DQo+ID4gZGVmaW5lZCBzb21ld2hlcmUuDQo+ID4gT3IgYXQgbGVhc3Qg
+c2hvdWxkIGNvbWUgZnJvbSBhIHRhYmxlLg0KPiA+DQo+ID4gWW91IGFsc28gbmVlZCB0byB2ZXJp
+ZnkgdGhhdCB0aGUgb2Zmc2V0cyBhcmUgd2l0aGluIHRoZSBtYXBwZWQgYXJlYS4NCj4gPiBBbiB1
+bmV4cGVjdGVkIG9mZnNldCBzaG91bGRuJ3QgdHJ5IHRvIGFjY2VzcyBhbiBpbnZhbGlkIGFkZHJl
+c3MuDQo+IA0KPiBUaGFua3MgZm9yIHRoZSByZXZpZXcuDQo+IA0KPiBJIGFncmVlIHRoYXQgd2Ug
+c2hvdWxkIGFkZCBhIGNoZWNrIGJlZm9yZSBtYXBwaW5nIHRoZSBhcmVhIHRvIHByZXZlbnQNCj4g
+dGhlIGlzc3VlIGhhcHBlbnMgYWdhaW4uDQo+IA0KPiBJIHRoaW5rIHRoZSBjaGVjayBzaG91bGQg
+YmUgYSBnZW5lcmljIGNoZWNrIGZvciBhbGwgcGxhdGZvcm1zIHdoaWNoIHRyeQ0KPiB0byBtYXAg
+YW4gYXJlYSwgbm90IGp1c3QgZm9yIFRHTC4gSSB3aWxsIHN1Ym1pdCBhIHNlcGFyYXRlIHBhdGNo
+IGZvciB0aGUNCj4gY2hlY2suDQoNCllvdSBuZWVkIGEgY2hlY2sgdGhhdCB0aGUgYWN0dWFsIGFj
+Y2VzcyBpcyB3aXRoaW5nIHRoZSBtYXBwZWQgYXJlYS4NClNvIGluc3RlYWQgb2YgZ2V0dGluZyBh
+biBPT1BTIHlvdSBnZXQgYSBlcnJvci4NCg0KVGhpcyBpcyBhZnRlciB5b3UndmUgbWFwcGVkIGl0
+Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJv
+YWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24g
+Tm86IDEzOTczODYgKFdhbGVzKQ0K
 
-Hi Ingo,
-
-Could you take this series?
-These are not adding any feature, but fixing real bugs.
-
-Thank you,
-
-On Tue, 12 May 2020 17:02:22 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> Hi Ingo,
-> 
-> Here is the 6th version of the series for kprobes. The previous
-> version is here.
-> 
->  https://lore.kernel.org/lkml/158583483116.26060.10517933482238348979.stgit@devnote2/
-> 
-> In this version, I picked 2 patches[1][2] which has been reviewed
-> on LKML but not merged to tip tree yet.
-> 
-> [1] https://lore.kernel.org/lkml/20200408164641.3299633-1-jolsa@kernel.org/
-> [2] https://lore.kernel.org/lkml/20200507185733.GA14931@embeddedor/
-> 
-> You can also pull this series from kprobes/core branch from
-> 
->  https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/
-> 
-> Thank you,
-> 
-> ---
-> 
-> Gustavo A. R. Silva (1):
->       kprobes: Replace zero-length array with flexible-array
-> 
-> Jiri Olsa (1):
->       kretprobe: Prevent triggering kretprobe from within kprobe_flush_task
-> 
-> Masami Hiramatsu (4):
->       kprobes: Suppress the suspicious RCU warning on kprobes
->       kprobes: Use non RCU traversal APIs on kprobe_tables if possible
->       kprobes: Fix to protect kick_kprobe_optimizer() by kprobe_mutex
->       kprobes: Remove redundant arch_disarm_kprobe() call
-> 
-> 
->  arch/x86/kernel/kprobes/core.c |   16 ++--------
->  include/linux/kprobes.h        |    6 +++-
->  kernel/kprobes.c               |   61 +++++++++++++++++++++++++++++++---------
->  3 files changed, 56 insertions(+), 27 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
