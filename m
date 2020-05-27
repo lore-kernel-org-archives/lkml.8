@@ -2,108 +2,83 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D09C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8502089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2FD8205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2tgfMBX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388233AbgE0LUG (ORCPT
+        id S2388268AbgE0LUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:20:06 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34554 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388146AbgE0LUF (ORCPT
+        Wed, 27 May 2020 07:20:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387839AbgE0LUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:20:05 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 90624803080A;
-        Wed, 27 May 2020 11:20:02 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9Bltaobyr5kB; Wed, 27 May 2020 14:20:01 +0300 (MSK)
-Date:   Wed, 27 May 2020 14:20:01 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 01/12] scripts/dtc: check: Add 10bit/slave i2c reg
- flags support
-Message-ID: <20200527112001.pxnzd4ofxsps7x57@mobilestation>
-References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
- <20200526215528.16417-2-Sergey.Semin@baikalelectronics.ru>
- <20200527011704.GA808104@bogus>
+        Wed, 27 May 2020 07:20:37 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D87C061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:20:36 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b6so28451140ljj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:20:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=qgCGl4i5KYXHBvhHs2r1weIGYhLtBTtsyUQbZCl+rHo=;
+        b=K2tgfMBXHrZgwofl/ex6u5ZgziYRGBRCGGcRUfqcYex+YEHbT9GKRYSIsNvE/R5B/j
+         YVfbcUv6RVln+3IZImO9xa6To3xxHhH6GdG+7+t8AU8SZOty2qkENQEMWdGpItZD+Xc7
+         aml188awxXDgYRS1xZyP2IeRJwPqOhdRDVZz02HmarZWKyeVpW9hmd40uRUxRhwnyqa9
+         550suo6va/wwMoM6kjUe+W1yqmdh2ZMPerlNaDwaQFrOmXlUZUzwShPIPouYR043tj9z
+         fGTM7FsXHQQxoDc9uxj/lMc1ciPx6eJi3YB6o/cY6a9mzG0oAJo4CWTmuUqYy0ya1LrN
+         hXEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=qgCGl4i5KYXHBvhHs2r1weIGYhLtBTtsyUQbZCl+rHo=;
+        b=ejof74SbycKyd0d4vy4XNWnawTXcmOe9aZnPnicTsNSXhEhZqzhTt/CnUf1ypo2O/n
+         sJ07XyIXshApvLcicEDP9prZcCFwr8QLVfRnp+pMZ8gCJs8IM7hyVAZ8xULDxBHDGg7U
+         wB8JVjX3/OafwG89ha9yCtFl3gqWNSNv2U9YcX0537yGq0pocAfeXWl9mhzJiCG0KJ9t
+         y8aOYd8znIIHwO6SY6bcJjFITDZckett+o7Td9RE8ZUvRRTx9PNnSlKrasA/pEr88r5E
+         5jNzZmSqXMV5Jz0jxnYVQKcx4Clt+xHXiSklWD/8wlerOiccMg64sOUx/kIoZIyDn7zf
+         ELDA==
+X-Gm-Message-State: AOAM531nYN933rmJBBL/wkaX0CPdDaUZj22+JhoiZqjzyvL06f8Z0bWL
+        1HGhad+acZA6OD2mQ3yT5ZOySwRQi/9/Rg==
+X-Google-Smtp-Source: ABdhPJwDYpERhOAMP58LMzjpMRKU7sh59Al2X9/mW5LDEhyFQv4SMVJHf6XRCdHZA3YqpJMJsXWqLQ==
+X-Received: by 2002:a2e:b8cd:: with SMTP id s13mr2889264ljp.83.1590578434840;
+        Wed, 27 May 2020 04:20:34 -0700 (PDT)
+Received: from a-barsegyan ([85.249.97.232])
+        by smtp.gmail.com with ESMTPSA id s13sm833982lfp.81.2020.05.27.04.20.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 04:20:34 -0700 (PDT)
+Date:   Wed, 27 May 2020 14:20:32 +0300
+From:   Artur Barsegyan <a.barsegyan96@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipc/msg.c: wake up senders until there is a queue empty
+ capacity
+Message-ID: <20200527112032.GB12093@a-barsegyan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527011704.GA808104@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:17:04PM -0600, Rob Herring wrote:
-> On Wed, May 27, 2020 at 12:55:17AM +0300, Serge Semin wrote:
-> > Recently the I2C-controllers slave interface support was added to the
-> > kernel I2C subsystem. In this case Linux can be used as, for example,
-> > a I2C EEPROM machine. See [1] for details. Other than instantiating
-> > the EEPROM-slave device from user-space there is a way to declare the
-> > device in dts. In this case firstly the I2C bus controller must support
-> > the slave interface. Secondly I2C-slave sub-node of that controller
-> > must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
-> > declared in [2]). That flag is declared as (1 << 30), which when set
-> > makes dtc unhappy about too big address set for a I2C-slave:
-> > 
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > 
-> > Similar problem would have happened if we had set the 10-bit address
-> > flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
-> > 
-> > In order to fix the problem we suggest to alter the I2C-bus reg-check
-> > algorithm, so one would be aware of the upper bits set. Normally if no
-> > flag specified, the 7-bit address is expected in the "reg"-property.
-> > If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
-> > performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
-> > 
-> > [1] Documentation/i2c/slave-interface.rst
-> > [2] include/dt-bindings/i2c/i2c.h
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Cc: linux-mips@vger.kernel.org
-> > Cc: linux-i2c@vger.kernel.org
-> > ---
-> >  scripts/dtc/checks.c | 13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> I've lost track of who all I've said this to already for this issue, but 
-> patches to dtc should be against upstream and a version of this has been 
-> sent there already. But it seems they've lost interest in addressing the 
-> review comments. So feel free to send another one. The same comment 
-> applies here.
+About your case:
 
-There is another patch in this series:
-[PATCH v3 04/12] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C controller
-which is also waiting for your review. I've updated it as you requested.
-Could you take a look at that too?
+The new receiver puts at the end of the receivers list.
+pipelined_send() starts from the beginning of the list and iterates until the end.
 
--Sergey
+If our queue is always full, each receiver should get a message because new receivers appends at the end.
+In my vision: we waste some time in that loop but in general should increase the throughout. But it should be tested.
 
-> 
-> Rob
+Yes, I'm gonna implement it and make a benchmark. But maybe it should be done in another patch thread?
