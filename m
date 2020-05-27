@@ -2,141 +2,130 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF224C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C382C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A9A2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346EB2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388899AbgE0OQC (ORCPT
+        id S2388986AbgE0ORC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:16:02 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36084 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387722AbgE0OP7 (ORCPT
+        Wed, 27 May 2020 10:17:02 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:42241 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388141AbgE0ORC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:15:59 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id BFA048030835;
-        Wed, 27 May 2020 14:15:56 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id c7gPw8_tpttc; Wed, 27 May 2020 17:15:56 +0300 (MSK)
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     <devicetree-compiler@vger.kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] check: Add 10bit/slave i2c reg flags support
-Date:   Wed, 27 May 2020 17:15:17 +0300
-Message-ID: <20200527141517.22677-1-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200527122525.6929-1-Sergey.Semin@baikalelectronics.ru>
-References: 
+        Wed, 27 May 2020 10:17:02 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MPK73-1jNdyb1lNN-00PfUR; Wed, 27 May 2020 16:15:56 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Slaby <jslaby@suse.cz>,
+        Juergen Gross <jgross@suse.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] x86: fix clang integrated assembler build
+Date:   Wed, 27 May 2020 16:15:39 +0200
+Message-Id: <20200527141553.1768675-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Uosxpj6yvjMCuoWo+Rtov8UwzN5IwYem5nwdvTWLIAVID8yaP/W
+ x7ewGXWq/QM+I7P3RCxJYWFjpDQalR+YODvDhjI71RN1tJZP8geV47TJs5LVSF7p7vmPoXm
+ qImyMgJGjmDeyS2NV4hdWnbJNcpxvHX0/3b8jp2OkQ3phuf5uluN+BUE0FMfsSyprNtQvnL
+ fV00HYQaumDJaxj6QfpPg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GWnMZ0bR6yk=:0Y1nTwmFteYTcoIjQ40K3U
+ cSlDlIO2MaEl7ZntvxtB1FiwS6sZj5h2Wg+YeSVHJJWLZhQIXpLujXfFgeCsDJdPdP4zf/tG+
+ z3vjludYoIj/dSsu1DCKX7HKRRlmKIYylGoLzlP+MuZ1sPFCoUCafKtwamLGglgNZGGinSGGq
+ L1vbbWJd6f1WpNSR9ORdxgFwNQHhK+uo6AllztWK76vGCAc/j8lXxkbtC3qKrPo2P1WpptWk5
+ jkygJhIWjdiF2fLcgxOlge0rwyvXcUz5tTe+FrKYGH6yCfJREI3SqSKE3wQEuiTszKc8+xfvv
+ MR6S28MzU+i5B7xWNneS8ed+VX4lLIaLNvTivoT5KkFO9oIed/dWF36QK6Mr/B18X0K7mXnCF
+ A8C7hWSLo719jVIGoCZ5nmx4JUnICaW0NSFhkF108Ehn5KD31jXfYJ31FYtY2bvjz/GGRA31N
+ rttY0nXn/FFJwP0pcT7RuYmHs4+WWv/3BqwURQa7ZNAoTvUtaXq0PcDwtxkLJVj3rnCsJQMAR
+ Kuu5E+fWt5jFkCon4fRjZdu3DtMEKsSA23jsUwCLQHMPsNY7/qJ80O05GoPp8Uf69m6BiPVVi
+ qggmvA7zKgPx6+pGVf2xZ4C+nsrulbKXXSdaycw9B56m9yssXSeKhVkx+np51y9bMD7jl+DAH
+ qMPVpL/RBQBiU8cg20vCC+dyI5xv3jEQbdBbFg6r5fCtjqawk1CF9NgDV1Mo3nzu+bxn9Wicf
+ LbA+0fiJ611f2RojqKBaHeqabSDVpZUeKPIF6dANGh7KANO3z2xyKj5HsQgPsLrk2VQi0rbrR
+ LNUvfiZ7HNzDzeYD4csCPzFo1Q0czax1TFof2QNccYY3Pxn0+Y=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recently the I2C-controllers slave interface support was added to the
-kernel I2C subsystem. In this case Linux can be used as, for example,
-a I2C EEPROM machine. See [1] for details. Other than instantiating
-the EEPROM-slave device from user-space there is a way to declare the
-device in dts. In this case firstly the I2C bus controller must support
-the slave interface. Secondly I2C-slave sub-node of that controller
-must have "reg"-property with flag I2C_OWN_SLAVE_ADDRESS set (flag is
-declared in [2]). That flag is declared as (1 << 30), which when set
-makes dtc unhappy about too big address set for a I2C-slave:
+clang and gas seem to interpret the symbols in memmove_64.S and
+memset_64.S differently, such that clang does not make them
+'weak' as expected, which leads to a linker error, with both
+ld.bfd and ld.lld:
 
-Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+ld.lld: error: duplicate symbol: memmove
+>>> defined at common.c
+>>>            kasan/common.o:(memmove) in archive mm/built-in.a
+>>> defined at memmove.o:(__memmove) in archive arch/arm64/lib/lib.a
 
-Similar problem would have happened if we had set the 10-bit address
-flag I2C_TEN_BIT_ADDRESS in the "reg"-property.
+ld.lld: error: duplicate symbol: memset
+>>> defined at common.c
+>>>            kasan/common.o:(memset) in archive mm/built-in.a
+>>> defined at memset.o:(__memset) in archive arch/arm64/lib/lib.a
 
-In order to fix the problem we suggest to alter the I2C-bus reg-check
-algorithm, so one would be aware of the upper bits set. Normally if no
-flag specified, the 7-bit address is expected in the "reg"-property.
-If I2C_TEN_BIT_ADDRESS is set, then the 10-bit address check will be
-performed. The I2C_OWN_SLAVE_ADDRESS flag will be just ignored.
+Copy the exact way these are written in memcpy_64.S, which does
+not have the same problem.
 
-[1] kernel/Documentation/i2c/slave-interface.rst
-[2] kernel/include/dt-bindings/i2c/i2c.h
+I don't know why this makes a difference, and it would be good
+to have someone with a better understanding of assembler internals
+review it.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree-compiler@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+It might be either a bug in the kernel or a bug in the assembler,
+no idea which one. My patch makes it work with all versions of
+clang and gcc, which is probably helpful even if it's a workaround
+for a clang bug.
 
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+ arch/x86/lib/memmove_64.S | 4 ++--
+ arch/x86/lib/memset_64.S  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Changelog v2:
-- Use unsigned numeric literal in the left-shit operation to avoid UB.
----
- checks.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/checks.c b/checks.c
-index 4b3c486f1399..7091d1bc38d2 100644
---- a/checks.c
-+++ b/checks.c
-@@ -1028,6 +1028,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 	const char *unitname = get_unitname(node);
- 	char unit_addr[17];
- 	uint32_t reg = 0;
-+	uint32_t addr;
- 	int len;
- 	cell_t *cells = NULL;
+diff --git a/arch/x86/lib/memmove_64.S b/arch/x86/lib/memmove_64.S
+index 7ff00ea64e4f..dcca01434be8 100644
+--- a/arch/x86/lib/memmove_64.S
++++ b/arch/x86/lib/memmove_64.S
+@@ -26,8 +26,8 @@
+  */
+ .weak memmove
  
-@@ -1044,17 +1045,21 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
- 	}
+-SYM_FUNC_START_ALIAS(memmove)
+-SYM_FUNC_START(__memmove)
++SYM_FUNC_START_ALIAS(__memmove)
++SYM_FUNC_START_LOCAL(memmove)
  
- 	reg = fdt32_to_cpu(*cells);
--	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
-+	addr = reg & 0x3FFFFFFFU;
-+	snprintf(unit_addr, sizeof(unit_addr), "%x", addr);
- 	if (!streq(unitname, unit_addr))
- 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
- 		     unit_addr);
+ 	mov %rdi, %rax
  
- 	for (len = prop->val.len; len > 0; len -= 4) {
- 		reg = fdt32_to_cpu(*(cells++));
--		if (reg > 0x3ff)
-+		addr = reg & 0x3FFFFFFFU;
-+		if ((reg & (1U << 31)) && addr > 0x3ff)
- 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
--				  reg);
--
-+				  addr);
-+		else if (!(reg & (1U << 31)) && addr > 0x7f)
-+			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\"",
-+				  addr);
- 	}
- }
- WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
+diff --git a/arch/x86/lib/memset_64.S b/arch/x86/lib/memset_64.S
+index 9ff15ee404a4..a97f2ea4e0b2 100644
+--- a/arch/x86/lib/memset_64.S
++++ b/arch/x86/lib/memset_64.S
+@@ -19,8 +19,8 @@
+  *
+  * rax   original destination
+  */
+-SYM_FUNC_START_ALIAS(memset)
+-SYM_FUNC_START(__memset)
++SYM_FUNC_START_ALIAS(__memset)
++SYM_FUNC_START_LOCAL(memset)
+ 	/*
+ 	 * Some CPUs support enhanced REP MOVSB/STOSB feature. It is recommended
+ 	 * to use it when possible. If not available, use fast string instructions.
 -- 
 2.26.2
 
