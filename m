@@ -2,158 +2,233 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC5FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC77C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 471FE21534
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dY2Hl6yz"
+	by mail.kernel.org (Postfix) with ESMTP id EAE2E2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:00:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgE0KAN (ORCPT
+        id S2387486AbgE0KAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:00:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729660AbgE0KAM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:00:12 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 307B3C061A0F;
-        Wed, 27 May 2020 03:00:12 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id 82so14112513lfh.2;
-        Wed, 27 May 2020 03:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bbRbY0KHq/DE+xFk5645tlp6NSa7U4JheXhifJETtOk=;
-        b=dY2Hl6yz+u8UpWZluySalMS34lkd6sqP3T362dnhpLDzJCp/mW5Lgng/U9FbxmgLI0
-         knpM5H3J7aBoPMWknfjyhUzp961K8AJqPIRMA3K0V4rEdSWnZXHR5Cwj376AMlWzkTeq
-         PJ1RZJIONAMG8gi9GvLp4rLNBavViZ1+XyU/j3qIUwXxfy7npFFSL33ParXr3KC3d7rS
-         Y5zr1TVVqtCd532tWpwyvUsOyTcq843ZErI+oXztfq+Nm23exJcxfvN7y606WUZHcO/Q
-         zZ9PtgKt2v8PwgvB4nrbxqnMK6hFS38StFIha62CXIzTNNM2IUYQyJxSWhWXGpcHJYu7
-         vDNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bbRbY0KHq/DE+xFk5645tlp6NSa7U4JheXhifJETtOk=;
-        b=kAj6qDXPXi+YvOS1Z7gGVW+/wk+gGcGug/T/vitdlz8EPZRWcIzoE2SscMindXN2tR
-         gkwWc4BDpMAexNff6qrrsDL6Ok0gIYb2b1iRxXL9I+BEW/gXo6yfZS8nTV4mRMRvHskw
-         nViQ/RkRGS3CRQxdj2dbUPSgYB+t+prTdlzToiRK6oZf3hZO0ybNpjA8LVPu1Colo1C2
-         ECqjabdt7nYb9427Ri/BOm9wo9eDodot7vuZFijGvR+/b5GYq7WV14KJ3A5DhOBTQA0J
-         tcnq2irH7zGE1ml1LJLR3SZh0Xas0rUsK53Qux+2YMpBQQvju3234plmDTvJUXX0iP5+
-         xEWw==
-X-Gm-Message-State: AOAM530zX2r4RocKaZYOMcq6C6ULgrDQjGmd23iFv8rAvrtFcvVGljDJ
-        3f/r4SMERyQ3xN+VLaaq0sEB4qzcnhtlyQ==
-X-Google-Smtp-Source: ABdhPJzjWDaSMoFOsQ2TplozOLoo5AwFO5OdvrTjJYl39AF9HfCDXhR+zx09AkYyl/7AkcHS6UWNfQ==
-X-Received: by 2002:a19:8b06:: with SMTP id n6mr2676424lfd.66.1590573610386;
-        Wed, 27 May 2020 03:00:10 -0700 (PDT)
-Received: from bitter.drabanten.lan ([195.178.180.206])
-        by smtp.gmail.com with ESMTPSA id x28sm599811ljd.53.2020.05.27.03.00.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 03:00:09 -0700 (PDT)
-From:   Jonas Falkevik <jonas.falkevik@gmail.com>
-To:     marcelo.leitner@gmail.com, lucien.xin@gmail.com,
-        nhorman@tuxdriver.com, vyasevich@gmail.com, davem@davemloft.net,
-        kuba@kernel.org, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonas Falkevik <jonas.falkevik@gmail.com>
-Subject: [PATCH] sctp: fix typo sctp_ulpevent_nofity_peer_addr_change
-Date:   Wed, 27 May 2020 11:59:43 +0200
-Message-Id: <20200527095943.271140-1-jonas.falkevik@gmail.com>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 27 May 2020 06:00:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:34918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729660AbgE0KAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:00:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17F5E55D;
+        Wed, 27 May 2020 03:00:16 -0700 (PDT)
+Received: from e123648.arm.com (unknown [10.37.12.61])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B0B5C3F6C4;
+        Wed, 27 May 2020 03:00:05 -0700 (PDT)
+From:   Lukasz Luba <lukasz.luba@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Dietmar.Eggemann@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
+        patrick.bellasi@matbug.net, orjan.eide@arm.com,
+        rdunlap@infradead.org, mka@chromium.org
+Subject: [PATCH v8 0/8] Add support for devices in the Energy Model
+Date:   Wed, 27 May 2020 10:58:46 +0100
+Message-Id: <20200527095854.21714-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-change typo in function name "nofity" to "notify"
-sctp_ulpevent_nofity_peer_addr_change ->
-sctp_ulpevent_notify_peer_addr_change
+Hi all,
 
-Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
----
- include/net/sctp/ulpevent.h | 2 +-
- net/sctp/associola.c        | 8 ++++----
- net/sctp/ulpevent.c         | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+Background of this version:
+This is the v8 of the patch set and is has smaller scope. I had to split
+the series into two: EM changes and thermal changes due to devfreq
+dependencies. The patches from v7 9-14 which change devfreq cooling are
+going to be sent in separate patch series, just after this set get merged
+into mainline. These patches related to EM got acks and hopefully can go
+through linux-pm tree. The later thermal patches will go through thermal
+tree.
 
-diff --git a/include/net/sctp/ulpevent.h b/include/net/sctp/ulpevent.h
-index 0b032b92da0b..994e984eef32 100644
---- a/include/net/sctp/ulpevent.h
-+++ b/include/net/sctp/ulpevent.h
-@@ -80,7 +80,7 @@ struct sctp_ulpevent *sctp_ulpevent_make_assoc_change(
- 	struct sctp_chunk *chunk,
- 	gfp_t gfp);
- 
--void sctp_ulpevent_nofity_peer_addr_change(struct sctp_transport *transport,
-+void sctp_ulpevent_notify_peer_addr_change(struct sctp_transport *transport,
- 					   int state, int error);
- 
- struct sctp_ulpevent *sctp_ulpevent_make_remote_error(
-diff --git a/net/sctp/associola.c b/net/sctp/associola.c
-index 437079a4883d..72315137d7e7 100644
---- a/net/sctp/associola.c
-+++ b/net/sctp/associola.c
-@@ -432,7 +432,7 @@ void sctp_assoc_set_primary(struct sctp_association *asoc,
- 		changeover = 1 ;
- 
- 	asoc->peer.primary_path = transport;
--	sctp_ulpevent_nofity_peer_addr_change(transport,
-+	sctp_ulpevent_notify_peer_addr_change(transport,
- 					      SCTP_ADDR_MADE_PRIM, 0);
- 
- 	/* Set a default msg_name for events. */
-@@ -574,7 +574,7 @@ void sctp_assoc_rm_peer(struct sctp_association *asoc,
- 
- 	asoc->peer.transport_count--;
- 
--	sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_REMOVED, 0);
-+	sctp_ulpevent_notify_peer_addr_change(peer, SCTP_ADDR_REMOVED, 0);
- 	sctp_transport_free(peer);
- }
- 
-@@ -714,7 +714,7 @@ struct sctp_transport *sctp_assoc_add_peer(struct sctp_association *asoc,
- 	list_add_tail_rcu(&peer->transports, &asoc->peer.transport_addr_list);
- 	asoc->peer.transport_count++;
- 
--	sctp_ulpevent_nofity_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
-+	sctp_ulpevent_notify_peer_addr_change(peer, SCTP_ADDR_ADDED, 0);
- 
- 	/* If we do not yet have a primary path, set one.  */
- 	if (!asoc->peer.primary_path) {
-@@ -840,7 +840,7 @@ void sctp_assoc_control_transport(struct sctp_association *asoc,
- 	 * to the user.
- 	 */
- 	if (ulp_notify)
--		sctp_ulpevent_nofity_peer_addr_change(transport,
-+		sctp_ulpevent_notify_peer_addr_change(transport,
- 						      spc_state, error);
- 
- 	/* Select new active and retran paths. */
-diff --git a/net/sctp/ulpevent.c b/net/sctp/ulpevent.c
-index 77d5c36a8991..0c3d2b4d7321 100644
---- a/net/sctp/ulpevent.c
-+++ b/net/sctp/ulpevent.c
-@@ -336,7 +336,7 @@ static struct sctp_ulpevent *sctp_ulpevent_make_peer_addr_change(
- 	return NULL;
- }
- 
--void sctp_ulpevent_nofity_peer_addr_change(struct sctp_transport *transport,
-+void sctp_ulpevent_notify_peer_addr_change(struct sctp_transport *transport,
- 					   int state, int error)
- {
- 	struct sctp_association *asoc = transport->asoc;
+The idea and purpose of the Energy Model framework changes:
+This patch set introduces support for devices in the Energy Model (EM)
+framework. It will unify the power model for thermal subsystem. It will
+make simpler to add support for new devices willing to use more
+advanced features (like Intelligent Power Allocation). Now it should
+require less knowledge and effort for driver developer to add e.g.
+GPU driver with simple energy model. A more sophisticated energy model
+in the thermal framework is also possible, driver needs to provide
+a dedicated callback function. More information can be found in the
+updated documentation file.
+
+First 7 patches are refactoring Energy Model framework to add support
+of other devices that CPUs. They change:
+- naming convention from 'capacity' to 'performance' state,
+- API arguments adding device pointer and not rely only on cpumask,
+- change naming when 'cpu' was used, now it's a 'device'
+- internal structure to maintain registered devices
+- update users to the new API
+Patch 8 updates OPP framework helper function to be more generic, not
+CPU specific.
+
+The patch set is based on linux-pm branch linux-next 813946019dfd.
+
+Changes:
+v8:
+- split the patch set in two: EM changes and thermal changes
+- re-based on top of linux-pm branch linux-next (asked by Daniel)
+- EM: changed comments content pointed out by Quentin
+- added Acked-by from Quentin to almost all EM patches
+v7 [7]:
+- EM: added em_perf_domain structure into struct device in order to simplify
+  code (suggested by Daniel)
+- EM: removed kref, em_pd, debug_dir from em_device (suggested by Daniel)
+- EM: refactored code and removed unsed functions
+- EM: refactored checking if EM exists for a CPU and deleted em_cpus_pd_exist()
+- EM: simplified em_pd_get() and em_cpu_get()
+- EM: removed em_debug_type_show()
+- EM: removed a few unused debug prints
+- EM: changed debug dir name in order to remove em_debug_type_show() and
+  em_debug_dev_show() functions
+- EM: removed em_dev_list and em_device since it is now possible to use
+  struct device
+- thermal: split patch 9/10 from v6 as requested by Daniel and created 5 new:
+-- patch v7 9/15 with only tracing change - exactly the same code so I keep
+   'Reviewed-by # for tracing code' from Steven Rostedt
+-- patch 10/15 and 11/14 takes more consistent state of devfreq device
+-- patch 12/15 which adds Energy Model register/unregister functions
+-- patch 13/15 adjust headers license into ne SPDX
+v6 [6]:
+- split patch 1/5 from v5 into smaller patches as requested by Daniel
+  and dropped ACK from Quentin which was in the old there
+- added function em_dev_register_perf_domain as suggested by Daniel, which
+  would help transition into the new API
+- changed 'cs' (capacity state) in different places into 'ps' (performance state),
+  since now there are many smaller patches (previously skipped because
+  of too big size of the patch with main features and left to do later)
+- changed cpumask_equal() to cpumask_intersects() when checking if 'cpus' coming
+  as an argument to registration function might overlap with already known;
+  this shouldn't be an issue when cpufreq policy is OK, but a check doesn't harm
+- added Reviewed-by from Alyssa into Panfrost related patch
+- dropped Matthias patch with PM QoS from the series since it's in the next now
+v5 [5]:
+- devfreq cooling: rebased on top of pending patch introducing PM QoS limits
+- devfreq cooling: added Matthias's patch to make this series build check pass
+- devfreq cooling: removed OPP disable code and switched to PM QoS
+- devfreq cooling: since thermal code always used a pointer to devfreq_dev_status,
+  switched to work on a local copy and avoid potential race when either busy_time or
+  total_time could change in the background
+- devfreq cooling: added _normalize_load() and handle all scenarios when
+  busy_time and total_time could have odd values (even raw counters)
+- Energy Model patch 2/4: removed prints from cpufreq drivers and added print inside
+  dev_pm_opp_of_register_em()
+- update patch 2/4 description to better reflect upcoming changes
+- collected ACK from Quentin for patch 1/4 and Reviewed-by from Steven for 4/4
+v4 [4]:
+- devfreq cooling: added two new registration functions, which will take care
+  of registering EM for the device and simplify drivers code
+  (suggested by Robin and Rob)
+- Energy Model: changed unregistering code, added kref to track usage, added
+  code freeing tables, added helper function
+- added return value to function dev_pm_opp_of_register_em() and updated
+  CPUFreq drivers code, added debug prints in case of failure
+- updated comments in devfreq cooling removing statement that only
+  simple_ondemand devfreq governor is supported to work with power extentions
+- fixed spelling in the documentation (reported by Randy)
+v3 [3]:
+- added back the cpumask 'cpus' in the em_perf_domain due potential cache misses
+- removed _is_cpu_em() since there is no need for it
+- changed function name from em_pd_energy() to em_cpu_energy(), which is
+  optimized for usage from the scheduler making some assumptions and not
+  validating arguments to speed-up, there is a comment stressing that it should
+  be used only for CPUs em_perf_domain
+- changed em_get_pd() to em_pd_get() which is now aligned with em_cpu_get()
+  naming
+- Energy Model: add code which checks if the EM is already registered for the
+  devfreq device
+- extended comment in em_cpu_get() describing the need for this function
+- fixed build warning reported on x86 by kbuild test robot in devfreq_cooling.c
+- updated documentation in the energy-model.rst
+- changed print messages from 'energy_model' to 'EM'
+- changed dev_warn to dev_dbg, should calm down test scripts in case the
+  platform has OPPs less efficient in the OPP table (some of them are there for
+  cooling reasons, we shouldn't warn in this case, debug info is enough)
+v2 [2]:
+- changed EM API em_register_perf_domain() adding cpumask_t pointer
+  as last argument (which was discussed with Dietmar and Quentin)
+- removed dependency on PM_OPP, thanks to the cpumask_t argument
+- removed enum em_type and em->type dependent code
+- em_get_pd() can handle CPU device as well as devfreq device
+- updated EM documentation
+- in devfreq cooling added code which prevents from race condition with
+  devfreq governors which are trying to use OPPs while thermal is in the middle
+  of disabling them.
+- in devfreq cooling added code which updates state of the devfreq device to
+  avoid working on stale data when governor has not updated it for a long time
+- in devfreq cooling added backward compatibility frequency table for drivers
+  which did not provide EM
+- added Steven's Reviewed-by to trace code in thermal
+- added another CPUFreq driver which needs to be updated to the new API
+The v1 can be found here [1].
+
+Regards,
+Lukasz Luba
+
+[1] https://lkml.org/lkml/2020/1/16/619
+[2] https://lkml.org/lkml/2020/2/6/377
+[3] https://lkml.org/lkml/2020/2/21/1910
+[4] https://lkml.org/lkml/2020/3/9/471
+[5] https://lkml.org/lkml/2020/3/18/351
+[6] https://lkml.org/lkml/2020/4/10/108
+[7] https://lkml.org/lkml/2020/5/11/326
+
+
+Lukasz Luba (8):
+  PM / EM: change naming convention from 'capacity' to 'performance'
+  PM / EM: introduce em_dev_register_perf_domain function
+  PM / EM: update callback structure and add device pointer
+  PM / EM: add support for other devices than CPUs in Energy Model
+  PM / EM: remove em_register_perf_domain
+  PM / EM: change name of em_pd_energy to em_cpu_energy
+  Documentation: power: update Energy Model description
+  OPP: refactor dev_pm_opp_of_register_em() and update related drivers
+
+ Documentation/power/energy-model.rst   | 135 ++++++------
+ drivers/cpufreq/cpufreq-dt.c           |   2 +-
+ drivers/cpufreq/imx6q-cpufreq.c        |   2 +-
+ drivers/cpufreq/mediatek-cpufreq.c     |   2 +-
+ drivers/cpufreq/omap-cpufreq.c         |   2 +-
+ drivers/cpufreq/qcom-cpufreq-hw.c      |   2 +-
+ drivers/cpufreq/scmi-cpufreq.c         |  11 +-
+ drivers/cpufreq/scpi-cpufreq.c         |   2 +-
+ drivers/cpufreq/vexpress-spc-cpufreq.c |   2 +-
+ drivers/opp/of.c                       |  76 ++++---
+ drivers/thermal/cpufreq_cooling.c      |  12 +-
+ include/linux/device.h                 |   5 +
+ include/linux/energy_model.h           | 149 +++++++------
+ include/linux/pm_opp.h                 |  15 +-
+ kernel/power/energy_model.c            | 285 ++++++++++++++++---------
+ kernel/sched/fair.c                    |   2 +-
+ kernel/sched/topology.c                |  20 +-
+ 17 files changed, 441 insertions(+), 283 deletions(-)
+
 -- 
-2.25.4
+2.17.1
 
