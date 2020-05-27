@@ -2,256 +2,96 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F2EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62CD12078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WFA30Dft"
+	by mail.kernel.org (Postfix) with ESMTP id 54F132078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgE0FD7 (ORCPT
+        id S1728108AbgE0FEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:03:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41442 "EHLO
+        Wed, 27 May 2020 01:04:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbgE0FD6 (ORCPT
+        with ESMTP id S1727996AbgE0FEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:03:58 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A560C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:03:58 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id n123so602784ybf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0cQ99hNcBpqlblA8kwO3C9vHQdT0SWO2tDvJ+g7Myl8=;
-        b=WFA30DftBDe2wuPwPNIyoqYvtqCv71gGanQC7p4xRta6756eSuqGdHxZAHzzHI3XXI
-         k0EA5yCuBcK7xgDyLWPshErGdU18E/E55zO93e0f+2TyIh8atFGG5yUfyQyp5gZ/BU1T
-         5nESTscCjwTOWYQ5ex+91TDC4bjzv53TDlneMRNpG79rWrOdCg4xj7F1Xbg/pC+rngpr
-         jYe1qqU68p11kcRXMTaSQeNpOYdepl5JJ4Y2o2M0eydGiuMRffTShmuEZdMHMdemWPFR
-         StcY1UTypM+pTGP9CNQsRD276LjotPa7+bqStS8JdSGpMc3OuNr3nGtXx/63Yc7n8nwr
-         K0FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0cQ99hNcBpqlblA8kwO3C9vHQdT0SWO2tDvJ+g7Myl8=;
-        b=nJeSRiiskDYEsKIsx5BdKIrPXotx8AGBa7Gf6LF4n85Pxxg/tH2TUf+Ww83zTgDRVI
-         kmAr/Y56zKP62B49Ao6WHR4uIedkTW/ABLToJfZbacvmrrgH/BJ2bcDYwjd+PsLYG5jX
-         FJX54Jv7d0FPHdWznvW+3XznQdfSXwb+N5GZJdpTnlAobHO7EIBadbDrUb8gToRefuaY
-         bs+QmoKn6tvZjZ5Sj5ND8zpH1OlBaB4UGlmNBzZ5VQqeMpg7/eKDW6Kbzi+EbGYpRXkS
-         dhxGHXZNXQnnmwZyndZL7a+HFIyuw+7jOtO78TIwnD20oDot044cDPgCAJlfvcQGHJS3
-         hlRg==
-X-Gm-Message-State: AOAM530lgkvEEiD9j/3ZwdXevfm9D4dXhuXTB/o1WIiN5X8z+MKFNN2T
-        sPLO/NWH0vX3fldqvDLRJ/pc1tdARs2dhCrXOhMkeA==
-X-Google-Smtp-Source: ABdhPJwsor73sWueKB15RCvM4rUou5eVfF0Y0LpuXkfOtkOGgW13SD9FglLD1bGBQ4c+XINywmfV/VmyU2dxvgr6ieg=
-X-Received: by 2002:a25:7cc1:: with SMTP id x184mr7140950ybc.403.1590555836775;
- Tue, 26 May 2020 22:03:56 -0700 (PDT)
+        Wed, 27 May 2020 01:04:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1BE4C061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 22:04:04 -0700 (PDT)
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jdoEK-0001cv-QG; Wed, 27 May 2020 07:03:52 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1jdoEI-0008BI-4d; Wed, 27 May 2020 07:03:50 +0200
+Date:   Wed, 27 May 2020 07:03:50 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
+        shawnguo@kernel.org, festevam@gmail.com,
+        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
+        dan.j.williams@intel.com, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        linux-imx@nxp.com
+Subject: Re: [PATCH v8 00/13] add ecspi ERR009165 for i.mx6/7 soc family
+Message-ID: <20200527050350.GV11869@pengutronix.de>
+References: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
 MIME-Version: 1.0
-References: <20200522065330.34872-1-nick.gasson@arm.com>
-In-Reply-To: <20200522065330.34872-1-nick.gasson@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 26 May 2020 22:03:45 -0700
-Message-ID: <CAP-5=fU8CJzOttgVDSxqHQoRg_eZ1+sToywOiek+8vw4j2GykA@mail.gmail.com>
-Subject: Re: [PATCH] perf jvmti: remove redundant jitdump line table entries
-To:     Nick Gasson <nick.gasson@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590006865-20900-1-git-send-email-yibin.gong@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:02:31 up 97 days, 12:33, 88 users,  load average: 0.44, 0.37,
+ 0.27
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 11:54 PM Nick Gasson <nick.gasson@arm.com> wrote:
->
-> For each PC/BCI pair in the JVMTI compiler inlining record table, the
-> jitdump plugin emits debug line table entries for every source line in
-> the method preceding that BCI. Instead only emit one source line per
-> PC/BCI pair. Reported by Ian Rogers. This reduces the .dump size for
-> SPECjbb from ~230MB to ~40MB.
+On Thu, May 21, 2020 at 04:34:12AM +0800, Robin Gong wrote:
+> There is ecspi ERR009165 on i.mx6/7 soc family, which cause FIFO
+> transfer to be send twice in DMA mode. Please get more information from:
+> https://www.nxp.com/docs/en/errata/IMX6DQCE.pdf. The workaround is adding
+> new sdma ram script which works in XCH  mode as PIO inside sdma instead
+> of SMC mode, meanwhile, 'TX_THRESHOLD' should be 0. The issue should be
+> exist on all legacy i.mx6/7 soc family before i.mx6ul.
+> NXP fix this design issue from i.mx6ul, so newer chips including i.mx6ul/
+> 6ull/6sll do not need this workaroud anymore. All other i.mx6/7/8 chips
+> still need this workaroud. This patch set add new 'fsl,imx6ul-ecspi'
+> for ecspi driver and 'ecspi_fixed' in sdma driver to choose if need errata
+> or not.
+> The first two reverted patches should be the same issue, though, it
+> seems 'fixed' by changing to other shp script. Hope Sean or Sascha could
+> have the chance to test this patch set if could fix their issues.
+> Besides, enable sdma support for i.mx8mm/8mq and fix ecspi1 not work
+> on i.mx8mm because the event id is zero.
 
-Great result, thanks! I note there is a lack of symbolization when
-benchmarking a few Java applications. I'll try to see if there's a
-sensible resolution for those.
+For the series:
 
-> Also fix an error in the DWARF line table state machine where addresses
-> are incorrectly offset by -0x40 (GEN_ELF_TEXT_OFFSET). This can be seen
-> with `objdump -S` on the ELF files after perf inject.
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-It'd be better to make this into two patches. Also on acme's perf/core
-branch if possible:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf/core
+Sascha
 
-> Signed-off-by: Nick Gasson <nick.gasson@arm.com>
-> ---
->  tools/perf/jvmti/libjvmti.c    | 73 +++++++++++++---------------------
->  tools/perf/util/genelf_debug.c |  4 +-
->  2 files changed, 30 insertions(+), 47 deletions(-)
->
-> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-> index a9a056d68416..398e4ba6498d 100644
-> --- a/tools/perf/jvmti/libjvmti.c
-> +++ b/tools/perf/jvmti/libjvmti.c
-> @@ -32,38 +32,41 @@ static void print_error(jvmtiEnv *jvmti, const char *msg, jvmtiError ret)
->
->  #ifdef HAVE_JVMTI_CMLR
->  static jvmtiError
-> -do_get_line_numbers(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
-> -                   jvmti_line_info_t *tab, jint *nr)
-> +do_get_line_number(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
-> +                  jvmti_line_info_t *tab)
->  {
-> -       jint i, lines = 0;
-> -       jint nr_lines = 0;
-> +       jint i, nr_lines = 0;
->         jvmtiLineNumberEntry *loc_tab = NULL;
->         jvmtiError ret;
-> +       jint src_line = -1;
->
->         ret = (*jvmti)->GetLineNumberTable(jvmti, m, &nr_lines, &loc_tab);
->         if (ret == JVMTI_ERROR_ABSENT_INFORMATION || ret == JVMTI_ERROR_NATIVE_METHOD) {
->                 /* No debug information for this method */
-> -               *nr = 0;
-> -               return JVMTI_ERROR_NONE;
-> +               return ret;
->         } else if (ret != JVMTI_ERROR_NONE) {
->                 print_error(jvmti, "GetLineNumberTable", ret);
->                 return ret;
->         }
->
-> -       for (i = 0; i < nr_lines; i++) {
-> -               if (loc_tab[i].start_location < bci) {
-> -                       tab[lines].pc = (unsigned long)pc;
-> -                       tab[lines].line_number = loc_tab[i].line_number;
-> -                       tab[lines].discrim = 0; /* not yet used */
-> -                       tab[lines].methodID = m;
-> -                       lines++;
-> -               } else {
-> -                       break;
-> -               }
-> +       for (i = 0; i < nr_lines && loc_tab[i].start_location <= bci; i++) {
-> +               src_line = i;
-> +       }
-> +
-> +       if (src_line != -1) {
-> +               tab->pc = (unsigned long)pc;
-> +               tab->line_number = loc_tab[src_line].line_number;
-> +               tab->discrim = 0; /* not yet used */
-> +               tab->methodID = m;
-> +
-> +               ret = JVMTI_ERROR_NONE;
-> +       } else {
-> +               ret = JVMTI_ERROR_ABSENT_INFORMATION;
->         }
-> +
->         (*jvmti)->Deallocate(jvmti, (unsigned char *)loc_tab);
-> -       *nr = lines;
-> -       return JVMTI_ERROR_NONE;
-> +
-> +       return ret;
->  }
->
->  static jvmtiError
-> @@ -71,9 +74,8 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
->  {
->         const jvmtiCompiledMethodLoadRecordHeader *hdr;
->         jvmtiCompiledMethodLoadInlineRecord *rec;
-> -       jvmtiLineNumberEntry *lne = NULL;
->         PCStackInfo *c;
-> -       jint nr, ret;
-> +       jint ret;
->         int nr_total = 0;
->         int i, lines_total = 0;
->
-> @@ -86,24 +88,7 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
->         for (hdr = compile_info; hdr != NULL; hdr = hdr->next) {
->                 if (hdr->kind == JVMTI_CMLR_INLINE_INFO) {
->                         rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
-> -                       for (i = 0; i < rec->numpcs; i++) {
-> -                               c = rec->pcinfo + i;
-> -                               nr = 0;
-> -                               /*
-> -                                * unfortunately, need a tab to get the number of lines!
-> -                                */
-> -                               ret = (*jvmti)->GetLineNumberTable(jvmti, c->methods[0], &nr, &lne);
-> -                               if (ret == JVMTI_ERROR_NONE) {
-> -                                       /* free what was allocated for nothing */
-> -                                       (*jvmti)->Deallocate(jvmti, (unsigned char *)lne);
-> -                                       nr_total += (int)nr;
-> -                               } else if (ret == JVMTI_ERROR_ABSENT_INFORMATION
-> -                                          || ret == JVMTI_ERROR_NATIVE_METHOD) {
-> -                                       /* No debug information for this method */
-> -                               } else {
-> -                                       print_error(jvmti, "GetLineNumberTable", ret);
-> -                               }
-> -                       }
-> +                       nr_total += rec->numpcs;
->                 }
->         }
->
-> @@ -122,14 +107,12 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
->                         rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
->                         for (i = 0; i < rec->numpcs; i++) {
->                                 c = rec->pcinfo + i;
-> -                               nr = 0;
-> -                               ret = do_get_line_numbers(jvmti, c->pc,
-> -                                                         c->methods[0],
-> -                                                         c->bcis[0],
-> -                                                         *tab + lines_total,
-> -                                                         &nr);
-> +                               ret = do_get_line_number(jvmti, c->pc,
-> +                                                        c->methods[0],
-> +                                                        c->bcis[0],
-> +                                                        *tab + lines_total);
-
-Nit: It'd be nice to comment here that [0] is the leaf method/bci. I
-don't believe it is supported but c->numstackframes could be used to
-give full inlining information.
-
-Thanks,
-Ian
-
-
->                                 if (ret == JVMTI_ERROR_NONE)
-> -                                       lines_total += nr;
-> +                                       lines_total++;
->                         }
->                 }
->         }
-> diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
-> index 30e9f618f6cd..dd40683bd4c0 100644
-> --- a/tools/perf/util/genelf_debug.c
-> +++ b/tools/perf/util/genelf_debug.c
-> @@ -342,7 +342,7 @@ static void emit_lineno_info(struct buffer_ext *be,
->          */
->
->         /* start state of the state machine we take care of */
-> -       unsigned long last_vma = code_addr;
-> +       unsigned long last_vma = 0;
->         char const  *cur_filename = NULL;
->         unsigned long cur_file_idx = 0;
->         int last_line = 1;
-> @@ -473,7 +473,7 @@ jit_process_debug_info(uint64_t code_addr,
->                 ent = debug_entry_next(ent);
->         }
->         add_compilation_unit(di, buffer_ext_size(dl));
-> -       add_debug_line(dl, debug, nr_debug_entries, 0);
-> +       add_debug_line(dl, debug, nr_debug_entries, GEN_ELF_TEXT_OFFSET);
->         add_debug_abbrev(da);
->         if (0) buffer_ext_dump(da, "abbrev");
->
-> --
-> 2.26.2
->
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
