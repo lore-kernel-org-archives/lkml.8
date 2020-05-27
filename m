@@ -2,118 +2,118 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9380C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A22C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B6B20723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C8120723
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbgE0Igo (ORCPT
+        id S2388108AbgE0Ihv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:36:44 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34356 "EHLO inva020.nxp.com"
+        Wed, 27 May 2020 04:37:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50258 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388025AbgE0Igo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:36:44 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 018C61A06E9;
-        Wed, 27 May 2020 10:36:42 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 86C5A1A06FB;
-        Wed, 27 May 2020 10:36:38 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 947364024F;
-        Wed, 27 May 2020 16:36:33 +0800 (SGT)
-From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ruscur@russell.cc, sbobroff@linux.ibm.com, oohall@gmail.com,
-        bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH] PCI: ERR: Don't override the status returned by error_detect()
-Date:   Wed, 27 May 2020 16:31:30 +0800
-Message-Id: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S2387858AbgE0Ihv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:37:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 70657AD65;
+        Wed, 27 May 2020 08:37:51 +0000 (UTC)
+Date:   Wed, 27 May 2020 10:37:47 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
+ printk(KERN_DEBUG)
+Message-ID: <20200527083747.GA27273@linux-b0ei>
+References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200525084218.GC5300@linux-b0ei>
+ <20200525091157.GF755@jagdpanzerIV.localdomain>
+ <f02a71bc-0867-be60-182b-10d7377b2b04@i-love.sakura.ne.jp>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f02a71bc-0867-be60-182b-10d7377b2b04@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Mon 2020-05-25 19:43:04, Tetsuo Handa wrote:
+> On 2020/05/25 17:42, Petr Mladek wrote:
+> > I see few drawbacks with this patch:
+> > 
+> > 1. It will cause adding much more messages into the logbuffer even
+> >    though they are not flushed to the console. It might cause that
+> >    more important messages will get overridden before they reach
+> >    console. They might also make hard to read the full log.
+> 
+> Since the user of this twist option will select console loglevel in a way
+> KERN_DEBUG messages are not printed to consoles, KERN_DEBUG messages will
+> be immediately processed (and space for future messages will be reclaimed).
+> Therefore, I don't think that more important messages will get overridden.
 
-The commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-overrode the 'status' returned by the error_detect() call back function,
-which is depended on by the next step. This overriding makes the Endpoint
-driver's required info (kept in the var status) lost, so it results in the
-fatal errors' recovery failed and then kernel panic.
+This is not fully true. More important messages will still be printed
+to the console. The debug messages will not be skipped before the
+older messages are proceed.
 
-In the e1000e case, the error logs:
-pcieport 0002:00:00.0: AER: Uncorrected (Fatal) error received: 0002:01:00.0
-e1000e 0002:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
-pcieport 0002:00:00.0: AER: Root Port link has been reset
-SError Interrupt on CPU0, code 0xbf000002 -- SError
-CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
-Hardware name: LS1046A RDB Board (DT)
-pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
-pc : __pci_enable_msix_range+0x4c8/0x5b8
-lr : __pci_enable_msix_range+0x480/0x5b8
-sp : ffff80001116bb30
-x29: ffff80001116bb30 x28: 0000000000000003
-x27: 0000000000000003 x26: 0000000000000000
-x25: ffff00097243e0a8 x24: 0000000000000001
-x23: ffff00097243e2d8 x22: 0000000000000000
-x21: 0000000000000003 x20: ffff00095bd46080
-x19: ffff00097243e000 x18: ffffffffffffffff
-x17: 0000000000000000 x16: 0000000000000000
-x15: ffffb958fa0e9948 x14: ffff00095bd46303
-x13: ffff00095bd46302 x12: 0000000000000038
-x11: 0000000000000040 x10: ffffb958fa101e68
-x9 : ffffb958fa101e60 x8 : 0000000000000908
-x7 : 0000000000000908 x6 : ffff800011600000
-x5 : ffff00095bd46800 x4 : ffff00096e7f6080
-x3 : 0000000000000000 x2 : 0000000000000000
-x1 : 0000000000000000 x0 : 0000000000000000
-Kernel panic - not syncing: Asynchronous SError Interrupt
-CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
+I mean that many debug messages might cause losing more important ones
+before the old important messages are proceed.
 
-I think it's the expected result that "if the initial value of error
-status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER
-then even after successful recovery (using reset_link()) pcie_do_recovery()
-will report the recovery result as failure" which is described in
-commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()").
 
-Refer to the Documentation/PCI/pci-error-recovery.rst.
-As the error_detect() is mandatory callback if the pci_err_handlers is
-implemented, if it return the PCI_ERS_RESULT_DISCONNECT, it means the
-driver doesn't want to recover at all;
-For the case PCI_ERS_RESULT_NO_AER_DRIVER, if the pci_err_handlers is not
-implemented, the failure is more expected.
+> This twist option might increase possibility of mixing KERN_DEBUG messages
+> and non-KERN_DEBUG messages due to KERN_CONT case.
+> 
+> But if these concerns turn out to be a real problem, we can redirect
+> pr_devel()/pr_debug() to simple snprintf() which evaluates arguments
+> but discards the result without storing into the logbuffer.
+> 
+> > 
+> > 2. Crash inside printk() causes recursive messages. They are currently
+> >    printed into the printk_safe() buffers and there is a bigger risk
+> >    that they will not reach the console.
+> 
+> Currently "static char textbuf[LOG_LINE_MAX];" is "static" because it is used
+> under logbuf_lock. If we remove "static", we can use "char textbuf[LOG_LINE_MAX];"
+> without logbuf_lock. Then, we can bring potentially dangerous-and-slow vscnprintf()
+> in vprintk_store() to earlier stage (and vprintk_store() will need to do simple
+> copy) so that oops in printk() will happen before entering printk-safe context.
+> I think that this change follows a direction which lockless logbuf will want.
 
-Fixes: commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
- drivers/pci/pcie/err.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+No, LOG_LINE_MAX is too big to be allocated on stack.
 
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 14bb8f54723e..84f72342259c 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -165,8 +165,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
- 	pci_dbg(dev, "broadcast error_detected message\n");
- 	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
--		status = reset_link(dev);
--		if (status != PCI_ERS_RESULT_RECOVERED) {
-+		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
- 			pci_warn(dev, "link reset failed\n");
- 			goto failed;
- 		}
--- 
-2.17.1
+Well, it would be possible to call vsprintf() with NULL buffer. It is
+normally used to calculate the length of the message before it is
+printed. But it also does all the accesses without printing anything.
 
+
+> > Have you tested this patch by the syzcaller with many runs, please?
+> > Did it helped to actually discover more bugs?
+> > Did it really made things easier?
+> 
+> syzbot can't test with custom patches. The only way to test this patch is
+> to send to e.g. linux-next.git which syzbot is testing.
+
+OK, we could try this via some test branch that will go into
+linux-next but it would not be scheduled for the next merge window.
+
+For the testing, this patch might be good enough.
+
+For eventual upstreaming, I would prefer to handle this in
+lib/dynamic_debug.c by enabling all entries by default. This
+would solve all DYNAMIC_DEBUG_BRANCH() users at one place.
+
+Anyway, I would like to see a proof that it really helped to find
+some bugs an easier way before upstreaming.
+
+Best Regards,
+Petr
