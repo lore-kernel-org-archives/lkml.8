@@ -2,91 +2,133 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72020C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62D292078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449F42078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pq4xIGDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbgE0MbQ (ORCPT
+        id S1730061AbgE0MbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:31:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728859AbgE0MbQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:31:16 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C67BC08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:31:16 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jdvCA-0001lZ-I0; Wed, 27 May 2020 14:30:06 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id A9496100D19; Wed, 27 May 2020 14:30:04 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Wei Liu <wei.liu@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>
-Subject: Re: [patch V9 30/39] x86/entry: Convert various hypervisor vectors to IDTENTRY_SYSVEC
-In-Reply-To: <20200527083803.gpigonfy2kd2g5t4@debian>
-References: <20200521200513.656533920@linutronix.de> <20200521202119.647997594@linutronix.de> <20200527014616.GA123239@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net> <20200527083803.gpigonfy2kd2g5t4@debian>
-Date:   Wed, 27 May 2020 14:30:04 +0200
-Message-ID: <87mu5tpnlf.fsf@nanos.tec.linutronix.de>
+        Wed, 27 May 2020 08:31:21 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:61069 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728859AbgE0MbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 08:31:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590582679; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=a0pH7dQyq4r9sJKjE/07Ll+1aMct4+PM140OnxeMnLs=; b=pq4xIGDTC0pmWziE1GUOkgmB9US0n26AwnYFR3CFNY0fb9WIS/D80QZBPrzRbD3cBmBKE7AL
+ IAObgdGvrP288HncUA62n1TRypMylMqvX2E5yFfAiQBCmB9M3kaTsN0Fks/oGdExton+I4H0
+ Seiv9bK+Quayuv6S15gWHEHhUPc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5ece5d8d2738686126ff3b55 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 12:31:09
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A6182C43391; Wed, 27 May 2020 12:31:08 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.1.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85F4BC433C6;
+        Wed, 27 May 2020 12:31:00 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85F4BC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 3/4] pinctrl: qcom: Add msmgpio irqchip flags
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-4-git-send-email-mkshah@codeaurora.org>
+ <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <65c86165-5956-5340-1f40-6426c6aec743@codeaurora.org>
+Date:   Wed, 27 May 2020 18:00:57 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wei Liu <wei.liu@kernel.org> writes:
-> On Wed, May 27, 2020 at 09:46:16AM +0800, Boqun Feng wrote:
-> VMBus is being loaded. That gives me some clue.
->
-> I notice a hunk in the patch:
->
-> @@ -331,17 +327,19 @@ static void __init ms_hyperv_init_platfo
->         x86_platform.apic_post_init = hyperv_init;
->         hyperv_setup_mmu_ops();
->         /* Setup the IDT for hypervisor callback */
-> -       alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, hyperv_callback_vector);
-> +       alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR, sysvec_hyperv_callback);
->
-> It is not using the asm variant.
->
-> Could this be the culprit? Thomas?
+Hi,
 
-Of course ... Sorry
+On 5/27/2020 3:17 PM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-05-23 10:11:12)
+>> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
+>> during suspend and mask before setting irq type.
+> Why do we need to mask before setting irq type? Does something go wrong?
+> Can you explain in the commit text?
+
+i don't think anything goes wrong but there might be a case where some 
+driver changing type at runtime,
+
+masking before changing type should make sure any spurious interrupt is 
+not detected during this operation.
+
+>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Does this need a Fixes tag?
+Thanks i will add.
+>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> index 2419023..b909ffe 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+>> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>>          pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+>>          pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
+>>          pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
+>> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
+> This is sort of sad. We have to set the IRQCHIP_MASK_ON_SUSPEND flag
+> here so that genirq can call the mask op during suspend for the parent
+> irqchip (pdc)?
+During suspend, suspend_device_irq() will check this flag in msmgpio 
+irqchip and then call it to mask if its not marked for wakeup.
+
+in this case, setting this flag will call first invoke gpiolib's 
+callback  (we override in first patch of this series), then it goes to 
+msmgpio chip's mask callback,
+
+this call will then get forwarded to its parent PDC and then to PDC's 
+parent GIC.
+
+This seems the way hierarchical irqchip works. i don't see any issue 
+with this.
+> Is there some way to not need to do that and instead let
+> genirq do mask on suspend at the chip level instead of the irq level?
+>
+>> +                               | IRQCHIP_SET_TYPE_MASKED;
+>>   
+>>          np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
+>>          if (np) {
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
