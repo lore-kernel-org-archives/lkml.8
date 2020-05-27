@@ -2,117 +2,179 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56527C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50FD72084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:03:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MhmIJE6n"
+	by mail.kernel.org (Postfix) with ESMTP id 2683F20890
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgE0KDV (ORCPT
+        id S1726926AbgE0KFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:03:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48860 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725775AbgE0KDV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:03:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590573799;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=K5aoZD94Bdt8IQkQiaPPsorrKIIJCA0ECfpK+RBmwjU=;
-        b=MhmIJE6ngQ9AZ6JE3zXQ1WEE5vEVC0oOVTCTcv82xvMs7U3vsywld1t8R6gQ4E6VfXay0y
-        qg+Tf+/snjA1drgkd/pkhiC24XfcV0hflCutWeWG/dUoUb1H4No7S8AUimSuezh1R9RcQU
-        WVdvj1ZiWPSa/MYbTJfUQHYRHgQUp20=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-S0UZJbIWOs2ORrLQzaxBug-1; Wed, 27 May 2020 06:03:18 -0400
-X-MC-Unique: S0UZJbIWOs2ORrLQzaxBug-1
-Received: by mail-ej1-f69.google.com with SMTP id ng1so8622710ejb.22
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 03:03:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=K5aoZD94Bdt8IQkQiaPPsorrKIIJCA0ECfpK+RBmwjU=;
-        b=dsDzTjM7kzLB7fp+0JsgxLINeC9tnx3du5IkLveYqkohxeYb382vcWd/f0DjvQ8jHv
-         h4XDqRrsenATaL9EgScS+gE4kkzvgiLiK4VaDmzhPb8m5gHQlDXvyQPoXr21KYUQAg5P
-         XyVNjeY0Yq6ba51hk3Os/J2rFUNHNwU8R79Cm4wzFt96bTyumRDPCYUbiDwmtwlKAJAQ
-         HGg64KmUNZXPXyMs7NbjfLg8fPL90tB+s00JUzIHAbM+fuuISpxIB5kQ7pm+C/T0n+6k
-         UnD5FviF1rXflXZy93UY+UERqXGKaZ+4KUvHYBwehzSRE8pZTOSFEeOfSBX1vGviGcsi
-         7Sww==
-X-Gm-Message-State: AOAM531Z5Cy0Sd7ZtcB4fc7Ld1wN+9qyHYQcaeW0f3CgF5BuUFzauVYY
-        LaA0e4F0qSWXFskoSvI8J20GOdPZ8hA+MnGOZWvGdGmOrjoI6PRiecNS6M7Zv9C7GkPkO2qduIP
-        liRRYZRdU1FlkAUspaAizcxvd
-X-Received: by 2002:a17:907:1189:: with SMTP id uz9mr5081182ejb.53.1590573796345;
-        Wed, 27 May 2020 03:03:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwtGDTVME1kTme3ysc0tvVt/aSxxpA7Dx0TxZxwIBs/4vrOxvgxcS0wsLTR19Vf7/VXoKMP5A==
-X-Received: by 2002:a17:907:1189:: with SMTP id uz9mr5081127ejb.53.1590573795772;
-        Wed, 27 May 2020 03:03:15 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id m11sm2268523ejq.49.2020.05.27.03.03.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 03:03:14 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+904752567107eefb728c@syzkaller.appspotmail.com,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
-In-Reply-To: <20200527085400.23759-1-sean.j.christopherson@intel.com>
-References: <20200527085400.23759-1-sean.j.christopherson@intel.com>
-Date:   Wed, 27 May 2020 12:03:13 +0200
-Message-ID: <875zch66fy.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 27 May 2020 06:05:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:35532 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgE0KFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:05:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09A5455D;
+        Wed, 27 May 2020 03:05:30 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.76.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4A1103F6C4;
+        Wed, 27 May 2020 03:05:26 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
+        suzuki.poulose@arm.com,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH V3] arm64/cpufeature: Add get_arm64_ftr_reg_nowarn()
+Date:   Wed, 27 May 2020 15:34:36 +0530
+Message-Id: <1590573876-19120-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+There is no way to proceed when requested register could not be searched in
+arm64_ftr_reg[]. Requesting for a non present register would be an error as
+well. Hence lets just WARN_ON() when search fails in get_arm64_ftr_reg()
+rather than checking for return value and doing a BUG_ON() instead in some
+individual callers. But there are also caller instances that dont error out
+when register search fails. Add a new helper get_arm64_ftr_reg_nowarn() for
+such cases.
 
-> Initialize vcpu->arch.tdp_level during vCPU creation to avoid consuming
-> garbage if userspace calls KVM_RUN without first calling KVM_SET_CPUID.
->
-> Fixes: e93fd3b3e89e9 ("KVM: x86/mmu: Capture TDP level when updating CPUID")
-> Reported-by: syzbot+904752567107eefb728c@syzkaller.appspotmail.com
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/x86.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index b226fb8abe41b..01a6304056197 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9414,6 +9414,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->  	fx_init(vcpu);
->  
->  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
-> +	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
->  
->  	vcpu->arch.pat = MSR_IA32_CR_PAT_DEFAULT;
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Changes in V3:
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+- Early return on register search failure in some callers per Will
+- Return 0, when search fails in check_update_ftr_reg() per Will
 
-Looking at kvm_update_cpuid() I was thinking if it would make sense to
-duplicate the "/* Note, maxphyaddr must be updated before tdp_level. */"
-comment here (it seems to be a vmx-only thing btw), drop it from
-kvm_update_cpuid() or move cpuid_query_maxphyaddr() to get_tdp_level()
-but didn't come to a conclusive answer. 
+Changes in V2: (https://patchwork.kernel.org/patch/11570575/)
 
+- Added get_arm64_ftr_reg_nowarn() per Will
+- read_sanitised_ftr_reg() returns 0 when register search fails per Catalin
+
+Changes in V1: (https://patchwork.kernel.org/patch/11559083/)
+
+ arch/arm64/kernel/cpufeature.c | 45 ++++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index e744f647cbac..64e87a7b3c3c 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -597,16 +597,16 @@ static int search_cmp_ftr_reg(const void *id, const void *regp)
+ }
+ 
+ /*
+- * get_arm64_ftr_reg - Lookup a feature register entry using its
+- * sys_reg() encoding. With the array arm64_ftr_regs sorted in the
+- * ascending order of sys_id , we use binary search to find a matching
++ * get_arm64_ftr_reg_nowarn - Looks up a feature register entry using
++ * its sys_reg() encoding. With the array arm64_ftr_regs sorted in the
++ * ascending order of sys_id, we use binary search to find a matching
+  * entry.
+  *
+  * returns - Upon success,  matching ftr_reg entry for id.
+  *         - NULL on failure. It is upto the caller to decide
+  *	     the impact of a failure.
+  */
+-static struct arm64_ftr_reg *get_arm64_ftr_reg(u32 sys_id)
++static struct arm64_ftr_reg *get_arm64_ftr_reg_nowarn(u32 sys_id)
+ {
+ 	const struct __ftr_reg_entry *ret;
+ 
+@@ -620,6 +620,28 @@ static struct arm64_ftr_reg *get_arm64_ftr_reg(u32 sys_id)
+ 	return NULL;
+ }
+ 
++/*
++ * get_arm64_ftr_reg - Looks up a feature register entry using
++ * its sys_reg() encoding. This calls get_arm64_ftr_reg_nowarn().
++ *
++ * returns - Upon success,  matching ftr_reg entry for id.
++ *         - NULL on failure but with an WARN_ON().
++ */
++static struct arm64_ftr_reg *get_arm64_ftr_reg(u32 sys_id)
++{
++	struct arm64_ftr_reg *reg;
++
++	reg = get_arm64_ftr_reg_nowarn(sys_id);
++
++	/*
++	 * Can not really proceed when the search fails here.
++	 * Requesting for a non existent register search will
++	 * be an error. Warn but let it continue for now.
++	 */
++	WARN_ON(!reg);
++	return reg;
++}
++
+ static u64 arm64_ftr_set_value(const struct arm64_ftr_bits *ftrp, s64 reg,
+ 			       s64 ftr_val)
+ {
+@@ -681,7 +703,8 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
+ 	const struct arm64_ftr_bits *ftrp;
+ 	struct arm64_ftr_reg *reg = get_arm64_ftr_reg(sys_reg);
+ 
+-	BUG_ON(!reg);
++	if (!reg)
++		return;
+ 
+ 	for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
+ 		u64 ftr_mask = arm64_ftr_mask(ftrp);
+@@ -815,7 +838,9 @@ static int check_update_ftr_reg(u32 sys_id, int cpu, u64 val, u64 boot)
+ {
+ 	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+ 
+-	BUG_ON(!regp);
++	if (!regp)
++		return 0;
++
+ 	update_cpu_ftr_reg(regp, val);
+ 	if ((boot & regp->strict_mask) == (val & regp->strict_mask))
+ 		return 0;
+@@ -829,7 +854,7 @@ static void relax_cpu_ftr_reg(u32 sys_id, int field)
+ 	const struct arm64_ftr_bits *ftrp;
+ 	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
+ 
+-	if (WARN_ON(!regp))
++	if (!regp)
+ 		return;
+ 
+ 	for (ftrp = regp->ftr_bits; ftrp->width; ftrp++) {
+@@ -1022,8 +1047,8 @@ u64 read_sanitised_ftr_reg(u32 id)
+ {
+ 	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(id);
+ 
+-	/* We shouldn't get a request for an unsupported register */
+-	BUG_ON(!regp);
++	if (!regp)
++		return 0;
+ 	return regp->sys_val;
+ }
+ 
+@@ -2663,7 +2688,7 @@ static int emulate_sys_reg(u32 id, u64 *valp)
+ 	if (sys_reg_CRm(id) == 0)
+ 		return emulate_id_reg(id, valp);
+ 
+-	regp = get_arm64_ftr_reg(id);
++	regp = get_arm64_ftr_reg_nowarn(id);
+ 	if (regp)
+ 		*valp = arm64_ftr_reg_user_value(regp);
+ 	else
 -- 
-Vitaly
+2.20.1
 
