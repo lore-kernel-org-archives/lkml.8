@@ -2,109 +2,174 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F44FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6554AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3B82100A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6BF2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:10:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uMPByhVH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5LlxT1j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgE0XJr (ORCPT
+        id S1725905AbgE0XK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:09:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40880 "EHLO
+        Wed, 27 May 2020 19:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0XJq (ORCPT
+        with ESMTP id S1725385AbgE0XK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:09:46 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55037C08C5C1;
-        Wed, 27 May 2020 16:09:46 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XRP33DLqz9sRY;
-        Thu, 28 May 2020 09:09:42 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590620983;
-        bh=aeZ6cnnOuwisND5DdjrOSTo33yM1MR4fyUAadjGwuEE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uMPByhVHKID+YFT/WHdfuGMrjXV1FfwwcZ5eFwOrOMSM487JWa7yR+WjEkXMmeQYF
-         j42vgRg7GzrPjBKQ3BY71kTtURFldOMAZXQktNKHGr/qX8ioOqseKt+YhTxa1y0G+Z
-         iWbIm+mGrj6oTm42kA062ziiawOd2eHLjSLwXxlMwZnxzpQ8vW+hGXYpn3CqzJ408T
-         3E0w7lD7KTEyxvMRi5WleDiRH8b1DAch1lg8gIphpJK12b6n+VDFpLcZaJhg6t7m8E
-         YefWwBzhaNO2ZGX4RVCuRzZgVjkKdwiRr/JVOpWr7RtVXF3IvYdHeHx925wTuPiWrz
-         LAP0bT0tik+eQ==
-Date:   Thu, 28 May 2020 09:09:41 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: linux-next: manual merge of the arm tree with Linus' tree
-Message-ID: <20200528090941.341ad93a@canb.auug.org.au>
+        Wed, 27 May 2020 19:10:57 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC85DC08C5C1;
+        Wed, 27 May 2020 16:10:57 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p30so12496931pgl.11;
+        Wed, 27 May 2020 16:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zMtt35pLxQhH0e+3rMcgNfVed4VL//myZjMB/4FBxzY=;
+        b=Z5LlxT1jqpw+r272ovO77dIojvS1RWSWxniR6y0Ub96AvfQfySl3UFbrTXrNCakmE5
+         7RnFaV8VNBC3Q20S+cbWqyOb7xcdHYPXuo+Gv2lJk17JlFSMUQlbDcHEF0c6eRz5Or6s
+         cD/CCnsVwZ7TQhmeC8iuuZS4o0I4yfgqMLC/qVyAtpFvnIa7EXQURKVDTy4MgTnMX2N3
+         1it58fas3bKAQihsE88bJQ0L+PnLrhNiqI9eDQrhD4bHNCbGuselusnov9FjFI/1hLG2
+         fj7I3/o9hZqDd1LLYZtW35SqFphqX7jGg77Bcc3RelLW13GjyNJ+/MKYkhmZaikzMBIz
+         a41w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zMtt35pLxQhH0e+3rMcgNfVed4VL//myZjMB/4FBxzY=;
+        b=nxpx8yjCosAjWaQYfqdxBu5aSx5HWvHpB4h2lWmIeBGdAVnnbpk8pEJJNU7pAQ1jTz
+         3n+6Elbfh/anO6lUoHz/zJd+9Up6heISe4sBoiifq+kQMDalXHGYHas744JmbQGVMOLN
+         YtE/9OEJ6vUqANkRI+YLk37owTDgml35MPsX0T8YxmugXrioRbuhLEUS7xJEoO1AaBqb
+         v1vfmlzGtm4TQKH7H3K6hRGuLlbwlF98AKpiXsXTHzze3G1cQ+uCkCHmKPF3pJlGSi7a
+         U8Uhowv0TKojotT/tJTzImKTvkTVMez37hci4OeAfzYngCzpNb9M951JUfchvEbvFqnn
+         2aYw==
+X-Gm-Message-State: AOAM532v0e45IBTuuBm6l9jamY/VcsgIElg0awrT/mD3hMNLav8y5iIO
+        zy6D8uoYgVKXn1g4ijkxtqa7zhr0
+X-Google-Smtp-Source: ABdhPJwG9RMYihgfoi/QUWvfwRWcNyRLqC96sXgXJroOTt7Pn1fNWepb6zJD+RztqNnMeayg/og4Rw==
+X-Received: by 2002:a62:1512:: with SMTP id 18mr91386pfv.326.1590621057274;
+        Wed, 27 May 2020 16:10:57 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u73sm3076205pfc.0.2020.05.27.16.10.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 16:10:56 -0700 (PDT)
+Date:   Wed, 27 May 2020 16:10:55 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH] MIPS: DTS: Only build subdir of current platform
+Message-ID: <20200527231055.GA141265@roeck-us.net>
+References: <1590027306-2137-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8AI_rclgG6ytRkuQ9lxso.b";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590027306-2137-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8AI_rclgG6ytRkuQ9lxso.b
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 21, 2020 at 10:15:06AM +0800, Tiezhu Yang wrote:
+> Add config check in Makefile to only build the subdir of current platform.
+> 
+> E.g. without this patch:
+> 
+>   AR      arch/mips/built-in.a
+>   AR      arch/mips/boot/dts/brcm/built-in.a
+>   AR      arch/mips/boot/dts/cavium-octeon/built-in.a
+>   AR      arch/mips/boot/dts/img/built-in.a
+>   AR      arch/mips/boot/dts/ingenic/built-in.a
+>   AR      arch/mips/boot/dts/lantiq/built-in.a
+>   DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
+>   DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
+>   AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
+>   DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
+>   DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
+>   AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
+>   AR      arch/mips/boot/dts/loongson/built-in.a
+>   AR      arch/mips/boot/dts/mscc/built-in.a
+>   AR      arch/mips/boot/dts/mti/built-in.a
+>   AR      arch/mips/boot/dts/netlogic/built-in.a
+>   AR      arch/mips/boot/dts/ni/built-in.a
+>   AR      arch/mips/boot/dts/pic32/built-in.a
+>   AR      arch/mips/boot/dts/qca/built-in.a
+>   AR      arch/mips/boot/dts/ralink/built-in.a
+>   AR      arch/mips/boot/dts/xilfpga/built-in.a
+>   AR      arch/mips/boot/dts/built-in.a
+> 
+> With this patch:
+> 
+>   AR      arch/mips/built-in.a
+>   DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
+>   DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
+>   AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
+>   DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
+>   DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
+>   AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
+>   AR      arch/mips/boot/dts/loongson/built-in.a
+>   AR      arch/mips/boot/dts/built-in.a
+> 
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-Hi all,
+With this patch applied, boston.dtb is no longer built with
+64r6el_defconfig, even though 64r6el_defconfig enables
+CONFIG_FIT_IMAGE_FDT_BOSTON=y. This is because the img
+subdirectory is now only included if CONFIG_MACH_PISTACHIO=y,
+but that is not the case with 64r6el_defconfig.
 
-Today's linux-next merge of the arm tree got a conflict in:
+Please revisit.
 
-  arch/arm/boot/compressed/head.S
+Guenter
 
-between commit:
-
-  a94691680bac ("efi/arm: Deal with ADR going out of range in efi_enter_ker=
-nel()")
-
-from Linus' tree and commit:
-
-  d0f9ca9be11f ("ARM: decompressor: run decompressor in place if loaded via=
- UEFI")
-
-from the arm tree.
-
-I fixed it up (I just used the latter) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8AI_rclgG6ytRkuQ9lxso.b
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7O8zUACgkQAVBC80lX
-0GyPfgf/VA3CjG2gRIkv3oywIndKU2bCv7p6tpg1Y9RqhkPEgr1lwYMVqhId/oEi
-ok2eNFjN77LdnY4Oj95Y1VxucH2mWguQumoRwuIGlef+fQavX3LsvYmpf3wIMF8q
-L2sUNIxFrHPTNkimcb/NnLStVE0oBkdbtaeJ6XUSiRjrwJq03mdRHojfPbmFlvfM
-QQsBGLHdi5LE7OtNrRVea/NohYFYYgtb0PldfJhlHuiGSDa4lJCADS1A+1fHcXVr
-2Xv3kPH8c4PLoBMMcqb81Mi4ArwCH+WfIOQz5imKi55UUClhda+tMdTcfMD5Sk6j
-6bN8hJ+kGNmk9lPgSFvq06daKFmBzQ==
-=aXGV
------END PGP SIGNATURE-----
-
---Sig_/8AI_rclgG6ytRkuQ9lxso.b--
+> ---
+>  arch/mips/boot/dts/Makefile | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+> index d429a69..dce32d1 100644
+> --- a/arch/mips/boot/dts/Makefile
+> +++ b/arch/mips/boot/dts/Makefile
+> @@ -1,17 +1,17 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -subdir-y	+= brcm
+> -subdir-y	+= cavium-octeon
+> -subdir-y	+= img
+> -subdir-y	+= ingenic
+> -subdir-y	+= lantiq
+> -subdir-y	+= loongson
+> -subdir-y	+= mscc
+> -subdir-y	+= mti
+> -subdir-y	+= netlogic
+> -subdir-y	+= ni
+> -subdir-y	+= pic32
+> -subdir-y	+= qca
+> -subdir-y	+= ralink
+> -subdir-y	+= xilfpga
+> +subdir-$(CONFIG_BMIPS_GENERIC)		+= brcm
+> +subdir-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon
+> +subdir-$(CONFIG_MACH_PISTACHIO)		+= img
+> +subdir-$(CONFIG_MACH_INGENIC)		+= ingenic
+> +subdir-$(CONFIG_LANTIQ)			+= lantiq
+> +subdir-$(CONFIG_MACH_LOONGSON64)	+= loongson
+> +subdir-$(CONFIG_MSCC_OCELOT)		+= mscc
+> +subdir-$(CONFIG_MIPS_MALTA)		+= mti
+> +subdir-$(CONFIG_NLM_XLP_BOARD)		+= netlogic
+> +subdir-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= ni
+> +subdir-$(CONFIG_MACH_PIC32)		+= pic32
+> +subdir-$(CONFIG_ATH79)			+= qca
+> +subdir-$(CONFIG_RALINK)			+= ralink
+> +subdir-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= xilfpga
+>  
+>  obj-$(CONFIG_BUILTIN_DTB)	:= $(addsuffix /, $(subdir-y))
+> -- 
+> 2.1.0
+> 
