@@ -2,75 +2,137 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F39C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB67C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2069B20721
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3lHzTLtp"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB1720873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391405AbgE0QnL (ORCPT
+        id S2391419AbgE0QnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:43:11 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:59174 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391358AbgE0QnK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:43:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/NR+tWQXI7ShSCqCpSQ3tqpGU8MPz+hHbfEP5s550KY=; b=3lHzTLtpG1Xp4RHgxteMHqoueD
-        lvFnMqfitcxUXeZcOIxR59B4LrfStEwFYL7YoutZ8SR45ExlNmR7NT1epzEbwuMiL3qBWS+Xs3hk6
-        2ZejasBqaOa3h11u6jKtRqvbfUnjJ5M/er3EMowEC9VJbFknun4lNuchgTYSrUWDGlTKqOhepIJRE
-        5f4qVLJi3spimqZogWUBaTi9V+j0WeOS2S8o54nqTtWZeRL+EOBIONrak53mbiSVtahW2Ri7ZfTTP
-        9YQlwoj4+2pn6fEQPJA2rlgEC2O/xkhGK5lhqTOmgG2YRskVKmpD3hfpSksedtywOO6qpUg6Um5jE
-        Q8xlSHvg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdz91-00031O-25; Wed, 27 May 2020 16:43:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D24EA307643;
-        Wed, 27 May 2020 18:43:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A4EE92023E7C7; Wed, 27 May 2020 18:43:05 +0200 (CEST)
-Date:   Wed, 27 May 2020 18:43:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        a.darwish@linutronix.de, rostedt@goodmis.org, bigeasy@linutronix.de
-Subject: Re: [PATCH 0/6] x86/entry,lockdep: Improve IRQ state tracking
-Message-ID: <20200527164305.GB706495@hirez.programming.kicks-ass.net>
-References: <20200527154527.233385756@infradead.org>
+        Wed, 27 May 2020 12:43:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:25364 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391358AbgE0QnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:43:15 -0400
+IronPort-SDR: 7f4nT+5OQ9oAR8kixpeIl2svcHUSwdjIkFV0fcafFolj1S2bE04STfWappG+kaA5UcBaDCVEX2
+ S8zMm9z1YXIQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 09:43:14 -0700
+IronPort-SDR: UnREJ0zffizlBgwZuaP50WVkE+7uT6va26qL5z0Mfk+YV8hQqUDvIkUnCC3WarTa9EXmWlqkAm
+ 9KozwRyZSBDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="266897448"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 09:43:11 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jdz98-009GJc-Co; Wed, 27 May 2020 19:43:14 +0300
+Date:   Wed, 27 May 2020 19:43:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/11] i2c: designware: Add Baytrail sem config DW I2C
+ platform dependency
+Message-ID: <20200527164314.GR1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-7-Sergey.Semin@baikalelectronics.ru>
+ <20200527134220.GX1634618@smile.fi.intel.com>
+ <20200527142406.jzdtkbdb2q6st7e6@mobilestation>
+ <20200527154632.GG1634618@smile.fi.intel.com>
+ <20200527160056.rg66gsubwhrwtnwf@mobilestation>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527154527.233385756@infradead.org>
+In-Reply-To: <20200527160056.rg66gsubwhrwtnwf@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 05:45:27PM +0200, Peter Zijlstra wrote:
-> Ahmed and Sebastian wanted additional lockdep_assert*() macros and ran
-> into header hell.
+On Wed, May 27, 2020 at 07:00:56PM +0300, Serge Semin wrote:
+> On Wed, May 27, 2020 at 06:46:32PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 05:24:06PM +0300, Serge Semin wrote:
+> > > On Wed, May 27, 2020 at 04:42:20PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, May 27, 2020 at 03:01:06PM +0300, Serge Semin wrote:
+> > > > > Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
+> > > > > platform driver. It's a bit confusing to see it's config in the menu at
+> > > > > some separated place with no reference to the platform code. Let's move the
+> > > > > config definition to be below the I2C_DESIGNWARE_PLATFORM config and mark
+> > > > > it with "depends on I2C_DESIGNWARE_PLATFORM" statement. By doing so the
+> > > > > config menu will display the feature right below the DW I2C platform
+> > > > > driver item and will indent it to the right so signifying its belonging.
+> > 
+> > ...
+> > 
+> > > > >  config I2C_DESIGNWARE_BAYTRAIL
+> > > > >  	bool "Intel Baytrail I2C semaphore support"
+> > > > >  	depends on ACPI
+> > > > > +	depends on I2C_DESIGNWARE_PLATFORM
+> > > > >  	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
+> > > > >  		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
+> > > > 
+> > > > I didn't get this. What is broken now with existing dependencies?
+> > > 
+> > > With no explicit "depends on I2C_DESIGNWARE_PLATFORM" the entry isn't right
+> > > shifted with respect to the I2C_DESIGNWARE_PLATFORM config entry in the kernel
+> > > menuconfig. So it looks like a normal no-yes driver without it. 
+> > 
+> > I didn't get. Is there problems with current case? (I don't see it).
+> > If there is a problem, it should have a separate patch and commit message.
+> > 
+> > As for now above excerpt seems redundant and unneeded churn.
 > 
-> Move the IRQ state into per-cpu variables, which removes the dependency on
-> task_struct, which is what generated the header-hell.
+> Please read the commit log more carefully.
 > 
-> And fix IRQ state tracking to not be affected by lockdep_off() (it really
-> should not have been anyway) and extends IRQ state tracking across (x86)
-> NMIs.
+> Without explicit "depends on I2C_DESIGNWARE_PLATFORM" you'd see the DW
+> I2C-related menuconfig as:
+> [*] Synopsys DesignWare Platform
+> [ ] Intel Baytrail I2C semaphore support
+> with that "depends on I2C_DESIGNWARE_PLATFORM" added:
+> [*] Synopsys DesignWare Platform
+> [ ]     Intel Baytrail I2C semaphore support
+> The second case presents the Baytrail semaphore as the DW I2C platform
+> feature. Otherwise it's just a simple menuentry. As I see it without adding
+> the explicit "depends on I2C_DESIGNWARE_PLATFORM" there is no need in moving
+> the config at all.
 
-After having it run kernel builds for a while, I've got a realy weird
-(false-positive) lockdep_assert_irqs_enabled() trigger.
+Thanks for explanation, this makes sense.
 
-So something isn't quite right. I'll prod at it some moar.
+
+> So if you think it's a churn. Well, I'll wait for
+> Jarkko' comment in this regard.
+> 
+> BTW Jarkko asked in v3 whether it would work with just explicit "depends on"
+> without if-endif enclosing the config.
+> 
+> -Sergey
+> 
+> > 
+> > -- 
+> > With Best Regards,
+> > Andy Shevchenko
+> > 
+> > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
