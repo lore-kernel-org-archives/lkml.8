@@ -2,126 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E07C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D361C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C912078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E232078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388526AbgE0Nk5 (ORCPT
+        id S2388533AbgE0NlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:40:57 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:54367 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387627AbgE0Nk4 (ORCPT
+        Wed, 27 May 2020 09:41:02 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53082 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387627AbgE0NlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:40:56 -0400
-Received: from localhost.localdomain ([149.172.98.151]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MxHLs-1ipQ2O23r6-00xZeZ; Wed, 27 May 2020 15:40:44 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: versatile: undo some dependency changes
-Date:   Wed, 27 May 2020 15:40:33 +0200
-Message-Id: <20200527134043.807045-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 27 May 2020 09:41:02 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04RDf0IC022702;
+        Wed, 27 May 2020 22:41:00 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
+ Wed, 27 May 2020 22:41:00 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04RDexlT022667
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 27 May 2020 22:40:59 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
+ printk(KERN_DEBUG)
+To:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <202005271707.bUYELlt7%lkp@intel.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <e4766ed8-905e-faf0-fcbf-3c806ef2b267@i-love.sakura.ne.jp>
+Date:   Wed, 27 May 2020 22:41:00 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:oX8d96/3agk6HQYMnHtVprdFalOQlNymeCToneAXooVriuWLRR+
- c/h+AwhIj6fC9vUzuz5Aa2eLCM3DNnwR+1QROcwAEUOdv4Lulkj+kNPH+g7+VS00QAnl+gr
- c/dD0CTtn4iEhMxVhrytOTGK3BdJav61Y5VWmm06MbbfbRJF+wr0RM02TJCmEuNKu6GocqM
- fVPA8dCdLvlOl5QyMJoIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8aMReIkVdqU=:yhFX2lu64OasDPFeHhky3H
- IC/WFCqnWvNVHYf5ttpwJsFmp8RmKdFCdbWyOd18oY93TMgMHBSi8BG4PNcmAcoOCzQbTAjVe
- 2n0FO4gp/b8z0cbzciNh1NhDV0DzamUtNPfAS8PAhkfrmKZw8elLwnUZMZOT7mBFEkOgGvNzZ
- ThhEgJyTv2JKI3sgBiQKIbZb8GRfvZJ3uGyje0aDEnZvabf/qwD8lcTjl9Ke1tA3R3Uli1pIv
- YoMV4J4lZrUpvBNy8Hszb8VvYzzsmcfUTxRdAdpHfd6a6WiVtbzPYQCTCu0UYPfSgoXCDkm6k
- Bl9xZ1P2tqJTpSTlI7fKnvmoU/cyRIE/E3ra0bIx1xIbMaptle12QYTc16RCVzmhe62aBMJ7J
- Ml2ZBk2UrFyq8fbq0BoH6b/xnigNotBVskzXNTlpg+GA5iAgAVBC468xVXlMixGq51OsYx4ur
- ikKJLzdpwjh+l5Ci1t7KLGorX51y2xm09nP3NGro/PAOMBUOC8JaaVCUxTy5QkjoWIveWwXfv
- f4Vh12dELsS0OTHvouycvZJ7B8ti+36fqacZ///KhnekwVAtgGhn4/3MJCplRbvNIPV9c8jfG
- pAmlZjnk/57dsb0vHyc7IO4OW+Lm6F8ZoFYg6K+W66eZNwPy269MjncCjaCFa2B7xl+/Ys+ug
- +mW0eawTP/R9H0IE7cOoAfPolwNq2bevSAywLpxhuuU/cgovHRbYKgMBRInSn2LkLb7YkIoPU
- L7z0bsXHv515uZ0R8FsS5miYtqW8nxOfNOvXXjBtw9udx3Qz5UiemItenrFyhRpLkCQzgja/D
- vToTOthP83fSoshZtvzcCxjjx3RTDLF3cS67SJ6JCc5FYsPm2E=
+In-Reply-To: <202005271707.bUYELlt7%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SP810 and ICST are selected by a couple of platforms, most but
-not all in the versatile family:
+From 3406a1853564618f167a5d0a815f174d2fb295f5 Mon Sep 17 00:00:00 2001
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Date: Wed, 27 May 2020 22:34:50 +0900
+Subject: [PATCH] dev_printk: Explicitly include dynamic_debug.h
 
-WARNING: unmet direct dependencies detected for CLK_SP810
-  Depends on [n]: COMMON_CLK [=y] && COMMON_CLK_VERSATILE [=n]
-  Selected by [y]:
-  - ARCH_REALVIEW [=y] && (ARCH_MULTI_V5 [=n] || ARCH_MULTI_V6 [=n] ||
-ARCH_MULTI_V7 [=y])
+While printk.h included dynamic_debug.h before pr_debug(), dev_printk.h
+did not include it before dynamic_dev_dbg(). Include it in dev_printk.h
+in case future patch touches CONFIG_DYNAMIC_DEBUG case in printk.h .
 
-WARNING: unmet direct dependencies detected for ICST
-  Depends on [n]: COMMON_CLK [=y] && COMMON_CLK_VERSATILE [=n]
-  Selected by [y]:
-  - ARCH_REALVIEW [=y] && (ARCH_MULTI_V5 [=n] || ARCH_MULTI_V6 [=n] || ARCH_MULTI_V7 [=y])
-  - ARCH_VEXPRESS [=y] && ARCH_MULTI_V7 [=y]
-  - ARCH_ZYNQ [=y] && ARCH_MULTI_V7 [=y]
-
-Change back the Kconfig logic to allow these to be selected
-without the main option.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 ---
- drivers/clk/versatile/Kconfig | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ include/linux/dev_printk.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
-index a0ed412e8396..a557886d813e 100644
---- a/drivers/clk/versatile/Kconfig
-+++ b/drivers/clk/versatile/Kconfig
-@@ -7,6 +7,18 @@ menuconfig COMMON_CLK_VERSATILE
+diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
+index 5aad06b4ca7b..69f0b3708eaf 100644
+--- a/include/linux/dev_printk.h
++++ b/include/linux/dev_printk.h
+@@ -110,6 +110,7 @@ void _dev_info(const struct device *dev, const char *fmt, ...)
+ 	_dev_info(dev, dev_fmt(fmt), ##__VA_ARGS__)
  
- if COMMON_CLK_VERSATILE
- 
-+config CLK_VEXPRESS_OSC
-+	tristate "Clock driver for Versatile Express OSC clock generators"
-+	depends on VEXPRESS_CONFIG
-+	select REGMAP_MMIO
-+	default y if ARCH_VEXPRESS
-+	---help---
-+	  Simple regmap-based driver driving clock generators on Versatile
-+	  Express platforms hidden behind its configuration infrastructure,
-+	  commonly known as OSCs.
-+
-+endif
-+
- config ICST
- 	bool "Clock driver for ARM Reference designs ICST"
- 	select REGMAP_MMIO
-@@ -22,14 +34,4 @@ config CLK_SP810
- 	  Supports clock muxing (REFCLK/TIMCLK to TIMERCLKEN0-3) capabilities
- 	  of the ARM SP810 System Controller cell.
- 
--config CLK_VEXPRESS_OSC
--	tristate "Clock driver for Versatile Express OSC clock generators"
--	depends on VEXPRESS_CONFIG
--	select REGMAP_MMIO
--	default y if ARCH_VEXPRESS
--	---help---
--	  Simple regmap-based driver driving clock generators on Versatile
--	  Express platforms hidden behind its configuration infrastructure,
--	  commonly known as OSCs.
- 
--endif
+ #if defined(CONFIG_DYNAMIC_DEBUG)
++#include <linux/dynamic_debug.h>
+ #define dev_dbg(dev, fmt, ...)						\
+ 	dynamic_dev_dbg(dev, dev_fmt(fmt), ##__VA_ARGS__)
+ #elif defined(DEBUG)
 -- 
-2.26.2
+2.18.2
 
