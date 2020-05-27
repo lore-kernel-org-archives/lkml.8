@@ -2,126 +2,165 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F044DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43671C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA8120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:12:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590599528;
-	bh=bp0trwaM6h8uuCkymHjXZN7fR6YHyRuri/1clQJDEB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HW9lESH+khMu9t2YUzA0WzvgDy3BarJi6iY01EqcFNGVJ59CN5CAOZSnopLohdoe4
-	 QFykDULjrr9wGgRXHuyI5x23V+hBofQcQn6/jBf7wNBwpbQn+TCjyIv4JdVSKwJeqa
-	 tIA5xjiqmpDYVZOHyhPclPd3GJveDchf6sCueT9k=
+	by mail.kernel.org (Postfix) with ESMTP id 1965520890
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:12:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="godB6zxk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbgE0RMI (ORCPT
+        id S1731221AbgE0RM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:12:08 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46449 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731164AbgE0RMH (ORCPT
+        Wed, 27 May 2020 13:12:28 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33164 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729894AbgE0RM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:12:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id j8so26805282iog.13;
-        Wed, 27 May 2020 10:12:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lH1rJnnAmu6mmVD9f+LiVA8Cp9GhZ/wNWYkFw3lVpLM=;
-        b=tWQZpIrBlsFv9F0gdZR8caqSGN4QrY4bxPuwr8m3TRTuWL+FxxaAmE7N0mBZtuwelX
-         raUSsu9Brnqsww1NiDzsMoiFR9pLhaGtY+vpWaHCpJq0xmM2qiCEI+0u1uD0qDF2Qyj/
-         8kTQB3Kj9vkiK3uwjJWVnbDxKV0VkVdxcnVb6OXmhDdM/rXGMh39diKA6rviRQK41Dbh
-         SRp4g3Mx4yGJBy4kU5FSQDyboq7B1+IkGv1XzUUuUoLM+kesLTjL8AWYKuQo2Prhxx/1
-         FmFUQYThX2RI2x7DAawNmKXcwYrH88GnE+QqwjfH5meSRudTa+8KCHhy85sU/jzg64Zj
-         nYWg==
-X-Gm-Message-State: AOAM530FxKDSE1z7or7uXHfp7OKsukcBR4cSEkU8JXq6QT5qgQ1aIiO1
-        twdePx5pAmpSMk1RIKXT0Q==
-X-Google-Smtp-Source: ABdhPJy6mZmSjT4GnETlDIhT4c/i6cpi2dbaYN20yoQHKee1l9OtKky3c0rbR9VKGY7uzGPRH/rQMg==
-X-Received: by 2002:a5e:970a:: with SMTP id w10mr11183277ioj.114.1590599526064;
-        Wed, 27 May 2020 10:12:06 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id j15sm1832662ilk.0.2020.05.27.10.12.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:12:05 -0700 (PDT)
-Received: (nullmailer pid 2353199 invoked by uid 1000);
-        Wed, 27 May 2020 17:12:04 -0000
-Date:   Wed, 27 May 2020 11:12:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200527171204.GA2348490@bogus>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
+        Wed, 27 May 2020 13:12:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590599546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0Ma+strw5r3/zerzC9gCl0y+XwFVc4Xo+zlOUjNhXTY=;
+        b=godB6zxkcscSCeZrHJ90Xwrk3hc0Ya/Wo6upCywZZjsYetU4EF2pH3DI9XaAbNBvQCxvM3
+        J8KO9raB7tLJfc2fTRmhVfj8Gvl4oXH3HFR6EJhOVobQs7lbjnr8HihRkaek0hjv8y88ij
+        9YNkGtk51zAwPxxFCYM2dAQapR8zjwI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-3CpxfOFBMOmIMhUA1TfO8A-1; Wed, 27 May 2020 13:12:21 -0400
+X-MC-Unique: 3CpxfOFBMOmIMhUA1TfO8A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AB3253;
+        Wed, 27 May 2020 17:12:20 +0000 (UTC)
+Received: from virtlab511.virt.lab.eng.bos.redhat.com (virtlab511.virt.lab.eng.bos.redhat.com [10.19.152.198])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D9F4F5D9E5;
+        Wed, 27 May 2020 17:12:19 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: x86: simplify is_mmio_spte
+Date:   Wed, 27 May 2020 13:12:19 -0400
+Message-Id: <20200527171219.130319-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
-> dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> i2c "reg" property. If it is the compiler will print a warning:
-> 
-> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> 
-> In order to silence dtc up let's discard the flag from the DW I2C DT
-> binding example for now. Just revert this commit when dtc is fixed.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch created as a result of the Rob request to remove
->   the EEPROM-slave bit setting in the DT binndings example until the dtc
->   is fixed.
-> ---
->  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> index 4bd430b2b41d..101d78e8f19d 100644
-> --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> @@ -137,7 +137,7 @@ examples:
->  
->        eeprom@64 {
->          compatible = "linux,slave-24c02";
-> -        reg = <0x40000064>;
-> +        reg = <0x64>;
+We can simply look at bits 52-53 to identify MMIO entries in KVM's page
+tables.  Therefore, there is no need to pass a mask to kvm_mmu_set_mmio_spte_mask.
 
-But the compatible is a slave, so you need an example with a different 
-device.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/mmu.h     |  2 +-
+ arch/x86/kvm/mmu/mmu.c | 10 +++-------
+ arch/x86/kvm/svm/svm.c |  2 +-
+ arch/x86/kvm/vmx/vmx.c |  3 +--
+ 4 files changed, 6 insertions(+), 11 deletions(-)
 
->        };
->      };
->    - |
-> -- 
-> 2.26.2
-> 
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 8a3b1bce722a..048e865ad485 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -51,7 +51,7 @@ static inline u64 rsvd_bits(int s, int e)
+ 	return ((1ULL << (e - s + 1)) - 1) << s;
+ }
+ 
+-void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask);
++void kvm_mmu_set_mmio_spte_mask(u64 mmio_value, u64 access_mask);
+ 
+ void
+ reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 92d056954194..bef05a437a89 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -244,7 +244,6 @@ static u64 __read_mostly shadow_x_mask;	/* mutual exclusive with nx_mask */
+ static u64 __read_mostly shadow_user_mask;
+ static u64 __read_mostly shadow_accessed_mask;
+ static u64 __read_mostly shadow_dirty_mask;
+-static u64 __read_mostly shadow_mmio_mask;
+ static u64 __read_mostly shadow_mmio_value;
+ static u64 __read_mostly shadow_mmio_access_mask;
+ static u64 __read_mostly shadow_present_mask;
+@@ -331,21 +330,19 @@ static void kvm_flush_remote_tlbs_with_address(struct kvm *kvm,
+ 	kvm_flush_remote_tlbs_with_range(kvm, &range);
+ }
+ 
+-void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
++void kvm_mmu_set_mmio_spte_mask(u64 mmio_value, u64 access_mask)
+ {
+ 	BUG_ON((u64)(unsigned)access_mask != access_mask);
+-	BUG_ON((mmio_mask & mmio_value) != mmio_value);
+ 	WARN_ON(mmio_value & (shadow_nonpresent_or_rsvd_mask << shadow_nonpresent_or_rsvd_mask_len));
+ 	WARN_ON(mmio_value & shadow_nonpresent_or_rsvd_lower_gfn_mask);
+ 	shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
+-	shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
+ 	shadow_mmio_access_mask = access_mask;
+ }
+ EXPORT_SYMBOL_GPL(kvm_mmu_set_mmio_spte_mask);
+ 
+ static bool is_mmio_spte(u64 spte)
+ {
+-	return (spte & shadow_mmio_mask) == shadow_mmio_value;
++	return (spte & SPTE_SPECIAL_MASK) == SPTE_MMIO_MASK;
+ }
+ 
+ static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
+@@ -568,7 +565,6 @@ static void kvm_mmu_reset_all_pte_masks(void)
+ 	shadow_dirty_mask = 0;
+ 	shadow_nx_mask = 0;
+ 	shadow_x_mask = 0;
+-	shadow_mmio_mask = 0;
+ 	shadow_present_mask = 0;
+ 	shadow_acc_track_mask = 0;
+ 
+@@ -6154,7 +6150,7 @@ static void kvm_set_mmio_spte_mask(void)
+ 	else
+ 		mask = 0;
+ 
+-	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
++	kvm_mmu_set_mmio_spte_mask(mask, ACC_WRITE_MASK | ACC_USER_MASK);
+ }
+ 
+ static bool get_nx_auto_mode(void)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index a862c768fd54..3c9b321a420a 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -780,7 +780,7 @@ static __init void svm_adjust_mmio_mask(void)
+ 	 */
+ 	mask = (mask_bit < 52) ? rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK : 0;
+ 
+-	kvm_mmu_set_mmio_spte_mask(mask, mask, PT_WRITABLE_MASK | PT_USER_MASK);
++	kvm_mmu_set_mmio_spte_mask(mask, PT_WRITABLE_MASK | PT_USER_MASK);
+ }
+ 
+ static void svm_hardware_teardown(void)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9b63ac8d97ee..65ff16f00c08 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4147,8 +4147,7 @@ static void ept_set_mmio_spte_mask(void)
+ 	 * EPT Misconfigurations can be generated if the value of bits 2:0
+ 	 * of an EPT paging-structure entry is 110b (write/execute).
+ 	 */
+-	kvm_mmu_set_mmio_spte_mask(VMX_EPT_RWX_MASK,
+-				   VMX_EPT_MISCONFIG_WX_VALUE, 0);
++	kvm_mmu_set_mmio_spte_mask(VMX_EPT_MISCONFIG_WX_VALUE, 0);
+ }
+ 
+ #define VMX_XSS_EXIT_BITMAP 0
+-- 
+2.26.2
+
