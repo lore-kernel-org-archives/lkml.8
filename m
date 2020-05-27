@@ -2,143 +2,102 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D35C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C020520890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E30120888
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3iUSz5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387563AbgE0J3H (ORCPT
+        id S2387639AbgE0JaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:29:07 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5290 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726761AbgE0J3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:29:06 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0B8E0E4858C83D8465D0;
-        Wed, 27 May 2020 17:28:58 +0800 (CST)
-Received: from [10.173.221.230] (10.173.221.230) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 27 May 2020 17:28:51 +0800
-Subject: Re: [RFC PATCH 2/7] KVM: arm64: Set DBM bit of PTEs if hw DBM enabled
-To:     Catalin Marinas <catalin.marinas@arm.com>
-References: <20200525112406.28224-1-zhukeqian1@huawei.com>
- <20200525112406.28224-3-zhukeqian1@huawei.com> <20200526114926.GD17051@gaia>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        <wanghaibin.wang@huawei.com>, <zhengxiang9@huawei.com>,
-        Peng Liang <liangpeng10@huawei.com>
-From:   zhukeqian <zhukeqian1@huawei.com>
-Message-ID: <01147c57-b45e-0a40-da9a-4a0e56aac78d@huawei.com>
-Date:   Wed, 27 May 2020 17:28:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 27 May 2020 05:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387567AbgE0JaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:30:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38075C061A0F;
+        Wed, 27 May 2020 02:30:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id r10so11514975pgv.8;
+        Wed, 27 May 2020 02:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v2y/iPyRzYyLhAEf/uh0yrX0CJhcJ6SET+/MsJX6kaw=;
+        b=b3iUSz5Btlb50npCe7UyMR7IsWPA9+4DMO1ClOEBKTbQhnnjOIGuyzlidQNPI4ocR9
+         US6ChbMBYIdDbqcVqwpaG06u2FePeQ2OZFEaD/xSBJHlQYSIN5+OwCk1pk1UV1VVkbCY
+         5RBUT0kJRRU1w8rnNkLbiRXAz+gRYUFnLC35oB25jz7/t2O9x62C7/86c9kqCn3+u+6T
+         /GJ9/9cObulZWF6mNqb1PsqhcTs7OGAUuB03pJVd5Bn5Lzb4ry2K8vgEqUsW9DktALe9
+         qAdF6WhTpRwmwzB+GnCpPoeL+O2s/Zj/7zqA1Eq3vDgf8/xV3D+m3WKhXMHPnpmy+zmJ
+         GFpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v2y/iPyRzYyLhAEf/uh0yrX0CJhcJ6SET+/MsJX6kaw=;
+        b=SdXN2AQlBD9gTn2ortoP5LqMnnG9jSQs14d8OpL2Q2mYsik+NoDwnai+p/lY99cV4n
+         mT/nAWbtWtMx3ZhrASFL7k3w/ENuDiSwJhM6+V4+uukQz++QFTM5UelRjkfZy6MQ8cUF
+         +UJq2AnCXtANwHyg8Z688Ne0DYf+ke4Qpg/5TWss96Pb2zd+pQz0H0e6IpGYoVjwRoFs
+         +lO4eVaSAtbWd3xsaOBXRupe0ntYrTlrZntSEtMkWq0qezMAF0ABX8rMQ2Ee/pi+QIU5
+         SEFTkmFQ3NFAuo/K3swxdgz55FpHnsa+jSV2HKaFnI9pxiz+sF2mjSxM1wp3RVOObXE4
+         Yk9Q==
+X-Gm-Message-State: AOAM531Yu9q+ORL1YBKuY4Cx9YoIBoTkpd9N0shjaM7ajmlr9JDqfZYG
+        NGMbcbXuvoEafCstllUEK5BdDQxXjGuxHWB0TIQ=
+X-Google-Smtp-Source: ABdhPJyTFziRopM7wF4GSqcaVtylH65nW8FdA0X1FwR99uSYlsoSIkNDcTyOmlRv7ciMfIYoQQpUqwhrK9h3iktHYhc=
+X-Received: by 2002:a63:1c1:: with SMTP id 184mr3180431pgb.203.1590571815755;
+ Wed, 27 May 2020 02:30:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526114926.GD17051@gaia>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.230]
-X-CFilter-Loop: Reflected
+References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru> <20200526215528.16417-4-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200526215528.16417-4-Sergey.Semin@baikalelectronics.ru>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 27 May 2020 12:30:04 +0300
+Message-ID: <CAHp75VdHC+fZNgc5oFbgYaNDebudDROcM_peRzOZpTVy55+tJg@mail.gmail.com>
+Subject: Re: [PATCH v3 03/12] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Catalin,
+On Wed, May 27, 2020 at 1:00 AM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> i2c "reg" property. If it is the compiler will print a warning:
 
-On 2020/5/26 19:49, Catalin Marinas wrote:
-> On Mon, May 25, 2020 at 07:24:01PM +0800, Keqian Zhu wrote:
->> diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
->> index 1305e28225fc..f9910ba2afd8 100644
->> --- a/arch/arm64/include/asm/pgtable-prot.h
->> +++ b/arch/arm64/include/asm/pgtable-prot.h
->> @@ -79,6 +79,7 @@ extern bool arm64_use_ng_mappings;
->>  	})
->>  
->>  #define PAGE_S2			__pgprot(_PROT_DEFAULT | PAGE_S2_MEMATTR(NORMAL) | PTE_S2_RDONLY | PAGE_S2_XN)
->> +#define PAGE_S2_DBM		__pgprot(_PROT_DEFAULT | PAGE_S2_MEMATTR(NORMAL) | PTE_S2_RDONLY | PAGE_S2_XN | PTE_DBM)
-> 
-> You don't need a new page permission (see below).
-> 
->>  #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PAGE_S2_MEMATTR(DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_S2_XN)
->>  
->>  #define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
->> diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
->> index e3b9ee268823..dc97988eb2e0 100644
->> --- a/virt/kvm/arm/mmu.c
->> +++ b/virt/kvm/arm/mmu.c
->> @@ -1426,6 +1426,10 @@ static void stage2_wp_ptes(pmd_t *pmd, phys_addr_t addr, phys_addr_t end)
->>  	pte = pte_offset_kernel(pmd, addr);
->>  	do {
->>  		if (!pte_none(*pte)) {
->> +#ifdef CONFIG_ARM64_HW_AFDBM
->> +			if (kvm_hw_dbm_enabled() && !kvm_s2pte_dbm(pte))
->> +				kvm_set_s2pte_dbm(pte);
->> +#endif
->>  			if (!kvm_s2pte_readonly(pte))
->>  				kvm_set_s2pte_readonly(pte);
->>  		}
-> 
-> Setting the DBM bit is equivalent to marking the page writable. The
-> actual writable pte bit (S2AP[1] or HAP[2] as we call them in Linux for
-> legacy reasons) tells you whether the page has been dirtied but it is
-> still writable if you set DBM. Doing this in stage2_wp_ptes()
-> practically means that you no longer have read-only pages at S2. There
-> are several good reasons why you don't want to break this. For example,
-> the S2 pte may already be read-only for other reasons (CoW).
-> 
-Thanks, your comments help to solve the first problem in cover letter.
+Shouldn't be dtc whatever tools fixed?
 
-> I think you should only set the DBM bit if the pte was previously
-> writable. In addition, any permission change to the S2 pte must take
-> into account the DBM bit and clear it while transferring the dirty
-> status to the underlying page. I'm not deeply familiar with all these
-> callbacks into KVM but two such paths are kvm_unmap_hva_range() and the
-> kvm_mmu_notifier_change_pte().
-Yes, I agree.
-> 
-> 
->> @@ -1827,7 +1831,15 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->>  
->>  		ret = stage2_set_pmd_huge(kvm, memcache, fault_ipa, &new_pmd);
->>  	} else {
->> -		pte_t new_pte = kvm_pfn_pte(pfn, mem_type);
->> +		pte_t new_pte;
->> +
->> +#ifdef CONFIG_ARM64_HW_AFDBM
->> +		if (kvm_hw_dbm_enabled() &&
->> +		    pgprot_val(mem_type) == pgprot_val(PAGE_S2)) {
->> +			mem_type = PAGE_S2_DBM;
->> +		}
->> +#endif
->> +		new_pte = kvm_pfn_pte(pfn, mem_type);
->>  
->>  		if (writable) {
->>  			new_pte = kvm_s2pte_mkwrite(new_pte);
-> 
-> That's wrong here. Basically for any fault you get, you just turn the S2
-> page writable. The point of DBM is that you don't get write faults at
-> all if you have a writable page. So, as I said above, only set the DBM
-> bit if you stored a writable S2 pte (kvm_s2pte_mkwrite()).
-Yeah, you are right. I will correct it in Patch v1.
-> 
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+>
+> In order to silence dtc up let's discard the flag from the DW I2C DT
+> binding example for now. Just revert this commit when dtc is fixed.
 
-Thanks,
-Keqian
+Doesn't sound like a good idea. If user happens in between of these
+ping-pong change, how they will know this subtle issue?
 
+-- 
+With Best Regards,
+Andy Shevchenko
