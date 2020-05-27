@@ -2,137 +2,112 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 489B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 214E02084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EED2207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="sIAKCvc0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GG3L+diV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbgE0Acc (ORCPT
+        id S1726938AbgE0Ad0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 20:32:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726835AbgE0Acb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 20:32:31 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0A8C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:32:31 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 185so2666260pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=b3E7kBOAM2ew0xZ38kPv10y9VtHtStBNAPoFOCwdwzA=;
-        b=sIAKCvc0u5PTCAIepNUBqhcRsAcLBfmDxstjdS7VwkNKBZmUZ/E/X+L4tZTb4qX4xm
-         3Z5lRnZk7EVb9clRn8reNvvO0h1/HVu3xYL7LIMe37sTYQcVm3s0oCcOz2Q79T3f6iQ7
-         bA/CUUmuwqKc58s6BnXfGlwXQu4ABI6KYefld9YLsaL+xj0KvVHAX58vlT0XSV3t1FoB
-         mrNOy3QSZjkJP7SoFA5FToBJPK8dsa/xNpI/BCcGlfaQcs2yUt6PQ/oLDCSOI6KOnoT8
-         n8SQ16PWLOqtOTGi/h4fT1zexP+hvWlItmdC31or1jVbQhS8EJaVW5Ez4NYm/G8eGPxU
-         Fs1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=b3E7kBOAM2ew0xZ38kPv10y9VtHtStBNAPoFOCwdwzA=;
-        b=QX7Ii+CbCKbDiPwL0XWkf52vbEYx4L5hecjFjKD6KfwuOYumdImoJ4R5LzWuArNyee
-         bAQwGXnGDLjJpDkvaVJjOioDKzS1/ZlVxgaWQuz1VNpuiBco7pMxZUbXK46QcMvsbYzL
-         floC8+jGIA5azwOKYGacm0Dvt1qKqAGi1jZj9HbM+U1nYOa4v3EK+BP9GnbTdIKohuFm
-         4bgqLkHT4+sr8XEpVH5r0OhtFxINtz+iYh1QUavi3l/rbpH8mBIfsiHpw5/kFqYcGYnd
-         iRaUWQBDmJmd9eDaVmZg2Ci51XDOmMQY/AwxSNjEcA1ax/dOPlabNcQp6zoiiuI6dFxT
-         GtMw==
-X-Gm-Message-State: AOAM530OQ61a9qD6LsiEDdxYMh52BhUCR82+VT75fdO0845/voAATegD
-        p8d0qeUYllJ7Kb365lkSPz60cA==
-X-Google-Smtp-Source: ABdhPJyLyZQqJTK/aWjlOUiPRd4F92ADMhZZVfoxKIVjzzI0ER808j2pZAQdP72+g4iGhVujHr1P9g==
-X-Received: by 2002:a63:5763:: with SMTP id h35mr1353749pgm.98.1590539551005;
-        Tue, 26 May 2020 17:32:31 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id b23sm616219pgs.33.2020.05.26.17.32.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 17:32:30 -0700 (PDT)
-Date:   Tue, 26 May 2020 17:32:30 -0700 (PDT)
-X-Google-Original-Date: Tue, 26 May 2020 17:32:27 PDT (-0700)
-Subject:     Re: [PATCH 5/5] dt-bindings: timer: Add CLINT bindings
-In-Reply-To: <c0e9e625-daf8-b72f-2237-06018ff5d8a0@gmail.com>
-CC:     anup@brainfault.org, Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, tglx@linutronix.de,
-        devicetree@vger.kernel.org, Damien Le Moal <Damien.LeMoal@wdc.com>,
-        linux-kernel@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv@lists.infradead.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     seanga2@gmail.com
-Message-ID: <mhng-0995a264-b39c-4790-9aa5-b8c598b43ffd@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 26 May 2020 20:33:26 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50814 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726835AbgE0AdZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 20:33:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=8XQiPl3J4Z+p4woOPKcPHigRSA+YLSXLLEdL58R3tic=; b=GG3L+diVvZhRkr5tFVxVy5Rjv+
+        yF3z/M9pnQzAXSgseibShXFvWc4rlA9YMc25DJmBt8sNuKbLSHeWZAwHFBU0/x8UpJ0zM4OQRBknL
+        jaSNCRSo6D/elxX6SZ5pxP7otqifDPO5s7kv+qXFt18zC3WdnW37bbHt35p0KNu3PiNs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jdk0W-003L8I-Hv; Wed, 27 May 2020 02:33:20 +0200
+Date:   Wed, 27 May 2020 02:33:20 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Michael Walle <michael@walle.cc>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Alex Marginean <alexandru.marginean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>
+Subject: Re: [PATCH net-next v2 1/2] net: enetc: Initialize SerDes for SGMII
+ and SXGMII protocols
+Message-ID: <20200527003320.GC782807@lunn.ch>
+References: <20200526225050.5997-1-michael@walle.cc>
+ <20200526225050.5997-2-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526225050.5997-2-michael@walle.cc>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 23:29:36 PDT (-0700), seanga2@gmail.com wrote:
-> On 5/22/20 1:54 AM, Anup Patel wrote:
->> On Fri, May 22, 2020 at 1:35 AM Sean Anderson <seanga2@gmail.com> wrote:
->>>
->>> On 5/21/20 9:45 AM, Anup Patel wrote:
->>>> +Required properties:
->>>> +- compatible : "sifive,clint-1.0.0" and a string identifying the actual
->>>> +  detailed implementation in case that specific bugs need to be worked around.
->>>
->>> Should the "riscv,clint0" compatible string be documented here? This
->> 
->> Yes, I forgot to add this compatible string. I will add in v2.
->> 
->>> peripheral is not really specific to sifive, as it is present in most
->>> rocket-chip cores.
->> 
->> I agree that CLINT is present in a lot of non-SiFive RISC-V SOCs and
->> FPGAs but this IP is only documented as part of SiFive FU540 SOC.
->> (Refer, https://static.dev.sifive.com/FU540-C000-v1.0.pdf)
->> 
->> The RISC-V foundation should host the CLINT spec independently
->> under https://github.com/riscv and make CLINT spec totally open.
->> 
->> For now, I have documented it just like PLIC DT bindings found at:
->> Documentation/devicetree/bindings/interrupt-controller/sifive,plic-1.0.0.txt
->
-> The PLIC seems to have its own RISC-V-sponsored documentation [1] which
-> was split off from the older privileged specs. By your logic above,
-> should it be renamed to riscv,plic0.txt (with a corresponding change in
-> the documented compatible strings)?
->
-> [1] https://github.com/riscv/riscv-plic-spec
+On Wed, May 27, 2020 at 12:50:49AM +0200, Michael Walle wrote:
+> From: Claudiu Manoil <claudiu.manoil@nxp.com>
+> 
+> ENETC has ethernet MACs capable of SGMII and SXGMII but in order to use
+> these protocols some serdes configurations need to be performed. The
+> SerDes is configurable via an internal MDIO bus connected to an internal
+> PCS device, all reads/writes are performed at address 0.
+> 
+> This patch basically removes the dependency on bootloader regarding
+> SerDes initialization.
+> 
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../net/ethernet/freescale/enetc/enetc_hw.h   | 17 ++++
+>  .../net/ethernet/freescale/enetc/enetc_pf.c   | 98 +++++++++++++++++++
+>  .../net/ethernet/freescale/enetc/enetc_pf.h   |  1 +
+>  3 files changed, 116 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_hw.h b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+> index 6314051bc6c1..ee5851486388 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc_hw.h
+> @@ -224,6 +224,23 @@ enum enetc_bdr_type {TX, RX};
+>  #define ENETC_PM0_MAXFRM	0x8014
+>  #define ENETC_SET_TX_MTU(val)	((val) << 16)
+>  #define ENETC_SET_MAXFRM(val)	((val) & 0xffff)
+> +
+> +#define ENETC_PM_IMDIO_BASE	0x8030
+> +/* PCS registers */
+> +#define ENETC_PCS_CR			0x0
+> +#define ENETC_PCS_CR_RESET_AN		0x1200
+> +#define ENETC_PCS_CR_DEF_VAL		0x0140
+> +#define ENETC_PCS_CR_LANE_RESET		0x8000
 
-Let's propose tagging that PLIC spec as v1.0.0 in the platform spec group, but
-I don't see a reason why that wouldn't be viable.  Assuming that's all OK, we
-can start calling this a RISC-V PLIC (in addition to a SiFive PLIC, as they'll
-be compatible).
+Hi Michael
 
->> 
->> If RISC-V maintainers agree then I will document it as "RISC-V CLINT".
->> 
->> @Palmer ?? @Paul ??
+This looks like a standard BMCR. I know Russell King has pushed for
+just using MII_BMCR, BMCR_ANENABLE | BMCR_ANRESTART, BMCR_FULLDPLX |
+BMCR_SPEED1000, etc, since people understand what they mean.
 
-The CLINT is a SiFive spec.  It has open source RTL so it's been implemented in
-other designs, but it's not a RISC-V spec.  The CLIC, which is a superset of
-the CLINT, is a RISC-V spec.  IIRC it's not finished yet (it's the fast
-interrupts task group), but presumably we should have a "riscv,clic-2.0.0" (or
-whatever it ends up being called) compat string to go along with the
-specification.
+> +#define ENETC_PCS_DEV_ABILITY		0x04
+> +#define ENETC_PCS_DEV_ABILITY_SGMII	0x4001
+> +#define ENETC_PCS_DEV_ABILITY_SXGMII	0x5001
+> +#define ENETC_PCS_LINK_TIMER1		0x12
+> +#define ENETC_PCS_LINK_TIMER1_VAL	0x06a0
+> +#define ENETC_PCS_LINK_TIMER2		0x13
+> +#define ENETC_PCS_LINK_TIMER2_VAL	0x0003
+> +#define ENETC_PCS_IF_MODE		0x14
+> +#define ENETC_PCS_IF_MODE_SGMII_AN	0x0003
 
->> Regards,
->> Anup
->> 
->
-> --Sean
+It would be nice to document what these individual bits mean.
+
+   Andrew
