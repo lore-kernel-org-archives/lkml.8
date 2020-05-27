@@ -2,221 +2,149 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E0CC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE932089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:42:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oJxUyzIV"
+	by mail.kernel.org (Postfix) with ESMTP id 842CC20723
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590569043;
+	bh=+/NGB2sSlT/fbXh2DrGQlclwzqoCcKODEoqXcgZ+w/I=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=EvBVNLLtHIQ7bhhFwzz9uyttcQwraw5frfEO4LIDP1t/wiREjr27/FmFXWeiDsk1t
+	 365+g6DPZo7fa+0MkW57dtqwHGnlB6jp31syZzozy1pbsGBUMluL/IdLgVH2M1hFRd
+	 +tT6e8z5E46mKbe8/iTqOxEQ24SsfOaqKAFJy8vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388179AbgE0Im0 (ORCPT
+        id S2388172AbgE0IoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:42:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388161AbgE0ImZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:42:25 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6411BC03E97C
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:42:25 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 82so13987339lfh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:42:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0cVbaBKHPFRHFgLj7eTRo1bAadVyagSGQGQWcN/OrRE=;
-        b=oJxUyzIVgZq7u4vhV2WTxYtWXGyQmwh7FnwZ8aW0G3ACHvkdtdA5Vg8o7/V1sOarON
-         yNJdUef2IB0O73wQevzC4PCIMlKH3IWiY6zcax+lX2CmWdkv8j2+pjwlJkLtYIpsWFgp
-         SuQ5IhYNHlfCZxc8AijCOMtBvTka3/7rbhfY3Nc6zRHthYsIW9Ia5YXmDFUO15q7K9hn
-         gv0TJ0vBP1RCF2fErFoKvNPuVJOLNxLkd0zU42psapjDni5JhYPlHuSrQgTT1TsaksnW
-         bLzX4DiKNHL6Hr18kFZRWSRt4TTWKotEOD6xkTw9O+WJMFFWo3KHfgwwU34C3KRgL8N2
-         oZ1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0cVbaBKHPFRHFgLj7eTRo1bAadVyagSGQGQWcN/OrRE=;
-        b=hk1j+r/qnQKmfKORuyPHtFycbIkNAhIOQRB7LJ/Sh3IJNdgE8WmC9sSjfEkv2wjv3W
-         pDoJJwdxrHaBXApaAkkGvK5EE2v2twOQyprkYC/Nv6fpoq/hq+jfw1MwS08CZ4wFrcFT
-         3sZhtuB21+WvSNfqHuj+TlmhpYj6u+HodGDX6xOIZ8wPfxmd/0grOIziy6wDkNhsHVHD
-         I1wbFMMl2Bz/KsUmcsG8vYG9UZF8rbaRZ/+dYvSuATum30DTv8Y3xEhSVK8odwDPc8lz
-         6AHBMXObKH3W9KVwPQwDTWEL0himl5ebDYvec5Q1ZGMKYDRJpVNllHhMbFZY4SQXaGP6
-         IR5w==
-X-Gm-Message-State: AOAM530vGQ3Itkw2aazuPDPFnkdqvZVDTyRECTU7ulnLesnR5LakCYqH
-        iIHkWgp5JyI4CvPgsHViCW9z+nAF5QZM0w==
-X-Google-Smtp-Source: ABdhPJyNlPGUsdKFIc4nPUUBfYBG9iP9HgT7+hNyJKOoA+mEZpSqes4qfc2yvtAB8gm2VZvscTPBfw==
-X-Received: by 2002:a19:550e:: with SMTP id n14mr2628879lfe.81.1590568943796;
-        Wed, 27 May 2020 01:42:23 -0700 (PDT)
-Received: from [192.168.118.216] (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.gmail.com with ESMTPSA id f2sm543541ljf.113.2020.05.27.01.42.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 01:42:23 -0700 (PDT)
-Subject: Re: [PATCH v3 07/10] media: i2c: imx290: Add RAW12 mode support
-To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        manivannan.sadhasivam@linaro.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, c.barrett@framos.com,
-        a.brela@framos.com, Peter Griffin <peter.griffin@linaro.org>
-References: <20200524192505.20682-1-andrey.konovalov@linaro.org>
- <20200524192505.20682-8-andrey.konovalov@linaro.org>
- <CAPY8ntAW+yfxw0NTDi3yEwoZ+AqUuXD__pqB977bXgJr=jnNXg@mail.gmail.com>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <3597b850-5ce6-0e88-8f1f-e16bad5f75ef@linaro.org>
-Date:   Wed, 27 May 2020 11:42:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 04:44:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387811AbgE0IoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:44:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EF3620723;
+        Wed, 27 May 2020 08:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590569041;
+        bh=+/NGB2sSlT/fbXh2DrGQlclwzqoCcKODEoqXcgZ+w/I=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=PBDJ/cQ710tqqqopy/zdRKfSSpzslqeR99wc57R/ID4DryWQmX7cxpspThsdX4XZK
+         hmoouoE/6tUeVhGUfUfw/uSJiAWN7Oev/I1Uc4o3DG9nQ1JWwh52KdTqbOai547N8y
+         PrHOEfwmsenKZ4XMgP5kh0cZoOi5E5TCsUZsf1bw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAPY8ntAW+yfxw0NTDi3yEwoZ+AqUuXD__pqB977bXgJr=jnNXg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200524210615.17035-8-jonathan@marek.ca>
+References: <20200524210615.17035-1-jonathan@marek.ca> <20200524210615.17035-8-jonathan@marek.ca>
+Subject: Re: [PATCH 07/10] clk: qcom: Add graphics clock controller driver for SM8150
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Date:   Wed, 27 May 2020 01:44:00 -0700
+Message-ID: <159056904079.88029.16161248455546031414@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Quoting Jonathan Marek (2020-05-24 14:06:08)
+> diff --git a/drivers/clk/qcom/gpucc-sm8150.c b/drivers/clk/qcom/gpucc-sm8=
+150.c
+> new file mode 100644
+> index 000000000000..6e1fff0cde75
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gpucc-sm8150.c
+> @@ -0,0 +1,429 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+[..]
+> +
+> +static struct clk_rcg2 gpu_cc_gmu_clk_src =3D {
+> +       .cmd_rcgr =3D 0x1120,
+> +       .mnd_width =3D 0,
+> +       .hid_width =3D 5,
+> +       .parent_map =3D gpu_cc_parent_map_0,
+> +       .freq_tbl =3D ftbl_gpu_cc_gmu_clk_src,
+> +       .clkr.hw.init =3D &(struct clk_init_data){
+> +               .name =3D "gpu_cc_gmu_clk_src",
+> +               .parent_names =3D gpu_cc_parent_names_0,
+> +               .num_parents =3D 6,
+> +               .flags =3D CLK_SET_RATE_PARENT,
+> +               .ops =3D &clk_rcg2_ops,
+> +       },
+> +};
+> +
+> +static struct clk_branch gpu_cc_ahb_clk =3D {
+> +       .halt_reg =3D 0x1078,
+> +       .halt_check =3D BRANCH_HALT_DELAY,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x1078,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gpu_cc_ahb_clk",
+> +                       .flags =3D CLK_IS_CRITICAL,
 
-On 26.05.2020 19:05, Dave Stevenson wrote:
-> Hi Andrey
-> 
-> Thanks for the patch.
-> 
-> On Sun, 24 May 2020 at 20:26, Andrey Konovalov
-> <andrey.konovalov@linaro.org> wrote:
->>
->> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>
->> IMX290 is capable of outputting frames in both Raw Bayer (packed) 10 and
->> 12 bit formats. Since the driver already supports RAW10 mode, let's add
->> the missing RAW12 mode as well.
->>
->> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
->> ---
->>   drivers/media/i2c/imx290.c | 36 +++++++++++++++++++++++++++++++++---
->>   1 file changed, 33 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
->> index 162c345fffac..6e70ff22bc5f 100644
->> --- a/drivers/media/i2c/imx290.c
->> +++ b/drivers/media/i2c/imx290.c
->> @@ -71,6 +71,7 @@ struct imx290 {
->>          struct clk *xclk;
->>          struct regmap *regmap;
->>          u8 nlanes;
->> +       u8 bpp;
->>
->>          struct v4l2_subdev sd;
->>          struct v4l2_fwnode_endpoint ep;
->> @@ -90,10 +91,12 @@ struct imx290 {
->>
->>   struct imx290_pixfmt {
->>          u32 code;
->> +       u8 bpp;
->>   };
->>
->>   static const struct imx290_pixfmt imx290_formats[] = {
->> -       { MEDIA_BUS_FMT_SRGGB10_1X10 },
->> +       { MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
->> +       { MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
->>   };
->>
->>   static const struct regmap_config imx290_regmap_config = {
->> @@ -261,6 +264,18 @@ static const struct imx290_regval imx290_10bit_settings[] = {
->>          { 0x300b, 0x00},
->>   };
->>
->> +static const struct imx290_regval imx290_12bit_settings[] = {
->> +       { 0x3005, 0x01 },
->> +       { 0x3046, 0x01 },
->> +       { 0x3129, 0x00 },
->> +       { 0x317c, 0x00 },
->> +       { 0x31ec, 0x0e },
->> +       { 0x3441, 0x0c },
->> +       { 0x3442, 0x0c },
->> +       { 0x300a, 0xf0 },
->> +       { 0x300b, 0x00 },
->> +};
->> +
->>   /* supported link frequencies */
->>   static const s64 imx290_link_freq_2lanes[] = {
->>          891000000, /* 1920x1080 -  2 lane */
->> @@ -421,7 +436,12 @@ static int imx290_set_ctrl(struct v4l2_ctrl *ctrl)
->>                  } else {
->>                          imx290_write_reg(imx290, IMX290_PGCTRL, 0x00);
->>                          msleep(10);
->> -                       imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x3c);
->> +                       if (imx290->bpp == 10)
->> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
->> +                                                0x3c);
->> +                       else /* 12 bits per pixel */
->> +                               imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW,
->> +                                                0xf0);
->>                          imx290_write_reg(imx290, IMX290_BLKLEVEL_HIGH, 0x00);
->>                  }
->>                  break;
->> @@ -496,7 +516,7 @@ static u64 imx290_calc_pixel_rate(struct imx290 *imx290)
->>          u8 nlanes = imx290->nlanes;
->>
->>          /* pixel rate = link_freq * 2 * nr_of_lanes / bits_per_sample */
->> -       return (link_freq * 2 * nlanes / 10);
->> +       return (link_freq * 2 * nlanes / imx290->bpp);
-> 
-> This doesn't link on a 32bit system as it's a 64bit divide:
-> ERROR: "__aeabi_ldivmod" [drivers/media/i2c/imx290.ko] undefined!
-> It ought to be using do_div().
+Why is this CLK_IS_CRITICAL? Why not just enable the clk manually with
+a register write in probe and then remove this clk from the system? We
+can save some memory that way.
 
-Nice catch, thanks!
-I'll fix this in the next version of the patchset.
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+[...]
+> +
+> +static struct gdsc gpu_cx_gdsc =3D {
+> +       .gdscr =3D 0x106c,
+> +       .gds_hw_ctrl =3D 0x1540,
+> +       .pd =3D {
+> +               .name =3D "gpu_cx_gdsc",
+> +       },
+> +       .pwrsts =3D PWRSTS_OFF_ON,
+> +       .flags =3D VOTABLE,
+> +};
+> +
+> +/* see comment in gpucc-sdm845 about this */
+> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
+> +{
+> +       /* Do nothing but give genpd the impression that we were successf=
+ul */
+> +       return 0;
+> +}
 
-Thanks,
-Andrey
+Maybe we should export a helper from gdsc.c for this with the comment
+and it named something obvious? gx_gdsc_do_nothing_enable()?
 
-> Admittedly it didn't compile before as you still had a s64 divide by
-> 10, but I hadn't tried that :-)
-> 
->    Dave
-> 
->>   }
->>
->>   static int imx290_set_fmt(struct v4l2_subdev *sd,
->> @@ -533,6 +553,7 @@ static int imx290_set_fmt(struct v4l2_subdev *sd,
->>          } else {
->>                  format = &imx290->current_format;
->>                  imx290->current_mode = mode;
->> +               imx290->bpp = imx290_formats[i].bpp;
->>
->>                  if (imx290->link_freq)
->>                          __v4l2_ctrl_s_ctrl(imx290->link_freq,
->> @@ -577,6 +598,15 @@ static int imx290_write_current_format(struct imx290 *imx290)
->>                          return ret;
->>                  }
->>                  break;
->> +       case MEDIA_BUS_FMT_SRGGB12_1X12:
->> +               ret = imx290_set_register_array(imx290, imx290_12bit_settings,
->> +                                               ARRAY_SIZE(
->> +                                                       imx290_12bit_settings));
->> +               if (ret < 0) {
->> +                       dev_err(imx290->dev, "Could not set format registers\n");
->> +                       return ret;
->> +               }
->> +               break;
->>          default:
->>                  dev_err(imx290->dev, "Unknown pixel format\n");
->>                  return -EINVAL;
->> --
->> 2.17.1
->>
+> +
+> +static struct gdsc gpu_gx_gdsc =3D {
+> +       .gdscr =3D 0x100c,
+> +       .clamp_io_ctrl =3D 0x1508,
+> +       .pd =3D {
+> +               .name =3D "gpu_gx_gdsc",
+> +               .power_on =3D gx_gdsc_enable,
+> +       },
+> +       .pwrsts =3D PWRSTS_OFF_ON,
+> +       .flags =3D CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
+> +};
+> +
