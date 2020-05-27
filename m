@@ -2,159 +2,203 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF86AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C497BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD762088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10AE2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:15:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U9PFUgFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387810AbgE0KNk (ORCPT
+        id S2387877AbgE0KPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:13:40 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:63372 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387767AbgE0KNj (ORCPT
+        Wed, 27 May 2020 06:15:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387852AbgE0KPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:13:39 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04RADbjT001274;
-        Wed, 27 May 2020 19:13:37 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
- Wed, 27 May 2020 19:13:37 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04RADal2001271
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Wed, 27 May 2020 19:13:37 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
- printk(KERN_DEBUG)
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200525084218.GC5300@linux-b0ei>
- <20200525091157.GF755@jagdpanzerIV.localdomain>
- <f02a71bc-0867-be60-182b-10d7377b2b04@i-love.sakura.ne.jp>
- <20200527083747.GA27273@linux-b0ei>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <35d76737-8d23-9fb2-8e55-507109317f44@i-love.sakura.ne.jp>
-Date:   Wed, 27 May 2020 19:13:38 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 27 May 2020 06:15:50 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48AAC03E979
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 03:15:50 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z26so11629895pfk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 03:15:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=TlnmUrscKa/rIKFGJ53s4sxtDr9jacnXeVYHbyTFQtU=;
+        b=U9PFUgFAFXaZ31fVg/bX9FAw0grwENMcVfqGyk+QHHM8fDNoIXX/5Jit64oU2z6s3V
+         QMe5JjD120SyMoGMqxhHG8jEFrM0uIeE5nEHudeCswPopXz5ChGfdIyiq7e07lDABEEs
+         614QVBHQD1bVz9Vl/rsQhNUZpNiWdfsiHeo9E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=TlnmUrscKa/rIKFGJ53s4sxtDr9jacnXeVYHbyTFQtU=;
+        b=Xki2hpJyVCQWg2xsG/oV7NZmZWJki9Xvi2Y4dyljXTTCl2YJvcxVssivDXEIFNuc1h
+         5NXMy3DB5tXfzX8rrOvGmJuZSNT9i6fSBMuo3R+LvtxveH85L2Qk7rqEJRDd6tT7M/ob
+         3SNUCIf7hijnSCyKVJl3/Xj9wcHU9qfaeQizrSmCgwoVW8ZuydxcuH+Mq3rtEb1DIQcu
+         xPy2oUqyquddxQdleRbObin0TXaWmdBSRjPnEw2Fuf0V0B7p4zzQU7/SUyLAx085pzee
+         1REY2MXaOoqWXVZFMGjTwy8WNE9PXJwy3a4NWal2IxLKa9Mo9xE3+t4kjuCSSb0iLEbc
+         2J+Q==
+X-Gm-Message-State: AOAM532RZP/sbq7Cy/s+bZgKAPIxAKvkohDFA3IXkU7Jk2cYd1fkYXs1
+        BIc8wcgWosoeO2lVWZrpDdJsgbi2ZFo=
+X-Google-Smtp-Source: ABdhPJyaQkX9GG0uxrGZHHp5tPrfy/kI025wjd11LmMZcniWV4wMMcJ/NJrAhz2pbNaPKnqpjnpfxQ==
+X-Received: by 2002:a63:7d53:: with SMTP id m19mr3475449pgn.168.1590574549868;
+        Wed, 27 May 2020 03:15:49 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z18sm1744925pfj.148.2020.05.27.03.15.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 03:15:49 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200527083747.GA27273@linux-b0ei>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-5-git-send-email-mkshah@codeaurora.org>
+Subject: Re: [PATCH v2 4/4] irqchip: qcom-pdc: Introduce irq_set_wake call
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Date:   Wed, 27 May 2020 03:15:47 -0700
+Message-ID: <159057454795.88029.5963412495484312088@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/27 17:37, Petr Mladek wrote:
-> On Mon 2020-05-25 19:43:04, Tetsuo Handa wrote:
->> On 2020/05/25 17:42, Petr Mladek wrote:
->>> I see few drawbacks with this patch:
->>>
->>> 1. It will cause adding much more messages into the logbuffer even
->>>    though they are not flushed to the console. It might cause that
->>>    more important messages will get overridden before they reach
->>>    console. They might also make hard to read the full log.
->>
->> Since the user of this twist option will select console loglevel in a way
->> KERN_DEBUG messages are not printed to consoles, KERN_DEBUG messages will
->> be immediately processed (and space for future messages will be reclaimed).
->> Therefore, I don't think that more important messages will get overridden.
-> 
-> This is not fully true. More important messages will still be printed
-> to the console. The debug messages will not be skipped before the
-> older messages are proceed.
-> 
-> I mean that many debug messages might cause losing more important ones
-> before the old important messages are proceed.
+Quoting Maulik Shah (2020-05-23 10:11:13)
+> Remove irq_disable callback to allow lazy disable for pdc interrupts.
+>=20
+> Add irq_set_wake callback that unmask interrupt in HW when drivers
+> mark interrupt for wakeup. Interrupt will be cleared in HW during
+> lazy disable if its not marked for wakeup.
+>=20
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> ---
+>  drivers/irqchip/qcom-pdc.c | 33 +++++++++++++++++----------------
+>  1 file changed, 17 insertions(+), 16 deletions(-)
+>=20
+> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> index 6ae9e1f..f7c0662 100644
+> --- a/drivers/irqchip/qcom-pdc.c
+> +++ b/drivers/irqchip/qcom-pdc.c
+> @@ -36,6 +36,7 @@ struct pdc_pin_region {
+>         u32 cnt;
+>  };
+> =20
+> +DECLARE_BITMAP(pdc_wake_irqs, PDC_MAX_IRQS);
 
-Then, this reasoning will be also applicable to
+static?
 
-  [PATCH] printk: Add loglevel for "do not print to consoles".
+>  static DEFINE_RAW_SPINLOCK(pdc_lock);
+>  static void __iomem *pdc_base;
+>  static struct pdc_pin_region *pdc_region;
+> @@ -87,22 +88,20 @@ static void pdc_enable_intr(struct irq_data *d, bool =
+on)
+>         raw_spin_unlock(&pdc_lock);
+>  }
+> =20
+> -static void qcom_pdc_gic_disable(struct irq_data *d)
+> +static int qcom_pdc_gic_set_wake(struct irq_data *d, unsigned int on)
+>  {
+>         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> -               return;
+> -
+> -       pdc_enable_intr(d, false);
+> -       irq_chip_disable_parent(d);
+> -}
+> +               return 0;
 
-in a sense that "don't try to quickly queue a lot of messages" rule. This concern
-cannot be solved even if asynchronous printk() and per console loglevel are
-supported someday, and oom_dump_tasks() is not allowed to count on these for
-solving the stall problem caused by reporting all OOM victim candidates at once.
+Shouldn't this fail if we can't set for wake?
 
-> 
-> 
->> This twist option might increase possibility of mixing KERN_DEBUG messages
->> and non-KERN_DEBUG messages due to KERN_CONT case.
->>
->> But if these concerns turn out to be a real problem, we can redirect
->> pr_devel()/pr_debug() to simple snprintf() which evaluates arguments
->> but discards the result without storing into the logbuffer.
->>
->>>
->>> 2. Crash inside printk() causes recursive messages. They are currently
->>>    printed into the printk_safe() buffers and there is a bigger risk
->>>    that they will not reach the console.
->>
->> Currently "static char textbuf[LOG_LINE_MAX];" is "static" because it is used
->> under logbuf_lock. If we remove "static", we can use "char textbuf[LOG_LINE_MAX];"
->> without logbuf_lock. Then, we can bring potentially dangerous-and-slow vscnprintf()
->> in vprintk_store() to earlier stage (and vprintk_store() will need to do simple
->> copy) so that oops in printk() will happen before entering printk-safe context.
->> I think that this change follows a direction which lockless logbuf will want.
-> 
-> No, LOG_LINE_MAX is too big to be allocated on stack.
+> =20
+> -static void qcom_pdc_gic_enable(struct irq_data *d)
+> -{
+> -       if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+> -               return;
+> +       if (on) {
+> +               pdc_enable_intr(d, true);
+> +               irq_chip_enable_parent(d);
+> +               set_bit(d->hwirq, pdc_wake_irqs);
+> +       } else {
+> +               clear_bit(d->hwirq, pdc_wake_irqs);
+> +       }
+> =20
+> -       pdc_enable_intr(d, true);
+> -       irq_chip_enable_parent(d);
+> +       return irq_chip_set_wake_parent(d, on);
+>  }
+> =20
+>  static void qcom_pdc_gic_mask(struct irq_data *d)
 
-We could assign per task_struct buffers and per CPU interrupt context buffers
-(like we discussed about how to handle KERN_CONT problem). But managing these
-off stack buffers is out of scope for this patch.
+The diff is really hard to read too. Maybe set_wake can be added first
+and then the enable/disable functions removed?
 
-> 
-> Well, it would be possible to call vsprintf() with NULL buffer. It is
-> normally used to calculate the length of the message before it is
-> printed. But it also does all the accesses without printing anything.
+> @@ -110,6 +109,9 @@ static void qcom_pdc_gic_mask(struct irq_data *d)
+>         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+>                 return;
+> =20
+> +       if (!test_bit(d->hwirq, pdc_wake_irqs))
+> +               pdc_enable_intr(d, false);
+> +
+>         irq_chip_mask_parent(d);
+>  }
+> =20
+> @@ -118,6 +120,7 @@ static void qcom_pdc_gic_unmask(struct irq_data *d)
+>         if (d->hwirq =3D=3D GPIO_NO_WAKE_IRQ)
+>                 return;
+> =20
+> +       pdc_enable_intr(d, true);
+>         irq_chip_unmask_parent(d);
+>  }
+> =20
 
-OK. I think that redirecting pr_debug() to vsnprintf(NULL, 0) will be
-better than modifying dynamic_debug path, for
+I find these two hunks deeply confusing. I'm not sure what the
+maintainers think though. I hope it would be simpler to always enable
+the hwirqs in the pdc when an irq is requested and only disable it in
+the pdc when the system goes to suspend and the pdc pin isn't for an irq
+that's marked for wakeup. Does that break somehow?
 
-> 
-> 
->>> Have you tested this patch by the syzcaller with many runs, please?
->>> Did it helped to actually discover more bugs?
->>> Did it really made things easier?
->>
->> syzbot can't test with custom patches. The only way to test this patch is
->> to send to e.g. linux-next.git which syzbot is testing.
-> 
-> OK, we could try this via some test branch that will go into
-> linux-next but it would not be scheduled for the next merge window.
-> 
-> For the testing, this patch might be good enough.
-> 
-> For eventual upstreaming, I would prefer to handle this in
-> lib/dynamic_debug.c by enabling all entries by default. This
-> would solve all DYNAMIC_DEBUG_BRANCH() users at one place.
+My understanding of the hardware is that the GPIO controller has lines
+directly connected to various SPI lines on the GIC and PDC has a way to
+monitor those direct connections and wakeup the CPUs when they trigger
+the detection logic in the PDC. The enable/disable bit in PDC gates that
+logic for each wire between the GPIO controller and the GIC.
 
-since "enabling all entries by default" will redirect pr_debug() calls to
-printk(KERN_DEBUG), the "don't try to quickly queue too much messages" above
-remains (i.e. it is essentially same with what this patch is doing).
+So isn't it simpler to leave the PDC monitoring pins that we care about
+all the time and only stop monitoring when we enter and leave suspend?
+And shouldn't the driver set something sane in qcom_pdc_init() to
+disable all the pdc pins so that we don't rely on boot state to
+configure pins for wakeup?
 
-> 
-> Anyway, I would like to see a proof that it really helped to find
-> some bugs an easier way before upstreaming.
-> 
-> Best Regards,
-> Petr
-> 
-
+> @@ -197,15 +200,13 @@ static struct irq_chip qcom_pdc_gic_chip =3D {
+>         .irq_eoi                =3D irq_chip_eoi_parent,
+>         .irq_mask               =3D qcom_pdc_gic_mask,
+>         .irq_unmask             =3D qcom_pdc_gic_unmask,
+> -       .irq_disable            =3D qcom_pdc_gic_disable,
+> -       .irq_enable             =3D qcom_pdc_gic_enable,
+>         .irq_get_irqchip_state  =3D qcom_pdc_gic_get_irqchip_state,
+>         .irq_set_irqchip_state  =3D qcom_pdc_gic_set_irqchip_state,
+>         .irq_retrigger          =3D irq_chip_retrigger_hierarchy,
+>         .irq_set_type           =3D qcom_pdc_gic_set_type,
+> +       .irq_set_wake           =3D qcom_pdc_gic_set_wake,
+>         .flags                  =3D IRQCHIP_MASK_ON_SUSPEND |
+> -                                 IRQCHIP_SET_TYPE_MASKED |
+> -                                 IRQCHIP_SKIP_SET_WAKE,
+> +                                 IRQCHIP_SET_TYPE_MASKED,
+>         .irq_set_vcpu_affinity  =3D irq_chip_set_vcpu_affinity_parent,
+>         .irq_set_affinity       =3D irq_chip_set_affinity_parent,
