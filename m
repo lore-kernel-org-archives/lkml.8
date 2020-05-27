@@ -2,106 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5678220899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC4E2065C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725915AbgE0WaL convert rfc822-to-8bit (ORCPT
+        id S1726019AbgE0WaV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:30:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:41419 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbgE0WaK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:30:10 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MF3Y8-1jp2uP0LBw-00FRqj; Thu, 28 May 2020 00:30:09 +0200
-Received: by mail-qt1-f177.google.com with SMTP id k22so5915055qtm.6;
-        Wed, 27 May 2020 15:30:08 -0700 (PDT)
-X-Gm-Message-State: AOAM531BeyRwL05UY3rtLnPZvc2nbJNbb7sKMNzq6Vi5Bajd5Ejmnh1S
-        VuZGpF2Ko/O/HaUuElbXzRtWmFX7xz/WtjZB+eY=
-X-Google-Smtp-Source: ABdhPJw0Sdq4wNMlX0rj1KsXIR85+wLbprQ8GBhIKMq/tB+jncEhZv4Duy7U08/H3avF8quPov/6lj3lUKHLEdRZq/U=
-X-Received: by 2002:ac8:306d:: with SMTP id g42mr167827qte.18.1590618607910;
- Wed, 27 May 2020 15:30:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200527134911.1024114-1-arnd@arndb.de> <877dwx3u9y.fsf@x220.int.ebiederm.org>
-In-Reply-To: <877dwx3u9y.fsf@x220.int.ebiederm.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 00:29:51 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1YHS0kQODqKEqZ5DJCSodyOWE=G5i0pjoPq_V0pQDauA@mail.gmail.com>
-Message-ID: <CAK8P3a1YHS0kQODqKEqZ5DJCSodyOWE=G5i0pjoPq_V0pQDauA@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_elf_fdpic: fix execfd build regression
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 May 2020 18:30:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:9372 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbgE0WaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 18:30:20 -0400
+IronPort-SDR: 2fq4SKqycdEiCmNoOeImZHuo+u2fd6Uw/AI/5nGQnpPMis0CCHECcC8v3AEUIboMMxT4dGlzch
+ vCQ2EpOoCTEA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 15:30:20 -0700
+IronPort-SDR: arn4Bo0jnxZUN0jzjB1ppZJVRvXE8vVaao7RnH7euAqVJOWIVNEmNGQqHqYeZ1OEJra6K7g1oQ
+ CElSDyC/wSKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="256885314"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by fmsmga008.fm.intel.com with ESMTP; 27 May 2020 15:30:19 -0700
+Received: from orsmsx107.amr.corp.intel.com ([169.254.1.106]) by
+ ORSMSX104.amr.corp.intel.com ([169.254.4.173]) with mapi id 14.03.0439.000;
+ Wed, 27 May 2020 15:30:19 -0700
+From:   "Williams, Dan J" <dan.j.williams@intel.com>
+To:     "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "ardb@kernel.org" <ardb@kernel.org>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "joe@perches.com" <joe@perches.com>,
+        "nivedita@alum.mit.edu" <nivedita@alum.mit.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH 08/15] efi/x86: Move command-line initrd loading to
+ efi_main
+Thread-Topic: [PATCH 08/15] efi/x86: Move command-line initrd loading to
+ efi_main
+Thread-Index: AQHWNHZm0cvj4qcSIk2dwmAeFoTM9A==
+Date:   Wed, 27 May 2020 22:30:18 +0000
+Message-ID: <10a1c7fcea861f5d45dff81cba673e970d686bc2.camel@intel.com>
+References: <20200508180157.1816-1-ardb@kernel.org>
+         <20200508180157.1816-9-ardb@kernel.org>
+In-Reply-To: <20200508180157.1816-9-ardb@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.254.38.97]
+Content-Type: text/plain; charset="utf-7"
+Content-ID: <E70E39CBD7C0D543B1E1BBF4835CD7BC@intel.com>
 Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:mn+FbMg1s8+W/BDX/3TYVn27SMUH65f55dYgmSvfH4jdsYFfBLN
- z7kZYksZI7k4rE/aPCtpd8B0zCr3lc2MCl477i9HRgfOTNNQvwgyslE9gElrBxeNPuMfTFA
- pKQWoLs59oveokwRsYlhTFlCpyoLvrjil4lsGlg7h5t48jWeIH8zg3XAob0nqKCeJvx3YgD
- uU/kHsAqfz/bePWAWTWIw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QbcoB7o2wfg=:5y+a6YqR/iiqxWm3KiMSh8
- /XtzUvtTg6sBa4ovt8apLRxrFxKc2FcD077v61lk//Lc+IixzyXbY+C8lOQXG9Au4lhrOPfMm
- jEvZuL/sC6UZhRdFqI/NulbPU7CH9/7MjrZP5RNVFYBgc28hY9Rb+1uQljgTmWowEUYa/HYI2
- wiaWPra/Ix/gK/J2+1FB9YOj9xeuOz9sBdFJbNa9KibFvwYK5juZzHkd/kWnxO9uzKNGUcrhu
- ccicWTVJkspNDwzcviFVJ6IX0JdjI2y5qhTCDH7pSSGWlYDJgQ8JOg8bIEREyrzpi1+1s6I6I
- 6nzbxGdreRG93NcZIgpFVJ6iNh85VZMOSTzdM2zsFAI71fHP/TZXe5RRW0BSzdRTeKSXxalFW
- t5EYdNF0SPCHHGe0+e1XSvswHM9XzKCBEi4doL6P+07BDrFXRj3Ksq5LK0UV/H8mguyaSZhay
- M6Ku7Rbal/ApvOnsHor2VedqGgAxp9mQfFSlxoMP1ZNB4NCaHIg+PKjaLAiIgyW05hkmfX3Q8
- tEWGCsXBhYKADsRl8vJy3T/17NN4dczfHjKWRQnG6xMJCW8Iqfv1F3lY1MZEskZv0j5sinsvZ
- ou4PNsIy+g2X0GVd62R12t3P4aI9rkkRmXuCw95v0rfStyDmCACU+0r1ussGC2CmB/0oLXvIS
- oZRI3tYH+VmCYjSRVygeETzGPQWKOR/EAGBfTVxXWbVfgL3Co0g5M+s/eUu0u8NTIVbrkEBa3
- puEnjO9quI2tyfTUaKRT+ySkhKprEvhLJgT8GhgY7HHfBVZ8LSCIgf5N+VEAI0u0tTcUp3Qp0
- n4TMSWbhtY0IlXqaFAHKYVK79qJMC3LJaY0Ks4eROXiSomhISs=
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:12 AM Eric W. Biederman
-<ebiederm@xmission.com> wrote:
->
-> Arnd Bergmann <arnd@arndb.de> writes:
->
-> > The change to bprm->have_execfd was incomplete, leading
-> > to a build failure:
-> >
-> > fs/binfmt_elf_fdpic.c: In function 'create_elf_fdpic_tables':
-> > fs/binfmt_elf_fdpic.c:591:27: error: 'BINPRM_FLAGS_EXECFD' undeclared
-> >
-> > Change the last user of BINPRM_FLAGS_EXECFD in a corresponding
-> > way.
-> >
-> > Reported-by: Valdis Klētnieks <valdis.kletnieks@vt.edu>
-> > Fixes: b8a61c9e7b4a ("exec: Generic execfd support")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> > I have no idea whether this is right, I only looked briefly at
-> > the commit that introduced the problem.
->
-> It is correct and my fault.
->
-> Is there an easy to build-test configuration that includes
-> binfmt_elf_fdpic?
->
-> I have this sense that it might be smart to unify binfmt_elf
-> and binftm_elf_fdpic to the extent possible, and that will take build
-> tests.
+On Fri, 2020-05-08 at 20:01 +-0200, Ard Biesheuvel wrote:
++AD4- From: Arvind Sankar +ADw-nivedita+AEA-alum.mit.edu+AD4-
++AD4- 
++AD4- Consolidate the initrd loading in efi+AF8-main.
++AD4- 
++AD4- The command line options now need to be parsed only once.
++AD4- 
++AD4- Signed-off-by: Arvind Sankar +ADw-nivedita+AEA-alum.mit.edu+AD4-
++AD4- Link: 
++AD4- https://lore.kernel.org/r/20200430182843.2510180-9-nivedita+AEA-alum.mit.edu
++AD4- Signed-off-by: Ard Biesheuvel +ADw-ardb+AEA-kernel.org+AD4-
 
-It should be included in an ARM allmodconfig. Nicolas Pitr did the
-work to support ELF_FDPIC on ARM with MMU a while ago, but
-I'm not sure what it would take to make this architecture independent
-or support build-testing on x86.
+Hi,
 
-       Arnd
+This patch patch in tip/master as:
+
+987053a30016 efi/x86: Move command-line initrd loading to efi+AF8-main
+
+...regresses my nfs root configuration. It hangs trying to mount the
+nfs root filesystem +ACI-root+AD0-/dev/nfs ip+AD0-dhcp+ACI-.
+
+It does not revert cleanly.
+
+
