@@ -2,94 +2,61 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 993ED207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:00:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g2rrPUM7"
+	by mail.kernel.org (Postfix) with ESMTP id EB15D207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389495AbgE0PAw (ORCPT
+        id S2389510AbgE0PBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:00:52 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23939 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389400AbgE0PAu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:00:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590591649;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=S79dLGaDC34U88k/muBN2/cWWvIJSeZD2zX/jWO3DQQ=;
-        b=g2rrPUM75riI+DtvHnoF2WAwoBSONDpP+AtLrZcuUs1JNfZcqfBFhxH72/4KJowcc3Fq9d
-        HiWYmmiLxY94abgy4EmKJnTOqWMO3kX8KAQSHdZNsilBFmB848B/7rOZU2d+FIh9CD2UlQ
-        QU0UQbHwvwsJXnc0RWrjisGI+J75pk0=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-cYKioqrlNwyadL1Q5TGRUA-1; Wed, 27 May 2020 11:00:47 -0400
-X-MC-Unique: cYKioqrlNwyadL1Q5TGRUA-1
-Received: by mail-ej1-f69.google.com with SMTP id nw19so9041964ejb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:00:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S79dLGaDC34U88k/muBN2/cWWvIJSeZD2zX/jWO3DQQ=;
-        b=BIWuuYJvOKHRRtBehJwVp/z+pMEctUZMYLsrUeOxUCDHki9LifD0dEpUllHSuW5Z47
-         21I1241XmlhdifGc1O3uzs2rh9xR6U74PSP2P2sdpvrglgVzd4oBPZQdgvCXvVGcQ1W6
-         JwkOWqOCgygXoCE/1jVB4L4jaMHmeeRoTXbN9Rt1KFkJowjoHesI9OCyweXM5tJsGWx8
-         rycpZwH1ySK0//gVKHyUBYb/HmNDnzz6LReNscMbnnyUg/yIOVlh0CEsSTQz5gArEBFV
-         TecO9UL9YG5vzKGajGIPyXx5VW6mi+jTFRGFdkXHDjXG0aKYf7UdHSWFJgLthskXPkFE
-         nj4w==
-X-Gm-Message-State: AOAM532HTo8/AFiEdcUcqcPcQ1MLHBqynmAu0qgNayNypkTsxhfCAgKV
-        F90gQLENc3Be6Hb24B5TynkwgQiek3GRzkyAh2AETxvl01KVPp6L+nzmN7RU1qdkT4RxZ5nk/g/
-        7HU64EDKX+ZZokoObLUJWCB72
-X-Received: by 2002:a17:906:1442:: with SMTP id q2mr3491307ejc.33.1590591646096;
-        Wed, 27 May 2020 08:00:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzxzNY5UhO1mssuYEm2F2UYGESNfuhTc2d/FaV+VoTyW39e+803AKyGa34dCi6Lxc3HyJGruA==
-X-Received: by 2002:a17:906:1442:: with SMTP id q2mr3491234ejc.33.1590591645542;
-        Wed, 27 May 2020 08:00:45 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id l1sm3053400ejd.114.2020.05.27.08.00.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 08:00:45 -0700 (PDT)
-Subject: Re: [PATCH v3 0/7] Statsfs: a new ram-based file system for Linux
- kernel statistics
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jim Mattson <jmattson@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
-        David Rientjes <rientjes@google.com>,
-        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org
-References: <20200526110318.69006-1-eesposit@redhat.com>
- <20200526153128.448bfb43@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <6a754b40-b148-867d-071d-8f31c5c0d172@redhat.com>
- <20200527133309.GC793752@lunn.ch>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b0d11337-3ea4-d874-6013-ff8c3e9d6f26@redhat.com>
-Date:   Wed, 27 May 2020 17:00:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 27 May 2020 11:01:37 -0400
+Received: from mga05.intel.com ([192.55.52.43]:39575 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389419AbgE0PBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:01:37 -0400
+IronPort-SDR: VBMFms1icsPTldew0BTCObFkBZuuyDJtw609JqnJnSne7lwwLN5KjYRNOdyHivCbvsJ7CrLcc1
+ ysG9PdbzvCmQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 08:01:36 -0700
+IronPort-SDR: +t/xX0Z/yYqy4caKhAxF3sBUghHe7W8udi9gBSgGLfbZ3iEBtCgNCeNiJ+Lb9tECaWUzihktoA
+ N77ntZe8G30A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
+   d="scan'208";a="284829491"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 08:01:35 -0700
+Received: from [10.251.8.26] (kliang2-mobl.ccr.corp.intel.com [10.251.8.26])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id B10FE5805EF;
+        Wed, 27 May 2020 08:01:34 -0700 (PDT)
+Subject: Re: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
+ events on some TGL
+To:     David Laight <David.Laight@ACULAB.COM>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
+ <869fafc80da84d188678c1cbb0267a0b@AcuMS.aculab.com>
+ <ed3d86b7-2f75-cfe9-bc74-5f2c29ef2540@linux.intel.com>
+ <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <9f0ed889-590e-6f7a-85bd-c4be43e993f3@linux.intel.com>
+Date:   Wed, 27 May 2020 11:01:22 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200527133309.GC793752@lunn.ch>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <d64c3c684ccd46daa5bb326dbbb277b0@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -97,25 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/05/20 15:33, Andrew Lunn wrote:
->> I don't really know a lot about the networking subsystem, and as it was
->> pointed out in another email on patch 7 by Andrew, networking needs to
->> atomically gather and display statistics in order to make them consistent,
->> and currently this is not supported by stats_fs but could be added in
->> future.
+
+
+On 5/27/2020 10:51 AM, David Laight wrote:
+> From: Liang, Kan
+>> Sent: 27 May 2020 15:47
+>> On 5/27/2020 8:59 AM, David Laight wrote:
+>>> From: kan.liang@linux.intel.com
+>>>> Sent: 27 May 2020 13:31
+>>>>
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> When counting IMC uncore events on some TGL machines, an oops will be
+>>>> triggered.
+>>>>     [ 393.101262] BUG: unable to handle page fault for address:
+>>>>     ffffb45200e15858
+>>>>     [ 393.101269] #PF: supervisor read access in kernel mode
+>>>>     [ 393.101271] #PF: error_code(0x0000) - not-present page
+>>>>
+>>>> Current perf uncore driver still use the IMC MAP SIZE inherited from
+>>>> SNB, which is 0x6000.
+>>>> However, the offset of IMC uncore counters for some TGL machines is
+>>>> larger than 0x6000, e.g. 0xd8a0.
+>>>>
+>>>> Enlarge the IMC MAP SIZE for TGL to 0xe000.
+>>>
+>>> Replacing one 'random' constant with a different one
+>>> doesn't seem like a proper fix.
+>>>
+>>> Surely the actual bounds of the 'memory' area are properly
+>>> defined somewhere.
+>>> Or at least should come from a table.
+>>>
+>>> You also need to verify that the offsets are within the mapped area.
+>>> An unexpected offset shouldn't try to access an invalid address.
+>>
+>> Thanks for the review.
+>>
+>> I agree that we should add a check before mapping the area to prevent
+>> the issue happens again.
+>>
+>> I think the check should be a generic check for all platforms which try
+>> to map an area, not just for TGL. I will submit a separate patch for the
+>> check.
 > 
-> Do you have any idea how you will support atomic access? It does not
-> seem easy to implement in a filesystem based model.
+> You need a check that the actual access is withing the mapped area.
+> So instead of getting an OOPS you get a error.
+> 
+> This is after you've mapped it.
 
-Hi Andrew,
+Sure. Will add a WARN_ONCE() before the actual access.
 
-there are plans to support binary access.  Emanuele and I don't really
-have a plan for how to implement it, but there are developers from
-Google that have ideas (because Google has a similar "metricfs" thing
-in-house).
+Thanks,
+Kan
 
-I think atomic access would use some kind of "source_ops" struct
-containing create_snapshot and release_snapshot function pointers.
-
-Paolo
-
+> 
+> 	David
+> 
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+> 
