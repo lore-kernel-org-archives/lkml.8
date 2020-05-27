@@ -2,137 +2,141 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71528C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4C520890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6212084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="afFk/O5M";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NfATUaw9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uVCPv3Iv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726816AbgE0JNm (ORCPT
+        id S1727112AbgE0JPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:13:42 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60915 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725820AbgE0JNm (ORCPT
+        Wed, 27 May 2020 05:15:05 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:40139 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726887AbgE0JPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:13:42 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 458BF580184;
-        Wed, 27 May 2020 05:13:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 05:13:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=V5epjiDGiclpAXJJpB3JE24jmk6
-        thqQZcHWLQmvyuUI=; b=afFk/O5M5iUdGGh/mcZZQSmWP9l8zSgz9lNVaE199Em
-        nbgE6W8CSw0zFL9SnUP7uXSR7qT1XxQX8tDdeDIuY63lN0z5jgxQp4K5Lzt2PKyf
-        tHXjyQicYV5VWtE3SKycCHL1AQqxyyxm30+2DEW9afNDHrvV5Vd9FwJXmT1omEjC
-        YZV4G+4eDO7d/2maCVg0uHcPCT7HbYcuC35DsDs3+0/WTRsb0gq23xUK8F2IlYX2
-        RjXIdbJykAIb8SUnCbhyKd2QczXXB1GyyYlOAryCe7ZNnjGl4O8Awk148iQP3fV/
-        0s0yWscW+JB8U/aPOF0BQrBhdHzJgelUb3Ju7GZz0Yg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=V5epji
-        DGiclpAXJJpB3JE24jmk6thqQZcHWLQmvyuUI=; b=NfATUaw901WlNTfX1Pg5wf
-        VzyV0ZCjREZzEubzT29J2zNQtbxmxgarGmO8OTcLnJFZDbjLIXpU3YkLFpApRf43
-        d65r9jucWdefHFKo0BDbhE7aiqT7SY1cq1i6OnXfumEe+D/Tof39+ge+z5byB15/
-        ow68Z6xgT68Q0RX2pF3Si0qRS9tOce+bAZdreEyzfvLOFc3JTg9wayySAW93iUgz
-        NtanODdCevcGOpqwweMlK8Gr2cUnF6hj+YrjQXuEkwsfWySc6dNXD5gmkrYuqboi
-        Tq5bKPkejPCobXrRhfgT0iKOemYDwJWFeUdfk72nOQz13dPB0YYxNb0M0zZ5/diw
-        ==
-X-ME-Sender: <xms:QS_OXsbh5mG9N37eoM9wr1nZmwvzQsVZK5HS5wtVD4XrBkrpuZoLTw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedguddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:QS_OXnYhpDwxYPnG140lqFLRlDN_P27ktwVqvxghdhSeN_ZdlZWniA>
-    <xmx:QS_OXm-bGmz1PUWtUlPhyx3yvXa3lF9sSUY1SINUu-poX_q3iI8POQ>
-    <xmx:QS_OXmpUMcCGukOP73oVLStJAyFaG9_8rlFR6rCrTeTgHqNJxkMotw>
-    <xmx:RC_OXq1jTEytyhpvWEScpxh_pvTdwfI8yH08SfBPb187Z1Mw3FSxjg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E95C43280063;
-        Wed, 27 May 2020 05:13:36 -0400 (EDT)
-Date:   Wed, 27 May 2020 11:13:35 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-Message-ID: <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
-References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech>
- <20200427072342.5499-1-jian-hong@endlessm.com>
- <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
- <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
- <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kokco5kof5hl45yv"
-Content-Disposition: inline
-In-Reply-To: <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
+        Wed, 27 May 2020 05:15:05 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200527091503epoutp037b203c8e27f2ebc48f242027679d6562~S188gENK80411304113epoutp03d
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:15:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200527091503epoutp037b203c8e27f2ebc48f242027679d6562~S188gENK80411304113epoutp03d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590570903;
+        bh=Dm3JG1JFIBm92Ne8ZPoNhZSsC2dbIoAQEZ/k9FavCTg=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=uVCPv3Iv1/QfhOj13XaqxIv1jaxjgNCc3r0bNtz54cHXd/QLUN4xchO64XOZ2n/aI
+         ByTiD67uOzPy9y+Dx4SrxLZI8NnYi3dTAd/QNJQYa8qLBirCBI0jVUKZ7uz083YBBI
+         IX3PxzvvsPRBGLzhLi7yHCC1fPFmwA/0QxnInLk4=
+Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200527091502epcas1p192c155d38ef4f98613a989b482a1aad4~S188EUuYj2923029230epcas1p1c;
+        Wed, 27 May 2020 09:15:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: Another approach of UFSHPB
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     ALIM AKHTAR <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        Zang Leigang <zangleigang@hisilicon.com>,
+        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
+        Bean Huo <beanhuo@micron.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <fd8c4336-8528-19d9-b1fe-1f74baf6b483@acm.org>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01590570902533.JavaMail.epsvc@epcpadp1>
+Date:   Wed, 27 May 2020 18:11:06 +0900
+X-CMS-MailID: 20200527091106epcms2p34428c8cbcda670e0a77cf6eab36ffcb4
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200516171420epcas2p108c570904c5117c3654d71e0a2842faa
+References: <fd8c4336-8528-19d9-b1fe-1f74baf6b483@acm.org>
+        <aaf130c2-27bd-977b-55df-e97859f4c097@acm.org>
+        <835c57b9-f792-2460-c3cc-667031969d63@acm.org>
+        <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
+        <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
+        <SN6PR04MB46408050B71E3A6225D6C495FCBA0@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
+        <231786897.01590385382061.JavaMail.epsvc@epcpadp2>
+        <6eec7c64-d4c1-c76e-5c14-7904a8792275@acm.org>
+        <SN6PR04MB46400AED930A3DC5B94AED25FCB00@SN6PR04MB4640.namprd04.prod.outlook.com>
+        <CGME20200516171420epcas2p108c570904c5117c3654d71e0a2842faa@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-05-26 Bart Van Assche wrote:
+>On 2020-05-25 23:15, Avri Altman wrote:
+>>> On 2020-05-24 22:40, Daejun Park wrote:
+>>>> The HPB driver is close to the UFS core function, but it is not essential
+>>>> for operating UFS device. With reference to this article
+>>>> (https://lwn.net/Articles/645810/), we implemented extended UFS-feature
+>>>> as bus model. Because the HPB driver consumes the user's main memory, it
+>>> should
+>>>> support bind / unbind functionality as needed. We implemented the HPB
+>>> driver
+>>>> can be unbind / unload on runtime.
+>>>
+>>> I do not agree that the bus model is the best choice for freeing cache
+>>> memory if it is no longer needed. A shrinker is probably a much better
+>>> choice because the callback functions in a shrinker get invoked when a
+>>> system is under memory pressure. See also register_shrinker(),
+>>> unregister_shrinker() and struct shrinker in include/linux/shrinker.h.
+>>
+>> Since this discussion is closely related to cache allocation,
+>> What is your opinion about allocating the pages dynamically as the regions
+>> Are being activated/deactivated, in oppose of how it is done today - 
+>> Statically on init for the entire max-active-subregions?
 
---kokco5kof5hl45yv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Memory that is statically allocated cannot be used for any other purpose
+> (e.g. page cache) without triggering the associated shrinker. As far as
+> I know shrinkers are only triggered when (close to) out of memory. So
+> dynamically allocating memory as needed is probably a better strategy
+> than statically allocating the entire region at initialization time.
 
-Hi Daniel,
+To improve UFS device performance using the HPB driver, 
+the number of active-subregions above a certain threshold is essential.
+If the number of active-subregions is lower than the threshold, 
+the performance improvement by using HPB will be reduced. 
+Also, due to frequent and active/inactive protocol overhead, 
+performance may be worse than when the HPB feature is not used.
 
-On Wed, May 27, 2020 at 11:49:36AM +0800, Daniel Drake wrote:
-> Hi Maxime,
->=20
-> On Tue, May 26, 2020 at 6:20 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > I gave it a try with U-Boot with my latest work and couldn't reproduce =
-it, so it
-> > seems that I fixed it along the way
->=20
-> Is your latest work available in a git branch anywhere that we could
-> test directly?
+Therefore, it is better to unbind/unload HPB driver than 
+to reduce the number of active subregions below the threshold. 
+We designed the HPB driver to make the UFS device work 
+even when the module is unloaded.
 
-I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Hong) if y=
-ou
-want.
+Thanks,
 
-Maxime
-
---kokco5kof5hl45yv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXs4vPwAKCRDj7w1vZxhR
-xaGaAQCg3gZaUrnvSNp3BzxW8iTAVt5FCWnVgDC2YFeAH5wRnAD/RUVn5pMYOZX3
-CW4nLRVoZ8NFLwZqHrhV/v6g5LHIhgQ=
-=WuzX
------END PGP SIGNATURE-----
-
---kokco5kof5hl45yv--
+Daejun
