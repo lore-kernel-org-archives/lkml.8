@@ -2,133 +2,159 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84769C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF86AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60F582088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RbcqV21e"
+	by mail.kernel.org (Postfix) with ESMTP id BDD762088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgE0KLJ (ORCPT
+        id S2387810AbgE0KNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:11:09 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37690 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728889AbgE0KLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:11:08 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590574267; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=atu17+9W+FIQs8MYmL02BKnoigWTXhhZazgWN3a+IvY=; b=RbcqV21eE0unoxXhqNVGJ59AaGU4FrsuFyH7pKuGWnTauKm21MkxsAFrNvVjwA6lfFeL+Trs
- Ky6lvZQTHE2bao9snIFaSwKSgM7dU4SlNuN5ajUx/2UFjX28efR1KqF1wsacNjweVt1SJXUp
- IicYNaJd/aiyHwjbpYR9C+1z0HA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ece3cbbcb045869331ce203 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 10:11:07
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 352DEC433CB; Wed, 27 May 2020 10:11:06 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 806D5C433C9;
-        Wed, 27 May 2020 10:11:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 806D5C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Wed, 27 May 2020 15:40:59 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Jirka Hladky <jhladky@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        valentin.schneider@arm.com, Hillf Danton <hdanton@sina.com>,
-        Rik van Riel <riel@surriel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] sched: Offload wakee task activation if it the wakee
- is descheduling
-Message-ID: <20200527101059.GA9455@codeaurora.org>
-References: <20200524202956.27665-1-mgorman@techsingularity.net>
- <20200524202956.27665-3-mgorman@techsingularity.net>
+        Wed, 27 May 2020 06:13:40 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:63372 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387767AbgE0KNj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:13:39 -0400
+Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04RADbjT001274;
+        Wed, 27 May 2020 19:13:37 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp);
+ Wed, 27 May 2020 19:13:37 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav110.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04RADal2001271
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 27 May 2020 19:13:37 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] twist: allow converting pr_devel()/pr_debug() into
+ printk(KERN_DEBUG)
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20200524145034.10697-1-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20200525084218.GC5300@linux-b0ei>
+ <20200525091157.GF755@jagdpanzerIV.localdomain>
+ <f02a71bc-0867-be60-182b-10d7377b2b04@i-love.sakura.ne.jp>
+ <20200527083747.GA27273@linux-b0ei>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <35d76737-8d23-9fb2-8e55-507109317f44@i-love.sakura.ne.jp>
+Date:   Wed, 27 May 2020 19:13:38 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200524202956.27665-3-mgorman@techsingularity.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200527083747.GA27273@linux-b0ei>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 09:29:56PM +0100, Mel Gorman wrote:
-> The patch "sched: Optimize ttwu() spinning on p->on_cpu" avoids spinning
-> on p->on_rq when the task is descheduling but only if the wakee is on
-> a CPU that does not share cache with the waker. This patch offloads the
-> activation of the wakee to the CPU that is about to go idle if the task
-> is the only one on the runqueue. This potentially allows the waker task
-> to continue making progress when the wakeup is not strictly synchronous.
+On 2020/05/27 17:37, Petr Mladek wrote:
+> On Mon 2020-05-25 19:43:04, Tetsuo Handa wrote:
+>> On 2020/05/25 17:42, Petr Mladek wrote:
+>>> I see few drawbacks with this patch:
+>>>
+>>> 1. It will cause adding much more messages into the logbuffer even
+>>>    though they are not flushed to the console. It might cause that
+>>>    more important messages will get overridden before they reach
+>>>    console. They might also make hard to read the full log.
+>>
+>> Since the user of this twist option will select console loglevel in a way
+>> KERN_DEBUG messages are not printed to consoles, KERN_DEBUG messages will
+>> be immediately processed (and space for future messages will be reclaimed).
+>> Therefore, I don't think that more important messages will get overridden.
 > 
-> This is very obvious with netperf UDP_STREAM running on localhost. The
-> waker is sending packets as quickly as possible without waiting for any
-> reply. It frequently wakes the server for the processing of packets and
-> when netserver is using local memory, it quickly completes the processing
-> and goes back to idle. The waker often observes that netserver is on_rq
-> and spins excessively leading to a drop in throughput.
+> This is not fully true. More important messages will still be printed
+> to the console. The debug messages will not be skipped before the
+> older messages are proceed.
 > 
-> This is a comparison of 5.7-rc6 against "sched: Optimize ttwu() spinning
-> on p->on_cpu" and against this patch labeled vanilla, optttwu-v1r1 and
-> localwakelist-v1r2 respectively.
-> 
->                                   5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
->                                     vanilla           optttwu-v1r1     localwakelist-v1r2
-> Hmean     send-64         251.49 (   0.00%)      258.05 *   2.61%*      305.59 *  21.51%*
-> Hmean     send-128        497.86 (   0.00%)      519.89 *   4.43%*      600.25 *  20.57%*
-> Hmean     send-256        944.90 (   0.00%)      997.45 *   5.56%*     1140.19 *  20.67%*
-> Hmean     send-1024      3779.03 (   0.00%)     3859.18 *   2.12%*     4518.19 *  19.56%*
-> Hmean     send-2048      7030.81 (   0.00%)     7315.99 *   4.06%*     8683.01 *  23.50%*
-> Hmean     send-3312     10847.44 (   0.00%)    11149.43 *   2.78%*    12896.71 *  18.89%*
-> Hmean     send-4096     13436.19 (   0.00%)    13614.09 (   1.32%)    15041.09 *  11.94%*
-> Hmean     send-8192     22624.49 (   0.00%)    23265.32 *   2.83%*    24534.96 *   8.44%*
-> Hmean     send-16384    34441.87 (   0.00%)    36457.15 *   5.85%*    35986.21 *   4.48%*
-> 
-> Note that this benefit is not universal to all wakeups, it only applies
-> to the case where the waker often spins on p->on_rq.
-> 
-Thanks for the detailed description. I think you meant p->on_cpu here not
-p->on_rq. I know this patch is included, if possible, please make this edit
-here and below.
+> I mean that many debug messages might cause losing more important ones
+> before the old important messages are proceed.
 
->  	/*
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index db3a57675ccf..06297d1142a0 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1688,7 +1688,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
->   */
->  #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
->  #define WF_FORK			0x02		/* Child wakeup after fork */
-> -#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
-> +#define WF_MIGRATED		0x04		/* Internal use, task got migrated */
-> +#define WF_ON_RQ		0x08		/* Wakee is on_rq */
->  
-should this be WF_ON_CPU? There is a different check for p->on_rq in
-try_to_wake_up.
+Then, this reasoning will be also applicable to
 
-Thanks,
-Pavan
+  [PATCH] printk: Add loglevel for "do not print to consoles".
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+in a sense that "don't try to quickly queue a lot of messages" rule. This concern
+cannot be solved even if asynchronous printk() and per console loglevel are
+supported someday, and oom_dump_tasks() is not allowed to count on these for
+solving the stall problem caused by reporting all OOM victim candidates at once.
+
+> 
+> 
+>> This twist option might increase possibility of mixing KERN_DEBUG messages
+>> and non-KERN_DEBUG messages due to KERN_CONT case.
+>>
+>> But if these concerns turn out to be a real problem, we can redirect
+>> pr_devel()/pr_debug() to simple snprintf() which evaluates arguments
+>> but discards the result without storing into the logbuffer.
+>>
+>>>
+>>> 2. Crash inside printk() causes recursive messages. They are currently
+>>>    printed into the printk_safe() buffers and there is a bigger risk
+>>>    that they will not reach the console.
+>>
+>> Currently "static char textbuf[LOG_LINE_MAX];" is "static" because it is used
+>> under logbuf_lock. If we remove "static", we can use "char textbuf[LOG_LINE_MAX];"
+>> without logbuf_lock. Then, we can bring potentially dangerous-and-slow vscnprintf()
+>> in vprintk_store() to earlier stage (and vprintk_store() will need to do simple
+>> copy) so that oops in printk() will happen before entering printk-safe context.
+>> I think that this change follows a direction which lockless logbuf will want.
+> 
+> No, LOG_LINE_MAX is too big to be allocated on stack.
+
+We could assign per task_struct buffers and per CPU interrupt context buffers
+(like we discussed about how to handle KERN_CONT problem). But managing these
+off stack buffers is out of scope for this patch.
+
+> 
+> Well, it would be possible to call vsprintf() with NULL buffer. It is
+> normally used to calculate the length of the message before it is
+> printed. But it also does all the accesses without printing anything.
+
+OK. I think that redirecting pr_debug() to vsnprintf(NULL, 0) will be
+better than modifying dynamic_debug path, for
+
+> 
+> 
+>>> Have you tested this patch by the syzcaller with many runs, please?
+>>> Did it helped to actually discover more bugs?
+>>> Did it really made things easier?
+>>
+>> syzbot can't test with custom patches. The only way to test this patch is
+>> to send to e.g. linux-next.git which syzbot is testing.
+> 
+> OK, we could try this via some test branch that will go into
+> linux-next but it would not be scheduled for the next merge window.
+> 
+> For the testing, this patch might be good enough.
+> 
+> For eventual upstreaming, I would prefer to handle this in
+> lib/dynamic_debug.c by enabling all entries by default. This
+> would solve all DYNAMIC_DEBUG_BRANCH() users at one place.
+
+since "enabling all entries by default" will redirect pr_debug() calls to
+printk(KERN_DEBUG), the "don't try to quickly queue too much messages" above
+remains (i.e. it is essentially same with what this patch is doing).
+
+> 
+> Anyway, I would like to see a proof that it really helped to find
+> some bugs an easier way before upstreaming.
+> 
+> Best Regards,
+> Petr
+> 
 
