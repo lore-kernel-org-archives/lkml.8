@@ -2,81 +2,119 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 388D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B18C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D41720899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590541699;
-	bh=gEQCahnR2XMMiWuyGv9OLa98c7dUNuD50Z8vXWxnv1s=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=u+p40paxYtfXeCZGYL66A3M83ynNmr9CGhkvb1bybZf38SmwxL1hNPPLqOsiIGRRZ
-	 JEv2sHiEAaN6Er4/CqEit457ZvjXgjCqIHssenQMKv3eukEiMMyFr0W7WIbjcv9EdO
-	 JSX4mupd+XJVSeq1CeJL0f4hUx72nZPRS1hdwf9I=
+	by mail.kernel.org (Postfix) with ESMTP id 252A22088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:08:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgE0BIS (ORCPT
+        id S1728133AbgE0BIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:08:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgE0BIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:08:17 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77F922088E;
-        Wed, 27 May 2020 01:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590541697;
-        bh=gEQCahnR2XMMiWuyGv9OLa98c7dUNuD50Z8vXWxnv1s=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Pr3AovO/66JVsQ6pMOFxy3X3OQ2+GE39lheSQKMxSP/jIN6snMAwzNKg1bDAhZUJp
-         tLPe/YEGL7n54na79S06oG9hjY3SBm7bQ3zYo7eV1aIu0A6W1ukXZIFA5x9vAH+Vol
-         5CCJvEAtXiKHfrON8DlLGdYlwrplmm/iuOeptsNE=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 26 May 2020 21:08:31 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:53702 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728092AbgE0BIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:08:31 -0400
+Received: from [10.20.42.25] (unknown [10.20.42.25])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axpultvc1eVXI5AA--.413S3;
+        Wed, 27 May 2020 09:07:57 +0800 (CST)
+Subject: Re: [PATCH v6 1/4] MIPS: Do not flush tlb page when updating PTE
+ entry
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
+ <79778fc3-c029-272b-358e-4f8f8e5772d3@cogentembedded.com>
+ <0a38f25d-dba0-688f-4588-345c861325aa@cogentembedded.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+From:   maobibo <maobibo@loongson.cn>
+Message-ID: <9b71761b-a744-086f-43f5-78dcca18b459@loongson.cn>
+Date:   Wed, 27 May 2020 09:07:57 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1584048699-24186-3-git-send-email-jolly.shah@xilinx.com>
-References: <1584048699-24186-1-git-send-email-jolly.shah@xilinx.com> <1584048699-24186-3-git-send-email-jolly.shah@xilinx.com>
-Subject: Re: [PATCH v2 2/2] drivers: clk: zynqmp: Update fraction clock check from custom type flags
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Jolly Shah <jolly.shah@xilinx.com>
-To:     Jolly Shah <jolly.shah@xilinx.com>, arm@kernel.org,
-        linux-clk@vger.kernel.org, michal.simek@xilinx.com,
-        mturquette@baylibre.com, olof@lixom.net
-Date:   Tue, 26 May 2020 18:08:16 -0700
-Message-ID: <159054169658.88029.371843532116000844@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <0a38f25d-dba0-688f-4588-345c861325aa@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Axpultvc1eVXI5AA--.413S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kr15XF1UZFyfCw4DuFyDZFb_yoW8Xr43pF
+        97CayYganrW34xKF1xXw4kurWfCws5KFWjqry3ArW5ZanrZr1kKr43ta10kr97Wr1fu3WI
+        v3yDt3y8Za45Z3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_KF4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7
+        Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG
+        6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJbIYCTnIWIevJa73UjIFyTuYvjxU2znQUUUUU
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jolly Shah (2020-03-12 14:31:39)
-> From: Tejas Patel <tejas.patel@xilinx.com>
->=20
-> Older firmware version sets BIT(13) in clkflag to mark a
-> divider as fractional divider. Updated firmware version sets BIT(4)
-> in type flags to mark a divider as fractional divider since
-> BIT(13) is defined as CLK_DUTY_CYCLE_PARENT in the common clk
-> framework flags.
->=20
-> To support both old and new firmware version, consider BIT(13) from
-> clkflag and BIT(4) from type_flag to check if divider is fractional
-> or not.
->=20
-> To maintain compatibility BIT(13) of clkflag in firmware will not be
-> used in future for any purpose and will be marked as unused.
 
-Why are we mixing the firmware flags with the ccf flags? They shouldn't
-be the same. The firmware should have its own 'flag numberspace' that is
-distinct from the common clk framework's 'flag numberspace'. Please fix
-the code.
+
+On 05/25/2020 04:31 PM, Sergei Shtylyov wrote:
+> On 25.05.2020 11:12, Sergei Shtylyov wrote:
+> 
+>>> It is not necessary to flush tlb page on all CPUs if suitable PTE
+>>> entry exists already during page fault handling, just updating
+>>> TLB is fine.
+>>>
+>>> Here redefine flush_tlb_fix_spurious_fault as empty on MIPS system.
+>>
+>>     Need empty line here.
+>>
+>>> V6:
+>>> - Add update_mmu_tlb function as empty on all platform except mips
+>>>    system, we use this function to update local tlb for page fault
+>>>    smp-race handling
+>>> V5:
+>>> - define update_mmu_cache function specified on MIPS platform, and
+>>>    add page fault smp-race stats info
+>>> V4:
+>>> - add pte_sw_mkyoung function to implement readable privilege, and
+>>>    this function is  only in effect on MIPS system.
+>>> - add page valid bit judgement in function pte_modify
+>>> V3:
+>>> - add detailed changelog, modify typo issue in patch V2
+>>> v2:
+>>> - split flush_tlb_fix_spurious_fault and tlb update into two patches
+>>> - comments typo modification
+>>> - separate tlb update and add pte readable privilege into two patches
+>>
+>>    It was a bad idea to keep the version change log in the 1st patch only,
+>> we have either cover letter for that, or all the individual patches...
+> 
+>    Sorry for noticing this only now. With 4 patches, you should have a cover letter anyway...
+Thanks for reviewing my patch, a cover letter will be added.
+
+> 
+
+>>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+>> [...]
+> 
+> MBR, Sergei
+
