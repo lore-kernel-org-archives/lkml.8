@@ -2,176 +2,120 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CFBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51FF20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749C8208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="moihhGhw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zwtz3KVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387979AbgE0NYY (ORCPT
+        id S2388042AbgE0N1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387645AbgE0NYX (ORCPT
+        Wed, 27 May 2020 09:27:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41730 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387867AbgE0N1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:24:23 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13667C08C5C1;
-        Wed, 27 May 2020 06:24:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CdaWOGaOflxXgDrY/I1cedipuSll5hQvTxBz7yXEwx0=; b=moihhGhwzlCnJoUE8WUmyYRPT
-        KAgdxW+VUeZG4C0u05unBWm6L8p+Ql2ifEDC+LhtHDruaFJAqmuErWZbruGKvcRErVwxEqbmXPuZy
-        XgqcMQNIonpIC7oD12aGP3qJ7tpUt7YEP4YpbrPSlMCyn/asvIVxFPQW+syXMtro/MaI2EvWluTsJ
-        VasurGiEvnLyOq0/XuiT7muqfHMfP5kCvTIaYopf70QGiqh0zacKmP057y2oCam585IWJ2zPbG6ik
-        CPsIEHQScemy+eFvQnmh8uonyZANr2d/xUfgX29qo9UfkyAel+zHjkXYfQU74A4ztfZZA8P9ursWo
-        Zn48qVs5Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37682)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jdw2L-0002Vg-Uo; Wed, 27 May 2020 14:24:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jdw2H-0006Si-Qe; Wed, 27 May 2020 14:23:57 +0100
-Date:   Wed, 27 May 2020 14:23:57 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: Re: High interrupt latency with low power idle mode on i.MX6
-Message-ID: <20200527132357.GO1551@shell.armlinux.org.uk>
-References: <bc91129c-121c-a070-53b2-1f0bb6d4500a@kontron.de>
- <20200527115347.GL1551@shell.armlinux.org.uk>
- <a6bb55aa-5c47-ba7a-2f74-56da4aef4a42@kontron.de>
+        Wed, 27 May 2020 09:27:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590586022;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rO0Xmu3kpwaS+spo70btHKk/n/bl2TDfOUNRISjvedY=;
+        b=Zwtz3KVNBkXkOAz7DJgnrvHQF910iCD0DumL8CXrwm+AxuidxSFfM0RhTeC+ggATVChFy3
+        VFlVuy7lUS8/hAoKFNgHbMJzej25iaW6narm54BNj/1QRjgpaSt4P4s83CDeu0S6YKgIOL
+        Fvydh9KyOOeBFinUXN8p0rU7UmSj9po=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-8-fEyHqr_yP4KFgCB8iB93-A-1; Wed, 27 May 2020 09:26:59 -0400
+X-MC-Unique: fEyHqr_yP4KFgCB8iB93-A-1
+Received: by mail-wr1-f70.google.com with SMTP id z8so11189588wrp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:26:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rO0Xmu3kpwaS+spo70btHKk/n/bl2TDfOUNRISjvedY=;
+        b=PjUvVnl7r9JvydMK4x0GceyDG40Xn7MstWrZXvYz6JW2Yz7AzX1rwj9lZTpD8A8kZl
+         safweBRsSgfzTrt7ig0kkMb3WvNFEylkq+PaHu9cHmIrHeGQVnn+dXqgBc2ZxKSjK5RA
+         bv5r/TRatMxPoZ/0wy2QhdG5+7w74l8I+Kr5hBoIbw9GqbcvFZr1rphaML4IbXL639UG
+         fwA/vHDPu4m4BcXaFUmoD4EL76luNIsgiVF3WuLz1Zyhu3Aq7hzhtGnGnhumLK+aiwzV
+         rnqzL9YrZtdYNj+6qBTapmE5KPRImWlwqgMAB3lpWhtkuXokOEQBPCCzafEaeY0B46ax
+         rIHA==
+X-Gm-Message-State: AOAM533VU3qZnXrOsWjezJ4pnqrf4fqrKDEhyRbpTsBOyepc70LmKH9f
+        iCHhGzfbQxU+7iws2LkmY0zyf39wSA/piRoGxC4eKd2s7/Ur+Jk/LJitfzZQuS9n7wrfkRTTs8v
+        we/qNYLsTTOrDz/P0LByjTnPL
+X-Received: by 2002:adf:f582:: with SMTP id f2mr23080022wro.204.1590586018595;
+        Wed, 27 May 2020 06:26:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzksEVrGsPk/xGJQnD5AtcYNTpqAooqkuvHIUr1bqlDBm3LvIU1wHX3ffnsooF7m2BY4wdfbQ==
+X-Received: by 2002:adf:f582:: with SMTP id f2mr23079984wro.204.1590586018345;
+        Wed, 27 May 2020 06:26:58 -0700 (PDT)
+Received: from localhost.localdomain ([194.230.155.225])
+        by smtp.gmail.com with ESMTPSA id c25sm2844600wmb.44.2020.05.27.06.26.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 06:26:57 -0700 (PDT)
+Subject: Re: [PATCH v3 3/7] kunit: tests for stats_fs API
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Emanuele Giuseppe Esposito <e.emanuelegiuseppe@gmail.com>,
+        David Rientjes <rientjes@google.com>,
+        Jonathan Adams <jwadams@google.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+        brendanhiggins@google.com, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com
+References: <20200526110318.69006-1-eesposit@redhat.com>
+ <20200526110318.69006-4-eesposit@redhat.com>
+ <alpine.LRH.2.21.2005271054360.24819@localhost>
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+Message-ID: <7178ea00-cee5-d5e9-a7aa-58aa46ee416a@redhat.com>
+Date:   Wed, 27 May 2020 15:26:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6bb55aa-5c47-ba7a-2f74-56da4aef4a42@kontron.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LRH.2.21.2005271054360.24819@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:50:01PM +0000, Schrempf Frieder wrote:
-> On 27.05.20 13:53, Russell King - ARM Linux admin wrote:
-> > On Wed, May 27, 2020 at 10:39:12AM +0000, Schrempf Frieder wrote:
-> >> Hi,
-> >>
-> >> on our i.MX6UL/ULL boards running mainline kernels, we see an issue with
-> >> RS485 collisions on the bus. These are caused by the resetting of the
-> >> RTS signal being delayed after each transmission. The TXDC interrupt
-> >> takes several milliseconds to trigger and the slave on the bus already
-> >> starts to send a reply in the meantime.
-> >>
-> >> We found out that these delays only happen when the CPU is in "low power
-> >> idle" mode (ARM power off). When we disable cpuidle state 2 or put some
-> >> background load on the CPU everything works fine and the delays are gone.
-> >>
-> >> echo 1 > /sys/devices/system/cpu/cpu0/cpuidle/state2/disable
-> >>
-> >> It seems like also other interfaces (I2C, etc.) might be affected by
-> >> these increased latencies, we haven't investigated this more closely,
-> >> though.
-> >>
-> >> We currently apply a patch to our kernel, that disables low power idle
-> >> mode by default, but I'm wondering if there's a way to fix this
-> >> properly? Any ideas?
-> > 
-> > Let's examine a basic fact about power management:
-> > 
-> > The deeper PM modes that the system enters, the higher the latency to
-> > resume operation.
-> > 
-> > So, I'm not surprised that you have higher latency when you allow the
-> > system to enter lower power modes.  Does that mean that the kernel
-> > should not permit entering lower power modes - no, it's policy and
-> > application dependent.
-> > 
-> > If the hardware is designed to use software to manage the RTS signal
-> > to control the RS485 receiver, then I'm afraid that your report really
-> > does not surprise me - throwing that at software to manage is a really
-> > stupid idea, but it seems lots of people do this.  I've held this view
-> > since I worked on a safety critical system that used RS485 back in the
-> > 1990s (London Underground Jubilee Line Extension public address system.)
-> > 
-> > So, what we have here is several things that come together to create a
-> > problem:
-> > 
-> > 1) higher power savings produce higher latency to resume from
-> > 2) lack of hardware support for RS485 half duplex communication needing
-> >     software support
-> > 3) an application that makes use of RS485 half duplex communication
-> >     without disabling the higher latency power saving modes
-> > 
-> > The question is, who should disable those higher latency power saving
-> > modes - the kernel, or userspace?
-> > 
-> > The kernel knows whether it needs to provide software control of the
-> > RTS signal or not, but the kernel does not know the maximum permissible
-> > latency (which is application specific.)  So, the kernel doesn't have
-> > all the information it needs.  However, there is a QoS subsystem which
-> > may help you.
-> > 
-> > There's also tweaks available via
-> > /sys/devices/system/cpu/cpu*/power/pm_qos_resume_latency_us
-> > 
-> > which can be poked to configure the latency that is required, and will
-> > prevent the deeper PM states being entered.
+
+>> In order to run them, the kernel .config must set CONFIG_KUNIT=y
+>> and a new .kunitconfig file must be created with CONFIG_STATS_FS=y
+>> and CONFIG_STATS_FS_TEST=y
+>>
 > 
-> Thanks for the detailed explanation. This all makes perfect sense to me.
-> I will keep in mind that we need to consider this aspect of power saving 
-> vs. latency when designing systems and also that we need to provide the 
-> information for the kernel to decide which of the two is more important.
+> It looks like CONFIG_STATS_FS is built-in, but it exports
+> much of the functionality you are testing.  However could the
+> tests also be built as a module (i.e. make CONFIG_STATS_FS_TEST
+> a tristate variable)? To test this you'd need to specify
+> CONFIG_KUNIT=m and CONFIG_STATS_FS_TEST=m, and testing would
+> simply be a case of "modprobe"ing the stats fs module and collecting
+> results in /sys/kernel/debug/kunit/<module_name> (rather
+> than running kunit.py). Are you relying on unexported internals in
+> the the tests that would prevent building them as a module?
 > 
-> Also thanks for pointing out the QoS subsystem. I'm not quite sure if it 
-> would work for us to use pm_qos_resume_latency_us in our specific case. 
-> The actual latency we observe is something like 2 to 3 milliseconds 
-> longer with low power idle than without, but the exit_latency for low 
-> power idle specified in the cpuidle driver is only 300 us.
 
-I wonder whether the exit latencies are correct in that case.
-From the comments, it seems 80us is allowed for the software overhead
-of entering/leaving the idle state vs 220us for the hardware.
-It may be a good idea for someone to add some tracing points in there
-to try and measure the minimum software latencies.
+I haven't checked it yet, but tests should work as separate module.
+I will look into it, thanks.
 
-> So as far as I can see with this difference even if we would set 
-> pm_qos_resume_latency_us to 1000 us (which should be fast enough for the 
-> RS485 to work properly), the low power idle wouldn't be disabled.
-> 
-> It's rather this discrepancy between the latency set in the driver and 
-> what we see in reality which makes me wonder if there's something I'm 
-> missing.
+Emanuele
 
-It's possible that there's something missing from the kernel's
-estimation of the latency required for entering / exiting those
-states.
-
-There is an amount of cache flushing that is required when entering
-those lower states, and I wonder if that has been accounted for.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
