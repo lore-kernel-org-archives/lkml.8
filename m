@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D599C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3608C20EDD
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FDB20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="dEs6sji+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fqP6XMUW"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qqWPMuAy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XlOWjSI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390437AbgE0Pw3 (ORCPT
+        id S1730744AbgE0Pwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:52:29 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:36045 "EHLO
+        Wed, 27 May 2020 11:52:32 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:60859 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730661AbgE0Pvi (ORCPT
+        by vger.kernel.org with ESMTP id S1730672AbgE0Pvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:51:38 -0400
+        Wed, 27 May 2020 11:51:43 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9139D581518;
-        Wed, 27 May 2020 11:51:37 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:51:37 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id 3AECF582101;
+        Wed, 27 May 2020 11:51:42 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:51:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=Hsd8JQOKXqqad
-        N9HnqexX4egl8EjW+cY6nFdDegziVM=; b=dEs6sji+it2ZXHG8WYplk+ElCqypR
-        7f6YbJHc52sSBDtdllmRFe4t1AftH69jcdN9BduIlV5SYH1Bn5nGk9VcOTItgENr
-        psGkZ3nbXqK5MuwL+GMpDXtF/5uD7WENtwYVHxAms9LfpoRK16H/4ZwxXI2hYFEV
-        TULzEC5aiLXNdNrFaxb7C4XVNhWO/olCEui1kf5++xYO4q+j1clJgbvCmjPxzRHG
-        UKc+BzlfcszWm7D+UKCuvx6CEwEoh42jA+I+YZZu95SCV0qc5Cm5Dbnt0wlkXfqi
-        fRdi8NbsGn3/OIrTThEnUtwRqc1vXIcV+pAwh0hm3CpHRefS7KDkyzSOA==
+        :mime-version:content-transfer-encoding; s=fm2; bh=Z5JNWa+khkkPT
+        A5Ia7+v7mohqb/B090X4sPaakkB4jc=; b=qqWPMuAyTDdQfrfyYk1Ym0j/4p/Uv
+        91o0yqsQMtl8AkIEiKrHrVTkhasZKcy+KhJqAqbSpDNchz3vkrDsRHM6L7ekh0T9
+        +SMIniMCmTU+dVLVAX5btS4ko0f5JMTfs+qBXBnNX8PuWwY5hBiwaMa+r9goHnBs
+        bOiafp2wfsZ96I8xPBcpJik/tjWnJ+xwkwn7iCHxxc21sTfqBJzSVbjtDge8bwhk
+        1pVLrOVKQXLQ9fAdMJMp7m/e5id2UbxiYYfGI2Bfa4/RwJwCMsnZKuBJNyeYTPUw
+        RruV6TmpTyOiVO/OveI/6hrjnX3UCZfgQ7E2bDWIrJ+Gjs/7TvrCXsDeQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=Hsd8JQOKXqqadN9HnqexX4egl8EjW+cY6nFdDegziVM=; b=fqP6XMUW
-        y3gBzLXMEY5ZRdGOje4ECtWXxvIsqmqy+oZPl8bbK9U1svzXamIzZ+kvz4MVUX6t
-        2Ml5WXFG5To9tfdn/SCBVc6W7MdibibSljuybpstJbtpxDHPXybW1Y1RWb19+ZQe
-        /ZkP2eNOHPQkJKxWzi4pFvQGk5Dh+I985yD2DdC9mW2AnuKSElpuF10vw47vDmvJ
-        abCCFkvc4Dwou6BN8qE8sxYDPkVJyUy7F11psaxiyVkH7s4WV5KZ29EPD03VS4mw
-        b+ENhJ8XL1S3hGPyuDYpOsf2rs4OLZuApDLaEJJviuaVutztVtkEUSPnorse7UYt
-        CFV/6mU+JBtoUg==
-X-ME-Sender: <xms:iYzOXpyiBsTFpIJjAMF5o8VXHDcwv9Njoc00UmEaMgg3s0kA55l8eg>
+        fm2; bh=Z5JNWa+khkkPTA5Ia7+v7mohqb/B090X4sPaakkB4jc=; b=XlOWjSI/
+        MV7i8bVZ8sMTprDuGNG8P4oDOJcKQ1O5LTBsKakTaVOL9Xy/UFcK+wqp2U55IIm6
+        QjRJaWG0Ir8Y0xs29qyetxXo4qnrFsVn2lIhvizSThMc6gosRLO0XFqs4eAoH17/
+        GXAnZ4u6e+Mxuv1C1NNoGKqwuZrH7p4jQf+FcoY+SXOmMkRecU+r38B37yHBpxDj
+        JEFI9ur2NM+IsV+QDyRYDdS+S5T/t+gpVpyiIL9B2Jln8gjhb85gOSAyXYgr5KbM
+        EwagJYi6Gg4c58Vo62XiU90TVk/eQNsjQ/cHRjWLg2jqdk1kQX/Lrr71Um76XKBr
+        ZMg3PkjpJCTYOA==
+X-ME-Sender: <xms:jozOXhDCp8m8hrjw9gGeTQxw__G6CM8fqjTp330kwSWpF6cWTbM-0g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepieejne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:iYzOXpSAseRgG1ESpsNfuZGXxM9ygo2n9Npp-hxkKTSKYZQUvk3E6g>
-    <xmx:iYzOXjUP6bBrfqf8doch-6KDGVZlsMmJTBpAbdpXZAxzGA8j7d0XKw>
-    <xmx:iYzOXriDpPa8MKsCeAAP4ZFTuZPFaZHGx4y0CdTkoZW_KYo95bqXlg>
-    <xmx:iYzOXtBXjCnzGm-rvyl4c6t0CYyB9VZa4w6KYmTZEhZI_EuOT40q-g>
+X-ME-Proxy: <xmx:jozOXvgcfqNDOY-hpin0hmQyB9PB7vquHF3dhNZGbbma4IQn30X5gA>
+    <xmx:jozOXsl9uabmycJPIgdmCCrTRrNbekUoWBIMpNv8t8R08RC77io3-A>
+    <xmx:jozOXryQLCye_aseRfXUS7KNs0ur5LpvzCHy7B50hkHipqxMcUgGTg>
+    <xmx:jozOXjTVCJKduXePkdEL_RnQIdYY9Y7ocAk7dVOW4SP3jvne49xagg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 352773061CCB;
-        Wed, 27 May 2020 11:51:37 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id C90743280068;
+        Wed, 27 May 2020 11:51:41 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 089/105] drm/vc4: hdmi: Remove unused CEC_CLOCK_DIV define
-Date:   Wed, 27 May 2020 17:48:59 +0200
-Message-Id: <45917004243e1d8a060a9932bd5348143718fb5b.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 092/105] drm/vc4: hdmi: Use clk_set_min_rate instead
+Date:   Wed, 27 May 2020 17:49:02 +0200
+Message-Id: <c946ab1946901d2d9426ce24733ff1f190f6096b.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,25 +89,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CEC_CLOCK_DIV define is not used anywhere in the driver, let's remove
-it.
+The HSM clock needs to be running at 101% the pixel clock of the HDMI
+controller, however it's shared between the two HDMI controllers, which
+means that if the resolutions are different between the two HDMI
+controllers, and the lowest resolution is on the second (in enable order)
+controller, the first HDMI controller will end up with a smaller than
+expected clock rate.
+
+Since we don't really need an exact frequency there, we can simply change
+the minimum rate we expect instead.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/vc4/vc4_hdmi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 27cfcf38edb4..f62b488c5bdb 100644
+index eda48f58dc01..c069bf8e6d7c 100644
 --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
 +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -55,7 +55,6 @@
- 
- #define HSM_CLOCK_FREQ 163682864
- #define CEC_CLOCK_FREQ 40000
--#define CEC_CLOCK_DIV  (HSM_CLOCK_FREQ / CEC_CLOCK_FREQ)
- 
- static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
- {
+@@ -462,7 +462,7 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+ 	 * pixel clock, but HSM ends up being the limiting factor.
+ 	 */
+ 	hsm_rate = max_t(unsigned long, 120000000, (pixel_rate / 100) * 101);
+-	ret = clk_set_rate(vc4_hdmi->hsm_clock, hsm_rate);
++	ret = clk_set_min_rate(vc4_hdmi->hsm_clock, hsm_rate);
+ 	if (ret) {
+ 		DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
+ 		return;
 -- 
 git-series 0.9.1
