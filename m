@@ -2,181 +2,143 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8FFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E924120899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A55D2084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8dfz6ch"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lAj3+1b/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389194AbgE0O0W (ORCPT
+        id S2389204AbgE0O0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43960 "EHLO
+        Wed, 27 May 2020 10:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389036AbgE0O0V (ORCPT
+        with ESMTP id S2389036AbgE0O0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:26:21 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B33DC08C5C1;
-        Wed, 27 May 2020 07:26:21 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 131so3509481pfv.13;
-        Wed, 27 May 2020 07:26:21 -0700 (PDT)
+        Wed, 27 May 2020 10:26:23 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF37C08C5C2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:26:21 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id j198so2401803wmj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:26:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zxT1CUhQy7++N7J2uEuPxuFfU6PCHQ/tHRlkWb3usUM=;
-        b=q8dfz6chvwikpsccikn81Com/PJ9/ujiLNqcTif2E/2FoveZ5+q1k908+cV5Ol4u5N
-         pzIIuASzoed2qsWojrwt4YGsWQlgnD9K46B/VExD/nJ4ABpOBmS0s6dXILeWoFa8Hanh
-         o4V1w4L5FoxbSAPAtQz8K2e4zP42/zQhRQ5fZ1U1QCpeGWMxhlyvpa5mkhrTEQNiFcWq
-         X6kf0H0WaYAJD+OEv1vM33n946Q+I8u0frhaREc809ycZ4JMYjPy54KHNAFX9q9XIDxz
-         kk2K5VYoaQsGSH5GN6D2DDEfEP2FJlDvFurdFkZGfFsS3LSFcFR1TogbEsjuPDrhNBdt
-         s5GQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Mly88rOWldb2hn6ZUpBbudlq0QPli1OI+xak074b4r4=;
+        b=lAj3+1b/p3m/ElrnylWgfn/5vAM5qlt1rTY6GYJMqKlpy+5swWInxuNIz8ay89ysVX
+         hc8Pzyf7c0E+jRldyVyLLE8rScc7piJOSxcjE8PLU1GH0bXHL0rfcGhfwDFAVn7FKZ94
+         f3HVHC9HU1SoQHT7yZOoYKcHdZWZL70//b9+xYaGv5rwmkxCyLnRWFHLChSXU3dsBxNV
+         tPNC8prFGFq+u/6YnTni0cBmAkN2MQc5sSCySaBzuOkCenirCZgX4UP9Q0EoxKOd5nzv
+         keB2wPsIVLoFf0Y5FLqgvswggZtbokmEZQP7V5VJJTCJ0soabWSO4axKZgomC8qEW/T1
+         /lMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zxT1CUhQy7++N7J2uEuPxuFfU6PCHQ/tHRlkWb3usUM=;
-        b=owZ8H9r/J4H+KgnX3l0uX2WnZD9VgAdJpw4Dp59/Z/GSLIo56/vj4tK6f4IlhY22MN
-         dGbYZYn6378yjrbU4jVEtKqNwsmLM6YbMrcpbgNV2CKepMCp9FYRlaEo1T26cyzAO9OH
-         nkHE+YdKcp9CacBeGX22/yQeB5c4Ky8HCxOYVe1AI6r4SYtXk2GBYSsFYkMvIMCkaD9b
-         pK7idBF4sfy9qEmEDWMei67TPyGtAgbqWf1geHLpK+WjYAkf2JHjmjP2rn6JarkOlNSv
-         13uX+AunazH/OpWfvbGWq/+5at8+RyUzLYLswBXe3nL3BuEnJtTVBitSX+DbwsAlzqKS
-         annw==
-X-Gm-Message-State: AOAM5335n4qLCDxYDzEo8LsCfeHVTgJRzl3QrX07FHDVm2Dd6NEUIESH
-        CT8HFfrQHluJYCNaQasZKD4=
-X-Google-Smtp-Source: ABdhPJzd+fsPgc2gE8SP4AB5eBntBpGk3JVixRSvF/psLPMiB4b6157LuZisq5B/zGRGa3gqZag6hw==
-X-Received: by 2002:a63:9255:: with SMTP id s21mr4197708pgn.363.1590589580622;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Mly88rOWldb2hn6ZUpBbudlq0QPli1OI+xak074b4r4=;
+        b=HhAwbPfC9fQp2UXgGD19I7u5VqM1id6H1YwEwvZQ2zAGYiYU9aFDbGU0lLClWPi8AZ
+         sAUbjAh1wy39EGVAPRYBZQYtI2LY2ItrmbTG4tvgCMXcVTB1YCkHwXbgK2yf1RQPg4uR
+         fb00JIKU12Ox1rc8s0SR7a0ThcWEdV1OMpS3DNHZwcCQmDxOR4lSnAoywg6KVriE0DCJ
+         4ECcstW7TJAHZ2Plsm51h2FKrxXp8ssMydwXrkQ1mDPHNtv4tbPvuLt3x8zr0shQGQSF
+         6+7tostZy9yKiW1UnHTQSgDRtspo0G5gxRmcvz7vPHNy4w+54KTh/lzmvvJXAd4nUaHy
+         1PEw==
+X-Gm-Message-State: AOAM533TWdWjo+A9DkO2zpDLpHXBvrR9gE0dUt9yAd7DJDOkpJYyt5ZJ
+        4Pc6zXwyDiRi0J/GjDqB8QdHpQ==
+X-Google-Smtp-Source: ABdhPJwSEI2N+Z0JrEzzTe6BWOigRZOSAIjRwq1zxP+KiTxFgPixzdvK7ac/pvk3MQ7iCOeGdGApOQ==
+X-Received: by 2002:a1c:f315:: with SMTP id q21mr4299691wmq.114.1590589580237;
         Wed, 27 May 2020 07:26:20 -0700 (PDT)
-Received: from localhost ([144.34.194.82])
-        by smtp.gmail.com with ESMTPSA id 5sm2251982pfp.182.2020.05.27.07.26.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 07:26:20 -0700 (PDT)
-From:   Dejin Zheng <zhengdejin5@gmail.com>
-To:     corbet@lwn.net, gregkh@linuxfoundation.org,
-        michal.simek@xilinx.com, wsa+renesas@sang-engineering.com,
-        linus.walleij@linaro.org, linux-doc@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Dejin Zheng <zhengdejin5@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH v3 1/2] drivers: provide devm_platform_request_irq()
-Date:   Wed, 27 May 2020 22:26:10 +0800
-Message-Id: <20200527142611.9006-1-zhengdejin5@gmail.com>
-X-Mailer: git-send-email 2.25.0
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s2sm2777668wmh.11.2020.05.27.07.26.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 07:26:19 -0700 (PDT)
+Date:   Wed, 27 May 2020 15:26:17 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, jason.wessel@windriver.com,
+        dianders@chromium.org, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] kdb: Make kdb_printf robust to run in NMI context
+Message-ID: <20200527142617.t7dzal7ok5i3exra@holly.lan>
+References: <1590560759-21453-1-git-send-email-sumit.garg@linaro.org>
+ <1590560759-21453-4-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590560759-21453-4-git-send-email-sumit.garg@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It will call devm_request_irq() after platform_get_irq() function
-in many drivers, sometimes, it is not right for the error handling
-of these two functions in some drivers. so provide this function
-to simplify the driver.
+On Wed, May 27, 2020 at 11:55:58AM +0530, Sumit Garg wrote:
+> While rounding up CPUs via NMIs, its possible that a rounded up CPU
 
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
----
-v2 -> v3:
-	- add devm_platform_request_irq() to devres.rst by Grygorii's
-	  suggestion.
-v1 -> v2:
-	- The patch content has not changed. just resend it by this discussion:
-	  https://patchwork.ozlabs.org/project/linux-i2c/patch/20200520144821.8069-1-zhengdejin5@gmail.com/
+This problem does not just impact NMI roundup (breakpoints, including
+implicit breakpoint-on-oops can have the same effect).
 
- .../driver-api/driver-model/devres.rst        |  1 +
- drivers/base/platform.c                       | 33 +++++++++++++++++++
- include/linux/platform_device.h               |  4 +++
- 3 files changed, 38 insertions(+)
 
-diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
-index 644078332354..89681264ee2c 100644
---- a/Documentation/driver-api/driver-model/devres.rst
-+++ b/Documentation/driver-api/driver-model/devres.rst
-@@ -325,6 +325,7 @@ IRQ
-   devm_request_any_context_irq()
-   devm_request_irq()
-   devm_request_threaded_irq()
-+  devm_platform_request_irq()
-   devm_irq_alloc_descs()
-   devm_irq_alloc_desc()
-   devm_irq_alloc_desc_at()
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index c0d0a5490ac6..1d2fd1ea3bc5 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -275,6 +275,39 @@ int platform_irq_count(struct platform_device *dev)
- }
- EXPORT_SYMBOL_GPL(platform_irq_count);
- 
-+/**
-+ * devm_platform_request_irq - get an irq and allocate an interrupt
-+ *				line for a managed device
-+ * @pdev: platform device
-+ * @num: IRQ number index
-+ * @irq: get an IRQ for a device if irq != NULL
-+ * @handler: function to be called when the IRQ occurs
-+ * @irqflags: interrupt type flags
-+ * @devname: an ascii name for the claiming device, dev_name(dev) if NULL
-+ * @dev_id: a cookie passed back to the handler function
-+ *
-+ * Return: zero on success, negative error number on failure.
-+ */
-+int devm_platform_request_irq(struct platform_device *pdev, unsigned int num,
-+		unsigned int *irq, irq_handler_t handler,
-+		unsigned long irqflags, const char *devname, void *dev_id)
-+{
-+	int tmp_irq, ret;
-+
-+	tmp_irq = platform_get_irq(pdev, num);
-+	if (tmp_irq < 0)
-+		return tmp_irq;
-+
-+	ret = devm_request_irq(&pdev->dev, tmp_irq, handler, irqflags,
-+				devname, dev_id);
-+	if (ret < 0)
-+		dev_err(&pdev->dev, "can't request IRQ\n");
-+	else if (irq != NULL)
-+		*irq = tmp_irq;
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(devm_platform_request_irq);
-+
- /**
-  * platform_get_resource_byname - get a resource for a device by name
-  * @dev: platform device
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index 77a2aada106d..d94652deea5c 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -11,6 +11,7 @@
- #define _PLATFORM_DEVICE_H_
- 
- #include <linux/device.h>
-+#include <linux/interrupt.h>
- 
- #define PLATFORM_DEVID_NONE	(-1)
- #define PLATFORM_DEVID_AUTO	(-2)
-@@ -70,6 +71,9 @@ devm_platform_ioremap_resource_byname(struct platform_device *pdev,
- extern int platform_get_irq(struct platform_device *, unsigned int);
- extern int platform_get_irq_optional(struct platform_device *, unsigned int);
- extern int platform_irq_count(struct platform_device *);
-+extern int devm_platform_request_irq(struct platform_device *pdev,
-+		unsigned int num, unsigned int *irq, irq_handler_t handler,
-+		unsigned long irqflags, const char *devname, void *dev_id);
- extern struct resource *platform_get_resource_byname(struct platform_device *,
- 						     unsigned int,
- 						     const char *);
--- 
-2.25.0
+> maybe holding a console port lock leading to kgdb master CPU stuck in
+> a deadlock during invocation of console write operations. So in order
+> to avoid such a deadlock, enable oops_in_progress prior to invocation
+> of console handlers.
+> 
+> Suggested-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 349dfcc..f848482 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -566,7 +566,17 @@ static void kdb_msg_write(char *msg, int msg_len)
+>  	for_each_console(c) {
+>  		if (!(c->flags & CON_ENABLED))
+>  			continue;
+> +		/*
+> +		 * While rounding up CPUs via NMIs, its possible that
 
+Ditto.
+
+> +		 * a rounded up CPU maybe holding a console port lock
+> +		 * leading to kgdb master CPU stuck in a deadlock during
+> +		 * invocation of console write operations. So in order
+> +		 * to avoid such a deadlock, enable oops_in_progress
+> +		 * prior to invocation of console handlers.
+
+Actually looking at this comment as a whole I think it spends to many
+words on what and not enough on why (e.g. what the tradeoffs are and
+why we are not using bust_spinlocks() which would be a more obvious
+approach).
+
+  Set oops_in_progress to encourage the console drivers to disregard
+  their internal spin locks: in the current calling context
+  the risk of deadlock is a bigger problem than risks due to
+  re-entering the console driver. We operate directly on
+  oops_in_progress rather than using bust_spinlocks() because
+  the calls bust_spinlocks() makes on exit are not appropriate
+  for this calling context.
+
+
+Daniel.
+
+
+> +		 */
+> +		++oops_in_progress;
+>  		c->write(c, msg, msg_len);
+> +		--oops_in_progress;
+>  		touch_nmi_watchdog();
+>  	}
+>  }
+> -- 
+> 2.7.4
+> 
