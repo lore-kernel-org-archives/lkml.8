@@ -2,154 +2,78 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D741C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:47:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F4D20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBwgNec4"
+	by mail.kernel.org (Postfix) with ESMTP id 21170208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590562060;
+	bh=5+tlLkLihU00jqHmrP7H7SWlj+BNK7hJ7XmRaGHL96w=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=VsVrrCz6V+3ogHZEBeQ0DD0oloEodMlkqAy76o65P0ZfvWIxMjSgn56+uzCX3tmr6
+	 qo0yD2YMM86ISZ9BRAtVbiV3NRab2MYpJOyb+q/j8Xd+FGiN5CWm51EHk88rX8KjSr
+	 jH3QXWqkS/r2apgM9C/Bo8gx8D2UzrFCxCf/gjI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbgE0Gq1 (ORCPT
+        id S1729033AbgE0Grj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbgE0GqW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:46:22 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CF1EC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:22 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y11so1497204plt.12
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:46:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aVdVVfxhZvfnyL0MAVnSG4rUWF/WkfXZ+WWr8J5EunM=;
-        b=WBwgNec4uNhh7ME9Y8eO7A+vnQ3wXjHclbvB0q51ijklLhHwIOkVoQZmY/T0+La8eA
-         rLf6rCdVKJIaXoS08XOuOqRx7XWzDrWMS2caaV4VLH5VTNwZLUScW9Nim5/9y2MIy80D
-         GxcDsz3hv1q8KVDPBwB+boOXsJKTBKgppy7iE+QPbzjsDjbES3pkUbUb1fBEUJtWulwx
-         Ppx8Lp5tDdW6QD6mfyjkx1LM+IYxxPH2b2vGZcVnV6jrjvI/vIu3vQ6r0EHlczw+sdBN
-         eyqKkWtqsUK9VGS5mIW2dS9bzNCkrXEWgro/Xc/G1vfvE6i/XV6KS3yQE3vkq1X1k2B2
-         EGfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=aVdVVfxhZvfnyL0MAVnSG4rUWF/WkfXZ+WWr8J5EunM=;
-        b=N57rzZCCoYDk/Ob57BAFg2VOVpPcD3bXTn0Ii/W9YbXfL1UQS9fS/KZ6c/l6C0ISqb
-         xiHEhA3ATvUAflOEIDX84RqqzT6RMT3qEN745/0ax4p9i0YFnkp+Itt21hqypxmlO+9n
-         yavj9SVkD7Dp5O3EPk+OqQyb1HkEJlQexeS2mFu8qdwLwb8ey/kG1Z6kWsiN79hbLhDQ
-         rapvznPHsLABjSK5vkTdztOjQD/Pv8tXh8+w9xrb6xWjNdeM1gz79EeRiK2OqSARy38o
-         jToHslPfXzWage6GaBA1khZ0H/oxhoH4kHc2dQRwRgy+5hiDaf68VkujOhCH1dewKGUe
-         bmAA==
-X-Gm-Message-State: AOAM531ZzzEa7+zm1FcWe8mXfvVh3c7wzl5ARLwcDPH2FJRGdwjnX6kf
-        97uxGuxE7DP5d2oD/GonpAM=
-X-Google-Smtp-Source: ABdhPJz7nYNIfgZiwi7ETzJTmgtEPvU+hH3xTK4PtfDi/TZOpiSqviLZpd0lF3u/LFynLmll3+kF7A==
-X-Received: by 2002:a17:902:7c90:: with SMTP id y16mr4225057pll.75.1590561982027;
-        Tue, 26 May 2020 23:46:22 -0700 (PDT)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id r13sm443883pgv.50.2020.05.26.23.46.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 23:46:21 -0700 (PDT)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 12/12] mm/page_alloc: use standard migration target allocation function directly
-Date:   Wed, 27 May 2020 15:45:03 +0900
-Message-Id: <1590561903-13186-13-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
+        Wed, 27 May 2020 02:47:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60408 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725914AbgE0Grj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 02:47:39 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0ABC20787;
+        Wed, 27 May 2020 06:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590562058;
+        bh=5+tlLkLihU00jqHmrP7H7SWlj+BNK7hJ7XmRaGHL96w=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=nZ0/4jIgaBAacgfigDF/ATTLFMH2+8osx1Ba1rg/F7Ox0XbAWloCR0TZG4GKia4Bd
+         ABwmIPWaiNEmptbBXpVCXTQd8TJQrLrGAS6A92GnC/aKmfjEKLvpvwzV5ZCYnFIVfG
+         egoj4X3fin0ToeOosPdQfr+/anpPn4ia9B0mIHZY=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <eeae1a92da7812f04a034498d3a1cb60e282fec7.1587742492.git-series.maxime@cerno.tech>
+References: <cover.d1e741d37e43e1ba2d2ecd93fc81d42a6df99d14.1587742492.git-series.maxime@cerno.tech> <eeae1a92da7812f04a034498d3a1cb60e282fec7.1587742492.git-series.maxime@cerno.tech>
+Subject: Re: [PATCH v2 06/91] clk: bcm: rpi: Statically init clk_init_data
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org
+To:     Eric Anholt <eric@anholt.net>, Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date:   Tue, 26 May 2020 23:47:38 -0700
+Message-ID: <159056205813.88029.2378352854347673195@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Quoting Maxime Ripard (2020-04-24 08:33:47)
+> Instead of declaring the clk_init_data and then calling memset on it, just
+> initialise properly.
+>=20
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Acked-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
 
-There is no need to make a function in order to call standard migration
-target allocation function. Use standard one directly.
-
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/page-isolation.h |  2 --
- mm/page_alloc.c                |  9 +++++++--
- mm/page_isolation.c            | 11 -----------
- 3 files changed, 7 insertions(+), 15 deletions(-)
-
-diff --git a/include/linux/page-isolation.h b/include/linux/page-isolation.h
-index 35e3bdb..20a4b63 100644
---- a/include/linux/page-isolation.h
-+++ b/include/linux/page-isolation.h
-@@ -62,6 +62,4 @@ undo_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
- int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
- 			int isol_flags);
- 
--struct page *alloc_migrate_target(struct page *page, struct alloc_control *ac);
--
- #endif
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9803158..3f5cfab 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -8359,6 +8359,11 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
- 	unsigned long pfn = start;
- 	unsigned int tries = 0;
- 	int ret = 0;
-+	struct alloc_control ac = {
-+		.nid = zone_to_nid(cc->zone),
-+		.nmask = &node_states[N_MEMORY],
-+		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
-+	};
- 
- 	migrate_prep();
- 
-@@ -8385,8 +8390,8 @@ static int __alloc_contig_migrate_range(struct compact_control *cc,
- 							&cc->migratepages);
- 		cc->nr_migratepages -= nr_reclaimed;
- 
--		ret = migrate_pages(&cc->migratepages, alloc_migrate_target,
--				    NULL, NULL, cc->mode, MR_CONTIG_RANGE);
-+		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
-+				    NULL, &ac, cc->mode, MR_CONTIG_RANGE);
- 	}
- 	if (ret < 0) {
- 		putback_movable_pages(&cc->migratepages);
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index aba799d..03d6cad 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -297,14 +297,3 @@ int test_pages_isolated(unsigned long start_pfn, unsigned long end_pfn,
- 
- 	return pfn < end_pfn ? -EBUSY : 0;
- }
--
--struct page *alloc_migrate_target(struct page *page, struct alloc_control *__ac)
--{
--	struct alloc_control ac = {
--		.nid = page_to_nid(page),
--		.nmask = &node_states[N_MEMORY],
--		.gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL,
--	};
--
--	return alloc_migration_target(page, &ac);
--}
--- 
-2.7.4
-
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
