@@ -2,64 +2,100 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55074C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1095FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34117207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E1220835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 21:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgE0V4Y (ORCPT
+        id S1725941AbgE0V5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 17:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgE0V4X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 17:56:23 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE1DC05BD1E;
-        Wed, 27 May 2020 14:56:23 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A9482128CE440;
-        Wed, 27 May 2020 14:56:22 -0700 (PDT)
-Date:   Wed, 27 May 2020 14:56:22 -0700 (PDT)
-Message-Id: <20200527.145622.575385364026122212.davem@davemloft.net>
-To:     tanhuazhong@huawei.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com, kuba@kernel.org
-Subject: Re: [PATCH V2 net-next 0/4] net: hns3: misc updates for -next
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1590541157-6803-1-git-send-email-tanhuazhong@huawei.com>
-References: <1590541157-6803-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 27 May 2020 14:56:23 -0700 (PDT)
+        Wed, 27 May 2020 17:57:43 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49740 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgE0V5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 17:57:43 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D81951A0989;
+        Wed, 27 May 2020 23:57:41 +0200 (CEST)
+Received: from smtp.na-rdc02.nxp.com (usphx01srsp001v.us-phx01.nxp.com [134.27.49.11])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9F6DD1A0984;
+        Wed, 27 May 2020 23:57:41 +0200 (CEST)
+Received: from right.am.freescale.net (right.am.freescale.net [10.81.116.70])
+        by usphx01srsp001v.us-phx01.nxp.com (Postfix) with ESMTP id DE9AD40A5F;
+        Wed, 27 May 2020 14:57:40 -0700 (MST)
+From:   Li Yang <leoyang.li@nxp.com>
+List-Id: <soc.lore.kernel.org>
+To:     arm@kernel.org, soc@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shawnguo@kernel.org
+Subject: [GIT PULL] soc/fsl drivers changes for next(v5.8)
+Date:   Wed, 27 May 2020 16:57:40 -0500
+Message-Id: <20200527215740.9279-1-leoyang.li@nxp.com>
+X-Mailer: git-send-email 2.25.1.377.g2d2118b
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
-Date: Wed, 27 May 2020 08:59:13 +0800
+Hi soc maintainers,
 
-> This patchset includes some misc updates for the HNS3 ethernet driver.
-> 
-> #1 adds a resetting check in hclgevf_init_nic_client_instance().
-> #2 adds a preparatory work for RMDA VF's driver.
-> #3 removes some unnecessary operations in app loopback.
-> #4 adds an error log for debugging.
-> 
-> Change log:
-> V1->V2: removes previous patch#1 which may needs further discussion.
+Please merge the following new changes for soc/fsl drivers.
 
-Series applied, thanks.
+Regards,
+Leo
+
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.8
+
+for you to fetch changes up to e9e4ef9116b12951eaee3f8447ba9bbb40ab3620:
+
+  soc: fsl: dpio: Remove unused inline function qbman_write_eqcr_am_rt_register (2020-05-22 18:11:03 -0500)
+
+----------------------------------------------------------------
+NXP/FSL SoC driver updates for v5.8
+
+DPAA2 DPIO driver
+- Prefer the CPU affined DPIO
+
+QUICC Engine drivers
+- Replace one-element array and use struct_size() helper
+
+Cleanups in various drivers
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      soc: fsl: qe: clean up an indentation issue
+
+Gustavo A. R. Silva (2):
+      treewide: Replace zero-length array with flexible-array
+      soc: fsl: qe: Replace one-element array and use struct_size() helper
+
+Roy Pledge (1):
+      soc: fsl: dpio: Prefer the CPU affine DPIO
+
+YueHaibing (2):
+      soc: fsl: qbman: Remove unused inline function qm_eqcr_get_ci_stashing
+      soc: fsl: dpio: Remove unused inline function qbman_write_eqcr_am_rt_register
+
+ drivers/soc/fsl/dpio/dpio-service.c   |  6 +++++-
+ drivers/soc/fsl/dpio/qbman-portal.c   | 12 ------------
+ drivers/soc/fsl/qbman/qman.c          |  5 -----
+ drivers/soc/fsl/qe/qe.c               |  4 ++--
+ drivers/soc/fsl/qe/ucc.c              |  2 +-
+ include/linux/fsl/bestcomm/bestcomm.h |  2 +-
+ include/soc/fsl/qe/qe.h               |  2 +-
+ 7 files changed, 10 insertions(+), 23 deletions(-)
