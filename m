@@ -2,88 +2,162 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E91C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E57206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B303206F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Gi0/PIZa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388275AbgE0Iqt (ORCPT
+        id S2388221AbgE0Ir5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:46:49 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:42250 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388107AbgE0Iqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:46:48 -0400
-Received: from localhost.localdomain (unknown [222.205.60.151])
-        by mail-app2 (Coremail) with SMTP id by_KCgCH_5bSKM5eQWchAA--.7710S4;
-        Wed, 27 May 2020 16:46:13 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: img-spdif-out: Fix runtime PM imbalance on error
-Date:   Wed, 27 May 2020 16:46:08 +0800
-Message-Id: <20200527084610.4790-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgCH_5bSKM5eQWchAA--.7710S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWfAFg_uw
-        4kGws3W3yfGws2qrW7Ja1Yv397Wrn7K3WUGr10vr15K34YyFZ8W3y8Xr98Cr18Xa1kZry0
-        q3yDuryxAryqvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
-        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
-        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWU
-        XwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
-        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
-        14v_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr
-        1UYxBIdaVFxhVjvjDU0xZFpf9x0JUP-B_UUUUU=
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0MBlZdtOUT6wAPso
+        Wed, 27 May 2020 04:47:57 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:53803 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388169AbgE0Ir5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:47:57 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590569276; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: Cc: References: To:
+ Subject: Sender; bh=uae7yIbf7LkvKzwAx7OZgJqnIs4z8A3JvYEC3/kjvas=; b=Gi0/PIZaQh8MPUmZEhBBVda8zuNvIavnGHtA/ydJcNEyX2up7dxvbcGe/HL0mAgjyUguEVZa
+ QaH5rysuByJ3Db/zv9a3/SwQKaw43QxYKh+oCHUjzrhs1k7x0cnnK7c5SAiAVlvM9YbokV3t
+ labQGGIHYGBL2NAhUQQ/+3shTlU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ece292d44a25e0052c0c369 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 08:47:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 79D87C433C9; Wed, 27 May 2020 08:47:40 +0000 (UTC)
+Received: from [192.168.1.227] (unknown [49.204.179.34])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D6D3AC433C6;
+        Wed, 27 May 2020 08:47:35 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D6D3AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
+ set DDR bandwidth
+To:     Rob Clark <robdclark@gmail.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
+ <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
+ <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+Cc:     viresh.kumar@linaro.org, saravanak@google.com,
+        sibis@codeaurora.org, rnayak@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+Message-ID: <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
+Date:   Wed, 27 May 2020 14:17:32 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
++ more folks
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- sound/soc/img/img-spdif-out.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 5/18/2020 9:55 PM, Rob Clark wrote:
+> On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
+>>> This patches replaces the previously used static DDR vote and uses
+>>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+>>> GPU frequency.
+>>>
+>>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+>>> ---
+>>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
+>>>   1 file changed, 1 insertion(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>> index 2d8124b..79433d3 100644
+>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+>>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+>>>
+>>>        gmu->freq = gmu->gpu_freqs[perf_index];
+>>>
+>>> -     /*
+>>> -      * Eventually we will want to scale the path vote with the frequency but
+>>> -      * for now leave it at max so that the performance is nominal.
+>>> -      */
+>>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+>>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+>>>   }
+>> This adds an implicit requirement that all targets need bandwidth settings
+>> defined in the OPP or they won't get a bus vote at all. I would prefer that
+>> there be an default escape valve but if not you'll need to add
+>> bandwidth values for the sdm845 OPP that target doesn't regress.
+>>
+> it looks like we could maybe do something like:
+>
+>    ret = dev_pm_opp_set_bw(...);
+>    if (ret) {
+>        dev_warn_once(dev, "no bandwidth settings");
+>        icc_set_bw(...);
+>    }
+>
+> ?
+>
+> BR,
+> -R
 
-diff --git a/sound/soc/img/img-spdif-out.c b/sound/soc/img/img-spdif-out.c
-index 456c462d52fb..b1d8e4535726 100644
---- a/sound/soc/img/img-spdif-out.c
-+++ b/sound/soc/img/img-spdif-out.c
-@@ -370,8 +370,10 @@ static int img_spdif_out_probe(struct platform_device *pdev)
- 			goto err_pm_disable;
- 	}
- 	ret = pm_runtime_get_sync(&pdev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
- 		goto err_suspend;
-+	}
- 
- 	img_spdif_out_writel(spdif, IMG_SPDIF_OUT_CTL_FS_MASK,
- 			     IMG_SPDIF_OUT_CTL);
--- 
-2.17.1
+There is a bit of an issue here - Looks like its not possible to two icc 
+handles to the same path.  Its causing double enumeration of the paths 
+in the icc core and messing up path votes. With [1] Since opp/core 
+already gets a handle to the icc path as part of table add,  drm/msm 
+could do either
 
+a) Conditionally enumerate gpu->icc_path handle only when pm/opp core 
+has not got the icc path handle. I could use something like [2] to 
+determine if should initialize gpu->icc_path*
+
+b) Add peak-opp-configs in 845 dt and mandate all future versions to use 
+this bindings. With this, I can remove gpu->icc_path from msm/drm 
+completely and only rely on opp/core for bw voting.
+
+[1] - https://lore.kernel.org/patchwork/cover/1240687/
+
+[2] - https://patchwork.kernel.org/patch/11527573/
+
+Let me know your thoughts
+
+Sharat
+
+>
+>> Jordan
+>>
+>>>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+>>> --
+>>> 2.7.4
+>>>
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>> _______________________________________________
+>> Freedreno mailing list
+>> Freedreno@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/freedreno
