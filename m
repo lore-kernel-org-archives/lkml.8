@@ -2,112 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84209C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 855A1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF80206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54635206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590578883;
+	bh=ef/jJPV9ByXtDirUxMky79f/X31SPpgZBquKZf4ExGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Weq48yP6QkuGtyR81uYK8torFScInjDTe4K6oDNSHFnGU0+YMTENyrQvoYHkvCOAd
+	 MImYXklgKuTUxHn0q02utbe9fkwy4Se4PjXhfkHVVD1yqGT5ohFmCwgwRkc4LwEuhT
+	 hxbrgovMBHNC6cA+LBFaVo+N8bJ0kMVPW+YRMcWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730036AbgE0L1L (ORCPT
+        id S1728527AbgE0L2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:27:11 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:35123 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbgE0L1K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:27:10 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MXXhv-1jVttD35Z9-00YwXx for <linux-kernel@vger.kernel.org>; Wed, 27 May
- 2020 13:27:08 +0200
-Received: by mail-qk1-f175.google.com with SMTP id 205so10785812qkg.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:27:08 -0700 (PDT)
-X-Gm-Message-State: AOAM530vg0P08A0uFEzxS6AWocI6316m1BDTKGSkEie1ktEmna+w7PZ7
-        fO7OgZJlM9f4emP04fHSsjWlb3J46UAIDG3cnJU=
-X-Google-Smtp-Source: ABdhPJyMxE/W5GNu5lFSY1EOd7K9CvUP7yQNK8/+Tbr1HASdaxQjcTSuBjo0aDfkhpRntAs3TlQQ9L0EYFa8/53Vb04=
-X-Received: by 2002:a37:434b:: with SMTP id q72mr3711430qka.352.1590578827661;
- Wed, 27 May 2020 04:27:07 -0700 (PDT)
+        Wed, 27 May 2020 07:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbgE0L2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:28:01 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE186207D3;
+        Wed, 27 May 2020 11:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590578881;
+        bh=ef/jJPV9ByXtDirUxMky79f/X31SPpgZBquKZf4ExGg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RJY9LUFfHCypglbuznceow9Hw1fql7iGoKCpk7ydeFGTRHjnp11jxf5g4owd2Cu3g
+         itrvhN5P5c8PfdjW2ak56F3khIJ3z4UQGG+M3pUr/L7g6iSO6FfO5WP9i5dUxNfm6W
+         IQzLRr9RP7/vfapSeVgVqbwwy2Ix4404Ii47l1IU=
+Date:   Wed, 27 May 2020 12:27:59 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     yuhsuan@chromium.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: AMD: Use mixer control to switch between DMICs
+Message-ID: <20200527112758.GE5308@sirena.org.uk>
+References: <20200527014023.2781-1-akshu.agrawal@amd.com>
 MIME-Version: 1.0
-References: <20200527103236.148700-1-elver@google.com>
-In-Reply-To: <20200527103236.148700-1-elver@google.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 13:26:51 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
-Message-ID: <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
-Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
- compilation time
-To:     Marco Elver <elver@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:J3mYKozi9qcfSPfrL19tbd/nl686s0nV1s9lUV7w/3ZibJ4OaI/
- 6LMFOclqEandcqWFMX9im0hpI48GoOBgizJmm0LhaYvZyvv7szhdWDTsRImII8th1mfY9hi
- 3aLED4+LHnzsOnrPoBiWos5ZKViJfaak2G0bF7rGRiuU7uvrUVgdnWQKOYIrcVTl4EcDi60
- ZfQzqOshlrtKbkQTRCe3w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:a0cE8+5pDVw=:oE+/BmVkRS4ikqU8wqm5RB
- yTbWeRGeg+e2PC7X0eRgGWkLzjNQh1zk+AtbNhT0tNf0EuZv726t+vN2Ik56iaxI3z6IPGTDD
- G5OQ4oV+lVL6BedS2crdC2kj3QQhCoLMjJKo+psxl/1qSkoO+6OdwWURXK+OT4Dat9QqMgt5A
- RRPo1Usd17GVQNREgt+SO7GWqJVA06RuedEOZMnUvxKiJxh3WArsrfTx1QNaa9QqLx9g5HJi5
- +eHk1Z/AUJZacURbpFdcv77p8+MtlZoExon3gRenBj14iNLXVHqTLUZEOQuYYcUMkz8T09yDS
- EyLk9zwyTpg5zF7wNqJyVs1f+4FYRG6r42DbG0+iAzE33Mfym6vtFRnfl4t5xlfbN5x1OuFaZ
- f9RzOKnk5jURhFYrMOT294bMhit+WNe4gLV1OZElEftS19iHjKuu0HyCuLmzRA7V314/8ANsU
- IQBzEWbeRfQj8Wwyv3f1lyw/EvBcGKYPmODIIutAGhdAnS0lGCZcKmF89NPk28xroX2Elq0wi
- hiSfdpvz1ys4mhqJ7BStYKem0Ro4mAAk6jPAsdewX0/i8bDVKiXYeTGB9u7jSMU9v7eRNWrvk
- Q/l1GEMdGzlXe/0NI0x+iwWKo9s1Ea9xV7eMgOdQ5SuivVQMEc0kgiS3wBGDSA+qr1ATKKe/n
- HP+DAZRjKQ9P65M7Zx+8TTW+9JBPtO7p5RG7JbzjPBPBDdA3tRTSFf9Ne8a8oyabWAwWKlGRk
- O0E6urzPwz3LG6Cn+xi/ZnVka9ujlpAJgswoAdOq1lHpn8pQGlxuadjKT017J/8NBvHmbvocc
- rWb1L6PWZa7irgUcm14yyVtk3Doewbe+fkHvrtgXy3I15D1mkg=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="imjhCm/Pyz7Rq5F2"
+Content-Disposition: inline
+In-Reply-To: <20200527014023.2781-1-akshu.agrawal@amd.com>
+X-Cookie: Drop in any mailbox.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:33 PM Marco Elver <elver@google.com> wrote:
->
-> If the compiler supports C11's _Generic, use it to speed up compilation
-> times of __unqual_scalar_typeof(). GCC version 4.9 or later and
-> all supported versions of Clang support the feature (the oldest
-> supported compiler that doesn't support _Generic is GCC 4.8, for which
-> we use the slower alternative).
->
-> The non-_Generic variant relies on multiple expansions of
-> __pick_integer_type -> __pick_scalar_type -> __builtin_choose_expr,
-> which increases pre-processed code size, and can cause compile times to
-> increase in files with numerous expansions of READ_ONCE(), or other
-> users of __unqual_scalar_typeof().
->
-> Summary of compile-time benchmarking done by Arnd Bergmann [1]:
->
->         <baseline normalized time>  clang-11   gcc-9
->         this patch                      0.78    0.91
->         ideal                           0.76    0.86
->
-> [1] https://lkml.kernel.org/r/CAK8P3a3UYQeXhiufUevz=rwe09WM_vSTCd9W+KvJHJcOeQyWVA@mail.gmail.com
->
-> Further compile-testing done with:
->         gcc 4.8, 4.9, 5.5, 6.4, 7.5, 8.4;
->         clang 9, 10.
->
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Marco Elver <elver@google.com>
 
-This gives us back 80% of the performance drop on clang, and 50%
-of the drop I saw with gcc, compared to current mainline.
+--imjhCm/Pyz7Rq5F2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, May 27, 2020 at 07:10:16AM +0530, Akshu Agrawal wrote:
+
+> +	SOC_SINGLE_BOOL_EXT("Front Mic", 0, front_mic_get, front_mic_set),
+
+This should probably be a mux with two labelled options, or if it's a
+boolean control it should end in Switch.  A mux definitely seems like a
+better option though.
+
+--imjhCm/Pyz7Rq5F2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7OTr4ACgkQJNaLcl1U
+h9DRYgf/akrvrra3kUeV1yqD3LwP+z/Awi1I/4x2sgSYHYzVEF60MkdDjY8+nYNZ
+YMvWIEcZYxu7AuOR6dKmzK6ogV0E2dTfiy4IaiftYE+FpFjVQSLml2E258WF4Fyl
+5Uz7BzoBvRT/t3YseDiZ1MPR/PiA/RbA38oiE//OKqLNQvEo+TZFf6Z/mzh6v7Fy
+BhN9D7wbAIWk9LNzvlx/F4w+W9oOc822A573binK00Ye7oTZGz1jr1hZ16nzOTha
+BmwljhOAM2VQW9Lly8uz3DfHP/P8z1X/Y09/EoTiEiH83v59zVL3vh3s4GrcFX/m
+JUsmP5670wkUeRvmMe4muY+0ReOj7w==
+=YKkv
+-----END PGP SIGNATURE-----
+
+--imjhCm/Pyz7Rq5F2--
