@@ -2,290 +2,162 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E00C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 619EE2084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CE92084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tndt5hkq"
+	dkim=pass (1024-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="kPEQxS0P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390957AbgE0QZx (ORCPT
+        id S2391022AbgE0Q0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:25:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34352 "EHLO
+        Wed, 27 May 2020 12:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389852AbgE0QZv (ORCPT
+        with ESMTP id S2389816AbgE0Q0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:25:51 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B90C05BD1E;
-        Wed, 27 May 2020 09:25:51 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y11so2016481plt.12;
-        Wed, 27 May 2020 09:25:51 -0700 (PDT)
+        Wed, 27 May 2020 12:26:02 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4F5C03E97D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:26:02 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c11so27528085ljn.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:26:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cPIgw/feStnGbABPrBX7WdVJISPCqmPO558epQRrQuM=;
-        b=Tndt5hkqia1IucLwLggfdmUPNOa7I7EXbqDbazST6TANHLD9EWbpSdd0D+zeVafNCq
-         6qwXsON26EZVHoxEVM7nf/Qi9K0r9v25H7zUqNvoFXvNZPvIuWddejxwWt8G7WBJyD5s
-         HwTNtDAEU0cIUsibrSK/ryP/oo/D2dy456v9bKxPnRKD2jwafoXYdVnHLKm86OrRCPXE
-         91ZnqcQhK0stBhJ2pnp0w2GKNu699iaEyDsCBcTfZwmdf5gOZiw0dVY3dFdxPOh0zG2W
-         unlHVYCiS9DMDvtx0dg7W7i2Cl0CrdScQWroAi/JaMXah//tLwGJfPxaQS2+sPSavmMW
-         8uOw==
+        d=antmicro.com; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=g9s8BvA2PQumY+6SHwRlWVAr/CRDLgvzgZHFCjcSWFk=;
+        b=kPEQxS0PW9dRJFegpNyWgrt8yIXYPoMQa4We9uL1uWfxS9FRb5wVnDsGlz1CY1XUDA
+         6S+/oBnySjJoeIkY1F41HfrI3u+McunRtLiBkBE4i/F6YBWmiFDgNjhq2Qk5fzJfmvWQ
+         ZpX96sYW4/1V1rG83f4+L9VnN1LT6HHE+Zaac=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cPIgw/feStnGbABPrBX7WdVJISPCqmPO558epQRrQuM=;
-        b=G217j0lipNE+F6RbbTxFOIW6cOmhbvuiuzHiWhPT2tUmOkzT4kD+CssWrNGOgpwdiL
-         WZ+F/3kP10Lk5K/DBls8DqT3scafOUSaeql5hs+k0fBVD2zMeFZiXgm9RLkIjQk1BisE
-         lqV9e9p5EgOZRjc8yv8e4QTwbP5lWJ1YmjsoiLDBl1X1nWw9GQT0OQTk9bh+JuS1Cig1
-         MgwmFK2PsJncYMDMah7iJx3FFYq1i5dGBgtEHGb9ErsQhvrN0WpWBnlOxFqJRulhr8xQ
-         fdArNi5AtfDXYzYuuELnhIGYkUa3dpkuHiTqNrzaK+1YR+Ete89ZHExAUEN3Lzm8RAYA
-         GSyw==
-X-Gm-Message-State: AOAM532KGzgmGREJbeeQPBaMU75CIbkx6uZO+T8utjwb+MRgT8jyhrDN
-        gS89oNEh6SbWDhOzYEq2ZRmtFRC/
-X-Google-Smtp-Source: ABdhPJxbbm3v9AsOnhGQleALBClbksJOBoDhbFq9rwsnAKGMmT3lUxatRG5hH2GaBdOVaa2CgK4LDg==
-X-Received: by 2002:a17:90a:7c48:: with SMTP id e8mr5966497pjl.135.1590596751048;
-        Wed, 27 May 2020 09:25:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x191sm2539709pfd.37.2020.05.27.09.25.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 09:25:50 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:25:49 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] hwmon: Add Baikal-T1 PVT sensor driver
-Message-ID: <20200527162549.GA225240@roeck-us.net>
-References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
- <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=g9s8BvA2PQumY+6SHwRlWVAr/CRDLgvzgZHFCjcSWFk=;
+        b=MOZoKGHpek+FQWOrxmTj4erWtHQYRHFdduDpZR3+aXgN4/NteRA6V5BS70g7YS3PXp
+         WS1fgzeHeegqMH3eibfDjrccNLkxyEBtcQ5utbaoLPecPZs1UovpiAOYfmraIbMVsWoz
+         U5tZtRpEB5xB7W9GIjTd/y71ZVVu6+bFcWoUOyS2BZayhHDvRSKTaXN+5+SjT5U+baBv
+         ggiDwk4TFgw4sqQBi1/+t8eFrvjX24sN7RqpltwWB7gPp6M9A2A5WJIdOJpeZnlR0ObJ
+         NJbu3DkOUY7FhemudocdMCuTiWyDj5TRvVjIN7t7iYByGV2E2snNyA3tcIh1ICfo9Aoj
+         mheQ==
+X-Gm-Message-State: AOAM532uabjQByHsRfQcPCFTwi6PB8+uwvB/7irms8je6hhXeYECm8IN
+        BRtdwNYqr88qe/Q8tO1Cnbl0fg==
+X-Google-Smtp-Source: ABdhPJxMdBdNzaQhOcNgRguBOidB8r8tVmkt5HJC4NDaHBBD8klKwTO/LK1I6tOhDGNUcjjIsfgfkA==
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr3452029ljg.337.1590596760509;
+        Wed, 27 May 2020 09:26:00 -0700 (PDT)
+Received: from localhost.localdomain (d79-196.icpnet.pl. [77.65.79.196])
+        by smtp.gmail.com with ESMTPSA id p68sm898784lfa.71.2020.05.27.09.25.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 09:25:59 -0700 (PDT)
+Date:   Wed, 27 May 2020 18:25:51 +0200
+From:   Mateusz Holenko <mholenko@antmicro.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mateusz Holenko <mholenko@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@antmicro.com>,
+        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
+Subject: [PATCH v6 0/5] LiteX SoC controller and LiteUART serial driver
+Message-ID: <20200527182545.3859622-0-mholenko@antmicro.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 04:38:23PM +0300, Serge Semin wrote:
-> Baikal-T1 SoC provides an embedded process, voltage and temperature
-> sensor to monitor an internal SoC environment (chip temperature, supply
-> voltage and process monitor) and on time detect critical situations,
-> which may cause the system instability and even damages. The IP-block
-> is based on the Analog Bits PVT sensor, but is equipped with a
-> dedicated control wrapper, which provides a MMIO registers-based access
-> to the sensor core functionality (APB3-bus based) and exposes an
-> additional functions like thresholds/data ready interrupts, its status
-> and masks, measurements timeout. All of these is used to create a hwmon
-> driver being added to the kernel by this commit.
-> 
-> The driver implements support for the hardware monitoring capabilities
-> of Baikal-T1 process, voltage and temperature sensors. PVT IP-core
-> consists of one temperature and four voltage sensors, each of which is
-> implemented as a dedicated hwmon channel config.
-> 
-> The driver can optionally provide the hwmon alarms for each sensor the
-> PVT controller supports. The alarms functionality is made compile-time
-> configurable due to the hardware interface implementation peculiarity,
-> which is connected with an ability to convert data from only one sensor
-> at a time. Additional limitation is that the controller performs the
-> thresholds checking synchronously with the data conversion procedure.
-> Due to these limitations in order to have the hwmon alarms
-> automatically detected the driver code must switch from one sensor to
-> another, read converted data and manually check the threshold status
-> bits. Depending on the measurements timeout settings this design may
-> cause additional burden on the system performance. By default if the
-> alarms kernel config is disabled the data conversion is performed by
-> the driver on demand when read operation is requested via corresponding
-> _input-file.
-> 
-> Co-developed-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
-> Signed-off-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
-> 
-> Changelog v2:
-> - Discard handwritten IO-access wrappers. Use normal readl/writel instead.
-> - Use generic FIELD_{GET,PREP} macros instead of handwritten ones.
-> - Since the driver depends on the OF config we can remove of_match_ptr()
->   macro utilization.
-> - Don't print error-message if no platform IRQ found. Just return an error.
-> - Remove probe-status info string printout.
-> 
-> Changelog v3:
-> - Add bt1-pvt into the Documentation/hwmon/index.rst file.
-> - Discard explicit "default n" from the SENSORS_BT1_PVT_ALARMS config.
-> - Use "depends on SENSORS_BT1_PVT" statement instead of if-endif kbuild
->   config clause.
-> - Alphabetically order the include macro operators.
-> - Discard unneeded include macro in the header file.
-> - Use new generic interface of the hwmon alarms notifications introduced
->   in the first patch (based on hwmon_notify_event()).
-> - Add more descriptive information regarding the temp1_trim attribute.
-> - Discard setting the platforms device private data by using
->   platform_set_drvdata(). It's redundant since unused in the driver.
-> - Pass "pvt" hwmon name instead of dev_name(dev) to
->   devm_hwmon_device_register_with_info().
-> - Add "baikal,pvt-temp-trim-millicelsius" temperature trim DT property
->   support.
-> - Discard kernel log warnings printed from the ISR when either min or
->   max threshold levels are crossed.
-> - Discard CONFIG_OF dependency since there is non at compile-time.
-> ---
->  Documentation/hwmon/bt1-pvt.rst |  116 ++++
->  Documentation/hwmon/index.rst   |    1 +
->  drivers/hwmon/Kconfig           |   25 +
->  drivers/hwmon/Makefile          |    1 +
->  drivers/hwmon/bt1-pvt.c         | 1155 +++++++++++++++++++++++++++++++
->  drivers/hwmon/bt1-pvt.h         |  244 +++++++
->  6 files changed, 1542 insertions(+)
->  create mode 100644 Documentation/hwmon/bt1-pvt.rst
->  create mode 100644 drivers/hwmon/bt1-pvt.c
->  create mode 100644 drivers/hwmon/bt1-pvt.h
-> 
-> diff --git a/Documentation/hwmon/bt1-pvt.rst b/Documentation/hwmon/bt1-pvt.rst
-> new file mode 100644
-> index 000000000000..f5f47891d87a
-> --- /dev/null
-> +++ b/Documentation/hwmon/bt1-pvt.rst
-> @@ -0,0 +1,116 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +Kernel driver bt1-pvt
-> +=====================
-> +
-> +Supported chips:
-> +
-> +  * Baikal-T1 PVT sensor (in SoC)
-> +
-> +    Prefix: 'bt1-pvt'
-> +
-> +    Addresses scanned: -
-> +
-> +    Datasheet: Provided by BAIKAL ELECTRONICS upon request and under NDA
-> +
-> +Authors:
-> +    Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
-> +    Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> +
-> +Description
-> +-----------
-> +
-> +This driver implements support for the hardware monitoring capabilities of the
-> +embedded into Baikal-T1 process, voltage and temperature sensors. PVT IP-core
-> +consists of one temperature and four voltage sensors, which can be used to
-> +monitor the chip internal environment like heating, supply voltage and
-> +transistors performance. The driver can optionally provide the hwmon alarms
-> +for each sensor the PVT controller supports. The alarms functionality is made
-> +compile-time configurable due to the hardware interface implementation
-> +peculiarity, which is connected with an ability to convert data from only one
-> +sensor at a time. Additional limitation is that the controller performs the
-> +thresholds checking synchronously with the data conversion procedure. Due to
-> +these in order to have the hwmon alarms automatically detected the driver code
-> +must switch from one sensor to another, read converted data and manually check
-> +the threshold status bits. Depending on the measurements timeout settings
-> +(update_interval sysfs node value) this design may cause additional burden on
-> +the system performance. So in case if alarms are unnecessary in your system
-> +design it's recommended to have them disabled to prevent the PVT IRQs being
-> +periodically raised to get the data cache/alarms status up to date. By default
-> +in alarm-less configuration the data conversion is performed by the driver
-> +on demand when read operation is requested via corresponding _input-file.
-> +
-> +Temperature Monitoring
-> +----------------------
-> +
-> +Temperature is measured with 10-bit resolution and reported in millidegree
-> +Celsius. The driver performs all the scaling by itself therefore reports true
-> +temperatures that don't need any user-space adjustments. While the data
-> +translation formulae isn't linear, which gives us non-linear discreteness,
-> +it's close to one, but giving a bit better accuracy for higher temperatures.
-> +The temperature input is mapped as follows (the last column indicates the input
-> +ranges)::
-> +
-> +	temp1: CPU embedded diode	-48.38C - +147.438C
-> +
-> +In case if the alarms kernel config is enabled in the driver the temperature input
-> +has associated min and max limits which trigger an alarm when crossed.
-> +
-> +Voltage Monitoring
-> +------------------
-> +
-> +The voltage inputs are also sampled with 10-bit resolution and reported in
-> +millivolts. But in this case the data translation formulae is linear, which
-> +provides a constant measurements discreteness. The data scaling is also
-> +performed by the driver, so returning true millivolts. The voltage inputs are
-> +mapped as follows (the last column indicates the input ranges)::
-> +
-> +	in0: VDD		(processor core)		0.62V - 1.168V
-> +	in1: Low-Vt		(low voltage threshold)		0.62V - 1.168V
-> +	in2: High-Vt		(high voltage threshold)	0.62V - 1.168V
-> +	in3: Standard-Vt	(standard voltage threshold)	0.62V - 1.168V
-> +
-> +In case if the alarms configis enabled in the driver the voltage inputs
-> +have associated min and max limits which trigger an alarm when crossed.
-> +
-> +Sysfs Attributes
-> +----------------
-> +
-> +Following is a list of all sysfs attributes that the driver provides, their
-> +permissions and a short description:
-> +
-> +=============================== ======= =======================================
-> +Name				Perm	Description
-> +=============================== ======= =======================================
-> +update_interval			RW	Measurements update interval per
-> +					sensor.
-> +temp1_type			RO	Sensor type (always 1 as CPU embedded
-> +					diode).
-> +temp1_label			RO	CPU Core Temperature sensor.
-> +temp1_input			RO	Measured temperature in millidegree
-> +					Celsius.
-> +temp1_min			RW	Low limit for temp input.
-> +temp1_max			RW	High limit for temp input.
-> +temp1_min_alarm			RO	Temperature input alarm. Returns 1 if
-> +					temperature input went below min limit,
-> +					0 otherwise.
-> +temp1_max_alarm			RO	Temperature input alarm. Returns 1 if
-> +					temperature input went above max limit,
-> +					0 otherwise.
-> +temp1_trim			RW	Temperature sensor trimming factor in
-> +					millidegree Celsius. It can be used to
-> +					manually adjust the temperature
-> +					measurements within 7.130 degrees
-> +					Celsius.
+This patchset introduces support for LiteX SoC Controller
+and LiteUART - serial device from LiteX SoC builder
+(https://github.com/enjoy-digital/litex).
 
-vs. standard ABI:
+In the following patchset I will add
+a new mor1kx-based (OpenRISC) platform that
+uses this device.
 
-temp[1-*]_offset`
-                Temperature offset which is added to the temperature reading
-                by the chip.
+Later I plan to extend this platform by
+adding support for more devices from LiteX suite.
 
-                Unit: millidegree Celsius
+Changes in v6:
+    - changed accessors in SoC Controller's driver
+    - reworked UART driver
 
-If you really think this is necessary, why not use the standard ABI ?
+Changes in v5:
+    - added Reviewed-by tag
+    - removed custom accessors from SoC Controller's driver
+    - fixed error checking in SoC Controller's driver
 
-Guenter
+Changes in v4:
+    - fixed copyright headers
+    - fixed SoC Controller's yaml 
+    - simplified SoC Controller's driver
+
+Changes in v3:
+    - added Acked-by and Reviewed-by tags
+    - introduced LiteX SoC Controller driver
+    - removed endianness detection (handled now by LiteX SoC Controller driver)
+    - modified litex.h header
+    - DTS aliases for LiteUART made optional
+    - renamed SERIAL_LITEUART_NR_PORTS to SERIAL_LITEUART_MAX_PORTS
+    - changed PORT_LITEUART from 122 to 123
+
+Changes in v2:
+    - binding description rewritten to a yaml schema file
+    - added litex.h header with common register access functions
+
+Filip Kokosinski (3):
+  dt-bindings: vendor: add vendor prefix for LiteX
+  dt-bindings: serial: document LiteUART bindings
+  drivers/tty/serial: add LiteUART driver
+
+Pawel Czarnecki (2):
+  dt-bindings: soc: document LiteX SoC Controller bindings
+  drivers/soc/litex: add LiteX SoC Controller driver
+
+ .../bindings/serial/litex,liteuart.yaml       |  38 ++
+ .../soc/litex/litex,soc-controller.yaml       |  39 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   9 +
+ drivers/soc/Kconfig                           |   1 +
+ drivers/soc/Makefile                          |   1 +
+ drivers/soc/litex/Kconfig                     |  15 +
+ drivers/soc/litex/Makefile                    |   3 +
+ drivers/soc/litex/litex_soc_ctrl.c            | 197 +++++++++
+ drivers/tty/serial/Kconfig                    |  31 ++
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/liteuart.c                 | 399 ++++++++++++++++++
+ include/linux/litex.h                         |  45 ++
+ 13 files changed, 781 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/litex/litex,soc-controller.yaml
+ create mode 100644 drivers/soc/litex/Kconfig
+ create mode 100644 drivers/soc/litex/Makefile
+ create mode 100644 drivers/soc/litex/litex_soc_ctrl.c
+ create mode 100644 drivers/tty/serial/liteuart.c
+ create mode 100644 include/linux/litex.h
+
+-- 
+2.25.1
+
