@@ -2,108 +2,83 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E169C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8D0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F68320899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD90207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:36:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389310AbgE0Of4 (ORCPT
+        id S2389312AbgE0Ogr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:35:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2249 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389205AbgE0Of4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:35:56 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id B48B11895055C8A31AB1;
-        Wed, 27 May 2020 15:35:53 +0100 (IST)
-Received: from [127.0.0.1] (10.47.6.244) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 27 May
- 2020 15:35:52 +0100
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for
- userspace
-To:     Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
- <20200512073115.14177-2-qiangqing.zhang@nxp.com>
- <20200519185125.GB453195@bogus> <20200520073304.GA23534@willie-the-truck>
- <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
- <20200521130415.GB5949@willie-the-truck>
- <c3be06c5-781f-384f-768b-d809da99b7e0@huawei.com>
-Message-ID: <51aa7cbc-0ce2-b96d-b056-fcc6013ccecf@huawei.com>
-Date:   Wed, 27 May 2020 15:34:48 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 27 May 2020 10:36:47 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:46809 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389152AbgE0Ogr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:36:47 -0400
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MwxNF-1ip7fK26qx-00ySSH for <linux-kernel@vger.kernel.org>; Wed, 27 May
+ 2020 16:36:45 +0200
+Received: by mail-qt1-f175.google.com with SMTP id j32so4369995qte.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 07:36:45 -0700 (PDT)
+X-Gm-Message-State: AOAM532zAwiZbeCqmBTkRbMEC0HFf8QFQmLNJGUJN6cCdL8npzv4AGec
+        Ftqlj04Bh2YscXQH5h/NMkrGcO0SHQ6UGQ4XfIs=
+X-Google-Smtp-Source: ABdhPJz5OgKXuoYgmUdLE+csUDsEEOEF0XSfC8Ij+VwLLkemZAcY7xiTkXrFOUDNARvgard005IXgUtkM4rz7IvR6EA=
+X-Received: by 2002:ac8:691:: with SMTP id f17mr4501313qth.204.1590590204402;
+ Wed, 27 May 2020 07:36:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c3be06c5-781f-384f-768b-d809da99b7e0@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.6.244]
-X-ClientProxiedBy: lhreml717-chm.china.huawei.com (10.201.108.68) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20200527134254.854672-1-arnd@arndb.de> <CAKb7Uvhh2JKck524D9S14uNSLykFj+U48AgR+sd2uwchsH_wEQ@mail.gmail.com>
+In-Reply-To: <CAKb7Uvhh2JKck524D9S14uNSLykFj+U48AgR+sd2uwchsH_wEQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 May 2020 16:36:28 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3kRP6Sg-An5szsN=4Pv1OsG+-YQYa1wgxJCi1c+uedPw@mail.gmail.com>
+Message-ID: <CAK8P3a3kRP6Sg-An5szsN=4Pv1OsG+-YQYa1wgxJCi1c+uedPw@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH] nouveau: add fbdev dependency
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:IkTtRky3C2ijnqvAwwC/+tGbWXDIHPSww6i892k0Lnz51LcdXbh
+ ZQdI0iNm4vgqvQ0o4RCc0LyWxF0ZuFHdEYmJn9aGPbOtfeNmgae2FIw6Q0IydcLcdjzPDc6
+ Hm7LJt3ZT51zWo8Pu9BdpX3x6TgpASDhfAV7D+565LhFBx67r67kID0Is36fpWCOvuFiAtC
+ t7FMGTDs3exdOLIxoNWAA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ZnalMiJdDrQ=:hqm6wrxMUmBXjlwTImbTVr
+ R5eK6oRgBs7YRGHA21AWdAJ5ackmba4Ept/xwNYpoUZ8iRS9BA4MpPNZyFTBDRBq7aVFs6XwA
+ mrcNosr3bOS7MwAcslCV2Uh37jhfyoBAI1AdtskxJsT+LzqnV5OBB+uOXGc9tKDHI795NSERa
+ m6/xYdnyXmio8ZODvgxO0W9XD0r2yIrNHb5cnEdnqOzpyvvd9hLYKNmoHgiwLnibbAKDXlHxw
+ LvfPqUFN3UfWOAcRDRYOkmBWepHgJycAG5iia6k5/DLkc5cIR32vCqVRXbdveLfaJNZ6v/UGs
+ IJta6SQugFHzJcpY9BEFVoYhswzvn7E5msVXpIbnal2VHxq39KaCMvQTviihout8TLgfoch3U
+ SD+uql5ymVGPGC7cWb3VYCS9FKeQGVY9Y2QonwoOL+e6xxkdNIKcyWg/dSSejS8Tt1FpMffr+
+ gD6SWORbztUC+7ynurE6QtRFnr7fGr8JpsG5hCtW+1wcPBxlJVZ63fhPebWSOZufVk2991Fgx
+ MdFPPDvpzgKf2pTVWKj/K52HBtXtNYM+ZxYIRX22u2Bjv9G+9odKOSPuwKnbQNBglKWV/ye13
+ SrniUFa9tX1p9ImRzlVb4UsgLrKR0R/sEPqFPZAwXbDpY8Rolki96JzIhiP8SBDEzI+CqvRac
+ r7HNFawN2ilA9GJ6hVzc2AwcLTX8VuMKtTAdVCP9gXrpYOKW4fnqBFDU6NnY0gbjs/zi3i8+G
+ X/Vh36zKqcpPZh2/zWMhgkoGSIPO61ikeLmEDJe5tTUxnVvlhWTsc0UpzhjWC1a2qoznWpQvv
+ fqwTUjZkk5gj0cMyEsNu1P5pcZn+/0VzKb9Mm5FuBNtmDfSMVo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>
->>>> I also really dislike this. What's the preferred way to identify the 
->>>> SoC
->>>> from userspace?
->>>
->>> /proc/cpuinfo? ;)
->>
->> The *SoC*!
->>
->>> For an non-firmware specific case, I'd say soc_device should be. I'd
->>> guess ACPI systems don't use it and for them it's dmidecode typically.
->>> The other problem I have with soc_device is it is optional.
->>
-> 
-> Hi Will,
-> 
->> John -- what do you think about using soc_device to expose this 
->> information,
->> with ACPI systems using DMI data instead?
-> 
-> Generally I don't think that DMI is reliable, and I saw this as the 
-> least preferred choice. I'm looking at the sysfs DMI info for my dev 
-> board, and I don't even see anything like a SoC identifier.
-> 
-> As for the event_source device sysfs identifier file, it would not 
-> always contain effectively the same as the SoC ID.
-> 
-> Certain PMUs which I'm interested in plan to have probe-able 
-> identification info available in future.
-> 
+On Wed, May 27, 2020 at 4:05 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
+>
+> Isn't this already fixed by
+>
+> https://cgit.freedesktop.org/drm/drm/commit/?id=7dbbdd37f2ae7dd4175ba3f86f4335c463b18403
 
-BTW, Shaokun now tells me that the HiSi uncore PMU HW have such 
-registers to identify the implementation. I didn't know.
+Ok, I see that fixes the link error, but I when I created my fix, that did
+not seem like the correct solution because it reverts part of the original
+patch without reverting the rest of it. Unfortunately there was no
+changelog text in the first patch to explain why this is safe.
 
-So we could add that identifier file for those PMUs as proof-of-concept, 
-exposing that register.
+Could you double-check if the behavior is still correct after the two patches?
 
-As for other PMUs which I'm interested in, again, future versions should 
-have such registers to self-identify.
-
-So using something derived from the DT compat string would hopefully be 
-the uncommon case.
-
-Cheers,
-John
+      Arnd
