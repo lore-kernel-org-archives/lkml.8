@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E241C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE8B20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F09208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391836AbgE0R7f (ORCPT
+        id S2391848AbgE0R7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:59:35 -0400
-Received: from out28-196.mail.aliyun.com ([115.124.28.196]:43447 "EHLO
-        out28-196.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391781AbgE0R70 (ORCPT
+        Wed, 27 May 2020 13:59:37 -0400
+Received: from out28-148.mail.aliyun.com ([115.124.28.148]:34082 "EHLO
+        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391802AbgE0R73 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:59:26 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1634384|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0106147-0.000420229-0.988965;FP=4506324612516202353|2|1|7|0|-1|-1|-1;HT=e02c03311;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeTcPrZ_1590602337;
+        Wed, 27 May 2020 13:59:29 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436431|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0143921-0.000318646-0.985289;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03297;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HeTcPrZ_1590602337;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HeTcPrZ_1590602337)
           by smtp.aliyun-inc.com(10.147.43.95);
-          Thu, 28 May 2020 01:59:22 +0800
+          Thu, 28 May 2020 01:59:23 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-clk@vger.kernel.org
@@ -33,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
         rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
-Subject: [PATCH v12 6/7] dt-bindings: clock: Add and reorder ABI for X1000.
-Date:   Thu, 28 May 2020 01:56:34 +0800
-Message-Id: <20200527175635.5558-7-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v12 7/7] clk: X1000: Add FIXDIV for SSI clock of X1000.
+Date:   Thu, 28 May 2020 01:56:35 +0800
+Message-Id: <20200527175635.5558-8-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
 References: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
@@ -50,32 +50,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 1.The SSI clock of X1000 not like JZ4770 and JZ4780, they are not
   directly derived from the output of SSIPLL, but from the clock
   obtained by dividing the frequency by 2. "X1000_CLK_SSIPLL_DIV2"
-  is added for this purpose, it must between "X1000_CLK_SSIPLL"
-  and "X1000_CLK_SSIMUX", otherwise an error will occurs when
-  initializing the clock. These ABIs are only used for X1000, and
-  I'm sure that no other devicetree out there is using these ABIs,
-  so we should be able to reorder them.
-2.Clocks of LCD, OTG, EMC, EFUSE, OST, TCU are also added.
+  is added for this purpose, and ensure that it initialized before
+  "X1000_CLK_SSIMUX" when initializing the clocks.
+2.Clocks of LCD, OTG, EMC, EFUSE, OST, TCU, and gates of CPU, PCLK
+  are also added.
+3.Use "CLK_OF_DECLARE_DRIVER" like the other CGU drivers.
 
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 ---
 
 Notes:
     v5:
     New patch.
     
-    v5->v6:
+    V5->v6:
     Add missing part of X1000's CGU.
     
     v6->v7:
-    No change.
+    Update commit message.
     
     v7->v8:
     No change.
     
     v8->v9:
-    No change.
+    Add Paul Cercueil's Reviewed-by, somehow his emails are not displayed
+    on the mailing list and patchwork of clock framework subsystem.
     
     v9->v10:
     No change.
@@ -84,85 +84,228 @@ Notes:
     No change.
     
     v11->v12:
-    No change.
+    Use "CLK_OF_DECLARE_DRIVER" instead "CLK_OF_DECLARE",
+    this modification was mentioned in the comments, but
+    did not really exist in the patch.
+    Reported-by: Paul Cercueil <paul@crapouillou.net>
 
- include/dt-bindings/clock/x1000-cgu.h | 64 ++++++++++++++++++++---------------
- 1 file changed, 36 insertions(+), 28 deletions(-)
+ drivers/clk/ingenic/x1000-cgu.c | 112 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 106 insertions(+), 6 deletions(-)
 
-diff --git a/include/dt-bindings/clock/x1000-cgu.h b/include/dt-bindings/clock/x1000-cgu.h
-index bbaebaf7adb9..0367c8c02e16 100644
---- a/include/dt-bindings/clock/x1000-cgu.h
-+++ b/include/dt-bindings/clock/x1000-cgu.h
-@@ -12,33 +12,41 @@
- #ifndef __DT_BINDINGS_CLOCK_X1000_CGU_H__
- #define __DT_BINDINGS_CLOCK_X1000_CGU_H__
+diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
+index c33934d8ac14..0508b65ea6df 100644
+--- a/drivers/clk/ingenic/x1000-cgu.c
++++ b/drivers/clk/ingenic/x1000-cgu.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+  * X1000 SoC CGU driver
+- * Copyright (c) 2019 Zhou Yanjie <zhouyanjie@zoho.com>
++ * Copyright (c) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+  */
  
--#define X1000_CLK_EXCLK		0
--#define X1000_CLK_RTCLK		1
--#define X1000_CLK_APLL		2
--#define X1000_CLK_MPLL		3
--#define X1000_CLK_SCLKA		4
--#define X1000_CLK_CPUMUX	5
--#define X1000_CLK_CPU		6
--#define X1000_CLK_L2CACHE	7
--#define X1000_CLK_AHB0		8
--#define X1000_CLK_AHB2PMUX	9
--#define X1000_CLK_AHB2		10
--#define X1000_CLK_PCLK		11
--#define X1000_CLK_DDR		12
--#define X1000_CLK_MAC		13
--#define X1000_CLK_MSCMUX	14
--#define X1000_CLK_MSC0		15
--#define X1000_CLK_MSC1		16
--#define X1000_CLK_SSIPLL	17
--#define X1000_CLK_SSIMUX	18
--#define X1000_CLK_SFC		19
--#define X1000_CLK_I2C0		20
--#define X1000_CLK_I2C1		21
--#define X1000_CLK_I2C2		22
--#define X1000_CLK_UART0		23
--#define X1000_CLK_UART1		24
--#define X1000_CLK_UART2		25
--#define X1000_CLK_SSI		26
--#define X1000_CLK_PDMA		27
-+#define X1000_CLK_EXCLK			0
-+#define X1000_CLK_RTCLK			1
-+#define X1000_CLK_APLL			2
-+#define X1000_CLK_MPLL			3
-+#define X1000_CLK_OTGPHY		4
-+#define X1000_CLK_SCLKA			5
-+#define X1000_CLK_CPUMUX		6
-+#define X1000_CLK_CPU			7
-+#define X1000_CLK_L2CACHE		8
-+#define X1000_CLK_AHB0			9
-+#define X1000_CLK_AHB2PMUX		10
-+#define X1000_CLK_AHB2			11
-+#define X1000_CLK_PCLK			12
-+#define X1000_CLK_DDR			13
-+#define X1000_CLK_MAC			14
-+#define X1000_CLK_LCD			15
-+#define X1000_CLK_MSCMUX		16
-+#define X1000_CLK_MSC0			17
-+#define X1000_CLK_MSC1			18
-+#define X1000_CLK_OTG			19
-+#define X1000_CLK_SSIPLL		20
-+#define X1000_CLK_SSIPLL_DIV2	21
-+#define X1000_CLK_SSIMUX		22
-+#define X1000_CLK_EMC			23
-+#define X1000_CLK_EFUSE			24
-+#define X1000_CLK_SFC			25
-+#define X1000_CLK_I2C0			26
-+#define X1000_CLK_I2C1			27
-+#define X1000_CLK_I2C2			28
-+#define X1000_CLK_UART0			29
-+#define X1000_CLK_UART1			30
-+#define X1000_CLK_UART2			31
-+#define X1000_CLK_TCU			32
-+#define X1000_CLK_SSI			33
-+#define X1000_CLK_OST			34
-+#define X1000_CLK_PDMA			35
+ #include <linux/clk-provider.h>
+@@ -20,6 +20,9 @@
+ #define CGU_REG_CLKGR		0x20
+ #define CGU_REG_OPCR		0x24
+ #define CGU_REG_DDRCDR		0x2c
++#define CGU_REG_USBPCR		0x3c
++#define CGU_REG_USBPCR1		0x48
++#define CGU_REG_USBCDR		0x50
+ #define CGU_REG_MACCDR		0x54
+ #define CGU_REG_I2SCDR		0x60
+ #define CGU_REG_LPCDR		0x64
+@@ -40,8 +43,47 @@
+ #define OPCR_SPENDN0		BIT(7)
+ #define OPCR_SPENDN1		BIT(6)
  
- #endif /* __DT_BINDINGS_CLOCK_X1000_CGU_H__ */
++/* bits within the USBPCR register */
++#define USBPCR_SIDDQ		BIT(21)
++#define USBPCR_OTG_DISABLE	BIT(20)
++
+ static struct ingenic_cgu *cgu;
+ 
++static int x1000_usb_phy_enable(struct clk_hw *hw)
++{
++	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
++	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
++
++	writel(readl(reg_opcr) | OPCR_SPENDN0, reg_opcr);
++	writel(readl(reg_usbpcr) & ~USBPCR_OTG_DISABLE & ~USBPCR_SIDDQ, reg_usbpcr);
++	return 0;
++}
++
++static void x1000_usb_phy_disable(struct clk_hw *hw)
++{
++	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
++	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
++
++	writel(readl(reg_opcr) & ~OPCR_SPENDN0, reg_opcr);
++	writel(readl(reg_usbpcr) | USBPCR_OTG_DISABLE | USBPCR_SIDDQ, reg_usbpcr);
++}
++
++static int x1000_usb_phy_is_enabled(struct clk_hw *hw)
++{
++	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
++	void __iomem *reg_usbpcr	= cgu->base + CGU_REG_USBPCR;
++
++	return (readl(reg_opcr) & OPCR_SPENDN0) &&
++		!(readl(reg_usbpcr) & USBPCR_SIDDQ) &&
++		!(readl(reg_usbpcr) & USBPCR_OTG_DISABLE);
++}
++
++static const struct clk_ops x1000_otg_phy_ops = {
++	.enable		= x1000_usb_phy_enable,
++	.disable	= x1000_usb_phy_disable,
++	.is_enabled	= x1000_usb_phy_is_enabled,
++};
++
+ static const s8 pll_od_encoding[8] = {
+ 	0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
+ };
+@@ -101,6 +143,15 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		},
+ 	},
+ 
++
++	/* Custom (SoC-specific) OTG PHY */
++
++	[X1000_CLK_OTGPHY] = {
++		"otg_phy", CGU_CLK_CUSTOM,
++		.parents = { -1, -1, X1000_CLK_EXCLK, -1 },
++		.custom = { &x1000_otg_phy_ops },
++	},
++
+ 	/* Muxes & dividers */
+ 
+ 	[X1000_CLK_SCLKA] = {
+@@ -116,9 +167,10 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 	},
+ 
+ 	[X1000_CLK_CPU] = {
+-		"cpu", CGU_CLK_DIV,
++		"cpu", CGU_CLK_DIV | CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_CPUMUX, -1, -1, -1 },
+ 		.div = { CGU_REG_CPCCR, 0, 1, 4, 22, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 30 },
+ 	},
+ 
+ 	[X1000_CLK_L2CACHE] = {
+@@ -147,9 +199,10 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 	},
+ 
+ 	[X1000_CLK_PCLK] = {
+-		"pclk", CGU_CLK_DIV,
++		"pclk", CGU_CLK_DIV | CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_AHB2PMUX, -1, -1, -1 },
+ 		.div = { CGU_REG_CPCCR, 16, 1, 4, 20, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 28 },
+ 	},
+ 
+ 	[X1000_CLK_DDR] = {
+@@ -162,12 +215,20 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 
+ 	[X1000_CLK_MAC] = {
+ 		"mac", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
+-		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL},
++		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL },
+ 		.mux = { CGU_REG_MACCDR, 31, 1 },
+ 		.div = { CGU_REG_MACCDR, 0, 1, 8, 29, 28, 27 },
+ 		.gate = { CGU_REG_CLKGR, 25 },
+ 	},
+ 
++	[X1000_CLK_LCD] = {
++		"lcd", CGU_CLK_MUX | CGU_CLK_DIV | CGU_CLK_GATE,
++		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL },
++		.mux = { CGU_REG_LPCDR, 31, 1 },
++		.div = { CGU_REG_LPCDR, 0, 1, 8, 28, 27, 26 },
++		.gate = { CGU_REG_CLKGR, 23 },
++	},
++
+ 	[X1000_CLK_MSCMUX] = {
+ 		"msc_mux", CGU_CLK_MUX,
+ 		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL},
+@@ -188,6 +249,15 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.gate = { CGU_REG_CLKGR, 5 },
+ 	},
+ 
++	[X1000_CLK_OTG] = {
++		"otg", CGU_CLK_DIV | CGU_CLK_GATE | CGU_CLK_MUX,
++		.parents = { X1000_CLK_EXCLK, -1,
++					 X1000_CLK_APLL, X1000_CLK_MPLL },
++		.mux = { CGU_REG_USBCDR, 30, 2 },
++		.div = { CGU_REG_USBCDR, 0, 1, 8, 29, 28, 27 },
++		.gate = { CGU_REG_CLKGR, 3 },
++	},
++
+ 	[X1000_CLK_SSIPLL] = {
+ 		"ssi_pll", CGU_CLK_MUX | CGU_CLK_DIV,
+ 		.parents = { X1000_CLK_SCLKA, X1000_CLK_MPLL, -1, -1 },
+@@ -195,14 +265,32 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.div = { CGU_REG_SSICDR, 0, 1, 8, 29, 28, 27 },
+ 	},
+ 
++	[X1000_CLK_SSIPLL_DIV2] = {
++		"ssi_pll_div2", CGU_CLK_FIXDIV,
++		.parents = { X1000_CLK_SSIPLL },
++		.fixdiv = { 2 },
++	},
++
+ 	[X1000_CLK_SSIMUX] = {
+ 		"ssi_mux", CGU_CLK_MUX,
+-		.parents = { X1000_CLK_EXCLK, X1000_CLK_SSIPLL, -1, -1 },
++		.parents = { X1000_CLK_EXCLK, X1000_CLK_SSIPLL_DIV2, -1, -1 },
+ 		.mux = { CGU_REG_SSICDR, 30, 1 },
+ 	},
+ 
+ 	/* Gate-only clocks */
+ 
++	[X1000_CLK_EMC] = {
++		"emc", CGU_CLK_GATE,
++		.parents = { X1000_CLK_AHB2, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 0 },
++	},
++
++	[X1000_CLK_EFUSE] = {
++		"efuse", CGU_CLK_GATE,
++		.parents = { X1000_CLK_AHB2, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 1 },
++	},
++
+ 	[X1000_CLK_SFC] = {
+ 		"sfc", CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_SSIPLL, -1, -1, -1 },
+@@ -245,12 +333,24 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
+ 		.gate = { CGU_REG_CLKGR, 16 },
+ 	},
+ 
++	[X1000_CLK_TCU] = {
++		"tcu", CGU_CLK_GATE,
++		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 18 },
++	},
++
+ 	[X1000_CLK_SSI] = {
+ 		"ssi", CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_SSIMUX, -1, -1, -1 },
+ 		.gate = { CGU_REG_CLKGR, 19 },
+ 	},
+ 
++	[X1000_CLK_OST] = {
++		"ost", CGU_CLK_GATE,
++		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
++		.gate = { CGU_REG_CLKGR, 20 },
++	},
++
+ 	[X1000_CLK_PDMA] = {
+ 		"pdma", CGU_CLK_GATE,
+ 		.parents = { X1000_CLK_EXCLK, -1, -1, -1 },
+@@ -277,4 +377,4 @@ static void __init x1000_cgu_init(struct device_node *np)
+ 
+ 	ingenic_cgu_register_syscore_ops(cgu);
+ }
+-CLK_OF_DECLARE(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
++CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
 -- 
 2.11.0
 
