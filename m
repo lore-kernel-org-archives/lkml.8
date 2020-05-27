@@ -2,98 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1393C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5062AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99667207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AAFF20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:34:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q4bDhs1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729995AbgE0Mcn (ORCPT
+        id S1730055AbgE0Meu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:32:43 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20409 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgE0Mcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:32:43 -0400
-IronPort-SDR: iNAQ9D7kTo/e+L8Bo9sbHyfc/RPtFSMS8/2zuhKtPd9aEyc48e3yQe3ebMOQ3LyXXqLXCaNG0a
- kSA/Eqlw3EsA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 05:32:43 -0700
-IronPort-SDR: bC8ATACVYor4iaQNqvOb/bXKkpaisVzz0DtscTTSsjjhrpijO3/yplCe9GLymE5Q/NJE39TbmP
- 7qAl9KeFHxLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="266819405"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 05:32:43 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore events on some TGL
-Date:   Wed, 27 May 2020 05:30:47 -0700
-Message-Id: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 27 May 2020 08:34:50 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:46644 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729752AbgE0Mes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 08:34:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590582887; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=+mQNVzce+4+RLoIQRxILi9XM/m92f1kvOextGxb68/E=; b=Q4bDhs1ZaNLV4wvZzLGIeVd0/uaDwXXKkwtXUjhwK+yNdjcVm6YQ5RDIcr4a2sRDe1Xcp5Nv
+ RDSvYUnCEvRG3WPGMaRz3CHMg9LaUdi8+9C9B0/8xovTrIprjNTe/VlB7MNO2iJtnWWHW1kN
+ NS32XqZtfxuO4Og74RhTyQIpeqw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5ece5e62b4f0a9ae220406b8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 12:34:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 52CF1C43391; Wed, 27 May 2020 12:34:42 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D435FC433C9;
+        Wed, 27 May 2020 12:34:39 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D435FC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
+Cc:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/10] staging: wfx: introduce nl80211 vendor extensions
+References: <20200526171821.934581-1-Jerome.Pouiller@silabs.com>
+Date:   Wed, 27 May 2020 15:34:37 +0300
+In-Reply-To: <20200526171821.934581-1-Jerome.Pouiller@silabs.com> (Jerome
+        Pouiller's message of "Tue, 26 May 2020 19:18:11 +0200")
+Message-ID: <87imghv9nm.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Jerome Pouiller <Jerome.Pouiller@silabs.com> writes:
 
-When counting IMC uncore events on some TGL machines, an oops will be
-triggered.
-  [ 393.101262] BUG: unable to handle page fault for address:
-  ffffb45200e15858
-  [ 393.101269] #PF: supervisor read access in kernel mode
-  [ 393.101271] #PF: error_code(0x0000) - not-present page
+> This series introduces some nl80211 vendor extensions to the wfx driver.
+>
+> This series may lead to some discussions:
+>
+>   1. Patch 7 allows to change the dynamic PS timeout. I have found
+>      an API in wext (cfg80211_wext_siwpower()) that do more or less the
+>      same thing. However, I have not found any equivalent in nl80211. Is it
+>      expected or this API should be ported to nl80211?
 
-Current perf uncore driver still use the IMC MAP SIZE inherited from
-SNB, which is 0x6000.
-However, the offset of IMC uncore counters for some TGL machines is
-larger than 0x6000, e.g. 0xd8a0.
+struct wireless_dev::ps_timeout doesn't work for you?
 
-Enlarge the IMC MAP SIZE for TGL to 0xe000.
+>
+>   2. The device The device allows to do Packet Traffic Arbitration (PTA or
+>      also Coex). This feature allows the device to communicate with another
+>      RF device in order to share the access to the RF. The patch 9 provides
+>      a way to configure that. However, I think that this chip is not the
+>      only one to provide this feature. Maybe a standard way to change
+>      these parameters should be provided?
+>
+>   3. For these vendor extensions, I have used the new policy introduced by
+>      the commit 901bb989185516 ("nl80211: require and validate vendor
+>      command policy"). However, it seems that my version of 'iw' is not
+>      able to follow this new policy (it does not pack the netlink
+>      attributes into a NLA_NESTED). I could develop a tool specifically for
+>      that API, but it is not very handy. So, in patch 10, I have also
+>      introduced an API for compatibility with iw. Any comments about this?
 
-Fixes: fdb64822443e ("perf/x86: Add Intel Tiger Lake uncore support")
-Reported-by: Ammy Yi <ammy.yi@intel.com>
-Tested-by: Ammy Yi <ammy.yi@intel.com>
-Tested-by: Chao Qin <chao.qin@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/events/intel/uncore_snb.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+If you want the driver out of staging I recommend not adding any vendor
+commands until the driver is moved to drivers/net/wireless. Also do note
+that we have special rules for nl80211 vendor commands:
 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 3de1065..1038e9f 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -1085,6 +1085,7 @@ static struct pci_dev *tgl_uncore_get_mc_dev(void)
- }
- 
- #define TGL_UNCORE_MMIO_IMC_MEM_OFFSET		0x10000
-+#define TGL_UNCORE_PCI_IMC_MAP_SIZE		0xe000
- 
- static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
- {
-@@ -1112,7 +1113,7 @@ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
- 	addr |= ((resource_size_t)mch_bar << 32);
- #endif
- 
--	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
-+	box->io_addr = ioremap(addr, TGL_UNCORE_PCI_IMC_MAP_SIZE);
- }
- 
- static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
+https://wireless.wiki.kernel.org/en/developers/documentation/nl80211#vendor-specific_api
+
 -- 
-2.7.4
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
