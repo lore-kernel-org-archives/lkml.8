@@ -2,140 +2,168 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03ACB20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590594296;
-	bh=9erfBo44Rs37pnCB4m7wPx90ygvL+5L/Nv3v6kJfPxs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yZtHjw33+BycNlTGUeIfUPvjTAam8vQGS471Yz7Ys5fIJ6j8fmdHg3wKny+NqP8GZ
-	 rJB6IM4wUjr1bNW1guG/SsstFUgEsWloBKwlF8bB7rV7HW6kEiC2HBonoUiNlvqYd0
-	 QnjJdBEJLofqOtDBUGcwxzMWV+2ItLmd81/0ZkTU=
+	by mail.kernel.org (Postfix) with ESMTP id ECFF120873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="K1CqDH1I";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Q08L1e6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389602AbgE0Poz (ORCPT
+        id S2389743AbgE0Ppc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:44:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgE0Poy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:44:54 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED94320873;
-        Wed, 27 May 2020 15:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590594294;
-        bh=9erfBo44Rs37pnCB4m7wPx90ygvL+5L/Nv3v6kJfPxs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HOWOZrFzPI11wHWkq8BgulOudUSZ5hKwcSGTKjX6exyGtQ55xFPey9ZsG8pYXvOTe
-         ubzfeMWfbVgiNKaqeyXheXgE21TUT3xKmYTN29ptTWIWH59cy7Ho4gnF+F2W2N7oMw
-         p4+viB5t5you4E/+U3xmfE6B9YKmg7VQd2BBixYI=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2A94240AFD; Wed, 27 May 2020 12:44:44 -0300 (-03)
-Date:   Wed, 27 May 2020 12:44:44 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V7 10/15] perf evlist: Disable 'immediate' events last
-Message-ID: <20200527154444.GB16490@kernel.org>
-References: <20200512121922.8997-1-adrian.hunter@intel.com>
- <20200512121922.8997-11-adrian.hunter@intel.com>
+        Wed, 27 May 2020 11:45:32 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:58055 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730426AbgE0Ppa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:45:30 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 670AB5C021C;
+        Wed, 27 May 2020 11:45:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:45:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=Br6jNHTz2Qqeu
+        hVMkqvSgmOdnA/EpKz1fVYzAs6ZIJ8=; b=K1CqDH1Ionf73F04BRWvx5bIQcVx5
+        KRcTo3666HaPFq5Lfplbn2jvFVZC6t5YQgb4HdzAlrNPJsf2d/0SSLmUE2Clp5BV
+        83fLE3nI/kezVl4+Avo5lPtIkKNDUxG2++H+OZrQQFe5kp5kc/AkPChscim+Odaa
+        Vzd5DIzCBdXFxR8Za19isbiQp9LxvYcBEAaWWu3Ku7LdzcA05mGY6D5yU774XIyp
+        KnBUiPfudLJtfztNVYtmG2ljDpgTmls/JP9qF17B1+z3pp5sWiZVmlKMAqLga+g5
+        gGaqloclxHrvOVDCucWETqrVulUDdcAZSzlKNlbq7NDfYLOyBlL2WpT3g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=Br6jNHTz2QqeuhVMkqvSgmOdnA/EpKz1fVYzAs6ZIJ8=; b=Q08L1e6r
+        B2A2JS3+sDyNI9KVLVDNJeuZqKcDTFKS7cgxjsUzFjLDUgdgxV+2VSZWMiVbBVIc
+        R38pZ9wdKrxy5FYUOsr6LI0Br3oAvQJWmADc2mwF9lu2Be4tK30pQmEqBUw/z0po
+        qzwRs65t6Cs44RBwGDhtpzJcU/HiX2GHXeOSHJAhfk6//kNB17pHpD4E3iLMIleg
+        pfrtTSp9ne6S6MHjXQIEZUwEvhjB4iAApWtw47lS7kXc3nmmGgD2OIOAPDAWqxsC
+        83V06HrOevLoILfPhkQoeFQfUsVbR9x8HOb317T8diegD49msEkTd0HBKpmPlY/V
+        j6Vq5xVrpuXG5w==
+X-ME-Sender: <xms:GIvOXvaxWik3iX2VsGuCCYdWeJKEhGDddmGZ0-ql2okHeYuET7mcGg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    govehorghsthgrlhdqhfeguddvqddtvdculdduhedtmdenucfjughrpefhvffufffkofgj
+    fhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucftihhprghrugcuoehmrg
+    igihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrghtthgvrhhnpeevjeeijedtvefg
+    fffgjeeugffguedtleetkeegteeufedtuddttdfgfffhgfeuffenucffohhmrghinhepug
+    gvvhhitggvthhrvggvrdhorhhgnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvg
+    hrnhhordhtvggthh
+X-ME-Proxy: <xmx:GIvOXublPsLx6x4UmbPQLa2XRbxc4D_q-7pu91nkW_hdNEgnvEmb_Q>
+    <xmx:GIvOXh_fvJL2WQJFmciPu6P7z01SHUYeBRfg162OvXoxowCug5tDjQ>
+    <xmx:GIvOXlpGWAJZmLyj3IlPRjjXvhAtmv01k4MWlX72lP8o-cav88ejlw>
+    <xmx:GYvOXreAUMRWDVZc5dQ_z2ao--49ihbi8KRiC5NV4vaMWPuFJtHxLw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 28BB4306215A;
+        Wed, 27 May 2020 11:45:28 -0400 (EDT)
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v3 01/25] dt-bindings: arm: bcm: Convert BCM2835 firmware binding to YAML
+Date:   Wed, 27 May 2020 17:44:57 +0200
+Message-Id: <2cd7d7e08bd90c2f61eb2ce79b1db418ff9270b6.1590594293.git-series.maxime@cerno.tech>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
+References: <cover.662a8d401787ef33780d91252a352de91dc4be10.1590594293.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200512121922.8997-11-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, May 12, 2020 at 03:19:17PM +0300, Adrian Hunter escreveu:
-> Events marked as 'immediate' are started before other events to ensure
-> that there is context at the start of the main tracing events. The same
-> is true at the end of tracing, so disable 'immediate' events after other
-> events.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-Applied, thanks,
+Convert the Raspberry Pi BCM2835 firmware binding document to YAML.
+Verified with dt_binding_check and dtbs_check.
 
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/util/evlist.c | 31 +++++++++++++++++++++----------
->  1 file changed, 21 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 2a9de6491700..173b4f0e0e6e 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -380,22 +380,33 @@ void evlist__disable(struct evlist *evlist)
->  {
->  	struct evsel *pos;
->  	struct affinity affinity;
-> -	int cpu, i;
-> +	int cpu, i, imm = 0;
-> +	bool has_imm = false;
->  
->  	if (affinity__setup(&affinity) < 0)
->  		return;
->  
-> -	evlist__for_each_cpu(evlist, i, cpu) {
-> -		affinity__set(&affinity, cpu);
-> -
-> -		evlist__for_each_entry(evlist, pos) {
-> -			if (evsel__cpu_iter_skip(pos, cpu))
-> -				continue;
-> -			if (pos->disabled || !evsel__is_group_leader(pos) || !pos->core.fd)
-> -				continue;
-> -			evsel__disable_cpu(pos, pos->cpu_iter - 1);
-> +	/* Disable 'immediate' events last */
-> +	for (imm = 0; imm <= 1; imm++) {
-> +		evlist__for_each_cpu(evlist, i, cpu) {
-> +			affinity__set(&affinity, cpu);
-> +
-> +			evlist__for_each_entry(evlist, pos) {
-> +				if (evsel__cpu_iter_skip(pos, cpu))
-> +					continue;
-> +				if (pos->disabled || !evsel__is_group_leader(pos) || !pos->core.fd)
-> +					continue;
-> +				if (pos->immediate)
-> +					has_imm = true;
-> +				if (pos->immediate != imm)
-> +					continue;
-> +				evsel__disable_cpu(pos, pos->cpu_iter - 1);
-> +			}
->  		}
-> +		if (!has_imm)
-> +			break;
->  	}
-> +
->  	affinity__cleanup(&affinity);
->  	evlist__for_each_entry(evlist, pos) {
->  		if (!evsel__is_group_leader(pos) || !pos->core.fd)
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+---
+ Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt  | 14 --------------
+ Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
 
+diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
+deleted file mode 100644
+index 6824b3180ffb..000000000000
+--- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-Raspberry Pi VideoCore firmware driver
+-
+-Required properties:
+-
+-- compatible:		Should be "raspberrypi,bcm2835-firmware"
+-- mboxes:		Phandle to the firmware device's Mailbox.
+-			  (See: ../mailbox/mailbox.txt for more information)
+-
+-Example:
+-
+-firmware {
+-	compatible = "raspberrypi,bcm2835-firmware";
+-	mboxes = <&mailbox>;
+-};
+diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+new file mode 100644
+index 000000000000..cec540c052b6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
+@@ -0,0 +1,35 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/bcm/raspberrypi,bcm2835-firmware.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Raspberry Pi VideoCore firmware driver
++
++maintainers:
++  - Eric Anholt <eric@anholt.net>
++  - Stefan Wahren <wahrenst@gmx.net>
++
++properties:
++  compatible:
++    items:
++      - const: raspberrypi,bcm2835-firmware
++      - const: simple-bus
++
++  mboxes:
++    $ref: '/schemas/types.yaml#/definitions/phandle'
++    description: |
++      Phandle to the firmware device's Mailbox.
++      (See: ../mailbox/mailbox.txt for more information)
++
++required:
++  - compatible
++  - mboxes
++
++examples:
++  - |
++    firmware {
++        compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
++        mboxes = <&mailbox>;
++    };
++...
 -- 
-
-- Arnaldo
+git-series 0.9.1
