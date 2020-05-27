@@ -2,131 +2,98 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0993BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2D602078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E542084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="a5dyhoCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbgE0I2T (ORCPT
+        id S1729555AbgE0I26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:28:19 -0400
-Received: from mga14.intel.com ([192.55.52.115]:64097 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgE0I2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:28:18 -0400
-IronPort-SDR: NHxQ3X4VTBwiGXTUPciSsudrAVti+de4L9IsrWWLPQUeTsZcJ6Mqe2Zgpm9M+n2xmZ8nmn7jHR
- AWpCag5Ho8eQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 01:28:18 -0700
-IronPort-SDR: BPuFDtUAXFOhySWlK+3vXLr86xoGMOJzINr6rvv+xvydIz+8LVAPPyR5NkGL22c9cp1p0NzCYZ
- z9iU6/C4GT/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
-   d="scan'208";a="302386909"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.141]) ([10.238.4.141])
-  by orsmga008.jf.intel.com with ESMTP; 27 May 2020 01:28:14 -0700
-Reply-To: like.xu@intel.com
-Subject: Re: [PATCH v11 00/11] Guest Last Branch Recording Enabling
-To:     Like Xu <like.xu@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>, ak@linux.intel.com,
-        wei.w.wang@intel.com
-References: <20200514083054.62538-1-like.xu@linux.intel.com>
-From:   "Xu, Like" <like.xu@intel.com>
-Organization: Intel OTC
-Message-ID: <810b0c63-ee8f-169b-d2a3-85feca5a9f22@intel.com>
-Date:   Wed, 27 May 2020 16:28:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 04:28:58 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:46872 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729349AbgE0I25 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:28:57 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04R8LbhT023059;
+        Wed, 27 May 2020 03:27:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=/Z2IFpwXCCw7IjOefH/qQAgu0CPZL8WWzPI10NwmY4A=;
+ b=a5dyhoCv/6DPxj5fo2SGX0JkkdUBxS0rsnSqVsPOHKh1aHARRnvT+DpKJCmJ6/6XpyVx
+ GS7ZuShlhnWa6uMoFpaMXrU/RldJW6s9TxMsjvfbGkUETNghYW2vbD1Awt+FHBr4jm9T
+ ZQ07zadzs8G7aiWtd09mKFQpEOAEgyKNlLeh8uiNUPuCvssZ7DnY1TLypo539Hn6rOZk
+ MJgxCqGIzqArZZ89fhXZPUsem929Y/argHYnC+J3MaNWADXDdu8AsYVbhYHv57q4iym4
+ xo5RvXmLoETvL2ImxMXN5866J3xCEOY8wv5vaiB6GLTRZDTGayTj+XW7rdlkRSPW7eTL UQ== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex02.ad.cirrus.com ([87.246.76.36])
+        by mx0b-001ae601.pphosted.com with ESMTP id 31708pw10m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 27 May 2020 03:27:56 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 27 May
+ 2020 09:27:55 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Wed, 27 May 2020 09:27:55 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 2005D2AB;
+        Wed, 27 May 2020 08:27:55 +0000 (UTC)
+Date:   Wed, 27 May 2020 08:27:55 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+CC:     <kjlu@umn.edu>, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: wm8962: Fix runtime PM imbalance on error
+Message-ID: <20200527082755.GI71940@ediswmail.ad.cirrus.com>
+References: <20200527024625.9937-1-dinghao.liu@zju.edu.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200514083054.62538-1-like.xu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200527024625.9937-1-dinghao.liu@zju.edu.cn>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ ip4:5.172.152.52 -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=18 phishscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1011
+ mlxscore=0 spamscore=0 mlxlogscore=945 cotscore=-2147483648
+ priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005270063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+On Wed, May 27, 2020 at 10:46:22AM +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> the call returns an error code. Thus a pairing decrement is needed
+> on the error handling path to keep the counter balanced.
+> 
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
 
-On 2020/5/14 16:30, Like Xu wrote:
-> Hi Peter,
-> Would you mind acking the host perf patches if it looks good to you ?
->
-> Hi Paolo,
-> Please help review the KVM proposal changes in this stable version.
->
-> Now, we can use upstream QEMU w/ '-cpu host' to test this feature, and
-> disable it by clearing the LBR format bits in the IA32_PERF_CAPABILITIES.
->
-> v10->v11 Changelog:
-> - add '.config = INTEL_FIXED_VLBR_EVENT' to the guest LBR event config;
-> - rewrite is_guest_lbr_event() with 'config == INTEL_FIXED_VLBR_EVENT';
-> - emit pr_warn() on the host when guest LBR is temporarily unavailable;
-> - drop the KVM_CAP_X86_GUEST_LBR patch;
-> - rewrite MSR_IA32_PERF_CAPABILITIES patch LBR record format;
-> - split 'kvm_pmu->lbr_already_available' into a separate patch;
-> - split 'pmu_ops->availability_check' into a separate patch;
-> - comments and naming refinement, misc;
->
-> You may check more details in each commit.
->
-> Previous:
-> https://lore.kernel.org/kvm/20200423081412.164863-1-like.xu@linux.intel.com/
-...
->
-> Like Xu (9):
->    perf/x86/core: Refactor hw->idx checks and cleanup
->    perf/x86/lbr: Add interface to get basic information about LBR stack
->    perf/x86: Add constraint to create guest LBR event without hw counter
->    perf/x86: Keep LBR stack unchanged in host context for guest LBR event
-Do you have a moment to review the KVM changes in this version
-to enable guest LBR on most Intel platforms ?
-
-It would be great if I can address most of your comments in the next version.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
 Thanks,
-Like Xu
->    KVM: x86: Expose MSR_IA32_PERF_CAPABILITIES for LBR record format
->    KVM: x86/pmu: Emulate LBR feature via guest LBR event
->    KVM: x86/pmu: Release guest LBR event via vPMU lazy release mechanism
->    KVM: x86/pmu: Check guest LBR availability in case host reclaims them
->    KVM: x86/pmu: Reduce the overhead of LBR passthrough or cancellation
->
-> Wei Wang (2):
->    perf/x86: Fix variable types for LBR registers
->    KVM: x86/pmu: Tweak kvm_pmu_get_msr to pass 'struct msr_data' in
->
->   arch/x86/events/core.c            |  26 ++-
->   arch/x86/events/intel/core.c      | 105 ++++++----
->   arch/x86/events/intel/lbr.c       |  56 +++++-
->   arch/x86/events/perf_event.h      |  12 +-
->   arch/x86/include/asm/kvm_host.h   |  13 ++
->   arch/x86/include/asm/perf_event.h |  34 +++-
->   arch/x86/kvm/cpuid.c              |   2 +-
->   arch/x86/kvm/pmu.c                |  19 +-
->   arch/x86/kvm/pmu.h                |  15 +-
->   arch/x86/kvm/svm/pmu.c            |   7 +-
->   arch/x86/kvm/vmx/capabilities.h   |  15 ++
->   arch/x86/kvm/vmx/pmu_intel.c      | 320 +++++++++++++++++++++++++++++-
->   arch/x86/kvm/vmx/vmx.c            |  12 +-
->   arch/x86/kvm/vmx/vmx.h            |   2 +
->   arch/x86/kvm/x86.c                |  18 +-
->   15 files changed, 564 insertions(+), 92 deletions(-)
->
-
+Charles
