@@ -2,118 +2,185 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09528C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89968C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB289208B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695B0208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=unikie-com.20150623.gappssmtp.com header.i=@unikie-com.20150623.gappssmtp.com header.b="JMBYzYs7"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YgVqEsnH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbgE0IRW (ORCPT
+        id S2387926AbgE0IRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
+        Wed, 27 May 2020 04:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387776AbgE0IRV (ORCPT
+        with ESMTP id S2387814AbgE0IRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:17:21 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC64C03E97C
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:17:20 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a2so26912718ejb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:17:20 -0700 (PDT)
+        Wed, 27 May 2020 04:17:35 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB8BC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:17:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id n5so2149554wmd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 01:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=unikie-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zktQjkPIq8F7/eqX0nZqeVIC495NLQMSfws8aVeqIPI=;
-        b=JMBYzYs7GwNK/iQLl5zExv/dNJWSk8eC2CrzKLirhInzMYf5arbF0isOJqOaeueLUd
-         WQjDXa1B8f9+HVHrLVufIHu+dElkGQ6p/ZTQ5a6nnQaiYzLGerknQoq+LMBze2hak29v
-         IC/8KnaI+0R8PCj/M8ZJShEMJ6IMcCDL1LBhPNU4NJUAO7nflaGRb+5cJ6iQaMFHuWHb
-         jvEG3hDzDFaG4RT86/EQVkvpEc+WGGQz7Zhe/vlFVjGQ//0Oh2UtsYkAtNn7tP+cYqtD
-         mki4CXaDVkKqpAXapVMRQdz2D7MIpAehE7a5p/rnQLOdB5vMX4Rfz84w5bCX0LLLw7v6
-         ZEcw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zQPsUVCqNfzFIU8v+ZDf1R9blbjp1zF0pTEs4sFWhWU=;
+        b=YgVqEsnHHZp93t+SQ2Ae73TGpl85Q6L1tDROvs8Tobv4eKCAT6IccsQt9lTRvQbuxT
+         O6gRYjdUeWehx0AhZ3hloWHfGclDcE6lRxvAxSjFiM/u5tuFFkqPHi6VvC4idg/peWJJ
+         PXmxtXbc2FPfb2G9YJnwd9blYMCKwXce1c3qDOE8qUunH9ZMXoFKSgzzxJEIWwhdX8HI
+         LJK2hTqGT1GbT0D+R5KLVgVnjZwCzVPGSOToiINSZojZ5Y8yqparHQ4hIa0LpHq4Be5M
+         Htj/D/oSFAmmNjpiQS6cjzqkIgLwn/QLo938SrxL9OxivAv4pqjJF7IbiEVfjtRQE9x+
+         d0aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zktQjkPIq8F7/eqX0nZqeVIC495NLQMSfws8aVeqIPI=;
-        b=jaBwVj8mW5WDxpfs1CHEl8mpsgsYE6UyI6prUlaRa7hTzR4iH8n3/CWq/Q0WA/V+q4
-         l887VkpXmhpNsteBzjMjGeWKPBIKRH9qACWLifI4OKVyTH/obBpzNHbpAx/A7imb7mgG
-         b0wVzaAmcC1E1AZHOTQvfXpNhbvV+kfyTfwVU1rQZXWVbEbqFqE/RxMbat2+96lWKhBH
-         c6KljSA+42t8/3G934zLJ/Jvn2Dm+k3VjzzvIQZBaEcNx5V7K5uwrb1SqpwWKs7Pg+VY
-         UIAY+krzYaF/q0rurcOg9x/Hpn7jesEyApqkE3R2EIT+P37cfyZkx3H+p4XQEkeI/Jcv
-         We7A==
-X-Gm-Message-State: AOAM532Py0Xrrk1STocombLKA4NDidW1HST4FmxaVsP8yp2/CMKLGZXN
-        8thFYMU8aaKwtjHp7Zq70dpM1kCjUnnRvltA4HfCPQ==
-X-Google-Smtp-Source: ABdhPJyypWT4wmLNImCUYVUo8q4iBua9cgcZASUIqvWuf+52iRtwtH7oA+kdgksGEuWM4FVNwJ240DmuP6FMbjSSJYU=
-X-Received: by 2002:a17:906:34c4:: with SMTP id h4mr5179696ejb.167.1590567439597;
- Wed, 27 May 2020 01:17:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=zQPsUVCqNfzFIU8v+ZDf1R9blbjp1zF0pTEs4sFWhWU=;
+        b=mxu08C+B9flQm3TXIpLMalBp+DMRVBsuUwntq1EcWt0yPFuglIsu7+Sb4+9dOYjC+K
+         abG7h0JSI8MyRKhFoWj+uqCqHf8h/08cQQfwwdkx/zsfBG/hBRcL7ifCJItei4jbHdw6
+         bF3VThO8KGaZkQkCHB1yu5qci1qZ3UKvXY3764B9qakZMzGmqXtuawa6+KTsRa4qU+aI
+         qXl8Si75Te9VVvRweCfzHueZ/6H53fkE+GXJ5BrAZhAZ5eaLn7t3qWKDNbQFh3nVpiHL
+         IrVRIyEfu4MUVImfyj/xawWZwpBhjod+kcJDxpm0t8bVicqdpEtlHmtEoq0L4ffN3T4r
+         zBJQ==
+X-Gm-Message-State: AOAM532CiUNR9RnQgd1WTRrjf9cDRH9W1CJSK0KzlIFy0UebUcEr9Pp7
+        BJ3oib38x6MZbGsu9RrE7+nCxQ==
+X-Google-Smtp-Source: ABdhPJx8wptAoFsnZYW04E1TTKd7bYnndpnmEkPYZcaM4kED49FKX+cqXxfItLqmi7vSzsFcR5xCkA==
+X-Received: by 2002:a1c:64c1:: with SMTP id y184mr3055622wmb.175.1590567453814;
+        Wed, 27 May 2020 01:17:33 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:acf8:18a8:b3a5:a17b? ([2a01:e35:2ec0:82b0:acf8:18a8:b3a5:a17b])
+        by smtp.gmail.com with ESMTPSA id t14sm2165032wrb.94.2020.05.27.01.17.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 01:17:33 -0700 (PDT)
+Subject: Re: [PATCH for-5.8 2/2] usb: dwc3: meson-g12a: fix USB2 PHY
+ initialization on G12A and A1 SoCs
+To:     balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        hanjie.lin@amlogic.com, yue.wang@amlogic.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "kernelci.org bot" <bot@kernelci.org>
+References: <20200526202943.715220-1-martin.blumenstingl@googlemail.com>
+ <20200526202943.715220-3-martin.blumenstingl@googlemail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <40a874eb-1a2b-533e-ee3e-bd90510abaf9@baylibre.com>
+Date:   Wed, 27 May 2020 10:17:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200514092637.15684-1-John.Mathew@unikie.com>
- <20200514092637.15684-4-John.Mathew@unikie.com> <20200526102511.GA5681@linux.vnet.ibm.com>
-In-Reply-To: <20200526102511.GA5681@linux.vnet.ibm.com>
-From:   John Mathew <john.mathew@unikie.com>
-Date:   Wed, 27 May 2020 11:17:08 +0300
-Message-ID: <CAJz2qXm4FKoqMMeM7n=dVpXm6Tko9edun49b=VVsN3j=xQCagQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v5 3/3] docs: scheduler: Add introduction to scheduler context-switch
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        rostedt@goodmis.org, Benjamin Segall <bsegall@google.com>,
-        mgorman@suse.de, bristot@redhat.com, tsbogend@alpha.franken.de,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, tglx@linutronix.de,
-        mostafa.chamanara@gmail.com, willy@infradead.org,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mostafa Chamanara <mostafa.chamanara@basemark.com>,
-        Oleg Tsymbal <oleg.tsymbal@unikie.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200526202943.715220-3-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 1:26 PM Srikar Dronamraju
-<srikar@linux.vnet.ibm.com> wrote:
->
-> * john mathew <john.mathew@unikie.com> [2020-05-14 12:26:37]:
->
-> > +
-> > +Context Switching
-> > +-----------------
-> > +
-> > +Context switching, the switching from a running task to another,
-> > +is done by the context_switch() function defined in kernel/sched.c.
->
-> context_switch is defined in kernel/sched/core.c
-Fixed in v6.
->
-> > +It is called by __schedule() when a new process has been selected to run.
-> > +The execution flow is as follows:
-> > +
-> > +
-> > +  For a kernel task switching to a user task, switch_mm_irqs_off()
-> > +  replaces the address space of prev kernel task with the next from the user
-> > +  task. Same as for exiting process in this case, the context_switch()
->
-> Did you mean existing instead of exiting?
-I reworded the description in v6.
->
-> > +  function saves the pointer to the memory descriptor used by prev in the
-> > +  runqueue???s prev_mm field and resets prev task active address space.
-Yes, hopefully better described in the v6.
-Please review and ack.
-> > +
-> --
-> Thanks and Regards
-> Srikar Dronamraju
+Hi Martin,
+
+On 26/05/2020 22:29, Martin Blumenstingl wrote:
+> dwc3_meson_g12a_usb2_init_phy() crashes with NULL pointer on an SM1
+> board (which uses the same USB setup as G12A) dereference as reported
+> by the Kernel CI bot. This is because of the following call flow:
+>   dwc3_meson_g12a_probe
+>     priv->drvdata->setup_regmaps
+>       dwc3_meson_g12a_setup_regmaps
+>         priv->usb2_ports is still 0 so priv->u2p_regmap[i] will be NULL
+>     dwc3_meson_g12a_get_phys
+>       initializes priv->usb2_ports
+>     priv->drvdata->usb_init
+>       dwc3_meson_g12a_usb_init
+>         dwc3_meson_g12a_usb_init_glue
+>           dwc3_meson_g12a_usb2_init
+>             priv->drvdata->usb2_init_phy
+>               dwc3_meson_g12a_usb2_init_phy
+>                 dereferences priv->u2p_regmap[i]
+> 
+> Call priv->drvdata->setup_regmaps only after dwc3_meson_g12a_get_phys so
+> priv->usb2_ports is initialized and the regmaps will be set up
+> correctly. This fixes the NULL dereference later on.
+> 
+> Fixes: 013af227f58a97 ("usb: dwc3: meson-g12a: handle the phy and glue registers separately")
+> Reported-by: "kernelci.org bot" <bot@kernelci.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/usb/dwc3/dwc3-meson-g12a.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
+> index ce5388338389..1f7f4d88ed9d 100644
+> --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
+> +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
+
+[...]
+
+Fixes regression reported at [1] on SEI510 board based on Amlogic G12A.
+
+Felipe, Greg, can this be queued on uxb-next for 5.8 ?
+
+Acked-by: Neil Armstrong <narmstron@baylibre.com>
+
+Thanks,
+Neil
+
+[1] http://lore.kernel.org/r/ffe2c64c-62ed-9b59-3754-7ede0f0203be@collabora.com
