@@ -2,157 +2,152 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B187EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E6A2075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E712E2075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:55:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9utoaO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgE0Cvx (ORCPT
+        id S1728251AbgE0CzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:51:53 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63469 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgE0Cvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:51:52 -0400
-IronPort-SDR: l4xK0HEBXkK09YnzS8cRwkjSJeePE0qnzVd0Exn5Qy4xZhvBGIuinbE1IMRXMUVLQVnvI5ki7I
- MQ92LCEUOR/Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 19:51:52 -0700
-IronPort-SDR: IZHzwPU39n6YAGz34ybNx/oUi7IFJXZJV3yMToik2/+nyg9lDC5WwFobtEfKzEIgqFOe58oAvs
- rXns1gJJcfAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="270302681"
-Received: from zalvear-mobl.amr.corp.intel.com (HELO [10.254.67.58]) ([10.254.67.58])
-  by orsmga006.jf.intel.com with ESMTP; 26 May 2020 19:51:51 -0700
-Subject: Re: [PATCH] iommu: Relax ACS requirement for Intel RCiEP devices.
-To:     Ashok Raj <ashok.raj@intel.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>
-References: <1590531455-19757-1-git-send-email-ashok.raj@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <6735b6d5-a04f-57ae-8e3f-f818f07a57a4@linux.intel.com>
-Date:   Tue, 26 May 2020 19:51:51 -0700
+        Tue, 26 May 2020 22:55:22 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40621 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725893AbgE0CzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:55:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590548120;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l4K9Ld8nvFhhrcUkF46+uYVzHz+spBxIeBhQGnUCsLs=;
+        b=A9utoaO4xJ1KlkScQ/p6asaAvyHOcr1eEy8yWJrqj0SlOFf2iGGYdiVk3mvjQIRZRuAy27
+        rACSvKxFb+44EeQIXR3UTthEUV7KMTYegfZrFlaC0h8Zs9xSxwnOSPGxRk7QnObFmjailZ
+        ZtsA4wNaDOqvYN5IvEctMxB5J99MMt0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-vg8k3xqlP2uyYE5pKH1NJA-1; Tue, 26 May 2020 22:55:15 -0400
+X-MC-Unique: vg8k3xqlP2uyYE5pKH1NJA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B61EC10753FB;
+        Wed, 27 May 2020 02:55:13 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-130.bne.redhat.com [10.64.54.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2852E5D9E7;
+        Wed, 27 May 2020 02:55:06 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH RFCv2 4/9] kvm/arm64: Detach ESR operator from vCPU struct
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, maz@kernel.org, will@kernel.org,
+        catalin.marinas@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
+        aarcange@redhat.com, shan.gavin@gmail.com
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-5-gshan@redhat.com>
+ <20200526105154.GD1363@C02TD0UTHF1T.local>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <4cda1e43-8f96-4e48-2642-39a5545905c0@redhat.com>
+Date:   Wed, 27 May 2020 12:55:04 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <1590531455-19757-1-git-send-email-ashok.raj@intel.com>
+In-Reply-To: <20200526105154.GD1363@C02TD0UTHF1T.local>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
+On 5/26/20 8:51 PM, Mark Rutland wrote:
+> On Fri, May 08, 2020 at 01:29:14PM +1000, Gavin Shan wrote:
+>> There are a set of inline functions defined in kvm_emulate.h. Those
+>> functions reads ESR from vCPU fault information struct and then operate
+>> on it. So it's tied with vCPU fault information and vCPU struct. It
+>> limits their usage scope.
+>>
+>> This detaches these functions from the vCPU struct. With this, the
+>> caller has flexibility on where the ESR is read. It shouldn't cause
+>> any functional changes.
+>>
+>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>> ---
+>>   arch/arm64/include/asm/kvm_emulate.h     | 83 +++++++++++-------------
+>>   arch/arm64/kvm/handle_exit.c             | 20 ++++--
+>>   arch/arm64/kvm/hyp/switch.c              | 24 ++++---
+>>   arch/arm64/kvm/hyp/vgic-v2-cpuif-proxy.c |  7 +-
+>>   arch/arm64/kvm/inject_fault.c            |  4 +-
+>>   arch/arm64/kvm/sys_regs.c                | 12 ++--
+>>   virt/kvm/arm/arm.c                       |  4 +-
+>>   virt/kvm/arm/hyp/aarch32.c               |  2 +-
+>>   virt/kvm/arm/hyp/vgic-v3-sr.c            |  5 +-
+>>   virt/kvm/arm/mmio.c                      | 27 ++++----
+>>   virt/kvm/arm/mmu.c                       | 22 ++++---
+>>   11 files changed, 112 insertions(+), 98 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+>> index bd1a69e7c104..2873bf6dc85e 100644
+>> --- a/arch/arm64/include/asm/kvm_emulate.h
+>> +++ b/arch/arm64/include/asm/kvm_emulate.h
+>> @@ -270,10 +270,8 @@ static __always_inline u32 kvm_vcpu_get_esr(const struct kvm_vcpu *vcpu)
+>>   	return vcpu->arch.fault.esr_el2;
+>>   }
+>>   
+>> -static __always_inline int kvm_vcpu_get_condition(const struct kvm_vcpu *vcpu)
+>> +static __always_inline int kvm_vcpu_get_condition(u32 esr)
+> 
+> Given the `vcpu` argument has been removed, it's odd to keep `vcpu` in the
+> name, rather than `esr`.
+> 
+> e.g. this would make more sense as something like esr_get_condition().
+> 
+> ... and if we did something like that, we could move most of the
+> extraction functions into <asm/esr.h>, and share them with non-KVM code.
+> 
+> Otherwise, do you need to extract all of these for your use-case, or do
+> you only need a few of the helpers? If you only need a few, it might be
+> better to only factor those out for now, and keep the existing API in
+> place with wrappers, e.g. have:
+> 
+> | esr_get_condition(u32 esr) {
+> | 	...
+> | }
+> |
+> | kvm_vcpu_get_condition(const struct kvm_vcpu *vcpu)
+> | {
+> | 	return esr_get_condition(kvm_vcpu_get_esr(vcpu));
+> | }
+> 
 
-On 5/26/20 3:17 PM, Ashok Raj wrote:
-> All Intel platforms guarantee that all root complex implementations
-> must send transactions up to IOMMU for address translations. Hence for
-> RCiEP devices that are Vendor ID Intel, can claim exception for lack of
-> ACS support.
-> 
-> 
-> 3.16 Root-Complex Peer to Peer Considerations
-> When DMA remapping is enabled, peer-to-peer requests through the
-> Root-Complex must be handled
-> as follows:
-> • The input address in the request is translated (through first-level,
->    second-level or nested translation) to a host physical address (HPA).
->    The address decoding for peer addresses must be done only on the
->    translated HPA. Hardware implementations are free to further limit
->    peer-to-peer accesses to specific host physical address regions
->    (or to completely disallow peer-forwarding of translated requests).
-> • Since address translation changes the contents (address field) of
->    the PCI Express Transaction Layer Packet (TLP), for PCI Express
->    peer-to-peer requests with ECRC, the Root-Complex hardware must use
->    the new ECRC (re-computed with the translated address) if it
->    decides to forward the TLP as a peer request.
-> • Root-ports, and multi-function root-complex integrated endpoints, may
->    support additional peerto-peer control features by supporting PCI Express
->    Access Control Services (ACS) capability. Refer to ACS capability in
->    PCI Express specifications for details.
-> 
-> Since Linux didn't give special treatment to allow this exception, certain
-> RCiEP MFD devices are getting grouped in a single iommu group. This
-> doesn't permit a single device to be assigned to a guest for instance.
-> 
-> In one vendor system: Device 14.x were grouped in a single IOMMU group.
-> 
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.3
-> 
-> After the patch:
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.0
-> /sys/kernel/iommu_groups/5/devices/0000:00:14.2
-> /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
-> 
-> 14.0 and 14.2 are integrated devices, but legacy end points.
-> Whereas 14.3 was a PCIe compliant RCiEP.
-> 
-> 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
-> Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
-> 
-> This permits assigning this device to a guest VM.
-> 
-> Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
-> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> To: Joerg Roedel <joro@8bytes.org>
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: iommu@lists.linux-foundation.org
-> Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
-> Cc: Mark Scott <mscott@forcepoint.com>,
-> Cc: Romil Sharma <rsharma@forcepoint.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> ---
->   drivers/iommu/iommu.c | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 2b471419e26c..31b595dfedde 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -1187,7 +1187,18 @@ static struct iommu_group *get_pci_function_alias_group(struct pci_dev *pdev,
->   	struct pci_dev *tmp = NULL;
->   	struct iommu_group *group;
->   
-> -	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
-> +	/*
-> +	 * Intel VT-d Specification Section 3.16, Root-Complex Peer to Peer
-> +	 * Considerations manadate that all transactions in RCiEP's and
-> +	 * even Integrated MFD's *must* be sent up to the IOMMU. P2P is
-> +	 * only possible on translated addresses. This gives enough
-> +	 * guarantee that such devices can be forgiven for lack of ACS
-> +	 * support.
-> +	 */
-> +	if (!pdev->multifunction ||
-> +	    (pdev->vendor == PCI_VENDOR_ID_INTEL &&
-> +	     pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) ||
-> +	     pci_acs_enabled(pdev, REQ_ACS_FLAGS))
-Looks good to me.
-Reviewed-by: Kuppuswamy Sathyanarayanan 
-<sathyanarayanan.kuppuswamy@linux.intel.com>
->   		return NULL;
->   
->   	for_each_pci_dev(tmp) {
-> 
+Sure, I'll follow approach#1, to move these helper functions to asm/esr.h
+and with "vcpu" dropped in their names. I don't think it makes sense to
+maintain two sets of helper functions for the simple logic. So the helper
+function will be called where they should be, as below:
+
+    esr_get_condition(u32 esr) { ... }
+    
+    bool __hyp_text kvm_condition_valid32(const struct kvm_vcpu *vcpu)
+    {
+         int cond = esr_get_condition(kvm_vcpu_get_esr(vcpu));
+         :
+    }
+
+Thanks,
+Gavin
+
