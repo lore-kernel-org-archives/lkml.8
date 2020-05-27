@@ -2,135 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 535A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26AA9207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:03:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="legZUfT0"
+	by mail.kernel.org (Postfix) with ESMTP id 2C1C62088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389438AbgE0PDb (ORCPT
+        id S2389523AbgE0PEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389202AbgE0PDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:03:31 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18A6C05BD1E;
-        Wed, 27 May 2020 08:03:30 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id w15so14610534lfe.11;
-        Wed, 27 May 2020 08:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5PEZQYwxj5Q5G0STX9V14FASvHWKnh/kX+D4eRBfroI=;
-        b=legZUfT07G44e584tiKggypvslg3wNxeX6VtiW1C2ZskXQCVTi5kisjdmPC4A4ZN73
-         aS1yx4o5GG2fPSSCeJRjjAlZ13a1x4BFPgFzx2GTpGeGOtxk9YhOCcl8K/tGwU6H2fhq
-         xVjca0WJC2oboSoODihKPDbvYC3l8M5dG5zuwDkk412XEnFJUzs9vVrpR0SZcPhjD4in
-         AnVbL2sI9pUaaNZ46zf2ZLsN3zbsCKj9Rgvjf/Q2GQBfO796tEE0mx9t5yEyJW87W5g4
-         hy5OvsAPQfRNUJuRkrEugEPs+dpps5Bexq7gCEVya4NFROXbxJihxI4CFAXfLTXbAwih
-         ybqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5PEZQYwxj5Q5G0STX9V14FASvHWKnh/kX+D4eRBfroI=;
-        b=PZvNEwuE92SpB5TEjumPi0BEjF9tQ6iKZwd+H0BHP5+xCgRkXtU1tbGcI+D3X14Hev
-         QHFf/w95YzoFaDD1XXd4awwga1xWk8MlX704uR4dMjXe4aTXIHiEni56wxHykl1KF6F9
-         /XVyAvMZyxmznE7Kwy3v+jPK5NhGMpXkMvmRQLidtezbVIUOIYC7BpHmBatuGE2HBcvW
-         oJZohjttknfrD8OZANg2qm/EqvOT5nOUONhKKD935/d438TLYVx1I82aeyLYgNDzaFrz
-         uo/v7DC0nYd3v3tY5tBdJF/Wd2dSpGKPJP+liVvLdqyRf0vxvpGvGYV5mAVXpSBUR737
-         KhxQ==
-X-Gm-Message-State: AOAM530ciRsZSQguww93sZyOkmo0L+iCuNen2lbiAoYZPxBDZcPyTVak
-        6AI5N07ZoHYU8D6ttYqv2gDLZwIr
-X-Google-Smtp-Source: ABdhPJwURfk8KquHUrvcKNLx4TIbo+P1L6YDAA/aTf2+iuE0weUg10TBsNSw8yCXrSM6aKw6sS179Q==
-X-Received: by 2002:a19:c8cb:: with SMTP id y194mr3434658lff.89.1590591808925;
-        Wed, 27 May 2020 08:03:28 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-173-94.dynamic.spd-mgts.ru. [109.252.173.94])
-        by smtp.googlemail.com with ESMTPSA id g142sm860072lfd.59.2020.05.27.08.03.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 08:03:28 -0700 (PDT)
-Subject: Re: [PATCH v2] mfd: tps65910: Correct power-off programming sequence
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Zack Pearsall <zpearsall@yahoo.com>,
-        linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200524192643.18207-1-digetx@gmail.com>
- <20200526145952.GA2517@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <90055b31-22ea-d427-42cb-79bcc0a350bd@gmail.com>
-Date:   Wed, 27 May 2020 18:03:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Wed, 27 May 2020 11:04:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:39754 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388922AbgE0PED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 11:04:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5650D30E;
+        Wed, 27 May 2020 08:04:02 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.7.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F37C13F52E;
+        Wed, 27 May 2020 08:03:59 -0700 (PDT)
+Date:   Wed, 27 May 2020 16:03:57 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jiping Ma <jiping.ma2@windriver.com>, zhe.he@windriver.com,
+        bruce.ashfield@gmail.com, yue.tao@windriver.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        paul.gortmaker@windriver.com, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH][V3] arm64: perf: Get the wrong PC value in REGS_ABI_32
+ mode
+Message-ID: <20200527150357.GB59947@C02TD0UTHF1T.local>
+References: <1589165527-188401-1-git-send-email-jiping.ma2@windriver.com>
+ <20200526102611.GA1363@C02TD0UTHF1T.local>
+ <20200526195419.GB2206@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20200526145952.GA2517@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526195419.GB2206@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-26.05.2020 18:01, Michał Mirosław пишет:
-> On Sun, May 24, 2020 at 10:26:43PM +0300, Dmitry Osipenko wrote:
->> This patch fixes system shutdown on a devices that use TPS65910 as a
->> system's power controller. In accordance to the TPS65910 datasheet, the
->> PMIC's state-machine transitions into the OFF state only when DEV_OFF
->> bit of DEVCTRL_REG is set. The ON / SLEEP states also should be cleared,
->> otherwise PMIC won't get into a proper state on shutdown. Devices like
->> Nexus 7 tablet and Ouya game console are now shutting down properly.
+On Tue, May 26, 2020 at 08:54:19PM +0100, Will Deacon wrote:
+> On Tue, May 26, 2020 at 11:26:11AM +0100, Mark Rutland wrote:
+> > On Mon, May 11, 2020 at 10:52:07AM +0800, Jiping Ma wrote:
+> > > Modified the patch subject and the change description.
+> > > 
+> > > PC value is get from regs[15] in REGS_ABI_32 mode, but correct PC
+> > > is regs->pc(regs[PERF_REG_ARM64_PC]) in arm64 kernel, which caused
+> > > that perf can not parser the backtrace of app with dwarf mode in the 
+> > > 32bit system and 64bit kernel.
+> > > 
+> > > Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
+> > 
+> > Thanks for this.
+> > 
+> > 
+> > > ---
+> > >  arch/arm64/kernel/perf_regs.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > > 
+> > > diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
+> > > index 0bbac61..0ef2880 100644
+> > > --- a/arch/arm64/kernel/perf_regs.c
+> > > +++ b/arch/arm64/kernel/perf_regs.c
+> > > @@ -32,6 +32,10 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+> > >  	if ((u32)idx == PERF_REG_ARM64_PC)
+> > >  		return regs->pc;
+> > >  
+> > > +	if (perf_reg_abi(current) == PERF_SAMPLE_REGS_ABI_32
+> > > +		&& idx == 15)
+> > > +		return regs->pc;
+> > 
+> > I think there are some more issues here, and we may need a more
+> > substantial rework. For a compat thread, we always expose
+> > PERF_SAMPLE_REGS_ABI_32 via per_reg_abi(), but for some reason
+> > perf_reg_value() also munges the compat SP/LR into their ARM64
+> > equivalents, which don't exist in the 32-bit sample ABI. We also don't
+> > zero the regs that don't exist in 32-bit (including the aliasing PC).
 > 
-> The datasheets of 65910 and 65911 say that ON and SLP bits are cleared
-> during OFF state. But I guess the hardware might work differently.
+> I think this was for the case where you have a 64-bit perf profiling a
+> 32-bit task, and it was passing the registers off to libunwind. Won't that
+> break if we follow your suggestion?
 
-Indeed, sounds like we can remove the SLP bit-clearing safely. IIUC,
-both tps65910 and tps65911 are nearly the same in regards to the
-power-off programming, tps65911 only supports an additional (sequential)
-power-off mode.
+Oh yuck; have we messed up the ABI here, or have I misunderstood?
 
-I'm not sure whether we've tried to remove the SLP bit-clearing before,
-will be interesting to try.
+Is arm64's PERF_SAMPLE_REGS_ABI_32 supposed to be the same as the 32-bit
+arm's PERF_SAMPLE_REGS_ABI_32?
 
-> [...]
->> --- a/drivers/mfd/tps65910.c
->> +++ b/drivers/mfd/tps65910.c
->> @@ -440,8 +440,13 @@ static void tps65910_power_off(void)
->>  			DEVCTRL_PWR_OFF_MASK) < 0)
->>  		return;
->>  
->> -	tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
->> -			DEVCTRL_DEV_ON_MASK);
->> +	if (tps65910_reg_clear_bits(tps65910, TPS65910_DEVCTRL,
->> +			DEVCTRL_DEV_SLP_MASK) < 0)
->> +		return;
->> +
->> +	tps65910_reg_update_bits(tps65910, TPS65910_DEVCTRL,
->> +				 DEVCTRL_DEV_OFF_MASK | DEVCTRL_DEV_ON_MASK,
->> +				 DEVCTRL_DEV_OFF_MASK);
->>  }
-> 
-> There is tps65910_reg_set_bits() at the start of function. I guess it
-> doesn't work if your changes are needed. Maybe you can remove it?
+If yes, and the differences are being relied upon by 64-bit consumers,
+that's a nasty ABI issue we've introduced for compat tasks, and I don't
+think this patch alone is quite right.
 
-It enables the "sequential power-off, reverse of power-on sequence",
-like datasheet says. I think it works and we actually need that PWR_OFF
-bit to be set separately, before setting the DEV_OFF bit.
+If no, then I don't see that any change is necessary, as we already
+expose the information, and it's a userspace bug to expect the PC in a
+place where the kernel has never exposed it.
 
-> I would also include your observations about the chip's behaviour in the
-> commit message so it doesn't get "fixed" later.
-
-I'll add a clarifying comment about it in v3, thank you for the suggestions.
+Thanks,
+Mark.
