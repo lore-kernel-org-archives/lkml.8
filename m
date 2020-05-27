@@ -2,141 +2,177 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2505207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:35:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tfge/ggI"
+	by mail.kernel.org (Postfix) with ESMTP id 1A734207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 07:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590565031;
+	bh=0M1mFsGDTKIzE9/6yoIC6rR97OlF6HfqERxEr8t9U4c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=atHN1YUIfRqboyZ/oVXdMnEskugcBTgU5G8yimz184jevLV30nVZaL0xsZuFpLFzT
+	 iKwsB8Lb2oAddZK6zKC3XkPn+vLl0oWDpt9KWgyTJZJ2ZMFolQEGxjlrJdoGJA+pQy
+	 27mdjQCt7eiPmnLk2+UN5BdLLngKqGvzxRVTpbeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387629AbgE0Hfd (ORCPT
+        id S1729307AbgE0HhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 03:35:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387536AbgE0Hfc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 03:35:32 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739F9C03E97A
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:35:31 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id c17so8124313uaq.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 00:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QSnTG6l9+S3MPXE+BOOxbCtul1/+rtYSsnYjZX/x7N8=;
-        b=tfge/ggIqEgGc6weOqu8HySKTKbo15QktUp2Yj6f2Oz6tuUQrWPuzv0dbLgk4vI4GT
-         8PyKWBGYPg4f5CJQH+7j/w2uNCVCKwSmW2DLXTmK5LzNc2j+iSSf4EkiEKnF64wXikHu
-         jCUYPv27OY+7h52zyk388RTKWG2OBcmpx/PWBl562aBWPvd/njQfKsVC869LWT5MNK9Q
-         7fFERgUBtDu0xZ8QEqNactwfkb+OMIgB3Cvgj4LajcNTjUI0xRYeYM2yzOgkXkE9d+Bn
-         mIQXpWrsYfa9U1IwxAGsxQR1mENoFwWt/iq+mfPq7mwC6NyiFubv0i6Keazz3NSHuuWR
-         m7jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QSnTG6l9+S3MPXE+BOOxbCtul1/+rtYSsnYjZX/x7N8=;
-        b=khbJ5b2bdEiJHtXwzV93KVpJbSw7yTNuMXp20sfzC7JV6K1zKohS9F0Qxv019kx0+0
-         OWS+StQdWgETg/xaNVnPKTZimkG06tk4JB7pflqVWs62u6fKiVwKAUS8iGEOp0OBCwqG
-         jC9IuZ4LHlOcZKmxqgTXW0cYoftwVV2bfdKvNDbkaduMvRAmTUe+Gq8SO7J8R2u17e16
-         iqjd3kwC35cX2uCu7LWwpOppbkq6bmbbR480HF3aw6ISbTlRxZCK+0EhzcW3EJRh0xgJ
-         MTC/84yqXWFYVyhFm484l3pnAp0YX2aYwJ3JyTwInjAbU1TEmu8Lr+5DV6ngQhXlhv5+
-         7QWQ==
-X-Gm-Message-State: AOAM530mUOAkhocVAqZoorCoX58abB+esG/JDZUUicMYghi1bbIFTq1L
-        HgOT2dEBBqfRWQwT+xZ9uC50MNdHhKiOcbRzGyzxEw==
-X-Google-Smtp-Source: ABdhPJxrali/w28V9SLfP9NXA5y8HfwWsWoIwteRLBWjWwgHYXkScL7eCvIPwqs9MlnlRxD36pyQIYtfj46Jf/p0h6o=
-X-Received: by 2002:ab0:70c9:: with SMTP id r9mr3673781ual.15.1590564930339;
- Wed, 27 May 2020 00:35:30 -0700 (PDT)
+        Wed, 27 May 2020 03:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729212AbgE0HhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 03:37:10 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E832207CB;
+        Wed, 27 May 2020 07:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590565029;
+        bh=0M1mFsGDTKIzE9/6yoIC6rR97OlF6HfqERxEr8t9U4c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YvrR6OuBxoy9z1BVf2rExUxfPg3agb10ofmlmcyMDTTaeYIAOmn8QaXB7vdbF/Sbv
+         +lYSGpYQS82+AuEAc32Sb3Ec2u2bVkqX9hEFUam+DAFG69l8iWDqGzKBW+GSHqu9kT
+         StqP/6DkYMcG2bufjcuOoS4XdXvDOS+W5gGuFn3A=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jdqcd-00FdBE-0J; Wed, 27 May 2020 08:37:07 +0100
 MIME-Version: 1.0
-References: <20200526154334.21222-1-pali@kernel.org>
-In-Reply-To: <20200526154334.21222-1-pali@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 27 May 2020 09:34:54 +0200
-Message-ID: <CAPDyKFptJ470iNGJ8pJCodnyqKcr263Seb3OPp4Pg0b3st8-zQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: core: Do not export MMC_NAME= and
- MODALIAS=mmc:block for SDIO cards
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 27 May 2020 08:37:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Gavin Shan <gshan@redhat.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
+        aarcange@redhat.com, shan.gavin@gmail.com
+Subject: Re: [PATCH RFCv2 7/9] kvm/arm64: Support async page fault
+In-Reply-To: <e1230110-b51f-b8b8-60d9-372660c5c387@redhat.com>
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-8-gshan@redhat.com>
+ <20200526123424.GF1363@C02TD0UTHF1T.local>
+ <e1230110-b51f-b8b8-60d9-372660c5c387@redhat.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <28c74819f42306e66370ddaf88f16918@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: gshan@redhat.com, mark.rutland@arm.com, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com, suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com, aarcange@redhat.com, shan.gavin@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 at 17:43, Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> SDIO non-combo cards are not handled by mmc_block driver and do not have
-> accessible CID register which is used for MMC_NAME=3D construction.
->
-> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> ---
->  drivers/mmc/core/bus.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
-> index 74de3f2dd..103eea7cd 100644
-> --- a/drivers/mmc/core/bus.c
-> +++ b/drivers/mmc/core/bus.c
-> @@ -93,15 +93,20 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent=
-_env *env)
->                         return retval;
->         }
->
-> -       retval =3D add_uevent_var(env, "MMC_NAME=3D%s", mmc_card_name(car=
-d));
-> -       if (retval)
-> -               return retval;
-> -
-> -       /*
-> -        * Request the mmc_block device.  Note: that this is a direct req=
-uest
-> -        * for the module it carries no information as to what is inserte=
-d.
-> -        */
-> -       retval =3D add_uevent_var(env, "MODALIAS=3Dmmc:block");
-> +       if (card->type !=3D MMC_TYPE_SDIO) {
-> +               retval =3D add_uevent_var(env, "MMC_NAME=3D%s", mmc_card_=
-name(card));
-> +               if (retval)
-> +                       return retval;
-> +
-> +               /*
-> +                * Request the mmc_block device.
-> +                * Note: that this is a direct request for the module it =
-carries
-> +                * no information as to what is inserted.
-> +                */
-> +               retval =3D add_uevent_var(env, "MODALIAS=3Dmmc:block");
-> +               if (retval)
-> +                       return retval;
-> +       }
->
->         return retval;
->  }
-> --
-> 2.20.1
->
+On 2020-05-27 05:05, Gavin Shan wrote:
+> Hi Mark,
+> 
 
-Overall this change makes sense to me, but at nitpick...
+[...]
 
-Rather than adding new nestled if-sentences, I suggest converting the
-function into using the "early returns" pattern instead.
+>>> +struct kvm_vcpu_pv_apf_data {
+>>> +	__u32	reason;
+>>> +	__u8	pad[60];
+>>> +	__u32	enabled;
+>>> +};
+>> 
+>> What's all the padding for?
+>> 
+> 
+> The padding is ensure the @reason and @enabled in different cache
+> line. @reason is shared by host/guest, while @enabled is almostly
+> owned by guest.
 
-For example, already in the switch loop, above the code you change, we
-could just return 0 instead of setting type =3D NULL. Likewise, you can
-check "if (card->type =3D=3D MMC_TYPE_SDIO) return 0;"
+So you are assuming that a cache line is at most 64 bytes.
+It is actualy implementation defined, and you can probe for it
+by looking at the CTR_EL0 register. There are implementations
+ranging from 32 to 256 bytes in the wild, and let's not mention
+broken big-little implementations here.
 
-Kind regards
-Uffe
+[...]
+
+>>> +bool kvm_arch_can_inject_async_page_not_present(struct kvm_vcpu 
+>>> *vcpu)
+>>> +{
+>>> +	u64 vbar, pc;
+>>> +	u32 val;
+>>> +	int ret;
+>>> +
+>>> +	if (!(vcpu->arch.apf.control_block & KVM_ASYNC_PF_ENABLED))
+>>> +		return false;
+>>> +
+>>> +	if (vcpu->arch.apf.send_user_only && vcpu_mode_priv(vcpu))
+>>> +		return false;
+>>> +
+>>> +	/* Pending page fault, which ins't acknowledged by guest */
+>>> +	ret = kvm_async_pf_read_cache(vcpu, &val);
+>>> +	if (ret || val)
+>>> +		return false;
+>>> +
+>>> +	/*
+>>> +	 * Events can't be injected through data abort because it's
+>>> +	 * going to clobber ELR_EL1, which might not consued (or saved)
+>>> +	 * by guest yet.
+>>> +	 */
+>>> +	vbar = vcpu_read_sys_reg(vcpu, VBAR_EL1);
+>>> +	pc = *vcpu_pc(vcpu);
+>>> +	if (pc >= vbar && pc < (vbar + vcpu->arch.apf.no_fault_inst_range))
+>>> +		return false;
+>> 
+>> Ah, so that's when this `no_fault_inst_range` is for.
+>> 
+>> As-is this is not sufficient, and we'll need t be extremely careful
+>> here.
+>> 
+>> The vectors themselves typically only have a small amount of stub 
+>> code,
+>> and the bulk of the non-reentrant exception entry work happens
+>> elsewhere, in a mixture of assembly and C code that isn't even 
+>> virtually
+>> contiguous with either the vectors or itself.
+>> 
+>> It's possible in theory that code in modules (or perhaps in eBPF JIT'd
+>> code) that isn't safe to take a fault from, so even having a 
+>> contiguous
+>> range controlled by the kernel isn't ideal.
+>> 
+>> How does this work on x86?
+>> 
+> 
+> Yeah, here we just provide a mechanism to forbid injecting data abort. 
+> The
+> range is fed by guest through HVC call. So I think it's guest related 
+> issue.
+> You had more comments about this in PATCH[9]. I will explain a bit more 
+> there.
+> 
+> x86 basically relies on EFLAGS[IF] flag. The async page fault can be 
+> injected
+> if it's on. Otherwise, it's forbidden. It's workable because exception 
+> is
+> special interrupt to x86 if I'm correct.
+> 
+>            return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
+>                   !(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
+>                         (GUEST_INTR_STATE_STI | 
+> GUEST_INTR_STATE_MOV_SS));
+
+I really wish this was relying on an architected exception delivery
+mechanism that can be blocked by the guest itself (PSTATE.{I,F,A}).
+Trying to guess based on the PC won't fly. But these signals are
+pretty hard to multiplex with anything else. Like any form of
+non-architected exception injection, I don't see a good path forward
+unless we start considering something like SDEI.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
