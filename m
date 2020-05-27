@@ -2,112 +2,107 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBB7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91DA620776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513D620776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OYBybCvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387518AbgE0DxU (ORCPT
+        id S2387531AbgE0Dxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 23:53:20 -0400
-Received: from mga02.intel.com ([134.134.136.20]:8198 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387487AbgE0DxT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 23:53:19 -0400
-IronPort-SDR: GRSqhu7Ij8H6PUGsOjoVTH4LQEhYjTFL2JnYFfVSjdWWVEU2aqrurznGQy27uNZH7BA/6dLOJ/
- A/5tz9dRxjbQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 20:53:19 -0700
-IronPort-SDR: f0/a7uXNqJ5aDFrnDJ0yEoe7GmPGGF/fM4jFM9d1GXpNKVgxLRdXoBGZ/L70VPM+xs2wnh8j4G
- vfSzCZXTOKAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="442356630"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 26 May 2020 20:53:19 -0700
-Received: from [10.214.150.18] (rtanwar-mobl.gar.corp.intel.com [10.214.150.18])
-        by linux.intel.com (Postfix) with ESMTP id 1D8CC5803C1;
-        Tue, 26 May 2020 20:53:15 -0700 (PDT)
-Subject: Re: [PATCH v8 2/2] clk: intel: Add CGU clock driver for a new SoC
-To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com
-Cc:     robh@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        rtanwar <rahul.tanwar@intel.com>
-References: <cover.1587102634.git.rahul.tanwar@linux.intel.com>
- <42a4f71847714df482bacffdcd84341a4052800b.1587102634.git.rahul.tanwar@linux.intel.com>
- <159054541310.88029.5777794695153819198@swboyd.mtv.corp.google.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <c91ec0e0-5a16-2e28-dae0-4219f5f5340f@linux.intel.com>
-Date:   Wed, 27 May 2020 11:53:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 26 May 2020 23:53:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387487AbgE0Dxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 23:53:54 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FBEC061A0F
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 20:53:53 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id q16so9620204plr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 20:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IYMd1AnUAPkMGM+mZJ4SXD6TMuAQaYu5keXEtUSwigU=;
+        b=OYBybCvA4Wk60gJ0QRkPpb+8kKDOtMgLg5Msuhx1IAMH/EuJPHEk2+5QswUX2XkbTA
+         uIpNhFkyGJYuBSY+mdFa7w4sPg95usp/ddDeC/CnTYEaGXfwJxVvbNMfWmKCxsKQ9vBc
+         1hA0YB7FkWB+E9fKuxbpHcnilnJ9Nxu4RF9fiINeKd35PwKPeOG0Z3+ZB+ytOaSX5MfI
+         88jDa/DMvYvA+X8ibB8/Szk5bJCCRBs0vqECD6/c9BaQfXmZdUkGbXVBWtcX0vmKaZrX
+         8vPO+yp3unIffWr4l0TtD82PTyoZO+HZSA0bCgLxchBRcspuibBMv1bpSgjor49AL4sv
+         cF6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IYMd1AnUAPkMGM+mZJ4SXD6TMuAQaYu5keXEtUSwigU=;
+        b=Jn1auz7/T6FTnMWYlZTg+N0YnDwv+8ekjdH4o+XafeXmhYUfrHbBWaekfat99icYr+
+         wHaBer2onzhCCSAN9pSkXrXC05jp8lPzyhxKMLUe3ZL4JOFVKCp8P9Oep8/Gz/e/3GKU
+         qcvv0pwdMALCkWssbgh62ruG+RWqMbijQxbgKNv2UnvEoshoRrFvwOxNCLgD9xxMMhUC
+         MJMyVPkTgYvrJCmhP/HNwx7We7aJVe7v34XWrLwc0m+DzYBaCbP5PjCyWgSEJu5MGUE3
+         gEmw8IFqrnRtrzrgKJdfel9hGG5M9SryYbJOVn5D0CnH1aOR8tnFRsbbNG+PHRHJ+Dcw
+         1FOQ==
+X-Gm-Message-State: AOAM5304PDC//4FP7cm/CeOnFPYuryYYPEEPbbsUy3KcCzCSIlbjSNAD
+        q7jWE2w27cmyZ7P2Magp7RHLOw==
+X-Google-Smtp-Source: ABdhPJzneh3TIZ4iWzcoexcyoNh9amW0JOGqNov81CSCdr8FsV5jm5LYXnkl+oudXPsIFda/4RQstQ==
+X-Received: by 2002:a17:90a:e38f:: with SMTP id b15mr2842638pjz.206.1590551633445;
+        Tue, 26 May 2020 20:53:53 -0700 (PDT)
+Received: from localhost ([122.172.60.59])
+        by smtp.gmail.com with ESMTPSA id w186sm819760pff.83.2020.05.26.20.53.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 26 May 2020 20:53:51 -0700 (PDT)
+Date:   Wed, 27 May 2020 09:23:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     sboyd@kernel.org, georgi.djakov@linaro.org,
+        bjorn.andersson@linaro.org, saravanak@google.com, mka@chromium.org,
+        nm@ti.com, agross@kernel.org, david.brown@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        dianders@chromium.org, vincent.guittot@linaro.org,
+        amit.kucheria@linaro.org, ulf.hansson@linaro.org,
+        lukasz.luba@arm.com, sudeep.holla@arm.com
+Subject: Re: [PATCH v4 06/12] cpufreq: qcom: Update the bandwidth levels on
+ frequency change
+Message-ID: <20200527035349.mrvvxeg3lqv53jm2@vireshk-i7>
+References: <20200504202243.5476-1-sibis@codeaurora.org>
+ <20200504202243.5476-7-sibis@codeaurora.org>
+ <20200505045012.zfx2e6chqo5f3e4n@vireshk-i7>
+ <8fc5b72c9af6fd6a707a280cfc678677@codeaurora.org>
+ <b7e184b2da5b780a4e7e6ee47963f9b4@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <159054541310.88029.5777794695153819198@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7e184b2da5b780a4e7e6ee47963f9b4@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 26-05-20, 23:18, Sibi Sankar wrote:
+> https://patchwork.kernel.org/cover/11548479/
+> GPU driver uses Georgi's series
+> for scaling and will need a way to
+> remove the icc votes in the suspend
+> path, (this looks like a pattern
+> that might be used by other clients
+> as well) I could probably update
+> opp_set_bw to support removing bw
+> when NULL opp is specified. Similarly
+> opp_set_rate will need to support
+> set bw to 0 when set_rate is passed
+> 0 as target freq for the same use case.
 
-Hi Stephen,
+Sure, please send a patch for that.
 
-On 27/5/2020 10:10 am, Stephen Boyd wrote:
-> Quoting Rahul Tanwar (2020-04-16 22:54:47)
->> diff --git a/drivers/clk/x86/clk-cgu.c b/drivers/clk/x86/clk-cgu.c
->> new file mode 100644
->> index 000000000000..802a7fa88535
->> --- /dev/null
->> +++ b/drivers/clk/x86/clk-cgu.c
->> @@ -0,0 +1,636 @@
-> [...]
->> +       ctx->membase = devm_platform_ioremap_resource(pdev, 0);
->> +       if (IS_ERR(ctx->membase))
->> +               return PTR_ERR(ctx->membase);
->> +
->> +       ctx->np = np;
->> +       ctx->dev = dev;
->> +       spin_lock_init(&ctx->lock);
->> +
->> +       ret = lgm_clk_register_plls(ctx, lgm_pll_clks,
->> +                                   ARRAY_SIZE(lgm_pll_clks));
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = lgm_clk_register_branches(ctx, lgm_branch_clks,
->> +                                       ARRAY_SIZE(lgm_branch_clks));
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = lgm_clk_register_ddiv(ctx, lgm_ddiv_clks,
->> +                                   ARRAY_SIZE(lgm_ddiv_clks));
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
->> +                                         &ctx->clk_data);
->> +       if (ret)
->> +               return ret;
-> Are any of the clks unregistered on failure? It looks like devm_ isn't
-> used for registration so nothing can be undone? Please fix this in a
-> future patch.
-
-Thanks a lot for accepting the patch series. I went through all of your
-comments and i agree with all of them. Will fix it & address other
-review concerns in a future patch once 5.8 is released.
-
-Regards,
-Rahul
-
+-- 
+viresh
