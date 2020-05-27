@@ -2,98 +2,95 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C571C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45461C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5563920873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2982920899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgE0M7j convert rfc822-to-8bit (ORCPT
+        id S1730212AbgE0NAB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:59:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:25391 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730045AbgE0M7j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:59:39 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-198-qX9oc7T4N0KznTx0LSTJKg-1; Wed, 27 May 2020 13:59:35 +0100
-X-MC-Unique: qX9oc7T4N0KznTx0LSTJKg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 27 May 2020 13:59:35 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 27 May 2020 13:59:35 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "'kan.liang@linux.intel.com'" <kan.liang@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
- events on some TGL
-Thread-Topic: [PATCH] perf/x86/intel/uncore: Fix oops when counting IMC uncore
- events on some TGL
-Thread-Index: AQHWNCLukMKeXYb1T0G/ZA+cFsVVx6i75DXQ
-Date:   Wed, 27 May 2020 12:59:35 +0000
-Message-ID: <869fafc80da84d188678c1cbb0267a0b@AcuMS.aculab.com>
-References: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
-In-Reply-To: <1590582647-90675-1-git-send-email-kan.liang@linux.intel.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
+        Wed, 27 May 2020 09:00:01 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2150 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730045AbgE0NAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:00:01 -0400
+Received: from DGGEML403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 6274EA3AC46CB98C2FC5;
+        Wed, 27 May 2020 20:59:58 +0800 (CST)
+Received: from DGGEML523-MBX.china.huawei.com ([169.254.4.221]) by
+ DGGEML403-HUB.china.huawei.com ([fe80::74d9:c659:fbec:21fa%31]) with mapi id
+ 14.03.0487.000; Wed, 27 May 2020 20:59:52 +0800
+From:   Fengtiantian <fengtiantian@huawei.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING [GENERAL" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        "Jiri Pirko" <jiri@mellanox.com>, Arnd Bergmann <arnd@arndb.de>,
+        Hadar Hen Zion <hadarh@mellanox.com>
+CC:     "Huangweidong (C)" <weidong.huang@huawei.com>,
+        yuehaibing <yuehaibing@huawei.com>
+Subject: [patch] flow_dissector:  Fix wrong vlan header offset in
+ __skb_flow_dissect
+Thread-Topic: [patch] flow_dissector:  Fix wrong vlan header offset in
+ __skb_flow_dissect
+Thread-Index: AdY0IeXHJXIXgx+ATVmoGwihjqqNXQ==
+Date:   Wed, 27 May 2020 12:59:52 +0000
+Message-ID: <2A6E6328DF026B458DBF90B38941F981871A42F1@DGGEML523-MBX.china.huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
+x-originating-ip: [10.174.149.160]
+Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kan.liang@linux.intel.com
-> Sent: 27 May 2020 13:31
-> 
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> When counting IMC uncore events on some TGL machines, an oops will be
-> triggered.
->   [ 393.101262] BUG: unable to handle page fault for address:
->   ffffb45200e15858
->   [ 393.101269] #PF: supervisor read access in kernel mode
->   [ 393.101271] #PF: error_code(0x0000) - not-present page
-> 
-> Current perf uncore driver still use the IMC MAP SIZE inherited from
-> SNB, which is 0x6000.
-> However, the offset of IMC uncore counters for some TGL machines is
-> larger than 0x6000, e.g. 0xd8a0.
-> 
-> Enlarge the IMC MAP SIZE for TGL to 0xe000.
+We use the openvswitch 2.7.0 and find the issue when ovs use the skb_get_hash() to get the hash of QinQ skb. Because the
+__skb_flow_dissect() get the wrong vlan protocol headers.
 
-Replacing one 'random' constant with a different one
-doesn't seem like a proper fix.
+Someone report bonding driver has the same issue use the
+__skb_flow_dissect() to count hash in bond_xmit_hash:
+https://lore.kernel.org/netdev/00a5d09f-a23e-661f-60c0-
+75fba6227451@huawei.com/T/.
 
-Surely the actual bounds of the 'memory' area are properly
-defined somewhere.
-Or at least should come from a table.
+Because in netif_receive_skb, the skb_network_header points to vlan head, but in dev_hard_start_xmit, the skb_network_header points to IP header. So use the skb_network_offset to get the vlan head is not reliable.
 
-You also need to verify that the offsets are within the mapped area.
-An unexpected offset shouldn't try to access an invalid address.
+Should we use the skb_mac_offset instead the skb_network_offset to get the vlan head when proto is ETH_P_8021AD or ETH_P_8021Q?
 
-	David
+Signed-off-by: Feng tiantian <fengtiantian@huawei.com>
+---
+ net/core/flow_dissector.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/net/core/flow_dissector.c b/net/core/flow_dissector.c index 415b95f..9a77d5d 100644
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -629,6 +629,13 @@ bool __skb_flow_dissect(const struct sk_buff *skb,
+ 			 skb->vlan_proto : skb->protocol;
+ 		nhoff = skb_network_offset(skb);
+ 		hlen = skb_headlen(skb);
++
++		if (proto == htons(ETH_P_8021AD) ||
++		    proto == htons(ETH_P_8021Q)) {
++			if (skb_mac_header_was_set(skb))
++				nhoff = skb_mac_offset(skb) + ETH_HLEN;
++		}
++
+ #if IS_ENABLED(CONFIG_NET_DSA)
+ 		if (unlikely(skb->dev && netdev_uses_dsa(skb->dev))) {
+ 			const struct dsa_device_ops *ops;
+--
+1.8.3.1
 
