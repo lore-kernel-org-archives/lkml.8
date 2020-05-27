@@ -2,135 +2,176 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F42EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26252C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26C5F2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056372071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="RfxEKl4S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVgewBZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgE0Ap4 (ORCPT
+        id S1727058AbgE0AtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 20:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58410 "EHLO
+        Tue, 26 May 2020 20:49:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgE0Apz (ORCPT
+        with ESMTP id S1726930AbgE0AtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 20:45:55 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F728C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:45:54 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id q18so1259300ilm.5
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 17:45:54 -0700 (PDT)
+        Tue, 26 May 2020 20:49:06 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFF5C061A0F;
+        Tue, 26 May 2020 17:49:06 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id a13so9421456pls.8;
+        Tue, 26 May 2020 17:49:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9L32LrOiBXF6bXFupNUcwgJzSfa5T/4eeicVRJznq9g=;
-        b=RfxEKl4S5Nrey6QjkVoYE6kTG9L0EapEyutjKAA7lpx3sf0mr2kX1vlYTGGf4A1iYw
-         /SWnSVp0aEmK5+VP7LRG/wvKc/1koLnTQK4vagFWY3+V7qAzImkofEXMQFE5X5WNrD0B
-         OCf+tlKwfCdrOhX5bWmSI8be/Oi75UIGZ4p0k=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q/JlVkIYtOH22Thby0LCK8W0UIVx5wzKW2ljCTmFrvY=;
+        b=OVgewBZMqLqx04vVNrWds7PmRoUIVOv+xHXyvWSIiIbGC+YwfZC7X6NVCuT5K1Asb1
+         HE929zmNDgh0Qkmgz/Jzx2oq0uP6lKIY1yBNTaS0Ztph/StvXi++sToegBHxx+Mh/qfS
+         pUsjuKHdfpOSJn28kuOr+a5ygYhL0xGrAfVLHNz+xw9ZYwfohwpHA2zwmhYdySIdzDDC
+         IrhOi6M3hIeSlY7UOxwTr5gRotCVmgrSyOsSCHMPu2336P6Ylk1Fnts++wQY+vwSVGtc
+         ok+P9eVxw4+6WHW6O0LYdbP40rNyxJyc04FlqaMxKX8ahQiE8yUPxASNRcsiBLUhZQAq
+         xtCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9L32LrOiBXF6bXFupNUcwgJzSfa5T/4eeicVRJznq9g=;
-        b=GbhySXnwx8S+myRVSQCNrn3fVqJH5j3VL3dchJDsmBpGO6Un2HeCyfj6Scwd+qXCqe
-         FOzoVftUtbgFqui897mriMdOJlL/D5hfgs6NC1NhBq9Ug7anuPO1T+QS4Igxf2xabxct
-         x2TVngh3RbMmNXXYsInXmqPRLc+KyzniYtTXns+pMDP2kE9mg0GWyKIa5iJM9UMvQ3Yb
-         vsU8T6ekBsw5wNlpWgRHuRaz/2opUG6ci+/09ieOeNs2O7MygrDhndk++8Y/MDskmht2
-         NB0T96q7dQIkW+Rxa033MGG4872tmAw/o+6mc//RPPD9zSvIpCw+xcfSCviOFKwMLfvr
-         /2jA==
-X-Gm-Message-State: AOAM530YwxwCYoVV9qpsUp1BOWy5GLOsbZbUD8A+9gRJ9aZX0U39UUfu
-        BI53XGndJBJSdUaeDKmgZEKs3U8MpPSFr9DlGTDCuw==
-X-Google-Smtp-Source: ABdhPJzGIA2LA2CFbvmxCeUvL+D2ipzLAj4zWcXU9JQ8u77hC93G5sTj3+nOgeshyNpJaxgJlVkKzmaBwVsfiYqqwm8=
-X-Received: by 2002:a92:8b43:: with SMTP id i64mr3829836ild.171.1590540353847;
- Tue, 26 May 2020 17:45:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q/JlVkIYtOH22Thby0LCK8W0UIVx5wzKW2ljCTmFrvY=;
+        b=YW3DBPbFy2WzTKNDbHcFgWplFhNp0kdaZWIKk2FFTBarrYZ5a1Az5Iyie4Z/f2lU8O
+         IUy2m6CCIZrO++/g6QaA08YS/9G5lYjgoq3CzVnh4uUoMfk0xWgbyjGXnGlP05EDYRtI
+         /BIN855ZvLw7ugdf9us3FRsjSHN6YKjwiJ554DhB4rgrxeiKZMufrgxlaWTIHuhhNTqJ
+         jRwVrrxmpKBUDD0c8KmZvfWnuG3xc0r4h/dA4YnUOrVbKOymdd2+lswkIuYb02q/lRWq
+         J0qU6lNoGKi2On2ikOSCR37T0JkRkw+LHk+NkJ5rZGLbuhyM79tq5HZ68w1bVcebxn/j
+         pbbg==
+X-Gm-Message-State: AOAM533Ms6gUramo+1advAMI8I+cq8PPfLpq0QB4JXvL66DK9R6q6Xsg
+        Vd9IwPF10D2V7o2t1pPCdbM=
+X-Google-Smtp-Source: ABdhPJzbIAE1tc8zindTkUItJkLL8VLCvoWaN1PuG6Cmc9mLiASRCnu8+8azTqHTQ9J1JgY60oTIUw==
+X-Received: by 2002:a17:90a:c584:: with SMTP id l4mr1939961pjt.195.1590540546018;
+        Tue, 26 May 2020 17:49:06 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:726d])
+        by smtp.gmail.com with ESMTPSA id gt10sm583281pjb.30.2020.05.26.17.49.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 May 2020 17:49:05 -0700 (PDT)
+Date:   Tue, 26 May 2020 17:49:02 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Florent Revest <revest@chromium.org>
+Subject: Re: [PATCH bpf-next 2/4] bpf: Implement bpf_local_storage for inodes
+Message-ID: <20200527004902.lo6c2efv5vix5nqq@ast-mbp.dhcp.thefacebook.com>
+References: <20200526163336.63653-1-kpsingh@chromium.org>
+ <20200526163336.63653-3-kpsingh@chromium.org>
 MIME-Version: 1.0
-References: <20200513164714.22557-1-frederic@kernel.org> <20200513164714.22557-2-frederic@kernel.org>
- <20200520122949.GB16672@google.com> <20200522175739.GM2869@paulmck-ThinkPad-P72>
- <20200526152137.GB76276@google.com> <20200526162946.GK2869@paulmck-ThinkPad-P72>
- <20200526201840.GC76276@google.com> <20200526210947.GP2869@paulmck-ThinkPad-P72>
- <20200526212756.GF76276@google.com> <20200526222900.GQ2869@paulmck-ThinkPad-P72>
-In-Reply-To: <20200526222900.GQ2869@paulmck-ThinkPad-P72>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 26 May 2020 20:45:42 -0400
-Message-ID: <CAEXW_YSvdJYGL2fKwsMK3nL+AHVzip8g+GMEPjM69ARBq=+8TQ@mail.gmail.com>
-Subject: Re: [PATCH 01/10] rcu: Directly lock rdp->nocb_lock on nocb code entrypoints
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Frederic Weisbecker <frederic@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526163336.63653-3-kpsingh@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Tue, May 26, 2020 at 06:33:34PM +0200, KP Singh wrote:
+>  
+> +static struct bpf_local_storage_data *inode_storage_update(
+> +	struct inode *inode, struct bpf_map *map, void *value, u64 map_flags)
+> +{
+> +	struct bpf_local_storage_data *old_sdata = NULL;
+> +	struct bpf_local_storage_elem *selem;
+> +	struct bpf_local_storage *local_storage;
+> +	struct bpf_local_storage_map *smap;
+> +	int err;
+> +
+> +	err = check_update_flags(map, map_flags);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	smap = (struct bpf_local_storage_map *)map;
+> +	local_storage = rcu_dereference(inode->inode_bpf_storage);
+> +
+> +	if (!local_storage || hlist_empty(&local_storage->list)) {
+> +		/* Very first elem for this inode */
+> +		err = check_flags(NULL, map_flags);
+> +		if (err)
+> +			return ERR_PTR(err);
+> +
+> +		selem = selem_alloc(smap, value);
+> +		if (!selem)
+> +			return ERR_PTR(-ENOMEM);
+> +
+> +		err = inode_storage_alloc(inode, smap, selem);
 
-On Tue, May 26, 2020 at 6:29 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Tue, May 26, 2020 at 05:27:56PM -0400, Joel Fernandes wrote:
-> > On Tue, May 26, 2020 at 02:09:47PM -0700, Paul E. McKenney wrote:
-> > [...]
-> > > > > > BTW, I'm really itching to give it a try to make the scheduler more deadlock
-> > > > > > resilient (that is, if the scheduler wake up path detects a deadlock, then it
-> > > > > > defers the wake up using timers, or irq_work on its own instead of passing
-> > > > > > the burden of doing so to the callers). Thoughts?
-> > > > >
-> > > > > I have used similar approaches within RCU, but on the other hand the
-> > > > > scheduler often has tighter latency constraints than RCU does.  So I
-> > > > > think that is a better question for the scheduler maintainers than it
-> > > > > is for me.  ;-)
-> > > >
-> > > > Ok, it definitely keeps coming up in my radar first with the
-> > > > rcu_read_unlock_special() stuff, and now the nocb ;-). Perhaps it could also
-> > > > be good for a conference discussion!
-> > >
-> > > Again, please understand that RCU has way looser latency constraints
-> > > than the scheduler does.  Adding half a jiffy to wakeup latency might
-> > > not go over well, especially in the real-time application area.
-> >
-> > Yeah, agreed that the "deadlock detection" code should be pretty light weight
-> > if/when it is written.
->
-> In addition, to even stand a chance, you would need to use hrtimers.
-> The half-jiffy (at a minimum) delay from any other deferral mechanism
-> that I know of would be the kiss of death, especially from the viewpoint
-> of the real-time guys.
+inode_storage_update looks like big copy-paste except above one line.
+pls consolidate.
 
-Just to make sure we are talking about the same kind of overhead - the
-deferring is only needed if the rq lock is already held (detected by
-trylocking). So there's no overhead in the common case other than the
-trylock possibly being slightly more expensive than the regular
-locking. Also, once the scheduler defers it, it uses the same kind of
-mechanism that other deferral mechanisms use to overcome this deadlock
-(timers, irq_work etc), so the overhead then would be no different
-than what he have now - the RT users would already have the wake up
-latency in current kernels without this idea implemented. Did I miss
-something?
+> +BPF_CALL_4(bpf_inode_storage_get, struct bpf_map *, map, struct inode *, inode,
+> +	   void *, value, u64, flags)
+> +{
+> +	struct bpf_local_storage_data *sdata;
+> +
+> +	if (flags > BPF_LOCAL_STORAGE_GET_F_CREATE)
+> +		return (unsigned long)NULL;
+> +
+> +	sdata = inode_storage_lookup(inode, map, true);
+> +	if (sdata)
+> +		return (unsigned long)sdata->data;
+> +
+> +	if (flags == BPF_LOCAL_STORAGE_GET_F_CREATE &&
+> +	    atomic_inc_not_zero(&inode->i_count)) {
+> +		sdata = inode_storage_update(inode, map, value, BPF_NOEXIST);
+> +		iput(inode);
+> +		return IS_ERR(sdata) ?
+> +			(unsigned long)NULL : (unsigned long)sdata->data;
+> +	}
 
-> > > But what did the scheduler maintainers say about this idea?
-> >
-> > Last I remember when it came up during the rcu_read_unlock_special() deadlock
-> > discussions, there's no way to know for infra like RCU to know that it was
-> > invoked from the scheduler.
-> >
-> > The idea I am bringing up now (about the scheduler itself detecting a
-> > recursion) was never brought up (not yet) with the sched maintainers (at
-> > least not by me).
->
-> It might be good to bounce if off of them sooner rather than later.
+This is wrong. You cannot just copy paste the refcounting logic
+from bpf_sk_storage_get(). sk->sk_refcnt is very different from inode->i_count.
+To start, the inode->i_count cannot be incremented without lock.
+If you really need to do it you need igrab().
+Secondly, the iput() is not possible to call from bpf prog yet, since
+progs are not sleepable and iput() may call iput_final() which may sleep.
+But considering that only lsm progs from lsm hooks will call bpf_inode_storage_get()
+the inode is not going to disappear while this function is running.
+So why touch i_count ?
 
-Ok, I did that now over IRC. Thank you!
+> +
+> +	return (unsigned long)NULL;
+> +}
+> +
+>  BPF_CALL_2(bpf_sk_storage_delete, struct bpf_map *, map, struct sock *, sk)
+>  {
+>  	if (refcount_inc_not_zero(&sk->sk_refcnt)) {
+> @@ -957,6 +1229,20 @@ BPF_CALL_2(bpf_sk_storage_delete, struct bpf_map *, map, struct sock *, sk)
+>  	return -ENOENT;
+>  }
+>  
+> +BPF_CALL_2(bpf_inode_storage_delete,
+> +	   struct bpf_map *, map, struct inode *, inode)
+> +{
+> +	int err;
+> +
+> +	if (atomic_inc_not_zero(&inode->i_count)) {
+> +		err = inode_storage_delete(inode, map);
+> +		iput(inode);
+> +		return err;
+> +	}
 
- - Joel
+ditto.
+
+> +
+> +	return inode_storage_delete(inode, map);
+
+bad copy-paste from bpf_sk_storage_delete?
+or what is this logic suppose to do?
