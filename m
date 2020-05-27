@@ -2,122 +2,111 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A792C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AADD2071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590542417;
-	bh=Y2hJCLCBwkSADf92oH6yDmNeL+/nNeVF3o3fUGCT59g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=brM4bx/Oj8VrexHEDvB7NdMNqiTbLf6CTDy/DIHG9b2tTQNPT59g7CJ1zTGAiLNtR
-	 9a2nSLUjUf6vmI4jpFX+ChkvkZBkx1hzzjdEBq4iQlkd9wwo2Sf6UPNqosW1ecvzvL
-	 cda2/aSbcPLkVq71GsYg8jmMNVnIg4ou04j+KDAw=
+	by mail.kernel.org (Postfix) with ESMTP id 5222B20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgE0BUQ (ORCPT
+        id S1728331AbgE0BUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:20:16 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:33146 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgE0BUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:20:16 -0400
-Received: by mail-il1-f193.google.com with SMTP id y17so20241038ilg.0;
-        Tue, 26 May 2020 18:20:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=effDvO19Bc+fjZS0vPWPfjiwZviY7P6mmpKeeJGhBDk=;
-        b=h9xaxlHTQ7oGkK2v9WXFCdZgEtjBB/7+oJJwc7vFKTe0bN1iYS0tcixRR9HzU/jmGF
-         cV5G75FeA3zcJ89WaFUVHtVvHbwZvy5+JbRKu4/TljzUURWc36KYF0QZKtyeWGk+P/F9
-         iB5citzH6QKDeVD7WfOnmBQajs00EGWgC1SdOQsUJ/70XCYcioQE82lqmgMP4gLP/pCv
-         1LptBm2dHQyGzG4WpS+xytcHLjdfNAuWq8ztE9BmJ2IfCfD6a6jyhb1VjntfVpy6yLJk
-         uQ4uszndu98MF6agpAN2VyJ226g9TvB7sy7hY3VZktZcQUFUPReX/VJ1KyhTn0czMoF5
-         zr+g==
-X-Gm-Message-State: AOAM532e0rAGhsqlgqFIueEfVbV9bIHlnfoPNAh6IuIIlqhCMjNLvy+v
-        2XB1y1pwGmpgl/hz16eEYg==
-X-Google-Smtp-Source: ABdhPJy4vTUVR47jxAW9SHk3Dr8bCUQFumiwyInbGQwJ8XPeCeH2qbcTmW7wNTRDS7V/Cq49xG0XuA==
-X-Received: by 2002:a92:39d2:: with SMTP id h79mr3720593ilf.74.1590542415023;
-        Tue, 26 May 2020 18:20:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z82sm842304ilk.75.2020.05.26.18.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 18:20:14 -0700 (PDT)
-Received: (nullmailer pid 822583 invoked by uid 1000);
-        Wed, 27 May 2020 01:20:13 -0000
-Date:   Tue, 26 May 2020 19:20:13 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        devicetree@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-Subject: Re: [PATCH v3 02/12] dt-bindings: i2c: Convert DW I2C binding to DT
- schema
-Message-ID: <20200527012013.GA822473@bogus>
-References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
- <20200526215528.16417-3-Sergey.Semin@baikalelectronics.ru>
+        Tue, 26 May 2020 21:20:40 -0400
+Received: from mga12.intel.com ([192.55.52.136]:59234 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728091AbgE0BUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:20:40 -0400
+IronPort-SDR: 1f4YdQ4VlHL0Fm1WvCVAy9XQM34TV/O/QL+y0ggY314UXOTTxsObtlPThQ/Gyq/FyBCkSap84G
+ JecNyt/elz2g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 18:20:39 -0700
+IronPort-SDR: hAgKyeHCBaFhOYSPZW0fwxys3UDsqclGl4hXiFIOO7DrqSJhToN67IjLjQm7c8NATQDqRem89r
+ RDKbgQc8R51g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
+   d="scan'208";a="266664018"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 26 May 2020 18:20:39 -0700
+Date:   Tue, 26 May 2020 18:20:39 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tao Xu <tao3.xu@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jingqi Liu <jingqi.liu@intel.com>
+Subject: Re: [PATCH 1/2] kvm/x86/vmx: enable X86_FEATURE_WAITPKG in KVM
+ capabilities
+Message-ID: <20200527012039.GC31696@linux.intel.com>
+References: <20200523161455.3940-1-mlevitsk@redhat.com>
+ <20200523161455.3940-2-mlevitsk@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526215528.16417-3-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200523161455.3940-2-mlevitsk@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 00:55:18 +0300, Serge Semin wrote:
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with dt-schema. This commit replaces Synopsys DW I2C
-> legacy bare text bindings with YAML file. As before the bindings file
-> states that the corresponding dts node is supposed to be compatible
-> either with generic DW I2C controller or with Microsemi Ocelot SoC I2C
-> one, to have registers, interrupts and clocks properties. In addition
-> the node may have clock-frequency, i2c-sda-hold-time-ns,
-> i2c-scl-falling-time-ns and i2c-sda-falling-time-ns optional properties.
+On Sat, May 23, 2020 at 07:14:54PM +0300, Maxim Levitsky wrote:
+> Even though we might not allow the guest to use
+> WAITPKG's new instructions, we should tell KVM
+> that the feature is supported by the host CPU.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Cc: linux-mips@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v2:
-> - Make sure that "mscc,ocelot-i2c" compatible node may have up to two
->   registers space defined, while normal DW I2C controller will have only
->   one registers space.
-> - Add "mscc,ocelot-i2c" example to test the previous fix.
-> - Declare "unevaluatedProperties" property instead of
->   "additionalProperties" one.
-> - Due to the previous fix we can now discard the dummy boolean properties
->   definitions, since the proper type evaluation will be performed by the
->   generic i2c-controller.yaml schema.
-> 
-> Changelog v3:
-> - Discard $ref from the "-ns" suffixed properties since they've got the
->   uint32-array type by default applied in the common schema. Set "maxItems: 1"
->   there instead to make sure the property will have a single value specified.
-> ---
->  .../bindings/i2c/i2c-designware.txt           |  73 ---------
->  .../bindings/i2c/snps,designware-i2c.yaml     | 154 ++++++++++++++++++
->  2 files changed, 154 insertions(+), 73 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> 
+> Note that vmx_waitpkg_supported checks that WAITPKG
+> _can_ be set in secondary execution controls as specified
+> by VMX capability MSR, rather that we actually enable it for a guest.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+These line wraps are quite weird and inconsistent.
+
+> 
+> Fixes: e69e72faa3a0 KVM: x86: Add support for user wait instructions
+
+Checkpatch doesn't complain,  but the preferred Fixes format is
+
+  Fixes: e69e72faa3a07 ("KVM: x86: Add support for user wait instructions")
+
+e.g.
+
+  git show -s --pretty='tformat:%h ("%s")'
+
+For the code itself:
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 55712dd86bafa..fca493d4517c5 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7298,6 +7298,9 @@ static __init void vmx_set_cpu_caps(void)
+>  	/* CPUID 0x80000001 */
+>  	if (!cpu_has_vmx_rdtscp())
+>  		kvm_cpu_cap_clear(X86_FEATURE_RDTSCP);
+> +
+> +	if (vmx_waitpkg_supported())
+> +		kvm_cpu_cap_check_and_set(X86_FEATURE_WAITPKG);
+>  }
+>  
+>  static void vmx_request_immediate_exit(struct kvm_vcpu *vcpu)
+> -- 
+> 2.26.2
+> 
