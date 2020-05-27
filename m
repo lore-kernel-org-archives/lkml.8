@@ -2,117 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F895C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB5A20787
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:46:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mgUTrkfi"
+	by mail.kernel.org (Postfix) with ESMTP id 8D86F20787
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgE0Cqu (ORCPT
+        id S1728222AbgE0CrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:46:50 -0400
-Received: from mail-m975.mail.163.com ([123.126.97.5]:37164 "EHLO
-        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgE0Cqu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:46:50 -0400
-X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Tue, 26 May 2020 22:46:48 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=BNEza
-        90c9rHb4GPPlGnzAcd3ROqRnWYmmv4MpZD8lx0=; b=mgUTrkfi2X/SeH3LH+hyj
-        e6vrWkhVxadSh3GyZEmyJjYmm4bxrBTKrdwUkfKwXjbh+pOBauGIkNobgv2UsBk7
-        EosmrrVZ2tpCUipJ6IYPLKBHOIjHld+m9rMbzEpRChP/saw6oRPopkbk59EGcwjD
-        bO7VuKsp68IcmVrVhg+mmA=
-Received: from [172.20.10.2] (unknown [124.64.17.235])
-        by smtp5 (Coremail) with SMTP id HdxpCgA3SlDz0M1esmokAQ--.63S2;
-        Wed, 27 May 2020 10:31:29 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Fix IRQ tracing when call handle_fpe()
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     paulburton@kernel.org, chenhc@lemote.com,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liulichao@loongson.cn
-References: <20200525033123.13114-1-yuanjunqing66@163.com>
- <20200525084234.GA5057@alpha.franken.de>
- <76f2c756-0ae4-83f5-becf-6f1b3319f6fd@163.com>
- <20200526130441.GB8487@alpha.franken.de>
-From:   yuanjunqing <yuanjunqing66@163.com>
-Message-ID: <802d9731-9ac9-6f97-fe6d-c815bdcc0684@163.com>
-Date:   Wed, 27 May 2020 10:31:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200526130441.GB8487@alpha.franken.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID: HdxpCgA3SlDz0M1esmokAQ--.63S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7CFy3AFy5tFy7CrWrWryfWFg_yoW8WFyxp3
-        yUC3Z5KF4qgFWjyr429wn5JrW5Kw4ktrW5uFs5tay3Xas8WFs3tF4Iqw4Y9F929r48GF4f
-        KF1jqa4a9F43AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jGGQDUUUUU=
-X-Originating-IP: [124.64.17.235]
-X-CM-SenderInfo: h1xd0ypxqtx0rjwwqiywtou0bp/xtbBUQExXFaD7PbL0QAAso
+        Tue, 26 May 2020 22:47:23 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:62720 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725948AbgE0CrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:47:23 -0400
+Received: from localhost.localdomain (unknown [222.205.60.151])
+        by mail-app2 (Coremail) with SMTP id by_KCgC3fuyB1M1e7XMdAA--.25698S4;
+        Wed, 27 May 2020 10:46:29 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: wm8962: Fix runtime PM imbalance on error
+Date:   Wed, 27 May 2020 10:46:22 +0800
+Message-Id: <20200527024625.9937-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgC3fuyB1M1e7XMdAA--.25698S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKrWrZF15CFyUGr4xXF1UKFg_yoWDZFX_Gr
+        s8u39FvwsxKrW7XrZrXa1YvrZ3ZF9rCF1UKF4vvF17AFWjvFs5Jry8Ars5CrWxWw48Z3Wa
+        q3ZI9FyxArWqkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2xKxwCY02Avz4vE
+        14v_Gr1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJbIYCTnIWIevJa73UjIFyTuYvjfUO_MaUUUUU
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0MBlZdtOUT6wAKst
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-yes, I will re-send email for this patch.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-在 2020/5/26 下午9:04, Thomas Bogendoerfer 写道:
-> On Tue, May 26, 2020 at 03:07:16PM +0800, yuanjunqing wrote:
->> 在 2020/5/25 下午4:42, Thomas Bogendoerfer 写道:
->>> On Mon, May 25, 2020 at 11:31:23AM +0800, YuanJunQing wrote:
->>>>  Register "a1" is unsaved in this function,
->>>>  when CONFIG_TRACE_IRQFLAGS is enabled,
->>>>  the TRACE_IRQS_OFF macro will call trace_hardirqs_off(),
->>>>  and this may change register "a1".
->>>>  The variment of register "a1" may send SIGFPE signal
->>>>  to task when call do_fpe(),and this may kill the task.
->>>>
->>>> Signed-off-by: YuanJunQing <yuanjunqing66@163.com>
->>>> ---
->>>>  arch/mips/kernel/genex.S | 6 ++++--
->>>>  1 file changed, 4 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/mips/kernel/genex.S b/arch/mips/kernel/genex.S
->>>> index 8236fb291e3f..956a76429773 100644
->>>> --- a/arch/mips/kernel/genex.S
->>>> +++ b/arch/mips/kernel/genex.S
->>>> @@ -480,16 +480,18 @@ NESTED(nmi_handler, PT_SIZE, sp)
->>>>  	/* gas fails to assemble cfc1 for some archs (octeon).*/ \
->>>>  	.set	mips1
->>>>  	SET_HARDFLOAT
->>>> -	cfc1	a1, fcr31
->>>> +	cfc1	s0, fcr31
->>>>  	.set	pop
->>>>  	CLI
->>>>  	TRACE_IRQS_OFF
->>>> +	move    a1,s0
->>>>  	.endm
->>> do we realy need to read fcr31 that early ? Wouldn't it work to
->>> just move the cfc1 below TRACE_IRQS_OFF ?
->>>
->>  yes, it can work when we just move the cfc1 below TRACE_IRQS_OFF,
->>  and the code is written as follows.
->>
->>  	CLI
->>  	TRACE_IRQS_OFF
->>  	.set	mips1
->>  	SET_HARDFLOAT
->> 	cfc1	a1, fcr31
->>  	.set	pop
->>        .endm
-> good, could we do the same with _cfcmsa	a1, MSA_CSR in the msa case ?
->
-> Thomas.
->
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ sound/soc/codecs/wm8962.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index d9d59f45833f..bb806b195d10 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2881,6 +2881,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+ 
+ 	ret = pm_runtime_get_sync(component->dev);
+ 	if (ret < 0) {
++		pm_runtime_put_noidle(component->dev);
+ 		dev_err(component->dev, "Failed to resume device: %d\n", ret);
+ 		return ret;
+ 	}
+@@ -3013,6 +3014,7 @@ static irqreturn_t wm8962_irq(int irq, void *data)
+ 
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
++		pm_runtime_put_noidle(dev);
+ 		dev_err(dev, "Failed to resume: %d\n", ret);
+ 		return IRQ_NONE;
+ 	}
+-- 
+2.17.1
 
