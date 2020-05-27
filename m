@@ -2,192 +2,164 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DE1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99937C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FA9420899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811CF208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590606736;
+	bh=hlQl/x2jvrjp/1keBpISAGM26d0xgeTYrKjSpkurpCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bFtUsAXeLg16L0cRUA0BbX5pbv1FG1SsztD310ywk0SVA7sEYYrK93lebKHGqLQrt
+	 2hPu2f7CiMcyw97znNdq5ApA1E2FdBP9BlfpwzRKHvBGEg1aIxxWyKHFw6lqG+cJ8X
+	 z7J54ujSfOPweu/sHOtAXJvSXu+vEJ3MTkWAb1/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbgE0TLh (ORCPT
+        id S1729137AbgE0TMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:11:37 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42573 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbgE0TLg (ORCPT
+        Wed, 27 May 2020 15:12:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35131 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgE0TMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:11:36 -0400
-Received: by mail-ot1-f65.google.com with SMTP id z3so432194otp.9;
-        Wed, 27 May 2020 12:11:33 -0700 (PDT)
+        Wed, 27 May 2020 15:12:15 -0400
+Received: by mail-io1-f65.google.com with SMTP id s18so13374729ioe.2;
+        Wed, 27 May 2020 12:12:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4UwtHfFWMV3qXkAccsrvoTcDY714sRSlKD/SKxmCGLI=;
-        b=orHWAhzFEq2xuFBRzFpSWV3D3/l5vA0oRh+e+8RJwsNA1bi8cpHpAwuom2OkV1yxNA
-         WI8+eDGTFxef0fu297EH00FLjaHeXgpAEiMFLoBBwWaORchMH1qqlojDcP5ydGXnDJvc
-         4tGJyFt/Ypo/eV8LEU40LrdJwvTgC+wea8lqtL0Cu95pp0cVN9+8W7CYwZAjJj4oUFb6
-         S+Oe0HwNpzBPTWO6kNXj6xw+iBA+ZDE7fTxxycMJwIQO2c/1Gw2Pcvv7RRb8bFXwO1Bt
-         qPK3kq7/pU3kGFxT99i4InspNAo16NHfC5uCd+DRSeQeMOhsV6szH+1m6ZWvoRO/dRPU
-         cSIw==
-X-Gm-Message-State: AOAM532T35zjsoISHaAOSU4+iTmDMro7M8LcgRlBC4ywk/mV8GGTvdKZ
-        kbMH8hyM79fq4TE1bCBdqPHGU53Z6NK1/DRGZwCaTl6D
-X-Google-Smtp-Source: ABdhPJyaTY5wjUliK9I6+q6c1jUR+OXiSOkM1Fh8CT5hi9v2ptJfVs6ZM+h9VJBPlQ5EQfM4ZGhEnLDpf9oAtnvb47c=
-X-Received: by 2002:a05:6830:18d9:: with SMTP id v25mr5412441ote.107.1590606693392;
- Wed, 27 May 2020 12:11:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bcgn8vintUmn/KLNjY166boSuempda8GQiMOp/S9kfA=;
+        b=areBso00ykwIV9rOohsu8RM6rRdm6IxweVOecJl4iOlovX+sC6F5ONKhSTDWTuS3Eg
+         tN0gUAofwKXlTw4picWW8OIdbvPKgSogoCv4U205x9R31ReztGC0qy3d4vxwB6hmq1AC
+         8TUApBUeYqAdiWw9OuLcKj8t7nohuCi+kV+AwgmTwM3FpTNjxwulLipiIj0O1oYUn0f9
+         b07ek0h27YH06gLrKLrlpC6vDVPfBNY/ggMmdv4fYn9ylVv6GMvmuPp6y6zkSjFPPg3Y
+         iaHe/23tu2pxamDoeCyHRcPFsmwVj0Uay8KxJXtCXS20BR40IDkbIpipo8EdNM7lD7ui
+         0d5Q==
+X-Gm-Message-State: AOAM530YU5NCR8NeaYsCuWglZgsyKPGRIxiRDMGtbrT1hhsbFAdoLF7c
+        0zR+khmSucg6dnz2PNi04PDstBM=
+X-Google-Smtp-Source: ABdhPJz3OUlhVOntgWTwiyD9K0iT6Dx6LzGlpf8nvq36l0+6hwUoaK1G46ggh/RhOEPZ+ELiB1RfTQ==
+X-Received: by 2002:a5e:aa14:: with SMTP id s20mr10199282ioe.58.1590606733230;
+        Wed, 27 May 2020 12:12:13 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v15sm2083078ila.57.2020.05.27.12.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 12:12:12 -0700 (PDT)
+Received: (nullmailer pid 2570767 invoked by uid 1000);
+        Wed, 27 May 2020 19:12:11 -0000
+Date:   Wed, 27 May 2020 13:12:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 006/105] dt-bindings: display: Convert VC4 bindings to
+ schemas
+Message-ID: <20200527191211.GA2559189@bogus>
+References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
+ <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
 MIME-Version: 1.0
-References: <20200422072137.8517-1-o.rempel@pengutronix.de>
- <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
- <20200428154718.GA24923@lunn.ch> <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
- <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com> <20200429092616.7ug4kdgdltxowkcs@pengutronix.de>
-In-Reply-To: <20200429092616.7ug4kdgdltxowkcs@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 27 May 2020 21:11:21 +0200
-Message-ID: <CAMuHMdWf1f95ZcOLd=k1rd4WE98T1qh_3YsJteyDGtYm1m_Nfg@mail.gmail.com>
-Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
- the KSZ9031 PHY
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "sergei.shtylyov@cogentembedded.com" 
-        <sergei.shtylyov@cogentembedded.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "david@protonic.nl" <david@protonic.nl>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2dc6384c945c7d35ab4f75464d3a77046dc125b3.1590594512.git-series.maxime@cerno.tech>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksij,
+On Wed, May 27, 2020 at 05:47:36PM +0200, Maxime Ripard wrote:
+> The BCM283x SoCs have a display pipeline composed of several controllers
+> with device tree bindings that are supported by Linux.
+> 
+> Now that we have the DT validation in place, let's split into separate
+> files and convert the device tree bindings for those controllers to
+> schemas.
+> 
+> This is just a 1:1 conversion though, and some bindings were incomplete so
+> it results in example validation warnings that are going to be addressed in
+> the following patches.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> ---
+>  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt              | 174 +------------------------------------------------------------------------
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml         |  66 +++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml        |  73 ++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml        |  75 +++++++++++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml         |  37 +++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml |  40 +++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml         |  37 +++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml         |  42 +++++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml         |  34 ++++++++++++++-
+>  Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml         |  44 ++++++++++++++++++-
+>  MAINTAINERS                                                             |   2 +-
+>  11 files changed, 449 insertions(+), 175 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dpi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hdmi.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-hvs.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-pixelvalve0.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-txp.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-v3d.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vc4.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/brcm,bcm2835-vec.yaml
 
-On Wed, Apr 29, 2020 at 11:26 AM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> On Wed, Apr 29, 2020 at 10:45:35AM +0200, Geert Uytterhoeven wrote:
-> > On Tue, Apr 28, 2020 at 6:16 PM Philippe Schenker
-> > <philippe.schenker@toradex.com> wrote:
-> > > On Tue, 2020-04-28 at 17:47 +0200, Andrew Lunn wrote:
-> > > > On Tue, Apr 28, 2020 at 05:28:30PM +0200, Geert Uytterhoeven wrote:
-> > > > > This triggers on Renesas Salvator-X(S):
-> > > > >
-> > > > >     Micrel KSZ9031 Gigabit PHY e6800000.ethernet-ffffffff:00:
-> > > > > *-skew-ps values should be used only with phy-mode = "rgmii"
-> > > > >
-> > > > > which uses:
-> > > > >
-> > > > >         phy-mode = "rgmii-txid";
-> > > > >
-> > > > > and:
-> > > > >
-> > > > >         rxc-skew-ps = <1500>;
-> > > > >
-> > > > > If I understand Documentation/devicetree/bindings/net/ethernet-
-> > > > > controller.yaml
-> > > > > correctly:
-> > > >
-> > > > Checking for skews which might contradict the PHY-mode is new. I think
-> > > > this is the first PHY driver to do it. So i'm not too surprised it has
-> > > > triggered a warning, or there is contradictory documentation.
-> > > >
-> > > > Your use cases is reasonable. Have the normal transmit delay, and a
-> > > > bit shorted receive delay. So we should allow it. It just makes the
-> > > > validation code more complex :-(
-> > >
-> > > I reviewed Oleksij's patch that introduced this warning. I just want to
-> > > explain our thinking why this is a good thing, but yes maybe we change
-> > > that warning a little bit until it lands in mainline.
-> > >
-> > > The KSZ9031 driver didn't support for proper phy-modes until now as it
-> > > don't have dedicated registers to control tx and rx delays. With
-> > > Oleksij's patch this delay is now done accordingly in skew registers as
-> > > best as possible. If you now also set the rxc-skew-ps registers those
-> > > values you previously set with rgmii-txid or rxid get overwritten.
 
-While I don't claim that the new implementation is incorrect, my biggest
-gripe is that this change breaks existing setups (cfr. Grygorii's report,
-plus see below).  People fine-tuned the parameters in their DTS files
-according to the old driver behavior, and now have to update their DTBs,
-which violates DTB backwards-compatibility rules.
-I know it's ugly, but I'm afraid the only backwards-compatible solution
-is to add a new DT property to indicate if the new rules apply.
+> diff --git a/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+> new file mode 100644
+> index 000000000000..3887675f844e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/brcm,bcm2835-dsi0.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/brcm,bcm2835-dsi0.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom VC4 (VideoCore4) DSI Controller
+> +
+> +maintainers:
+> +  - Eric Anholt <eric@anholt.net>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm2835-dsi0
+> +      - brcm,bcm2835-dsi1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: The DSI PLL clock feeding the DSI analog PHY
+> +      - description: The DSI ESC clock
+> +      - description: The DSI pixel clock
+> +
+> +  clock-output-names: true
+> +    # FIXME: The meta-schemas don't seem to allow it for now
+> +    # items:
+> +    #   - description: The DSI byte clock for the PHY
+> +    #   - description: The DSI DDR2 clock
+> +    #   - description: The DSI DDR clock
 
-> > > We chose the warning to occur on phy-modes 'rgmii-id', 'rgmii-rxid' and
-> > > 'rgmii-txid' as on those, with the 'rxc-skew-ps' value present,
-> > > overwriting skew values could occur and you end up with values you do
-> > > not wanted. We thought, that most of the boards have just 'rgmii' set in
-> > > phy-mode with specific skew-values present.
-> > >
-> > > @Geert if you actually want the PHY to apply RXC and TXC delays just
-> > > insert 'rgmii-id' in your DT and remove those *-skew-ps values. If you
-> >
-> > That seems to work for me, but of course doesn't take into account PCB
-> > routing.
+Doesn't pattern work for you?
 
-Of course I talked too soon.  Both with the existing DTS that triggers
-the warning, and after changing the mode to "rgmii-id", and dropping the
-*-skew-ps values, Ethernet became flaky on R-Car M3-W ES1.0.  While the
-system still boots, it boots very slow.
-Using nuttcp, I discovered TX performance dropped from ca. 400 Mbps to
-0.1-0.3 Mbps, while RX performance looks unaffected.
+pattern: '^dsi[0-1]_byte$'
 
-So I did some more testing:
-  1. Plain "rgmii-txid" and "rgmii" break the network completely, on all
-     R-Car Gen3 platforms,
-  2. "rgmii-id" and "rgmii-rxid" work, but cause slowness on R-Car M3-W,
-  3. "rgmii" with *-skew-ps values that match the old values (default
-     420 for everything, but default 900 for txc-skew-ps, and the 1500
-     override for rxc-skew-ps), behaves exactly the same as "rgmii-id",
-  4. "rgmii-txid" with *-skew-ps values that match the old values does
-work, i.e.
-     adding to arch/arm64/boot/dts/renesas/salvator-common.dtsi:
-     +               rxd0-skew-ps = <420>;
-     +               rxd1-skew-ps = <420>;
-     +               rxd2-skew-ps = <420>;
-     +               rxd3-skew-ps = <420>;
-     +               rxdv-skew-ps = <420>;
-     +               txc-skew-ps = <900>;
-     +               txd0-skew-ps = <420>;
-     +               txd1-skew-ps = <420>;
-     +               txd2-skew-ps = <420>;
-     +               txd3-skew-ps = <420>;
-     +               txen-skew-ps = <420>;
+Either way,
 
-You may wonder what's the difference between 3 and 4? It's not just the
-PHY driver that looks at phy-mode!
-drivers/net/ethernet/renesas/ravb_main.c:ravb_set_delay_mode() also
-does, and configures an additional TX clock delay of 1.8 ns if TXID is
-enabled.  Doing so fixes R-Car M3-W, but doesn't seem to be needed,
-or harm, on R-Car H3 ES2.0 and R-Car M3-N.
-
-> > Using "rgmii" without any skew values makes DHCP fail on R-Car H3 ES2.0,
-> > M3-W (ES1.0), and M3-N (ES1.0). Interestingly, DHCP still works on R-Car
-> > H3 ES1.0.
-
-FTR, the reason R-Car H3 ES1.0 is not affected is that the driver limits
-its maximum speed to 100 Mbps, due to a hardware erratum.
-
-So, how to proceed?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Rob Herring <robh@kernel.org>
