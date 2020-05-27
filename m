@@ -4,91 +4,198 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22336C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4B22071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B7F20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590600880;
-	bh=50/46HbEuZ8ktKy1hUSMZWqMKtiPAlEWhFNa2bVRYAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dtQU2gkbBwcUVzH67YwqnDLw0AHxzLi+IwYDUC+fRO34oTHb+lSSZsYqgNP9m7Ypt
-	 czoRVELWf3t4iUu5d5rJJcNGZsgsiss6dcLQa06XFofc6a3HioNsgHmPajW9+Osuhs
-	 3MCq77+WxpxifOpt7B3lrIq1xqYrRMsV0YBFjrnw=
+	s=default; t=1590600919;
+	bh=R4uYeYb/qGMRhcWjqOb/3pZMJwyktp8m5KLtFgAnSqI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KsQlwj2Ga1/R0EwznIHEPHeoE9lrJFJCLNl5wcbJKHCaxAb1a7M1alReVAsm4Eqdm
+	 EAv6rGf3XnSiaCsWKPJYP1kvn1WLYBNy8x7++HVgwoD0NlpCRzfrFrsvMbX6CGeGPC
+	 P50oxjeyu5UDMWoMJmBRrH/InPv0q2TyrPlyzrKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391127AbgE0Rej (ORCPT
+        id S2391224AbgE0RfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:34:39 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44272 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390984AbgE0Rei (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:34:38 -0400
-Received: by mail-il1-f194.google.com with SMTP id j3so24851554ilk.11;
-        Wed, 27 May 2020 10:34:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=eEGnzOVokk32OQNCpauQqJQNJOfZnAg7FW8OPsQsazA=;
-        b=tgPHJi41241Jl1FnW1D0BwdwAspnveHQ28oeIiJAvAqA2vcuu6BUxUP7jwMaeecpl8
-         uCgIqwvAc3eJK/7FCNsLlojYlUnLExdbufJEs1m4JATERqkaFHvrFNSppbUd0m47bOJy
-         IzIfX1FC9ILCQwyH++vgk8J1BnsU4VwfyXDrXLXh9peg52RrYYv7kmJyq5YjlXT279U5
-         6/CRQyiv9kt5XWvzWkhMi3N835GHKZlSmOaiZu6HWLUinTzrxwqPMsqjfoHpVW2GucFF
-         pbeLWZ+DFdPvFh3BnISaaBDb/1Gn6ZtfCQpRwGWGYXhek48U+8jV90cn1rPbqRPB0Znn
-         PhfQ==
-X-Gm-Message-State: AOAM530UGzH57sY30n3T2eBgxZ7+jIHXJBMYUwd8+KXB9xP04GWGs04h
-        fJF1+trHxdsRY0Jx0TC9L8N6wsQ=
-X-Google-Smtp-Source: ABdhPJwCDC0YrgrZpF5OGosH4URn71w/FGNE+SY/vo39G7m9TPvQq8/pR56Uz7h1o49ErORUBE0HYw==
-X-Received: by 2002:a92:7414:: with SMTP id p20mr7037011ilc.77.1590600877820;
-        Wed, 27 May 2020 10:34:37 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id x8sm1869233ilo.81.2020.05.27.10.34.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 10:34:37 -0700 (PDT)
-Received: (nullmailer pid 2411785 invoked by uid 1000);
-        Wed, 27 May 2020 17:34:36 -0000
-Date:   Wed, 27 May 2020 11:34:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     devicetree@vger.kernel.org, sernia.zhou@foxmail.com,
-        sboyd@kernel.org, zhenwenjin@gmail.com, mturquette@baylibre.com,
-        yanfei.li@ingenic.com, aric.pzqi@ingenic.com, paul@crapouillou.net,
-        dongsheng.qiu@ingenic.com, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, rick.tyliu@ingenic.com,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v11 4/7] dt-bindings: clock: Add X1830 clock bindings.
-Message-ID: <20200527173436.GA2411605@bogus>
-References: <20200527085449.55573-1-zhouyanjie@wanyeetech.com>
- <20200527085449.55573-5-zhouyanjie@wanyeetech.com>
+        Wed, 27 May 2020 13:35:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387837AbgE0RfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:35:17 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DC6820707;
+        Wed, 27 May 2020 17:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590600916;
+        bh=R4uYeYb/qGMRhcWjqOb/3pZMJwyktp8m5KLtFgAnSqI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uVYNj7lZ4xzTSRh+Pg/jNOxxHCwnMGR7S+2bTJsGtFiSO45ERABAF0AfTz6sBajsK
+         0qjzyb34sjtSAxqZfCFNlmq8UpBvZtffOgE6+k/ReIePkfy3iGtwFWWrFDon8YZ2Xu
+         eUyKd3q9+VRT1jSrPxCuWF7+NtoYBOxrYhtrj8ds=
+Date:   Wed, 27 May 2020 10:35:13 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, richardcochran@gmail.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
+        foss@0leil.net
+Subject: Re: [PATCH net-next 5/8] net: phy: mscc: 1588 block initialization
+Message-ID: <20200527103513.05ee36e9@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <20200527164158.313025-6-antoine.tenart@bootlin.com>
+References: <20200527164158.313025-1-antoine.tenart@bootlin.com>
+        <20200527164158.313025-6-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200527085449.55573-5-zhouyanjie@wanyeetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 16:54:46 +0800, 周琰杰 (Zhou Yanjie) wrote:
-> Add the clock bindings for the X1830 Soc from Ingenic.
-> 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
-> 
-> Notes:
->     v11:
->     New patch, split from [3/6] in v10.
-> 
->  include/dt-bindings/clock/x1830-cgu.h | 55 +++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 include/dt-bindings/clock/x1830-cgu.h
-> 
+On Wed, 27 May 2020 18:41:55 +0200 Antoine Tenart wrote:
+> From: Quentin Schulz <quentin.schulz@bootlin.com>
+>=20
+> This patch adds the first parts of the 1588 support in the MSCC PHY,
+> with registers definition and the 1588 block initialization.
+>=20
+> Those PHYs are distributed in hardware packages containing multiple
+> times the PHY. The VSC8584 for example is composed of 4 PHYs. With
+> hardware packages, parts of the logic is usually common and one of the
+> PHY has to be used for some parts of the initialization. Following this
+> logic, the 1588 blocks of those PHYs are shared between two PHYs and
+> accessing the registers has to be done using the "base" PHY of the
+> group. This is handled thanks to helpers in the PTP code (and locks).
+> We also need the MDIO bus lock while performing a single read or write
+> to the 1588 registers as the read/write are composed of multiple MDIO
+> transactions (and we don't want other threads updating the page).
+>=20
+> Co-developed-by: Antoine Tenart <antoine.tenart@bootlin.com>
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+This doesn't build on my system :S
+
+In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+../include/linux/unaligned/be_byteshift.h:41:19: error: redefinition of =C3=
+=A2=E2=82=AC=CB=9Cget_unaligned_be16=C3=A2=E2=82=AC=E2=84=A2
+   41 | static inline u16 get_unaligned_be16(const void *p)
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from ../arch/x86/include/asm/unaligned.h:9,
+                 from ../include/linux/etherdevice.h:24,
+                 from ../include/linux/if_vlan.h:11,
+                 from ../include/linux/filter.h:22,
+                 from ../include/net/sock.h:59,
+                 from ../include/net/inet_sock.h:22,
+                 from ../include/linux/udp.h:16,
+                 from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+../include/linux/unaligned/access_ok.h:23:28: note: previous definition of =
+=C3=A2=E2=82=AC=CB=9Cget_unaligned_be16=C3=A2=E2=82=AC=E2=84=A2 was here
+   23 | static __always_inline u16 get_unaligned_be16(const void *p)
+      |                            ^~~~~~~~~~~~~~~~~~
+In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+../include/linux/unaligned/be_byteshift.h:46:19: error: redefinition of =C3=
+=A2=E2=82=AC=CB=9Cget_unaligned_be32=C3=A2=E2=82=AC=E2=84=A2
+   46 | static inline u32 get_unaligned_be32(const void *p)
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from ../arch/x86/include/asm/unaligned.h:9,
+                 from ../include/linux/etherdevice.h:24,
+                 from ../include/linux/if_vlan.h:11,
+                 from ../include/linux/filter.h:22,
+                 from ../include/net/sock.h:59,
+                 from ../include/net/inet_sock.h:22,
+                 from ../include/linux/udp.h:16,
+                 from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+../include/linux/unaligned/access_ok.h:28:28: note: previous definition of =
+=C3=A2=E2=82=AC=CB=9Cget_unaligned_be32=C3=A2=E2=82=AC=E2=84=A2 was here
+   28 | static __always_inline u32 get_unaligned_be32(const void *p)
+      |                            ^~~~~~~~~~~~~~~~~~
+In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+../include/linux/unaligned/be_byteshift.h:51:19: error: redefinition of =C3=
+=A2=E2=82=AC=CB=9Cget_unaligned_be64=C3=A2=E2=82=AC=E2=84=A2
+   51 | static inline u64 get_unaligned_be64(const void *p)
+      |                   ^~~~~~~~~~~~~~~~~~
+In file included from ../arch/x86/include/asm/unaligned.h:9,
+                 from ../include/linux/etherdevice.h:24,
+                 from ../include/linux/if_vlan.h:11,
+                 from ../include/linux/filter.h:22,
+                 from ../include/net/sock.h:59,
+                 from ../include/net/inet_sock.h:22,
+                 from ../include/linux/udp.h:16,
+                 from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+../include/linux/unaligned/access_ok.h:33:28: note: previous definition of =
+=C3=A2=E2=82=AC=CB=9Cget_unaligned_be64=C3=A2=E2=82=AC=E2=84=A2 was here
+   33 | static __always_inline u64 get_unaligned_be64(const void *p)
+      |                            ^~~~~~~~~~~~~~~~~~
+In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+../include/linux/unaligned/be_byteshift.h:56:20: error: redefinition of =C3=
+=A2=E2=82=AC=CB=9Cput_unaligned_be16=C3=A2=E2=82=AC=E2=84=A2
+   56 | static inline void put_unaligned_be16(u16 val, void *p)
+      |                    ^~~~~~~~~~~~~~~~~~
+In file included from ../arch/x86/include/asm/unaligned.h:9,
+                 from ../include/linux/etherdevice.h:24,
+                 from ../include/linux/if_vlan.h:11,
+                 from ../include/linux/filter.h:22,
+                 from ../include/net/sock.h:59,
+                 from ../include/net/inet_sock.h:22,
+                 from ../include/linux/udp.h:16,
+                 from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+../include/linux/unaligned/access_ok.h:53:29: note: previous definition of =
+=C3=A2=E2=82=AC=CB=9Cput_unaligned_be16=C3=A2=E2=82=AC=E2=84=A2 was here
+   53 | static __always_inline void put_unaligned_be16(u16 val, void *p)
+      |                             ^~~~~~~~~~~~~~~~~~
+In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+../include/linux/unaligned/be_byteshift.h:61:20: error: redefinition of =C3=
+=A2=E2=82=AC=CB=9Cput_unaligned_be32=C3=A2=E2=82=AC=E2=84=A2
+   61 | static inline void put_unaligned_be32(u32 val, void *p)
+      |                    ^~~~~~~~~~~~~~~~~~
+In file included from ../arch/x86/include/asm/unaligned.h:9,
+                 from ../include/linux/etherdevice.h:24,
+                 from ../include/linux/if_vlan.h:11,
+                 from ../include/linux/filter.h:22,
+                 from ../include/net/sock.h:59,
+                 from ../include/net/inet_sock.h:22,
+                 from ../include/linux/udp.h:16,
+                 from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+../include/linux/unaligned/access_ok.h:58:29: note: previous definition of =
+=C3=A2=E2=82=AC=CB=9Cput_unaligned_be32=C3=A2=E2=82=AC=E2=84=A2 was here
+   58 | static __always_inline void put_unaligned_be32(u32 val, void *p)
+      |                             ^~~~~~~~~~~~~~~~~~
+In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
+../include/linux/unaligned/be_byteshift.h:66:20: error: redefinition of =C3=
+=A2=E2=82=AC=CB=9Cput_unaligned_be64=C3=A2=E2=82=AC=E2=84=A2
+   66 | static inline void put_unaligned_be64(u64 val, void *p)
+      |                    ^~~~~~~~~~~~~~~~~~
+In file included from ../arch/x86/include/asm/unaligned.h:9,
+                 from ../include/linux/etherdevice.h:24,
+                 from ../include/linux/if_vlan.h:11,
+                 from ../include/linux/filter.h:22,
+                 from ../include/net/sock.h:59,
+                 from ../include/net/inet_sock.h:22,
+                 from ../include/linux/udp.h:16,
+                 from ../drivers/net/phy/mscc/mscc_ptp.c:17:
+../include/linux/unaligned/access_ok.h:63:29: note: previous definition of =
+=C3=A2=E2=82=AC=CB=9Cput_unaligned_be64=C3=A2=E2=82=AC=E2=84=A2 was here
+   63 | static __always_inline void put_unaligned_be64(u64 val, void *p)
+      |                             ^~~~~~~~~~~~~~~~~~
+../drivers/net/phy/mscc/mscc_ptp.c:658:12: warning: =C3=A2=E2=82=AC=CB=9Cvs=
+c85xx_ts_engine_init=C3=A2=E2=82=AC=E2=84=A2 defined but not used [-Wunused=
+-function]
+  658 | static int vsc85xx_ts_engine_init(struct phy_device *phydev, bool o=
+ne_step)
+      |            ^~~~~~~~~~~~~~~~~~~~~~
+make[5]: *** [drivers/net/phy/mscc/mscc_ptp.o] Error 1
+make[4]: *** [drivers/net/phy/mscc] Error 2
+make[3]: *** [drivers/net/phy] Error 2
+make[3]: *** Waiting for unfinished jobs....
+make[2]: *** [drivers/net] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [drivers] Error 2
+make: *** [sub-make] Error 2
