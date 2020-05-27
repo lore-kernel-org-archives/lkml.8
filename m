@@ -2,120 +2,163 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFC2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6810D2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CADE2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590598690;
-	bh=Zgs3ccEsGbJs7QUjPvZSh9uNEyoqKDTE8+GbiCafCuw=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=mfhtggo2vwU4UdKF1VnNYIeRZqkcYT1dURd88o1C1CuqgdMuxLEhKlTF5y+dGDOqw
-	 Px2HGXMcJ5o6WubNwunMGN9YELUjvBGNW2w6t+CFHDVZGATYjVXrcANeyUscajllD0
-	 gbtUJt/LcToGcI1o22alJlKoB+Rv5NNN9C6iIq5w=
+	s=default; t=1590598794;
+	bh=8q3jzRDqvsoIvtRypUgXiAuysDm2k8ZTq2KJ7ICZPRw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jWHvYOJckyfL6sySTp+985mVZQ4VwFViTKdF+HX91jrNMA5NqzDb2FhfVe4LEZV8b
+	 raRVlvuH4z1c20DAQzWO1y7RT4GMQcACVgxT/etk+8eJRl+XJpregsrlJvvVv7AUI1
+	 CJth5FBLAfrIFsycY9jfWcxb1wYE6TKnF+AdQdAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390757AbgE0Q6I (ORCPT
+        id S1729706AbgE0Q7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 12:59:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387913AbgE0Q6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:58:03 -0400
-Received: from localhost (unknown [137.135.114.1])
+        id S1726978AbgE0Q7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 12:59:53 -0400
+Received: from embeddedor (unknown [189.207.59.248])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACDBF20C09;
-        Wed, 27 May 2020 16:58:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EA7D20787;
+        Wed, 27 May 2020 16:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590598682;
-        bh=Zgs3ccEsGbJs7QUjPvZSh9uNEyoqKDTE8+GbiCafCuw=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=BpZGYzEU29cupZ5FK7KTZC2fWtXMgxUf5U2xAX0ntrVIV7RT9cno2tuJt0keiKe+c
-         VwZVwbS1nZweYAO+/GPOuEXb4H2zMckszbWYdMrfyZOnSoUNNQHSlf/PQAC5Hu+l5V
-         sp+d2285PwykdpMP5lQh/M2VUUUkYIXlyYapGMjs=
-Date:   Wed, 27 May 2020 16:58:01 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>, kai.heng.feng@canonical.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH] HID: multitouch: enable multi-input as a quirk for some devices
-In-Reply-To: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
-References: <20200526150717.324783-1-benjamin.tissoires@redhat.com>
-Message-Id: <20200527165802.ACDBF20C09@mail.kernel.org>
+        s=default; t=1590598792;
+        bh=8q3jzRDqvsoIvtRypUgXiAuysDm2k8ZTq2KJ7ICZPRw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=z77S30Je4HHzBgmSeOMM5AkkIP9p2ZWVnR1YCItAVSijnC3ewxIAhnj4y6a7BFShF
+         oVmmFix+NS1cuwy3CS3KaXU+1NDVM9WU/LpvdyBu+0MVkGUW22ehQhyost2GOK3xwX
+         ecWkKtocFqtDNsj74hCZQKktsfHUG2Dxm/fsqNk0=
+Date:   Wed, 27 May 2020 12:04:47 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH] IB/core: Use sizeof_field() helper
+Message-ID: <20200527170447.GA18738@embeddedor>
+References: <20200527144152.GA22605@embeddedor>
+ <20200527164452.GQ744@ziepe.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527164452.GQ744@ziepe.ca>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Wed, May 27, 2020 at 01:44:52PM -0300, Jason Gunthorpe wrote:
+> On Wed, May 27, 2020 at 09:41:52AM -0500, Gustavo A. R. Silva wrote:
+> > Make use of the sizeof_field() helper instead of an open-coded version.
+> > 
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >  drivers/infiniband/core/sa_query.c     | 8 ++++----
+> >  drivers/infiniband/core/uverbs_cmd.c   | 2 +-
+> >  drivers/infiniband/core/uverbs_ioctl.c | 2 +-
+> >  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> What kind of tool are you using for this? It seems to miss a lot, I
+> added in a few others to this patch and applied it, thanks:
+> 
 
-[This is an automated email]
+Hi Jason,
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
+I was just doing a "terrain recognition" with grep. I certainly
+wasn't expecting spaces between the sizeof operator and the opening
+parenthesis: "sizeof ((struct ib_sa_mcmember_rec *) 0)->field".
 
-The bot has tested the following trees: v5.6.14, v5.4.42, v4.19.124, v4.14.181, v4.9.224, v4.4.224.
+Also, I was just running grep in drivers/infiniband/
 
-v5.6.14: Build OK!
-v5.4.42: Build OK!
-v4.19.124: Failed to apply! Possible dependencies:
-    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
-    7ffa13be4945 ("HID: multitouch: simplify the application retrieval")
+I'll run a cocci script next time...
 
-v4.14.181: Failed to apply! Possible dependencies:
-    127e71bd462b ("HID: multitouch: Combine all left-button events in a frame")
-    29cc309d8bf1 ("HID: hid-multitouch: forward MSC_TIMESTAMP")
-    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
-    7f81c8db5489 ("HID: multitouch: simplify the settings of the various features")
-    abb36fe691b2 ("HID: multitouch: fix calculation of last slot field in multi-touch reports")
-    af8dc4d09490 ("HID: multitouch: Properly deal with Win8 PTP reports with 0 touches")
-    d9c57a7090ba ("HID: multitouch: export a quirk for the button handling of touchpads")
-    f146d1c4d7ea ("HID: multitouch: Store per collection multitouch data")
+Thanks for your feedback. :)
+--
+Gustavo
 
-v4.9.224: Failed to apply! Possible dependencies:
-    0485b1ec280c ("HID: asus: ignore declared dummy usages")
-    1caccc2565a8 ("HID: asus: support Republic of Gamers special keys")
-    4f4001bc76fd ("HID: multitouch: fix rare Win 8 cases when the touch up event gets missing")
-    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
-    76dd1fbebbae ("HID: asus: Add support for T100 keyboard")
-    957b8dffa4e3 ("HID: multitouch: Support Asus T304UA media keys")
-    9ce12d8be12c ("HID: asus: Add i2c touchpad support")
-    a93913e1496d ("HID: asus: fix and generalize ambiguous preprocessor macros")
-    af22a610bc38 ("HID: asus: support backlight on USB keyboards")
-    c8b1b3dd89ea ("HID: asus: Fix keyboard support")
-    d9c57a7090ba ("HID: multitouch: export a quirk for the button handling of touchpads")
-    e9d0a26d3481 ("HID: multitouch: change for touch height/width")
-    f3287a995ac3 ("HID: multitouch: fix LG Melfas touchscreen")
-    fd91189654a3 ("HID: multitouch: use BIT macro")
-
-v4.4.224: Failed to apply! Possible dependencies:
-    0485b1ec280c ("HID: asus: ignore declared dummy usages")
-    1caccc2565a8 ("HID: asus: support Republic of Gamers special keys")
-    69ecd44d68a7 ("HID: multitouch: add support for the Smart Tech panel")
-    76dd1fbebbae ("HID: asus: Add support for T100 keyboard")
-    957b8dffa4e3 ("HID: multitouch: Support Asus T304UA media keys")
-    9ce12d8be12c ("HID: asus: Add i2c touchpad support")
-    a93913e1496d ("HID: asus: fix and generalize ambiguous preprocessor macros")
-    af22a610bc38 ("HID: asus: support backlight on USB keyboards")
-    b94f7d5ddf1b ("HID: asus: add support for VivoBook E200HA")
-    c8b1b3dd89ea ("HID: asus: Fix keyboard support")
-    d9c57a7090ba ("HID: multitouch: export a quirk for the button handling of touchpads")
-    eeb01a57921a ("HID: Asus X205TA keyboard driver")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks
-Sasha
+> diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+> index 8f70c5c38ab7c3..a2ed09a3c714a9 100644
+> --- a/drivers/infiniband/core/sa_query.c
+> +++ b/drivers/infiniband/core/sa_query.c
+> @@ -420,7 +420,7 @@ static const struct ib_field opa_path_rec_table[] = {
+>  
+>  #define MCMEMBER_REC_FIELD(field) \
+>  	.struct_offset_bytes = offsetof(struct ib_sa_mcmember_rec, field),	\
+> -	.struct_size_bytes   = sizeof ((struct ib_sa_mcmember_rec *) 0)->field,	\
+> +	.struct_size_bytes   = sizeof_field(struct ib_sa_mcmember_rec, field),	\
+>  	.field_name          = "sa_mcmember_rec:" #field
+>  
+>  static const struct ib_field mcmember_rec_table[] = {
+> @@ -504,7 +504,7 @@ static const struct ib_field mcmember_rec_table[] = {
+>  
+>  #define SERVICE_REC_FIELD(field) \
+>  	.struct_offset_bytes = offsetof(struct ib_sa_service_rec, field),	\
+> -	.struct_size_bytes   = sizeof ((struct ib_sa_service_rec *) 0)->field,	\
+> +	.struct_size_bytes   = sizeof_field(struct ib_sa_service_rec, field),	\
+>  	.field_name          = "sa_service_rec:" #field
+>  
+>  static const struct ib_field service_rec_table[] = {
+> @@ -710,7 +710,7 @@ static const struct ib_field opa_classport_info_rec_table[] = {
+>  
+>  #define GUIDINFO_REC_FIELD(field) \
+>  	.struct_offset_bytes = offsetof(struct ib_sa_guidinfo_rec, field),	\
+> -	.struct_size_bytes   = sizeof((struct ib_sa_guidinfo_rec *) 0)->field,	\
+> +	.struct_size_bytes   = sizeof_field(struct ib_sa_guidinfo_rec, field),	\
+>  	.field_name          = "sa_guidinfo_rec:" #field
+>  
+>  static const struct ib_field guidinfo_rec_table[] = {
+> diff --git a/drivers/infiniband/core/ud_header.c b/drivers/infiniband/core/ud_header.c
+> index 29a45d2f8898e1..d65d541b9a2587 100644
+> --- a/drivers/infiniband/core/ud_header.c
+> +++ b/drivers/infiniband/core/ud_header.c
+> @@ -41,7 +41,7 @@
+>  
+>  #define STRUCT_FIELD(header, field) \
+>  	.struct_offset_bytes = offsetof(struct ib_unpacked_ ## header, field),      \
+> -	.struct_size_bytes   = sizeof ((struct ib_unpacked_ ## header *) 0)->field, \
+> +	.struct_size_bytes   = sizeof_field(struct ib_unpacked_ ## header, field), \
+>  	.field_name          = #header ":" #field
+>  
+>  static const struct ib_field lrh_table[]  = {
+> diff --git a/include/rdma/uverbs_ioctl.h b/include/rdma/uverbs_ioctl.h
+> index 5bd2b037e9147c..0418d7bddf3e0c 100644
+> --- a/include/rdma/uverbs_ioctl.h
+> +++ b/include/rdma/uverbs_ioctl.h
+> @@ -420,9 +420,9 @@ struct uapi_definition {
+>  		.scope = UAPI_SCOPE_OBJECT,                                    \
+>  		.needs_fn_offset =                                             \
+>  			offsetof(struct ib_device_ops, ibdev_fn) +             \
+> -			BUILD_BUG_ON_ZERO(                                     \
+> -			    sizeof(((struct ib_device_ops *)0)->ibdev_fn) !=   \
+> -			    sizeof(void *)),				       \
+> +			BUILD_BUG_ON_ZERO(sizeof_field(struct ib_device_ops,   \
+> +						       ibdev_fn) !=            \
+> +					  sizeof(void *)),                     \
+>  	}
+>  
+>  /*
+> @@ -435,9 +435,9 @@ struct uapi_definition {
+>  		.scope = UAPI_SCOPE_METHOD,                                    \
+>  		.needs_fn_offset =                                             \
+>  			offsetof(struct ib_device_ops, ibdev_fn) +             \
+> -			BUILD_BUG_ON_ZERO(                                     \
+> -			    sizeof(((struct ib_device_ops *)0)->ibdev_fn) !=   \
+> -			    sizeof(void *)),                                   \
+> +			BUILD_BUG_ON_ZERO(sizeof_field(struct ib_device_ops,   \
+> +						       ibdev_fn) !=            \
+> +					  sizeof(void *)),                     \
+>  	}
+>  
+>  /* Call a function to determine if the entire object is supported or not */
