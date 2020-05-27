@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC04C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE22207ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F921207ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 05:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KE/N/QUU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SUn+0mPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgE0FZY (ORCPT
+        id S1727781AbgE0FZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 01:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44724 "EHLO
+        Wed, 27 May 2020 01:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729077AbgE0FZF (ORCPT
+        with ESMTP id S1729054AbgE0FY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 01:25:05 -0400
+        Wed, 27 May 2020 01:24:58 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EBDAC061A0F;
-        Tue, 26 May 2020 22:25:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CECE9C061A0F;
+        Tue, 26 May 2020 22:24:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=9XennrgwipSgDkcsh71JEE0YegAAd1Z7p+AJvSBp+LI=; b=KE/N/QUU7KEPg8KwFaByBxVm16
-        6UVgeALZheCCC/5WRZ7tD/5KMAmgLmAWR4UAgXFISqpEQFvvshPhR7xaovhoiNCsgEOICUgq0pXla
-        ebdmddx8T6oBlWKG05+ZpmhAiA1fKGN3B2PN2YKYFQ7W5495exwJOoHhhJ/pgfdB8Vsm97bCpnmsR
-        hDB7EsMPcvACPQ2anG207HXBzX2lnwEQQgZsH4wNylFqZniDHe630r5pJbabxrW60loCtpXU6DYjs
-        Ymp8VCHiro/kNu/cbtZMrNpFWRf84UEIQ4RmCFOF2rf67FoNQRBRThaQQ6ruizueZCgzqGZ+jTU5z
-        5GvxG0/Q==;
+        bh=Bqhnde9dFznWgi2aGOgRLd+HtchsYvr9PHZmbOGgvm4=; b=SUn+0mPicK4jlHHCaQrGP7lCUz
+        eT3XvXAXsDRDpJXPJEUby/j+oC3UGTdirGmUi6TC2Cd7lFP1MV88zP0O6VMiKiV+yOzO447xpvHKt
+        DlXXSz/CHOrcp72jA6NKbyPfxG+FCO4loHdYZN1F63x3DmHWeRqA4JP2Cp3iOakS8r3S36YQrh6sV
+        FwnDTk5VPPwtTjnuyzVtXb60vfuvPwrOXi/FKSkJuPp4utdu9IlQVGAo37+ujlprGhnIT7gfoEKTa
+        +3oLWmWzUbLXDlWxTC5rwkx6YSumQtpDrEE9m0tGzua9FcBhDj9TV1JddoKDK0Wnh5Jpvl3zW09tc
+        xATfUvRQ==;
 Received: from [2001:4bb8:18c:5da7:8164:affc:3c20:853d] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdoYn-0000vd-EV; Wed, 27 May 2020 05:25:01 +0000
+        id 1jdoYh-0000tS-QQ; Wed, 27 May 2020 05:24:56 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
@@ -47,9 +47,9 @@ Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
         linux-block@vger.kernel.org, drbd-dev@lists.linbit.com,
         linux-bcache@vger.kernel.org, linux-nvdimm@lists.01.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/16] block: remove rcu_read_lock() from part_stat_lock()
-Date:   Wed, 27 May 2020 07:24:17 +0200
-Message-Id: <20200527052419.403583-15-hch@lst.de>
+Subject: [PATCH 12/16] block: account merge of two requests
+Date:   Wed, 27 May 2020 07:24:15 +0200
+Message-Id: <20200527052419.403583-13-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527052419.403583-1-hch@lst.de>
 References: <20200527052419.403583-1-hch@lst.de>
@@ -63,69 +63,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-The RCU lock is required only in disk_map_sector_rcu() to lookup the
-partition.  After that request holds reference to related hd_struct.
-
-Replace get_cpu() with preempt_disable() - returned cpu index is unused.
+Also rename blk_account_io_merge() into blk_account_io_merge_request() to
+distinguish it from merging request and bio.
 
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 [hch: rebased]
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- block/genhd.c             | 11 ++++++++---
- include/linux/part_stat.h |  4 ++--
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ block/blk-merge.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 3e7df0a3e6bb0..1a76593276644 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -321,11 +321,12 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
- 	struct hd_struct *part;
- 	int i;
- 
-+	rcu_read_lock();
- 	ptbl = rcu_dereference(disk->part_tbl);
- 
- 	part = rcu_dereference(ptbl->last_lookup);
- 	if (part && sector_in_part(part, sector) && hd_struct_try_get(part))
--		return part;
-+		goto out_unlock;
- 
- 	for (i = 1; i < ptbl->len; i++) {
- 		part = rcu_dereference(ptbl->part[i]);
-@@ -339,10 +340,14 @@ struct hd_struct *disk_map_sector_rcu(struct gendisk *disk, sector_t sector)
- 			if (!hd_struct_try_get(part))
- 				break;
- 			rcu_assign_pointer(ptbl->last_lookup, part);
--			return part;
-+			goto out_unlock;
- 		}
- 	}
--	return &disk->part0;
-+
-+	part = &disk->part0;
-+out_unlock:
-+	rcu_read_unlock();
-+	return part;
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 6a4538d39efd2..c3beae5c1be71 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -669,18 +669,16 @@ void blk_rq_set_mixed_merge(struct request *rq)
+ 	rq->rq_flags |= RQF_MIXED_MERGE;
  }
  
- /**
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index 6644197980b92..a6b0938ce82e9 100644
---- a/include/linux/part_stat.h
-+++ b/include/linux/part_stat.h
-@@ -21,8 +21,8 @@ struct disk_stats {
-  *
-  * part_stat_read() can be called at any time.
-  */
--#define part_stat_lock()	({ rcu_read_lock(); get_cpu(); })
--#define part_stat_unlock()	do { put_cpu(); rcu_read_unlock(); } while (0)
-+#define part_stat_lock()	preempt_disable()
-+#define part_stat_unlock()	preempt_enable()
+-static void blk_account_io_merge(struct request *req)
++static void blk_account_io_merge_request(struct request *req)
+ {
+ 	if (blk_do_io_stat(req)) {
+-		struct hd_struct *part;
+-
+ 		part_stat_lock();
+-		part = req->part;
+-
+-		hd_struct_put(part);
++		part_stat_inc(req->part, merges[op_stat_group(req_op(req))]);
++		hd_struct_put(req->part);
+ 		part_stat_unlock();
+ 	}
+ }
++
+ /*
+  * Two cases of handling DISCARD merge:
+  * If max_discard_segments > 1, the driver takes every bio
+@@ -792,7 +790,7 @@ static struct request *attempt_merge(struct request_queue *q,
+ 	/*
+ 	 * 'next' is going away, so update stats accordingly
+ 	 */
+-	blk_account_io_merge(next);
++	blk_account_io_merge_request(next);
  
- #define part_stat_get_cpu(part, field, cpu)				\
- 	(per_cpu_ptr((part)->dkstats, (cpu))->field)
+ 	/*
+ 	 * ownership of bio passed from next to req, return 'next' for
 -- 
 2.26.2
 
