@@ -2,111 +2,113 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E470EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE25AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAC972065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:28:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ky1qqSC8"
+	by mail.kernel.org (Postfix) with ESMTP id B4AC8207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728313AbgE0R24 (ORCPT
+        id S1728527AbgE0RaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbgE0R2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:28:55 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BF5C03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:28:55 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x18so9250168pll.6
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tFnj+ie2MtneCS/evX/ZluPtSFLWtigbTQzNUbxK00k=;
-        b=Ky1qqSC8sGjlOrTziUzHIbiwNaWHHocAD08wV/tv2onL6WH5zm+e02G048rm7MMDep
-         DCc1AI9EcQ+QnrbGR5KrnxLwKNM8tnRw+IQTNxvdCkUTBviaQLLW2m8YmCcFyyI9nmeQ
-         hmG25wC1Z1LTBuydrWYvavtiWigaVh9LjMoYnv302ZSNsc8JVNS/GSVvnG2Gkhl9HvVn
-         Ei2FrQI0A0JTmtost4lPh/OyPKn1TqlObwU9P+xNmIbD2InZ/QwvWwRKFTQWal+8Cc4D
-         CDE4XLn+lSOb4c56lAmoujD3F9OTjDlTqcqB9m9CmYPGCYqomUOjAKXMSfpQVVW6ATY1
-         iTSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tFnj+ie2MtneCS/evX/ZluPtSFLWtigbTQzNUbxK00k=;
-        b=FLEz//NqiNHd3WHFgc4sXQyGKgFraudTDrbXaAfapI3cu3Y3yMEpPufLtyG7BTGLCg
-         00Jng9s+/QwQ2REV3AXoJEymiJcDJE30G8Nhy/yFdDmuEQruArBHlpaW2N+XE8lbilZt
-         YDZsy5ytwBS9aKPzIN96s5D+GKPeqUdDzvA+A0PevV0dkGbKP0s2Bj40IOJ/AFmxrbiA
-         1TbBf3zuazOce2tSn1I76kgvHAnK/vCAg1H1fhzkhmt+unfuJwl2J7FUAJPKVm/IeOdF
-         r6cJugpglksdjr9hzICIjq1A0FUo6DYjfs7z4G3hTyilEcF/RrMB2pLH+NAAVtS6+jKj
-         Dxrg==
-X-Gm-Message-State: AOAM531nrxZGCM7t0kN16Q07pD6fukGKP3UBN5dkcHC4qIVkUq307iwD
-        iglUbitVV/Y0FEMzgjQTQ6PjXsD05R3/wswyeDXvOA==
-X-Google-Smtp-Source: ABdhPJyeuK37fJhKLfBA8uGQHGR65zBBNcwnWp0A1w2+kyRxmJO+mGP5rc8u/fLIcmnCwVN6cfAKjAZ5Xg83d2JcKEg=
-X-Received: by 2002:a17:902:82c9:: with SMTP id u9mr6827669plz.179.1590600534489;
- Wed, 27 May 2020 10:28:54 -0700 (PDT)
+        Wed, 27 May 2020 13:30:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:42900 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726487AbgE0RaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:30:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0DCB31B;
+        Wed, 27 May 2020 10:30:19 -0700 (PDT)
+Received: from [10.57.2.168] (unknown [10.57.2.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D2B73F305;
+        Wed, 27 May 2020 10:30:17 -0700 (PDT)
+Subject: Re: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
+ address
+To:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
+Date:   Wed, 27 May 2020 18:30:15 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200527134016.753354-1-arnd@arndb.de> <20200527152406.GD59947@C02TD0UTHF1T.local>
-In-Reply-To: <20200527152406.GD59947@C02TD0UTHF1T.local>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 27 May 2020 10:28:43 -0700
-Message-ID: <CAKwvOdn637hSboMnMV=S5f1wbiEnc6qtnrn=fpeCGtvr2W_Daw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: disable -fsanitize=shadow-call-stack for big-endian
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 8:24 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, May 27, 2020 at 03:39:46PM +0200, Arnd Bergmann wrote:
-> > clang-11 and earlier do not support -fsanitize=shadow-call-stack
-> > in combination with -mbig-endian, but the Kconfig check does not
-> > pass the endianess flag, so building a big-endian kernel with
-> > this fails at build time:
-> >
-> > clang: error: unsupported option '-fsanitize=shadow-call-stack' for target 'aarch64_be-unknown-linux'
-> >
-> > Change the Kconfig check to let Kconfig figure this out earlier
-> > and prevent the broken configuration. I assume this is a bug
-> > in clang that needs to be fixed, but we also have to work
-> > around existing releases.
-> >
-> > Fixes: 5287569a790d ("arm64: Implement Shadow Call Stack")
-> > Link: https://bugs.llvm.org/show_bug.cgi?id=46076
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> I suspect this is similar to the patchable-function-entry issue, and
-> this is an oversight that we'd rather fix toolchain side.
->
-> Nick, Fangrui, thoughts?
+On 2020-05-27 17:03, Srinath Mannam wrote:
+> This patch gives the provision to change default value of MSI IOVA base
+> to platform's suitable IOVA using module parameter. The present
+> hardcoded MSI IOVA base may not be the accessible IOVA ranges of platform.
 
-Exactly, Fangrui already has a fix: https://reviews.llvm.org/D80647.
-Thanks Fangrui!
-It seems it's easy in the codebase to check the specific ABI, which
-isn't explicitly LE, rather than use a method that checks the ISA
-regardless of endianness.
+That in itself doesn't seem entirely unreasonable; IIRC the current 
+address is just an arbitrary choice to fit nicely into Qemu's memory 
+map, and there was always the possibility that it wouldn't suit everything.
 
--- 
-Thanks,
-~Nick Desaulniers
+> Since commit aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible
+> DMA address"), inaccessible IOVA address ranges parsed from dma-ranges
+> property are reserved.
+
+That, however, doesn't seem to fit here; iommu-dma maps MSI doorbells 
+dynamically, so they aren't affected by reserved regions any more than 
+regular DMA pages are. In fact, it explicitly ignores the software MSI 
+region, since as the comment says, it *is* the software that manages those.
+
+The MSI_IOVA_BASE region exists for VFIO, precisely because in that case 
+the kernel *doesn't* control the address space, but still needs some way 
+to steal a bit of it for MSIs that the guest doesn't necessarily know 
+about, and give userspace a fighting chance of knowing what it's taken. 
+I think at the time we discussed the idea of adding something to the 
+VFIO uapi such that userspace could move this around if it wanted or 
+needed to, but decided we could live without that initially. Perhaps now 
+the time has come?
+
+Robin.
+
+> If any platform has the limitaion to access default MSI IOVA, then it can
+> be changed using "arm-smmu.msi_iova_base=0xa0000000" command line argument.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> ---
+>   drivers/iommu/arm-smmu.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 4f1a350..5e59c9d 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -72,6 +72,9 @@ static bool disable_bypass =
+>   module_param(disable_bypass, bool, S_IRUGO);
+>   MODULE_PARM_DESC(disable_bypass,
+>   	"Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+> +static unsigned long msi_iova_base = MSI_IOVA_BASE;
+> +module_param(msi_iova_base, ulong, S_IRUGO);
+> +MODULE_PARM_DESC(msi_iova_base, "msi iova base address.");
+>   
+>   struct arm_smmu_s2cr {
+>   	struct iommu_group		*group;
+> @@ -1566,7 +1569,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+>   	struct iommu_resv_region *region;
+>   	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+>   
+> -	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+> +	region = iommu_alloc_resv_region(msi_iova_base, MSI_IOVA_LENGTH,
+>   					 prot, IOMMU_RESV_SW_MSI);
+>   	if (!region)
+>   		return;
+> 
