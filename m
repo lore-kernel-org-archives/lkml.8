@@ -2,184 +2,142 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D77207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4F5207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590588386;
-	bh=MkIk8HRQfNKTJpeG9uXaBiahdr4DaoqFGscee3N22ss=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SwXJcwqdg1sFYRe6NqBHovd+wlOhaaG6nKegFgmIUJPC1QcMA6dT3GD3ndKjkrMsT
-	 K/F7iYOkbgK1mFX4m74lN952hkjLX8BS+E15fBuHKRUQ//CcT/EevPiKci5Hs6O15k
-	 htKrZazSxwBxi3gwhKZRCexdy74WzArLSP68nwpo=
+	s=default; t=1590588482;
+	bh=C+fyE5snjSW0wurnYjLepMoojkVqeGo12cjI4Sl3UGY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MEUJd5l0EodUR3wawBlap22X73wcEndVlgkKq/Q1JGtVFyy75lZLRy46C1GoNGfTm
+	 m3Q3hfKBMARtrvSA8ZESJD7PCOf6+xmVtK+H/txvprV92Zsy/QWwabUZmUH4Xojjan
+	 iyLHneiYn+EFll1EqNGEW93RVZc85BajumexYgCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388594AbgE0OGZ (ORCPT
+        id S2388779AbgE0OIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54766 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 10:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730338AbgE0OGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:06:24 -0400
-Received: from embeddedor (unknown [189.207.59.248])
+        id S2388623AbgE0OIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:08:00 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61B2C206F1;
-        Wed, 27 May 2020 14:06:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8FAA207D3;
+        Wed, 27 May 2020 14:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590588384;
-        bh=MkIk8HRQfNKTJpeG9uXaBiahdr4DaoqFGscee3N22ss=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Jj4ei4DG1vGZad9fnUD1l/lcyfWl0H2ZfbsskJwT7Sw5d7Zl9oAzFFE8Od1o2BDAy
-         yffwR6kMJB0pTgicdUPZQNZROoS7OPA2VUwLwzn9VrddUAq2xb9AVJntI4eShdIivs
-         q5NauugRjY0F296Oapc14WsW/000CevOcQTi8fUM=
-Date:   Wed, 27 May 2020 09:11:19 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH net-next v3] ice: Replace one-element arrays with
- flexible-arrays
-Message-ID: <20200527141119.GA30849@embeddedor>
+        s=default; t=1590588480;
+        bh=C+fyE5snjSW0wurnYjLepMoojkVqeGo12cjI4Sl3UGY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EfwTqzFJqXFu0FZiDOyRAvOGH8n+GxPdxahnlUxU6Z4tTdsdydEYQ0vaaIqTjF9vA
+         hTisCa8TdDT0aIwZ2nl1FLanYc651GLRGlnl9nd6UgJQMu4drhamKS0TbiXVbnElBR
+         10MfWQoFEAcN3+8Rdp8+bHlCooUpZmkPaeYOLUwI=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id EC13940AFD; Wed, 27 May 2020 11:07:53 -0300 (-03)
+Date:   Wed, 27 May 2020 11:07:53 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Nick Gasson <nick.gasson@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] perf jvmti: Do not report error when missing debug
+ information
+Message-ID: <20200527140753.GD14219@kernel.org>
+References: <20200427061520.24905-1-nick.gasson@arm.com>
+ <20200427061520.24905-3-nick.gasson@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200427061520.24905-3-nick.gasson@arm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of one-element arrays in the following
-form:
+Em Mon, Apr 27, 2020 at 02:15:15PM +0800, Nick Gasson escreveu:
+> If the Java sources are compiled with -g:none to disable debug
+> information the perf JVMTI plugin reports a lot of errors like:
+> 
+>   java: GetLineNumberTable failed with JVMTI_ERROR_ABSENT_INFORMATION
+>   java: GetLineNumberTable failed with JVMTI_ERROR_ABSENT_INFORMATION
+>   java: GetLineNumberTable failed with JVMTI_ERROR_ABSENT_INFORMATION
+>   java: GetLineNumberTable failed with JVMTI_ERROR_ABSENT_INFORMATION
+>   java: GetLineNumberTable failed with JVMTI_ERROR_ABSENT_INFORMATION
+> 
+> Instead if GetLineNumberTable returns JVMTI_ERROR_ABSENT_INFORMATION
+> simply skip emitting line number information for that method. Unlike the
+> previous patch these errors don't affect the jitdump generation, they
+> just generate a lot of noise.
+> 
+> Similarly for native methods which also don't have line tables.
+> 
+> Signed-off-by: Nick Gasson <nick.gasson@arm.com>
+> ---
+>  tools/perf/jvmti/libjvmti.c | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+> index 50ef524b5cd4..a9a056d68416 100644
+> --- a/tools/perf/jvmti/libjvmti.c
+> +++ b/tools/perf/jvmti/libjvmti.c
+> @@ -41,7 +41,11 @@ do_get_line_numbers(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
+>  	jvmtiError ret;
+>  
+>  	ret = (*jvmti)->GetLineNumberTable(jvmti, m, &nr_lines, &loc_tab);
+> -	if (ret != JVMTI_ERROR_NONE) {
+> +	if (ret == JVMTI_ERROR_ABSENT_INFORMATION || ret == JVMTI_ERROR_NATIVE_METHOD) {
+> +		/* No debug information for this method */
+> +		*nr = 0;
+> +		return JVMTI_ERROR_NONE;
+> +	} else if (ret != JVMTI_ERROR_NONE) {
+>  		print_error(jvmti, "GetLineNumberTable", ret);
+>  		return ret;
+>  	}
+> @@ -93,6 +97,9 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
+>  					/* free what was allocated for nothing */
+>  					(*jvmti)->Deallocate(jvmti, (unsigned char *)lne);
+>  					nr_total += (int)nr;
+> +				} else if (ret == JVMTI_ERROR_ABSENT_INFORMATION
+> +					   || ret == JVMTI_ERROR_NATIVE_METHOD) {
 
-struct something {
-    int length;
-    u8 data[1];
-};
+Please add the || operator at the end of the line next time, I'm fixing
+this up this time,
 
-struct something *instance;
+Applied,
 
-instance = kmalloc(sizeof(*instance) + size, GFP_KERNEL);
-instance->length = size;
-memcpy(instance->data, source, size);
+- Arnaldo
 
-but the preferred mechanism to declare variable-length types such as
-these ones is a flexible array member[1][2], introduced in C99:
+> +					/* No debug information for this method */
+>  				} else {
+>  					print_error(jvmti, "GetLineNumberTable", ret);
+>  				}
+> @@ -262,7 +269,9 @@ compiled_method_load_cb(jvmtiEnv *jvmti,
+>  	if (has_line_numbers && map && map_length) {
+>  		ret = get_line_numbers(jvmti, compile_info, &line_tab, &nr_lines);
+>  		if (ret != JVMTI_ERROR_NONE) {
+> -			warnx("jvmti: cannot get line table for method");
+> +			if (ret != JVMTI_ERROR_NOT_FOUND) {
+> +				warnx("jvmti: cannot get line table for method");
+> +			}
+>  			nr_lines = 0;
+>  		} else if (nr_lines > 0) {
+>  			line_file_names = malloc(sizeof(char*) * nr_lines);
+> -- 
+> 2.26.1
+> 
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on. So, replace
-the one-element array with a flexible-array member.
-
-Also, make use of the offsetof() helper in order to simplify some macros
-and properly calculate the size of the structures that contain
-flexible-array members.
-
-This issue was found with the help of Coccinelle and, audited _manually_.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - We still can simply the code even more by using offsetof() just once. :)
-
-Changes in v2:
- - Use offsetof(struct ice_aqc_sw_rules_elem, pdata) instead of
-   sizeof(struct ice_aqc_sw_rules_elem) - sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata)
- - Update changelog text.
-
- .../net/ethernet/intel/ice/ice_adminq_cmd.h   |  6 ++---
- drivers/net/ethernet/intel/ice/ice_switch.c   | 23 ++++++-------------
- 2 files changed, 10 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-index 586d69491268a..faa21830e40d8 100644
---- a/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-+++ b/drivers/net/ethernet/intel/ice/ice_adminq_cmd.h
-@@ -570,7 +570,7 @@ struct ice_sw_rule_lkup_rx_tx {
- 	 * lookup-type
- 	 */
- 	__le16 hdr_len;
--	u8 hdr[1];
-+	u8 hdr[];
- } __packed;
- 
- /* Add/Update/Remove large action command/response entry
-@@ -580,7 +580,7 @@ struct ice_sw_rule_lkup_rx_tx {
- struct ice_sw_rule_lg_act {
- 	__le16 index; /* Index in large action table */
- 	__le16 size;
--	__le32 act[1]; /* array of size for actions */
-+	__le32 act[]; /* array of size for actions */
- 	/* Max number of large actions */
- #define ICE_MAX_LG_ACT	4
- 	/* Bit 0:1 - Action type */
-@@ -640,7 +640,7 @@ struct ice_sw_rule_lg_act {
- struct ice_sw_rule_vsi_list {
- 	__le16 index; /* Index of VSI/Prune list */
- 	__le16 number_vsi;
--	__le16 vsi[1]; /* Array of number_vsi VSI numbers */
-+	__le16 vsi[]; /* Array of number_vsi VSI numbers */
- };
- 
- /* Query VSI list command/response entry */
-diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
-index 0156b73df1b1f..191735ac491c6 100644
---- a/drivers/net/ethernet/intel/ice/ice_switch.c
-+++ b/drivers/net/ethernet/intel/ice/ice_switch.c
-@@ -29,25 +29,16 @@ static const u8 dummy_eth_header[DUMMY_ETH_HDR_LEN] = { 0x2, 0, 0, 0, 0, 0,
- 							0x81, 0, 0, 0};
- 
- #define ICE_SW_RULE_RX_TX_ETH_HDR_SIZE \
--	(sizeof(struct ice_aqc_sw_rules_elem) - \
--	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
--	 sizeof(struct ice_sw_rule_lkup_rx_tx) + DUMMY_ETH_HDR_LEN - 1)
-+	(offsetof(struct ice_aqc_sw_rules_elem, pdata.lkup_tx_rx) + \
-+	 DUMMY_ETH_HDR_LEN)
- #define ICE_SW_RULE_RX_TX_NO_HDR_SIZE \
--	(sizeof(struct ice_aqc_sw_rules_elem) - \
--	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
--	 sizeof(struct ice_sw_rule_lkup_rx_tx) - 1)
-+	(offsetof(struct ice_aqc_sw_rules_elem, pdata.lkup_tx_rx))
- #define ICE_SW_RULE_LG_ACT_SIZE(n) \
--	(sizeof(struct ice_aqc_sw_rules_elem) - \
--	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
--	 sizeof(struct ice_sw_rule_lg_act) - \
--	 sizeof(((struct ice_sw_rule_lg_act *)0)->act) + \
--	 ((n) * sizeof(((struct ice_sw_rule_lg_act *)0)->act)))
-+	(offsetof(struct ice_aqc_sw_rules_elem, pdata.lg_act.act) + \
-+	 ((n) * sizeof(__le32)))
- #define ICE_SW_RULE_VSI_LIST_SIZE(n) \
--	(sizeof(struct ice_aqc_sw_rules_elem) - \
--	 sizeof(((struct ice_aqc_sw_rules_elem *)0)->pdata) + \
--	 sizeof(struct ice_sw_rule_vsi_list) - \
--	 sizeof(((struct ice_sw_rule_vsi_list *)0)->vsi) + \
--	 ((n) * sizeof(((struct ice_sw_rule_vsi_list *)0)->vsi)))
-+	(offsetof(struct ice_aqc_sw_rules_elem, pdata.vsi_list.vsi) + \
-+	 ((n) * sizeof(__le16)))
- 
- /**
-  * ice_init_def_sw_recp - initialize the recipe book keeping tables
 -- 
-2.26.2
 
+- Arnaldo
