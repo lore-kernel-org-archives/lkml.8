@@ -2,133 +2,108 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72020C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73526C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 449F42078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pq4xIGDT"
+	by mail.kernel.org (Postfix) with ESMTP id 5CAD8207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgE0MbV (ORCPT
+        id S1730064AbgE0Mb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:31:21 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61069 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728859AbgE0MbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:31:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590582679; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=a0pH7dQyq4r9sJKjE/07Ll+1aMct4+PM140OnxeMnLs=; b=pq4xIGDTC0pmWziE1GUOkgmB9US0n26AwnYFR3CFNY0fb9WIS/D80QZBPrzRbD3cBmBKE7AL
- IAObgdGvrP288HncUA62n1TRypMylMqvX2E5yFfAiQBCmB9M3kaTsN0Fks/oGdExton+I4H0
- Seiv9bK+Quayuv6S15gWHEHhUPc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ece5d8d2738686126ff3b55 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 12:31:09
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A6182C43391; Wed, 27 May 2020 12:31:08 +0000 (UTC)
-Received: from [192.168.43.129] (unknown [106.222.1.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85F4BC433C6;
-        Wed, 27 May 2020 12:31:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85F4BC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 3/4] pinctrl: qcom: Add msmgpio irqchip flags
-To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-4-git-send-email-mkshah@codeaurora.org>
- <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <65c86165-5956-5340-1f40-6426c6aec743@codeaurora.org>
-Date:   Wed, 27 May 2020 18:00:57 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 27 May 2020 08:31:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:52487 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbgE0MbZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 08:31:25 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N3bb1-1ivknH0RIR-010ZZl for <linux-kernel@vger.kernel.org>; Wed, 27 May
+ 2020 14:31:24 +0200
+Received: by mail-qk1-f172.google.com with SMTP id c185so9965730qke.7
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 05:31:23 -0700 (PDT)
+X-Gm-Message-State: AOAM5316YI3pT+kXks7wwJZUYj+IgmtR2tKN1NQ5bEAhbkS5HKyG7CNo
+        P6NjU2DwTg+Hr3F8+/f1sRw6f/iiemrYgBr4F9o=
+X-Google-Smtp-Source: ABdhPJy+DIja/rYj4frYWtQK9fb6NOOBdkItZSOJngfCTwueSXdO4GIuDHPs8sOzmDUB9tIsxetSsQlRzOrUfhK6DMI=
+X-Received: by 2002:a37:434b:: with SMTP id q72mr4003383qka.352.1590582683017;
+ Wed, 27 May 2020 05:31:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <159057285160.88029.12486371130122290394@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+References: <20200527103236.148700-1-elver@google.com> <CAK8P3a1MFgRxm6=+9WZKNzN+Nc5fhrDso6orSNQaaa-0yqygYA@mail.gmail.com>
+ <CA+icZUWtzu0ONUSy0E27Mq1BrdO79qNaY3Si-PDhHZyF8M4S5g@mail.gmail.com>
+In-Reply-To: <CA+icZUWtzu0ONUSy0E27Mq1BrdO79qNaY3Si-PDhHZyF8M4S5g@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 May 2020 14:31:06 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a04=mVQgSrvDhpVxQj50JEFDn_xMhYrvjmUnLYTWH3QXQ@mail.gmail.com>
+Message-ID: <CAK8P3a04=mVQgSrvDhpVxQj50JEFDn_xMhYrvjmUnLYTWH3QXQ@mail.gmail.com>
+Subject: Re: [PATCH -tip] compiler_types.h: Optimize __unqual_scalar_typeof
+ compilation time
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:RZEd1IDi31CFLHqM/PVJubG9aykZPIKmvo2DAIiIX7Q/CrtzNdo
+ qQrk16AKnOwoGul7/a0bZSylHZs5sysIC56JY2bgWORZzhfvfUelHcQhuZ21BunT+ck8xce
+ 1ScpsWoL0sc+Ik+X7XTGu4MMNX7s5wRs+/7Oo0jhTIeDkXjCNrjtyTfJ7+gZmdWiOYJ5lod
+ 35T2pRTmhbgu0NEQKrEfw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:67xoUZ9rMd8=:x+4WxF7+pml6DkU+TsT9zU
+ GcB96kdNt7W65Jcsn6EtR+o0S+iQbyktk5TYe1sLOEeskcSSKmv23cy9yBJ19+tzVEtU9OrJQ
+ CJRgFReVnavhNmRFT6ODS7axmiTHBPTY7nlD+R/LsLAkrhmMVL616Yc/MAHBohdGSwO4YQKCV
+ N3tMlhhy4yQatOcctAGdd7CpbTgnxFJeQzgk/6e8QaXOYt35ebVZMEo+TwLOqxyBZROeYjCrf
+ 7c1wf414YExyFl4RGtVca2HrUiOdeB8TPWDyXQZzoZpYW2ArzcKPF3QH5CT98i7jlUvK6mmZ/
+ LnVoeFlkWqh+Bb9UnbgYF6NTdwuNAqChEp+YBxEtE1LT78PDwWYZj2WBd1HoSobmSO89uDQMD
+ 4SrArx1t9PeiB4Q7xw3fXSVsolzjswvLNNyZibaMWCFpHPs3FEpyei/h5gdnpjCOknQKSBh9n
+ Y+43n8ucoslIGvBf3P88nOZRJEhUadOwVcdX/6tKosLaljMj8EW+qyKEZ9GOdbbXCSOSyLeYm
+ jCbUu0XzYpN80Ivp7bNnCL6aoD8J8GKGzKQ/NLLQWwGq3YRZHC95eKXsoBJK2fIPSkK3WNSv3
+ 6Zf0GmQ+N4UEcncvW47qAzZTbrZ2Gi3jZ4KLa9QzXa/oOI7E6N3Y9SJCzIAEWSGbfXo/j+ZB8
+ K5i7uvRa7xGk1k9VI4mp06RKVlKoOiaaJOQcxBW+e7uq1LP1wlAO0gk5toXfaPzZ7Ql0YKqD/
+ qp/I+fxXl60r653AygGZiB7ObWjgTAHHaEX9bdkQf/jd2718+W0kh/9EW3KsrLtlloTqcTJoL
+ yfB55PWTcF69pxYyyJDj79cXGNeZxqM/7IdH1QSe9+RoTgDDWE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 5/27/2020 3:17 PM, Stephen Boyd wrote:
-> Quoting Maulik Shah (2020-05-23 10:11:12)
->> Add irqchip specific flags for msmgpio irqchip to mask non wakeirqs
->> during suspend and mask before setting irq type.
-> Why do we need to mask before setting irq type? Does something go wrong?
-> Can you explain in the commit text?
-
-i don't think anything goes wrong but there might be a case where some 
-driver changing type at runtime,
-
-masking before changing type should make sure any spurious interrupt is 
-not detected during this operation.
-
+On Wed, May 27, 2020 at 1:36 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> On Wed, May 27, 2020 at 1:27 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wed, May 27, 2020 at 12:33 PM Marco Elver <elver@google.com> wrote:
+> >
+> > This gives us back 80% of the performance drop on clang, and 50%
+> > of the drop I saw with gcc, compared to current mainline.
+> >
+> > Tested-by: Arnd Bergmann <arnd@arndb.de>
+> >
 >
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Does this need a Fixes tag?
-Thanks i will add.
+> Hi Arnd,
 >
->> ---
->>   drivers/pinctrl/qcom/pinctrl-msm.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->> index 2419023..b909ffe 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->> @@ -1143,6 +1143,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>          pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->>          pctrl->irq_chip.irq_set_affinity = msm_gpio_irq_set_affinity;
->>          pctrl->irq_chip.irq_set_vcpu_affinity = msm_gpio_irq_set_vcpu_affinity;
->> +       pctrl->irq_chip.flags = IRQCHIP_MASK_ON_SUSPEND
-> This is sort of sad. We have to set the IRQCHIP_MASK_ON_SUSPEND flag
-> here so that genirq can call the mask op during suspend for the parent
-> irqchip (pdc)?
-During suspend, suspend_device_irq() will check this flag in msmgpio 
-irqchip and then call it to mask if its not marked for wakeup.
+> with "mainline" you mean Linux-next aka Linux v5.8 - not v5.7?
 
-in this case, setting this flag will call first invoke gpiolib's 
-callback  (we override in first patch of this series), then it goes to 
-msmgpio chip's mask callback,
+I meant v5.7.
 
-this call will then get forwarded to its parent PDC and then to PDC's 
-parent GIC.
-
-This seems the way hierarchical irqchip works. i don't see any issue 
-with this.
-> Is there some way to not need to do that and instead let
-> genirq do mask on suspend at the chip level instead of the irq level?
+> I have not seen __unqual_scalar_typeof(x) in compiler_types.h in Linux v5.7.
 >
->> +                               | IRQCHIP_SET_TYPE_MASKED;
->>   
->>          np = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
->>          if (np) {
+> Is there a speedup benefit also for Linux v5.7?
+> Which patches do I need?
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+v5.7-rc is the baseline and is the fastest I currently see. On certain files,
+I saw an intermittent 10x slowdown that was already fixed earlier, now
+linux-next
+is more like 2x slowdown for me and 1.2x with this patch on top, so we're
+almost back to the speed of linux-5.7.
 
+      Arnd
