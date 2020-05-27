@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BBFC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD13C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92DC720899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF5C20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:53:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XKuOfr1O"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZnDpCFqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390481AbgE0Pxw (ORCPT
+        id S2390490AbgE0Px4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57326 "EHLO
+        Wed, 27 May 2020 11:53:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390395AbgE0PwG (ORCPT
+        with ESMTP id S2390393AbgE0PwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 27 May 2020 11:52:06 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D708C08C5C1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F48C05BD1E
         for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:52:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=hafMSOxLvz0QMVwPW5mBIYngaYhoFVerUK45tuPkV0M=; b=XKuOfr1OVw+yPdKaz3jD5vAbj9
-        LabCrGpx/l0CG3hM+3eUhmCI8Q3ub0YikAyBnJYGcM2k+q2fyqkYPq5SY9NyOpGKVFUPWpnDE8xnq
-        h1q7hKbg688hRFguDyVZETmV2KE9wRys2qNCi5lwhTOmCcV4mxJQChYtxlv2te1q80MVNTROvyVTo
-        OiRG9BiaoTCMqP1cc5ZgCyoO5luKrXE7NZDTb5+SBeH131xU4rAeOW2RMV2mSqzBvrxh8V8kWHUoX
-        GrOEN3KRq7Z3sOX9PBNYCXzgr5diGbpkeec86b6Dwj/4qXkunay914HqlrYfm8eDrrl0ZzZrJRAzp
-        /IbKNQEg==;
+        bh=UOj/pEVWrVPLn+XP9VNIoLrTqQL4onfm76HyQA1XrC4=; b=ZnDpCFqKhu0+zQ4ikUVEBeV51j
+        9EvRPZIjWBxTm2HZ3Y/O+GwmgjQtrgzi2ho9G3eWx7y4hCO0A1BLQyvbwVYdkDlUo4+Ul9MDpGgca
+        gcPNRY0CAuJwvUHVAVfPCGhvMI0h/2R6i+BCkTs/tFoTK0KkPTYnPzlA5ihUPN26hmdze/+OEWpkY
+        nDKFiB1yAKszCoYwzQSTTBhZMLj2kw+k/seaKPYd8XEz435nr3pi3QwlMuGGfJdFKb/B3ejKKTmUg
+        Ytac34gGMfIbzdV4OmzHpHs9D/38RW5DFDgsDxLF2Ifm8JkjnpXteKs+FQkH1pHS+Xkhq/vVOP+/1
+        PYdTijpA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jdyLQ-0001tu-Ha; Wed, 27 May 2020 15:51:53 +0000
+        id 1jdyLS-0001wG-Pq; Wed, 27 May 2020 15:51:55 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0737F3079B2;
-        Wed, 27 May 2020 17:51:49 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 112073079B9;
+        Wed, 27 May 2020 17:51:50 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id B84EF201596D8; Wed, 27 May 2020 17:51:49 +0200 (CEST)
-Message-ID: <20200527155003.272724643@infradead.org>
+        id C2C722015DDF9; Wed, 27 May 2020 17:51:49 +0200 (CEST)
+Message-ID: <20200527155003.485332738@infradead.org>
 User-Agent: quilt/0.66
-Date:   Wed, 27 May 2020 17:45:30 +0200
+Date:   Wed, 27 May 2020 17:45:33 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org, will@kernel.org, tglx@linutronix.de
 Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         a.darwish@linutronix.de, rostedt@goodmis.org,
         bigeasy@linutronix.de, peterz@infradead.org
-Subject: [PATCH 3/6] lockdep: Remove lockdep_hardirq{s_enabled,_context}() argument
+Subject: [PATCH 6/6] x86/entry: Fix NMI vs IRQ state tracking
 References: <20200527154527.233385756@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,200 +62,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the functions use per-cpu data, we no longer need the macro
-argument. Remove it.
+While the nmi_enter() users did
+trace_hardirqs_{off_prepare,on_finish}() there was no matching
+lockdep_hardirqs_*() calls to complete the picture.
+
+Introduce idtentry_{enter,exit}_nmi() to enable proper IRQ state
+tracking across the NMIs.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/irqflags.h       |    8 ++++----
- include/linux/lockdep.h        |    2 +-
- kernel/locking/lockdep.c       |   30 +++++++++++++++---------------
- kernel/softirq.c               |    2 +-
- tools/include/linux/irqflags.h |    4 ++--
- 5 files changed, 23 insertions(+), 23 deletions(-)
+ arch/x86/entry/common.c         |   32 ++++++++++++++++++++++++++++----
+ arch/x86/include/asm/idtentry.h |    3 +++
+ arch/x86/kernel/nmi.c           |    7 ++-----
+ arch/x86/kernel/traps.c         |   21 ++++++---------------
+ include/linux/hardirq.h         |   22 ++++++++++++++++------
+ 5 files changed, 55 insertions(+), 30 deletions(-)
 
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -40,9 +40,9 @@ DECLARE_PER_CPU(int, hardirq_context);
-   extern void trace_hardirqs_off_prepare(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
--# define lockdep_hardirq_context(p)	(this_cpu_read(hardirq_context))
-+# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
- # define lockdep_softirq_context(p)	((p)->softirq_context)
--# define lockdep_hardirqs_enabled(p)	(this_cpu_read(hardirqs_enabled))
-+# define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
- # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
- # define lockdep_hardirq_enter()			\
- do {							\
-@@ -109,9 +109,9 @@ do {						\
- # define trace_hardirqs_off_prepare()		do { } while (0)
- # define trace_hardirqs_on()		do { } while (0)
- # define trace_hardirqs_off()		do { } while (0)
--# define lockdep_hardirq_context(p)	0
-+# define lockdep_hardirq_context()	0
- # define lockdep_softirq_context(p)	0
--# define lockdep_hardirqs_enabled(p)	0
-+# define lockdep_hardirqs_enabled()	0
- # define lockdep_softirqs_enabled(p)	0
- # define lockdep_hardirq_enter()	do { } while (0)
- # define lockdep_hardirq_threaded()	do { } while (0)
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -736,7 +736,7 @@ do {									\
- 
- # define lockdep_assert_RT_in_threaded_ctx() do {			\
- 		WARN_ONCE(debug_locks && !current->lockdep_recursion &&	\
--			  lockdep_hardirq_context(current) &&		\
-+			  lockdep_hardirq_context() &&			\
- 			  !(current->hardirq_threaded || current->irq_config),	\
- 			  "Not in threaded context on PREEMPT_RT as expected\n");	\
- } while (0)
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -2062,9 +2062,9 @@ print_bad_irq_dependency(struct task_str
- 	pr_warn("-----------------------------------------------------\n");
- 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] is trying to acquire:\n",
- 		curr->comm, task_pid_nr(curr),
--		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
-+		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
- 		curr->softirq_context, softirq_count() >> SOFTIRQ_SHIFT,
--		lockdep_hardirqs_enabled(curr),
-+		lockdep_hardirqs_enabled(),
- 		curr->softirqs_enabled);
- 	print_lock(next);
- 
-@@ -3331,9 +3331,9 @@ print_usage_bug(struct task_struct *curr
- 
- 	pr_warn("%s/%d [HC%u[%lu]:SC%u[%lu]:HE%u:SE%u] takes:\n",
- 		curr->comm, task_pid_nr(curr),
--		lockdep_hardirq_context(curr), hardirq_count() >> HARDIRQ_SHIFT,
-+		lockdep_hardirq_context(), hardirq_count() >> HARDIRQ_SHIFT,
- 		lockdep_softirq_context(curr), softirq_count() >> SOFTIRQ_SHIFT,
--		lockdep_hardirqs_enabled(curr),
-+		lockdep_hardirqs_enabled(),
- 		lockdep_softirqs_enabled(curr));
- 	print_lock(this);
- 
-@@ -3649,7 +3649,7 @@ void lockdep_hardirqs_on_prepare(unsigne
- 	if (unlikely(!debug_locks || current->lockdep_recursion))
- 		return;
- 
--	if (unlikely(lockdep_hardirqs_enabled(current))) {
-+	if (unlikely(lockdep_hardirqs_enabled())) {
- 		/*
- 		 * Neither irq nor preemption are disabled here
- 		 * so this is racy by nature but losing one hit
-@@ -3677,7 +3677,7 @@ void lockdep_hardirqs_on_prepare(unsigne
- 	 * Can't allow enabling interrupts while in an interrupt handler,
- 	 * that's general bad form and such. Recursion, limited stack etc..
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context(current)))
-+	if (DEBUG_LOCKS_WARN_ON(lockdep_hardirq_context()))
- 		return;
- 
- 	current->hardirq_chain_key = current->curr_chain_key;
-@@ -3695,7 +3695,7 @@ void noinstr lockdep_hardirqs_on(unsigne
- 	if (unlikely(!debug_locks || curr->lockdep_recursion))
- 		return;
- 
--	if (lockdep_hardirqs_enabled(curr)) {
-+	if (lockdep_hardirqs_enabled()) {
- 		/*
- 		 * Neither irq nor preemption are disabled here
- 		 * so this is racy by nature but losing one hit
-@@ -3745,7 +3745,7 @@ void noinstr lockdep_hardirqs_off(unsign
- 	if (DEBUG_LOCKS_WARN_ON(!irqs_disabled()))
- 		return;
- 
--	if (lockdep_hardirqs_enabled(curr)) {
-+	if (lockdep_hardirqs_enabled()) {
- 		/*
- 		 * We have done an ON -> OFF transition:
- 		 */
-@@ -3794,7 +3794,7 @@ void lockdep_softirqs_on(unsigned long i
- 	 * usage bit for all held locks, if hardirqs are
- 	 * enabled too:
- 	 */
--	if (lockdep_hardirqs_enabled(curr))
-+	if (lockdep_hardirqs_enabled())
- 		mark_held_locks(curr, LOCK_ENABLED_SOFTIRQ);
- 	lockdep_recursion_finish();
- }
-@@ -3843,7 +3843,7 @@ mark_usage(struct task_struct *curr, str
- 	 */
- 	if (!hlock->trylock) {
- 		if (hlock->read) {
--			if (lockdep_hardirq_context(curr))
-+			if (lockdep_hardirq_context())
- 				if (!mark_lock(curr, hlock,
- 						LOCK_USED_IN_HARDIRQ_READ))
- 					return 0;
-@@ -3852,7 +3852,7 @@ mark_usage(struct task_struct *curr, str
- 						LOCK_USED_IN_SOFTIRQ_READ))
- 					return 0;
- 		} else {
--			if (lockdep_hardirq_context(curr))
-+			if (lockdep_hardirq_context())
- 				if (!mark_lock(curr, hlock, LOCK_USED_IN_HARDIRQ))
- 					return 0;
- 			if (curr->softirq_context)
-@@ -3890,7 +3890,7 @@ mark_usage(struct task_struct *curr, str
- 
- static inline unsigned int task_irq_context(struct task_struct *task)
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -550,7 +550,7 @@ SYSCALL_DEFINE0(ni_syscall)
+  * The return value must be fed into the rcu_exit argument of
+  * idtentry_exit_cond_rcu().
+  */
+-bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
++noinstr bool idtentry_enter_cond_rcu(struct pt_regs *regs)
  {
--	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context(task) +
-+	return LOCK_CHAIN_HARDIRQ_CONTEXT * !!lockdep_hardirq_context() +
- 	       LOCK_CHAIN_SOFTIRQ_CONTEXT * !!task->softirq_context;
+ 	if (user_mode(regs)) {
+ 		enter_from_user_mode();
+@@ -619,7 +619,7 @@ static void idtentry_exit_cond_resched(s
+  * Counterpart to idtentry_enter_cond_rcu(). The return value of the entry
+  * function must be fed into the @rcu_exit argument.
+  */
+-void noinstr idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
++noinstr void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
+ {
+ 	lockdep_assert_irqs_disabled();
+ 
+@@ -663,7 +663,7 @@ void noinstr idtentry_exit_cond_rcu(stru
+  * Invokes enter_from_user_mode() to establish the proper context for
+  * NOHZ_FULL. Otherwise scheduling on exit would not be possible.
+  */
+-void noinstr idtentry_enter_user(struct pt_regs *regs)
++noinstr void idtentry_enter_user(struct pt_regs *regs)
+ {
+ 	enter_from_user_mode();
+ }
+@@ -680,13 +680,37 @@ void noinstr idtentry_enter_user(struct
+  *
+  * Counterpart to idtentry_enter_user().
+  */
+-void noinstr idtentry_exit_user(struct pt_regs *regs)
++noinstr void idtentry_exit_user(struct pt_regs *regs)
+ {
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	prepare_exit_to_usermode(regs);
  }
  
-@@ -3983,7 +3983,7 @@ static inline short task_wait_context(st
- 	 * Set appropriate wait type for the context; for IRQs we have to take
- 	 * into account force_irqthread as that is implied by PREEMPT_RT.
- 	 */
--	if (lockdep_hardirq_context(curr)) {
-+	if (lockdep_hardirq_context()) {
- 		/*
- 		 * Check if force_irqthreads will run us threaded.
- 		 */
-@@ -4826,11 +4826,11 @@ static void check_flags(unsigned long fl
- 		return;
++noinstr void idtentry_enter_nmi(struct pt_regs *regs)
++{
++	lockdep_hardirqs_off(CALLER_ADDR0);
++	__nmi_enter();
++	instrumentation_begin();
++	trace_hardirqs_off_finish();
++	instrumentation_end();
++	lockdep_hardirq_enter();
++}
++
++noinstr void idtentry_exit_nmi(struct pt_regs *regs)
++{
++	lockdep_hardirq_exit();
++	if (regs->flags & X86_EFLAGS_IF) {
++		instrumentation_begin();
++		trace_hardirqs_on_prepare();
++		lockdep_hardirqs_on_prepare(CALLER_ADDR0);
++		instrumentation_end();
++	}
++	__nmi_exit();
++	if (regs->flags & X86_EFLAGS_IF)
++		lockdep_hardirqs_on(CALLER_ADDR0);
++}
++
+ #ifdef CONFIG_XEN_PV
+ #ifndef CONFIG_PREEMPTION
+ /*
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -16,6 +16,9 @@ void idtentry_exit_user(struct pt_regs *
+ bool idtentry_enter_cond_rcu(struct pt_regs *regs);
+ void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit);
  
- 	if (irqs_disabled_flags(flags)) {
--		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled(current))) {
-+		if (DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())) {
- 			printk("possible reason: unannotated irqs-off.\n");
- 		}
++void idtentry_enter_nmi(struct pt_regs *regs);
++void idtentry_exit_nmi(struct pt_regs *regs);
++
+ /**
+  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
+  *		      No error code pushed by hardware
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -330,7 +330,6 @@ static noinstr void default_do_nmi(struc
+ 	__this_cpu_write(last_nmi_rip, regs->ip);
+ 
+ 	instrumentation_begin();
+-	trace_hardirqs_off_finish();
+ 
+ 	handled = nmi_handle(NMI_LOCAL, regs);
+ 	__this_cpu_add(nmi_stats.normal, handled);
+@@ -417,8 +416,6 @@ static noinstr void default_do_nmi(struc
+ 		unknown_nmi_error(reason, regs);
+ 
+ out:
+-	if (regs->flags & X86_EFLAGS_IF)
+-		trace_hardirqs_on_prepare();
+ 	instrumentation_end();
+ }
+ 
+@@ -535,14 +532,14 @@ DEFINE_IDTENTRY_NMI(exc_nmi)
+ 	}
+ #endif
+ 
+-	nmi_enter();
++	idtentry_enter_nmi(regs);
+ 
+ 	inc_irq_stat(__nmi_count);
+ 
+ 	if (!ignore_nmis)
+ 		default_do_nmi(regs);
+ 
+-	nmi_exit();
++	idtentry_exit_nmi(regs);
+ 
+ #ifdef CONFIG_X86_64
+ 	if (unlikely(this_cpu_read(update_debug_stack))) {
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -387,7 +387,8 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
+ 	}
+ #endif
+ 
+-	nmi_enter();
++
++	idtentry_enter_nmi(regs);
+ 	instrumentation_begin();
+ 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
+ 
+@@ -632,15 +633,12 @@ DEFINE_IDTENTRY_RAW(exc_int3)
+ 		instrumentation_end();
+ 		idtentry_exit_user(regs);
  	} else {
--		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled(current))) {
-+		if (DEBUG_LOCKS_WARN_ON(!lockdep_hardirqs_enabled())) {
- 			printk("possible reason: unannotated irqs-on.\n");
- 		}
+-		nmi_enter();
++		idtentry_enter_nmi(regs);
+ 		instrumentation_begin();
+-		trace_hardirqs_off_finish();
+ 		if (!do_int3(regs))
+ 			die("int3", regs, 0);
+-		if (regs->flags & X86_EFLAGS_IF)
+-			trace_hardirqs_on_prepare();
+ 		instrumentation_end();
+-		nmi_exit();
++		idtentry_exit_nmi(regs);
  	}
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -230,7 +230,7 @@ static inline bool lockdep_softirq_start
+ }
+ 
+@@ -852,10 +850,7 @@ static void noinstr handle_debug(struct
+ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 					     unsigned long dr6)
  {
- 	bool in_hardirq = false;
+-	nmi_enter();
+-	instrumentation_begin();
+-	trace_hardirqs_off_finish();
+-	instrumentation_end();
++	idtentry_enter_nmi(regs);
  
--	if (lockdep_hardirq_context(current)) {
-+	if (lockdep_hardirq_context()) {
- 		in_hardirq = true;
- 		lockdep_hardirq_exit();
- 	}
---- a/tools/include/linux/irqflags.h
-+++ b/tools/include/linux/irqflags.h
-@@ -2,9 +2,9 @@
- #ifndef _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
- #define _LIBLOCKDEP_LINUX_TRACE_IRQFLAGS_H_
+ 	/*
+ 	 * The SDM says "The processor clears the BTF flag when it
+@@ -878,11 +873,7 @@ static __always_inline void exc_debug_ke
+ 	if (dr6)
+ 		handle_debug(regs, dr6, false);
  
--# define lockdep_hardirq_context(p)	0
-+# define lockdep_hardirq_context()	0
- # define lockdep_softirq_context(p)	0
--# define lockdep_hardirqs_enabled(p)	0
-+# define lockdep_hardirqs_enabled()	0
- # define lockdep_softirqs_enabled(p)	0
- # define lockdep_hardirq_enter()	do { } while (0)
- # define lockdep_hardirq_exit()		do { } while (0)
+-	instrumentation_begin();
+-	if (regs->flags & X86_EFLAGS_IF)
+-		trace_hardirqs_on_prepare();
+-	instrumentation_end();
+-	nmi_exit();
++	idtentry_exit_nmi(regs);
+ }
+ 
+ static __always_inline void exc_debug_user(struct pt_regs *regs,
+--- a/include/linux/hardirq.h
++++ b/include/linux/hardirq.h
+@@ -111,32 +111,42 @@ extern void rcu_nmi_exit(void);
+ /*
+  * nmi_enter() can nest up to 15 times; see NMI_BITS.
+  */
+-#define nmi_enter()						\
++#define __nmi_enter()						\
+ 	do {							\
++		lockdep_off();					\
+ 		arch_nmi_enter();				\
+ 		printk_nmi_enter();				\
+-		lockdep_off();					\
+ 		BUG_ON(in_nmi() == NMI_MASK);			\
+ 		__preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
+ 		rcu_nmi_enter();				\
+-		lockdep_hardirq_enter();			\
+ 		instrumentation_begin();			\
+ 		ftrace_nmi_enter();				\
+ 		instrumentation_end();				\
+ 	} while (0)
+ 
+-#define nmi_exit()						\
++#define nmi_enter()						\
++	do {							\
++		lockdep_hardirq_enter();			\
++		__nmi_enter();					\
++	} while (0)
++
++#define __nmi_exit()						\
+ 	do {							\
+ 		instrumentation_begin();			\
+ 		ftrace_nmi_exit();				\
+ 		instrumentation_end();				\
+-		lockdep_hardirq_exit();				\
+ 		rcu_nmi_exit();					\
+ 		BUG_ON(!in_nmi());				\
+ 		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
+-		lockdep_on();					\
+ 		printk_nmi_exit();				\
+ 		arch_nmi_exit();				\
++		lockdep_on();					\
++	} while (0)
++
++#define nmi_exit()						\
++	do {							\
++		__nmi_exit();					\
++		lockdep_hardirq_exit();				\
+ 	} while (0)
+ 
+ #endif /* LINUX_HARDIRQ_H */
 
 
