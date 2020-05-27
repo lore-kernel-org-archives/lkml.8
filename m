@@ -2,106 +2,124 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC10C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17EE821534
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="wr9R8e/k"
+	by mail.kernel.org (Postfix) with ESMTP id 35522208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:09:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390840AbgE0QIt (ORCPT
+        id S1729914AbgE0QJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390822AbgE0QIt (ORCPT
+        Wed, 27 May 2020 12:09:57 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37104 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgE0QJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:08:49 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35216C03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:08:48 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id x12so19569078qts.9
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:08:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w8h0j9dH4yYJY4/vfPJevkjnamNxkzeTwIjaJ077JR0=;
-        b=wr9R8e/kt+6YZN51MgGSrgrQKN+iV0+U0w3YDiUZds+tcdj7UMMAPuL2YRAryMtohX
-         VNKbvNrG4bIjPWETOEhzA2c4U/E+X4CVY2EgJ/5ySPQ3LlqJidyQIRGPfTzASiiFnl+S
-         uHmbW0X2xvXgxyXg4abfE1eHxfYdyOP2KHd5y4aqtb2dKO5FWfHDDlvh4G4leXuoDM2X
-         6k6SD1XYo3XXhbqc/Ijv/Mz+1Egec9v2tRNzcTRPdOlPecpv6ZUeA9Eni8M8qGoWVGYI
-         25JlCJx5lZcI/qzgwceu2T05yXTObMsf3EZfQHFHZ6afE2C5Lsf9qFojbh1qNErXd8RZ
-         b0/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w8h0j9dH4yYJY4/vfPJevkjnamNxkzeTwIjaJ077JR0=;
-        b=M71WRA4YM3CJQZGux5zl13T0E4+9sWEVz0ZioH1Egg7nqKSzJW9zZqToUsCdY0ZtHt
-         JK7RuQcu6xNjHPvC/RsghXJ8Kku6+W5VpDkSAY9ZWJ9ZACIwjWYn58KounR44SqNvgO+
-         BB2zF4r5loh/kvW6V0oCSc7rE6lX/yREJydEZ0Ey0KqLCLidhAME+ZNfeC6LLl3/7cUy
-         /csH1Cr+1fDRdYcxY8MyjKzeBrrNEtlLO8OH2QPJ0O3Ck1CTclzOrCDaPWDVEvbZzr2O
-         fyyEvOxCGnEsIFwP+AeItVyJzqUhCRUIxj7+rFaGw9WwHUVdis1l/QtXUqbEvbvPPkc6
-         ibpw==
-X-Gm-Message-State: AOAM530qT2yCbkYhCvYz3H3Fb13vGkEGK2iU22v7iR8W8mvzDzkSHPCI
-        aGoJCn4tbWDrCdA3jPEj0wKdoL+YUw4=
-X-Google-Smtp-Source: ABdhPJy5UGsbDyy2tFB1CZRSSq0mPUHmpiz0WO0wsfMt60nuAnhNi+TNUDnh/WaDsCnTkdOrWSy7Rg==
-X-Received: by 2002:ac8:42ce:: with SMTP id g14mr4989535qtm.117.1590595727478;
-        Wed, 27 May 2020 09:08:47 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2535])
-        by smtp.gmail.com with ESMTPSA id f14sm2558579qka.70.2020.05.27.09.08.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 09:08:46 -0700 (PDT)
-Date:   Wed, 27 May 2020 12:08:21 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Boris Burkov <boris@bur.io>
-Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH cgroup/for-5.8] cgroup: add cpu.stat file to root cgroup
-Message-ID: <20200527160821.GC42293@cmpxchg.org>
-References: <20200526200800.3969430-1-boris@bur.io>
+        Wed, 27 May 2020 12:09:57 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id BA1EA8030835;
+        Wed, 27 May 2020 16:09:54 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bDkvW9sg6A7Z; Wed, 27 May 2020 19:09:53 +0300 (MSK)
+Date:   Wed, 27 May 2020 19:09:50 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 08/11] i2c: designware: Convert driver to using regmap
+ API
+Message-ID: <20200527160950.p3brpiup3pihlzi6@mobilestation>
+References: <20200527153046.6172-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527153046.6172-9-Sergey.Semin@baikalelectronics.ru>
+ <20200527160337.GL1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200526200800.3969430-1-boris@bur.io>
+In-Reply-To: <20200527160337.GL1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 01:08:00PM -0700, Boris Burkov wrote:
-> Currently, the root cgroup does not have a cpu.stat file. Add one which
-> is consistent with /proc/stat to capture global cpu statistics that
-> might not fall under cgroup accounting.
+On Wed, May 27, 2020 at 07:03:37PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 06:30:43PM +0300, Serge Semin wrote:
+> > Seeing the DW I2C driver is using flags-based accessors with two
+> > conditional clauses it would be better to replace them with the regmap
+> > API IO methods and to initialize the regmap object with read/write
+> > callbacks specific to the controller registers map implementation. This
+> > will be also handy for the drivers with non-standard registers mapping
+> > (like an embedded into the Baikal-T1 System Controller DW I2C block, which
+> > glue-driver is a part of this series).
+> > 
+> > As before the driver tries to detect the mapping setup at probe stage and
+> > creates a regmap object accordingly, which will be used by the rest of the
+> > code to correctly access the controller registers. In two places it was
+> > appropriate to convert the hand-written read-modify-write and
+> > read-poll-loop design patterns to the corresponding regmap API
+> > ready-to-use methods.
+> > 
+> > Note the regmap IO methods return value is checked only at the probe
+> > stage. The rest of the code won't do this because basically we have
+> > MMIO-based regmap so non of the read/write methods can fail (this also
+> > won't be needed for the Baikal-T1-specific I2C controller).
 > 
-> We haven't done this in the past because the data are already presented
-> in /proc/stat and we didn't want to add overhead from collecting root
-> cgroup stats when cgroups are configured, but no cgroups have been
-> created.
+> ...
 > 
-> By keeping the data consistent with /proc/stat, I think we avoid the
-> first problem, while improving the usability of cgroups stats.
-> We avoid the second problem by computing the contents of cpu.stat from
-> existing data collected for /proc/stat anyway.
+> > +	struct regmap_config map_cfg = {
+> > +		.reg_bits = 32,
+> > +		.val_bits = 32,
+> > +		.reg_stride = 4,
+> > +		.disable_locking = true,
+> > +		.reg_read = dw_reg_read,
+> > +		.reg_write = dw_reg_write,
 > 
-> Signed-off-by: Boris Burkov <boris@bur.io>
-> Suggested-by: Tejun Heo <tj@kernel.org>
+> > +		.max_register = DW_IC_COMP_TYPE
+> 
 
-Looks good to me, but Boris can you please update
-Documentation/admin-guide/cgroup-v2.rst as well in this patch?
+> Perhaps leave comma here as well.
 
-  cpu.stat
-        A read-only flat-keyed file which exists on non-root cgroups.
+If v6 is required, it'll be fixed there.
 
-Thanks!
+-Sergey
+
+> 
+> > +	};
+> 
+> ...
+> 
+> > +	/*
+> > +	 * Note we'll check the return value of the regmap IO accessors only
+> > +	 * at the probe stage. The rest of the code won't do this because
+> > +	 * basically we have MMIO-based regmap so non of the read/write methods
+> > +	 * can fail.
+> > +	 */
+> > +	dev->map = devm_regmap_init(dev->dev, NULL, dev, &map_cfg);
+> > +	if (IS_ERR(dev->map)) {
+> > +		dev_err(dev->dev, "Failed to init the registers map\n");
+> 
+> > +		return PTR_ERR(dev->map);
+> > +	}
+> > +
+> >  	return 0;
+> 
+> 	return PTR_ERR_OR_ZERO(dev->map);
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
