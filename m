@@ -2,95 +2,121 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C65EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAC4207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D5820657
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:07:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgE0MHY (ORCPT
+        id S1729408AbgE0MHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:07:24 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:34850 "EHLO
+        Wed, 27 May 2020 08:07:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:34894 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgE0MHX (ORCPT
+        with ESMTP id S1728530AbgE0MHc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:07:23 -0400
+        Wed, 27 May 2020 08:07:32 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3ED58803080A;
-        Wed, 27 May 2020 12:07:18 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 4A2CA803083B;
+        Wed, 27 May 2020 12:07:28 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 6yp1ZNgKw_kt; Wed, 27 May 2020 15:07:17 +0300 (MSK)
-Date:   Wed, 27 May 2020 15:07:16 +0300
+        with ESMTP id SCCFiA2iPBDp; Wed, 27 May 2020 15:07:27 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Wolfram Sang <wsa@the-dreams.de>,
-        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <linux-mips@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 03/12] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200527120716.4dke6psqpw726wrd@mobilestation>
-References: <20200526215528.16417-1-Sergey.Semin@baikalelectronics.ru>
- <20200526215528.16417-4-Sergey.Semin@baikalelectronics.ru>
- <CAHp75VdHC+fZNgc5oFbgYaNDebudDROcM_peRzOZpTVy55+tJg@mail.gmail.com>
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 07/11] i2c: designware: Discard Cherry Trail model flag
+Date:   Wed, 27 May 2020 15:01:07 +0300
+Message-ID: <20200527120111.5781-8-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdHC+fZNgc5oFbgYaNDebudDROcM_peRzOZpTVy55+tJg@mail.gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:30:04PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 1:00 AM Serge Semin
-> <Sergey.Semin@baikalelectronics.ru> wrote:
-> >
-> > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> > i2c "reg" property. If it is the compiler will print a warning:
-> 
-> Shouldn't be dtc whatever tools fixed?
+A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+bus pm_disabled workaround"), but the flag most likely by mistake has been
+left in the Dw I2C drivers. Let's remove it.
 
-See the first patch in the series.
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: devicetree@vger.kernel.org
 
-> 
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> >
-> > In order to silence dtc up let's discard the flag from the DW I2C DT
-> > binding example for now. Just revert this commit when dtc is fixed.
-> 
-> Doesn't sound like a good idea. If user happens in between of these
-> ping-pong change, how they will know this subtle issue?
+---
 
-As I see it, there are three ways we can follow.
-1) Apply the patch and revert when dtc is fixed.
-2) Apply the patch, but add a comment above the property, that we need
-   to get the 0x40000064 address back when dtc is dixed.
-3) Leave this ugly warning be until dtc is fixed.
+Changelog v3:
+- Since MSCC and Baikal-T1 will be a part of the platform driver code, we
+  have to preserve the MODEL_MASK macro to use it to filter the model
+  flags during the IP-specific quirks activation.
+---
+ drivers/i2c/busses/i2c-designware-core.h    | 3 +--
+ drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
+ drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-In a comment to v2 Rob mentioned a solution like 1). Personally I am ok with
-either, though I'd like to see a Rob's final comment about this.
+diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+index 150de5e5c31b..b9ef9b0deef0 100644
+--- a/drivers/i2c/busses/i2c-designware-core.h
++++ b/drivers/i2c/busses/i2c-designware-core.h
+@@ -289,8 +289,7 @@ struct dw_i2c_dev {
+ #define ACCESS_INTR_MASK	0x00000004
+ #define ACCESS_NO_IRQ_SUSPEND	0x00000008
+ 
+-#define MODEL_CHERRYTRAIL	0x00000100
+-#define MODEL_MSCC_OCELOT	0x00000200
++#define MODEL_MSCC_OCELOT	0x00000100
+ #define MODEL_MASK		0x00000f00
+ 
+ u32 dw_readl(struct dw_i2c_dev *dev, int offset);
+diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
+index 11a5e4751eab..947c096f86e3 100644
+--- a/drivers/i2c/busses/i2c-designware-pcidrv.c
++++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
+@@ -149,7 +149,6 @@ static struct dw_pci_controller dw_pci_controllers[] = {
+ 	},
+ 	[cherrytrail] = {
+ 		.bus_num = -1,
+-		.flags = MODEL_CHERRYTRAIL,
+ 		.scl_sda_cfg = &byt_config,
+ 	},
+ 	[elkhartlake] = {
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index f6d2c96e35ce..ca057aa9eac4 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -44,7 +44,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
+ 	{ "INT3432", 0 },
+ 	{ "INT3433", 0 },
+ 	{ "80860F41", ACCESS_NO_IRQ_SUSPEND },
+-	{ "808622C1", ACCESS_NO_IRQ_SUSPEND | MODEL_CHERRYTRAIL },
++	{ "808622C1", ACCESS_NO_IRQ_SUSPEND },
+ 	{ "AMD0010", ACCESS_INTR_MASK },
+ 	{ "AMDI0010", ACCESS_INTR_MASK },
+ 	{ "AMDI0510", 0 },
+-- 
+2.26.2
 
--Sergey 
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
