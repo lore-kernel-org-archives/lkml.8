@@ -2,138 +2,134 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14952C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E92AC20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="F0kLEdkP"
+	by mail.kernel.org (Postfix) with ESMTP id 64E7720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgE0T4m (ORCPT
+        id S2387459AbgE0UCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbgE0T4l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:56:41 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C742C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:56:41 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id w1so812981qkw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uWtuI3UUqrcr2MPYY5t1qIqp8t2VdGpdGQyBHayc2+I=;
-        b=F0kLEdkPRpFO9sH4wIpK6WFmkk+axi+AF8AIp2TUrvRiQ5IBMPR/xY35x5yDhSQmEe
-         7qd3x3C70smXp6N9YZ2ugYa3/Edu51g8JTb+5dcxs5oHL7ox91AXyxIRsBkNIrYvMNeH
-         /dBAvk1ujz0GqKOEewegiRaGmAm25tBIInVhUFdlxeO4s44vafo89W6zlYBv5HJtjsas
-         a2o4WMkqr9p6Reb7lyX2opm9Ze5J09sHAUyJ5Gz8293k4J/CSalOGy6VrI+87azCztME
-         6DuFJ5GyV9LZVq40cWVEKHdf5ipbGToeGK5YW1ffw/2l1Yi6PK6sx8fY0OZYSosgdSIo
-         d/4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uWtuI3UUqrcr2MPYY5t1qIqp8t2VdGpdGQyBHayc2+I=;
-        b=dEgoAh9Dw4UDzJHGWYsTaA8iKcL+/wQmW9ayuHKjbgIGbdB5Xv8B9v7mnPkTZTySh4
-         2OvQKIDgGutmkRy9oKttyuwjIcPdjhMDZghYc+Bybi8X2UP0ZKm0U4Ei4LghCTxvB8bi
-         9WJhJec7JB+Gv3xOVuxZbb9SfwY5dC5pbPOzRF240gHA5ub4fCt2iGT9+LPfpbMhrqyD
-         6R3AYO0kflxxpv8K07t0fvTX0wEK+jAjnc8gN6An/gMchm69eqLcU3kH3P4ydwc+8QX4
-         XHpCY+e1y1qqGrXUxexsrwhyJ2aa6jb9gdJBjGEx78bERZ4oYhprUURiecg6VOV/3sSn
-         UamQ==
-X-Gm-Message-State: AOAM533Xtwi38NOFjKrb8nl4+Tvzu7gNIhlGK1IQAe0BPYtvo5hIqPZh
-        mzv+u4kvPc8e1K+L/ayV49m4kQ==
-X-Google-Smtp-Source: ABdhPJzlAziYYOCm4VXEycz3sNv4Do6UvsXICCUPA0HIuaPoefFQjqsdZvAOOeXzo/yJ5MNL3mZ2OA==
-X-Received: by 2002:a37:79c5:: with SMTP id u188mr5718286qkc.300.1590609400422;
-        Wed, 27 May 2020 12:56:40 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2535])
-        by smtp.gmail.com with ESMTPSA id s74sm3135071qka.54.2020.05.27.12.56.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:56:39 -0700 (PDT)
-Date:   Wed, 27 May 2020 15:56:14 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        Vlastimil Babka <vbabka@suse.cz>, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 06/19] mm: memcg/slab: obj_cgroup API
-Message-ID: <20200527195614.GC47905@cmpxchg.org>
-References: <20200526214227.989341-1-guro@fb.com>
- <20200526214227.989341-7-guro@fb.com>
+        Wed, 27 May 2020 16:02:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:44210 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726114AbgE0UCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:02:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7394C31B;
+        Wed, 27 May 2020 13:02:38 -0700 (PDT)
+Received: from [10.57.2.168] (unknown [10.57.2.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45AE93F52E;
+        Wed, 27 May 2020 13:02:36 -0700 (PDT)
+Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
+From:   Robin Murphy <robin.murphy@arm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Naohiro Aota <naohiro.aota@wdc.com>,
+        Stephen Boyd <swboyd@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Manoj Gupta <manojgupta@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20200526173117.155339-1-ndesaulniers@google.com>
+ <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
+ <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
+ <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com>
+Message-ID: <d2bf55cf-8b72-3f88-3c0b-5dfb4e120f7f@arm.com>
+Date:   Wed, 27 May 2020 21:02:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526214227.989341-7-guro@fb.com>
+In-Reply-To: <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 02:42:14PM -0700, Roman Gushchin wrote:
-> @@ -257,6 +257,98 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
->  }
->  
->  #ifdef CONFIG_MEMCG_KMEM
-> +extern spinlock_t css_set_lock;
-> +
-> +static void obj_cgroup_release(struct percpu_ref *ref)
-> +{
-> +	struct obj_cgroup *objcg = container_of(ref, struct obj_cgroup, refcnt);
-> +	struct mem_cgroup *memcg;
-> +	unsigned int nr_bytes;
-> +	unsigned int nr_pages;
-> +	unsigned long flags;
-> +
-> +	/*
-> +	 * At this point all allocated objects are freed, and
-> +	 * objcg->nr_charged_bytes can't have an arbitrary byte value.
-> +	 * However, it can be PAGE_SIZE or (x * PAGE_SIZE).
-> +	 *
-> +	 * The following sequence can lead to it:
-> +	 * 1) CPU0: objcg == stock->cached_objcg
-> +	 * 2) CPU1: we do a small allocation (e.g. 92 bytes),
-> +	 *          PAGE_SIZE bytes are charged
-> +	 * 3) CPU1: a process from another memcg is allocating something,
-> +	 *          the stock if flushed,
-> +	 *          objcg->nr_charged_bytes = PAGE_SIZE - 92
-> +	 * 5) CPU0: we do release this object,
-> +	 *          92 bytes are added to stock->nr_bytes
-> +	 * 6) CPU0: stock is flushed,
-> +	 *          92 bytes are added to objcg->nr_charged_bytes
-> +	 *
-> +	 * In the result, nr_charged_bytes == PAGE_SIZE.
-> +	 * This page will be uncharged in obj_cgroup_release().
-> +	 */
+On 2020-05-27 20:28, Robin Murphy wrote:
+> On 2020-05-27 18:55, Nick Desaulniers wrote:
+>> On Wed, May 27, 2020 at 6:45 AM Robin Murphy <robin.murphy@arm.com> 
+>> wrote:
+>>>
+>>> On 2020-05-26 18:31, Nick Desaulniers wrote:
+>>>> Custom toolchains that modify the default target to -mthumb cannot
+>>>> compile the arm64 compat vdso32, as
+>>>> arch/arm64/include/asm/vdso/compat_gettimeofday.h
+>>>> contains assembly that's invalid in -mthumb.  Force the use of -marm,
+>>>> always.
+>>>
+>>> FWIW, this seems suspicious - the only assembly instructions I see there
+>>> are SWI(SVC), MRRC, and a MOV, all of which exist in Thumb for the
+>>> -march=armv7a baseline that we set.
+>>>
+>>> On a hunch, I've just bodged "VDSO_CFLAGS += -mthumb" into my tree and
+>>> built a Thumb VDSO quite happily with Ubuntu 19.04's
+>>> gcc-arm-linux-gnueabihf. What was the actual failure you saw?
+>>
+>>  From the link in the commit message: `write to reserved register 'R7'`
+>> https://godbolt.org/z/zwr7iZ
+>> IIUC r7 is reserved for the frame pointer in THUMB?
+> 
+> It can be, if you choose to build with frame pointers and the common 
+> frame pointer ABI for Thumb code that uses r7. However it can also be 
+> for other things like the syscall number in the Arm syscall ABI too. I 
 
-Thanks for adding this.
+Oh, and for the avoidance of ambiguity that's "Arm" as in the 32-bit Arm 
+architecture port, not a specific instruction set.
 
-> +int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)
-> +{
-> +	struct mem_cgroup *memcg;
-> +	unsigned int nr_pages, nr_bytes;
-> +	int ret;
-> +
-> +	if (consume_obj_stock(objcg, size))
-> +		return 0;
-> +
-> +	rcu_read_lock();
-> +	memcg = obj_cgroup_memcg(objcg);
-> +	css_get(&memcg->css);
-> +	rcu_read_unlock();
+Robin.
 
-Can you please also add the comment here I mentioned last time? To
-explain why we're not checking objcg->nr_charged_bytes if we have
-already pre-allocated bytes that could satisfy the allocation.
-
-Otherwise, looks good to me.
+> take it Clang has decided that writing syscall wrappers with minimal 
+> inline asm is not a thing people deserve to do without arbitrary other 
+> restrictions?
+> 
+>> What is the implicit default of your gcc-arm-linux-gnueabihf at -O2?
+>> -mthumb, or -marm?
+> 
+> As Dave pointed out, like the probable majority of users it's Thumb:
+> 
+> $ arm-linux-gnueabihf-gcc -v
+> Using built-in specs.
+> COLLECT_GCC=arm-linux-gnueabihf-gcc
+> COLLECT_LTO_WRAPPER=/usr/lib/gcc-cross/arm-linux-gnueabihf/8/lto-wrapper
+> Target: arm-linux-gnueabihf
+> Configured with: ../src/configure -v --with-pkgversion='Ubuntu/Linaro 
+> 8.3.0-6ubuntu1' --with-bugurl=file:///usr/share/doc/gcc-8/README.Bugs 
+> --enable-languages=c,ada,c++,go,d,fortran,objc,obj-c++ --prefix=/usr 
+> --with-gcc-major-version-only --program-suffix=-8 --enable-shared 
+> --enable-linker-build-id --libexecdir=/usr/lib 
+> --without-included-gettext --enable-threads=posix --libdir=/usr/lib 
+> --enable-nls --with-sysroot=/ --enable-clocale=gnu 
+> --enable-libstdcxx-debug --enable-libstdcxx-time=yes 
+> --with-default-libstdcxx-abi=new --enable-gnu-unique-object 
+> --disable-libitm --disable-libquadmath --disable-libquadmath-support 
+> --enable-plugin --enable-default-pie --with-system-zlib 
+> --with-target-system-zlib --enable-multiarch --enable-multilib 
+> --disable-sjlj-exceptions --with-arch=armv7-a --with-fpu=vfpv3-d16 
+> --with-float=hard --with-mode=thumb --disable-werror --enable-multilib 
+> --enable-checking=release --build=aarch64-linux-gnu 
+> --host=aarch64-linux-gnu --target=arm-linux-gnueabihf 
+> --program-prefix=arm-linux-gnueabihf- 
+> --includedir=/usr/arm-linux-gnueabihf/include
+> Thread model: posix
+> gcc version 8.3.0 (Ubuntu/Linaro 8.3.0-6ubuntu1)
+> 
+> (yeah, I didn't actually need to hack my makefile at all)
+> 
+> Robin.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
