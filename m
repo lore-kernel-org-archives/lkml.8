@@ -2,46 +2,47 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9156BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C341EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66FC820899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF7020707
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IM9uHa0w"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="KiKH1jpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgE0WeR (ORCPT
+        id S1726636AbgE0WeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:34:17 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:61352 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726398AbgE0WeP (ORCPT
+        Wed, 27 May 2020 18:34:19 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32292 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726445AbgE0WeO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:34:15 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 04RMG9Vx001541
+        Wed, 27 May 2020 18:34:14 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04RME0Kk016708
         for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:14 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=ZjC2jceVpIqn2kv0DV6twUVNHinzsg0N2vbtb40UgLg=;
- b=IM9uHa0waPJnGQmf0f4/o0NjyfLhvIehy+eHWSpZxqK2mS+PxbUxu7aFbKKfxyrIVjmu
- TDm/C6g5dxh8cG2cZytj4qY5GCy9I4S/H8SGYTjTd9wUqIJ82t19jPWJo4YSzkGqwHP+
- EWqXCpS3Os1nyJPmGxrdQgxifJcp2SJ84gc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 316yb1gv34-9
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=d6l00WkVLgtmYXyZnmkXhIoFuaUk1sBZ4g/dXP9ISL4=;
+ b=KiKH1jpdQAbFjBCYFHSvKyAb5M5AGSBvM3W3OCuVe1POQniJMuBwijkRthuho1GIRf+K
+ SjxC8Dv77fHUUd4K8nZCnU/qLcAnId+WBmpBVIfjKtNZVXpI2p5xNKzZGavL005ylwNL
+ JLBlJeZehSf+0bZZnMroQuvD7WsekBqtX7s= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 317ktaj67e-5
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
         for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:34:14 -0700
-Received: from intmgw004.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c085:208::f) by
+ mail.thefacebook.com (2620:10d:c085:21d::7) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 15:34:13 -0700
+ 15.1.1979.3; Wed, 27 May 2020 15:34:12 -0700
 Received: by devvm1291.vll0.facebook.com (Postfix, from userid 111017)
-        id 868E61669014; Wed, 27 May 2020 15:34:07 -0700 (PDT)
+        id 9A8E0166901C; Wed, 27 May 2020 15:34:07 -0700 (PDT)
 Smtp-Origin-Hostprefix: devvm
 From:   Roman Gushchin <guro@fb.com>
 Smtp-Origin-Hostname: devvm1291.vll0.facebook.com
@@ -53,20 +54,22 @@ CC:     Johannes Weiner <hannes@cmpxchg.org>,
         Vlastimil Babka <vbabka@suse.cz>, <kernel-team@fb.com>,
         <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
 Smtp-Origin-Cluster: vll0c01
-Subject: [PATCH v5 00/19] The new cgroup slab memory controller
-Date:   Wed, 27 May 2020 15:33:45 -0700
-Message-ID: <20200527223404.1008856-1-guro@fb.com>
+Subject: [PATCH v5 04/19] mm: slub: implement SLUB version of obj_to_index()
+Date:   Wed, 27 May 2020 15:33:49 -0700
+Message-ID: <20200527223404.1008856-5-guro@fb.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200527223404.1008856-1-guro@fb.com>
+References: <20200527223404.1008856-1-guro@fb.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
  definitions=2020-05-27_03:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- clxscore=1015 adultscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999
- cotscore=-2147483648 spamscore=0 priorityscore=1501 suspectscore=0
- bulkscore=0 malwarescore=0 lowpriorityscore=0 classifier=spam adjust=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ suspectscore=2 mlxlogscore=858 clxscore=1015 spamscore=0 adultscore=0
+ bulkscore=0 mlxscore=0 cotscore=-2147483648 priorityscore=1501
+ phishscore=0 malwarescore=0 impostorscore=0 classifier=spam adjust=0
  reason=mlx scancount=1 engine=8.12.0-2004280000
  definitions=main-2005270170
 X-FB-Internal: deliver
@@ -75,136 +78,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a fifth version of the slab cgroup controller rework.
+This commit implements SLUB version of the obj_to_index() function,
+which will be required to calculate the offset of obj_cgroup in the
+obj_cgroups vector to store/obtain the objcg ownership data.
 
-The patchset moves the accounting from the page level to the object
-level. It allows to share slab pages between memory cgroups.
-This leads to a significant win in the slab utilization (up to 45%)
-and the corresponding drop in the total kernel memory footprint.
-The reduced number of unmovable slab pages should also have a positive
-effect on the memory fragmentation.
+To make it faster, let's repeat the SLAB's trick introduced by
+commit 6a2d7a955d8d ("[PATCH] SLAB: use a multiply instead of a
+divide in obj_to_index()") and avoid an expensive division.
 
-The patchset makes the slab accounting code simpler: there is no more
-need in the complicated dynamic creation and destruction of per-cgroup
-slab caches, all memory cgroups use a global set of shared slab caches.
-The lifetime of slab caches is not more connected to the lifetime
-of memory cgroups.
+Vlastimil Babka noticed, that SLUB does have already a similar
+function called slab_index(), which is defined only if SLUB_DEBUG
+is enabled. The function does a similar math, but with a division,
+and it also takes a page address instead of a page pointer.
 
-The more precise accounting does require more CPU, however in practice
-the difference seems to be negligible. We've been using the new slab
-controller in Facebook production for several months with different
-workloads and haven't seen any noticeable regressions. What we've seen
-were memory savings in order of 1 GB per host (it varied heavily dependin=
-g
-on the actual workload, size of RAM, number of CPUs, memory pressure, etc=
-).
+Let's remove slab_index() and replace it with the new helper
+__obj_to_index(), which takes a page address. obj_to_index()
+will be a simple wrapper taking a page pointer and passing
+page_address(page) into __obj_to_index().
 
-The third version of the patchset added yet another step towards
-the simplification of the code: sharing of slab caches between
-accounted and non-accounted allocations. It comes with significant
-upsides (most noticeable, a complete elimination of dynamic slab caches
-creation) but not without some regression risks, so this change sits
-on top of the patchset and is not completely merged in. So in the unlikel=
-y
-event of a noticeable performance regression it can be reverted separatel=
-y.
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ include/linux/slub_def.h | 16 ++++++++++++++++
+ mm/slub.c                | 15 +++++----------
+ 2 files changed, 21 insertions(+), 10 deletions(-)
 
-v5:
-  1) fixed a build error, spotted by Vlastimil
-  2) added a comment about memcg->nr_charged_bytes, asked by Johannes
-  3) added missed acks and reviews
-
-v4:
-  1) rebased on top of the mm tree, some fixes here and there
-  2) merged obj_to_index() with slab_index(), suggested by Vlastimil
-  3) changed objects_per_slab() to a better objects_per_slab_page(),
-     suggested by Vlastimil
-  4) other minor fixes and changes
-
-v3:
-  1) added a patch that switches to a global single set of kmem_caches
-  2) kmem API clean up dropped, because if has been already merged
-  3) byte-sized slab vmstat API over page-sized global counters and
-     bytes-sized memcg/lruvec counters
-  3) obj_cgroup refcounting simplifications and other minor fixes
-  4) other minor changes
-
-v2:
-  1) implemented re-layering and renaming suggested by Johannes,
-     added his patch to the set. Thanks!
-  2) fixed the issue discovered by Bharata B Rao. Thanks!
-  3) added kmem API clean up part
-  4) added slab/memcg follow-up clean up part
-  5) fixed a couple of issues discovered by internal testing on FB fleet.
-  6) added kselftests
-  7) included metadata into the charge calculation
-  8) refreshed commit logs, regrouped patches, rebased onto mm tree, etc
-
-v1:
-  1) fixed a bug in zoneinfo_show_print()
-  2) added some comments to the subpage charging API, a minor fix
-  3) separated memory.kmem.slabinfo deprecation into a separate patch,
-     provided a drgn-based replacement
-  4) rebased on top of the current mm tree
-
-RFC:
-  https://lwn.net/Articles/798605/
-
-
-Johannes Weiner (1):
-  mm: memcontrol: decouple reference counting from page accounting
-
-Roman Gushchin (18):
-  mm: memcg: factor out memcg- and lruvec-level changes out of
-    __mod_lruvec_state()
-  mm: memcg: prepare for byte-sized vmstat items
-  mm: memcg: convert vmstat slab counters to bytes
-  mm: slub: implement SLUB version of obj_to_index()
-  mm: memcg/slab: obj_cgroup API
-  mm: memcg/slab: allocate obj_cgroups for non-root slab pages
-  mm: memcg/slab: save obj_cgroup for non-root slab objects
-  mm: memcg/slab: charge individual slab objects instead of pages
-  mm: memcg/slab: deprecate memory.kmem.slabinfo
-  mm: memcg/slab: move memcg_kmem_bypass() to memcontrol.h
-  mm: memcg/slab: use a single set of kmem_caches for all accounted
-    allocations
-  mm: memcg/slab: simplify memcg cache creation
-  mm: memcg/slab: remove memcg_kmem_get_cache()
-  mm: memcg/slab: deprecate slab_root_caches
-  mm: memcg/slab: remove redundant check in memcg_accumulate_slabinfo()
-  mm: memcg/slab: use a single set of kmem_caches for all allocations
-  kselftests: cgroup: add kernel memory accounting tests
-  tools/cgroup: add memcg_slabinfo.py tool
-
- drivers/base/node.c                        |   6 +-
- fs/proc/meminfo.c                          |   4 +-
- include/linux/memcontrol.h                 |  80 ++-
- include/linux/mm_types.h                   |   5 +-
- include/linux/mmzone.h                     |  24 +-
- include/linux/slab.h                       |   5 -
- include/linux/slab_def.h                   |   9 +-
- include/linux/slub_def.h                   |  31 +-
- include/linux/vmstat.h                     |  14 +-
- kernel/power/snapshot.c                    |   2 +-
- mm/memcontrol.c                            | 603 +++++++++++--------
- mm/oom_kill.c                              |   2 +-
- mm/page_alloc.c                            |   8 +-
- mm/slab.c                                  |  70 +--
- mm/slab.h                                  | 365 +++++-------
- mm/slab_common.c                           | 643 +--------------------
- mm/slob.c                                  |  12 +-
- mm/slub.c                                  | 229 +-------
- mm/vmscan.c                                |   3 +-
- mm/vmstat.c                                |  30 +-
- mm/workingset.c                            |   6 +-
- tools/cgroup/memcg_slabinfo.py             | 226 ++++++++
- tools/testing/selftests/cgroup/.gitignore  |   1 +
- tools/testing/selftests/cgroup/Makefile    |   2 +
- tools/testing/selftests/cgroup/test_kmem.c | 382 ++++++++++++
- 25 files changed, 1369 insertions(+), 1393 deletions(-)
- create mode 100755 tools/cgroup/memcg_slabinfo.py
- create mode 100644 tools/testing/selftests/cgroup/test_kmem.c
-
+diff --git a/include/linux/slub_def.h b/include/linux/slub_def.h
+index d2153789bd9f..30e91c83d401 100644
+--- a/include/linux/slub_def.h
++++ b/include/linux/slub_def.h
+@@ -8,6 +8,7 @@
+  * (C) 2007 SGI, Christoph Lameter
+  */
+ #include <linux/kobject.h>
++#include <linux/reciprocal_div.h>
+=20
+ enum stat_item {
+ 	ALLOC_FASTPATH,		/* Allocation from cpu slab */
+@@ -86,6 +87,7 @@ struct kmem_cache {
+ 	unsigned long min_partial;
+ 	unsigned int size;	/* The size of an object including metadata */
+ 	unsigned int object_size;/* The size of an object without metadata */
++	struct reciprocal_value reciprocal_size;
+ 	unsigned int offset;	/* Free pointer offset */
+ #ifdef CONFIG_SLUB_CPU_PARTIAL
+ 	/* Number of per cpu partial objects to keep around */
+@@ -182,4 +184,18 @@ static inline void *nearest_obj(struct kmem_cache *c=
+ache, struct page *page,
+ 	return result;
+ }
+=20
++/* Determine object index from a given position */
++static inline unsigned int __obj_to_index(const struct kmem_cache *cache=
+,
++					  void *addr, void *obj)
++{
++	return reciprocal_divide(kasan_reset_tag(obj) - addr,
++				 cache->reciprocal_size);
++}
++
++static inline unsigned int obj_to_index(const struct kmem_cache *cache,
++					const struct page *page, void *obj)
++{
++	return __obj_to_index(cache, page_address(page), obj);
++}
++
+ #endif /* _LINUX_SLUB_DEF_H */
+diff --git a/mm/slub.c b/mm/slub.c
+index dbed2cfd2776..601c0fc3c83a 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -313,12 +313,6 @@ static inline void set_freepointer(struct kmem_cache=
+ *s, void *object, void *fp)
+ 		__p < (__addr) + (__objects) * (__s)->size; \
+ 		__p +=3D (__s)->size)
+=20
+-/* Determine object index from a given position */
+-static inline unsigned int slab_index(void *p, struct kmem_cache *s, voi=
+d *addr)
+-{
+-	return (kasan_reset_tag(p) - addr) / s->size;
+-}
+-
+ static inline unsigned int order_objects(unsigned int order, unsigned in=
+t size)
+ {
+ 	return ((unsigned int)PAGE_SIZE << order) / size;
+@@ -461,7 +455,7 @@ static unsigned long *get_map(struct kmem_cache *s, s=
+truct page *page)
+ 	bitmap_zero(object_map, page->objects);
+=20
+ 	for (p =3D page->freelist; p; p =3D get_freepointer(s, p))
+-		set_bit(slab_index(p, s, addr), object_map);
++		set_bit(__obj_to_index(s, addr, p), object_map);
+=20
+ 	return object_map;
+ }
+@@ -3675,6 +3669,7 @@ static int calculate_sizes(struct kmem_cache *s, in=
+t forced_order)
+ 	 */
+ 	size =3D ALIGN(size, s->align);
+ 	s->size =3D size;
++	s->reciprocal_size =3D reciprocal_value(size);
+ 	if (forced_order >=3D 0)
+ 		order =3D forced_order;
+ 	else
+@@ -3781,7 +3776,7 @@ static void list_slab_objects(struct kmem_cache *s,=
+ struct page *page,
+ 	map =3D get_map(s, page);
+ 	for_each_object(p, s, addr, page->objects) {
+=20
+-		if (!test_bit(slab_index(p, s, addr), map)) {
++		if (!test_bit(__obj_to_index(s, addr, p), map)) {
+ 			pr_err("INFO: Object 0x%p @offset=3D%tu\n", p, p - addr);
+ 			print_tracking(s, p);
+ 		}
+@@ -4506,7 +4501,7 @@ static void validate_slab(struct kmem_cache *s, str=
+uct page *page)
+ 	/* Now we know that a valid freelist exists */
+ 	map =3D get_map(s, page);
+ 	for_each_object(p, s, addr, page->objects) {
+-		u8 val =3D test_bit(slab_index(p, s, addr), map) ?
++		u8 val =3D test_bit(__obj_to_index(s, addr, p), map) ?
+ 			 SLUB_RED_INACTIVE : SLUB_RED_ACTIVE;
+=20
+ 		if (!check_object(s, page, p, val))
+@@ -4697,7 +4692,7 @@ static void process_slab(struct loc_track *t, struc=
+t kmem_cache *s,
+=20
+ 	map =3D get_map(s, page);
+ 	for_each_object(p, s, addr, page->objects)
+-		if (!test_bit(slab_index(p, s, addr), map))
++		if (!test_bit(__obj_to_index(s, addr, p), map))
+ 			add_location(t, s, get_track(s, p, alloc));
+ 	put_map(map);
+ }
 --=20
 2.25.4
 
