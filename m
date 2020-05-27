@@ -2,98 +2,69 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B768C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DED3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E43A20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yPtc2Wor"
+	by mail.kernel.org (Postfix) with ESMTP id DF31C20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgE0RGj (ORCPT
+        id S1729772AbgE0RIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgE0RGi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:06:38 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2BBC03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:06:38 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id h9so9564780qtj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2Lhu2ZcEcwwrOR37CL1brFOzPiOBufKSZIC4FQQB508=;
-        b=yPtc2Wor4aOKqJgM9mCqbJiYDKwPnGCFGYXNxj12SXW369UtlgQZGLVdXV30NwYzZO
-         xOPRn6AmKsb53FSpNBpXSjdR7FkAeWtZQfeFNThPDTZ/zYr+b0vRman0zIjoUfQoW5qZ
-         xIHzSEuTDr68Xsyul5g7SSQnsI9O8JPUFz/TkKbNQ6fsO4MZ5Bt+HVOsqzKnZ7XF1L5l
-         BexiMBwU9qQeCUB+L9tgJGedJHoQwuRNZso/rQIerZHTtzLdBZUdqde0hGTbv4aQxgO6
-         HAUaM1GCCknfDzepc8ifaHScr+mr2SbwKX0HYEQRZMyuMN9DVgeK5trZQbWZQrU5o+A8
-         N6JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2Lhu2ZcEcwwrOR37CL1brFOzPiOBufKSZIC4FQQB508=;
-        b=auqNrYD2O0e4ndo+8PLkiHO6fSs15737NrN343wkDV6MzFLzK5FaqeROgMjLKzOR/P
-         aEssvhQ/mlPyrdyG7xi3j6EDNemsOJ7OYt4PVyRMsSqsu6WqWL2pVPd/Dr50z2ZT9+RW
-         E2D+y56HzbErejgr7SqnlIVzVGcfV8NEWpJU0F4iBKiOWwmbmlaCDynP3bA2vI1aZ1TV
-         EGga1VlIvgekiABBOKKd1lDECSW3IVBW07Q9633JRhz8e0f8M0a31+EYpImoDnhbnRYm
-         /gzWdgvILO3s7KWlMwT7aQYSn+EPjTTdcJ9qv2rPppD3qOagIRmM/+2/9x74VfyzyYu3
-         y5xA==
-X-Gm-Message-State: AOAM530tBq4qUkc28ey2PeZSG1yzBjUgpyS1euLHjPvCWlCc6AxKJw2T
-        6HxU1n6KWQ6grKcZxUz1xTnz+M0///CQCzGf0umivw==
-X-Google-Smtp-Source: ABdhPJxROTeFQEz0Kn+FsZBDkx+YaHV9yORoWcoDONnKZ1wtXCH8knWZXCjA6zt9CuIPkUvqUfwQCzIFXddHejoBTyI=
-X-Received: by 2002:ac8:718d:: with SMTP id w13mr5369489qto.131.1590599197938;
- Wed, 27 May 2020 10:06:37 -0700 (PDT)
+        Wed, 27 May 2020 13:08:18 -0400
+Received: from mga02.intel.com ([134.134.136.20]:24714 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgE0RIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:08:17 -0400
+IronPort-SDR: 4RypG239s4ykV/TPrMOD2E6bLZM6tKwPHizrqAshjKC+lYZgA/WixNZ5NaUFs9eJMK9ypgsLH8
+ lkFBG0G5BNxA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 10:06:13 -0700
+IronPort-SDR: eXcf5DjvIgIvmCd3FZhCi3GvS7LhmuToG8rM/iNhyd+XIRI5fZy2Bhusu9VMUX8I4fZ1d0zwiF
+ tqdj7avK+8DQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="414277949"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 10:06:13 -0700
+Date:   Wed, 27 May 2020 10:06:13 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+904752567107eefb728c@syzkaller.appspotmail.com
+Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
+Message-ID: <20200527170612.GA24930@linux.intel.com>
+References: <20200527085400.23759-1-sean.j.christopherson@intel.com>
+ <40800163-2b28-9879-f21b-687f89070c91@redhat.com>
+ <20200527162933.GE24461@linux.intel.com>
+ <078365dd-64ff-4f3c-813c-3d9fc955ed1a@redhat.com>
 MIME-Version: 1.0
-References: <20200527161743.15972-1-brgl@bgdev.pl> <58fca7418c8d18392562aaad2c3a6634@kernel.org>
-In-Reply-To: <58fca7418c8d18392562aaad2c3a6634@kernel.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 27 May 2020 19:06:26 +0200
-Message-ID: <CAMpxmJVPB2+hD8mZ+Bo9=UVEist7BSJrZej5O9_9a_SmWyTanA@mail.gmail.com>
-Subject: Re: [PATCH] irqchip/irq-mtk-sysirq: drop unnecessary spinlock
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <078365dd-64ff-4f3c-813c-3d9fc955ed1a@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 27 maj 2020 o 18:38 Marc Zyngier <maz@kernel.org> napisa=C5=82(a)=
-:
->
-> Sight... Do you realize that these two locks do not protect the same
-> thing at all? One protects the interrupt data, and the other protects
-> the MMIO register which is shared between multiple interrupts, and
-> on which the driver performs a RMW.
->
-> Thanks to the removal of this spinlock, two irq_set_type() can execute
-> in parallel and silently corrupt the register. Not exactly an
-> improvement.
->
+On Wed, May 27, 2020 at 06:56:19PM +0200, Paolo Bonzini wrote:
+> On 27/05/20 18:29, Sean Christopherson wrote:
+> > Ya.  syzbot is hitting a #GP due to NULL pointer during debugfs on the exact
+> > same sequence.  I haven't been able to reproduce that one (have yet to try
+> > syzbot's exact config), but it's another example of a "dumb" test hitting
+> > meaningful bugs.
+> 
+> Saw that, it's mine. :)
 
-Eek I missed the fact that the internal lock is tied to the chip, not
-the interrupt. In that case I'll convert this spinlock to a raw one.
-
-Bart
+All yours.  I as hoping it would be easily reproducible and fixable while I
+was looking at the MMU BUG(), but that didn't happen.
