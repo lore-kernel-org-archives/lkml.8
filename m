@@ -2,113 +2,112 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C54C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE572C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEDBD207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE963207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 12:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bgl06NX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgE0M2b convert rfc822-to-8bit (ORCPT
+        id S1730037AbgE0M26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 08:28:31 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:54951 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbgE0M2a (ORCPT
+        Wed, 27 May 2020 08:28:58 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32650 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728143AbgE0M25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 08:28:30 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1N2E9e-1isAKI1XpO-013aAV; Wed, 27 May 2020 14:28:28 +0200
-Received: by mail-qk1-f175.google.com with SMTP id w1so649129qkw.5;
-        Wed, 27 May 2020 05:28:27 -0700 (PDT)
-X-Gm-Message-State: AOAM532osS/AFq3CkigcS15Y6Sv7PR6JWzFoZ1tv+w478Legne8yYC2Q
-        IUOGoI5OcwuDIDsny3PqaE5aIM+BZAlJ4cXL924=
-X-Google-Smtp-Source: ABdhPJwaAgzroHfp7pJ7RNhUPIcAie1aEFqd1EprpZ9PmXq2JihQh/b6bzG/FLdwRDsYzWluddqdrXxjIL6hkdgwLDI=
-X-Received: by 2002:a37:bc7:: with SMTP id 190mr3695944qkl.286.1590582507016;
- Wed, 27 May 2020 05:28:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
- <20200527073150.GA3384158@ubuntu-s3-xlarge-x86> <CAMRc=MevVsYZFDQif+8Zyv41sSkbS8XqWbKGdCvHooneXz88hg@mail.gmail.com>
- <CAK8P3a3WXGZpeX0E8Kyuo5Rkv5acdkZN6_HNS61Y1=Jh+G+pRQ@mail.gmail.com> <CAMRc=Md1w_6+dU9gCwiiB5R+dMcYMPFLPrA++RBkKp5zaY6Riw@mail.gmail.com>
-In-Reply-To: <CAMRc=Md1w_6+dU9gCwiiB5R+dMcYMPFLPrA++RBkKp5zaY6Riw@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 14:28:10 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3L6aGtKqv4ikNJc3or_mX2VvRE1sgaZZ9esD6jx+Hyug@mail.gmail.com>
-Message-ID: <CAK8P3a3L6aGtKqv4ikNJc3or_mX2VvRE1sgaZZ9esD6jx+Hyug@mail.gmail.com>
-Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Edwin Peer <edwin.peer@broadcom.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+        Wed, 27 May 2020 08:28:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590582536;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g9FxUpI3OzPM1e9gI4pX6q/XzrU1P17TZrLPSvSwy/4=;
+        b=bgl06NX7JFw6Oyrt3rS9fEIwh2v6pDOOQ3UXbwCMcY+loGcM9H+VgG0VncjtWKF71nceNW
+        RjuMQq0paj3/ya3PnoWEY4gTziKx0Ha2AjT/2YfPlmveXDnXEQ320TqPXIGljjFOsSh1eB
+        Pxea/daAgRcGLo0DdEQujRLFp+txrVM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-oAjDMN-xP067UrZLUINvoQ-1; Wed, 27 May 2020 08:28:54 -0400
+X-MC-Unique: oAjDMN-xP067UrZLUINvoQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 592A1107ACCA;
+        Wed, 27 May 2020 12:28:53 +0000 (UTC)
+Received: from starship (unknown [10.35.206.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC70C5D9E5;
+        Wed, 27 May 2020 12:28:51 +0000 (UTC)
+Message-ID: <7240b1f9ef497fd040c7315d90711c642f709d16.camel@redhat.com>
+Subject: Re: KVM broken after suspend in most recent kernels.
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Brad Campbell <lists2009@fnarfbargle.com>
+Cc:     kvm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 27 May 2020 15:28:50 +0300
+In-Reply-To: <20200527051354.GL31696@linux.intel.com>
+References: <1f7a85cc-38a6-2a2e-cbe3-a5b9970b7b92@fnarfbargle.com>
+         <f726be8c-c7ef-bf6a-f31e-394969d35045@fnarfbargle.com>
+         <1f7b1c9a8d9cbb6f82e97f8ba7a13ce5b773e16f.camel@redhat.com>
+         <a45bc9d7-ad0b-2ff0-edcc-5283f591bc10@fnarfbargle.com>
+         <20200527051354.GL31696@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:42xuInEhqB0LXEINV+ATzXFlSMMIjNK510ngCJoHuhHdNsuqk4w
- 68JRv4VvYzZWx1vsiWvmeFS+1NeUsk0M37H9qQ5WgGs8IVw2uVu/a5xFALDPbCNQ3zFm+2P
- 508dd+urfo1iRHl5MaflH+JN9p90uLD3a8C+zj9c2lLetniKhTImGSr4IDkMFlKnaCpNRgn
- MoXoURCWf2iSPksOB9qmQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xAdFMfLVBtI=:DTxMeHJVSg8YjC8fXbe+DT
- s/o+xcigouZHqnyFyjG0dXlhkLJhSljvBRxoAP2CKpCv7v2VYsLxsRWMubVGv7YM9R9XINm/x
- 8OwWsm7+k9eP5KKUkjlkFQCWYYR7sdSiYnAEq27LrYFH2e7goybUfvb6DLuXt6Xa9xEQq7+LT
- aghXQDp7gK4F20sj/yU1wagnazrG2B1n23nJp6jwWL5WTWAmU2JTL7Q0MJn//OL0Z1MIHbMqa
- qPQCpCQXQ6hOTIC7QAleQT8agF21K/s0hmxSd4Cblf/YYQKFA4oDXlRlDPrCSvK5BdcgAYuVL
- XcVKOGQD0gL5IO7iUBciV4qqU6g+yMWKsaDhbfev6Y/Km7aGlGnz4RezjxC8XAbj9vwJYDE74
- SCbfl5UcsTncNSM929NBgl0JS9WNUe0gdhBx6l40zflwRPUeVdM3WnUyLTVwAJ+E90hwQrsRr
- 0sGSfKf/cFJJEYkNweUDOsKw2RkooDS11SQwXFS+eDHCzS4LPS2Fkipg7UySi0pvfKKBUbEuO
- Qt/reNs/nYwY0+PXJhJ0y71lKGLvQYFRrs9ZaeaTOyaQWrCqhiYKfPlXrpnqbKuCwtQjYXqWu
- /8SSP+3rFjdn8EUupqi9rVdMQ+GMkJEv9BWKpcZSVGQtV8rKveRiwSpYOJlUXj52Xl1Z6TFiV
- SgWLNjzPVwryybtSrCy4nzmjkR4uqqvcmvEhedUROHoypouBP6rKQCGXzaBFXYyuQVQcoIYuE
- +46SpmkItW5PUP2nM1lj5CezoKiJUq+m4AN579NyOyVhsnl0ZLAEOafo1IrbNwjr7x1t8Xrd6
- RfSQdrBOK2LJRkq7b+AmrJAeitmOCj/ltItIMg6rHg8qeDUcy4=
+User-Agent: Evolution 3.36.2 (3.36.2-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 1:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> śr., 27 maj 2020 o 13:33 Arnd Bergmann <arnd@arndb.de> napisał(a):
-> >
-> > On Wed, May 27, 2020 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > Thanks for reporting this! I have a fix ready and will send it shortly.
-> >
-> > I already have a workaround for this bug as well as another one
-> > in my tree that I'll send later today after some more testing.
-> >
-> > Feel free to wait for that, or just ignore mine if you already have a fix.
-> >
->
-> I already posted a fix[1]. Sorry for omitting you, but somehow your
-> name didn't pop up in get_maintainers.pl.
+On Tue, 2020-05-26 at 22:13 -0700, Sean Christopherson wrote:
+> On Mon, May 25, 2020 at 09:15:57PM +0800, Brad Campbell wrote:
+> > > When you mean that KVM is broken after suspend, you mean that you
+> > > can't
+> > > start new VMs after suspend, or do VMs that were running before
+> > > suspend
+> > > break?  I see the later on my machine. I have AMD system though,
+> > > so most
+> > > likely this is another bug.
+> > > 
+> > > Looking at the commit, I suspect that we indeed should set the
+> > > IA32_FEAT_CTL
+> > > after resume from ram, since suspend to ram might count as a
+> > > complete CPU
+> > > reset.
+> > > 
+> > 
+> > One of those "I should have clarified that" moments immediately
+> > after I
+> > pressed send.  I've not tried suspending with a VM running. It's
+> > "can't start
+> > new VMs after suspend".
+> 
+> Don't bother testing suspending with a VM, the only thing that will
+> be
+> different is that your system will hang on resume instead when
+> running a
+> VM.  If there are active VMs, KVM automatically re-enables VMX via
+> VMXON
+> after resume, and VMXON is what's faulting.
+> 
+> Odds are good the firmware simply isn't initializing IA32_FEAT_CTL,
+> ever.
+> The kernel handles the boot-time case, but I (obviously) didn't
+> consider
+> the suspend case.  I'll work on a patch.
 
-I'm not a maintainer for this, I just do a lot of build fixes on the side,
-as I verify the stuff that I merge myself ;-)
+This is exactly what I was thinking about this as well.
 
-> [1] https://lkml.org/lkml/2020/5/27/378
+Best regards,
+	Maxim Levitsky
+> 
 
-Ok, perfect, that is indeed the correct fix and mine was wrong. I'll
-just send a fix for the other bug (unused-function warning) then.
-
-     Arnd
