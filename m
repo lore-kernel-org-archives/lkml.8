@@ -2,176 +2,133 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26252C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 056372071A
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9032020870
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 00:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVgewBZM"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xXwdGwbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgE0AtH (ORCPT
+        id S1727072AbgE0Awc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 20:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgE0AtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 20:49:06 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAFF5C061A0F;
-        Tue, 26 May 2020 17:49:06 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id a13so9421456pls.8;
-        Tue, 26 May 2020 17:49:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Q/JlVkIYtOH22Thby0LCK8W0UIVx5wzKW2ljCTmFrvY=;
-        b=OVgewBZMqLqx04vVNrWds7PmRoUIVOv+xHXyvWSIiIbGC+YwfZC7X6NVCuT5K1Asb1
-         HE929zmNDgh0Qkmgz/Jzx2oq0uP6lKIY1yBNTaS0Ztph/StvXi++sToegBHxx+Mh/qfS
-         pUsjuKHdfpOSJn28kuOr+a5ygYhL0xGrAfVLHNz+xw9ZYwfohwpHA2zwmhYdySIdzDDC
-         IrhOi6M3hIeSlY7UOxwTr5gRotCVmgrSyOsSCHMPu2336P6Ylk1Fnts++wQY+vwSVGtc
-         ok+P9eVxw4+6WHW6O0LYdbP40rNyxJyc04FlqaMxKX8ahQiE8yUPxASNRcsiBLUhZQAq
-         xtCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Q/JlVkIYtOH22Thby0LCK8W0UIVx5wzKW2ljCTmFrvY=;
-        b=YW3DBPbFy2WzTKNDbHcFgWplFhNp0kdaZWIKk2FFTBarrYZ5a1Az5Iyie4Z/f2lU8O
-         IUy2m6CCIZrO++/g6QaA08YS/9G5lYjgoq3CzVnh4uUoMfk0xWgbyjGXnGlP05EDYRtI
-         /BIN855ZvLw7ugdf9us3FRsjSHN6YKjwiJ554DhB4rgrxeiKZMufrgxlaWTIHuhhNTqJ
-         jRwVrrxmpKBUDD0c8KmZvfWnuG3xc0r4h/dA4YnUOrVbKOymdd2+lswkIuYb02q/lRWq
-         J0qU6lNoGKi2On2ikOSCR37T0JkRkw+LHk+NkJ5rZGLbuhyM79tq5HZ68w1bVcebxn/j
-         pbbg==
-X-Gm-Message-State: AOAM533Ms6gUramo+1advAMI8I+cq8PPfLpq0QB4JXvL66DK9R6q6Xsg
-        Vd9IwPF10D2V7o2t1pPCdbM=
-X-Google-Smtp-Source: ABdhPJzbIAE1tc8zindTkUItJkLL8VLCvoWaN1PuG6Cmc9mLiASRCnu8+8azTqHTQ9J1JgY60oTIUw==
-X-Received: by 2002:a17:90a:c584:: with SMTP id l4mr1939961pjt.195.1590540546018;
-        Tue, 26 May 2020 17:49:06 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:726d])
-        by smtp.gmail.com with ESMTPSA id gt10sm583281pjb.30.2020.05.26.17.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 May 2020 17:49:05 -0700 (PDT)
-Date:   Tue, 26 May 2020 17:49:02 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Florent Revest <revest@chromium.org>
-Subject: Re: [PATCH bpf-next 2/4] bpf: Implement bpf_local_storage for inodes
-Message-ID: <20200527004902.lo6c2efv5vix5nqq@ast-mbp.dhcp.thefacebook.com>
-References: <20200526163336.63653-1-kpsingh@chromium.org>
- <20200526163336.63653-3-kpsingh@chromium.org>
+        Tue, 26 May 2020 20:52:32 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:50872 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726701AbgE0Awb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 20:52:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=4g+QjcgqBBdlXj9GuROVX7jykU64LcaF7oK4MUdO6AA=; b=xXwdGwbBnqIBLc/16cfVjN1+Yt
+        C9bj+FYw41raWFKql2omrQ41YijjzVsTBJ/dha95qgn+uIti6GoufaTkdYIJSCg+YGLvYp/oFTrxj
+        iP5nIuGu0luNDbB4Vw6wh19ExYMOrLYfOWdoXUiBZGoZtgjIEGHvfPTLSnx62OSl/UUM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jdkIy-003LDU-4D; Wed, 27 May 2020 02:52:24 +0200
+Date:   Wed, 27 May 2020 02:52:24 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
+        robh@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH net-next v3 4/4] net: dp83869: Add RGMII internal delay
+ configuration
+Message-ID: <20200527005224.GF782807@lunn.ch>
+References: <20200526174716.14116-1-dmurphy@ti.com>
+ <20200526174716.14116-5-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526163336.63653-3-kpsingh@chromium.org>
+In-Reply-To: <20200526174716.14116-5-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 06:33:34PM +0200, KP Singh wrote:
+> @@ -218,6 +224,7 @@ static int dp83869_of_init(struct phy_device *phydev)
+>  		ret = phy_read_mmd(phydev, DP83869_DEVADDR, DP83869_STRAP_STS1);
+>  		if (ret < 0)
+>  			return ret;
+> +
+>  		if (ret & DP83869_STRAP_MIRROR_ENABLED)
+>  			dp83869->port_mirroring = DP83869_PORT_MIRRORING_EN;
+>  		else
+
+This random white space change does not belong in this patch.
+
+> @@ -232,6 +239,20 @@ static int dp83869_of_init(struct phy_device *phydev)
+>  				 &dp83869->tx_fifo_depth))
+>  		dp83869->tx_fifo_depth = DP83869_PHYCR_FIFO_DEPTH_4_B_NIB;
 >  
-> +static struct bpf_local_storage_data *inode_storage_update(
-> +	struct inode *inode, struct bpf_map *map, void *value, u64 map_flags)
-> +{
-> +	struct bpf_local_storage_data *old_sdata = NULL;
-> +	struct bpf_local_storage_elem *selem;
-> +	struct bpf_local_storage *local_storage;
-> +	struct bpf_local_storage_map *smap;
-> +	int err;
-> +
-> +	err = check_update_flags(map, map_flags);
-> +	if (err)
-> +		return ERR_PTR(err);
-> +
-> +	smap = (struct bpf_local_storage_map *)map;
-> +	local_storage = rcu_dereference(inode->inode_bpf_storage);
-> +
-> +	if (!local_storage || hlist_empty(&local_storage->list)) {
-> +		/* Very first elem for this inode */
-> +		err = check_flags(NULL, map_flags);
-> +		if (err)
-> +			return ERR_PTR(err);
-> +
-> +		selem = selem_alloc(smap, value);
-> +		if (!selem)
-> +			return ERR_PTR(-ENOMEM);
-> +
-> +		err = inode_storage_alloc(inode, smap, selem);
-
-inode_storage_update looks like big copy-paste except above one line.
-pls consolidate.
-
-> +BPF_CALL_4(bpf_inode_storage_get, struct bpf_map *, map, struct inode *, inode,
-> +	   void *, value, u64, flags)
-> +{
-> +	struct bpf_local_storage_data *sdata;
-> +
-> +	if (flags > BPF_LOCAL_STORAGE_GET_F_CREATE)
-> +		return (unsigned long)NULL;
-> +
-> +	sdata = inode_storage_lookup(inode, map, true);
-> +	if (sdata)
-> +		return (unsigned long)sdata->data;
-> +
-> +	if (flags == BPF_LOCAL_STORAGE_GET_F_CREATE &&
-> +	    atomic_inc_not_zero(&inode->i_count)) {
-> +		sdata = inode_storage_update(inode, map, value, BPF_NOEXIST);
-> +		iput(inode);
-> +		return IS_ERR(sdata) ?
-> +			(unsigned long)NULL : (unsigned long)sdata->data;
+> +	ret = of_property_read_u32(of_node, "rx-internal-delay-ps",
+> +				   &dp83869->rx_id_delay);
+> +	if (ret) {
+> +		dp83869->rx_id_delay = ret;
+> +		ret = 0;
 > +	}
 
-This is wrong. You cannot just copy paste the refcounting logic
-from bpf_sk_storage_get(). sk->sk_refcnt is very different from inode->i_count.
-To start, the inode->i_count cannot be incremented without lock.
-If you really need to do it you need igrab().
-Secondly, the iput() is not possible to call from bpf prog yet, since
-progs are not sleepable and iput() may call iput_final() which may sleep.
-But considering that only lsm progs from lsm hooks will call bpf_inode_storage_get()
-the inode is not going to disappear while this function is running.
-So why touch i_count ?
+This looks odd.
+
+If this optional property is not found, -EINVAL will be returned. It
+could also return -ENODATA. You then assign this error value to
+dp83869->rx_id_delay? I would of expected you to assign 2000, the
+default value?
 
 > +
-> +	return (unsigned long)NULL;
-> +}
+> +	ret = of_property_read_u32(of_node, "tx-internal-delay-ps",
+> +				   &dp83869->tx_id_delay);
+> +	if (ret) {
+> +		dp83869->tx_id_delay = ret;
+> +		ret = 0;
+> +	}
 > +
->  BPF_CALL_2(bpf_sk_storage_delete, struct bpf_map *, map, struct sock *, sk)
->  {
->  	if (refcount_inc_not_zero(&sk->sk_refcnt)) {
-> @@ -957,6 +1229,20 @@ BPF_CALL_2(bpf_sk_storage_delete, struct bpf_map *, map, struct sock *, sk)
->  	return -ENOENT;
+>  	return ret;
+>  }
+>  #else
+> @@ -367,10 +388,45 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>  	return ret;
 >  }
 >  
-> +BPF_CALL_2(bpf_inode_storage_delete,
-> +	   struct bpf_map *, map, struct inode *, inode)
+> +static int dp83869_get_delay(struct phy_device *phydev)
 > +{
-> +	int err;
+> +	struct dp83869_private *dp83869 = phydev->priv;
+> +	int delay_size = ARRAY_SIZE(dp83869_internal_delay);
+> +	int tx_delay = 0;
+> +	int rx_delay = 0;
 > +
-> +	if (atomic_inc_not_zero(&inode->i_count)) {
-> +		err = inode_storage_delete(inode, map);
-> +		iput(inode);
-> +		return err;
+> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_TXID ||
+> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
+> +		tx_delay = phy_get_delay_index(phydev,
+> +					       &dp83869_internal_delay[0],
+> +					       delay_size, dp83869->tx_id_delay,
+> +					       false);
+> +		if (tx_delay < 0) {
+> +			phydev_err(phydev, "Tx internal delay is invalid\n");
+> +			return tx_delay;
+> +		}
+> +	}
+> +
+> +	if (phydev->interface == PHY_INTERFACE_MODE_RGMII_RXID ||
+> +	    phydev->interface == PHY_INTERFACE_MODE_RGMII_ID) {
+> +		rx_delay = phy_get_delay_index(phydev,
+> +					       &dp83869_internal_delay[0],
+> +					       delay_size, dp83869->rx_id_delay,
+> +					       false);
+> +		if (rx_delay < 0) {
+> +			phydev_err(phydev, "Rx internal delay is invalid\n");
+> +			return rx_delay;
+> +		}
 > +	}
 
-ditto.
+So any PHY using these properties is going to pretty much reproduce
+this code. Meaning is should all be in a helper.
 
-> +
-> +	return inode_storage_delete(inode, map);
-
-bad copy-paste from bpf_sk_storage_delete?
-or what is this logic suppose to do?
+     Andrew
