@@ -2,87 +2,175 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA80C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEABE20723
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14476208B8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 08:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="d51hFcio"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgE0IDb (ORCPT
+        id S1729382AbgE0IF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 04:03:31 -0400
-Received: from elvis.franken.de ([193.175.24.41]:40852 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729052AbgE0IDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 04:03:31 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jdr1v-0007iQ-00; Wed, 27 May 2020 10:03:15 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 338BAC0458; Wed, 27 May 2020 09:10:46 +0200 (CEST)
-Date:   Wed, 27 May 2020 09:10:46 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     maobibo <maobibo@loongson.cn>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v6 3/4] mm/memory.c: Add memory read privilege on page
- fault handling
-Message-ID: <20200527071046.GA8600@alpha.franken.de>
-References: <1590375160-6997-1-git-send-email-maobibo@loongson.cn>
- <1590375160-6997-3-git-send-email-maobibo@loongson.cn>
- <20200525144413.8c13559ec87616aa2c77af41@linux-foundation.org>
- <4ca3c5b8-f695-c011-7e00-ef884a1c3d84@loongson.cn>
+        Wed, 27 May 2020 04:05:27 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:7398 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729292AbgE0IF0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 04:05:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590566725; x=1622102725;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=PVXzxMF9Vqjr2PV3qWdmGql8cs4THQnOC1D9NN8NFjI=;
+  b=d51hFciozFX3EFMx7R42XBJJdXmhf8VcH/Ay7Jpubckv/b1tWutdNQtP
+   1I9INmswMsBa0LSvTn+6hBTswi8IeMzJDCRhYgl1TACqkE/bMOP9ykD/W
+   /1jg8HggMN1UsMlFFWg15clmaMJ+VoypmqC9/iuAVFs221gHkBdLwF6EG
+   JCcg49LT8dsctZQfyaczj1gfQd5tA5kXOa9mHAPW6H1ALe3mLmXFysPD2
+   JW74w9yJepkz+SJqePqk40hmDhR4ZGZOsnDxj0PDXoSm8xJCV+M3IqgrF
+   rScU1jH0fJ+hfONA8/8Pt9T7ulnna2nVneqWcnTuWYsJXnKIUC6DcccZs
+   w==;
+IronPort-SDR: wg7qi6vKQlAMeUaLNnYr/pgQElF/mppTRVRdDs9j6PL/VdSfGQovFxd2A5lvqEM0HL/Ak6SWnd
+ ajiqm0f2b17I3CEQkkBX2KqN9Qqxg5p/Q8wLzRN0jfPwJMHJFvYjz7hs5Ur4MGRcXojOH/HKbs
+ qwbkThrcDH62qSlTpCfcrRcwCppPObutq2XoZRMqMTvY2iTGXWTgRnBE6QwtZZ3MvtvBHfLiMz
+ B0KEQqOfwbBq7msr+yB8KK/1kjFe07ov25eqns6rasTXxFBJrGetBF5DDmXjml6pxyGrC+gVJb
+ ccM=
+X-IronPort-AV: E=Sophos;i="5.73,440,1583218800"; 
+   d="scan'208";a="13635860"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 May 2020 01:05:25 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 27 May 2020 01:05:24 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 27 May 2020 01:05:22 -0700
+References: <20200513141134.25819-1-lars.povlsen@microchip.com> <20200513141134.25819-2-lars.povlsen@microchip.com> <CACRpkdZa7OM3bqB+zRprEQ3M4m9hG3uPCoYxrdH_O=oxD8zi8Q@mail.gmail.com> <87pnb1nf2j.fsf@soft-dev15.microsemi.net> <CACRpkdYesD9sRQZXQNEaBY2Ouu3bjKKGWpRtU-Lpa4AcjyPwXw@mail.gmail.com> <87r1v8oz9f.fsf@soft-dev15.microsemi.net> <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        SoC Team <soc@kernel.org>, "Rob Herring" <robh+dt@kernel.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: Add bindings for mscc,ocelot-sgpio
+In-Reply-To: <CACRpkdaJvaqPptPD-A1DriVgBOZGZ4Qf0UsbsjG39ptx6bSJKg@mail.gmail.com>
+Date:   Wed, 27 May 2020 10:05:20 +0200
+Message-ID: <87pnappzun.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ca3c5b8-f695-c011-7e00-ef884a1c3d84@loongson.cn>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 09:05:41AM +0800, maobibo wrote:
-> 
-> 
-> On 05/26/2020 05:44 AM, Andrew Morton wrote:
-> > On Mon, 25 May 2020 10:52:39 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
-> > 
-> >> Here add pte_sw_mkyoung function to make page readable on MIPS
-> >> platform during page fault handling. This patch improves page
-> >> fault latency about 10% on my MIPS machine with lmbench
-> >> lat_pagefault case.
-> >>
-> >> It is noop function on other arches, there is no negative
-> >> influence on those architectures.
-> > 
-> > Acked-by: Andrew Morton <akpm@linux-foundation.org>
-> > 
-> > Should I take these, or would the mips tree be preferred?  I'm OK
-> > either way, but probably the MIPS tree would be better?
-> Thanks for reviewing again and again.
-> This patch is based on mips-next, maybe MIPS tree will be better.
 
-I'll take your next version then.
+Linus Walleij writes:
 
-Thomas.
+> On Mon, May 25, 2020 at 4:38 PM Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>
+>> Yes, the problem is they're not in sequence. F.ex. you could have ports
+>> 0,1 enabled, skip 2,3,4 and have 5,6,7 enabled.
+>
+> Just use disabled nodes.
+>
+> That would look like this in my idea of a device tree:
+>
+> pinctrl@nnn {
+>     gpio0: gpio@0 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio1: gpio@1 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio2: gpio@2 {
+>         compatible = "foo";
+>         status = "disabled";
+>         ....
+>     };
+>     gpio3: gpio@3 {
+>         compatible = "foo";
+>         status = "disabled";
+>         ....
+>     };
+>     gpio4: gpio@4 {
+>         compatible = "foo";
+>         status = "disabled";
+>         ....
+>     };
+>     gpio5: gpio@5 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio6: gpio@6 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+>     gpio7: gpio@7 {
+>         compatible = "foo";
+>         status = "ok";
+>         ....
+>     };
+> };
+>
+> It is common to use the status to enable/disable nodes like this.
+>
+> In the Linux kernel is is possible to iterate over these subnodes and
+> check which ones are enabled and disabled while keeping the
+> index by using something like:
+>
+> i = 0;
+> struct device_node *np, *child;
+> for_each_child_of_node(np, child) {
+>     if (of_device_is_available(child)) {
+>         pr_info("populating device %d\n", i);
+>     }
+>     i++;
+> }
+>
+> Certainly you can use i in the above loop to populate your registers
+> etc from an indexed array.
+>
+> This way the consumers can pick their GPIO from the right port
+> and everything just using e.g.
+> my-gpios = <&gpio6 4 GPIO_OUT_LOW>;
+>
+
+Linux, thank you for your input, it is much appreciated. I will use the
+pattern in the driver in the next revision.
+
+The only issue is that the gpios on the same "port" have restrictions on
+their status - they can only be enabled "all" or "none" for gpios that
+map to the same port. F.ex. gpio0, gpio32, gpio64 and gpio96 must all be
+enabled or disabled because at the hardware level you control the
+_port_. But as I noted earlier, that could just be the driver enforcing
+this.
+
+Thanks again.
+
+---Lars
+
+> Yours,
+> Linus Walleij
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Lars Povlsen,
+Microchip
