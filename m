@@ -2,93 +2,162 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC6BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7134EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 020F221531
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5809F20890
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TnvOhSKl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RbHn4yG2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgE0Tsf (ORCPT
+        id S2387432AbgE0Tt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgE0Tse (ORCPT
+        Wed, 27 May 2020 15:49:56 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:6834 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgE0Ttz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:48:34 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A70EC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:48:33 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m18so30422911ljo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:48:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5aQnJXyiQA3IowsNfVoOSqHgT1OkRmP0E5K+YnP6bZ0=;
-        b=TnvOhSKlFxE31tFdDGs7QlyMOK6Y7cUfkHrTbOmzpDgDbGW+JPoveR4i0MYR41TeBh
-         z3XnFBVgJIiV5+i6dphaBvKpRVeqDNoT8mp9flwB3oLqK1X+fKUW4N0cq1KlbOxLaPD9
-         Oa23F4+5CyZa0ZuPBk7SL9bZg/5tT/T3VwRO4DQnpNMjhqK/pwF2PDzUOFa1n1wSpaeh
-         EwhNhB4cA+b/YBoGMYrYiD2SZEprrV0KkYUySrjMaaqPGLzkzYx+J+ACdgcVMl8lAxwC
-         0oA2BItbx/b+YNSeQcDZX1HHFzlW05hAPbrEyTQnb8VcyMMKWD1rAKGjasJC4kcIOcN/
-         ZeIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5aQnJXyiQA3IowsNfVoOSqHgT1OkRmP0E5K+YnP6bZ0=;
-        b=lQpR2X08XheWcLAjLEIxUJdEzU1yr5Vip8YRMiF/zgCE7YN4D2NMxWlm7IF+TeeF88
-         SyfsqWef4mGs5zscbWBCZsSDv6T0GvD2j9NiTH7OjDFXrYX5fYKSwDsdSGJ4/gurTbwZ
-         NesSPeRvMKAop7R7isJqlrFEunbJ0XVKmAUsdnas0XVA8tAvJW66QD9q3G7xJjMGF152
-         fjCO8r8Gxlgncyi21Icy8gljpmrgiP8wmGPJ9ZiPCyrgu7h/ln7ovq1FnZw35W+G9+Jz
-         mqviJu7nQPOWhn5rl240vRPHr0G4lJBQp9qdUO105T8cmBBrO1yfNNcdCp454XfouP/Y
-         n+Sg==
-X-Gm-Message-State: AOAM530el0J8GBStTHCntUm8yyk5C5vh5PZbFKlrT24ymZvWl/S5b2bS
-        RJqGR1vIZsYyrgBYin6Go3KEhWP9yZVi25zgxbpKBg==
-X-Google-Smtp-Source: ABdhPJyEZKW3APXVi32eLvyHMFmU9WePyudCh1ndYkbgbtfCupI8fzy9fNXJFu97bCHQmtzpSyDl6UVJ40xglAwJ4VY=
-X-Received: by 2002:a2e:8e79:: with SMTP id t25mr4050863ljk.446.1590608911447;
- Wed, 27 May 2020 12:48:31 -0700 (PDT)
+        Wed, 27 May 2020 15:49:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5ecec4100001>; Wed, 27 May 2020 12:48:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 27 May 2020 12:49:55 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 27 May 2020 12:49:55 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 27 May
+ 2020 19:49:55 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 27 May 2020 19:49:55 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.87.74]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5ecec462000e>; Wed, 27 May 2020 12:49:55 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jan Kara <jack@suse.cz>,
+        Dave Chinner <david@fromorbit.com>,
+        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+Subject: [PATCH] mm/gup: update pin_user_pages.rst for "case 3" (mmu notifiers)
+Date:   Wed, 27 May 2020 12:49:53 -0700
+Message-ID: <20200527194953.11130-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200520232525.798933-1-hannes@cmpxchg.org> <20200520232525.798933-2-hannes@cmpxchg.org>
-In-Reply-To: <20200520232525.798933-2-hannes@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 27 May 2020 12:48:20 -0700
-Message-ID: <CALvZod5ayJ3UzuNw-a5cio3equRFaWGdLGxf+fxcokRx3mCJXQ@mail.gmail.com>
-Subject: Re: [PATCH 01/14] mm: fix LRU balancing effect of new transparent
- huge pages
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Linux MM <linux-mm@kvack.org>, Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan.kim@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
+X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1590608912; bh=+JO9SzIVC7F8gI8jTFzEl6QoxL/thoNHpxziO/PBuik=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=RbHn4yG2kSWbcFxzxdHvbZj23GM1l2XQ9OV43KKqB5pYAAx0dqZbie/A8Lqe7iA8N
+         D3Xv3j5Dm16ONLL0bFQGcsZX3X4x3NSRsWwXzknqY5esUouiyjwcd+WKX6bK0z6bKX
+         tZtbIaYr6XyQwN2CqThSIgUKjVbBXz6zPp/kZYHVvhMmqCDVtvxfowJXSBcWsNsDqW
+         hVMwcZZQhRR1I3NPHeiEdBXN5rXNrcT26/g12MndJ67DRV7Zu3sjBM/mvEGn/48Kif
+         af4BZjhcPZeI6WEHMUpqJ7u/rJpAGCQXIpF5RdLZ/7xEwHgAyHYet9n5rrzvxrOVRS
+         mwUAVRtqviZqg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 20, 2020 at 4:28 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> Currently, THP are counted as single pages until they are split right
-> before being swapped out. However, at that point the VM is already in
-> the middle of reclaim, and adjusting the LRU balance then is useless.
->
-> Always account THP by the number of basepages, and remove the fixup
-> from the splitting path.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> Reviewed-by: Rik van Riel <riel@redhat.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Acked-by: Minchan Kim <minchan@kernel.org>
+Update case 3 so that it covers the use of mmu notifiers, for
+hardware that does, or does not have replayable page faults.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Also, elaborate case 4 slightly, as it was quite cryptic.
+
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ Documentation/core-api/pin_user_pages.rst | 33 +++++++++++++----------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core=
+-api/pin_user_pages.rst
+index 2e939ff10b86..4675b04e8829 100644
+--- a/Documentation/core-api/pin_user_pages.rst
++++ b/Documentation/core-api/pin_user_pages.rst
+@@ -148,23 +148,28 @@ NOTE: Some pages, such as DAX pages, cannot be pinned=
+ with longterm pins. That's
+ because DAX pages do not have a separate page cache, and so "pinning" impl=
+ies
+ locking down file system blocks, which is not (yet) supported in that way.
+=20
+-CASE 3: Hardware with page faulting support
+--------------------------------------------
+-Here, a well-written driver doesn't normally need to pin pages at all. How=
+ever,
+-if the driver does choose to do so, it can register MMU notifiers for the =
+range,
+-and will be called back upon invalidation. Either way (avoiding page pinni=
+ng, or
+-using MMU notifiers to unpin upon request), there is proper synchronizatio=
+n with
+-both filesystem and mm (page_mkclean(), munmap(), etc).
+-
+-Therefore, neither flag needs to be set.
+-
+-In this case, ideally, neither get_user_pages() nor pin_user_pages() shoul=
+d be
+-called. Instead, the software should be written so that it does not pin pa=
+ges.
+-This allows mm and filesystems to operate more efficiently and reliably.
++CASE 3: MMU notifier registration, with or without page faulting hardware
++-------------------------------------------------------------------------
++Device drivers can pin pages via get_user_pages*(), and register for mmu
++notifier callbacks for the memory range. Then, upon receiving a notifier
++"invalidate range" callback , stop the device from using the range, and un=
+pin
++the pages. There may be other possible schemes, such as for example explic=
+itly
++synchronizing against pending IO, that accomplish approximately the same t=
+hing.
++
++Or, if the hardware supports replayable page faults, then the device drive=
+r can
++avoid pinning entirely (this is ideal), as follows: register for mmu notif=
+ier
++callbacks as above, but instead of stopping the device and unpinning in th=
+e
++callback, simply remove the range from the device's page tables.
++
++Either way, as long as the driver unpins the pages upon mmu notifier callb=
+ack,
++then there is proper synchronization with both filesystem and mm
++(page_mkclean(), munmap(), etc). Therefore, neither flag needs to be set.
+=20
+ CASE 4: Pinning for struct page manipulation only
+ -------------------------------------------------
+-Here, normal GUP calls are sufficient, so neither flag needs to be set.
++If only struct page data (as opposed to the actual memory contents that a =
+page
++is tracking) is affected, then normal GUP calls are sufficient, and neithe=
+r flag
++needs to be set.
+=20
+ page_maybe_dma_pinned(): the whole point of pinning
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+--=20
+2.26.2
+
