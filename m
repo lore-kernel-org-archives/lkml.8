@@ -2,160 +2,205 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C37C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD76C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 606A12088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D41D2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:51:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KBI9y4h2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GTB1y7yY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgE0UvU (ORCPT
+        id S1728697AbgE0Uv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728082AbgE0UvT (ORCPT
+        Wed, 27 May 2020 16:51:27 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26119 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728082AbgE0Uv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:51:19 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF00BC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:51:19 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id h129so25682084ybc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=DdLsrZGy87gL5PPAo+OzWKykA6lM0LgtmgPWJCOmcHk=;
-        b=KBI9y4h2V0uHMOfFBPfbiog35DiwugIstTan2mISIhH8KQdcT4+CQos3HKFsPNfGwu
-         wtTmEB6XcMsc0iHcHGNhVbGWxlv0uWBgO9Y/GtJ/+NRJSmlCdktSzjtZItvEGZuKntag
-         zVEZUl5t8RlO/uyCIXk/DjRJWteYdnJL0LPlALsqoikETA3UHngduPwUCFVmwmZ1rMcz
-         4Fz9Ix2v3t8ilmjrBRK/P5im8hYp7yGffAS6kDihg/D5YEPVpMeNaWXB0YbmVaDoP5Gh
-         lrll8YobGEPqfKMN5sBgkb3QnGzzfN2NthWtmhfRLGMvRLK4k0oYtzSMQEkSX/rkmQav
-         4zXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=DdLsrZGy87gL5PPAo+OzWKykA6lM0LgtmgPWJCOmcHk=;
-        b=cZS7AAS+e8YrZrqFYx6An13KosEhpGKNVFHbDbCoqCQa/IiR8CoIa9CtEiHmmNIDSF
-         pFv4pbkhk9pVDiMqkBbEf83X5I7uPqw0wHQ49sdavsyF2DT7dMlWcCsmLN89SgWY5DVO
-         Zo7yH8c69e67+kkhvL7TlkhAPue0fYrZAAwMp5MantwwwIqprYkkjwqJpur1Wr39tm/I
-         1ojZvcEDhPizLqNh1HAXlqZF8IPSb6Y4sV35g1KEY0PKglmJvEw/yw8H4T9+iGa5IC97
-         nAaTUjLkPNAI7DwjWAwzMPYoZE7LF3vNPusEavnnpnKak+3Lb758jvqervY3IvA8q71Y
-         xSoA==
-X-Gm-Message-State: AOAM5319s0HQcIj6sSsKj1OLqv6pjHSAcG6JsW7pRUJH8L/BKBebDqYC
-        P3XtEkd96FmLdLbnj7uyYRVyL3lLAddV
-X-Google-Smtp-Source: ABdhPJwqrxGl9Q21WiHWkTy/Cz9smW2aDm7R64tvq70OTi1aKuKjSQeoGTICzcGl93U27BBxS8lewg04umpI
-X-Received: by 2002:a25:7496:: with SMTP id p144mr25973ybc.112.1590612679064;
- Wed, 27 May 2020 13:51:19 -0700 (PDT)
-Date:   Wed, 27 May 2020 21:51:00 +0100
-In-Reply-To: <20200527194811.GF30374@kadam>
-Message-Id: <20200527205100.35794-1-pterjan@google.com>
-Mime-Version: 1.0
-References: <20200527194811.GF30374@kadam>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH v2] staging: rtl8723bs: Use common packet header constants
-From:   Pascal Terjan <pterjan@google.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     Pascal Terjan <pterjan@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 May 2020 16:51:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590612686; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=oQKoa8Cj84DPHKqtKgg0JYSKoT8dZrtpHgoZsTqyTeY=; b=GTB1y7yY1YgSMjqVxiqjDFnRLwWOOUIujLzoYLm7/KcHBS2uKLTjUTRbLScfPl/GAcM9p+sX
+ nTfyVA3+iWG0Oy55Avf/24h0R9VKRQ3jf/EjP1oIQqN5XGLKlKzv9BNWljoW32nzP6OFe8Fq
+ Et0HoLpTozOhtXBPMknDVqYwo60=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5eced2cc44a25e00524fb710 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 20:51:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B1019C4339C; Wed, 27 May 2020 20:51:23 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 556F4C433C6;
+        Wed, 27 May 2020 20:51:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 556F4C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 27 May 2020 14:51:19 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
+ set DDR bandwidth
+Message-ID: <20200527205117.GA8479@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+        dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
+ <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
+ <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
+ <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
+ <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
+ <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver contains a local version of the rfc1042 header and bridge
-tunnel header constants which are available from cfg80211.h, switch to
-those.
+On Wed, May 27, 2020 at 08:38:47AM -0700, Rob Clark wrote:
+> On Wed, May 27, 2020 at 1:47 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
+> >
+> > + more folks
+> >
+> > On 5/18/2020 9:55 PM, Rob Clark wrote:
+> > > On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> > >> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
+> > >>> This patches replaces the previously used static DDR vote and uses
+> > >>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
+> > >>> GPU frequency.
+> > >>>
+> > >>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> > >>> ---
+> > >>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
+> > >>>   1 file changed, 1 insertion(+), 5 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > >>> index 2d8124b..79433d3 100644
+> > >>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > >>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+> > >>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
+> > >>>
+> > >>>        gmu->freq = gmu->gpu_freqs[perf_index];
+> > >>>
+> > >>> -     /*
+> > >>> -      * Eventually we will want to scale the path vote with the frequency but
+> > >>> -      * for now leave it at max so that the performance is nominal.
+> > >>> -      */
+> > >>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
+> > >>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
+> > >>>   }
+> > >> This adds an implicit requirement that all targets need bandwidth settings
+> > >> defined in the OPP or they won't get a bus vote at all. I would prefer that
+> > >> there be an default escape valve but if not you'll need to add
+> > >> bandwidth values for the sdm845 OPP that target doesn't regress.
+> > >>
+> > > it looks like we could maybe do something like:
+> > >
+> > >    ret = dev_pm_opp_set_bw(...);
+> > >    if (ret) {
+> > >        dev_warn_once(dev, "no bandwidth settings");
+> > >        icc_set_bw(...);
+> > >    }
+> > >
+> > > ?
+> > >
+> > > BR,
+> > > -R
+> >
+> > There is a bit of an issue here - Looks like its not possible to two icc
+> > handles to the same path.  Its causing double enumeration of the paths
+> > in the icc core and messing up path votes. With [1] Since opp/core
+> > already gets a handle to the icc path as part of table add,  drm/msm
+> > could do either
+> >
+> > a) Conditionally enumerate gpu->icc_path handle only when pm/opp core
+> > has not got the icc path handle. I could use something like [2] to
+> > determine if should initialize gpu->icc_path*
+> >
+> > b) Add peak-opp-configs in 845 dt and mandate all future versions to use
+> > this bindings. With this, I can remove gpu->icc_path from msm/drm
+> > completely and only rely on opp/core for bw voting.
+> 
+> The main thing is that we want to make sure newer dtb always works on
+> an older kernel without regression.. but, hmm..  I guess the
+> interconnects/interconnects-names properties haven't landed yet in
+> sdm845.dtsi?  Maybe that lets us go with the simpler approach (b).
+> Looks like we haven't wired up interconnect for 8916 or 8996 either,
+> so probably we can just mandate this for all of them?
+> 
+> If we have landed the interconnect dts hookup for gpu somewhere that
+> I'm overlooking, I guess we would have to go with (a) and keep the
+> existing interconnects/interconnects-names properties.
 
-Signed-off-by: Pascal Terjan <pterjan@google.com>
----
-v2: improve description and drop confusing cosmetic changes
+The main problem is that (on sdm845 at least) the path comes up with a very slow
+default so even if we don't do scaling we had to set _something_.  Perhaps if we
+solved that problem somewhere else (inerconnect, rpmh?) then we wouldn't need to
+worry about it in the leaf driver unless the full opp tables are described.
 
- drivers/staging/rtl8723bs/core/rtw_recv.c     | 9 +++------
- drivers/staging/rtl8723bs/include/rtw_recv.h  | 2 --
- drivers/staging/rtl8723bs/os_dep/recv_linux.c | 5 +++--
- 3 files changed, 6 insertions(+), 10 deletions(-)
+Jordan
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
-index 5245098b9ecf..7e1da0e35812 100644
---- a/drivers/staging/rtl8723bs/core/rtw_recv.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
-@@ -10,14 +10,11 @@
- #include <rtw_debug.h>
- #include <linux/jiffies.h>
- #include <rtw_recv.h>
-+#include <net/cfg80211.h>
- 
- static u8 SNAP_ETH_TYPE_IPX[2] = {0x81, 0x37};
- static u8 SNAP_ETH_TYPE_APPLETALK_AARP[2] = {0x80, 0xf3};
- 
--u8 rtw_rfc1042_header[] = { 0xaa, 0xaa, 0x03, 0x00, 0x00, 0x00 };
--/* Bridge-Tunnel header (for EtherTypes ETH_P_AARP and ETH_P_IPX) */
--u8 rtw_bridge_tunnel_header[] = { 0xaa, 0xaa, 0x03, 0x00, 0x00, 0xf8 };
--
- static void rtw_signal_stat_timer_hdl(struct timer_list *t);
- 
- void _rtw_init_sta_recv_priv(struct sta_recv_priv *psta_recvpriv)
-@@ -1625,11 +1622,11 @@ sint wlanhdr_to_ethhdr(union recv_frame *precvframe)
- 	psnap_type = ptr+pattrib->hdrlen + pattrib->iv_len+SNAP_SIZE;
- 	/* convert hdr + possible LLC headers into Ethernet header */
- 	/* eth_type = (psnap_type[0] << 8) | psnap_type[1]; */
--	if ((!memcmp(psnap, rtw_rfc1042_header, SNAP_SIZE) &&
-+	if ((!memcmp(psnap, rfc1042_header, SNAP_SIZE) &&
- 		(memcmp(psnap_type, SNAP_ETH_TYPE_IPX, 2)) &&
- 		(memcmp(psnap_type, SNAP_ETH_TYPE_APPLETALK_AARP, 2))) ||
- 		/* eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) || */
--		 !memcmp(psnap, rtw_bridge_tunnel_header, SNAP_SIZE)) {
-+		 !memcmp(psnap, bridge_tunnel_header, SNAP_SIZE)) {
- 		/* remove RFC1042 or Bridge-Tunnel encapsulation and replace EtherType */
- 		bsnaphdr = true;
- 	} else
-diff --git a/drivers/staging/rtl8723bs/include/rtw_recv.h b/drivers/staging/rtl8723bs/include/rtw_recv.h
-index 98c3e92245b7..a851b818ef0e 100644
---- a/drivers/staging/rtl8723bs/include/rtw_recv.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_recv.h
-@@ -38,8 +38,6 @@
- #define RX_MAX_QUEUE				2
- 
- #define MAX_SUBFRAME_COUNT	64
--extern u8 rtw_rfc1042_header[];
--extern u8 rtw_bridge_tunnel_header[];
- 
- /* for Rx reordering buffer control */
- struct recv_reorder_ctrl
-diff --git a/drivers/staging/rtl8723bs/os_dep/recv_linux.c b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-index 2a7b9922b1d4..eb4d1c3008fe 100644
---- a/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-@@ -9,6 +9,7 @@
- #include <drv_types.h>
- #include <rtw_debug.h>
- #include <linux/jiffies.h>
-+#include <net/cfg80211.h>
- 
- void rtw_os_free_recvframe(union recv_frame *precvframe)
- {
-@@ -71,9 +72,9 @@ _pkt *rtw_os_alloc_msdu_pkt(union recv_frame *prframe, u16 nSubframe_Length, u8
- 	eth_type = RTW_GET_BE16(&sub_skb->data[6]);
- 
- 	if (sub_skb->len >= 8 &&
--		((!memcmp(sub_skb->data, rtw_rfc1042_header, SNAP_SIZE) &&
-+		((!memcmp(sub_skb->data, rfc1042_header, SNAP_SIZE) &&
- 		  eth_type != ETH_P_AARP && eth_type != ETH_P_IPX) ||
--		 !memcmp(sub_skb->data, rtw_bridge_tunnel_header, SNAP_SIZE))) {
-+		 !memcmp(sub_skb->data, bridge_tunnel_header, SNAP_SIZE))) {
- 		/*
- 		 * remove RFC1042 or Bridge-Tunnel encapsulation and replace
- 		 * EtherType
+> BR,
+> -R
+> 
+> > [1] - https://lore.kernel.org/patchwork/cover/1240687/
+> >
+> > [2] - https://patchwork.kernel.org/patch/11527573/
+> >
+> > Let me know your thoughts
+> >
+> > Sharat
+> >
+> > >
+> > >> Jordan
+> > >>
+> > >>>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
+> > >>> --
+> > >>> 2.7.4
+> > >>>
+> > >> --
+> > >> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> > >> a Linux Foundation Collaborative Project
+> > >> _______________________________________________
+> > >> Freedreno mailing list
+> > >> Freedreno@lists.freedesktop.org
+> > >> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
 -- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
