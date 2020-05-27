@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D90C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE65C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613882088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185DE20776
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="A5CdNSbz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="1Fp/wADc"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Jyt+CZeK";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E3yqKKg+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbgE0Pu4 (ORCPT
+        id S2389039AbgE0P4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:50:56 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:47645 "EHLO
+        Wed, 27 May 2020 11:56:01 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:57075 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730557AbgE0Pua (ORCPT
+        by vger.kernel.org with ESMTP id S1730620AbgE0Puy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:50:30 -0400
+        Wed, 27 May 2020 11:50:54 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 2AD8A582086;
-        Wed, 27 May 2020 11:50:29 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:29 -0400
+        by mailnew.nyi.internal (Postfix) with ESMTP id F21DE5820CD;
+        Wed, 27 May 2020 11:50:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:50:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=nG/RYo7tmKxJf
-        6kRryI78rAS9caRthvRwWfJX3SbsG0=; b=A5CdNSbzLgWsDFPRyDGr7S6i2Qp6J
-        vgfku64SpbbqX1swjGP4Im9bmXzaraxHGW+KHX2EOPNHDfZcxTmnRaU1vbl+9bLS
-        ZRJEfcwoFdN5LbbSsGqd8ywC9dAY8Qp8F8LIRTZHH0PQScEZZcLTss0H2wDxYFeN
-        n5/Vaz1eV3NHGr8Q9hAkDtzgP2P/3zIjyL1TbTB/aULwNTi8Jr3nDPlrumDkTmIo
-        Y6I1oBAPiOJn64U1BU7LDhC9bIgIyFOAqAxfCtPOqFDHyg6ER+1UYOU3B/CUba0G
-        ChRxxPKpajCBqC0lE28jtAOFLrsOEEs0aWZyKuvmjWRreqULCHPgiH0xw==
+        :mime-version:content-transfer-encoding; s=fm2; bh=IxL7aM4/cF0Eq
+        P+78A1SAtbW8PYoMF3heOq6qhP5SA0=; b=Jyt+CZeKZ4VnXxPavwkER2FRucBtS
+        8qClaKNzX0NqwNi1he1lRO1gUCgLv5DfJxfehEo7e9bLV2Gpvq9TG3Yfjlw/RuDA
+        Xhfd5TcX1nAYyw8cdhUQUZCIyBfgUJ+39GhlkgEDQi+DSRWkbp4WCQQWU5el3l5o
+        ++pTDxZNXNVIOB36MT3WhOuFjBuZHmaChIqBFRstoOzvSfNf8vSLH4H8SvaY3eD6
+        Kd3mx7LFqUn5u9IhbSO4uKJVjcNKgn1xi1yR0VsAAZxwBeWnnefn/oDPYeel2tiH
+        d5HvhXXuFwtHv88jKBWw0p0dwK0sh19BvX1G8iNq/AMcDf8KaldDrcMbA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=nG/RYo7tmKxJf6kRryI78rAS9caRthvRwWfJX3SbsG0=; b=1Fp/wADc
-        U9CoB8+Xb/cAepV5LsvhZE5Ybj7f3c4OX2rHQyLcWZ2XbbORDmY39LaWY53JYyUu
-        qd7qhVu3LFi+lFsbEaDYmnPgF3640mj7rya8im20njaCYB3LNyDPqcmMWtBwdTue
-        03dDIU2yvmlpdHkqTebyeiUk/cuX4phcz9kkyHHF00LoSSbE3/DcQUEOI9IT3Rri
-        6QPkXya+7at64Q69oO9G/FY+QR0MjJUnnXvbKTcee4o/9I7y5PkTAn2CHHpVqyRl
-        e7ix3nZaY5qw64x1swnuPMWHQRbu/F8Prx+RlCnkT/5OVE8UZ2hkKj1V15e70gG4
-        HjiZ4tWzuXEVFg==
-X-ME-Sender: <xms:RYzOXu39WoUbQEbRgsOLV35Yfy_8hMu55Unxy0A0yEWaG_lMy9ALVQ>
+        fm2; bh=IxL7aM4/cF0EqP+78A1SAtbW8PYoMF3heOq6qhP5SA0=; b=E3yqKKg+
+        G7y00T9pCmq8/AyCY9xWAPAAd0Dfmi8TSynbCuMAeFbfrvkUm3OjbbUpA4We/EVz
+        zHKrWsbyTkw9XjRiPPY4nI9+9m9mhtopLqmvrmW2KB29XxHi2MLUPO2bw/o02gmg
+        0gDwFj7e9TV02NjuMzS2IW3ubYsKCXVS9ydV4cUkM6ja0lhWlYLSnYAJxgkCdDly
+        eXlQaATyiPRf3fnphL/NWdtbpRNd3K1/8fdFG5Ubhc7L19oQegRYsF4cASJp8Qpd
+        yNR5BDw8fyyVY5McDp5+PO7yK3D+5qcyFN7bde2kwrFRPDMHKfNLWn8ABb7IxXHe
+        zuL0ZntINGFMag==
+X-ME-Sender: <xms:XIzOXo8j2tr2e5rezCqTgMpC8_GL5U7ytuQydgAj6mbU6dslZc5Rig>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdehne
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepgedtne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:RYzOXhEoU2zzLKEzZoaPyG5uMLEcxpZmJcjyVfHvjK6x-lwksZp7sQ>
-    <xmx:RYzOXm6tc3rkK2f05zF3f2CO28fhhrgFKmyf7ooU0eyHR_b6UY2Edg>
-    <xmx:RYzOXv0XXZvz_mGcy7MCNvksUEk9Xi8anuFRCeMFaY_J2onO8DufPg>
-    <xmx:RYzOXo3YiqEi58qDNsOLf2piHcaszUUnKVyvxxTCUXSCvfobXzrscA>
+X-ME-Proxy: <xmx:XIzOXgu6nTwH7PJDXdPUVUzjbCBllBvlq7eq9VDIzED8JNVsDpJm0Q>
+    <xmx:XIzOXuBw0ocyDb2szbE9B3ytAkIG7_DwNYA6Amu7Albhy3rfYev1wg>
+    <xmx:XIzOXoe7Znn46joZqlxYtyww0-ptse7AW1IvSfPAFQk_fHoY23_h8A>
+    <xmx:XIzOXgfd5f4_85QcN2AnrXonphH_k0dGIAqLU00kwAPCl_87n8z_bQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 98E263061CCB;
-        Wed, 27 May 2020 11:50:28 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 945653280067;
+        Wed, 27 May 2020 11:50:52 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 045/105] drm/vc4: hvs: Make sure our channel is reset
-Date:   Wed, 27 May 2020 17:48:15 +0200
-Message-Id: <c1c69d2d2d909822300dca1ddc0bb5b5896a5107.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 060/105] drm/vc4: crtc: Make state functions public
+Date:   Wed, 27 May 2020 17:48:30 +0200
+Message-Id: <8d86964fb69d9d2d681dd3cab914bedd4e24b728.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,29 +89,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to clear our intermediate FIFOs that might end up with a stale
-pixel, let's make sure our FIFO channel is reset everytime our channel is
-setup.
+We'll need the CRTC state related functions to be exported so that we can
+reuse them for the TXP.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_hvs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 21 ++++++++++-----------
+ drivers/gpu/drm/vc4/vc4_drv.h  | 10 ++++++++++
+ 2 files changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-index 87bbd68d44db..754aff3966bd 100644
---- a/drivers/gpu/drm/vc4/vc4_hvs.c
-+++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-@@ -205,6 +205,10 @@ static int vc4_hvs_init_channel(struct vc4_dev *vc4, struct drm_crtc *crtc,
- 	u32 dispbkgndx;
- 	u32 dispctrl;
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index a577ed8f929f..4df8cc5387a0 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -201,7 +201,7 @@ static bool vc4_crtc_get_scanout_position(struct drm_crtc *crtc,
+ 	return ret;
+ }
  
-+	HVS_WRITE(SCALER_DISPCTRLX(chan), 0);
-+	HVS_WRITE(SCALER_DISPCTRLX(chan), SCALER_DISPCTRLX_RESET);
-+	HVS_WRITE(SCALER_DISPCTRLX(chan), 0);
-+
- 	/* Turn on the scaler, which will wait for vstart to start
- 	 * compositing.
- 	 * When feeding the transposer, we should operate in oneshot
+-static void vc4_crtc_destroy(struct drm_crtc *crtc)
++void vc4_crtc_destroy(struct drm_crtc *crtc)
+ {
+ 	drm_crtc_cleanup(crtc);
+ }
+@@ -803,11 +803,11 @@ static int vc4_async_page_flip(struct drm_crtc *crtc,
+ 	return 0;
+ }
+ 
+-static int vc4_page_flip(struct drm_crtc *crtc,
+-			 struct drm_framebuffer *fb,
+-			 struct drm_pending_vblank_event *event,
+-			 uint32_t flags,
+-			 struct drm_modeset_acquire_ctx *ctx)
++int vc4_page_flip(struct drm_crtc *crtc,
++		  struct drm_framebuffer *fb,
++		  struct drm_pending_vblank_event *event,
++		  uint32_t flags,
++		  struct drm_modeset_acquire_ctx *ctx)
+ {
+ 	if (flags & DRM_MODE_PAGE_FLIP_ASYNC)
+ 		return vc4_async_page_flip(crtc, fb, event, flags);
+@@ -815,7 +815,7 @@ static int vc4_page_flip(struct drm_crtc *crtc,
+ 		return drm_atomic_helper_page_flip(crtc, fb, event, flags, ctx);
+ }
+ 
+-static struct drm_crtc_state *vc4_crtc_duplicate_state(struct drm_crtc *crtc)
++struct drm_crtc_state *vc4_crtc_duplicate_state(struct drm_crtc *crtc)
+ {
+ 	struct vc4_crtc_state *vc4_state, *old_vc4_state;
+ 
+@@ -832,8 +832,8 @@ static struct drm_crtc_state *vc4_crtc_duplicate_state(struct drm_crtc *crtc)
+ 	return &vc4_state->base;
+ }
+ 
+-static void vc4_crtc_destroy_state(struct drm_crtc *crtc,
+-				   struct drm_crtc_state *state)
++void vc4_crtc_destroy_state(struct drm_crtc *crtc,
++			    struct drm_crtc_state *state)
+ {
+ 	struct vc4_dev *vc4 = to_vc4_dev(crtc->dev);
+ 	struct vc4_crtc_state *vc4_state = to_vc4_crtc_state(state);
+@@ -850,8 +850,7 @@ static void vc4_crtc_destroy_state(struct drm_crtc *crtc,
+ 	drm_atomic_helper_crtc_destroy_state(crtc, state);
+ }
+ 
+-static void
+-vc4_crtc_reset(struct drm_crtc *crtc)
++void vc4_crtc_reset(struct drm_crtc *crtc)
+ {
+ 	if (crtc->state)
+ 		vc4_crtc_destroy_state(crtc, crtc->state);
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
+index 32e9de15262a..da4d2391a4ba 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.h
++++ b/drivers/gpu/drm/vc4/vc4_drv.h
+@@ -798,6 +798,16 @@ void vc4_bo_remove_from_purgeable_pool(struct vc4_bo *bo);
+ /* vc4_crtc.c */
+ extern struct platform_driver vc4_crtc_driver;
+ int vc4_crtc_disable_at_boot(struct drm_crtc *crtc);
++void vc4_crtc_destroy(struct drm_crtc *crtc);
++int vc4_page_flip(struct drm_crtc *crtc,
++		  struct drm_framebuffer *fb,
++		  struct drm_pending_vblank_event *event,
++		  uint32_t flags,
++		  struct drm_modeset_acquire_ctx *ctx);
++struct drm_crtc_state *vc4_crtc_duplicate_state(struct drm_crtc *crtc);
++void vc4_crtc_destroy_state(struct drm_crtc *crtc,
++			    struct drm_crtc_state *state);
++void vc4_crtc_reset(struct drm_crtc *crtc);
+ void vc4_crtc_handle_vblank(struct vc4_crtc *crtc);
+ void vc4_crtc_txp_armed(struct drm_crtc_state *state);
+ void vc4_crtc_get_margins(struct drm_crtc_state *state,
 -- 
 git-series 0.9.1
