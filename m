@@ -2,109 +2,123 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A1DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9203C20DD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590609952;
-	bh=N1nKAU4vjXzrN3ZCzfQIK8tGr2UNnnDVh5ijat7Jixc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=F93oKGooo0bpelRHRYunf8HPnsIovfnsa9E9OayiiKJfhX4yfY+y56Ywb5EDswDK+
-	 SZ5yf/t2Bwbu5uPr9YD8IbUMro+a/BfwRw8z5qlWPe+ConR4zMVk2Y89Kfltiwgkgh
-	 sfR6db7Jbz4I3wZ8M3nWfcCzY5kzEmyn1MavNIhc=
+	by mail.kernel.org (Postfix) with ESMTP id 90A9A2089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbgE0UFv (ORCPT
+        id S1728546AbgE0UGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbgE0UFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:05:51 -0400
-Received: from localhost.localdomain (unknown [194.230.155.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF9D42089D;
-        Wed, 27 May 2020 20:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590609950;
-        bh=N1nKAU4vjXzrN3ZCzfQIK8tGr2UNnnDVh5ijat7Jixc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vSBjwSbCJvKlikusm/wmEr/7TTDzTbgl52W4bOlziIe35z6bmG7aVvt16cX4vA3Ds
-         JawzsuArKpqNtEmfpTUHEY4PpJ0UflU2koaEGTxsAfJy7ykbE1JLOiYLsX0PVK6ntO
-         MBQLohmfCYcFetFH5Zo07tt1jDsbH52VrZ740kqc=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3] drm/panfrost: Reduce the amount of logs on deferred probe
-Date:   Wed, 27 May 2020 22:05:44 +0200
-Message-Id: <20200527200544.7849-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 May 2020 16:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726114AbgE0UGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:06:03 -0400
+X-Greylist: delayed 18763 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 27 May 2020 13:06:03 PDT
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:12e:520::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6055EC05BD1E;
+        Wed, 27 May 2020 13:06:03 -0700 (PDT)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1je2JN-0002DO-Fg; Wed, 27 May 2020 22:06:01 +0200
+Date:   Wed, 27 May 2020 22:06:01 +0200
+From:   Florian Westphal <fw@strlen.de>
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netfilter-devel@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+        sgrubb@redhat.com, omosnace@redhat.com, twoerner@redhat.com,
+        eparis@parisplace.org, tgraf@infradead.org
+Subject: Re: [PATCH ghak124 v1] audit: log nftables configuration change
+ events
+Message-ID: <20200527200601.GJ2915@breakpoint.cc>
+References: <d92a718b54269f426acc18f28e561031da66d3ca.1590579994.git.rgb@redhat.com>
+ <20200527145317.GI2915@breakpoint.cc>
+ <20200527152443.7axktc2im3zpvk37@madcap2.tricolour.ca>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527152443.7axktc2im3zpvk37@madcap2.tricolour.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point to print deferred probe (and its failures to get
-resources) as an error.  Also there is no need to print regulator errors
-twice.
+Richard Guy Briggs <rgb@redhat.com> wrote:
+> Well, we are only logging "some change", so is it necessary to log the
+> generation count to show that?  Is the generation count of specific
+> interest?
 
-In case of multiple probe tries this would pollute the dmesg.
+No, its of no specific interest.  I just worded this poorly.
+If the generation id increments, then something has been changed by the
+batch, thats all.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Steven Price <steven.price@arm.com>
+> > (After that, kernel can't back down anymore, i.e. all errors are
+> >  caught/handled beforehand).
+> 
+> I did think of recording all failed attempts too, but coding that would
+> be more effort.  It is worth doing if it is deemed important,
+> particularly for permission issues (as opposed to resource limits or
+> packet format errors.  This would be more of interest to a security
+> officer rather than a network technician, but the latter may find it
+> useful for debugging.
 
----
+The permission check is done early, in nfnetlink_rcv() (search for
+EPERM), you would need to add an audit call there if thats relevant
+for audit purposes.
 
-Changes since v2:
-1. Rebase
-2. Add Steven's review
+> > If its 'any config change', then you also need to handle adds
+> > or delete from sets/maps, since that may allow something that wasn't
+> > allowed before, e.g. consider
+> > 
+> > ip saddr @trused accept
+> > 
+> > and then, later on,
+> > nft add element ip filter @trusted { 10.0.0.0/8, 192.168.0.1 }
+> > 
+> > This would not add a table, or chain, or set, but it does implicitly
+> > alter the ruleset.
+> 
+> Ah, ok, so yes, we would need that too.  I see family and table in
+> there, op is evident.  Is there a useful value we can use in the
+> "entries" field?
 
-Changes since v1:
-1. Remove second error message from calling panfrost_regulator_init()
----
- drivers/gpu/drm/panfrost/panfrost_device.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Maybe the handle of the set that the element was added to.
+Each set, rule, chain, ... has a kernel-assigned number that
+serves as a unique identifier.
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-index 8136babd3ba9..b172087eee6a 100644
---- a/drivers/gpu/drm/panfrost/panfrost_device.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-@@ -101,7 +101,9 @@ static int panfrost_regulator_init(struct panfrost_device *pfdev)
- 				      pfdev->comp->num_supplies,
- 				      pfdev->regulators);
- 	if (ret < 0) {
--		dev_err(pfdev->dev, "failed to get regulators: %d\n", ret);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(pfdev->dev, "failed to get regulators: %d\n",
-+				ret);
- 		return ret;
- 	}
- 
-@@ -213,10 +215,8 @@ int panfrost_device_init(struct panfrost_device *pfdev)
- 	}
- 
- 	err = panfrost_regulator_init(pfdev);
--	if (err) {
--		dev_err(pfdev->dev, "regulator init failed %d\n", err);
-+	if (err)
- 		goto err_out0;
--	}
- 
- 	err = panfrost_reset_init(pfdev);
- 	if (err) {
--- 
-2.17.1
+> > Is that record format expected to emit the current number of chains?
+> 
+> I was aiming for a relevant value such as perhaps the new rule number or
+> the rule number being deleted.
 
+In that case, use the handle, which is a u64 with a unique value (for a
+given table).
+
+> > Since table names can be anything in nf_tables (they have no special
+> > properties anymore), the table name is interesting from a informational
+> > pov, but not super interesting.
+> 
+> I don't think we need to be able to completely reconstruct the
+> tables/chains/rules from the information in the audit log, but be aware
+> of who is changing what when.
+
+Ok.  Have a look at nf_tables_fill_gen_info() in that case, you probably
+want to emit at least the pid and task info, unless audit doesn't add
+that already anyway.
+
+> > Consider a batch update that commits 100 new rules in chain x,
+> > this would result in 100 audit_log_nfcfg() calls, each with the
+> > same information.
+> 
+> So rule number would be a useful differentiator here.
+
+Ok.  Yes, that is available (rule->handle).
