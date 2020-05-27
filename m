@@ -6,83 +6,112 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E18DC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A1520776
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081A52075F
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbgE0P7z (ORCPT
+        id S2388931AbgE0QBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:59:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:37641 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbgE0P7y (ORCPT
+        Wed, 27 May 2020 12:01:02 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:36992 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388395AbgE0QBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:59:54 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MTR6K-1jRxsz1Bsq-00ThRF for <linux-kernel@vger.kernel.org>; Wed, 27 May
- 2020 17:59:53 +0200
-Received: by mail-qk1-f171.google.com with SMTP id w1so1410146qkw.5
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:59:53 -0700 (PDT)
-X-Gm-Message-State: AOAM5307y7h5mQL0sUrCKOVIH09FXkf/OnjoXcyTBnAB1CWImKaCFMUe
-        wrOO/Xk1syxwLO75iytRvkBQawNWBxdxmNK6NRs=
-X-Google-Smtp-Source: ABdhPJxDutw7MBd/EYBIKtYxOivFQlLGm+KC5RbbRJSXfuIwQcc5opcAUQCuxjh5ZJMaChtg/SMDmArapoMUIIqUbag=
-X-Received: by 2002:ae9:c10d:: with SMTP id z13mr4427434qki.3.1590595192185;
- Wed, 27 May 2020 08:59:52 -0700 (PDT)
+        Wed, 27 May 2020 12:01:01 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 661C88030809;
+        Wed, 27 May 2020 16:00:58 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id z4Dur32t_e9w; Wed, 27 May 2020 19:00:57 +0300 (MSK)
+Date:   Wed, 27 May 2020 19:00:56 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 06/11] i2c: designware: Add Baytrail sem config DW I2C
+ platform dependency
+Message-ID: <20200527160056.rg66gsubwhrwtnwf@mobilestation>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-7-Sergey.Semin@baikalelectronics.ru>
+ <20200527134220.GX1634618@smile.fi.intel.com>
+ <20200527142406.jzdtkbdb2q6st7e6@mobilestation>
+ <20200527154632.GG1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-References: <20200527134151.834555-1-arnd@arndb.de> <20200527134743.GH5308@sirena.org.uk>
-In-Reply-To: <20200527134743.GH5308@sirena.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 27 May 2020 17:59:35 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3fmQSTAKehsjZX8CEEEK7oHoGdviLKY2JE4=tTccGkyQ@mail.gmail.com>
-Message-ID: <CAK8P3a3fmQSTAKehsjZX8CEEEK7oHoGdviLKY2JE4=tTccGkyQ@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: amd: rt5682: fix soundwire dependencies
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:/2wIZzDDzQfrpWPFB69zwAucAUGfcez+Giw5RW1G7/iCV6t6Epr
- 42uliFgccxu6zXDveSMeqkHrETPJ6RnokDMk1LAYuItH/7Qd6X174boFXYQ24iucpwS0p5t
- 5BVfCUP5xqGIXYurM2FDO1oKtWVbuAt1zyGKlpOELMBpLKAjqbcDtAJAZ1arEZAIEBGu22o
- aBVmIrFcbdGvSsd0DOvJQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:33NcIUxmnpY=:+Qa5+8GfW5bgys04GaMR4D
- IBMzfSuIv0eLT+MhfECkVOAMfqLR5AIG7h7yCWw1Xyiw/Z7ZdON2bs2iKNyLt+V77F24Sh8XJ
- GWnMT9TaYejGKVa1JXaN0PrJL5Vu+AWvAExQ39t6r4gXpZaA3+X3p22ld1ky5Fcv80R/Mr0VR
- X15NJRwYebTlgToemrvXvb4JpFjZ/UIct9eB/oa8PKDRZis6SbicZ9cgmU6IgbH/LA8NKeoVB
- 9+BzX2gjaEBrhj1l2YxinNpWNynEuQUK3G7qcNr5jawA2Z2Bna6mc7X4igEGgtiZGRjl4o+JF
- w7qrbYGAU1bddDYlakf8CJU92G/WRKkycmowKrDm8Gu1ODfaRI/Qiq7OrsCP6U3KudzdjN3Uk
- 5Gw5vpBo7T0ksIi49y5VWLoiMAiu6IvJxNqfAlT9AayB2BjpR9zJaIfhP5DxpLm7KDPDzPt6a
- 4BxhIi/mGS/jcMiOYMwIwERU6QASeJD8Ae1Nls9tvztZwu1n/LEDxOBu3hM2hXYUSj5fmzdf8
- dqkGvYN5jWuhTDeT0dJ68GIcYezB4Gfq4raKcJTq0nvb9fQeq2M8hNcviuDMW6SNH2eMhNOzz
- NyEOlw+MReRrq+4qnLMQJgSAI1/5IotQLYNWv4bo2y+ZVVnZ0IEQ+YRSGn5NkaL2yjRcsHJUf
- h7T6dh0UFn95bK4fJYsYoHe+RsWoyxjCmMzlpnNymYCLV/y/WeKwEAua5pHMlZFTADOSvkEh9
- EYUo+ufr7KjYVzAAnIas/5TUl0QKxTKHSEUpVVNl2AOyEh2spZ2ilTBmnV7q9RN0RsezoPFav
- +lTGUUwfpBIEk/cUlLpmS+N2Ok9KbMdLiRgEaw/ZLcuXFd/pc4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200527154632.GG1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:47 PM Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 03:41:26PM +0200, Arnd Bergmann wrote:
->
-> > Maybe the SND_SOC_RT5682 driver itself can be reworked so that
-> > the common part depends on neither soundwire nor i2c and the two
-> > bus specific options can be loadable modules when the common part
-> > is built-in.
->
-> Yes, please do that.
+On Wed, May 27, 2020 at 06:46:32PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 05:24:06PM +0300, Serge Semin wrote:
+> > On Wed, May 27, 2020 at 04:42:20PM +0300, Andy Shevchenko wrote:
+> > > On Wed, May 27, 2020 at 03:01:06PM +0300, Serge Semin wrote:
+> > > > Currently Intel Baytrail I2C semaphore is a feature of the DW APB I2C
+> > > > platform driver. It's a bit confusing to see it's config in the menu at
+> > > > some separated place with no reference to the platform code. Let's move the
+> > > > config definition to be below the I2C_DESIGNWARE_PLATFORM config and mark
+> > > > it with "depends on I2C_DESIGNWARE_PLATFORM" statement. By doing so the
+> > > > config menu will display the feature right below the DW I2C platform
+> > > > driver item and will indent it to the right so signifying its belonging.
+> 
+> ...
+> 
+> > > >  config I2C_DESIGNWARE_BAYTRAIL
+> > > >  	bool "Intel Baytrail I2C semaphore support"
+> > > >  	depends on ACPI
+> > > > +	depends on I2C_DESIGNWARE_PLATFORM
+> > > >  	depends on (I2C_DESIGNWARE_PLATFORM=m && IOSF_MBI) || \
+> > > >  		   (I2C_DESIGNWARE_PLATFORM=y && IOSF_MBI=y)
+> > > 
+> > > I didn't get this. What is broken now with existing dependencies?
+> > 
+> > With no explicit "depends on I2C_DESIGNWARE_PLATFORM" the entry isn't right
+> > shifted with respect to the I2C_DESIGNWARE_PLATFORM config entry in the kernel
+> > menuconfig. So it looks like a normal no-yes driver without it. 
+> 
+> I didn't get. Is there problems with current case? (I don't see it).
+> If there is a problem, it should have a separate patch and commit message.
+> 
+> As for now above excerpt seems redundant and unneeded churn.
 
-It took me longer than I thought it would, but I have a patch now.
-I'll send it after it passes more randconfig builds to ensure it covers
-all corner cases.
+Please read the commit log more carefully.
 
-      Arnd
+Without explicit "depends on I2C_DESIGNWARE_PLATFORM" you'd see the DW
+I2C-related menuconfig as:
+[*] Synopsys DesignWare Platform
+[ ] Intel Baytrail I2C semaphore support
+with that "depends on I2C_DESIGNWARE_PLATFORM" added:
+[*] Synopsys DesignWare Platform
+[ ]     Intel Baytrail I2C semaphore support
+The second case presents the Baytrail semaphore as the DW I2C platform
+feature. Otherwise it's just a simple menuentry. As I see it without adding
+the explicit "depends on I2C_DESIGNWARE_PLATFORM" there is no need in moving
+the config at all. So if you think it's a churn. Well, I'll wait for
+Jarkko' comment in this regard.
+
+BTW Jarkko asked in v3 whether it would work with just explicit "depends on"
+without if-endif enclosing the config.
+
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
