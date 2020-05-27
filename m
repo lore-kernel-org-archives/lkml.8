@@ -2,126 +2,90 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64624C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92864208FE
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377FF20704
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 03:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590548765;
+	bh=YbNeRVytyv7hmFv8eyt94pX7Zws5RRSp3CNsb4NKfkA=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=F10QgbfePVJd44ZuqeOEpJS9P4rKhQ+NFR0VfbWNclgmI8no5nvn7mqpGcbbyN0u/
+	 iHlX9J5Yd5fbs7OZJ3sPwr3MDArAvswQa/XtKG7UqOAqnMqj+EGE7yE3gCODOknu2e
+	 ZMGixuLDAGxJN74H2umfBCwB7e3JhjjWFcdXihHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387455AbgE0DGD (ORCPT
+        id S2387464AbgE0DGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 26 May 2020 23:06:03 -0400
-Received: from mga07.intel.com ([134.134.136.100]:29330 "EHLO mga07.intel.com"
+Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387412AbgE0DGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387403AbgE0DGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 26 May 2020 23:06:02 -0400
-IronPort-SDR: QNB2Hc1LbhEqd06LcAQinYI7mj9YDKju6B8oPphCkTPQQ5V3gNw3jAed3Iv1BxTElJ7P4H2m7l
- A6Vr2ShiRq6g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 20:06:02 -0700
-IronPort-SDR: udG/k5eKyhqnYaLObyUiCt5BjJmK5ygdvlGvYHJTa9RB/w+qpuZOdmfgFJauU/Rfkbpbl98rSy
- ENEKzTgE9ulw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="270305926"
-Received: from zalvear-mobl.amr.corp.intel.com (HELO [10.254.67.58]) ([10.254.67.58])
-  by orsmga006.jf.intel.com with ESMTP; 26 May 2020 20:06:01 -0700
-Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
- non-hotplug capable devices
-To:     Oliver O'Halloran <oohall@gmail.com>
-Cc:     Yicong Yang <yangyicong@hisilicon.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ashok.raj@intel.com
-References: <18609.1588812972@famine>
- <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
- <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
- <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
- <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
- <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
- <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
- <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
- <CAOSf1CHTUyQ5o_ThkaPUkGjtTSK1UOkxSmKAWY3n3bdrVcjacA@mail.gmail.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <55b3a469-c306-acf1-f97e-f07f40054974@linux.intel.com>
-Date:   Tue, 26 May 2020 20:06:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 287BB20704;
+        Wed, 27 May 2020 03:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590548762;
+        bh=YbNeRVytyv7hmFv8eyt94pX7Zws5RRSp3CNsb4NKfkA=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Sn8YK+jBzUIMzXKJn7/wsSWSbhTvI7W6bjafgp6ioe35NvIChSrIgZFz/7Mq1s9wn
+         C1ha2ECoBHOGMKxBCeXLzDBKUD0zDLNbnu4XPZPLniFsjExGOhLmyiFPG1KYI8YkoF
+         8PuahXByZxzff9tpl2lZmKamrHmQSaBZtTi7QlZ0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <CAOSf1CHTUyQ5o_ThkaPUkGjtTSK1UOkxSmKAWY3n3bdrVcjacA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <159054862230.88029.9004999082945050815@swboyd.mtv.corp.google.com>
+References: <20200501223232.275800-1-konradybcio@gmail.com> <20200501223232.275800-5-konradybcio@gmail.com> <20200512224522.GA13463@bogus> <159054862230.88029.9004999082945050815@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH 4/4] dt-bindings: soc: qcom: Document MSM8936 SMD RPM compatible
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org,
+        Vincent Knecht <vincent.knecht@mailoo.org>,
+        Andy Gross <agross@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+To:     Konrad Dybcio <konradybcio@gmail.com>,
+        Rob Herring <robh@kernel.org>
+Date:   Tue, 26 May 2020 20:06:01 -0700
+Message-ID: <159054876138.88029.1324636788135726522@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Quoting Stephen Boyd (2020-05-26 20:03:42)
+> Quoting Rob Herring (2020-05-12 15:45:22)
+> > On Sat,  2 May 2020 00:32:32 +0200, Konrad Dybcio wrote:
+> > > From: Vincent Knecht <vincent.knecht@mailoo.org>
+> > >=20
+> > > Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >=20
+> >=20
+> > Acked-by: Rob Herring <robh@kernel.org>
+>=20
+> I picked these ones up actually, not the other ones, but my MUA totally
+> failed to open anything because the patches weren't sent To: anyone. O
+> well!
 
-On 5/26/20 8:00 PM, Oliver O'Halloran wrote:
-> On Wed, May 27, 2020 at 12:00 PM Kuppuswamy, Sathyanarayanan
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->>
->> Hi,
->>
->> On 5/21/20 7:56 PM, Yicong Yang wrote:
->>>
->>>
->>> On 2020/5/22 3:31, Kuppuswamy, Sathyanarayanan wrote:
->>>>
->>> Not exactly. In pci_bus_error_reset(), we call pci_slot_reset() only if it's
->>> hotpluggable. But we always call pci_bus_reset() to perform a secondary bus
->>> reset for the bridge. That's what I think is unnecessary for a normal link,
->>> and that's what reset link indicates us to do. The slot reset is introduced
->>> in the process only to solve side effects. (c4eed62a2143, PCI/ERR: Use slot reset if available)
->>
->> IIUC, pci_bus_reset() will do slot reset if its supported (hot-plug
->> capable slots). If its not supported then it will attempt secondary
->> bus reset. So secondary bus reset will be attempted only if slot
->> reset is not supported.
->>
->> Since reported_error_detected() requests us to do reset, we will have
->> to attempt some kind of reset before we call ->slot_reset() right?
-> 
-> Yes, the driver returns PCI_ERS_RESULT_NEED_RESET from
-> ->error_detected() to indicate that it doesn't know how to recover
-> from the error. How that reset is performed doesn't really matter, but
-> it does need to happen.
-> 
-> 
->>> PCI_ERS_RESULT_NEED_RESET indicates that the driver
->>> wants a platform-dependent slot reset and its ->slot_reset() method to be called then.
->>> I don't think it's same as slot reset mentioned above, which is only for hotpluggable
->>> ones.
->> What you think is the correct reset implementation ? Is it something
->> like this?
->>
->> if (hotplug capable)
->>      try_slot_reset()
->> else
->>      do_nothing()
-> 
-> Looks broken to me, but all the reset handling is a rat's nest so
-> maybe I'm missing something. In the case of a DPC trip the link is
-> disabled which has the side-effect of hot-resetting the downstream
-> device. Maybe it's fine?
-Yes, in case of DPC (Fatal errors) link is already reset. So we
-don't need any special handling. This reset logic is mainly for
-non-fatal errors.
-> 
-> As an aside, why do we have both ->slot_reset() and ->reset_done() in
-> the error handling callbacks? Seems like their roles are almost
-> identical.
-Not sure.I think reset_done() is final cleanup.
-> 
-> Oliver
-> 
+Oh and now I've dropped them because:
+
+drivers/clk/qcom/clk-smd-rpm.c:478:4: error: =E2=80=98RPM_SMD_SYSMMNOC_A_CL=
+K=E2=80=99 undeclared here (not in a function); did you mean =E2=80=98RPM_S=
+MD_SNOC_A_CLK=E2=80=99?
+  478 |   [RPM_SMD_SYSMMNOC_A_CLK]  =3D &msm8936_sysmmnoc_a_clk,
+      |    ^~~~~~~~~~~~~~~~~~~~~~
+      |    RPM_SMD_SNOC_A_CLK
+
+So please fix that and resend with proper To.
