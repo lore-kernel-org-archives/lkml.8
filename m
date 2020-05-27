@@ -2,189 +2,137 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED7EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF96C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C03FD20721
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4172071A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="W1Cxi2bY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4Ckd5wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391449AbgE0QpL (ORCPT
+        id S2391470AbgE0Qp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37412 "EHLO
+        Wed, 27 May 2020 12:45:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387952AbgE0QpK (ORCPT
+        with ESMTP id S2387952AbgE0QpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:45:10 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 682A3C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:45:09 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id b6so29785068ljj.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:45:09 -0700 (PDT)
+        Wed, 27 May 2020 12:45:25 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17A3C05BD1E;
+        Wed, 27 May 2020 09:45:24 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fs4so1743114pjb.5;
+        Wed, 27 May 2020 09:45:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x5U/zKfkvmSEww+vSURoUmS0s1xUIVHLA1Nb4AtxJis=;
-        b=W1Cxi2bY3PkaST1Z8OpeWGbMyEmo5P8jlNIwCdvVr+EjtPpX+j4R/HBMaMD7y4Dbz2
-         sN2rfypqEM2mZkwCR0i0VC8WXHwpnf1WoXE9veH7nmHE1qcnAYL60rYjN5GtdbL7Er1s
-         WzhIsrXN6NswcPYYrH1wEJ9LKSW6ea64X8zPbj5KzHqu6v6U4SOTWTD1ACj2AgEXeE6n
-         Ow7zyaPtpdsM5IvuEpbGg6vrgBYIUyUwC4ri2NUosucaU5RmpJLrkxfAuYYsbvPM+u9v
-         L7aHcngTSiHdWHOweNSQYkka0AxBsVpDzpNMA5BjYV4Hv/uBtOwPuqzDoOR/heOa38Sr
-         dgyw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HOBnpx8HZKNA2mYIrdIzHPO79IIq+OTFtfJlgxpJynw=;
+        b=p4Ckd5waAaTuvezAffm07NRV85HZodPW8wNla6B8uK/gXbUpwtX5HwUMRwlRt3Fdfh
+         q2Giqjv+VG1ScvnivS3X3fmz31jXmDS8roFzNGnrS/HiWq4o8MSg+UyNhvKCbCsQv4vy
+         FtPuEoMZSz1dZ7J4ExxMdMRMPIc2OOJiB5+mnuGh5KbMyuqRgRDnFgVlUIb/DoqtyC1I
+         um+HfeHStBaBKv54odL4+T7QBiDqyR3cntNfh9Y+8us1fkWTCMz7Hk8KQCyhqH2EAGjP
+         9GWSvpiZGfyqffIG24RHMBYKSuKLiAR9TGMuhGwYrfr9IwDxVlFuqDBtCi3JGA1g0DZb
+         nqDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x5U/zKfkvmSEww+vSURoUmS0s1xUIVHLA1Nb4AtxJis=;
-        b=gBdiaNs/gvrxEBmm5V6rk2y7Y6U9fXo8KkGmsFuEx6smsK5qtVHTuTX97a6uWs5uSu
-         5mvqbHSAVsVDWfX89dIf3Wujw5Dz99MQz9hfJR3qXsFIQuazpvmXZSgvcmzJUGA5fWg/
-         fW0hlYKXAVbcp85yb9rx2NzdPSQElADKDuggUIMzS7v2f7kjakZghUvkJUmc5Lj+TLxV
-         Q2Azj27vQ+lTxYzSCEcrA1hQKCKH0atLtBRCOQdJaZLPiokdOA915gT+JVwSf6dQNeV5
-         OVFogLFxDxmiGPi83JHCPP+qhrLEZWGZnVRaG9shWhv8aT04e2SihnwjA9oy60a3fD90
-         hrfw==
-X-Gm-Message-State: AOAM53389d9gBX1pEglM41NKLManrQKQjTuYSdMJRsJhqGW/WN0m4hc2
-        xIh85Vy/4yPeSZGRD2j2HkGntmnT7BXUl2hM9255lI9d
-X-Google-Smtp-Source: ABdhPJzlE2zCA4ef3RAWHj2biI9Q1eAsYK7BNlo9EXKXBDmBQL0WWpSKBn/3tA9ID11/ogPIYEhxoy1NogcPeGz3zR4=
-X-Received: by 2002:a2e:b0ec:: with SMTP id h12mr3241295ljl.269.1590597907811;
- Wed, 27 May 2020 09:45:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HOBnpx8HZKNA2mYIrdIzHPO79IIq+OTFtfJlgxpJynw=;
+        b=Lw3F1ykj/alalyaG5ccwoeCnzkyIz8xQWRkgRECJ+7CkPj1jA8Vx5jFlkk+45ZdwOI
+         vpSL/ySISKADeMDYYaZ1bmVMDenmwJIs+R3qC6X6BtvekESDxGGR5J2PBvpxikZFWFIS
+         Ui6Qb6RYkXhO1NpjZiaLamF9JXGmVmCI9e2hyK2GJ/CcJkc7kKKOdC6cYOTm8I0n8l3a
+         3Jbv3gBTn+9IejhHIice2WrVzovqL/ouN7QtJ9AOrxJIH/4Rd/MbneKILZ4ofzyyIDDi
+         c61kwqWvOfNZ0+aF6krBu5rstxl3AEF+0y52PebsIQ7IozRT2xph+asV0YAbWcRCiPmc
+         BvdQ==
+X-Gm-Message-State: AOAM533nhhM1Tlx8HFgyOmNK16gETI6a8vDYdAS0B2kYKaxGlb82YgLw
+        +nUl8GUzTpkb5sh8EB+urSI=
+X-Google-Smtp-Source: ABdhPJxqHB/iYSQ/+IIgLYnRKb0OQneD8BTKop/Sw/gGN6GWtWYe7tcz1W0KOcQOXoNpZgVtiC+KMQ==
+X-Received: by 2002:a17:902:a584:: with SMTP id az4mr6717595plb.201.1590597924251;
+        Wed, 27 May 2020 09:45:24 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id c12sm3147692pjm.46.2020.05.27.09.45.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 09:45:23 -0700 (PDT)
+Date:   Wed, 27 May 2020 09:45:21 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 0/7] media: atomisp: Address several clang warnings
+Message-ID: <20200527164521.GA1239557@ubuntu-s3-xlarge-x86>
+References: <20200527071150.3381228-1-natechancellor@gmail.com>
+ <20200527104525.5e6cd93b@coco.lan>
 MIME-Version: 1.0
-References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
- <44e3ec27ee6c0d81c440cd2d6cdd1bf93ea102e7.1590594512.git-series.maxime@cerno.tech>
-In-Reply-To: <44e3ec27ee6c0d81c440cd2d6cdd1bf93ea102e7.1590594512.git-series.maxime@cerno.tech>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Wed, 27 May 2020 09:44:56 -0700
-Message-ID: <CADaigPVbUZzo5c8fp9EqZsfrp44-09whu-HPk9c-eNc2KXS4Mg@mail.gmail.com>
-Subject: Re: [PATCH v3 016/105] drm/vc4: plane: Improve LBM usage
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527104525.5e6cd93b@coco.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 8:49 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> From: Dave Stevenson <dave.stevenson@raspberrypi.com>
->
-> LBM allocations were always taking the worst case sizing of
-> max(src_width, dst_width) * 16. This is significantly over
-> the required sizing, and stops us rendering multiple 4k images
-> to the screen.
->
-> Add some of the additional constraints to more accurately
-> describe the LBM requirements.
->
-> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/gpu/drm/vc4/vc4_plane.c | 31 ++++++++++++++++++++-----------
->  1 file changed, 20 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-> index 1575c05e3106..602927745f84 100644
-> --- a/drivers/gpu/drm/vc4/vc4_plane.c
-> +++ b/drivers/gpu/drm/vc4/vc4_plane.c
-> @@ -142,9 +142,10 @@ static const struct hvs_format *vc4_get_hvs_format(u32 drm_format)
->         return NULL;
->  }
->
-> -static enum vc4_scaling_mode vc4_get_scaling_mode(u32 src, u32 dst)
-> +static enum vc4_scaling_mode vc4_get_scaling_mode(u32 src, u32 dst,
-> +                                                 bool chroma_vrep)
->  {
-> -       if (dst == src)
-> +       if (dst == src && !chroma_vrep)
->                 return VC4_SCALING_NONE;
->         if (3 * dst >= 2 * src)
->                 return VC4_SCALING_PPF;
-> @@ -369,9 +370,11 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
->                 return ret;
->
->         vc4_state->x_scaling[0] = vc4_get_scaling_mode(vc4_state->src_w[0],
-> -                                                      vc4_state->crtc_w);
-> +                                                      vc4_state->crtc_w,
-> +                                                      false);
->         vc4_state->y_scaling[0] = vc4_get_scaling_mode(vc4_state->src_h[0],
-> -                                                      vc4_state->crtc_h);
-> +                                                      vc4_state->crtc_h,
-> +                                                      false);
->
->         vc4_state->is_unity = (vc4_state->x_scaling[0] == VC4_SCALING_NONE &&
->                                vc4_state->y_scaling[0] == VC4_SCALING_NONE);
-> @@ -384,10 +387,12 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
->
->                 vc4_state->x_scaling[1] =
->                         vc4_get_scaling_mode(vc4_state->src_w[1],
-> -                                            vc4_state->crtc_w);
-> +                                            vc4_state->crtc_w,
-> +                                            v_subsample == 2);
->                 vc4_state->y_scaling[1] =
->                         vc4_get_scaling_mode(vc4_state->src_h[1],
-> -                                            vc4_state->crtc_h);
-> +                                            vc4_state->crtc_h,
-> +                                            v_subsample == 2);
->
->                 /* YUV conversion requires that horizontal scaling be enabled
->                  * on the UV plane even if vc4_get_scaling_mode() returned
+On Wed, May 27, 2020 at 10:45:25AM +0200, Mauro Carvalho Chehab wrote:
+> Em Wed, 27 May 2020 00:11:43 -0700
+> Nathan Chancellor <natechancellor@gmail.com> escreveu:
+> 
+> > Hi all,
+> > 
+> > This series aims to clean up the code while addressing the majority of
+> > clang warnings in this driver, some found by the 0day bot and others
+> > found by me.
+> > 
+> > There are several enum conversion warnings that happen, which I do not
+> > really know how to solve without understanding how exactly this driver
+> > works. I would appreciate some guidance or a solution. Below are the
+> > warnings, sorry for not wrapping them but they would be hard to read
+> > otherwise.
+> 
+> ... 
+> > ../drivers/staging/media/atomisp//pci/atomisp_compat_css20.h:117:22: note: expanded from macro 'CSS_ID'
+> > #define CSS_ID(val)     (IA_ ## val)
+> ...
+> 
+> I actually wrote a patch getting rid of this ugly thing:
+> 
+> 	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=atomisp_v3&id=cf6a15543ace1e99364911c0b7a2f6b8f2f43021
+> 
+> This one was already submitted upstream (not merged yet), but there
+> are also lots of other patches on my working tree.
 
-The change above isn't mentioned in the commit message and I don't
-understand what's going on.  It should be split out with an
-explanation.
+Ah excellent, that makes the warnings a lot more readable. I am still
+not sure how to reconcile the differences, it might be easier to just
+change the types in the struct to int.
 
-> @@ -437,10 +442,7 @@ static void vc4_write_ppf(struct vc4_plane_state *vc4_state, u32 src, u32 dst)
->  static u32 vc4_lbm_size(struct drm_plane_state *state)
->  {
->         struct vc4_plane_state *vc4_state = to_vc4_plane_state(state);
-> -       /* This is the worst case number.  One of the two sizes will
-> -        * be used depending on the scaling configuration.
-> -        */
-> -       u32 pix_per_line = max(vc4_state->src_w[0], (u32)vc4_state->crtc_w);
-> +       u32 pix_per_line;
->         u32 lbm;
->
->         /* LBM is not needed when there's no vertical scaling. */
-> @@ -448,6 +450,11 @@ static u32 vc4_lbm_size(struct drm_plane_state *state)
->             vc4_state->y_scaling[1] == VC4_SCALING_NONE)
->                 return 0;
->
-> +       if (vc4_state->x_scaling[0] == VC4_SCALING_TPZ)
-> +               pix_per_line = vc4_state->crtc_w;
-> +       else
-> +               pix_per_line = vc4_state->src_w[0];
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:49:68: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, IA_CSS_FRAME_FORMAT_NV21, 0, IA_CSS_FRAME_FORMAT_NV21 },
+        ~                                                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:49:39: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV21, 12, 12, IA_CSS_FRAME_FORMAT_NV21, 0, IA_CSS_FRAME_FORMAT_NV21 },
+        ~                                    ^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:48:68: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, IA_CSS_FRAME_FORMAT_NV12, 0, IA_CSS_FRAME_FORMAT_NV12 },
+        ~                                                                 ^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:48:39: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { V4L2_MBUS_FMT_CUSTOM_NV12, 12, 12, IA_CSS_FRAME_FORMAT_NV12, 0, IA_CSS_FRAME_FORMAT_NV12 },
+        ~                                    ^~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/staging/media/atomisp/pci/atomisp_subdev.c:47:34: warning: implicit conversion from enumeration type 'enum ia_css_frame_format' to different enumeration type 'enum atomisp_input_format' [-Wenum-conversion]
+        { MEDIA_BUS_FMT_JPEG_1X8, 8, 8, IA_CSS_FRAME_FORMAT_BINARY_8, 0, ATOMISP_INPUT_FORMAT_BINARY_8 },
+        ~                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+5 warnings generated.
 
-Looks like it's also crtc_w for RGB or 4:4:4 and HPPF in (0.5,1.0].
-Maybe drop a note in here that we're not covering that case, but src_w
-> crtc_w so it's safe at least.
+> I'll try to apply your patch series on it, once I'll be able to
+> fix a bug with mmap support.
 
-> +
->         if (!vc4_state->is_yuv) {
->                 if (vc4_state->y_scaling[0] == VC4_SCALING_TPZ)
->                         lbm = pix_per_line * 8;
-> @@ -583,7 +590,9 @@ static int vc4_plane_allocate_lbm(struct drm_plane_state *state)
->                 spin_lock_irqsave(&vc4->hvs->mm_lock, irqflags);
->                 ret = drm_mm_insert_node_generic(&vc4->hvs->lbm_mm,
->                                                  &vc4_state->lbm,
-> -                                                lbm_size, 32, 0, 0);
-> +                                                lbm_size,
-> +                                                vc4->hvs->hvs5 ? 64 : 32,
-> +                                                0, 0);
->                 spin_unlock_irqrestore(&vc4->hvs->mm_lock, irqflags);
->
->                 if (ret)
-> --
-> git-series 0.9.1
+It looks like all of them apply to your experimental branch aside from
+patch 3, which you handled in a different way.
+
+Cheers,
+Nathan
