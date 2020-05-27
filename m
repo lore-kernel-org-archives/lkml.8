@@ -2,132 +2,117 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0FF82073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 757F52075A
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iOS01wcS"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="N44EygEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgE0UPC (ORCPT
+        id S1728369AbgE0URg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgE0UPA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:15:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0FB5C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:15:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y11so2310258plt.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FfdtyyVLKdq4NOXXZJIyNw3sD+oufFVMDv2SJ2Qrq/A=;
-        b=iOS01wcS1koYPOrmLcJdGte4hEdREZewrFPmwl/ApUOoPSbaa6h1EGPT+K5AzRcK0q
-         1IwXjAPfTKsALyRr4GzqzFCVp+xdSFzkrIzwgiSbVtTJsCrxvqHPVVzZcM/NAp6PU3Vb
-         dHxxD1ZX+D45FuEy6e3b2MV3QvQEDGYnfyfF0dmosVnDcQn4kqwk6Ea2HjPYVf/2VVnv
-         J1spBnWL7rCAOGDrnPQ+F1Q7dL2kCiEp1hB94bxNcc8WiUysLnCVr8BR9ee++3la2qUl
-         RwqF89loSOdPVzMUkoJZAM2EtcxsvAUn2GssB5F7zLAEsMkiWm6+hQJyqq3MAtMLmYUS
-         K0lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FfdtyyVLKdq4NOXXZJIyNw3sD+oufFVMDv2SJ2Qrq/A=;
-        b=Za+1G/mO7VMeUKWjTJ+ds/sh3ercg/LzuBSKqqN90IU2cqq0uSOM2PaIwjCEe7avW0
-         9IynM7ET8BR015Nu8BVO05AVQujTaZbk34shYPgffRxsrkznkI80+6MqWA2COW0/8Zh0
-         LlvpOLBDikgMl4XsOxe9yHReGu2x4tFKbK4cYjsM5fWjyVPozBWJ3lZu9863odeKzLai
-         9EsDus+5KzCZVH2srYvjnZ8K5oIkL0v1fqXW2Zjw/RYVFKMtpw6xjGC89PZrXasPhebX
-         FdFLtFgfb8yKtFFCU8qmJpEwc41UPfl74yIvu6H9b/ebKA2O2gfKBr0ndu/8kydI1Ifw
-         XCGA==
-X-Gm-Message-State: AOAM533zUM8F5ug3Ou9YKtIXpOhoBvQxpZF+UUpy8TGPhEhC9Y4Tg59+
-        lVR3DHRUnppbl8yJt/PZogGM0hhPXwmpm0f/9WXr3g==
-X-Google-Smtp-Source: ABdhPJxkmmUDLdBND/oo7tPsXbQ7K5srOsr7qRUdoa5Z7H024vJyqnQlLqDUWZ9ULjMDKkGRQvhC0J39xq0J1s/D86s=
-X-Received: by 2002:a17:90a:4e8c:: with SMTP id o12mr89158pjh.25.1590610499964;
- Wed, 27 May 2020 13:14:59 -0700 (PDT)
+        Wed, 27 May 2020 16:17:36 -0400
+Received: from mail-am6eur05on2120.outbound.protection.outlook.com ([40.107.22.120]:52449
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727090AbgE0URg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:17:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YwveDMlgkk2b6ktBKhmHLjRWGE0zbBGYUJc2i/Pye3wMP3dIt+efUphx2GAdeZWj2Cq1yI++6zyyXQ8+2pwb+2N04BoHp2PPOliLvu+FIwz8F6CT071WqKKfbgYs0xHVa4n+6+ul+JiOteXb09+S9r0avMmZY42XPqkiS4VkHE10KUM3tqciSXhbdgUs3hRmbcplY4hcjJoIl8afWIndnG6tvvpLWcdse5dtVZ3hDf3gUQ/ba3iMb6peHwinF9Dv7Yxso1Ph3k/SxLeW/UrleZxXhnoxJH/rSqMoqYBammfa4tIZ7DInNUq80+yHIRFPnm9kiMWKtneuHLUVnN0/lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IF6Hid4A2OUle2hh8nzxKUId47CAQ52XsqnMaQOFNgk=;
+ b=Pv9jhfuAKHWoLdUujeqGPtcq8yBvuvFTZJpClijDDMapWw+gIXrGlCqZNl4w0cNAkJolj2/MDl0Ex982XsUOlcpUef05ieJpQ4aoKy5XC9+tQzbSvPXuJfaa6Krsy2D0cJplB96jS1Y9ISLkVucIMGuBQe1vsC2hkHiYNjrWtyuaO8CY3IiNeR4SpZIlBxKupceREriczAGcZ86pg2fVU4OaT4gHJi7leVcj5RToWlK5eonESb6k2fGxWUqmkCijhsCM6XrqvvT1WhpL33PBu9gJ/fl+jtWltt/QD/cnVpqPiTGRJffgLa77vZkmtz7oy7h0dQuBvQamb61+YYi3ow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IF6Hid4A2OUle2hh8nzxKUId47CAQ52XsqnMaQOFNgk=;
+ b=N44EygErtKtC9d/QnHA0QWXH8d2M+iZH+N2xPIY/fe/CK2mnbaMH5GUbb0UiSVEq/nHPJs4mwiIjvCZ5FSiFDls93/X7sMK8QtpvNeWFllpxtl5SneW/DuL4zmNnoNQlfOcsLoXXqbja1aS6BPiHBejrVpIVpJWofCEDdedWN1w=
+Authentication-Results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=plvision.eu;
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10)
+ by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (2603:10a6:802:35::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18; Wed, 27 May
+ 2020 20:17:32 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::8149:8652:3746:574f]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::8149:8652:3746:574f%7]) with mapi id 15.20.3045.018; Wed, 27 May 2020
+ 20:17:32 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Taras Chornyi <taras.chornyi@plvision.eu>,
+        Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [PATCH 0/2] nvmem: add ONIE NVMEM cells provider
+Date:   Wed, 27 May 2020 23:17:13 +0300
+Message-Id: <20200527201715.3660-1-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM6P192CA0106.EURP192.PROD.OUTLOOK.COM
+ (2603:10a6:209:8d::47) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 MIME-Version: 1.0
-References: <20200526173117.155339-1-ndesaulniers@google.com>
- <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com> <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
- <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com>
-In-Reply-To: <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 27 May 2020 13:14:48 -0700
-Message-ID: <CAKwvOdn1W4C5HRJEch5PS-Atcmysh0UD+VZX_wi8tviGwhmM7Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kristof Beyls <Kristof.Beyls@arm.com>, victor.campos@arm.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6P192CA0106.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:8d::47) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Wed, 27 May 2020 20:17:31 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 45e404f4-43af-49c7-83b2-08d8027afc81
+X-MS-TrafficTypeDiagnostic: VI1P190MB0399:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1P190MB03991C423FA4E5A97D138AF195B10@VI1P190MB0399.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 04163EF38A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IpeOQISLvUhAFZH7r/H2B4Wv3kvekjOSyuLWGsEA3Oe0/u8USMl6DVmb6WpKnwH/1JmllvRnN+dDObfb7ardG2z1J3db8VD04a7eXKZqh5gWhV+Ri/r+/GnCToZuiIboiXVf4f+zCOItQ6GcweHlLJr1DGaVxVAtabMqIxkPWE0FDbkM5rQ7T7E5O13zCnIQ5OYLg+TgwtjWAuDnch05F31TM8azkemC14zZgzIRffedvh2ltVekihp79Oc5xQJ36Mvl7JZbqdlOiWHYI89lOpAZ/9eaO6DvQyiObSNvg3xDY6OK3oyVTKK5CC8GqCmWCXhqewQm348xi+C+bI1ZKA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(376002)(366004)(346002)(39830400003)(136003)(396003)(6486002)(6506007)(6666004)(36756003)(66946007)(66556008)(66476007)(4326008)(83380400001)(5660300002)(44832011)(16526019)(8936002)(956004)(186003)(52116002)(2616005)(8676002)(107886003)(316002)(26005)(86362001)(4744005)(2906002)(1076003)(508600001)(6512007)(54906003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 8zQIuInVt8sRN0ti8LF7VIryPfvhL72VBZtim7T0jZrXtQQU+2Fr88Rmm4QjXZG279fkachZwJfq7hXv3ElIjF+kDnWVu97yOcfFFnHmOopewILrD8cqlY5arNBaYMRPu42BWObB6ZtXYEwClMaT9q0vLXdegNZRsxpXko0XENtrhnDFlCCI9C4Rs0Q/v4E25yFIOu/WCf7Hh9BpUGcvrrmw3BF0Ud2kQsdm5/Ac2H6Ovcb8sKrdk2PyrSPlONDQ24GRHAVRhrneT28PbPYZzlOzJ3plUpmf25qroQoYiozBft7yjuvJGPrGjm3d5BFROOmSDE5Q0H2XMCLAxDS5cXRoMXn/v5A6WrXLoUyq8S6g1u2AsFGnjqS1YURZ2q5htsOHRvr3gOXrlYJ7Z05Ox/gwghZLSXlCe/5azjU74BCiD8pK80mKDRMHoRJCwt9afgCBOAwZ/5PanUJ4wy9KeJLClyuwozLSFZZgOHbl3C0=
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45e404f4-43af-49c7-83b2-08d8027afc81
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2020 20:17:32.2155
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gqei1NOotDJXQ0RwwEwzFTxpL4ZpRstBeQQJnrDIQErGUuGVqPcrwoEPsG17RtQkWs7Btox5s8s8Ahsp5D++o50+iIP57afZIBGCg6UBRZs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0399
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 12:28 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-05-27 18:55, Nick Desaulniers wrote:
-> > On Wed, May 27, 2020 at 6:45 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>
-> >> On 2020-05-26 18:31, Nick Desaulniers wrote:
-> >>> Custom toolchains that modify the default target to -mthumb cannot
-> >>> compile the arm64 compat vdso32, as
-> >>> arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> >>> contains assembly that's invalid in -mthumb.  Force the use of -marm,
-> >>> always.
-> >>
-> >> FWIW, this seems suspicious - the only assembly instructions I see there
-> >> are SWI(SVC), MRRC, and a MOV, all of which exist in Thumb for the
-> >> -march=armv7a baseline that we set.
-> >>
-> >> On a hunch, I've just bodged "VDSO_CFLAGS += -mthumb" into my tree and
-> >> built a Thumb VDSO quite happily with Ubuntu 19.04's
-> >> gcc-arm-linux-gnueabihf. What was the actual failure you saw?
-> >
-> >  From the link in the commit message: `write to reserved register 'R7'`
-> > https://godbolt.org/z/zwr7iZ
-> > IIUC r7 is reserved for the frame pointer in THUMB?
->
-> It can be, if you choose to build with frame pointers and the common
-> frame pointer ABI for Thumb code that uses r7. However it can also be
-> for other things like the syscall number in the Arm syscall ABI too.
+This series adds cells provider for the ONIE TLV attributes which are
+stored on NVMEM device. It adds possibility to read the mac address (and
+other info) by other drivers.
 
-Ah, right, with -fomit-frame-pointer, this error also goes away.  Not
-sure if we prefer either:
-- build the compat vdso as -marm always or
-- disable frame pointers for the vdso (does this have unwinding implications?)
-- other?
+Driver needs to register NVMEM cells table for already registered
+NVMEM device, this requires additional change to the core logic because
+current logic only allows to add additional cells only before nvmem
+device registration.
 
-> I
-> take it Clang has decided that writing syscall wrappers with minimal
-> inline asm is not a thing people deserve to do without arbitrary other
-> restrictions?
+Vadym Kochan (2):
+  nvmem: core: allow to register cells for existing device
+  nvmem: add ONIE NVMEM cells support
 
-Was the intent not obvious? We would have gotten away with it, too, if
-wasn't for you meddling kids and your stupid dog! /s
-https://www.youtube.com/watch?v=hXUqwuzcGeU
-Anyways, this seems to explain more the intentions:
-https://reviews.llvm.org/D76848#1945810
-+ Victor, Kristof (ARM)
+ drivers/nvmem/Kconfig      |   9 ++
+ drivers/nvmem/Makefile     |   3 +
+ drivers/nvmem/core.c       |  61 ++++---
+ drivers/nvmem/onie-cells.c | 324 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 375 insertions(+), 22 deletions(-)
+ create mode 100644 drivers/nvmem/onie-cells.c
+
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.1
+
