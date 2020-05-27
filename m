@@ -2,107 +2,103 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA91C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B74C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0562020835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:55:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aXTIpopG"
+	by mail.kernel.org (Postfix) with ESMTP id 9448F20EDD
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391739AbgE0Rzi (ORCPT
+        id S2388737AbgE0R4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387653AbgE0Rzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:55:37 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4A1C03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:55:36 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y11so2123335plt.12
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 10:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VJBYNC82NEK7x8dg+i0heBurZRdVbjA3vrgBU6V12M4=;
-        b=aXTIpopGmyddAjXhIqoKG+WhFjn8oDlcxZJA54zQq7ysZKo1Efm/lBVPNknrDfpFbE
-         tdjxJvEcB7VtuSIuFr8lrwXjv3t+M42UgIb7qKO3AP5eSqzEFAl3mKK65x+LRU3+5cFB
-         owtzO27omqQlHzQ93AqPLuiCYgqSVNpn6nsRVY2v+TrLVyAOeKg8DgMIWntL14c+svfu
-         42XE/24+FRgxOGUmfzcc20FRcrKrKz4Z9CGOcL4bfZTT2/z/sKipItoUpWwcOem0ItpY
-         kWfVuJHCPFkkZY21ascjp5VhGk9iTN0AFdap29/F54VByjmzHWgiuhY7q5j1HkOdsy+p
-         FJpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VJBYNC82NEK7x8dg+i0heBurZRdVbjA3vrgBU6V12M4=;
-        b=Iaf4uK5rIqd/isldslS+MqkxtCcLzssS6B78cferfOoRO3Go7swG2Xsq7lwcQTgpPm
-         fU0WcNU0KNzLFEib9iycJpt5JxcqrwBdkaFuvGgTrQA8OkuXYdmeWq1FH2NvIpxpUGru
-         frP+El47MnpwM4Upvu+XgEcw1AjA7bbM/FNBtRjzMuBuJfxEnkBWQlVaUHm0VQEdtSVG
-         8wect2Nvw3N3y6XS2TXy4aTIEGev3l/Gk5Tf2Qc8if+d0ekwW2ubf+2o/GS2CSNvD6aL
-         dm5aLtV1Mo8LZ1+V0YP0qSnzE38GvSBC6ej1w6DjP5n4vrwFcUp9W2WESSiKcKrPo/Rm
-         4Gkw==
-X-Gm-Message-State: AOAM533QBz/kjDK2dnJJud7nS2wJmdkm0wOl8Rt05dlIrfKV4rjTon0+
-        WeHjM/5T5FM/r4erfUrfMNwlGxHnQhvS9YlR7XNj4A==
-X-Google-Smtp-Source: ABdhPJyJQQ2c1D01xZIN8zVnubpyY/DMXiTEzIKKdFF28gU5xSU/7XCGzI6d/c9CFiYJSE0m6MbG1hDAZRiVQq6XR6U=
-X-Received: by 2002:a17:90b:4c47:: with SMTP id np7mr6497081pjb.101.1590602135592;
- Wed, 27 May 2020 10:55:35 -0700 (PDT)
+        Wed, 27 May 2020 13:56:25 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56350 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387653AbgE0R4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:56:24 -0400
+IronPort-SDR: yy5htggTAGCEhGJELTFS7dIFq8V4VKvkHmfwz8su24INBMqkFXT+AGlHty+XZcjeEVNYgDGwmV
+ emtC9qeIM3ZQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 10:56:24 -0700
+IronPort-SDR: BUCmUzmT5hqdJlG/DUNApFH70adMolehOUn/c+8TgUocuItasvW4AvY+/8Pri0JuJK2agIQ2qK
+ 424U6mDOdreQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
+   d="scan'208";a="255540259"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 27 May 2020 10:56:21 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1je0Hw-009GwD-0t; Wed, 27 May 2020 20:56:24 +0300
+Date:   Wed, 27 May 2020 20:56:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Rob Herring <robh@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
+ the DW I2C example
+Message-ID: <20200527175624.GT1634618@smile.fi.intel.com>
+References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
+ <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
+ <20200527171204.GA2348490@bogus>
+ <20200527171841.am2iaynff243xoep@mobilestation>
 MIME-Version: 1.0
-References: <20200526173117.155339-1-ndesaulniers@google.com> <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
-In-Reply-To: <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 27 May 2020 10:55:24 -0700
-Message-ID: <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
-Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200527171841.am2iaynff243xoep@mobilestation>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 6:45 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-05-26 18:31, Nick Desaulniers wrote:
-> > Custom toolchains that modify the default target to -mthumb cannot
-> > compile the arm64 compat vdso32, as
-> > arch/arm64/include/asm/vdso/compat_gettimeofday.h
-> > contains assembly that's invalid in -mthumb.  Force the use of -marm,
-> > always.
->
-> FWIW, this seems suspicious - the only assembly instructions I see there
-> are SWI(SVC), MRRC, and a MOV, all of which exist in Thumb for the
-> -march=armv7a baseline that we set.
->
-> On a hunch, I've just bodged "VDSO_CFLAGS += -mthumb" into my tree and
-> built a Thumb VDSO quite happily with Ubuntu 19.04's
-> gcc-arm-linux-gnueabihf. What was the actual failure you saw?
+On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
+> On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
+> > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
+> > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+> > > i2c "reg" property. If it is the compiler will print a warning:
+> > > 
+> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+> > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+> > > 
+> > > In order to silence dtc up let's discard the flag from the DW I2C DT
+> > > binding example for now. Just revert this commit when dtc is fixed.
 
-From the link in the commit message: `write to reserved register 'R7'`
-https://godbolt.org/z/zwr7iZ
-IIUC r7 is reserved for the frame pointer in THUMB?
+> > >        eeprom@64 {
+> > >          compatible = "linux,slave-24c02";
+> > > -        reg = <0x40000064>;
+> > > +        reg = <0x64>;
+> > 
+> > But the compatible is a slave, so you need an example with a different 
+> > device.
+> 
 
-What is the implicit default of your gcc-arm-linux-gnueabihf at -O2?
--mthumb, or -marm?
+> Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+
+But how it will be different to the another slave connected to the master?
+
+This example is specifically to show that DesingWare I²C controller may be
+switched to slave mode.
+
+> > >        };
+> > >      };
+> > >    - |
+
 -- 
-Thanks,
-~Nick Desaulniers
+With Best Regards,
+Andy Shevchenko
+
+
