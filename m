@@ -2,263 +2,138 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14952C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 092D3207E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E92AC20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:56:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="F0kLEdkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgE0T4B (ORCPT
+        id S1728515AbgE0T4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:56:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:54808 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgE0T4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:56:00 -0400
-IronPort-SDR: OLiFCzD0QNUl3GKHgKPnZYawLoAxjQkm1hMFhbX6hBnRy2CnbLBZ4MbMFPZu2cejM7U6oiSIb5
- yL+nW34FkmQA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 12:56:00 -0700
-IronPort-SDR: MC8ILC1TC7Qhwe+8pdr6GxO9hKgIuvS2YOS6VReHKjsjVAlr06/UORj6Qi8OHXLPyyzwV8wRNo
- 7DrqrPMqwPLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
-   d="scan'208";a="256854105"
-Received: from lkakolx-mobl.ger.corp.intel.com ([10.249.43.73])
-  by fmsmga008.fm.intel.com with ESMTP; 27 May 2020 12:55:56 -0700
-Message-ID: <096698e5493ffe714357b0d6926b900418f71dd0.camel@linux.intel.com>
-Subject: Re: [PATCHv3 1/3] optee: do drivers initialization before and after
- tee-supplicant run
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Maxim Uvarov <maxim.uvarov@linaro.org>,
-        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
-Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, gregkh@linuxfoundation.org,
-        jens.wiklander@linaro.org, linux-integrity@vger.kernel.org,
-        arnd@linaro.org, sumit.garg@linaro.org
-Date:   Wed, 27 May 2020 22:55:54 +0300
-In-Reply-To: <20200525115235.5405-2-maxim.uvarov@linaro.org>
-References: <20200525115235.5405-1-maxim.uvarov@linaro.org>
-         <20200525115235.5405-2-maxim.uvarov@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Wed, 27 May 2020 15:56:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbgE0T4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:56:41 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C742C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:56:41 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id w1so812981qkw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uWtuI3UUqrcr2MPYY5t1qIqp8t2VdGpdGQyBHayc2+I=;
+        b=F0kLEdkPRpFO9sH4wIpK6WFmkk+axi+AF8AIp2TUrvRiQ5IBMPR/xY35x5yDhSQmEe
+         7qd3x3C70smXp6N9YZ2ugYa3/Edu51g8JTb+5dcxs5oHL7ox91AXyxIRsBkNIrYvMNeH
+         /dBAvk1ujz0GqKOEewegiRaGmAm25tBIInVhUFdlxeO4s44vafo89W6zlYBv5HJtjsas
+         a2o4WMkqr9p6Reb7lyX2opm9Ze5J09sHAUyJ5Gz8293k4J/CSalOGy6VrI+87azCztME
+         6DuFJ5GyV9LZVq40cWVEKHdf5ipbGToeGK5YW1ffw/2l1Yi6PK6sx8fY0OZYSosgdSIo
+         d/4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uWtuI3UUqrcr2MPYY5t1qIqp8t2VdGpdGQyBHayc2+I=;
+        b=dEgoAh9Dw4UDzJHGWYsTaA8iKcL+/wQmW9ayuHKjbgIGbdB5Xv8B9v7mnPkTZTySh4
+         2OvQKIDgGutmkRy9oKttyuwjIcPdjhMDZghYc+Bybi8X2UP0ZKm0U4Ei4LghCTxvB8bi
+         9WJhJec7JB+Gv3xOVuxZbb9SfwY5dC5pbPOzRF240gHA5ub4fCt2iGT9+LPfpbMhrqyD
+         6R3AYO0kflxxpv8K07t0fvTX0wEK+jAjnc8gN6An/gMchm69eqLcU3kH3P4ydwc+8QX4
+         XHpCY+e1y1qqGrXUxexsrwhyJ2aa6jb9gdJBjGEx78bERZ4oYhprUURiecg6VOV/3sSn
+         UamQ==
+X-Gm-Message-State: AOAM533Xtwi38NOFjKrb8nl4+Tvzu7gNIhlGK1IQAe0BPYtvo5hIqPZh
+        mzv+u4kvPc8e1K+L/ayV49m4kQ==
+X-Google-Smtp-Source: ABdhPJzlAziYYOCm4VXEycz3sNv4Do6UvsXICCUPA0HIuaPoefFQjqsdZvAOOeXzo/yJ5MNL3mZ2OA==
+X-Received: by 2002:a37:79c5:: with SMTP id u188mr5718286qkc.300.1590609400422;
+        Wed, 27 May 2020 12:56:40 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2535])
+        by smtp.gmail.com with ESMTPSA id s74sm3135071qka.54.2020.05.27.12.56.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 12:56:39 -0700 (PDT)
+Date:   Wed, 27 May 2020 15:56:14 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/19] mm: memcg/slab: obj_cgroup API
+Message-ID: <20200527195614.GC47905@cmpxchg.org>
+References: <20200526214227.989341-1-guro@fb.com>
+ <20200526214227.989341-7-guro@fb.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526214227.989341-7-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-05-25 at 14:52 +0300, Maxim Uvarov wrote:
-> Some drivers (like ftpm) can operate only after tee-supplicant
-> runs becase of tee-supplicant provides things like storage
-> services.  This patch splits probe of non tee-supplicant dependable
-> drivers to early stage, and after tee-supplicant run probe other
-> drivers.
-
-Fix the typos and remove extra spaces (one space after '.').
-
-Why "tee-supplicant" and not "TEE-supplicant"?
-
-> 
-> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> Suggested-by: Sumit Garg <sumit.garg@linaro.org>
-> Suggested-by: Arnd Bergmann <arnd@linaro.org>
-> ---
->  drivers/tee/optee/core.c          | 28 +++++++++++++++++++++++++---
->  drivers/tee/optee/device.c        | 17 +++++++++++------
->  drivers/tee/optee/optee_private.h | 10 +++++++++-
->  3 files changed, 45 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
-> index 99698b8a3a74..d059e3ac491c 100644
-> --- a/drivers/tee/optee/core.c
-> +++ b/drivers/tee/optee/core.c
-> @@ -17,6 +17,7 @@
->  #include <linux/tee_drv.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> +#include <linux/workqueue.h>
->  #include "optee_private.h"
->  #include "optee_smc.h"
->  #include "shm_pool.h"
-> @@ -218,6 +219,15 @@ static void optee_get_version(struct tee_device *teedev,
->  	*vers = v;
+On Tue, May 26, 2020 at 02:42:14PM -0700, Roman Gushchin wrote:
+> @@ -257,6 +257,98 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
 >  }
 >  
-> +static void optee_bus_scan(struct work_struct *work)
+>  #ifdef CONFIG_MEMCG_KMEM
+> +extern spinlock_t css_set_lock;
+> +
+> +static void obj_cgroup_release(struct percpu_ref *ref)
 > +{
-> +	int rc;
+> +	struct obj_cgroup *objcg = container_of(ref, struct obj_cgroup, refcnt);
+> +	struct mem_cgroup *memcg;
+> +	unsigned int nr_bytes;
+> +	unsigned int nr_pages;
+> +	unsigned long flags;
 > +
-> +	rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP);
-> +	if (rc)
-> +		pr_err("optee_enumerate_devices failed %d\n", rc);
-> +}
+> +	/*
+> +	 * At this point all allocated objects are freed, and
+> +	 * objcg->nr_charged_bytes can't have an arbitrary byte value.
+> +	 * However, it can be PAGE_SIZE or (x * PAGE_SIZE).
+> +	 *
+> +	 * The following sequence can lead to it:
+> +	 * 1) CPU0: objcg == stock->cached_objcg
+> +	 * 2) CPU1: we do a small allocation (e.g. 92 bytes),
+> +	 *          PAGE_SIZE bytes are charged
+> +	 * 3) CPU1: a process from another memcg is allocating something,
+> +	 *          the stock if flushed,
+> +	 *          objcg->nr_charged_bytes = PAGE_SIZE - 92
+> +	 * 5) CPU0: we do release this object,
+> +	 *          92 bytes are added to stock->nr_bytes
+> +	 * 6) CPU0: stock is flushed,
+> +	 *          92 bytes are added to objcg->nr_charged_bytes
+> +	 *
+> +	 * In the result, nr_charged_bytes == PAGE_SIZE.
+> +	 * This page will be uncharged in obj_cgroup_release().
+> +	 */
 
-Is pr_err() required really here? Why not just pr_info()?
+Thanks for adding this.
 
-Why have it all and not just ftrace when needed? There is series going
-on to add CONFIG_FTRACE_FUNC_PROTOTYPE to that to get return values and
-arguments.
-
-> +
->  static int optee_open(struct tee_context *ctx)
->  {
->  	struct optee_context_data *ctxdata;
-> @@ -241,8 +251,18 @@ static int optee_open(struct tee_context *ctx)
->  			kfree(ctxdata);
->  			return -EBUSY;
->  		}
-> -	}
->  
-> +		if (!optee->scan_bus_done) {
-> +			INIT_WORK(&optee->scan_bus_work, optee_bus_scan);
-> +			optee->scan_bus_wq = create_workqueue("optee_bus_scan");
-> +			if (!optee->scan_bus_wq) {
-> +				pr_err("optee: couldn't create workqueue\n");
-
-Neither get pr_err() here. Please remove this one completely.
-
-> +				return -ECHILD;
-> +			}
-> +			queue_work(optee->scan_bus_wq, &optee->scan_bus_work);
-> +			optee->scan_bus_done = true;
-> +		}
-> +	}
->  	mutex_init(&ctxdata->mutex);
->  	INIT_LIST_HEAD(&ctxdata->sess_list);
->  
-> @@ -296,8 +316,10 @@ static void optee_release(struct tee_context *ctx)
->  
->  	ctx->data = NULL;
->  
-> -	if (teedev == optee->supp_teedev)
-> +	if (teedev == optee->supp_teedev) {
-> +		destroy_workqueue(optee->scan_bus_wq);
->  		optee_supp_release(&optee->supp);
-> +	}
->  }
->  
->  static const struct tee_driver_ops optee_ops = {
-> @@ -675,7 +697,7 @@ static int optee_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, optee);
->  
-> -	rc = optee_enumerate_devices();
-> +	rc = optee_enumerate_devices(PTA_CMD_GET_DEVICES);
->  	if (rc) {
->  		optee_remove(pdev);
->  		return rc;
-> diff --git a/drivers/tee/optee/device.c b/drivers/tee/optee/device.c
-> index e3a148521ec1..d4931dad07aa 100644
-> --- a/drivers/tee/optee/device.c
-> +++ b/drivers/tee/optee/device.c
-> @@ -21,7 +21,6 @@
->   * TEE_ERROR_BAD_PARAMETERS - Incorrect input param
->   * TEE_ERROR_SHORT_BUFFER - Output buffer size less than required
->   */
-> -#define PTA_CMD_GET_DEVICES		0x0
->  
->  static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
->  {
-> @@ -32,7 +31,8 @@ static int optee_ctx_match(struct tee_ioctl_version_data *ver, const void *data)
->  }
->  
->  static int get_devices(struct tee_context *ctx, u32 session,
-> -		       struct tee_shm *device_shm, u32 *shm_size)
-> +		       struct tee_shm *device_shm, u32 *shm_size,
-> +		       u32 func)
->  {
->  	int ret = 0;
->  	struct tee_ioctl_invoke_arg inv_arg;
-> @@ -42,7 +42,7 @@ static int get_devices(struct tee_context *ctx, u32 session,
->  	memset(&param, 0, sizeof(param));
->  
->  	/* Invoke PTA_CMD_GET_DEVICES function */
-> -	inv_arg.func = PTA_CMD_GET_DEVICES;
-> +	inv_arg.func = func;
->  	inv_arg.session = session;
->  	inv_arg.num_params = 4;
->  
-> @@ -87,7 +87,7 @@ static int optee_register_device(const uuid_t *device_uuid, u32 device_id)
->  	return rc;
->  }
->  
-> -int optee_enumerate_devices(void)
-> +static int __optee_enumerate_devices(u32 func)
->  {
->  	const uuid_t pta_uuid =
->  		UUID_INIT(0x7011a688, 0xddde, 0x4053,
-> @@ -118,7 +118,7 @@ int optee_enumerate_devices(void)
->  		goto out_ctx;
->  	}
->  
-> -	rc = get_devices(ctx, sess_arg.session, NULL, &shm_size);
-> +	rc = get_devices(ctx, sess_arg.session, NULL, &shm_size, func);
->  	if (rc < 0 || !shm_size)
->  		goto out_sess;
->  
-> @@ -130,7 +130,7 @@ int optee_enumerate_devices(void)
->  		goto out_sess;
->  	}
->  
-> -	rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size);
-> +	rc = get_devices(ctx, sess_arg.session, device_shm, &shm_size, func);
->  	if (rc < 0)
->  		goto out_shm;
->  
-> @@ -158,3 +158,8 @@ int optee_enumerate_devices(void)
->  
->  	return rc;
->  }
-> +
-> +int optee_enumerate_devices(u32 func)
+> +int obj_cgroup_charge(struct obj_cgroup *objcg, gfp_t gfp, size_t size)
 > +{
-> +	return  __optee_enumerate_devices(func);
-> +}
-> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
-> index d9c5037b4e03..8b71839a357e 100644
-> --- a/drivers/tee/optee/optee_private.h
-> +++ b/drivers/tee/optee/optee_private.h
-> @@ -78,6 +78,9 @@ struct optee_supp {
->   * @memremaped_shm	virtual address of memory in shared memory pool
->   * @sec_caps:		secure world capabilities defined by
->   *			OPTEE_SMC_SEC_CAP_* in optee_smc.h
-> + * @scan_bus_done	flag if device registation was already done.
-> + * @scan_bus_wq		workqueue to scan optee bus and register optee drivers
-> + * @scan_bus_work	workq to scan optee bus and register optee drivers
->   */
->  struct optee {
->  	struct tee_device *supp_teedev;
-> @@ -89,6 +92,9 @@ struct optee {
->  	struct tee_shm_pool *pool;
->  	void *memremaped_shm;
->  	u32 sec_caps;
-> +	bool   scan_bus_done;
-> +	struct workqueue_struct *scan_bus_wq;
-> +	struct work_struct scan_bus_work;
->  };
->  
->  struct optee_session {
-> @@ -173,7 +179,9 @@ void optee_free_pages_list(void *array, size_t num_entries);
->  void optee_fill_pages_list(u64 *dst, struct page **pages, int num_pages,
->  			   size_t page_offset);
->  
-> -int optee_enumerate_devices(void);
-> +#define PTA_CMD_GET_DEVICES		0x0
-> +#define PTA_CMD_GET_DEVICES_SUPP	0x1
-> +int optee_enumerate_devices(u32 func);
->  
->  /*
->   * Small helpers
+> +	struct mem_cgroup *memcg;
+> +	unsigned int nr_pages, nr_bytes;
+> +	int ret;
+> +
+> +	if (consume_obj_stock(objcg, size))
+> +		return 0;
+> +
+> +	rcu_read_lock();
+> +	memcg = obj_cgroup_memcg(objcg);
+> +	css_get(&memcg->css);
+> +	rcu_read_unlock();
 
-No exalanation of "scan bus" neither in the comments nor in the code.
+Can you please also add the comment here I mentioned last time? To
+explain why we're not checking objcg->nr_charged_bytes if we have
+already pre-allocated bytes that could satisfy the allocation.
 
-/Jarkko
-
+Otherwise, looks good to me.
