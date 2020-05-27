@@ -2,92 +2,105 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37616C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB966C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1526920899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590608693;
-	bh=DZt3wS0HDhql7bEOFRVEA2igLoTHCpYSclISd/Eul8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ipLfeuEWx12odNXAbShT4LefSge4oaF3EP4Dgf24o+VVbwz6DUv6xRQK8mXoMGpZE
-	 ES4h0RLDvkHMsf68gX+/Otv7d/4e8stsA38T5PmpI+Yxyl5OemxidEeI+Txqyb+y1U
-	 Negx1bMp9lWWuL0PXkYxYDxZFvS6+onHOd7xkvic=
+	by mail.kernel.org (Postfix) with ESMTP id 9A2EE2088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="hV9+5puq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgE0Tor (ORCPT
+        id S1728299AbgE0TpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:44:47 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33711 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgE0Toq (ORCPT
+        Wed, 27 May 2020 15:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgE0TpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:44:46 -0400
-Received: by mail-il1-f196.google.com with SMTP id y17so23119701ilg.0;
-        Wed, 27 May 2020 12:44:46 -0700 (PDT)
+        Wed, 27 May 2020 15:45:22 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFADC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:45:22 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x29so7065871qtv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 12:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=D80XpsA6hJ4kY4NNH02ZCQ+SxpQnIHKs3bcOMnCiqaA=;
+        b=hV9+5puqc8TazkxTs6psTgANjLuorgwlMEXYnsnhCo+mw9taU1spQGto8UthSQ0LTF
+         w8l/d+vh+tJ1UDVAWTP7pHdmCvXxbCfbVswIiQ9FaSUTGahXM/Emag2teZrIKyJZxBIm
+         blhjYl35v+2kYyF8Kx4bm0JVyTMQ8qO1o2HcJqthotpb7fz5qYTHu1ms8PT60qteiOHW
+         lBP12r117ByfuDvTHsRzh4Bui41TdIbWV4zSQ7f5iTWv9sbuob+9dFK8jqGnbx/0bh0a
+         Uw0ra6vaDjyO85emAlyD0v7cFz/NXx+4oHJpUYHInlCVQ0ZS2wv5cEGGrOQ9hmSo5LEb
+         X2zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=0ezqpncSP+so+GMtHN0GoHq59MSX0XPIXvACL9VZwvc=;
-        b=fYy7tnv9uoxJYRJmwOtYeideAqODFd7JRRGBXvVQVFC42mR5R5ZSHSOjqRHre46DWV
-         mMPMwj4rHn7jVjyCzweuQ7Q2ODL6eaOBe+IiwrznE+6BwDj1Q+iKOy9159Bzg+RnrLMM
-         e8U9wMg1Ph84DWOGiEwX/sYqnBoRxTSnMzTVYEQU6IhD2AKQrIzISsmRf7qPNh0pjhz4
-         xxf5lZWB5TaVgwh8YZyXZH0eZBf0fHyEdSpr9xBilLpd3cq9NkvktvzHLv949I2i5Z1+
-         epvh/cW2lhLJ2ZhWhDVeK3GLmpaziA/vBpvIpFATRdnMONkIXTWvVK85Lg9tt54yZ1wi
-         RqAQ==
-X-Gm-Message-State: AOAM530PbSV9UT5pAEvmuaz9HcpMvDEGNhLxkXldBo/5UTvFHbn0gPzn
-        8HTB72IYrRwRI1Ej96+UzA==
-X-Google-Smtp-Source: ABdhPJw5xR+WhPv+66P4Q6B5NBxNP8HoPoKWI6OCFZcUgXyvdt7rJCbZLeUp3ovW1s3gIL5w8wpIBg==
-X-Received: by 2002:a92:3d8b:: with SMTP id k11mr5468393ilf.122.1590608680896;
-        Wed, 27 May 2020 12:44:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z75sm2138197ilc.50.2020.05.27.12.44.39
+        bh=D80XpsA6hJ4kY4NNH02ZCQ+SxpQnIHKs3bcOMnCiqaA=;
+        b=EMkZA7KFxZ3UOQIydnX3v55J1D/F8wWGKI4mroo4r5rD44qgCX8orxhyg/0d21IHlY
+         eOGTdtAJ8ZCnduQG8h3bLcQbAlp/EtzwN8nnXxYFPGb/6HikgxhDpEO4z8E08m1t+PU/
+         DlIy8AIwh6J7lzOmlEhExaiCwu44sdBvXM/Bv542g2ywUxmkmOjYlwL6hp1tDRDnoTWf
+         4EQaVT+1HkcJ6EhaKdbshqdUVIK21IukpBZhHoJrT91m+91Vy3Og/A0d/b0jpRkZRKn/
+         5zBecDRbX+u2rNKHDfKxasPuw5Oj9MQoZTuo6ekJnax09lt3itF6hABk0Fr/KLMIUS9X
+         dBzw==
+X-Gm-Message-State: AOAM533pi1AQim53uLUJ9s0Ow/ZKTusRNunIEXzr1EE0Y8ClqbdnSikJ
+        1XjNgySMkXILJprIpfjhdBp4LQ==
+X-Google-Smtp-Source: ABdhPJydAAdrWEqBz4+lafNXlZ92z44aShoyQMaDpyiLn4rtZVfccZmqkLHnU+QgCDyMuEQjPPnV5A==
+X-Received: by 2002:ac8:339c:: with SMTP id c28mr6210643qtb.9.1590608721295;
+        Wed, 27 May 2020 12:45:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2535])
+        by smtp.gmail.com with ESMTPSA id l22sm2850802qki.45.2020.05.27.12.45.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 12:44:40 -0700 (PDT)
-Received: (nullmailer pid 2619201 invoked by uid 1000);
-        Wed, 27 May 2020 19:44:39 -0000
-Date:   Wed, 27 May 2020 13:44:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     linus.walleij@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, cw00.choi@samsung.com,
-        robh+dt@kernel.org, lgirdwood@gmail.com,
-        patches@opensource.cirrus.com, lee.jones@linaro.org,
-        myungjoo.ham@samsung.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/7] mfd: arizona: Move binding over to dtschema
-Message-ID: <20200527194439.GA2619148@bogus>
-References: <20200513095720.8867-1-ckeepax@opensource.cirrus.com>
- <20200513095720.8867-4-ckeepax@opensource.cirrus.com>
+        Wed, 27 May 2020 12:45:20 -0700 (PDT)
+Date:   Wed, 27 May 2020 15:44:55 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        Vlastimil Babka <vbabka@suse.cz>, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/19] mm: slub: implement SLUB version of
+ obj_to_index()
+Message-ID: <20200527194455.GB47905@cmpxchg.org>
+References: <20200526214227.989341-1-guro@fb.com>
+ <20200526214227.989341-5-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513095720.8867-4-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20200526214227.989341-5-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 10:57:17 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
+On Tue, May 26, 2020 at 02:42:12PM -0700, Roman Gushchin wrote:
+> This commit implements SLUB version of the obj_to_index() function,
+> which will be required to calculate the offset of obj_cgroup in the
+> obj_cgroups vector to store/obtain the objcg ownership data.
 > 
-> Changes since v2:
->  - Removed a couple more redundant descriptions
+> To make it faster, let's repeat the SLAB's trick introduced by
+> commit 6a2d7a955d8d ("[PATCH] SLAB: use a multiply instead of a
+> divide in obj_to_index()") and avoid an expensive division.
 > 
-> Thanks,
-> Charles
+> Vlastimil Babka noticed, that SLUB does have already a similar
+> function called slab_index(), which is defined only if SLUB_DEBUG
+> is enabled. The function does a similar math, but with a division,
+> and it also takes a page address instead of a page pointer.
 > 
->  Documentation/devicetree/bindings/mfd/arizona.txt  | 101 -------
->  .../devicetree/bindings/mfd/wlf,arizona.yaml       | 289 +++++++++++++++++++++
->  MAINTAINERS                                        |   8 +-
->  3 files changed, 293 insertions(+), 105 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/wlf,arizona.yaml
+> Let's remove slab_index() and replace it with the new helper
+> __obj_to_index(), which takes a page address. obj_to_index()
+> will be a simple wrapper taking a page pointer and passing
+> page_address(page) into __obj_to_index().
 > 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Applied, thanks!
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
