@@ -2,146 +2,98 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41934C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2846C207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAD7207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:26:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="AO00RpDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgE0PZo (ORCPT
+        id S2388306AbgE0P0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:25:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
+        Wed, 27 May 2020 11:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbgE0PZo (ORCPT
+        with ESMTP id S1730294AbgE0P0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:25:44 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F98C05BD1E;
-        Wed, 27 May 2020 08:25:44 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jdxw3-0006uM-OZ; Wed, 27 May 2020 17:25:39 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 30C291C00ED;
-        Wed, 27 May 2020 17:25:39 +0200 (CEST)
-Date:   Wed, 27 May 2020 15:25:39 -0000
-From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] compiler_types.h: Optimize
- __unqual_scalar_typeof compilation time
-Cc:     Arnd Bergmann <arnd@arndb.de>, Marco Elver <elver@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200527103236.148700-1-elver@google.com>
-References: <20200527103236.148700-1-elver@google.com>
+        Wed, 27 May 2020 11:26:06 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E547C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:26:06 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id z15so1183292pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 08:26:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=diDLEh/NKfAiTgrkORi9j9+/MffGZqePbVT8pyJZQa4=;
+        b=AO00RpDHcGljo0ZBenMboFTqJT0jVi+hidKNOvUCDhkZoqPI82Rc848SvBoMdLuAoN
+         Rt/xgQ2fO0AOMX+inhPoOHufY16af7/d9J8vbvNnc0aGWLH8hy9UwiFz/Ez4ZdL5hdqi
+         xz2RgzdNzbpWWrHc1JGeffLzIPh75x4dA0d52VwVVaLDfHnxjn7Cz3VltVQmBLMmN0vC
+         jAMazivfxIff67VJ+2GEt2vPsNq4ITcO3PMsBR3rpSP0jevZAqYKinip7/noxku6fZeJ
+         yxBFJOmq6khMsb1nNX2XRbuSIG5XocjRWKIKBS33C4WQrb+JAHRRiCKXkSre1GVqOrPq
+         v+bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=diDLEh/NKfAiTgrkORi9j9+/MffGZqePbVT8pyJZQa4=;
+        b=B66M0tf/DeFgKgFYpXUa6osI7dNDqY/q+N4puWYfGj1P89C5WLt2JFHUJKTDRDJ/RF
+         JKmfvze1smoEa5Pajyxg7i8HLYmx3SK6Y2jJWoL/xYeYVDcvCQQh14wOtyUzDp1xHE7S
+         MMEx/2+D/b0UIIez4ueUaEVDtnkQfcSJcdon+3USZuBk7Oe7ys625gYr6+fY3CXfrWzp
+         EUlOVEKA2+uGT3jApzLqmXZDvA6KdGHW/qVecfh88pTf3d2O1qMevDuJhJkd0pobiXLD
+         ZK8bmV0BvyuwxN1S1gy7PH9YULgIy5KMmD7zqMyKnhdB3yx2ihyaNyfYQwMa8LbBMrnP
+         FhBQ==
+X-Gm-Message-State: AOAM530L7wVSAPxFdb7b7moEl3h3rQJScBtubfGuiQXBytiiTSsZuc5S
+        mSEBhY8TKpqYaWKLwchuHsgY3A==
+X-Google-Smtp-Source: ABdhPJzYFeFijTzQO/msoNv8LjXRAE3f1mGK3osdG9uczKx7T4VD+6ZL9onhjL1ETOyj5/gpOaTcDw==
+X-Received: by 2002:a17:902:7202:: with SMTP id ba2mr6332966plb.93.1590593165709;
+        Wed, 27 May 2020 08:26:05 -0700 (PDT)
+Received: from cisco ([2001:420:c0c8:1007::592])
+        by smtp.gmail.com with ESMTPSA id n8sm2873328pjq.49.2020.05.27.08.26.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 08:26:04 -0700 (PDT)
+Date:   Wed, 27 May 2020 09:25:59 -0600
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200527152559.GB4153131@cisco>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Message-ID: <159059313900.17951.16258985921157909524.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527111902.163213-1-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/kcsan branch of tip:
+On Wed, May 27, 2020 at 01:19:01PM +0200, Christian Brauner wrote:
+> +void seccomp_filter_notify(const struct task_struct *tsk)
+> +{
+> +	struct seccomp_filter *orig = tsk->seccomp.filter;
+> +
+> +	while (orig && refcount_dec_and_test(&orig->live)) {
+> +		if (waitqueue_active(&orig->wqh))
+> +			wake_up_poll(&orig->wqh, EPOLLHUP);
+> +		orig = orig->prev;
+> +	}
+> +}
 
-Commit-ID:     a5dead405f6be1fb80555bdcb77c406bf133fdc8
-Gitweb:        https://git.kernel.org/tip/a5dead405f6be1fb80555bdcb77c406bf133fdc8
-Author:        Marco Elver <elver@google.com>
-AuthorDate:    Wed, 27 May 2020 12:32:36 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 27 May 2020 14:03:26 +02:00
+Is there a reason this can't live in put_seccomp_filter()?
 
-compiler_types.h: Optimize __unqual_scalar_typeof compilation time
-
-If the compiler supports C11's _Generic, use it to speed up compilation
-times of __unqual_scalar_typeof(). GCC version 4.9 or later and
-all supported versions of Clang support the feature (the oldest
-supported compiler that doesn't support _Generic is GCC 4.8, for which
-we use the slower alternative).
-
-The non-_Generic variant relies on multiple expansions of
-__pick_integer_type -> __pick_scalar_type -> __builtin_choose_expr,
-which increases pre-processed code size, and can cause compile times to
-increase in files with numerous expansions of READ_ONCE(), or other
-users of __unqual_scalar_typeof().
-
-Summary of compile-time benchmarking done by Arnd Bergmann:
-
-  <baseline normalized time>  clang-11   gcc-9
-  this patch                      0.78    0.91
-  ideal                           0.76    0.86
-
-See https://lkml.kernel.org/r/CAK8P3a3UYQeXhiufUevz=rwe09WM_vSTCd9W+KvJHJcOeQyWVA@mail.gmail.com
-
-Further compile-testing done with:
-  gcc 4.8, 4.9, 5.5, 6.4, 7.5, 8.4;
-  clang 9, 10.
-
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Peter Zijlstra <peterz@infradead.org>
-Tested-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lkml.kernel.org/r/20200527103236.148700-1-elver@google.com
-Link: https://lkml.kernel.org/r/CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com
----
- include/linux/compiler_types.h | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-index 5faf68e..a529fa2 100644
---- a/include/linux/compiler_types.h
-+++ b/include/linux/compiler_types.h
-@@ -245,7 +245,9 @@ struct ftrace_likely_data {
- /*
-  * __unqual_scalar_typeof(x) - Declare an unqualified scalar type, leaving
-  *			       non-scalar types unchanged.
-- *
-+ */
-+#if defined(CONFIG_CC_IS_GCC) && CONFIG_GCC_VERSION < 40900
-+/*
-  * We build this out of a couple of helper macros in a vain attempt to
-  * help you keep your lunch down while reading it.
-  */
-@@ -267,6 +269,24 @@ struct ftrace_likely_data {
- 			__pick_integer_type(x, int,				\
- 				__pick_integer_type(x, long,			\
- 					__pick_integer_type(x, long long, x))))))
-+#else
-+/*
-+ * If supported, prefer C11 _Generic for better compile-times. As above, 'char'
-+ * is not type-compatible with 'signed char', and we define a separate case.
-+ */
-+#define __scalar_type_to_expr_cases(type)				\
-+		type: (type)0, unsigned type: (unsigned type)0
-+
-+#define __unqual_scalar_typeof(x) typeof(				\
-+		_Generic((x),						\
-+			 __scalar_type_to_expr_cases(char),		\
-+			 signed char: (signed char)0,			\
-+			 __scalar_type_to_expr_cases(short),		\
-+			 __scalar_type_to_expr_cases(int),		\
-+			 __scalar_type_to_expr_cases(long),		\
-+			 __scalar_type_to_expr_cases(long long),	\
-+			 default: (x)))
-+#endif
- 
- /* Is this type a native word size -- useful for atomic operations */
- #define __native_word(t) \
+Tycho
