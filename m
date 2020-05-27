@@ -2,164 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B545C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBAC72089D
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="frpH8Obm"
+	by mail.kernel.org (Postfix) with ESMTP id E7F93208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:39:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgE0KiP (ORCPT
+        id S1729962AbgE0KjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:38:15 -0400
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:48247 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729876AbgE0KiN (ORCPT
+        Wed, 27 May 2020 06:39:16 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:58142 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729828AbgE0KjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:38:13 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id dtRkjMiyIdPgTdtRnjtUQq; Wed, 27 May 2020 12:38:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1590575891; bh=qRIFqz0elNM1geNjVEmMdd4KeyUj5WFBR8OGFEv/h8M=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=frpH8ObmjkPT4zHwSdbP0plnF9ghDkvb3DNdealDM5V90vC0z4M6px8BoxnUcwH69
-         5EohCWTBwupg0/ujz6OYhW3r+obmlLNKG+OmS9udEmhj4zs/H7xSXGDhGhd16w4qJq
-         milt6csZgLI+9EZAXL4jZyrxcTAXIXt+0pizZtuuHiORfgsQjQyEKJsJ132htjpZR6
-         vrjnjPxUTn3kYRluNJGR3d1nlZUKnDUXzDzezytWptXH+FUmJLBHteDTmTmZq7bhWX
-         FNm0UOBREbC2v/Q6dZIP/37L4dJZMM7vMKftyBPRF0uNMwxKFc+AtiVNapQ+1QCxGL
-         qiFsPoRVG4kLw==
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
+        Wed, 27 May 2020 06:39:15 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 418D167A7C7;
+        Wed, 27 May 2020 12:39:13 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 27 May
+ 2020 12:39:12 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1913.007; Wed, 27 May 2020 12:39:12 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Russell King <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+CC:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
- <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
- <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <3efa1f69-1e1d-f919-d47e-b4c5c73532b7@xs4all.nl>
-Date:   Wed, 27 May 2020 12:38:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdba9j4EdCkD5OeL=3A4Zeb57vO78FAXA9fo0SOgBE57ag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: High interrupt latency with low power idle mode on i.MX6
+Thread-Topic: High interrupt latency with low power idle mode on i.MX6
+Thread-Index: AQHWNBMPiENrGmpy5EqtWjfM5SmInw==
+Date:   Wed, 27 May 2020 10:39:12 +0000
+Message-ID: <bc91129c-121c-a070-53b2-1f0bb6d4500a@kontron.de>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHU8KnRyJwn+E52ojZZxHXaRmGhgMgCE+NU8TFHR0NZkWGBWUO7JKHZ1h8RtGzHn7GXOrxOQd3SaF1FqUJD7lueqQuWeBljRKHQPp9GaoL/NQsgpG1W5
- J3hAvfOg8rn4Sv+Dboblt1JB8v0ejHRjXEBSlo5yfLzs40RP2y+BekHomJl1DUEr/ccGo0nc0KL5ElOUlv/rixVF6IMurEuQcx7FD70ExArqpOPWcM6cIXXq
- GTIFFw1qTDRILuGJpX85aCmycYF/0G2uAWdSu8y3TIacl/1yA3QMiVaW3RhmNnWRYPSKYFyldSNLTTFcsCga7OqqAH+2nSupwbiZdfcyQgqzYTp7TYBi/yRQ
- sDYj5bvmKTndRFxbX4PATX7HcpAKZ6cVJLYwv0wPHIKgn88xPYlmwiEia0XU4H5qHPFxYxvcKE9iw3z0dngjjxva+Em4CAgG9P+8Dh61GbMhK7Qa+FxKHYt3
- y7q0G3Jo+mpckWIyfvAx176UAYFkc/Ppj5ikRabkcaqEHjTMJWZZpJ3l4WJqjYAPsEITK4EnWOOZrl5zjVkTgEn3/qkGHzMNaWaN5y3UKF4hTSioBjD6MmTu
- hIkZiJXwCw96pWHI1Gd15oZEmxsHiG76NPyWNJJ7pIqY6FN49HFiB3y3fSYAILby5ttT7BHugLxvsAe49IcR/yeAm6Ut270bsSqrlYrdCed8rbZvrb8PFHZj
- 5X44Gs2jbqc=
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <74610AFAFACFA04C9CA7028EA7CC1B36@snt-world.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 418D167A7C7.AEE78
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: daniel.lezcano@linaro.org, info@metux.net,
+        kstewart@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux@armlinux.org.uk, rjw@rjwysocki.net, s.hauer@pengutronix.de,
+        shawnguo@kernel.org, tglx@linutronix.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/2020 13:55, Linus Walleij wrote:
-> On Sat, May 23, 2020 at 7:11 PM Maulik Shah <mkshah@codeaurora.org> wrote:
-> 
->> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
->> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
->> callback is implemented then genirq takes unlazy path to disable irq.
->>
->> Underlying irqchip may not want to implement irq_disable callback to lazy
->> disable irq when client drivers invokes disable_irq(). By overriding
->> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
->>
->> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
->> if irqchip implemented irq_disable. In cases where irq_disable is not
->> implemented irq_mask is overridden. Similarly override irq_enable callback
->> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
->>
->> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> 
-> I definitely want Hans Verkuils test and review on this, since it
-> is a usecase that he is really dependent on.
-
-For this patch:
-
-Tested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-
-However, I discovered that patch 256efaea1fdc ("gpiolib: fix up emulated
-open drain outputs") broke the cec-gpio driver on the Raspberry Pi starting
-with kernel v5.5.
-
-The CEC pin is an open drain pin that is used in both input and output
-directions and has an interrupt (which is of course disabled while in
-output mode).
-
-With this patch the interrupt can no longer be requested:
-
-[    4.157806] gpio gpiochip0: (pinctrl-bcm2835): gpiochip_lock_as_irq: tried to flag a GPIO set as output for IRQ
-
-[    4.168086] gpio gpiochip0: (pinctrl-bcm2835): unable to lock HW IRQ 7 for IRQ
-[    4.175425] genirq: Failed to request resources for cec-gpio@7 (irq 79) on irqchip pinctrl-bcm2835
-[    4.184597] cec-gpio: probe of cec-gpio@7 failed with error -5
-
-You can easily test this with a RPi by enabling cec-gpio:
-
-------------------------------------------------------
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index 054ecaa355c9..87d6ed711ce2 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -29,6 +29,13 @@ wifi_pwrseq: wifi-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
- 	};
-+
-+	cec-gpio@7 {
-+		compatible = "cec-gpio";
-+		cec-gpios = <&gpio 7 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-+		hpd-gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-+		v5-gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
-+	};
- };
-
- &firmware {
-------------------------------------------------------
-
-Reverting that patch makes it work again.
-
-I'm happy to test a fix for this.
-
-Regards,
-
-	Hans
-
-> 
-> Also the irqchip people preferredly.
-> 
-> But it does seem to mop up my mistakes and fix this up properly!
-> 
-> So with some testing I'll be happy to merge it, even this one
-> patch separately if Hans can verify that it works.
-> 
-> Yours,
-> Linus Walleij
-> 
-
+SGksDQoNCm9uIG91ciBpLk1YNlVML1VMTCBib2FyZHMgcnVubmluZyBtYWlubGluZSBrZXJuZWxz
+LCB3ZSBzZWUgYW4gaXNzdWUgd2l0aCANClJTNDg1IGNvbGxpc2lvbnMgb24gdGhlIGJ1cy4gVGhl
+c2UgYXJlIGNhdXNlZCBieSB0aGUgcmVzZXR0aW5nIG9mIHRoZSANClJUUyBzaWduYWwgYmVpbmcg
+ZGVsYXllZCBhZnRlciBlYWNoIHRyYW5zbWlzc2lvbi4gVGhlIFRYREMgaW50ZXJydXB0IA0KdGFr
+ZXMgc2V2ZXJhbCBtaWxsaXNlY29uZHMgdG8gdHJpZ2dlciBhbmQgdGhlIHNsYXZlIG9uIHRoZSBi
+dXMgYWxyZWFkeSANCnN0YXJ0cyB0byBzZW5kIGEgcmVwbHkgaW4gdGhlIG1lYW50aW1lLg0KDQpX
+ZSBmb3VuZCBvdXQgdGhhdCB0aGVzZSBkZWxheXMgb25seSBoYXBwZW4gd2hlbiB0aGUgQ1BVIGlz
+IGluICJsb3cgcG93ZXIgDQppZGxlIiBtb2RlIChBUk0gcG93ZXIgb2ZmKS4gV2hlbiB3ZSBkaXNh
+YmxlIGNwdWlkbGUgc3RhdGUgMiBvciBwdXQgc29tZSANCmJhY2tncm91bmQgbG9hZCBvbiB0aGUg
+Q1BVIGV2ZXJ5dGhpbmcgd29ya3MgZmluZSBhbmQgdGhlIGRlbGF5cyBhcmUgZ29uZS4NCg0KZWNo
+byAxID4gL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1MC9jcHVpZGxlL3N0YXRlMi9kaXNhYmxl
+DQoNCkl0IHNlZW1zIGxpa2UgYWxzbyBvdGhlciBpbnRlcmZhY2VzIChJMkMsIGV0Yy4pIG1pZ2h0
+IGJlIGFmZmVjdGVkIGJ5IA0KdGhlc2UgaW5jcmVhc2VkIGxhdGVuY2llcywgd2UgaGF2ZW4ndCBp
+bnZlc3RpZ2F0ZWQgdGhpcyBtb3JlIGNsb3NlbHksIA0KdGhvdWdoLg0KDQpXZSBjdXJyZW50bHkg
+YXBwbHkgYSBwYXRjaCB0byBvdXIga2VybmVsLCB0aGF0IGRpc2FibGVzIGxvdyBwb3dlciBpZGxl
+IA0KbW9kZSBieSBkZWZhdWx0LCBidXQgSSdtIHdvbmRlcmluZyBpZiB0aGVyZSdzIGEgd2F5IHRv
+IGZpeCB0aGlzIA0KcHJvcGVybHk/IEFueSBpZGVhcz8NCg0KVGhhbmtzLA0KRnJpZWRlcg==
