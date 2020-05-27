@@ -2,122 +2,157 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB1C2207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA9220873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:41:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oV5uCXq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389388AbgE0Okj (ORCPT
+        id S2388531AbgE0Olr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:40:39 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:42650 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389198AbgE0Oki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:40:38 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax9umae85e9bA5AA--.593S3;
-        Wed, 27 May 2020 22:39:23 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v4 2/2] clk: Allow COMPILE_TEST for subdir hisilicon in Makefile
-Date:   Wed, 27 May 2020 22:39:22 +0800
-Message-Id: <1590590362-11570-2-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf9Ax9umae85e9bA5AA--.593S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw45JFWxJw45Ww48Xr47Jwb_yoW8uF17pa
-        n5JrW7trykXF47KFZ7ArW29FyYqanaqFWqkFy8Z3WYvr98JFWFvr4Ig348tF4UWr18Gay3
-        Xa97u343CF1Yk37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUmI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-        Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
-        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2kK
-        e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I
-        80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
-        c4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262
-        kKe7AKxVWUAVWUtwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-        IxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-        CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
-        WIevJa73UjIFyTuYvjfU8TmhDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 27 May 2020 10:41:47 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:58216 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388226AbgE0Olr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:41:47 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200527144145euoutp019c96ffb69538867228d7404f70f84b1b~S6aMdilEw2808328083euoutp01h
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 14:41:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200527144145euoutp019c96ffb69538867228d7404f70f84b1b~S6aMdilEw2808328083euoutp01h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590590505;
+        bh=t4EzPguwX4E7bHoRYGdEfAqtcPaah4R31keDabGtleQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=oV5uCXq79taHhvDZnk5AKvxMzBd0UmASBrJTbB/eVCREPvM3bMD+H/jc8rRCKGh9a
+         nQAZjeRzHsYIokOmiyYQLX3KmH1ReAKspJvu1PwjlnBXgvp4MgEuTRsGrgl38U60zD
+         i5M9N7MAZS/V98D9/6IKmP6H2ZdgjY+vKX5L3bAU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200527144144eucas1p1fc3e1875238ccbd1080e4b93389aff45~S6aMEYbHD2003620036eucas1p1u;
+        Wed, 27 May 2020 14:41:44 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id C6.15.61286.82C7ECE5; Wed, 27
+        May 2020 15:41:44 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200527144144eucas1p1cdd660c7d737f98d5f53c2d58db6d0ea~S6aLr5GQe2201722017eucas1p1J;
+        Wed, 27 May 2020 14:41:44 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200527144144eusmtrp1d9df50ff3a8527146794319df8721a4f~S6aLrNNw82814928149eusmtrp16;
+        Wed, 27 May 2020 14:41:44 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-8f-5ece7c28989f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 85.7C.07950.82C7ECE5; Wed, 27
+        May 2020 15:41:44 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200527144143eusmtip2a72e4f585f5874a80c474890b819c2fe~S6aKkwIN42212222122eusmtip2J;
+        Wed, 27 May 2020 14:41:43 +0000 (GMT)
+Subject: Re: [PATCH v5 0/3] interconnect: Support Samsung Exynos use-case
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     a.swigon@samsung.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
+        krzk@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <479885f5-41cb-a3d5-8506-353a6f261bc3@samsung.com>
+Date:   Wed, 27 May 2020 16:41:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <edf16797-4c1d-5b92-fbe2-28557c2fcdf0@linaro.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7oaNefiDG6c07G4P6+V0WLjjPWs
+        Fte/PGe1mL53E5vF+fMb2C0u75rDZvG59wijxYzz+5gs1h65y+7A6bFpVSebx51re9g8+ras
+        YvT4vEkugCWKyyYlNSezLLVI3y6BK+P9IfWC6zwV115sZWxg/MzZxcjJISFgItEz+yZjFyMX
+        h5DACkaJoz9WsUA4XxglJh1rYQapEhL4zCixYrIdTMePmw+YIYqWM0pc6V4JVfSRUeL5qXQQ
+        W1jAU+Lv52+MILaIgI7E0tm/waYyC1xmlGg71c0GkmATMJToPdoHVsQrYCcx++wuJhCbRUBV
+        or3lMthQUYFYidOLN0PVCEqcnPkEaBAHBydQff8/IZAws4C4xK0n85kgbHmJ7W/ngB0nIbCP
+        XWL75w/sEFe7SJzv3cQGYQtLvDq+BSouI3F6cg8LREMzo0TP7tvsEM4ERon7xxcwQlRZS9w5
+        94sNZDOzgKbE+l36IKaEgKPEskWqECafxI23ghA38ElM2jadGSLMK9HRJgQxQ0Xi96rpTBC2
+        lET3k/8sExiVZiF5bBaSb2Yh+WYWwtoFjCyrGMVTS4tz01OLDfNSy/WKE3OLS/PS9ZLzczcx
+        AhPR6X/HP+1g/Hop6RCjAAejEg9vh9e5OCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXH
+        F5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnVwLjjDocE78xAhpLrZ/cx8d2+
+        1lZozlI77easRuGf0dv59q/fWOZd8PtU9IOpBwzW1Wz5PPlV6NX3H459NCpPmNM1YVX0lb9y
+        z9g+LdeVOrfoybtYx7eqB56JWD46U2782nSdzsQZClmrLC5/Dz0pL/NhiWROYxLj1DtTlG1u
+        1BpFnV8RwCPPoMSjxFKckWioxVxUnAgAPu+dSUADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsVy+t/xe7oaNefiDBYeEbK4P6+V0WLjjPWs
+        Fte/PGe1mL53E5vF+fMb2C0u75rDZvG59wijxYzz+5gs1h65y+7A6bFpVSebx51re9g8+ras
+        YvT4vEkugCVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI
+        3y5BL+P9IfWC6zwV115sZWxg/MzZxcjJISFgIvHj5gPmLkYuDiGBpYwSX3a+Z+ti5ABKSEnM
+        b1GCqBGW+HOtiw2i5j2jxOIL89lAEsICnhJ/P39jBLFFBHQkls7+zQJSxCxwmVFi0fn97BAd
+        hxglurevYwGpYhMwlOg92gfWwStgJzH77C4mEJtFQFWiveUyM4gtKhArsfpaK1SNoMTJmU9Y
+        QC7iBKrv/ycEEmYWUJf4M+8SM4QtLnHryXwmCFteYvvbOcwTGIVmIemehaRlFpKWWUhaFjCy
+        rGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAiMvm3Hfm7Zwdj1LvgQowAHoxIPr4HHuTgh1sSy
+        4spcoP84mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgK9NtEZinR5HxgYsgriTc0NTS3sDQ0
+        NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cB4RXNRjIv5dtap9nNCP6sr/4/fHbf5
+        lc2mmr0TdILurpotcah6n7frasuChNW9G15vuXYlJsxCrOjbFDm7RaZbjwS61klorC1luWeh
+        8l1ordy7U4HCs6KKfH48Vd76aMJGuepdj8KMRD8VW1Q/DDVSSeNpdfZzjYtpfCezaM/P9Za9
+        G061ODxSYinOSDTUYi4qTgQA8oiQm9QCAAA=
+X-CMS-MailID: 20200527144144eucas1p1cdd660c7d737f98d5f53c2d58db6d0ea
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200521122848eucas1p27ce74486ea2044cb0b942b2619426e21
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200521122848eucas1p27ce74486ea2044cb0b942b2619426e21
+References: <CGME20200521122848eucas1p27ce74486ea2044cb0b942b2619426e21@eucas1p2.samsung.com>
+        <20200521122841.8867-1-s.nawrocki@samsung.com>
+        <edf16797-4c1d-5b92-fbe2-28557c2fcdf0@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_ARCH_HISI is not set but COMPILE_TEST is set, some files
-in the subdir hisilicon can not be built due to CONFIG_ARCH_HISI
-check in drivers/clk/Makefile.
+Hi Georgi,
 
-Since the related configs in drivers/clk/hisilicon/Kconfig depend
-on ARCH_HISI, so remove CONFIG_ARCH_HISI check for subdir hisilicon
-in drivers/clk/Makefile.
+On 27.05.2020 15:49, Georgi Djakov wrote:
+> Hi Sylwester,
+> 
+> Thank you for re-sending these!
+> 
+> On 5/21/20 15:28, Sylwester Nawrocki wrote:
+>> Hi All,
+>>
+>> This is a continuation of Artur's efforts to add interconnect and PM QoS
+>> support for Exynos SoCs. Previous version of the patch set can be found 
+>> at [1]. The only change comparing to v4 is an addition of missing 'static
+>> inline' qualifier to the of_icc_get_from_provider() function stub, i.e.
+>> addresing Georgi's review comments.
+>>
+>> The patches have been tested on Odroid U3 (Exynos4412 SoC). 
+>>
+>> Below is detailed description of the patch set as in v4.
+>>
+>>                               ---------
+>> Previously posted as a part of a larger RFC [2].
+> 
+> The patches look good to me and i am planning to apply them for v5.9,
+> but what happened to the devfreq patches, which will make use of this?
+> Are they posted separately?
 
-At the same time, we should add CONFIG_ARCH_HISI and COMPILE_TEST
-(for better compile testing coverage) check for the common files
-in drivers/clk/hisilicon/Makefile, otherwise there exists build
-failure about undefined reference.
+Thank you, remaining patches are not posted yet. I'm still working on them
+and should be posting them this week. They are almost ready and I'm doing
+some more tests. 
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+I have converted the code that was previously added to the exynos-bus driver
+to a separate interconnect driver as you suggested. In the exynos devfreq 
+only a child platform device is registered for the interconnect driver,
+which then registers a PM QoS request for its parent device. After rebasing 
+today I noticed something very similar has been recently added in the devfreq
+subsystem for the imx platforms. Let's discuss further after I actually post 
+the patches.
 
-v2:
-  - Add CONFIG_ARCH_HISI check for the common files
-    to fix the build failure
-
-v3:
-  - Add CONFIG_COMPILE_TEST check for the common files
-    for better compile testing coverage
-
-v4:
-  - Modify the patch subject to reflect the reality
-
- drivers/clk/Makefile           | 2 +-
- drivers/clk/hisilicon/Makefile | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f4169cc..81045ec 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -79,7 +79,7 @@ obj-y					+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
- obj-$(CONFIG_ARCH_DAVINCI)		+= davinci/
- obj-$(CONFIG_H8300)			+= h8300/
--obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
-+obj-y					+= hisilicon/
- obj-y					+= imgtec/
- obj-y					+= imx/
- obj-y					+= ingenic/
-diff --git a/drivers/clk/hisilicon/Makefile b/drivers/clk/hisilicon/Makefile
-index b2441b9..e58104d 100644
---- a/drivers/clk/hisilicon/Makefile
-+++ b/drivers/clk/hisilicon/Makefile
-@@ -3,7 +3,8 @@
- # Hisilicon Clock specific Makefile
- #
- 
--obj-y	+= clk.o clkgate-separated.o clkdivider-hi6220.o clk-hisi-phase.o
-+obj-$(CONFIG_ARCH_HISI)		+= clk.o clkgate-separated.o clkdivider-hi6220.o clk-hisi-phase.o
-+obj-$(CONFIG_COMPILE_TEST)	+= clk.o clkgate-separated.o clkdivider-hi6220.o clk-hisi-phase.o
- 
- obj-$(CONFIG_ARCH_HI3xxx)	+= clk-hi3620.o
- obj-$(CONFIG_ARCH_HIP04)	+= clk-hip04.o
--- 
-2.1.0
-
+--
+Regards,
+Sylwester
