@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB736C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 894C820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D173520873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="yYHqLeeT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mfCerUHn"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="wD9Cp1Ay";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Nh5U/pBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730276AbgE0P4v (ORCPT
+        id S1730869AbgE0P44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:56:51 -0400
+        Wed, 27 May 2020 11:56:56 -0400
 Received: from new1-smtp.messagingengine.com ([66.111.4.221]:40009 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390141AbgE0Pts (ORCPT
+        by vger.kernel.org with ESMTP id S2390155AbgE0Ptp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:49:48 -0400
+        Wed, 27 May 2020 11:49:45 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 3994D582030;
-        Wed, 27 May 2020 11:49:48 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 34431582026;
+        Wed, 27 May 2020 11:49:45 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:48 -0400
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:45 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=FGHgip5pCgsef
-        Z4M/vFInKoncWLsvsxW7FNyZtJgmzk=; b=yYHqLeeTM+s0JuUFx5k0doTF+khCA
-        MBjLG0djSmTRIK45cNzxKKflIclQE6lK9L5NNcA88H0nVyTHIoai5+m29VdWEAgd
-        g6hj5UJ9w38de+R79XuPs3IZn+WNN7LqXOa26JU/k2k4k24kZuSebm86Lv+u/5WK
-        JEk/m2JbhZqETNFE3kE92eWHOn9yBtuLIvLzcN7vC841OC+YonV7mLi9twFEaypn
-        E01VW48VExpB7y2jGIBCYbQ3XtC54AnQHFsgKpE7Wu83dHIuH0g09rPzNRFDqByg
-        p6NZgR939fYveNWH0Hf1oGv7xhxc0uAIICQkWAtF9Moh3Kqc2CtXDa7qQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=oSQosAw4Q7vGc
+        L01pDAaCeuv0svJvci7XNfnDxhY4go=; b=wD9Cp1AyP9VKPrrwQzGwKUXpxp/l5
+        czNXVKIztc5CQZ6FJOuNMqm/QKv/RvS462MsxJl3tYhhGKGCcHJ0UsJAwWyGrdqX
+        vYElxJafEcu1iTG3nDRkvMMdtzYYvlj1VFf3viC+aqybv5/sp/XD/IdMOrOl97e0
+        b6/Z1NhqKooplUd/W3GfRIMH4kJZDgjO/dSMtKDQZHlfrI2quuKa1PV8M6lZUgTq
+        FXFCBdGFQ2kJSUCoc6kw4+U1yCKaYDNywv3pVItPURxFdnmsBsvlhFW3Oe4zfS8h
+        35rkOIx8snehUrBi2Gy2DnIGPFDva2RpDBFx5uV7difcuSgQPWYic8vhw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=FGHgip5pCgsefZ4M/vFInKoncWLsvsxW7FNyZtJgmzk=; b=mfCerUHn
-        7tbvVA0B/mMWEDtBCMmONK31ovGYj0pCPhq/V/f90eZV4pXjKkDu5YNUgJXk9LNv
-        v7GSN62YQRozBV1MSpFAmORDaYMYQi7S96zR5kEs2oBG5Ier51mKpyABx3ps5owa
-        R3Zrp0oKg6rpno+5lw5YZ1cPssj3AA9myFwAgC8Yqdj1+mv+DtC70QyLHvJ6FY/Z
-        +z12FnHnwuCyVfQ3JWKntM7/Wm4HaRyBeih33MOkUuXBGW5GRhOfMFtZo79Id8WZ
-        sawnnhVTBfftSYQ5CeYdEYIFbuxjbbFv/tGInnxhxlRZqu5NPQ/kKeSn8TodwVHv
-        3UbL6TACfPg3ng==
-X-ME-Sender: <xms:HIzOXqFDH5o-_Qy8DUoOhUpkzTz8P9j95KfAeiNrynV22rLfRajVCg>
+        fm2; bh=oSQosAw4Q7vGcL01pDAaCeuv0svJvci7XNfnDxhY4go=; b=Nh5U/pBB
+        R3zjrWJYZTF0l7hNzolnuMDFOO/hm4ZN36giX965khZbgejIMaYsJcS/o4sVZjRc
+        RmI3PqOuBNQIpEowA5/Xm6lmvOfh3A5cZfHWMdxv202776iBjR4exEA/OilQjZiq
+        6jmdhNv+i11nz0ESshWdLUpUKV5/32kUfwZTW66PGoo4gCrMLpmGfyOmU2BPbAPj
+        ibtGrNYS+EXRwRuOq97rxHxE8adv+ATY9gbnwQEZCv5GlCKC+lWmmqtMwg3Mgzva
+        Wuf/hNMA/6U2PXjFYNTXEtdUF7IW26xs2r/VEnzS4UFcWf2K5IwPWnhvseE2jwk7
+        x9GldzGz/o8V1Q==
+X-ME-Sender: <xms:GYzOXpEa_ha4FB68IYCP0Tgu1DjrkdZeD9novkATm_aMrfMGTErg-A>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -58,13 +58,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggod
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
     hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:HIzOXrWNdPTSWzoB6wpWZwzQpRfhwEaaZpr-36HBCs5W8-mzwfD4cw>
-    <xmx:HIzOXkJMLV2BuiPie6Foecpez46L9naT3InCIKJyLLgeKEBX6eB03A>
-    <xmx:HIzOXkEwiCxK8dskKfOYGyBJIe84B28HgYqpdkHuoa182s4s6Xfd8w>
-    <xmx:HIzOXjHvIAMGDv5JopO3lQ_WK5jTj3_5trhnXO7YJA1Hgi4tR-iQ4A>
+X-ME-Proxy: <xmx:GYzOXuWxsZnGFtFVSgXxH6buVGTRnYqUfs2pKMDTjMfFg7BkR6ePsQ>
+    <xmx:GYzOXrLU-KLhqMrcQhyN-9TUgFQDrhpcw9ElmMQd4olRcY8-pBKv6w>
+    <xmx:GYzOXvHnBaiSety1cAsTpdpx1yC6uKi1gr0xROolZmxofzugDK_skQ>
+    <xmx:GYzOXmF_r9ejAtSydrFuWhZQLqirb8uEpUhv7JjdjcH8gYj-HuZX8w>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D3457328005E;
-        Wed, 27 May 2020 11:49:47 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id C663C3280064;
+        Wed, 27 May 2020 11:49:44 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 020/105] drm/vc4: plane: Create overlays for any CRTC
-Date:   Wed, 27 May 2020 17:47:50 +0200
-Message-Id: <74d84c75511974bc1ff4bc044413894a43a907a6.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 018/105] drm/vc4: plane: Move additional planes creation to driver
+Date:   Wed, 27 May 2020 17:47:48 +0200
+Message-Id: <0b85a3fdb20bb4ff85fb62cabd082d5a65e2730b.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,72 +89,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have everything in place, we can now register all the overlay
-planes that can be assigned to all the CRTCs.
+So far the plane creation was done when each CRTC was bound, and those
+planes were only tied to the CRTC that was registering them.
 
-This has two side effects:
+This causes two main issues:
+  - The planes in the vc4 hardware are actually not tied to any CRTC, but
+    can be used with every combination
 
-  - The number of overlay planes is reduced from 24 to 8. This is temporary
-    and will be increased again in the next patch.
+  - More importantly, so far, we allocate 10 planes per CRTC, with 3 CRTCs.
+    However, the next generation of hardware will have 5 CRTCs, putting us
+    well above the maximum of 32 planes currently allowed by DRM.
 
-  - The ID of the various planes is changed again, and we will now have all
-    the primary planes, then all the overlay planes and finally the cursor
-    planes. This shouldn't cause any issue since the ordering between
-    primary, overlay and cursor planes is preserved.
+This patch is the first one in a series of patches that will take down both
+of these issues so that we can support the next generation of hardware
+while keeping a good amount of planes.
+
+We start by changing the way the planes are registered to first registering
+the primary planes for each CRTC in the CRTC bind function as we used to,
+but moving the overlay and cursor creation to the main driver bind
+function, after all the CRTCs have been bound.
+
+This will slightly change the ID order of the planes, since the primary
+planes of all CRTCs will be first, and then a pattern of 8 overlays, 1
+cursor plane for each CRTC.
+
+This shouldn't cause any trouble since the ordering between the planes is
+preserved though.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_plane.c | 35 +++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 4 ----
+ drivers/gpu/drm/vc4/vc4_drv.c  | 7 +++++++
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index 824c188980b0..5335123ae2a0 100644
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -1378,26 +1378,27 @@ int vc4_plane_create_additional_planes(struct drm_device *drm)
- 	struct drm_crtc *crtc;
- 	unsigned int i;
+diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+index 29c72c322c6b..2131164779dd 100644
+--- a/drivers/gpu/drm/vc4/vc4_crtc.c
++++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+@@ -1192,10 +1192,6 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
+ 	 */
+ 	drm_crtc_enable_color_mgmt(crtc, 0, true, crtc->gamma_size);
  
--	drm_for_each_crtc(crtc, drm) {
--		/* Set up some arbitrary number of planes.  We're not limited
--		 * by a set number of physical registers, just the space in
--		 * the HVS (16k) and how small an plane can be (28 bytes).
--		 * However, each plane we set up takes up some memory, and
--		 * increases the cost of looping over planes, which atomic
--		 * modesetting does quite a bit.  As a result, we pick a
--		 * modest number of planes to expose, that should hopefully
--		 * still cover any sane usecase.
--		 */
--		for (i = 0; i < 8; i++) {
--			struct drm_plane *plane =
--				vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
-+	/* Set up some arbitrary number of planes.  We're not limited
-+	 * by a set number of physical registers, just the space in
-+	 * the HVS (16k) and how small an plane can be (28 bytes).
-+	 * However, each plane we set up takes up some memory, and
-+	 * increases the cost of looping over planes, which atomic
-+	 * modesetting does quite a bit.  As a result, we pick a
-+	 * modest number of planes to expose, that should hopefully
-+	 * still cover any sane usecase.
-+	 */
-+	for (i = 0; i < 8; i++) {
-+		struct drm_plane *plane =
-+			vc4_plane_init(drm, DRM_PLANE_TYPE_OVERLAY);
+-	ret = vc4_plane_create_additional_planes(drm, crtc);
+-	if (ret)
+-		goto err_destroy_planes;
+-
+ 	vc4_crtc_get_cob_allocation(vc4_crtc);
  
--			if (IS_ERR(plane))
--				continue;
-+		if (IS_ERR(plane))
-+			continue;
- 
--			plane->possible_crtcs = drm_crtc_mask(crtc);
--		}
-+		plane->possible_crtcs =
-+			GENMASK(drm->mode_config.num_crtc - 1, 0);
-+	}
+ 	CRTC_WRITE(PV_INTEN, 0);
+diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
+index d7f554a6f0ed..daf07a61a7b5 100644
+--- a/drivers/gpu/drm/vc4/vc4_drv.c
++++ b/drivers/gpu/drm/vc4/vc4_drv.c
+@@ -250,6 +250,7 @@ static int vc4_drm_bind(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct drm_device *drm;
++	struct drm_crtc *crtc;
+ 	struct vc4_dev *vc4;
+ 	struct device_node *node;
+ 	int ret = 0;
+@@ -288,6 +289,12 @@ static int vc4_drm_bind(struct device *dev)
+ 	if (ret)
+ 		goto gem_destroy;
  
 +	drm_for_each_crtc(crtc, drm) {
- 		/* Set up the legacy cursor after overlay initialization,
- 		 * since we overlay planes on the CRTC in the order they were
- 		 * initialized.
++		ret = vc4_plane_create_additional_planes(drm, crtc);
++		if (ret)
++			continue;
++	}
++
+ 	drm_fb_helper_remove_conflicting_framebuffers(NULL, "vc4drmfb", false);
+ 
+ 	ret = vc4_kms_load(drm);
 -- 
 git-series 0.9.1
