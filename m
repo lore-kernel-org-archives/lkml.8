@@ -2,87 +2,92 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4006C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B99C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9754120C56
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D0F207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590577752;
+	bh=3diRTG4EYmBHANbsqVvKSY9n7VhyjG1AQZ7fBVDT5fw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Nntk4wNF5zZwkVV3IKehZbG6S6qcoqz/WnK6LNw5Bz5gRHU68TmlJBvjrK3b2bsd0
+	 Ls5wvb1mFvIVwmSrKgo2KPxnK9LzUiT1QG7uCiMf+PiXRAPt7KunedKhMyVEK2la7m
+	 L/MdIw9XaowHoFzEwdF+CNhXwI8ZwWBgs59dIKJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387913AbgE0LDW (ORCPT
+        id S2388065AbgE0LJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:03:22 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36164 "EHLO mx2.suse.de"
+        Wed, 27 May 2020 07:09:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387800AbgE0LDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:03:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 297E0AC9F;
-        Wed, 27 May 2020 11:03:21 +0000 (UTC)
-Subject: Re: [PATCH v3 08/19] mm: memcg/slab: save obj_cgroup for non-root
- slab objects
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200422204708.2176080-1-guro@fb.com>
- <20200422204708.2176080-9-guro@fb.com>
- <3e02b3c6-2bf5-bddb-d855-83a1a1a54034@suse.cz>
- <20200526175330.GB377498@carbon.DHCP.thefacebook.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <90706966-b64d-751d-5f5a-b1e72fbfb30a@suse.cz>
-Date:   Wed, 27 May 2020 13:03:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2387534AbgE0LJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:09:10 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7902E2075A;
+        Wed, 27 May 2020 11:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590577750;
+        bh=3diRTG4EYmBHANbsqVvKSY9n7VhyjG1AQZ7fBVDT5fw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mZouomnUotk3X2CsfpVxo+OBvqg04n7c9VZ4A8Iwwo6pLg8LIXuyLbHcjK0PzZIgH
+         t4xujoUFhFAQMYEZ6mbg7FmTAD4S+WWgsIDhx3oAzETDGotud1HGQnYzlpaMbrv8uQ
+         RgA6AbMHTUb+oXrASEw435R222pO3ASMgeebBTEI=
+Received: by pali.im (Postfix)
+        id CF479BF4; Wed, 27 May 2020 13:09:07 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH v2 1/2] mmc: core: Do not export MMC_NAME= and MODALIAS=mmc:block for SDIO cards
+Date:   Wed, 27 May 2020 13:08:57 +0200
+Message-Id: <20200527110858.17504-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200526175330.GB377498@carbon.DHCP.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 7:53 PM, Roman Gushchin wrote:
-> On Mon, May 25, 2020 at 05:07:22PM +0200, Vlastimil Babka wrote:
->> On 4/22/20 10:46 PM, Roman Gushchin wrote:
->> > diff --git a/mm/slab.h b/mm/slab.h
->> > index 44def57f050e..525e09e05743 100644
->> > --- a/mm/slab.h
->> > +++ b/mm/slab.h
->> ...
->> > @@ -636,8 +684,8 @@ static inline void slab_post_alloc_hook(struct kmem_cache *s, gfp_t flags,
->> >  					 s->flags, flags);
->> >  	}
->> >  
->> > -	if (memcg_kmem_enabled())
->> > -		memcg_kmem_put_cache(s);
->> > +	if (!is_root_cache(s))
->> > +		memcg_slab_post_alloc_hook(s, objcg, size, p);
->> >  }
->> >  
->> >  #ifndef CONFIG_SLOB
->> 
->> Keep also the memcg_kmem_enabled() static key check, like elsewhere?
->> 
-> 
-> Ok, will add, it can speed things up a little bit. My only concern is that
-> the code is not ready for memcg_kmem_enabled() turning negative after being positive.
-> But it's not a concern, right?
-> 
-> Actually, we can simplify memcg_kmem_enabled() mechanics and enable it
-> only once as soon as the first memcg is fully initialized. I don't think there
-> is any value in tracking the actual number of active memcgs.
+SDIO non-combo cards are not handled by mmc_block driver and do not have
+accessible CID register which is used for MMC_NAME= construction.
 
-Yeah, it should be acceptable that once the key is enabled after boot, there's
-no way back until reboot.
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Marek Behún <marek.behun@nic.cz>
 
-> Thanks!
-> 
+---
+Changes in V2:
+* Use early returns pattern
+---
+ drivers/mmc/core/bus.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/mmc/core/bus.c b/drivers/mmc/core/bus.c
+index 74de3f2dd..b1cb447da 100644
+--- a/drivers/mmc/core/bus.c
++++ b/drivers/mmc/core/bus.c
+@@ -93,6 +93,13 @@ mmc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 			return retval;
+ 	}
+ 
++	/*
++	 * SDIO (non-combo) cards are not handled by mmc_block driver and do not
++	 * have accessible CID register which used by mmc_card_name() function.
++	 */
++	if (card->type == MMC_TYPE_SDIO)
++		return 0;
++
+ 	retval = add_uevent_var(env, "MMC_NAME=%s", mmc_card_name(card));
+ 	if (retval)
+ 		return retval;
+-- 
+2.20.1
 
