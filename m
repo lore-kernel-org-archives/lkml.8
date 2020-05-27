@@ -2,127 +2,88 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F28C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2594AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A87E20899
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:42:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFBFTPaz"
+	by mail.kernel.org (Postfix) with ESMTP id EF21220721
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 16:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391337AbgE0QmY (ORCPT
+        id S2391354AbgE0Qmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 12:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgE0QmY (ORCPT
+        Wed, 27 May 2020 12:42:46 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:13177 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390729AbgE0Qmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 12:42:24 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2368BC05BD1E;
-        Wed, 27 May 2020 09:42:23 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 5so1724876pjd.0;
-        Wed, 27 May 2020 09:42:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XocHLjl4KQE4CHPG3EcVffWOwMuyfL2OpIEOiwvn290=;
-        b=KFBFTPaz3pEwrQW6KI9k90I66CBEkxGcMewwzCJKlHCAik1KrihheMJUk1xvDFAKJe
-         guDv45FCm4veZTMOoYge85g5nWsQ1eiR7wt/hg7p7srl06ObTGrarp+/sn49qlZ33PAp
-         XF9NoCJlh6qoTkKY/u9bae9KJ7dGfdV9b0S8VX5slptH93c66jnk/Bde9oGEN1NO1dsS
-         /6VHVRtNo9P/9+XDN5Dj3TzwDf6VONYxfPr95VLQJdz71u2yOFfp3/a26abUKClaPlof
-         PnKQZ9HoSy5GUYFy54gpfmKxc5tpDED88bQgWhEg4IVhZ0VpfzBvSfzESq3tIyGFLti+
-         7BhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XocHLjl4KQE4CHPG3EcVffWOwMuyfL2OpIEOiwvn290=;
-        b=qE8SoDuXvKeaBeltrCG+Sp46sNCJKS4VoYr33Ydm0kqqOFYD4tOOk/TaPQ6k5ed7ju
-         4uu8zgfQWOsddoDRww/dCmObkzrXTVoUDbaLzpplUkqZcj0wMhmfqQDlIMIGP5LiGoIo
-         SrZXR+XFM2G0k5BfecadOGkOCNWsFH4NxbbR0Dh+AnnVyFRbMrbgB35nr6XMxKn4t5XV
-         GXweqttF+yLUAB6Soz/oWt4buqZIVgETUrXrKEknfPwe4Fs5nI7tnQi3AjAZpzK6jKNo
-         xLVb1rr87kl0HbFC55BpzQlRrQ3+ZncxJwTp1ojCG7yyawzbxMa8KOKqUkvhKz6dbpBr
-         R4pg==
-X-Gm-Message-State: AOAM530BD7PhSaroA7V7xGwC5YBzH8CfIlNwojuXQucxE2qoinxvniRN
-        WJPpOl9B3obzcIYNahDerH8=
-X-Google-Smtp-Source: ABdhPJzxbmps8uAE7iJBbTHs0Ipf6Gx3h+MZQmG0wpbg+VJN75Y5wuhCky/NBfrR+RlLzFWjKLGNAw==
-X-Received: by 2002:a17:90a:268f:: with SMTP id m15mr6372558pje.190.1590597742622;
-        Wed, 27 May 2020 09:42:22 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id i21sm2371045pgn.20.2020.05.27.09.42.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 09:42:22 -0700 (PDT)
-Date:   Wed, 27 May 2020 09:42:19 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Slaby <jslaby@suse.cz>,
+        Wed, 27 May 2020 12:42:45 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 27 May 2020 09:42:42 -0700
+Received: from sc9-mailhost2.vmware.com (unknown [10.200.192.41])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 9826B4046A;
+        Wed, 27 May 2020 09:42:44 -0700 (PDT)
+From:   Matt Helsley <mhelsley@vmware.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] x86: crypto: fix building crc32c with clang ias
-Message-ID: <20200527164219.GB1073507@ubuntu-s3-xlarge-x86>
-References: <20200527141754.1850968-1-arnd@arndb.de>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: [RFC][PATCH 0/3] objtool: Support implicit addend relocations
+Date:   Wed, 27 May 2020 09:42:30 -0700
+Message-ID: <cover.1590597288.git.mhelsley@vmware.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527141754.1850968-1-arnd@arndb.de>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: mhelsley@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:17:40PM +0200, Arnd Bergmann wrote:
-> The clang integrated assembler complains about movzxw:
-> 
-> arch/x86/crypto/crc32c-pcl-intel-asm_64.S:173:2: error: invalid instruction mnemonic 'movzxw'
-> 
-> It seems that movzwq is the mnemonic that it expects instead,
-> and this is what objdump prints when disassembling the file.
-> 
-> Fixes: 6a8ce1ef3940 ("crypto: crc32c - Optimize CRC32C calculation with PCLMULQDQ instruction")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Future tools that use objtool to process ELF object files may require
+reading or even modifying relocations with implicit addends. This
+series cleans up the naming of the relocation struct in objtool,
+variable names, and function names to be consistent with a more
+generic use rather than being specific to those applying explicit
+addends.
 
-We had an identical patch pending from another contributor, see the
-discussion and result in the issue below.
+From there we switch to the specification compliant method of
+finding the section the relocations apply to and fall back to the
+old naming-heuristic basis if that's not available.
 
-https://github.com/ClangBuiltLinux/linux/issues/1010
+Finally, add support for implicit addends. Note that we don't
+completely convert the orc tools to work with both kinds of
+relocations. I'm hoping to get feedback on whether it makes more
+sense to convert it or leave it as-is.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Matt Helsley (3):
+  objtool: Rename rela to reloc
+  objtool: Find relocation base section using sh_info
+  objtool: Add support for relocations without addends
 
-> ---
->  arch/x86/crypto/crc32c-pcl-intel-asm_64.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-> index 8501ec4532f4..442599cbe796 100644
-> --- a/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-> +++ b/arch/x86/crypto/crc32c-pcl-intel-asm_64.S
-> @@ -170,7 +170,7 @@ continue_block:
->  
->  	## branch into array
->  	lea	jump_table(%rip), %bufp
-> -	movzxw  (%bufp, %rax, 2), len
-> +	movzwq  (%bufp, %rax, 2), len
->  	lea	crc_array(%rip), %bufp
->  	lea     (%bufp, len, 1), %bufp
->  	JMP_NOSPEC bufp
-> -- 
-> 2.26.2
-> 
+ tools/objtool/arch.h            |   2 +-
+ tools/objtool/arch/x86/decode.c |   2 +-
+ tools/objtool/check.c           | 196 +++++++++++++-------------
+ tools/objtool/check.h           |   2 +-
+ tools/objtool/elf.c             | 237 +++++++++++++++++++++-----------
+ tools/objtool/elf.h             |  27 ++--
+ tools/objtool/orc_gen.c         |  46 +++----
+ tools/objtool/special.c         |  28 ++--
+ 8 files changed, 311 insertions(+), 229 deletions(-)
+
+
+base-commit: 7c0577f4e609f7278ebd6d21e2de82b42f110944
+prerequisite-patch-id: 387905b1da8b1293e7736b28fcc1585583e3e7cf
+prerequisite-patch-id: 2fd7ac6c4dfd717ab117fc771623c01040188b4e
+prerequisite-patch-id: bfeefd995e3f80d6fa0edfa2205d98be31fbee4e
+prerequisite-patch-id: abcb5732607ad17f4c99c06b8bb83c9db1b15c42
+prerequisite-patch-id: 5179e659d828bed48051d365f669a8ba3a36c206
+-- 
+2.20.1
+
