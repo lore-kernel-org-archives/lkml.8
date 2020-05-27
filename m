@@ -2,102 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1832C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A64DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F6A20B80
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590574153;
-	bh=yHPxx5r9WV3zA/SmpY1Eg7WTbX8X43s++csgc5GvexY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ofarLuZSVJZFy01ohLHtLn7m+nAHMazGYXZ8S4rWr0wDz0FzLCZCl+OoXfrgmxWJW
-	 LNjyAqvHiKI3Zo0AhMzk9cUqzJPL1RNsSK1DLIcWBaIGmy+odePxvbSSmZDo6B/3vv
-	 C0M6heSmCKvXL8JKlfnq9/TNcBfacAY2sY/kSZK8=
+	by mail.kernel.org (Postfix) with ESMTP id 4803020B80
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 10:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgE0KJN (ORCPT
+        id S1729768AbgE0KJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 06:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55516 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 06:09:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:35584 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729758AbgE0KJM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 06:09:12 -0400
-Received: from localhost (p54b33011.dip0.t-ipconnect.de [84.179.48.17])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D963820890;
-        Wed, 27 May 2020 10:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590574152;
-        bh=yHPxx5r9WV3zA/SmpY1Eg7WTbX8X43s++csgc5GvexY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QJ5e/s/B4XUN5LSz4MlcKt499k4rM5l5FOI9Ke3mIEMyDFBS4YWpN1XfOLC5LLhTO
-         VFzRvdnHzWKp0rWsKXIphYwsRV/RCE1T2VLBn/Qh+FCIXbih4wGjoWOUNCw8MiRxNy
-         /9UdcGijtqyFCYtwF1F4IKz1sNcBSsq7tcC6VlHo=
-Date:   Wed, 27 May 2020 12:09:09 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Samuel Zou <zou_wei@huawei.com>
-Cc:     ajayg@nvidia.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] i2c: nvidia-gpu: Use PTR_ERR_OR_ZERO() to simplify
- code
-Message-ID: <20200527100909.GD1161@ninjato>
-References: <1588755670-38476-1-git-send-email-zou_wei@huawei.com>
+        id S1729678AbgE0KJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 06:09:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D58AB55D;
+        Wed, 27 May 2020 03:09:12 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEC213F6C4;
+        Wed, 27 May 2020 03:09:10 -0700 (PDT)
+References: <20200526151619.8779-1-benjamin.gaignard@st.com>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, hugues.fruchet@st.com,
+        mchehab@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, pavel@ucw.cz, len.brown@intel.com,
+        vincent.guittot@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC RESEND 0/3] Introduce cpufreq minimum load QoS
+In-reply-to: <20200526151619.8779-1-benjamin.gaignard@st.com>
+Date:   Wed, 27 May 2020 11:09:05 +0100
+Message-ID: <jhjk10xu1tq.mognet@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LKTjZJSUETSlgu2t"
-Content-Disposition: inline
-In-Reply-To: <1588755670-38476-1-git-send-email-zou_wei@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---LKTjZJSUETSlgu2t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Benjamin,
 
-On Wed, May 06, 2020 at 05:01:10PM +0800, Samuel Zou wrote:
-> Fixes coccicheck warning:
->=20
-> drivers/i2c/busses/i2c-nvidia-gpu.c:280:1-3: WARNING: PTR_ERR_OR_ZERO can=
- be used
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Samuel Zou <zou_wei@huawei.com>
+On 26/05/20 16:16, Benjamin Gaignard wrote:
+> A first round [1] of discussions and suggestions have already be done on
+> this series but without found a solution to the problem. I resend it to
+> progress on this topic.
+>
 
-Thanks, but has been fixed already with
+Apologies for sleeping on that previous thread.
 
-http://patchwork.ozlabs.org/project/linux-i2c/patch/20200505145230.17251-1-=
-aishwaryarj100@gmail.com/
+So what had been suggested over there was to use uclamp to boost the
+frequency of the handling thread; however if you use threaded IRQs you
+get RT threads, which already get the max frequency by default (at least
+with schedutil).
 
+Does that not work for you, and if so, why?
 
---LKTjZJSUETSlgu2t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl7OPEUACgkQFA3kzBSg
-KbY4Uw//bqrBvtas5lI1W3btxS5KD7yTOENLR7QT2TTN8C7zeVgUwFifV2FNeMl3
-JmzN8r6XJ9ptwnHCFx4R+oufVdPFr4IIFRyJU1NDnOaRAisYdNy5YDiTGIsu5iil
-jI9wpVsnCZt5Fev9D7IaBMe/pPxewqogzwPP00qnSYvJmFzcMoFItBMA8WomjvoG
-tFqqbYfO3z7j4y7SbdM+GUytAjoymi/fgsvl3+1M/AKvCq75b0RtcIawClLvm1dN
-W3tshRGMPgtxi9jsivLcpzhPzYib1bGMC5fyW9iPKgIyyEeJtbQvAiybRbqYRL3O
-pMZnCpvFKF87dHZRU/iuaeVOCewXCfi63w0KDGSOseVlckViGsIq4eRXkcRBxKaE
-NZmcuObiKMwW768hPuVudz1yqSre7oF+E177JiohBiauV+ShHNYnI+cl5FVABcWo
-trUBjEYR8rQCq+SQft6ih9q81t2Jws6iOUYOg60mLIt1tO5tCDl9AkCsOW3gWDQW
-0BYEE9B6CMDqCzljmOiVlU1YaZPNNqG1vWe/mYj7umvb4q9eZ26aJ1D7eLLJVTZH
-mfOh/vGbpedUV3/z2b+QtsezCi/8wtOsrl1GtLQJOHyU23JUGXtzn8bkwi10Nvjo
-P4esZq37OJeud5l63vJJ3MaxuuWZToTzOxzqGh3itv5DPaFyQDk=
-=bBbu
------END PGP SIGNATURE-----
-
---LKTjZJSUETSlgu2t--
+> When start streaming from the sensor the CPU load could remain very low
+> because almost all the capture pipeline is done in hardware (i.e. without
+> using the CPU) and let believe to cpufreq governor that it could use lower
+> frequencies. If the governor decides to use a too low frequency that
+> becomes a problem when we need to acknowledge the interrupt during the
+> blanking time.
+> The delay to ack the interrupt and perform all the other actions before
+> the next frame is very short and doesn't allow to the cpufreq governor to
+> provide the required burst of power. That led to drop the half of the frames.
+>
+> To avoid this problem, DCMI driver informs the cpufreq governors by adding
+> a cpufreq minimum load QoS resquest.
+>
+> Benjamin
+>
+> [1] https://lkml.org/lkml/2020/4/24/360
+>
+> Benjamin Gaignard (3):
+>   PM: QoS: Introduce cpufreq minimum load QoS
+>   cpufreq: governor: Use minimum load QoS
+>   media: stm32-dcmi: Inform cpufreq governors about cpu load needs
+>
+>  drivers/cpufreq/cpufreq_governor.c        |   5 +
+>  drivers/media/platform/stm32/stm32-dcmi.c |   8 ++
+>  include/linux/pm_qos.h                    |  12 ++
+>  kernel/power/qos.c                        | 213 ++++++++++++++++++++++++++++++
+>  4 files changed, 238 insertions(+)
