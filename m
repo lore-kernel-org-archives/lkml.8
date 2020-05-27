@@ -2,127 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCA4C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE02207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E37C72078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 23:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZFX+5j0w"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TqSI87qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgE0XTL (ORCPT
+        id S1725815AbgE0XXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 19:19:11 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41558 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgE0XSy (ORCPT
+        Wed, 27 May 2020 19:23:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42918 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0XXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 19:18:54 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04RNIolo130365;
-        Wed, 27 May 2020 18:18:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590621530;
-        bh=QIOM13dIxaMyLxjkwDypJQgBgow31wSAdopluu2z1e4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ZFX+5j0wpJsATd4TJkb+5QBQxxDedtopveLW6gK8iaCOadtnH+1OE3opedFUObxoJ
-         eQNeEExqmwuwoPAflxSoyDteMHWXo071XGW7fyvVLCJGknBuDOtzhRCyKQkcbjEo+n
-         Rp6D+S/8D+BNVafzy11+RhEao2fa/dRR+cCvC8Fs=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04RNIocC088673
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 27 May 2020 18:18:50 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 27
- May 2020 18:18:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 27 May 2020 18:18:50 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04RNIo3W079343;
-        Wed, 27 May 2020 18:18:50 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
-CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <sspatil@android.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v10 1/4] power_supply: Add additional health properties to the header
-Date:   Wed, 27 May 2020 18:17:40 -0500
-Message-ID: <20200527231743.18066-2-r-rivera-matos@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200527231743.18066-1-r-rivera-matos@ti.com>
-References: <20200527231743.18066-1-r-rivera-matos@ti.com>
+        Wed, 27 May 2020 19:23:04 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94936C08C5C1;
+        Wed, 27 May 2020 16:23:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kkKuXlZkefdaTbsQ8LAr7bWz0v+au1TpQMecu+KkdsM=; b=TqSI87qiYboEzCul9zKvX0pV6
+        CG+C4VH88nAcLysydmf2QjR8db5MzBma2hUviRr9B2iPXGpg5b7aBc9QMKldb6tjliUyxS3V7FC1l
+        /GgPfx9HBpG+GQcnAaOHtZdGLIYjumsOcT5x8GJ/PTabw1alvkAkKzCbpHkR1xOyBrwba/LFHnx2F
+        CsABDueVmhT/mSrPU1/FhNshqKHvHMGs+C/3OY9N3l7jYvi4lEbti85gGaqIwPMHI+YfwWHutHd1j
+        IUcb9LRh8J6z6/8OhAMPeKNeFApUtTt44VTuhjTtnU9h5u1pociNlMSgJVVWXy7DxY7ngSwedI50U
+        AhAlRGwFg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37856)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1je5Ny-0003si-Fg; Thu, 28 May 2020 00:22:58 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1je5Nx-0006r0-RY; Thu, 28 May 2020 00:22:57 +0100
+Date:   Thu, 28 May 2020 00:22:57 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
+Message-ID: <20200527232257.GS1551@shell.armlinux.org.uk>
+References: <20200528090941.341ad93a@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528090941.341ad93a@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
+Ard,
 
-Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+Please take a look.  Obviously, whatever the resolution is going to be
+needed when Linus opens the merge window.
 
-HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
+Thanks.
 
-Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/ABI/testing/sysfs-class-power | 2 +-
- drivers/power/supply/power_supply_sysfs.c   | 2 +-
- include/linux/power_supply.h                | 3 +++
- 3 files changed, 5 insertions(+), 2 deletions(-)
+On Thu, May 28, 2020 at 09:09:41AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the arm tree got a conflict in:
+> 
+>   arch/arm/boot/compressed/head.S
+> 
+> between commit:
+> 
+>   a94691680bac ("efi/arm: Deal with ADR going out of range in efi_enter_kernel()")
+> 
+> from Linus' tree and commit:
+> 
+>   d0f9ca9be11f ("ARM: decompressor: run decompressor in place if loaded via UEFI")
+> 
+> from the arm tree.
+> 
+> I fixed it up (I just used the latter) and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index bf3b48f022dc..9f3fd01a9373 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -190,7 +190,7 @@ Description:
- 		Valid values: "Unknown", "Good", "Overheat", "Dead",
- 			      "Over voltage", "Unspecified failure", "Cold",
- 			      "Watchdog timer expire", "Safety timer expire",
--			      "Over current"
-+			      "Over current", "Warm", "Cool", "Hot"
- 
- What:		/sys/class/power_supply/<supply_name>/precharge_current
- Date:		June 2017
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4eae60b..d0d549611794 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
- static const char * const power_supply_health_text[] = {
- 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
- 	"Unspecified failure", "Cold", "Watchdog timer expire",
--	"Safety timer expire", "Over current"
-+	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
- };
- 
- static const char * const power_supply_technology_text[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..8670e90c1d51 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -61,6 +61,9 @@ enum {
- 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_OVERCURRENT,
-+	POWER_SUPPLY_HEALTH_WARM,
-+	POWER_SUPPLY_HEALTH_COOL,
-+	POWER_SUPPLY_HEALTH_HOT,
- };
- 
- enum {
+
+
 -- 
-2.26.2
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
