@@ -2,130 +2,175 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA9FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E40420835
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A22220899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 18:03:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Juuy34H7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgE0SDX (ORCPT
+        id S1729354AbgE0SDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 14:03:23 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31564 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726069AbgE0SDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 14:03:23 -0400
-IronPort-SDR: NAzBuRSK0b3F13gBb5LWlFsHWKqjqFP5Rhnp6MArYJ9fOXr4cjbjZlvhhNu79jjrn5q1jET5Bw
- OSfKMcq8HWBw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 11:03:22 -0700
-IronPort-SDR: zOzprujK1m7EQvx35bqerN8Q1Xorg5edMghLJEuR85os/fmxxky0tlOX5J6o/5v2dNNbDj0jaI
- Ir492gQENQrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,442,1583222400"; 
-   d="scan'208";a="266925675"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.157])
-  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 11:03:20 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf script: Fix --call-trace for Intel PT
-Date:   Wed, 27 May 2020 21:02:50 +0300
-Message-Id: <20200527180250.16723-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Wed, 27 May 2020 14:03:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729082AbgE0SDg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 14:03:36 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414E9C03E97D
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 11:03:36 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z26so12159970pfk.12
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 11:03:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1i+2CYKnygDzk/GvSPMFnlsBZ+PDQAs0JHC2OCU8Rpg=;
+        b=Juuy34H7e5clylfdiyvSvG4F1wyq9c8Gaj8QNysrOlDgGCGB7A08vEUvk3NP/Wn1H6
+         Yog5pD+mXyHk+WVgoLhuHW3Omp5d+eepMRoD2hYNRRK5PkkUSlyxec51h45s6fdpYill
+         lA4WHf6wyk335XsVHjeAc4Q2RIQDLyeAIKwrzDBommB66eFrjgaTrHUKh+YskoAupwbq
+         eDWaNMQh5VN1aoa5wksCQ49WwMi1vHRhUDNMtMhCEclzc24PdY4Wv3QfxGMydNAOePYK
+         xdcnU39N8S3XzdUmTP21oRzd9CrtlFniuJBnOhhkPr0/09QMJdtokXOxrAby+3nxwfjm
+         aARA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1i+2CYKnygDzk/GvSPMFnlsBZ+PDQAs0JHC2OCU8Rpg=;
+        b=otc3GfKdR8PxhF1MPLQ1aLZEtBvJeC4qc3YKOUhsyHjahWnUjkmNtW0heXlVmmKCzz
+         NdflOGKt5Y+y6/bXYPsWVfn7c5VpGoQ0/LHq+ywYfmFhWgXsswxeQH+nLmFI/2we0+yf
+         JsD0qLFRVn0e7bu3lo/O0OpsAT44PzKQu2p9HG1M+s2u3z8ASkbSduEkXhp28GxMuXjI
+         Ic8RZgsKeYxxyfdjYv4iDo34OxfKFNQBpL7Xyg0Z8uBJ2sMmqTGXIqdCVUsocS8xE4iO
+         RREsqbn1lZoXVSa2S7EBTXbPJFEkCbz1uxCKZIO/FsqUbKsr0KZ8frDT3viL1iL1v14M
+         p7QA==
+X-Gm-Message-State: AOAM533vMJU/JP4R0cWGviWTMjTRmZ7Tp+rDQI+rDvDXihXnTaLnf1Jt
+        N6slVXTfLQFNEFCxHiDJuBLKYfr70+YP2Bm0LA+laQ==
+X-Google-Smtp-Source: ABdhPJzzSTK199jYEXH1x++KGRbblCgHnTwlQdoA6pICLSVL6mQAiv7Qjw8mXRGdXDnysRpSmZq3n9RSuMqpypAtzOk=
+X-Received: by 2002:aa7:8c44:: with SMTP id e4mr5128942pfd.108.1590602615524;
+ Wed, 27 May 2020 11:03:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200527141435.1716510-1-arnd@arndb.de>
+In-Reply-To: <20200527141435.1716510-1-arnd@arndb.de>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 27 May 2020 11:03:24 -0700
+Message-ID: <CAKwvOdnNxj-MdKj3aWoefF2W9PPG-TSeNU4Ym-N8NODJB5Yw_w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: fix clang integrated assembler build
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Bill Wendling <morbo@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Fangrui Song <maskray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make process_attr() respect -F-ip, noting also that the condition in
-process_attr() (callchain_param.record_mode != CALLCHAIN_NONE) is always
-true so test the sample type directly.
+On Wed, May 27, 2020 at 7:14 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> clang and gas seem to interpret the symbols in memmove.S and
+> memset.S differently, such that clang does not make them
+> 'weak' as expected, which leads to a linker error, with both
+> ld.bfd and ld.lld:
+>
+> ld.lld: error: duplicate symbol: memmove
+> >>> defined at common.c
+> >>>            kasan/common.o:(memmove) in archive mm/built-in.a
+> >>> defined at memmove.o:(__memmove) in archive arch/arm64/lib/lib.a
+>
+> ld.lld: error: duplicate symbol: memset
+> >>> defined at common.c
+> >>>            kasan/common.o:(memset) in archive mm/built-in.a
+> >>> defined at memset.o:(__memset) in archive arch/arm64/lib/lib.a
+>
+> Copy the exact way these are written in memcpy_64.S, which does
+> not have the same problem.
+>
+> I don't know why this makes a difference, and it would be good
+> to have someone with a better understanding of assembler internals
+> review it.
+>
+> It might be either a bug in the kernel or a bug in the assembler,
+> no idea which one. My patch makes it work with all versions of
+> clang and gcc, which is probably helpful even if it's a workaround
+> for a clang bug.
 
-Example:
++ Bill, Fangrui, Jian
+I think we saw this bug or a very similar bug internally around the
+ordering of .weak to .global.
 
-  Before:
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> ---
+>  arch/arm64/lib/memcpy.S  | 3 +--
+>  arch/arm64/lib/memmove.S | 3 +--
+>  arch/arm64/lib/memset.S  | 3 +--
+>  3 files changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/lib/memcpy.S b/arch/arm64/lib/memcpy.S
+> index e0bf83d556f2..dc8d2a216a6e 100644
+> --- a/arch/arm64/lib/memcpy.S
+> +++ b/arch/arm64/lib/memcpy.S
+> @@ -56,9 +56,8 @@
+>         stp \reg1, \reg2, [\ptr], \val
+>         .endm
+>
+> -       .weak memcpy
+>  SYM_FUNC_START_ALIAS(__memcpy)
+> -SYM_FUNC_START_PI(memcpy)
+> +SYM_FUNC_START_WEAK_PI(memcpy)
+>  #include "copy_template.S"
+>         ret
+>  SYM_FUNC_END_PI(memcpy)
+> diff --git a/arch/arm64/lib/memmove.S b/arch/arm64/lib/memmove.S
+> index 02cda2e33bde..1035dce4bdaf 100644
+> --- a/arch/arm64/lib/memmove.S
+> +++ b/arch/arm64/lib/memmove.S
+> @@ -45,9 +45,8 @@ C_h   .req    x12
+>  D_l    .req    x13
+>  D_h    .req    x14
+>
+> -       .weak memmove
+>  SYM_FUNC_START_ALIAS(__memmove)
+> -SYM_FUNC_START_PI(memmove)
+> +SYM_FUNC_START_WEAK_PI(memmove)
+>         cmp     dstin, src
+>         b.lo    __memcpy
+>         add     tmp1, src, count
+> diff --git a/arch/arm64/lib/memset.S b/arch/arm64/lib/memset.S
+> index 77c3c7ba0084..a9c1c9a01ea9 100644
+> --- a/arch/arm64/lib/memset.S
+> +++ b/arch/arm64/lib/memset.S
+> @@ -42,9 +42,8 @@ dst           .req    x8
+>  tmp3w          .req    w9
+>  tmp3           .req    x9
+>
+> -       .weak memset
+>  SYM_FUNC_START_ALIAS(__memset)
+> -SYM_FUNC_START_PI(memset)
+> +SYM_FUNC_START_WEAK_PI(memset)
+>         mov     dst, dstin      /* Preserve return value.  */
+>         and     A_lw, val, #255
+>         orr     A_lw, A_lw, A_lw, lsl #8
+> --
+> 2.26.2
 
-    $ perf record -e intel_pt//u uname
-    Linux
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.033 MB perf.data ]
-    $ perf script --call-trace | head -5
-           uname 30992 [006] 41758.313696574:  cbr: 42 freq: 4219 MHz (156%)                    0 [unknown] ([unknown]                                         )
-           uname 30992 [006] 41758.313696907: _start                               7f71792c4100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )
-           uname 30992 [006] 41758.313699574:     _dl_start                        7f71792c4103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )
-           uname 30992 [006] 41758.313699907:     _dl_start                        7f71792c4e18 _dl_start+0x28 (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )
-           uname 30992 [006] 41758.313701574:     _dl_start                        7f71792c5128 _dl_start+0x338 (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )
-
-  After:
-
-    $ perf script --call-trace | head -5
-           uname 30992 [006] 41758.313696574:  cbr: 42 freq: 4219 MHz (156%)
-           uname 30992 [006] 41758.313696907: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
-           uname 30992 [006] 41758.313699574: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 30992 [006] 41758.313699907: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-           uname 30992 [006] 41758.313701574: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: f288e8e1aa4f ("perf script: Enable IP fields for callchains")
----
- tools/perf/builtin-script.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 5bdd1a393399..3249ead2deef 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -167,6 +167,7 @@ static struct {
- 	u64 fields;
- 	u64 invalid_fields;
- 	u64 user_set_fields;
-+	u64 user_unset_fields;
- } output[OUTPUT_TYPE_MAX] = {
- 
- 	[PERF_TYPE_HARDWARE] = {
-@@ -2132,10 +2133,18 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 	sample_type = perf_evlist__combined_sample_type(evlist);
- 	callchain_param_setup(sample_type);
- 
--	/* Enable fields for callchain entries, if it got enabled. */
--	if (callchain_param.record_mode != CALLCHAIN_NONE) {
--		output[output_type(evsel->core.attr.type)].fields |= PERF_OUTPUT_IP |
--								     PERF_OUTPUT_SYM;
-+	/* Enable fields for callchain entries */
-+	if (symbol_conf.use_callchain &&
-+	    (sample_type & PERF_SAMPLE_CALLCHAIN ||
-+	     sample_type & PERF_SAMPLE_BRANCH_STACK ||
-+	     (sample_type & PERF_SAMPLE_REGS_USER &&
-+	      sample_type & PERF_SAMPLE_STACK_USER))) {
-+		int type = output_type(evsel->core.attr.type);
-+
-+		if (!(output[type].user_unset_fields & PERF_OUTPUT_IP))
-+			output[type].fields |= PERF_OUTPUT_IP;
-+		if (!(output[type].user_unset_fields & PERF_OUTPUT_SYM))
-+			output[type].fields |= PERF_OUTPUT_SYM;
- 	}
- 	set_print_ip_opts(&evsel->core.attr);
- 	return 0;
-@@ -2704,9 +2713,11 @@ static int parse_output_fields(const struct option *opt __maybe_unused,
- 					if (change == REMOVE) {
- 						output[j].fields &= ~all_output_options[i].field;
- 						output[j].user_set_fields &= ~all_output_options[i].field;
-+						output[j].user_unset_fields |= all_output_options[i].field;
- 					} else {
- 						output[j].fields |= all_output_options[i].field;
- 						output[j].user_set_fields |= all_output_options[i].field;
-+						output[j].user_unset_fields &= ~all_output_options[i].field;
- 					}
- 					output[j].user_set = true;
- 					output[j].wildcard_set = true;
 -- 
-2.17.1
-
+Thanks,
+~Nick Desaulniers
