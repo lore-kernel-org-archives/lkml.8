@@ -2,141 +2,85 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E44EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C03EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6212084C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:15:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uVCPv3Iv"
+	by mail.kernel.org (Postfix) with ESMTP id E01252084C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 09:15:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgE0JPF (ORCPT
+        id S1728029AbgE0JPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 05:15:05 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:40139 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgE0JPF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 05:15:05 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200527091503epoutp037b203c8e27f2ebc48f242027679d6562~S188gENK80411304113epoutp03d
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 09:15:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200527091503epoutp037b203c8e27f2ebc48f242027679d6562~S188gENK80411304113epoutp03d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590570903;
-        bh=Dm3JG1JFIBm92Ne8ZPoNhZSsC2dbIoAQEZ/k9FavCTg=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=uVCPv3Iv1/QfhOj13XaqxIv1jaxjgNCc3r0bNtz54cHXd/QLUN4xchO64XOZ2n/aI
-         ByTiD67uOzPy9y+Dx4SrxLZI8NnYi3dTAd/QNJQYa8qLBirCBI0jVUKZ7uz083YBBI
-         IX3PxzvvsPRBGLzhLi7yHCC1fPFmwA/0QxnInLk4=
-Received: from epcpadp1 (unknown [182.195.40.11]) by epcas1p1.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200527091502epcas1p192c155d38ef4f98613a989b482a1aad4~S188EUuYj2923029230epcas1p1c;
-        Wed, 27 May 2020 09:15:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: Re: Another approach of UFSHPB
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Avri Altman <Avri.Altman@wdc.com>,
-        Daejun Park <daejun7.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        "James E . J . Bottomley" <jejb@linux.vnet.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        Zang Leigang <zangleigang@hisilicon.com>,
-        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        MOHAMMED RAFIQ KAMAL BASHA <md.rafiq@samsung.com>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <fd8c4336-8528-19d9-b1fe-1f74baf6b483@acm.org>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01590570902533.JavaMail.epsvc@epcpadp1>
-Date:   Wed, 27 May 2020 18:11:06 +0900
-X-CMS-MailID: 20200527091106epcms2p34428c8cbcda670e0a77cf6eab36ffcb4
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200516171420epcas2p108c570904c5117c3654d71e0a2842faa
-References: <fd8c4336-8528-19d9-b1fe-1f74baf6b483@acm.org>
-        <aaf130c2-27bd-977b-55df-e97859f4c097@acm.org>
-        <835c57b9-f792-2460-c3cc-667031969d63@acm.org>
-        <1589538614-24048-1-git-send-email-avri.altman@wdc.com>
-        <d10b27f1-49ec-d092-b252-2bb8cdc4c66e@acm.org>
-        <SN6PR04MB46408050B71E3A6225D6C495FCBA0@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <231786897.01589928601376.JavaMail.epsvc@epcpadp1>
-        <231786897.01590385382061.JavaMail.epsvc@epcpadp2>
-        <6eec7c64-d4c1-c76e-5c14-7904a8792275@acm.org>
-        <SN6PR04MB46400AED930A3DC5B94AED25FCB00@SN6PR04MB4640.namprd04.prod.outlook.com>
-        <CGME20200516171420epcas2p108c570904c5117c3654d71e0a2842faa@epcms2p3>
+        Wed, 27 May 2020 05:15:24 -0400
+Received: from mga14.intel.com ([192.55.52.115]:2801 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726600AbgE0JPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 05:15:23 -0400
+IronPort-SDR: cnGDxl3jRMnYfdI4wlawiljsnVz3dHyTTFSnu/srEniJteMbPZfeLdEQpBBE45Hod0Uxx/oz8R
+ 6utRS9l7QH1Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 02:15:23 -0700
+IronPort-SDR: SF4e9Ud+NzqoSgOtLCWW0thQSwuv/BECHfAnvtDAcpsDAhHpFny/uY/6luXlxGJNppq1NgL8h+
+ UvXH7gzK4b+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,440,1583222400"; 
+   d="scan'208";a="284741187"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 27 May 2020 02:15:18 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1jds9h-009BXB-AC; Wed, 27 May 2020 12:15:21 +0300
+Date:   Wed, 27 May 2020 12:15:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 2/2] Add PWM driver for LGM
+Message-ID: <20200527091521.GH1634618@smile.fi.intel.com>
+References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+ <3c1d2343b034325dbc185ccd23a35b40a62a4e7b.1590132733.git.rahul.tanwar@linux.intel.com>
+ <20200522085613.ktb2ruw2virj337v@pengutronix.de>
+ <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3a1f1e83-2d9d-ddbf-e2e6-9c8bab87372b@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-26 Bart Van Assche wrote:
->On 2020-05-25 23:15, Avri Altman wrote:
->>> On 2020-05-24 22:40, Daejun Park wrote:
->>>> The HPB driver is close to the UFS core function, but it is not essential
->>>> for operating UFS device. With reference to this article
->>>> (https://lwn.net/Articles/645810/), we implemented extended UFS-feature
->>>> as bus model. Because the HPB driver consumes the user's main memory, it
->>> should
->>>> support bind / unbind functionality as needed. We implemented the HPB
->>> driver
->>>> can be unbind / unload on runtime.
->>>
->>> I do not agree that the bus model is the best choice for freeing cache
->>> memory if it is no longer needed. A shrinker is probably a much better
->>> choice because the callback functions in a shrinker get invoked when a
->>> system is under memory pressure. See also register_shrinker(),
->>> unregister_shrinker() and struct shrinker in include/linux/shrinker.h.
->>
->> Since this discussion is closely related to cache allocation,
->> What is your opinion about allocating the pages dynamically as the regions
->> Are being activated/deactivated, in oppose of how it is done today - 
->> Statically on init for the entire max-active-subregions?
+On Wed, May 27, 2020 at 02:28:53PM +0800, Tanwar, Rahul wrote:
+> On 22/5/2020 4:56 pm, Uwe Kleine-König wrote:
+> > On Fri, May 22, 2020 at 03:41:59PM +0800, Rahul Tanwar wrote:
 
-> Memory that is statically allocated cannot be used for any other purpose
-> (e.g. page cache) without triggering the associated shrinker. As far as
-> I know shrinkers are only triggered when (close to) out of memory. So
-> dynamically allocating memory as needed is probably a better strategy
-> than statically allocating the entire region at initialization time.
+...
 
-To improve UFS device performance using the HPB driver, 
-the number of active-subregions above a certain threshold is essential.
-If the number of active-subregions is lower than the threshold, 
-the performance improvement by using HPB will be reduced. 
-Also, due to frequent and active/inactive protocol overhead, 
-performance may be worse than when the HPB feature is not used.
+> > I'm a unhappy to have this in the PWM driver. The PWM driver is supposed
+> > to be generic and I think this belongs into a dedicated driver.
+> 
+> Well noted about all other review concerns. I will rework the driver in v2.
+> However, i am not very sure about the above point - of having a separate
+> dedicated driver for tach_work because its logic is tightly coupled with
+> this driver.
 
-Therefore, it is better to unbind/unload HPB driver than 
-to reduce the number of active subregions below the threshold. 
-We designed the HPB driver to make the UFS device work 
-even when the module is unloaded.
+Actually I agree with Uwe.
+Here is layering violation, i.e. provider and consumer in the same pot. It's
+not good from design perspective.
 
-Thanks,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Daejun
+
