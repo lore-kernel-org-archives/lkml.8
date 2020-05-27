@@ -2,205 +2,94 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD76C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0BBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D41D2088E
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 446432088E
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GTB1y7yY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="WyvaIFrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgE0Uv1 (ORCPT
+        id S1728742AbgE0Uwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:51:27 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26119 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728082AbgE0Uv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:51:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590612686; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=oQKoa8Cj84DPHKqtKgg0JYSKoT8dZrtpHgoZsTqyTeY=; b=GTB1y7yY1YgSMjqVxiqjDFnRLwWOOUIujLzoYLm7/KcHBS2uKLTjUTRbLScfPl/GAcM9p+sX
- nTfyVA3+iWG0Oy55Avf/24h0R9VKRQ3jf/EjP1oIQqN5XGLKlKzv9BNWljoW32nzP6OFe8Fq
- Et0HoLpTozOhtXBPMknDVqYwo60=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5eced2cc44a25e00524fb710 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 20:51:24
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B1019C4339C; Wed, 27 May 2020 20:51:23 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 556F4C433C6;
-        Wed, 27 May 2020 20:51:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 556F4C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Wed, 27 May 2020 14:51:19 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [Freedreno] [PATCH 5/6] drm: msm: a6xx: use dev_pm_opp_set_bw to
- set DDR bandwidth
-Message-ID: <20200527205117.GA8479@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-        dri-devel@freedesktop.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>, saravanak@google.com,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-References: <1589453659-27581-1-git-send-email-smasetty@codeaurora.org>
- <1589453659-27581-6-git-send-email-smasetty@codeaurora.org>
- <20200518142333.GA10796@jcrouse1-lnx.qualcomm.com>
- <CAF6AEGtoNwUGX-r7QytGn5hSU-VD4RJZyhcb3WdgAgAFR5BK4A@mail.gmail.com>
- <c8a514c9-5e48-b561-4b45-47cde3bdfb34@codeaurora.org>
- <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
+        Wed, 27 May 2020 16:52:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53104 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726129AbgE0Uwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:52:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=gKAXQgUdWQP/zL1P3eNew3G65B4gJ6Xt1zF4bmT1hDg=; b=WyvaIFrAsWiNdYbeeSXajmyKD6
+        6I8uuI6yBuqgB3E3YJb/fM/ogGpVN6EhTp9s1KROW2q6RwLo9hFHGFaGz8E86tphPbfvG8p5+xnMf
+        sGW6H/UMHw8y6QxnMjTQRLU/Qwgf3L6OJ4PFdtaTMogDnXyqRrvzHFcIlrmKLtm3N/6c=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1je32D-003S61-VH; Wed, 27 May 2020 22:52:21 +0200
+Date:   Wed, 27 May 2020 22:52:21 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        "sergei.shtylyov@cogentembedded.com" 
+        <sergei.shtylyov@cogentembedded.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "david@protonic.nl" <david@protonic.nl>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH net-next v3] net: phy: micrel: add phy-mode support for
+ the KSZ9031 PHY
+Message-ID: <20200527205221.GA818296@lunn.ch>
+References: <20200422072137.8517-1-o.rempel@pengutronix.de>
+ <CAMuHMdU1ZmSm_tjtWxoFNako2fzmranGVz5qqD2YRNEFRjX0Sw@mail.gmail.com>
+ <20200428154718.GA24923@lunn.ch>
+ <6791722391359fce92b39e3a21eef89495ccf156.camel@toradex.com>
+ <CAMuHMdXm7n6cE5-ZjwxU_yKSrCaZCwqc_tBA+M_Lq53hbH2-jg@mail.gmail.com>
+ <20200429092616.7ug4kdgdltxowkcs@pengutronix.de>
+ <CAMuHMdWf1f95ZcOLd=k1rd4WE98T1qh_3YsJteyDGtYm1m_Nfg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAF6AEGvOtgpHMuiw01QgRYGEBB2rp5QOdVMpkTMsi0c-QSSv1Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAMuHMdWf1f95ZcOLd=k1rd4WE98T1qh_3YsJteyDGtYm1m_Nfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:38:47AM -0700, Rob Clark wrote:
-> On Wed, May 27, 2020 at 1:47 AM Sharat Masetty <smasetty@codeaurora.org> wrote:
-> >
-> > + more folks
-> >
-> > On 5/18/2020 9:55 PM, Rob Clark wrote:
-> > > On Mon, May 18, 2020 at 7:23 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> > >> On Thu, May 14, 2020 at 04:24:18PM +0530, Sharat Masetty wrote:
-> > >>> This patches replaces the previously used static DDR vote and uses
-> > >>> dev_pm_opp_set_bw() to scale GPU->DDR bandwidth along with scaling
-> > >>> GPU frequency.
-> > >>>
-> > >>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> > >>> ---
-> > >>>   drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 6 +-----
-> > >>>   1 file changed, 1 insertion(+), 5 deletions(-)
-> > >>>
-> > >>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > >>> index 2d8124b..79433d3 100644
-> > >>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > >>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-> > >>> @@ -141,11 +141,7 @@ void a6xx_gmu_set_freq(struct msm_gpu *gpu, struct dev_pm_opp *opp)
-> > >>>
-> > >>>        gmu->freq = gmu->gpu_freqs[perf_index];
-> > >>>
-> > >>> -     /*
-> > >>> -      * Eventually we will want to scale the path vote with the frequency but
-> > >>> -      * for now leave it at max so that the performance is nominal.
-> > >>> -      */
-> > >>> -     icc_set_bw(gpu->icc_path, 0, MBps_to_icc(7216));
-> > >>> +     dev_pm_opp_set_bw(&gpu->pdev->dev, opp);
-> > >>>   }
-> > >> This adds an implicit requirement that all targets need bandwidth settings
-> > >> defined in the OPP or they won't get a bus vote at all. I would prefer that
-> > >> there be an default escape valve but if not you'll need to add
-> > >> bandwidth values for the sdm845 OPP that target doesn't regress.
-> > >>
-> > > it looks like we could maybe do something like:
-> > >
-> > >    ret = dev_pm_opp_set_bw(...);
-> > >    if (ret) {
-> > >        dev_warn_once(dev, "no bandwidth settings");
-> > >        icc_set_bw(...);
-> > >    }
-> > >
-> > > ?
-> > >
-> > > BR,
-> > > -R
-> >
-> > There is a bit of an issue here - Looks like its not possible to two icc
-> > handles to the same path.  Its causing double enumeration of the paths
-> > in the icc core and messing up path votes. With [1] Since opp/core
-> > already gets a handle to the icc path as part of table add,  drm/msm
-> > could do either
-> >
-> > a) Conditionally enumerate gpu->icc_path handle only when pm/opp core
-> > has not got the icc path handle. I could use something like [2] to
-> > determine if should initialize gpu->icc_path*
-> >
-> > b) Add peak-opp-configs in 845 dt and mandate all future versions to use
-> > this bindings. With this, I can remove gpu->icc_path from msm/drm
-> > completely and only rely on opp/core for bw voting.
-> 
-> The main thing is that we want to make sure newer dtb always works on
-> an older kernel without regression.. but, hmm..  I guess the
-> interconnects/interconnects-names properties haven't landed yet in
-> sdm845.dtsi?  Maybe that lets us go with the simpler approach (b).
-> Looks like we haven't wired up interconnect for 8916 or 8996 either,
-> so probably we can just mandate this for all of them?
-> 
-> If we have landed the interconnect dts hookup for gpu somewhere that
-> I'm overlooking, I guess we would have to go with (a) and keep the
-> existing interconnects/interconnects-names properties.
+> You may wonder what's the difference between 3 and 4? It's not just the
+> PHY driver that looks at phy-mode!
+> drivers/net/ethernet/renesas/ravb_main.c:ravb_set_delay_mode() also
+> does, and configures an additional TX clock delay of 1.8 ns if TXID is
+> enabled.
 
-The main problem is that (on sdm845 at least) the path comes up with a very slow
-default so even if we don't do scaling we had to set _something_.  Perhaps if we
-solved that problem somewhere else (inerconnect, rpmh?) then we wouldn't need to
-worry about it in the leaf driver unless the full opp tables are described.
+Hi Geert
 
-Jordan
+That sounds like a MAC bug. Either the MAC insert the delay, or the
+PHY does. If the MAC decides it is going to insert the delay, it
+should be masking what it passes to phylib so that the PHY does not
+add a second delay.
 
-> BR,
-> -R
-> 
-> > [1] - https://lore.kernel.org/patchwork/cover/1240687/
-> >
-> > [2] - https://patchwork.kernel.org/patch/11527573/
-> >
-> > Let me know your thoughts
-> >
-> > Sharat
-> >
-> > >
-> > >> Jordan
-> > >>
-> > >>>   unsigned long a6xx_gmu_get_freq(struct msm_gpu *gpu)
-> > >>> --
-> > >>> 2.7.4
-> > >>>
-> > >> --
-> > >> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> > >> a Linux Foundation Collaborative Project
-> > >> _______________________________________________
-> > >> Freedreno mailing list
-> > >> Freedreno@lists.freedesktop.org
-> > >> https://lists.freedesktop.org/mailman/listinfo/freedreno
+This whole area of RGMII delays has a number of historical bugs, which
+often counter act each other. So you fix one, and it break somewhere
+else.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+In this case, not allowing skews for plain RGMII is probably being too
+strict. We probably should relax that constrain in this case, for this
+PHY driver.
+
+    Andrew
