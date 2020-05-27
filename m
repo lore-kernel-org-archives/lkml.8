@@ -2,143 +2,103 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E32C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8444CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C8F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EOZNcbLX"
+	by mail.kernel.org (Postfix) with ESMTP id 6075C206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590578938;
+	bh=9f/lRzafJFrJXPhrHpqb1P487oTDycX7ANTY/3w2low=;
+	h=In-Reply-To:References:From:Date:Subject:To:Cc:List-ID:From;
+	b=LooaggGUnyUpk7PzbqcqBHx4q+kexdiyGNqrBc84vtPfGc09HVkbfXW+lYF/7ALP9
+	 SI/4nmim3vw2u6yzZ7F+B6iX/CWxudZ5dT54VB0QViJEPhPQjdqGBV8VypbYdPJIC8
+	 U/aXHOboTy+hrrsDNMtJW4K1Wnls7uTjLqLMRXJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbgE0L2f (ORCPT
+        id S1730050AbgE0L25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728568AbgE0L2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:28:35 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028F9C061A0F;
-        Wed, 27 May 2020 04:28:35 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id k19so19981044edv.9;
-        Wed, 27 May 2020 04:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cUS3+FHzxdOJYBvppLYv/k7Qnu4FBiAFM6a3qwD7zwE=;
-        b=EOZNcbLX4WgtgegWPrbd31D1EDL1EwaAPdS/8W+FukopOQKazQsRHeVSMbBY0lh8Sp
-         55WI9/eWKvjGONoI96NM4gz4SLe6yxjSXzBDMdI6TaaNquols/wODObgUqHchYP2ykNh
-         Mt/50OjTxCzIUxPDhnaK19aG2LsNmXZt0jxj3p7Wcdi2E4AsjFkwtQ8+veswFbOkZgsP
-         3SaH38NQKvl5Gzh/5TwsrOpd+sU6phvrZa8McqrqjC9vKkcg2lucAgjAQ3BXzs+8Fn0Q
-         G/LH5EgJpE661+jvyfKfUKPd3i8M5b3ZgjJbFwucRPnQ0qxTaozdh6XRhry6D/Do/MWZ
-         76kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cUS3+FHzxdOJYBvppLYv/k7Qnu4FBiAFM6a3qwD7zwE=;
-        b=YpwFRom3o8uC3cd2t8KGy70SC6AOqnDEH7bZrtmdKlgcXI3uG0MKL+SiyD9D0sOzx/
-         vVWEj/AD10kaUoQI9gm5yj5pmQz4nSxfyQmh+rY57x3PU81ezQOtmJzHzDDyIcRnmNO9
-         eDIjSAif/UaBVj9LAw1/NhPe8hRKXK9Nlyo2rblbFVjFTAXMOZkHYp6wfrYHHpNXHWf1
-         Z2B5p6nbQay+LXwyj6mPs2KCZ+zMyiK2uwdwDwcA3AfW/zIo0BegRX1bA4LSAizY9hWT
-         wwjBR9nUiBqBzha8/9ENgzEhMqLh2MQExwJ/jLX12mHDgKcYyzGn7uJOToddLZfMVkQg
-         PaAg==
-X-Gm-Message-State: AOAM531BhXejA9ALuzAo4bcgzRYnFUQU36t5RSHpJXUdIUas13ytV2bo
-        R2+z4DyeA0aUcX21cwD5kjJc8Yj2rG6r1UGGn0w=
-X-Google-Smtp-Source: ABdhPJwApfQ8QYyu3sVC9yXDreluemdyvMzOiEEd71HoZVJi+WtLnVwAzYnI3LiLJWzGu11AWxzRM6Aa182jB7eHhGQ=
-X-Received: by 2002:a50:f983:: with SMTP id q3mr908282edn.259.1590578913571;
- Wed, 27 May 2020 04:28:33 -0700 (PDT)
+        Wed, 27 May 2020 07:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60266 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbgE0L25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:28:57 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80A27208C3;
+        Wed, 27 May 2020 11:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590578936;
+        bh=9f/lRzafJFrJXPhrHpqb1P487oTDycX7ANTY/3w2low=;
+        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
+        b=ZaN7XVSQ4RPZG0KbPIpeSN7Voo/9jycJMTHX6d9WR/iviuDdPQPGH1OyWXYQT792d
+         7aVYgRM7VtT6CDfUnIiCQDp2pYBrui++m6tCg3gkhfCv5Kv9ddxwYhzxptoWre91tt
+         nAp/cmgfRdHu5B8Azsxql6o3LKJjdnzWKVPT4xqY=
+Received: by mail-oo1-f42.google.com with SMTP id a83so4907403oob.9;
+        Wed, 27 May 2020 04:28:56 -0700 (PDT)
+X-Gm-Message-State: AOAM530dvrMVbD3PViuQ5YOy+8Bb4zvabJV8/NElnX15K7Gfn7bJgP9F
+        g4L5296ySwQER8bb6sGK2mDvb+xIdWfDB2xXibU=
+X-Google-Smtp-Source: ABdhPJxL4QyLSRiXgww4FQ3grAmkFtEQXMWXQUZG/8ZuPKRGO2M5716GycRTSDB51t/qlLqcd0i19z0MUC2gLIEpwQM=
+X-Received: by 2002:a05:6820:28a:: with SMTP id q10mr2723842ood.79.1590578935739;
+ Wed, 27 May 2020 04:28:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANpvso4V67SBKn9+SXc+H=r-H-up+GWt77K4jH5HJx9k+sR+hA@mail.gmail.com>
- <CACXcFmkYtSeRMNTr=NXGK06MUyEnvaFqe_9Q11kWZq=f1ZdE_A@mail.gmail.com>
-In-Reply-To: <CACXcFmkYtSeRMNTr=NXGK06MUyEnvaFqe_9Q11kWZq=f1ZdE_A@mail.gmail.com>
-From:   Eric Curtin <ericcurtin17@gmail.com>
-Date:   Wed, 27 May 2020 12:28:21 +0100
-Message-ID: <CANpvso5xjawMVcRff-qbTeoPLkvyNNYCqdCuZYVEOYv-zsycQw@mail.gmail.com>
-Subject: Re: Looking for an open-source thesis idea
-To:     Sandy Harris <sandyinchina@gmail.com>
-Cc:     Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
+Received: by 2002:ac9:1d8:0:0:0:0:0 with HTTP; Wed, 27 May 2020 04:28:54 -0700 (PDT)
+In-Reply-To: <d0d2e4b3-436e-3bad-770c-21c9cbddf80e@gmail.com>
+References: <20200525115052.19243-1-kohada.t2@gmail.com> <CGME20200525115121epcas1p2843be2c4af35d5d7e176c68af95052f8@epcas1p2.samsung.com>
+ <20200525115052.19243-4-kohada.t2@gmail.com> <00d301d6332f$d4a52300$7def6900$@samsung.com>
+ <d0d2e4b3-436e-3bad-770c-21c9cbddf80e@gmail.com>
+From:   Namjae Jeon <linkinjeon@kernel.org>
+Date:   Wed, 27 May 2020 20:28:54 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
+Message-ID: <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
+Subject: Re: [PATCH 4/4] exfat: standardize checksum calculation
+To:     Tetsuhiro Kohada <kohada.t2@gmail.com>
+Cc:     Namjae Jeon <namjae.jeon@samsung.com>,
+        kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sandy,
-
-I actually have worked quite a bit with IPsec, it's not a protocol I'm
-a huge fan of, it's use of multiple ports make it difficult to work
-with middleboxs (be it load-balancers, TLS interceptors, reverse
-proxies, proxies, firewalls, routers, switches, etc.). I've even seen
-issues where some middleboxes only recognize TCP/UDP packets and not
-ESP packets. There's so many implementations of IPsec with various
-routers OS's and the standard seems to be only sort of universally
-accepted. It can be difficult to deploy.
-
-Although Wireshark does solve at many of these problems, it's simpler
-at least, as regards VPNs I really like it. I'm actually more a fan of
-protocols that applications have a little more control over like QUIC
-over UDP or TLS over TCP.
-
-I actually use HTTPS Everywhere plugin, but at the end of the day,
-that simply just turns on TLS encryption if it's available right?
-
-I like some of the problems QUIC solves, the multiple handshake
-problem decreasing overall round trips, and just that it's more
-modern. openssl is brilliant, but there's a lot of deadwood, older
-encryption techniques in that codebase.
-
-A monolithic secure TCP protocol seems like a nice idea, but maybe it
-is too difficult.
-
-I think it's a nice idea to explore OOM killer and compare it to the
-solutions on various other OS's (FreeBSD, AIX, z/OS, Solaris, HP-UX,
-macOS, iOS, Windows, Zircon, etc. and the OS I work on Powermax).
-Thanks for that.
-
-Any other ideas, keep them coming :)
-
-On Tue, 26 May 2020 at 08:18, Sandy Harris <sandyinchina@gmail.com> wrote:
+2020-05-27 16:39 GMT+09:00, Tetsuhiro Kohada <kohada.t2@gmail.com>:
+> Thank you for your comment.
 >
-> Eric Curtin <ericcurtin17@gmail.com> wrote:
+>> I can not apply this patch to exfat dev tree. Could you please check it ?
+>> patching file fs/exfat/dir.c
+>> Hunk #1 succeeded at 491 (offset -5 lines).
+>> Hunk #2 succeeded at 500 (offset -5 lines).
+>> Hunk #3 succeeded at 508 (offset -5 lines).
+>> Hunk #4 FAILED at 600.
+>> Hunk #5 succeeded at 1000 (offset -47 lines).
+>> 1 out of 5 hunks FAILED -- saving rejects to file fs/exfat/dir.c.rej
+>> patching file fs/exfat/exfat_fs.h
+>> Hunk #1 succeeded at 137 (offset -2 lines).
+>> Hunk #2 succeeded at 512 (offset -3 lines).
+>> patching file fs/exfat/misc.c
+>> patching file fs/exfat/nls.c
 >
-> > Hope I'm not bothering you. I'm looking for a masters thesis idea, ...
+> II tried applying patch to dev-tree (4c4dbb6ad8e8).
+> -The .patch file I sent
+> -mbox file downloaded from archive
+> But I can't reproduce the error. (Both succeed)
+> How do you reproduce the error?
+I tried to appy your patches in the following order.
+1. [PATCH] exfat: optimize dir-cache
+2. [PATCH 1/4] exfat: redefine PBR as boot_sector
+3. [PATCH 2/4] exfat: separate the boot sector analysis
+4. [PATCH 3/4] exfat: add boot region verification
+5. [PATCH 4/4] exfat: standardize checksum calculation
+
+Thanks!
 >
-> > I'm really liking this
-> > new QUIC (UDP) protocol as an alternative to TCP over TLS. And with
-> > the growth of new modern secure protocols like Wireguard. I was
-> > wondering, would it be an idea to do a monolithic secure TCP protocol
-> > (as an alternative to TCP over TLS) as a small thesis project or is it
-> > as hard as the guys at Google make is sound?
-> >
-> > "Because TCP is implemented in operating system kernels, and middlebox
-> > firmware, making significant changes to TCP is next to impossible."
+> BR
 >
-> I'm inclined to agree with the Google folk on that. However, what about
-> IPsec? That was designed to secure anything-over-IP so it should be
-> a more general solution. The FreeS/WAN project added opportunistic
-> encryption for wider availability
-> https://freeswan.org/freeswan_trees/freeswan-2.06/doc/intro.html#goals
->
-> Today some opportunistic encryption protocols -- SMTP-over-TLS and
-> HTTPS Everywhere -- are quite widespread but my impression is
-> that opportunistic IPsec is not. Would adding it to an open source
-> router be a thesis-sized project? Or, since routers likely have IPsec
-> already, just making it easier to deploy?
->
-> > I'm open to any other suggestions also for my thesis :)
->
-> Linux's OOM killer strikes me as a spectacularly ugly kluge,
-> but people who are certainly more knowledgeable and likely
-> more competent seem to think it is necessary. Is there a
-> thesis in examining it, looking at how other Unix-like systems
-> handle the problem & perhaps implementing an alternative
-> for Linux?
