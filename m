@@ -2,151 +2,104 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C456FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B417C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0ABC2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQ039xQ6"
+	by mail.kernel.org (Postfix) with ESMTP id 04D07207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388809AbgE0Ntv (ORCPT
+        id S2388818AbgE0Nt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388800AbgE0Ntu (ORCPT
+        Wed, 27 May 2020 09:49:58 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:51029 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388607AbgE0Nt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:49:50 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4323C08C5C1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:49:49 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id l21so28209530eji.4
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 06:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=++foOLm8XCp/vzZg1vNHQX18MozqLm2xHnvVgSzZ15k=;
-        b=ZQ039xQ6Ytn70l5fJFrT9eGp4ft8CCo2lngDIHXIc1pvVceMXDKpE8p7RkRDFWzjlq
-         xEdHqHqScBluUCFxRuBw/LIscKvogY4mPssJ4CdzX7ABdVu+iRxDKGPujNbPilVdbfjy
-         9BSBIyFrLVZ3kNfrXTRdpTqph2pqBUPfEX1suptbNWbHNZDvkgAGiw9y5YBNuyulO70H
-         yQokCKUt/gam3wK7H2Cr3RZ6m9jKgj8BKvHzmeBgLOm0Jz1godHXh2xq6sdyH7ELqHsn
-         m7OQlmRM3k5lQvh/fnk2fwYCFs1jZ/uYVOpWTHP8BblXR3v1Ht2n2Sy535b3mX0eMKVY
-         S4FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=++foOLm8XCp/vzZg1vNHQX18MozqLm2xHnvVgSzZ15k=;
-        b=P0f70/hih6c9KaXLKBYSyZvPmFYiC2en1+gvbOTx5SNGC5xnjbITOkOiJdhjznAspu
-         IQT0NYTzkZ63Q4eO6ALr5BD2y2KradrRBwkojVC33HurAlSWccbPeB1UnF96fiyva6Uv
-         VNwWRnryWbImdAGSAMlEAUpBvXw6KYJ7UWIGGM+nw/DxeMabgOtr8sCXtLaMQQjSnPpd
-         yqSgCKLbNTv4vEZ8wpxA4X/lHD7ezvxfsVQ0JmQW5FLU2sHOU3h16/FKUpIS759mymFD
-         5u8sLldxddy/zhf7HFRI3IoXQrhK2ZRY02QshOZa8A7IeSsNXuULf0sPD8A9s8xwGHK+
-         FDXg==
-X-Gm-Message-State: AOAM530IZLkqZkNkwwPoflu9E+0p0qXu1lcU9/UtUJYWzEYV+kHab6Ct
-        7c5HR5vVamLlAxwgYxsYZfYwmg==
-X-Google-Smtp-Source: ABdhPJwbNxhh5un0+914l8MgigNqf2Xve3x7buMO4RSJFwdLmnL1CjIbVHZfCJQ1D0Z8lULmY+x1hg==
-X-Received: by 2002:a17:906:2b14:: with SMTP id a20mr6598593ejg.387.1590587388384;
-        Wed, 27 May 2020 06:49:48 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id nj6sm2889467ejb.99.2020.05.27.06.49.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 May 2020 06:49:47 -0700 (PDT)
-Subject: Re: [PATCH v5 0/3] interconnect: Support Samsung Exynos use-case
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     a.swigon@samsung.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        krzk@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-References: <CGME20200521122848eucas1p27ce74486ea2044cb0b942b2619426e21@eucas1p2.samsung.com>
- <20200521122841.8867-1-s.nawrocki@samsung.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <edf16797-4c1d-5b92-fbe2-28557c2fcdf0@linaro.org>
-Date:   Wed, 27 May 2020 16:49:44 +0300
+        Wed, 27 May 2020 09:49:57 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MeToK-1j3mD13omq-00aStF; Wed, 27 May 2020 15:49:47 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nathan Huckleberry <nhuck15@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: pass -msoft-float to gcc earlier
+Date:   Wed, 27 May 2020 15:49:34 +0200
+Message-Id: <20200527134946.1034391-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200521122841.8867-1-s.nawrocki@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:G5fO0GvXqQ7URCOK275565svfOfjD5zjWbghoAyYqsXD61NGPPV
+ K3P+UcFTh2o/d8MI/VsrOcbfFksMEw7u1v2KFJI6nP+xf/v/qOU6RVa+Pu5ZZg2ZtebjVaW
+ tsb2V6RQplKSQTiTvuvi5WkDqZy6qzEGPwloEkwqKHfbICW6mNJObm/mwqBT1AGpuNNM43i
+ vEz1YQwWcfzoziXlzOepQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:F/gBf8yOHW8=:5cuOcmDhdtzCJCm0zoNZgt
+ ZtF8+oGlZwNWTXQJqiHCMjNXmEsfdwmft9cA4rbnXJs9aM7km6WYRsyc6oz9js5S1d3sh/aye
+ xnogOzfSLlw+BYYo/c4AzbyxQgxv4OKSMa+RisnP8LfBCwUO980XTUQV5zRKqWw8IZn+FMPmB
+ WtZhDlM9utEQyHFrPLej3hA/59gBS9ly0J0hXKZJRAvsykz8CzxVdtB639NywEP24FtN7cth6
+ bWHBzJeTfzu/4dB6UWULId8FwI0XShfSfurO6JXs7gLBUJMruxzK9t8Y7WnCWnJY5e6q+GtOv
+ +Mv0p6hs0+HsDU1jJRyQXtAbdAWJ92FMIaBptBuDogpASSMz2MwT2XeL6XXFAwJ+ndY/WBfbz
+ SP3HS5MpUbA06oumhVdpuZR2WY8I3DxrmL5XYz9SXyJrr9PnEvcyrUwVjyK9dYSVvQhiLKfi1
+ szwpcnObSPKcbdjQkxZSQ6WNJ73zQxmBtiqUjSZoy3FAxEvaGu23bH6+gRn2oFkkd0/M5R7UC
+ Gs8rPkNeFdnDTpOeJOUXlD4t/AbqNafO0auZuWwnmvA9dRBiJfVj/Y63/XIkstvjBbTWx9GjG
+ aUoPZpu+wffPiTB/0WCY3K4EQn5S0XwRXYYKHfypFtctx52XbI9G2utzxW4henz2dE4/gvxFa
+ +3ZNgLhUBk1iDMWpzcERcAgRiGTX+Uxwk9yimIb1V6k4SUnoH6rKXG91EPLsNHPr54fMeJvF5
+ 3lu5tOCJzhS33qiU2PAupR2XFh93FPWVYvs55jwY0OiFTlqbH9DoBINICzuivzM3NVBPRryvJ
+ KywP/UlNgPerwZHcHme3CXB1FxX6+wGwHYyoiXy3Lac0wX7lfM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
+Szabolcs Nagy ran into a kernel build failure with a custom gcc
+toochain that sets -mfpu=auto -mfloat-abi-hard:
 
-Thank you for re-sending these!
+ /tmp/ccmNdcdf.s:1898: Error: selected processor does not support `cpsid i' in ARM mode
 
-On 5/21/20 15:28, Sylwester Nawrocki wrote:
-> Hi All,
-> 
-> This is a continuation of Artur's efforts to add interconnect and PM QoS
-> support for Exynos SoCs. Previous version of the patch set can be found 
-> at [1]. The only change comparing to v4 is an addition of missing 'static
-> inline' qualifier to the of_icc_get_from_provider() function stub, i.e.
-> addresing Georgi's review comments.
-> 
-> The patches have been tested on Odroid U3 (Exynos4412 SoC). 
-> 
-> Below is detailed description of the patch set as in v3.
-> 
->                               ---------
-> Previously posted as a part of a larger RFC [2].
+The problem is that $(call cc-option, -march=armv7-a) fails before the
+kernel overrides the gcc options to also pass -msoft-float.
 
-The patches look good to me and i am planning to apply them for v5.9,
-but what happened to the devfreq patches, which will make use of this?
-Are they posted separately?
+Move the option to the beginning the Makefile, before we call
+cc-option for the first time.
 
-Thanks,
-Georgi
+Reported-by: Szabolcs Nagy <szabolcs.nagy@arm.com>
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=87302
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index fcd40c5bfd94..9804f8f61e67 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -16,6 +16,8 @@ LDFLAGS_vmlinux	+= --be8
+ KBUILD_LDFLAGS_MODULE	+= --be8
+ endif
+ 
++KBUILD_CFLAGS	+= -msoft-float
++
+ ifeq ($(CONFIG_CPU_32v4),y)
+ LDFLAGS_vmlinux	+= $(call ld-option,--fix-v4bx)
+ LDFLAGS_MODULE	+= $(call ld-option,--fix-v4bx)
+@@ -138,7 +140,7 @@ AFLAGS_ISA	:=$(CFLAGS_ISA)
+ endif
+ 
+ # Need -Uarm for gcc < 3.x
+-KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
++KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -Uarm
+ KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) $(arch-y) $(tune-y) -include asm/unified.h -msoft-float
+ 
+ CHECKFLAGS	+= -D__arm__
+-- 
+2.26.2
+
