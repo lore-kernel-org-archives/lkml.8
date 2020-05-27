@@ -2,92 +2,125 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE7D207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:05:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="K5syjY4r"
+	by mail.kernel.org (Postfix) with ESMTP id 47A812078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725988AbgE0WFg (ORCPT
+        id S1726086AbgE0WFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:05:36 -0400
-Received: from ozlabs.org ([203.11.71.1]:37467 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725385AbgE0WFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:05:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XPz22JMmz9sRK;
-        Thu, 28 May 2020 08:05:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590617134;
-        bh=uYG7+cfkkwolCgny1+9NJ7oeNNpp6APuRn0IP0IwlBo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=K5syjY4rkKjJumeJk/aguu7lBGUMooPc7C4tDocUXOhuRVcZpaj5PbToSGM4GPGeF
-         i7YM1uaRb28j3HbeIz2gKo6MVcMbUJ40pRh1e12Do3nUry7L8LPdfHqE7HulL0RfxT
-         SyIuY+HjhQDgZf1Nr5W/DXCFEXGGoUobGIQLzJDcIASZzOo/10ChHdZ2H3e2Jr3uVU
-         nB9tPU/jP1Q3mqTN2DIh8Ag5SYgW32rQ8xyU6vbBNMvVJBEXQle6sDsqyF23l+1i9Q
-         D1DCaz8T4CEQxL9zNxVGfuaHi/ChhFNyoOj96I4pUzXqoKrcf6Nhl8B6blOzirOa6f
-         m3bvN0z+QfSdQ==
-Date:   Thu, 28 May 2020 08:05:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commits in the coresight tree
-Message-ID: <20200528080533.5ac7b842@canb.auug.org.au>
+        Wed, 27 May 2020 18:05:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50646 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgE0WFh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 18:05:37 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1je4B3-0000kh-Tm; Wed, 27 May 2020 22:05:34 +0000
+Date:   Thu, 28 May 2020 00:05:32 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200527220532.jplypougn3qzwrms@wittgenstein>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+ <202005271408.58F806514@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LNivBGByuM+qcomZGjmW2AZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202005271408.58F806514@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LNivBGByuM+qcomZGjmW2AZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 27, 2020 at 02:43:49PM -0700, Kees Cook wrote:
+> On Wed, May 27, 2020 at 01:19:01PM +0200, Christian Brauner wrote:
+> > loop. But this is problematic since we don't get a notification when the
+> > seccomp filter has become unused and so we currently never remove the
+> > seccomp notifier fd from the event loop and just keep accumulating fds
+> > in the event loop. We've had this issue for a while but it has recently
+> > become more pressing as more and larger users make use of this.
+> 
+> I had been under the (seemingly very wrong) understanding that when
+> all the tasks associated with a filter cease to exist, the notif fd is
+> effectively closed. But I see now where I got confused: this is only
+> half implemented: if the userspace end of the fd is closed, it'll get
+> cleaned up in the kernel, but we have nothing going the other direction
+> except the general object lifetime management on the filter itself.
+> 
+> So, yes, I accept the basic problem statement, "we have fds hanging
+> around that will never be used again, we need to notice that". :)
+> 
+> Why is EPOLLHUP needed? Can't the fd just get closed on the kernel end?
+> I would expect that to be visible as EPOLLHUP internally (though I
+> haven't looked through the VFS yet). And I haven't found how to
+> close/detach a anon file from the listener task. It strikes me that this
+> would actually be much cleaner: then we actually don't need the
+> additional __get_seccomp_filter() in init_listener() -- we simply
+> invalidate the file during __put_seccomp_filter().
+> 
+> (While I'm here -- why can there be only one listener per task? The
+> notifications are filter-specific, not task-specific?)
+> 
+> > To fix this, we introduce a new "live" reference counter that tracks the
+> > live tasks making use of a given filter and when a notifier is
+> > registered waiting tasks will be notified that the filter is now empty
+> > by receiving a (E)POLLHUP event.
+> > The concept in this patch introduces is the same as for signal_struct,
+> > i.e. reference counting for life-cycle management is decoupled from
+> > reference counting live taks using the object.
+> 
+> I will need convincing that life-cycle ref-counting needs to be decoupled
+> from usage ref-counting. I see what you're saying here and in the other
+> reply about where the notification is coming from (release vs put, etc),
+> but I think it'd be better if the EPOLLHUP was handled internally to the
+> VFS due to the kernel end of the file being closed.
+> 
+> > There's probably some trickery possible but the second counter is just
+> > the correct way of doing this imho and has precedence. The patch also
+> > lifts the waitqeue from struct notification into into sruct
+> > seccomp_filter. This is cleaner overall and let's us avoid having to
+> > take the notifier mutex since we neither need to read nor modify the
+> > notifier specific aspects of the seccomp filter. In the exit path I'd
+> > very much like to avoid having to take the notifier mutex for each
+> > filter in the task's filter hierarchy.
+> 
+> I guess this is a minor size/speed trade-off (every seccomp_filter
+> struct grows by 1 pointer regardless of the presence of USER_NOTIF
+> rules attached...). But I think this is an optimization detail, and I
+> need to understand why we can't just close the file on filter free.
 
-Hi all,
+The usage count is not just notify + tasks, it's also incremented when
+e.g. ptrace is inspecting the filter and everytime someone takes a
+refrence to it that is not using the filter. So "usage" never had a 1:1
+correspondence with tasks in the first place. Filter free can happen way
+after any task _used_ that filter, either because of where that filter
+free happens due to call_rcu, or because someone is mucking with the
+filter but not using it (ptrace etc. pp.). So a separate counter doesn't
+seem wrong. We also need it even if we were to do the kernel close thing
+you suggested.
 
-Commits
+The main question also is, is there precedence where the kernel just
+closes the file descriptor for userspace behind it's back? I'm not sure
+I've heard of this before. That's not how that works afaict; it's also
+not how we do pidfds. We don't just close the fd when the task
+associated with it goes away, we notify and then userspace can close.
 
-  32de512f3f4c ("dt-bindings: arm: coresight: Add optional property to repl=
-icators")
-  73fe4652e020 ("coresight: replicator: Reset replicator if context is lost=
-")
-  fa7c3883f1f2 ("dt-bindings: arm: coresight: Add support to skip trace uni=
-t power up")
-  dec0cca9cd91 ("coresight: etm4x: Add support to skip trace unit power up")
-
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LNivBGByuM+qcomZGjmW2AZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7O5C0ACgkQAVBC80lX
-0Gyv/QgAi0a61uxPssQZ6PSUShqyeMcEW1BKimUEl22xdPnd24YgwBy9kPkzi6Jw
-n3lfc6FHNNm2j/bgiKmj5E40sHYH3jvCm7RFLEeKydtx++9444vFXgllBBmKNEfc
-nME+uIOqQTooopjueqS0N7yFUC1a6Wm14Vd/GYGphc9nNSZXC7LkSfatnUOxcBgK
-OMEOBoI4nxiNaUSEcsKI01FZ+dHKzVhQ65AhYJCRpkGrRFBxVNOCM8QNtck4TMLP
-yjDJCXi64WpRKntrGtPJhEAndgaeiC8xzrD3wqxgNzqw1oMa+0E2sLriEs2MYZ0h
-npCciH7rMq8xmW9rCVin6J1kBPsbfg==
-=YTen
------END PGP SIGNATURE-----
-
---Sig_/LNivBGByuM+qcomZGjmW2AZ--
+Christian
