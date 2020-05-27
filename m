@@ -2,139 +2,122 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B01C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE1CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D23C620C56
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1C2207D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 14:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389380AbgE0OkD (ORCPT
+        id S2389388AbgE0Okj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 10:40:03 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:36292 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389179AbgE0OkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 10:40:02 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 166CC8030833;
-        Wed, 27 May 2020 14:40:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Qq9RTFftZtOP; Wed, 27 May 2020 17:39:58 +0300 (MSK)
-Date:   Wed, 27 May 2020 17:39:57 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 08/11] i2c: designware: Convert driver to using regmap
- API
-Message-ID: <20200527143957.y6fqbg2bge3qxsyi@mobilestation>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-9-Sergey.Semin@baikalelectronics.ru>
- <20200527135023.GZ1634618@smile.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200527135023.GZ1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+        Wed, 27 May 2020 10:40:39 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:42650 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389198AbgE0Oki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 10:40:38 -0400
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Ax9umae85e9bA5AA--.593S3;
+        Wed, 27 May 2020 22:39:23 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH v4 2/2] clk: Allow COMPILE_TEST for subdir hisilicon in Makefile
+Date:   Wed, 27 May 2020 22:39:22 +0800
+Message-Id: <1590590362-11570-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1590590362-11570-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf9Ax9umae85e9bA5AA--.593S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw45JFWxJw45Ww48Xr47Jwb_yoW8uF17pa
+        n5JrW7trykXF47KFZ7ArW29FyYqanaqFWqkFy8Z3WYvr98JFWFvr4Ig348tF4UWr18Gay3
+        Xa97u343CF1Yk37anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUmI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2kK
+        e7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I
+        80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
+        c4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262
+        kKe7AKxVWUAVWUtwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
+        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
+        AF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
+        IxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+        CI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+        WIevJa73UjIFyTuYvjfU8TmhDUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 04:50:23PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 03:01:08PM +0300, Serge Semin wrote:
-> > Seeing the DW I2C driver is using flags-based accessors with two
-> > conditional clauses it would be better to replace them with the regmap
-> > API IO methods and to initialize the regmap object with read/write
-> > callbacks specific to the controller registers map implementation. This
-> > will be also handy for the drivers with non-standard registers mapping
-> > (like an embedded into the Baikal-T1 System Controller DW I2C block, which
-> > glue-driver is a part of this series).
-> > 
-> > As before the driver tries to detect the mapping setup at probe stage and
-> > creates a regmap object accordingly, which will be used by the rest of the
-> > code to correctly access the controller registers. In two places it was
-> > appropriate to convert the hand-written read-modify-write and
-> > read-poll-loop design patterns to the corresponding regmap API
-> > ready-to-use methods.
-> > 
-> > Note the regmap IO methods return value is checked only at the probe
-> > stage. The rest of the code won't do this because basically we have
-> > MMIO-based regmap so non of the read/write methods can fail (this also
-> > won't be needed for the Baikal-T1-specific I2C controller).
-> 
-> Thanks! My comments below.
-> 
-> ...
-> 
-> >  #include <linux/export.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/interrupt.h>
-> > +#include <linux/regmap.h>
-> >  #include <linux/io.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> 
+If CONFIG_ARCH_HISI is not set but COMPILE_TEST is set, some files
+in the subdir hisilicon can not be built due to CONFIG_ARCH_HISI
+check in drivers/clk/Makefile.
 
-> Please, keep ordered.
+Since the related configs in drivers/clk/hisilicon/Kconfig depend
+on ARCH_HISI, so remove CONFIG_ARCH_HISI check for subdir hisilicon
+in drivers/clk/Makefile.
 
-Thanks. I'll fix the order. It must have been shifted after rebase.
-I made sure the order was ok before that.
+At the same time, we should add CONFIG_ARCH_HISI and COMPILE_TEST
+(for better compile testing coverage) check for the common files
+in drivers/clk/hisilicon/Makefile, otherwise there exists build
+failure about undefined reference.
 
-> 
-> ...
-> 
-> > +static int dw_reg_write_word(void *context, unsigned int reg, unsigned int val)
-> > +{
-> > +	struct dw_i2c_dev *dev = context;
-> > +
-> 
-> > +	writew_relaxed((u16)val, dev->base + reg);
-> > +	writew_relaxed((u16)(val >> 16), dev->base + reg + 2);
-> 
-> What does explicit casting here help to?
-> I think you may drop it.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Good question. It has been there originally. I'll remove it in the next patchset
-version.
+v2:
+  - Add CONFIG_ARCH_HISI check for the common files
+    to fix the build failure
 
-> 
-> > +	return 0;
-> >  }
-> 
-> ...
-> 
-> >  #include <linux/errno.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/interrupt.h>
-> > +#include <linux/regmap.h>
-> >  #include <linux/io.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pm_runtime.h>
-> 
-> Order?
+v3:
+  - Add CONFIG_COMPILE_TEST check for the common files
+    for better compile testing coverage
 
-Ok.
+v4:
+  - Modify the patch subject to reflect the reality
 
--Sergey
+ drivers/clk/Makefile           | 2 +-
+ drivers/clk/hisilicon/Makefile | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index f4169cc..81045ec 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -79,7 +79,7 @@ obj-y					+= bcm/
+ obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
+ obj-$(CONFIG_ARCH_DAVINCI)		+= davinci/
+ obj-$(CONFIG_H8300)			+= h8300/
+-obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
++obj-y					+= hisilicon/
+ obj-y					+= imgtec/
+ obj-y					+= imx/
+ obj-y					+= ingenic/
+diff --git a/drivers/clk/hisilicon/Makefile b/drivers/clk/hisilicon/Makefile
+index b2441b9..e58104d 100644
+--- a/drivers/clk/hisilicon/Makefile
++++ b/drivers/clk/hisilicon/Makefile
+@@ -3,7 +3,8 @@
+ # Hisilicon Clock specific Makefile
+ #
+ 
+-obj-y	+= clk.o clkgate-separated.o clkdivider-hi6220.o clk-hisi-phase.o
++obj-$(CONFIG_ARCH_HISI)		+= clk.o clkgate-separated.o clkdivider-hi6220.o clk-hisi-phase.o
++obj-$(CONFIG_COMPILE_TEST)	+= clk.o clkgate-separated.o clkdivider-hi6220.o clk-hisi-phase.o
+ 
+ obj-$(CONFIG_ARCH_HI3xxx)	+= clk-hi3620.o
+ obj-$(CONFIG_ARCH_HIP04)	+= clk-hip04.o
+-- 
+2.1.0
+
