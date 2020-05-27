@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4032C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB513C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE921208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC7C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 15:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="vLOvYNlq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yQipRvmp"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XQsou6Ec";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="YdSuNB6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgE0P4n (ORCPT
+        id S1730737AbgE0P4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 11:56:43 -0400
+        Wed, 27 May 2020 11:56:41 -0400
 Received: from new1-smtp.messagingengine.com ([66.111.4.221]:51869 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728984AbgE0Ptz (ORCPT
+        by vger.kernel.org with ESMTP id S2390186AbgE0Pt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 11:49:55 -0400
+        Wed, 27 May 2020 11:49:58 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5E5CC58203B;
-        Wed, 27 May 2020 11:49:54 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id 6C82F58203B;
+        Wed, 27 May 2020 11:49:57 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:54 -0400
+  by compute4.internal (MEProxy); Wed, 27 May 2020 11:49:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=TRM6X4G5yvAqt
-        +dJj7RIy+HHWn9k6iwxRb21u0ULa7A=; b=vLOvYNlqIOnZzt3gzwvw+h/q7oSO7
-        N3b6FCRPQNWBBWfzFjaqSlmZmA8f2rS3WNN0jNpDyCkxT960aAv//iQbZc6Y1nfn
-        4IFgHMrdj2Ji1XU3PKqOWm4JtkUQPXlVTAYE1sFbV3/f543anCjaJxD89EG9jmDD
-        GLsAMKSo5WPtGBxLnOTSIxeRRysNUBMUSYtpkTjAaqZZkMNclnmrLQdgIxx4KRBK
-        Av7MFsACa4/gNwyS1GbZvCsi7cMxfDD1/3b75vHzpZ9isEFSQH+HqaoAkB/OOT8X
-        UW2hxaJFzl1WHBMsWdhRCh7Eis7F/2WEBd8uJzUADT782SJHCt+qccHYQ==
+        :mime-version:content-transfer-encoding; s=fm2; bh=NNRyGdulB+GEV
+        VHlWzjj38fI50EeD5+L1i1sfpqi4Ew=; b=XQsou6Ec0LVf7hi+Q3BTvqjM2Ok4F
+        3qKV+k8tjBBzUjwNDd4tvICTjLwa1Z4R6W0DlNdxm7WylV9WCCBknGJQfHrRk0Ji
+        WJAdwBEa6t76sZRJkdQphBH/I0LWp12pdGi/maIxa26KBafhb7ZuxKgUQ1Oz06JA
+        II8M4P8mNz8Qmg9zgquXLEmsiWFgal0IiEiI0MjlmiXTcD7z8gEwdjSgNcoRIFWY
+        nyz9naBUOtNo8hrmaPbh0md8/HUsJOXS6ZLtRFgMBT6dztoeXnQlrS8jczP42XKr
+        MuiTI5s6R4ZNekouAWr/sunvkmTTMu/hG1h5u2N/mAoZm0zz4t1sRAZXQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=TRM6X4G5yvAqt+dJj7RIy+HHWn9k6iwxRb21u0ULa7A=; b=yQipRvmp
-        FTGI469+E50yNwt8QK0Oq7C4vx/y+b669MY0NfBurwZLQfqSTVKc/P9oyBmc+cO0
-        w1SOs2Q0z0ZFYfmz/86TZISsYT28aJu/j52vikxcQJs+SIwSiJQKxYFims8pEOO2
-        t2LvVlanUineDOL8pDru4sq+rkDUTH2kZBd677YpebWHhDF/AVBQ09kI6rnWtQ/G
-        jKzX1WUmqEJTowy/d2ILpmOF8qxN5drGMVXvseOmVvkcuiOCBhX4651C5AsvHzQd
-        JwXJal8s+ltidOTkp9//HuSvYbzevvEtQyctgYqKUIMqARGsWiMsGZuOgUteZWlM
-        4UtdF9QCIOHbbw==
-X-ME-Sender: <xms:IozOXhk5sn-x8hHuZwpHJhsyhEevtbyEhdh7IdHQ0nJY4Qefg1k0Gg>
+        fm2; bh=NNRyGdulB+GEVVHlWzjj38fI50EeD5+L1i1sfpqi4Ew=; b=YdSuNB6s
+        IVGtX3fEc0TsyhqUOmPcLs5XF9QViFRI+YETtBjb6XK1i79/9hnJhu9XLpkCjE4c
+        0QGoszNK+xNyEGw/Y88/FO5f5rMQlBXF/c5wwi7AN1keZyLFy0J2hcj7i8dp4St8
+        f+ons4XBuZ6QNiJ9lkcHOjVKRbWDFp/X/fMGab806pRlrOdwwt3WoZ2/bcYTr2vs
+        ew8W6D+x5HtOqSd83B37NaMsvNNnnxJ1xHMItkct3rTltFC9EN5aiwxsC4CdveHJ
+        +aleyrHD68D15TDGKmIq/rGUDwmHQURzZrl2JcIupX6rPJemA5yMP+T5JAwPgiuZ
+        58zymcHTpX2wiQ==
+X-ME-Sender: <xms:JYzOXvo6w6_oAuzV5ziME1pZ-ULmOWaYKlNKbck5W9tKpkUx9zCgEw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvgedgkeegucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepvdekleevfeffkeejhfffueelteelfeduieefheduudfggffhhfffheevveeh
-    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepfeenuc
+    hedvnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepjeenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:IozOXs3hMBfbD7sPUcOAUHE61jJ1KlirWg2TPm9Y3K1ElYkc1PI1vg>
-    <xmx:IozOXnqqCrH8b870EhDINuxQ421bFNkE9-K-Ch3U67q1Z7zujMpk2g>
-    <xmx:IozOXhmeDzBkwG7Rw7mArJgk9xNhh7UGdm_ikUioDyLJMPhQ5mfH2Q>
-    <xmx:IozOXkl5emjGhIWdFC54yor6rVcKPa22k5Soc0Q7svSrCdjyAUpaaQ>
+X-ME-Proxy: <xmx:JYzOXprUiq_nepVFRl_plvrR24y8jaEEFZ5PDiaW0rKkOl2d7TYAwQ>
+    <xmx:JYzOXsM5d_ql6ZJ8Xg4y0litrZSDpGljG4arHnZVAlAubjmZyDZciw>
+    <xmx:JYzOXi42UGG2eJCYN5vwUIcGKTPHqzTD2yKiJz3r-4EKg6NhTNHkDg>
+    <xmx:JYzOXla5GrBThQISpr_JAvnb5rjwaPl-Y84mnM4nO5vxQO-pkp8i-w>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F287F328005A;
-        Wed, 27 May 2020 11:49:53 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 108B5328005A;
+        Wed, 27 May 2020 11:49:56 -0400 (EDT)
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
         Eric Anholt <eric@anholt.net>
@@ -76,9 +76,9 @@ Cc:     dri-devel@lists.freedesktop.org,
         Tim Gover <tim.gover@raspberrypi.com>,
         Phil Elwell <phil@raspberrypi.com>,
         Maxime Ripard <maxime@cerno.tech>
-Subject: [PATCH v3 024/105] drm/vc4: crtc: Move crtc state to common header
-Date:   Wed, 27 May 2020 17:47:54 +0200
-Message-Id: <1e6e563f9c75961e2885c9d648a3130d3b46b6d1.1590594512.git-series.maxime@cerno.tech>
+Subject: [PATCH v3 026/105] drm/vc4: crtc: Use a shared interrupt
+Date:   Wed, 27 May 2020 17:47:56 +0200
+Message-Id: <6a2e6a4ba651d5bbdfd2c18c090525e50992e448.1590594512.git-series.maxime@cerno.tech>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
 References: <cover.aaf2100bd7da4609f8bcb8216247d4b4e4379639.1590594512.git-series.maxime@cerno.tech>
@@ -89,78 +89,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We'll need to access the crtc_state from outside of vc4_crtc.c, so let's
-move it to vc4_drv.h
+Some pixelvalves in vc5 use the same interrupt line so let's register our
+interrupt handler as a shared one.
 
 Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 ---
- drivers/gpu/drm/vc4/vc4_crtc.c | 21 ---------------------
- drivers/gpu/drm/vc4/vc4_drv.h  | 21 +++++++++++++++++++++
- 2 files changed, 21 insertions(+), 21 deletions(-)
+ drivers/gpu/drm/vc4/vc4_crtc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
-index b668bb8d060c..db056dfe14df 100644
+index a3fc7dd97446..fd248ee546e8 100644
 --- a/drivers/gpu/drm/vc4/vc4_crtc.c
 +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-@@ -44,27 +44,6 @@
- #include "vc4_drv.h"
- #include "vc4_regs.h"
+@@ -1179,7 +1179,9 @@ static int vc4_crtc_bind(struct device *dev, struct device *master, void *data)
+ 	CRTC_WRITE(PV_INTEN, 0);
+ 	CRTC_WRITE(PV_INTSTAT, PV_INT_VFP_START);
+ 	ret = devm_request_irq(dev, platform_get_irq(pdev, 0),
+-			       vc4_crtc_irq_handler, 0, "vc4 crtc", vc4_crtc);
++			       vc4_crtc_irq_handler,
++			       IRQF_SHARED,
++			       "vc4 crtc", vc4_crtc);
+ 	if (ret)
+ 		goto err_destroy_planes;
  
--struct vc4_crtc_state {
--	struct drm_crtc_state base;
--	/* Dlist area for this CRTC configuration. */
--	struct drm_mm_node mm;
--	bool feed_txp;
--	bool txp_armed;
--
--	struct {
--		unsigned int left;
--		unsigned int right;
--		unsigned int top;
--		unsigned int bottom;
--	} margins;
--};
--
--static inline struct vc4_crtc_state *
--to_vc4_crtc_state(struct drm_crtc_state *crtc_state)
--{
--	return (struct vc4_crtc_state *)crtc_state;
--}
--
- #define CRTC_WRITE(offset, val) writel(val, vc4_crtc->regs + (offset))
- #define CRTC_READ(offset) readl(vc4_crtc->regs + (offset))
- 
-diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-index 80633c488b04..329185a53a79 100644
---- a/drivers/gpu/drm/vc4/vc4_drv.h
-+++ b/drivers/gpu/drm/vc4/vc4_drv.h
-@@ -486,6 +486,27 @@ to_vc4_crtc(struct drm_crtc *crtc)
- 	return (struct vc4_crtc *)crtc;
- }
- 
-+struct vc4_crtc_state {
-+	struct drm_crtc_state base;
-+	/* Dlist area for this CRTC configuration. */
-+	struct drm_mm_node mm;
-+	bool feed_txp;
-+	bool txp_armed;
-+
-+	struct {
-+		unsigned int left;
-+		unsigned int right;
-+		unsigned int top;
-+		unsigned int bottom;
-+	} margins;
-+};
-+
-+static inline struct vc4_crtc_state *
-+to_vc4_crtc_state(struct drm_crtc_state *crtc_state)
-+{
-+	return (struct vc4_crtc_state *)crtc_state;
-+}
-+
- #define V3D_READ(offset) readl(vc4->v3d->regs + offset)
- #define V3D_WRITE(offset, val) writel(val, vc4->v3d->regs + offset)
- #define HVS_READ(offset) readl(vc4->hvs->regs + offset)
 -- 
 git-series 0.9.1
