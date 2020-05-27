@@ -2,86 +2,107 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72AEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A2DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 836AD206F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E4D207CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 02:29:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590546549;
+	bh=YhyOLQZ3lG6PhFtaaTEo8SRrhB4AT+bwZDOiVXp2vqc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=GF+7X+brNThsO3+ZqflmtLhpxUSr2L0nDr2QQP8+Zgl5yqJ7XG12j0uHCM+vDAsDg
+	 AdYsIx0lpalFZgDJU18DUEEC/g2l1t644m6TMGTAnEA+acLD5XxKcZLTlwy8OzuBU+
+	 iLc9IImN00VYnR7lpKtPy9bM6qhZCdRoKa+SaeTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgE0C1N (ORCPT
+        id S1727026AbgE0C3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 22:27:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:59518 "EHLO foss.arm.com"
+        Tue, 26 May 2020 22:29:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbgE0C1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 22:27:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB3BA30E;
-        Tue, 26 May 2020 19:27:12 -0700 (PDT)
-Received: from [10.163.76.100] (unknown [10.163.76.100])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B36143F52E;
-        Tue, 26 May 2020 19:27:10 -0700 (PDT)
-Subject: Re: [PATCH V2] arm64/cpufeature: Add get_arm64_ftr_reg_nowarn()
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-References: <1590500353-28082-1-git-send-email-anshuman.khandual@arm.com>
- <20200526150135.GI17051@gaia> <20200526194648.GA2206@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ca38b2c0-533f-9b98-46a2-37ba8bf21d83@arm.com>
-Date:   Wed, 27 May 2020 07:56:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725267AbgE0C3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 22:29:07 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7A15207CB;
+        Wed, 27 May 2020 02:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590546546;
+        bh=YhyOLQZ3lG6PhFtaaTEo8SRrhB4AT+bwZDOiVXp2vqc=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=OILEbTIyH7PRImnc2FbROX72D4Gf4CtoOUmee0Go461O+bmJHeLjNyG0s8Vvw60ws
+         9gBnlCkuY+n09H06leznxe670bYqMCXomNfWGG/jg3v9SFaYEL7DPrx82lHQhNamFD
+         7FTR0YLonQ1HLzJfbgBLUBQCXrHwlaemvg+uHGyk=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20200526194648.GA2206@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590314686-11749-4-git-send-email-sivaprak@codeaurora.org>
+References: <1590314686-11749-1-git-send-email-sivaprak@codeaurora.org> <1590314686-11749-4-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH V5 3/8] clk: qcom: Add ipq apss pll driver
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Date:   Tue, 26 May 2020 19:29:06 -0700
+Message-ID: <159054654603.88029.920557590088471867@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Sivaprakash Murugesan (2020-05-24 03:04:41)
+> diff --git a/drivers/clk/qcom/apss-ipq-pll.c b/drivers/clk/qcom/apss-ipq-=
+pll.c
+> new file mode 100644
+> index 0000000..aafdaa7
+> --- /dev/null
+> +++ b/drivers/clk/qcom/apss-ipq-pll.c
+> @@ -0,0 +1,97 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/module.h>
 
+Sort the includes above, also add clk-provider.h because this is a clk
+provider.
 
-On 05/27/2020 01:16 AM, Will Deacon wrote:
-> On Tue, May 26, 2020 at 04:01:35PM +0100, Catalin Marinas wrote:
->> On Tue, May 26, 2020 at 07:09:13PM +0530, Anshuman Khandual wrote:
->>> @@ -632,8 +654,6 @@ static void __init init_cpu_ftr_reg(u32 sys_reg, u64 new)
->>>  	const struct arm64_ftr_bits *ftrp;
->>>  	struct arm64_ftr_reg *reg = get_arm64_ftr_reg(sys_reg);
->>>  
->>> -	BUG_ON(!reg);
->>> -
->>>  	for (ftrp = reg->ftr_bits; ftrp->width; ftrp++) {
->>>  		u64 ftr_mask = arm64_ftr_mask(ftrp);
->>>  		s64 ftr_new = arm64_ftr_value(ftrp, new);
->>> @@ -762,7 +782,6 @@ static int check_update_ftr_reg(u32 sys_id, int cpu, u64 val, u64 boot)
->>>  {
->>>  	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
->>>  
->>> -	BUG_ON(!regp);
->>>  	update_cpu_ftr_reg(regp, val);
->>>  	if ((boot & regp->strict_mask) == (val & regp->strict_mask))
->>>  		return 0;
->>> @@ -776,9 +795,6 @@ static void relax_cpu_ftr_reg(u32 sys_id, int field)
->>>  	const struct arm64_ftr_bits *ftrp;
->>>  	struct arm64_ftr_reg *regp = get_arm64_ftr_reg(sys_id);
->>>  
->>> -	if (WARN_ON(!regp))
->>> -		return;
->>
->> I think Will wanted an early return in all these functions not just
->> removing the BUG_ON(). I'll let him clarify.
-> 
-> Yes, the callers need to check the pointer and return early.
+> +
+> +#include "clk-alpha-pll.h"
+> +
+> +static const u8 ipq_pll_offsets[] =3D {
+[...]
+> +
+> +static int apss_ipq_pll_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct regmap *regmap;
+> +       struct resource *res;
+> +       void __iomem *base;
+> +       int ret;
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       base =3D devm_ioremap_resource(dev, res);
 
-Sure, will do. But for check_update_ftr_reg(), a feature register search
-failure should be treated as a success (0) or a failure (1). What should
-it return ? Seems bit tricky, as there are good reasons to go either way.
+Use devm_platform_ioremap_resource()?
+
+> +       if (IS_ERR(base))
+> +               return PTR_ERR(base);
+> +
+> +       regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
+> +                                               &ipq_pll_regmap_config);
+
+Tabbing is off here. &ipq_pll_regmap_config should line up with the (
+above.
+
+> +       if (IS_ERR(regmap))
+> +               return PTR_ERR(regmap);
