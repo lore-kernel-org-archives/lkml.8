@@ -2,69 +2,135 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D741C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 063582075F
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590607835;
-	bh=yB3E8aqzW3OvKuaG42APyedRVwI1AwVLwI54ZqxWZvw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wd4OTLC2tpTDr5l9iOK7hSMDoZfyZrDdaRDXX0z0wrigd+VyRvalr64J3NpJxyr6Z
-	 GxXYAo3qxyrnMo9zCDOvTOA58G6Xf1+NB/59JYiqMXXQ8W9nDlDu9KcqcBHaMHewa2
-	 Z9ut4BDFL+0dTxHe6S86DSUa2EGY5O1ol0vi8KK4=
+	by mail.kernel.org (Postfix) with ESMTP id 88E112089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 19:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GcPehbpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbgE0Tae (ORCPT
+        id S1726596AbgE0Ta4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 15:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 15:30:56 -0400
+Received: from mout.web.de ([217.72.192.78]:49687 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725320AbgE0Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 15:30:33 -0400
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CAE320723;
-        Wed, 27 May 2020 19:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590607833;
-        bh=yB3E8aqzW3OvKuaG42APyedRVwI1AwVLwI54ZqxWZvw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RPokBkyI2Dkc0L+na1ltgQA27uvepDoIrOcyYJirgyJJRP8hwlu+ZG7XPrD9/LoK8
-         /wzB75ReeiPnHEXoLy8hiQu+DtlGR5U+HR4858RwVEBfHHmlv/gwjYhyI/vCoa1kjz
-         1FDnFPXbCtvjHZ8CvcCfVyqJT3TNUTYnsyEI6yQI=
-Date:   Wed, 27 May 2020 12:30:31 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     tanhuazhong <tanhuazhong@huawei.com>
-Cc:     David Miller <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
-Message-ID: <20200527123031.7fd4834d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
-References: <1590061105-36478-1-git-send-email-tanhuazhong@huawei.com>
-        <20200521121707.6499ca6b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200521.143726.481524442371246082.davem@davemloft.net>
-        <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
-        <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
+        id S1725320AbgE0Taz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 15:30:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590607835;
+        bh=EXR2BiKOTwaciW/Mys75uSRQDsAkHJB0uiphyQGosvY=;
+        h=X-UI-Sender-Class:Cc:Subject:From:To:Date;
+        b=GcPehbpdOkHrpBT6VXF3UDmN8KOSe8oePZm9kkiAcXPKX1OC3u4tV9yZOzG/tdFuU
+         5ZayVsoMpMMfMyBoAbtZBkOIp3EqwJTI1RZDS04xLnfENlO19Zi9r0F4u3m0CuQXIW
+         85UZyDH5LUgdleRoonKuZ8Zx3Y17Ww+XQDodWPKA=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.185.253]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MiuSs-1j7yBz2YTM-00elQk; Wed, 27
+ May 2020 21:30:35 +0200
+Cc:     linux-kernel@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH] iio: amplifiers: ad8366: Add the missed check for
+ devm_gpiod_get()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+To:     Chuhong Yuan <hslester96@gmail.com>, linux-iio@vger.kernel.org
+Message-ID: <2b4d43a9-30db-95a3-1aa9-9efb278fd7f7@web.de>
+Date:   Wed, 27 May 2020 21:30:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Do2W5RKgJEWiL6ta9m/xDuyNGeBLR6rKQvvf8xicOMbSOgw2e9e
+ be8ru+be5rwqvC3GNcveACYSECtNOEXgZkkO6fpOVR5XW0V3Uj17gBQxhw2fSZsseptNkMi
+ Isi+ZePbwmLiVyOqCSLotrc6+ppPjUari2606BgOw91lftgTL4smqUCWhYa7orwf6IPGy7C
+ TqM9Q88o5izVDfjxvsmEQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NSug1gAueNs=:tdpMi7t4iV3NazBmdxhWKp
+ SXAX18Qci5OoPjBVPLT2cnig/FXKQ9+D5CiAYZl+pmOhmbFctvPZLDSh2WU2zH8evjaFcJtmX
+ b8E+1EI/oZZrBigzc70UFWNMbP/JSao2DkutNffyBcLC5WXHmQ0aNCJaz25UGVcFwJcCSKBsf
+ rlaO7gXSu136Ve3q/bqzXtee3DONHe6lEAGUviI/JrISo8QZ4acs+LBDD7Rmn+bOUIdLVsENz
+ wOX4peleocGlgWp95HyFPmi7qDDZTxj6G9cmEpcB0G7nCMeY1R19zsYsco/hYSXWNmSuJ5cwv
+ LRshIxXVIwAR3H7dDRpUW8NhjMiL10LEHD2PZigW8xWUJLnxsqLn8CzRXVve8owOSfSkNJK58
+ 5/SxPMWU8NhVe9gdRbjsuO5r+TPsdMxp+O5ASLGcXOlFXAzuhSj8Dlu/WNyG8zeotGLZizFZm
+ MCuwjed0lUQiBKjBL1giCtsQFLI9yuwEza8M5j6FikqE5JQY3qowzv0C+Ly1tvuOSPqxIpmwr
+ qkUYl4RxUN+prNYGHZydaMdFRIYwOPDuvjeVj5bVvxxWNW2XgKmI62qTd2NOWhM2+GLw3QsSk
+ WhSHDbCIq28mC7lssCY6pykhlZskwBnC/wsvpS7/sMHpXQIiWhFtjiyHLYLuAN6DyD7eStt/y
+ LSY1zqtrlPHGQvJoqnsEy1bZVnSTXP5tFhv89IvLd0ynQt4JyUJZTfik2uUT/fqB3pVJaZ/wr
+ XTPgpjyYKxT61bpnqdYmbkCHNRLszJGoSTUVWYcfZPtNUtyXmEnMGTTtw/HZlmlI+Yei2+33X
+ sMxqyiYlvEXOqQ6j4DSVaQLB9ozLzG1HpGouO4MEhbwt5oxMmW3g1P4G8D/dbahVNSBYM4aBd
+ LI2ThLdGaE8a3r/s35MiX0HjCfqCgRe7iZyJJJnNpE1cCDLJLux2ItFJpxcnHqidiHWINnE/u
+ CQc9AJofyCTXc5EC4vXhEy6fpE5BJSSmrZYT0yQcAZKJR9+L7QnkB5NgsXTmvFuygbQEtVgXr
+ qreR/lykLjjeue4J1qm4Uc38cz3MJiG93esZ+pgAj8ChYGvz9lLGlRlGKw/hoRIy8c5jM0m0d
+ hoC5x3gOegZZQw4EYakCMuYTBFMbiEvRznTmFV9rBCgmvN6dUcg5O9NtQonigb3JwyBH19qUs
+ qfyWI8ACUY1dThV0SHgOoqtWxVo5cR+l1caI77p9xBAkyps21WO8iRbSSNssFYdFIAa7bPlBm
+ eJfFc0X5KsUXbFfaZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 10:31:59 +0800 tanhuazhong wrote:
-> Hi, Jakub & David.
-> 
-> For patch#1, is it acceptable adding "ethtool --get-priv-flags"
-> to query the VLAN. If yes, I will send a RFC for it.
+> ad8366_probe() forgets to check the return value of devm_gpiod_get().
+> Add the missed check
 
-The recommended way of implementing vfs with advanced vlan
-configurations is via "switchdev mode" & representors.
+Thanks for another completion of the exception handling.
+
+
+>                      to fix it.
+
+I suggest to replace this wording by the tag =E2=80=9CFixes=E2=80=9D for t=
+he commit message.
+
+Regards,
+Markus
