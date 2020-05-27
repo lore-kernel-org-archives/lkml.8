@@ -2,172 +2,152 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6606FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE363C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC0A2078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9042D2078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 04:08:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ji07iUms"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gUSb8iPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbgE0EHr (ORCPT
+        id S1728623AbgE0EI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 00:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgE0EHr (ORCPT
+        Wed, 27 May 2020 00:08:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50363 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726907AbgE0EI0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 00:07:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3390C061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 21:07:46 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id b190so11242818pfg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 21:07:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pIU60IIBCZmiBBYjlcnA3+Z62eyxZftbez2P4JhOGz0=;
-        b=ji07iUmsxzL5OTjKkByLDlUB9yuFIIUDKEFDffRLh2WLg3PTMsr6gSb9aheyF3dWhh
-         1jydjFmU3me6Rzh9/791mf0yg0KRn+554youg0XUgm0UhIxYmjOWMYL0dHTWV6hcQHam
-         vD11UOkYMs3OZhZ1ipCE+9NTk5e7I45zuOgNzN3YR9POohMHq9J2BhuX5M0OVyuSSZCF
-         1oJJDFWV3b29m/lTzMVeTdpDzympPTsyXD1GlKasOpkWvFiCFoUUISyrhQIwOxi8y5Nq
-         DhshdPhvEOIoasTQo8YXczmzazKd6u3OHZtodB7NuH1u/lcW4x3RUTh/3cQ+Bn9T2FZj
-         RGWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pIU60IIBCZmiBBYjlcnA3+Z62eyxZftbez2P4JhOGz0=;
-        b=WZrTUO5MlUGrjVyljHWkvfBSEgBRtjb83rr8nUTHyk2APK4NIAKzeUOiN7fHywTMTh
-         4epZFncJ0/1YWCvS2vdy1XId2aCRJXm13ttwp1unReNIvckZgienLGBljzdbU+5zO60w
-         MMCF8z0JshXaoZSqjO/9KejuSWjDNVLvxNNwfgi5K2Ebme8+c5pM1ZpSyHAyGFEjyqom
-         bRcrgigVUoLaAM7mzWlOSaNe2M0w6ABB9Mj57ZSZVzIgurS8OdQnaWKblpWCvpT6mKnp
-         e3yQ+NaGJkRoFJtQ+XrH2K7Q3GRAh7Rw4eKeKxI42FKpynoNBmSEb2RnmYVG5WVxv4eN
-         n1xw==
-X-Gm-Message-State: AOAM532RBx8XUOskZX2w7LhDd8zU2r1B41hLHQ2NIqYxZ8MTH1Od7QbG
-        tPlXot/rc8u3gDWFpXIRF9VvD/7dD3w=
-X-Google-Smtp-Source: ABdhPJzEM29IyiSEssb7QXL96O/HQMHYQ/moyf5cAXSnMKK0zq8bqWNjRk5L63foZs2z2MdlVxuWbw==
-X-Received: by 2002:aa7:928e:: with SMTP id j14mr1939135pfa.261.1590552466476;
-        Tue, 26 May 2020 21:07:46 -0700 (PDT)
-Received: from localhost ([122.172.60.59])
-        by smtp.gmail.com with ESMTPSA id u69sm848927pjb.40.2020.05.26.21.07.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 26 May 2020 21:07:45 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, georgi.djakov@linaro.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] opp: Remove bandwidth votes when target_freq is zero
-Date:   Wed, 27 May 2020 09:37:36 +0530
-Message-Id: <a761681456ef6b8c9a98918c130a0b402caf90c4.1590552303.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <20200512125327.1868-1-georgi.djakov@linaro.org>
-References: <20200512125327.1868-1-georgi.djakov@linaro.org>
+        Wed, 27 May 2020 00:08:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590552505;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HNBN9I3GKdXmb2gltM0hVnCri1z/6RmaleZWAYCiNNc=;
+        b=gUSb8iPiSV1yZCj2FGk9zYK9P3wsioZHPOCbPI7noTqaoybMDxuvHOEKER8n4C3lJUDw03
+        bvA5WSQEChtWPPgi2yRKIyuKo/qgEmfVToWDNBTsr53EaVTJtiwEMBqAJ8CEWgNJfhuMgH
+        raWbJWLNm2Nn2BRmFiqU3/bCqFxuOWU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-324-KavK4lNnP42joJdk9iYHfQ-1; Wed, 27 May 2020 00:08:23 -0400
+X-MC-Unique: KavK4lNnP42joJdk9iYHfQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C940E100A61D;
+        Wed, 27 May 2020 04:08:21 +0000 (UTC)
+Received: from [10.72.12.206] (ovpn-12-206.pek2.redhat.com [10.72.12.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC64D648DB;
+        Wed, 27 May 2020 04:08:15 +0000 (UTC)
+Subject: Re: [PATCH] kexec: Do not verify the signature without the lockdown
+ or mandatory signature
+From:   lijiang <lijiang@redhat.com>
+To:     Jiri Bohac <jbohac@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        ebiederm@xmission.com, jmorris@namei.org, mjg59@google.com,
+        dyoung@redhat.com, bhe@redhat.com
+References: <20200525052351.24134-1-lijiang@redhat.com>
+ <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
+ <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
+Message-ID: <4da44e94-a839-2033-29d2-90bebd4ee1e2@redhat.com>
+Date:   Wed, 27 May 2020 12:08:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already drop several votes when target_freq is set to zero, drop
-bandwidth votes as well.
+在 2020年05月27日 11:15, lijiang 写道:
+> 在 2020年05月26日 21:59, Jiri Bohac 写道:
+>> On Mon, May 25, 2020 at 01:23:51PM +0800, Lianbo Jiang wrote:
+>>> So, here, let's simplify the logic to improve code readability. If the
+>>> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
+>>> is mandated. Otherwise, we lift the bar for any kernel image.
+>>
+>> I agree completely; in fact that was my intention when
+>> introducing the code, but I got overruled about the return codes:
+>> https://lore.kernel.org/lkml/20180119125425.l72meyyc2qtrriwe@dwarf.suse.cz/
+>>
+>> I like this simplification very much, except this part:
+>>
+>>> +	if (ret) {
+>>> +		pr_debug("kernel signature verification failed (%d).\n", ret);
+>>
+>> ...
+>>
+>>> -		pr_notice("kernel signature verification failed (%d).\n", ret);
+>>
+>> I think the log level should stay at most PR_NOTICE when the
+>> verification failure results in rejecting the kernel. Perhaps
+>> even lower.
+>>
+> 
+> Thank you for the comment, Jiri Bohac.
+> 
+> I like the idea of staying at most PR_NOTICE, but the pr_notice() will output
+> some messages that kernel could want to ignore, such as the case you mentioned
+> below.
+> 
+>> In case verification is not enforced and the failure is
+>> ignored, KERN_DEBUG seems reasonable.
+>>
+> 
+> Yes, good understanding. It seems that the pr_debug() is still a good option here?
+> Any other thoughts?
+> 
 
-Reported-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-@Georgi/Sibi: Sibi requested this change, please test this out.
+Or the following change looks better? What's your opinion?
 
- drivers/opp/core.c | 47 +++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 11 deletions(-)
+static int
+kimage_validate_signature(struct kimage *image)
+{
+        int ret;
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 56d3022c1ca2..0c259d5ed232 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -725,6 +725,34 @@ static int _generic_set_opp_regulator(struct opp_table *opp_table,
- 	return ret;
- }
- 
-+static int _set_opp_bw(const struct opp_table *opp_table,
-+		       struct dev_pm_opp *opp, bool remove)
-+{
-+	u32 avg, peak;
-+	int i, ret;
-+
-+	if (!opp_table->paths)
-+		return 0;
-+
-+	for (i = 0; i < opp_table->path_count; i++) {
-+		if (remove) {
-+			avg = 0;
-+			peak = 0;
-+		} else {
-+			avg = opp->bandwidth[i].avg;
-+			peak = opp->bandwidth[i].peak;
-+		}
-+		ret = icc_set_bw(opp_table->paths[i], avg, peak);
-+		if (ret) {
-+			dev_err(dev, "Failed to %s bandwidth[%d]: %d\n",
-+				remove ? "remove" : "set", i, ret);
-+			retrun ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int _set_opp_custom(const struct opp_table *opp_table,
- 			   struct device *dev, unsigned long old_freq,
- 			   unsigned long freq,
-@@ -837,12 +865,17 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		if (!_get_opp_count(opp_table))
- 			return 0;
- 
--		if (!opp_table->required_opp_tables && !opp_table->regulators) {
-+		if (!opp_table->required_opp_tables && !opp_table->regulators &&
-+		    !opp_table->paths) {
- 			dev_err(dev, "target frequency can't be 0\n");
- 			ret = -EINVAL;
- 			goto put_opp_table;
- 		}
- 
-+		ret = _set_opp_bw(opp_table, opp, true);
-+		if (ret)
-+			return ret;
-+
- 		if (opp_table->regulator_enabled) {
- 			regulator_disable(opp_table->regulators[0]);
- 			opp_table->regulator_enabled = false;
-@@ -932,16 +965,8 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 			dev_err(dev, "Failed to set required opps: %d\n", ret);
- 	}
- 
--	if (!ret && opp_table->paths) {
--		for (i = 0; i < opp_table->path_count; i++) {
--			ret = icc_set_bw(opp_table->paths[i],
--					 opp->bandwidth[i].avg,
--					 opp->bandwidth[i].peak);
--			if (ret)
--				dev_err(dev, "Failed to set bandwidth[%d]: %d\n",
--					i, ret);
--		}
--	}
-+	if (!ret)
-+		ret = _set_opp_bw(opp_table, opp, false);
- 
- put_opp:
- 	dev_pm_opp_put(opp);
--- 
-2.25.0.rc1.19.g042ed3e048af
+        ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+                                           image->kernel_buf_len);
+        if (ret) {
+
+                if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+                        pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
+                        return ret;
+                }
+
+                /*
+                 * If IMA is guaranteed to appraise a signature on the kexec
+                 * image, permit it even if the kernel is otherwise locked
+                 * down.
+                 */
+                if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
+                    security_locked_down(LOCKDOWN_KEXEC))
+                        return -EPERM;
+
+                pr_debug("kernel signature verification failed (%d).\n", ret);
+        }
+
+        return 0;
+}
+
+
+Thanks.
+Lianbo
+
+> Thanks.
+> Lianbo
+> 
+> 
+>> Regards,
+>>
 
