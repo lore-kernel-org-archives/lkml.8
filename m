@@ -2,156 +2,100 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9245DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE91C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C96207CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336B520899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 01:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590543898;
+	bh=X8IeUYi5TEn1bZovze7WvWR7fZ/TpSB3r+3JOJw+vJQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=EmDb9drEJgRR6yd2GwJllMyivis7bsL+uaHMJrwqdMlgv1cS7qy5B3HhipwiLp0Wg
+	 mQB0O2YlpMYS7HoRn7xYQej+/AIErrXuPGRLgHrasb2hwLjcRnnqvdm5tpGCbPUtdQ
+	 Op6NuaMQnAPYJ5VMfbHAe0jRX8ppoS3u0Ng8kc5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgE0BoF (ORCPT
+        id S1726886AbgE0Bo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 26 May 2020 21:44:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:59084 "EHLO mga09.intel.com"
+        Tue, 26 May 2020 21:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbgE0BoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 26 May 2020 21:44:05 -0400
-IronPort-SDR: pj4uXSQEHp7LhosaWVl4JNJwoAg3nxLB0vgVEiAG/91cgxLIE7f/oj+VXeSuA8FlYsAYR7z6ZK
- 4TmaUyA/TVeQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2020 18:44:04 -0700
-IronPort-SDR: xF4NamqZOsUfFCvLw03Fj91Sa2iAEJ1DPzR8Hjbd2NynOMqmOFEDowii1ih4wd95HIlwHYfBHy
- 8YnMVI6dUygw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,439,1583222400"; 
-   d="scan'208";a="255326666"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by fmsmga007.fm.intel.com with ESMTP; 26 May 2020 18:44:00 -0700
-Date:   Wed, 27 May 2020 09:43:59 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Andi Kleen <andi.kleen@intel.com>
-Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>, tim.c.chen@intel.com,
-        dave.hansen@intel.com, ying.huang@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
- policy
-Message-ID: <20200527014359.GA93879@shbuild999.sh.intel.com>
-References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
- <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
- <20200526181459.GD991@lca.pw>
- <20200527011413.GA610738@tassilo.jf.intel.com>
+        id S1725287AbgE0Bo5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 26 May 2020 21:44:57 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D60D207CB;
+        Wed, 27 May 2020 01:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590543896;
+        bh=X8IeUYi5TEn1bZovze7WvWR7fZ/TpSB3r+3JOJw+vJQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=QLptIsKhuHarasq/W6RYkU8NHJoMp0xnt0xZil+C30FyLSxx0ko4GnJqD1aLFrCrv
+         JahMQqsz6vQdQrXrr7Lr60y5v4JGPCylyVhsRe+7tPWmeip6Q9DrXJiEgtMwCK7xfM
+         XKAngA+z8LBWFwXGQrGa2SIOEiDtNeNG0h/0i6vA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527011413.GA610738@tassilo.jf.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590378348-8115-6-git-send-email-dillon.minfei@gmail.com>
+References: <1590378348-8115-1-git-send-email-dillon.minfei@gmail.com> <1590378348-8115-6-git-send-email-dillon.minfei@gmail.com>
+Subject: Re: [PATCH v5 5/8] clk: stm32: Fix stm32f429's ltdc driver hang in set clock rate, fix duplicated ltdc clock register to 'clk_core' case ltdc's clock turn off by clk_disable_unused()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
+        dillon min <dillon.minfei@gmail.com>
+To:     broonie@kernel.org, dillon.minfei@gmail.com,
+        linus.walleij@linaro.org
+Date:   Tue, 26 May 2020 18:44:55 -0700
+Message-ID: <159054389592.88029.12389551390229328953@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 06:14:13PM -0700, Andi Kleen wrote:
-> On Tue, May 26, 2020 at 02:14:59PM -0400, Qian Cai wrote:
-> > On Thu, May 21, 2020 at 05:27:26PM -0400, Qian Cai wrote:
-> > > On Fri, May 08, 2020 at 03:25:14PM +0800, Feng Tang wrote:
-> > > > When checking a performance change for will-it-scale scalability
-> > > > mmap test [1], we found very high lock contention for spinlock of
-> > > > percpu counter 'vm_committed_as':
-> > > > 
-> > > >     94.14%     0.35%  [kernel.kallsyms]         [k] _raw_spin_lock_irqsave
-> > > >     48.21% _raw_spin_lock_irqsave;percpu_counter_add_batch;__vm_enough_memory;mmap_region;do_mmap;
-> > > >     45.91% _raw_spin_lock_irqsave;percpu_counter_add_batch;__do_munmap;
-> > > > 
-> > > > Actually this heavy lock contention is not always necessary. The
-> > > > 'vm_committed_as' needs to be very precise when the strict
-> > > > OVERCOMMIT_NEVER policy is set, which requires a rather small batch
-> > > > number for the percpu counter.
-> > > > 
-> > > > So lift the batch number to 16X for OVERCOMMIT_ALWAYS and
-> > > > OVERCOMMIT_GUESS policies, and add a sysctl handler to adjust it
-> > > > when the policy is reconfigured.
-> > > > 
-> > > > Benchmark with the same testcase in [1] shows 53% improvement on a
-> > > > 8C/16T desktop, and 2097%(20X) on a 4S/72C/144T server. And no change
-> > > > for some platforms, due to the test mmap size of the case is bigger
-> > > > than the batch number computed, though the patch will help mmap/munmap
-> > > > generally.
-> > > > 
-> > > > [1] https://lkml.org/lkml/2020/3/5/57
-> > > > 
-> > > > There are some style complain from checkpatch for patch 3, as it
-> > > > follows the similar format of sibling functions
-> > > > 
-> > > > patch1: a cleanup for /proc/meminfo
-> > > > patch2: a preparation patch which also improve the accuracy of
-> > > >         vm_memory_committed
-> > > > patch3: the main change
-> > > > 
-> > > > Please help to review, thanks!
-> > > 
-> > > Reverted this series fixed a warning under memory pressue.
-> > 
-> > Andrew, Stephen, can you drop this series?
-> 
-> Hope you're happy now.
-> 
-> The warning is just not needed for the always case. The whole point
-> of the patch was to maintain these counters only approximately.
-> We could of course use _sum or _sum_positive in the warning, but that would
-> just be unnecessary overhead in this moderately hot path.
-> 
-> So this patch should fix it: (untested)
-> 
-> Possibly might need to move it even further down because the patch
-> also affected the _GUESS case.
+Quoting dillon.minfei@gmail.com (2020-05-24 20:45:45)
+> From: dillon min <dillon.minfei@gmail.com>
+>=20
+> ltdc set clock rate crashed
+>    'post_div_data[]''s pll_num is PLL_I2S, PLL_SAI (number is 1,2). but,
 
-Thanks Andi for the patch. And I agree that it could be after _GUESS
-case, as existig check for _GUESS is loose:
+Please write "post_div_data[]'s" if it is possessive. "But" doesn't
+start a sentence. This is one sentence, not two.
 
-	if (pages > totalram_pages() + total_swap_pages)
-	         goto error;
+>     as pll_num is offset of 'clks[]' input to clk_register_pll_div(), whi=
+ch
+>     is FCLK, CLK_LSI, defined in 'include/dt-bindings/clock/stm32fx-clock=
+.h'
+>     so, this is a null object at the register time.
+>     then, in ltdc's clock is_enabled(), enable(), will call to_clk_gate().
+>     will return a null object, cause kernel crashed.
+>     need change pll_num to PLL_VCO_I2S, PLL_VCO_SAI for 'post_div_data[]'
+>=20
+>  duplicated ltdc clock
+>    'stm32f429_gates[]' has a member 'ltdc' register to 'clk_core', but no
+>     upper driver use it, ltdc driver use the lcd-tft defined in
+>    'stm32f429_aux_clk[]'. after system startup, as stm32f429_gates[]'s lt=
+dc
+>     enable_count is zero, so turn off by clk_disable_unused()
 
-Thanks,
-Feng
+I sort of follow this. Is this another patch? Seems like two things are
+going on here.
 
-> 
-> 
-> diff --git a/mm/util.c b/mm/util.c
-> index 988d11e6c17c..fa78f90e29a1 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -798,10 +798,6 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
->  {
->  	long allowed;
->  
-> -	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
-> -			-(s64)vm_committed_as_batch * num_online_cpus(),
-> -			"memory commitment underflow");
-> -
->  	vm_acct_memory(pages);
->  
->  	/*
-> @@ -810,6 +806,10 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
->  	if (sysctl_overcommit_memory == OVERCOMMIT_ALWAYS)
->  		return 0;
->  
-> +	VM_WARN_ONCE(percpu_counter_read(&vm_committed_as) <
-> +			-(s64)vm_committed_as_batch * num_online_cpus(),
-> +			"memory commitment underflow");
-> +
->  	if (sysctl_overcommit_memory == OVERCOMMIT_GUESS) {
->  		if (pages > totalram_pages() + total_swap_pages)
->  			goto error;
+>=20
+> Changes since V3:
+> 1 drop last wrong changes about 'CLK_IGNORE_UNUSED' patch
+> 2 fix PLL_SAI mismatch with PLL_VCO_SAI
+
+This change log goes under the --- below.
+
+>=20
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+
+Any Fixes tag?
