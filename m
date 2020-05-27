@@ -2,133 +2,123 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5830CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703AFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 365122078C
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D033207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 06:28:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eV+QIeRE"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WRFLWp1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgE0G2N (ORCPT
+        id S1728657AbgE0G2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 02:28:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728614AbgE0G2M (ORCPT
+        Wed, 27 May 2020 02:28:17 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:55536 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728605AbgE0G2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 02:28:12 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E2AC061A0F
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:28:12 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id b6so27499455ljj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 26 May 2020 23:28:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fuGN860/GT6rsIgye6vRLXh5U9Ac6GXjLL4lq5g3Y6Q=;
-        b=eV+QIeREnm8d0KAolwLemA8K7XqJQaOFoLCumF8tLNjpdNQNPKLvXdWY0PDhgIMJES
-         H66/+8LS3/SPi8fhH55gEtnO24d4TVD4NfCkuNbVMaFpEvmfF+8UUX+uftnUk+Zrn4Vy
-         fP7WRjClwXdPrDqC9/nZqqp4S4t2KIZNhIkEvcnerGDpA3/9XEh3ol31TKcxtjsnYL70
-         tJvOt8+ZEl2Mhnwbb3Q8VTIbhVNX5ELRKXsscWo0yPbtPMOqtAp4sFlGSNmWmrKz4hYI
-         4ks3UgIohz0OUzJRUYvla6rLXWuAhv2EkElBCn+wvwNAuvvO8kApecc7lkXr2w1vd/dT
-         bmVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fuGN860/GT6rsIgye6vRLXh5U9Ac6GXjLL4lq5g3Y6Q=;
-        b=Woxen1qLx4qoVLy/tBbUvkq612xnHmoiwUmsNSLSbnbdh7Cv4ldjWPbKq+2BUJJqE6
-         2aZta0TB1L4dWtLe54l5Hw7PLo2rYrhhPY3zaY7wIoYuHXotpVYVfpYvhkqwQecRSNwJ
-         VDp64SMTNpXnGTmJFlxyI4GSsiXzHHYIJa+R7uqRseRr1Pse9wd7KA345mlWpGn18f5O
-         MfV/pYKaZvwYdIfy5Zvv2Rx1jqpOkFMCcCbND9SJRr2e2i8akWBq3ydgJOJbQx4tSprO
-         wVmalmq2haSX1vyjEqEESJqoofqZPeTBZTAtebosMu4mAFQWYWljrQXZ1eAGddmz5loC
-         tKjg==
-X-Gm-Message-State: AOAM530dzt9krFJyBCVTzdo4zO9Is3xYEKx0MVWAEmIRCxMo4cm6s/+5
-        3yK6PfaYH+qWhzv040MNywXOXAGPkUTttKjJM3fOYJpe
-X-Google-Smtp-Source: ABdhPJxBnQAFFfiCQ7xTDrmAudUz9xD/143iCAMfDqv6XVvlI/S6PhyLlZyY+pB/FYkysU6Stw3Z5BZReurHErMC/9w=
-X-Received: by 2002:a05:651c:20d:: with SMTP id y13mr2362045ljn.29.1590560890952;
- Tue, 26 May 2020 23:28:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200522220103.908307-1-anders.roxell@linaro.org>
- <20200524222025.GA3116034@ubuntu-s3-xlarge-x86> <292277.1590449865@turing-police>
- <20200526053850.GA2368760@ubuntu-s3-xlarge-x86> <CAL_JsqJ9LnCpH92bXfk4ryXrTgzbPM03=PYLTzQXazuznJM=hg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJ9LnCpH92bXfk4ryXrTgzbPM03=PYLTzQXazuznJM=hg@mail.gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Wed, 27 May 2020 08:28:00 +0200
-Message-ID: <CADYN=9JdZfduPYeM7KV8H18_mbVrKj1aYRSkeWrTprQnffCXNg@mail.gmail.com>
-Subject: Re: [PATCH] power: reset: vexpress: fix build issue
-To:     Rob Herring <robh@kernel.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 27 May 2020 02:28:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590560895; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=1JU5P6SSJi3Mzo/Vr/khHl0YlT5LryxGbyA3I2UXqIQ=; b=WRFLWp1EmCdvH3Sbl8XrNwZ4qL0bsgJ4N/9+LxmNUL8yTAtXwxfLGwE7E02cnvjW1Bt1PoIv
+ KrRmFRy3Dm+t2uh50K9T2l1JnkBP3Aham1PCCSzB8xgHtbdnCgGcL/C2hVtmpjNigsQh3LmL
+ kHz+dA+1oManoma764zdL8ZCUP4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5ece08783131442d9566f518 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 06:28:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 019D5C433CB; Wed, 27 May 2020 06:28:08 +0000 (UTC)
+Received: from akashast-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94953C433C6;
+        Wed, 27 May 2020 06:28:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94953C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+From:   Akash Asthana <akashast@codeaurora.org>
+To:     robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org,
+        msavaliy@codeaurora.org, Akash Asthana <akashast@codeaurora.org>
+Subject: [PATCH V7 2/3] dt-bindings: geni-se: Add interconnect binding for GENI QUP
+Date:   Wed, 27 May 2020 11:57:43 +0530
+Message-Id: <1590560864-27037-3-git-send-email-akashast@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1590560864-27037-1-git-send-email-akashast@codeaurora.org>
+References: <1590560864-27037-1-git-send-email-akashast@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 26 May 2020 at 17:41, Rob Herring <robh@kernel.org> wrote:
->
-> " On Mon, May 25, 2020 at 11:38 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > On Mon, May 25, 2020 at 07:37:45PM -0400, Valdis Kl=C4=93tnieks wrote:
-> > > On Sun, 24 May 2020 15:20:25 -0700, Nathan Chancellor said:
-> > >
-> > > > arm-linux-gnueabi-ld: drivers/power/reset/vexpress-poweroff.o: in f=
-unction `vexpress_reset_probe':
-> > > > vexpress-poweroff.c:(.text+0x36c): undefined reference to `devm_reg=
-map_init_vexpress_config'
-> > >
-> > > The part I can't figure out is that git blame tells me there's alread=
-y an
-> > > export:
-> > >
-> > > 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 154)   retur=
-n regmap;
-> > > 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 155) }
-> > > b33cdd283bd91 (Arnd Bergmann   2014-05-26 17:25:22 +0200 156) EXPORT_=
-SYMBOL_GPL(devm_regmap_init_vexpress_config);
-> > > 3b9334ac835bb (Pawel Moll      2014-04-30 16:46:29 +0100 157)
-> > >
-> > > but I can't figure out where or if drivers/power/reset/vexpress-power=
-off.c gets
-> > > a MODULE_LICENSE from...
-> >
-> > Correct, it is exported but that file is being built as a module wherea=
-s
-> > the file requiring it is beign builtin. As far as I understand, that
-> > will not work, hence the error.
-> >
-> > The issue with this patch is that ARCH_VEXPRESS still just selects
-> > POWER_RESET_VEXPRESS, which ignores "depends on", hence the Kconfig
-> > warning and not fixing the error.
-> >
-> > I am not that much of a Kconfig guru to come up with a solution. I am
-> > just reporting it because arm allmodconfig is broken on -next due to
-> > this.
->
-> Commit "ARM: vexpress: Don't select VEXPRESS_CONFIG" needs to be
-> reverted. I've asked Arnd to revert it.
+Add documentation for the interconnect and interconnect-names properties
+for the GENI QUP.
 
-Reverting that patch with my patch will make allmodconfig work for arm too.
+Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+Changes in V5:
+ - Add interconnect property for QUP wrapper (parent node).
+ - Add minItems = 2 for interconnect property in child nodes
 
->
-> Anders patch is still needed for arm64.
+Changes in V6:
+ - As per Rob's comment added minItems = 2 for interconnect-names.
 
-Yes, it is still needed for arm64.
+Changes in V7:
+ - No change.
 
-Cheers,
-Anders
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.yaml      | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+index 885966f..b19505b 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+@@ -46,6 +46,12 @@ properties:
+ 
+   ranges: true
+ 
++  interconnects:
++    maxItems: 1
++
++  interconnect-names:
++    const: qup-core
++
+ required:
+   - compatible
+   - reg
+@@ -73,6 +79,17 @@ patternProperties:
+         description: Serial engine core clock needed by the device.
+         maxItems: 1
+ 
++      interconnects:
++         minItems: 2
++         maxItems: 3
++
++      interconnect-names:
++         minItems: 2
++         items:
++           - const: qup-core
++           - const: qup-config
++           - const: qup-memory
++
+     required:
+       - reg
+       - clock-names
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+
