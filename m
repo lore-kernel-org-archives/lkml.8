@@ -2,102 +2,106 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C244B206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AN2mzep8"
+	by mail.kernel.org (Postfix) with ESMTP id 598B9206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgE0Lc4 (ORCPT
+        id S1729464AbgE0Ldd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:32:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgE0Lcz (ORCPT
+        Wed, 27 May 2020 07:33:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:54727 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725964AbgE0Ldb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:32:55 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D425C061A0F;
-        Wed, 27 May 2020 04:32:55 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id c187so4922858ooc.2;
-        Wed, 27 May 2020 04:32:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LCm08sq66Q3U++l+V74WsB7Hkmk+EFqTJfvHJknMZU4=;
-        b=AN2mzep8xZkr/JRqPxTyR34FkdcROkPVXOMdrWjGCDE5MdlvyeFy/89eNu+FFYgNaJ
-         0O3zZCpub0fl1Qd+fkpWx+OYeAzC4QB5c5bMJgO1L9DjxiuPVNNQW62XYsimpE6xTHxF
-         XZEXc6/6+Ln/57fWjJzSyyzCWTCnZUtWCzefe6KL2fHnrp3vW8ZSJjPf7dWsUtcrA7fh
-         twyibzWV/U3IcEUCkjCvINUksHSqIyZnuRLPIoiNkSouJj4DwlSDNmmbMf2G4eoOtNHs
-         wRRkQZ50jLzVaxqeAL5LZC621iLjbukVTj3nSjySbtq7dLoaQ5gGIL26SU0ysfMsY3Pj
-         MxOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LCm08sq66Q3U++l+V74WsB7Hkmk+EFqTJfvHJknMZU4=;
-        b=rHHDnpnNr9P0dcKAvfqtnMQwS92i+Qd1hDoDXL5dhzOv+yIxIuimWXVRo50jksvceF
-         GaN+JD735/5c6Uim/eNz4wmuDCvTCO5OWWMguCq6mN8W96gywqnO0718J5kbMY+kwkm4
-         NPenya+7jG8sR6JTt3m7H3WXm5STDVmnNRFpxqMJXtyOaMoPXAUI0Q/ALNLpwSDCpMKr
-         nlZINHFvtyoXhpFi2wkQ7f0jNW1+vewBXfmIvfIKMFDFLRHosuJJi1Bf0tueB9dCrU9J
-         S7aBUOxO0tDiQpzB4QbNZzXMebX0pQraXcnd34sor9Ui9O762RJm11K2LSCW6m7xjIPK
-         fohg==
-X-Gm-Message-State: AOAM532Q0Dw99xDaR3KCrDkJFuKkJpHYzgypW+b4DUTTt070Y/fabhkk
-        m9zgZRoGPoh3r9R2MfdkpN86d++uN2Z4J+6Gzhk=
-X-Google-Smtp-Source: ABdhPJzjplcHCSKcgSqbLouxesEL59Ah0jAiA+aLZBUPeJrNy6hJ0Vv/xmju6otXj6ZALV+lhsBCAWTs4T/C+2XR4rU=
-X-Received: by 2002:a4a:bf14:: with SMTP id r20mr2745052oop.18.1590579174656;
- Wed, 27 May 2020 04:32:54 -0700 (PDT)
+        Wed, 27 May 2020 07:33:31 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MwQCb-1imMQ81StB-00sPXK; Wed, 27 May 2020 13:33:29 +0200
+Received: by mail-qt1-f177.google.com with SMTP id k22so4043403qtm.6;
+        Wed, 27 May 2020 04:33:28 -0700 (PDT)
+X-Gm-Message-State: AOAM530RRMcKjDTVH729nVCCqJTL7+y4mrTZI2gvMXtAML0Jweln865p
+        BPoR4XL25KrMIUj9BGo50ZFkWPbBrwnuVqt8+P8=
+X-Google-Smtp-Source: ABdhPJytr2bjG8wmbrwCUlNw85Yc0YEiejDsr/eUYMM1igF/l+KazWx6+Wav70gPMdZ6TcuTfzx28axhkOZA5yS1Tu0=
+X-Received: by 2002:ac8:306d:: with SMTP id g42mr3579966qte.18.1590579208037;
+ Wed, 27 May 2020 04:33:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1590526904-13855-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590526904-13855-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200527112548.GD5308@sirena.org.uk>
-In-Reply-To: <20200527112548.GD5308@sirena.org.uk>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 27 May 2020 12:32:28 +0100
-Message-ID: <CA+V-a8v0i71MCTNTPVD3XHuyGZiVjzuCkCUnvoUczeMr416ouQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ASoC: renesas,rsnd: Add r8a7742 support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+References: <20200522120700.838-1-brgl@bgdev.pl> <20200522120700.838-7-brgl@bgdev.pl>
+ <20200527073150.GA3384158@ubuntu-s3-xlarge-x86> <CAMRc=MevVsYZFDQif+8Zyv41sSkbS8XqWbKGdCvHooneXz88hg@mail.gmail.com>
+In-Reply-To: <CAMRc=MevVsYZFDQif+8Zyv41sSkbS8XqWbKGdCvHooneXz88hg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 27 May 2020 13:33:11 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3WXGZpeX0E8Kyuo5Rkv5acdkZN6_HNS61Y1=Jh+G+pRQ@mail.gmail.com>
+Message-ID: <CAK8P3a3WXGZpeX0E8Kyuo5Rkv5acdkZN6_HNS61Y1=Jh+G+pRQ@mail.gmail.com>
+Subject: Re: [PATCH v5 06/11] net: ethernet: mtk-star-emac: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        "David S . Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:xLCVZVJKQytAvbA8rvzmUb8CsvyaiYXOseUJ7GWZPaF0uJkBKS3
+ wZqcGEVmdbEivR6kjmvDMEpd7hO3UFwf62hEQ+pS1DvyODLfVZp/8G/He4Cnk7HWkeFc2EK
+ KTPG4qQZmde2+O+RhbHGrzznk73F6CZZCakNOkhAvU1ck2Am5iStpPT67qoBizpzWjS6UBU
+ HZsRfZeKupTRRySgSMk3A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/X7C0o/PeQs=:y5tIAJrBfNdHDdAaJk2Dm1
+ s56FsrM0Dn2f3KSRCbiI0+hHHtQuYV28tcE5by+77pNRvotxBThPTWfgU6HOJeZM5/ySqXNbq
+ IXV1xo+ktKJAkGh+Ueb1E/rmvnnnhA68t0BV5bFXayPWlN4a6OavB9f9fi6FN8Pf2SBwKTovC
+ EpTXvD1U6Xm8Pa9llDcXlTnGfMPucgcNdLxfalIQapgDdIKmAoti7B22KR/pERJzvaq+mTqd+
+ k3AstFS/SJbKtKjU0GlMEejWxa/Svvm0E8aY2a44KVMhODdbiTw+OM0fVZna+GMLbnnweInIw
+ E4/3KVlblW6wPR+aOJHXYUhBw93G8UCrZ0Al2q6heb8FOApRbGs108/j/Ztvgy5Ff9Jz/B+2d
+ 0xTh1O/1keqhjB6Sk+m1nFuxdQ45fZzkpb3sINgZrVE+jG1+MGp+D2b8Qv9FWt/V5nYnr8abs
+ gg788k+bsT7BkWiRr8ihTRprdweND8AQb0ZFmrIIpIp79UYPzYWHXpQ1jbzffNt5e4CyrzS/E
+ F0bPKQzYTOb9YqN23DFwwIuV1odKcJdyIPRpzERiAHYDpRMz/nXzVM4edyqpyMMRRj/4oWRcx
+ /lX45laOFCI3048ND62UOR3EZlq854vatp/rqz375WyBB3ThWSoiiCJ2OPyjAB6SF8nP6RzpH
+ Z7/jdeOqmoJabBdSLsYB8OY/LqTRZrzKdMNqQO//yUDkMfUv6y3G+olNDaBPwXDm2h53FqxtL
+ YPdTzYIdtSK/7eK3nAZmAJEmM/iRjGulLKU18fa2zxoYomAF792s1dak+1ZNJy5KoDdiSgCXK
+ s6H2NMy59a6MFFUm/LW/iG8PijuygUhGGqYpwa4/3O2Wiqy4Yg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Wed, May 27, 2020 at 10:46 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Thank you for the review.
-
-On Wed, May 27, 2020 at 12:25 PM Mark Brown <broonie@kernel.org> wrote:
+> > I don't know if there should be a new label that excludes that
+> > assignment for those particular gotos or if new_dma_addr should
+> > be initialized to something at the top. Please take a look at
+> > addressing this when you get a chance.
+> >
+> > Cheers,
+> > Nathan
 >
-> On Tue, May 26, 2020 at 10:01:43PM +0100, Lad Prabhakar wrote:
+> Hi Nathan,
 >
-> >                                 Examples with soctypes are:
-> > +                                 - "renesas,rcar_sound-r8a7742" (RZ/G1H)
-> >                                   - "renesas,rcar_sound-r8a7743" (RZ/G1M)
-> >                                   - "renesas,rcar_sound-r8a7744" (RZ/G1N)
-> >                                   - "renesas,rcar_sound-r8a7745" (RZ/G1E)
->
-> I'd expect a matching patch adding this compatible to the driver.
+> Thanks for reporting this! I have a fix ready and will send it shortly.
 
-The Renesas R-Car sound for RZ/G1H is identical to the R-Car Gen2
-family. So no driver change is needed and  the fallback compatible
-value "renesas,rcar_sound-gen2" will be used in the SOC DT.
+I already have a workaround for this bug as well as another one
+in my tree that I'll send later today after some more testing.
 
-Cheers,
---Prabhakar Lad
+Feel free to wait for that, or just ignore mine if you already have a fix.
+
+       Arnd
