@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E94C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8D3620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E715B208B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GhxPzSwZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vXBWyVt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgE0L0V (ORCPT
+        id S1729998AbgE0L0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:26:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44152 "EHLO
+        Wed, 27 May 2020 07:26:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgE0L0U (ORCPT
+        with ESMTP id S1725820AbgE0L0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:26:20 -0400
+        Wed, 27 May 2020 07:26:23 -0400
 Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E548BC061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:19 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c11so26295039ljn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0EFC061A0F
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:23 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m18so28426465ljo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7uD4NJKCCrAKNdXZhG6Aj4i9yfAmRa77MGUIOkJhlYc=;
-        b=GhxPzSwZxz/FuMNuYGDzM0k2vcNESJSv1wSCeApiFe9C5uuAhpURWaks7Na0i1OoZl
-         fb4TZBpJSzNuud6nOW5MZxTyfDD4j/YafFwKfPIothSviDUQmqjZtVbN/9OsckDhTr+V
-         mA4nZK+7Ev17F4Bai5Dz7iASsxNNmXrEs04XGyrUHqeN6xW4Q5C+KoFhevkkttayPL87
-         7zp5uZYZ8wXlhnnIafFDbuDwPhbL0kqa5Lrqndy3Dt+APlMRJetnr3S5clk48W130t4Z
-         t5topENI91V8YnZG5eGP5YxuPpcGYEnYGLKwCgmWQwI9dwTh07aeg8S3Z0DzqvPwF7/6
-         kZsw==
+        bh=7JrgKFknWam4V1fZqyMtAvJglLBt+OuycTcodKNrhfA=;
+        b=vXBWyVt9KfxvraiQX+TBkoR9fkLxC6dAcjgqDC8FPB8Eg5T0vCu3hFkF7mrPDmGH3+
+         B8sK9h5OmF3hTDadQ/boUYw+M60ietj/qXOgyJsslTPI/qJK8r9mWyxG2uPL3tC3EPGo
+         9OKSyfA3fDQGAvb8q3XLuZGH5rY/VSeDCgpjjTGyhJ7k+KrmPnEaPf3uF6AUYWQGMauo
+         dl9FMEIA/nAFX3bS2PqWq+9j+UTxtt5BWFBimT+d8KxcUc3CDwP7O7YQdUivztrgny63
+         Q1FfDh9V8pUOvvddTYTtExzVL+81dSlazBBOL7SOK4pkp+mrC31giVsP5cUZBYfs1/1y
+         Ea2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7uD4NJKCCrAKNdXZhG6Aj4i9yfAmRa77MGUIOkJhlYc=;
-        b=JUgRAgWmkNJQMSZknM36Y9YB3MkqnKpakOF/eM5MErAnj2iPmQsbsuhgokDieH2hZ6
-         GptQMtLLmCAW2h4y7V5B/kNVCXVwi4u3skl3duG5+jWvtAuoxQLOvRCxbvmS6r0sM1JO
-         SSmUEr9OFJVe7kifTPp7qqlkGfnvSNKTpuvqnhAJ9UfioNaueo0rG0FkxqTUmdIlysaY
-         Gic5vTqqCwU974yWbjKDY3LS2+ghyWNtwx2VSIJEH2vySPhqe+mmqkYOREqVjVX9NEgC
-         PA874k6x0psVCch2b0SzPuvVH3q08zOjk4SkUToJXKakrhjA5bq6Nm2rAywb3B2XZenu
-         9arg==
-X-Gm-Message-State: AOAM533utuVQ+dKApvJr/GOPYI/cCF24inGo15WTu+NKd/KXnuS+TGwZ
-        pdR/Ks0l3dw2BP+VB6vJr3JQ5Q==
-X-Google-Smtp-Source: ABdhPJwDVIZKKWsa2g9rM6j4jD0gbLPuXLdz/ptNe0zUdXTeoHpsBq5Wum0HsUHujy9Uyd5zBz27Pw==
-X-Received: by 2002:a2e:9a02:: with SMTP id o2mr2659598lji.89.1590578778399;
-        Wed, 27 May 2020 04:26:18 -0700 (PDT)
+        bh=7JrgKFknWam4V1fZqyMtAvJglLBt+OuycTcodKNrhfA=;
+        b=tfu7iR5x1wY0rbdwnF9oZizBtaDQZAGCpC9ALNjufbRjCX0gbfJUYIRMqpReJwJLlC
+         f86SqrScUEx+0QGNGiZDHysRUDAF2HimDZUR7/daVpV5sVq0YdwLFoxojmwsqVPAf2mT
+         4YFba4prh+w9YSp/sCw1OgsGfxKtelrqokn/ipvIdwNZmIQ2YGW9UXSZJW2tfEP7h4T3
+         gL/EBFIJqvtleblmy22h4gqECnBBErYkYpu2Tfc+TwYG1LuDUDaMPBx7jYB+3QGUdJO2
+         XTQIkXiKYp1hu6uwcpk1j/U82zxFSBFv29POTKpXqs65dbOSotSwmvREqCMxGymNxrGc
+         xD4g==
+X-Gm-Message-State: AOAM532/QQ6U2Ke+So94V+74ledpu3E/C9ILAsKZG2Y2lesriwO2Z7Ln
+        fLBzANWYoZY1y2n1WdZfGpMkhw==
+X-Google-Smtp-Source: ABdhPJynCQiy7HTZrLhL1W88TFn9lXdsTehxo3xi0Uzt9bQLsp1sbAhmLpjUyAhmBW+kLMsahCt4xg==
+X-Received: by 2002:a2e:9b89:: with SMTP id z9mr2653117lji.51.1590578781833;
+        Wed, 27 May 2020 04:26:21 -0700 (PDT)
 Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
-        by smtp.gmail.com with ESMTPSA id b18sm637226ljp.35.2020.05.27.04.26.17
+        by smtp.gmail.com with ESMTPSA id c4sm844304lfj.9.2020.05.27.04.26.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 04:26:17 -0700 (PDT)
+        Wed, 27 May 2020 04:26:21 -0700 (PDT)
 From:   Anders Roxell <anders.roxell@linaro.org>
 List-Id: <soc.lore.kernel.org>
 To:     soc@kernel.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         robh@kernel.org, linus.walleij@linaro.org,
         Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH 1/5] power: vexpress: add suppress_bind_attrs to true
-Date:   Wed, 27 May 2020 13:26:04 +0200
-Message-Id: <20200527112608.3886105-2-anders.roxell@linaro.org>
+Subject: [PATCH 2/5] power: vexpress: cleanup: use builtin_platform_driver
+Date:   Wed, 27 May 2020 13:26:05 +0200
+Message-Id: <20200527112608.3886105-3-anders.roxell@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200527112608.3886105-1-anders.roxell@linaro.org>
 References: <20200527112608.3886105-1-anders.roxell@linaro.org>
@@ -78,28 +78,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure that the POWER_RESET_VEXPRESS driver won't have bind/unbind
-attributes available via the sysfs, so lets be explicit here and use
-".suppress_bind_attrs = true" to prevent userspace from doing something
-silly.
+Use the helper macro for builtin drivers taht don't do anything special
+in driver init. This removes some boilerplate code.
 
 Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
 ---
- drivers/power/reset/vexpress-poweroff.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/power/reset/vexpress-poweroff.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/drivers/power/reset/vexpress-poweroff.c b/drivers/power/reset/vexpress-poweroff.c
-index 90cbaa8341e3..0bf9ab8653ae 100644
+index 0bf9ab8653ae..1fdbcbd95fc2 100644
 --- a/drivers/power/reset/vexpress-poweroff.c
 +++ b/drivers/power/reset/vexpress-poweroff.c
-@@ -143,6 +143,7 @@ static struct platform_driver vexpress_reset_driver = {
- 	.driver = {
- 		.name = "vexpress-reset",
- 		.of_match_table = vexpress_reset_of_match,
-+		.suppress_bind_attrs = true,
+@@ -146,9 +146,4 @@ static struct platform_driver vexpress_reset_driver = {
+ 		.suppress_bind_attrs = true,
  	},
  };
- 
+-
+-static int __init vexpress_reset_init(void)
+-{
+-	return platform_driver_register(&vexpress_reset_driver);
+-}
+-device_initcall(vexpress_reset_init);
++builtin_platform_driver(vexpress_reset_driver);
 -- 
 2.26.2
 
