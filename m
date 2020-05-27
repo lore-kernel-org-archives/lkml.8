@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2ADC2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E87F2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JwousZ2y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TJfxogc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726350AbgE0WrP (ORCPT
+        id S1726542AbgE0WrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37394 "EHLO
+        Wed, 27 May 2020 18:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgE0WrM (ORCPT
+        with ESMTP id S1726393AbgE0WrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:47:12 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 292AFC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:11 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id q16so1025885qki.13
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:11 -0700 (PDT)
+        Wed, 27 May 2020 18:47:14 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECD2C08C5C1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:13 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id 19so27404858qtp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=nbEWkIzxzN6eZ6xPKnCRGctia5KBHft159BSCmyKONo=;
-        b=JwousZ2yLFbWfR3g1IJR6wZbl7lKbd/jQsaDFlLivWKbbZLizq7IOrRCLpFB2Ka6P0
-         78DMWCbw8u4Man4C3yVrW6eHNq178lw2MNHqEQnZtdDrHoPmCJnKsRSKAwX4MqcJowCJ
-         dG5dpU71hT+u4IvHLdnzty2ddvr5R7v0jXjA7ZKonb5sH+jSIL1lVY5N2gZfJyZuSqgw
-         qX36OFj8SC3fTnk49T/QhXml9c/UiNSxDi2KzFP2a4yV/EHFPUFzFfqclWdeRwgQTWdM
-         krJA4jLj5hsTyw5akztpyovZ3RiJwQ/OVZiuo2+3zc+Rl8DuF7/hvfltQG06jOEtuVvP
-         jb+Q==
+        bh=EPOmpxXNIJ+6In9IN6TBBRdLz/P9JOhwRE1awJTQ7UI=;
+        b=TJfxogc/xDxHr9mQZHN7JkU1Up2TtKdYLsm4R30RDECy3TUXBL+JSdGI70Tnf4ldY7
+         I6P3Nc/b4csbG+TKEInX8M6A6kHdKFJ6Enw4CBjP1DFYTGKgxuS9QNf5kkmqwR7LyYUb
+         dgdRuJVwR9eb+7Am0jKimjii8WIx1CDMTKFsjE/q8gCW8lQZoz7JUbxvfteUvuCSq5pv
+         LGD2bb7wY0U2v6EqJbeCyNedhKsLTPZSzzF3ymQS/vJDK77ygCvNSxCvBU5gCkrGLaR6
+         3PA6GEnMQuvK12duehw64GuRd9xBM9XmRSxP/o6s5Jp94b6+uD3bF0F2jFefUO2UIMom
+         mO2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=nbEWkIzxzN6eZ6xPKnCRGctia5KBHft159BSCmyKONo=;
-        b=NRKCiwUe2RNqhFBuQmUbbCZ25kBjtL4lbC50F7zafAkQDJrmNT7eHBoZBhfVCVL66e
-         l+OOg/koMeWkZpwkKa2w08pToxuVkelZEWFg0m38DmzVSwZGw2UBZwUaOOz4KuPoXdmk
-         MJGsfxxSf2hvbhRW1MYglxWuY9XdTSdRS+8RO4gkSOQsbkj3gmfoKO9v8/L5Bm/IQyrM
-         8QtbiyVO/6kuuAqJ1Jstdyq5+exeQTnFki7dVfNOigm9NemjTZ665PVBMZztFgeiCRJ0
-         JzYrDFF33JotSuIphrb7KLJBCb+1iZ+40qbCSUifXQnrdnGS5Poh7MFMn3PfzeKj6ZUq
-         biew==
-X-Gm-Message-State: AOAM531+nCsPq6rYhxS81fVXvKVNKBz95f1s7+OiRm0TrQotvmORBeyn
-        PYTajHWkqjO9sj8JRU2rSlSSjLUyf3UXrnHxZFw+fkyCo3P3WkYRDddiIVEQogh7h9vWBbQGyzm
-        H3OnfDmG7uPihIYat9Jmua6wLJcQg5uwWZLWDjVy2YwPCJ22+Ez/EWs6a9i6xKwH/diBmeSBC
-X-Google-Smtp-Source: ABdhPJykuBdgApQm/wDt+i0xZO9/PzLst/7oADnfK8r2MRQoUbYR8AwJTXPhEdIi+X+70PRi9qbSsfvFySDx
-X-Received: by 2002:ad4:5668:: with SMTP id bm8mr282519qvb.248.1590619630187;
- Wed, 27 May 2020 15:47:10 -0700 (PDT)
-Date:   Wed, 27 May 2020 15:46:55 -0700
+        bh=EPOmpxXNIJ+6In9IN6TBBRdLz/P9JOhwRE1awJTQ7UI=;
+        b=O2JSNesOoPAnMVZAuOz3ETSHCY9T6uGpRdUK5bZB9pl1JhaAkEANvPIicxOxhAbCic
+         KRPL/xD6o8phmWIZcLDoy4jH8+zkXMtH6OLepdu+U/VaCvILpfGmUVpQiTkqAD2AYzmB
+         0kE+2kOgIiDdfqDQV4mJawTp55r/vM2i35OwRBHxV/YJa57qfcCs4OodzsYNmP5JcYn9
+         UPHUIrrkkW0LlXrHW7424O0cMtsZAQhQylCMEfNn16YvtCKYLrLrt12DE5gvd7Afekm2
+         aipunrEMbQPyJHQYpGMbiElIdGMiyZnhUDyb6JBA2nU0URRnPCqlX4/Jq5CPnzxl0lSA
+         f7Cw==
+X-Gm-Message-State: AOAM533XDluFsnFQjMPGsYpRRaDj4Fz+dQpF0ziDsadnpIMw/w/Nol4z
+        XcOMJJf0HedyXPlr2saIew5gYrj85WXtDoVT4a6yocJdpGZ+wUp789pgikrw0epy0oKsJqP9zoz
+        yg7QuS+Z6Bt9zu1qmFy+tBzERC6ipb8iFIzcZwkhk/VAdJvRHtXdBLtO8rJdgCC36T8qY92FO
+X-Google-Smtp-Source: ABdhPJxjxd/6kJpQ9z8kT6kKlT6FKW+xMzusW2OFeQEQ0rKlH4J1wfDQgf0ZaX/krytmcAgJN795UmBexRo/
+X-Received: by 2002:a0c:9aeb:: with SMTP id k43mr278612qvf.101.1590619632442;
+ Wed, 27 May 2020 15:47:12 -0700 (PDT)
+Date:   Wed, 27 May 2020 15:46:56 -0700
 In-Reply-To: <20200527224659.206129-1-eranian@google.com>
-Message-Id: <20200527224659.206129-2-eranian@google.com>
+Message-Id: <20200527224659.206129-3-eranian@google.com>
 Mime-Version: 1.0
 References: <20200527224659.206129-1-eranian@google.com>
 X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH v2 1/5] perf/x86/rapl: move RAPL support to common x86 code
+Subject: [PATCH v2 2/5] perf/x86/rapl: refactor code for Intel/AMD sharing
 From:   Stephane Eranian <eranian@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     peterz@infradead.org, mingo@elte.hu, irogers@google.com,
@@ -73,93 +73,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To prepare for support of both Intel and AMD RAPL.
+This patch modifies the rapl_model struct to include architecture specific
+knowledge to Intel specific structure, and in particular the MSR for
+POWER_UNIT and the rapl_msrs array.
+
+No functional changes.
 
 Signed-off-by: Stephane Eranian <eranian@google.com>
 ---
- arch/x86/events/Kconfig            | 6 +++---
- arch/x86/events/Makefile           | 1 +
- arch/x86/events/intel/Makefile     | 2 --
- arch/x86/events/{intel => }/rapl.c | 9 ++++++---
- 4 files changed, 10 insertions(+), 8 deletions(-)
- rename arch/x86/events/{intel => }/rapl.c (98%)
+ arch/x86/events/rapl.c | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
-index 9a7a1446cb3a0..4a809c6cbd2f5 100644
---- a/arch/x86/events/Kconfig
-+++ b/arch/x86/events/Kconfig
-@@ -10,11 +10,11 @@ config PERF_EVENTS_INTEL_UNCORE
- 	available on NehalemEX and more modern processors.
- 
- config PERF_EVENTS_INTEL_RAPL
--	tristate "Intel rapl performance events"
--	depends on PERF_EVENTS && CPU_SUP_INTEL && PCI
-+	tristate "Intel/AMD rapl performance events"
-+	depends on PERF_EVENTS && (CPU_SUP_INTEL || CPU_SUP_AMD) && PCI
- 	default y
- 	---help---
--	Include support for Intel rapl performance events for power
-+	Include support for Intel and AMD rapl performance events for power
- 	monitoring on modern processors.
- 
- config PERF_EVENTS_INTEL_CSTATE
-diff --git a/arch/x86/events/Makefile b/arch/x86/events/Makefile
-index 6f1d1fde8b2de..12c42eba77ec3 100644
---- a/arch/x86/events/Makefile
-+++ b/arch/x86/events/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-y					+= core.o probe.o
-+obj-$(PERF_EVENTS_INTEL_RAPL)		+= rapl.o
- obj-y					+= amd/
- obj-$(CONFIG_X86_LOCAL_APIC)            += msr.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= intel/
-diff --git a/arch/x86/events/intel/Makefile b/arch/x86/events/intel/Makefile
-index 3468b0c1dc7c9..e67a5886336c1 100644
---- a/arch/x86/events/intel/Makefile
-+++ b/arch/x86/events/intel/Makefile
-@@ -2,8 +2,6 @@
- obj-$(CONFIG_CPU_SUP_INTEL)		+= core.o bts.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= ds.o knc.o
- obj-$(CONFIG_CPU_SUP_INTEL)		+= lbr.o p4.o p6.o pt.o
--obj-$(CONFIG_PERF_EVENTS_INTEL_RAPL)	+= intel-rapl-perf.o
--intel-rapl-perf-objs			:= rapl.o
- obj-$(CONFIG_PERF_EVENTS_INTEL_UNCORE)	+= intel-uncore.o
- intel-uncore-objs			:= uncore.o uncore_nhmex.o uncore_snb.o uncore_snbep.o
- obj-$(CONFIG_PERF_EVENTS_INTEL_CSTATE)	+= intel-cstate.o
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/rapl.c
-similarity index 98%
-rename from arch/x86/events/intel/rapl.c
-rename to arch/x86/events/rapl.c
-index a5dbd25852cb7..ece043fb7b494 100644
---- a/arch/x86/events/intel/rapl.c
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index ece043fb7b494..72990e9a4e71f 100644
+--- a/arch/x86/events/rapl.c
 +++ b/arch/x86/events/rapl.c
-@@ -1,11 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Support Intel RAPL energy consumption counters
-+ * Support Intel/AMD RAPL energy consumption counters
-  * Copyright (C) 2013 Google, Inc., Stephane Eranian
-  *
-  * Intel RAPL interface is specified in the IA-32 Manual Vol3b
-  * section 14.7.1 (September 2013)
-  *
-+ * AMD RAPL interface for Fam17h is described in the public PPR:
-+ * https://bugzilla.kernel.org/show_bug.cgi?id=206537
-+ *
-  * RAPL provides more controls than just reporting energy consumption
-  * however here we only expose the 3 energy consumption free running
-  * counters (pp0, pkg, dram).
-@@ -58,8 +61,8 @@
- #include <linux/nospec.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
--#include "../perf_event.h"
--#include "../probe.h"
-+#include "perf_event.h"
-+#include "probe.h"
+@@ -131,7 +131,9 @@ struct rapl_pmus {
+ };
  
- MODULE_LICENSE("GPL");
+ struct rapl_model {
++	struct perf_msr *rapl_msrs;
+ 	unsigned long	events;
++	unsigned int	msr_power_unit;
+ 	bool		apply_quirk;
+ };
+ 
+@@ -141,7 +143,7 @@ static struct rapl_pmus *rapl_pmus;
+ static cpumask_t rapl_cpu_mask;
+ static unsigned int rapl_cntr_mask;
+ static u64 rapl_timer_ms;
+-static struct perf_msr rapl_msrs[];
++static struct perf_msr *rapl_msrs;
+ 
+ static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+ {
+@@ -516,7 +518,7 @@ static bool test_msr(int idx, void *data)
+ 	return test_bit(idx, (unsigned long *) data);
+ }
+ 
+-static struct perf_msr rapl_msrs[] = {
++static struct perf_msr intel_rapl_msrs[] = {
+ 	[PERF_RAPL_PP0]  = { MSR_PP0_ENERGY_STATUS,      &rapl_events_cores_group, test_msr },
+ 	[PERF_RAPL_PKG]  = { MSR_PKG_ENERGY_STATUS,      &rapl_events_pkg_group,   test_msr },
+ 	[PERF_RAPL_RAM]  = { MSR_DRAM_ENERGY_STATUS,     &rapl_events_ram_group,   test_msr },
+@@ -578,13 +580,13 @@ static int rapl_cpu_online(unsigned int cpu)
+ 	return 0;
+ }
+ 
+-static int rapl_check_hw_unit(bool apply_quirk)
++static int rapl_check_hw_unit(struct rapl_model *rm)
+ {
+ 	u64 msr_rapl_power_unit_bits;
+ 	int i;
+ 
+ 	/* protect rdmsrl() to handle virtualization */
+-	if (rdmsrl_safe(MSR_RAPL_POWER_UNIT, &msr_rapl_power_unit_bits))
++	if (rdmsrl_safe(rm->msr_power_unit, &msr_rapl_power_unit_bits))
+ 		return -1;
+ 	for (i = 0; i < NR_RAPL_DOMAINS; i++)
+ 		rapl_hw_unit[i] = (msr_rapl_power_unit_bits >> 8) & 0x1FULL;
+@@ -595,7 +597,7 @@ static int rapl_check_hw_unit(bool apply_quirk)
+ 	 * "Intel Xeon Processor E5-1600 and E5-2600 v3 Product Families, V2
+ 	 * of 2. Datasheet, September 2014, Reference Number: 330784-001 "
+ 	 */
+-	if (apply_quirk)
++	if (rm->apply_quirk)
+ 		rapl_hw_unit[PERF_RAPL_RAM] = 16;
+ 
+ 	/*
+@@ -676,6 +678,8 @@ static struct rapl_model model_snb = {
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_PP1),
+ 	.apply_quirk	= false,
++	.msr_power_unit = MSR_RAPL_POWER_UNIT,
++	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static struct rapl_model model_snbep = {
+@@ -683,6 +687,8 @@ static struct rapl_model model_snbep = {
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM),
+ 	.apply_quirk	= false,
++	.msr_power_unit = MSR_RAPL_POWER_UNIT,
++	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static struct rapl_model model_hsw = {
+@@ -691,6 +697,8 @@ static struct rapl_model model_hsw = {
+ 			  BIT(PERF_RAPL_RAM) |
+ 			  BIT(PERF_RAPL_PP1),
+ 	.apply_quirk	= false,
++	.msr_power_unit = MSR_RAPL_POWER_UNIT,
++	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static struct rapl_model model_hsx = {
+@@ -698,12 +706,16 @@ static struct rapl_model model_hsx = {
+ 			  BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM),
+ 	.apply_quirk	= true,
++	.msr_power_unit = MSR_RAPL_POWER_UNIT,
++	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static struct rapl_model model_knl = {
+ 	.events		= BIT(PERF_RAPL_PKG) |
+ 			  BIT(PERF_RAPL_RAM),
+ 	.apply_quirk	= true,
++	.msr_power_unit = MSR_RAPL_POWER_UNIT,
++	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static struct rapl_model model_skl = {
+@@ -713,6 +725,8 @@ static struct rapl_model model_skl = {
+ 			  BIT(PERF_RAPL_PP1) |
+ 			  BIT(PERF_RAPL_PSYS),
+ 	.apply_quirk	= false,
++	.msr_power_unit = MSR_RAPL_POWER_UNIT,
++	.rapl_msrs      = intel_rapl_msrs,
+ };
+ 
+ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+@@ -758,10 +772,13 @@ static int __init rapl_pmu_init(void)
+ 		return -ENODEV;
+ 
+ 	rm = (struct rapl_model *) id->driver_data;
++
++	rapl_msrs = rm->rapl_msrs;
++
+ 	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
+ 					false, (void *) &rm->events);
+ 
+-	ret = rapl_check_hw_unit(rm->apply_quirk);
++	ret = rapl_check_hw_unit(rm);
+ 	if (ret)
+ 		return ret;
  
 -- 
 2.27.0.rc0.183.gde8f92d652-goog
