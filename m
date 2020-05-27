@@ -2,91 +2,117 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00420C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF40C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D22BF20890
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:05:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590599100;
-	bh=QrRQgXxxJ63vZq31dxWJOpXXtjXrN47jMut59lAdhhE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uA0oz8H8oGopT+WOGQSAMx9noTfzVwTCpBVnmmTh91tsDMSyQP+2IYh1F+bbrovCe
-	 zVrBOFH/rvibi24JGvC2Q94g+0tNje7ds8NMQDFvqUsgylKAns7sjvJsNt46FghpMn
-	 2H9g158KnN6iYg2TGYJ5Z01DqhDkntxFyebIlK7Q=
+	by mail.kernel.org (Postfix) with ESMTP id 747BD20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 17:05:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbgE0RFA (ORCPT
+        id S1731127AbgE0RFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 13:05:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbgE0RE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 13:04:59 -0400
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64C4220890;
-        Wed, 27 May 2020 17:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590599099;
-        bh=QrRQgXxxJ63vZq31dxWJOpXXtjXrN47jMut59lAdhhE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZELDOLFfWjUSMiPpsOIL+bfRkPqpUhd1RzHpynSc+IqAYV3B4TQzhBDh/hjNHlaER
-         zSCxTfrx+M48Wvhl+b1XI7Jog4/rPMJsw/8sd/+murItayBJzaSvAhIBcoezdlHEZV
-         bVZInSDO/RWrUu6s2ZDx2C3LmOn4xuoLQftDGM4s=
-Received: by mail-ot1-f42.google.com with SMTP id u23so100715otq.10;
-        Wed, 27 May 2020 10:04:59 -0700 (PDT)
-X-Gm-Message-State: AOAM531c5WLvn9nied//CGS5+x5A38pcl61X+eOrRkSrHgYQ6LjfZ09u
-        UxEf2MoJvUlLehWC/nVDQD702AqZhl+9gcAZIg==
-X-Google-Smtp-Source: ABdhPJxhrJavKUHM5x9pqsCda+ALmNJDjhk8EtNPXvR0b64+JsptO0YtuOMTTuRXh5oLXhzzBNvT36fiDwmer89Ghu0=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr5433914ots.192.1590599098693;
- Wed, 27 May 2020 10:04:58 -0700 (PDT)
+        Wed, 27 May 2020 13:05:31 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:37414 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbgE0RFa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 13:05:30 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 2A6F58030809;
+        Wed, 27 May 2020 17:05:27 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id QBkDe7aTVI8O; Wed, 27 May 2020 20:05:25 +0300 (MSK)
+Date:   Wed, 27 May 2020 20:05:24 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hwmon@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] hwmon: Add Baikal-T1 PVT sensor driver
+Message-ID: <20200527170524.hbjbikp5b6e5nw5l@mobilestation>
+References: <20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526133823.20466-4-Sergey.Semin@baikalelectronics.ru>
+ <20200527162549.GA225240@roeck-us.net>
+ <20200527165205.5krrdahiup3i2oq3@mobilestation>
+ <14256f0f-2977-4a54-cf01-ae7e684d10c2@roeck-us.net>
 MIME-Version: 1.0
-References: <20200511111128.16210-1-nikitos.tr@gmail.com> <20200518221435.GA6734@bogus>
- <20200525105236.GB27989@amd>
-In-Reply-To: <20200525105236.GB27989@amd>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 27 May 2020 11:04:47 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJOMzjO_caip6-eXGWoPOWhPcyqfEpBXd2PLyH2OO7RAw@mail.gmail.com>
-Message-ID: <CAL_JsqJOMzjO_caip6-eXGWoPOWhPcyqfEpBXd2PLyH2OO7RAw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Shanghai Awinic
- Technology Co., Ltd.
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     nikitos.tr@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <14256f0f-2977-4a54-cf01-ae7e684d10c2@roeck-us.net>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 25, 2020 at 4:52 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Mon 2020-05-18 16:14:35, Rob Herring wrote:
-> > On Mon, 11 May 2020 16:11:26 +0500,  wrote:
-> > > From: Nikita Travkin <nikitos.tr@gmail.com>
-> > >
-> > > Add the "awinic" vendor prefix for Shanghai Awinic Technology Co., Ltd.
-> > > Website: https://www.awinic.com/
-> > >
-> > > Signed-off-by: Nikita Travkin <nikitos.tr@gmail.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> I can take 2/ and 3/ of the series, but I believe we'll get conflicts
-> if I change vendor-prefixes.yaml in the LED tree. Can you take this
-> one?
+On Wed, May 27, 2020 at 09:58:00AM -0700, Guenter Roeck wrote:
+> On 5/27/20 9:52 AM, Serge Semin wrote:
+> > On Wed, May 27, 2020 at 09:25:49AM -0700, Guenter Roeck wrote:
+> >> On Tue, May 26, 2020 at 04:38:23PM +0300, Serge Semin wrote:
+> > 
+> > [nip]
+> > 
+> >>> +
+> >>> +=============================== ======= =======================================
+> >>> +Name				Perm	Description
+> >>> +=============================== ======= =======================================
+> >>> +update_interval			RW	Measurements update interval per
+> >>> +					sensor.
+> >>> +temp1_type			RO	Sensor type (always 1 as CPU embedded
+> >>> +					diode).
+> >>> +temp1_label			RO	CPU Core Temperature sensor.
+> >>> +temp1_input			RO	Measured temperature in millidegree
+> >>> +					Celsius.
+> >>> +temp1_min			RW	Low limit for temp input.
+> >>> +temp1_max			RW	High limit for temp input.
+> >>> +temp1_min_alarm			RO	Temperature input alarm. Returns 1 if
+> >>> +					temperature input went below min limit,
+> >>> +					0 otherwise.
+> >>> +temp1_max_alarm			RO	Temperature input alarm. Returns 1 if
+> >>> +					temperature input went above max limit,
+> >>> +					0 otherwise.
+> >>> +temp1_trim			RW	Temperature sensor trimming factor in
+> >>> +					millidegree Celsius. It can be used to
+> >>> +					manually adjust the temperature
+> >>> +					measurements within 7.130 degrees
+> >>> +					Celsius.
+> >>
+> >> vs. standard ABI:
+> >>
+> >> temp[1-*]_offset`
+> >>                 Temperature offset which is added to the temperature reading
+> >>                 by the chip.
+> >>
+> >>                 Unit: millidegree Celsius
+> >>
+> >> If you really think this is necessary, why not use the standard ABI ?
+> > 
+> > That would have made much more sense.) I'll replace the handwritten temp1_trim
+> > with the standard temp1_offset attribute in v4 shortly today. Thanks for pointing
+> > this out.
+> > 
+> 
+> Sorry for not realizing this earlier. The added explanation
+> made all the difference.
 
-Okay, applied.
+No worries. I'll fix it in v4. What about the clk_get_rate() part of the code?
+You had a comment regarding it in v2. I responded with justification that we can
+leave it as is. If you still disagree, then I create the clock rate caching in the
+private data at the probe() stage.
 
-Rob
+-Sergey
+
+> 
+> Guenter
