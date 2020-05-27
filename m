@@ -2,120 +2,93 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA829C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52316C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE48207D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEA12078C
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 13:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388874AbgE0Nvb (ORCPT
+        id S2388887AbgE0Nvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 09:51:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:49507 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388516AbgE0Nv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 09:51:28 -0400
-IronPort-SDR: IKo8haopAWSBl9I1yCtpdlb8BI4qZQbMyoNgczX8WMpN+XeuvlHCdyTvw/TZmRFzfeUmzyOC6Y
- uO76M7f0yFoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 06:51:28 -0700
-IronPort-SDR: NNzNVuxnsYgjq0//FrIlgA2Ubaekv0qkfg27wRfeu27gjGG5QHBtb0zZbvLGFggWcMukhQXXLU
- sgaB3Jr9XmgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,441,1583222400"; 
-   d="scan'208";a="266840260"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 06:51:25 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jdwSt-009Eo4-V3; Wed, 27 May 2020 16:51:27 +0300
-Date:   Wed, 27 May 2020 16:51:27 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 09/11] i2c: designware: Retrieve quirk flags as early
- as possible
-Message-ID: <20200527135127.GA1634618@smile.fi.intel.com>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-10-Sergey.Semin@baikalelectronics.ru>
+        Wed, 27 May 2020 09:51:41 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:54443 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388516AbgE0Nvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 09:51:40 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N1fei-1itmw20YYa-011xf5; Wed, 27 May 2020 15:51:26 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] bridge: multicast: work around clang bug
+Date:   Wed, 27 May 2020 15:51:13 +0200
+Message-Id: <20200527135124.1082844-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527120111.5781-10-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:tNJGImBksv3+uHh4LK9iDkXQuSmBokYMQI86sR1uOpirtHXc2NK
+ CrX21qK2bbI6xhZ/Ib4t+RJHd4UNZzA3A8i8Udhs+Nj6xtysytaLytX2xtrUB3t5bOmtrDH
+ Ibtv+P8HKRJy4pUycJSjjYzaNl2DkK5nnWSAL7d8WuvguMsMdN+CvlSnMfp143rT9MKRdXy
+ GJne/oiPD9a6i+xx4Thjg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BuiwkU7bU2Y=:GCvuv9qB6dHCgoInEOLGK9
+ 808pZ65A3+ZvuUmKlZmMiMD+KWWW2i9sI6v31khsncel949CUjtROBxfQ/YqLPiJUBV2ZsN9j
+ qQV6S3goxKEOk9KzwOExut5lMc8AjOFOiF7jXZmTEB/owEEAV0SUx3tM8L1tkLLBxrJELyN6J
+ PqyBUv8hhDmxkOB5b+/7AwSSKMb+THSX2UgAaAdjJXpHwVzyyPLJtTMOxmpQCb7DzClmRCS/u
+ dSbxI4gPROhiPNa8PXGS6rZ9c0mebdDsIs42fVsJKJMSaRpWjWffc9pt5Y8+y0CmvHl4n3vAt
+ qH9K9bG8kV4OEwviLn4j3mWr8mFsal3Pz9anJ5PlSWXDL46FLykAv6jQouHtV/hri3R2yFyb+
+ hwhaFktbARAdRFXtEcygRtIZxEfRg6b7j0WKdyJe8Dc1aBg13Zi4xs1rtC1MrDU3qgpxPIWcX
+ ME2+KIlcSe8RyJWLuNR2qQLQcPKIeQZUeQyjQNfAYeIJG6gcWSzqAk7UUppgM7hX/9AzZgiPl
+ 7EdDeK3BKgwKGWGRypzGiRdQOk/cb/6PY1mti/GTsTFSrbPz8N6apCWYpoIx2bg4EY2Lhk7QN
+ ua8LzeoeF5dWNsDG8BvW9SP1/8hmPZ7Q1cuPp6P0l2vReHontQz/GesEr++93qzBrWIpccEbi
+ QjLD6J7noL6sgsnqeNoIwHa8y1tl2XpOQYJ1KDVXNob0pyUWKGelHT+PJVJmrf8ooIbe/a5E5
+ Ejc2tS5hwpNiGyKjwaRcItpmmNZPROwbjJcVBXMabwtIKubudHvMqjW+19SuMHF+eWEbZNHjL
+ m6RSK50uvvuP0D73KZUz5T2LuCfFaMWnR9CemE+ZRKpt2N+Oh0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 03:01:09PM +0300, Serge Semin wrote:
-> Some platforms might need to activate the driver quirks at a very early
-> probe stage. For instance, Baikal-T1 System I2C doesn't need to map the
-> registers space as ones belong to the system controller. Instead it will
-> request the syscon regmap from the parental DT node. In order to be able
-> to do so let's retrieve the model flags right after the DW I2C private
-> data is created.
+Clang-10 and clang-11 run into a corner case of the register
+allocator on 32-bit ARM, leading to excessive stack usage from
+register spilling:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+net/bridge/br_multicast.c:2422:6: error: stack frame size of 1472 bytes in function 'br_multicast_get_stats' [-Werror,-Wframe-larger-than=]
 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> 
-> ---
-> 
-> Changelog v3:
-> - This is a new patch, which has been created due to declining the
->   glue-layer approach.
-> ---
->  drivers/i2c/busses/i2c-designware-platdrv.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index ca057aa9eac4..ad292de2d260 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -124,6 +124,8 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->  	if (!dev)
->  		return -ENOMEM;
->  
-> +	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
-> +
->  	dev->base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(dev->base))
->  		return PTR_ERR(dev->base);
-> @@ -146,8 +148,6 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->  
->  	i2c_dw_acpi_adjust_bus_speed(&pdev->dev);
->  
-> -	dev->flags |= (uintptr_t)device_get_match_data(&pdev->dev);
-> -
->  	if (pdev->dev.of_node)
->  		dw_i2c_of_configure(pdev);
->  
-> -- 
-> 2.26.2
-> 
+Work around this by marking one of the internal functions as
+noinline_for_stack.
 
+Link: https://bugs.llvm.org/show_bug.cgi?id=45802#c9
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ net/bridge/br_multicast.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
+index ad12fe3fca8c..83490bf73a13 100644
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -2413,7 +2413,8 @@ void br_multicast_uninit_stats(struct net_bridge *br)
+ 	free_percpu(br->mcast_stats);
+ }
+ 
+-static void mcast_stats_add_dir(u64 *dst, u64 *src)
++/* noinline for https://bugs.llvm.org/show_bug.cgi?id=45802#c9 */
++static noinline_for_stack void mcast_stats_add_dir(u64 *dst, u64 *src)
+ {
+ 	dst[BR_MCAST_DIR_RX] += src[BR_MCAST_DIR_RX];
+ 	dst[BR_MCAST_DIR_TX] += src[BR_MCAST_DIR_TX];
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.26.2
 
