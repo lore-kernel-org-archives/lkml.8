@@ -2,127 +2,138 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A61C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72954C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD332073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DC42089D
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 20:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cO0BH8ko"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GfIrViUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbgE0UKQ (ORCPT
+        id S1728450AbgE0ULU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 16:10:16 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38360 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387629AbgE0UKN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 16:10:13 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 49XMPw2mpyz9vZ2R
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 20:10:12 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id S72-_PqyCzUr for <linux-kernel@vger.kernel.org>;
-        Wed, 27 May 2020 15:10:12 -0500 (CDT)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 49XMPw138jz9vK0r
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:10:12 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p6.oit.umn.edu 49XMPw138jz9vK0r
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p6.oit.umn.edu 49XMPw138jz9vK0r
-Received: by mail-io1-f71.google.com with SMTP id t23so17771753iog.21
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 13:10:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=hPSY+Zh0t1rGNkSqJtjBbGWhpyEB+X/pF0E6TThgwhg=;
-        b=cO0BH8ko43bkOPatdOWMTW1FAm4WGWEPap0aloF2Ov8I0nG59A/3qh6AZfb6yAbZZO
-         WAhNKKNK7gSl5i+QdplLfll1L86UVGr2JjcN3cCuvjtM4R1WxDbhalnYCwNgAdRyz5pR
-         gYgtyRBZD+g5y6bZ/jB0XJ+eePjHUzxTXtJ8zt8lnJwfL9WqejH+dysiC2m3vWxz0qIU
-         5nQrWV7T5cxzaojhGzAJaNCP3VPFY8xJInVRdfzCR+MaWpnpTT3X+w0EwAsjWp/q6kjl
-         XGbnFX8oRUWA22jCtYpUo772KJpqFPyEjNrgn1OTYXUggTnMtWI0arlJAKaeejZwEVHO
-         OJ/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hPSY+Zh0t1rGNkSqJtjBbGWhpyEB+X/pF0E6TThgwhg=;
-        b=NmOFRPJ+l1W6Xf9oEJcZhhhKv8FBb3Vk/40y5Wi2mm6TTLVd0ePNV4cZmRvwvzFYO6
-         l4X6/tyz9SzzDLNXWCPJVyYmSE6wPWsZaPalH1/HBGaBLyUZAe5+z7BTv4Gm+XTUbQ02
-         F//MGINyT9GUXeBwNLuMv2g2Gm+gl/wgIGnNvdS8VZx92OTdhi+112ZwUctErmTjc7Bp
-         XJwXL7pbQHncJkdTqlPoGzFxT93Y3+ccWEj7Uc4+MydDzJD8xIiZ63wYqwckRcl7tpey
-         7vFWTk2nHbudOgB+1jBwxHvlXrjPN817uY7TLYOH3/hvGpETaJ7921EFG9zUZs+26por
-         yGkQ==
-X-Gm-Message-State: AOAM531Dxe31Z0OKwcTYS5MrWdUpVrAVwERNMjKSp+0kirC1VdOuQQyf
-        9Jut7/bLRquugImHMKoSPAX2qx0191yDGXCh21MkujDGVu1jipLusiP0XrM9+5R8gw2i3maXhu5
-        izqWw8qAo2U7O+PWpw9L4cLDnBQyC
-X-Received: by 2002:a6b:7b4a:: with SMTP id m10mr8477805iop.55.1590610211694;
-        Wed, 27 May 2020 13:10:11 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxuhrc7NDsfRK/mm7gpFg9DSuH5ZtlqPdBbXWHpT2UnfIHxGwqhPUuTPCAJzX65HWUIdG9W/A==
-X-Received: by 2002:a6b:7b4a:: with SMTP id m10mr8477782iop.55.1590610211353;
-        Wed, 27 May 2020 13:10:11 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id y11sm2020565ily.22.2020.05.27.13.10.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 13:10:10 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Vyacheslav Dubeyko <Vyacheslav.Dubeyko@hgst.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nilfs2: Fix reference count leak in nilfs_sysfs_create_device_group
-Date:   Wed, 27 May 2020 15:09:33 -0500
-Message-Id: <20200527200933.31135-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 May 2020 16:11:20 -0400
+Received: from mout.web.de ([212.227.17.11]:60313 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgE0ULT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 16:11:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1590610261;
+        bh=CHV7SNSIIZzmGY3i8n8PgVpj3Nj1KoCxW/Gzc0jiBr8=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=GfIrViUQFiikAi7Qic8g6awgl7l7e3lC9z1+ZC76F8DCKcYCwI1tm5la5Cd+z2ZAQ
+         mMs/5qA+VJDno0FmtVThXZcikyGbM2bEj/Lplp7Gmr3HsJuFQhVMd0JRkfz+BhpVo/
+         M2IayMrUsuloABU74SfxIx9WqeIGdpUmmOJM3ioY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.135.185.253]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M6mTI-1iqM8v2Gm4-00wYgX; Wed, 27
+ May 2020 22:11:01 +0200
+To:     Chuhong Yuan <hslester96@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Chuhong Yuan <hslester95@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] media: exynos4-is: Add missed check for
+ pinctrl_lookup_state()
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <9e5330d3-9f68-2538-6bd6-cc4c688e9e85@web.de>
+Date:   Wed, 27 May 2020 22:11:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:E0ncCqmnC3zi3ItR9C0IER0kl4BL2d120+xAIU464WkV7h3xbBR
+ jtRpR8xK2RG9pQApzkz0BQPA85iBqNhHvDcihVDeIuWa3endfeLIg570GHvTSMSje0E7S9u
+ L0K4RICfoFuLy+KsPSD2sadpJhV+us5k2WjJJy8GSHsZx76R8fLjFMI922+6hWTQcgs9DEF
+ Ljvi741rMrYBCAL/KYahA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R9sKFzu2WYk=:D+BapHhaQTTkh/HkEA5gLs
+ 55HI6FXMc53defQsDSwfQGmpeD6V9jHqUymC5680rmQJQF9dj+PRBtDopIbZa3WYgJMhGWou4
+ ax/hTE7P8PNkTn5FG20cPS+eAZ76nuUZFViQTwTL98u5aQrVurr11xtooughAxojbbYW17921
+ nNV8LVWl+yAUJJ9joRhmW+bT2d/g9OVVHuTa9moUQMZiLFpZoa+XfS1grnIwLw0LoZOLf1bx3
+ XWwZYIwcQ1GHpmqBnttKTEd3y2cKP4NJIIV+UG20hgXRbkW/4JBvN51lfLiViU0ZpC4JZqo2F
+ wP81brd19HULAp7I7oh1mHbmoD/zdV5W8dmdqTDdQ7GtpsjNeqCq6JEL60hAT0R+d/zBoKmve
+ EEFZSaGh32Gnc5VZVhgOKU032TOhKbHXpKcJrl0CvFYbO21R68fe0j5nCELbkDf7ixvv+hS+b
+ HqosIuB3IKKBFvdUwoMlZLIt8YikHH5y5c5X9K131+bxANSJQ2LLK+r7Tm7BB1zDqwmDA2VJc
+ uGUeLVZfvSg1PoBtgwbrFj/xzURXmCCoNeHfkIqNqOrLpQbkLqoCVwJXU06ss48H9zHP1HWl4
+ oBfzif5HLGZ80Ilog+hmILSPEngZOShnCa+obp5KmXXNHqraI4hN97ZAWtiaS88sUJpgfdjRD
+ fiQ3FiWkGdclx0bETeKlttXrTcugTLAPRlMK369wr/beClx1a6fzbShnW36azvwcAwUTVA78q
+ bqvqSjFw0p6rxLFA0UqmJ3OVTAsVsRq2ct/IOFka/1kHMuNKqQElnBfDxjVMNHZxw4IB/xS1K
+ H4koE6T5TAY/CjAfQEUmP9Nuk1yGuNG+FDLtOjpWBvIfEu0ChO9h/qI7GWB904d98PtwIHYu7
+ f0aLhzVUwwxYL8rixxgspoeyMHCa9014O8tAWyZ/dVJIVQ2eMTMWdXd/ALFJX5M+UcDSyZSbc
+ leb5JOWRvrlJEB0oUr91yMZhya8PPPzsLCb4uhqb3+DcEWg37JO8xQ598HGtqhohQFZP3SFcu
+ 4egzmZ7UYWaNLktc57c3UUMmaDDhMV7OX//c4xXu8FSfx4CuPoOdi+4ufSqnn54ZUMA2f+aUy
+ zNEZFkG5fCX7NTKeIua1xHMK+RJrpUqFpOOkQDcoqXEdxT87tA7kdnVKCaHzy7Nb7s7F0u1Qb
+ 9ReBdrsJxHrX2rU5Iz9OHYoYXgEm3nLL6FBKGeNfkLIEXjn9ytssWRojCFRVn9K/O0S6vRNsh
+ AGhFknlT0gy+0IuYa
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+> fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
+> Add the missed check
 
-kobject_init_and_add() takes reference even when it fails.
-In nilfs_sysfs_create_device_group(), the memory allocated by
-kobject_init_and_add() is not freed when kobject_init_and_add()
-fails. Thus replace the jump target "free_dev_subgroups" by
-"cleanup_dev_kobject".
+Thanks for another completion of the exception handling.
 
-Fixes: da7141fb78db ("nilfs2: add /sys/fs/nilfs2/<device> group")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- fs/nilfs2/sysfs.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nilfs2/sysfs.c b/fs/nilfs2/sysfs.c
-index e60be7bb55b0..4a74756d52fe 100644
---- a/fs/nilfs2/sysfs.c
-+++ b/fs/nilfs2/sysfs.c
-@@ -1000,7 +1000,7 @@ int nilfs_sysfs_create_device_group(struct super_block *sb)
- 	err = kobject_init_and_add(&nilfs->ns_dev_kobj, &nilfs_dev_ktype, NULL,
- 				    "%s", sb->s_id);
- 	if (err)
--		goto free_dev_subgroups;
-+		goto cleanup_dev_kobject;
- 
- 	err = nilfs_sysfs_create_mounted_snapshots_group(nilfs);
- 	if (err)
-@@ -1038,8 +1038,6 @@ int nilfs_sysfs_create_device_group(struct super_block *sb)
- 
- cleanup_dev_kobject:
- 	kobject_del(&nilfs->ns_dev_kobj);
--
--free_dev_subgroups:
- 	kfree(nilfs->ns_dev_subgroups);
- 
- failed_create_device_group:
--- 
-2.17.1
+>                      to fix it.
 
+I suggest to replace this wording by the tag =E2=80=9CFixes=E2=80=9D for t=
+he commit message.
+
+Regards,
+Markus
