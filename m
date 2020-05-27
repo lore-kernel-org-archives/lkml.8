@@ -2,148 +2,160 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9687C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B59C8207D3
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733AC207D3
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 11:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XsUGywVb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Nd7UDQBk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730025AbgE0L0g (ORCPT
+        id S1730032AbgE0L0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 07:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730000AbgE0L0e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 07:26:34 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B92F0C061A0F
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id 82so14247676lfh.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 04:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7O70g2lJGWAJBSxv7+BPv+EgaUlJHCXJMM3QrFbfLoU=;
-        b=XsUGywVbPPu2a5crGLJmxPTCsuzR0OuIQ+aBzOOBv++1v3NKjBLrrjSSZcDpiYN0qf
-         Dqa0KgBDDL2GMXstARbs0S3GGlmSB6moGoADwt2Gf9llGEkgAQoEEbIxpiCeugl/wXdJ
-         1Y7er1GA02R3sgkVvwl7nNkN/XKDaMMP9Wjvt0SWx7XmF54qZM7DmAzM4MJwI1dZ8eli
-         ASI8yK3ag/j5xU4oDjT5/oP5EaLGYEpesbrFqrn6AVy/NiIea1s2hRKTrr2EHjKvVfgG
-         4J+BYiAZgDrSD/C3CkWmD+A/yT8MjSYIMj7StC2bFYg9auoVk0KpMirlMocizL+A561/
-         0/0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7O70g2lJGWAJBSxv7+BPv+EgaUlJHCXJMM3QrFbfLoU=;
-        b=DMXdkGyGQfTFXRrjRGUZ6TYIyUSW42D86ucYqUl3ZWHwLZslJ+WH1W8yf8vtGVf9SV
-         3Ne+OS2P+PpeyphUsQgMeDu2wQVceX/OYCKC9hXYm5usFJW+6jF5RJ0UyIrzMBs84w9M
-         PlpHp/swnfoLiC7u5slF6esdUdB+Tv95zDHgHJyU7jk3wYeJEUAwOqPFyXvYmatxjfKW
-         CrlDMVOwJbOY9APSZzLfg4HJZbJyHJm4ymVTX99354SZneE+Yh2EnvMo7rtpuzufp3Uw
-         pNrBeRZSeKtL9r2VSH1Zg4zaE3NmIpsb+wYq7GyTLKumal863lZ8sIRnzwNgL1Wb7/Wf
-         PCVg==
-X-Gm-Message-State: AOAM533RpC+1nqvXn6qHj48xRCPA2FNmShhUZvsPdHgSUJO3v6HKkZ53
-        gF1LKKQB7MvnhmDbN83SnCPcZw==
-X-Google-Smtp-Source: ABdhPJxqhuM7NA8BFMzydGM+AFjiGQCKOMTJMKG2dfNheWXSg5exJmnEkRYX48DfquyDmwLY2gQZtQ==
-X-Received: by 2002:ac2:5604:: with SMTP id v4mr2364028lfd.124.1590578792196;
-        Wed, 27 May 2020 04:26:32 -0700 (PDT)
-Received: from localhost (c-8c28e555.07-21-73746f28.bbcust.telenor.se. [85.229.40.140])
-        by smtp.gmail.com with ESMTPSA id n22sm627557ljj.138.2020.05.27.04.26.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 04:26:31 -0700 (PDT)
-From:   Anders Roxell <anders.roxell@linaro.org>
-List-Id: <soc.lore.kernel.org>
-To:     soc@kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, linus.walleij@linaro.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH 5/5] power: vexpress: make the reset driver a module
-Date:   Wed, 27 May 2020 13:26:08 +0200
-Message-Id: <20200527112608.3886105-6-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200527112608.3886105-1-anders.roxell@linaro.org>
-References: <20200527112608.3886105-1-anders.roxell@linaro.org>
+        Wed, 27 May 2020 07:26:40 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:58974 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730005AbgE0L0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 07:26:35 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590578794; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=P25q6ipZ3riPqbhrRJ+PtUgnCNFkPSplK5OpM68AuG8=; b=Nd7UDQBkFQiyTavNQyHxZ73QA+DJrbToW4oSCI7Xh1P6KOXmtiDZu+T9st9+bu3HL5CsZ1Gw
+ hXf3TuoHw+DR8iLOekx+B+nZjLo3CERAfDEAEuKyw/w4/E2kaY5ySAoPbNugFr9DfYk7QNGd
+ R09mmdxXNKJ67TCJVocwYmALU94=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ece4e6037a454afcbcfe370 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 27 May 2020 11:26:24
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A0AF8C433B1; Wed, 27 May 2020 11:26:24 +0000 (UTC)
+Received: from [192.168.43.129] (unknown [106.222.1.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AFE3C433C9;
+        Wed, 27 May 2020 11:26:17 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AFE3C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org>
+ <1590253873-11556-2-git-send-email-mkshah@codeaurora.org>
+ <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
+Date:   Wed, 27 May 2020 16:56:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Today the vexpress power driver can only be builtin.  Rework so it's
-possible for the vexpress power driver to be a module.
+Hi,
 
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- arch/arm/mach-vexpress/Kconfig          |  1 -
- drivers/power/reset/Kconfig             |  5 +++--
- drivers/power/reset/vexpress-poweroff.c | 12 +++++++++++-
- 3 files changed, 14 insertions(+), 4 deletions(-)
+On 5/27/2020 3:14 PM, Stephen Boyd wrote:
+> Quoting Maulik Shah (2020-05-23 10:11:10)
+>> With 'commit 461c1a7d4733 ("gpiolib: override irq_enable/disable")' gpiolib
+>> overrides irqchip's irq_enable and irq_disable callbacks. If irq_disable
+>> callback is implemented then genirq takes unlazy path to disable irq.
+>>
+>> Underlying irqchip may not want to implement irq_disable callback to lazy
+>> disable irq when client drivers invokes disable_irq(). By overriding
+>> irq_disable callback, gpiolib ends up always unlazy disabling IRQ.
+>>
+>> Allow gpiolib to lazy disable IRQs by overriding irq_disable callback only
+>> if irqchip implemented irq_disable. In cases where irq_disable is not
+>> implemented irq_mask is overridden. Similarly override irq_enable callback
+>> only if irqchip implemented irq_enable otherwise irq_unmask is overridden.
+>>
+>> Fixes: 461c1a7d47 (gpiolib: override irq_enable/disable)
+> This isn't a proper Fixes line. Should have quotes
+>
+> Fixes: 461c1a7d4733 ("gpiolib: override irq_enable/disable")
+Thanks for pointing this, i will address in next revision.
+>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   drivers/gpio/gpiolib.c      | 55 +++++++++++++++++++++++++++++----------------
+>>   include/linux/gpio/driver.h | 13 +++++++++++
+>>   2 files changed, 49 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index eaa0e20..3810cd0 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_data *d)
+>>          gpiochip_relres_irq(gc, d->hwirq);
+>>   }
+>>   
+>> +static void gpiochip_irq_mask(struct irq_data *d)
+>> +{
+>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>> +
+>> +       if (gc->irq.irq_mask)
+>> +               gc->irq.irq_mask(d);
+>> +       gpiochip_disable_irq(gc, d->hwirq);
+> How does this work in the lazy case when I want to drive the GPIO? Say I
+> have a GPIO that is also an interrupt. The code would look like
+>
+>   struct gpio_desc *gpio = gpiod_get(...)
+>   unsigned int girq = gpiod_to_irq(gpio)
+>
+>   request_irq(girq, ...);
+>
+>   disable_irq(girq);
+>   gpiod_direction_output(gpio, 1);
+>
+> In the lazy case genirq wouldn't call the mask function until the first
+> interrupt arrived on the GPIO line. If that never happened then wouldn't
+> we be blocked in gpiod_direction_output() when the test_bit() sees
+> FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
+> gpios?
 
-diff --git a/arch/arm/mach-vexpress/Kconfig b/arch/arm/mach-vexpress/Kconfig
-index 065e12991663..4b54d8cf897d 100644
---- a/arch/arm/mach-vexpress/Kconfig
-+++ b/arch/arm/mach-vexpress/Kconfig
-@@ -15,7 +15,6 @@ menuconfig ARCH_VEXPRESS
- 	select NO_IOPORT_MAP
- 	select PLAT_VERSATILE
- 	select POWER_RESET
--	select POWER_RESET_VEXPRESS
- 	select POWER_SUPPLY
- 	select REGULATOR if MMC_ARMMMCI
- 	select REGULATOR_FIXED_VOLTAGE if REGULATOR
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index f07b982c8dff..8468d42b0198 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -189,9 +189,10 @@ config POWER_RESET_VERSATILE
- 	  reference boards.
- 
- config POWER_RESET_VEXPRESS
--	bool "ARM Versatile Express power-off and reset driver"
-+	tristate "ARM Versatile Express power-off and reset driver"
- 	depends on ARM || ARM64
--	depends on VEXPRESS_CONFIG=y
-+	depends on VEXPRESS_CONFIG
-+	default VEXPRESS_CONFIG
- 	help
- 	  Power off and reset support for the ARM Ltd. Versatile
- 	  Express boards.
-diff --git a/drivers/power/reset/vexpress-poweroff.c b/drivers/power/reset/vexpress-poweroff.c
-index 1fdbcbd95fc2..b1eef95132d9 100644
---- a/drivers/power/reset/vexpress-poweroff.c
-+++ b/drivers/power/reset/vexpress-poweroff.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/delay.h>
-+#include <linux/module.h>
- #include <linux/notifier.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -146,4 +147,13 @@ static struct platform_driver vexpress_reset_driver = {
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(vexpress_reset_driver);
-+
-+static int __init vexpress_reset_init(void)
-+{
-+	return platform_driver_register(&vexpress_reset_driver);
-+}
-+module_init(vexpress_reset_init);
-+
-+MODULE_AUTHOR("Pawel Moll <pawel.moll@arm.com>");
-+MODULE_DESCRIPTION("Vexpress reset driver");
-+MODULE_LICENSE("GPL v2");
+The client driver can decide to unlazy disable IRQ with below API...
+
+  irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
+
+This will immediatly invoke mask function (unlazy disable) from genirq, 
+even though irq_disable is not implemented.
+
+Thanks,
+Maulik
+>
+>> +}
+>> +
+>> +static void gpiochip_irq_unmask(struct irq_data *d)
+>> +{
+>> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>> +
+>> +       gpiochip_enable_irq(gc, d->hwirq);
+>> +       if (gc->irq.irq_unmask)
+>> +               gc->irq.irq_unmask(d);
+>> +}
+>> +
+
 -- 
-2.26.2
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
