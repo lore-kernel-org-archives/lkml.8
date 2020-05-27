@@ -2,124 +2,83 @@ Return-Path: <SRS0=UR55=7J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 773422073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QGQZOGqP"
+	by mail.kernel.org (Postfix) with ESMTP id 6988D20899
+	for <linux-kernel@archiver.kernel.org>; Wed, 27 May 2020 22:50:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590619837;
+	bh=AC/qBVIz2RY3tjOrzusi4AN43Yd3fTkCrWWr78GG/34=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=H/fpliM0dFg8L/nOnlEiaf7YjWRmzl7obCMYMv9ix2NE6urbu75JR3HMyq7JdqGX2
+	 1x13ONn97z9ZqLEc7NdzkXsX2iMSMmXBZdY+YCDK9PVlfpNRfp5XC5hLH7TjXPZCkw
+	 B1wV4TNfQ6lGuny1enox7HaNkiBkpHote9E5MVR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbgE0Wr2 (ORCPT
+        id S1725820AbgE0Wug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 18:47:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbgE0WrR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 18:47:17 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3D2C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:17 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id u6so1129016ybo.18
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 15:47:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=uaO5q9pQaTKgJe9+MaWFZJcIfvBVER7QDMhUyzQaTsA=;
-        b=QGQZOGqPrpupB3Vp5Ef4HrGXuY4cHKgDlnXhudD88I4lnYaYraUMccM1rB+egyoBwY
-         jn5dh4ZGyIOoC9cbyIPz96TyUcoM4MCn4PBgKi4X7wsWqWfsDcYvQ0nyDVc7tA1nBDvQ
-         rKR9vd61VOZF3jsWwWdX/QNBxCnBRkrgUN1PK1Sn6mC5l4nFILTmNtKCfzptAk8alP9y
-         FisfjA8ffax2sqzrmxGfIwh6bAhSfWzz/t+CRdOg9d+tO2obmW/yTOVBcqCu5QLepq3z
-         CGjdllfjTxHLygf9Y3nf/3q8tuZV23pKo+FpvwbQLv8YpbtwhyHnLfhR9yP7dTxeZMJL
-         9shw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=uaO5q9pQaTKgJe9+MaWFZJcIfvBVER7QDMhUyzQaTsA=;
-        b=ZgV282BtGpyuM8V1Og+ANZyikxNhYR3KlD4J2bB5JsoFxQFWqVbefkq8VeGXZLsHFx
-         Aaj6JiHj8V0MVcfqwVZv19fB9ty9RmuCm99puRFG4P940IAiDQz/teDe13raDPUak9Um
-         K/elejQGT2I227984ZVvpxexbF9/ic461TIcp8A2AsqNW8i3m1zFDZCghNTi+ioDhh2l
-         QbqjM2bMY3bqi+0Y+3mfrVL4QcgsuvRdKAqHY8+f0Es/IOcTv6zHAQZlJeysaBhb0p0R
-         IVL5qfnL66aizUwyNlx8t4Gu34pSsnPwaQzeC7KCxMseHIx4JM0Sugi1ghmSSwNxMzIQ
-         JEqw==
-X-Gm-Message-State: AOAM533uhsnk8+Hfhg5CAvDML1/zKpt95PP+3OU4jCTQXERfksDRCCq7
-        ybaVNa5+neB1l5m2nT+laYaXZsy6TCfDwr+VEYNKIQidrfr4lPPAxnNpLlfetlO1ISqRty0a79/
-        YrxaT23sHDLMn1t1vIJrxyMW2eK9BXEavuxUlND7B2R8xUx7JgiHfsfVI3g+zVFDI0/FFwSl7
-X-Google-Smtp-Source: ABdhPJwXL2hxpvnqkAu2gn3sIOOy1ci5pKJ+ZEBo5kAjt8MvF6xde14ZaMNyZ6HexAnAui46BrSDtx8Nhs5K
-X-Received: by 2002:a25:60c4:: with SMTP id u187mr715831ybb.509.1590619636693;
- Wed, 27 May 2020 15:47:16 -0700 (PDT)
-Date:   Wed, 27 May 2020 15:46:58 -0700
-In-Reply-To: <20200527224659.206129-1-eranian@google.com>
-Message-Id: <20200527224659.206129-5-eranian@google.com>
-Mime-Version: 1.0
-References: <20200527224659.206129-1-eranian@google.com>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-Subject: [PATCH v2 4/5] perf/x86/rapl: make perf_probe_msr() more robust and flexible
-From:   Stephane Eranian <eranian@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@elte.hu, irogers@google.com,
-        kim.phillips@amd.com, jolsa@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 27 May 2020 18:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbgE0Wug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 18:50:36 -0400
+Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EEFC2071A;
+        Wed, 27 May 2020 22:50:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590619836;
+        bh=AC/qBVIz2RY3tjOrzusi4AN43Yd3fTkCrWWr78GG/34=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VGr0mm/uYPh+W6nREpEC/OqhxQ54VwT0nXe0oLBmmhPRb48QhwaTYd3VgVQO3kJ59
+         3UJbET/o9qWoUkvbv97YWwpxa2JX5FSr5+QalNF0uLbxOR60YCdltuCmj351kl/Iba
+         V7Knj2in8qphInGIehOaq1LhmIuM1JqviKvUTM14=
+Date:   Wed, 27 May 2020 17:50:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 1/2] xen-pciback: Use dev_printk() when possible
+Message-ID: <20200527225034.GA270348@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <612fee00-4e7c-9b90-511d-4efb7676cbed@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch modifies perf_probe_msr() by allowing passing of
-struct perf_msr array where some entries are not populated, i.e.,
-they have either an msr address of 0 or no attribute_group pointer.
-This helps with certain call paths, e.g., RAPL.
+On Wed, May 27, 2020 at 03:34:26PM -0700, Boris Ostrovsky wrote:
+> On 5/27/20 1:43 PM, Bjorn Helgaas wrote:
+> > @@ -155,8 +157,8 @@ int xen_pcibk_config_read(struct pci_dev *dev, int offset, int size,
+> >  	u32 value = 0, tmp_val;
+> >  
+> >  	if (unlikely(verbose_request))
+> > -		printk(KERN_DEBUG DRV_NAME ": %s: read %d bytes at 0x%x\n",
+> > -		       pci_name(dev), size, offset);
+> > +		dev_printk(KERN_DEBUG, &dev->dev, "read %d bytes at 0x%x\n",
+> > +			   size, offset);
+> 
+> 
+> Maybe then dev_dbg() ?
 
-In case the grp is NULL, the default sysfs visibility rule
-applies which is to make the group visible. Without the patch,
-you would get a kernel crash with a NULL group.
+printk(KERN_DEBUG) always produces output, so I used
+dev_printk(KERN_DEBUG) to retain that behavior.
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
----
- arch/x86/events/probe.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+dev_dbg() does not always produce output, since it depends on DEBUG or
+CONFIG_DYNAMIC_DEBUG and the dynamic debug settings.
 
-diff --git a/arch/x86/events/probe.c b/arch/x86/events/probe.c
-index c2ede2f3b2770..34ee0ee60ace8 100644
---- a/arch/x86/events/probe.c
-+++ b/arch/x86/events/probe.c
-@@ -10,6 +10,11 @@ not_visible(struct kobject *kobj, struct attribute *attr, int i)
- 	return 0;
- }
- 
-+/*
-+ * accepts msr[] array with non populated entries as long as either
-+ * msr[i].msr is 0 or msr[i].grp is NULL. Note that the default sysfs
-+ * visibility is visible when group->is_visible callback is set.
-+ */
- unsigned long
- perf_msr_probe(struct perf_msr *msr, int cnt, bool zero, void *data)
- {
-@@ -24,8 +29,16 @@ perf_msr_probe(struct perf_msr *msr, int cnt, bool zero, void *data)
- 		if (!msr[bit].no_check) {
- 			struct attribute_group *grp = msr[bit].grp;
- 
-+			/* skip entry with no group */
-+			if (!grp)
-+				continue;
-+
- 			grp->is_visible = not_visible;
- 
-+			/* skip unpopulated entry */
-+			if (!msr[bit].msr)
-+				continue;
-+
- 			if (msr[bit].test && !msr[bit].test(bit, data))
- 				continue;
- 			/* Virt sucks; you cannot tell if a R/O MSR is present :/ */
--- 
-2.27.0.rc0.183.gde8f92d652-goog
+If dev_dbg() seems like the right thing, I would probably add a
+separate patch on top to convert dev_printk(KERN_DEBUG) to dev_dbg().
 
+Thanks for taking a look!  
+
+Bjorn
