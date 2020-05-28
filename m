@@ -2,162 +2,200 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C507C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB352145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A87A208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590631903;
+	bh=asJD/3t/zHweutpV8BFPslQh/6BkbEzl3h/0Wlk8ORE=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=rx8wUkQNCeys3zKKAm8vz+fbarqjKOv+Sb3/p0TCdN2/PhZmqzp1K2UQQFHW492Nt
+	 JoiUmvQ+jxR6uZiOTceNw1dUz0skCdTh9oWb8lvB0o6re6rFp5Oev7oEVMjATmHJPE
+	 mmm4++dgsPoYifyHKY02ACoXdnKfZG/AsZ9yvd54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbgE1CHQ (ORCPT
+        id S1726718AbgE1CLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:07:16 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:51826 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726815AbgE1CHP (ORCPT
+        Wed, 27 May 2020 22:11:42 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:46712 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgE1CLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:07:15 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 27 May 2020 19:07:11 -0700
-Received: from ubuntu.eng.vmware.com (unknown [10.20.113.240])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 274C9B2720;
-        Wed, 27 May 2020 22:07:14 -0400 (EDT)
-From:   Ronak Doshi <doshir@vmware.com>
-To:     <netdev@vger.kernel.org>
-CC:     Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 1/4] vmxnet3: prepare for version 4 changes
-Date:   Wed, 27 May 2020 19:07:03 -0700
-Message-ID: <20200528020707.10036-2-doshir@vmware.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200528020707.10036-1-doshir@vmware.com>
-References: <20200528020707.10036-1-doshir@vmware.com>
+        Wed, 27 May 2020 22:11:42 -0400
+Received: by mail-il1-f194.google.com with SMTP id h3so3581561ilh.13;
+        Wed, 27 May 2020 19:11:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8/7AtcVQnogEJMITKMjo/+NbsrcSCHvci6t4MVh9Kc8=;
+        b=d5LCXuCw9SWG3qJRvbpPLoPX1fFN0k4rSS+k2b8ciZ5tLE7LW9rVeDljwHKt9HwMoA
+         eM61FFhMlHVN64eSvJR5u/HQoNULb5gbqImMZbJo5PvmXVkKDJ2h6cn86Sgsh04DThd8
+         97VEYkK+vGvbd9unwiqtfnQ2HBOaoMHZjHKm6KxfOduTUMGko90uCLYw0bn1kHCM6Yu3
+         cxXDurYVoUWSleiS2WVJMsZmjvDrnGiDH8UATpGIQWQWNM2ujKy6akwRcgi9q7WeIq4M
+         Y6sgDzTFzcDX0LL9ijawjdCj30I7K97QcHL/I+OTdAUH8doYLC/cV4TiuyVoE/jBu+18
+         IWtw==
+X-Gm-Message-State: AOAM531dUBirf/D4cLh3LG/F1Wus7fGl1zqBFkhbePHwf0SIveYPD0N7
+        hWUBbVuCy55tujqk8YRqaQ==
+X-Google-Smtp-Source: ABdhPJyarlfDg0topsEF4LLMlLljnAFIUiSejKfnwzERU46ep1pIjMA9nxf26wH/i1HT1FPTA9wZsg==
+X-Received: by 2002:a92:2907:: with SMTP id l7mr1061985ilg.48.1590631899776;
+        Wed, 27 May 2020 19:11:39 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id b18sm2458167ilh.77.2020.05.27.19.11.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 19:11:39 -0700 (PDT)
+Received: (nullmailer pid 3220699 invoked by uid 1000);
+        Thu, 28 May 2020 02:11:37 -0000
+Date:   Wed, 27 May 2020 20:11:37 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Olof Johansson <olof@lixom.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 05/14] dt-bindings: arm: sparx5: Add documentation for
+ Microchip Sparx5 SoC
+Message-ID: <20200528021137.GA3214411@bogus>
+References: <20200513125532.24585-1-lars.povlsen@microchip.com>
+ <20200513125532.24585-6-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: doshir@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513125532.24585-6-lars.povlsen@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmxnet3 is currently at version 3 and this patch initiates the
-preparation to accommodate changes for version 4. Introduced utility
-macros for vmxnet3 version 4 comparison and update Copyright
-information.
+On Wed, May 13, 2020 at 02:55:23PM +0200, Lars Povlsen wrote:
+> This adds the main Sparx5 SoC DT documentation file, with information
+> abut the supported board types.
+> 
+> Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> ---
+>  .../bindings/arm/microchip,sparx5.yaml        | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> new file mode 100644
+> index 0000000000000..83b36d1217988
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/microchip,sparx5.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/microchip,sparx5.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip Sparx5 Boards Device Tree Bindings
+> +
+> +maintainers:
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
+> +
+> +description: |+
+> +   The Microchip Sparx5 SoC is a ARMv8-based used in a family of
+> +   gigabit TSN-capable gigabit switches.
+> +
+> +   The SparX-5 Ethernet switch family provides a rich set of switching
+> +   features such as advanced TCAM-based VLAN and QoS processing
+> +   enabling delivery of differentiated services, and security through
+> +   TCAM-based frame processing using versatile content aware processor
+> +   (VCAP)
+> +
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
+> +      - description: The Sparx5 pcb125 board is a modular board,
+> +          which has both spi-nor and eMMC storage. The modular design
+> +          allows for connection of different network ports.
+> +        items:
+> +          - const: microchip,sparx5-pcb125
+> +          - const: microchip,sparx5
+> +
+> +      - description: The Sparx5 pcb134 is a pizzabox form factor
+> +          gigabit switch with 20 SFP ports. It features spi-nor and
+> +          either spi-nand or eMMC storage (mount option).
+> +        items:
+> +          - const: microchip,sparx5-pcb134
+> +          - const: microchip,sparx5
+> +
+> +      - description: The Sparx5 pcb135 is a pizzabox form factor
+> +          gigabit switch with 48+4 Cu ports. It features spi-nor and
+> +          either spi-nand or eMMC storage (mount option).
+> +        items:
+> +          - const: microchip,sparx5-pcb135
+> +          - const: microchip,sparx5
+> +
+> +  axi@600000000:
+> +    type: object
+> +    description: the root node in the Sparx5 platforms must contain
+> +      an axi bus child node. They are always at physical address
+> +      0x600000000 in all the Sparx5 variants.
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: simple-bus
+> +      reg:
+> +        maxItems: 1
 
-Signed-off-by: Ronak Doshi <doshir@vmware.com>
----
- drivers/net/vmxnet3/Makefile          | 2 +-
- drivers/net/vmxnet3/upt1_defs.h       | 2 +-
- drivers/net/vmxnet3/vmxnet3_defs.h    | 2 +-
- drivers/net/vmxnet3/vmxnet3_drv.c     | 2 +-
- drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 +-
- drivers/net/vmxnet3/vmxnet3_int.h     | 5 ++++-
- 6 files changed, 9 insertions(+), 6 deletions(-)
+simple-bus doesn't have 'reg'. If there's bus registers, then it's not 
+simple.
 
-diff --git a/drivers/net/vmxnet3/Makefile b/drivers/net/vmxnet3/Makefile
-index 8cdbb63d1bb0..c5a167a1c85c 100644
---- a/drivers/net/vmxnet3/Makefile
-+++ b/drivers/net/vmxnet3/Makefile
-@@ -2,7 +2,7 @@
- #
- # Linux driver for VMware's vmxnet3 ethernet NIC.
- #
--# Copyright (C) 2007-2016, VMware, Inc. All Rights Reserved.
-+# Copyright (C) 2007-2020, VMware, Inc. All Rights Reserved.
- #
- # This program is free software; you can redistribute it and/or modify it
- # under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/upt1_defs.h b/drivers/net/vmxnet3/upt1_defs.h
-index db9f1fde3aac..65a203c842b2 100644
---- a/drivers/net/vmxnet3/upt1_defs.h
-+++ b/drivers/net/vmxnet3/upt1_defs.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_defs.h b/drivers/net/vmxnet3/vmxnet3_defs.h
-index c3a31646189f..c77274228a3e 100644
---- a/drivers/net/vmxnet3/vmxnet3_defs.h
-+++ b/drivers/net/vmxnet3/vmxnet3_defs.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index 722cb054a5cd..ec2878f8c1f6 100644
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index 6528940ce5f3..1163eca7aba5 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
-index 1cc1cd4aaa59..e803ffad75d6 100644
---- a/drivers/net/vmxnet3/vmxnet3_int.h
-+++ b/drivers/net/vmxnet3/vmxnet3_int.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-@@ -81,6 +81,7 @@
- 	#define VMXNET3_RSS
- #endif
- 
-+#define VMXNET3_REV_4		3	/* Vmxnet3 Rev. 4 */
- #define VMXNET3_REV_3		2	/* Vmxnet3 Rev. 3 */
- #define VMXNET3_REV_2		1	/* Vmxnet3 Rev. 2 */
- #define VMXNET3_REV_1		0	/* Vmxnet3 Rev. 1 */
-@@ -412,6 +413,8 @@ struct vmxnet3_adapter {
- 	(adapter->version >= VMXNET3_REV_2 + 1)
- #define VMXNET3_VERSION_GE_3(adapter) \
- 	(adapter->version >= VMXNET3_REV_3 + 1)
-+#define VMXNET3_VERSION_GE_4(adapter) \
-+	(adapter->version >= VMXNET3_REV_4 + 1)
- 
- /* must be a multiple of VMXNET3_RING_SIZE_ALIGN */
- #define VMXNET3_DEF_TX_RING_SIZE    512
--- 
-2.11.0
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +patternProperties:
+> +  "^syscon@[0-9a-f]+$":
 
+This should be under a bus node.
+
+> +    description: All Sparx5 boards must provide a system controller,
+> +      typically under the axi bus node. It contain reset registers and
+> +      other system control.
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        items:
+> +          - const: microchip,sparx5-cpu-syscon
+> +          - const: syscon
+
+This probably should be in its own document. If really this simple, 
+there's already syscon.yaml you can add to. 
+
+> +      reg:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +
+> +required:
+> +  - compatible
+> +  - axi@600000000
+> +  - syscon@600000000
+> +
+> +...
+> --
+> 2.26.2
