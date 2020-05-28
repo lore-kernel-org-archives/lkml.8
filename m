@@ -2,151 +2,219 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF83C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12452C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE41920814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67E62084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:55:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZI4OG95s"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ci2fVkIp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390690AbgE1Nxw (ORCPT
+        id S2390681AbgE1NzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36450 "EHLO
+        Thu, 28 May 2020 09:55:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390556AbgE1Nxu (ORCPT
+        with ESMTP id S2390552AbgE1NzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:53:50 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6545EC05BD1E;
-        Thu, 28 May 2020 06:53:50 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a18so171687ilp.7;
-        Thu, 28 May 2020 06:53:50 -0700 (PDT)
+        Thu, 28 May 2020 09:55:07 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CDD4C08C5C6;
+        Thu, 28 May 2020 06:55:07 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id z9so12886692qvi.12;
+        Thu, 28 May 2020 06:55:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PLslgLPnR8Y3hUCC1IVbsxu7nCYCKRf2I9pQNybG4iw=;
-        b=ZI4OG95s12fs6duy/N6GO+aP1nLDrDpPTqcEI+BBaZ/62gH07ZCHspb5o346ycdUB9
-         rkQTQ5trZ258WzyAYipr54oCSuyqWkdyHJh+DY2uqA1R9hA8gklEXgpEMCHT0GBBNOlG
-         OlwmXGnemC8O3/n8u3wDiYZG0+im3X7sky2Q6J10n3UttfoO2KRN9BYumCweKV8/4d79
-         nUiRIOUJYRtpX/F5u3P3NXh9/FZ4+NUzNeDmuzzzznK54ZeNTp9DLIn8AhmoGd9uZlLB
-         EXjCl9eLG6vLHOGZa3nPxMC1igEKQaDvv1NImtywFk4HPv3kPjqmqyt+RZwNDhT1OXkt
-         RzQg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GeTtPJIfmEr7+1bwUpo3zXUUHr8dPGmrm3c30JGLdGU=;
+        b=ci2fVkIpO6vUrWQ+KPwvraonqaR1XyJziqp5JUW4sIW1Gu/NLvjcGlVKd/PaxQrttM
+         ZGUhgzcdPxuWfC8HD+qVZ1dm11OS375pLyKbskIpwk+ddCBSsfzEOdG8PzPm1mb1ELun
+         19U9X5BBJBlZhfOe5C14CJgk5ZhmI4ETE2BuPdfgUWNCKQa75nuuFWKOs506SqCTip9x
+         PyWUeyZN5xK3HqfgrMWvVmwiW/Uv8NchdURxQWhkh+d+gJlB37nyXWmNI9VXJT87kYrv
+         cLiLY8xpj+QPlxPt8c5RFGZ0HzNllWT/Ds/UcdzPsQRc6uNzzOkoN/kE0MXx6e8XsmBm
+         fYyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PLslgLPnR8Y3hUCC1IVbsxu7nCYCKRf2I9pQNybG4iw=;
-        b=J3tNDZUF8ThhcZynqxZLu4DsdWX5QtmlE4sizv4Dve0xvMPpErMfwUkYV2fIvN+4OK
-         ibP6VShH4fD/TBEP+M8tBciPb3cfavCET5BEV0nDoiBgFXf1AG4GNskRsPXQp7Bz2z8Z
-         /Ya6S+rdG454N0dLchtnvL8DAFSfoRsPWN+TvETqx6gwWkn1BOIxef7vf0x541qamLfp
-         BBGKS9/0yqxGTeBC//RKkM++wIaruLQrGALlyBD/iWAM6pzmrVuWleA9vEHMfiedDsx5
-         JfnuxK99iE+3h/07APyMswNSvLknO78dxPZMlbccheWmzGu3XJpp95Wsw5Op8Jlcw2TS
-         VGqA==
-X-Gm-Message-State: AOAM530u8zAQdu2EaNV1Bmp/JP4MLK2O5Ru3LzcNuPoY/LMGvf/BgWOL
-        /HyEU6tc1x08ppOuhVS8OvfR6fUuvZEi5mqbfHI=
-X-Google-Smtp-Source: ABdhPJz3pvsvF3vDZQHDZZARSic+cjjWuwrrrczg7rXeFCBhcYnxfSVnTCNBGgfPQxBCstbjZmlY6QUq4VyklDrFv/Y=
-X-Received: by 2002:a92:5b99:: with SMTP id c25mr2977848ilg.42.1590674029756;
- Thu, 28 May 2020 06:53:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GeTtPJIfmEr7+1bwUpo3zXUUHr8dPGmrm3c30JGLdGU=;
+        b=N//wRnRq1jMxP9xplhdCDpUU/arJQam2sF6WV4tD8CvMNITuvhRE7YfYmxKgivxXCa
+         gxWTgWb1si5LzVBbPQyUM9c761GX3Liimgs6BTZq76t2kHhHoZgJlAD1E2rERoF2QTi7
+         ph4YMyQGvrK+Ue7dHAHssgIL4KBH24ofS3UYP4/AGFlWpWvJl2KrgJ2VFFUBZD+zKPK9
+         VSumVKnLXdBb7xjOJPcBXPS4xeWW/ubBEDxfRLaTbS47MsLODUE8Z22G2r7Ki3Bg1M43
+         PuAW+w4MVyVPnUtRR0Z1soRuthXiyjzyn9qSrVHoIJrYSCgTSYvReAzSwsYvZ3Zh6kV4
+         2X8g==
+X-Gm-Message-State: AOAM531XChY+j7eO4k6SVWVUfwC5duReLeH7sOE4n0N9yVn6NgaJ2IS4
+        0MOwvONrK7xyJot1z9ykW+swnjqkC+E=
+X-Google-Smtp-Source: ABdhPJw0I4eQ626R1lrou885QwlV5+buIMLht9Z1fnUA0WfY+zKV07/wltIpwOCR15oRJkrnVW9Tzg==
+X-Received: by 2002:ad4:4c4f:: with SMTP id cs15mr2987571qvb.117.1590674106652;
+        Thu, 28 May 2020 06:55:06 -0700 (PDT)
+Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:480::1:1cb7])
+        by smtp.gmail.com with ESMTPSA id l186sm4890889qkf.89.2020.05.28.06.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 06:55:05 -0700 (PDT)
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-kernel@vger.kernel.org (open list),
+        linux-fsdevel@vger.kernel.org (open list:FILESYSTEMS (VFS and
+        infrastructure)),
+        cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
+        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
+        CONTROLLER (MEMCG))
+Subject: [PATCH v6 0/4] Charge loop device i/o to issuing cgroup
+Date:   Thu, 28 May 2020 09:54:35 -0400
+Message-Id: <20200528135444.11508-1-schatzberg.dan@gmail.com>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-References: <cover.1585160616.git.asutoshd@codeaurora.org> <d0c6c22455811e9f0eda01f9bc70d1398b51b2bd.1585160616.git.asutoshd@codeaurora.org>
- <CAOCk7NrrBoO2k1M7XX0W6L2+efBbo-s6WVaKZx4EtSqNpCaUyA@mail.gmail.com> <f52a59df-5697-9e82-d12d-292ee9653f45@codeaurora.org>
-In-Reply-To: <f52a59df-5697-9e82-d12d-292ee9653f45@codeaurora.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 28 May 2020 07:53:38 -0600
-Message-ID: <CAOCk7NrR1dhr47audXYQr4gBQAYNqEP9-N9-1rPNWwApqib3vQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] scsi: ufshcd: Update the set frequency to devfreq
-To:     "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Cc:     c_vkoul@quicinc.com, hongwus@codeaurora.org,
-        Avri Altman <Avri.Altman@wdc.com>,
-        Can Guo <cang@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, MSM <linux-arm-msm@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 11:17 AM Asutosh Das (asd)
-<asutoshd@codeaurora.org> wrote:
->
-> Hi Jeffrey
-> On 5/25/2020 3:19 PM, Jeffrey Hugo wrote:
-> > On Wed, Mar 25, 2020 at 12:29 PM Asutosh Das <asutoshd@codeaurora.org> wrote:
-> >>
-> >> Currently, the frequency that devfreq provides the
-> >> driver to set always leads the clocks to be scaled up.
-> >> Hence, round the clock-rate to the nearest frequency
-> >> before deciding to scale.
-> >>
-> >> Also update the devfreq statistics of current frequency.
-> >>
-> >> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> >
-> > This change appears to cause issues for the Lenovo Miix 630, as
-> > identified by git bisect.
-> >
->
-> Thanks for reporting this.
->
-> > On 5.6-final, My boot log looks normal.  On 5.7-rc7, the Lenovo Miix
-> > 630 rarely boots, usually stuck in some kind of infinite printk loop.
-> >
-> > If I disable some of the UFS logging, I can capture this from the
-> > logs, as soon as UFS inits -
-> >
-> > [    4.353860] ufshcd-qcom 1da4000.ufshc: ufshcd_intr: Unhandled
-> > interrupt 0x00000000
-> > [    4.359605] ufshcd-qcom 1da4000.ufshc: ufshcd_intr: Unhandled
-> > interrupt 0x00000000
-> > [    4.365412] ufshcd-qcom 1da4000.ufshc: ufshcd_check_errors:
-> > saved_err 0x4 saved_uic_err 0x2
-> > [    4.371121] ufshcd-qcom 1da4000.ufshc: hba->ufs_version = 0x210,
-> > hba->capabilities = 0x1587001f
-> > [    4.376846] ufshcd-qcom 1da4000.ufshc: hba->outstanding_reqs =
-> > 0x100000, hba->outstanding_tasks = 0x0
-> > [    4.382636] ufshcd-qcom 1da4000.ufshc: last_hibern8_exit_tstamp at
-> > 0 us, hibern8_exit_cnt = 0
-> > [    4.388368] ufshcd-qcom 1da4000.ufshc: No record of pa_err
-> > [    4.394001] ufshcd-qcom 1da4000.ufshc: dl_err[0] = 0x80000001 at 3873626 us
-> > [    4.399577] ufshcd-qcom 1da4000.ufshc: No record of nl_err
-> > [    4.405053] ufshcd-qcom 1da4000.ufshc: No record of tl_err
-> > [    4.410464] ufshcd-qcom 1da4000.ufshc: No record of dme_err
-> > [    4.415747] ufshcd-qcom 1da4000.ufshc: No record of auto_hibern8_err
-> > [    4.420950] ufshcd-qcom 1da4000.ufshc: No record of fatal_err
-> > [    4.426013] ufshcd-qcom 1da4000.ufshc: No record of link_startup_fail
-> > [    4.430950] ufshcd-qcom 1da4000.ufshc: No record of resume_fail
-> > [    4.435786] ufshcd-qcom 1da4000.ufshc: No record of suspend_fail
-> > [    4.440538] ufshcd-qcom 1da4000.ufshc: dev_reset[0] = 0x0 at 3031009 us
-> > [    4.445199] ufshcd-qcom 1da4000.ufshc: No record of host_reset
-> > [    4.449750] ufshcd-qcom 1da4000.ufshc: No record of task_abort
-> > [    4.454214] ufshcd-qcom 1da4000.ufshc: clk: core_clk, rate: 50000000
-> > [    4.458590] ufshcd-qcom 1da4000.ufshc: clk: core_clk_unipro, rate: 37500000
-> >
-> > I don't understand how this change is breaking things, but it clearly is for me.
-> >
-> > What kind of additional data would be useful to get to the bottom of this?
-> >
+Much of the discussion about this has died down. There's been a
+concern raised that we could generalize infrastructure across loop,
+md, etc. This may be possible, in the future, but it isn't clear to me
+how this would look like. I'm inclined to fix the existing issue with
+loop devices now (this is a problem we hit at FB) and address
+consolidation with other cases if and when those need to be addressed.
 
-It turns out that the unipro_core clock had no parent, and thus no
-ability to scale.  Fixing that in GCC seems to have resolved this.  I
-suspect the UFS clock scaling code attempted to scale the core clock,
-didn't check that the clock could change rates, and went along
-assuming the new rate was effective, thus putting the hardware into a
-bad state.
+Changes since V6:
+
+* Added separate spinlock for worker synchronization
+* Minor style changes
+
+Changes since V5:
+
+* Fixed a missing css_put when failing to allocate a worker
+* Minor style changes
+
+Changes since V4:
+
+Only patches 1 and 2 have changed.
+
+* Fixed irq lock ordering bug
+* Simplified loop detach
+* Added support for nesting memalloc_use_memcg
+
+Changes since V3:
+
+* Fix race on loop device destruction and deferred worker cleanup
+* Ensure charge on shmem_swapin_page works just like getpage
+* Minor style changes
+
+Changes since V2:
+
+* Deferred destruction of workqueue items so in the common case there
+  is no allocation needed
+
+Changes since V1:
+
+* Split out and reordered patches so cgroup charging changes are
+  separate from kworker -> workqueue change
+
+* Add mem_css to struct loop_cmd to simplify logic
+
+The loop device runs all i/o to the backing file on a separate kworker
+thread which results in all i/o being charged to the root cgroup. This
+allows a loop device to be used to trivially bypass resource limits
+and other policy. This patch series fixes this gap in accounting.
+
+A simple script to demonstrate this behavior on cgroupv2 machine:
+
+'''
+#!/bin/bash
+set -e
+
+CGROUP=/sys/fs/cgroup/test.slice
+LOOP_DEV=/dev/loop0
+
+if [[ ! -d $CGROUP ]]
+then
+    sudo mkdir $CGROUP
+fi
+
+grep oom_kill $CGROUP/memory.events
+
+# Set a memory limit, write more than that limit to tmpfs -> OOM kill
+sudo unshare -m bash -c "
+echo \$\$ > $CGROUP/cgroup.procs;
+echo 0 > $CGROUP/memory.swap.max;
+echo 64M > $CGROUP/memory.max;
+mount -t tmpfs -o size=512m tmpfs /tmp;
+dd if=/dev/zero of=/tmp/file bs=1M count=256" || true
+
+grep oom_kill $CGROUP/memory.events
+
+# Set a memory limit, write more than that limit through loopback
+# device -> no OOM kill
+sudo unshare -m bash -c "
+echo \$\$ > $CGROUP/cgroup.procs;
+echo 0 > $CGROUP/memory.swap.max;
+echo 64M > $CGROUP/memory.max;
+mount -t tmpfs -o size=512m tmpfs /tmp;
+truncate -s 512m /tmp/backing_file
+losetup $LOOP_DEV /tmp/backing_file
+dd if=/dev/zero of=$LOOP_DEV bs=1M count=256;
+losetup -D $LOOP_DEV" || true
+
+grep oom_kill $CGROUP/memory.events
+'''
+
+Naively charging cgroups could result in priority inversions through
+the single kworker thread in the case where multiple cgroups are
+reading/writing to the same loop device. This patch series does some
+minor modification to the loop driver so that each cgroup can make
+forward progress independently to avoid this inversion.
+
+With this patch series applied, the above script triggers OOM kills
+when writing through the loop device as expected.
+
+Dan Schatzberg (3):
+  loop: Use worker per cgroup instead of kworker
+  mm: Charge active memcg when no mm is set
+  loop: Charge i/o to mem and blk cg
+
+Johannes Weiner (1):
+  mm: support nesting memalloc_use_memcg()
+
+ drivers/block/loop.c                 | 244 ++++++++++++++++++++++-----
+ drivers/block/loop.h                 |  15 +-
+ fs/buffer.c                          |   6 +-
+ fs/notify/fanotify/fanotify.c        |   5 +-
+ fs/notify/inotify/inotify_fsnotify.c |   5 +-
+ include/linux/memcontrol.h           |   6 +
+ include/linux/sched/mm.h             |  28 +--
+ kernel/cgroup/cgroup.c               |   1 +
+ mm/memcontrol.c                      |  11 +-
+ mm/shmem.c                           |   4 +-
+ 10 files changed, 246 insertions(+), 79 deletions(-)
+
+-- 
+2.24.1
+
