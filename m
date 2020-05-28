@@ -2,105 +2,171 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E36AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54032C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACD821548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3668A21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667684;
-	bh=SaN5zxdEN5dv0HxKBjQ//aUrp207XYOJ1RHgQVW34Po=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kPw+76QvsCUDlC4bZECXqPmILwe6H7d3Xb691CnH4OHkUHxeDfGNKuTdPWpB+uqaC
-	 l4TQsn5rSgCRup5z5r6BIn/OYsL16/I4INoBp6Z86tUAEx5EwWx7ODJeb98A8LcD9o
-	 iX2QxG0mq6QxpjwT7wY6mojOLStfOvpEHfdCLXjk=
+	s=default; t=1590667695;
+	bh=t3/DUnZ7Va7LfUYt2PknXD6yTzNvyjCApmOw95O2kAk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Uz+5g6Y0FxIcIvshyv5Gm0SPhyc4XANzvXWIg2vzPiVsqi8os1Ek7SjTB96nZfvXP
+	 fCSWWjCxcQnw2T+xesDxHO6ri/LOFDdimKpt005IzK10DNyDt12LwcJKuo0kQbvs9Q
+	 Al32LpmzmSD88aw7hOuTud76rW5nauWbb1VA4K9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389634AbgE1MIC (ORCPT
+        id S2389654AbgE1MIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:08:02 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38101 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389353AbgE1MHz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:07:55 -0400
-Received: by mail-wm1-f65.google.com with SMTP id f185so1772842wmf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 05:07:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fX1cujbgfbt/VM5a/7eMs0kHkEp+fJc6bInREoz+SAI=;
-        b=SpEc7hFsTY4g2zT7Z8I3MiCr4QQD7Mpbe4nGYDU9O2ojdQJMmTk1jUpu/RHf9NUkI+
-         Ams1rjbxRyHxhL4P1YcYaqezvcL1mmEbYqOZmUzcGU35lTrpUoxdKSg0ZYM5a/4KTKeH
-         YdtJyaICSmo+FuuMMA5Z/1ntoUGLHKbVpGbcZKGExD9f89ZVYr0pxjoWfxgcea86o/Dn
-         1GLgvfLurs1viGUFJ7Xk8fVHKsD5ROncJcp4YiRomkfwC4rbqZ1RVs20Oz1Lz5DMcQJ4
-         oplxMxyyDNW78+vE44t9o5dVgDjmGRjXuyI6fBvr22I3ueUO8QxaAXSPoHhaeboo0m+w
-         IHCA==
-X-Gm-Message-State: AOAM530k47M4mBa1X4qEQ6KEBG+tDnIx1t/mNdpx5HQk8OWHCwrAFRTO
-        +XiawZWsJhW0UrccwQ7lbVE=
-X-Google-Smtp-Source: ABdhPJw2dn25o5ZhsRcMskgXExklPfpC8pBiTQuJ7MSlKTB+XEWW9AxfZMKa8mVSNRnjxPHc3rxpfA==
-X-Received: by 2002:a1c:117:: with SMTP id 23mr3291422wmb.90.1590667673252;
-        Thu, 28 May 2020 05:07:53 -0700 (PDT)
-Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
-        by smtp.gmail.com with ESMTPSA id 62sm5912776wrm.1.2020.05.28.05.07.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 05:07:52 -0700 (PDT)
-Date:   Thu, 28 May 2020 14:07:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@osdl.org>, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com
-Subject: Re: next-20200515: Xorg killed due to "OOM"
-Message-ID: <20200528120750.GC27484@dhcp22.suse.cz>
-References: <20200526091054.GA12103@amd>
- <20200528090517.GA27484@dhcp22.suse.cz>
- <20200528120354.GB22054@duo.ucw.cz>
+        Thu, 28 May 2020 08:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388755AbgE1L4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:37 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4845721532;
+        Thu, 28 May 2020 11:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590666997;
+        bh=t3/DUnZ7Va7LfUYt2PknXD6yTzNvyjCApmOw95O2kAk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tsGlU3An/C895GRREflbRkXT1/0mwHYwqESDHife5OKSe9aPosK+5jqc/v9LvW2XP
+         Ji1IZGtCOpC/ghrBZem2VAjhD4535EAkZCpnjhkrgoYC0hi8mIw6DjkilOKbkumTZ7
+         G98yCWqQc2Ow9rRefgNt0tAal7HcVmLlmRbla5ls=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jiri Pirko <jiri@mellanox.com>,
+        Danielle Ratson <danieller@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 32/47] mlxsw: spectrum: Fix use-after-free of split/unsplit/type_set in case reload fails
+Date:   Thu, 28 May 2020 07:55:45 -0400
+Message-Id: <20200528115600.1405808-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
+References: <20200528115600.1405808-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528120354.GB22054@duo.ucw.cz>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 28-05-20 14:03:54, Pavel Machek wrote:
-> On Thu 2020-05-28 11:05:17, Michal Hocko wrote:
-> > On Tue 26-05-20 11:10:54, Pavel Machek wrote:
-> > [...]
-> > > [38617.276517] oom_reaper: reaped process 31769 (chromium), now anon-rss:0kB, file-rss:0kB, shmem-rss:7968kB
-> > > [38617.277232] Xorg invoked oom-killer: gfp_mask=0x0(), order=0, oom_score_adj=0
-> > > [38617.277247] CPU: 0 PID: 2978 Comm: Xorg Not tainted 5.7.0-rc5-next-20200515+ #117
-> > > [38617.277256] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
-> > > [38617.277266] Call Trace:
-> > > [38617.277286]  dump_stack+0x54/0x6e
-> > > [38617.277300]  dump_header+0x45/0x321
-> > > [38617.277313]  oom_kill_process.cold+0x9/0xe
-> > > [38617.277324]  ? out_of_memory+0x167/0x420
-> > > [38617.277336]  out_of_memory+0x1f2/0x420
-> > > [38617.277348]  pagefault_out_of_memory+0x34/0x56
-> > > [38617.277361]  mm_fault_error+0x4a/0x130
-> > > [38617.277372]  do_page_fault+0x3ce/0x416
-> > 
-> > The reason the OOM killer has been invoked is that the page fault
-> > handler has returned VM_FAULT_OOM. So this is not a result of the page
-> > allocator struggling to allocate a memory. It would be interesting to
-> > check which code path has returned this. 
-> 
-> Should the core WARN_ON if that happens and there's enough memory, or
-> something like that?
+From: Jiri Pirko <jiri@mellanox.com>
 
-I wish it would simply go away. There shouldn't be really any reason for
-VM_FAULT_OOM to exist. The real low on memory situation is already
-handled in the page allocator.
+[ Upstream commit 4340f42f207eacb81e7a6b6bb1e3b6afad9a2e26 ]
 
+In case of reload fail, the mlxsw_sp->ports contains a pointer to a
+freed memory (either by reload_down() or reload_up() error path).
+Fix this by initializing the pointer to NULL and checking it before
+dereferencing in split/unsplit/type_set callpaths.
+
+Fixes: 24cc68ad6c46 ("mlxsw: core: Add support for reload")
+Reported-by: Danielle Ratson <danieller@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 14 ++++++++++++--
+ drivers/net/ethernet/mellanox/mlxsw/switchx2.c |  8 ++++++++
+ 2 files changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 7358b5bc7eb6..58ebabe99876 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -4043,6 +4043,7 @@ static void mlxsw_sp_ports_remove(struct mlxsw_sp *mlxsw_sp)
+ 			mlxsw_sp_port_remove(mlxsw_sp, i);
+ 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
+ 	kfree(mlxsw_sp->ports);
++	mlxsw_sp->ports = NULL;
+ }
+ 
+ static int mlxsw_sp_ports_create(struct mlxsw_sp *mlxsw_sp)
+@@ -4079,6 +4080,7 @@ err_port_create:
+ 	mlxsw_sp_cpu_port_remove(mlxsw_sp);
+ err_cpu_port_create:
+ 	kfree(mlxsw_sp->ports);
++	mlxsw_sp->ports = NULL;
+ 	return err;
+ }
+ 
+@@ -4200,6 +4202,14 @@ static int mlxsw_sp_local_ports_offset(struct mlxsw_core *mlxsw_core,
+ 	return mlxsw_core_res_get(mlxsw_core, local_ports_in_x_res_id);
+ }
+ 
++static struct mlxsw_sp_port *
++mlxsw_sp_port_get_by_local_port(struct mlxsw_sp *mlxsw_sp, u8 local_port)
++{
++	if (mlxsw_sp->ports && mlxsw_sp->ports[local_port])
++		return mlxsw_sp->ports[local_port];
++	return NULL;
++}
++
+ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 			       unsigned int count,
+ 			       struct netlink_ext_ack *extack)
+@@ -4213,7 +4223,7 @@ static int mlxsw_sp_port_split(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 	int i;
+ 	int err;
+ 
+-	mlxsw_sp_port = mlxsw_sp->ports[local_port];
++	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
+ 	if (!mlxsw_sp_port) {
+ 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
+ 			local_port);
+@@ -4308,7 +4318,7 @@ static int mlxsw_sp_port_unsplit(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 	int offset;
+ 	int i;
+ 
+-	mlxsw_sp_port = mlxsw_sp->ports[local_port];
++	mlxsw_sp_port = mlxsw_sp_port_get_by_local_port(mlxsw_sp, local_port);
+ 	if (!mlxsw_sp_port) {
+ 		dev_err(mlxsw_sp->bus_info->dev, "Port number \"%d\" does not exist\n",
+ 			local_port);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+index f0e98ec8f1ee..c69232445ab7 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/switchx2.c
+@@ -1259,6 +1259,7 @@ static void mlxsw_sx_ports_remove(struct mlxsw_sx *mlxsw_sx)
+ 		if (mlxsw_sx_port_created(mlxsw_sx, i))
+ 			mlxsw_sx_port_remove(mlxsw_sx, i);
+ 	kfree(mlxsw_sx->ports);
++	mlxsw_sx->ports = NULL;
+ }
+ 
+ static int mlxsw_sx_ports_create(struct mlxsw_sx *mlxsw_sx)
+@@ -1293,6 +1294,7 @@ err_port_module_info_get:
+ 		if (mlxsw_sx_port_created(mlxsw_sx, i))
+ 			mlxsw_sx_port_remove(mlxsw_sx, i);
+ 	kfree(mlxsw_sx->ports);
++	mlxsw_sx->ports = NULL;
+ 	return err;
+ }
+ 
+@@ -1376,6 +1378,12 @@ static int mlxsw_sx_port_type_set(struct mlxsw_core *mlxsw_core, u8 local_port,
+ 	u8 module, width;
+ 	int err;
+ 
++	if (!mlxsw_sx->ports || !mlxsw_sx->ports[local_port]) {
++		dev_err(mlxsw_sx->bus_info->dev, "Port number \"%d\" does not exist\n",
++			local_port);
++		return -EINVAL;
++	}
++
+ 	if (new_type == DEVLINK_PORT_TYPE_AUTO)
+ 		return -EOPNOTSUPP;
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
