@@ -2,104 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B046C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F02C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDA222084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590632709;
-	bh=fX7oELJ9tHUzD6bJd/9A56d7dP5Cz9AAiYmB0W8QR8o=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=zuGjebktNBHk6ZbbJy5hRUiv/29gW0exOzUhpvlw1X7/xxhN566hAHY8JxE1+omMY
-	 AYtfzwNSykbq2WNEeHSVASN1YnCRyA111c9WaoKOVKNmammIZnl+FKn1AxCwTh+dzT
-	 EE1BG0GMhsuumM1MclJzFX7JIiMlueY+nQB/LGEg=
+	by mail.kernel.org (Postfix) with ESMTP id B10CE20C56
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:25:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Omh6UMI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgE1CZI (ORCPT
+        id S1726903AbgE1CZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:25:08 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:40621 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbgE1CZG (ORCPT
+        Wed, 27 May 2020 22:25:14 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:17898 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725901AbgE1CZN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:25:06 -0400
-Received: by mail-il1-f194.google.com with SMTP id a18so8868463ilp.7;
-        Wed, 27 May 2020 19:25:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TWK/yt8wEPtAEh5uiWmORMzf8N+47TheQbGehNEJTNo=;
-        b=WoazSe3cPYQ8opkECLol3Ww/SVmLMfmzcHh7BByCb/MPYtw0uO0s678GQUkSfXui6c
-         ko7f2P1mUze3j+18eTZOozCn9XiDZgV+Ihxhsf4xh3uaamaJK2IulWK9/nL9FAAgRdoM
-         oUkn4nSJjTFVf3yKSX9CNGC6LkCuFIvy+NfCLhPsRqxV/j5c6aXEIgzUQSMwRidxCv9E
-         pqyKq6ntdsl6kVCI4Uqt502RARhWa0avVMqbj8MaeeO+LbM56sx9EBZF4QDaxzKsChmh
-         +8a9qK84nOq2JXxwfEzpTg86pQLMv6Z2uka1eH+bMkTLT9NDLYfp949DSiOSDZ9MTKQ0
-         uuGw==
-X-Gm-Message-State: AOAM532XUbeqMXKA6P0RF5QWNpV632vBGq88LzC+NtCv0PrG+MJvl/Bq
-        Py+zMabOq0ddpDJ9etm8KA==
-X-Google-Smtp-Source: ABdhPJznBK7J4jfTRRptgmH6VfuihabhXQkH6wzIbabFHPxNfhYIn/vanUVmodLM98GWZsQkpBEuAw==
-X-Received: by 2002:a05:6e02:6cd:: with SMTP id p13mr994377ils.188.1590632703884;
-        Wed, 27 May 2020 19:25:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y15sm2477235ila.13.2020.05.27.19.25.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:25:03 -0700 (PDT)
-Received: (nullmailer pid 3238161 invoked by uid 1000);
-        Thu, 28 May 2020 02:25:02 -0000
-Date:   Wed, 27 May 2020 20:25:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Sebastian Reichel <sre@kernel.org>, SoC Team <soc@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/5] dt-bindings: reset: ocelot: Add documentation for
- 'microchip,reset-switch-core' property
-Message-ID: <20200528022502.GA3234572@bogus>
-References: <20200513130842.24847-1-lars.povlsen@microchip.com>
- <20200513130842.24847-4-lars.povlsen@microchip.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513130842.24847-4-lars.povlsen@microchip.com>
+        Wed, 27 May 2020 22:25:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590632712; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=2J7cueeKkOfgzsvequVRFP6NRw+rP6CDwjyHhxAlHOU=; b=Omh6UMI7Etm/UXtrAY15q2VXOA5ynZ1v5YOpJw5PH+DjeBCj+TJrlPr22Mo1eUiWly9Xge4V
+ Dh5qTwmuGqUZ5ZsfrGNOWzStOjaf2+X5i4XBQKP66WTTu1ijf1pFt2289lrgQD6NYh4n9P/g
+ q2WzH03M6ZFKqZMNjL3PUzu6kPw=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ecf20f82dd9e15ae37b80b0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 02:24:56
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E0FF3C433CB; Thu, 28 May 2020 02:24:55 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EC93C433C9;
+        Thu, 28 May 2020 02:24:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2EC93C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/1] scsi: ufs: Don't update urgent bkops level when toggle auto bkops
+Date:   Wed, 27 May 2020 19:24:42 -0700
+Message-Id: <1590632686-17866-1-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 13, 2020 at 03:08:40PM +0200, Lars Povlsen wrote:
-> This documents the 'microchip,reset-switch-core' property in the
-> ocelot-reset driver.
-> 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  .../devicetree/bindings/power/reset/ocelot-reset.txt        | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> index 4d530d8154848..20fff03753ad2 100644
-> --- a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
-> @@ -9,9 +9,15 @@ microchip Sparx5 armv8 SoC's.
->  Required Properties:
->   - compatible: "mscc,ocelot-chip-reset" or "microchip,sparx5-chip-reset"
-> 
-> +Optional properties:
-> +- microchip,reset-switch-core : Perform a switch core reset at the
-> +  time of driver load. This is may be used to initialize the switch
-> +  core to a known state (before other drivers are loaded).
+Urgent bkops level is used to compare against actual bkops status read
+from UFS device. Urgent bkops level is set during initialization and might
+be updated in exception event handler during runtime, but it should not be
+updated to the actual bkops status every time when auto bkops is toggled.
+Otherwise, if urgent bkops level is updated to 0, auto bkops shall always
+be kept enabled.
 
-How do you know when other drivers are loaded? This could be a module 
-perhaps. Doesn't seem like something that belongs in DT.
+Fixes: 24366c2afbb0 ("scsi: ufs: Recheck bkops level if bkops is disabled")
+Signed-off-by: Can Guo <cang@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Can this behavior be implied with "microchip,sparx5-chip-reset"?
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 1827b57..178322e 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5133,7 +5133,6 @@ static int ufshcd_bkops_ctrl(struct ufs_hba *hba,
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
+-	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-Rob
