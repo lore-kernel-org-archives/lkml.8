@@ -2,153 +2,128 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F663C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFA3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2692E21475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qoTiOd3I"
+	by mail.kernel.org (Postfix) with ESMTP id 0C0EA2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgE1Hzp (ORCPT
+        id S1726195AbgE1H6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:55:45 -0400
-Received: from mail-bn8nam11on2067.outbound.protection.outlook.com ([40.107.236.67]:34628
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725779AbgE1Hzo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:55:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GUnae30IiMLYGToJ0tD0dR6bIZg0g9JDgZUOO3EiYjmER3kHUpnsyr+H5Dl9KDmZRk9ysLa98irecUWd2qogjIUX2gtHockp2Hs7g4z1xdBCuaIs2kF4BLSd4UlSAf0hRaxBOt2azR44G7lRdo5HBFGV54WRX4VeySi9KBvB1Wl2I9OR5ORiBGvpWqtcrrClZL3FloRI/lMzmrK68B9FfZ086Ian9i8he/PqUsaa2M1qYl/NuYNu5i3l8wsW5QHpcBadnMhWF7U0qqRQOes0BPfWTA5UZAgff71nl5VkWtfUxRLxLz1Oxg/XDqSoLgwS2x8T4ueywMrrRng7sZYK3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7KASRA/0a7qd0wphlXj49kDm6f9PCqbkntlDH6XcuQE=;
- b=S3P8+jSN9ZsoI9EqVHwQNiC7ptVd5iAfVel7q6JZ0Touc3gSkNLMjCTBSsz6SyC4UF+ScoRK4IXzA2Oc74UzyO/c3KZPyJm32N9KCJkJxse2te9z6KH0/Ghdl7KsIXp9GDAFJustz843NVPg0EBlMHg+HiI/67JVgYw3XhhJl3bIo1EEdEhDIy1QwEKn5L6nfeVCszYXkWNs8X1x+ktd94uiEaH7QqLGWQpTzNQKnzMafp4UZiHJYZLOsb2Ns6SEomAx4xrf9B/aC/H9nnJRum+pFrOxZKUm6NkNH07t7Pt8P/Wg2PyGHaeMLrKoCezbar/H8jPF4Ktrvtus1SdefQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7KASRA/0a7qd0wphlXj49kDm6f9PCqbkntlDH6XcuQE=;
- b=qoTiOd3Is2GjgFDnl3ZINJTxQyAM4fihoRLzEk8YXSV+VcHWBXWf+Lpz6rDgRjwJD1OfZUnhA/78Zun+DXgUoHiSFARjBB796AlUuYQLEjw3lKX7Mtm5E+bRzky4sGExlDo/XVCYNSt7MmokHoLlHMXDfKz6uQYsolW6gdKoLfQ=
-Received: from DM6PR18CA0019.namprd18.prod.outlook.com (2603:10b6:5:15b::32)
- by DM5PR12MB1531.namprd12.prod.outlook.com (2603:10b6:4:f::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.23; Thu, 28 May 2020 07:55:42 +0000
-Received: from DM6NAM11FT050.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:15b:cafe::84) by DM6PR18CA0019.outlook.office365.com
- (2603:10b6:5:15b::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend
- Transport; Thu, 28 May 2020 07:55:42 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- DM6NAM11FT050.mail.protection.outlook.com (10.13.173.111) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3021.23 via Frontend Transport; Thu, 28 May 2020 07:55:41 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 28 May
- 2020 02:55:41 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 28 May
- 2020 02:55:40 -0500
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Thu, 28 May 2020 02:55:35 -0500
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>, <broonie@kernel.org>,
-        "Ravulapati Vishnu vardhan rao" <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: amd: Removing unnecessary instance initialization
-Date:   Thu, 28 May 2020 13:22:16 +0530
-Message-ID: <1590652337-21587-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(136003)(396003)(46966005)(82740400003)(6666004)(36756003)(316002)(5660300002)(82310400002)(83380400001)(478600001)(2906002)(54906003)(356005)(8936002)(81166007)(4326008)(86362001)(47076004)(70206006)(336012)(186003)(2616005)(70586007)(8676002)(7696005)(109986005)(26005)(426003)(266003);DIR:OUT;SFP:1101;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 068254b6-7372-4805-08b1-08d802dc84d7
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1531:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1531E95E928AFA026BF8C9E9E78E0@DM5PR12MB1531.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
-X-Forefront-PRVS: 0417A3FFD2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TnS+45s9vl61SdyWS3N9Y88a5LbKfiKh4uip5pDsXE9SlKKfLWixrMuZsYFStekXVEJkbFlei6oA79kSYY3loLJqLXLRQgchnOvCrfThCatcX+iYaaD+S7ftU1mNOzQ6sj6zFjznjKWuU6AAb2zxbnIdOe8/Dft4s8zKSgito8H46f5Xs5tDgYae5u8Xcm5AFF0AEs3Z9YIcTCCCA0woNgc9xkQ1PTCy171++KmYJK5nyw3VTo4Fh92xtwZsjYemcc45k7ML+vOjUZycfrth5GeefDpR5DUq3QJGrfAjoNWByiva6JKWs3p2CpavEO8ZgHVy0g7SQ93C9n3EEGOWSZsClQn4XkyVlxKmVTngZR4o52rx4AK4zOuH2/wvAFJFG3GAkFPax/mTNRhSQ0HHBX1IfTzsvs/Zcwv6fx/3I/o=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 07:55:41.6821
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 068254b6-7372-4805-08b1-08d802dc84d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1531
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 28 May 2020 03:58:30 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:31097 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgE1H6a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 03:58:30 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG4.macronix.com with ESMTP id 04S7wMHZ030973;
+        Thu, 28 May 2020 15:58:22 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        boris.brezillon@collabora.com, matthias.bgg@gmail.com
+Cc:     p.yadav@ti.com, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mason Yang <masonccyang@mxic.com.tw>
+Subject: [PATCH v3 00/14] mtd: spi-nor: add xSPI Octal DTR support 
+Date:   Thu, 28 May 2020 15:58:02 +0800
+Message-Id: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG4.macronix.com 04S7wMHZ030973
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In DMA pointer the initialzation of instance is of no use.
-In fact it will reinitialize the instance variable which is already
-opened and functional.
+Hello,
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
----
- sound/soc/amd/raven/acp3x-pcm-dma.c | 8 --------
- 1 file changed, 8 deletions(-)
+JESD216C has defined specification for Octal 8S-8S-8S and 8D-8D-8D.
+Based on JEDEC216C Basic Flash Parameter Table (BFPT) driver extract
+DWORD-18: command and command extension type.
+DWORD-20: Maximum operation speed of device in Octal mode.
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 620b568..d8f554f 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -303,7 +303,6 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
- {
- 	struct snd_soc_pcm_runtime *prtd;
- 	struct snd_soc_card *card;
--	struct acp3x_platform_info *pinfo;
- 	struct i2s_stream_instance *rtd;
- 	u32 pos;
- 	u32 buffersize;
-@@ -312,13 +311,6 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
- 	prtd = substream->private_data;
- 	card = prtd->card;
- 	rtd = substream->runtime->private_data;
--	pinfo = snd_soc_card_get_drvdata(card);
--	if (pinfo) {
--		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
--			rtd->i2s_instance = pinfo->play_i2s_instance;
--		else
--			rtd->i2s_instance = pinfo->cap_i2s_instance;
--	}
- 
- 	buffersize = frames_to_bytes(substream->runtime,
- 				     substream->runtime->buffer_size);
+xSPI profile 1.0 table:
+DWORD-1: Read Fast command, the number of dummy cycles and address nbytes
+	 for Read Status Register command.
+DWORD-2: Read/Write volatile Register command for CFG Reg2.
+DWORD-4 and DWORD-5: dummy cycles used for various frequencies based on
+maximum speed of device from BFPT 20th DWORD.
+
+Ccommand sequences to change to octal DTR mode:
+The length of each command sequence is 8 per byte for single SPI mode and
+patching driver to parse and execute these sequences for octal DTR mode.
+
+By Vignesh's comments to patch these drivers based on Pratyush's patches
+set [1].
+
+This series adds support for Macronix mx25uw51245g works in octal DTR mode.
+
+Tested on Macronix's Zynq PicoZed board with Macronix's SPI controller
+(spi-mxic.c) driver patched on mx25uw51245g Octal flash.
+
+
+[1] https://patchwork.ozlabs.org/project/linux-mtd/cover/20200525091544.17270-1-p.yadav@ti.com/
+
+
+Summary of change log
+v3:
+Add support command sequences to change octal DTR mode and based on
+part of Pratyush's patches set.
+
+v2: 
+Parse BFPT & xSPI table for Octal 8D-8D-8D mode parameters and enable Octal
+mode in spi_nor_late_init_params().
+Using Macros in spi_nor_spimem_read_data, spi_nor_spimem_write_data and
+so on by Vignesh comments.
+
+v1:
+Without parsing BFPT & xSPI profile 1.0 table and enter Octal 8D-8D-8D
+mode directly in spi_nor_fixups hooks.
+
+
+thnaks for your time and review.
+best regards,
+Mason
+
+--
+Mason Yang (7):
+  mtd: spi-nor: sfdp: get octal mode maximum speed from BFPT
+  mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+  mtd: spi-nor: sfdp: parse command sequences to change octal DTR mode
+  mtd: spi-nor: core: add configuration register 2 read & write support
+  spi: mxic: patch for octal DTR mode support
+  mtd: spi-nor: core: execute command sequences to change octal DTR mode
+  mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
+    mx25uw51245g
+
+Pratyush Yadav (7):
+  spi: spi-mem: allow specifying whether an op is DTR or not
+  spi: spi-mem: allow specifying a command's extension
+  mtd: spi-nor: add support for DTR protocol
+  mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
+  mtd: spi-nor: sfdp: get command opcode extension type from BFPT
+  mtd: spi-nor: core: use dummy cycle and address width info from SFDP
+  mtd: spi-nor: core: enable octal DTR mode when possible
+
+ drivers/mtd/spi-nor/core.c     | 514 +++++++++++++++++++++++++++++++++++------
+ drivers/mtd/spi-nor/core.h     |  49 ++++
+ drivers/mtd/spi-nor/macronix.c |  55 +++++
+ drivers/mtd/spi-nor/sfdp.c     | 278 +++++++++++++++++++++-
+ drivers/mtd/spi-nor/sfdp.h     |  15 +-
+ drivers/spi/spi-mem.c          |  16 +-
+ drivers/spi/spi-mtk-nor.c      |   4 +-
+ drivers/spi/spi-mxic.c         | 101 +++++---
+ drivers/spi/spi-zynq-qspi.c    |  11 +-
+ include/linux/mtd/spi-nor.h    |  51 ++--
+ include/linux/spi/spi-mem.h    |  14 +-
+ 11 files changed, 980 insertions(+), 128 deletions(-)
+
 -- 
-2.7.4
+1.9.1
 
