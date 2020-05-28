@@ -2,145 +2,107 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D166C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53AD720721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0637820721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590674738;
-	bh=y1z9dlJ3EhIXj2RWA0vbMrF2xmkbQlAPyyia0RW25Rc=;
+	s=default; t=1590674779;
+	bh=CqxW5YXHZwoOO0gTWPmchSna78rh3Q5xrhhZ2hKnLp8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q2ADrnYnlzTvkwqO/miLpu9TZaANQwkTVtnbw4lcYs7KmVj7VLxJTMBKdXRgCVRYX
-	 6Pmd+vlDgCIRyWg1Vta64fGgb6rgw0X9ytUrf9JrSWUEXouLnJS95JdCnXkjT86OIm
-	 o4aO2ZBbww4ZnBd+xf19BWBFH0y08QV7bIKZZOmQ=
+	b=lWvWTgQ2BZb35SBYvS9qFwsqyyVJx4cqh53Hv5xJIAbTzJ9bcvtxWuKmnzUXXs/v8
+	 y0wsMYt3673ZnehgWPyyI9XcnhmioctDvJ9pTfo0P1Rc49npJOc32VGr4zU63qUmaX
+	 LSaoc+o+cFS+64h0UjZAtiY097+NyCbaVj54E5YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390906AbgE1OFh (ORCPT
+        id S2390910AbgE1OGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:05:37 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42301 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390596AbgE1OF3 (ORCPT
+        Thu, 28 May 2020 10:06:16 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:35129 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390656AbgE1OGK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:05:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id d5so20567626ios.9;
-        Thu, 28 May 2020 07:05:28 -0700 (PDT)
+        Thu, 28 May 2020 10:06:10 -0400
+Received: by mail-il1-f194.google.com with SMTP id a14so244167ilk.2;
+        Thu, 28 May 2020 07:06:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=SLMEy6Ytljxjg8a2KXQ/FizRno8giPzwlWNr4nIvO0E=;
-        b=Y1QmPcCNT+4dpmz3ep3znCua571UqhZRq6K2HRWcArhtge1giNZ+gbPZwOExXiDkqY
-         qctOyP9SO9n5kYruKrBy4Zkv1rUvCSluZzSHeM8RyesSp1Lnrtgu83cTa8auVFuCGOJc
-         KxuGkkN3XQ9XBRiTF6UolmKrkXaM1yBQ2ItrCRFa3g3iojQqVZJBdUNEGVcroxx10R9h
-         aHssLK3ZDEBOaFTobfEQiDN0BVC6f2/tFGB74eOLes2ONauX8eToETQIA7xQJ8ntNb+b
-         Z8pvoB+IWLZ/bOJuH+AvVdyuADaoOroCO8t8VtFU2wSJoGZs7tmnPrQIfWCZBIQ5D249
-         vH7w==
-X-Gm-Message-State: AOAM530EuzDKDZD7WotmrwWn2UIvZ1BbbIZH6J0Wawoh5crDG138XEs+
-        9MPH6Pu3dKMukhsCHSODmA==
-X-Google-Smtp-Source: ABdhPJzoX/OrRJgrF0RLFSzW9vlhDIhoXc7lQcsFo+49D/RYaTtv2OthkVdqcft8AlGIdyG+p7PixA==
-X-Received: by 2002:a5d:9dd2:: with SMTP id 18mr2468310ioo.196.1590674728083;
-        Thu, 28 May 2020 07:05:28 -0700 (PDT)
+        bh=1jidT3xKZRKULWJIwqa2tys07NIrxI3mybLQC/9d/ko=;
+        b=DWsO/F1eL9DjP82NBsLsNPxie0SlEjScD8II2Cq1DIL2kaGCxCaT4PgBl5Ww8CONba
+         3xepZq1DflZNleeydwg501TlttgPCp9bq2FQkw4TIWbHuzx21fgApSgNE218racIV0ek
+         gtVDO72sc0Wtz+soNCEEWh+8Xm2iVCvVryTP8H9FkSpnde/I7IRXh2dr1IusZyK1nX4/
+         DflFeoJ5bqSR8nFPNkC8PKTyqWaWcC9M6HlS5gdwLUBUQNVph7jEaD4Y2fbbEp+nqIrj
+         3+emczmaZD4HFc8B0ukE4wk1yi/JPUnRBr82oif9g/oZrIGs2zdkhEzIudA24C5NQncN
+         Ss7A==
+X-Gm-Message-State: AOAM532cSysK1aLb8yvlk2lsV8G4K58IQUR+VzyjoGMTYhF3wsX/22VC
+        AkOCxjc+gvGHpndH6GtVOQ==
+X-Google-Smtp-Source: ABdhPJwgyTHzsDhxjiIb8r+RbEwXO/nh2hiq7xZNTxCVYzX32CAooeVLqphtOftt4LjRzbfcNOdExw==
+X-Received: by 2002:a92:d40a:: with SMTP id q10mr3051355ilm.87.1590674768954;
+        Thu, 28 May 2020 07:06:08 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n27sm3317522ild.76.2020.05.28.07.05.26
+        by smtp.gmail.com with ESMTPSA id n25sm2574334ioa.29.2020.05.28.07.06.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:05:26 -0700 (PDT)
-Received: (nullmailer pid 4173461 invoked by uid 1000);
-        Thu, 28 May 2020 14:05:25 -0000
-Date:   Thu, 28 May 2020 08:05:25 -0600
+        Thu, 28 May 2020 07:06:08 -0700 (PDT)
+Received: (nullmailer pid 4174426 invoked by uid 1000);
+        Thu, 28 May 2020 14:06:06 -0000
+Date:   Thu, 28 May 2020 08:06:06 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: sound: tlv320adcx140: Add GPI config
- property
-Message-ID: <20200528140525.GA4166160@bogus>
-References: <20200526200917.10385-1-dmurphy@ti.com>
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de,
+        hauke.mehrtens@intel.com, linux-mips@vger.kernel.org,
+        richard@nod.at, qi-ming.wu@intel.com, tglx@linutronix.de,
+        brendanhiggins@google.com, linux-mtd@lists.infradead.org,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        miquel.raynal@bootlin.com, andriy.shevchenko@intel.com,
+        robh+dt@kernel.org, masonccyang@mxic.com.tw
+Subject: Re: [PATCH v9 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+Message-ID: <20200528140606.GA4173978@bogus>
+References: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526200917.10385-1-dmurphy@ti.com>
+In-Reply-To: <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 03:09:16PM -0500, Dan Murphy wrote:
-> Add an array property that configures the General Purpose Input (GPI)
-> register.  The device has 4 GPI pins and each pin can be configured in 1
-> of 7 different ways.
-
-Dan seems to have trouble running get_maintainers.pl and Cc'ing the DT 
-list. Running 'make dt_binding_check' also seems to be a problem. Now 
-linux-next has these warnings:
-
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:0: 4 is greater than the maximum of 1
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:1: 5 is greater than the maximum of 1
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:2: 6 is greater than the maximum of 1
-/builds/robherring/linux-dt-bindings/Documentation/devicetree/bindings/sound/tlv320adcx140.example.dt.yaml: codec@4c: ti,gpi-config:0:3: 7 is greater than the maximum of 1
-
-Please send a fix.
-
+On Thu, 28 May 2020 13:12:10 +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Add YAML file for dt-bindings to support NAND Flash Controller
+> on Intel's Lightning Mountain SoC.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  .../bindings/sound/tlv320adcx140.yaml         | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 93 ++++++++++++++++++++++
+>  1 file changed, 93 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> index daa6cc0e031b..e8a69b1c7ca9 100644
-> --- a/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> +++ b/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
-> @@ -86,6 +86,32 @@ properties:
->            maximum: 1
->          default: [0, 0, 0, 0]
->  
-> +  ti,gpi-config:
-> +    description: |
-> +       Defines the configuration for the general purpose input pins (GPI).
-> +       The array is defined as <GPI1 GPI2 GPI3 GPI4>.
-> +
-> +       0 - (default) disabled
-> +       1 - GPIX is configured as a general-purpose input (GPI)
-> +       2 - GPIX is configured as a master clock input (MCLK)
-> +       3 - GPIX is configured as an ASI input for daisy-chain (SDIN)
-> +       4 - GPIX is configured as a PDM data input for channel 1 and channel
-> +            (PDMDIN1)
-> +       5 - GPIX is configured as a PDM data input for channel 3 and channel
-> +            (PDMDIN2)
-> +       6 - GPIX is configured as a PDM data input for channel 5 and channel
-> +            (PDMDIN3)
-> +       7 - GPIX is configured as a PDM data input for channel 7 and channel
-> +            (PDMDIN4)
-> +
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - minItems: 1
-> +        maxItems: 4
-> +        items:
-> +          maximum: 1
 
-I believe you want '7' here.
 
-> +        default: [0, 0, 0, 0]
-> +
->  required:
->    - compatible
->    - reg
-> @@ -101,6 +127,7 @@ examples:
->          reg = <0x4c>;
->          ti,mic-bias-source = <6>;
->          ti,pdm-edge-select = <0 1 0 1>;
-> +        ti,gpi-config = <4 5 6 7>;
->          reset-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
->        };
->      };
-> -- 
-> 2.26.2
-> 
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: '#address-cells', '#size-cells' do not match any of the regexes: '^nand@[a-f0-9]+$', 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: nand@0: '#address-cells', '#size-cells', 'nand-on-flash-bbt' do not match any of the regexes: 'pinctrl-[0-9]+'
+
+See https://patchwork.ozlabs.org/patch/1299399
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
