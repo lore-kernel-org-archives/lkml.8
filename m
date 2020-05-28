@@ -2,151 +2,124 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A168C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B0F20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4AEA208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cc6qe0Ag"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fine7BNp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387796AbgE1KTv (ORCPT
+        id S2387822AbgE1KU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
+        Thu, 28 May 2020 06:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387717AbgE1KTo (ORCPT
+        with ESMTP id S2387717AbgE1KUP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:19:44 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B8E0C05BD1E;
-        Thu, 28 May 2020 03:19:44 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XkG56Yryz9sRY;
-        Thu, 28 May 2020 20:19:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590661182;
-        bh=IszKvvDOxq/C0cwGvrIkv686ESl0u0/FYLJoye6b6ms=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Cc6qe0AgGyw/1T9j6tw1VLeCUEz8VoG+BB9WE0GVKrJJr8O+hIrtzBOHe13ZSLWdA
-         Udpwv5VGrabc/aaFEJUGGymSJEn3mqF68IwuDL44MdN3Unr+Hbk5sviNoaA/imOCiE
-         bR3zgxOliDCcgv/jn5YRARl57+19Ke/ZYA5pH0oqpsMOO6XKDspmJLatkZ1R7VfasF
-         Ta8BqcUw56dVuSRvA+A42fyXcxpOaxVZ61zA99ibkxD6u/63fMDYM4mItQA18SHnLm
-         M6heLhKXy25nzFheP+ujFz/L21sgUyvpxldkNRTJJPbLC+ilwR7LED3nUWZzZyO4Hd
-         IsFOTHAnPdtUg==
-Date:   Thu, 28 May 2020 20:19:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mukul Joshi <mukul.joshi@amd.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: linux-next: build failure after merge of the akpm tree
-Message-ID: <20200528201940.759c58ff@canb.auug.org.au>
+        Thu, 28 May 2020 06:20:15 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3B2C05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:20:15 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m1so7022407pgk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:20:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e4iqIqjqfcu2jYuHJ8gHDSAYpn6BV5cK7NWla5/OpCc=;
+        b=fine7BNps1tLaqQpOkYNnOzDQ8/3ewTYSNJNWmUlgZB+nOK9oFRr6YO+6eNAYgefpj
+         3toBPNdcodrpawwGpPOxJ/z7QtFW2O/syKMeDQ33u37dXb9HNvsJ4JdVhtqhlARAbems
+         IP0PMiW9mI132tXfYZwvp2J1KqunBZ+zIewl6NoNpa6ltMsEgdwpBSNEj7U9rWm2ggqX
+         +H5YPpSRz7ZT2uI6l8AJlBai98juS7J36UFJIX1NAwkWUTzrhFTv4eit7R0S1zfkhWgb
+         QMPW7sCxJLGoelFNNXt4TdFb8eM/oWBAWa8tblL/cnU1h/zqN/meyLpK/M0FT3Xxeunl
+         NgfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=e4iqIqjqfcu2jYuHJ8gHDSAYpn6BV5cK7NWla5/OpCc=;
+        b=aIbFe52l09QjQgANrBcceBkL5Fqd5XV8+MifcFaei1Z+fslCzsbezhqTrjuLXzeyJQ
+         4MNEpJxi3DcsfQC9SgN1UE61fPiWI08etoUDWXsOzyBmX/B5hQXzD6Jhlud9jzKdZnrK
+         nGeBLhoDwxftgNbH4DabsRuR5D8/+fO/rViIE3a4LtJmYDgvAP8nXzssD5joeIKLP29G
+         L4cKtSpYsPlOIqloRpR/hGpyQVfORoClHHa/9K/BbUtAB2EaRcUNkSFBw74+9HftSNly
+         upnbfIOPokgKiRG8y8uXTP0p4QGbBKc5VTcWYtIb9Vl6aKWwflmefg/JNxqjJpoeTvP2
+         uFVQ==
+X-Gm-Message-State: AOAM533DPpO7AHQneQ26Z4SR3MvrVzpovEL90QVbYF0ddZfbHoc5jW/r
+        EmZDOIYanXObFiGn2/nSM5U=
+X-Google-Smtp-Source: ABdhPJwZuzNh6gjiqrMSHdQWV+rwqRu9NqCxiEoWpsPOyQ89Kk024C4ub7WOXC3CrVTFr3XeFqJzFQ==
+X-Received: by 2002:a63:d307:: with SMTP id b7mr2317587pgg.219.1590661214793;
+        Thu, 28 May 2020 03:20:14 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id o201sm4643579pfd.115.2020.05.28.03.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 03:20:14 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] ASoC: sta32x: add missed function calls in error paths
+Date:   Thu, 28 May 2020 18:20:04 +0800
+Message-Id: <20200528102004.911653-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ynU0manH9YL0PYqxaSew.4t";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ynU0manH9YL0PYqxaSew.4t
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+sta32x_probe() forgets to call undo functions when it fails, add
+the missed function calls to fix it.
 
-Hi all,
-
-After merging the akpm tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c: In function 'kfd_sdma_a=
-ctivity_worker':
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:117:2: error: implicit d=
-eclaration of function 'use_mm' [-Werror=3Dimplicit-function-declaration]
-  117 |  use_mm(mm);
-      |  ^~~~~~
-drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:144:2: error: implicit d=
-eclaration of function 'unuse_mm' [-Werror=3Dimplicit-function-declaration]
-  144 |  unuse_mm(mm);
-      |  ^~~~~~~~
-
-Caused by commit
-
-  d21760f76006 ("kernel: better document the use_mm/unuse_mm API contract")
-
-interacting with commit
-
-  522b89c63370 ("drm/amdkfd: Track SDMA utilization per process")
-
-from the amdgpu tree.
-
-I have added the following patch for today:
-
-rom: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 28 May 2020 20:15:34 +1000
-Subject: [PATCH] drm/amdkfd: fix up for {un}use_mm() rename
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/sta32x.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd=
-/amdkfd/kfd_process.c
-index db010c5da144..25636789f3d3 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -114,7 +114,7 @@ static void kfd_sdma_activity_worker(struct work_struct=
- *work)
- 		return;
+diff --git a/sound/soc/codecs/sta32x.c b/sound/soc/codecs/sta32x.c
+index db4b3ec55311..e9ccebbc31e4 100644
+--- a/sound/soc/codecs/sta32x.c
++++ b/sound/soc/codecs/sta32x.c
+@@ -893,13 +893,13 @@ static int sta32x_probe(struct snd_soc_component *component)
+ 				    sta32x->supplies);
+ 	if (ret != 0) {
+ 		dev_err(component->dev, "Failed to enable supplies: %d\n", ret);
+-		return ret;
++		goto err_clk_disable_unprepare;
  	}
-=20
--	use_mm(mm);
-+	kthread_use_mm(mm);
-=20
- 	dqm_lock(dqm);
-=20
-@@ -141,7 +141,7 @@ static void kfd_sdma_activity_worker(struct work_struct=
- *work)
+ 
+ 	ret = sta32x_startup_sequence(sta32x);
+ 	if (ret < 0) {
+ 		dev_err(component->dev, "Failed to startup device\n");
+-		return ret;
++		goto err_regulator_bulk_disable;
  	}
-=20
- 	dqm_unlock(dqm);
--	unuse_mm(mm);
-+	kthread_unuse_mm(mm);
- 	mmput(mm);
+ 
+ 	/* CONFA */
+@@ -983,6 +983,13 @@ static int sta32x_probe(struct snd_soc_component *component)
+ 	regulator_bulk_disable(ARRAY_SIZE(sta32x->supplies), sta32x->supplies);
+ 
+ 	return 0;
++
++err_regulator_bulk_disable:
++	regulator_bulk_disable(ARRAY_SIZE(sta32x->supplies), sta32x->supplies);
++err_clk_disable_unprepare:
++	if (sta32x->xti_clk)
++		clk_disable_unprepare(sta32x->xti_clk);
++	return ret;
  }
-=20
---=20
+ 
+ static void sta32x_remove(struct snd_soc_component *component)
+-- 
 2.26.2
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ynU0manH9YL0PYqxaSew.4t
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PkDwACgkQAVBC80lX
-0GwLZgf/f8fma9ON/CWmYBr8ou68R7zXknO8hP7vQ6YvYsPWNCjr+5dW63cj/hWk
-SsdMxblbC3J4JKJ0w3meyNjR75ipV+W292mVfVk8gErGbNv1FRaQqbWzpxqvXTcn
-G/LSMvbQpY4Cu/oHB2hFx0cFMl5dd2cb9DcojXq7CQUsMpqHVDZsTZRQs8FSHPoc
-1j1DeFheCcA6o7Kd0/KqwHzv8ityNWd96PRAapuFbUYQfjDiN0MWb78Ng8j7JEy/
-xovei7zkz7D/PJW88TljauzhPCeTtUErjXBNNsneWmUfurNE2/9shT4Zq99DkXSZ
-R3s6ZYgnGFG+j+y13xxtaZYRr93STg==
-=ABD0
------END PGP SIGNATURE-----
-
---Sig_/ynU0manH9YL0PYqxaSew.4t--
