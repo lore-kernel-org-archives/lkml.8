@@ -2,101 +2,105 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A724C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E36AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 494BB21548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:07:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACD821548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667677;
-	bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzXVxeLMQhup8MrSvP33GR5ZyjxCQLgpYZrStZFtwzzm4Z77Nj8DDkb8vj6/6oHVz
-	 lSG5yp8U7jOyJx1w1+mS5YcYQn89VKs/G/Q97tHABoVBiXQmDFQqWhe9nn2UirwQK9
-	 38FabfAztXZvO7uDTeRl5iQAuxuvtcPPis8ffiWI=
+	s=default; t=1590667684;
+	bh=SaN5zxdEN5dv0HxKBjQ//aUrp207XYOJ1RHgQVW34Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kPw+76QvsCUDlC4bZECXqPmILwe6H7d3Xb691CnH4OHkUHxeDfGNKuTdPWpB+uqaC
+	 l4TQsn5rSgCRup5z5r6BIn/OYsL16/I4INoBp6Z86tUAEx5EwWx7ODJeb98A8LcD9o
+	 iX2QxG0mq6QxpjwT7wY6mojOLStfOvpEHfdCLXjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389645AbgE1MH4 (ORCPT
+        id S2389634AbgE1MIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388789AbgE1L4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:38 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7078621582;
-        Thu, 28 May 2020 11:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666998;
-        bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cwk5HNVY5oKqBcAhYEPgfSIbrcNNxBkhooEL1G/bdOQj1iga9xsD6vRtaEmgBuscI
-         UfKgQmDHlp/aI1jnxJ/eMFmYrVTDr6PFrNjyKYrfYRN+h8z92KXZDhCoLtn2GmNirz
-         490/g8amptJLw/hkQe9vp7xkRb8u2ibiXyzpWSrk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Cohen <amitc@mellanox.com>, Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 33/47] selftests: mlxsw: qos_mc_aware: Specify arping timeout as an integer
-Date:   Thu, 28 May 2020 07:55:46 -0400
-Message-Id: <20200528115600.1405808-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
-References: <20200528115600.1405808-1-sashal@kernel.org>
+        Thu, 28 May 2020 08:08:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38101 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389353AbgE1MHz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:07:55 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f185so1772842wmf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 05:07:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fX1cujbgfbt/VM5a/7eMs0kHkEp+fJc6bInREoz+SAI=;
+        b=SpEc7hFsTY4g2zT7Z8I3MiCr4QQD7Mpbe4nGYDU9O2ojdQJMmTk1jUpu/RHf9NUkI+
+         Ams1rjbxRyHxhL4P1YcYaqezvcL1mmEbYqOZmUzcGU35lTrpUoxdKSg0ZYM5a/4KTKeH
+         YdtJyaICSmo+FuuMMA5Z/1ntoUGLHKbVpGbcZKGExD9f89ZVYr0pxjoWfxgcea86o/Dn
+         1GLgvfLurs1viGUFJ7Xk8fVHKsD5ROncJcp4YiRomkfwC4rbqZ1RVs20Oz1Lz5DMcQJ4
+         oplxMxyyDNW78+vE44t9o5dVgDjmGRjXuyI6fBvr22I3ueUO8QxaAXSPoHhaeboo0m+w
+         IHCA==
+X-Gm-Message-State: AOAM530k47M4mBa1X4qEQ6KEBG+tDnIx1t/mNdpx5HQk8OWHCwrAFRTO
+        +XiawZWsJhW0UrccwQ7lbVE=
+X-Google-Smtp-Source: ABdhPJw2dn25o5ZhsRcMskgXExklPfpC8pBiTQuJ7MSlKTB+XEWW9AxfZMKa8mVSNRnjxPHc3rxpfA==
+X-Received: by 2002:a1c:117:: with SMTP id 23mr3291422wmb.90.1590667673252;
+        Thu, 28 May 2020 05:07:53 -0700 (PDT)
+Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
+        by smtp.gmail.com with ESMTPSA id 62sm5912776wrm.1.2020.05.28.05.07.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 05:07:52 -0700 (PDT)
+Date:   Thu, 28 May 2020 14:07:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com
+Subject: Re: next-20200515: Xorg killed due to "OOM"
+Message-ID: <20200528120750.GC27484@dhcp22.suse.cz>
+References: <20200526091054.GA12103@amd>
+ <20200528090517.GA27484@dhcp22.suse.cz>
+ <20200528120354.GB22054@duo.ucw.cz>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528120354.GB22054@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Cohen <amitc@mellanox.com>
+On Thu 28-05-20 14:03:54, Pavel Machek wrote:
+> On Thu 2020-05-28 11:05:17, Michal Hocko wrote:
+> > On Tue 26-05-20 11:10:54, Pavel Machek wrote:
+> > [...]
+> > > [38617.276517] oom_reaper: reaped process 31769 (chromium), now anon-rss:0kB, file-rss:0kB, shmem-rss:7968kB
+> > > [38617.277232] Xorg invoked oom-killer: gfp_mask=0x0(), order=0, oom_score_adj=0
+> > > [38617.277247] CPU: 0 PID: 2978 Comm: Xorg Not tainted 5.7.0-rc5-next-20200515+ #117
+> > > [38617.277256] Hardware name: LENOVO 17097HU/17097HU, BIOS 7BETD8WW (2.19 ) 03/31/2011
+> > > [38617.277266] Call Trace:
+> > > [38617.277286]  dump_stack+0x54/0x6e
+> > > [38617.277300]  dump_header+0x45/0x321
+> > > [38617.277313]  oom_kill_process.cold+0x9/0xe
+> > > [38617.277324]  ? out_of_memory+0x167/0x420
+> > > [38617.277336]  out_of_memory+0x1f2/0x420
+> > > [38617.277348]  pagefault_out_of_memory+0x34/0x56
+> > > [38617.277361]  mm_fault_error+0x4a/0x130
+> > > [38617.277372]  do_page_fault+0x3ce/0x416
+> > 
+> > The reason the OOM killer has been invoked is that the page fault
+> > handler has returned VM_FAULT_OOM. So this is not a result of the page
+> > allocator struggling to allocate a memory. It would be interesting to
+> > check which code path has returned this. 
+> 
+> Should the core WARN_ON if that happens and there's enough memory, or
+> something like that?
 
-[ Upstream commit 46ca11177ed593f39d534f8d2c74ec5344e90c11 ]
+I wish it would simply go away. There shouldn't be really any reason for
+VM_FAULT_OOM to exist. The real low on memory situation is already
+handled in the page allocator.
 
-Starting from iputils s20190709 (used in Fedora 31), arping does not
-support timeout being specified as a decimal:
-
-$ arping -c 1 -I swp1 -b 192.0.2.66 -q -w 0.1
-arping: invalid argument: '0.1'
-
-Previously, such timeouts were rounded to an integer.
-
-Fix this by specifying the timeout as an integer.
-
-Fixes: a5ee171d087e ("selftests: mlxsw: qos_mc_aware: Add a test for UC awareness")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Reviewed-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-index 24dd8ed48580..b025daea062d 100755
---- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-+++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-@@ -300,7 +300,7 @@ test_uc_aware()
- 	local i
- 
- 	for ((i = 0; i < attempts; ++i)); do
--		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 0.1; then
-+		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 1; then
- 			((passes++))
- 		fi
- 
 -- 
-2.25.1
-
+Michal Hocko
+SUSE Labs
