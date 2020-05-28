@@ -2,94 +2,146 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25056C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDB4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 061A02084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:21:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GrU5OrO4"
+	by mail.kernel.org (Postfix) with ESMTP id C90C12084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391039AbgE1OVG (ORCPT
+        id S2391088AbgE1OVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:21:06 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53714 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390924AbgE1OVB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:21:01 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SEK9x2058714;
-        Thu, 28 May 2020 09:20:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590675609;
-        bh=giCOpDS6bO2ay1fMfMqMlDIeUNjJc+xqzMLgnM4de2E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GrU5OrO4T18LMXnpAo/1aJbOjKUKljKi0ymTnur31JUZkV+anrJjyQ1UptVQyAJNT
-         C/f+8f9VVA/ZMOHp/p9UlpVzDQdcmw75ZVOGNEmRtZEOkTemueiSkTQDRCpqO2tcw5
-         TIqp/PiKYZS1mmK2NUiGYF69mi/C0IxGgbVsiO3M=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SEK9Db019516
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 09:20:09 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:20:09 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 09:20:08 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEK41L054935;
-        Thu, 28 May 2020 09:20:05 -0500
-Subject: Re: [PATCH 1/2] dt-bindings: sound: tlv320adcx140: Add GPI config
- property
-To:     Rob Herring <robh@kernel.org>
-CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <devicetree@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20200526200917.10385-1-dmurphy@ti.com>
- <20200528140525.GA4166160@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <23500301-1076-ac47-327e-f7731525657c@ti.com>
-Date:   Thu, 28 May 2020 09:20:03 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 10:21:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:20668 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390924AbgE1OVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:21:09 -0400
+IronPort-SDR: lwKWPPpfCUBJU3dam2bE/0jMqpJA8LN84Ga4uMfHoqm0O2LDKfYlrBSstawzBPwbmKvY0ICh2+
+ ltQp7l6BTv2g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:21:05 -0700
+IronPort-SDR: RbBOw7sCwjdGD+r6XWfXsZOuFjUtGlLTVQc41w4UEzOUe0AuN9UGJnNDQcyvlokBiRqVwZyWKo
+ iFk1h8NQGUXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="302827105"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 28 May 2020 07:21:01 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeJP6-009RKe-LU; Thu, 28 May 2020 17:21:04 +0300
+Date:   Thu, 28 May 2020 17:21:04 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] dmaengine: Introduce min burst length capability
+Message-ID: <20200528142104.GQ1634618@smile.fi.intel.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-4-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200528140525.GA4166160@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526225022.20405-4-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+On Wed, May 27, 2020 at 01:50:14AM +0300, Serge Semin wrote:
+> Some hardware aside from default 0/1 may have greater minimum burst
+> transactions length constraints. Here we introduce the DMA device
+> and slave capability, which if required can be initialized by the DMA
+> engine driver with the device-specific value.
 
-On 5/28/20 9:05 AM, Rob Herring wrote:
-> On Tue, May 26, 2020 at 03:09:16PM -0500, Dan Murphy wrote:
->> Add an array property that configures the General Purpose Input (GPI)
->> register.  The device has 4 GPI pins and each pin can be configured in 1
->> of 7 different ways.
-> Dan seems to have trouble running get_maintainers.pl and Cc'ing the DT
-> list. Running 'make dt_binding_check' also seems to be a problem. Now
-> linux-next has these warnings:
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I don't have an issue with doing get_maintainers.  All the maintainers 
-listed were added to the patch.
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dmaengine.c   | 1 +
+>  include/linux/dmaengine.h | 4 ++++
+>  2 files changed, 5 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index d31076d9ef25..b332ffe52780 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -590,6 +590,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	caps->src_addr_widths = device->src_addr_widths;
+>  	caps->dst_addr_widths = device->dst_addr_widths;
+>  	caps->directions = device->directions;
+> +	caps->min_burst = device->min_burst;
+>  	caps->max_burst = device->max_burst;
+>  	caps->residue_granularity = device->residue_granularity;
+>  	caps->descriptor_reuse = device->descriptor_reuse;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index e1c03339918f..0c7403b27133 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -465,6 +465,7 @@ enum dma_residue_granularity {
+>   *	Since the enum dma_transfer_direction is not defined as bit flag for
+>   *	each type, the dma controller should set BIT(<TYPE>) and same
+>   *	should be checked by controller as well
+> + * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+>   * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+>   *	       for resume later)
+> @@ -478,6 +479,7 @@ struct dma_slave_caps {
+>  	u32 src_addr_widths;
+>  	u32 dst_addr_widths;
+>  	u32 directions;
+> +	u32 min_burst;
+>  	u32 max_burst;
+>  	bool cmd_pause;
+>  	bool cmd_resume;
+> @@ -769,6 +771,7 @@ struct dma_filter {
+>   *	Since the enum dma_transfer_direction is not defined as bit flag for
+>   *	each type, the dma controller should set BIT(<TYPE>) and same
+>   *	should be checked by controller as well
+> + * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+>   * @residue_granularity: granularity of the transfer residue reported
+>   *	by tx_status
+> @@ -839,6 +842,7 @@ struct dma_device {
+>  	u32 src_addr_widths;
+>  	u32 dst_addr_widths;
+>  	u32 directions;
+> +	u32 min_burst;
+>  	u32 max_burst;
+>  	bool descriptor_reuse;
+>  	enum dma_residue_granularity residue_granularity;
+> -- 
+> 2.26.2
+> 
 
-And devicetree@vger.kernel.org was cc'd.
-
-I will fix this warning.
-
-Dan
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
