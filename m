@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F82C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A72C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C84521548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAAD21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667603;
-	bh=fJxAjeDEvRm4OWsDU+0shWN9BkZJZgIzTXJEgHRXUF4=;
+	s=default; t=1590667612;
+	bh=qcIOPJSyyVRafaHYyA7Q6NsCowK1Js4HxODpc6lloAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ydh2AKYnINrNzYbYV6o030nSy+XUh2sywAsXui0CVjCeqsEI6p08OjaYHeiLqAkht
-	 wnWxX6v0v7V46F0Kt9EAegSxG0P7y49W1p77gR0oRtsDLlG/kWCI84irrLONZhHk8f
-	 OzlxFzPW4hloearrwzvxiOGQajOidZ9ggRRmO8T4=
+	b=Q8qIx0ZTEOISBgfBqmx11aZWl9zT7QlwiHeqfZRVLZFimtKgKbGoFy/glCOxdjNQ8
+	 WOn1qAWaZNrzD4dWiBAV+tE9brk48O+PeVM7Bcs46bbs9rT0ihnX67dMFISBMlK6qj
+	 rzbRnWd03hJ60o5jTnLy+vqBwwU4F00ha5omgWRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389513AbgE1MGm (ORCPT
+        id S2389409AbgE1MGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:06:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49004 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388830AbgE1L4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:49 -0400
+        id S2388822AbgE1L4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B169821475;
-        Thu, 28 May 2020 11:56:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64CC620DD4;
+        Thu, 28 May 2020 11:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667008;
-        bh=fJxAjeDEvRm4OWsDU+0shWN9BkZJZgIzTXJEgHRXUF4=;
+        s=default; t=1590667007;
+        bh=qcIOPJSyyVRafaHYyA7Q6NsCowK1Js4HxODpc6lloAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mwOOi8XmDNd59Ap6/0EHT2QCaHQgQDo7aVUfOOOmbiocvPymLn/KNOMhqGNs8MfK5
-         3oInQnLTsrilmsDFyLqsq+N+ztRq1EAkyPv/kT1RFDvECFTOp+nfHDd6CgBy9MRNRU
-         vT7h3/cgXYWSzwVYkuXLOjawh0l5GljDqXINRKaE=
+        b=l4yUHkP99vm5CJM0tErf65DXeSXoBxRqkpXPznLL0cvsy+xS6Gc+JXcF3osC/Mh0c
+         NiApbnEmSab9PzRmMWPMJbCKXA2aOWjn/UIJMzSUKd457xCC7fgDhDIMHzhE5u8/iF
+         kCEaeTbLfR83UhjpTAo5DMuaTWZTzAzCESust1+Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
+Cc:     Roi Dayan <roid@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Paul Blakey <paulb@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
         linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 42/47] net/mlx5e: Update netdev txq on completions during closure
-Date:   Thu, 28 May 2020 07:55:55 -0400
-Message-Id: <20200528115600.1405808-42-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.6 41/47] net/mlx5: Fix cleaning unmanaged flow tables
+Date:   Thu, 28 May 2020 07:55:54 -0400
+Message-Id: <20200528115600.1405808-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -61,57 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moshe Shemesh <moshe@mellanox.com>
+From: Roi Dayan <roid@mellanox.com>
 
-[ Upstream commit 5e911e2c06bd8c17df29147a5e2d4b17fafda024 ]
+[ Upstream commit aee37f3d940ca732df71c3df49347bccaafc0b24 ]
 
-On sq closure when we free its descriptors, we should also update netdev
-txq on completions which would not arrive. Otherwise if we reopen sqs
-and attach them back, for example on fw fatal recovery flow, we may get
-tx timeout.
+Unmanaged flow tables doesn't have a parent and tree_put_node()
+assume there is always a parent if cleaning is needed. fix that.
 
-Fixes: 29429f3300a3 ("net/mlx5e: Timeout if SQ doesn't flush during close")
-Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Fixes: 5281a0c90919 ("net/mlx5: fs_core: Introduce unmanaged flow tables")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Mark Bloch <markb@mellanox.com>
+Reviewed-by: Paul Blakey <paulb@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fs_core.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-index ee60383adc5b..c2b801b435cf 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
-@@ -538,10 +538,9 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *cq, int napi_budget)
- void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
- {
- 	struct mlx5e_tx_wqe_info *wi;
-+	u32 dma_fifo_cc, nbytes = 0;
-+	u16 ci, sqcc, npkts = 0;
- 	struct sk_buff *skb;
--	u32 dma_fifo_cc;
--	u16 sqcc;
--	u16 ci;
- 	int i;
- 
- 	sqcc = sq->cc;
-@@ -566,11 +565,15 @@ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+index 9dc24241dc91..cdc566768a07 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -323,14 +323,13 @@ static void tree_put_node(struct fs_node *node, bool locked)
+ 		if (node->del_hw_func)
+ 			node->del_hw_func(node);
+ 		if (parent_node) {
+-			/* Only root namespace doesn't have parent and we just
+-			 * need to free its node.
+-			 */
+ 			down_write_ref_node(parent_node, locked);
+ 			list_del_init(&node->list);
+ 			if (node->del_sw_func)
+ 				node->del_sw_func(node);
+ 			up_write_ref_node(parent_node, locked);
++		} else if (node->del_sw_func) {
++			node->del_sw_func(node);
+ 		} else {
+ 			kfree(node);
  		}
+@@ -447,8 +446,10 @@ static void del_sw_flow_table(struct fs_node *node)
+ 	fs_get_obj(ft, node);
  
- 		dev_kfree_skb_any(skb);
-+		npkts++;
-+		nbytes += wi->num_bytes;
- 		sqcc += wi->num_wqebbs;
- 	}
- 
- 	sq->dma_fifo_cc = dma_fifo_cc;
- 	sq->cc = sqcc;
-+
-+	netdev_tx_completed_queue(sq->txq, npkts, nbytes);
+ 	rhltable_destroy(&ft->fgs_hash);
+-	fs_get_obj(prio, ft->node.parent);
+-	prio->num_ft--;
++	if (ft->node.parent) {
++		fs_get_obj(prio, ft->node.parent);
++		prio->num_ft--;
++	}
+ 	kfree(ft);
  }
  
- #ifdef CONFIG_MLX5_CORE_IPOIB
 -- 
 2.25.1
 
