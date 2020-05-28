@@ -2,91 +2,111 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F4EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D54C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5FA220899
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E024207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f5aQgYOO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OjwtmTh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgE1Gcc (ORCPT
+        id S1725939AbgE1GeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:32:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:12530 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725308AbgE1Gcb (ORCPT
+        Thu, 28 May 2020 02:34:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22674 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725601AbgE1GeV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:32:31 -0400
-X-UUID: fdc33ac2baf7469cbd786d81f5623493-20200528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=X5yIYJsx3HE5VilfUgdZ3rZhUrrpxFF0glSlGP64Xxw=;
-        b=f5aQgYOOaRvemxhGQK9nd3qsWQRbZsKUHsRC1cApktA7NMY0WMUo9s4AUnwC8HvE/pfpddsXWXhz+p89Luohacgx3xmwgxRLjzywFqWcvkthib8uEtlUavFENnqilmVojxSrtcf36CrXdt7SPBaDRyYIixMLhgTFd1cod21uy/g=;
-X-UUID: fdc33ac2baf7469cbd786d81f5623493-20200528
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1923720607; Thu, 28 May 2020 14:32:27 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 28 May 2020 14:32:25 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 28 May 2020 14:32:25 +0800
-Message-ID: <1590647545.25636.0.camel@mtkswgap22>
-Subject: Re: [PATCH v1 1/1] scsi: ufs: Don't update urgent bkops level when
- toggle auto bkops
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <stanley.chu@mediatek.com>, <asutoshd@codeaurora.org>,
-        <nguyenb@codeaurora.org>, <hongwus@codeaurora.org>,
-        <rnayak@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-team@android.com>, <saravanak@google.com>,
-        <salyzyn@google.com>, Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 28 May 2020 14:32:25 +0800
-In-Reply-To: <1590632686-17866-1-git-send-email-cang@codeaurora.org>
-References: <1590632686-17866-1-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 28 May 2020 02:34:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590647660;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A0TbfU1Wtk9UqNPHb2mnR7GHgRz5NlicH2MG30iIhdQ=;
+        b=OjwtmTh0zrTrT55C1ugNY2uw/mCJiqwKZQPEcS9nFMDoY7Uj8LOigV5n9YQzGECOMVXP5Q
+        UCVszqXIQFgl5u7w1vyTkSGzLnYxdhO09ZDldXEe0h+d1I4w9SXCeoHmN9ZTgQAafVqfnk
+        X6YWrIvsBJSxvpMNQ4Vt8//23QvCE/M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-V0gHZIGzPNaVCuaWjLDYHA-1; Thu, 28 May 2020 02:34:16 -0400
+X-MC-Unique: V0gHZIGzPNaVCuaWjLDYHA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9313E1005510;
+        Thu, 28 May 2020 06:34:14 +0000 (UTC)
+Received: from localhost.localdomain (vpn2-54-130.bne.redhat.com [10.64.54.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 048385C1B0;
+        Thu, 28 May 2020 06:34:07 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH RFCv2 3/9] kvm/arm64: Rename kvm_vcpu_get_hsr() to
+ kvm_vcpu_get_esr()
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, kvmarm@lists.cs.columbia.edu,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, james.morse@arm.com,
+        suzuki.poulose@arm.com, drjones@redhat.com, eric.auger@redhat.com,
+        aarcange@redhat.com, shan.gavin@gmail.com
+References: <20200508032919.52147-1-gshan@redhat.com>
+ <20200508032919.52147-4-gshan@redhat.com>
+ <20200526104249.GB1363@C02TD0UTHF1T.local>
+ <2e4dd03f-656a-c32b-5e87-ca28583999ef@redhat.com>
+ <359dad5546a428ea963781f2728e70bf@kernel.org>
+From:   Gavin Shan <gshan@redhat.com>
+Message-ID: <e71af813-7f72-9d2e-2419-f4e03cf35369@redhat.com>
+Date:   Thu, 28 May 2020 16:34:05 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <359dad5546a428ea963781f2728e70bf@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA1LTI3IGF0IDE5OjI0IC0wNzAwLCBDYW4gR3VvIHdyb3RlOg0KPiBVcmdl
-bnQgYmtvcHMgbGV2ZWwgaXMgdXNlZCB0byBjb21wYXJlIGFnYWluc3QgYWN0dWFsIGJrb3BzIHN0
-YXR1cyByZWFkDQo+IGZyb20gVUZTIGRldmljZS4gVXJnZW50IGJrb3BzIGxldmVsIGlzIHNldCBk
-dXJpbmcgaW5pdGlhbGl6YXRpb24gYW5kIG1pZ2h0DQo+IGJlIHVwZGF0ZWQgaW4gZXhjZXB0aW9u
-IGV2ZW50IGhhbmRsZXIgZHVyaW5nIHJ1bnRpbWUsIGJ1dCBpdCBzaG91bGQgbm90IGJlDQo+IHVw
-ZGF0ZWQgdG8gdGhlIGFjdHVhbCBia29wcyBzdGF0dXMgZXZlcnkgdGltZSB3aGVuIGF1dG8gYmtv
-cHMgaXMgdG9nZ2xlZC4NCj4gT3RoZXJ3aXNlLCBpZiB1cmdlbnQgYmtvcHMgbGV2ZWwgaXMgdXBk
-YXRlZCB0byAwLCBhdXRvIGJrb3BzIHNoYWxsIGFsd2F5cw0KPiBiZSBrZXB0IGVuYWJsZWQuDQo+
-IA0KPiBGaXhlczogMjQzNjZjMmFmYmIwICgic2NzaTogdWZzOiBSZWNoZWNrIGJrb3BzIGxldmVs
-IGlmIGJrb3BzIGlzIGRpc2FibGVkIikNCj4gU2lnbmVkLW9mZi1ieTogQ2FuIEd1byA8Y2FuZ0Bj
-b2RlYXVyb3JhLm9yZz4NCj4gLS0tDQo+ICBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jIHwgMSAt
-DQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQo+IGlu
-ZGV4IDE4MjdiNTcuLjE3ODMyMmUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc2NzaS91ZnMvdWZz
-aGNkLmMNCj4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnNoY2QuYw0KPiBAQCAtNTEzMyw3ICs1
-MTMzLDYgQEAgc3RhdGljIGludCB1ZnNoY2RfYmtvcHNfY3RybChzdHJ1Y3QgdWZzX2hiYSAqaGJh
-LA0KPiAgCQllcnIgPSB1ZnNoY2RfZW5hYmxlX2F1dG9fYmtvcHMoaGJhKTsNCj4gIAllbHNlDQo+
-ICAJCWVyciA9IHVmc2hjZF9kaXNhYmxlX2F1dG9fYmtvcHMoaGJhKTsNCj4gLQloYmEtPnVyZ2Vu
-dF9ia29wc19sdmwgPSBjdXJyX3N0YXR1czsNCj4gIG91dDoNCj4gIAlyZXR1cm4gZXJyOw0KPiAg
-fQ0KDQpSZXZpZXdlZC1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNvbT4N
-Cg0K
+On 5/27/20 5:20 PM, Marc Zyngier wrote:
+> On 2020-05-27 03:43, Gavin Shan wrote:
+>> Hi Mark,
+>>
+>> On 5/26/20 8:42 PM, Mark Rutland wrote:
+>>> On Fri, May 08, 2020 at 01:29:13PM +1000, Gavin Shan wrote:
+>>>> Since kvm/arm32 was removed, this renames kvm_vcpu_get_hsr() to
+>>>> kvm_vcpu_get_esr() to it a bit more self-explaining because the
+>>>> functions returns ESR instead of HSR on aarch64. This shouldn't
+>>>> cause any functional changes.
+>>>>
+>>>> Signed-off-by: Gavin Shan <gshan@redhat.com>
+>>>
+>>> I think that this would be a nice cleanup on its own, and could be taken
+>>> independently of the rest of this series if it were rebased and sent as
+>>> a single patch.
+>>>
+>>
+>> Yeah, I'll see how PATCH[3,4,5] can be posted independently
+>> as part of the preparatory work, which is suggested by you
+>> in another reply.
+>>
+>> By the way, I assume the cleanup patches are good enough to
+>> target 5.8.rc1/rc2 if you agree.
+> 
+> It's fine to base them on -rc1 or -rc2. They will not be merged
+> before 5.9 though.
+> 
+> Thanks,
+> 
+>          M.
+
+Sure, Thanks, Marc!
 
