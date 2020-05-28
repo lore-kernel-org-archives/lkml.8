@@ -2,92 +2,103 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E34BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:43:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26C6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6650020721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:43:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D7220721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:44:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jz5H+K0L"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="gzq7o17B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437271AbgE1WnC (ORCPT
+        id S2437284AbgE1WoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34520 "EHLO
+        Thu, 28 May 2020 18:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437076AbgE1Wm6 (ORCPT
+        with ESMTP id S2437076AbgE1WoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:42:58 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A57C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:42:58 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id c8so286618iob.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:42:58 -0700 (PDT)
+        Thu, 28 May 2020 18:44:05 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF54AC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:44:05 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p30so297071pgl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IEfGi4dyFMuYwCLRVBWXpuKxbIcboEwlu5YMHVWkvwU=;
-        b=Jz5H+K0LECOpJV+x5y5LzisTdw0mBwpNBAWX0ryNwkXHFicCczhJWkTy7cyfBTaoh8
-         7UDbLYj2s0zAXp62JNi2RahdJWGo7317KyHjlyBaUQgE26pYk3YCSSvxuPtJ27rvY6Ou
-         I5rFFKjOqq1PWOVQhH2jYfo6RftnqRYqgeziTykblZfbmDwphViFy4xXbFc3buPYnEiG
-         gN0bGGtBTVt4wrf+MlgHub54Gn6nmsqOXirjbkEUikMqic3jf8wKbVsNGDR8D4f4/dCF
-         Dz0zx7E7z4Yc4+ApMbZmdC6bJ+V8YZjpU6BwBA5PQQaZWqREhVbzVhcx5Dj0jvQYFIMS
-         eUyw==
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:date:message-id:mime-version:content-transfer-encoding:cc
+         :from:to;
+        bh=l45d2ebIgVTYBdcwadzZn1AiPQm55aaNY7J4mpFY86s=;
+        b=gzq7o17BUls8m2QY2K9AJK73zJe60aWiWfGiLBL/NiD7RUd+s6lCnOfHl7LoNFT1j8
+         qUfkNJRnB4CVStoGo7C3cdIym/GnWivmbC9QxLGwQnffvtyrbxvnJGPRw7RWIsuC7vUG
+         FLFzERKd/C0fKkrxYUq6SV8Tg4nf6ol0XslnBxchnkDaurX2rs9c3LDvq8sgF0RgXViB
+         ehS3OoqYMb91sZHeE2cWUKybggSjQDPEf7unUbr4TKmzePcNEut6vMJ2/xpXZPXea2ww
+         gqQixF/rQUwmBXjbvbOCl6doypj/KE5VWH0xcSnS+tnL/w2h0J6I5ff1MQ5MQlVEus29
+         xaDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IEfGi4dyFMuYwCLRVBWXpuKxbIcboEwlu5YMHVWkvwU=;
-        b=EMRoer3Lryy1ESYI35z3/nFcvGcLt+g20E4Q7CWE+yt4c+n6wzoDCvsxUlQOUnbmqo
-         sq1P1372Teu2ebQDDb7SViyWojQnkZffixWFLw7hQTI+7EXbELCevYoqrt6vV2Fi5aab
-         8tHiRC9t724fAyYC/r9HQ7OhkznT8l4+J+9W0a2ufXCiE6AJi5aClpIduvkdX/1V/nWQ
-         NX+upmj/ofWUnnpEJDwrRmCbjUd6CHtEDdPXNDIWRdbEPLKr+7mLUB3ZrskoJ0iO03oz
-         7N9H+qfht3f1FFTAq5Yv4Ryw4vm8fQxq2dtZZEdL/tPJKihfGIwsBNI2hUJovAw8FUWw
-         y5dA==
-X-Gm-Message-State: AOAM5316vNScF1wF7kMclZ+BzeUrVJVBGxBhGmGc/QlcLSzBf+HM2rlN
-        o/Y+IaXWVVMFuU6MpKLW32XGyM9OuC4gDwEY7+A=
-X-Google-Smtp-Source: ABdhPJzcCzO/QPGhPNtHDDVPrWC+c7clNsY2whbfzkyuR1rchvCHcalka6QuFOi1V/bewHNjt9xxf3BMPxYlsBDsrdM=
-X-Received: by 2002:a05:6638:112c:: with SMTP id f12mr1888020jar.98.1590705777743;
- Thu, 28 May 2020 15:42:57 -0700 (PDT)
+        h=x-gm-message-state:subject:date:message-id:mime-version
+         :content-transfer-encoding:cc:from:to;
+        bh=l45d2ebIgVTYBdcwadzZn1AiPQm55aaNY7J4mpFY86s=;
+        b=Jxm95JIsGyJJQ6sW/Z9s5r5gFaM/A2as9qsQ3xx09e8IenP0VqwKfx3ZgBJTiIs5yX
+         5lvkEeruSSFh/xCMgHKYjHufXRGKEg9W/WX862XeVjkPbiw7L7sgDawxDON0UnjM+9PJ
+         +HSenZEJ22xa48AnLGSoC9WAXtIuhpisxsEsuVDtY1P0rlPmSiLC3uY0LujAp30FQhpL
+         uiGsSABaN3ojZ5JF0YP3c6MkMZObFSpKJzZO3XIbMeH7/FvYmC48EgdV/IzHw3p5DH0c
+         QIiDdaHPKqBXRhYx/ZA+EbAmej4MTs4bAGq7pI125JbMU+p9Q4fZIwEPTAnkGT4QSwDL
+         RzYA==
+X-Gm-Message-State: AOAM531XCXC42ykj16svHpePMb6j7ppFkp5/NNdFstU6odWlkPoWXOz6
+        FJKccfjKYmri6caTKq/nEyHYdA==
+X-Google-Smtp-Source: ABdhPJwq9RAGTsT72bc6ZS4m4DqTZ9XT3ecH6wm1LPKrA30nov53xcwsWLSkrP5e8rF1Klixj+jFzQ==
+X-Received: by 2002:aa7:9e52:: with SMTP id z18mr5446497pfq.57.1590705844915;
+        Thu, 28 May 2020 15:44:04 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id e19sm5488131pfn.17.2020.05.28.15.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 15:44:04 -0700 (PDT)
+Subject: [PATCH 1/2] soc: sifive: l2 cache: Eliminate an unsigned zero compare warning
+Date:   Thu, 28 May 2020 15:43:52 -0700
+Message-Id: <20200528224353.32559-1-palmer@dabbelt.com>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
-References: <20200528201937.038455891@infradead.org>
-In-Reply-To: <20200528201937.038455891@infradead.org>
-From:   Lai Jiangshan <jiangshanlai+lkml@gmail.com>
-Date:   Fri, 29 May 2020 06:42:46 +0800
-Message-ID: <CAJhGHyCua-oTww9U26CJvfojxdfQGewH1T-JUro7gLKucT2+kw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] x86/entry: disallow #DB more
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        andrew.cooper3@citrix.com, daniel.thompson@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>, yash.shah@sifive.com,
+        anup@brainfault.org, bp@suse.de, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        kernel-team@android.com, Palmer Dabbelt <palmerdabbelt@google.com>
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:         linux-riscv@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 4:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> These patches disallow #DB during NMI/#MC and allow removing a lot of fugly code.
->
+From: Palmer Dabbelt <palmerdabbelt@google.com>
 
-Hello
+GCC warns about this comparison, which is unnecessary.
 
-Will #DB be allowed in #DF?
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+---
+ drivers/soc/sifive/sifive_l2_cache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
-Lai
+diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+index d5f266551880..51e198880a8d 100644
+--- a/drivers/soc/sifive/sifive_l2_cache.c
++++ b/drivers/soc/sifive/sifive_l2_cache.c
+@@ -51,7 +51,7 @@ static ssize_t l2_write(struct file *file, const char __user *data,
+ 
+ 	if (kstrtouint_from_user(data, count, 0, &val))
+ 		return -EINVAL;
+-	if ((val >= 0 && val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
++	if ((val < 0xFF) || (val >= 0x10000 && val < 0x100FF))
+ 		writel(val, l2_base + SIFIVE_L2_ECCINJECTERR);
+ 	else
+ 		return -EINVAL;
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
 
-> Patch #6 should probably wait until we've got the KGDB situation sorted
-> because applying that makes a bad situation worse.
->
->
