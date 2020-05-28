@@ -6,60 +6,60 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76530C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6C0208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5D22084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gkEaaK+m"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TEUWhQ66"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgE1BtZ (ORCPT
+        id S1726805AbgE1Bu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
+        Wed, 27 May 2020 21:50:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgE1BtZ (ORCPT
+        with ESMTP id S1725294AbgE1Bu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:49:25 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D42AC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:49:24 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id cx22so2380729pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:49:24 -0700 (PDT)
+        Wed, 27 May 2020 21:50:59 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0C8C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:50:59 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id z64so8179326pfb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:50:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=96mpkTGIh5O+UhFhsZdg+qMWj6+2k5Ul5jGV+bLnnek=;
-        b=gkEaaK+mzjRx+bD6cc68JEGvfpTM3rvOHmlG4Bnihe+uU/pUiP9UwNk19rHnCA1olu
-         kNauOY3GmkNcZ/R9YuuewHA2/YJk6qI0DzkVsLdVyFqzj/bvCjDeCpJ3JbTbDpGopnn/
-         LmcOcI+o6qHREUzxG/p89YipTrWC82xyuu828=
+        bh=foNaBO5M0gttX4Deanmv+4MV7YTgTH1Dw1Ba0mJEKI0=;
+        b=TEUWhQ66EouoTP5oSr4b2i8yoee/soXAhlKcpyhLTdH3zwczQQljamxh19Q/EO8Z7R
+         wtFS863YLckwd3vINecEHk21qkGl7hT/irUImImnwJNynasmUBmPojoiJL0m9zHLzhYT
+         XM3QwJCFCSS3Mu6CKkyteS14OQ2dYGFUuhBXM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=96mpkTGIh5O+UhFhsZdg+qMWj6+2k5Ul5jGV+bLnnek=;
-        b=PQziOGIgNIj6Z8aVxFf9zvDhmN8TY24XLx9p43AfhjFyeJlW7ToyR7MUMoFpsgOnrg
-         qLap2RNiCXNyI7zb0s8rm97GQTbHAeVS4il5WTjfkWSdwtfpVpMu94LqH/gmNcmmLRMN
-         ogthG5wEm+JsQUtIWlJSsu7ytEfaPFvmC4dnYJpUMrzYwOcZf2HfXt0/lxepX/Bbp9Oy
-         Fz2ybRpAmBm6MoJf5qoyaDjGOmGp6cSF4ExwzYEIRKmT+qle1+DqaOoO/HB/AtKDBkQT
-         +KkK/JbspJPT8NzpXvN7shr4COfhCQs9dlXl5fc2D/ULrJfj/SrD1zTSVif693VPAvth
-         eLtg==
-X-Gm-Message-State: AOAM531N+dWac4vlMhdM67zT6g9jcEz0OI1Z7CHoflA3VmVc7Dp8IS9U
-        2hqyqBCEwicR9NBoHnPUII1SbqERhUsL1g==
-X-Google-Smtp-Source: ABdhPJyYTOKEF0F/ft64x5o+RPpNjPsThjLEcZwqLphp+nYDzEhBHXTc5ufdDmZyz5fygyY5IReKww==
-X-Received: by 2002:a17:90a:8d16:: with SMTP id c22mr1170872pjo.16.1590630563876;
-        Wed, 27 May 2020 18:49:23 -0700 (PDT)
+        bh=foNaBO5M0gttX4Deanmv+4MV7YTgTH1Dw1Ba0mJEKI0=;
+        b=tR5Fq6FiI1J+9TBvxwNc73VCwpSHvWrPuMuRcr0qTNVvVcfaExqrulTynHqqDNvWO6
+         ENX/FZf175MVmbZsR8bvwid8buGUgHJLKORQQnekWD1rZvSk0xhyhSHAAxdJkeTpqAZ7
+         DXVUBWaxO7CcSznQCLxpcNYPvaJicxl6efwszlkti1m2fl+USi5iRRJIv7q3iTRfmS7h
+         fS6XVi9BVPe5IMX24xf8RStHyqlEuzTbDUjHN6npyYpl47VmtDTKn80mVkbDDob8edzQ
+         AzuDJesxUXN7bTGP0MFupOH/NdQOErww4ci0Qp+1bBYsIVf5QspVW9eQFCHVqNKfSEpj
+         i9Tw==
+X-Gm-Message-State: AOAM531o+5cJ+gJCWbohOBYG3bzmgOl9+kDqhQ0aq7XDkxqAvq4UjO39
+        kN2vXt3hz2hFILVqYgf5N5+nDg==
+X-Google-Smtp-Source: ABdhPJzZD8Dg5qbVJaRbhQTVVGOz9kqTMb0AkXoOzHCTGL+96Bu92uETmZSa3nOr5HhAAeVuUlpGTw==
+X-Received: by 2002:a63:4504:: with SMTP id s4mr593083pga.175.1590630658485;
+        Wed, 27 May 2020 18:50:58 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id n19sm54816pfu.194.2020.05.27.18.49.22
+        by smtp.gmail.com with ESMTPSA id b74sm2984800pga.31.2020.05.27.18.50.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 18:49:23 -0700 (PDT)
-Date:   Wed, 27 May 2020 18:49:21 -0700
+        Wed, 27 May 2020 18:50:57 -0700 (PDT)
+Date:   Wed, 27 May 2020 18:50:56 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
         Matt Denton <mpdenton@google.com>,
         Sargun Dhillon <sargun@sargun.me>,
         Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
@@ -68,53 +68,67 @@ Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
         Jeffrey Vander Stoep <jeffv@google.com>,
         Linux Containers <containers@lists.linux-foundation.org>
 Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
-Message-ID: <202005271846.80FC6F3@keescook>
+Message-ID: <202005271849.F34CE6A@keescook>
 References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
  <202005271408.58F806514@keescook>
- <20200527220532.jplypougn3qzwrms@wittgenstein>
- <202005271537.75548B6@keescook>
- <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
+ <20200527215203.GE4153131@cisco>
+ <202005271457.CF4BBB47@keescook>
+ <20200527225600.GF4153131@cisco>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
+In-Reply-To: <20200527225600.GF4153131@cisco>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:45:01AM +0200, Christian Brauner wrote:
-> On Wed, May 27, 2020 at 03:37:58PM -0700, Kees Cook wrote:
-> > But there's a mapping between pidfd and task struct that is separate
-> > from task struct itself, yes? I.e. keeping a pidfd open doesn't pin
-> > struct task in memory forever, right?
+On Wed, May 27, 2020 at 04:56:00PM -0600, Tycho Andersen wrote:
+> On Wed, May 27, 2020 at 03:36:09PM -0700, Kees Cook wrote:
+> > On Wed, May 27, 2020 at 03:52:03PM -0600, Tycho Andersen wrote:
+> > > On Wed, May 27, 2020 at 02:43:49PM -0700, Kees Cook wrote:
+> > > > (While I'm here -- why can there be only one listener per task? The
+> > > > notifications are filter-specific, not task-specific?)
+> > > 
+> > > Not sure what you mean here?
+> > 
+> > tatic struct file *init_listener(struct seccomp_filter *filter)
+> > {
+> >         struct file *ret = ERR_PTR(-EBUSY);
+> >         struct seccomp_filter *cur;
+> > 
+> >         for (cur = current->seccomp.filter; cur; cur = cur->prev) {
+> >                 if (cur->notif)
+> >                         goto out;
+> >         }
+> > 
+> > ...
+> > 
+> >         /* Installing a second listener in the chain should EBUSY */
+> >         EXPECT_EQ(user_trap_syscall(__NR_getpid,
+> >                                     SECCOMP_FILTER_FLAG_NEW_LISTENER),
+> >                   -1);
+> >         EXPECT_EQ(errno, EBUSY);
+> > 
+> > 
+> > Why does this limit exist? Since the fd is tied to a specific filter,
+> > I don't see conflicts about having multiple USER_NOTIF filters on one
+> > task -- the monitor's response will either fake it or continue it, so
+> > there is no "composition" needed? I must be missing something.
 > 
-> No, but that's an implementation detail and we discussed that. It pins
-> struct pid instead of task_struct. Once the process is fully gone you
-> just get ESRCH.
-
-Oh right! struct pid, yes. Okay, that's quite a bit smaller.
-
-> For example, fds to /proc/<pid>/<tid>/ fds aren't just closed once the
-> task has gone away, userspace will just get ESRCH when it tries to open
-> files under there but the fd remains valid until close() is called.
+> It exists because Andy asked for it :)
 > 
-> In addition, of all the anon inode fds, none of them have the "close the
-> file behind userspace back" behavior: io_uring, signalfd, timerfd, btf,
-> perf_event, bpf-prog, bpf-link, bpf-map, pidfd, userfaultfd, fanotify,
-> inotify, eventpoll, fscontext, eventfd. These are just core kernel ones.
-> I'm pretty sure that it'd be very odd behavior if we did that. I'd
-> rather just notify userspace and leave the close to them. But maybe I'm
-> missing something.
+> I agree that there's no technical reason for it to be there. I think
+> it's just that the semantics were potentially confusing, and it wasn't
+> a requirement anyone had to have multiples attached.
 
-Well, they have a "you are now disconnected" state, which I was thinking
-could be done entirely entirely on the VFS side of things, but it looks
-like it's not.
+Okay, sounds good. It just seems seccomp continues to grow "layers", so
+I'm eyeing this aspect of user_notif. i.e. what if systemd decides to
+add a user_notif for something and now suddenly the containers can't use
+it. Or if some complex thing inside a container tries to use user_notif
+and it can't because the container manager is doing it, etc.
 
-So, yes, okay, thank you for walking me through all that. I still want
-to take a closer look at all the notify calls in here. It seems strange
-that seccomp has to do all the wakeups (but I guess there are no
-"generic" poll helpers?)
+Future work! :)
 
 -- 
 Kees Cook
