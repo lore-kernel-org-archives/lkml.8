@@ -2,127 +2,273 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C6CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACCF21475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C326B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="aF2Ya9KZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D1ZT3ivh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgE1JGH (ORCPT
+        id S1728123AbgE1JHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:06:07 -0400
-Received: from mail-eopbgr20090.outbound.protection.outlook.com ([40.107.2.90]:33954
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728028AbgE1JGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:06:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NHMNE1GJSgOEi6szWaTZQtIxIc1jN/Bs5BQx+zpt1FLQtEfWH5/DNK+wotIx7iCOanpXL+6VgD9YQODF45kx/tfaKLtOz2roeKAYrsI5t8k8SYILiLJGxssMyeVyD28qyXHLM7Ms4mGHiehs5GSdMShOolpfJQ4S9glNZaJFLu0BVIzOBcFKHAmzqXvssYPA3ap4V9CP0h5EaR96MWS4P1VX/BAsW6zQLH6KFiMHIQ6d1rl1GplB2A/MmkjRsjNux74z/VLDgCrW14PnB2rVOhk2mzipsOhZvNvyhrW5mGb+o2snfOzOVRPKO13/slh7yt8iRZ3Acoo56FBlj1NSoA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FkezDt131EPJYG5chw2hWW4RkYqjVomz7cpkispl9Ps=;
- b=DwbtPYavRn8qnkVsc2b2a4UHiCwFgvaOU5YrEnKSTJrkmvuhm53taoZrLHrpmHx4Ch/3tDBH+2V/dBWJjbPuhuClgFbw9zE6261DDACXtKI7rTF3zuzvmLBBhV1TDu75Oh2XJTA16Ysshvqjx5cjZ1Fia72EOvUKabq+rev/jdbUwy8y2wCA+8zX8cETzIAN6BR/wGP3IVuN7r9YTICzQJ8WY/lzqp5ZVNNko1uPxepXOsjAFzI1zrCOHAnytm2RJTaXgxFMJ4gDhECUYItTrFdV9N/0cHxTOOgqbOzzpdCMhp2cYFe2gXvCvrb6bSVCvcE8uI0Hxzdseu0RUzEYFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FkezDt131EPJYG5chw2hWW4RkYqjVomz7cpkispl9Ps=;
- b=aF2Ya9KZl8pvGDeTi4thuswz9HVAri0oymMy2b1+a2UepaU3BVRZkAb0toYU3nVhSJl6ZLAl5W1uiyLOIFDsyLg8HMy1549QlPnvSjUoBg/tGkK4tAV4wX1pk52zkbwIXoRFWt1x2rL6jL2n3G1P05XWg8CKfGcpdPvoUqC0av8=
-Received: from AM0PR07MB3937.eurprd07.prod.outlook.com (2603:10a6:208:4c::20)
- by AM0PR07MB4018.eurprd07.prod.outlook.com (2603:10a6:208:48::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.8; Thu, 28 May
- 2020 09:06:03 +0000
-Received: from AM0PR07MB3937.eurprd07.prod.outlook.com
- ([fe80::55f1:90c6:a5ae:2c82]) by AM0PR07MB3937.eurprd07.prod.outlook.com
- ([fe80::55f1:90c6:a5ae:2c82%4]) with mapi id 15.20.3066.007; Thu, 28 May 2020
- 09:06:03 +0000
-From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
-To:     "dinghao.liu@zju.edu.cn" <dinghao.liu@zju.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>
-CC:     "mpm@selenic.com" <mpm@selenic.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] [v2] hwrng: ks-sa - Fix runtime PM imbalance on error
-Thread-Topic: [PATCH] [v2] hwrng: ks-sa - Fix runtime PM imbalance on error
-Thread-Index: AQHWNMCb9mSYDuCNCEaSWl1hJI18sKi9NOoA
-Date:   Thu, 28 May 2020 09:06:03 +0000
-Message-ID: <8592887a502e174b076f16846704fac43885aa5b.camel@nokia.com>
-References: <20200528072106.5191-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200528072106.5191-1-dinghao.liu@zju.edu.cn>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.36.2 
-authentication-results: zju.edu.cn; dkim=none (message not signed)
- header.d=none;zju.edu.cn; dmarc=none action=none header.from=nokia.com;
-x-originating-ip: [131.228.2.19]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7a48336d-458d-4f5c-24b8-08d802e6590a
-x-ms-traffictypediagnostic: AM0PR07MB4018:
-x-microsoft-antispam-prvs: <AM0PR07MB40181AC34E8DAC4B7D718A87888E0@AM0PR07MB4018.eurprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9TNeVCTFWnm4PhsV1Fy4syUZ88s9mc5UxXlocxPD+8Z8+d0+VZGgO8XJE4MXriqrpHH/oSMiWXG6TeKOisjwXLJLUWFmdng0Tbd9kms4svCejJpDhJlgpe2WXKL4p9mzIsgdFd+/I9MWHc7UbClsk4hZQuztLYbd5MRd80lGSgiY7CxPlDvaOU26fG5OFob9b7Kb8zYTVQmNYRXs4CajJnamfThSAbjvxziQ9XwuZ4zJBUNz7cU8co4PpvvN1hGf4i9u80+4dUjVXn5PsH6gzDxQMYjeUK/vxYVhScAKavIrmeBIAGvdGVnQgJUs3sW9FbefLiY7JgTpZ52/p4S0Ww==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR07MB3937.eurprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(8936002)(54906003)(6512007)(110136005)(36756003)(2616005)(478600001)(4326008)(6486002)(5660300002)(71200400001)(8676002)(2906002)(6506007)(316002)(86362001)(186003)(26005)(64756008)(66476007)(66446008)(66946007)(66556008)(91956017)(76116006)(7416002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 3ALc/5LmaSlq7TcPrdEEQBIYJqHYxilfNX75B89nraBOaz3xpfD0l0pVPYif0BbNh9lmkcfzs5+bYyXsYZ6N3hAFSAvh2ElJeKF2vyS/jKNzIXk7mKYVLuHvKW9CbO2bnv2RYziBklHkOjIniEzmlAgCSi1lSqGqMNGk1Z7Otw4HpThOj616VuTX5v9uwATtEm3aUtbXm0WPQC5/7wP2+ao3aSQ414molZbMVcGa7DT/E1CQuKVTXFtuwlFXgIaDg6+tGiX9Iwo4FbjOYiZqxAq9kT/mfOnIfBN3u0qHnLCTDe+Tz99nPPdQlf89OhyJswhyuCts2zoI+f9XPf9/orwSS5RcW7/dTRfoZvVHiInIjFhzLKy39tb1ELFBi9pmLHog78vkrx89Ret9ZLOgGZBcmKeqmdfFxsCtxoDPVdQSPaq6x+7YYdyLe3h00Ro+lrRun8tlJOg9NAGcCDzf09nT7SrVHKegPVD4abUjjbY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4326AC2BF077EC4999B0E514A237761A@eurprd07.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 28 May 2020 05:07:44 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38954 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728028AbgE1JHn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:07:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590656861;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wQmI0+P/PEpIKaNOyFwxoTQFEAf09zsYAcbhQ4pxdC8=;
+        b=D1ZT3ivhRaWaGwS8KqXtyyboK6i6AolOiuTqByhPBA58ci/mkI70Oi/Py/XzGX01gZkdgy
+        W4BPMScsfEbc8hn0ZrupvBGokOSlEHEsXLltoiuHpLBJJ2359MJsgOpfGdCUvN8UAVfCLM
+        7jTbM0nLYrvijfadqB4z09Y1bOtMq/I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-9ryIWqjjO7G9vB1sAO4Fuw-1; Thu, 28 May 2020 05:07:39 -0400
+X-MC-Unique: 9ryIWqjjO7G9vB1sAO4Fuw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9CDE107ACCA;
+        Thu, 28 May 2020 09:07:37 +0000 (UTC)
+Received: from localhost (ovpn-12-80.pek2.redhat.com [10.72.12.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E404B62932;
+        Thu, 28 May 2020 09:07:33 +0000 (UTC)
+Date:   Thu, 28 May 2020 17:07:31 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, cai@lca.pw, mhocko@kernel.org,
+        steve.wahl@hpe.com
+Subject: Re: [PATCH] mm/compaction: Fix the incorrect hole in
+ fast_isolate_freepages()
+Message-ID: <20200528090731.GI20045@MiWiFi-R3L-srv>
+References: <20200521014407.29690-1-bhe@redhat.com>
+ <20200521092612.GP1059226@linux.ibm.com>
+ <20200521155225.GA20045@MiWiFi-R3L-srv>
+ <20200521171836.GU1059226@linux.ibm.com>
+ <20200522070114.GE26955@MiWiFi-R3L-srv>
+ <20200522072524.GF26955@MiWiFi-R3L-srv>
+ <20200522142053.GW1059226@linux.ibm.com>
+ <20200526084543.GG26955@MiWiFi-R3L-srv>
+ <20200526113244.GH13212@linux.ibm.com>
+ <01beec81-565f-d335-5eff-22693fc09c0e@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a48336d-458d-4f5c-24b8-08d802e6590a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 09:06:03.1686
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /9wO0mlP0A/uwM/sJpbQ86uQxFUTQiKgF79vfOOuB6XhOXHqZRdXe19A4fv2paY+DEqV1y4SpCK1+YS21sc0bbvoSSRMRjbVzJuRBvJhC0U=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR07MB4018
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01beec81-565f-d335-5eff-22693fc09c0e@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gRGluZ2hhbywNCg0KT24gVGh1LCAyMDIwLTA1LTI4IGF0IDE1OjIxICswODAwLCBEaW5n
-aGFvIExpdSB3cm90ZToNCj4gcG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhlIHJ1
-bnRpbWUgUE0gdXNhZ2UgY291bnRlciBldmVuDQo+IHRoZSBjYWxsIHJldHVybnMgYW4gZXJyb3Ig
-Y29kZS4gVGh1cyBhIHBhaXJpbmcgZGVjcmVtZW50IGlzIG5lZWRlZA0KPiBvbiB0aGUgZXJyb3Ig
-aGFuZGxpbmcgcGF0aCB0byBrZWVwIHRoZSBjb3VudGVyIGJhbGFuY2VkLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+DQoNClJldmlld2Vk
-LWJ5OiBBbGV4YW5kZXIgU3ZlcmRsaW4gPGFsZXhhbmRlci5zdmVyZGxpbkBub2tpYS5jb20+DQoN
-Cj4gLS0tDQo+IA0KPiBDaGFuZ2Vsb2c6DQo+IA0KPiB2MjogLSBVc2UgcG1fcnVudGltZV9wdXRf
-bm9pZGxlKCkgaW5zdGVhZCBvZiBwbV9ydW50aW1lX3B1dF9zeW5jKCkuDQo+IC0tLQ0KPiAgZHJp
-dmVycy9jaGFyL2h3X3JhbmRvbS9rcy1zYS1ybmcuYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL2h3X3JhbmRv
-bS9rcy1zYS1ybmcuYyBiL2RyaXZlcnMvY2hhci9od19yYW5kb20va3Mtc2Etcm5nLmMNCj4gaW5k
-ZXggZTIzMzBlNzU3ZjFmLi4wMDE2MTcwMzNkNmEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY2hh
-ci9od19yYW5kb20va3Mtc2Etcm5nLmMNCj4gKysrIGIvZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9r
-cy1zYS1ybmcuYw0KPiBAQCAtMjQ0LDYgKzI0NCw3IEBAIHN0YXRpYyBpbnQga3Nfc2Ffcm5nX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJcmV0ID0gcG1fcnVudGltZV9n
-ZXRfc3luYyhkZXYpOw0KPiAgCWlmIChyZXQgPCAwKSB7DQo+ICAJCWRldl9lcnIoZGV2LCAiRmFp
-bGVkIHRvIGVuYWJsZSBTQSBwb3dlci1kb21haW5cbiIpOw0KPiArCQlwbV9ydW50aW1lX3B1dF9u
-b2lkbGUoZGV2KTsNCj4gIAkJcG1fcnVudGltZV9kaXNhYmxlKGRldik7DQo+ICAJCXJldHVybiBy
-ZXQ7DQo+ICAJfQ0KLS0gDQpBbGV4YW5kZXIgU3ZlcmRsaW4uDQoNCg==
+On 05/26/20 at 01:49pm, David Hildenbrand wrote:
+> On 26.05.20 13:32, Mike Rapoport wrote:
+> > Hello Baoquan,
+> > 
+> > On Tue, May 26, 2020 at 04:45:43PM +0800, Baoquan He wrote:
+> >> On 05/22/20 at 05:20pm, Mike Rapoport wrote:
+> >>> Hello Baoquan,
+> >>>
+> >>> On Fri, May 22, 2020 at 03:25:24PM +0800, Baoquan He wrote:
+> >>>> On 05/22/20 at 03:01pm, Baoquan He wrote:
+> >>>>>
+> >>>>> So let's add these unavailable ranges into memblock and reserve them
+> >>>>> in init_unavailable_range() instead. With this change, they will be added
+> >>>>> into appropriate node and zone in memmap_init(), and initialized in
+> >>>>> reserve_bootmem_region() just like any other memblock reserved regions.
+> >>>>
+> >>>> Seems this is not right. They can't get nid in init_unavailable_range().
+> >>>> Adding e820 ranges may let them get nid. But the hole range won't be
+> >>>> added to memblock, and still has the issue.
+> >>>>
+> >>>> Nack this one for now, still considering.
+> >>>
+> >>> Why won't we add  the e820 reserved ranges to memblock.memory during
+> >>> early boot as I suggested?
+> >>>
+> >>> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> >>> index c5399e80c59c..b0940c618ed9 100644
+> >>> --- a/arch/x86/kernel/e820.c
+> >>> +++ b/arch/x86/kernel/e820.c
+> >>> @@ -1301,8 +1301,11 @@ void __init e820__memblock_setup(void)
+> >>>  		if (end != (resource_size_t)end)
+> >>>  			continue;
+> >>>  
+> >>> -		if (entry->type == E820_TYPE_SOFT_RESERVED)
+> >>> +		if (entry->type == E820_TYPE_SOFT_RESERVED ||
+> >>> +		    entry->type == E820_TYPE_RESERVED) {
+> >>> +			memblock_add(entry->addr, entry->size);
+> >>>  			memblock_reserve(entry->addr, entry->size);
+> >>> +		}
+> >>>  
+> >>>  		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
+> >>>  			continue;
+> >>>
+> >>> The setting of node later  in numa_init() will assign the proper node
+> >>> for these regions as it does for the usable memory.
+> >>
+> >> Yes, if it's only related to e820 reserved region, this truly works.
+> >>
+> >> However, it also has ACPI table regions. That's why I changed to call
+> >> the problematic area as firmware reserved ranges later.
+> >>
+> >> Bisides, you can see below line, there's another reserved region which only
+> >> occupies one page in one memory seciton. If adding to memblock.memory, we also
+> >> will build struct mem_section and the relevant struct pages for the whole
+> >> section. And then the holes around that page will be added and initialized in
+> >> init_unavailable_mem(). numa_init() will assign proper node for memblock.memory
+> >> and memblock.reserved, but won't assign proper node for the holes.
+> >>
+> >> ~~~
+> >> [    0.000000] BIOS-e820: [mem 0x00000000fed80000-0x00000000fed80fff] reserved
+> >> ~~~
+> >>
+> >> So I still think we should not add firmware reserved range into
+> >> memblock for fixing this issue.
+> >>
+> >> And, the fix in the original patch seems necessary. You can see in
+> >> compaction code, the migration source is chosen from LRU pages or
+> >> movable pages, the migration target has to be got from Buddy. However,
+> >> only the min_pfn in fast_isolate_freepages(), it's calculated by
+> >> distance between cc->free_pfn - cc->migrate_pfn, we can't guarantee it's
+> >> safe, then use it as the target to handle.
+> > 
+> > I do not object to your original fix with careful check for pfn validity.
+> > 
+> > But I still think that the memory reserved by the firmware is still
+> > memory and it should be added to memblock.memory. This way the memory
+> 
+> If it's really memory that could be read/written, I think I agree.
+
+I would say some of them may not be allowed to be read/written, if I
+understand it correctly. I roughly went through the x86 init code, there
+are some places where mem region is marked as E820_TYPE_RESERVED so that
+they are not touched after initialization. E.g:
+
+1) pfn 0
+In trim_bios_range(), we set the pfn 0 as E820_TYPE_RESERVED. You can
+see the code comment, this is a BIOS owned area, but not kernel RAM.
+
+2)GART reserved region
+In early_gart_iommu_check(), GART IOMMU firmware will reserve a region
+in an area, firmware designer won't map system RAM into that area.
+
+And also intel_graphics_stolen(), arch_rmrr_sanity_check(), these
+regions are not system RAM backed area, reading from or writting into
+these area may cause error.
+
+Futhermore, there's a KASLR bug found by HPE, its triggering and root
+cause are written into below commit log. You can see that accessing to
+firmware reserved region caused BIOS to halt system when cpu doing
+speculative.
+
+commit 2aa85f246c181b1fa89f27e8e20c5636426be624
+Author: Steve Wahl <steve.wahl@hpe.com>
+Date:   Tue Sep 24 16:03:55 2019 -0500
+
+    x86/boot/64: Make level2_kernel_pgt pages invalid outside kernel area
+
+    Our hardware (UV aka Superdome Flex) has address ranges marked
+    reserved by the BIOS. Access to these ranges is caught as an error,
+    causing the BIOS to halt the system.
+
+> 
+> > map will be properly initialized from the very beginning and we won't
+> > need init_unavailable_mem() and alike workarounds and. Obviously, the patch
+> 
+> I remember init_unavailable_mem() is necessary for holes within
+> sections, where we actually *don't* have memory, but we still have have
+> a valid memmap (full section) that we have to initialize.
+> 
+> See the example from 4b094b7851bf ("mm/page_alloc.c: initialize memmap
+> of unavailable memory directly"). Our main memory ends within a section,
+> so we have to initialize the remaining parts because the whole section
+> will be marked valid/online.
+
+Yes, memory hole need be handled in init_unavailable_mem(). Since we
+have created struct page for them, need initialize them. We can't
+discard init_unavailable_mem() for now.
+
+> 
+> Any way to improve this handling is appreciated. In that patch I also
+> spelled out that we might want to mark such holes via a new page type,
+> e.g., PageHole(). Such a page is a memory hole, but has a valid memmap.
+> Any content in the memmap (zone/node) should be ignored.
+
+As I said at above, I am a little conservative to add all those regions of
+E820_TYPE_RESERVED into memblock.memory and memblock.reserved, because
+most of them are firmware reserved region, they may be not backed by normal
+RAM.
+
+I was thinking to step back to use mm_zero_struct_page() inside
+init_unavailable_range() as below. But it doesn't differ much
+from __init_single_page(), except of the _refcount and mapcount.
+Zeroing struct page equals to putting them into node 0, zero 0.
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3973b5fdfe3f..4e4b72cf5283 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6901,7 +6901,7 @@ static u64 __init init_unavailable_range(unsigned long spfn, unsigned long epfn)
+                 * (in memblock.reserved but not in memblock.memory) will
+                 * get re-initialized via reserve_bootmem_region() later.
+                 */
+-               __init_single_page(pfn_to_page(pfn), pfn, 0, 0);
++               mm_zero_struct_page(pfn_to_page(pfn));
+                __SetPageReserved(pfn_to_page(pfn));
+                pgcnt++;
+        }
+
+About adding these unavailable ranges into node/zone, in the old code,
+it just happened to add them into expected node/zone. You can see in
+early_pfn_in_nid(), if no nid found from memblock, the returned '-1'
+will make it true ironically. But that is not saying the bad thing
+always got good result. If the last zone of node 0 is DMA32 zone, the
+deferred init will skip the only chance to add some of unavailable
+rnages into expected node/zone. Means they were not always added into
+appropriate node/zone before, the change of iterating memblock.memory in
+memmap_init() dones't introduce regression.
+
+static inline bool __meminit early_pfn_in_nid(unsigned long pfn, int node)
+{
+        int nid;
+
+        nid = __early_pfn_to_nid(pfn, &early_pfnnid_cache);
+        if (nid >= 0 && nid != node)
+                return false;
+        return true;
+}
+
+So if no anybody need access them after boot, not adding them into any
+node/zone sounds better. Otherwise, better add them in the appropriate
+node/zone.
+
+> 
+> But it's all quite confusing, especially across architectures and ...
+> 
+> > above is not enough, but it's a small step in this direction.
+> > 
+> > I believe that improving the early memory initialization would make many
+> > things simpler and more robust, but that's a different story :)
+> 
+> ... I second that.
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+
