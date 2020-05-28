@@ -2,97 +2,78 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2479CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E0BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F229B20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GM+ONoU9"
+	by mail.kernel.org (Postfix) with ESMTP id 12A4520888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbgE1LD3 (ORCPT
+        id S2388317AbgE1LDq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:03:29 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:60269 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388287AbgE1LD1 (ORCPT
+        Thu, 28 May 2020 07:03:46 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:24237 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388287AbgE1LDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:03:27 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590663806; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=85XoM0RC3qYbWlqeNJuCnlm67Y/UmDqWjm8ga97G2o4=; b=GM+ONoU9UNPNI1HA6nwSY0w1cw6VMSCFK6mvKBD9p2/GKIf6B+WfXE9hlT6l3wAStMdRHwpg
- 03GSgoenT702FOWH+vuDMc7J61DWFh9bOGDJVYKh9ioKtdT/V+Gzo0Kp1fJVZsuR3QNguXwo
- yxkVOII8bsEoJ4iiy2+LRZf4ZtA=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5ecf9a7dea0dfa490e2bc661 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:03:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BBB80C433A0; Thu, 28 May 2020 11:03:24 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5ADEC433C9;
-        Thu, 28 May 2020 11:03:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5ADEC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v3] Bluetooth: hci_qca: Improve controller ID info log level
-Date:   Thu, 28 May 2020 19:03:17 +0800
-Message-Id: <1590663797-16531-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 28 May 2020 07:03:46 -0400
+X-Originating-IP: 91.224.148.103
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 59C07240003;
+        Thu, 28 May 2020 11:03:43 +0000 (UTC)
+Date:   Thu, 28 May 2020 13:03:42 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of/platform: Avoid compilation warning
+Message-ID: <20200528130342.219f8a44@xps13>
+In-Reply-To: <20200527183555.GA2512243@bogus>
+References: <20200514170707.24466-1-miquel.raynal@bootlin.com>
+        <20200527183555.GA2512243@bogus>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Controller ID info got by VSC EDL_PATCH_GETVER is very
-important, so improve its log level from DEBUG to INFO.
+Hi Rob,
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
----
- drivers/bluetooth/btqca.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Rob Herring <robh@kernel.org> wrote on Wed, 27 May 2020 12:35:55 -0600:
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index 3ea866d..6193030 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -74,10 +74,14 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version,
- 
- 	ver = (struct qca_btsoc_version *)(edl->data);
- 
--	BT_DBG("%s: Product:0x%08x", hdev->name, le32_to_cpu(ver->product_id));
--	BT_DBG("%s: Patch  :0x%08x", hdev->name, le16_to_cpu(ver->patch_ver));
--	BT_DBG("%s: ROM    :0x%08x", hdev->name, le16_to_cpu(ver->rom_ver));
--	BT_DBG("%s: SOC    :0x%08x", hdev->name, le32_to_cpu(ver->soc_id));
-+	bt_dev_info(hdev, "QCA Product ID   :0x%08x",
-+		    le32_to_cpu(ver->product_id));
-+	bt_dev_info(hdev, "QCA SOC Version  :0x%08x",
-+		    le32_to_cpu(ver->soc_id));
-+	bt_dev_info(hdev, "QCA ROM Version  :0x%08x",
-+		    le16_to_cpu(ver->rom_ver));
-+	bt_dev_info(hdev, "QCA Patch Version:0x%08x",
-+		    le16_to_cpu(ver->patch_ver));
- 
- 	/* QCA chipset version can be decided by patch and SoC
- 	 * version, combination with upper 2 bytes from SoC
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> On Thu, May 14, 2020 at 07:07:07PM +0200, Miquel Raynal wrote:
+> > The of_find_device_by_node() helper has its dummy counterpart for when
+> > CONFIG_OF is not enabled. However, it is clearly stated in the kernel
+> > documentation that it "takes a reference to the embedded struct device
+> > which needs to be dropped after use". Which means the of_dev_put()
+> > helper might have to be called afterwards. Unfortunately, there is no
+> > of_dev_put() dummy function if OF_CONFIG is not enabled which seems
+> > odd in this case. The of_dev_put() helper is pretty simple, it just
+> > checks the validity of the single argument and calls put_device() on
+> > it. One can just call put_device() directly to avoid any build issue
+> > but I find much more accurate in this case to create the dummy
+> > helper.
+> > 
+> > With this helper, a file using of_find_device_by_node() can also call
+> > of_dev_put() without triggering the following:  
+> 
+> IMO, you should use platform_device_put() instead. It has the NULL check 
+> too.
+> 
+> I imagine of_dev_put() is left over from when OF devices were not 
+> platform devices. 
 
+Ok, makes sense. Perhaps we should entirely get rid of it, I don't see
+a lot of users left. Or at least update the comment I was mentioning.
+
+Cheers,
+Miquèl
