@@ -2,156 +2,95 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9004C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E62C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6504207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590693522;
-	bh=ENwJXkJLKZRRsPK+WQo6kcGcxKkeYsu9FJkyfV7BrsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bmQELStCF/8dVglkREWQooA4MY4yODdEZxIxpY90HDPuEbamS+2WTAbRlnIgD0z3v
-	 Bmog5y7ipQ6yDUJv5efoUMMHYnYbDPQWuf60ogrerW/ODjrYSiptuDeCXLfW99jbtf
-	 2bOjxw5tZpFHVTuzZu+rE3veCasLS/6ZSPC4S12s=
+	by mail.kernel.org (Postfix) with ESMTP id 5E648207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406254AbgE1TSm (ORCPT
+        id S2406263AbgE1TTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 15:19:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:42100 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405596AbgE1TSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:18:40 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E0D2075A;
-        Thu, 28 May 2020 19:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590693519;
-        bh=ENwJXkJLKZRRsPK+WQo6kcGcxKkeYsu9FJkyfV7BrsY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AxJ5emo9TW7QwGwPSsV9Dp1eJDxxvH4nmRepMbV4kjwQoATkDAQwKTqE05mMxWE2b
-         U36vLeleBvo0SwmbPZfbuGe4GbUsq9AS8XxCMEXyo6gJx/WucGGSc5x/+Nhhvjozbk
-         OXcjyo8rgkphmvKFpjCzbLVST1jQ5R9N5dsyWg68=
-Date:   Thu, 28 May 2020 12:18:39 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix retry logic in
- f2fs_write_cache_pages()
-Message-ID: <20200528191839.GA180586@google.com>
-References: <1590546056-17871-1-git-send-email-stummala@codeaurora.org>
- <1d54379e-35c7-76e0-0c8a-d89bfcecb935@huawei.com>
- <78d2f29b-3ec0-39bc-46cf-88e82f1970c9@huawei.com>
+        id S2405596AbgE1TTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:19:19 -0400
+IronPort-SDR: 9beMskLDrBnv9zTRO0fyo5YNu+oh5B+fVcaIOwX7TpKHSOU6RoZbWmKZHkmpd8OzzjIml8psUr
+ mRIZLj23nRBw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 12:19:18 -0700
+IronPort-SDR: rYxDEesOM5+HpYuOiYxDoBMxJa241T34T363LDDQv41MwgTvB1xQcu+kixQR7ANse9fBmli7tS
+ QoMPJO31GvrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="292105760"
+Received: from jtitox-mobl.ger.corp.intel.com (HELO localhost) ([10.252.56.171])
+  by fmsmga004.fm.intel.com with ESMTP; 28 May 2020 12:19:12 -0700
+Date:   Thu, 28 May 2020 22:19:10 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Don Porter <porter@cs.unc.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
+        dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+Message-ID: <20200528191910.GC2147934@linux.intel.com>
+References: <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
+ <20200518153407.GA499505@tassilo.jf.intel.com>
+ <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
+ <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
+ <20200519164853.GA19706@linux.intel.com>
+ <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
+ <87h7w7qy18.fsf@nanos.tec.linutronix.de>
+ <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
+ <87d06opd3a.fsf@nanos.tec.linutronix.de>
+ <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <78d2f29b-3ec0-39bc-46cf-88e82f1970c9@huawei.com>
+In-Reply-To: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28, Chao Yu wrote:
-> On 2020/5/28 10:45, Chao Yu wrote:
-> > On 2020/5/27 10:20, Sahitya Tummala wrote:
-> >> In case a compressed file is getting overwritten, the current retry
-> >> logic doesn't include the current page to be retried now as it sets
-> >> the new start index as 0 and new end index as writeback_index - 1.
-> >> This causes the corresponding cluster to be uncompressed and written
-> >> as normal pages without compression. Fix this by allowing writeback to
-> >> be retried for the current page as well (in case of compressed page
-> >> getting retried due to index mismatch with cluster index). So that
-> >> this cluster can be written compressed in case of overwrite.
-> >>
-> >> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-> >> ---
-> >>  fs/f2fs/data.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> >> index 4af5fcd..bfd1df4 100644
-> >> --- a/fs/f2fs/data.c
-> >> +++ b/fs/f2fs/data.c
-> >> @@ -3024,7 +3024,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
-> >>  	if ((!cycled && !done) || retry) {
-> > 
-> > IMO, we add retry logic in wrong place, you can see that cycled value is
-> > zero only if wbc->range_cyclic is true, in that case writeback_index is valid.
-> > 
-> > However if retry is true and wbc->range_cyclic is false, then writeback_index
-> > would be uninitialized variable.
-> > 
-> > Thoughts?
-> > 
-> > Thanks,
-> > 
-> >>  		cycled = 1;
-> >>  		index = 0;
-> >> -		end = writeback_index - 1;
+On Thu, May 28, 2020 at 01:40:16PM -0400, Don Porter wrote:
+> Hi Thomas,
 > 
-> BTW, I notice that range_cyclic writeback flow was refactored in below commit,
-> and skeleton of f2fs.writepages was copied from mm/page-writeback.c::write_cache_pages(),
-> I guess we need follow that change.
+> On 5/28/20 6:29 AM, Thomas Gleixner wrote:
+> > > Until recently, we were doing proof-of-concept research, not product
+> > > development, and there are limited hours in the day.  I also hasten to
+> > > say that the product of research is an article, the software artifact
+> > > serves as documentation of the experiment.  In contrast, the product of
+> > > software development is software.  It takes significant time and effort
+> > > to convert one to the other.  Upstreaming code is of little scientific
+> > > interest.  But things have changed for our project; we had no users in
+> > > 2015 and we are now un-cutting corners that are appropriate for research
+> > > but inappropriate for production.  For a research artifact with an
+> > > audience that knew the risks, we shipped a module because it was easier
+> > > to maintain and install than a kernel patch.
+> > 
+> > I understand that and with a big fat warning and documentation from
+> > start I wouldn't have complained so vehemently.
 > 
-> 64081362e8ff ("mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock")
+> This is a fair point.  We will fix this ASAP, and I will be more careful
+> about this going forward.
 
-Is that something like this?
+Are you going to experiment with this patch set and Graphene? Just
+sanity checking so that I don't unnecessarily do duplicate work.
 
----
- fs/f2fs/data.c | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+I ignored most of the discussion since I came here only with the
+motivation of testing Graphene together with this patch set. I'm
+assuming that motivation is always good no matter which angle you come
+from. Thus, I might have missed the part I'm asking.
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 48a622b95b76e..28fcdf0d4dcb9 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2861,7 +2861,6 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 	pgoff_t index;
- 	pgoff_t end;		/* Inclusive */
- 	pgoff_t done_index;
--	int cycled;
- 	int range_whole = 0;
- 	xa_mark_t tag;
- 	int nwritten = 0;
-@@ -2879,17 +2878,12 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 	if (wbc->range_cyclic) {
- 		writeback_index = mapping->writeback_index; /* prev offset */
- 		index = writeback_index;
--		if (index == 0)
--			cycled = 1;
--		else
--			cycled = 0;
- 		end = -1;
- 	} else {
- 		index = wbc->range_start >> PAGE_SHIFT;
- 		end = wbc->range_end >> PAGE_SHIFT;
- 		if (wbc->range_start == 0 && wbc->range_end == LLONG_MAX)
- 			range_whole = 1;
--		cycled = 1; /* ignore range_cyclic tests */
- 	}
- 	if (wbc->sync_mode == WB_SYNC_ALL || wbc->tagged_writepages)
- 		tag = PAGECACHE_TAG_TOWRITE;
-@@ -3054,10 +3048,9 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
- 		}
- 	}
- #endif
--	if ((!cycled && !done) || retry) {
--		cycled = 1;
-+	if (retry) {
- 		index = 0;
--		end = writeback_index - 1;
-+		end = -1;
- 		goto retry;
- 	}
- 	if (wbc->range_cyclic || (range_whole && wbc->nr_to_write > 0))
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+/Jarkko
