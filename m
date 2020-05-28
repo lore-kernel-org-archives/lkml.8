@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90173C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA71C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73855208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA0C2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391249AbgE1OvC (ORCPT
+        id S2403766AbgE1OvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:51:02 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:42582 "EHLO
+        Thu, 28 May 2020 10:51:09 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42602 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbgE1OvA (ORCPT
+        with ESMTP id S1728611AbgE1OvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 10:51:00 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3289880307C0;
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 8A8D58030839;
         Thu, 28 May 2020 14:50:58 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oi3CD9VmS7XJ; Thu, 28 May 2020 17:50:57 +0300 (MSK)
+        with ESMTP id d34vhtuaL0fr; Thu, 28 May 2020 17:50:58 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Arnd Bergmann <arnd@arndb.de>
 List-Id: <soc.lore.kernel.org>
@@ -36,9 +36,11 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Olof Johansson <olof@lixom.net>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         <soc@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/6] bus: bt1-apb: Include linux/io.h
-Date:   Thu, 28 May 2020 17:50:45 +0300
-Message-ID: <20200528145050.5203-1-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH 2/6] bus: bt1-apb: Fix show/store callback identations
+Date:   Thu, 28 May 2020 17:50:46 +0300
+Message-ID: <20200528145050.5203-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200528145050.5203-1-Sergey.Semin@baikalelectronics.ru>
+References: <20200528145050.5203-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -48,7 +50,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It must be included since we are using readl() method here.
+After fixing the sysfs calback return value the functions argumnets
+identations have been left as before the fix. That made the
+argments declarations being unaligned with respect to the space
+surrounded by the parentheses.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -56,21 +61,33 @@ Cc: Olof Johansson <olof@lixom.net>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: soc@kernel.org
 ---
- drivers/bus/bt1-apb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bus/bt1-apb.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/bus/bt1-apb.c b/drivers/bus/bt1-apb.c
-index abccd1dfc544..839f1add2236 100644
+index 839f1add2236..59ec5e7077e8 100644
 --- a/drivers/bus/bt1-apb.c
 +++ b/drivers/bus/bt1-apb.c
-@@ -15,6 +15,7 @@
- #include <linux/atomic.h>
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/nmi.h>
- #include <linux/of.h>
- #include <linux/regmap.h>
+@@ -311,15 +311,15 @@ static ssize_t timeout_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(timeout);
+ 
+-static ssize_t inject_error_show(struct device *dev, struct device_attribute *attr,
+-			     char *buf)
++static ssize_t inject_error_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
+ {
+ 	return scnprintf(buf, PAGE_SIZE, "Error injection: nodev irq\n");
+ }
+ 
+ static ssize_t inject_error_store(struct device *dev,
+-			      struct device_attribute *attr,
+-			      const char *data, size_t count)
++				  struct device_attribute *attr,
++				  const char *data, size_t count)
+ {
+ 	struct bt1_apb *apb = dev_get_drvdata(dev);
+ 
 -- 
 2.26.2
 
