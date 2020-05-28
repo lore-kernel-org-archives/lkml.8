@@ -2,76 +2,115 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47759C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2104C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 312172075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8EB2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:53:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="SbC0EQCR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391361AbgE1OxM (ORCPT
+        id S2403833AbgE1Ox3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:53:12 -0400
-Received: from mga07.intel.com ([134.134.136.100]:1728 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391349AbgE1OxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:53:06 -0400
-IronPort-SDR: LBwS2Hp/10q4c/MqEDIgNTM9n1fCbS9PAtOg6P9J4l7YvToGZ0lnHdXBIfYjHOmfRcNf5C00V9
- SPWpXam2xI/g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:53:06 -0700
-IronPort-SDR: XJE73Pykesx7YX0HnG+ihINBfAg2RBknVwW8TgTVC9TylLzeFvcDRBXHaw5SjxfjkTG6n5+EOB
- B/5TcXTxj6BA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="310945955"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2020 07:53:01 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeJu3-009Rb9-H3; Thu, 28 May 2020 17:53:03 +0300
-Date:   Thu, 28 May 2020 17:53:03 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/10] dmaengine: dw: Add dummy device_caps callback
-Message-ID: <20200528145303.GU1634618@smile.fi.intel.com>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
+        Thu, 28 May 2020 10:53:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391244AbgE1Ox0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:53:26 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DDDC08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:53:26 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f5so3502909wmh.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jYwlFXyoA5W7eOjmY64mk9fyq3/rODJ0HXkx98UI8ms=;
+        b=SbC0EQCRmMAuKlDmTMhJKM9/33wrjm/5m2A2+LrYTwDPw/46j9VlKEgIUfKQCdLuAn
+         fXX93FqGNDFTYN3zPxj+k59IOEd36bKDQRBOBhfWH9O7pBo+QJaZACUtjmi0qvG6k1WX
+         tdRemBAXpwxvD6CCdTEFVESiud6PlgU1nXiLU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jYwlFXyoA5W7eOjmY64mk9fyq3/rODJ0HXkx98UI8ms=;
+        b=QozHgNWiuASB+mbubCWZ1Qdb0aEu5JFuH5TTl1svv8Qa+pSkl/6IS6amschEJ7e+4b
+         gCJoM1bnOZ52/rAvspkbTmGj7M5E4UJOoyLgxuKOTASF5nU+VbiLpydYtUx63wbNXmuw
+         7ql7re7COYahcYdAZ3r89bvG9E555xwhWPpeerexmffCXO7pbrpuxJSqK6nkv0uVWCTh
+         Dbwgn+P4Xbnd+jQkt02U1E3WE1CHIXB4WtS0skRqOjfwWASE/GL1QIzKJuoEmR1y0BFI
+         anCLRFtStHdAaSiLy83mVqGbZmjueebuitu2pZEK2N2QU1+CvjYGcybU4PpmOwG4Uh3c
+         k35w==
+X-Gm-Message-State: AOAM533FQCeE3ImLE42QT4nnAk5VpBkvR+om2rFAd9ud7EIlKvm9Qj7S
+        o/oiw7BwBM/uLmw9TeyWGIWI/Lv9O6qrIg==
+X-Google-Smtp-Source: ABdhPJw6x83C5m+liS6sK3O+5Mi+sGqGNugMnzt/+6U4WeTLNCfN42hQ7sh+8CL5hqzz96DVlegeBA==
+X-Received: by 2002:a1c:a74d:: with SMTP id q74mr3779042wme.177.1590677604252;
+        Thu, 28 May 2020 07:53:24 -0700 (PDT)
+Received: from [192.168.51.243] ([78.128.78.220])
+        by smtp.gmail.com with ESMTPSA id h20sm6747524wma.6.2020.05.28.07.53.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 07:53:22 -0700 (PDT)
+Subject: Re: [PATCH][net-next] nexthop: fix incorrect allocation failure on
+ nhg->spare
+To:     Colin King <colin.king@canonical.com>,
+        David Ahern <dsahern@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528145114.420100-1-colin.king@canonical.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
+Date:   Thu, 28 May 2020 17:53:21 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200528145114.420100-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:50:19AM +0300, Serge Semin wrote:
-> Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
-> have non-uniform DMA capabilities per device channels, let's add
-> the DW DMA specific device_caps callback to expose that specifics up to
-> the DMA consumer. It's a dummy function for now. We'll fill it in with
-> capabilities overrides in the next commits.
+On 28/05/2020 17:51, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The allocation failure check for nhg->spare is currently checking
+> the pointer nhg rather than nhg->spare which is never false. Fix
+> this by checking nhg->spare instead.
+> 
+> Addresses-Coverity: ("Logically dead code")
+> Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  net/ipv4/nexthop.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
+> index ebafa5ed91ac..97423d6f2de9 100644
+> --- a/net/ipv4/nexthop.c
+> +++ b/net/ipv4/nexthop.c
+> @@ -1185,7 +1185,7 @@ static struct nexthop *nexthop_create_group(struct net *net,
+>  
+>  	/* spare group used for removals */
+>  	nhg->spare = nexthop_grp_alloc(num_nh);
+> -	if (!nhg) {
+> +	if (!nhg->spare) {
+>  		kfree(nhg);
+>  		kfree(nh);
+>  		return NULL;
+> 
 
-I think per se it is not worth to have it separated. Squash into the next one.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Good catch, embarrassing copy paste error :-/
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
