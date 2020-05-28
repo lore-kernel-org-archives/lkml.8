@@ -2,100 +2,129 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B301FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23662089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:37:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902F720899
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:37:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWo864au"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vRtFM9Xj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgE1FhH (ORCPT
+        id S1727814AbgE1Fhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgE1FhG (ORCPT
+        Thu, 28 May 2020 01:37:43 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:26238 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727109AbgE1Fhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:37:06 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D635C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 22:37:05 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id n24so30679967ejd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 22:37:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gy40l8ytYFD4On3jgRuXuVgXsORjyYNKkP1fvl5BPX0=;
-        b=vWo864aurC3+M/TSNk+TthFtkQQX7o1qOe+6xoraeNLnBopLzJ+cKiNE9ze2TczG4A
-         apWyilBlgzHifms1ZTkgrkWquMTTFnicFuQj8WvbFCPUTiFFCnCrt+2MQpOY9TEQ/GtE
-         tWwMFlYSdq20cIKnO45SgFSiS316pCt0NZhT1LVoUsOrD7dNSc/QTpaQLXc5ZqXl81OI
-         dEd76mirnI/VA4NAvDYULb0mSfQ48A74hJ9dv1t3bQZisfpvfIFExUEaOwcHCnfGzcqF
-         /8eUgfVNyWcDB1FXKHS8vjYUgjmNPKqFHWHnkdEMsNFq0Z1ao1txQmdO/utYhgaUEYu/
-         9UwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gy40l8ytYFD4On3jgRuXuVgXsORjyYNKkP1fvl5BPX0=;
-        b=A00NrEHZufyZErKvSsIDIFX6xPgwcXD6Ttj2N+ktS4QMKtmAh5NMNWnNOMkukmVou5
-         UiBTIeCV7/a9KdX8J0vWWnf+b+3vSHJKJR2YoYKHSYSAFapgt22e0Otxn2oviZP0xNJM
-         znTw7zLRMnAvm60u0YBXgfsFEtVysUFxzN/uJYAU6jA5AiZUkFmSErccZJc01UOfRdIy
-         OB7B80OkYNUmGcCQikF2qCmYvJN4+wHXyYi7CP7AByAeE89j59Awmg9IxGgmPtaIRa01
-         iG/MXOv9juXG3K7mqqPMe0lUd2SUvqvR3nL9TpwzSk0mtOD/n/UxYNQ4VOnLvrYrcJuc
-         1uhw==
-X-Gm-Message-State: AOAM531GHJDvEVfzpq3X0RYFDxnwn0EUXM9Bkwf7xUwcUXeCqM4tIV0d
-        HGUQRX7BRmpicOqsotw4faPuHjxdRxNeanMVbRyQOQ==
-X-Google-Smtp-Source: ABdhPJyX6LHyIsUbfRxySNpFhUlOfjIe8odA5lY+ulB8QAePBB1iqSkzOITEmqNMBTGJ6Z5OnJTvXRT1ZsFQGxUMdWI=
-X-Received: by 2002:a17:906:57c5:: with SMTP id u5mr1409803ejr.419.1590644223757;
- Wed, 27 May 2020 22:37:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200527134254.854672-1-arnd@arndb.de> <CAKb7Uvhh2JKck524D9S14uNSLykFj+U48AgR+sd2uwchsH_wEQ@mail.gmail.com>
- <CAK8P3a3kRP6Sg-An5szsN=4Pv1OsG+-YQYa1wgxJCi1c+uedPw@mail.gmail.com>
-In-Reply-To: <CAK8P3a3kRP6Sg-An5szsN=4Pv1OsG+-YQYa1wgxJCi1c+uedPw@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Thu, 28 May 2020 15:36:52 +1000
-Message-ID: <CAPM=9tw_D0edbF38iFSrecDM8gnK4wNCDGiL2JV86tSUAmSk6g@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] nouveau: add fbdev dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
-        David Airlie <airlied@linux.ie>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 May 2020 01:37:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590644261; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=76SNVzNsMbmn9Mu5oMNXD7d+F7RHcX3AAwWukpWZb5Y=; b=vRtFM9XjtgdQZK/iGK+Od5a4gKznlVb72AB71PiWJeRyjmuSYuJMy4425FZYFIO2x30S4JqZ
+ x2hdy2w/Alv1bgrRGuWPDmY41W6MT0PF+61DxOqSGmJMfco48J0tdMvY5ltBLs6+aGzsxx2H
+ //rsdmjn1XZ1aZDZ/p9dzyBLNbA=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ecf4e20c28b2cdd989237e7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 05:37:36
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 06EB2C433CA; Thu, 28 May 2020 05:37:36 +0000 (UTC)
+Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0803FC433C6;
+        Thu, 28 May 2020 05:37:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0803FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+From:   Zijun Hu <zijuhu@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org, zijuhu@codeaurora.org
+Subject: [PATCH v4] bluetooth: hci_qca: Fix qca6390 enable failure after warm reboot
+Date:   Thu, 28 May 2020 13:37:28 +0800
+Message-Id: <1590644248-9373-1-git-send-email-zijuhu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 00:36, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Wed, May 27, 2020 at 4:05 PM Ilia Mirkin <imirkin@alum.mit.edu> wrote:
-> >
-> > Isn't this already fixed by
-> >
-> > https://cgit.freedesktop.org/drm/drm/commit/?id=7dbbdd37f2ae7dd4175ba3f86f4335c463b18403
->
-> Ok, I see that fixes the link error, but I when I created my fix, that did
-> not seem like the correct solution because it reverts part of the original
-> patch without reverting the rest of it. Unfortunately there was no
-> changelog text in the first patch to explain why this is safe.
+Warm reboot can not restore qca6390 controller baudrate
+to default due to lack of controllable BT_EN pin or power
+supply, so fails to download firmware after warm reboot.
 
-No it doesn't, I think you missed the pci in API name.
+Fixed by sending EDL_SOC_RESET VSC to reset controller
+within added device shutdown implementation.
 
-The initial behaviour doesn't use the pci version of the API, the
-replacement did, and the fix used the drm wrapper around the pci one.
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-So this patch isn't necessary now that I've fixed it the other way,
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index e4a6823..8e03bfe 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1975,6 +1975,38 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+ 	hci_uart_unregister_device(&qcadev->serdev_hu);
+ }
+ 
++static void qca_serdev_shutdown(struct device *dev)
++{
++	int ret;
++	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
++	const u8 ibs_wake_cmd[] = { 0xFD };
++	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
++
++	if (qcadev->btsoc_type == QCA_QCA6390) {
++		serdev_device_write_flush(serdev);
++		ret = serdev_device_write_buf(serdev,
++				ibs_wake_cmd, sizeof(ibs_wake_cmd));
++		if (ret < 0) {
++			BT_ERR("QCA send IBS_WAKE_IND error: %d", ret);
++			return;
++		}
++		serdev_device_wait_until_sent(serdev, timeout);
++		usleep_range(8000, 10000);
++
++		serdev_device_write_flush(serdev);
++		ret = serdev_device_write_buf(serdev,
++				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
++		if (ret < 0) {
++			BT_ERR("QCA send EDL_RESET_REQ error: %d", ret);
++			return;
++		}
++		serdev_device_wait_until_sent(serdev, timeout);
++		usleep_range(8000, 10000);
++	}
++}
++
+ static int __maybe_unused qca_suspend(struct device *dev)
+ {
+ 	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+@@ -2100,6 +2132,7 @@ static struct serdev_device_driver qca_serdev_driver = {
+ 		.name = "hci_uart_qca",
+ 		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
+ 		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
++		.shutdown = qca_serdev_shutdown,
+ 		.pm = &qca_pm_ops,
+ 	},
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-Thanks,
-Dave.
