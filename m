@@ -2,100 +2,277 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AF3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F55C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2FB206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C87032075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:11:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJSrLMII"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G3kqC6Dx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387733AbgE1KJK (ORCPT
+        id S2387707AbgE1KLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:09:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387597AbgE1KJI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:09:08 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE354C05BD1E;
-        Thu, 28 May 2020 03:09:07 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m1so7010945pgk.1;
-        Thu, 28 May 2020 03:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aNL4rrbHRBiHzlIt6XKjh1SWIm34V5I2S8EBeVbO3Z0=;
-        b=HJSrLMIIanLw1HMAG8ROB7qcD3+KlHBCN411s7WgKjiBPhymzTFUzYA0nnbPwikIwp
-         vHBtvlImlO43CkpGhFeOHp8PNUdxQ2ZOlBMoBB4aUA2jkV3wmyhftHmFCNl6f8MdXuhP
-         ebjEJnB4s+kaz+xnXzTg957gqcJbreoGhMMDb9XnTk8Jtu/m/pMi0dzpxf3hbVHqPhTL
-         kGfpEtzle/b+T8YG4EI/eo/qtdzhsTPBn4/aQUPq14qkdGum+VSYsrIfAHqgPn6Gmp93
-         Io9Rn6NYBDRpIioPam9P4UMsYODyg6C8i7nRsfvJix8T8QgSMzLd/BHlIIE7Jni+5VZL
-         P0Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aNL4rrbHRBiHzlIt6XKjh1SWIm34V5I2S8EBeVbO3Z0=;
-        b=TKWfkodWzOeJzXDv2IEMe1nc1L2TsOydcYGOMseq5pKKn1FGxwP8CuQY4MNijA+esC
-         LDuqAAa3Ki9gqSdAKTYzXaUhfb05CGD1BLvqLnJDVs5flJPCkFkloxi81MheRDoDWDBN
-         2QGiTfz6SBDlvAx4ZrnU0waUReBeKBrbnl4r99ZkKqiJgic1bOygXTPjz0refGGUn6mX
-         t5TvlMqbkefPtz3B98Bu6g1jYzLyCPKjteZ4qrAwGxBH9rm5B0UF0jvd57/P89bL9IWs
-         Qzoa2nZkwcctse7B8xWcxcZR1By2jKlokHY3cxGrzG3Zbgc7KpTxDsgY+0bWGtb9nzEH
-         Q7vg==
-X-Gm-Message-State: AOAM5333+fuTamtxFqsDntAUN5GbtwvY5CDBZJVT+oHM49qAPhpOc7g0
-        F1jTsQZZ4dUfi+St2vCXHDEZmkW9HZM=
-X-Google-Smtp-Source: ABdhPJxX3CR2VS66Sg0ylHR9qDL1Vu5o/xb1qcb1Qnnr+H020EQ88Jx2pMo+Pmm2WfQ4Gux0oDrI7Q==
-X-Received: by 2002:a65:6550:: with SMTP id a16mr2152926pgw.183.1590660547178;
-        Thu, 28 May 2020 03:09:07 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:295a:ef64:e071:39ab? ([2404:7a87:83e0:f800:295a:ef64:e071:39ab])
-        by smtp.gmail.com with ESMTPSA id j24sm4158533pga.51.2020.05.28.03.09.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 03:09:06 -0700 (PDT)
-Subject: Re: [PATCH 4/4] exfat: standardize checksum calculation
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        'Namjae Jeon' <linkinjeon@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200525115052.19243-1-kohada.t2@gmail.com>
- <CGME20200525115121epcas1p2843be2c4af35d5d7e176c68af95052f8@epcas1p2.samsung.com>
- <20200525115052.19243-4-kohada.t2@gmail.com>
- <00d301d6332f$d4a52300$7def6900$@samsung.com>
- <d0d2e4b3-436e-3bad-770c-21c9cbddf80e@gmail.com>
- <CAKYAXd9GzYTxjtFuUJe+WjEOHSJnVbOfwn_4ZXZgmiVtjV4z6A@mail.gmail.com>
- <ccb66f50-b275-4717-f165-98390520077b@gmail.com>
- <015401d634ad$4628e4c0$d27aae40$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <780793fc-029a-28a6-5970-c21ffc91268b@gmail.com>
-Date:   Thu, 28 May 2020 19:09:04 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 06:11:11 -0400
+Received: from ozlabs.org ([203.11.71.1]:57523 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387597AbgE1KLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 06:11:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Xk493qnYz9sRY;
+        Thu, 28 May 2020 20:11:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590660665;
+        bh=yZu8pTsXoAWViGOtEIA+R1ZbKI/20ZYajI2a+UN95uY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G3kqC6DxS1EStmmlfs8rzkQsmtMwNNcHsv3oSftU7flTgHf85kCQICF/fopP8sJfB
+         7s3/NpBWc1Ik4nILKfPLty65ujK3RmYzEMOndeqkuPzLkfU1bZpepdGfKOjEWx0OFu
+         y0izXMNkF/SMPHVsk3hNYYDGhtLS2ShSEhc5JrYsdKMZUQ2WWSCBKNQsr80bxlT/HF
+         yLb7a03ITHz8b2ZVuEciBl4uLhoNm5gD5iX+ogQl8pcSaE5XRiqEi7demX6+7IKuXi
+         hQCNtPX2qhgCsZksz4GSpVsDh5wAjET/lJrnhAQgCQtP6ZQCyBpMJcyxSqZQnNXHLC
+         h7mziLt/fgbGw==
+Date:   Thu, 28 May 2020 20:11:04 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: linux-next: build warnings after merge of the fsinfo tree
+Message-ID: <20200528201104.529e9bc5@canb.auug.org.au>
+In-Reply-To: <20200528184017.503eeff1@canb.auug.org.au>
+References: <20200528184017.503eeff1@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <015401d634ad$4628e4c0$d27aae40$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/4Z.oOHNM+uviI+HlVvjYIS8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> I'll repost the patch, based on the dir-cache patched dev-tree.
->> If dir-cache patch will merge into dev-tree, should I wait until then?
-> I will apply them after testing at once if you send updated 5 patches again.
+--Sig_/4Z.oOHNM+uviI+HlVvjYIS8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I resend patches for boot_sector.
-However, the dir-cache patch hasn't changed, so I haven't reposted it.
+Hi all,
 
-BR
+This should have been the block tree, not the fsinfo tree, of course.
+
+On Thu, 28 May 2020 18:40:17 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the fsinfo tree, today's linux-next build (x86_64
+> allnoconfig) produced these warnings:
+>=20
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/loadavg.c:9:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from fs/super.c:26:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/clock.c:56:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/idle.c:9:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/cputime.c:5:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/rt.c:6:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/core.c:9:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/swait.c:5:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/wait_bit.c:5:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/fair.c:23:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/wait.c:7:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/deadline.c:18:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from kernel/sched/sched.h:39,
+>                  from kernel/sched/completion.c:14:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+> In file included from fs/libfs.c:7:
+> include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1895 | unsigned long disk_start_io_acct(struct gendisk *disk, unsigned i=
+nt sectors,
+>       |                                         ^~~~~~~
+> include/linux/blkdev.h:1897:30: warning: 'struct gendisk' declared inside=
+ parameter list will not be visible outside of this definition or declarati=
+on
+>  1897 | void disk_end_io_acct(struct gendisk *disk, unsigned int op,
+>       |                              ^~~~~~~
+>=20
+> Introduced by commit
+>=20
+>   956d510ee78c ("block: add disk/bio-based accounting helpers")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/4Z.oOHNM+uviI+HlVvjYIS8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PjjgACgkQAVBC80lX
+0Gwc3wgAkIcB6H9vmuSMTq9SN0E+6uNnW1yMT4/HU6c5TVmcZnl2tBg3Sy0SP7UH
+bFS/AR4WLXkECZDgBIis2UO3SqPiZ6r4YZ6wYGlFiy9vy/dbwPRdoSTTBWm/dmBy
+CrlGVnHdAhwT8I+N7YexqLTd060pAK4zTIDxI7Z7VbuVn79nMKMGp5zeWNnUNIaT
+yhnvXOYkdqfSOjTU6hPaIUeITUOICizXNeJ+P8TgnNfsi9i9njdT//PB7FH8V0sL
+2hf2j/tmH5NgP6u2rVOD+ep+FwpVRxH5tdO45oCqgNHfq8qCSxsdWLDwGKywgWHv
+491ElvRwYBovIoeXncar6h6iAdxYpQ==
+=b6ZP
+-----END PGP SIGNATURE-----
+
+--Sig_/4Z.oOHNM+uviI+HlVvjYIS8--
