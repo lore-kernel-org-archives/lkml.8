@@ -2,88 +2,217 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B607CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99F3F2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EA8F2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406691AbgE1Tiq (ORCPT
+        id S2406701AbgE1TjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:38:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:53663 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406540AbgE1Tim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:38:42 -0400
-IronPort-SDR: GXBnmyQ6wSHGnIwwAHXaU5E+Yn+EOV6zVnPprRqdGRJGQYZgWn/2WldcfgPtIMtToB4GL7+2+T
- aLxoSkE9nBmA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 12:38:41 -0700
-IronPort-SDR: 9HOb7WvJFdbYjWp6h4nwPYosl1cE/gewjfxnveuR03MQZ2YPCjJ+V5QhtGBKTDmX0X3v48gDN1
- VgvEQkpzRI3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
-   d="scan'208";a="302584054"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga002.fm.intel.com with ESMTP; 28 May 2020 12:38:41 -0700
-Date:   Thu, 28 May 2020 12:38:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        kvm list <kvm@vger.kernel.org>, eesposit@redhat.com,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: BUG: arch/x86/kvm/mmu/mmu.c:3722: kvm_mmu_load+0x407/0x420
-Message-ID: <20200528193840.GD30353@linux.intel.com>
-References: <CA+G9fYvnJNre4G=ZsPAon_Zt+kT_QLQB_VZVhdWKYbn29xtsRA@mail.gmail.com>
+        Thu, 28 May 2020 15:39:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406540AbgE1Ti5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:38:57 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7409CC08C5C6;
+        Thu, 28 May 2020 12:38:57 -0700 (PDT)
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jeOMf-0007VO-Kh; Thu, 28 May 2020 21:38:53 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 270F11C0051;
+        Thu, 28 May 2020 21:38:53 +0200 (CEST)
+Date:   Thu, 28 May 2020 19:38:52 -0000
+From:   "tip-bot2 for Jay Lang" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/ioperm: Prevent a memory leak when fork fails
+Cc:     Jay Lang <jaytlang@mit.edu>, Thomas Gleixner <tglx@linutronix.de>,
+        stable#@vger.kernel.org, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200524162742.253727-1-jaytlang@mit.edu>
+References: <20200524162742.253727-1-jaytlang@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvnJNre4G=ZsPAon_Zt+kT_QLQB_VZVhdWKYbn29xtsRA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Message-ID: <159069473297.17951.5698539330024737587.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 29, 2020 at 12:59:40AM +0530, Naresh Kamboju wrote:
-> While running selftest kvm set_memory_region_test on x86_64 linux-next kernel
-> 5.7.0-rc6-next-20200518 the kernel BUG noticed.
-> 
-> steps to reproduce: (always reproducible )
-> -------------------------
-> cd /opt/kselftests/default-in-kernel/kvm
-> ./set_memory_region_test
-> 
-> BAD: next-20200518 (still reproducible on next-20200526)
-> GOOD: next-20200515
-> git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> kernel config:
-> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-next/777/config
-> 
-> kernel crash log,
-> -----------------------
-> [   33.074161] ------------[ cut here ]------------
-> [   33.079845] kernel BUG at /usr/src/kernel/arch/x86/kvm/mmu/mmu.c:3722!
+The following commit has been merged into the x86/urgent branch of tip:
 
-I'm 99% certain this is already fixed[*], I'll double check to confirm.
+Commit-ID:     4bfe6cce133cad82cea04490c308795275857782
+Gitweb:        https://git.kernel.org/tip/4bfe6cce133cad82cea04490c308795275857782
+Author:        Jay Lang <jaytlang@mit.edu>
+AuthorDate:    Sun, 24 May 2020 12:27:39 -04:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 28 May 2020 21:36:20 +02:00
 
-[*] https://lkml.kernel.org/r/20200527085400.23759-1-sean.j.christopherson@intel.com
+x86/ioperm: Prevent a memory leak when fork fails
+
+In the copy_process() routine called by _do_fork(), failure to allocate
+a PID (or further along in the function) will trigger an invocation to
+exit_thread(). This is done to clean up from an earlier call to
+copy_thread_tls(). Naturally, the child task is passed into exit_thread(),
+however during the process, io_bitmap_exit() nullifies the parent's
+io_bitmap rather than the child's.
+
+As copy_thread_tls() has been called ahead of the failure, the reference
+count on the calling thread's io_bitmap is incremented as we would expect.
+However, io_bitmap_exit() doesn't accept any arguments, and thus assumes
+it should trash the current thread's io_bitmap reference rather than the
+child's. This is pretty sneaky in practice, because in all instances but
+this one, exit_thread() is called with respect to the current task and
+everything works out.
+
+A determined attacker can issue an appropriate ioctl (i.e. KDENABIO) to
+get a bitmap allocated, and force a clone3() syscall to fail by passing
+in a zeroed clone_args structure. The kernel handles the erroneous struct
+and the buggy code path is followed, and even though the parent's reference
+to the io_bitmap is trashed, the child still holds a reference and thus
+the structure will never be freed.
+
+Fix this by tweaking io_bitmap_exit() and its subroutines to accept a
+task_struct argument which to operate on.
+
+Fixes: ea5f1cd7ab49 ("x86/ioperm: Remove bitmap if all permissions dropped")
+Signed-off-by: Jay Lang <jaytlang@mit.edu>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable#@vger.kernel.org
+Link: https://lkml.kernel.org/r/20200524162742.253727-1-jaytlang@mit.edu
+---
+ arch/x86/include/asm/io_bitmap.h |  4 ++--
+ arch/x86/kernel/ioport.c         | 22 +++++++++++-----------
+ arch/x86/kernel/process.c        |  4 ++--
+ 3 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/arch/x86/include/asm/io_bitmap.h b/arch/x86/include/asm/io_bitmap.h
+index 07344d8..ac1a99f 100644
+--- a/arch/x86/include/asm/io_bitmap.h
++++ b/arch/x86/include/asm/io_bitmap.h
+@@ -17,7 +17,7 @@ struct task_struct;
+ 
+ #ifdef CONFIG_X86_IOPL_IOPERM
+ void io_bitmap_share(struct task_struct *tsk);
+-void io_bitmap_exit(void);
++void io_bitmap_exit(struct task_struct *tsk);
+ 
+ void native_tss_update_io_bitmap(void);
+ 
+@@ -29,7 +29,7 @@ void native_tss_update_io_bitmap(void);
+ 
+ #else
+ static inline void io_bitmap_share(struct task_struct *tsk) { }
+-static inline void io_bitmap_exit(void) { }
++static inline void io_bitmap_exit(struct task_struct *tsk) { }
+ static inline void tss_update_io_bitmap(void) { }
+ #endif
+ 
+diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
+index a53e7b4..e2fab3c 100644
+--- a/arch/x86/kernel/ioport.c
++++ b/arch/x86/kernel/ioport.c
+@@ -33,15 +33,15 @@ void io_bitmap_share(struct task_struct *tsk)
+ 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ }
+ 
+-static void task_update_io_bitmap(void)
++static void task_update_io_bitmap(struct task_struct *tsk)
+ {
+-	struct thread_struct *t = &current->thread;
++	struct thread_struct *t = &tsk->thread;
+ 
+ 	if (t->iopl_emul == 3 || t->io_bitmap) {
+ 		/* TSS update is handled on exit to user space */
+-		set_thread_flag(TIF_IO_BITMAP);
++		set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ 	} else {
+-		clear_thread_flag(TIF_IO_BITMAP);
++		clear_tsk_thread_flag(tsk, TIF_IO_BITMAP);
+ 		/* Invalidate TSS */
+ 		preempt_disable();
+ 		tss_update_io_bitmap();
+@@ -49,12 +49,12 @@ static void task_update_io_bitmap(void)
+ 	}
+ }
+ 
+-void io_bitmap_exit(void)
++void io_bitmap_exit(struct task_struct *tsk)
+ {
+-	struct io_bitmap *iobm = current->thread.io_bitmap;
++	struct io_bitmap *iobm = tsk->thread.io_bitmap;
+ 
+-	current->thread.io_bitmap = NULL;
+-	task_update_io_bitmap();
++	tsk->thread.io_bitmap = NULL;
++	task_update_io_bitmap(tsk);
+ 	if (iobm && refcount_dec_and_test(&iobm->refcnt))
+ 		kfree(iobm);
+ }
+@@ -102,7 +102,7 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
+ 		if (!iobm)
+ 			return -ENOMEM;
+ 		refcount_set(&iobm->refcnt, 1);
+-		io_bitmap_exit();
++		io_bitmap_exit(current);
+ 	}
+ 
+ 	/*
+@@ -134,7 +134,7 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
+ 	}
+ 	/* All permissions dropped? */
+ 	if (max_long == UINT_MAX) {
+-		io_bitmap_exit();
++		io_bitmap_exit(current);
+ 		return 0;
+ 	}
+ 
+@@ -192,7 +192,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
+ 	}
+ 
+ 	t->iopl_emul = level;
+-	task_update_io_bitmap();
++	task_update_io_bitmap(current);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 9da70b2..35638f1 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -96,7 +96,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
+ }
+ 
+ /*
+- * Free current thread data structures etc..
++ * Free thread data structures etc..
+  */
+ void exit_thread(struct task_struct *tsk)
+ {
+@@ -104,7 +104,7 @@ void exit_thread(struct task_struct *tsk)
+ 	struct fpu *fpu = &t->fpu;
+ 
+ 	if (test_thread_flag(TIF_IO_BITMAP))
+-		io_bitmap_exit();
++		io_bitmap_exit(tsk);
+ 
+ 	free_vm86(t);
+ 
