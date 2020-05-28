@@ -2,177 +2,173 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 241C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E79C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE96D207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DA020776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:11:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="D4whbS/U"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OmJBhJ/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437479AbgE1XJn (ORCPT
+        id S2391558AbgE1XLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38666 "EHLO
+        Thu, 28 May 2020 19:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437333AbgE1XJk (ORCPT
+        with ESMTP id S2389436AbgE1XLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:09:40 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBDDC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:09:38 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id h4so967138wmb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:09:38 -0700 (PDT)
+        Thu, 28 May 2020 19:11:04 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C02FC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:11:03 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id bh7so197417plb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GpXkyS7vVv9FTAH7S5+DpOFQmjUaMM+ePrWJEGENvuo=;
-        b=D4whbS/UshWlAvLJxUCbzHUeSluRxsQX+qSiJdSScDGH+1JBkWXskHDWLQCEWOohQN
-         dJQK6J896u99oDKZWAkWmKb7J0seMtAJMbVZYqWUZGl/4JW1DGQ08QRCBqDzEqVtd4WQ
-         +6/yQMoNotw8xQ1ZiD5bXcTlej/UFrAAhwe3M=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hhHN359Ew47gJ5gX5WV0SNMAZS6D9j63wv90uny4S/0=;
+        b=OmJBhJ/0IOIFDk5mPrGlIKKqb2/s3ePzbjtaWJQDOCZlPx/tukVzOJxLUVy8+usxc9
+         ie2xnQk1GQKWJFPEEfspASUg4SxD6HOIkE3LbppNsxHjIOu1OpFsAj8zTc/AcsY+rjaZ
+         jRReSg1yY82ZNFp0NLVC3jH2lqR5KyWzJ63Wg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GpXkyS7vVv9FTAH7S5+DpOFQmjUaMM+ePrWJEGENvuo=;
-        b=MfKSIPFSpxBDJ7hL/gY1Q21JDp2PnBsJGuKPF9HqClj4rACnhIspELbUomw0Ai5xDP
-         jinjbET/KdM1hZ7eR3W2vmzpBN6+UYJ+VntsZtqVBXaKjh6ZCiZfBYEv0jSYmbIUiz7y
-         W62SEZvwOvKbnwabVYfCvwkdhuvi5dDtSVgc1NOP8JG+R4xGPo/Wc3Q8JupzcX2tb4dJ
-         w7VMdgpSY4moZPAMkATTSfJ4rlbkMoRDgq5sK5r3o9XUMPr7hkg3Pc2fLSzFK+0mkQEW
-         FQefl0w44o/qVVfP2cDPOYHQCKLfvpE/FRaZJH0pPHIsX7YrbpRSRrXBVbuWEnwODpth
-         /M5Q==
-X-Gm-Message-State: AOAM532U9CFIykh4AC+yCFFqBwUs/8xoSGaAhp77LrGufJuEwGVN0wCv
-        mMTseUwXZZ7xU0DfciuHpzlL2nyo78JNAvayQ2G/
-X-Google-Smtp-Source: ABdhPJziYtIixceIrIWS3U3B1fj6vDkMc+6p4dpoZVeXiGvP5uccTm4Fr5yvsPFiQvuuC0xwvZBKPLWBdMJOTYLSSgA=
-X-Received: by 2002:a7b:c84b:: with SMTP id c11mr5395364wml.78.1590707377649;
- Thu, 28 May 2020 16:09:37 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hhHN359Ew47gJ5gX5WV0SNMAZS6D9j63wv90uny4S/0=;
+        b=QKAUvxsRKgEX7rwvMM74VpBr4VGqSbZbKVYUjYm3Gfq7ZDccMoMDGAwQVwo9BUPzmG
+         zO9WuQXpHwXTJtE9lIPvoKoTQMIv+QXBNhu75P/sLv0aEtH/ZCI+MWInsxGa8C+KJr94
+         xqeq8FTMQu51UdmiM1ug6Ftlbdpln2in9+kzS0ERojQsep1praNgs0JWK2i+BQJygYIw
+         dLGpgj8EMdwSfL0Xu1rG0ygPuT32GLfuh11LQGqS5k70QUlOon09iO7EYhr87t2N5lcK
+         GRKmTqBIDOyE8jeM5gK6WUtYnSMNsl6Bj8ahpPoJilY3ayvA4GxN/Ib4nyp6pZJRumq5
+         8zUg==
+X-Gm-Message-State: AOAM532XvIxnO6aVbGUgKKl5seO4RbzUmYLlzh4gpu/32Ra4HW3aDmxT
+        Kb/cAy3b8qyR7R2/PBGdTDLGRSMCmVzTjg==
+X-Google-Smtp-Source: ABdhPJwLHjBFG1zCoyVNQBoVW72L17zkcrxlZ82pL3WrE04iAHIMsfVEpLPHDZHbFqpOFoBq2SV78g==
+X-Received: by 2002:a17:90a:f0cd:: with SMTP id fa13mr6055915pjb.95.1590707462976;
+        Thu, 28 May 2020 16:11:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x20sm5422372pfc.211.2020.05.28.16.11.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 16:11:01 -0700 (PDT)
+Date:   Thu, 28 May 2020 16:11:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
+Message-ID: <202005281404.276641223F@keescook>
+References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-References: <20200521133301.816665-1-anup.patel@wdc.com> <20200521133301.816665-3-anup.patel@wdc.com>
-In-Reply-To: <20200521133301.816665-3-anup.patel@wdc.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Thu, 28 May 2020 16:09:26 -0700
-Message-ID: <CAOnJCUJJcerzrUjoJ-8gt3q8uMcetp4YyXHj-qucoQmfs+LGzg@mail.gmail.com>
-Subject: Re: [PATCH v5 2/6] RISC-V: Rename and move plic_find_hart_id() to
- arch directory
-To:     Anup Patel <anup.patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Anup Patel <anup@brainfault.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528151412.265444-1-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 21, 2020 at 6:34 AM Anup Patel <anup.patel@wdc.com> wrote:
->
-> The plic_find_hart_id() can be useful to other interrupt controller
-> drivers (such as RISC-V local interrupt driver) so we rename this
-> function to riscv_of_parent_hartid() and place it in arch directory
-> along with riscv_of_processor_hartid().
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/include/asm/processor.h |  1 +
->  arch/riscv/kernel/cpu.c            | 16 ++++++++++++++++
->  drivers/irqchip/irq-sifive-plic.c  | 16 +---------------
->  3 files changed, 18 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
-> index 3ddb798264f1..b1efd840003c 100644
-> --- a/arch/riscv/include/asm/processor.h
-> +++ b/arch/riscv/include/asm/processor.h
-> @@ -75,6 +75,7 @@ static inline void wait_for_interrupt(void)
->
->  struct device_node;
->  int riscv_of_processor_hartid(struct device_node *node);
-> +int riscv_of_parent_hartid(struct device_node *node);
->
->  extern void riscv_fill_hwcap(void);
->
-> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-> index 40a3c442ac5f..6d59e6906fdd 100644
-> --- a/arch/riscv/kernel/cpu.c
-> +++ b/arch/riscv/kernel/cpu.c
-> @@ -44,6 +44,22 @@ int riscv_of_processor_hartid(struct device_node *node)
->         return hart;
->  }
->
-> +/*
-> + * Find hart ID of the CPU DT node under which given DT node falls.
-> + *
-> + * To achieve this, we walk up the DT tree until we find an active
-> + * RISC-V core (HART) node and extract the cpuid from it.
-> + */
-> +int riscv_of_parent_hartid(struct device_node *node)
-> +{
-> +       for (; node; node = node->parent) {
-> +               if (of_device_is_compatible(node, "riscv"))
-> +                       return riscv_of_processor_hartid(node);
-> +       }
-> +
-> +       return -1;
-> +}
-> +
->  #ifdef CONFIG_PROC_FS
->
->  static void print_isa(struct seq_file *f, const char *isa)
-> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> index d9c53f85a68e..16d31d114c30 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -240,20 +240,6 @@ static void plic_handle_irq(struct pt_regs *regs)
->         csr_set(CSR_IE, IE_EIE);
->  }
->
-> -/*
-> - * Walk up the DT tree until we find an active RISC-V core (HART) node and
-> - * extract the cpuid from it.
-> - */
-> -static int plic_find_hart_id(struct device_node *node)
-> -{
-> -       for (; node; node = node->parent) {
-> -               if (of_device_is_compatible(node, "riscv"))
-> -                       return riscv_of_processor_hartid(node);
-> -       }
-> -
-> -       return -1;
-> -}
-> -
->  static void plic_set_threshold(struct plic_handler *handler, u32 threshold)
->  {
->         /* priority must be > threshold to trigger an interrupt */
-> @@ -330,7 +316,7 @@ static int __init plic_init(struct device_node *node,
->                 if (parent.args[0] != RV_IRQ_EXT)
->                         continue;
->
-> -               hartid = plic_find_hart_id(parent.np);
-> +               hartid = riscv_of_parent_hartid(parent.np);
->                 if (hartid < 0) {
->                         pr_warn("failed to parse hart ID for context %d.\n", i);
->                         continue;
-> --
-> 2.25.1
->
->
+On Thu, May 28, 2020 at 05:14:11PM +0200, Christian Brauner wrote:
+>   * @usage: reference count to manage the object lifetime.
+>   *         get/put helpers should be used when accessing an instance
+>   *         outside of a lifetime-guarded section.  In general, this
+>   *         is only needed for handling filters shared across tasks.
+> [...]
+> + * @live: Number of tasks that use this filter directly and number
+> + *	  of dependent filters that have a non-zero @live counter.
+> + *	  Altered during fork(), exit(), and filter installation
+> [...]
+>  	refcount_set(&sfilter->usage, 1);
+> +	refcount_set(&sfilter->live, 1);
 
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
+I'd like these reference counters to have more descriptive names. "usage"
+by what? "live" from what perspective? At the least, I think we need
+to be explicit in the comment, and at best we should do that and rename
+them to be a bit more clear.
+
+A filter's "usage" is incremented for each directly-attached task
+(task::seccomp_data.filter, via fork() or thread_sync), once for the
+dependent filter (filter::prev), and once for an open user_notif file
+(file::private_data). When it reaches zero, there are (should be) no more
+active memory references back to the struct filter and it can be freed.
+
+A filter's "live" is incremented for each directly-attached task
+(task::seccomp_data.filter, via fork() or thread_sync), and once for
+the dependent filter (filter::prev). When it reaches zero there is no
+way for new tasks to get associated with the filter, but there may still
+be user_notif file::private_data references pointing at the filter.
+
+But we're tracking "validity lifetime" (live) and "memory reference
+safety" (usage).
+
+signal_struct has "sigcnt" and "live". I find "sigcnt" to be an
+unhelpful name too. (And why isn't it refcount_t?)
+
+So, perhaps leave "live", but rename "usage" -> "references".
+
+After looking at these other lifetime management examples in the kernel,
+I'm convinced that tracking these states separately is correct, but I
+remain uncomfortable about task management needing to explicitly make
+two calls to let go of the filter.
+
+I wonder if release_task() should also detach the filter from the task
+and do a put_seccomp_filter() instead of waiting for task_free(). This
+is supported by the other place where seccomp_filter_release() is
+called:
+
+> @@ -396,6 +400,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
+>  		 * allows a put before the assignment.)
+>  		*/
+>   		put_seccomp_filter(thread);
+> +		seccomp_filter_release(thread);
+
+This would also remove the only put_seccomp_filter() call outside of
+seccomp.c, since the free_task() call will be removed now in favor of
+the task_release() call.
+
+So, is it safe to detach the filter in release_task()? Has dethreading
+happened yet? i.e. can we race TSYNC? -- is there a possible
+inc-from-zero? (Actually, all our refcount_inc()s should be
+refcount_inc_not_zero() just for robustness.) I *think* we can do it
+before the release_thread() call (instead of after cgroup_release()).
+
+With that, then seccomp_filter_release() could assign the filter to NULL
+and do the clean up:
+
+void seccomp_filter_release(const struct task_struct *tsk)
+{
+	struct seccomp_filter *orig = READ_ONCE(tsk->seccomp.filter);
+
+	smp_store_release(&tsk->seccomp.filter, NULL);
+	__seccomp_filter_release(orig);
+}
+
+All other refcounting is then internal to seccomp.c. Which brings me
+back to TSYNC, since we don't want to write NULL to task->seccomp.filter
+during TSYNC. TSYNC can use:
+
+void __seccomp_filter_release(struct seccomp_filter *filter)
+{
+	while (filter && refcount_dec_and_test(&filter->live)) {
+		if (waitqueue_active(&filter->wqh))
+			wake_up_poll(&filter->wqh, EPOLLHUP);
+		filter = filter->prev;
+	}
+	__put_seccomp_filter(filter);
+}
+
+Thoughts?
 
 -- 
-Regards,
-Atish
+Kees Cook
