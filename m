@@ -2,107 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D166C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D25C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0637820721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590674779;
-	bh=CqxW5YXHZwoOO0gTWPmchSna78rh3Q5xrhhZ2hKnLp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lWvWTgQ2BZb35SBYvS9qFwsqyyVJx4cqh53Hv5xJIAbTzJ9bcvtxWuKmnzUXXs/v8
-	 y0wsMYt3673ZnehgWPyyI9XcnhmioctDvJ9pTfo0P1Rc49npJOc32VGr4zU63qUmaX
-	 LSaoc+o+cFS+64h0UjZAtiY097+NyCbaVj54E5YE=
+	by mail.kernel.org (Postfix) with ESMTP id 6D8BC20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rZDaY87P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390910AbgE1OGQ (ORCPT
+        id S2390915AbgE1OG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:06:16 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35129 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390656AbgE1OGK (ORCPT
+        Thu, 28 May 2020 10:06:26 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58684 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390812AbgE1OGX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:06:10 -0400
-Received: by mail-il1-f194.google.com with SMTP id a14so244167ilk.2;
-        Thu, 28 May 2020 07:06:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1jidT3xKZRKULWJIwqa2tys07NIrxI3mybLQC/9d/ko=;
-        b=DWsO/F1eL9DjP82NBsLsNPxie0SlEjScD8II2Cq1DIL2kaGCxCaT4PgBl5Ww8CONba
-         3xepZq1DflZNleeydwg501TlttgPCp9bq2FQkw4TIWbHuzx21fgApSgNE218racIV0ek
-         gtVDO72sc0Wtz+soNCEEWh+8Xm2iVCvVryTP8H9FkSpnde/I7IRXh2dr1IusZyK1nX4/
-         DflFeoJ5bqSR8nFPNkC8PKTyqWaWcC9M6HlS5gdwLUBUQNVph7jEaD4Y2fbbEp+nqIrj
-         3+emczmaZD4HFc8B0ukE4wk1yi/JPUnRBr82oif9g/oZrIGs2zdkhEzIudA24C5NQncN
-         Ss7A==
-X-Gm-Message-State: AOAM532cSysK1aLb8yvlk2lsV8G4K58IQUR+VzyjoGMTYhF3wsX/22VC
-        AkOCxjc+gvGHpndH6GtVOQ==
-X-Google-Smtp-Source: ABdhPJwgyTHzsDhxjiIb8r+RbEwXO/nh2hiq7xZNTxCVYzX32CAooeVLqphtOftt4LjRzbfcNOdExw==
-X-Received: by 2002:a92:d40a:: with SMTP id q10mr3051355ilm.87.1590674768954;
-        Thu, 28 May 2020 07:06:08 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id n25sm2574334ioa.29.2020.05.28.07.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:06:08 -0700 (PDT)
-Received: (nullmailer pid 4174426 invoked by uid 1000);
-        Thu, 28 May 2020 14:06:06 -0000
-Date:   Thu, 28 May 2020 08:06:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de,
-        hauke.mehrtens@intel.com, linux-mips@vger.kernel.org,
-        richard@nod.at, qi-ming.wu@intel.com, tglx@linutronix.de,
-        brendanhiggins@google.com, linux-mtd@lists.infradead.org,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
-        miquel.raynal@bootlin.com, andriy.shevchenko@intel.com,
-        robh+dt@kernel.org, masonccyang@mxic.com.tw
-Subject: Re: [PATCH v9 1/2] dt-bindings: mtd: Add Nand Flash Controller
- support for Intel LGM SoC
-Message-ID: <20200528140606.GA4173978@bogus>
-References: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 28 May 2020 10:06:23 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SE6LD5073115;
+        Thu, 28 May 2020 09:06:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590674781;
+        bh=lNhA+E2fd/RxBR6mEdxlKPJRrv3x5UmqnhFIGQavOu4=;
+        h=From:To:CC:Subject:Date;
+        b=rZDaY87PLxQk5fvHXKyQHc93j9CSZk94ao28sb+uG2yQH+5EWukRXF/FRKOccGOwr
+         SHTVSY+niteFp1p5vwZC62rXN80g32dQx/mudsuwfIBrth1Z7NchpKEZ5ayFx7gIBt
+         jkeEGO6Kjv+1Elaxeo3e7F1X7Zc5LLURSbzb7zj0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SE6LPm083163
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 09:06:21 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 09:06:21 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 09:06:21 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SE6Lf3032079;
+        Thu, 28 May 2020 09:06:21 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
+CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <sspatil@android.com>
+Subject: [PATCH v11 0/4] Add JEITA properties and introduce the bq2515x charger
+Date:   Thu, 28 May 2020 09:05:42 -0500
+Message-ID: <20200528140546.25260-1-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 13:12:10 +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add YAML file for dt-bindings to support NAND Flash Controller
-> on Intel's Lightning Mountain SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 93 ++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
-> 
+Hello,
 
+This patchset adds additional health properties to the power_supply header.
+These additional properties are taken from the JEITA specification. This
+patchset also introduces the bq2515x family of charging ICs.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Dan Murphy (2):
+  power_supply: Add additional health properties to the header
+  dt-bindings: power: Convert battery.txt to battery.yaml
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: '#address-cells', '#size-cells' do not match any of the regexes: '^nand@[a-f0-9]+$', 'pinctrl-[0-9]+'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: nand@0: '#address-cells', '#size-cells', 'nand-on-flash-bbt' do not match any of the regexes: 'pinctrl-[0-9]+'
+Ricardo Rivera-Matos (2):
+  dt-bindings: power: Add the bindings for the bq2515x family of
+    chargers.
+  power: supply: bq25150 introduce the bq25150
 
-See https://patchwork.ozlabs.org/patch/1299399
+ Documentation/ABI/testing/sysfs-class-power   |    2 +-
+ .../bindings/power/supply/battery.txt         |   82 +-
+ .../bindings/power/supply/battery.yaml        |  143 ++
+ .../bindings/power/supply/bq2515x.yaml        |   91 ++
+ drivers/power/supply/Kconfig                  |   13 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq2515x_charger.c        | 1159 +++++++++++++++++
+ drivers/power/supply/power_supply_sysfs.c     |    2 +-
+ include/linux/power_supply.h                  |    3 +
+ 9 files changed, 1413 insertions(+), 83 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.yaml
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+ create mode 100644 drivers/power/supply/bq2515x_charger.c
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+-- 
+2.26.2
 
