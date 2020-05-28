@@ -2,121 +2,232 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3326C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131FEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D15120B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P5oBbOUi"
+	by mail.kernel.org (Postfix) with ESMTP id E6FA121702
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388217AbgE1LCS (ORCPT
+        id S2388226AbgE1LCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:02:18 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:39228 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388198AbgE1LCJ (ORCPT
+        Thu, 28 May 2020 07:02:22 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42917 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388099AbgE1LCS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:02:09 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SB1nP5047624;
-        Thu, 28 May 2020 06:01:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590663709;
-        bh=eZ+LzRXdAqLDmjIFFtSVLARH/fNt7cotb+N9npkFJXg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=P5oBbOUi9kZWxa4qDviJIucWymckrM9WRiUANyvqvQ96VbY5vwhyLc3JrjPfz15+X
-         vXWdk2shZRg+9PT8xWSAXqbEvHnTwbT6EP9jIb5/De3u/GvHGHdlESZhBJksu1I1zO
-         iaDCNNaQH5kB3sSxlNQnaYbGt0cgOciq9fsND6yY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SB1nCp079663
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 06:01:49 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 06:01:49 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 06:01:49 -0500
-Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SB1j9F106456;
-        Thu, 28 May 2020 06:01:46 -0500
-Subject: Re: [PATCH 2/2] mtd: spi-nor: intel-spi: fix forced writable option
-To:     Daniel Walker <danielwa@cisco.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Jinhua Wu <jinhwu@cisco.com>, <xe-linux-external@cisco.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-References: <20200518175930.10948-2-danielwa@cisco.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <73a475fa-3c26-89ab-aac6-54f9b5b15936@ti.com>
-Date:   Thu, 28 May 2020 16:31:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200518175930.10948-2-danielwa@cisco.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 28 May 2020 07:02:18 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TztNb5P_1590663688;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TztNb5P_1590663688)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 May 2020 19:01:29 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v11 10/16] mm/compaction: do page isolation first in compaction
+Date:   Thu, 28 May 2020 19:00:52 +0800
+Message-Id: <1590663658-184131-11-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Johannes Weiner has suggested:
+"So here is a crazy idea that may be worth exploring:
 
+Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
+linked list.
 
-On 18/05/20 11:29 pm, Daniel Walker wrote:
-> This option currently doesn't work as expected. If the BIOS has this
-> flash as read-only there is no way to change this thru the driver.
-> There is a parameter which allows the flash to become writable with the
-> "writable" option to the module, but it does nothing if the BIOS has it
-> set to read-only.
-> 
-> I would expect this option would make the flash writable regardless of
-> the BIOS settings. This patch changes this option so the BIOS setting
-> doesn't stop the writable option from enabling read write on the flash.
-> 
+Can we make PageLRU atomic and use it to stabilize the lru_lock
+instead, and then use the lru_lock only serialize list operations?
+..."
 
-I am confused you say "If the BIOS has this flash as read-only there is
-no way to change this thru the driver", so is it possible to override
-BIOS setting? If yes, where is the code in the driver?
+Yes, this patch is doing so on  __isolate_lru_page which is the core
+page isolation func in compaction and shrinking path.
+With this patch, the compaction will only deal the PageLRU set and now
+isolated pages to skip the just alloced page which no LRU bit. And the
+isolation could exclusive the other isolations in memcg move_account,
+page migrations and thp split_huge_page.
 
-What happens if BIOS is set to allow writes but writeable is set to 0?
+As a side effect, PageLRU may be cleared during shrink_inactive_list
+path for isolation reason. If so, we can skip that page.
 
-Also please send patch series as thread (2/2 in reply to 1/2). You can
-use tool like git send-email
+Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ include/linux/swap.h |  2 +-
+ mm/compaction.c      | 33 +++++++++++++++++++++++----------
+ mm/vmscan.c          | 38 ++++++++++++++++++++++----------------
+ 3 files changed, 46 insertions(+), 27 deletions(-)
 
-> Original patch by Jinhua Wu <jinhwu@cisco.com>
-> 
-> Cc: Jinhua Wu <jinhwu@cisco.com>
-> Cc: xe-linux-external@cisco.com
-> Signed-off-by: Daniel Walker <danielwa@cisco.com>
-> ---
->  drivers/mtd/spi-nor/controllers/intel-spi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/controllers/intel-spi.c b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> index e5a3d51a2e4d..68a5877bfc0b 100644
-> --- a/drivers/mtd/spi-nor/controllers/intel-spi.c
-> +++ b/drivers/mtd/spi-nor/controllers/intel-spi.c
-> @@ -954,7 +954,7 @@ struct intel_spi *intel_spi_probe(struct device *dev,
->  	intel_spi_fill_partition(ispi, &part);
->  
->  	/* Prevent writes if not explicitly enabled */
-> -	if (!ispi->writeable || !writeable)
-> +	if (!ispi->writeable && !writeable)
->  		ispi->nor.mtd.flags &= ~MTD_WRITEABLE;
->  
->  	ret = mtd_device_register(&ispi->nor.mtd, &part, 1);
-> 
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index d12ecacce307..8baf0c2928e2 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -356,7 +356,7 @@ extern void lru_cache_add_active_or_unevictable(struct page *page,
+ extern unsigned long zone_reclaimable_pages(struct zone *zone);
+ extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+ 					gfp_t gfp_mask, nodemask_t *mask);
+-extern int __isolate_lru_page(struct page *page, isolate_mode_t mode);
++extern int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode);
+ extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+ 						  unsigned long nr_pages,
+ 						  gfp_t gfp_mask,
+diff --git a/mm/compaction.c b/mm/compaction.c
+index c359772dbfcc..c36d832b2a84 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -954,6 +954,23 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 		if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+ 			goto isolate_fail;
+ 
++		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
++			goto isolate_fail;
++
++		/*
++		 * Be careful not to clear PageLRU until after we're
++		 * sure the page is not being freed elsewhere -- the
++		 * page release code relies on it.
++		 */
++		if (unlikely(!get_page_unless_zero(page)))
++			goto isolate_fail;
++
++		/* Try isolate the page */
++		if (!TestClearPageLRU(page)) {
++			put_page(page);
++			goto isolate_fail;
++		}
++
+ 		/* If we already hold the lock, we can skip some rechecking */
+ 		if (!locked) {
+ 			locked = compact_lock_irqsave(&pgdat->lru_lock,
+@@ -966,10 +983,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 					goto isolate_abort;
+ 			}
+ 
+-			/* Recheck PageLRU and PageCompound under lock */
+-			if (!PageLRU(page))
+-				goto isolate_fail;
+-
+ 			/*
+ 			 * Page become compound since the non-locked check,
+ 			 * and it's on LRU. It can only be a THP so the order
+@@ -980,18 +993,18 @@ static bool too_many_isolated(pg_data_t *pgdat)
+ 				goto isolate_fail;
+ 			}
+ 
+-			/* Recheck page extra references under lock */
+-			if (page_count(page) > page_mapcount(page) +
++			/*
++			 * Recheck page extra references under lock. The
++			 * extra page_count comes from above
++			 * get_page_unless_zero().
++			 */
++			if (page_count(page) > page_mapcount(page) + 1 +
+ 				    (!PageAnon(page) || PageSwapCache(page)))
+ 				goto isolate_fail;
+ 		}
+ 
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+ 
+-		/* Try isolate the page */
+-		if (__isolate_lru_page(page, isolate_mode) != 0)
+-			goto isolate_fail;
+-
+ 		/* The whole page is taken off the LRU; skip the tail pages. */
+ 		if (PageCompound(page))
+ 			low_pfn += compound_nr(page) - 1;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 8a88a907c19d..df0765203473 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1543,7 +1543,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+  *
+  * returns 0 on success, -ve errno on failure.
+  */
+-int __isolate_lru_page(struct page *page, isolate_mode_t mode)
++int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode)
+ {
+ 	int ret = -EINVAL;
+ 
+@@ -1597,20 +1597,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+ 	if ((mode & ISOLATE_UNMAPPED) && page_mapped(page))
+ 		return ret;
+ 
+-	if (likely(get_page_unless_zero(page))) {
+-		/*
+-		 * Be careful not to clear PageLRU until after we're
+-		 * sure the page is not being freed elsewhere -- the
+-		 * page release code relies on it.
+-		 */
+-		ClearPageLRU(page);
+-		ret = 0;
+-	}
+-
+-	return ret;
++	return 0;
+ }
+ 
+-
+ /*
+  * Update LRU sizes after isolating pages. The LRU size updates must
+  * be complete before mem_cgroup_update_lru_size due to a sanity check.
+@@ -1690,17 +1679,34 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+ 		 * only when the page is being freed somewhere else.
+ 		 */
+ 		scan += nr_pages;
+-		switch (__isolate_lru_page(page, mode)) {
++		switch (__isolate_lru_page_prepare(page, mode)) {
+ 		case 0:
++			/*
++			 * Be careful not to clear PageLRU until after we're
++			 * sure the page is not being freed elsewhere -- the
++			 * page release code relies on it.
++			 */
++			if (unlikely(!get_page_unless_zero(page)))
++				goto busy;
++
++			if (!TestClearPageLRU(page)) {
++				/*
++				 * This page may in other isolation path,
++				 * but we still hold lru_lock.
++				 */
++				put_page(page);
++				goto busy;
++			}
++
+ 			nr_taken += nr_pages;
+ 			nr_zone_taken[page_zonenum(page)] += nr_pages;
+ 			list_move(&page->lru, dst);
+ 			break;
+-
++busy:
+ 		case -EBUSY:
+ 			/* else it is being freed elsewhere */
+ 			list_move(&page->lru, src);
+-			continue;
++			break;
+ 
+ 		default:
+ 			BUG();
+-- 
+1.8.3.1
+
