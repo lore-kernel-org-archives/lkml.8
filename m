@@ -2,84 +2,174 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0FDC206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB6206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="eBxrUA/+"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CE98I9F+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405834AbgE1Sae (ORCPT
+        id S2405819AbgE1Sam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:30:34 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:39577 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405803AbgE1Sab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:30:31 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 49Xx8N2wkvz63;
-        Thu, 28 May 2020 20:30:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1590690629; bh=wyk1Xu6FHxs00Uj8yLfVamGMvT7czOOsTndQSx9fs8A=;
-        h=Date:From:Subject:To:Cc:From;
-        b=eBxrUA/+NVA3frxBWe/uNipfhphrdxrnbO+QVsyc2NKfb4EGBpJcs2UohSLpDFIhr
-         d7Z8q4sg6xd5TxvxBazcy9UgEJYV8WRwcWauVfYz15zNWiIP0Y9TC50CFl9dMCpigz
-         GJUcK4BIDQDLmvVwBNuEK+cScQZdRAwfd9tGuK+bRQj/DW2YQskjqt8zyjucNN8oYB
-         GPz248JYO9lF02C+Khq/FeigGaLORj4W0jHzUOMKM11nZsZrzImKM9B4eEAh2vH3r1
-         +FUHviTw1zhlKhtytHgcwKSwDdM+w9TF/sE2xz9uMVLbDVHbNd67kHRq8Ke/VON9HF
-         J5vBtQAHmYQYA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-Date:   Thu, 28 May 2020 20:30:28 +0200
-Message-Id: <237e4bc8c63680f9ce0388d35b4c34a856ed8595.1590690518.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH] usb: gadget: f_acm: don't disable disabled EP
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Robert Baldyga <r.baldyga@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+        Thu, 28 May 2020 14:30:42 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:60396 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405803AbgE1Sai (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 14:30:38 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 67F1730D922;
+        Thu, 28 May 2020 11:20:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 67F1730D922
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1590690022;
+        bh=xTLN0Ne8/Unwvxj7vRuoFM8k4HSoC2gvxWr7h+2Ueic=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CE98I9F+YpFVK5YhkoZsPrHDWVftEaJJvhZrl8D8zUkEmwKeBjEyTaat+gultQOOA
+         vfDwwRUcIdQ7Q9J5Q2yMHxtHH2DRTt03GpitZRG+UmzbmFo8JZB13wQaaUdMOKMTyZ
+         pMFG8jLc/dUk80lQ83Edj3h/xEJDNggoLNUN652E=
+Received: from lbrmn-mmayer.ric.broadcom.net (lbrmn-mmayer.ric.broadcom.net [10.136.28.150])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id F2492140069;
+        Thu, 28 May 2020 11:20:21 -0700 (PDT)
+From:   Markus Mayer <markus.mayer@broadcom.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Linux Power Management List <linux-pm@vger.kernel.org>,
+        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
+        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Markus Mayer <markus.mayer@broadcom.com>
+Subject: [PATCH 2/3] cpufreq: brcmstb-avs-cpufreq: Support polling AVS firmware
+Date:   Thu, 28 May 2020 11:20:13 -0700
+Message-Id: <20200528182014.20021-2-mmayer@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200528182014.20021-1-mmayer@broadcom.com>
+References: <20200528182014.20021-1-mmayer@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make debugging real problems easier by not trying to disable an EP that
-was not yet enabled.
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-Fixes: 4aab757ca44a ("usb: gadget: f_acm: eliminate abuse of ep->driver data")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+In case the interrupt towards the host is never raised, yet the AVS
+firmware responds correctly within the alloted time, allow supporting a
+polling mode.
+
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 ---
- drivers/usb/gadget/function/f_acm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 47 +++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_acm.c b/drivers/usb/gadget/function/f_acm.c
-index 200596ea9557..46647bfac2ef 100644
---- a/drivers/usb/gadget/function/f_acm.c
-+++ b/drivers/usb/gadget/function/f_acm.c
-@@ -425,9 +425,11 @@ static int acm_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- 	/* we know alt == 0, so this is an activation or a reset */
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index c8b754694a5e..79a0538a531a 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -42,6 +42,7 @@
+  */
  
- 	if (intf == acm->ctrl_id) {
--		dev_vdbg(&cdev->gadget->dev,
--				"reset acm control interface %d\n", intf);
--		usb_ep_disable(acm->notify);
-+		if (acm->notify->enabled) {
-+			dev_vdbg(&cdev->gadget->dev,
-+					"reset acm control interface %d\n", intf);
-+			usb_ep_disable(acm->notify);
-+		}
+ #include <linux/cpufreq.h>
++#include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+@@ -178,6 +179,7 @@ struct private_data {
+ 	struct completion done;
+ 	struct semaphore sem;
+ 	struct pmap pmap;
++	int host_irq;
+ };
  
- 		if (!acm->notify->desc)
- 			if (config_ep_by_speed(cdev->gadget, f, acm->notify))
+ static void __iomem *__map_region(const char *name)
+@@ -195,12 +197,36 @@ static void __iomem *__map_region(const char *name)
+ 	return ptr;
+ }
+ 
++static unsigned long wait_for_avs_command(struct private_data *priv,
++					  unsigned long timeout)
++{
++	unsigned long time_left = 0;
++	u32 val;
++
++	/* Event driven, wait for the command interrupt */
++	if (priv->host_irq >= 0)
++		return wait_for_completion_timeout(&priv->done,
++						   msecs_to_jiffies(timeout));
++
++	/* Polling for command completion */
++	do {
++		time_left = timeout;
++		val = readl(priv->base + AVS_MBOX_STATUS);
++		if (val)
++			break;
++
++		usleep_range(1000, 2000);
++	} while (--timeout);
++
++	return time_left;
++}
++
+ static int __issue_avs_command(struct private_data *priv, unsigned int cmd,
+ 			       unsigned int num_in, unsigned int num_out,
+ 			       u32 args[])
+ {
+-	unsigned long time_left = msecs_to_jiffies(AVS_TIMEOUT);
+ 	void __iomem *base = priv->base;
++	unsigned long time_left;
+ 	unsigned int i;
+ 	int ret;
+ 	u32 val;
+@@ -238,7 +264,7 @@ static int __issue_avs_command(struct private_data *priv, unsigned int cmd,
+ 	writel(AVS_CPU_L2_INT_MASK, priv->avs_intr_base + AVS_CPU_L2_SET0);
+ 
+ 	/* Wait for AVS co-processor to finish processing the command. */
+-	time_left = wait_for_completion_timeout(&priv->done, time_left);
++	time_left = wait_for_avs_command(priv, AVS_TIMEOUT);
+ 
+ 	/*
+ 	 * If the AVS status is not in the expected range, it means AVS didn't
+@@ -509,7 +535,7 @@ static int brcm_avs_prepare_init(struct platform_device *pdev)
+ {
+ 	struct private_data *priv;
+ 	struct device *dev;
+-	int host_irq, ret;
++	int ret;
+ 
+ 	dev = &pdev->dev;
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -536,19 +562,14 @@ static int brcm_avs_prepare_init(struct platform_device *pdev)
+ 		goto unmap_base;
+ 	}
+ 
+-	host_irq = platform_get_irq_byname(pdev, BRCM_AVS_HOST_INTR);
+-	if (host_irq < 0) {
+-		dev_err(dev, "Couldn't find interrupt %s -- %d\n",
+-			BRCM_AVS_HOST_INTR, host_irq);
+-		ret = host_irq;
+-		goto unmap_intr_base;
+-	}
++	priv->host_irq = platform_get_irq_byname(pdev, BRCM_AVS_HOST_INTR);
+ 
+-	ret = devm_request_irq(dev, host_irq, irq_handler, IRQF_TRIGGER_RISING,
++	ret = devm_request_irq(dev, priv->host_irq, irq_handler,
++			       IRQF_TRIGGER_RISING,
+ 			       BRCM_AVS_HOST_INTR, priv);
+-	if (ret) {
++	if (ret && priv->host_irq >= 0) {
+ 		dev_err(dev, "IRQ request failed: %s (%d) -- %d\n",
+-			BRCM_AVS_HOST_INTR, host_irq, ret);
++			BRCM_AVS_HOST_INTR, priv->host_irq, ret);
+ 		goto unmap_intr_base;
+ 	}
+ 
 -- 
-2.20.1
+2.17.1
 
