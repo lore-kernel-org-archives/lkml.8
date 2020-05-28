@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FA121702
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B46214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388226AbgE1LCW (ORCPT
+        id S2388143AbgE1LBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:02:22 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:42917 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388099AbgE1LCS (ORCPT
+        Thu, 28 May 2020 07:01:46 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:36146 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388087AbgE1LBe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:02:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0TztNb5P_1590663688;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TztNb5P_1590663688)
+        Thu, 28 May 2020 07:01:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0TztfJev_1590663686;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TztfJev_1590663686)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 28 May 2020 19:01:29 +0800
+          Thu, 28 May 2020 19:01:26 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -33,10 +33,14 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org, shakeelb@google.com,
         iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v11 10/16] mm/compaction: do page isolation first in compaction
-Date:   Thu, 28 May 2020 19:00:52 +0800
-Message-Id: <1590663658-184131-11-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH v11 04/16] mm/compaction: rename compact_deferred as compact_should_defer
+Date:   Thu, 28 May 2020 19:00:46 +0800
+Message-Id: <1590663658-184131-5-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -45,189 +49,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Weiner has suggested:
-"So here is a crazy idea that may be worth exploring:
+The compact_deferred is a defer suggestion check, deferring action does in
+defer_compaction not here. so, better rename it to avoid confusing.
 
-Right now, pgdat->lru_lock protects both PageLRU *and* the lruvec's
-linked list.
-
-Can we make PageLRU atomic and use it to stabilize the lru_lock
-instead, and then use the lru_lock only serialize list operations?
-..."
-
-Yes, this patch is doing so on  __isolate_lru_page which is the core
-page isolation func in compaction and shrinking path.
-With this patch, the compaction will only deal the PageLRU set and now
-isolated pages to skip the just alloced page which no LRU bit. And the
-isolation could exclusive the other isolations in memcg move_account,
-page migrations and thp split_huge_page.
-
-As a side effect, PageLRU may be cleared during shrink_inactive_list
-path for isolation reason. If so, we can skip that page.
-
-Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Hugh Dickins <hughd@google.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org
 ---
- include/linux/swap.h |  2 +-
- mm/compaction.c      | 33 +++++++++++++++++++++++----------
- mm/vmscan.c          | 38 ++++++++++++++++++++++----------------
- 3 files changed, 46 insertions(+), 27 deletions(-)
+ include/linux/compaction.h        | 4 ++--
+ include/trace/events/compaction.h | 2 +-
+ mm/compaction.c                   | 8 ++++----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index d12ecacce307..8baf0c2928e2 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -356,7 +356,7 @@ extern void lru_cache_add_active_or_unevictable(struct page *page,
- extern unsigned long zone_reclaimable_pages(struct zone *zone);
- extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
- 					gfp_t gfp_mask, nodemask_t *mask);
--extern int __isolate_lru_page(struct page *page, isolate_mode_t mode);
-+extern int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode);
- extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
- 						  unsigned long nr_pages,
- 						  gfp_t gfp_mask,
-diff --git a/mm/compaction.c b/mm/compaction.c
-index c359772dbfcc..c36d832b2a84 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -954,6 +954,23 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 		if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
- 			goto isolate_fail;
+diff --git a/include/linux/compaction.h b/include/linux/compaction.h
+index 3ed2f22b588a..9626f057b9f2 100644
+--- a/include/linux/compaction.h
++++ b/include/linux/compaction.h
+@@ -100,7 +100,7 @@ extern enum compact_result compaction_suitable(struct zone *zone, int order,
+ 		unsigned int alloc_flags, int highest_zoneidx);
  
-+		if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
-+			goto isolate_fail;
-+
-+		/*
-+		 * Be careful not to clear PageLRU until after we're
-+		 * sure the page is not being freed elsewhere -- the
-+		 * page release code relies on it.
-+		 */
-+		if (unlikely(!get_page_unless_zero(page)))
-+			goto isolate_fail;
-+
-+		/* Try isolate the page */
-+		if (!TestClearPageLRU(page)) {
-+			put_page(page);
-+			goto isolate_fail;
-+		}
-+
- 		/* If we already hold the lock, we can skip some rechecking */
- 		if (!locked) {
- 			locked = compact_lock_irqsave(&pgdat->lru_lock,
-@@ -966,10 +983,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 					goto isolate_abort;
- 			}
- 
--			/* Recheck PageLRU and PageCompound under lock */
--			if (!PageLRU(page))
--				goto isolate_fail;
--
- 			/*
- 			 * Page become compound since the non-locked check,
- 			 * and it's on LRU. It can only be a THP so the order
-@@ -980,18 +993,18 @@ static bool too_many_isolated(pg_data_t *pgdat)
- 				goto isolate_fail;
- 			}
- 
--			/* Recheck page extra references under lock */
--			if (page_count(page) > page_mapcount(page) +
-+			/*
-+			 * Recheck page extra references under lock. The
-+			 * extra page_count comes from above
-+			 * get_page_unless_zero().
-+			 */
-+			if (page_count(page) > page_mapcount(page) + 1 +
- 				    (!PageAnon(page) || PageSwapCache(page)))
- 				goto isolate_fail;
- 		}
- 
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 
--		/* Try isolate the page */
--		if (__isolate_lru_page(page, isolate_mode) != 0)
--			goto isolate_fail;
--
- 		/* The whole page is taken off the LRU; skip the tail pages. */
- 		if (PageCompound(page))
- 			low_pfn += compound_nr(page) - 1;
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 8a88a907c19d..df0765203473 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1543,7 +1543,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
-  *
-  * returns 0 on success, -ve errno on failure.
-  */
--int __isolate_lru_page(struct page *page, isolate_mode_t mode)
-+int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode)
+ extern void defer_compaction(struct zone *zone, int order);
+-extern bool compaction_deferred(struct zone *zone, int order);
++extern bool compaction_should_defer(struct zone *zone, int order);
+ extern void compaction_defer_reset(struct zone *zone, int order,
+ 				bool alloc_success);
+ extern bool compaction_restarting(struct zone *zone, int order);
+@@ -199,7 +199,7 @@ static inline void defer_compaction(struct zone *zone, int order)
  {
- 	int ret = -EINVAL;
- 
-@@ -1597,20 +1597,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
- 	if ((mode & ISOLATE_UNMAPPED) && page_mapped(page))
- 		return ret;
- 
--	if (likely(get_page_unless_zero(page))) {
--		/*
--		 * Be careful not to clear PageLRU until after we're
--		 * sure the page is not being freed elsewhere -- the
--		 * page release code relies on it.
--		 */
--		ClearPageLRU(page);
--		ret = 0;
--	}
--
--	return ret;
-+	return 0;
  }
  
--
- /*
-  * Update LRU sizes after isolating pages. The LRU size updates must
-  * be complete before mem_cgroup_update_lru_size due to a sanity check.
-@@ -1690,17 +1679,34 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
- 		 * only when the page is being freed somewhere else.
- 		 */
- 		scan += nr_pages;
--		switch (__isolate_lru_page(page, mode)) {
-+		switch (__isolate_lru_page_prepare(page, mode)) {
- 		case 0:
-+			/*
-+			 * Be careful not to clear PageLRU until after we're
-+			 * sure the page is not being freed elsewhere -- the
-+			 * page release code relies on it.
-+			 */
-+			if (unlikely(!get_page_unless_zero(page)))
-+				goto busy;
-+
-+			if (!TestClearPageLRU(page)) {
-+				/*
-+				 * This page may in other isolation path,
-+				 * but we still hold lru_lock.
-+				 */
-+				put_page(page);
-+				goto busy;
-+			}
-+
- 			nr_taken += nr_pages;
- 			nr_zone_taken[page_zonenum(page)] += nr_pages;
- 			list_move(&page->lru, dst);
- 			break;
--
-+busy:
- 		case -EBUSY:
- 			/* else it is being freed elsewhere */
- 			list_move(&page->lru, src);
--			continue;
-+			break;
+-static inline bool compaction_deferred(struct zone *zone, int order)
++static inline bool compaction_should_defer(struct zone *zone, int order)
+ {
+ 	return true;
+ }
+diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
+index 54e5bf081171..33633c71df04 100644
+--- a/include/trace/events/compaction.h
++++ b/include/trace/events/compaction.h
+@@ -274,7 +274,7 @@
+ 		1UL << __entry->defer_shift)
+ );
  
- 		default:
- 			BUG();
+-DEFINE_EVENT(mm_compaction_defer_template, mm_compaction_deferred,
++DEFINE_EVENT(mm_compaction_defer_template, mm_compaction_should_defer,
+ 
+ 	TP_PROTO(struct zone *zone, int order),
+ 
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 38cdf392837b..c359772dbfcc 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -154,7 +154,7 @@ void defer_compaction(struct zone *zone, int order)
+ }
+ 
+ /* Returns true if compaction should be skipped this time */
+-bool compaction_deferred(struct zone *zone, int order)
++bool compaction_should_defer(struct zone *zone, int order)
+ {
+ 	unsigned long defer_limit = 1UL << zone->compact_defer_shift;
+ 
+@@ -168,7 +168,7 @@ bool compaction_deferred(struct zone *zone, int order)
+ 	if (zone->compact_considered >= defer_limit)
+ 		return false;
+ 
+-	trace_mm_compaction_deferred(zone, order);
++	trace_mm_compaction_should_defer(zone, order);
+ 
+ 	return true;
+ }
+@@ -2379,7 +2379,7 @@ enum compact_result try_to_compact_pages(gfp_t gfp_mask, unsigned int order,
+ 		enum compact_result status;
+ 
+ 		if (prio > MIN_COMPACT_PRIORITY
+-					&& compaction_deferred(zone, order)) {
++				&& compaction_should_defer(zone, order)) {
+ 			rc = max_t(enum compact_result, COMPACT_DEFERRED, rc);
+ 			continue;
+ 		}
+@@ -2563,7 +2563,7 @@ static void kcompactd_do_work(pg_data_t *pgdat)
+ 		if (!populated_zone(zone))
+ 			continue;
+ 
+-		if (compaction_deferred(zone, cc.order))
++		if (compaction_should_defer(zone, cc.order))
+ 			continue;
+ 
+ 		if (compaction_suitable(zone, cc.order, 0, zoneid) !=
 -- 
 1.8.3.1
 
