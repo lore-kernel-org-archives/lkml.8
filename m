@@ -2,217 +2,183 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490E1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0301CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA8F2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D611E2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:40:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FoXMQP8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406701AbgE1TjC (ORCPT
+        id S2406702AbgE1TkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:39:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33962 "EHLO
+        Thu, 28 May 2020 15:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406540AbgE1Ti5 (ORCPT
+        with ESMTP id S2406540AbgE1TkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:38:57 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7409CC08C5C6;
-        Thu, 28 May 2020 12:38:57 -0700 (PDT)
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jeOMf-0007VO-Kh; Thu, 28 May 2020 21:38:53 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 270F11C0051;
-        Thu, 28 May 2020 21:38:53 +0200 (CEST)
-Date:   Thu, 28 May 2020 19:38:52 -0000
-From:   "tip-bot2 for Jay Lang" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/ioperm: Prevent a memory leak when fork fails
-Cc:     Jay Lang <jaytlang@mit.edu>, Thomas Gleixner <tglx@linutronix.de>,
-        stable#@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200524162742.253727-1-jaytlang@mit.edu>
-References: <20200524162742.253727-1-jaytlang@mit.edu>
+        Thu, 28 May 2020 15:40:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86193C08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:40:13 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id e11so13122893pfn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1zYINYS5M5H4v7usoMXZUPWVFvds+U+lV2Ynob3L6pg=;
+        b=FoXMQP8TGdKIsTYwBlxJfrVj2VQ8RR/kNIgT4CxA3KobyKEU1+//9t64t3OLh2Khi+
+         3vuUcAJFpfayXZesLB0YySRHjZz50yewdX78MfGCTUDUym7HAZ/sEZgGqKUO+F7X7Pk6
+         taRil4k2kvl5UYMcHl7NDrUI1mIZMJjxCQ465VJHxLnrPICiYv/Vi0UXic4hHDqRAvfW
+         gqZcYlc3sXu8BEQeytCGnQA807rsOddGVE0d5t1iPEZNc8/uur3Vfn0e9Z/XuQahAovq
+         mNxpuC8YNyLKpRRdmmkZkpSmwmMKkOH51NN/AI6z+GhLENAmi5i0h6GvVVzSD/0cGpFf
+         5G/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1zYINYS5M5H4v7usoMXZUPWVFvds+U+lV2Ynob3L6pg=;
+        b=HSUg7NRh2nEyybZ5LG4tXtyNHfv7xozncFSfXFFb7FQSW3vDf+uGm5ujnllTMk76pA
+         TR8k1tnSM9MpqTwJ5PZwSvtSA/UruB8iD8/Jn+8FZDov1nTAILfU+QIJjQ+4i3/7bSZz
+         +7nonrRePj3vZ849C7+qSUscGERzwcEnjssKw9ycc6Tz2UPVdN9aWJ/3hWyBKVR7lBTJ
+         ptvF2Xs1SKIjshgMW2mrUErPIslTgJr8TpfIwhrzn+dbW+KxYDwshfojK2XnoW675BBu
+         B9i2csKLILmOMeweLhlIgyLV4d45KpxOc/4v1m/1R3jqY9gx8F70a2W5/8UrkQFGM5vu
+         mT9g==
+X-Gm-Message-State: AOAM533DRoaLyUT9g7c/ef+Tm8UkOQXhzC7ghFCnp3GdZwRGEToiD6kO
+        bdTYJjmhX21BymLs2E6LME9WJ61FmOcc0loH8FyKCQ==
+X-Google-Smtp-Source: ABdhPJwozeLhos5j9E4l4Rjye1rhwxuDuiI7FKvL5yBfWGFravInkuhzgP2rYNecqDRsWSxeiONoNQrGfUSlOCU39kk=
+X-Received: by 2002:a62:8c42:: with SMTP id m63mr4710270pfd.106.1590694812613;
+ Thu, 28 May 2020 12:40:12 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159069473297.17951.5698539330024737587.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <1585313122-26441-1-git-send-email-alan.maguire@oracle.com> <1585313122-26441-2-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1585313122-26441-2-git-send-email-alan.maguire@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 28 May 2020 12:40:01 -0700
+Message-ID: <CAFd5g44-eDSDQqt+ZR-CibEjgZ3x6RzYf6WFQ7t088Bf2c8qRg@mail.gmail.com>
+Subject: Re: [PATCH v3 kunit-next 1/2] kunit: generalize kunit_resource API
+ beyond allocated resources
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     shuah <shuah@kernel.org>,
+        Patricia Alfonso <trishalfonso@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Fri, Mar 27, 2020 at 5:45 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> In its original form, the kunit resources API - consisting the
+> struct kunit_resource and associated functions - was focused on
+> adding allocated resources during test operation that would be
+> automatically cleaned up on test completion.
+>
+> The recent RFC patch proposing converting KASAN tests to KUnit [1]
+> showed another potential model - where outside of test context,
+> but with a pointer to the test state, we wish to access/update
+> test-related data, but expressly want to avoid allocations.
+>
+> It turns out we can generalize the kunit_resource to support
+> static resources where the struct kunit_resource * is passed
+> in and initialized for us. As part of this work, we also
+> change the "allocation" field to the more general "data" name,
+> as instead of associating an allocation, we can associate a
+> pointer to static data.  Static data is distinguished by a NULL
+> free functions.  A test is added to cover using kunit_add_resource()
+> with a static resource and data.
+>
+> Finally we also make use of the kernel's krefcount interfaces
+> to manage reference counting of KUnit resources.  The motivation
+> for this is simple; if we have kernel threads accessing and
+> using resources (say via kunit_find_resource()) we need to
+> ensure we do not remove said resources (or indeed free them
+> if they were dynamically allocated) until the reference count
+> reaches zero.  A new function - kunit_put_resource() - is
+> added to handle this, and it should be called after a
+> thread using kunit_find_resource() is finished with the
+> retrieved resource.
+>
+> We ensure that the functions needed to look up, use and
+> drop reference count are "static inline"-defined so that
+> they can be used by builtin code as well as modules in
+> the case that KUnit is built as a module.
+>
+> A cosmetic change here also; I've tried moving to
+> kunit_[action]_resource() as the format of function names
+> for consistency and readability.
+>
+> [1] https://lkml.org/lkml/2020/2/26/1286
+>
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 
-Commit-ID:     4bfe6cce133cad82cea04490c308795275857782
-Gitweb:        https://git.kernel.org/tip/4bfe6cce133cad82cea04490c308795275857782
-Author:        Jay Lang <jaytlang@mit.edu>
-AuthorDate:    Sun, 24 May 2020 12:27:39 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 28 May 2020 21:36:20 +02:00
+One comment below, other than that:
 
-x86/ioperm: Prevent a memory leak when fork fails
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-In the copy_process() routine called by _do_fork(), failure to allocate
-a PID (or further along in the function) will trigger an invocation to
-exit_thread(). This is done to clean up from an earlier call to
-copy_thread_tls(). Naturally, the child task is passed into exit_thread(),
-however during the process, io_bitmap_exit() nullifies the parent's
-io_bitmap rather than the child's.
+Sorry for not keeping up with this. I forgot that I didn't give this a
+reviewed-by.
 
-As copy_thread_tls() has been called ahead of the failure, the reference
-count on the calling thread's io_bitmap is incremented as we would expect.
-However, io_bitmap_exit() doesn't accept any arguments, and thus assumes
-it should trash the current thread's io_bitmap reference rather than the
-child's. This is pretty sneaky in practice, because in all instances but
-this one, exit_thread() is called with respect to the current task and
-everything works out.
+> ---
+>  include/kunit/test.h      | 157 +++++++++++++++++++++++++++++++++++++---------
+>  lib/kunit/kunit-test.c    |  74 ++++++++++++++++------
+>  lib/kunit/string-stream.c |  14 ++---
+>  lib/kunit/test.c          | 154 ++++++++++++++++++++++++---------------------
+>  4 files changed, 270 insertions(+), 129 deletions(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 9b0c46a..8c7f3ff 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -52,30 +59,27 @@
+>   *
+>   *     static void kunit_kmalloc_free(struct kunit_resource *res)
+>   *     {
+> - *             kfree(res->allocation);
+> + *             kfree(res->data);
+>   *     }
+>   *
+>   *     void *kunit_kmalloc(struct kunit *test, size_t size, gfp_t gfp)
+>   *     {
+>   *             struct kunit_kmalloc_params params;
+> - *             struct kunit_resource *res;
+>   *
+>   *             params.size = size;
+>   *             params.gfp = gfp;
+>   *
+> - *             res = kunit_alloc_resource(test, kunit_kmalloc_init,
+> + *             return kunit_alloc_resource(test, kunit_kmalloc_init,
+>   *                     kunit_kmalloc_free, &params);
+> - *             if (res)
+> - *                     return res->allocation;
+> - *
+> - *             return NULL;
+>   *     }
+>   */
+>  struct kunit_resource {
+> -       void *allocation;
+> -       kunit_resource_free_t free;
+> +       void *data;
+>
+>         /* private: internal use only. */
+> +       kunit_resource_init_t init;
 
-A determined attacker can issue an appropriate ioctl (i.e. KDENABIO) to
-get a bitmap allocated, and force a clone3() syscall to fail by passing
-in a zeroed clone_args structure. The kernel handles the erroneous struct
-and the buggy code path is followed, and even though the parent's reference
-to the io_bitmap is trashed, the child still holds a reference and thus
-the structure will never be freed.
+Apologies for bringing this up so late, but it looks like you never
+addressed my comment from v1:
 
-Fix this by tweaking io_bitmap_exit() and its subroutines to accept a
-task_struct argument which to operate on.
+I don't think you use this `init` field anywhere; I only see it passed
+as a parameter. Is there something obvious that I am missing?
 
-Fixes: ea5f1cd7ab49 ("x86/ioperm: Remove bitmap if all permissions dropped")
-Signed-off-by: Jay Lang <jaytlang@mit.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable#@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200524162742.253727-1-jaytlang@mit.edu
----
- arch/x86/include/asm/io_bitmap.h |  4 ++--
- arch/x86/kernel/ioport.c         | 22 +++++++++++-----------
- arch/x86/kernel/process.c        |  4 ++--
- 3 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/arch/x86/include/asm/io_bitmap.h b/arch/x86/include/asm/io_bitmap.h
-index 07344d8..ac1a99f 100644
---- a/arch/x86/include/asm/io_bitmap.h
-+++ b/arch/x86/include/asm/io_bitmap.h
-@@ -17,7 +17,7 @@ struct task_struct;
- 
- #ifdef CONFIG_X86_IOPL_IOPERM
- void io_bitmap_share(struct task_struct *tsk);
--void io_bitmap_exit(void);
-+void io_bitmap_exit(struct task_struct *tsk);
- 
- void native_tss_update_io_bitmap(void);
- 
-@@ -29,7 +29,7 @@ void native_tss_update_io_bitmap(void);
- 
- #else
- static inline void io_bitmap_share(struct task_struct *tsk) { }
--static inline void io_bitmap_exit(void) { }
-+static inline void io_bitmap_exit(struct task_struct *tsk) { }
- static inline void tss_update_io_bitmap(void) { }
- #endif
- 
-diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index a53e7b4..e2fab3c 100644
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -33,15 +33,15 @@ void io_bitmap_share(struct task_struct *tsk)
- 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- }
- 
--static void task_update_io_bitmap(void)
-+static void task_update_io_bitmap(struct task_struct *tsk)
- {
--	struct thread_struct *t = &current->thread;
-+	struct thread_struct *t = &tsk->thread;
- 
- 	if (t->iopl_emul == 3 || t->io_bitmap) {
- 		/* TSS update is handled on exit to user space */
--		set_thread_flag(TIF_IO_BITMAP);
-+		set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- 	} else {
--		clear_thread_flag(TIF_IO_BITMAP);
-+		clear_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- 		/* Invalidate TSS */
- 		preempt_disable();
- 		tss_update_io_bitmap();
-@@ -49,12 +49,12 @@ static void task_update_io_bitmap(void)
- 	}
- }
- 
--void io_bitmap_exit(void)
-+void io_bitmap_exit(struct task_struct *tsk)
- {
--	struct io_bitmap *iobm = current->thread.io_bitmap;
-+	struct io_bitmap *iobm = tsk->thread.io_bitmap;
- 
--	current->thread.io_bitmap = NULL;
--	task_update_io_bitmap();
-+	tsk->thread.io_bitmap = NULL;
-+	task_update_io_bitmap(tsk);
- 	if (iobm && refcount_dec_and_test(&iobm->refcnt))
- 		kfree(iobm);
- }
-@@ -102,7 +102,7 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
- 		if (!iobm)
- 			return -ENOMEM;
- 		refcount_set(&iobm->refcnt, 1);
--		io_bitmap_exit();
-+		io_bitmap_exit(current);
- 	}
- 
- 	/*
-@@ -134,7 +134,7 @@ long ksys_ioperm(unsigned long from, unsigned long num, int turn_on)
- 	}
- 	/* All permissions dropped? */
- 	if (max_long == UINT_MAX) {
--		io_bitmap_exit();
-+		io_bitmap_exit(current);
- 		return 0;
- 	}
- 
-@@ -192,7 +192,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
- 	}
- 
- 	t->iopl_emul = level;
--	task_update_io_bitmap();
-+	task_update_io_bitmap(current);
- 
- 	return 0;
- }
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 9da70b2..35638f1 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -96,7 +96,7 @@ int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- }
- 
- /*
-- * Free current thread data structures etc..
-+ * Free thread data structures etc..
-  */
- void exit_thread(struct task_struct *tsk)
- {
-@@ -104,7 +104,7 @@ void exit_thread(struct task_struct *tsk)
- 	struct fpu *fpu = &t->fpu;
- 
- 	if (test_thread_flag(TIF_IO_BITMAP))
--		io_bitmap_exit();
-+		io_bitmap_exit(tsk);
- 
- 	free_vm86(t);
- 
+> +       kunit_resource_free_t free;
+> +       struct kref refcount;
+>         struct list_head node;
+>  };
