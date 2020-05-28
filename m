@@ -2,190 +2,109 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12ADF21501
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590705870;
-	bh=Of5qUS3iNNYn924FnJ7Bx2pbtxirKh2MJA2vT9aP9lY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j53Mi/Cu+FEJvd0wPgUVMuacwyOpJ9R5ez4bePGUh/ctMEIGJV75U+BfpUS0U3cQv
-	 gnyO43fHLEU5n8bJd3dTsvP9DbnySaL8CpbkTbfe4GJvvXyFy+snSvVI3STI8FmZRF
-	 uM14xq+C87NEjXHLAxO0u0sDg+/RycoZgfx83ssI=
+	by mail.kernel.org (Postfix) with ESMTP id EAC16207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:44:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VmAFHRbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437301AbgE1Wo2 (ORCPT
+        id S2437311AbgE1Woy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437279AbgE1WoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:44:10 -0400
-Received: from earth.universe (dyndsl-095-033-156-068.ewe-ip-backbone.de [95.33.156.68])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C88720721;
-        Thu, 28 May 2020 22:44:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590705850;
-        bh=Of5qUS3iNNYn924FnJ7Bx2pbtxirKh2MJA2vT9aP9lY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ddkZuwXVe27DsXGWGbCeIgI2/VifW2NWwIBlSNGfi6UBSPXuwKiu2pgSwH4tKK+pJ
-         ZQGcjwYDXL0Jr2mfqeksQz/JnFE9WfpQe9viNu/ySc/CJ0ziiLKt6zDnNMZUA030iC
-         v1F10TzRGZIlBqGp030eqpLduipe7ajSpztNuUfY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 59CDF3C08C7; Fri, 29 May 2020 00:44:08 +0200 (CEST)
-Date:   Fri, 29 May 2020 00:44:08 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-Subject: Re: [PATCHv1 00/19] Improve SBS battery support
-Message-ID: <20200528224408.4fo44kdjoqekpnpn@earth.universe>
-References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+        Thu, 28 May 2020 18:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437279AbgE1Wou (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 18:44:50 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4687C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:44:50 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id d10so312880pgn.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=CzlwaQBhB6X7vtfLTVD7DA58u/rA562/f1SXevkBPwc=;
+        b=VmAFHRbfcJExWJg8IgA6FKmejubQ9aKrIMIpPgpBFIhi+OMjmGfyYIhaTxzH6Poy/w
+         jdvuOtq2cPl5F0semT5ERouwcWiYv5TlPYJ933Xqr+/eboqx/JeNEHqXDYbWa6RA3L5u
+         gvsCSQ26kDVhEfH0T0/kDNwzv32S1XZYOCkFs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=CzlwaQBhB6X7vtfLTVD7DA58u/rA562/f1SXevkBPwc=;
+        b=B8gj4/mYXaUecEzrHZqSh1HhlS8Sq62IN1dID0d5hoYzvBMYqoJOCd31oZMg3yBnBA
+         2CkonpSUqUprCmWepy66dxAFnQsZtinRPB9yMCqP1FZ+7SdQvd63+FI4pt44GASleZFr
+         z1ZWZK6skzLtcCgeeWkRkLWShlMW3Yp5viihVItf6HNgmgH67zlrBHeQS2b/fib4roSK
+         eAB3BWyen+NVCrWOHheBR5CDuy0enqB3/n9btCTo78Kb9/hfvPLDrFINR9Ofs5SQDWjZ
+         MWyqWUm7RZeUpLib30zaxyAIPlNGFxlQf/7UaYBSsvwig0mMJAVWITYY9WA/we9A1ik5
+         72qA==
+X-Gm-Message-State: AOAM530MLd39pw/IxDKUNvC8CuoggPu59MiS8oZ1zm+kLRwWVTk0J3ME
+        mR3TfhZNuPQfDYFJ9c0UtlKvRg==
+X-Google-Smtp-Source: ABdhPJydC1Uuong0oSvH9QsEwRg5vR0vIvCmTEg9LwzUV3nx+omAdHyv2zklrA8Igo05zSZkK9WQYQ==
+X-Received: by 2002:a05:6a00:1486:: with SMTP id v6mr5324082pfu.83.1590705890029;
+        Thu, 28 May 2020 15:44:50 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id z18sm5600812pfj.148.2020.05.28.15.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 15:44:49 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kq3ssriyb4k4re57"
-Content-Disposition: inline
-In-Reply-To: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200528074530.1.Ib86e5b406fe7d16575ae1bb276d650faa144b63c@changeid>
+References: <20200528074530.1.Ib86e5b406fe7d16575ae1bb276d650faa144b63c@changeid>
+Subject: Re: [PATCH] soc: qcom: rpmh-rsc: Don't use ktime for timeout in write_tcs_reg_sync()
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Date:   Thu, 28 May 2020 15:44:48 -0700
+Message-ID: <159070588846.69627.5268638209383373410@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---kq3ssriyb4k4re57
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-I queued this series to power-supply's for-next branch.
-
--- Sebastian
-
-On Wed, May 13, 2020 at 08:55:56PM +0200, Sebastian Reichel wrote:
-> This patchset improves support for SBS compliant batteries. Due to
-> the changes, the battery now exposes 32 power supply properties and
-> (un)plugging it generates a backtrace containing the following message
-> without the first patch in this series:
+Quoting Douglas Anderson (2020-05-28 07:48:34)
+> The write_tcs_reg_sync() may be called after timekeeping is suspended
+> so it's not OK to use ktime.  The readl_poll_timeout_atomic() macro
+> implicitly uses ktime.  This was causing a warning at suspend time.
 >=20
-> ---------------------------
-> WARNING: CPU: 0 PID: 20 at lib/kobject_uevent.c:659 add_uevent_var+0xd4/0=
-x104
-> add_uevent_var: too many keys
-> ---------------------------
+> Change to just loop 1000000 times with a delay of 1 us between loops.
+> This may give a timeout of more than 1 second but never less and is
+> safe even if timekeeping is suspended.
 >=20
-> For references this is what an SBS battery status looks like after
-> the patch series has been applied:
+> NOTE: I don't have any actual evidence that we need to loop here.
+> It's possibly that all we really need to do is just read the value
+> back to ensure that the pipes are cleaned and the looping/comparing is
+> totally not needed.  I never saw the loop being needed in my tests.
+> However, the loop shouldn't hurt.
 >=20
-> cat /sys/class/power_supply/sbs-0-000b/uevent=20
-> POWER_SUPPLY_NAME=3Dsbs-0-000b
-> POWER_SUPPLY_TYPE=3DBattery
-> POWER_SUPPLY_STATUS=3DDischarging
-> POWER_SUPPLY_CAPACITY_LEVEL=3DNormal
-> POWER_SUPPLY_HEALTH=3DGood
-> POWER_SUPPLY_PRESENT=3D1
-> POWER_SUPPLY_TECHNOLOGY=3DLi-ion
-> POWER_SUPPLY_CYCLE_COUNT=3D12
-> POWER_SUPPLY_VOLTAGE_NOW=3D11441000
-> POWER_SUPPLY_CURRENT_NOW=3D-26000
-> POWER_SUPPLY_CURRENT_AVG=3D-24000
-> POWER_SUPPLY_CAPACITY=3D76
-> POWER_SUPPLY_CAPACITY_ERROR_MARGIN=3D1
-> POWER_SUPPLY_TEMP=3D198
-> POWER_SUPPLY_TIME_TO_EMPTY_AVG=3D438600
-> POWER_SUPPLY_TIME_TO_FULL_AVG=3D3932100
-> POWER_SUPPLY_SERIAL_NUMBER=3D0000
-> POWER_SUPPLY_VOLTAGE_MIN_DESIGN=3D10800000
-> POWER_SUPPLY_VOLTAGE_MAX_DESIGN=3D10800000
-> POWER_SUPPLY_ENERGY_NOW=3D31090000
-> POWER_SUPPLY_ENERGY_FULL=3D42450000
-> POWER_SUPPLY_ENERGY_FULL_DESIGN=3D41040000
-> POWER_SUPPLY_CHARGE_NOW=3D2924000
-> POWER_SUPPLY_CHARGE_FULL=3D3898000
-> POWER_SUPPLY_CHARGE_FULL_DESIGN=3D3800000
-> POWER_SUPPLY_CONSTANT_CHARGE_CURRENT_MAX=3D3000000
-> POWER_SUPPLY_CONSTANT_CHARGE_VOLTAGE_MAX=3D12300000
-> POWER_SUPPLY_MANUFACTURE_YEAR=3D2017
-> POWER_SUPPLY_MANUFACTURE_MONTH=3D7
-> POWER_SUPPLY_MANUFACTURE_DAY=3D3
-> POWER_SUPPLY_MANUFACTURER=3DUR18650A
-> POWER_SUPPLY_MODEL_NAME=3DGEHC
->=20
-> -- Sebastian
->=20
-> Jean-Francois Dagenais (1):
->   power: supply: sbs-battery: add ability to disable charger broadcasts
->=20
-> Sebastian Reichel (18):
->   kobject: increase allowed number of uevent variables
->   power: supply: core: add capacity error margin property
->   power: supply: core: add manufacture date properties
->   power: supply: core: add POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED
->   power: supply: sbs-battery: Add TI BQ20Z65 support
->   power: supply: sbs-battery: add
->     POWER_SUPPLY_PROP_CAPACITY_ERROR_MARGIN support
->   power: supply: sbs-battery: simplify read_read_string_data
->   power: supply: sbs-battery: add PEC support
->   power: supply: sbs-battery: add POWER_SUPPLY_PROP_CURRENT_AVG support
->   power: supply: sbs-battery: Improve POWER_SUPPLY_PROP_TECHNOLOGY
->     support
->   power: supply: sbs-battery: add
->     POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT/VOLTAGE_MAX support
->   power: supply: sbs-battery: add MANUFACTURE_DATE support
->   power: supply: sbs-battery: add
->     POWER_SUPPLY_HEALTH_CALIBRATION_REQUIRED support
->   power: supply: sbs-battery: fix idle battery status
->   power: supply: sbs-battery: switch from of_property_* to
->     device_property_*
->   power: supply: sbs-battery: switch to i2c's probe_new
->   power: supply: sbs-battery: constify power-supply property array
->   dt-bindings: power: sbs-battery: Convert to yaml
->=20
->  Documentation/ABI/testing/sysfs-class-power   |  45 ++-
->  .../power/supply/sbs,sbs-battery.yaml         |  83 +++++
->  .../bindings/power/supply/sbs_sbs-battery.txt |  27 --
->  drivers/power/supply/power_supply_sysfs.c     |   5 +
->  drivers/power/supply/sbs-battery.c            | 348 +++++++++++++-----
->  include/linux/kobject.h                       |   2 +-
->  include/linux/power_supply.h                  |   5 +
->  7 files changed, 404 insertions(+), 111 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/sbs,sb=
-s-battery.yaml
->  delete mode 100644 Documentation/devicetree/bindings/power/supply/sbs_sb=
-s-battery.txt
->=20
-> --=20
-> 2.26.2
->=20
+> Fixes: 91160150aba0 ("soc: qcom: rpmh-rsc: Timeout after 1 second in writ=
+e_tcs_reg_sync()")
+> Reported-by: Maulik Shah <mkshah@codeaurora.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
---kq3ssriyb4k4re57
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7QPq0ACgkQ2O7X88g7
-+pqduw//X98/LG8aTNRLOt8MjdJhqNI1GdcnfavsVOnT5Tec9ZPRqxaqpvdOkmHD
-R2lQ0FUaiTJTRp7bW/PsQK9iz8nVcSp4P8WMvqeazhOzvkMFtdWinCoThlUm994w
-QblthPhHT334gBQ2kP9vqXYHM/vwsBVEydJoUJtaMb5n83cgdyp6Kb393x1IGNPG
-jCTUGT+NXYwFSkCZuSi0EAtGGD6s6nkAsgxx85Ta46en9ByOngAAqKQo0uwjYPl4
-osYWtH0aXrQ2n/uV8Rxfy4GoPu1iEZ13WaThU2pzc5iQiz2PLpOLEMgf9oRTwS7v
-Abo6SDBFvlaZQaCCWgpHEUCj4tQWckzMrXb6sp6YVMKm/5DE7hLOoNNwLvp3U/S+
-M4B7bFsAlrez6sTIOQ56ORN+gV3I649Opz4lWIvSl4diRSGz1rdCGXawKTJYb2rd
-ZHZZSi5lZUm52/mPkOEH4SgJixfD2sdW4Dksvug341NuLJ0mw49LqTm+p0eCa4Lt
-a2tp0zEgIZ2k59hHkgQA33ifVsT941YK21TLcF2LTpjuFqlfrN0Ge3nF64w99FMh
-0EjMrDUJpzGwr+/6KDoSCQAk3W+a5df7BFYzdzWp9iD+5pylpliB/WetUDCkQ3oP
-hGNPvE5hXR544iBvr+fUeDUFc/9X7zOjQXh6jTqq9qiT5JVst+Y=
-=tJEb
------END PGP SIGNATURE-----
-
---kq3ssriyb4k4re57--
+Although I don't think ktime_get() inside of readl_poll_timeout_atomic()
+is correct. The timekeeping base won't be able to update when a loop is
+spinning in an irq disabled region. We need the tick interrupt to come
+in and update the base. Spinning for a second with irqs disabled is also
+insane for realtime so there's that problem too. Maybe we should try to
+kick timekeeping forward from these loops manually. Anyway, not problems
+with this patch so not important to fix immediately.
