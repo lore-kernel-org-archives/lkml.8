@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21E321532
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568022176B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667042;
-	bh=Hmnlnv9nFU6PTw7F+vd337vnvowVzLF2H7YfcS0VCgQ=;
+	s=default; t=1590667049;
+	bh=mJ93CnXc9YSI6aOXXURM2kusgG8AVDTiDJs40asWSXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uFYKV1MUy/bMPme7Rbu2SZtiugJi0/xDalgzUyk4L2UfqFubst36r7UULuMea3kN+
-	 V+hCE7F9ZigIA1M3FRs+9F+5EDpcvJKlxrbXOuAoepzbFamM52KnaRhTuu8HdGWExE
-	 w1hmCy0QGUjNT4nt2hpOgGAK0lt59xR+3ay4ujI0=
+	b=TB9hLr3nCnhG9uPcIaPdehNjNPh3VmcwLTEgGpdcBq+TJCGSDvS4alv62T4PgrDY5
+	 nUcjiAxq3VB+Ay1lHiroPgt8i/seqjfc890A+97lGjnhcnvMTw1dsZarYwBwIPyTaz
+	 H/elmba5XrpB3aRhYodgoif3EsiilGH1yVFO4j0I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388995AbgE1L5V (ORCPT
+        id S2389016AbgE1L51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:57:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49106 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388847AbgE1L4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:52 -0400
+        id S2388844AbgE1L4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42F9621475;
-        Thu, 28 May 2020 11:56:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19EAE207D3;
+        Thu, 28 May 2020 11:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667011;
-        bh=Hmnlnv9nFU6PTw7F+vd337vnvowVzLF2H7YfcS0VCgQ=;
+        s=default; t=1590667010;
+        bh=mJ93CnXc9YSI6aOXXURM2kusgG8AVDTiDJs40asWSXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JUgQ7iI7GoKpF5bBCKcCIjr/Fss6QcITFr4xY0gTlCvgTKkB2RJ15NNQVpJcGzgYw
-         1raLlbsKb4S5vWdeClCxd3ElKGZ4iWBgZ6zpWgdWhr0tegBvFTUn0sUilhLA9T2TCu
-         yqB1bEwLelFa7Bu+n81+TTHCaPVkrCyrtGJUNYZ0=
+        b=rLO+AGUk5CbQRxpLv4uy/vEiv+OifPojL5eOHd6cxR0uWnd+jwY2zxuT3Zqu7DZjp
+         DAqIjGoFphjq8C7OoDVp+C0HUxAU2TZF2h+mzt2w1wtteVM1FDlapRBZMqzTRm71kf
+         uoCMtKlJFHAoDK7BnpJvpMDOO7Uk6dHUQWcBXVS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 45/47] net: ethernet: ti: cpsw: fix ASSERT_RTNL() warning during suspend
-Date:   Thu, 28 May 2020 07:55:58 -0400
-Message-Id: <20200528115600.1405808-45-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 44/47] net: Fix return value about devm_platform_ioremap_resource()
+Date:   Thu, 28 May 2020 07:55:57 -0400
+Message-Id: <20200528115600.1405808-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -59,49 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 4c64b83d03f4aafcdf710caad994cbc855802e74 ]
+[ Upstream commit ef24d6c3d6965158dfe23ae961d87e9a343e18a2 ]
 
-vlan_for_each() are required to be called with rtnl_lock taken, otherwise
-ASSERT_RTNL() warning will be triggered - which happens now during System
-resume from suspend:
-  cpsw_suspend()
-  |- cpsw_ndo_stop()
-    |- __hw_addr_ref_unsync_dev()
-      |- cpsw_purge_all_mc()
-         |- vlan_for_each()
-            |- ASSERT_RTNL();
+When call function devm_platform_ioremap_resource(), we should use IS_ERR()
+to check the return value and return PTR_ERR() if failed.
 
-Hence, fix it by surrounding cpsw_ndo_stop() by rtnl_lock/unlock() calls.
-
-Fixes: 15180eca569b ("net: ethernet: ti: cpsw: fix vlan mcast")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ti/cpsw.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/can/ifi_canfd/ifi_canfd.c     | 5 ++++-
+ drivers/net/can/sun4i_can.c               | 2 +-
+ drivers/net/dsa/b53/b53_srab.c            | 2 +-
+ drivers/net/ethernet/marvell/pxa168_eth.c | 2 +-
+ 4 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 6ae4a72e6f43..5577ff0b7663 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1752,11 +1752,15 @@ static int cpsw_suspend(struct device *dev)
- 	struct cpsw_common *cpsw = dev_get_drvdata(dev);
- 	int i;
+diff --git a/drivers/net/can/ifi_canfd/ifi_canfd.c b/drivers/net/can/ifi_canfd/ifi_canfd.c
+index 04d59bede5ea..74503cacf594 100644
+--- a/drivers/net/can/ifi_canfd/ifi_canfd.c
++++ b/drivers/net/can/ifi_canfd/ifi_canfd.c
+@@ -947,8 +947,11 @@ static int ifi_canfd_plat_probe(struct platform_device *pdev)
+ 	u32 id, rev;
  
-+	rtnl_lock();
+ 	addr = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(addr))
++		return PTR_ERR(addr);
 +
- 	for (i = 0; i < cpsw->data.slaves; i++)
- 		if (cpsw->slaves[i].ndev)
- 			if (netif_running(cpsw->slaves[i].ndev))
- 				cpsw_ndo_stop(cpsw->slaves[i].ndev);
+ 	irq = platform_get_irq(pdev, 0);
+-	if (IS_ERR(addr) || irq < 0)
++	if (irq < 0)
+ 		return -EINVAL;
  
-+	rtnl_unlock();
-+
- 	/* Select sleep pin state */
- 	pinctrl_pm_select_sleep_state(dev);
+ 	id = readl(addr + IFI_CANFD_IP_ID);
+diff --git a/drivers/net/can/sun4i_can.c b/drivers/net/can/sun4i_can.c
+index e3ba8ab0cbf4..e2c6cf4b2228 100644
+--- a/drivers/net/can/sun4i_can.c
++++ b/drivers/net/can/sun4i_can.c
+@@ -792,7 +792,7 @@ static int sun4ican_probe(struct platform_device *pdev)
+ 
+ 	addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(addr)) {
+-		err = -EBUSY;
++		err = PTR_ERR(addr);
+ 		goto exit;
+ 	}
+ 
+diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
+index 0a1be5259be0..38cd8285ac67 100644
+--- a/drivers/net/dsa/b53/b53_srab.c
++++ b/drivers/net/dsa/b53/b53_srab.c
+@@ -609,7 +609,7 @@ static int b53_srab_probe(struct platform_device *pdev)
+ 
+ 	priv->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->regs))
+-		return -ENOMEM;
++		return PTR_ERR(priv->regs);
+ 
+ 	dev = b53_switch_alloc(&pdev->dev, &b53_srab_ops, priv);
+ 	if (!dev)
+diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
+index 7a0d785b826c..17243bb5ba91 100644
+--- a/drivers/net/ethernet/marvell/pxa168_eth.c
++++ b/drivers/net/ethernet/marvell/pxa168_eth.c
+@@ -1418,7 +1418,7 @@ static int pxa168_eth_probe(struct platform_device *pdev)
+ 
+ 	pep->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pep->base)) {
+-		err = -ENOMEM;
++		err = PTR_ERR(pep->base);
+ 		goto err_netdev;
+ 	}
  
 -- 
 2.25.1
