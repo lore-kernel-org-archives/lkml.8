@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F5FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC83C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 405FC21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA95021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667304;
-	bh=TxT4HgKP8cxjnm29rmgpIbDnAgilIC2D7Ig1uEnXgPA=;
+	s=default; t=1590667308;
+	bh=XGQY4lkxh1sVy4fv5Bb37M5kyF4uv2WZElrUH33Elkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i7p3EyT+WMyEFBBJg9HRXVKU3IEBrDSKOpAU1h8JC4s4o04DRM5lCFumHtLP1Hw0e
-	 ah2IzuVZ2xAkt9zLREaoOEutp/38cIG4EVlevXV8uh9/TJXG4FLVNa1JMqXEI/hieq
-	 N0nI69G/F4qgRNp6z4IBFCv3YjqzSx90+Fc9eEuY=
+	b=Te/EAERb2KhYMN/mf+/fA59quWzXqDYmQZpt5gKUrKGmvgr4xF4CphmuvyDO5qC6E
+	 rgnEynCX32gDK5YOUpRdpbKvTEznuBajVSn0eCnH+NY1+214ftXaAhlIUYQQGoZWm7
+	 Fr62wNJr2RStg46t08FvbIGn0bzBVEenwAa2cKh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389237AbgE1MBm (ORCPT
+        id S2389108AbgE1L5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50540 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389115AbgE1L5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:52 -0400
+        id S2388916AbgE1L5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49AFE21582;
-        Thu, 28 May 2020 11:57:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31F13215A4;
+        Thu, 28 May 2020 11:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667072;
-        bh=TxT4HgKP8cxjnm29rmgpIbDnAgilIC2D7Ig1uEnXgPA=;
+        s=default; t=1590667022;
+        bh=XGQY4lkxh1sVy4fv5Bb37M5kyF4uv2WZElrUH33Elkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjT0FRpvWInZFFfU6nEWxBjwqkNnBzLS4iUAe9Tu+zFDB6PsNOW0Dw0ngdV6PYVWz
-         16KsNbfizsqV/HaDwKCILkAgSjZcImrG6Gb7Cmqx+CF6dM7G0ruCUNtWaNEQWgqQ9Z
-         AUD0DFbG7r0uePXZOgp1ze/lMLT2xCwX+9rfuPjM=
+        b=avLHH3Ufe47ouF3ge1A3jRv0bnRILfU9LZ3G6+jMR83AlE57I9ZGRW3+9kJLnhonv
+         +6t8Z74qDUXv/EI2b572oeBVWvy/kU90ZvngyVjYzpzJHEcjXiWv9jBHIpu0ld4YmY
+         tWKqusYfbMfR47ggZbWR/mGQES1/zrDd3wSFT3lg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
+Cc:     Roman Mashak <mrv@mojatatu.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/13] net: bmac: Fix read of MAC address from ROM
-Date:   Thu, 28 May 2020 07:57:37 -0400
-Message-Id: <20200528115744.1406533-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 07/26] net sched: fix reporting the first-time use timestamp
+Date:   Thu, 28 May 2020 07:56:35 -0400
+Message-Id: <20200528115654.1406165-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115744.1406533-1-sashal@kernel.org>
-References: <20200528115744.1406533-1-sashal@kernel.org>
+In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
+References: <20200528115654.1406165-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Roman Mashak <mrv@mojatatu.com>
 
-[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
+[ Upstream commit b15e62631c5f19fea9895f7632dae9c1b27fe0cd ]
 
-In bmac_get_station_address, We're reading two bytes at a time from ROM,
-but we do that six times, resulting in 12 bytes of read & writes. This
-means we will write off the end of the six-byte destination buffer.
+When a new action is installed, firstuse field of 'tcf_t' is explicitly set
+to 0. Value of zero means "new action, not yet used"; as a packet hits the
+action, 'firstuse' is stamped with the current jiffies value.
 
-This change fixes the for-loop to only read/write six bytes.
+tcf_tm_dump() should return 0 for firstuse if action has not yet been hit.
 
-Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Reported-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Reported-by: Finn Thain <fthain@telegraphics.com.au>
+Fixes: 48d8ee1694dd ("net sched actions: aggregate dumping of actions timeinfo")
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/apple/bmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/act_api.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
-index eac740c476ce..a8b462e1beba 100644
---- a/drivers/net/ethernet/apple/bmac.c
-+++ b/drivers/net/ethernet/apple/bmac.c
-@@ -1187,7 +1187,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
- 	int i;
- 	unsigned short data;
+diff --git a/include/net/act_api.h b/include/net/act_api.h
+index b18c699681ca..59d05feecfb8 100644
+--- a/include/net/act_api.h
++++ b/include/net/act_api.h
+@@ -69,7 +69,8 @@ static inline void tcf_tm_dump(struct tcf_t *dtm, const struct tcf_t *stm)
+ {
+ 	dtm->install = jiffies_to_clock_t(jiffies - stm->install);
+ 	dtm->lastuse = jiffies_to_clock_t(jiffies - stm->lastuse);
+-	dtm->firstuse = jiffies_to_clock_t(jiffies - stm->firstuse);
++	dtm->firstuse = stm->firstuse ?
++		jiffies_to_clock_t(jiffies - stm->firstuse) : 0;
+ 	dtm->expires = jiffies_to_clock_t(stm->expires);
+ }
  
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < 3; i++)
- 		{
- 			reset_and_select_srom(dev);
- 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
 -- 
 2.25.1
 
