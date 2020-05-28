@@ -2,165 +2,114 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6122AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCD2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD802145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAEC320B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="Jjh7JSIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726408AbgE1G5r convert rfc822-to-8bit (ORCPT
+        id S1725928AbgE1G7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:57:47 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:44941 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgE1G5r (ORCPT
+        Thu, 28 May 2020 02:59:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgE1G7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:57:47 -0400
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id E914E40013;
-        Thu, 28 May 2020 06:57:43 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 28 May 2020 02:59:52 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788FDC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:59:52 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id d7so1610157ote.6
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z0n00Sh0q9ugLL0M7jdyJtvzSqJImGm0OrDZwPdP+eM=;
+        b=Jjh7JSIn8/6N2Nkqi4tTtwzcgNFvf+6LPbujb4vVE8Bd7B2FMJDDYNZtaJ8wSz1zCg
+         jw2p+AKn+4Y8qErOKh+90t1VkJ3tMCkrZ01T0HMpOzSc8UnmMeiJnAZE+FbNYG7VYA+f
+         plpV9cAyYl6K1g6OKzgJpCrk4eYDwVWJ7IkJpyv0r0JJzMk/4E0dDinb9429J4hG1JXW
+         l2MfxEZ1LgjODAlygmnta442uyM/sOXN/jNfS96XuvENQl+3GKOrDAfv46Uh93pBk30M
+         wL/ThADrLKn52kAjjAopWxaCftMWuhzJtbbVTPC/zWjNHRV5k4aELUdTFpAzhHSrQKCC
+         fx0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z0n00Sh0q9ugLL0M7jdyJtvzSqJImGm0OrDZwPdP+eM=;
+        b=WXXF/FWa7T0gIZ4Hj8AGP8tLXdjBAKnT1Y6smFm71U+dc9SLmgT+kPBaHh6Xi72Pt/
+         Y3HHWLkbg6MNuDVdZrPiRnQXyEltp8Bi6P8xiN3qDw+igZk6gbBu2qLUOiRPQCjkZJcD
+         Oajj9r/XUQqsCnQcaDBe/vr7JIsZ7q/Rg79ylF+Pz+d85KV9v7SWkYPfEuof3PTSajVD
+         1EFi+Dgm4QFTD19JAGaVAq+kECxcRhs7HuWTYZ54T97yTIJdEgW+v3ewAiuAqEEzCUTs
+         b8hyBUQgn/YD9g/2jYbt47tNlm4sfORN3lF3sdlyomEYsvIxMVt02Ux7Xh34vDAElTgm
+         ekrw==
+X-Gm-Message-State: AOAM530hTShb+hpgppj7g/KCJOzdCJKkPT9nlqXwEaQ4vkmB5PG7jI2B
+        O7KVVcJ84YIXDCAx6rFosv/m1g==
+X-Google-Smtp-Source: ABdhPJybnG9kn7Fe9crlVczZYlhpR65Y825LDiyVC4sKtFMjvOcjAgUah0EBsUWFk+Pirh8OrpEMqA==
+X-Received: by 2002:a9d:124:: with SMTP id 33mr1206249otu.31.1590649191734;
+        Wed, 27 May 2020 23:59:51 -0700 (PDT)
+Received: from localhost ([51.19.80.112])
+        by smtp.gmail.com with ESMTPSA id p5sm191090oof.7.2020.05.27.23.59.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 27 May 2020 23:59:51 -0700 (PDT)
+Date:   Thu, 28 May 2020 07:59:49 +0100
+From:   Matt Fleming <matt@codeblueprint.co.uk>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf ordered_events: Optimise event object reuse
+Message-ID: <20200528065949.GF19431@codeblueprint.co.uk>
+References: <20200526135928.946-1-matt@codeblueprint.co.uk>
+ <20200527102533.GG350217@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200527103513.05ee36e9@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-References: <20200527164158.313025-1-antoine.tenart@bootlin.com> <20200527164158.313025-6-antoine.tenart@bootlin.com> <20200527103513.05ee36e9@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, richardcochran@gmail.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, allan.nielsen@microchip.com,
-        foss@0leil.net
-To:     Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH net-next 5/8] net: phy: mscc: 1588 block initialization
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-Message-ID: <159064906267.314251.13734785844479438819@kwain>
-Date:   Thu, 28 May 2020 08:57:42 +0200
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527102533.GG350217@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Jakub,
-
-Quoting Jakub Kicinski (2020-05-27 19:35:13)
+On Wed, 27 May, at 12:25:33PM, Jiri Olsa wrote:
+> On Tue, May 26, 2020 at 02:59:28PM +0100, Matt Fleming wrote:
+> > +/*
+> > + * Allocate a new event object from the free event cache.
+> > + *
+> > + * Find the first address range in the cache and carve out enough bytes
+> > + * for an ordered_event objects. The object with the lowest address is
+> > + * always returned so that subsequent allocations benefit from
+> > + * contiguous memory accesses (spatial locality).
+> > + */
+> > +static struct ordered_event *free_event_get_tree(struct ordered_events *oe)
+> > +{
+> > +	struct interval_tree_node *it;
+> > +	struct ordered_event *new;
+> > +	size_t bytes = sizeof(*new);
+> > +
+> > +	it = interval_tree_iter_first(&oe->cache.rb, 0, ULONG_MAX);
+> > +	if (!it)
+> > +		return NULL;
+> > +
+> > +	/* Has the cache memory been exhausted? */
+> > +	assert(cache_region_size(it) >= bytes);
+> > +
+> > +	new = (void *)it->start;
+> > +
+> > +	if (cache_region_size(it) == bytes) {
+> > +		interval_tree_remove(it, &oe->cache.rb);
+> > +		free(it);
+> > +	}
+> > +
+> > +	it->start += bytes;
 > 
-> This doesn't build on my system :S
+> this does not look right.. should this go to else path in above condition?
 
-I'll have a look at this and fix it for v2.
-
-Thanks for reporting it!
-Antoine
-
-> 
-> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
-> ../include/linux/unaligned/be_byteshift.h:41:19: error: redefinition of â€˜get_unaligned_be16â€™
->    41 | static inline u16 get_unaligned_be16(const void *p)
->       |                   ^~~~~~~~~~~~~~~~~~
-> In file included from ../arch/x86/include/asm/unaligned.h:9,
->                  from ../include/linux/etherdevice.h:24,
->                  from ../include/linux/if_vlan.h:11,
->                  from ../include/linux/filter.h:22,
->                  from ../include/net/sock.h:59,
->                  from ../include/net/inet_sock.h:22,
->                  from ../include/linux/udp.h:16,
->                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
-> ../include/linux/unaligned/access_ok.h:23:28: note: previous definition of â€˜get_unaligned_be16â€™ was here
->    23 | static __always_inline u16 get_unaligned_be16(const void *p)
->       |                            ^~~~~~~~~~~~~~~~~~
-> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
-> ../include/linux/unaligned/be_byteshift.h:46:19: error: redefinition of â€˜get_unaligned_be32â€™
->    46 | static inline u32 get_unaligned_be32(const void *p)
->       |                   ^~~~~~~~~~~~~~~~~~
-> In file included from ../arch/x86/include/asm/unaligned.h:9,
->                  from ../include/linux/etherdevice.h:24,
->                  from ../include/linux/if_vlan.h:11,
->                  from ../include/linux/filter.h:22,
->                  from ../include/net/sock.h:59,
->                  from ../include/net/inet_sock.h:22,
->                  from ../include/linux/udp.h:16,
->                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
-> ../include/linux/unaligned/access_ok.h:28:28: note: previous definition of â€˜get_unaligned_be32â€™ was here
->    28 | static __always_inline u32 get_unaligned_be32(const void *p)
->       |                            ^~~~~~~~~~~~~~~~~~
-> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
-> ../include/linux/unaligned/be_byteshift.h:51:19: error: redefinition of â€˜get_unaligned_be64â€™
->    51 | static inline u64 get_unaligned_be64(const void *p)
->       |                   ^~~~~~~~~~~~~~~~~~
-> In file included from ../arch/x86/include/asm/unaligned.h:9,
->                  from ../include/linux/etherdevice.h:24,
->                  from ../include/linux/if_vlan.h:11,
->                  from ../include/linux/filter.h:22,
->                  from ../include/net/sock.h:59,
->                  from ../include/net/inet_sock.h:22,
->                  from ../include/linux/udp.h:16,
->                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
-> ../include/linux/unaligned/access_ok.h:33:28: note: previous definition of â€˜get_unaligned_be64â€™ was here
->    33 | static __always_inline u64 get_unaligned_be64(const void *p)
->       |                            ^~~~~~~~~~~~~~~~~~
-> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
-> ../include/linux/unaligned/be_byteshift.h:56:20: error: redefinition of â€˜put_unaligned_be16â€™
->    56 | static inline void put_unaligned_be16(u16 val, void *p)
->       |                    ^~~~~~~~~~~~~~~~~~
-> In file included from ../arch/x86/include/asm/unaligned.h:9,
->                  from ../include/linux/etherdevice.h:24,
->                  from ../include/linux/if_vlan.h:11,
->                  from ../include/linux/filter.h:22,
->                  from ../include/net/sock.h:59,
->                  from ../include/net/inet_sock.h:22,
->                  from ../include/linux/udp.h:16,
->                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
-> ../include/linux/unaligned/access_ok.h:53:29: note: previous definition of â€˜put_unaligned_be16â€™ was here
->    53 | static __always_inline void put_unaligned_be16(u16 val, void *p)
->       |                             ^~~~~~~~~~~~~~~~~~
-> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
-> ../include/linux/unaligned/be_byteshift.h:61:20: error: redefinition of â€˜put_unaligned_be32â€™
->    61 | static inline void put_unaligned_be32(u32 val, void *p)
->       |                    ^~~~~~~~~~~~~~~~~~
-> In file included from ../arch/x86/include/asm/unaligned.h:9,
->                  from ../include/linux/etherdevice.h:24,
->                  from ../include/linux/if_vlan.h:11,
->                  from ../include/linux/filter.h:22,
->                  from ../include/net/sock.h:59,
->                  from ../include/net/inet_sock.h:22,
->                  from ../include/linux/udp.h:16,
->                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
-> ../include/linux/unaligned/access_ok.h:58:29: note: previous definition of â€˜put_unaligned_be32â€™ was here
->    58 | static __always_inline void put_unaligned_be32(u32 val, void *p)
->       |                             ^~~~~~~~~~~~~~~~~~
-> In file included from ../drivers/net/phy/mscc/mscc_ptp.c:18:
-> ../include/linux/unaligned/be_byteshift.h:66:20: error: redefinition of â€˜put_unaligned_be64â€™
->    66 | static inline void put_unaligned_be64(u64 val, void *p)
->       |                    ^~~~~~~~~~~~~~~~~~
-> In file included from ../arch/x86/include/asm/unaligned.h:9,
->                  from ../include/linux/etherdevice.h:24,
->                  from ../include/linux/if_vlan.h:11,
->                  from ../include/linux/filter.h:22,
->                  from ../include/net/sock.h:59,
->                  from ../include/net/inet_sock.h:22,
->                  from ../include/linux/udp.h:16,
->                  from ../drivers/net/phy/mscc/mscc_ptp.c:17:
-> ../include/linux/unaligned/access_ok.h:63:29: note: previous definition of â€˜put_unaligned_be64â€™ was here
->    63 | static __always_inline void put_unaligned_be64(u64 val, void *p)
->       |                             ^~~~~~~~~~~~~~~~~~
-> ../drivers/net/phy/mscc/mscc_ptp.c:658:12: warning: â€˜vsc85xx_ts_engine_initâ€™ defined but not used [-Wunused-function]
->   658 | static int vsc85xx_ts_engine_init(struct phy_device *phydev, bool one_step)
->       |            ^~~~~~~~~~~~~~~~~~~~~~
-> make[5]: *** [drivers/net/phy/mscc/mscc_ptp.o] Error 1
-> make[4]: *** [drivers/net/phy/mscc] Error 2
-> make[3]: *** [drivers/net/phy] Error 2
-> make[3]: *** Waiting for unfinished jobs....
-> make[2]: *** [drivers/net] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [drivers] Error 2
-> make: *** [sub-make] Error 2
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Urgh, yes. You're right -- this should be in the else path.
