@@ -2,87 +2,120 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11857C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF15CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9FB206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:03:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590703417;
-	bh=YVK8Lpb2pcQzYPa+g9E7u52SbRROFJJiP5k3r+Piq9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AlHk8NgxemSkx+90DdWxqxXl20DEJL5N5ChEFGO3ZWoZ9yVI91vC12pxSxfYz0kSi
-	 1GQzERyrotasoMbaddq/PfwFfdcB8cInQGwUPB7k9P8cp7zRVMMjigVTvGecuHP5yK
-	 g2ZfuCncdQ/F/IT9SNXmRzYp1xCT4cTklLC7mQ1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 838EA206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:04:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="j1r/mV0g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436862AbgE1WDg (ORCPT
+        id S2436873AbgE1WEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:03:36 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44872 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436845AbgE1WDE (ORCPT
+        Thu, 28 May 2020 18:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436730AbgE1WEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:03:04 -0400
-Received: by mail-io1-f65.google.com with SMTP id p20so142738iop.11;
-        Thu, 28 May 2020 15:03:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BVo7bwcyHNQhbNQlvK9k2FqD/huUhkXJ3cTPpto8QjM=;
-        b=Xha2xGn9u+dU0dRqRg1JI4LTW2jA2Hs4bgFLLsEPTdstdLk3+wXs8DXGk1i0hrX1UF
-         8Ety1poX1I17LNYAoKDz6/xcIxaiIiFNSwdkmQZzXg03L26N2IPbvzRiuoDTTRfmGwpW
-         6cpeN5ocIng4Oy1mWV92Zz9kkpNiiJWHSH0OXo9umsH3MICyMxUumWrWKJlbQxr1XhUq
-         KD336NL9s8BHwxlzMWTCWc9C0zzSEL4J0V9F1VaGcoadHsBZGhSWLrS1sGMdBq67JFOZ
-         2IrCfDtmxcOPap7a7U28d4deLylSsWrcarBFpIthl310bd1PYkQhquDi7VTNQqYHpOAS
-         zduA==
-X-Gm-Message-State: AOAM533AbMb2hR3P7jlI2NHWEGRFAOnxSWkTUVTkgWeZeenJVLnkcKxw
-        u6MB0gW8LfzdrH9C3Qy3xg==
-X-Google-Smtp-Source: ABdhPJzNW5gQ4aaMX82/bIdYGNG7tdR9dwc4EDAGFh0RCIznKrCd+mSB4tA6dHiC/erY5Uap94ohQw==
-X-Received: by 2002:a5e:a705:: with SMTP id b5mr4126254iod.12.1590703383914;
-        Thu, 28 May 2020 15:03:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v15sm3962090ila.57.2020.05.28.15.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 15:03:03 -0700 (PDT)
-Received: (nullmailer pid 762177 invoked by uid 1000);
-        Thu, 28 May 2020 22:03:02 -0000
-Date:   Thu, 28 May 2020 16:03:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com
-Subject: Re: [PATCH v3 1/3] dt-bindings: mailbox: Add devicetree binding for
- Qcom IPCC
-Message-ID: <20200528220302.GA762089@bogus>
-References: <20200520084854.19729-1-manivannan.sadhasivam@linaro.org>
- <20200520084854.19729-2-manivannan.sadhasivam@linaro.org>
+        Thu, 28 May 2020 18:04:37 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91204C08C5C6;
+        Thu, 28 May 2020 15:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Bt2h7rfOaK/tkLrJKxNWOCgPHxrv405JYv6YKsjsrUA=; b=j1r/mV0gy3+Rsbb9SW8Nbi6r6
+        RRGZzanlnqaVZo79+jZJr7wL4NJUl4Sov4aLiCSBwynnChBEIVOZOHve7zQMKolFb/FEYNIG+k3Dx
+        FLBN5kI0JL4PXrb037vulOaJAyD6Ce28f7tGN2doUcpkTEQpbgjARB3ErnkysUav80PHr9F1YzbgZ
+        YKjJ8YR1IY5h04QbT33eXJeh+nLAtb8EEccvAa83Uao3E9J072WSXO7N9II99muKAWImY0Z91Uedl
+        J08uBtu03yhHufdWWWyX3IS5iB8HjNFSpXFNa+Dl0/E7cjCceGQmQ4nb2I3j/HBZL3r0EiDcI1aHD
+        lmYVsu6XQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:35846)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1jeQdW-0006Y0-VU; Thu, 28 May 2020 23:04:27 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1jeQdQ-0007pL-94; Thu, 28 May 2020 23:04:20 +0100
+Date:   Thu, 28 May 2020 23:04:20 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
+ 1000BaseX/2500BaseX ports
+Message-ID: <20200528220420.GY1551@shell.armlinux.org.uk>
+References: <20200528121121.125189-1-tbogendoerfer@suse.de>
+ <20200528130738.GT1551@shell.armlinux.org.uk>
+ <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
+ <20200528135608.GU1551@shell.armlinux.org.uk>
+ <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
+ <20200528144805.GW1551@shell.armlinux.org.uk>
+ <20200528204312.df9089425162a22e89669cf1@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200520084854.19729-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20200528204312.df9089425162a22e89669cf1@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 May 2020 14:18:52 +0530, Manivannan Sadhasivam wrote:
-> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
-> Controller (IPCC) block.
+On Thu, May 28, 2020 at 08:43:12PM +0200, Thomas Bogendoerfer wrote:
+> On Thu, 28 May 2020 15:48:05 +0100
+> Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
 > 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../bindings/mailbox/qcom-ipcc.yaml           | 80 +++++++++++++++++++
->  include/dt-bindings/mailbox/qcom-ipcc.h       | 33 ++++++++
->  2 files changed, 113 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
->  create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
+> > On Thu, May 28, 2020 at 04:33:35PM +0200, Thomas Bogendoerfer wrote:
+> > > below is the dts part for the two network interfaces. The switch to
+> > > the outside has two ports, which correlate to the two internal ports.
+> > > And the switch propagates the link state of the external ports to
+> > > the internal ports.
+> > 
+> > Okay, so this DTS hasn't been reviewed...
 > 
+> that's from our partner, I'm just using it. Stripping it down isn't
+> the point for my now.
+> 
+> > This isn't correct - you are requesting that in-band status is used
+> > (i.o.w. the in-band control word, see commit 4cba5c210365), but your
+> > bug report wants to enable AN bypass because there is no in-band
+> > control word.  This seems to be rather contradictory.
+> > 
+> > May I suggest you use a fixed-link here, which will not have any
+> 
+> afaik fixed-link will always be up, and we want to have the link state
+> from the switch external ports.
+> 
+> > inband status, as there is no in-band control word being sent by
+> > the switch?  That is also the conventional way of handling switch
+> > links.
+> 
+> again, we want to propagte the external link state inside to all
+> the internal nodes. So this will not work anymore with fixed-link.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Can you explain this please?  Just as we think we understand what's
+going on here, you throw in a new comment that makes us confused.
+
+You said previously that the mvpp2 was connected to a switch, which
+makes us think that you've got some DSA-like setup going on here.
+Does your switch drop its serdes link when all the external links
+(presumably the 10G SFP+ cages) fail?
+
+Both Andrew and myself wish to have a complete picture before we
+move forward with this.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
