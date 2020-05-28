@@ -6,70 +6,58 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 770A8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2B6215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478E6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:46:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbgE1HqR (ORCPT
+        id S1726518AbgE1HqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:46:17 -0400
-Received: from elvis.franken.de ([193.175.24.41]:42141 "EHLO elvis.franken.de"
+        Thu, 28 May 2020 03:46:22 -0400
+Received: from elvis.franken.de ([193.175.24.41]:42145 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbgE1HqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:46:17 -0400
+        id S1725747AbgE1HqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 03:46:22 -0400
 Received: from uucp (helo=alpha)
         by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jeDF0-0000aG-00; Thu, 28 May 2020 09:46:14 +0200
+        id 1jeDF0-0000aG-02; Thu, 28 May 2020 09:46:14 +0200
 Received: by alpha.franken.de (Postfix, from userid 1000)
-        id CE484C059F; Thu, 28 May 2020 09:44:31 +0200 (CEST)
-Date:   Thu, 28 May 2020 09:44:31 +0200
+        id 173BFC05A4; Thu, 28 May 2020 09:45:39 +0200 (CEST)
+Date:   Thu, 28 May 2020 09:45:39 +0200
 From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        kbuild test robot <lkp@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] MIPS: DTS: Fix build errors used with various configs
-Message-ID: <20200528074431.GA10708@alpha.franken.de>
-References: <1590631141-23904-1-git-send-email-yangtiezhu@loongson.cn>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Loongson64: Define PCI_IOBASE
+Message-ID: <20200528074539.GC10708@alpha.franken.de>
+References: <20200527131721.646926-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1590631141-23904-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <20200527131721.646926-1-jiaxun.yang@flygoat.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:59:01AM +0800, Tiezhu Yang wrote:
-> If CONFIG_MIPS_MALTA is not set but CONFIG_LEGACY_BOARD_SEAD3 is set,
-> the subdir arch/mips/boot/dts/mti will not be built, so the sead3.dts
-> which depends on CONFIG_LEGACY_BOARD_SEAD3 in this subdir is also not
-> built, and then there exists the following build error, fix it.
+On Wed, May 27, 2020 at 09:17:21PM +0800, Jiaxun Yang wrote:
+> PCI_IOBASE is used to create VM maps for PCI I/O ports, it is
+> required by generic PCI drivers to make memory mapped I/O range
+> work.
 > 
->   LD      .tmp_vmlinux.kallsyms1
-> arch/mips/generic/board-sead3.o:(.mips.machines.init+0x4): undefined reference to `__dtb_sead3_begin'
-> Makefile:1106: recipe for target 'vmlinux' failed
-> make: *** [vmlinux] Error 1
+> To deal with legacy drivers that have fixed I/O ports range we
+> reserved 0x10000 in PCI_IOBASE, should be enough for i8259 i8042
+> stuff.
 > 
-> Additionally, add CONFIG_FIT_IMAGE_FDT_BOSTON check for subdir img to
-> fix the following build error when CONFIG_MACH_PISTACHIO is not set but
-> CONFIG_FIT_IMAGE_FDT_BOSTON is set.
-> 
-> FATAL ERROR: Couldn't open "boot/dts/img/boston.dtb": No such file or directory
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: 41528ba6afe6 ("MIPS: DTS: Only build subdir of current platform")
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  arch/mips/boot/dts/Makefile | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../mips/include/asm/mach-loongson64/spaces.h |  8 ++++
+>  arch/mips/loongson64/init.c                   | 42 ++++++++++++++++++-
+>  2 files changed, 48 insertions(+), 2 deletions(-)
 
-applied to mips-next.
+that looks so much nicer, thank you for doing this. Applied to mips-next.
 
 Thomas.
 
