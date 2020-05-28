@@ -2,125 +2,198 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE447C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F06C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FF4207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0D8207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590676525;
-	bh=RTmn9I/P/h/b2BAlvnmL5VL241LIu4BNAQWUSjN0NX0=;
+	s=default; t=1590676646;
+	bh=9zKbvCTU1zpIf1hXyspIWo1sTvWjTI9Sv5au6DTe2/A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QAnDpLXoTSrZetYUspL8+zB2oNZiBPXXcZs5+WgLuUR5c1DIoD/TNmK9PwZ7eF/J8
-	 D2EzxP0rG68xxQkJfHS0qvIdJ0+pf3AIxUS9NjX+KM0wcwwCelqMKsVUC6+oXSD4gq
-	 qVYCvm3YiGSaySwmOqQWf6EnrN6ndkDoMtEjvd5o=
+	b=TmErO0ThR9QnMYe4yvDqGMgkZMSjg+wEU3KxkUjUKf6lPSaahfjGxqDxXTIe1jCk0
+	 RQcdPniUukXcuEzCzAufA8uCx5SecTJcVO4ek5UGeExbblT5IA6+cSODzYMM8sUKYY
+	 6MkyEERmMF3VvfAGJP6gP5f8S6aU5OinCF+YTb64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgE1OfY (ORCPT
+        id S1726865AbgE1OhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:35:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbgE1OfX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:35:23 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5E0C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:35:23 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id g18so154567qtu.13
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xcAb2KpcuRPfgfB5jORmrIWIuJewUz8Wtbi29XX230A=;
-        b=jtN+TaOEPI9GArXzBTG/FsSfByBqNnwA9+Pzz4nDsmi94Ju3aJfChT/Rd72wQMjn7r
-         vvwDR8daI7Bock14JBETyWZWnrOHAx1mf+cYXazPuijo2ReKCQ3vAeAMA8Co0YdZmre9
-         aieQGdaZkvlA1nZxMfAjjw79cmZ2FdwZFkTQzf6XsIeSFufCa8HHXFQkhWVhNNyChn4x
-         wN+zArWYK702o1TmzQcEMBgoLYVUsxCO5d3+19QqIiJleWwmAm2cVV9p8H5EMkvnVXDr
-         +UO4vDIZHI9P843hYxfLqIFQGetwhNdjuGVDx8HGl52Yg4pXG8X/NI5cmlwuGL9b/gwA
-         5WIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=xcAb2KpcuRPfgfB5jORmrIWIuJewUz8Wtbi29XX230A=;
-        b=rpih9VZsUQ6LdNT3FckCRJszAx7nJDA2EWLP0HRiDg3VDkw5APehnWu3jIEAt3Qy5L
-         jtEqdefDUnP3krIiL97zY7qBdWvNqoSj68ZS+olqaWH7uwdKXICjOAAzkC9VAe+c4c+n
-         MYa/Ngg1JXMn0fUKWCVT+jnLqPWewuUqxNz/6kx9veovKMxAOqCbdHCQUBxX+6zOHA1d
-         qxWE5uE2q9opvpSYakpezkMgZ8cUCl4JB2pOjXJGN7+K4SWzcZEjMuSuh16jprDSho5m
-         eK0f4NYDpf6LI/HRVu8MT/0scMljjwGYaxh02itgRfTi5fkzPu6lFsm5pNNLhE8GsUj0
-         yV0Q==
-X-Gm-Message-State: AOAM532IUJ0058SM7NiRvUMAXu7g1j/L2BW2+JlxvJ5eI5s0QnjxztjR
-        qLnw+5JfDHvObethQYMD9L4=
-X-Google-Smtp-Source: ABdhPJz1vfe5Sk2jtVPNDYukh8JAkxVWKOD9EHEyXlc18+76FG8E0pjwWLpfB8ULY+xMkGx4sqtpxQ==
-X-Received: by 2002:ac8:7b4c:: with SMTP id m12mr3165443qtu.97.1590676522504;
-        Thu, 28 May 2020 07:35:22 -0700 (PDT)
-Received: from localhost ([199.96.181.106])
-        by smtp.gmail.com with ESMTPSA id a62sm4967178qkg.71.2020.05.28.07.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:35:21 -0700 (PDT)
-Date:   Thu, 28 May 2020 10:35:19 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [PATCH 1/2] workqueue: pin the pool while it is managing
-Message-ID: <20200528143519.GN83516@mtj.thefacebook.com>
-References: <20200527194633.1660952-2-bigeasy@linutronix.de>
- <20200528030657.1690-1-laijs@linux.alibaba.com>
+        Thu, 28 May 2020 10:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725768AbgE1OhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:37:22 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6FBD207D3;
+        Thu, 28 May 2020 14:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590676642;
+        bh=9zKbvCTU1zpIf1hXyspIWo1sTvWjTI9Sv5au6DTe2/A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=youo3qj1doLzHlyZ9m5p+QpHesq0JDPsPSQZQ8h/YLw2cpJyFREkbwVnXqSkTjn70
+         vCqwYoD+/O6LUwHcUCuF8TzXGf3118s6oKYxChb5zhVJUGXJfLF1NqlIld+SZQwq5v
+         dBdP3OQAlRXGaR9S1eanipSg9knRNrmppoIzCxIE=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 91AB440AFD; Thu, 28 May 2020 11:37:19 -0300 (-03)
+Date:   Thu, 28 May 2020 11:37:19 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH 1/2] perf record: Respect --no-switch-events
+Message-ID: <20200528143719.GG16490@kernel.org>
+References: <20200528120859.21604-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528030657.1690-1-laijs@linux.alibaba.com>
+In-Reply-To: <20200528120859.21604-1-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Em Thu, May 28, 2020 at 03:08:58PM +0300, Adrian Hunter escreveu:
+> Context switch events are added automatically by Intel PT and Coresight.
+> Make it possible to suppress them. That is useful for tracing the
+> scheduler without the disturbance that the switch event processing
+> creates.
+> 
+> Example:
+> 
+>   Prerequisites:
+> 
+>     $ which perf
+>     ~/bin/perf
+>     $ sudo setcap "cap_sys_rawio,cap_sys_admin,cap_sys_ptrace,cap_syslog,cap_ipc_lock=ep" ~/bin/perf
+>     $ sudo chmod +r /proc/kcore
+> 
+>   Before:
+> 
+>     $ perf record --no-switch-events --kcore -a -e intel_pt//k -- sleep 0.001
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.938 MB perf.data ]
+>     $ perf script -D | grep PERF_RECORD_SWITCH | wc -l
+>     572
+> 
+>   After:
+> 
+>     $ perf record --no-switch-events --kcore -a -e intel_pt//k -- sleep 0.001
+>     Warning:
+>     Intel Processor Trace decoding will not be possible except for kernel tracing!
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.838 MB perf.data ]
+>     $ perf script -D | grep PERF_RECORD_SWITCH | wc -l
+>     0
+> 
+>     $ sudo chmod go-r /proc/kcore
+>     $ sudo setcap -r ~/bin/perf
 
-On Thu, May 28, 2020 at 03:06:55AM +0000, Lai Jiangshan wrote:
-> @@ -2129,10 +2128,21 @@ __acquires(&pool->lock)
->  static bool manage_workers(struct worker *worker)
->  {
->  	struct worker_pool *pool = worker->pool;
-> +	struct work_struct *work = list_first_entry(&pool->worklist,
-> +					struct work_struct, entry);
+Thanks, tested as root and applied.
 
-I'm not sure about this. It's depending on an external condition (active
-work item) which isn't obvious and when that condition breaks the resulting
-bug will be one which is difficult to reproduce. Adding to that, pwq isn't
-even the object this code path is interested in, which is the cause of the
-previous problem too.
-
-> @@ -2140,7 +2150,7 @@ static bool manage_workers(struct worker *worker)
+- Arnaldo
+ 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt | 4 +++-
+>  tools/perf/arch/arm/util/cs-etm.c        | 3 ++-
+>  tools/perf/arch/x86/util/intel-pt.c      | 3 ++-
+>  tools/perf/builtin-record.c              | 5 +++--
+>  tools/perf/util/record.h                 | 6 ++++++
+>  5 files changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 561ef55743e2..97b1a866ab22 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -458,7 +458,9 @@ This option sets the time out limit. The default value is 500 ms.
 >  
->  	pool->manager = NULL;
->  	pool->flags &= ~POOL_MANAGER_ACTIVE;
-> -	wake_up(&wq_manager_wait);
-> +	put_pwq(pwq);
-
-So, this works only because pwq release bounces through another work item,
-so even if a worker of the pool which is currently being destroyed initiates
-the release of the containing pool, it still works out, because by the time
-the async release path kicks in and grabs the pool lock, everything should
-be idle.
-
-I get that this can work but it's sitting on top of a bunch of subtleties.
-The current code is more verbose but also significantly more explicit and
-straight-forward. I'd rather keep the current behavior unless we can get rid
-of the subtleties.
-
-Thanks.
+>  --switch-events::
+>  Record context switch events i.e. events of type PERF_RECORD_SWITCH or
+> -PERF_RECORD_SWITCH_CPU_WIDE.
+> +PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT or CoreSight)
+> +switch events will be enabled automatically, which can be suppressed by
+> +by the option --no-switch-events.
+>  
+>  --clang-path=PATH::
+>  Path to clang binary to use for compiling BPF scriptlets.
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 607499b41bea..cea5e33d61d2 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -265,7 +265,8 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  	ptr->evlist = evlist;
+>  	ptr->snapshot_mode = opts->auxtrace_snapshot_mode;
+>  
+> -	if (perf_can_record_switch_events())
+> +	if (!record_opts__no_switch_events(opts) &&
+> +	    perf_can_record_switch_events())
+>  		opts->record_switch_events = true;
+>  
+>  	evlist__for_each_entry(evlist, evsel) {
+> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+> index fdb917fcf511..3fc547769707 100644
+> --- a/tools/perf/arch/x86/util/intel-pt.c
+> +++ b/tools/perf/arch/x86/util/intel-pt.c
+> @@ -779,7 +779,8 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+>  	 * Per-cpu recording needs sched_switch events to distinguish different
+>  	 * threads.
+>  	 */
+> -	if (have_timing_info && !perf_cpu_map__empty(cpus)) {
+> +	if (have_timing_info && !perf_cpu_map__empty(cpus) &&
+> +	    !record_opts__no_switch_events(opts)) {
+>  		if (perf_can_record_switch_events()) {
+>  			bool cpu_wide = !target__none(&opts->target) &&
+>  					!target__has_task(&opts->target);
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 02d85f4e4517..dc6d5ba2fff8 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -2490,8 +2490,9 @@ static struct option __record_options[] = {
+>  		    "Record namespaces events"),
+>  	OPT_BOOLEAN(0, "all-cgroups", &record.opts.record_cgroup,
+>  		    "Record cgroup events"),
+> -	OPT_BOOLEAN(0, "switch-events", &record.opts.record_switch_events,
+> -		    "Record context switch events"),
+> +	OPT_BOOLEAN_SET(0, "switch-events", &record.opts.record_switch_events,
+> +			&record.opts.record_switch_events_set,
+> +			"Record context switch events"),
+>  	OPT_BOOLEAN_FLAG(0, "all-kernel", &record.opts.all_kernel,
+>  			 "Configure all used events to run in kernel space.",
+>  			 PARSE_OPT_EXCLUSIVE),
+> diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+> index dce6332f5071..84dbbc3f0204 100644
+> --- a/tools/perf/util/record.h
+> +++ b/tools/perf/util/record.h
+> @@ -36,6 +36,7 @@ struct record_opts {
+>  	bool	      record_namespaces;
+>  	bool	      record_cgroup;
+>  	bool	      record_switch_events;
+> +	bool	      record_switch_events_set;
+>  	bool	      all_kernel;
+>  	bool	      all_user;
+>  	bool	      kernel_callchains;
+> @@ -77,4 +78,9 @@ extern struct option *record_options;
+>  
+>  int record__parse_freq(const struct option *opt, const char *str, int unset);
+>  
+> +static inline bool record_opts__no_switch_events(const struct record_opts *opts)
+> +{
+> +	return opts->record_switch_events_set && !opts->record_switch_events;
+> +}
+> +
+>  #endif // _PERF_RECORD_H
+> -- 
+> 2.17.1
+> 
 
 -- 
-tejun
+
+- Arnaldo
