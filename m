@@ -2,138 +2,110 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5201C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30B920814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0DC920814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:47:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+7cOlU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405958AbgE1Sqa (ORCPT
+        id S2405965AbgE1Sr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:46:30 -0400
-Received: from mga04.intel.com ([192.55.52.120]:49491 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405901AbgE1Sq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:46:28 -0400
-IronPort-SDR: ugP8DY17GIWoUQ94zsvGRMmbDmzzusr2+4uEaF8fndC81k6ckZPrNBrv6vFRaLQ9rsFBWvv7ba
- /CLyLYGEfaHA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 11:46:27 -0700
-IronPort-SDR: x9hFq4CaKByj5b+UNBLppyjZw6vF0xYhQMH8mXwb2Dg3bCdhuKQaFb02Ic4S+hekwVV/QLt3Vh
- wDNBIei/GfJQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="302570748"
-Received: from jorycorx-mobl.amr.corp.intel.com (HELO [10.254.102.46]) ([10.254.102.46])
-  by fmsmga002.fm.intel.com with ESMTP; 28 May 2020 11:46:27 -0700
-Subject: Re: [PATCH v6 2/3] gpio: add a reusable generic gpio_chip using
- regmap
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20200528145845.31436-1-michael@walle.cc>
- <20200528145845.31436-3-michael@walle.cc>
- <adb4eba6-c6c4-a403-dead-1951050eec26@linux.intel.com>
- <7d281a1e30ea40837ab1a156c561ca6b@walle.cc>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <6cec4ed5-3a4a-62d8-5209-da3b0863dcd1@linux.intel.com>
-Date:   Thu, 28 May 2020 13:15:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 14:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54036 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405966AbgE1SrY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 14:47:24 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFB7C08C5C6;
+        Thu, 28 May 2020 11:47:23 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id bs4so915426edb.6;
+        Thu, 28 May 2020 11:47:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=C0hYqHcMOeGmeNkFJaRKYE9LRqgonnvy7dyDwDZLMKk=;
+        b=Z+7cOlU1Z+FswU1WSwnvV2gStkFRPyxQ8ZhAIpohlCoCBMIOFhAF9UdQZq2dMxTVi/
+         u3vdVfV7ZgPht/zGL1mG4HDugozPSsHUyRB+brGbftGi6PoVjvR1+33I517fD/zazGhZ
+         22yyHsv384ySypfY0RphM2zS72g5YV+i8VJiq/j6FvPDGQBQs48cWtW/CQja5Trr5QBw
+         0E4gy64WdaNuRPObBHndMGtCyGfoAg2AT0uv9bt72g3uCAhZZIODedBHkQ44q4PeNfkM
+         y1y2DuIsOdYMLcn9L/lAeG/S+mG0o5HWxvwrVeUM63UZ9a2x3P/ON2Su7CwMskmE7ggY
+         Rpag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=C0hYqHcMOeGmeNkFJaRKYE9LRqgonnvy7dyDwDZLMKk=;
+        b=PRvC/ctv7qcDvuXyZD1ogVGArQUKatuS/fTBYruuiZm6jhHAkl5ZdeXY6ZttcHasMF
+         As6ppHFqww/Om9RxbOcs+ENkU3jvLpWhWgYYLJxuV6i0fB4Ww5uDyDaDerZ8DfO9reY9
+         zKOYObmgnOr8nyuBLBAOX149UJmQbIEXhSCchzHa7qFYHEw2iwuP1idd+e2XLdH6b70K
+         5wFbwy/SpCswfJQZ7H4JDibocPtXTBwSrj2w5b6pCAG5vVa08prqbcW9izreyIlE3BaL
+         PjppzKjDjNDkIGsnQ4NZF0LTVINIRHOMPAmDQfnO+oYe9Ed25yIH/HUDU780rTx3/9FA
+         tdEA==
+X-Gm-Message-State: AOAM530ang6rQX16F9ZKqRw76NtsYLs0dl5gEr/guQ350cxXzRetRUWG
+        HR/AWqHSv/LyZQYT84u2cvF3L7rZ
+X-Google-Smtp-Source: ABdhPJzH6sLGHOUWeATOskSrI00u0rH4Gx95oCEfcaPwrXya9BwAfrI8AVrNG0c/wPk2P1BUcJ6MdQ==
+X-Received: by 2002:a50:a412:: with SMTP id u18mr4739604edb.192.1590691641603;
+        Thu, 28 May 2020 11:47:21 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f28:5200:593c:f5d:44cf:3de4? (p200300ea8f285200593c0f5d44cf3de4.dip0.t-ipconnect.de. [2003:ea:8f28:5200:593c:f5d:44cf:3de4])
+        by smtp.googlemail.com with ESMTPSA id b14sm5038552edx.93.2020.05.28.11.47.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 11:47:21 -0700 (PDT)
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: PCI: Disable not requested resource types in pci_enable_resources
+Message-ID: <18bb3264-9901-135d-8b40-1ee98dd672f1@gmail.com>
+Date:   Thu, 28 May 2020 20:47:12 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <7d281a1e30ea40837ab1a156c561ca6b@walle.cc>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, if both resource types are enabled before the call, the mask
+value doesn't matter. Means as of today I wouldn't be able to e.g.
+disable PCI_COMMAND_IO. At least my interpretation is that mask defines
+which resource types are enabled after the call. Therefore change the
+behavior to disable not requested resource types.
 
+At least on my x86 devices this change doesn't have side effects.
 
->>> +    /* if we have a direction register we need both input and
->>> output */
->>> +    if ((config->reg_dir_out_base || config->reg_dir_in_base) &&
->>> +        (!config->reg_dat_base || !config->reg_set_base))
->>> +        return ERR_PTR(-EINVAL);
->>  This failed for me since I didn't have the 'dat' base assigned. I
->> still can't figure out what 'dat' stands for...I just assigned it to
->> the same offset as the 'set' base but really don't understand what
->> this is supposed to do.
-> 
-> DAT is the data register, aka input register, if the GPIO is in input
-> mode.
-> 
-> If I read the datasheet correctly you should use the following:
-> 
-> PCM512x_GPIO_EN should be reg_dir_out_base
-> PCM512x_GPIO_CONTROL_1 should be reg_set_base
-> PCM512x_GPIN should be reg_dat_base
-> 
-> no custom xlate necessary. GPIN looks a bit fishy in that datasheet:
->   http://www.ti.com/lit/ds/symlink/pcm5121.pdf?ts=1590684141147
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+ drivers/pci/setup-res.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-ok, I updated that part - can't test it though with the boards I have, 
-only output is supported.
-
-> PCM512x_GPIO_OUTPUT_1..6 is pinmux control and shouldn't be part of
-> the gpio-regmap. Your driver needs to take care of that.
-
-yes, that's what I did.
-
->>> +
->>> +    /* we don't support having both registers simultaneously for
->>> now */
->>> +    if (config->reg_dir_out_base && config->reg_dir_in_base)
->>> +        return ERR_PTR(-EINVAL);
->>
->> and this second test seems to contradict the notion of 'both input and
->> output' above?
-> 
-> dir_out_base is used if the register is high active to select an output.
-> dir_in_base is used for a low active register. Thus both bases are used
-> to switch a GPIO between input and output.
-
-ok, makes sense now, thanks for the explanations.
-
->> re-adding comment from previous series:
->>  >> I still have a series of odd warnings I didn't have before: >> >>
->> [  101.400263] WARNING: CPU: 3 PID: 1129 at >>
->> drivers/gpio/gpiolib.c:4084 gpiod_set_value+0x3f/0x50 >> >> This seems
->> to come from >>     /* Should be using gpiod_set_value_cansleep() */
->>>>     WARN_ON(desc->gdev->chip->can_sleep); > > Right now,
->> gpio-regmap hardcodes can_sleep to true. But the only regmap > which
->> don't sleep is regmap-mmio. The PCM512x seems to be either I2C or >
->> SPI, which can both sleep. So this warning is actually correct and >
->> wherever this gpio is set should do it by calling the _cansleep() >
->> version.
->>
->> I still have the warnings with this version, not sure if you wanted to
->> fix it in the v6 or is this needs to be fixed in another piece of
->> code/patch. How would we go about removing this warning?
-> 
-> There is no fix in gpio-regmap. wherever this GPIO is connected to must
-> not call gpiod_set_value() but have to use gpiod_set_value_cansleep().
-
-yes, I figured this out and corrected the drivers, works just fine now. 
-My cleaned-up code is at 
-https://github.com/thesofproject/linux/pull/1945, I'll resubmit the v2 
-based on these patches when they are merged and available in Mark 
-Brown's tree (and I need to address the clock-related feedback).
-
-Thanks for your work Michael, really nice and useful, feel free to add 
-the following tag:
-
-Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-
+diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
+index d21fa04fa..6ef458c10 100644
+--- a/drivers/pci/setup-res.c
++++ b/drivers/pci/setup-res.c
+@@ -459,8 +459,8 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
+ 	int i;
+ 	struct resource *r;
+ 
+-	pci_read_config_word(dev, PCI_COMMAND, &cmd);
+-	old_cmd = cmd;
++	pci_read_config_word(dev, PCI_COMMAND, &old_cmd);
++	cmd = old_cmd & ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
+ 
+ 	for (i = 0; i < PCI_NUM_RESOURCES; i++) {
+ 		if (!(mask & (1 << i)))
+-- 
+2.26.2
 
