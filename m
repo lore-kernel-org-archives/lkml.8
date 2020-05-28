@@ -2,129 +2,105 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE36C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5EC62078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:08:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PVn9xmls"
+	by mail.kernel.org (Postfix) with ESMTP id 9F8692078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbgE1BIu (ORCPT
+        id S1726093AbgE1BKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE1BIt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:08:49 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F200C03E97D
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:08:49 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p30so12612523pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:08:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=CL/IKWXXhgD7nYIcRM77gSNJoAiFSfa9BaKCTrGTTAY=;
-        b=PVn9xmlsNpJBnmTG7486QBKPU4B72Pcbl2qmBfKYmIXiMih8cpnIr3UIEpPyUgvs2Z
-         sKYYsC88fgKW9B9veGnXrBl1ICYi6SsNl5Q2Dytzu4A9uAB8LJ/qT8rYmMA54tSxalB3
-         DQw+lWyS2VDPILubigwUOR2Liw263AYeZhrVE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=CL/IKWXXhgD7nYIcRM77gSNJoAiFSfa9BaKCTrGTTAY=;
-        b=l5Ii0HjMuMzgXnFe5sfHrNej87SnpPRYP6zfV/T3eRJwqwykxl6wEF+RtTq8BaMFs/
-         AwCDfFgrID9O6d7iYp0CB8LToiUrDTwVm6hICTJyd0XNu/IOz0VoD/EjFDrU83z/j+9F
-         xeOUf5OJE7edTKZPMOiZnF5npHEqe4IB2pJJgWH9RrCQrpKBQQwlHuJ+GKJC8lhMCyg0
-         p9FLB7tYsO4veM/0vTNwNDQW3ZjCYwk2MD6nzq2EiKu2q8OtvUr3hY07UZOi32AbmZP8
-         weviRgdH/fTOvv8sON+Ftk/0F7akrHqit0cJoVrm9XBeEonQ6Nm+gBEmruO/uaRocYTJ
-         tr0Q==
-X-Gm-Message-State: AOAM532fhg6npXDSk8yS9d7lyByzAABJQKTYFiWL4ZEBesBJD7X9DTY5
-        Vv9lZ72Ti1w8Y4KPv0JaOV1hlVxhfdw=
-X-Google-Smtp-Source: ABdhPJxIemgLPr3D6mtUM3FpmOsuWeq5aNiqkRnMIlOzQPkgTmCeYfEj0EISKOoBynt6RLBuPAu8VQ==
-X-Received: by 2002:a62:e402:: with SMTP id r2mr501008pfh.300.1590628128117;
-        Wed, 27 May 2020 18:08:48 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e1sm3033758pgj.0.2020.05.27.18.08.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 18:08:47 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 27 May 2020 21:10:18 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37124 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbgE1BKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:10:17 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E2ED01509E92DF93ECA2;
+        Thu, 28 May 2020 09:10:13 +0800 (CST)
+Received: from [127.0.0.1] (10.166.215.154) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 28 May 2020
+ 09:10:10 +0800
+Subject: Re: [PATCH -next] hwmon: (amd_energy) Fix build error
+To:     Guenter Roeck <linux@roeck-us.net>, <nchatrad@amd.com>,
+        <jdelvare@suse.com>
+References: <20200527130241.58468-1-yuehaibing@huawei.com>
+ <bfcd6504-c717-8e60-a1ad-d173f3bea02f@roeck-us.net>
+CC:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <a0d97556-feb2-ee02-2554-678c4cac2801@huawei.com>
+Date:   Thu, 28 May 2020 09:10:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
-References: <1590253873-11556-1-git-send-email-mkshah@codeaurora.org> <1590253873-11556-2-git-send-email-mkshah@codeaurora.org> <159057264232.88029.4708934729701385486@swboyd.mtv.corp.google.com> <4e070cda-8c22-c554-610e-172320045840@codeaurora.org>
-Subject: Re: [PATCH v2 1/4] gpio: gpiolib: Allow GPIO IRQs to lazy disable
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Wed, 27 May 2020 18:08:46 -0700
-Message-ID: <159062812628.69627.2153485337510882984@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <bfcd6504-c717-8e60-a1ad-d173f3bea02f@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.166.215.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-05-27 04:26:14)
-> On 5/27/2020 3:14 PM, Stephen Boyd wrote:
-> > Quoting Maulik Shah (2020-05-23 10:11:10)
-> >> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> >> index eaa0e20..3810cd0 100644
-> >> --- a/drivers/gpio/gpiolib.c
-> >> +++ b/drivers/gpio/gpiolib.c
-> >> @@ -2465,32 +2465,37 @@ static void gpiochip_irq_relres(struct irq_dat=
-a *d)
-> >>          gpiochip_relres_irq(gc, d->hwirq);
-> >>   }
-> >>  =20
-> >> +static void gpiochip_irq_mask(struct irq_data *d)
-> >> +{
-> >> +       struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-> >> +
-> >> +       if (gc->irq.irq_mask)
-> >> +               gc->irq.irq_mask(d);
-> >> +       gpiochip_disable_irq(gc, d->hwirq);
-> > How does this work in the lazy case when I want to drive the GPIO? Say I
-> > have a GPIO that is also an interrupt. The code would look like
-> >
-> >   struct gpio_desc *gpio =3D gpiod_get(...)
-> >   unsigned int girq =3D gpiod_to_irq(gpio)
-> >
-> >   request_irq(girq, ...);
-> >
-> >   disable_irq(girq);
-> >   gpiod_direction_output(gpio, 1);
-> >
-> > In the lazy case genirq wouldn't call the mask function until the first
-> > interrupt arrived on the GPIO line. If that never happened then wouldn't
-> > we be blocked in gpiod_direction_output() when the test_bit() sees
-> > FLAG_USED_AS_IRQ? Or do we need irqs to be released before driving
-> > gpios?
->=20
-> The client driver can decide to unlazy disable IRQ with below API...
->=20
->  =C2=A0irq_set_status_flags(girq, IRQ_DISABLE_UNLAZY);
->=20
-> This will immediatly invoke mask function (unlazy disable) from genirq,=20
-> even though irq_disable is not implemented.
->=20
+On 2020/5/27 21:22, Guenter Roeck wrote:
+> On 5/27/20 6:02 AM, YueHaibing wrote:
+>> If CONFIG_NEED_MULTIPLE_NODES is n, building fails:
+>>
+>> drivers/hwmon/amd_energy.c: In function ‘amd_energy_read’:
+>> ./include/asm-generic/topology.h:51:36: error: void value not ignored as it ought to be
+>>      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
+>> ./include/linux/cpumask.h:618:72: note: in definition of macro ‘cpumask_first_and’
+>>  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
+>>                                                                         ^~~~~
+>> drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro ‘cpumask_of_node’
+>>       cpumask_of_node
+>>       ^~~~~~~~~~~~~~~
+>> ./include/asm-generic/topology.h:51:46: warning: left-hand operand of comma expression has no effect [-Wunused-value]
+>>      #define cpumask_of_node(node) ((void)node, cpu_online_mask)
+>>                                               ^
+>> ./include/linux/cpumask.h:618:72: note: in definition of macro ‘cpumask_first_and’
+>>  #define cpumask_first_and(src1p, src2p) cpumask_next_and(-1, (src1p), (src2p))
+>>                                                                         ^~~~~
+>> drivers/hwmon/amd_energy.c:194:6: note: in expansion of macro ‘cpumask_of_node’
+>>       cpumask_of_node
+>>       ^~~~~~~~~~~~~~~
+>>
+>> Fixes: 8abee9566b7e ("hwmon: Add amd_energy driver to report energy counters")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/hwmon/amd_energy.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hwmon/amd_energy.c b/drivers/hwmon/amd_energy.c
+>> index bc8b643a37d5..9d5cd3057866 100644
+>> --- a/drivers/hwmon/amd_energy.c
+>> +++ b/drivers/hwmon/amd_energy.c
+>> @@ -192,7 +192,7 @@ static int amd_energy_read(struct device *dev,
+>>  	if (channel >= data->nr_cpus) {
+>>  		cpu = cpumask_first_and(cpu_online_mask,
+>>  					cpumask_of_node
+>> -					(channel - data->nr_cpus));
+>> +					((channel - data->nr_cpus)));
+> 
+> Wrong fix. The correct fix is to fix the macro, not its caller.
+> A patch to fix the macro has been submitted.
+> 
+Thanks, missing that.
 
-Sure a consumer can disable the lazy feature, but that shouldn't be
-required to make this work. The flag was introduced in commit
-e9849777d0e2 ("genirq: Add flag to force mask in
-disable_irq[_nosync]()") specifically to help devices that can't disable
-the interrupt in their own device avoid a double interrupt.
+> Guenter
+> 
+> 
+>>  		amd_add_delta(data, channel, cpu, val, false);
+>>  	} else {
+>>  		cpu = channel;
+>>
+> 
+> 
+> 
+
