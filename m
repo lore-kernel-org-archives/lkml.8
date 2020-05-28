@@ -2,194 +2,156 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE321206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10D1206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1fosZG8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+qwcWWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405830AbgE1Sef (ORCPT
+        id S2405862AbgE1Seo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:34:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47150 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2405775AbgE1Sed (ORCPT
+        Thu, 28 May 2020 14:34:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405831AbgE1Sej (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:34:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590690871;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YNkxNQgU0Bvr5BvVxj5dKt6vrXoZ9dGRx/rhFTl7OMQ=;
-        b=Q1fosZG8a+kGRfpNConCIzwkTJjlze9Ik/CkeLfNkRSjTOQJvMHovZIORXrDdLh85YA0rO
-        BkaSKag9x0LGjQFRcm8j2GSwAd+VgP7zyjoyqzdXAqP2qcyDC+NrlKpL/i260vYEsH6lN/
-        2kWST9eiX8Jo1wRrUYDmneD9k/gkfrM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-93-762b9mjwMgekqrZ8HlQw0g-1; Thu, 28 May 2020 14:34:28 -0400
-X-MC-Unique: 762b9mjwMgekqrZ8HlQw0g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84E3F1005510;
-        Thu, 28 May 2020 18:34:25 +0000 (UTC)
-Received: from lorien.usersys.redhat.com (ovpn-114-31.phx2.redhat.com [10.3.114.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 907ECA1031;
-        Thu, 28 May 2020 18:34:23 +0000 (UTC)
-Date:   Thu, 28 May 2020 14:34:21 -0400
-From:   Phil Auld <pauld@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
-Message-ID: <20200528183421.GD26442@lorien.usersys.redhat.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <20200520222642.70679-1-joel@joelfernandes.org>
- <20200521085122.GF325280@hirez.programming.kicks-ass.net>
- <20200521134705.GA140701@google.com>
- <20200522125905.GM325280@hirez.programming.kicks-ass.net>
- <20200522213524.GD213825@google.com>
- <20200524140046.GA5598@lorien.usersys.redhat.com>
- <20200528170128.GN2483@worktop.programming.kicks-ass.net>
- <20200528181715.GC26442@lorien.usersys.redhat.com>
+        Thu, 28 May 2020 14:34:39 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E52C08C5C6;
+        Thu, 28 May 2020 11:34:39 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id s1so4068077qkf.9;
+        Thu, 28 May 2020 11:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DrK+nlSE8fWyydBa/BxyXKvC67NSQZxVCHU0aPhkfzA=;
+        b=i+qwcWWGjVfNAnpXXgA+vCCmiuQTw7bThfut4HpZ/2X6FtCMgCtQiesLYJLyhf3YyJ
+         G5oQH4x+DWlsFuCRN8Qt3Zc2ReMAB3x0suEWPZzsbDxaRthTSWlolP6vMSRHW/A8wWTf
+         xjghj71+g2h0p5l06ou0mb4bYMMkL4TMpp+ZVvS1F8qAY7qUx5T4hu8js19FJi3+aKhL
+         /l2lbRuEmoSF7N5zwCWfsfInjo2G1pV2NH7PGEOOxAJ97KzzcCnN1VU6uQgYLBAjYtYM
+         PuqLAdFW1RrDAW47Vg/ErZ8NdsJtyuxv9NjhXJ5ll33Uk//PqfiGth5SZUgpglh0J+J1
+         denw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DrK+nlSE8fWyydBa/BxyXKvC67NSQZxVCHU0aPhkfzA=;
+        b=gvwTEuENkgsI3PhxxndJJUhWdjEI0ixkjVDYbzu/nYTTPqaO/OWHwqBnNCqsZ4cymo
+         yx5oznflfk7cU7T6aXcAXMRHyAGxHKvyRlPxPmNWkW5wHwS6QCkFsi1a2EphQTCKkpIS
+         obYjhiWj69ODarIX+qyoYiniJ8PvKEsul+3bRPc/zKXizMzSAisIp/1IewcdDhA88TCN
+         /gwqNfL0qR4Yszd8WHIT8jr0IInASGkjGuJLktDZjGvdVrIBr0Jt8dd0l3IUbldGtE2M
+         oHasrC36izXJDSrOblY6jaHg7JccgbSpulh5WtKRgP/EiBMA8zdDK7gnGfQt1WuxqvY/
+         Yj9Q==
+X-Gm-Message-State: AOAM5315qGSKES76EW56gA3u8MJKQPuNRAZXm+bnS2bjNdpxkHeLDCc6
+        hU+qOkWf+8q/OuD3n5HLdzrVjwH5WGhmPNAYRLE=
+X-Google-Smtp-Source: ABdhPJxHIJaijQGVGt4J7VFlFnpm+fHBMOcm6yDEkhzLyizj/o2AKkKihujlAX+A305iqR/zOFNNocd0RLEffDyRMgc=
+X-Received: by 2002:a37:4595:: with SMTP id s143mr4546043qka.449.1590690878252;
+ Thu, 28 May 2020 11:34:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528181715.GC26442@lorien.usersys.redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <6561a67d-6dac-0302-8590-5f46bb0205c2@linux.alibaba.com>
+ <CAEf4BzYwO59x0kJWNk1sfwKz=Lw+Sb_ouyRpx8-v1x8XFoqMOw@mail.gmail.com> <9a78329c-8bfe-2b83-b418-3de88e972c5a@linux.alibaba.com>
+In-Reply-To: <9a78329c-8bfe-2b83-b418-3de88e972c5a@linux.alibaba.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 28 May 2020 11:34:25 -0700
+Message-ID: <CAEf4BzYHFAbOeVbs8Y2j5HjYOavDC+M+HtOst69Qtm2h5A3M=A@mail.gmail.com>
+Subject: Re: [RFC PATCH] samples:bpf: introduce task detector
+To:     =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 02:17:19PM -0400 Phil Auld wrote:
-> On Thu, May 28, 2020 at 07:01:28PM +0200 Peter Zijlstra wrote:
-> > On Sun, May 24, 2020 at 10:00:46AM -0400, Phil Auld wrote:
-> > > On Fri, May 22, 2020 at 05:35:24PM -0400 Joel Fernandes wrote:
-> > > > On Fri, May 22, 2020 at 02:59:05PM +0200, Peter Zijlstra wrote:
-> > > > [..]
-> > > > > > > It doens't allow tasks for form their own groups (by for example setting
-> > > > > > > the key to that of another task).
-> > > > > > 
-> > > > > > So for this, I was thinking of making the prctl pass in an integer. And 0
-> > > > > > would mean untagged. Does that sound good to you?
-> > > > > 
-> > > > > A TID, I think. If you pass your own TID, you tag yourself as
-> > > > > not-sharing. If you tag yourself with another tasks's TID, you can do
-> > > > > ptrace tests to see if you're allowed to observe their junk.
-> > > > 
-> > > > But that would require a bunch of tasks agreeing on which TID to tag with.
-> > > > For example, if 2 tasks tag with each other's TID, then they would have
-> > > > different tags and not share.
-> > 
-> > Well, don't do that then ;-)
+On Thu, May 28, 2020 at 1:14 AM =E7=8E=8B=E8=B4=87 <yun.wang@linux.alibaba.=
+com> wrote:
+>
+> Hi, Andrii
+>
+> Thanks for your comments :-)
+>
+> On 2020/5/28 =E4=B8=8B=E5=8D=882:36, Andrii Nakryiko wrote:
+> [snip]
+> >> ---
 > >
-> 
-> That was a poorly worded example :)
+> > I haven't looked through implementation thoroughly yet. But I have few
+> > general remarks.
+> >
+> > This looks like a useful and generic tool. I think it will get most
+> > attention and be most useful if it will be part of BCC tools. There is
+> > already a set of generic tools that use libbpf and CO-RE, see [0]. It
+> > feels like this belongs there.
+> >
+> > Some of the annoying parts (e.g., syscall name translation) is already
+> > generalized as part of syscount tool PR (to be hopefully merged soon),
+> > so you'll be able to save quite a lot of code with this. There is also
+> > a common build infra that takes care of things like vmlinux.h, which
+> > would provide definitions for all those xxx_args structs that you had
+> > to manually define.
+> >
+> > With CO-RE, it also will allow to compile this tool once and run it on
+> > many different kernels without recompilation. Please do take a look
+> > and submit a PR there, it will be a good addition to the toolkit (and
+> > will force you write a bit of README explaining use of this tool as
+> > well ;).
+>
+> Aha, I used to think bcc only support python and cpp :-P
 >
 
-Heh, sorry, I thought that was my statement. I do not mean to belittle Joel's
-example...  That's a fine example of a totally different problem than I
-was thinking of :)
+libbpf-tools don't use BCC at all, they are just co-located with BCC
+and BCC tools in the same repository and are lightweight alternatives
+to BCC-based tools. But it needs kernel with BTF built-in, which is
+the only (temporary) downside.
 
-
-Cheers,
-Phil
-
-> The point I was trying to make was more that one TID of a group (not cgroup!)
-> of tasks is just an arbitrary value.
-> 
-> At a single process (or pair rather) level, sure, you can see it as an
-> identifier of whom you want to share with, but even then you have to tag
-> both processes with this. And it has less meaning when the whom you want to
-> share with is mutltiple tasks.
-> 
-> > > > What's wrong with passing in an integer instead? In any case, we would do the
-> > > > CAP_SYS_ADMIN check to limit who can do it.
-> > 
-> > So the actual permission model can be different depending on how broken
-> > the hardware is.
-> > 
-> > > > Also, one thing CGroup interface allows is an external process to set the
-> > > > cookie, so I am wondering if we should use sched_setattr(2) instead of, or in
-> > > > addition to, the prctl(2). That way, we can drop the CGroup interface
-> > > > completely. How do you feel about that?
-> > > >
-> > > 
-> > > I think it should be an arbitrary 64bit value, in both interfaces to avoid
-> > > any potential reuse security issues.
-> > > 
-> > > I think the cgroup interface could be extended not to be a boolean but take
-> > > the value. With 0 being untagged as now.
-> > 
-> > How do you avoid reuse in such a huge space? That just creates yet
-> > another problem for the kernel to keep track of who is who.
+> I'll try to rework it and submit PR, I'm glad to know that you think
+> this tool as a helpful one, we do solved some tough issue with it
+> already.
+>
 > >
-> 
-> The kernel doesn't care or have to track anything.  The admin does.
-> At the kernel level it's just matching cookies. 
-> 
-> Tasks A,B,C all can share core so you give them each A's TID as a cookie.
-> Task A then exits. Now B and C are using essentially a random value.
-> Task D comes along and want to share with B and C. You have to tag it
-> with A's old TID, which has no meaning at this point.
-> 
-> And if A's TID ever gets reused. The new A` gets to share too. At some
-> level aren't those still 32bits? 
-> 
-> > With random u64 numbers, it even becomes hard to determine if you're
-> > sharing at all or not.
-> > 
-> > Now, with the current SMT+MDS trainwreck, any sharing is bad because it
-> > allows leaking kernel privates. But under a less severe thread scenario,
-> > say where only user data would be at risk, the ptrace() tests make
-> > sense, but those become really hard with random u64 numbers too.
-> > 
-> > What would the purpose of random u64 values be for cgroups? That only
-> > replicates the problem of determining uniqueness there. Then you can get
-> > two cgroups unintentionally sharing because you got lucky.
+> > As for the code itself, I haven't gone through it much, but please
+> > convert map definition syntax to BTF-defined one. The one you are
+> > using is a legacy one. Thanks!
 > >
-> 
-> Seems that would be more flexible for the admin. 
-> 
-> What if you had two cgroups you wanted to allow to run together?  Or a
-> cgroup and a few processes from a different one (say with different
-> quotas or something).
-> 
-> I don't have such use cases so I don't feel that strongly but it seemed
-> more flexible and followed the mechanism-in-kernel/policy-in-userspace
-> dictum rather than basing the functionality on the implementation details.
-> 
-> 
-> Cheers,
-> Phil
-> 
-> 
-> > Also, fundamentally, we cannot have more threads than TID space, it's a
-> > natural identifier.
-> > 
-> 
-> -- 
-
--- 
-
+> >   [0] https://github.com/iovisor/bcc/tree/master/libbpf-tools
+>
+> Will check the example there :-)
+>
+> Regards,
+> Michael Wang
+>
+> >
+> >>  samples/bpf/Makefile             |   3 +
+> >>  samples/bpf/task_detector.h      | 382 ++++++++++++++++++++++++++++++=
++++++++++
+> >>  samples/bpf/task_detector_kern.c | 329 ++++++++++++++++++++++++++++++=
++++
+> >>  samples/bpf/task_detector_user.c | 314 ++++++++++++++++++++++++++++++=
+++
+> >>  4 files changed, 1028 insertions(+)
+> >>  create mode 100644 samples/bpf/task_detector.h
+> >>  create mode 100644 samples/bpf/task_detector_kern.c
+> >>  create mode 100644 samples/bpf/task_detector_user.c
+> >>
+> >
+> > [...]
+> >
