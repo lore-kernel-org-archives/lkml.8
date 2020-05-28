@@ -2,97 +2,91 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC517C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45361C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD5AD207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20561207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:48:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eVSemKwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgE1TqZ (ORCPT
+        id S2406765AbgE1TsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:46:25 -0400
-Received: from mga17.intel.com ([192.55.52.151]:44023 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbgE1TqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:46:04 -0400
-IronPort-SDR: I/1Hh/kElfz5zYvhuqua8Xb9QSgm7iiJZVU3rNhbtpNNunUoRJdOx9gHGp4VPi4GMbeXUWpqrR
- wfJQBw5Gvtxg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 12:46:04 -0700
-IronPort-SDR: dRYAISkiX1NNkVtxVULMKqZt002txmSTrvWdtlwNu1ea2sbnNhNhJVXQqMbLtR4F+F6+K8f2bs
- 5NJN/hhXHqwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
-   d="scan'208";a="256272198"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga007.jf.intel.com with ESMTP; 28 May 2020 12:46:04 -0700
-Date:   Thu, 28 May 2020 12:46:04 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+904752567107eefb728c@syzkaller.appspotmail.com
-Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
-Message-ID: <20200528194604.GE30353@linux.intel.com>
-References: <20200527085400.23759-1-sean.j.christopherson@intel.com>
- <40800163-2b28-9879-f21b-687f89070c91@redhat.com>
- <20200527162933.GE24461@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527162933.GE24461@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Thu, 28 May 2020 15:48:25 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55694 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728525AbgE1TsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:48:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590695280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ukUKsMQtJQ/POklgv6hxv6yQhdAjZ+dAaodZMEeHyDI=;
+        b=eVSemKwO6kCTNHyF+POjTM7ZDuWYK7xdfwJFzW1kFGRUnZ/ztHDlUHvafuYxmIvrTVJ7TK
+        KO9dyGnLvvy4NgmxqfRAnTfKpisRB5ieQbm2ZLV7LMqp1NQ2Cl7gPxF35F2NbQ+Vlrr2pp
+        YduXOhIhiJKOpLs5rlgJLD/GTgk/ncU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-FB6j3GvTObqL524yhdStPg-1; Thu, 28 May 2020 15:47:58 -0400
+X-MC-Unique: FB6j3GvTObqL524yhdStPg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0759EC1A0;
+        Thu, 28 May 2020 19:47:55 +0000 (UTC)
+Received: from localhost (unknown [10.10.110.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 664A19F9BA;
+        Thu, 28 May 2020 19:47:52 +0000 (UTC)
+Date:   Thu, 28 May 2020 12:47:51 -0700 (PDT)
+Message-Id: <20200528.124751.1622700747294014742.davem@redhat.com>
+To:     jonas.falkevik@gmail.com
+Cc:     marcelo.leitner@gmail.com, lucien.xin@gmail.com,
+        nhorman@tuxdriver.com, vyasevich@gmail.com, kuba@kernel.org,
+        linux-sctp@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sctp: check assoc before
+ SCTP_ADDR_{MADE_PRIM,ADDED} event
+From:   David Miller <davem@redhat.com>
+In-Reply-To: <20200527095640.270986-1-jonas.falkevik@gmail.com>
+References: <20200527095640.270986-1-jonas.falkevik@gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 09:29:33AM -0700, Sean Christopherson wrote:
-> On Wed, May 27, 2020 at 06:17:57PM +0200, Paolo Bonzini wrote:
-> > On 27/05/20 10:54, Sean Christopherson wrote:
-> > > Initialize vcpu->arch.tdp_level during vCPU creation to avoid consuming
-> > > garbage if userspace calls KVM_RUN without first calling KVM_SET_CPUID.
-> > > 
-> > > Fixes: e93fd3b3e89e9 ("KVM: x86/mmu: Capture TDP level when updating CPUID")
-> > > Reported-by: syzbot+904752567107eefb728c@syzkaller.appspotmail.com
-> > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > ---
-> > >  arch/x86/kvm/x86.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > > index b226fb8abe41b..01a6304056197 100644
-> > > --- a/arch/x86/kvm/x86.c
-> > > +++ b/arch/x86/kvm/x86.c
-> > > @@ -9414,6 +9414,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
-> > >  	fx_init(vcpu);
-> > >  
-> > >  	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
-> > > +	vcpu->arch.tdp_level = kvm_x86_ops.get_tdp_level(vcpu);
-> > >  
-> > >  	vcpu->arch.pat = MSR_IA32_CR_PAT_DEFAULT;
-> > 
-> > Queued, it is probably a good idea to add a selftests testcase for this
-> > (it's even okay if it doesn't use the whole selftests infrastructure and
-> > invokes KVM_CREATE_VM/KVM_CREATE_VCPU/KVM_RUN manually).
+From: Jonas Falkevik <jonas.falkevik@gmail.com>
+Date: Wed, 27 May 2020 11:56:40 +0200
+
+> Make sure SCTP_ADDR_{MADE_PRIM,ADDED} are sent only for associations
+> that have been established.
 > 
-> Ya.  syzbot is hitting a #GP due to NULL pointer during debugfs on the exact
-> same sequence.  I haven't been able to reproduce that one (have yet to try
-> syzbot's exact config), but it's another example of a "dumb" test hitting
-> meaningful bugs.
+> These events are described in rfc6458#section-6.1
+> SCTP_PEER_ADDR_CHANGE:
+> This tag indicates that an address that is
+> part of an existing association has experienced a change of
+> state (e.g., a failure or return to service of the reachability
+> of an endpoint via a specific transport address).
+> 
+> Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
+> ---
+> Changes in v2:
+>  - Check asoc state to be at least established.
+>    Instead of associd being SCTP_FUTURE_ASSOC.
+>  - Common check for all peer addr change event
 
-So we already have a selftest for this scenario, test_zero_memory_regions()
-in set_memory_region_test.c.  Embarrassingly, I wrote the darn thing, I'm
-just really neglectful when it comes to running selftests.
+Applied and queued up for -stable, thanks.
 
-I'll looking into writing a script to run all selftests with a single
-command, unless someone already has one laying around? 
+ 
+
