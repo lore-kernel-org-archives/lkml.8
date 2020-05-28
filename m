@@ -2,136 +2,133 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97490C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79606206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93ADD206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:19:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ROLiHp2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436555AbgE1VSy (ORCPT
+        id S2436564AbgE1VTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:18:54 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61069 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436543AbgE1VSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:18:43 -0400
-IronPort-SDR: BC49y7K5BgYLTB0PeyRL5FEzNMFM674uOqPUmJoo5GOQoHQnabDEY6cZE45lSblC38aaRGYCbG
- Q6KCJOWBQDCQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 14:18:42 -0700
-IronPort-SDR: 4AScpdRfM/Qz6G0HI8poSM3B9H5Mqkq5vrBTOmecqUhhBSB1772DdFAAsj45uU0XmppsLIFVUS
- 1ihVdZLx2rfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
-   d="scan'208";a="311045002"
-Received: from vvhadaga-mobl.amr.corp.intel.com (HELO [10.254.98.146]) ([10.254.98.146])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2020 14:18:42 -0700
-Subject: Re: [PATCH] PCI: ERR: Don't override the status returned by
- error_detect()
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ruscur@russell.cc,
-        sbobroff@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com
-References: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <84a2bc7e-7556-96ff-6cd5-988d432ad8e3@linux.intel.com>
-Date:   Thu, 28 May 2020 14:18:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 17:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436543AbgE1VTA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 17:19:00 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DC1C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:18:59 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id j145so535848oib.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:18:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Izclf3iWwhuBdj+AyqDZNTKQPIM/hg7SPWZBXMGL2l4=;
+        b=ROLiHp2NjSvrFpWBfBWNkFIDKRaTw9ZwEIv+rl38brz1x9SCCDtn5e1RlEBtjEbFZE
+         8GbOXVqoaw/jfLpOyutnvB1Vtg1kI4KkiSxcEB0nJlQ1YzdNxY8wBeMzoptY69RnBF9R
+         zRmov/xazXgAZIvXC3pR/25/mrcdA/LsxRSltp4WwzgqZDX9bc924CIqE8FVXfAVgzQv
+         st2eP5qhP7X3OwNP3dWdsTVGgC0GWmj6uaseeOnJolw6IK0M4cTSbpi3FZ1uUU6oxA57
+         BxnKzvFqPeZm6DPURVfEPrVCoQxTXLesY6dO85z8dEdse9zEAYtFQ5F/z1rxXHEuY+2r
+         YZrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Izclf3iWwhuBdj+AyqDZNTKQPIM/hg7SPWZBXMGL2l4=;
+        b=s9Ep/iqXMOwRiichmUl3g6BrwDMoJSTKg2KzaaFOBd6FTjpoSf8REcVzUGkEzYVEEA
+         QZ44OkqEWEFSL3q0Ejje70OHQBHIpo1EuaJNEuaLc2MmN6oK93f7zBJIZYYf1Q0A9EAs
+         OeO5oYM8MZ8jjH5uuqdx43xa2noh929H5SzOGSXp7QulXhI/pCozHH2o6HvwKF+0kUqo
+         1pXMu5Ka6AFgaB1d6fK++eoAEzu91oz7iqoSFF9/bwmV13KD1zjwgLlcHrOQNAoo3qdq
+         EVxpxwO+NOLTlpuHSrEw88Ti1QAvsmPsSsTlaobc0Kyiy3oXr3C0CUb/C/OukFLHKFRm
+         p0Xg==
+X-Gm-Message-State: AOAM530sXCpmPcgoEqobWON7YIZNAVOiGpQIcr1J9hwt9bHEHCInU53Q
+        zW0TiX7AEczEZEiRhSW9PF7Vri+rDLMZa0dTB9thlQ==
+X-Google-Smtp-Source: ABdhPJyw7U2WT9n/sOygpPecLN3RFPOU9iX8N0Q+3xHWo4rHkDHqt8y0wR3uXmA498b8tKy12JJDyucNnaHpuYSyklI=
+X-Received: by 2002:aca:d0d:: with SMTP id 13mr3586541oin.172.1590700739034;
+ Thu, 28 May 2020 14:18:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200527083130.4137-1-Zhiqiang.Hou@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200521191800.136035-1-saravanak@google.com>
+In-Reply-To: <20200521191800.136035-1-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 28 May 2020 14:18:23 -0700
+Message-ID: <CAGETcx8UGps6bz1YhYcbjCAAXenBuR6XDT0qv5WED5zbyfzNFw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/3] driver core: Add device link related sysfs files
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, May 21, 2020 at 12:18 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> With fw_devlink and with sync_state() callback features, there's a lot
+> of device/device link related information that's not available in sysfs.
+>
+> Exposing these details to user space can be very useful in understanding
+> suspend/resume issues, runtime pm issues, probing issues, figuring out
+> the modules that'd be needed for first stage init, etc. In fact, an
+> earlier verion of this series was very helpful in debugging and
+> validating the recent memory leak fix[1].
+>
+> This series is based on driver-core-next and [1] cherry-picked on top of
+> it.
+>
+> [1] - https://lore.kernel.org/lkml/20200519063000.128819-1-saravanak@google.com/
+>
+> v1->v2:
+> Patch 1/4
+> - New patch
+> Patch 2/4
+> - Fixed the warnings I saw before that were related to incorrect
+>   sysfs removal code when a device link is deleted.
+> - Fixed error handling in device_link_add()
+> - Split up flags into more meaningful files.
+> - Added status file.
+> Patch 3/4
+> - Fixed error handling that Greg pointed out before.
+> Patch 4/4
+> - New patch
+>
+> v2->v3:
+> - Dropped patch 1/4 from v2 since it was already picked up. So numbering
+>   has shifted.
+> Patch 1/3
+> - Added documentation
+>
+> Saravana Kannan (3):
+>   driver core: Expose device link details in sysfs
+>   driver core: Add state_synced sysfs file for devices that support it
+>   driver core: Add waiting_for_supplier sysfs file for devices
+>
+>  Documentation/ABI/testing/sysfs-class-devlink | 126 ++++++++++
+>  .../ABI/testing/sysfs-devices-consumer        |   8 +
+>  .../ABI/testing/sysfs-devices-state_synced    |  24 ++
+>  .../ABI/testing/sysfs-devices-supplier        |   8 +
+>  .../sysfs-devices-waiting_for_supplier        |  17 ++
+>  drivers/base/core.c                           | 237 +++++++++++++++++-
+>  drivers/base/dd.c                             |  22 ++
+>  include/linux/device.h                        |  58 ++---
+>  8 files changed, 464 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-devlink
+>  create mode 100644 Documentation/ABI/testing/sysfs-devices-consumer
+>  create mode 100644 Documentation/ABI/testing/sysfs-devices-state_synced
+>  create mode 100644 Documentation/ABI/testing/sysfs-devices-supplier
+>  create mode 100644 Documentation/ABI/testing/sysfs-devices-waiting_for_supplier
 
-On 5/27/20 1:31 AM, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> overrode the 'status' returned by the error_detect() call back function,
-> which is depended on by the next step. This overriding makes the Endpoint
-> driver's required info (kept in the var status) lost, so it results in the
-> fatal errors' recovery failed and then kernel panic.
-Can you explain why updating status affects the recovery ?
-> 
-> In the e1000e case, the error logs:
-> pcieport 0002:00:00.0: AER: Uncorrected (Fatal) error received: 0002:01:00.0
-> e1000e 0002:01:00.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
-> pcieport 0002:00:00.0: AER: Root Port link has been reset
-As per above commit log, it looks like link is reset correctly.
-> SError Interrupt on CPU0, code 0xbf000002 -- SError
-> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
-> Hardware name: LS1046A RDB Board (DT)
-> pstate: 80000005 (Nzcv daif -PAN -UAO BTYPE=--)
-> pc : __pci_enable_msix_range+0x4c8/0x5b8
-> lr : __pci_enable_msix_range+0x480/0x5b8
-> sp : ffff80001116bb30
-> x29: ffff80001116bb30 x28: 0000000000000003
-> x27: 0000000000000003 x26: 0000000000000000
-> x25: ffff00097243e0a8 x24: 0000000000000001
-> x23: ffff00097243e2d8 x22: 0000000000000000
-> x21: 0000000000000003 x20: ffff00095bd46080
-> x19: ffff00097243e000 x18: ffffffffffffffff
-> x17: 0000000000000000 x16: 0000000000000000
-> x15: ffffb958fa0e9948 x14: ffff00095bd46303
-> x13: ffff00095bd46302 x12: 0000000000000038
-> x11: 0000000000000040 x10: ffffb958fa101e68
-> x9 : ffffb958fa101e60 x8 : 0000000000000908
-> x7 : 0000000000000908 x6 : ffff800011600000
-> x5 : ffff00095bd46800 x4 : ffff00096e7f6080
-> x3 : 0000000000000000 x2 : 0000000000000000
-> x1 : 0000000000000000 x0 : 0000000000000000
-> Kernel panic - not syncing: Asynchronous SError Interrupt
-> CPU: 0 PID: 111 Comm: irq/76-aerdrv Not tainted 5.7.0-rc7-next-20200526 #8
-> 
-> I think it's the expected result that "if the initial value of error
-> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER
-> then even after successful recovery (using reset_link()) pcie_do_recovery()
-> will report the recovery result as failure" which is described in
-> commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()").
-> 
-> Refer to the Documentation/PCI/pci-error-recovery.rst.
-> As the error_detect() is mandatory callback if the pci_err_handlers is
-> implemented, if it return the PCI_ERS_RESULT_DISCONNECT, it means the
-> driver doesn't want to recover at all;
-> For the case PCI_ERS_RESULT_NO_AER_DRIVER, if the pci_err_handlers is not
-> implemented, the failure is more expected.
-> 
-> Fixes: commit 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
->   drivers/pci/pcie/err.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 14bb8f54723e..84f72342259c 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -165,8 +165,7 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->   	pci_dbg(dev, "broadcast error_detected message\n");
->   	if (state == pci_channel_io_frozen) {
->   		pci_walk_bus(bus, report_frozen_detected, &status);
-> -		status = reset_link(dev);
-> -		if (status != PCI_ERS_RESULT_RECOVERED) {
-> +		if (reset_link(dev) != PCI_ERS_RESULT_RECOVERED) {
->   			pci_warn(dev, "link reset failed\n");
->   			goto failed;
->   		}
-> 
+Friendly reminder.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+-Saravana
