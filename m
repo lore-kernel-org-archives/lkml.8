@@ -2,130 +2,85 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44AD02084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1F6207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725839AbgE1Edf (ORCPT
+        id S1725994AbgE1EjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 00:33:35 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:50296 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725298AbgE1Edf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 00:33:35 -0400
-Received: from [10.20.42.25] (unknown [10.20.42.25])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn2r_Ps9e4wI6AA--.1019S3;
-        Thu, 28 May 2020 12:33:04 +0800 (CST)
-Subject: Re: [PATCH v3 3/3] mm/memory.c: Add memory read privilege before
- filling PTE entry
-To:     Hugh Dickins <hughd@google.com>
-References: <1589778529-25627-1-git-send-email-maobibo@loongson.cn>
- <1589778529-25627-3-git-send-email-maobibo@loongson.cn>
- <20200518135747.d8837ba6742b2d193e14fbb0@linux-foundation.org>
- <d1646320-51ec-4b5f-bcad-41eba85b78cf@loongson.cn>
- <alpine.LSU.2.11.2005271329050.6217@eggly.anvils>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Dmitry Korotin <dkorotin@wavecomp.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        Stafford Horne <shorne@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>
-From:   maobibo <maobibo@loongson.cn>
-Message-ID: <b5219f15-f0bb-55b0-010a-104d42bd64c2@loongson.cn>
-Date:   Thu, 28 May 2020 12:33:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 28 May 2020 00:39:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:47000 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725298AbgE1EjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 00:39:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D20A31B;
+        Wed, 27 May 2020 21:39:01 -0700 (PDT)
+Received: from A010555 (unknown [10.169.38.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43AD03F6C4;
+        Wed, 27 May 2020 21:38:59 -0700 (PDT)
+References: <20200522065330.34872-1-nick.gasson@arm.com> <CAP-5=fU8CJzOttgVDSxqHQoRg_eZ1+sToywOiek+8vw4j2GykA@mail.gmail.com> <xgl9wo4ylyv5.fsf@arm.com> <CAP-5=fUXP7OVEAX+u7-t8VZ9d8xq747kWgdvC_s7=wiHg7iBSw@mail.gmail.com>
+User-agent: mu4e 1.4.5; emacs 26.3
+From:   Nick Gasson <nick.gasson@arm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf jvmti: remove redundant jitdump line table entries
+In-reply-to: <CAP-5=fUXP7OVEAX+u7-t8VZ9d8xq747kWgdvC_s7=wiHg7iBSw@mail.gmail.com>
+Date:   Thu, 28 May 2020 12:38:56 +0800
+Message-ID: <xgl9y2pcfzbz.fsf@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.2005271329050.6217@eggly.anvils>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxn2r_Ps9e4wI6AA--.1019S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1kZw48AF47Gry7Jw1xuFg_yoW8KF1fpa
-        ySya12kr4DKrn2yFy2gw1xZF15C3yktFW5WrnxJryj9398XryrKr4aqFZYga1UCr4fCa1F
-        yrW8Xr98ua9xZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvEb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
-        xwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73UjIFyTuYvjxUg0D7DUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/28/2020 04:55 AM, Hugh Dickins wrote:
-> On Tue, 19 May 2020, maobibo wrote:
->> On 05/19/2020 04:57 AM, Andrew Morton wrote:
->>> On Mon, 18 May 2020 13:08:49 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
->>>
->>>> On mips platform, hw PTE entry valid bit is set in pte_mkyoung
->>>> function, it is used to set physical page with readable privilege.
->>>
->>> pte_mkyoung() seems to be a strange place to set the pte's valid bit. 
->>> Why is it done there?  Can it be done within mips's mk_pte()?
->> On MIPS system hardware cannot set PAGE_ACCESS bit when accessing the page,
->> software sets PAGE_ACCESS software bit and PAGE_VALID hw bit together during page
->> fault stage.
+On 05/28/20 02:08 AM, Ian Rogers wrote:
 >>
->> If mk_pte is called in page fault flow, it is ok to set both bits. If it is not 
->> called in page fault, PAGE_ACCESS is set however there is no actual memory accessing.
-> 
-> Sorry for joining in so late, but would you please explain that some more:
-> preferably in the final commit message, if not here.
-> 
-> I still don't understand why this is not done in the same way as on other
-> architectures - those that care (I just checked x86, powerpc, arm, arm64,
-> but not all of them) make sure that all the bits they want are there in
-> mm/mmap.c's protection_map[16], which then feeds into vma->vm_page_prot,
-> and so into mk_pte() as Andrew indicated.
-> 
-> And I can see that arch/mips/mm/cache.c has a setup_protection_map()
-> to do that: why does it not set the additional bits that you want?
-> including the valid bit and the accessed (young) bit, as others do.
-> Are you saying that there are circumstances in which it is wrong
-> for mk_pte() to set the additional bits?
-MIPS is actually strange here, _PAGE_ACCESSED is not set in protection_map.
-I do not understand history of mips neither. 
+>> I noticed it loses information when the Hotspot code cache is
+>> resized. I've been working around that by setting
+>> -XX:InitialCodeCacheSize and -XX:ReservedCodeCacheSize to large
+>> values. Does this help in your case?
+>
+> Thanks, I tried and also with Steve's patch:
+> https://lore.kernel.org/lkml/1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com/
 
-On x86/aarch/powerpc system, _PAGE_ACCESSED bit is set in the beginning. How does
-software track memory page accessing frequency?  Does software not care current
-status about _PAGE_ACCESSED bit, just calles madvise_cold to clear this bit, and
-then watches whether this bit is changed or not?
+Thanks for the reference! That patch fixes the problem I had with code
+cache resizing so the workaround above is no longer necessary.
 
-regards
-bibo,mao
-> 
-> I'm afraid that generic mm developers will have no clue as to whether
-> or not to add a pte_sw_mkyoung() after a mk_pte(); and generic source
-> will be the cleaner if it turns out not to be needed (but thank you
-> for making sure that it does nothing on the other architectures).
-> 
-> Hugh
-> 
+>
+> Trying something very basic like just the -version command with compile only:
+> /tmp/perf/perf record -k 1 -e cycles:u -F 6500 -o /tmp/perf.data java
+> -agentpath:/tmp/perf/libperf-jvmti.so -XX:+PreserveFramePointer
+> -XX:InitialCodeCacheSize=2G -XX:ReservedCodeCacheSize=2G
+> -XX:CompileOnly=1 -version
+> /tmp/perf/perf inject -i /tmp/perf.data -o /tmp/perf-jit.data -j
+> /tmp/perf/perf report -i /tmp/perf-jit.data
+>
+> I don't see any of the JDK classes but 35 unknown symbols out of 272.
+> The JDK classes are stripped to some degree iirc, but we should be
+> able to give a symbol name as we don't care about local variables and
+> like.
+>
 
+I tried this with latest perf/core and JDK 11 but I don't see any
+[unknown] from jitted-*.so. All the events are in "Interpreter": I think
+the options you want are -Xcomp -Xbatch rather than -XX:CompileOnly=1?
+The latter restricts compilation to the named method/package.
+
+There was a bug where no jitdump debug info was written for classes
+compiled without line tables. That was fixed by d3ea46da3 ("perf jvmti:
+Fix jitdump for methods without debug info").
+
+--
+Nick
