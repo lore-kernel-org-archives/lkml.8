@@ -2,216 +2,107 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE43C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4CFB2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466D020657
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iA3EwlU4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MfsFqGgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgE1GTa (ORCPT
+        id S1727854AbgE1GWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:19:30 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55534 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgE1GT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:19:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590646768; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=/xlgRok4iJeFBM6NdyamVK1507R2eKJORFrUKr1SJp0=; b=iA3EwlU4Wbi0g5Wx/Ek1akRoKISMdFP0pj/Z02Xy2baqiPOGqdN9CF1MprSatNsMMbvpzN66
- pem4/tYOrIgqWrUgsG2Gd+C6hv4pa7Wtjc+4niPero6eLX2Sxhw0fBh/umv/IMHzb1yWEMpX
- brn5zMpEIyXmtU6a9U+xZ4g41W4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5ecf57efb65440fdba255460 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 06:19:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 906DEC433CA; Thu, 28 May 2020 06:19:26 +0000 (UTC)
-Received: from [10.253.38.28] (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 28 May 2020 02:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbgE1GWV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:22:21 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB63C05BD1E;
+        Wed, 27 May 2020 23:22:21 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E1BEEC43395;
-        Thu, 28 May 2020 06:19:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E1BEEC43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix QCA6390 memdump failure
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        Matthias Kaehlcke <mka@chromium.org>, rjliao@codeaurora.org
-References: <1590550627-24618-1-git-send-email-zijuhu@codeaurora.org>
- <CANFp7mXMiYKY-33xZX2MaHd5RyicbRb2fZHo8mk4-VM_Jf47UQ@mail.gmail.com>
-From:   Zijun Hu <zijuhu@codeaurora.org>
-Message-ID: <cdc9c050-c7e4-da5c-defa-65abb397afd1@codeaurora.org>
-Date:   Thu, 28 May 2020 14:19:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Xd092Gn7z9sSF;
+        Thu, 28 May 2020 16:22:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590646937;
+        bh=629MSPhHF+Qav3O/mRS1kD6JZN5Cr2BemX3ADrv1Wrk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MfsFqGgjwa367mRMxGv/9D6E0dhWNGgRAVK/e4BaT45dtyo2+6vsh8M75DelHHGHM
+         7cTWivWgd5DLxJyV1z2f6P/aw1s45XKgV34eqwdqoC++0p7+x+4ddt9YShS8U6w3nz
+         7hUkeCHkjd0TV1hRSNp2AgernRPgjpEBaj2PShc3eBKFB36vZEV3IUx6bMX9FRwild
+         iQMxf+O4vuJcduxqH0HPtv80zSOTsy/JWA+0qDnLY9Z4T6QyvQ7vgVV9IsZSTI607n
+         NkYiBtFaUtm2I/qsG3l26pMoFNBRCVltdCJxGvaN9D2jL6ppVwQI+8O6WBWhdK6ORV
+         tSN5xqsEOaGSA==
+Date:   Thu, 28 May 2020 16:22:15 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Rob Herring <robherring2@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: linux-next: manual merge of the usb tree with the devicetree tree
+Message-ID: <20200528162215.3a9aa663@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CANFp7mXMiYKY-33xZX2MaHd5RyicbRb2fZHo8mk4-VM_Jf47UQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/3vZuWlHWNFvmOkWX=eeyRBv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/3vZuWlHWNFvmOkWX=eeyRBv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/28/2020 11:42 AM, Abhishek Pandit-Subedi wrote:
-> Hi Zijun,
-> 
-> On Tue, May 26, 2020 at 8:37 PM Zijun Hu <zijuhu@codeaurora.org> wrote:
->>
->> QCA6390 memdump VSE sometimes come to bluetooth driver
->> with wrong sequence number as illustrated as follows:
->> frame # in DEC: frame data in HEX
->> 1396: ff fd 01 08 74 05 00 37 8f 14
->> 1397: ff fd 01 08 75 05 00 ff bf 38
->> 1414: ff fd 01 08 86 05 00 fb 5e 4b
->> 1399: ff fd 01 08 77 05 00 f3 44 0a
->> 1400: ff fd 01 08 78 05 00 ca f7 41
->> it is mistook for controller missing packets, so results
->> in page fault after overwriting memdump buffer allocated.
->>
->> it is fixed by ignoring QCA6390 sequence number error
->> and checking buffer space before writing.
->>
->> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
->>  1 file changed, 38 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index e4a6823..388fe01b 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -114,6 +114,7 @@ struct qca_memdump_data {
->>         char *memdump_buf_tail;
->>         u32 current_seq_no;
->>         u32 received_dump;
->> +       u32 ram_dump_size;
->>  };
->>
->>  struct qca_memdump_event_hdr {
->> @@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
->>         char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
->>         u16 seq_no;
->>         u32 dump_size;
->> +       u32 rx_size;
->> +       enum qca_btsoc_type soc_type = qca_soc_type(hu);
->>
->>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
->>
->> @@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
->>
->>                         skb_pull(skb, sizeof(dump_size));
->>                         memdump_buf = vmalloc(dump_size);
->> +                       qca_memdump->ram_dump_size = dump_size;
->>                         qca_memdump->memdump_buf_head = memdump_buf;
->>                         qca_memdump->memdump_buf_tail = memdump_buf;
->>                 }
->> @@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
->>                  * packets in the buffer.
->>                  */
->>                 while ((seq_no > qca_memdump->current_seq_no + 1) &&
->> +                       (soc_type != QCA_QCA6390) &&
-> 
-> This probably shouldn't be SOC specific.
->
-make sense. but this logic block should be skipped for QCA6390
-the present logic to fix controller missing packets for the other products
-is not suitable for QCA6390. for QCA6390, it doesn't miss packet and sequence
-number field of the packet maybe have data error, but serdev driver doesn't propagate
-these error info detected by UART driver to bluetooth driver. so the sequence number
-extracted from packet received is not reliable.
- 
->>                         seq_no != QCA_LAST_SEQUENCE_NUM) {
->>                         bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
->>                                    qca_memdump->current_seq_no);
->> +                       rx_size = qca_memdump->received_dump;
->> +                       rx_size += QCA_DUMP_PACKET_SIZE;
->> +                       if (rx_size > qca_memdump->ram_dump_size) {
->> +                               bt_dev_err(hu->hdev,
->> +                                               "QCA memdump received %d, no space for missed packet",
->> +                                               qca_memdump->received_dump);
->> +                               break;
->> +                       }
->>                         memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
->>                         memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
->>                         qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
->>                         qca_memdump->current_seq_no++;
->>                 }
-> 
-> You can replace this loop with a memset(memdump_buf, 0, (seq_no -
-> qca_memdump->current_seq_no) * QCA_DUMP_PACKET_SIZE). This simplifies
-> the ram_dump_size check as well because it won't zero fill until the
-> end anymore (meaning a single bad seq_no doesn't make the rest of the
-> dump incorrect).
->
-i don't think so
-as explained above, the sequence number is not reliable, so we can't memset buffer
-area calculated from seqence number. i just dump all the packets we received without
-any handling for QCA6390.
->>
->> -               memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
->> -               memdump_buf = memdump_buf + skb->len;
->> -               qca_memdump->memdump_buf_tail = memdump_buf;
->> -               qca_memdump->current_seq_no = seq_no + 1;
->> -               qca_memdump->received_dump += skb->len;
->> +               rx_size = qca_memdump->received_dump + skb->len;
->> +               if (rx_size <= qca_memdump->ram_dump_size) {
->> +                       if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
->> +                                       (seq_no != qca_memdump->current_seq_no))
->> +                               bt_dev_err(hu->hdev,
->> +                                               "QCA memdump unexpected packet %d",
->> +                                               seq_no);
->> +                       bt_dev_dbg(hu->hdev,
->> +                                       "QCA memdump packet %d with length %d",
->> +                                       seq_no, skb->len);
->> +                       memcpy(memdump_buf, (unsigned char *)skb->data,
->> +                                       skb->len);
->> +                       memdump_buf = memdump_buf + skb->len;
->> +                       qca_memdump->memdump_buf_tail = memdump_buf;
->> +                       qca_memdump->current_seq_no = seq_no + 1;
->> +                       qca_memdump->received_dump += skb->len;
->> +               } else {
->> +                       bt_dev_err(hu->hdev,
->> +                                       "QCA memdump received %d, no space for packet %d",
->> +                                       qca_memdump->received_dump, seq_no);
->> +               }
->>                 qca->qca_memdump = qca_memdump;
->>                 kfree_skb(skb);
->>                 if (seq_no == QCA_LAST_SEQUENCE_NUM) {
->> -                       bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
->> -                                  qca_memdump->received_dump);
->> +                       bt_dev_info(hu->hdev,
->> +                                       "QCA memdump Done, received %d, total %d",
->> +                                       qca_memdump->received_dump,
->> +                                       qca_memdump->ram_dump_size);
->>                         memdump_buf = qca_memdump->memdump_buf_head;
->>                         dev_coredumpv(&hu->serdev->dev, memdump_buf,
->>                                       qca_memdump->received_dump, GFP_KERNEL);
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
->>
+Today's linux-next merge of the usb tree got a conflict in:
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+
+between commit:
+
+  3828026c9ec8 ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
+
+from the devicetree tree and commits:
+
+  cd4b54e2ae1f ("dt-bindings: usb: qcom,dwc3: Convert USB DWC3 bindings")
+
+from the usb tree.
+
+I fixed it up (I guessed, taking most changes from the former) and can
+carry the fix as necessary. This is now fixed as far as linux-next is
+concerned, but any non trivial conflicts should be mentioned to your
+upstream maintainer when your tree is submitted for merging.  You may
+also want to consider cooperating with the maintainer of the
+conflicting tree to minimise any particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/3vZuWlHWNFvmOkWX=eeyRBv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PWJcACgkQAVBC80lX
+0GwbGAf+LlyXFd1Cnvh8G7uCCS8QpF5UcrqklncoPKY4BOSMHyONLIT02THHgmQ3
+IEvTFY4Sl/XBh2o2BEmQ7idZ9LZi7Oidr6RqKcEmxrTUrL0Kk/g8AMs7wZ6bZjTZ
+CaMmNmEzwgTbSEnf35f+s882C0SHkc/iOcyba5l236tVQfS5qTlaoHSAOy7b8y0o
+Ykw9yZF5kCS6V0dH/WAsu/DRTQhjj/fXpsUefBhMbOy2/JRRyXC+E/LAT+/sTg4p
+Fy2flrWCTXHSXe/KezLXoQ5eYzd5uWCG/G1YXwD5/iv4D3O8yZOG42d7TbPLZ8QG
+xfb2pWI7TxilRKAM/RFwlaU6IMT/0A==
+=eqBq
+-----END PGP SIGNATURE-----
+
+--Sig_/3vZuWlHWNFvmOkWX=eeyRBv--
