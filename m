@@ -2,111 +2,73 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A14C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D54B3207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLxBZ9um"
+	by mail.kernel.org (Postfix) with ESMTP id 57E31207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgE1GmA (ORCPT
+        id S1726910AbgE1GmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:42:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgE1Gl6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:41:58 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C823C05BD1E;
-        Wed, 27 May 2020 23:41:58 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id a13so11131946pls.8;
-        Wed, 27 May 2020 23:41:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xrBThDxeaj7xavtiCZsH7YWZDMSxeuAoxlObig/4N/I=;
-        b=FLxBZ9um2B2vEtPr7iWB8XrtkQjPngKLYYruLGsgNh0z4zcH/kRn+xf9BjeYNqgn6v
-         a1y8YeP8u9KYE8YO90AbBef2V2RHKBFt5Uht42QMif6yLUiSoBF96vNaq3O2mrjUecyY
-         7n1PFt5QAypRKHp3c0ajsBka1XeAjra/w41dwwD+ZJLvJoA6iDRzZu5rieTDtEBfc8OH
-         XK8eB+Hghu9vQMOaaO+1w5bUxee5WXmODQZsnsKZhcoVUJYU0lTWAJlmakfZzBsw9Qan
-         cQPV/i03z77q21dBx2XCO2Qg/wTl24x7aWlKON4pprcUxVi2JtpcDVn9aZOW5joX9rJl
-         PPDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xrBThDxeaj7xavtiCZsH7YWZDMSxeuAoxlObig/4N/I=;
-        b=O+X25ODh+OiQ0NUggTPO+dplbmElkFUgJUDy/NU4LMnL+iuWon2cQfwnWbdZcpaCjk
-         20Jk2U9u/YjEvkb5odO85d8yc8+GfNPd2pvhYbyscVTaSMjJMCEtVMRmhAjjbAufiEFK
-         Xsnk/7Gde3Quo5eBYZ585pJOk1KqG0emBGp4HueJQf5jJVicOIPd9ZgbB+4Kay/QtAUO
-         evRpmKDKtYYRyAsSmF3+MsZN6F/IqlUiItwUAOIq7HZ50i1r8IYYpB1QhjsJsJeDw8Hy
-         5amPqE3UE49yJWIfFyKTqHoBHVhD3y8Ef2mNPllbAis8UsmMkOVVzlldaSieAwmXLU51
-         Qwow==
-X-Gm-Message-State: AOAM532WQoHbl0/AdIqhywVQRP++ibdVcj/65i90N+PGMPu4CF5IDOx6
-        9YxRZEqddqXtKW9+6BJ4aGg=
-X-Google-Smtp-Source: ABdhPJxfyVJYCW6OXxyIdqotYbExAo0vhBiYRCbKzt47PRvIp3kO28WGI5wLHLxB+zAdla2Gy3EPbA==
-X-Received: by 2002:a17:902:9695:: with SMTP id n21mr2045679plp.137.1590648118126;
-        Wed, 27 May 2020 23:41:58 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id h21sm4284633pjz.6.2020.05.27.23.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 23:41:57 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] media: exynos4-is: Add missed check for pinctrl_lookup_state()
-Date:   Thu, 28 May 2020 14:41:47 +0800
-Message-Id: <20200528064147.547158-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 28 May 2020 02:42:20 -0400
+Received: from 8bytes.org ([81.169.241.247]:45136 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725836AbgE1GmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:42:20 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 2194526B; Thu, 28 May 2020 08:42:18 +0200 (CEST)
+Date:   Thu, 28 May 2020 08:42:16 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, jroedel@suse.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/10] iommu/amd: Unexport get_dev_data()
+Message-ID: <20200528064216.GN5221@8bytes.org>
+References: <20200527115313.7426-1-joro@8bytes.org>
+ <20200527115313.7426-3-joro@8bytes.org>
+ <20200528061353.GA17035@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528061353.GA17035@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
-Add the missed check to fix it.
+On Wed, May 27, 2020 at 11:13:53PM -0700, Christoph Hellwig wrote:
+> On Wed, May 27, 2020 at 01:53:05PM +0200, Joerg Roedel wrote:
+> > From: Joerg Roedel <jroedel@suse.de>
+> > 
+> > This function is internal to the AMD IOMMU driver and only exported
+> > because the amd_iommu_v2 modules calls it. But the reason it is called
+> > from there could better be handled by amd_iommu_is_attach_deferred().
+> > So unexport get_dev_data() and use amd_iommu_is_attach_deferred()
+> > instead.
+> 
+> Btw, what is the reason amd_iommu_v2 is a separate module?  It is
+> very little code, and other drivers seem to just integrate such
+> functionality.
 
-Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]") 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Add fixes tag.
+The module contains optional functionality that is only needed by the
+amd_kfd driver, which itself only does something useful on (newer) AMD
+GPUs. So I made it a separate module back in the days to save the memory
+when it is not needed. But this caused other problems with the amd_kfd
+module, when they got loaded in the wrong order. And the module is often
+loaded by distros anyway, as it successfully loads even when no AMD
+IOMMU is in the system. The reason for that was to have the symbols
+available for drivers which can optionally use AMD IOMMUv2
+functionality.
 
- drivers/media/platform/exynos4-is/media-dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+In fact I have already thought about making it built-in, just havn't
+done so yet.
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index 9aaf3b8060d5..9c31d950cddf 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -1270,6 +1270,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
- 
- 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
- 					PINCTRL_STATE_IDLE);
-+	if (IS_ERR(pctl->state_idle))
-+		return PTR_ERR(pctl->state_idle);
-+
- 	return 0;
- }
- 
--- 
-2.26.2
 
+Regards,
+
+	Joerg
