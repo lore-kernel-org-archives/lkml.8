@@ -2,117 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59367C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD43C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 286322073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590691905;
-	bh=ET8yM6AWMNpDjaCHAyz3Kke+AsO4jCxWygmB2OrK0MQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dy3mFP7fFBLq3Fr3qT2z+E0dfm/Sb91DLwvg4KQBVt95UNLASTGw8SK9LsSUSGg4g
-	 uwdWHyUpZTSeRpdBsht7cU152R6I1YdyImozieJSK4wKfV7ZpLGvGBy1RVyaA07U+2
-	 TNIxWaBGkKlUwS3n5x8oB8B+1QAElCjvWsT5k1B8=
+	by mail.kernel.org (Postfix) with ESMTP id 71D612074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:54:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLSJ+Lpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406023AbgE1Svo (ORCPT
+        id S2406032AbgE1Sx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:51:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54718 "EHLO
+        Thu, 28 May 2020 14:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405912AbgE1Svm (ORCPT
+        with ESMTP id S2405951AbgE1Sx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:51:42 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25344C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:51:42 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id h188so17215441lfd.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:51:42 -0700 (PDT)
+        Thu, 28 May 2020 14:53:57 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BA8C08C5C6;
+        Thu, 28 May 2020 11:53:57 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id ci21so3678413pjb.3;
+        Thu, 28 May 2020 11:53:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AhLg0g9nIVFkh8Xej4e2gvlmNSMTD4F2E/T/7QsRMv8=;
-        b=AYcUjneN2MB3Dg+M1pugzVZJdxa872FQyc0afbyKSWW1oWb/d1rwk9bn7+CzdK3mHa
-         tArLlEWWcS0pmgUdgvh4UhxapiHNyCYitzgmuPpFaFrB1CcK1PCfLpwMLGY/rt9ZbGVr
-         HuHNIUVtpMtoMJZ4AirU8Bfo1+H2VgFd0PSHQ=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tZ7Vc9iMN6KFf8vNf3m0eJCmtRi1FglHJlqzSAdVkZ0=;
+        b=YLSJ+LpvFz6XfEKIbwz6U3/AVdLhCJCdC7QEYOF1kKIuTyh3V4d7OwYNyOVaIjRw6Z
+         JpXrtlz1k6O44QJh1dMpcwe99fiDC+6t/Pp2UPeu6Jh06dl/VSsdLD+f3nX4lrqUglJL
+         d06MsVFz5baw2/SPQUfW0grjn2ZsntL6SVvJQlm+MDYHt5nCa5R+cPZmkRsLSER9+trI
+         VHYJJ4tLtJXoPrTIWvP+3uXcg1lR5tvWaA1Svw+oog71tf6tBOqCIAeoHRjoT+648FiQ
+         Fhx93wI0jAlBlmJDeGOubdhjH21IqzVPStH1EiPE5DyOR8K2J1ztiiyUfesG3NGIurrK
+         D1Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AhLg0g9nIVFkh8Xej4e2gvlmNSMTD4F2E/T/7QsRMv8=;
-        b=TmtW2Q2VuIBBHDZb7ervpJiomM7C404v48sYeSk9R5Y9vRvu5cqj2ss3CJpZemY1sp
-         e7P/sNSjWZ0hvBApqHsrc/o8TkLa/ekpVCRF52IJcPOQjCZbEmJQCap2g3RtQihJWX5C
-         ResyRMF4LPWO326HAU26I0RWZWUAZ2/XHqBdfkhhwp7yF+6P2sobCSU+zmiNDpIRkcBi
-         K4Mp8D/b2PcxI7cAxwQ3CdZsJUwjeTyUFS90ECyT/IEWqqevsX5M3R+3PZ4i6pLNlki/
-         uHLHhh9XMiz0HM44QJThOXQQJtgoQ/wymghBbadCQ85rImUfRVFF6dGbOYoYNWvBDrM5
-         yYYQ==
-X-Gm-Message-State: AOAM532wCEDsSexoAFVzGHKgfGyUbLKNU9z94lG0JXcWDp4rWHR8pqar
-        RmBe/5Vpjix7psp8h2OGuhL7pKXqVZw=
-X-Google-Smtp-Source: ABdhPJwa1FpS0DRwMuLBTUQ0DKTRbTkwWsYIKwtAdiUNu0x1kvG+suniU544SgiBLKhe2u5/8wPPoQ==
-X-Received: by 2002:ac2:4114:: with SMTP id b20mr2355166lfi.34.1590691898972;
-        Thu, 28 May 2020 11:51:38 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id h2sm1805648ljb.45.2020.05.28.11.51.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 11:51:38 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id v16so34766561ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:51:37 -0700 (PDT)
-X-Received: by 2002:a2e:8090:: with SMTP id i16mr1927771ljg.421.1590691897249;
- Thu, 28 May 2020 11:51:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200528054043.621510-1-hch@lst.de>
-In-Reply-To: <20200528054043.621510-1-hch@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 11:51:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
-Message-ID: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
-Subject: Re: clean up kernel_{read,write} & friends v2
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tZ7Vc9iMN6KFf8vNf3m0eJCmtRi1FglHJlqzSAdVkZ0=;
+        b=oxrGWQLHfF30oD9VgZCf3WMBE5TBapLw1S9Ozfm1X7CiUuUNsr4pZFEjYxd1AOjzgB
+         EG48/pOI5VbM5tVz4Ka6HW/IRtEPxpEHyWyx7vHIV1LN7mrPf3zJ/NQlhrTDPRuTUFt6
+         hNLkZ/SmNZOfv4BOVYLz0WUp4JbEaOLcJFA/kqRh6RWo1pfTo8SP1Il+J/HKG/6QxNbd
+         lbvCYDCXA5XGbjH1wT9djh4MU6VrJ7p03//Vpyky3OxNv5aH35OERbNo1sk5BQXOCaai
+         b3kEqQD82bGVW1w4j1NzsizoHr6e4kEY/r3lcHSfvNb2hR3YCKNhpTY8Z8BAozi94/vX
+         SHHw==
+X-Gm-Message-State: AOAM5314s+e68OKbiGkjj6Rmt/8/79DTLY13l85ZUh5yFUoFT8XnQ0nX
+        7YKxQK4JTlu4UvJENi87HTQ=
+X-Google-Smtp-Source: ABdhPJzVQUPX3S7UHZlOQgBxQJS9LzRooe+ZAtJZrLVJsm9msV1osHonGBuS22zxeu9SXYRX69qHGA==
+X-Received: by 2002:a17:902:8ec5:: with SMTP id x5mr4960795plo.149.1590692037271;
+        Thu, 28 May 2020 11:53:57 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id s13sm5253179pfh.118.2020.05.28.11.53.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 11:53:56 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] arm64: dts: qcom: lenovo630: Add Modem firmware files
+Date:   Thu, 28 May 2020 11:53:41 -0700
+Message-Id: <20200528185341.4891-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:40 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> this series fixes a few issues and cleans up the helpers that read from
-> or write to kernel space buffers, and ensures that we don't change the
-> address limit if we are using the ->read_iter and ->write_iter methods
-> that don't need the changed address limit.
+By specifying the modem firmware files, we can boot the modem subsystem
+which also gives us wifi.
 
-Apart from the "please don't mix irrelevant whitespace changes with
-other changes" comment, this looks fine to me.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-And a rant related to that change: I'm really inclined to remove the
-checkpatch check for 80 columns entirely, but it shouldn't have been
-triggering for old lines even now.
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+index 407c6a32911c..89492ed5196c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
++++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+@@ -25,6 +25,11 @@
+ 	};
+ };
+ 
++&remoteproc_mss {
++	firmware-name = "qcom/LENOVO/81F1/qcdsp1v28998.mbn",
++			"qcom/LENOVO/81F1/qcdsp28998.mbn";
++};
++
+ &sdhc2 {
+ 	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
+ };
+-- 
+2.17.1
 
-Or maybe make it check for something more reasonable, like 100 characters.
-
-I find it ironic and annoying how "checkpatch" warns about that silly
-legacy limit, when checkpatch itself then on the very next few lines
-has a line that is 124 columns wide
-
-And yes, that 124 character line has a good reason for it. But that's
-kind of the point. There are lots of perfectly fine reasons for longer
-lines.
-
-I'd much rather check for "no deep indentation" or "no unnecessarily
-complex conditionals" or other issues that are more likely to be
-_real_ problems.  But do we really have 80x25 terminals any more that
-we'd care about?
-
-               Linus
