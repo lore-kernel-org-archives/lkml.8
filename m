@@ -2,100 +2,80 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37907C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0F8208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590629177;
-	bh=FrkNrOnyuxxgqjKw18LCwgpFRO2g3jWI9Z3k+0njVXQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gD1xY12su1iZWxc8eSAMXTcs1lP2xkxl7Q+cE0F9qQT8lscMIJJaxAxeybDVB2/aH
-	 8cNWu+6hQP+qdcKSXlwCoGk3iFauy0o1iaY0WTG8MKGVzldfVRxzvnkju6zt4Q7Hsz
-	 07k0npX2+0kp5WTam3rTFBK3kyjC34L6iwfJKmiY=
+	by mail.kernel.org (Postfix) with ESMTP id 3E06F20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgE1B0Q (ORCPT
+        id S1726214AbgE1B27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:26:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725747AbgE1B0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:26:15 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B1920888;
-        Thu, 28 May 2020 01:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590629175;
-        bh=FrkNrOnyuxxgqjKw18LCwgpFRO2g3jWI9Z3k+0njVXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NR0QGGZyrKSAieQ6Pte0JsOsZzZtDrD/6rX7sz1N5YPNmxprW3x2V4nULOEE1cWRG
-         Dy4fT75efExtLjP7Zhl813wPkRRXrWe0utFYw/Ri3IeChB4nngDk6kCf0VN6dNqASl
-         aGG0gQHe6NM6lFMSuH31TZ/qwV9LI8z5h6y4Es8A=
-Date:   Wed, 27 May 2020 18:26:15 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 3/3] f2fs: fix to cover meta flush with cp_lock
-Message-ID: <20200528012615.GA232094@google.com>
-References: <20200527102753.15743-1-yuchao0@huawei.com>
- <20200527102753.15743-3-yuchao0@huawei.com>
- <20200527210233.GC206249@google.com>
- <23245f6e-528d-43ab-57b6-4ca16db43fe5@huawei.com>
+        Wed, 27 May 2020 21:28:59 -0400
+Received: from mail.windriver.com ([147.11.1.11]:60236 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgE1B26 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:28:58 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 04S1Spg2015775
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Wed, 27 May 2020 18:28:52 -0700 (PDT)
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 27 May 2020 18:28:50 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <tj@kernel.org>
+CC:     <jiangshanlai@gmail.com>, <markus.elfring@web.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6] workqueue: Remove unnecessary kfree() call in rcu_free_wq()
+Date:   Thu, 28 May 2020 09:37:36 +0800
+Message-ID: <20200528013736.39356-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23245f6e-528d-43ab-57b6-4ca16db43fe5@huawei.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28, Chao Yu wrote:
-> On 2020/5/28 5:02, Jaegeuk Kim wrote:
-> > On 05/27, Chao Yu wrote:
-> >> meta inode page should be flushed under cp_lock, fix it.
-> > 
-> > It doesn't matter for this case, yes?
-> 
-> It's not related to discard issue.
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-I meant we really need this or not. :P
+The data structure member "wq->rescuer" was reset to a null pointer
+in one if branch. It was passed to a call of the function "kfree"
+in the callback function "rcu_free_wq" (which was eventually executed).
+The function "kfree" does not perform more meaningful data processing
+for a passed null pointer (besides immediately returning from such a call).
+Thus delete this function call which became unnecessary with the referenced
+software update.
 
-> 
-> Now, I got some progress, I can reproduce that bug occasionally.
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> >> ---
-> >>  fs/f2fs/file.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >>
-> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> >> index f7de2a1da528..0fcae4d90074 100644
-> >> --- a/fs/f2fs/file.c
-> >> +++ b/fs/f2fs/file.c
-> >> @@ -2260,7 +2260,9 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
-> >>  		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
-> >>  		break;
-> >>  	case F2FS_GOING_DOWN_METAFLUSH:
-> >> +		mutex_lock(&sbi->cp_mutex);
-> >>  		f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_META_IO);
-> >> +		mutex_unlock(&sbi->cp_mutex);
-> >>  		f2fs_stop_checkpoint(sbi, false);
-> >>  		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
-> >>  		break;
-> >> -- 
-> >> 2.18.0.rc1
-> > .
-> > 
+Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
+
+Co-developed-by: Markus Elfring <Markus.Elfring@web.de> 
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ v1->v2->v3->v4->v5->v6:
+ Modify weakly submitted information and tag.
+
+ kernel/workqueue.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 891ccad5f271..a2451cdcd503 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -3491,7 +3491,6 @@ static void rcu_free_wq(struct rcu_head *rcu)
+ 	else
+ 		free_workqueue_attrs(wq->unbound_attrs);
+ 
+-	kfree(wq->rescuer);
+ 	kfree(wq);
+ }
+ 
+-- 
+2.24.1
+
