@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E40C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 335FF2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A2921548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667821;
-	bh=iEDnrsz6xY98L2zR/1m+vsa68l86wv7afRh44H+XURc=;
+	s=default; t=1590667826;
+	bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqfHT4sxKm8Icq4O1wZa4C28CRwl8mjdrH2NKrmavJwW+QMF2fBOj8VKtV+tCueWE
-	 xy/YS+E6tqR/It9eLaYu9BsWuEMfgsuGXoNaWIoDa+lepXj5qEMciAb9yXjh0FGXVi
-	 kKRtmfa2wg23f0yPXvIwlLOkFLjki3pfbJpHvGh8=
+	b=EXQT8xGjwqfc9s2OFb0NmjeSf/mVil3/HojWWiBiWnHcw8rLwQKPuAFw67xnofTyb
+	 FdSPB1T50JnSw6UCIUt451DuSIeshz3vzThoZ7Dm7TlBQgUGldDBwIse4xG1EeOX0s
+	 YVDLGyoPHktO7KwMDbmSVO9fh/xtSeCIGtq6eGWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbgE1L4U (ORCPT
+        id S2389455AbgE1MKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48118 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:10:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388630AbgE1L4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:07 -0400
+        id S2388686AbgE1L4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72119212CC;
-        Thu, 28 May 2020 11:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76612208E4;
+        Thu, 28 May 2020 11:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666967;
-        bh=iEDnrsz6xY98L2zR/1m+vsa68l86wv7afRh44H+XURc=;
+        s=default; t=1590666979;
+        bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vHRvASaAjuR+Nb7gSwldh4/ZxkYxODyQJHUxlHOqY4f0sNRSfZS5LbLSzQDu3CHYk
-         ZJz43yfocmveZ+hU9fkbmmvMkZ2FCjKwE95Qcq2KHW//0hOi1gaWNBWooTcvlCLnGb
-         mvHdR6Yx/hE4Kb33UTbG6N55DLcDHYABPl10G8F0=
+        b=grWxn/rFk284PwVWUq5pHEdH7pmffpTS7ja30QsO8+uCs9czuA+oII9pfssE8Yhzm
+         FhasNl7MUNmMj5iVcC4xnTfaD627yCxLFk21VtP3TSH1vgI7tANNNn7/pZDyYxSBSg
+         tfkx1+Uuqt8G7Ed+RXiGipUkTxBKHu73wqHb4hbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Can Guo <cang@codeaurora.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 05/47] scsi: pm: Balance pm_only counter of request queue during system resume
-Date:   Thu, 28 May 2020 07:55:18 -0400
-Message-Id: <20200528115600.1405808-5-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>, Stan Johnson <userm57@yahoo.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 16/47] net: bmac: Fix read of MAC address from ROM
+Date:   Thu, 28 May 2020 07:55:29 -0400
+Message-Id: <20200528115600.1405808-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -60,80 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit 05d18ae1cc8a0308b12f37b4ab94afce3535fac9 ]
+[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
 
-During system resume, scsi_resume_device() decreases a request queue's
-pm_only counter if the scsi device was quiesced before. But after that, if
-the scsi device's RPM status is RPM_SUSPENDED, the pm_only counter is still
-held (non-zero). Current SCSI resume hook only sets the RPM status of the
-scsi_device and its request queue to RPM_ACTIVE, but leaves the pm_only
-counter unchanged. This may make the request queue's pm_only counter remain
-non-zero after resume hook returns, hence those who are waiting on the
-mq_freeze_wq would never be woken up. Fix this by calling
-blk_post_runtime_resume() if a sdev's RPM status was RPM_SUSPENDED.
+In bmac_get_station_address, We're reading two bytes at a time from ROM,
+but we do that six times, resulting in 12 bytes of read & writes. This
+means we will write off the end of the six-byte destination buffer.
 
-(struct request_queue)0xFFFFFF815B69E938
-	pm_only = (counter = 2),
-	rpm_status = 0,
-	dev = 0xFFFFFF815B0511A0,
+This change fixes the for-loop to only read/write six bytes.
 
-((struct device)0xFFFFFF815B0511A0)).power
-	is_suspended = FALSE,
-	runtime_status = RPM_ACTIVE,
+Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
 
-(struct scsi_device)0xffffff815b051000
-	request_queue = 0xFFFFFF815B69E938,
-	sdev_state = SDEV_RUNNING,
-	quiesced_by = 0x0,
-
-B::v.f_/task_0xFFFFFF810C246940
--000|__switch_to(prev = 0xFFFFFF810C246940, next = 0xFFFFFF80A49357C0)
--001|context_switch(inline)
--001|__schedule(?)
--002|schedule()
--003|blk_queue_enter(q = 0xFFFFFF815B69E938, flags = 0)
--004|generic_make_request(?)
--005|submit_bio(bio = 0xFFFFFF80A8195B80)
-
-Link: https://lore.kernel.org/r/1588740936-28846-1-git-send-email-cang@codeaurora.org
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Reported-by: Stan Johnson <userm57@yahoo.com>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_pm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/apple/bmac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_pm.c b/drivers/scsi/scsi_pm.c
-index 3717eea37ecb..5f0ad8b32e3a 100644
---- a/drivers/scsi/scsi_pm.c
-+++ b/drivers/scsi/scsi_pm.c
-@@ -80,6 +80,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 	dev_dbg(dev, "scsi resume: %d\n", err);
+diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
+index a58185b1d8bf..3e3711b60d01 100644
+--- a/drivers/net/ethernet/apple/bmac.c
++++ b/drivers/net/ethernet/apple/bmac.c
+@@ -1182,7 +1182,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
+ 	int i;
+ 	unsigned short data;
  
- 	if (err == 0) {
-+		bool was_runtime_suspended;
-+
-+		was_runtime_suspended = pm_runtime_suspended(dev);
-+
- 		pm_runtime_disable(dev);
- 		err = pm_runtime_set_active(dev);
- 		pm_runtime_enable(dev);
-@@ -93,8 +97,10 @@ static int scsi_dev_type_resume(struct device *dev,
- 		 */
- 		if (!err && scsi_is_sdev_device(dev)) {
- 			struct scsi_device *sdev = to_scsi_device(dev);
--
--			blk_set_runtime_active(sdev->request_queue);
-+			if (was_runtime_suspended)
-+				blk_post_runtime_resume(sdev->request_queue, 0);
-+			else
-+				blk_set_runtime_active(sdev->request_queue);
- 		}
- 	}
- 
+-	for (i = 0; i < 6; i++)
++	for (i = 0; i < 3; i++)
+ 		{
+ 			reset_and_select_srom(dev);
+ 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
 -- 
 2.25.1
 
