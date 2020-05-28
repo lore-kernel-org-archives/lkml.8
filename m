@@ -2,124 +2,115 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA90C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283D12088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:40:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="DeK/qHOk"
+	by mail.kernel.org (Postfix) with ESMTP id 998DE208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgE1JkV (ORCPT
+        id S1728453AbgE1Jls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:40:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgE1JkU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:40:20 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A26C08C5C4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:40:20 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id u190so5590286ooa.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Rg/jQtOAufmv9zTXyUApJHA7GRXuqiMxXo9mtSDI+YU=;
-        b=DeK/qHOkPphL1YEJ12bOXStaEyZQMTUB3Xmk/bUN5zYAVRIY7PYOusUAyR3pRGgbFF
-         WzWbgZeGRg1FLbPgaX030YozQ1iKIZ/abEEzTzMEUBywnOoXp1iNV83f9vlzQWrLwX4E
-         PTNQKNu7jr5PSyJ5ynLEaACi1Bd+1YhxNB6uW4OXXMM9w8DCJlByt0f1WND6jsTEaqBH
-         sdm8siOyLQ/EJIM7N0t51oINAACfwkUxFOEm8cQVF91lNBsX284mPAdLKeSTVuzDA9Y6
-         pdJyIQpY+IABGaf+N9Ck0kB6zR3c/pCR4nxomnvdyHA56+IMOvtndhc3abjKZ/Asxqrt
-         yuwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Rg/jQtOAufmv9zTXyUApJHA7GRXuqiMxXo9mtSDI+YU=;
-        b=c3Bwd+ohGeIRxaH50eD4w4qPl/BxUCkr+5LGVTQjP/aJs6UMoy3Y7j9tEFtpa4Yx3F
-         JtMi7T491sDRaIfAfzeKxoz+d5d84ZBFckPIVtNoy9ncufvxHx6bwvfClRzSAFD0kO2T
-         u1FY48GPAhPgLflzc5r81lfVyG6MAsXFedzQe8CeaHqdGpvSqn83vwsLdQrf5oVdTMW2
-         gjnMHkNabQGi02bhur9at9GZOWyQ8Kk9KSFMELJYJQKui6K1hBby6TcPmFnTIeT8BSJT
-         F7+UHPvkIwXK91ueeIO/Kf6gfAcpseG90Yze2oF51m1E/ypER09VU4Colge1RCTzaAH+
-         98zg==
-X-Gm-Message-State: AOAM533torwXMxSMWTaFE5Jho6AGc4HKEixHFOScLVNXwY4M+j6rZ/Aa
-        K3jndjj5UQTG65YkrMGfv3o+U77PfWg=
-X-Google-Smtp-Source: ABdhPJynq/Sf7HuCQoaXq3kTzLGkYX8RA2u9n6/Pkv/ESo8hdfhY/a6VvFAmwcHhf4r97Gr2R9yjqA==
-X-Received: by 2002:a4a:1dc5:: with SMTP id 188mr1810473oog.76.1590658818843;
-        Thu, 28 May 2020 02:40:18 -0700 (PDT)
-Received: from [192.168.86.21] ([136.62.4.88])
-        by smtp.gmail.com with ESMTPSA id a7sm1486763otf.38.2020.05.28.02.40.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 02:40:18 -0700 (PDT)
-Subject: Re: [GIT PULL] sh: remove sh5 support
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-sh@vger.kernel.org, ysato@users.sourceforge.jp,
-        dalias@libc.org, linux-kernel@vger.kernel.org,
-        viro@zeniv.linux.org.uk, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200424221948.1120587-1-arnd@arndb.de>
- <20200507143552.GA28683@infradead.org> <20200528054600.GA29717@infradead.org>
- <67759544-b041-74af-fe95-50fca4a9ea39@physik.fu-berlin.de>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <3a2164e3-08da-efea-2d58-5e230a85ccce@landley.net>
-Date:   Thu, 28 May 2020 04:40:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 05:41:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53500 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728300AbgE1Jlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:41:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 037BFAD81;
+        Thu, 28 May 2020 09:41:44 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D71171E1283; Thu, 28 May 2020 11:41:44 +0200 (CEST)
+Date:   Thu, 28 May 2020 11:41:44 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Xiao Yang <yangx.jy@cn.fujitsu.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>, linux-ext4@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>, Jeff Moyer <jmoyer@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 6/8] fs/ext4: Make DAX mount option a tri-state
+Message-ID: <20200528094144.GD14550@quack2.suse.cz>
+References: <20200521191313.261929-1-ira.weiny@intel.com>
+ <20200521191313.261929-7-ira.weiny@intel.com>
+ <5ECE00AE.3010802@cn.fujitsu.com>
+ <20200527235002.GA725853@iweiny-DESK2.sc.intel.com>
+ <5ECF7CD3.20409@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <67759544-b041-74af-fe95-50fca4a9ea39@physik.fu-berlin.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ECF7CD3.20409@cn.fujitsu.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 12:55 AM, John Paul Adrian Glaubitz wrote:
-> On 5/28/20 7:46 AM, Christoph Hellwig wrote:
->> [adding Linus]
->>
->> On Thu, May 07, 2020 at 07:35:52AM -0700, Christoph Hellwig wrote:
->>> Any progress on this?  I plan to resend the sh dma-mapping I've been
->>> trying to get upstream for a year again, and they would conflict,
->>> so I could look into rebasing them first.
->>
->> So for years now it has been close to and in the end impossible to
->> provoke sh maintainer action.  At the same point hardware is pretty much
->> long gone for the real commercial variants, and never took off for the
->> open hardware nommu variant.
->>
->> Linus, would you ok with a 5.8 pull request to just kill off arch/sh/?
+On Thu 28-05-20 16:56:51, Xiao Yang wrote:
+> On 2020/5/28 7:50, Ira Weiny wrote:
+> > On Wed, May 27, 2020 at 01:54:54PM +0800, Xiao Yang wrote:
+> > > On 2020/5/22 3:13, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny<ira.weiny@intel.com>
+> > > > 
+> > > > We add 'always', 'never', and 'inode' (default).  '-o dax' continues to
+> > > > operate the same which is equivalent to 'always'.  This new
+> > > > functionality is limited to ext4 only.
+> > > > 
+> > > > Specifically we introduce a 2nd DAX mount flag EXT4_MOUNT2_DAX_NEVER and set
+> > > > it and EXT4_MOUNT_DAX_ALWAYS appropriately for the mode.
+> > > > 
+> > > > We also force EXT4_MOUNT2_DAX_NEVER if !CONFIG_FS_DAX.
+> > > > 
+> > > > Finally, EXT4_MOUNT2_DAX_INODE is used solely to detect if the user
+> > > > specified that option for printing.
+> > > Hi Ira,
+> > > 
+> > > I have two questions when reviewing this patch:
+> > > 1) After doing mount with the same dax=inode option, ext4/xfs shows
+> > > differnt output(i.e. xfs doesn't print 'dax=inode'):
+> > > ---------------------------------------------------
+> > > # mount -o dax=inode /dev/pmem0 /mnt/xfstests/test/
+> > > # mount | grep pmem0
+> > > /dev/pmem0 on /mnt/xfstests/test type ext4 (rw,relatime,seclabel,dax=inode)
+> > > 
+> > > # mount -odax=inode /dev/pmem1 /mnt/xfstests/scratch/
+> > > # mount | grep pmem1
+> > > /dev/pmem1 on /mnt/xfstests/scratch type xfs
+> > > (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+> > > ----------------------------------------------------
+> > > Is this expected output? why don't unify the output?
+> > 
+> > Correct. dax=inode is the default.  xfs treats that default the same whether
+> > you specify it on the command line or not.
+> > 
+> > For ext4 Jan specifically asked that if the user specified dax=inode on the
+> > command line that it be printed on the mount options.  If you don't specify
+> > anything then dax=inode is in effect but ext4 will not print anything.
+> > 
+> > I had the behavior the same as XFS originally but Jan wanted it this way.  The
+> > XFS behavior is IMO better and is what the new mount infrastructure gives by
+> > default.
 > 
-> We're maintaining SH in Debian so I'm interested in keeping arch/sh, but
-> I'm also let down that SH maintainers aren't that active at the moment.
-> 
-> I do know that Yoshinori Sato has a tree where he takes patches and sends
-> PRs from time to time, but I have no idea what is going on.
+> Could we unify the output?  It is strange for me to use differnt output on
+> ext4 and xfs.
 
-There are still people who care about the architecture and try to get fixes in:
+If we'd unify the output with XFS, it would be inconsistent with all the
+other ext4 mount options. So I disagree with that. I agree it is not ideal
+to have different behavior between xfs and ext4 but such is the historical
+behavior. If we want to change that, we need to change the handling for all
+the ext4 mount options. I'm open for that discussion but it is a problem
+unrelated to this patch set.
 
-  https://www.spinics.net/lists/linux-sh/msg56844.html
-
-Alas, I haven't had better luck getting Rich's attention, and I say that as
-someone who has his phone number.
-
-It met Sato-san for lunch once years ago, but he lives in Tokyo and english is
-not his first language. I was under the impression he became co-maintainer to
-show Rich the ropes of maintainership and to answer obscure architectural
-questions, not because he was volunteering for significantly more work. Rich was
-supposed to be load bearing.
-
-I don't really have the domain expertise to do it myself... :(
-
-Rob
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
