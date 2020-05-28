@@ -2,106 +2,93 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C283EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1891FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5092073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD102088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590696126;
-	bh=aVYxP7+2RyedpkJ1nyED5/t7IMRyTZLYOpD/3LzmIQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qEBbbW7jVhJU5GKCPDAp9V6d42wMjIUvXHeku2dlP5HIanxpYdZyrwwe+O8nbJDgZ
-	 c9h0rBWou+vwB/NcZ9LTmf4Hx5UlWo9h25ShBSI7JJCCn+57jGBYR0BsRo/o4TPDXh
-	 1TJ8K/mbMOTqJSQ6NnZUUSMOj8KV01lafFjpfRGk=
+	s=default; t=1590696221;
+	bh=NIw5Btq0dmzq0CVYiZD6rRZc1lg4X7QFAZgo/5sBZYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0/fRQ0Mt0K/crtu4G8ZSm9BNW01tbQIipqdGb9/E5/C2KsdznCzTazUt6GyKNn7AI
+	 uachh/ceuRjA0Tc7tu75vOiwifeUHkgH5ogmDmdTZmkBQp6etAcnPZG66NY4lxP0It
+	 60ZUdk6Zws42XPREPy7K272smYS3G7VuBP0/KwJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406860AbgE1UCF (ORCPT
+        id S2406885AbgE1UDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406768AbgE1UCD (ORCPT
+        Thu, 28 May 2020 16:03:38 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44275 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406768AbgE1UDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:02:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5AA6C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:02:02 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id o9so3311551ljj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:02:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZGVDWib6rFI6u2cHNuBS7q44AMVUuGy+tY1n2uOTWt4=;
-        b=alKIs44dXi9rsQbYsZDyQcre3mM659EE40dpxqjve1g6kexznQ9xXZerJ7HdKI/Tqr
-         QqO5aRe6isuMMCyk4BWaWjTJY/BGoMMgHptuhk6mTO9gVVxK82kSqYr62iC9vAHZZyKQ
-         d+hDOFIa4UloPWuFSrvuOA1thoGC52dN+XEJA=
+        Thu, 28 May 2020 16:03:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id p20so18110717iop.11;
+        Thu, 28 May 2020 13:03:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZGVDWib6rFI6u2cHNuBS7q44AMVUuGy+tY1n2uOTWt4=;
-        b=aZsRaBURk45YVzEtgCmzSHZElBGfq5j7SdFE1CXsgn++F71SNKedVifx/ww59PwkYR
-         79LSKwmmv1JRTkvtM5zCMsxGQ8VolOADD9+B5qrqFtEcXpXdDP3Fdy0ii9j0iqvyGjPl
-         eizTvHmvIri1HYIaDNrPwibalYIqVOz/6Xxwi+7gWjqfUOALcLeO2HW3AzaNnJOn2Ddi
-         zAD+mbeFbe/9j1nlS4INb4SwZ/DHBhSMDuFdXLxq7pvwNPXx467FlAz/27EjJB4u4VQX
-         VJY6wHGV1WBbOPNgStkquhuuVqtQjy3v1Jp6l2L07n+cE82Mvks+G3b4rU66LSusS9dE
-         79xw==
-X-Gm-Message-State: AOAM533+tjZPsmW2TqcgjzL0lgVE5vnkdrg6PMVXXv+Sw1pN7TTjC7x0
-        iJfu4NOdPr+KV6TBLDitqI9obz0sXMI=
-X-Google-Smtp-Source: ABdhPJxNHoszfLWCZ3WCfkuhCzuVKMFO78Elz5ZLqqrPpwImWyoRROaPCCXkATjoL2kIJyisIFUMoA==
-X-Received: by 2002:a2e:b0e6:: with SMTP id h6mr2107848ljl.178.1590696119463;
-        Thu, 28 May 2020 13:01:59 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id q8sm1616968lfo.13.2020.05.28.13.01.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 13:01:58 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id w15so17266381lfe.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:01:57 -0700 (PDT)
-X-Received: by 2002:a19:6a0e:: with SMTP id u14mr2466293lfu.192.1590696117511;
- Thu, 28 May 2020 13:01:57 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WOZJJYcxACXW/f86CWGzaIWG9UVyWDM2VBeq6ibxzFA=;
+        b=faJNQ/AMpjNpyEqqNZ6VWKJDQzjwOpCUerNO/r9v3nkLHNsvHlMnEzDbhHlq/rkXPi
+         /FHxFKJj8LXCX9+GT51wXmhXc4xUPu1QGeG2dvAfyTrivimr6IL7FZLRLcJpZLC1x0IR
+         SZ+QiHRgrrrz1c9RmiAs+yvuE15/oL7+dmqPZWfCxHVnGGaDKdwfAmPtC//etQm5gUNG
+         ko8+xR/wsL4/g8sIk1dLadaxvzpatJ5Ko2gHs5IoPUMZuteE/2gS50IUAhxDSBqWj+XI
+         KlWLTw0XoTbtoOiR9+/CC1kQuYS9csG/9sEOdIyZRq33yBbyumVhmBvXmd5CqF/g0fAK
+         G8+A==
+X-Gm-Message-State: AOAM5316ZiHeGm1kXkgEsY3PBD7GjI1lj5+R04mn1SG/JEWBYpFYIZst
+        Ct6949y/2CqiooLkG6hACA==
+X-Google-Smtp-Source: ABdhPJy6bw+eVdj/3BkqQEG8iWgPJd3s+TdcOk/LXrCK3tBxvHyGnDNQ1TXnU6AiW/ROgs77w1FZzg==
+X-Received: by 2002:a02:c8d2:: with SMTP id q18mr4157449jao.127.1590696211401;
+        Thu, 28 May 2020 13:03:31 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id n22sm2921088ioh.46.2020.05.28.13.03.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 13:03:30 -0700 (PDT)
+Received: (nullmailer pid 589004 invoked by uid 1000);
+        Thu, 28 May 2020 20:03:29 -0000
+Date:   Thu, 28 May 2020 14:03:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-mmc@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        devicetree@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 01/17] dt-bindings: i2c: renesas,i2c: Document r8a7742
+ support
+Message-ID: <20200528200329.GA588958@bogus>
+References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1589555337-5498-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei> <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
- <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgz=7MGxxX-tmMmdCsKyYJkuyxNc-4uLP=e_eEV=OzUaw@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 13:01:41 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
-Message-ID: <CAHk-=wjW+_pjJzVRMuCbLhbWLkvEQVYJoXVBYGNW2PUgtX1fDw@mail.gmail.com>
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into snprintf()
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589555337-5498-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:50 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> I still don't understand why this small set of random options couldn't
-> just be kernel options that get set on the command line, and that have
-> independent and sane and explainable behavior? Why this odd mentality
-> of "syzkaller is special"?
+On Fri, 15 May 2020 16:08:41 +0100, Lad Prabhakar wrote:
+> Document i2c controller for RZ/G1H (R8A7742) SoC, which is compatible
+> with R-Car Gen2 SoC family.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/renesas,i2c.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-And just to clarify: the kernel option wouldn't be "syzcaller_twist"
-or something insane like that.
-
-It would be something like "kbd-disable-hotkeys" or whatever: actual
-real text that says what it does.
-
-             Linus
+Applied, thanks!
