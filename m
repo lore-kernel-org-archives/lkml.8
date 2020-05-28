@@ -2,143 +2,124 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D446AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB01C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6F20207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="OgFfHLjM"
+	by mail.kernel.org (Postfix) with ESMTP id 7D2DF208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590696794;
+	bh=Sl+FQX54KTnwvcKBxUeT4SXmuP4TyICnB6HzQEVhigU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PeeuN+dA4hAnCzMMkc2NBUPqygvWb8JYGscyUiIbrj14jdHaZASvfTh6UWDBTagmI
+	 rdHPPxfO7I34JBjL6A+Pwr8qyUh+1i4WtE5l+dsw+dQ8oinI8zrZzx5nu790xQM4pX
+	 FItiOIERQIfk0PK4CeWZEgziuJDONGicJ0V2JMZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406916AbgE1ULs (ORCPT
+        id S2406948AbgE1UNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406777AbgE1ULq (ORCPT
+        Thu, 28 May 2020 16:13:10 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:44971 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406917AbgE1UNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:11:46 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAA6C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:11:46 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id e20so7099qvu.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=83zLTVKdvpR2KxKh88qE1mTweOG1k93RYAEKbnweuYU=;
-        b=OgFfHLjM0xzOmXUQpzcCAMMrfpbK7MxIECNfhMYFKDunkqaArhuEzxRhhBna2RhZWt
-         dI5uXxPB91bBATybc4BO6D/IZ9XFYihdh4Ww2J/zjZAOcfJs0Ywxe5XpkYtsbPVHcnN+
-         dQNWfQWnFUJqwapSBddU8wJ3Jf+P0hmGbx79Gxlz8Mz4JxS/hOUQnsrgbwoTF/C2J9CY
-         +ldcrCBHzBD9/d/fM7E+irtE/rIfpQJ/awZqWcpJtHj+TuXt7Gelc9gpi1v4YwSvup+R
-         R95gCm5EwJnymHuv8GMnue0qTo/SUO2lAO0OvH4i1mBJbpu5cvs8jyDX5m3VeVsb1HgI
-         xeXg==
+        Thu, 28 May 2020 16:13:09 -0400
+Received: by mail-io1-f68.google.com with SMTP id p20so18147627iop.11;
+        Thu, 28 May 2020 13:13:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=83zLTVKdvpR2KxKh88qE1mTweOG1k93RYAEKbnweuYU=;
-        b=JihZTfPImkgKIvHpR2kksXz31hv7KKtzP5x87HJYdjlBtAyOELZzT3He/snC8V4WDf
-         dTo5reLK8pOHU/qUmnHZ34yEPXJ0AzcgngGmeMN3rpe1UsTXjCkhWYuY9YOSk9ilJu9f
-         PiY7VkBBHllTC41gGXa4UHbfZ5DXebbxdHeGGCqEKMOnaf8HQrMPhn/KROYJHSL4hVae
-         zEhPrAl3CFyqoyg06Vk3EwsutJSCeOimNJ1vhkaJq+qbuHOx6m8MzS2zG8Urb1lOM5wS
-         nFNCVGz6njitfYu8O1GhzUn2scCb1teVmW6DJwD/fIfBD5h3NDjgsCS6byfdZgnYhAmP
-         lVBw==
-X-Gm-Message-State: AOAM530024mIS+zPjwC4IfbQHxiCjRv8KDDmj8iHD70MOyRpv/j804dB
-        fWQs5q58veJrdBjQAIuQCJ3Izg==
-X-Google-Smtp-Source: ABdhPJwVzQ41nOq3YlszafKQOCiQXl6KehufAtMo9uhqbuy6HXJ3L5Rb6re1G77IVPDUCvMjAIhTgA==
-X-Received: by 2002:a0c:a9c6:: with SMTP id c6mr4986010qvb.224.1590696705375;
-        Thu, 28 May 2020 13:11:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:2535])
-        by smtp.gmail.com with ESMTPSA id v2sm5889705qtq.8.2020.05.28.13.11.44
+        bh=1oMkqoersnFFwgywd3WN+uq5VZO3agXx7VdT97nuswE=;
+        b=alTOlr0MOeHLZrQI7t6KiUUzl7xroqHHnFrB87T/9v/tIMEnr7d9Xe7QbJYd+nCbXq
+         ZHqozsJoKqKhuTJqlpHR2bP3yKacmYdtNRploQKApseuLYFDDsQwwww59fcmUa1Jzoyd
+         ziw6lk62fbCCsgRQ/Nrwhlt4pLgEMuMnuT8MnhcSdE6fOfw3tWGmvkzead5chDRPjsK4
+         s+rCiwOtxmjjuNqfaS79AuRGweH15L21dkjeQcsAPEc3UxGSmzShpkduImSG6tMC7mqs
+         XWmk6q1kA+k7YhrBLELJfYq62pJXzn9Vq5Xzbt3ECmUF9egZBuMs8sWNRXQIV0T+W/My
+         czpw==
+X-Gm-Message-State: AOAM533OWO3ul/KDwyzekSZei8b9XAmTbYJLVlZg90gZx8jq5A388u1K
+        e6r+np+XHD3EqidGg742ag==
+X-Google-Smtp-Source: ABdhPJwMmV4QCCuHOJ6KHY4KnxIF7p1ZXD6CHCaXRvZ6Vu7Xde/UspNzAIHI81yEGeFNzrjvoOcMhg==
+X-Received: by 2002:a02:665c:: with SMTP id l28mr4024811jaf.1.1590696787916;
+        Thu, 28 May 2020 13:13:07 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h71sm3860082ili.43.2020.05.28.13.13.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:11:44 -0700 (PDT)
-Date:   Thu, 28 May 2020 16:11:17 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-Message-ID: <20200528201117.GD69521@cmpxchg.org>
-References: <20200520165131.GB630613@cmpxchg.org>
- <20200520170430.GG6462@dhcp22.suse.cz>
- <20200520175135.GA793901@cmpxchg.org>
- <20200521073245.GI6462@dhcp22.suse.cz>
- <20200521135152.GA810429@cmpxchg.org>
- <20200521143515.GU6462@dhcp22.suse.cz>
- <20200521163833.GA813446@cmpxchg.org>
- <20200521173701.GX6462@dhcp22.suse.cz>
- <20200521184505.GA815980@cmpxchg.org>
- <20200528163101.GJ27484@dhcp22.suse.cz>
+        Thu, 28 May 2020 13:13:07 -0700 (PDT)
+Received: (nullmailer pid 602641 invoked by uid 1000);
+        Thu, 28 May 2020 20:13:06 -0000
+Date:   Thu, 28 May 2020 14:13:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: Add binding for
+ current-from-voltage
+Message-ID: <20200528201306.GA594238@bogus>
+References: <20200516022619.30779-1-xc-racer2@live.ca>
+ <BN6PR04MB06600A3AFE160C6E07BF5B2CA3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528163101.GJ27484@dhcp22.suse.cz>
+In-Reply-To: <BN6PR04MB06600A3AFE160C6E07BF5B2CA3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:31:01PM +0200, Michal Hocko wrote:
-> On Thu 21-05-20 14:45:05, Johannes Weiner wrote:
-> > After analyzing this problem, it's clear that we had an oversight
-> > here: all other reclaimers are already familiar with the fact that
-> > reclaim may not be able to complete the reclaim target in one call, or
-> > that page reclaim is inherently racy and reclaim work can be stolen.
+On Fri, May 15, 2020 at 07:26:18PM -0700, Jonathan Bakker wrote:
+> Some devices may require a current adc, but only have a voltage
+> ADC onboard.  In order to read the current, they have a resistor
+> connected to the ADC.  Add bindings for this possibility.
 > 
-> There is no disagreement here.
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> ---
+>  .../iio/adc/linux,current-from-voltage.yaml   | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
 > 
-> > We send a simple bug fix: bring this instance of reclaim in line with
-> > how everybody else is using the reclaim API, to meet the semantics as
-> > they are intendend and documented.
-> 
-> Here is where we are not on the same page though. Once you have identified
-> that the main problem is that the reclaim fails too early to meet the
-> target then the fix would be to enforce that target. I have asked why
-> this hasn't been done and haven't got any real answer for that.
+> diff --git a/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml b/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
+> new file mode 100644
+> index 000000000000..385d317607c3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
+> @@ -0,0 +1,47 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/linux,current-from-voltage.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Current ADC from voltage ADC and resistor
+> +
+> +maintainers:
+> +  - Jonathan Bakker <xc-racer2@live.ca>
+> +
+> +properties:
+> +  compatible:
+> +    const: linux,current-from-voltage
 
-Then I encourage you to re-read the thread.
+How is an ADC with a resistor attached a Linux thing? So you don't need 
+'linux', but then 'current-from-voltage' isn't the best naming. I don't 
+have a suggestion ATM.
 
-I have explained that reclaim invocations can fail to meet the
-requested target for a variety of reasons, including dirty state or
-other states that make memory temporarily unreclaimable, race
-conditions between reclaimers and so forth.
+> +
+> +  io-channel-names:
+> +    const: adc
+> +
+> +  io-channels:
+> +    maxItems: 1
+> +    description: Voltage ADC channel
+> +
+> +  linux,resistor-ohms:
+> +    description: Strength of resistor connected to voltage ADC
 
-I have also pointed out that this is widely acknowledged by the fact
-that all other reclaimers retry in the exact same manner. If you want
-to question that VM-wide precedence, please do so in your own patches.
+Wouldn't you need this to be micro-ohms? Otherwise, there'd be too much 
+voltage drop?
 
-As to the question around fairness, I have explained that fairness is
-a best effort and that if push comes to shove, preventing premature
-OOM situations or failing cgroup containment and causing system-wide
-OOMs is more important.
-
-> Instead what you call "a simple bug fix" has larger consequences
-> which are not really explained in the changelog and they are also
-> not really trivial to see. If the changelog explicitly stated that
-> the proportional memory reclaim is not sufficient because XYZ and
-> the implementation has been changed to instead meet the high limit
-> target then this would be a completely different story and I believe
-> we could have saved some discussion.
-
-The point of memory.high reclaim is to meet the memory.high memory
-limit. That, too, has been addressed - although it's astounding that
-it needed to be pointed out. The proportionality is an attempt at
-fairness that doesn't override the primary purpose.
-
-I appreciate your concerns, but your questions have been addressed.
-
-And you're not contributing anything of value to the conversation
-until you familiarize yourself with the purpose of the memory.high
-interface.
-
-Thanks
+Rob
