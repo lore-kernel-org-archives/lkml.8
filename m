@@ -2,158 +2,1056 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE450C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA9C208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJpSZTSo"
+	by mail.kernel.org (Postfix) with ESMTP id A4EC621475
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbgE1KCz (ORCPT
+        id S2387684AbgE1KEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:02:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387643AbgE1KCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:02:53 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7793C08C5C5;
-        Thu, 28 May 2020 03:02:52 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id c11so30481538ljn.2;
-        Thu, 28 May 2020 03:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I/h3gNMyb53kQmKAThGHtCMjDN3Ct7BvAp2TJgMXdZA=;
-        b=WJpSZTSoXxOoQNFiNdn06UQLrPFVP7QspnEg1drKRgsC5f8Nx1hiN8zz9Z2vyNHKdn
-         ITNwk3XNuaSbSVUe0EXZEmi7i50HofTw9v+2R5yRgBMmXkDGFGCMvvHubV4yBLyR16GL
-         FP4oUpJVYVMfaKfVW8+s4LSpLZlmjsY8fgCxYYsOVDlHHl9nLEQxbl4830z8gHZMMJv/
-         AWxk6I60V+gGP8EmM9PChMkBxBbWXuPoaOksra8i9XEzslhMxoX0mhOsZ0a/xgKQEGXx
-         P0yYH6cE97WBgGOyrLTF+pXyBYBnlbUWi/+LV910wzbJzzhssmqPUjOrMmj2oIlNc0z9
-         nTpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I/h3gNMyb53kQmKAThGHtCMjDN3Ct7BvAp2TJgMXdZA=;
-        b=j4Ps/OJqUxmG8pzA5WNcmTeeOarQPtRvAUp1RRm65n5zvISJyXhNYlUjRQkiUrTScD
-         rQ8RmhKUoZfXSZU0p1hwpXZbSgu9BmFNgQA39tIcxp+tB6T/6/XJ5PGUqUN60W7oHL68
-         1ffMYEg6QspVhRVN4pmitpWTrV4kwBrnTK5N+kiqXc0JMCiE2wQFPdbFG0FMNCs6sP6m
-         qFm6gcfQbxCCQV3I/ALp6zvaDfMngWIZagS8uXXBbm0q1g7j32wIFw+3kDMiZ85qB4+E
-         fVzc1bEdScCPip9NqaQt2vafmrfJQjzryUydToE/SveKHcGvEzN711MEDyOuvXMjtUlg
-         CeUQ==
-X-Gm-Message-State: AOAM532EaM+zCX9Jk3Ff38vxFx2WfWQT17E6aOL3PHYiITEHdgYd1J2g
-        I4KqUBqaOAmRk7Eb+7fR9Q9UbMMAUASvYOcSYbE=
-X-Google-Smtp-Source: ABdhPJyZid/lyuqY1E3XF3MpNA5pp/s7NOjWjcLahYBAhDGX3VlzICBAygFi9yx1WwgtsGZ7kz96rCT/FdXyTiDgFzo=
-X-Received: by 2002:a2e:711c:: with SMTP id m28mr1088182ljc.104.1590660171385;
- Thu, 28 May 2020 03:02:51 -0700 (PDT)
+        Thu, 28 May 2020 06:04:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46057 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387518AbgE1KEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 06:04:33 -0400
+IronPort-SDR: uvGBPFCeI40oa5FF3d6vglq7RU3oygp8k557Z65Se8ClxbKO4LEovUxzF5TTTqvLNgseEyLa9f
+ w1iP1fZxPRoA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 03:04:29 -0700
+IronPort-SDR: RySMi2dB7IP4X71lxMAepoxEbcavZA50bSjscHBCVYfApH9V5708FT4JDS3b9YzxUfccukQAtG
+ Xxfqdd0w9/Nw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="285119573"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 28 May 2020 03:04:25 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeFOm-009PAr-QS; Thu, 28 May 2020 13:04:28 +0300
+Date:   Thu, 28 May 2020 13:04:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 08/11] i2c: designware: Convert driver to using regmap
+ API
+Message-ID: <20200528100428.GG1634618@smile.fi.intel.com>
+References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528093322.23553-9-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200518004930.20973-1-steves.lee@maximintegrated.com> <20200526223642.GA506893@bogus>
-In-Reply-To: <20200526223642.GA506893@bogus>
-From:   Steve Lee <steves.lee.maxim@gmail.com>
-Date:   Thu, 28 May 2020 19:02:38 +0900
-Message-ID: <CABff4NR7MJM8VmM_gXnspEh2h+MEwv9WDW_Ra6t_Tv2SjrHSFQ@mail.gmail.com>
-Subject: Re: [RESEND][V5 PATCH 1/2] dt-bindings: Added device tree binding for max98390
-To:     Rob Herring <robh@kernel.org>
-Cc:     Steve Lee <steves.lee@maximintegrated.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        ALSA development <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ryan.lee.maxim@gmail.com, ryans.lee@maximintegrated.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528093322.23553-9-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 7:36 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, May 18, 2020 at 09:49:30AM +0900, Steve Lee wrote:
-> > Add documentation for DT binding of max98390 amplifier driver.
-> >
-> > Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
-> > ---
-> >
-> >
-> > Changed since V4:
-> >       * No changes.
-> > Changed since V3:
-> >       * No changes.
-> > Changed since V2:
-> >       * No changes.
-> > Changed since V1:
-> >       * Modified sample text in example
->
-> You are obviously sending patches too quickly. Give folks a chance to
-> review.
+On Thu, May 28, 2020 at 12:33:18PM +0300, Serge Semin wrote:
+> Seeing the DW I2C driver is using flags-based accessors with two
+> conditional clauses it would be better to replace them with the regmap
+> API IO methods and to initialize the regmap object with read/write
+> callbacks specific to the controller registers map implementation. This
+> will be also handy for the drivers with non-standard registers mapping
+> (like an embedded into the Baikal-T1 System Controller DW I2C block, which
+> glue-driver is a part of this series).
+> 
+> As before the driver tries to detect the mapping setup at probe stage and
+> creates a regmap object accordingly, which will be used by the rest of the
+> code to correctly access the controller registers. In two places it was
+> appropriate to convert the hand-written read-modify-write and
+> read-poll-loop design patterns to the corresponding regmap API
+> ready-to-use methods.
+> 
+> Note the regmap IO methods return value is checked only at the probe
+> stage. The rest of the code won't do this because basically we have
+> MMIO-based regmap so non of the read/write methods can fail (this also
+> won't be needed for the Baikal-T1-specific I2C controller).
 
- Thanks for your feedback !.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
->
-> >
-> >  .../devicetree/bindings/sound/max98390.txt    | 26 +++++++++++++++++++
->
-> Bindings are now in DT schema format. Please convert this. See
-> Documentation/devicetree/writing-schema.rst
+Thanks!
 
- Thanks for review. I will change txt to yaml version.
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-mips@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v5:
+> - Keep alphabetical order of the include statements.
+> - Discard explicit u16-type cast in the dw_reg_write_word() method.
+> 
+> Changelog v6:
+> - Add comma in the last explicitly initialized member of the map_cfg
+>   struct regmap_config instance.
+> ---
+>  drivers/i2c/busses/Kconfig                 |   1 +
+>  drivers/i2c/busses/i2c-designware-common.c | 178 +++++++++++++++------
+>  drivers/i2c/busses/i2c-designware-core.h   |  22 ++-
+>  drivers/i2c/busses/i2c-designware-master.c | 125 ++++++++-------
+>  drivers/i2c/busses/i2c-designware-slave.c  |  77 ++++-----
+>  5 files changed, 248 insertions(+), 155 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 7cd279c36898..259e2325712a 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -526,6 +526,7 @@ config I2C_DAVINCI
+>  
+>  config I2C_DESIGNWARE_CORE
+>  	tristate
+> +	select REGMAP
+>  
+>  config I2C_DESIGNWARE_SLAVE
+>  	bool "Synopsys DesignWare Slave"
+> diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
+> index ed302342f8db..0b190a3c837c 100644
+> --- a/drivers/i2c/busses/i2c-designware-common.c
+> +++ b/drivers/i2c/busses/i2c-designware-common.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+>  #include <linux/swab.h>
+>  #include <linux/types.h>
+>  
+> @@ -57,66 +58,123 @@ static char *abort_sources[] = {
+>  		"incorrect slave-transmitter mode configuration",
+>  };
+>  
+> -u32 dw_readl(struct dw_i2c_dev *dev, int offset)
+> +static int dw_reg_read(void *context, unsigned int reg, unsigned int *val)
+>  {
+> -	u32 value;
+> +	struct dw_i2c_dev *dev = context;
+>  
+> -	if (dev->flags & ACCESS_16BIT)
+> -		value = readw_relaxed(dev->base + offset) |
+> -			(readw_relaxed(dev->base + offset + 2) << 16);
+> -	else
+> -		value = readl_relaxed(dev->base + offset);
+> +	*val = readl_relaxed(dev->base + reg);
+>  
+> -	if (dev->flags & ACCESS_SWAP)
+> -		return swab32(value);
+> -	else
+> -		return value;
+> +	return 0;
+>  }
+>  
+> -void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
+> +static int dw_reg_write(void *context, unsigned int reg, unsigned int val)
+>  {
+> -	if (dev->flags & ACCESS_SWAP)
+> -		b = swab32(b);
+> -
+> -	if (dev->flags & ACCESS_16BIT) {
+> -		writew_relaxed((u16)b, dev->base + offset);
+> -		writew_relaxed((u16)(b >> 16), dev->base + offset + 2);
+> -	} else {
+> -		writel_relaxed(b, dev->base + offset);
+> -	}
+> +	struct dw_i2c_dev *dev = context;
+> +
+> +	writel_relaxed(val, dev->base + reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw_reg_read_swab(void *context, unsigned int reg, unsigned int *val)
+> +{
+> +	struct dw_i2c_dev *dev = context;
+> +
+> +	*val = swab32(readl_relaxed(dev->base + reg));
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw_reg_write_swab(void *context, unsigned int reg, unsigned int val)
+> +{
+> +	struct dw_i2c_dev *dev = context;
+> +
+> +	writel_relaxed(swab32(val), dev->base + reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw_reg_read_word(void *context, unsigned int reg, unsigned int *val)
+> +{
+> +	struct dw_i2c_dev *dev = context;
+> +
+> +	*val = readw_relaxed(dev->base + reg) |
+> +		(readw_relaxed(dev->base + reg + 2) << 16);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw_reg_write_word(void *context, unsigned int reg, unsigned int val)
+> +{
+> +	struct dw_i2c_dev *dev = context;
+> +
+> +	writew_relaxed(val, dev->base + reg);
+> +	writew_relaxed(val >> 16, dev->base + reg + 2);
+> +
+> +	return 0;
+>  }
+>  
+>  /**
+> - * i2c_dw_set_reg_access() - Set register access flags
+> + * i2c_dw_init_regmap() - Initialize registers map
+>   * @dev: device private data
+> + * @base: Registers map base address
+>   *
+> - * Autodetects needed register access mode and sets access flags accordingly.
+> - * This must be called before doing any other register access.
+> + * Autodetects needed register access mode and creates the regmap with
+> + * corresponding read/write callbacks. This must be called before doing any
+> + * other register access.
+>   */
+> -int i2c_dw_set_reg_access(struct dw_i2c_dev *dev)
+> +int i2c_dw_init_regmap(struct dw_i2c_dev *dev)
+>  {
+> +	struct regmap_config map_cfg = {
+> +		.reg_bits = 32,
+> +		.val_bits = 32,
+> +		.reg_stride = 4,
+> +		.disable_locking = true,
+> +		.reg_read = dw_reg_read,
+> +		.reg_write = dw_reg_write,
+> +		.max_register = DW_IC_COMP_TYPE,
+> +	};
+>  	u32 reg;
+>  	int ret;
+>  
+> +	/*
+> +	 * Skip detecting the registers map configuration if the regmap has
+> +	 * already been provided by a higher code.
+> +	 */
+> +	if (dev->map)
+> +		return 0;
+> +
+>  	ret = i2c_dw_acquire_lock(dev);
+>  	if (ret)
+>  		return ret;
+>  
+> -	reg = dw_readl(dev, DW_IC_COMP_TYPE);
+> +	reg = readl(dev->base + DW_IC_COMP_TYPE);
+>  	i2c_dw_release_lock(dev);
+>  
+>  	if (reg == swab32(DW_IC_COMP_TYPE_VALUE)) {
+> -		/* Configure register endianness access */
+> -		dev->flags |= ACCESS_SWAP;
+> +		map_cfg.reg_read = dw_reg_read_swab;
+> +		map_cfg.reg_write = dw_reg_write_swab;
+>  	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
+> -		/* Configure register access mode 16bit */
+> -		dev->flags |= ACCESS_16BIT;
+> +		map_cfg.reg_read = dw_reg_read_word;
+> +		map_cfg.reg_write = dw_reg_write_word;
+>  	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
+>  		dev_err(dev->dev,
+>  			"Unknown Synopsys component type: 0x%08x\n", reg);
+>  		return -ENODEV;
+>  	}
+>  
+> +	/*
+> +	 * Note we'll check the return value of the regmap IO accessors only
+> +	 * at the probe stage. The rest of the code won't do this because
+> +	 * basically we have MMIO-based regmap so non of the read/write methods
+> +	 * can fail.
+> +	 */
+> +	dev->map = devm_regmap_init(dev->dev, NULL, dev, &map_cfg);
+> +	if (IS_ERR(dev->map)) {
+> +		dev_err(dev->dev, "Failed to init the registers map\n");
+> +		return PTR_ERR(dev->map);
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -327,11 +385,17 @@ int i2c_dw_set_sda_hold(struct dw_i2c_dev *dev)
+>  		return ret;
+>  
+>  	/* Configure SDA Hold Time if required */
+> -	reg = dw_readl(dev, DW_IC_COMP_VERSION);
+> +	ret = regmap_read(dev->map, DW_IC_COMP_VERSION, &reg);
+> +	if (ret)
+> +		goto err_release_lock;
+> +
+>  	if (reg >= DW_IC_SDA_HOLD_MIN_VERS) {
+>  		if (!dev->sda_hold_time) {
+>  			/* Keep previous hold time setting if no one set it */
+> -			dev->sda_hold_time = dw_readl(dev, DW_IC_SDA_HOLD);
+> +			ret = regmap_read(dev->map, DW_IC_SDA_HOLD,
+> +					  &dev->sda_hold_time);
+> +			if (ret)
+> +				goto err_release_lock;
+>  		}
+>  
+>  		/*
+> @@ -355,14 +419,16 @@ int i2c_dw_set_sda_hold(struct dw_i2c_dev *dev)
+>  		dev->sda_hold_time = 0;
+>  	}
+>  
+> +err_release_lock:
+>  	i2c_dw_release_lock(dev);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  void __i2c_dw_disable(struct dw_i2c_dev *dev)
+>  {
+>  	int timeout = 100;
+> +	u32 status;
+>  
+>  	do {
+>  		__i2c_dw_disable_nowait(dev);
+> @@ -370,7 +436,8 @@ void __i2c_dw_disable(struct dw_i2c_dev *dev)
+>  		 * The enable status register may be unimplemented, but
+>  		 * in that case this test reads zero and exits the loop.
+>  		 */
+> -		if ((dw_readl(dev, DW_IC_ENABLE_STATUS) & 1) == 0)
+> +		regmap_read(dev->map, DW_IC_ENABLE_STATUS, &status);
+> +		if ((status & 1) == 0)
+>  			return;
+>  
+>  		/*
+> @@ -449,22 +516,23 @@ void i2c_dw_release_lock(struct dw_i2c_dev *dev)
+>   */
+>  int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
+>  {
+> -	int timeout = TIMEOUT;
+> +	u32 status;
+> +	int ret;
+>  
+> -	while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
+> -		if (timeout <= 0) {
+> -			dev_warn(dev->dev, "timeout waiting for bus ready\n");
+> -			i2c_recover_bus(&dev->adapter);
+> +	ret = regmap_read_poll_timeout(dev->map, DW_IC_STATUS, status,
+> +				       !(status & DW_IC_STATUS_ACTIVITY),
+> +				       1100, 20000);
+> +	if (ret) {
+> +		dev_warn(dev->dev, "timeout waiting for bus ready\n");
+>  
+> -			if (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY)
+> -				return -ETIMEDOUT;
+> -			return 0;
+> -		}
+> -		timeout--;
+> -		usleep_range(1000, 1100);
+> +		i2c_recover_bus(&dev->adapter);
+> +
+> +		regmap_read(dev->map, DW_IC_STATUS, &status);
+> +		if (!(status & DW_IC_STATUS_ACTIVITY))
+> +			ret = 0;
+>  	}
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev)
+> @@ -490,15 +558,19 @@ int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev)
+>  		return -EIO;
+>  }
+>  
+> -void i2c_dw_set_fifo_size(struct dw_i2c_dev *dev)
+> +int i2c_dw_set_fifo_size(struct dw_i2c_dev *dev)
+>  {
+>  	u32 param, tx_fifo_depth, rx_fifo_depth;
+> +	int ret;
+>  
+>  	/*
+>  	 * Try to detect the FIFO depth if not set by interface driver,
+>  	 * the depth could be from 2 to 256 from HW spec.
+>  	 */
+> -	param = dw_readl(dev, DW_IC_COMP_PARAM_1);
+> +	ret = regmap_read(dev->map, DW_IC_COMP_PARAM_1, &param);
+> +	if (ret)
+> +		return ret;
+> +
+>  	tx_fifo_depth = ((param >> 16) & 0xff) + 1;
+>  	rx_fifo_depth = ((param >> 8)  & 0xff) + 1;
+>  	if (!dev->tx_fifo_depth) {
+> @@ -510,6 +582,8 @@ void i2c_dw_set_fifo_size(struct dw_i2c_dev *dev)
+>  		dev->rx_fifo_depth = min_t(u32, dev->rx_fifo_depth,
+>  				rx_fifo_depth);
+>  	}
+> +
+> +	return 0;
+>  }
+>  
+>  u32 i2c_dw_func(struct i2c_adapter *adap)
+> @@ -521,17 +595,19 @@ u32 i2c_dw_func(struct i2c_adapter *adap)
+>  
+>  void i2c_dw_disable(struct dw_i2c_dev *dev)
+>  {
+> +	u32 dummy;
+> +
+>  	/* Disable controller */
+>  	__i2c_dw_disable(dev);
+>  
+>  	/* Disable all interrupts */
+> -	dw_writel(dev, 0, DW_IC_INTR_MASK);
+> -	dw_readl(dev, DW_IC_CLR_INTR);
+> +	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+> +	regmap_read(dev->map, DW_IC_CLR_INTR, &dummy);
+>  }
+>  
+>  void i2c_dw_disable_int(struct dw_i2c_dev *dev)
+>  {
+> -	dw_writel(dev, 0, DW_IC_INTR_MASK);
+> +	regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+>  }
+>  
+>  MODULE_DESCRIPTION("Synopsys DesignWare I2C bus adapter core");
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index b9ef9b0deef0..f5bbe3d6bcf8 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -15,6 +15,7 @@
+>  #include <linux/dev_printk.h>
+>  #include <linux/errno.h>
+>  #include <linux/i2c.h>
+> +#include <linux/regmap.h>
+>  #include <linux/types.h>
+>  
+>  #define DW_IC_DEFAULT_FUNCTIONALITY (I2C_FUNC_I2C |			\
+> @@ -126,8 +127,6 @@
+>  #define STATUS_WRITE_IN_PROGRESS	0x1
+>  #define STATUS_READ_IN_PROGRESS		0x2
+>  
+> -#define TIMEOUT			20 /* ms */
+> -
+>  /*
+>   * operation modes
+>   */
+> @@ -183,7 +182,9 @@ struct reset_control;
+>  /**
+>   * struct dw_i2c_dev - private i2c-designware data
+>   * @dev: driver model device node
+> + * @map: IO registers map
+>   * @base: IO registers pointer
+> + * @ext: Extended IO registers pointer
+>   * @cmd_complete: tx completion indicator
+>   * @clk: input reference clock
+>   * @pclk: clock required to access the registers
+> @@ -233,6 +234,7 @@ struct reset_control;
+>   */
+>  struct dw_i2c_dev {
+>  	struct device		*dev;
+> +	struct regmap		*map;
+>  	void __iomem		*base;
+>  	void __iomem		*ext;
+>  	struct completion	cmd_complete;
+> @@ -284,17 +286,13 @@ struct dw_i2c_dev {
+>  	bool			suspended;
+>  };
+>  
+> -#define ACCESS_SWAP		0x00000001
+> -#define ACCESS_16BIT		0x00000002
+> -#define ACCESS_INTR_MASK	0x00000004
+> -#define ACCESS_NO_IRQ_SUSPEND	0x00000008
+> +#define ACCESS_INTR_MASK	0x00000001
+> +#define ACCESS_NO_IRQ_SUSPEND	0x00000002
+>  
+>  #define MODEL_MSCC_OCELOT	0x00000100
+>  #define MODEL_MASK		0x00000f00
+>  
+> -u32 dw_readl(struct dw_i2c_dev *dev, int offset);
+> -void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset);
+> -int i2c_dw_set_reg_access(struct dw_i2c_dev *dev);
+> +int i2c_dw_init_regmap(struct dw_i2c_dev *dev);
+>  u32 i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset);
+>  u32 i2c_dw_scl_lcnt(u32 ic_clk, u32 tLOW, u32 tf, int offset);
+>  int i2c_dw_set_sda_hold(struct dw_i2c_dev *dev);
+> @@ -304,19 +302,19 @@ int i2c_dw_acquire_lock(struct dw_i2c_dev *dev);
+>  void i2c_dw_release_lock(struct dw_i2c_dev *dev);
+>  int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev);
+>  int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev);
+> -void i2c_dw_set_fifo_size(struct dw_i2c_dev *dev);
+> +int i2c_dw_set_fifo_size(struct dw_i2c_dev *dev);
+>  u32 i2c_dw_func(struct i2c_adapter *adap);
+>  void i2c_dw_disable(struct dw_i2c_dev *dev);
+>  void i2c_dw_disable_int(struct dw_i2c_dev *dev);
+>  
+>  static inline void __i2c_dw_enable(struct dw_i2c_dev *dev)
+>  {
+> -	dw_writel(dev, 1, DW_IC_ENABLE);
+> +	regmap_write(dev->map, DW_IC_ENABLE, 1);
+>  }
+>  
+>  static inline void __i2c_dw_disable_nowait(struct dw_i2c_dev *dev)
+>  {
+> -	dw_writel(dev, 0, DW_IC_ENABLE);
+> +	regmap_write(dev->map, DW_IC_ENABLE, 0);
+>  }
+>  
+>  void __i2c_dw_disable(struct dw_i2c_dev *dev);
+> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
+> index 95eeec53c744..2cba21b945d8 100644
+> --- a/drivers/i2c/busses/i2c-designware-master.c
+> +++ b/drivers/i2c/busses/i2c-designware-master.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+>  #include <linux/reset.h>
+>  
+>  #include "i2c-designware-core.h"
+> @@ -25,11 +26,11 @@
+>  static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
+>  {
+>  	/* Configure Tx/Rx FIFO threshold levels */
+> -	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
+> -	dw_writel(dev, 0, DW_IC_RX_TL);
+> +	regmap_write(dev->map, DW_IC_TX_TL, dev->tx_fifo_depth / 2);
+> +	regmap_write(dev->map, DW_IC_RX_TL, 0);
+>  
+>  	/* Configure the I2C master */
+> -	dw_writel(dev, dev->master_cfg, DW_IC_CON);
+> +	regmap_write(dev->map, DW_IC_CON, dev->master_cfg);
+>  }
+>  
+>  static int i2c_dw_set_timings_master(struct dw_i2c_dev *dev)
+> @@ -44,8 +45,11 @@ static int i2c_dw_set_timings_master(struct dw_i2c_dev *dev)
+>  	ret = i2c_dw_acquire_lock(dev);
+>  	if (ret)
+>  		return ret;
+> -	comp_param1 = dw_readl(dev, DW_IC_COMP_PARAM_1);
+> +
+> +	ret = regmap_read(dev->map, DW_IC_COMP_PARAM_1, &comp_param1);
+>  	i2c_dw_release_lock(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* Set standard and fast speed dividers for high/low periods */
+>  	sda_falling_time = t->sda_fall_ns ?: 300; /* ns */
+> @@ -187,22 +191,22 @@ static int i2c_dw_init_master(struct dw_i2c_dev *dev)
+>  	__i2c_dw_disable(dev);
+>  
+>  	/* Write standard speed timing parameters */
+> -	dw_writel(dev, dev->ss_hcnt, DW_IC_SS_SCL_HCNT);
+> -	dw_writel(dev, dev->ss_lcnt, DW_IC_SS_SCL_LCNT);
+> +	regmap_write(dev->map, DW_IC_SS_SCL_HCNT, dev->ss_hcnt);
+> +	regmap_write(dev->map, DW_IC_SS_SCL_LCNT, dev->ss_lcnt);
+>  
+>  	/* Write fast mode/fast mode plus timing parameters */
+> -	dw_writel(dev, dev->fs_hcnt, DW_IC_FS_SCL_HCNT);
+> -	dw_writel(dev, dev->fs_lcnt, DW_IC_FS_SCL_LCNT);
+> +	regmap_write(dev->map, DW_IC_FS_SCL_HCNT, dev->fs_hcnt);
+> +	regmap_write(dev->map, DW_IC_FS_SCL_LCNT, dev->fs_lcnt);
+>  
+>  	/* Write high speed timing parameters if supported */
+>  	if (dev->hs_hcnt && dev->hs_lcnt) {
+> -		dw_writel(dev, dev->hs_hcnt, DW_IC_HS_SCL_HCNT);
+> -		dw_writel(dev, dev->hs_lcnt, DW_IC_HS_SCL_LCNT);
+> +		regmap_write(dev->map, DW_IC_HS_SCL_HCNT, dev->hs_hcnt);
+> +		regmap_write(dev->map, DW_IC_HS_SCL_LCNT, dev->hs_lcnt);
+>  	}
+>  
+>  	/* Write SDA hold time if supported */
+>  	if (dev->sda_hold_time)
+> -		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
+> +		regmap_write(dev->map, DW_IC_SDA_HOLD, dev->sda_hold_time);
+>  
+>  	i2c_dw_configure_fifo_master(dev);
+>  	i2c_dw_release_lock(dev);
+> @@ -213,15 +217,15 @@ static int i2c_dw_init_master(struct dw_i2c_dev *dev)
+>  static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
+>  {
+>  	struct i2c_msg *msgs = dev->msgs;
+> -	u32 ic_con, ic_tar = 0;
+> +	u32 ic_con = 0, ic_tar = 0;
+> +	u32 dummy;
+>  
+>  	/* Disable the adapter */
+>  	__i2c_dw_disable(dev);
+>  
+>  	/* If the slave address is ten bit address, enable 10BITADDR */
+> -	ic_con = dw_readl(dev, DW_IC_CON);
+>  	if (msgs[dev->msg_write_idx].flags & I2C_M_TEN) {
+> -		ic_con |= DW_IC_CON_10BITADDR_MASTER;
+> +		ic_con = DW_IC_CON_10BITADDR_MASTER;
+>  		/*
+>  		 * If I2C_DYNAMIC_TAR_UPDATE is set, the 10-bit addressing
+>  		 * mode has to be enabled via bit 12 of IC_TAR register.
+> @@ -229,17 +233,17 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
+>  		 * detected from registers.
+>  		 */
+>  		ic_tar = DW_IC_TAR_10BITADDR_MASTER;
+> -	} else {
+> -		ic_con &= ~DW_IC_CON_10BITADDR_MASTER;
+>  	}
+>  
+> -	dw_writel(dev, ic_con, DW_IC_CON);
+> +	regmap_update_bits(dev->map, DW_IC_CON, DW_IC_CON_10BITADDR_MASTER,
+> +			   ic_con);
+>  
+>  	/*
+>  	 * Set the slave (target) address and enable 10-bit addressing mode
+>  	 * if applicable.
+>  	 */
+> -	dw_writel(dev, msgs[dev->msg_write_idx].addr | ic_tar, DW_IC_TAR);
+> +	regmap_write(dev->map, DW_IC_TAR,
+> +		     msgs[dev->msg_write_idx].addr | ic_tar);
+>  
+>  	/* Enforce disabled interrupts (due to HW issues) */
+>  	i2c_dw_disable_int(dev);
+> @@ -248,11 +252,11 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
+>  	__i2c_dw_enable(dev);
+>  
+>  	/* Dummy read to avoid the register getting stuck on Bay Trail */
+> -	dw_readl(dev, DW_IC_ENABLE_STATUS);
+> +	regmap_read(dev->map, DW_IC_ENABLE_STATUS, &dummy);
+>  
+>  	/* Clear and enable interrupts */
+> -	dw_readl(dev, DW_IC_CLR_INTR);
+> -	dw_writel(dev, DW_IC_INTR_MASTER_MASK, DW_IC_INTR_MASK);
+> +	regmap_read(dev->map, DW_IC_CLR_INTR, &dummy);
+> +	regmap_write(dev->map, DW_IC_INTR_MASK, DW_IC_INTR_MASTER_MASK);
+>  }
+>  
+>  /*
+> @@ -271,6 +275,7 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
+>  	u32 buf_len = dev->tx_buf_len;
+>  	u8 *buf = dev->tx_buf;
+>  	bool need_restart = false;
+> +	unsigned int flr;
+>  
+>  	intr_mask = DW_IC_INTR_MASTER_MASK;
+>  
+> @@ -303,8 +308,11 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
+>  				need_restart = true;
+>  		}
+>  
+> -		tx_limit = dev->tx_fifo_depth - dw_readl(dev, DW_IC_TXFLR);
+> -		rx_limit = dev->rx_fifo_depth - dw_readl(dev, DW_IC_RXFLR);
+> +		regmap_read(dev->map, DW_IC_TXFLR, &flr);
+> +		tx_limit = dev->tx_fifo_depth - flr;
+> +
+> +		regmap_read(dev->map, DW_IC_RXFLR, &flr);
+> +		rx_limit = dev->rx_fifo_depth - flr;
+>  
+>  		while (buf_len > 0 && tx_limit > 0 && rx_limit > 0) {
+>  			u32 cmd = 0;
+> @@ -337,11 +345,14 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
+>  				if (dev->rx_outstanding >= dev->rx_fifo_depth)
+>  					break;
+>  
+> -				dw_writel(dev, cmd | 0x100, DW_IC_DATA_CMD);
+> +				regmap_write(dev->map, DW_IC_DATA_CMD,
+> +					     cmd | 0x100);
+>  				rx_limit--;
+>  				dev->rx_outstanding++;
+> -			} else
+> -				dw_writel(dev, cmd | *buf++, DW_IC_DATA_CMD);
+> +			} else {
+> +				regmap_write(dev->map, DW_IC_DATA_CMD,
+> +					     cmd | *buf++);
+> +			}
+>  			tx_limit--; buf_len--;
+>  		}
+>  
+> @@ -371,7 +382,7 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
+>  	if (dev->msg_err)
+>  		intr_mask = 0;
+>  
+> -	dw_writel(dev, intr_mask,  DW_IC_INTR_MASK);
+> +	regmap_write(dev->map,  DW_IC_INTR_MASK, intr_mask);
+>  }
+>  
+>  static u8
+> @@ -399,7 +410,7 @@ i2c_dw_read(struct dw_i2c_dev *dev)
+>  	int rx_valid;
+>  
+>  	for (; dev->msg_read_idx < dev->msgs_num; dev->msg_read_idx++) {
+> -		u32 len;
+> +		u32 len, tmp;
+>  		u8 *buf;
+>  
+>  		if (!(msgs[dev->msg_read_idx].flags & I2C_M_RD))
+> @@ -413,18 +424,18 @@ i2c_dw_read(struct dw_i2c_dev *dev)
+>  			buf = dev->rx_buf;
+>  		}
+>  
+> -		rx_valid = dw_readl(dev, DW_IC_RXFLR);
+> +		regmap_read(dev->map, DW_IC_RXFLR, &rx_valid);
+>  
+>  		for (; len > 0 && rx_valid > 0; len--, rx_valid--) {
+>  			u32 flags = msgs[dev->msg_read_idx].flags;
+>  
+> -			*buf = dw_readl(dev, DW_IC_DATA_CMD);
+> +			regmap_read(dev->map, DW_IC_DATA_CMD, &tmp);
+>  			/* Ensure length byte is a valid value */
+>  			if (flags & I2C_M_RECV_LEN &&
+> -				*buf <= I2C_SMBUS_BLOCK_MAX && *buf > 0) {
+> -				len = i2c_dw_recv_len(dev, *buf);
+> +			    tmp <= I2C_SMBUS_BLOCK_MAX && tmp > 0) {
+> +				len = i2c_dw_recv_len(dev, tmp);
+>  			}
+> -			buf++;
+> +			*buf++ = tmp;
+>  			dev->rx_outstanding--;
+>  		}
+>  
+> @@ -542,7 +553,7 @@ static const struct i2c_adapter_quirks i2c_dw_quirks = {
+>  
+>  static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
+>  {
+> -	u32 stat;
+> +	u32 stat, dummy;
+>  
+>  	/*
+>  	 * The IC_INTR_STAT register just indicates "enabled" interrupts.
+> @@ -550,47 +561,47 @@ static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
+>  	 * in the IC_RAW_INTR_STAT register.
+>  	 *
+>  	 * That is,
+> -	 *   stat = dw_readl(IC_INTR_STAT);
+> +	 *   stat = readl(IC_INTR_STAT);
+>  	 * equals to,
+> -	 *   stat = dw_readl(IC_RAW_INTR_STAT) & dw_readl(IC_INTR_MASK);
+> +	 *   stat = readl(IC_RAW_INTR_STAT) & readl(IC_INTR_MASK);
+>  	 *
+>  	 * The raw version might be useful for debugging purposes.
+>  	 */
+> -	stat = dw_readl(dev, DW_IC_INTR_STAT);
+> +	regmap_read(dev->map, DW_IC_INTR_STAT, &stat);
+>  
+>  	/*
+>  	 * Do not use the IC_CLR_INTR register to clear interrupts, or
+>  	 * you'll miss some interrupts, triggered during the period from
+> -	 * dw_readl(IC_INTR_STAT) to dw_readl(IC_CLR_INTR).
+> +	 * readl(IC_INTR_STAT) to readl(IC_CLR_INTR).
+>  	 *
+>  	 * Instead, use the separately-prepared IC_CLR_* registers.
+>  	 */
+>  	if (stat & DW_IC_INTR_RX_UNDER)
+> -		dw_readl(dev, DW_IC_CLR_RX_UNDER);
+> +		regmap_read(dev->map, DW_IC_CLR_RX_UNDER, &dummy);
+>  	if (stat & DW_IC_INTR_RX_OVER)
+> -		dw_readl(dev, DW_IC_CLR_RX_OVER);
+> +		regmap_read(dev->map, DW_IC_CLR_RX_OVER, &dummy);
+>  	if (stat & DW_IC_INTR_TX_OVER)
+> -		dw_readl(dev, DW_IC_CLR_TX_OVER);
+> +		regmap_read(dev->map, DW_IC_CLR_TX_OVER, &dummy);
+>  	if (stat & DW_IC_INTR_RD_REQ)
+> -		dw_readl(dev, DW_IC_CLR_RD_REQ);
+> +		regmap_read(dev->map, DW_IC_CLR_RD_REQ, &dummy);
+>  	if (stat & DW_IC_INTR_TX_ABRT) {
+>  		/*
+>  		 * The IC_TX_ABRT_SOURCE register is cleared whenever
+>  		 * the IC_CLR_TX_ABRT is read.  Preserve it beforehand.
+>  		 */
+> -		dev->abort_source = dw_readl(dev, DW_IC_TX_ABRT_SOURCE);
+> -		dw_readl(dev, DW_IC_CLR_TX_ABRT);
+> +		regmap_read(dev->map, DW_IC_TX_ABRT_SOURCE, &dev->abort_source);
+> +		regmap_read(dev->map, DW_IC_CLR_TX_ABRT, &dummy);
+>  	}
+>  	if (stat & DW_IC_INTR_RX_DONE)
+> -		dw_readl(dev, DW_IC_CLR_RX_DONE);
+> +		regmap_read(dev->map, DW_IC_CLR_RX_DONE, &dummy);
+>  	if (stat & DW_IC_INTR_ACTIVITY)
+> -		dw_readl(dev, DW_IC_CLR_ACTIVITY);
+> +		regmap_read(dev->map, DW_IC_CLR_ACTIVITY, &dummy);
+>  	if (stat & DW_IC_INTR_STOP_DET)
+> -		dw_readl(dev, DW_IC_CLR_STOP_DET);
+> +		regmap_read(dev->map, DW_IC_CLR_STOP_DET, &dummy);
+>  	if (stat & DW_IC_INTR_START_DET)
+> -		dw_readl(dev, DW_IC_CLR_START_DET);
+> +		regmap_read(dev->map, DW_IC_CLR_START_DET, &dummy);
+>  	if (stat & DW_IC_INTR_GEN_CALL)
+> -		dw_readl(dev, DW_IC_CLR_GEN_CALL);
+> +		regmap_read(dev->map, DW_IC_CLR_GEN_CALL, &dummy);
+>  
+>  	return stat;
+>  }
+> @@ -612,7 +623,7 @@ static int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
+>  		 * Anytime TX_ABRT is set, the contents of the tx/rx
+>  		 * buffers are flushed. Make sure to skip them.
+>  		 */
+> -		dw_writel(dev, 0, DW_IC_INTR_MASK);
+> +		regmap_write(dev->map, DW_IC_INTR_MASK, 0);
+>  		goto tx_aborted;
+>  	}
+>  
+> @@ -633,9 +644,9 @@ static int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
+>  		complete(&dev->cmd_complete);
+>  	else if (unlikely(dev->flags & ACCESS_INTR_MASK)) {
+>  		/* Workaround to trigger pending interrupt */
+> -		stat = dw_readl(dev, DW_IC_INTR_MASK);
+> +		regmap_read(dev->map, DW_IC_INTR_MASK, &stat);
+>  		i2c_dw_disable_int(dev);
+> -		dw_writel(dev, stat, DW_IC_INTR_MASK);
+> +		regmap_write(dev->map, DW_IC_INTR_MASK, stat);
+>  	}
+>  
+>  	return 0;
+> @@ -646,8 +657,8 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
+>  	struct dw_i2c_dev *dev = dev_id;
+>  	u32 stat, enabled;
+>  
+> -	enabled = dw_readl(dev, DW_IC_ENABLE);
+> -	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
+> +	regmap_read(dev->map, DW_IC_ENABLE, &enabled);
+> +	regmap_read(dev->map, DW_IC_RAW_INTR_STAT, &stat);
+>  	dev_dbg(dev->dev, "enabled=%#x stat=%#x\n", enabled, stat);
+>  	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
+>  		return IRQ_NONE;
+> @@ -739,7 +750,7 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
+>  	dev->disable = i2c_dw_disable;
+>  	dev->disable_int = i2c_dw_disable_int;
+>  
+> -	ret = i2c_dw_set_reg_access(dev);
+> +	ret = i2c_dw_init_regmap(dev);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -747,7 +758,9 @@ int i2c_dw_probe_master(struct dw_i2c_dev *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	i2c_dw_set_fifo_size(dev);
+> +	ret = i2c_dw_set_fifo_size(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ret = dev->init(dev);
+>  	if (ret)
+> diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
+> index 576e7af4e94b..44974b53a626 100644
+> --- a/drivers/i2c/busses/i2c-designware-slave.c
+> +++ b/drivers/i2c/busses/i2c-designware-slave.c
+> @@ -14,18 +14,19 @@
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+>  
+>  #include "i2c-designware-core.h"
+>  
+>  static void i2c_dw_configure_fifo_slave(struct dw_i2c_dev *dev)
+>  {
+>  	/* Configure Tx/Rx FIFO threshold levels. */
+> -	dw_writel(dev, 0, DW_IC_TX_TL);
+> -	dw_writel(dev, 0, DW_IC_RX_TL);
+> +	regmap_write(dev->map, DW_IC_TX_TL, 0);
+> +	regmap_write(dev->map, DW_IC_RX_TL, 0);
+>  
+>  	/* Configure the I2C slave. */
+> -	dw_writel(dev, dev->slave_cfg, DW_IC_CON);
+> -	dw_writel(dev, DW_IC_INTR_SLAVE_MASK, DW_IC_INTR_MASK);
+> +	regmap_write(dev->map, DW_IC_CON, dev->slave_cfg);
+> +	regmap_write(dev->map, DW_IC_INTR_MASK, DW_IC_INTR_SLAVE_MASK);
+>  }
+>  
+>  /**
+> @@ -49,7 +50,7 @@ static int i2c_dw_init_slave(struct dw_i2c_dev *dev)
+>  
+>  	/* Write SDA hold time if supported */
+>  	if (dev->sda_hold_time)
+> -		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
+> +		regmap_write(dev->map, DW_IC_SDA_HOLD, dev->sda_hold_time);
+>  
+>  	i2c_dw_configure_fifo_slave(dev);
+>  	i2c_dw_release_lock(dev);
+> @@ -72,7 +73,7 @@ static int i2c_dw_reg_slave(struct i2c_client *slave)
+>  	 * the address to which the DW_apb_i2c responds.
+>  	 */
+>  	__i2c_dw_disable_nowait(dev);
+> -	dw_writel(dev, slave->addr, DW_IC_SAR);
+> +	regmap_write(dev->map, DW_IC_SAR, slave->addr);
+>  	dev->slave = slave;
+>  
+>  	__i2c_dw_enable(dev);
+> @@ -103,7 +104,7 @@ static int i2c_dw_unreg_slave(struct i2c_client *slave)
+>  
+>  static u32 i2c_dw_read_clear_intrbits_slave(struct dw_i2c_dev *dev)
+>  {
+> -	u32 stat;
+> +	u32 stat, dummy;
+>  
+>  	/*
+>  	 * The IC_INTR_STAT register just indicates "enabled" interrupts.
+> @@ -111,39 +112,39 @@ static u32 i2c_dw_read_clear_intrbits_slave(struct dw_i2c_dev *dev)
+>  	 * in the IC_RAW_INTR_STAT register.
+>  	 *
+>  	 * That is,
+> -	 *   stat = dw_readl(IC_INTR_STAT);
+> +	 *   stat = readl(IC_INTR_STAT);
+>  	 * equals to,
+> -	 *   stat = dw_readl(IC_RAW_INTR_STAT) & dw_readl(IC_INTR_MASK);
+> +	 *   stat = readl(IC_RAW_INTR_STAT) & readl(IC_INTR_MASK);
+>  	 *
+>  	 * The raw version might be useful for debugging purposes.
+>  	 */
+> -	stat = dw_readl(dev, DW_IC_INTR_STAT);
+> +	regmap_read(dev->map, DW_IC_INTR_STAT, &stat);
+>  
+>  	/*
+>  	 * Do not use the IC_CLR_INTR register to clear interrupts, or
+>  	 * you'll miss some interrupts, triggered during the period from
+> -	 * dw_readl(IC_INTR_STAT) to dw_readl(IC_CLR_INTR).
+> +	 * readl(IC_INTR_STAT) to readl(IC_CLR_INTR).
+>  	 *
+>  	 * Instead, use the separately-prepared IC_CLR_* registers.
+>  	 */
+>  	if (stat & DW_IC_INTR_TX_ABRT)
+> -		dw_readl(dev, DW_IC_CLR_TX_ABRT);
+> +		regmap_read(dev->map, DW_IC_CLR_TX_ABRT, &dummy);
+>  	if (stat & DW_IC_INTR_RX_UNDER)
+> -		dw_readl(dev, DW_IC_CLR_RX_UNDER);
+> +		regmap_read(dev->map, DW_IC_CLR_RX_UNDER, &dummy);
+>  	if (stat & DW_IC_INTR_RX_OVER)
+> -		dw_readl(dev, DW_IC_CLR_RX_OVER);
+> +		regmap_read(dev->map, DW_IC_CLR_RX_OVER, &dummy);
+>  	if (stat & DW_IC_INTR_TX_OVER)
+> -		dw_readl(dev, DW_IC_CLR_TX_OVER);
+> +		regmap_read(dev->map, DW_IC_CLR_TX_OVER, &dummy);
+>  	if (stat & DW_IC_INTR_RX_DONE)
+> -		dw_readl(dev, DW_IC_CLR_RX_DONE);
+> +		regmap_read(dev->map, DW_IC_CLR_RX_DONE, &dummy);
+>  	if (stat & DW_IC_INTR_ACTIVITY)
+> -		dw_readl(dev, DW_IC_CLR_ACTIVITY);
+> +		regmap_read(dev->map, DW_IC_CLR_ACTIVITY, &dummy);
+>  	if (stat & DW_IC_INTR_STOP_DET)
+> -		dw_readl(dev, DW_IC_CLR_STOP_DET);
+> +		regmap_read(dev->map, DW_IC_CLR_STOP_DET, &dummy);
+>  	if (stat & DW_IC_INTR_START_DET)
+> -		dw_readl(dev, DW_IC_CLR_START_DET);
+> +		regmap_read(dev->map, DW_IC_CLR_START_DET, &dummy);
+>  	if (stat & DW_IC_INTR_GEN_CALL)
+> -		dw_readl(dev, DW_IC_CLR_GEN_CALL);
+> +		regmap_read(dev->map, DW_IC_CLR_GEN_CALL, &dummy);
+>  
+>  	return stat;
+>  }
+> @@ -155,14 +156,14 @@ static u32 i2c_dw_read_clear_intrbits_slave(struct dw_i2c_dev *dev)
+>  
+>  static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
+>  {
+> -	u32 raw_stat, stat, enabled;
+> -	u8 val, slave_activity;
+> +	u32 raw_stat, stat, enabled, tmp;
+> +	u8 val = 0, slave_activity;
+>  
+> -	stat = dw_readl(dev, DW_IC_INTR_STAT);
+> -	enabled = dw_readl(dev, DW_IC_ENABLE);
+> -	raw_stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
+> -	slave_activity = ((dw_readl(dev, DW_IC_STATUS) &
+> -		DW_IC_STATUS_SLAVE_ACTIVITY) >> 6);
+> +	regmap_read(dev->map, DW_IC_INTR_STAT, &stat);
+> +	regmap_read(dev->map, DW_IC_ENABLE, &enabled);
+> +	regmap_read(dev->map, DW_IC_RAW_INTR_STAT, &raw_stat);
+> +	regmap_read(dev->map, DW_IC_STATUS, &tmp);
+> +	slave_activity = ((tmp & DW_IC_STATUS_SLAVE_ACTIVITY) >> 6);
+>  
+>  	if (!enabled || !(raw_stat & ~DW_IC_INTR_ACTIVITY) || !dev->slave)
+>  		return 0;
+> @@ -177,7 +178,8 @@ static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
+>  	if (stat & DW_IC_INTR_RD_REQ) {
+>  		if (slave_activity) {
+>  			if (stat & DW_IC_INTR_RX_FULL) {
+> -				val = dw_readl(dev, DW_IC_DATA_CMD);
+> +				regmap_read(dev->map, DW_IC_DATA_CMD, &tmp);
+> +				val = tmp;
+>  
+>  				if (!i2c_slave_event(dev->slave,
+>  						     I2C_SLAVE_WRITE_RECEIVED,
+> @@ -185,24 +187,24 @@ static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
+>  					dev_vdbg(dev->dev, "Byte %X acked!",
+>  						 val);
+>  				}
+> -				dw_readl(dev, DW_IC_CLR_RD_REQ);
+> +				regmap_read(dev->map, DW_IC_CLR_RD_REQ, &tmp);
+>  				stat = i2c_dw_read_clear_intrbits_slave(dev);
+>  			} else {
+> -				dw_readl(dev, DW_IC_CLR_RD_REQ);
+> -				dw_readl(dev, DW_IC_CLR_RX_UNDER);
+> +				regmap_read(dev->map, DW_IC_CLR_RD_REQ, &tmp);
+> +				regmap_read(dev->map, DW_IC_CLR_RX_UNDER, &tmp);
+>  				stat = i2c_dw_read_clear_intrbits_slave(dev);
+>  			}
+>  			if (!i2c_slave_event(dev->slave,
+>  					     I2C_SLAVE_READ_REQUESTED,
+>  					     &val))
+> -				dw_writel(dev, val, DW_IC_DATA_CMD);
+> +				regmap_write(dev->map, DW_IC_DATA_CMD, val);
+>  		}
+>  	}
+>  
+>  	if (stat & DW_IC_INTR_RX_DONE) {
+>  		if (!i2c_slave_event(dev->slave, I2C_SLAVE_READ_PROCESSED,
+>  				     &val))
+> -			dw_readl(dev, DW_IC_CLR_RX_DONE);
+> +			regmap_read(dev->map, DW_IC_CLR_RX_DONE, &tmp);
+>  
+>  		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
+>  		stat = i2c_dw_read_clear_intrbits_slave(dev);
+> @@ -210,7 +212,8 @@ static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
+>  	}
+>  
+>  	if (stat & DW_IC_INTR_RX_FULL) {
+> -		val = dw_readl(dev, DW_IC_DATA_CMD);
+> +		regmap_read(dev->map, DW_IC_DATA_CMD, &tmp);
+> +		val = tmp;
+>  		if (!i2c_slave_event(dev->slave, I2C_SLAVE_WRITE_RECEIVED,
+>  				     &val))
+>  			dev_vdbg(dev->dev, "Byte %X acked!", val);
+> @@ -263,7 +266,7 @@ int i2c_dw_probe_slave(struct dw_i2c_dev *dev)
+>  	dev->disable = i2c_dw_disable;
+>  	dev->disable_int = i2c_dw_disable_int;
+>  
+> -	ret = i2c_dw_set_reg_access(dev);
+> +	ret = i2c_dw_init_regmap(dev);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -271,7 +274,9 @@ int i2c_dw_probe_slave(struct dw_i2c_dev *dev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	i2c_dw_set_fifo_size(dev);
+> +	ret = i2c_dw_set_fifo_size(dev);
+> +	if (ret)
+> +		return ret;
+>  
+>  	ret = dev->init(dev);
+>  	if (ret)
+> -- 
+> 2.26.2
+> 
 
->
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/max98390.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/sound/max98390.txt b/Documentation/devicetree/bindings/sound/max98390.txt
-> > new file mode 100644
-> > index 000000000000..0ddd4c6ae55e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/sound/max98390.txt
-> > @@ -0,0 +1,26 @@
-> > +Maxim Integrated MAX98390 Speaker Amplifier
-> > +
-> > +This device supports I2C.
-> > +
-> > +Required properties:
-> > +
-> > + - compatible : "maxim,max98390"
-> > +
-> > + - reg : the I2C address of the device.
-> > +
-> > +Optional properties:
-> > +
-> > +- maxim,temperature_calib
-> > +  u32. The calculated temperature data was measured while doing the calibration. Data : Temp / 100 * 2^12
-> > +
-> > +- maxim,r0_calib
-> > +  u32. This is r0 calibration data which was measured in factory mode.
->
-> Unless these are shared already with other Maxim chips, s/_/-/.
->
-> > +
-> > +Example:
-> > +
-> > +codec: max98390@38 {
->
-> amplifier@38
+-- 
+With Best Regards,
+Andy Shevchenko
 
- I will change example as you advise.
 
->
-> > +     compatible = "maxim,max98390";
-> > +     reg = <0x38>;
-> > +     maxim,temperature_calib = <1024>;
-> > +     maxim,r0_calib = <100232>;
-> > +};
-> > --
-> > 2.17.1
-> >
