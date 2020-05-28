@@ -2,139 +2,86 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2556C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 790692075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:40:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iM2RRmz4"
+	by mail.kernel.org (Postfix) with ESMTP id 055562075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590709300;
+	bh=IM3/f6BnKOY2kmPivoPRyYWTa7o7xEPpz75oasEgS5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ruAyzNchnqZ7Qa9inn0Z6sxhjeMhaVe+upisIW7Ozu9IxhwP/9OEcts4cvDjH7thK
+	 99nH4HfUsSj1K2BWDwujJ14ybhU9pDo9dVVHQLSUia3QIC3LASCwIX4DTcCZ7gO/Nn
+	 7BNG8N42mX83Xsyd79xrfasGWeg74aHwYZLSQmt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437654AbgE1Xku (ORCPT
+        id S2437666AbgE1Xlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:40:50 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40680 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437593AbgE1Xkq (ORCPT
+        Thu, 28 May 2020 19:41:37 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36206 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437593AbgE1XlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:40:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SNYfv7090690;
-        Thu, 28 May 2020 18:34:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590708881;
-        bh=rl7/xrN4dyHCY0P9+fejZ1982cTwA0TKyTv5w1Z40oA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=iM2RRmz4/3X5f176xVtTiWBycEJKu+Heq2CbqG5eR0d6bNtQ+WIcMlVIcRDeC7/yl
-         35/hMLFEeKXzzrrGHFsSXLXcDKemIdhgbvq3BOXdLZaqGnQ00zNDwv6BX4CpjpgCF5
-         83y1ahAhQxC/Rc2zgX/gORZFZ62zBbjxsBlm71GI=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SNYfPu022920
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 18:34:41 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 18:34:40 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 18:34:40 -0500
-Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SNYdoL029206;
-        Thu, 28 May 2020 18:34:40 -0500
-Subject: Re: [PATCH v12 1/4] power_supply: Add additional health properties to
- the header
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
-        <pali@kernel.org>, <robh@kernel.org>
-CC:     <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
-References: <20200528225350.661-1-r-rivera-matos@ti.com>
- <20200528225350.661-2-r-rivera-matos@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <5be7933c-dc85-d526-a321-1cc0ce127ddc@ti.com>
-Date:   Thu, 28 May 2020 19:34:39 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 19:41:20 -0400
+Received: by mail-il1-f195.google.com with SMTP id 17so751485ilj.3;
+        Thu, 28 May 2020 16:41:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ypfIIDza/08sqd4tW33oT01BD9y9sXiyifz9nYv051M=;
+        b=fsRuQVoRgfq6M69OxL6KjuNBv0G0vJgqaens804f66zQRq+iXjk2ntqRwAXFiYpbGg
+         M/8PVPA6ZzE94MEfHAXK6RmFP6HDRee6e1D3JjIcPKW/X2ZOhJhjvNI0s2kFuPULpYjr
+         42f9KaE6sTSmSzZ60O1lZww5aM4MZTBqJs0NQv5l0+wD8Ze4d4R/YwkJbQtG/UKPUmNH
+         1M0ddCckPNTc3m1NiXfQnMXGYEXm9X2KwIShSZrespEkq4P2zLCgh5S+bx5TV1vMiKnc
+         tlLK8g2GwMCqTRg5wz8edqjHgACgG0A6DlGaWxg6G8KKZfOM+qYTRRTKs097HGxJTbD4
+         AOxg==
+X-Gm-Message-State: AOAM531fnX11SQZ0cYSuumnwkA8G5dSTHOomKwvrJNebg63aehWfcTA/
+        JeT8FAWDnhIg9tO2MWIaB3wcAodsmg==
+X-Google-Smtp-Source: ABdhPJwkYkB51TMDa1sXJoxCcE7geVsDSvUfsrHGWXxX0xBbn7n5sLreOJIOOVEACZSIfr9KjUy4FA==
+X-Received: by 2002:a92:894e:: with SMTP id n75mr5117600ild.271.1590709279650;
+        Thu, 28 May 2020 16:41:19 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id l26sm12905ild.59.2020.05.28.16.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 16:41:19 -0700 (PDT)
+Received: (nullmailer pid 895152 invoked by uid 1000);
+        Thu, 28 May 2020 23:41:18 -0000
+Date:   Thu, 28 May 2020 17:41:18 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 05/10] dt-bindings: clock: Introduce SM8150 QCOM Graphics
+ clock bindings
+Message-ID: <20200528234118.GA892766@bogus>
+References: <20200524210615.17035-1-jonathan@marek.ca>
+ <20200524210615.17035-6-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <20200528225350.661-2-r-rivera-matos@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524210615.17035-6-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 6:53 PM, Ricardo Rivera-Matos wrote:
-> From: Dan Murphy <dmurphy@ti.com>
+On Sun, May 24, 2020 at 05:06:06PM -0400, Jonathan Marek wrote:
+> Add device tree bindings for graphics clock controller for
+> Qualcomm Technology Inc's SM8150 SoCs.
+
+Where's the schema?
+
 > 
-> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
-> 
-> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken
-> from JEITA specification JISC8712:2015
-> 
-> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-
-
-You should collect the acks and such you have received in previous
-versions here, like mine from v11:
-
-Acked-by: Andrew F. Davis <afd@ti.com>
-
-
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 > ---
->  Documentation/ABI/testing/sysfs-class-power | 2 +-
->  drivers/power/supply/power_supply_sysfs.c   | 2 +-
->  include/linux/power_supply.h                | 3 +++
->  3 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-> index bf3b48f022dc..9f3fd01a9373 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -190,7 +190,7 @@ Description:
->  		Valid values: "Unknown", "Good", "Overheat", "Dead",
->  			      "Over voltage", "Unspecified failure", "Cold",
->  			      "Watchdog timer expire", "Safety timer expire",
-> -			      "Over current"
-> +			      "Over current", "Warm", "Cool", "Hot"
->  
->  What:		/sys/class/power_supply/<supply_name>/precharge_current
->  Date:		June 2017
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-> index f37ad4eae60b..d0d549611794 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
->  static const char * const power_supply_health_text[] = {
->  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
->  	"Unspecified failure", "Cold", "Watchdog timer expire",
-> -	"Safety timer expire", "Over current"
-> +	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
->  };
->  
->  static const char * const power_supply_technology_text[] = {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index dcd5a71e6c67..8670e90c1d51 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -61,6 +61,9 @@ enum {
->  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
->  	POWER_SUPPLY_HEALTH_OVERCURRENT,
-> +	POWER_SUPPLY_HEALTH_WARM,
-> +	POWER_SUPPLY_HEALTH_COOL,
-> +	POWER_SUPPLY_HEALTH_HOT,
->  };
->  
->  enum {
-> 
+>  include/dt-bindings/clock/qcom,gpucc-sm8150.h | 40 +++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8150.h
