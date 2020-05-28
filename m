@@ -2,84 +2,93 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD44C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4063F208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C4020888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590627349;
-	bh=LVt+v07eAhhKUzT7NqWt/6bOrLAfS45SVvYmNSlojo4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zjDqSqmr+C+P8inQGxjA2x/kyQ7/HHNzb8nhbONhu4uoQp1gx3b0s5cTMHfKsINMX
-	 pV4J5uXohf5TwzEraTJTdkYTISIHCtyInR3yymGrDe+vrr0bTjO6yWTUj2LlPHItlX
-	 J9sjQ9C03tdKO2uTus0w/lzOfu/A0xGc0DtcTCZU=
+	s=default; t=1590627586;
+	bh=vzFsK0uZn8FT7qx2c568pKl6hoqO6DKr1GFwtLmOzXw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oQ/kaz3a8/QK18wYXNb0C8Q75Dj++ZvoirlKg1Wfdle4U9rZNGV/6GfBC2SWLENoT
+	 FSA/Y9m9d59SCYB8guk7+V4MPM+liLnm0cbnAEBXJmZ7V4aBH0lNXao6AXXRoRUaOb
+	 MfchFgoQqR4P5iOJZLeBdCgJb+a+aEyJgS3zGU94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgE1Azs (ORCPT
+        id S1725883AbgE1A7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:55:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35114 "EHLO mail.kernel.org"
+        Wed, 27 May 2020 20:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgE1Azs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:55:48 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725267AbgE1A7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:59:45 -0400
+Received: from guoren-Inspiron-7460.lan (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A70B8207CB;
-        Thu, 28 May 2020 00:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90CFE207CB;
+        Thu, 28 May 2020 00:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590627348;
-        bh=LVt+v07eAhhKUzT7NqWt/6bOrLAfS45SVvYmNSlojo4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jv37DevlwxDmCOqr9Zb5+P2Xeq5ZWKgzCjORE0J9RBB7bJfqb3n8CvDivIWERcESE
-         VM38R5KdZwFEAuJzap4U8cYrCW2Bkn8bZDTrxsIVze5ZoSzUpmeMIKrR/RqWTuadrt
-         WomSlE/Kd+KPBoOd1wYzuXZRNXU+tR00icpmem+o=
-Date:   Wed, 27 May 2020 17:55:47 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/23] maccess: unify the probe kernel arch hooks
-Message-Id: <20200527175547.0260fb90d76734d4e0f56def@linux-foundation.org>
-In-Reply-To: <20200521152301.2587579-11-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-        <20200521152301.2587579-11-hch@lst.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1590627584;
+        bh=vzFsK0uZn8FT7qx2c568pKl6hoqO6DKr1GFwtLmOzXw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0fsjCmS+jQjb+yzf5tQemzRFuHLSODBnpUVwKmHxlu92C2mUBd6nV8KcRqy3E3+U+
+         Ah5h5ZM9mEoozL/zlBE0941UNgIu2/EMWKfmT8/6mPKLNfEWyQ7sQd3Xn8Z2X9WhWa
+         nOTWizI3n1yTsssTKQnk1bmqflnlO0PkE0T9TwYc=
+From:   guoren@kernel.org
+To:     torvalds@linux-foundation.org
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-csky@vger.kernel.org
+Subject: [GIT PULL] csky updates for v5.7-rc8
+Date:   Thu, 28 May 2020 08:59:32 +0800
+Message-Id: <1590627572-10100-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 17:22:48 +0200 Christoph Hellwig <hch@lst.de> wrote:
+Hi Linus,
 
-> Currently architectures have to override every routine that probes
-> kernel memory, which includes a pure read and strcpy, both in strict
-> and not strict variants.  Just provide a single arch hooks instead to
-> make sure all architectures cover all the cases.
+Please pull the 4 fixups for v5.7-rc8.
 
-Fix a buildo.
+Best Regards
+ Guo Ren
 
---- a/arch/x86/mm/maccess.c~maccess-unify-the-probe-kernel-arch-hooks-fix
-+++ a/arch/x86/mm/maccess.c
-@@ -29,6 +29,6 @@ bool probe_kernel_read_allowed(const voi
- {
- 	if (!strict)
- 		return true;
--	return (unsigned long)vaddr >= TASK_SIZE_MAX;
-+	return (unsigned long)unsafe_src >= TASK_SIZE_MAX;
- }
- #endif
-_
+The following changes since commit 9cb1fd0efd195590b828b9b865421ad345a4a145:
 
+  Linux 5.7-rc7 (2020-05-24 15:32:54 -0700)
+
+are available in the git repository at:
+
+  https://github.com/c-sky/csky-linux.git tags/csky-for-linus-5.7-rc8
+
+for you to fetch changes up to f36e0aab6f1f78d770ce859df3f07a9c5763ce5f:
+
+  csky: Fixup CONFIG_DEBUG_RSEQ (2020-05-28 00:18:36 +0000)
+
+----------------------------------------------------------------
+csky updates for 5.7-rc8
+
+Another 4 fixups for csky:
+ - fixup req_syscall debug
+ - fixup abiv2 syscall_trace
+ - fixup preempt enable
+ - Cleanup regs usage in entry.S
+
+----------------------------------------------------------------
+Guo Ren (4):
+      csky: Fixup CONFIG_PREEMPT panic
+      csky: Fixup abiv2 syscall_trace break a4 & a5
+      csky: Coding convention in entry.S
+      csky: Fixup CONFIG_DEBUG_RSEQ
+
+ arch/csky/abiv1/inc/abi/entry.h     |   6 --
+ arch/csky/abiv2/inc/abi/entry.h     |   8 +--
+ arch/csky/include/asm/thread_info.h |   6 ++
+ arch/csky/kernel/entry.S            | 117 ++++++++++++++++++------------------
+ 4 files changed, 66 insertions(+), 71 deletions(-)
