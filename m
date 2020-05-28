@@ -2,118 +2,196 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52764C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D4720888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2eTWFls"
+	by mail.kernel.org (Postfix) with ESMTP id 25FAC20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590663479;
+	bh=+s3iQbU50oMyjWLA4SvDT7injikcxGDv7jfjesepKU8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rmf/NDzI/TB7yNyF87FXIHN2Y3UW7p/7VN/kQdERowco5Bu+/a8K7iQe4uuU5UyP9
+	 mluvJXItO0Fgtf0U3ihOfp2PZOzY2OP1iDoSa81VoWlxWoJLgtEEiOqqj6/6CQJby6
+	 5IHiJLGq/FVOyLah6xNo5rF9ykmUDqCmGe7lFgmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388007AbgE1Kxf (ORCPT
+        id S2388041AbgE1K56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:53:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40074 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387926AbgE1Kxd (ORCPT
+        Thu, 28 May 2020 06:57:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45061 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387926AbgE1K55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:53:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590663211;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=THROXU06O8NObD/CvI2mO/QZizA3BtE1Fcaww6HOCqQ=;
-        b=A2eTWFlszFZOaI3npx5B3/4av+2FHEaY7SBGNUAoW+sABNG1TqPWT6mhdeSkiMKH1D/abX
-        8uCGCydKh9FU6nRIhIIA22MFCvPuf8PZ+RSOZWxU1/NFmA54i4lMhbx7kUCJcLHxGgm2zT
-        3jJ25VBY1tbpDBPyDlszarNr3XZ2tDk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-7HPIga_1M1muqOSSNzSyqw-1; Thu, 28 May 2020 06:53:30 -0400
-X-MC-Unique: 7HPIga_1M1muqOSSNzSyqw-1
-Received: by mail-ej1-f70.google.com with SMTP id pw1so10002222ejb.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:53:29 -0700 (PDT)
+        Thu, 28 May 2020 06:57:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c3so1994581otr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:57:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=THROXU06O8NObD/CvI2mO/QZizA3BtE1Fcaww6HOCqQ=;
-        b=Z/WvbyiWkoSivjK9refiKzuXj7hkzGCSk/RRwYZLCHu6xASCEng5fqj2JyBjUOS5O0
-         7wror9lUlHZCmNM8FLJ37oc8at8ullsmCyzDEQ0Ks/IFgRdBKjSgR1zfWWgfy6x8u3qy
-         z4AjPkDfD4NBrCeR/MFu0ny9JMbWYdSP+ExRsLTX07TMMLscH4IfRSi2IpCwUtuRd39p
-         eoAY3b//+GgT4LHsZkGTA/9s8Bu0uUkva1/gs7T5eVyDMY0mC1NtS7uFVDq7tW1Jn7io
-         FNWBcCJ9TeYH3nx7gqQLPdsCG4JliPMmcKdfkZG6tcyplzymXNkpFa92qu0N+V1Kb0cG
-         Cfqw==
-X-Gm-Message-State: AOAM531qll38DzsdYb2aNwLOVi0CQ5jn1QB+Fk5c/vFKBoq74MeUAO6x
-        MfO1ZyPqLX4PFPgkH2IpU/8Vh6WyuQKFkWM8U5dkpnCzpZipLcn+7qRHQ2l+C8a6gcCI2cPNgkn
-        cwLfrrob6InwnP/Vc6uhNQ00V
-X-Received: by 2002:aa7:d0cc:: with SMTP id u12mr2450276edo.385.1590663208733;
-        Thu, 28 May 2020 03:53:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxedx2WYnJYMDlOaUBBjXoew4r7E/DhBUsZ1oryjTyqUpxzgiFDrYyuhtNMmnqvf0J2iR/C7g==
-X-Received: by 2002:aa7:d0cc:: with SMTP id u12mr2450257edo.385.1590663208543;
-        Thu, 28 May 2020 03:53:28 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id z20sm3835520ejb.68.2020.05.28.03.53.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 03:53:28 -0700 (PDT)
-Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
-To:     Marc Zyngier <maz@kernel.org>, Gavin Shan <gshan@redhat.com>
-Cc:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        shan.gavin@gmail.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-10-gshan@redhat.com>
- <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
- <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
- <8b09c298fab15e2629c65e8ee98a8a29@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <59904c11-6965-510f-4848-bc1e91af49fd@redhat.com>
-Date:   Thu, 28 May 2020 12:53:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FagLwjO9/oUcuTnUK3r+oVdBaE/5DDFSwRBmyKi9WoA=;
+        b=hrXeYXeYd1y0egy88E8LoOJRGFDQX7X8LrxhRo+o1XFrYNZnIUWLWXE9LJ1HqA3yoZ
+         GCjA+0uZ37Gr5L3XocUpP2o/blTnJXnBdo/EIgvSkUg/WxjiuXSVV4v2cmz/szMGXM8I
+         N+YjHnBcknBWnP4DvYWM6acIqCfI5pZkFbtZkr9KydZwwVeR35Xrc1+Y0kxdLbgB6Mcx
+         URjXdPRnbb8D2xABjlDPr4QFXZXHKFU4aBatONLJSWZEmrpWFKuNSt5BkGF6HKrjJ/7u
+         Sq8SIHnDdOEnHUWj0dSbyZUGsHFnTrL47kluG8t+6sbfPPw3vxd/foUI7py7jjDouFAz
+         pgAw==
+X-Gm-Message-State: AOAM530go9Jqkcb3XpDMOeB8jQS1+22ymTmlmD82q1pboQntNo7uHvvd
+        BhDrwvIeimNECfkqyLqO3XNnai6JWnZkMLPW7DY=
+X-Google-Smtp-Source: ABdhPJzUyNQmJNPkY78iRbBaFzZTP/huSbYm3BIX72A2C8e+rMkaltPXGh3QTh8yd/rugcntC4rYj6GhUw6meG4Lepw=
+X-Received: by 2002:a9d:6c0f:: with SMTP id f15mr1755562otq.118.1590663475733;
+ Thu, 28 May 2020 03:57:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <8b09c298fab15e2629c65e8ee98a8a29@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+ <20200527075048.GD3284396@kuha.fi.intel.com> <CAJZ5v0h0Xjovm-eVyiOG+j7kNEPxB=PZF4rLVEgwUW+H+61DFg@mail.gmail.com>
+ <2407984.idRd5kzSG0@kreacher> <20200527222515.GA89212@roeck-us.net>
+In-Reply-To: <20200527222515.GA89212@roeck-us.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 28 May 2020 12:57:42 +0200
+Message-ID: <CAJZ5v0jPoi+5d+jv0iAuKkObSr=EDxmMhNqMTvLQNUEc_i9zcg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kobject: send KOBJ_REMOVE uevent when the object is
+ removed from sysfs
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/05/20 09:03, Marc Zyngier wrote:
-> The current state of the architecture doesn't seem to leave much leeway in
-> terms of SW creativity here. You just can't allocate your own ISS encoding
-> without risking a clash with future revisions of the architecture.
-> It isn't even clear whether the value you put would stick in ESR_EL1
-> if it isn't a valid value for this CPU (see the definition of 'Reserved'
-> in the ARM ARM).
-> 
-> Allocating such a syndrome would require from ARM:
-> 
-> - the guarantee that no existing implementation, irrespective of the
->   implementer, can cope with the ISS encoding of your choice,
-> 
-> - the written promise in the architecture that some EC/ISS values
->   are reserved for SW, and that promise to apply retrospectively.
-> 
-> This is somewhat unlikely to happen.
+On Thu, May 28, 2020 at 12:25 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Wed, May 27, 2020 at 11:01:16AM +0200, Rafael J. Wysocki wrote:
+> >
+> > So Guenter, can you please test the patch below to see if it still introduces
+> > the problems seen by you on ARM?
+> >
+>
+> arm64 and arm64be boot tests pass with the patch below.
 
-Well, that's a euphemism probably.  On x86 we're somewhat lucky that
-there's an architectural way for injecting hypervisor vmexit directly in
-the guest, and we can piggyback on that for async page faults (which are
-essentially stage2 page faults that are processed by the guest).
+Great, thanks!
 
-Is it possible to reuse EL2 exception codes / syndromes somehow?  (I
-haven't checked in the ARM ARM the differences between the EL1 and EL2
-syndrome registers).
+> Some arm boot tests fail, but I think that is due to some other problem with -next.
+> Hard to say for sure at this point because -next is pretty badly broken
+> overall. I'll need to run some bisects to see what is going on.
 
-Paolo
+I see.
 
+Thanks for giving this one a go.
+
+> > ---
+> > From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Subject: [PATCH] kobject: Make sure the parent does not get released before its children
+> >
+> > In the function kobject_cleanup(), kobject_del(kobj) is
+> > called before the kobj->release(). That makes it possible to
+> > release the parent of the kobject before the kobject itself.
+> >
+> > To fix that, adding function __kboject_del() that does
+> > everything that kobject_del() does except release the parent
+> > reference. kobject_cleanup() then calls __kobject_del()
+> > instead of kobject_del(), and separately decrements the
+> > reference count of the parent kobject after kobj->release()
+> > has been called.
+> >
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_release() function"")
+> > Suggested-by: "Rafael J. Wysocki" <rafael@kernel.org>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > [ rjw: Drop parent reference only when called __kobject_del() ]
+> > Signed-off-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > ---
+> >  lib/kobject.c |   34 +++++++++++++++++++++++-----------
+> >  1 file changed, 23 insertions(+), 11 deletions(-)
+> >
+> > Index: linux-pm/lib/kobject.c
+> > ===================================================================
+> > --- linux-pm.orig/lib/kobject.c
+> > +++ linux-pm/lib/kobject.c
+> > @@ -599,14 +599,7 @@ out:
+> >  }
+> >  EXPORT_SYMBOL_GPL(kobject_move);
+> >
+> > -/**
+> > - * kobject_del() - Unlink kobject from hierarchy.
+> > - * @kobj: object.
+> > - *
+> > - * This is the function that should be called to delete an object
+> > - * successfully added via kobject_add().
+> > - */
+> > -void kobject_del(struct kobject *kobj)
+> > +static void __kobject_del(struct kobject *kobj)
+> >  {
+> >       struct kernfs_node *sd;
+> >       const struct kobj_type *ktype;
+> > @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+> >
+> >       kobj->state_in_sysfs = 0;
+> >       kobj_kset_leave(kobj);
+> > -     kobject_put(kobj->parent);
+> >       kobj->parent = NULL;
+> >  }
+> > +
+> > +/**
+> > + * kobject_del() - Unlink kobject from hierarchy.
+> > + * @kobj: object.
+> > + *
+> > + * This is the function that should be called to delete an object
+> > + * successfully added via kobject_add().
+> > + */
+> > +void kobject_del(struct kobject *kobj)
+> > +{
+> > +     struct kobject *parent = kobj->parent;
+> > +
+> > +     __kobject_del(kobj);
+> > +     kobject_put(parent);
+> > +}
+> >  EXPORT_SYMBOL(kobject_del);
+> >
+> >  /**
+> > @@ -663,7 +670,9 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+> >   */
+> >  static void kobject_cleanup(struct kobject *kobj)
+> >  {
+> > +     struct kobject *parent = kobj->parent;
+> >       struct kobj_type *t = get_ktype(kobj);
+> > +     bool state_in_sysfs = kobj->state_in_sysfs;
+> >       const char *name = kobj->name;
+> >
+> >       pr_debug("kobject: '%s' (%p): %s, parent %p\n",
+> > @@ -681,10 +690,10 @@ static void kobject_cleanup(struct kobje
+> >       }
+> >
+> >       /* remove from sysfs if the caller did not do it */
+> > -     if (kobj->state_in_sysfs) {
+> > +     if (state_in_sysfs) {
+> >               pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+> >                        kobject_name(kobj), kobj);
+> > -             kobject_del(kobj);
+> > +             __kobject_del(kobj);
+> >       }
+> >
+> >       if (t && t->release) {
+> > @@ -698,6 +707,9 @@ static void kobject_cleanup(struct kobje
+> >               pr_debug("kobject: '%s': free name\n", name);
+> >               kfree_const(name);
+> >       }
+> > +
+> > +     if (state_in_sysfs)
+> > +             kobject_put(parent);
+> >  }
+> >
+> >  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+> >
+> >
+> >
