@@ -2,162 +2,150 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22886C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B061BC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3542084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E9A42084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:54:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="MM++JSv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgE1Byr (ORCPT
+        id S1726774AbgE1Byp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:54:47 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:9110 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726598AbgE1Byq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:54:46 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Wed, 27 May 2020 18:54:42 -0700
-Received: from ubuntu.eng.vmware.com (unknown [10.20.113.240])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id F351E402C2;
-        Wed, 27 May 2020 18:54:45 -0700 (PDT)
-From:   Ronak Doshi <doshir@vmware.com>
-To:     <netdev@vger.kernel.org>
-CC:     Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 1/4] vmxnet3: prepare for version 4 changes
-Date:   Wed, 27 May 2020 18:54:23 -0700
-Message-ID: <20200528015426.8285-2-doshir@vmware.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200528015426.8285-1-doshir@vmware.com>
-References: <20200528015426.8285-1-doshir@vmware.com>
+        Wed, 27 May 2020 21:54:45 -0400
+Received: from mail-eopbgr20044.outbound.protection.outlook.com ([40.107.2.44]:24081
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725959AbgE1Byo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:54:44 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZnQkZJR2nUWKKS55eJCTsCDqvKNfnJXjHAggan6NZjdPd1mJA7s2HGKW3vPyuJSsXcyq+SATEb4aphBGDsdqTI+NrR9gMfkK6s8m4Wrk6TJ3kFlEKqsiZ7j8YNynUwjTLgw3oTQiWYZD9sFCn653U+AI3mJZENs3AH7tWN3Dds6eAqJcvVoV6L8GvwDEFJE04CeiCKKn39tzSV9DPkadFCmB4u/+rUpJ1JKxn3wGReZgKKNWWr+j+w//ftRfofEKVIycDXQyVgS6r9LU56QEevKKO6vlzbCOxifQ9rQH0/q9sVGuNt7YRwH25l4V5GMw3GK18cfa48aLHQQrVJ6fig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KjUPrPJ00xxIBEwt1p5tpm43IUd4loBg/3MMli0Nczc=;
+ b=E5oG9jzuMAbdfuWDq8QnYp8kNInsNf2xJVNr+nKwj/ukGz9PVYvLcDgGj3/H7KL510pWhBt/T5pSLphbTxgN34uiOXhU2L4GXr4QPB4ae/b53JwoUhA0YHMrX1MRCQwEXGGwtyReUbLi4A+vWCeQaNNmuss3/6QhI8kwxHW4bBdQGBoa0R8u/GrVXeVLsHDJqCgYVr+I2kU7zhMEhg/5L4TFM+c8DfXybRK2l6bBmjoOYvFNKXu4kqX4ybPTxx4D8GcW16ZXP1BTmJ2laEJfiUkgq2UQFzxw34puutuXAnO5SEDdpNSAGmMDsKGSVxHlN74f3Uml33JfBzdR75SqCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KjUPrPJ00xxIBEwt1p5tpm43IUd4loBg/3MMli0Nczc=;
+ b=MM++JSv3SOoba8fX5H14/ByeFnc+qE4//ZFxoyJeTWjqEHZOLFCK9F/gKD+oJr0TMYGDp8X6PY/+otVgRTA60vYfnXnm852YUY3Jm3Z5lOmpqAof3GxyCoEm3pGo+Wa8gEqtam+LRdZVuFtmdxfmf/a/kT71ia41L22I6ePNcKo=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB3PR0402MB3644.eurprd04.prod.outlook.com (2603:10a6:8:c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Thu, 28 May
+ 2020 01:54:40 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 01:54:40 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/2] firmware: imx: make sure MU irq can wake up system
+ from suspend mode
+Thread-Topic: [PATCH 1/2] firmware: imx: make sure MU irq can wake up system
+ from suspend mode
+Thread-Index: AQHWGcUyRhHY8Y+vZ0uZHvfqU0lQUai88iwg
+Date:   Thu, 28 May 2020 01:54:40 +0000
+Message-ID: <DB3PR0402MB39165713C539F1A81085F4B0F58E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1587683231-18468-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1587683231-18468-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4358e10f-6f4b-4d2f-ad86-08d802aa15b1
+x-ms-traffictypediagnostic: DB3PR0402MB3644:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3644782B3721F50077DE7E1DF58E0@DB3PR0402MB3644.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /cHP2TB71SrY+A6AWFazJ1mvIhNBl/Li4dvKiMAiyoQhQKUW8T8ahgZ+jXnM0fWXndvz4y/pswFXN9gqujZ4eGpWIjPxBgH5LPs5n5oqaqWhvt1Kw+zTEH42sNQjYBe4iHo2TQK1bgr0brZ4Ebz6tODza2DL+2f2HcSptRlkhcRGcz07egrIgx6DeMrSVKsXwI8avCRMNPU+iq4S2rSljE8an47VgH97iC6qrRmI9/WlcRUYoq30W5rG0QfT1G+jCDwUkZu8CwDiJr23laJ5o/IXwbmDsCKG6ragY8o8al14Nrqr+jTz11Z/Un5ys2Cf
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(136003)(376002)(346002)(33656002)(86362001)(8936002)(6506007)(8676002)(44832011)(7696005)(5660300002)(76116006)(64756008)(66556008)(66946007)(26005)(66476007)(83380400001)(186003)(66446008)(71200400001)(55016002)(2906002)(478600001)(15650500001)(52536014)(110136005)(316002)(4326008)(9686003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ZoPgZn0JysQM10TmoWJKYgKan1Sk+ReFSh8BNsMZBaPGR2UryUFfR55Zbb38Szp5u+hrBS30Y4MfATXWrm49xGXSZbKIvWyKNxCbgjAZ+O9t97PrBnFIfY0kwuyLujWeI0djL0ymiq612E++4OcR9Z8aZI4sSVVFa7Iy68WTQHCNka7zzeS6o6UEH91iO6j5Pi4/jSjWXODjD3PVoGrcn6+qoTJuL4kcixkVo1pjaLhvgycCPKlSpSsCzJDE95NRxHSkOQ32uCakI+dRfq7+CzV3BrZDjkc/T5W37B5wI/UywnoVojS1c70Lq0EhiVM/f6loh0f641kl14DrMu0HIiz16S8DIFx79Wx2srz0nxASoKq4msdoIv0eLOqvqPmHuxJT5xgWfAg1sRZ3rM0FVOUryhVGtelP2dEQJsJKO4uLr3JPHhZcgsSoiP0SHibtVieSBl47PS1xIBlQ9Sm4tEYBHGAk6bSPkiplYSD+WYs=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: doshir@vmware.com does not
- designate permitted sender hosts)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4358e10f-6f4b-4d2f-ad86-08d802aa15b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 01:54:40.3107
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NPLGJL7QiZCT5z4XJZWb/HC1DJaUMKzV2Lmn8fWUOHE6ap9ABwRYHrKVykABgjrNzHm+BNowmbkoLIL0yj6O2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3644
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmxnet3 is currently at version 3 and this patch initiates the
-preparation to accommodate changes for version 4. Introduced utility
-macros for vmxnet3 version 4 comparison and update Copyright
-information.
+Gentle ping...
 
-Signed-off-by: Ronak Doshi <doshir@vmware.com>
----
- drivers/net/vmxnet3/Makefile          | 2 +-
- drivers/net/vmxnet3/upt1_defs.h       | 2 +-
- drivers/net/vmxnet3/vmxnet3_defs.h    | 2 +-
- drivers/net/vmxnet3/vmxnet3_drv.c     | 2 +-
- drivers/net/vmxnet3/vmxnet3_ethtool.c | 2 +-
- drivers/net/vmxnet3/vmxnet3_int.h     | 5 ++++-
- 6 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/vmxnet3/Makefile b/drivers/net/vmxnet3/Makefile
-index 8cdbb63d1bb0..c5a167a1c85c 100644
---- a/drivers/net/vmxnet3/Makefile
-+++ b/drivers/net/vmxnet3/Makefile
-@@ -2,7 +2,7 @@
- #
- # Linux driver for VMware's vmxnet3 ethernet NIC.
- #
--# Copyright (C) 2007-2016, VMware, Inc. All Rights Reserved.
-+# Copyright (C) 2007-2020, VMware, Inc. All Rights Reserved.
- #
- # This program is free software; you can redistribute it and/or modify it
- # under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/upt1_defs.h b/drivers/net/vmxnet3/upt1_defs.h
-index db9f1fde3aac..65a203c842b2 100644
---- a/drivers/net/vmxnet3/upt1_defs.h
-+++ b/drivers/net/vmxnet3/upt1_defs.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_defs.h b/drivers/net/vmxnet3/vmxnet3_defs.h
-index c3a31646189f..c77274228a3e 100644
---- a/drivers/net/vmxnet3/vmxnet3_defs.h
-+++ b/drivers/net/vmxnet3/vmxnet3_defs.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index 722cb054a5cd..ec2878f8c1f6 100644
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index 6528940ce5f3..1163eca7aba5 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
-index 1cc1cd4aaa59..e803ffad75d6 100644
---- a/drivers/net/vmxnet3/vmxnet3_int.h
-+++ b/drivers/net/vmxnet3/vmxnet3_int.h
-@@ -1,7 +1,7 @@
- /*
-  * Linux driver for VMware's vmxnet3 ethernet NIC.
-  *
-- * Copyright (C) 2008-2016, VMware, Inc. All Rights Reserved.
-+ * Copyright (C) 2008-2020, VMware, Inc. All Rights Reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms of the GNU General Public License as published by the
-@@ -81,6 +81,7 @@
- 	#define VMXNET3_RSS
- #endif
- 
-+#define VMXNET3_REV_4		3	/* Vmxnet3 Rev. 4 */
- #define VMXNET3_REV_3		2	/* Vmxnet3 Rev. 3 */
- #define VMXNET3_REV_2		1	/* Vmxnet3 Rev. 2 */
- #define VMXNET3_REV_1		0	/* Vmxnet3 Rev. 1 */
-@@ -412,6 +413,8 @@ struct vmxnet3_adapter {
- 	(adapter->version >= VMXNET3_REV_2 + 1)
- #define VMXNET3_VERSION_GE_3(adapter) \
- 	(adapter->version >= VMXNET3_REV_3 + 1)
-+#define VMXNET3_VERSION_GE_4(adapter) \
-+	(adapter->version >= VMXNET3_REV_4 + 1)
- 
- /* must be a multiple of VMXNET3_RING_SIZE_ALIGN */
- #define VMXNET3_DEF_TX_RING_SIZE    512
--- 
-2.11.0
+> Subject: [PATCH 1/2] firmware: imx: make sure MU irq can wake up system
+> from suspend mode
+>=20
+> IRQF_NO_SUSPEND flag is set for MU IRQ of IPC work, but with this flag se=
+t,
+> IRQD_WAKEUP_ARMED flag will NOT be set during
+> suspend_device_irq() phase, then when MU IRQ arrives, it will NOT wake up
+> system from suspend.
+>=20
+> To fix this issue, pm_system_wakeup() is called in general MU IRQ handler=
+ to
+> make sure system can be waked up when MU IRQ arrives.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/firmware/imx/imx-scu-irq.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/firmware/imx/imx-scu-irq.c
+> b/drivers/firmware/imx/imx-scu-irq.c
+> index db655e8..d9dcc20 100644
+> --- a/drivers/firmware/imx/imx-scu-irq.c
+> +++ b/drivers/firmware/imx/imx-scu-irq.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/firmware/imx/ipc.h>
+>  #include <linux/firmware/imx/sci.h>
+>  #include <linux/mailbox_client.h>
+> +#include <linux/suspend.h>
+>=20
+>  #define IMX_SC_IRQ_FUNC_ENABLE	1
+>  #define IMX_SC_IRQ_FUNC_STATUS	2
+> @@ -91,6 +92,7 @@ static void imx_scu_irq_work_handler(struct work_struct
+> *work)
+>  		if (!irq_status)
+>  			continue;
+>=20
+> +		pm_system_wakeup();
+>  		imx_scu_irq_notifier_call_chain(irq_status, &i);
+>  	}
+>  }
+> --
+> 2.7.4
 
