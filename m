@@ -2,139 +2,119 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA71C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A1E120776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:21:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E/tD2onB"
+	by mail.kernel.org (Postfix) with ESMTP id 86035208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590654274;
+	bh=1XpzYMmYZp/Qk1kJtW0aiug2LeRfEo1uHDMQ6LmkHPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A8iEOMJxlVT9LYHZ9i1mxUuZ9JpnCN0ukLf9QCFCWNNLImskGGDQwwRNUTMcHJuhK
+	 YyeWjO7f6gr+YpajpLvKapJ5UIl+3eUUKq8+5QU1gtJLXfr/UwooBPc8Ew5DIufXvZ
+	 NKomWicPmE82wtmFH+YbqT7hclu5sfa5C1MYrSHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgE1IVw (ORCPT
+        id S1726903AbgE1IYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:21:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726635AbgE1IVv (ORCPT
+        Thu, 28 May 2020 04:24:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34427 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbgE1IYd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:21:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590654110;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=28XwRKURWnZzobTHiXxPf0058GoHHCEM7vKk4EkRWcg=;
-        b=E/tD2onB20OTqYhh+H/7aUk+UEibZAtOrJ4/JzLk2QY4XHO+TnxESa9LVQfaBRwNQP867F
-        elqAOL+fv1S6+krD5fw0K0ijxlEx3z9XsUVtRkh0KFzCyYUKnxrWPZ7TW2E8IQam203582
-        Wk2+iZVQVKhAxkgvKDyNlzNiy3LumOY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-HvQqvjmRNcu0fwraVnRZbA-1; Thu, 28 May 2020 04:21:46 -0400
-X-MC-Unique: HvQqvjmRNcu0fwraVnRZbA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3E55107ACCA;
-        Thu, 28 May 2020 08:21:44 +0000 (UTC)
-Received: from [10.36.114.114] (ovpn-114-114.ams2.redhat.com [10.36.114.114])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4152F78900;
-        Thu, 28 May 2020 08:21:42 +0000 (UTC)
-Subject: Re: [PATCH 5.6 086/126] virtio-balloon: Revert "virtio-balloon:
- Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM"
-To:     Jiri Slaby <jslaby@suse.cz>,
+        Thu, 28 May 2020 04:24:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id b6so32328787ljj.1;
+        Thu, 28 May 2020 01:24:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=htN54AV/Ihu6JzPNFvenMo8mjoWrRH1sjEjPiN8cCzk=;
+        b=ulMG+2s1laMLyaQ/fBjFjyudzzlg7UtXeIjTVIUmI7fAj+LV6xjDjYHVh+qMcwd4v5
+         AgsBTyX6iz8C5hSEm+tuhvyVEHEjBCuXAXMrj6Uzay/OKj47Rm2IUPzQ2aikMF04RAtL
+         YsupteV2O9uk6Pwz0+fGUg/RenlHSq9rRB18cWkHe/s6c39SPi/WY67QX6l4LDN+LxPz
+         3ZvUHO7/Hqz3ikBplcMMDmcS82XaxHYTUZzNt0jHn2qUwp+okOWo2UJV+sVYV9Lt3lnC
+         flgaCihZ0sYEarDkfTl1FXP415xHiOFJ8KxT+Kq89wuQfqQextNpo0M8kTM2Gncgq97y
+         4G0Q==
+X-Gm-Message-State: AOAM531fSwjDNtKbA6tqDDAVw7pJGHep1v1H8deLs5sDeoCcWeUrcRc+
+        keyA8rU+bB/nAPs25VGn6rs=
+X-Google-Smtp-Source: ABdhPJw0lfniAdlAI2ff5VOzb5wHTOW7tmV6sPriJoXUvYGZu9htTeK/qTi3Nk+AwKcKnzJOR4uUXA==
+X-Received: by 2002:a2e:a171:: with SMTP id u17mr953864ljl.225.1590654269229;
+        Thu, 28 May 2020 01:24:29 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id u16sm1292531lji.58.2020.05.28.01.24.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 01:24:28 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jeDps-00035C-Ur; Thu, 28 May 2020 10:24:21 +0200
+Date:   Thu, 28 May 2020 10:24:20 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Johan Hovold <johan@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200526183937.471379031@linuxfoundation.org>
- <20200526183945.237904570@linuxfoundation.org>
- <8f649042-bc3a-2809-0332-44a5d3202807@suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <c8253932-5e6b-51e1-fe0c-19514779c9be@redhat.com>
-Date:   Thu, 28 May 2020 10:21:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
+ droid4 modem
+Message-ID: <20200528082420.GA10358@localhost>
+References: <20200421232752.3070-1-tony@atomide.com>
+ <20200423114326.GQ18608@localhost>
+ <20200423153756.GE37466@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <8f649042-bc3a-2809-0332-44a5d3202807@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200423153756.GE37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28.05.20 07:51, Jiri Slaby wrote:
-> On 26. 05. 20, 20:53, Greg Kroah-Hartman wrote:
->> From: Michael S. Tsirkin <mst@redhat.com>
->>
->> [ Upstream commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7 ]
->>
->> This reverts commit 5a6b4cc5b7a1892a8d7f63d6cbac6e0ae2a9d031.
->>
->> It has been queued properly in the akpm tree, this version is just
->> creating conflicts.
+Hi Tony,
+
+Sorry about the late reply on this.
+
+On Thu, Apr 23, 2020 at 08:37:56AM -0700, Tony Lindgren wrote:
+> * Johan Hovold <johan@kernel.org> [200423 11:44]:
+
+> > I know the location of this driver has been up for discussion already,
+> > but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
+> > drivers/i2c/protocol directory where we stuff random i2c client
+> > drivers).
 > 
-> Should this be applied to stable trees at all?
+> Argh, the location of driver again.. So we do have the custom motorola
+> layer to deal with on top of TS 27.010, but the custom handling is
+> contained within the driver. So maybe just drivers/serial for the
+> custom driver then.
+
+Yeah, that should do for now; n_gsm is a serial driver (exposing tty
+devices) after all.
+
+> > Last, it seems you've based the serdev-ngsm-motmdm.c chardev
+> > implementation on a more or less verbatim copy of drivers/gnss/core.c.
+> > I'd appreciate if you could mention that in the file header and
+> > reproduce the copyright notice if you end up keeping that interface.
 > 
-> To me, it occurs to be a revert to avoid conflicts, not to fix something?
+> Oh yes indeed, thanks for pointing that out. I'll add it to the next
+> version. The chardev code is for sure based on drivers/gnss.
+> 
+> To explain my ignorance, I added the chardev support initially as an
+> experiment to see if I can handle the motorola packet layer better
+> that way compared to the n_gsm ttys and userspace handling. It ended
+> up working quite nicely, so I kept it but then I accidentally left
+> out references to the source. Sorry about that.
 
-Agreed.
+No worries.
 
-
--- 
-Thanks,
-
-David / dhildenb
-
+Johan
