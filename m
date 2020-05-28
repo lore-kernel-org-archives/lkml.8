@@ -2,113 +2,186 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1AC7207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FE3207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:41:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhZlk94F"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CWbKKA8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726114AbgE1Gkk (ORCPT
+        id S1726411AbgE1GlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53894 "EHLO
+        Thu, 28 May 2020 02:41:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgE1Gkj (ORCPT
+        with ESMTP id S1725747AbgE1GlH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:40:39 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCB8C05BD1E;
-        Wed, 27 May 2020 23:40:38 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d66so277216pfd.6;
-        Wed, 27 May 2020 23:40:38 -0700 (PDT)
+        Thu, 28 May 2020 02:41:07 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98494C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:41:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k22so11122703pls.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:41:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=f153Oiv6V0dDvFVZ6jioj2CuCS8APNuYD3It8Lwcg+4=;
-        b=UhZlk94F98Aj/hZGx61pLSICB2FDY7I6hJdQWOtN9kJ4NJLvVTCYnWR0LU7v9B7N2B
-         FE8DgnAHdXmCi/QeMS0zRp4d61ujJy6bubDqAS6TQT3wwX9nomojpLmXPjnlHH/e+t9S
-         MRbcwT9ByYEIcOrpWHXMFVOolCLJzLBYSUTMoszVTQz2ke7BMHARE4dKh8PSmftbdRmm
-         ouGHfcTvKstVClY14Q8m4e2IzrhW5qD+O7fqp9bvzIV9DuTJDmgnoJvehByfGUBwtNm+
-         +KjcSrSet0Ak5Zms30vcHBGuchPi9FR2OcJ3u+xl3IoxIidWPvv6+WNH3ztOygESKQhf
-         oxpw==
+        bh=JnNgpr0CjoQS7tA3oSvr2nQu06Bzj91OtHhD7FgEFDI=;
+        b=CWbKKA8xirK2sOKqXxKJdqgLLoRl72aIO5DmCD7PYLJX9BZ1PY2T0nSS7T46zYrrTZ
+         F9EJO9RTJUbPyJnO/DsEyEbAIAesxUnMhkmXph3HBzPkqei7xwMlXk0jxcV0n4cP+mnS
+         oNvsDXFFAgihjcjnCTdNmaK7TgvQAnVjdR4PgqiSIfPafqoa6rv9OwyfFOOLXrW/2pqI
+         6RdL0xSqaRQTQtj6m7K5hEaIYTg9ZcMlpakC8XRnfWov7Xp+GeDU1SkVsVHM1KlaQyyp
+         bSqbZC/cN3TPfFtpqpl6/0RBrSI0kgMAtR75FQBxR2Sf0sG5BYhgp/75/mJdmzAnd9pi
+         LFtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=f153Oiv6V0dDvFVZ6jioj2CuCS8APNuYD3It8Lwcg+4=;
-        b=BKkRyIUfdOt3IqhMXc993y63jks8n7bG1Y9Mpc3kd3rOMMjNqWw96WsYMWKOMhYxwh
-         r7z990BW38n5KdguoYnfXk7ZDVb4p+9Y3U4wF+PsK/Vp+TZj+kXGcKOEGOERH6nzaIMm
-         5CCAeXr4LwapGQpliGTNYOpjlY6KCZRxKApqSWLfrmLQPNaQOxJ7tWwAKyl44KNnxviB
-         yA5Sm56E8Fj757f6RsvL0+C1nbtfYTBp8RLThx2TCtKqiE4p7GqLTXPvRNohraoY0Xhj
-         rQt/9cmtityGt/mVDOdt5vt1v31Xqah7/8jZiWzekEeC6EmD+w5BejUSiPdqFlBnaOzu
-         o8mQ==
-X-Gm-Message-State: AOAM530iNtexcJc221lSRLsj/E9c+Wd1hXojP8aAK23LhVqgydsOs9qH
-        mUPiHqIbXFWIajYF8YFuDuo=
-X-Google-Smtp-Source: ABdhPJx9md1AR61lHBvpJgMZk46aFkX7hlTdIy0H6XrIhkCvZNH9cFhp1yfYraE3awUeUEtqBAaWnA==
-X-Received: by 2002:a63:3101:: with SMTP id x1mr1423569pgx.392.1590648038543;
-        Wed, 27 May 2020 23:40:38 -0700 (PDT)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id n8sm4338580pjq.49.2020.05.27.23.40.33
+        bh=JnNgpr0CjoQS7tA3oSvr2nQu06Bzj91OtHhD7FgEFDI=;
+        b=fTjxb53zlsfoHwYFZKgkzY7tE0wwStpLF8Q3RgKGgQgYIqLtMldzMg3YUS1leySzAZ
+         94UHtAJ1Ek/shGuqex9MrqaWCV48ZvKBm2Y+GGhw3IHGpafkR0yJ//PFuRqpMI5XVj/4
+         JWl9CKYZitLVzVxhU2Htf151S5Btd62YFFkc7YSZn8tXkVPFoil0R5P7HILS8sopbIyT
+         HvCLM455hFKbGGnb91z11LVWFPxZWjpMkDLfu6FfKM4hFxbttjuI+wdHZqAf0y4q61vd
+         9e8lGPketN4+1Omt2DHnXPjO/37PSgRENzfdRxgCKEV1AbjNXpUT/vzWZUdByf1zE80+
+         86PQ==
+X-Gm-Message-State: AOAM5305oEqDEb3QuK1+G0OPpI4MvCQ4Zg8jmzOL/hywtPhMKrNcYjlI
+        pJ5KZpsMw4JulwL59YY877+uTw==
+X-Google-Smtp-Source: ABdhPJyeHOl09Kz+ySwow3GaIj0wGeuqe30jflggi25BDT1FNrfSQZmcpP8OAEgxxWuEx23oBgc5MQ==
+X-Received: by 2002:a17:90a:fb88:: with SMTP id cp8mr2058350pjb.63.1590648066887;
+        Wed, 27 May 2020 23:41:06 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id q29sm3773366pfg.79.2020.05.27.23.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 23:40:37 -0700 (PDT)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Paul Cercueil <paul.cercueil@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] iio: amplifiers: ad8366: Add the missed check for devm_gpiod_get()
-Date:   Thu, 28 May 2020 14:40:27 +0800
-Message-Id: <20200528064027.546944-1-hslester96@gmail.com>
+        Wed, 27 May 2020 23:41:06 -0700 (PDT)
+From:   Greentime Hu <greentime.hu@sifive.com>
+To:     greentime.hu@sifive.com, guoren@linux.alibaba.com,
+        vincent.chen@sifive.com, paul.walmsley@sifive.com,
+        palmerdabbelt@google.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, oleg@redhat.com
+Subject: [RFC PATCH v5 00/13] riscv: Add vector ISA support
+Date:   Thu, 28 May 2020 14:40:48 +0800
+Message-Id: <cover.1590646208.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ad8366_probe() forgets to check the return value of devm_gpiod_get().
-Add the missed check to fix it.
+This patchset is based on Guo Ren's v3 patchset to add dynamic vlen vector
+support for all different kinds of vector length in riscv. To make this
+happened we defined a new __riscv_v_state in sigcontext to save the vector
+related registers. In kernel space, the datap pointer in __riscv_v_state
+will be allocated dynamically to save vector registers. In user space,
+datap will point to the address right after the __riscv_v_state data
+structure to save vector registers in stack of signal handler. So does the
+implementation in ptrace, they will be saved in ubuf in which we put the
+__riscv_v_state data structure and datap pointer points to the address
+right after the __riscv_v_state for saving vector registers. This patchset
+also fixes several bugs for vector lazy save/restore mechanism and vtype
+not saving issue. It also adds new CSR support for vector based on the 0.9
+vector spec and clean up some unused macros.
 
-Fixes: cee211f4e5a0 ("iio: amplifiers: ad8366: Add support for the ADA4961 DGA")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+This patchset is rebased to v5.7-rc4 and it is tested by running several
+vector programs simultaneously. It also can get the correct ucontext_t in
+signal handler and restore correct context after sigreturn. It is also
+tested with ptrace() syscall to use PTRACE_GETREGSET/PTRACE_SETREGSET to
+get/set the vector registers. I have tested vlen=128 and vlen=256 cases in
+virt machine of qemu-system-riscv32 and qemu-system-riscv64 provided by
+Zhiwei Lui.
+
+Since the vector spec is under developing, there might still need some
+changes. For example the vle.v/vse.v instructions will be replaced with
+proper instructions. The reason that I don't replace the instruction in
+this patchset is because that the Qemu doesn't fully support 0.9 spec yet.
+I have no simulator to test. We may need to discuss the default value of
+MINSIGSTKSZ and SIGSTKSZ. They might also need to set a proper number. They
+are 2048 and 8096 now. Since the stack in signal will be reserved for
+ucontext and the vector registers might be larger and larger someday, these
+two macros will need to be defined as a proper value or maybe we should
+provide a better mechanism to provide user to get a better default signal
+stack size.
+
+
+ [1] https://github.com/romanheros/qemu/tree/linux-vector-dev
+ [2] https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
+ [3] https://github.com/riscv/riscv-v-spec/blob/master/v-spec.adoc
+
 ---
-Changes in v2:
-  - Add fixes tag.
+Changelog V5
+ - Using regset_size() correctly in generic ptrace
+ - Fix the ptrace porting
+ - Fix compile warning
 
- drivers/iio/amplifiers/ad8366.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Changelog V4
+ - Support dynamic vlen
+ - Fix bugs: lazy save/resotre, not saving vtype
+ - Update VS bit offset based on latest vector spec
+ - Add new vector csr based on latest vector spec
+ - Code refine and removed unused macros
 
-diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-index 62167b87caea..b996823c8d51 100644
---- a/drivers/iio/amplifiers/ad8366.c
-+++ b/drivers/iio/amplifiers/ad8366.c
-@@ -264,6 +264,10 @@ static int ad8366_probe(struct spi_device *spi)
- 	case ID_HMC1119:
- 		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
- 			GPIOD_OUT_HIGH);
-+		if (IS_ERR(st->reset_gpio)) {
-+			ret = PTR_ERR(st->reset_gpio);
-+			goto error_disable_reg;
-+		}
- 		indio_dev->channels = ada4961_channels;
- 		indio_dev->num_channels = ARRAY_SIZE(ada4961_channels);
- 		break;
+Changelog V3
+ - Rebase linux-5.6-rc3 and tested with qemu
+ - Seperate patches with Anup's advice
+ - Give out a ABI puzzle with unlimited vlen
+
+Changelog V2
+ - Fixup typo "vecotr, fstate_save->vstate_save".
+ - Fixup wrong saved registers' length in vector.S.
+ - Seperate unrelated patches from this one.
+
+Greentime Hu (1):
+  ptrace: Use regset_size() for dynamic regset
+
+Guo Ren (11):
+  riscv: Separate patch for cflags and aflags
+  riscv: Rename __switch_to_aux -> fpu
+  riscv: Extending cpufeature.c to detect V-extension
+  riscv: Add new csr defines related to vector extension
+  riscv: Add vector feature to compile
+  riscv: Add has_vector/riscv_vsize to save vector features.
+  riscv: Reset vector register
+  riscv: Add vector struct and assembler definitions
+  riscv: Add task switch support for vector
+  riscv: Add ptrace vector support
+  riscv: Add sigcontext save/restore for vector
+
+Vincent Chen (1):
+  riscv: signal: Report signal frame size to userspace via auxv
+
+ arch/riscv/Kconfig                       |   9 ++
+ arch/riscv/Makefile                      |  19 ++--
+ arch/riscv/include/asm/csr.h             |  16 +++-
+ arch/riscv/include/asm/elf.h             |  17 +++-
+ arch/riscv/include/asm/processor.h       |   3 +
+ arch/riscv/include/asm/switch_to.h       |  77 ++++++++++++++-
+ arch/riscv/include/uapi/asm/auxvec.h     |   2 +
+ arch/riscv/include/uapi/asm/elf.h        |   1 +
+ arch/riscv/include/uapi/asm/hwcap.h      |   1 +
+ arch/riscv/include/uapi/asm/ptrace.h     |  13 +++
+ arch/riscv/include/uapi/asm/sigcontext.h |   2 +
+ arch/riscv/kernel/Makefile               |   1 +
+ arch/riscv/kernel/asm-offsets.c          |   8 ++
+ arch/riscv/kernel/cpufeature.c           |  15 ++-
+ arch/riscv/kernel/entry.S                |   2 +-
+ arch/riscv/kernel/head.S                 |  49 +++++++++-
+ arch/riscv/kernel/process.c              |  40 ++++++++
+ arch/riscv/kernel/ptrace.c               | 115 +++++++++++++++++++++++
+ arch/riscv/kernel/setup.c                |   5 +
+ arch/riscv/kernel/signal.c               | 108 ++++++++++++++++++++-
+ arch/riscv/kernel/vector.S               |  84 +++++++++++++++++
+ include/uapi/linux/elf.h                 |   1 +
+ kernel/ptrace.c                          |   2 +-
+ 23 files changed, 567 insertions(+), 23 deletions(-)
+ create mode 100644 arch/riscv/kernel/vector.S
+
 -- 
 2.26.2
 
