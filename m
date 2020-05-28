@@ -2,90 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EC8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1948EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379D12078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED8FC2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590694516;
-	bh=OWLKCU7KQGNacnB15hHj6riNDAs958qPxB6r1+7vpiA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lR3vx6mQWeaRffFb9NEmmOdGn4D/hyXMwYDy3/YrqXpFFwkARQSI/kNCmEMLXZomJ
-	 CHJqLcwTZpp7buE44NELJdHvKcRXSz8l9ByWDkSqeEeLZQTD6k+iJWCvzhuUX50JNx
-	 irtWPW0U9fN+S3RYmyBVh93EJn+FMClcHIlmozmU=
+	s=default; t=1590694615;
+	bh=/7kHFBqmcXUzywK3Zg26OL14ofFFyyZj6hSKx1od/WU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HoTS+/HuW+V3rSjehXwaRMw9TgUyyNT3MhLH7Frkx8Ec8tCatg70uvxdtXVEf5ilt
+	 XY/un8uSBV2WPijDYL9LdMVz+WV13pU5lCxqAQ143vmeO3WaB7s5ybbHi1FzgpDf45
+	 1anXFQlYZ8l7pP6ZcT6PyjpZPc3Y32YpSKhqdmRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406660AbgE1TfN (ORCPT
+        id S2406663AbgE1Tgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:35:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406647AbgE1TfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:35:08 -0400
-Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6936A2078C;
-        Thu, 28 May 2020 19:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590694507;
-        bh=OWLKCU7KQGNacnB15hHj6riNDAs958qPxB6r1+7vpiA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zNztFQPNPfdwkX38qiOCaeviJApt7/pupinol4AlwxiOHdYbDQzgoX/mP7c96myzf
-         W3nNb1HHGaBFCIuubWJFACKdwwD2uXJJz/WW7tyFgSzUxRSwbqn/4VufQAxYLf7eON
-         8nhTXLmBDCD0rWHCXMRL81JAZFgyA+0YfGDi4gao=
-Date:   Thu, 28 May 2020 12:35:05 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Ronak Doshi <doshir@vmware.com>
-Cc:     <netdev@vger.kernel.org>, "VMware, Inc." <pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 net-next 3/4] vmxnet3: add geneve and vxlan tunnel
- offload support
-Message-ID: <20200528123505.25baf888@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20200528183615.27212-4-doshir@vmware.com>
-References: <20200528183615.27212-1-doshir@vmware.com>
-        <20200528183615.27212-4-doshir@vmware.com>
+        Thu, 28 May 2020 15:36:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45740 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406319AbgE1Tgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:36:46 -0400
+Received: by mail-io1-f66.google.com with SMTP id y5so8596721iob.12;
+        Thu, 28 May 2020 12:36:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=anLARnrJJYeYAOB5KTKHSKOnzH0boPrtofWMELzWPU8=;
+        b=eszk8+Dr5DGsMPVkuuDZkT9s0FqOEuL1kSXDU6CHHdpAyv3w59G8WWWangxo2itI7P
+         gdqo/85HaK7KV1rX91Tm/xqSvCXUQIWJLGSWEOPsbfb9Jek0r5nY6Pd9cMomYu3b5QdG
+         TCkRoRjcXt5EzyBPYCfdagT+RCcARPRm1LhSEftBII4FSKFbwPF1ioV1QxX5kqHUsOh/
+         6BBQuE6OH7gMfQqJg965LiGH+xTj+M3aSWJKtro02rXNBHZf0eAYqhkqV3i3D2ikH2c2
+         espqQS17WeqLU0FNHkkk/Jy/i9yrNWyWmE9TOqorkJXyWlEU60T+zlJrqqdTW1NcJUUO
+         G6xA==
+X-Gm-Message-State: AOAM5331Wh+sRBbU3q3jArtjh/jDaaPjv5624qImiZdzwnCBUfJrKtjx
+        rbXVztGWDclvMpWfPr9eorkUj2k=
+X-Google-Smtp-Source: ABdhPJxAbgV9QaVK5dOC48fScjQWHA5Gld2FnTR86BVEq9Vbv9X4kGVbNWcHJZhyKd7pm6KmH4S+0Q==
+X-Received: by 2002:a5d:88d3:: with SMTP id i19mr3781474iol.194.1590694605038;
+        Thu, 28 May 2020 12:36:45 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v2sm1938613iol.36.2020.05.28.12.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:36:44 -0700 (PDT)
+Received: (nullmailer pid 553763 invoked by uid 1000);
+        Thu, 28 May 2020 19:36:42 -0000
+Date:   Thu, 28 May 2020 13:36:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-renesas-soc@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 03/10] dt-bindings: serial: renesas,scifa: Document
+ r8a7742 bindings
+Message-ID: <20200528193642.GA552811@bogus>
+References: <1588542414-14826-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1588542414-14826-4-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200512222056.GA7267@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200512222056.GA7267@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 11:36:14 -0700 Ronak Doshi wrote:
-> @@ -1168,13 +1220,21 @@ vmxnet3_rx_csum(struct vmxnet3_adapter *adapter,
->  		    (le32_to_cpu(gdesc->dword[3]) &
->  		     VMXNET3_RCD_CSUM_OK) == VMXNET3_RCD_CSUM_OK) {
->  			skb->ip_summed = CHECKSUM_UNNECESSARY;
-> -			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp));
-> -			BUG_ON(gdesc->rcd.frg);
-> +			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
-> +			       !(le32_to_cpu(gdesc->dword[0]) &
-> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
-> +			BUG_ON(gdesc->rcd.frg &&
-> +			       !(le32_to_cpu(gdesc->dword[0]) &
-> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
->  		} else if (gdesc->rcd.v6 && (le32_to_cpu(gdesc->dword[3]) &
->  					     (1 << VMXNET3_RCD_TUC_SHIFT))) {
->  			skb->ip_summed = CHECKSUM_UNNECESSARY;
-> -			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp));
-> -			BUG_ON(gdesc->rcd.frg);
-> +			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
-> +			       !(le32_to_cpu(gdesc->dword[0]) &
-> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
-> +			BUG_ON(gdesc->rcd.frg &&
-> +			       !(le32_to_cpu(gdesc->dword[0]) &
-> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
->  		} else {
->  			if (gdesc->rcd.csum) {
->  				skb->csum = htons(gdesc->rcd.csum);
+On Tue, May 12, 2020 at 05:20:56PM -0500, Rob Herring wrote:
+> On Sun,  3 May 2020 22:46:47 +0100, Lad Prabhakar wrote:
+> > RZ/G1H (R8A7742) SoC also has the R-Car gen2 compatible SCIFA ports,
+> > so document the SoC specific bindings.
+> > 
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  Documentation/devicetree/bindings/serial/renesas,scifa.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Seems fairly extreme to trigger BUG_ONs if rx descriptor doesn't
-contain valid checksum offload flags :S WARN_ON_ONCE() and ignore 
-checsum or drop packet would be more than sufficient.
+Geert asked me to apply this one, so I have now.
+
+Rob
