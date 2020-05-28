@@ -2,57 +2,54 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DA3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A225C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 987B9215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63351215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667191;
-	bh=S4KM5I5mlZ7ee/9OlhpsT18kVRzb28Dx0RM1xpD9ayk=;
+	s=default; t=1590667201;
+	bh=COC5NdZRXHs8ujGC9l4QIvWlelg5pUxAoKMI83NTNzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZP7RMVVyqqYQBwzH8yJ2F0f1y30ttQBu/GjISiqCQmHVPtj3lzTc5pKRpLWPeq1Cw
-	 rIzDAOZD3jp1j9OwAfHCEPnpUIOCkNqoaJ51+ZWgTd6RTGrHguCt7QDTj92EZ9HlVy
-	 HkDF7W5Xfpsm1p9OQ2V4v1pVKiO97VEIEVqVYWyI=
+	b=vSUGV1fz9ZiASO8i8/l+BaUNlYeKj3uhiLoudHhjN17LURRGeoANiiDuDOP1iScZs
+	 6Jk0atzWnKDJc5PVFg0X6mDiTkzJXJPDp/svDdqjDm2p8ukrDvyG1qnIPS4WOvqyFI
+	 xRNWujvM5W/i8Q4F5fhzu7q0Utsm6CyYnIVwwals=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389362AbgE1L7q (ORCPT
+        id S2389374AbgE1MAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:59:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51144 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:00:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388980AbgE1L6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:58:15 -0400
+        id S2389188AbgE1L6L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:58:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03BE921897;
-        Thu, 28 May 2020 11:58:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70AF2216C4;
+        Thu, 28 May 2020 11:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667094;
-        bh=S4KM5I5mlZ7ee/9OlhpsT18kVRzb28Dx0RM1xpD9ayk=;
+        s=default; t=1590667091;
+        bh=COC5NdZRXHs8ujGC9l4QIvWlelg5pUxAoKMI83NTNzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KQzPevZvdMZNRk4HR3yD3I/GvvkPSQWPusIVV5e+MrH7AE4SS9FirsClr1plu7Bqg
-         265/dE4UujC/cpviMmNeLvr1N/g4Ls4cUL6wUtkl6SZk5b5j4DGD0DcgRWBJgF2xax
-         SFgykL2wglIKYRKfT3Gw4t13D/Mvao87EcQs5AhA=
+        b=iIxJ3m9D08e1mro+R4H6uQW4TN0BINgGJrlchYHeUSNUubD6sDhGABgVbQd8uqndo
+         uLyZKOIX6nt3tmwv2TbluhARnJgtd/LvnauAIaZznoa0dn3TlMOSNTlE23jaleYA/J
+         3v7Xofgm9BDHV8ihBkkFzYYnWwHHxJ/ijTI0Ikyk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 2/7] x86/mmiotrace: Use cpumask_available() for cpumask_var_t variables
-Date:   Thu, 28 May 2020 07:58:06 -0400
-Message-Id: <20200528115811.1406810-2-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 9/9] net: smsc911x: Fix runtime PM imbalance on error
+Date:   Thu, 28 May 2020 07:58:00 -0400
+Message-Id: <20200528115800.1406703-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115811.1406810-1-sashal@kernel.org>
-References: <20200528115811.1406810-1-sashal@kernel.org>
+In-Reply-To: <20200528115800.1406703-1-sashal@kernel.org>
+References: <20200528115800.1406703-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,65 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit d7110a26e5905ec2fe3fc88bc6a538901accb72b ]
+[ Upstream commit 539d39ad0c61b35f69565a037d7586deaf6d6166 ]
 
-When building with Clang + -Wtautological-compare and
-CONFIG_CPUMASK_OFFSTACK unset:
+Remove runtime PM usage counter decrement when the
+increment function has not been called to keep the
+counter balanced.
 
-  arch/x86/mm/mmio-mod.c:375:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL &&
-              ^~~~~~~~~~~    ~~~~
-  arch/x86/mm/mmio-mod.c:405:6: warning: comparison of array 'downed_cpus'
-  equal to a null pointer is always false [-Wtautological-pointer-compare]
-          if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-              ^~~~~~~~~~~    ~~~~
-  2 warnings generated.
-
-Commit
-
-  f7e30f01a9e2 ("cpumask: Add helper cpumask_available()")
-
-added cpumask_available() to fix warnings of this nature. Use that here
-so that clang does not warn regardless of CONFIG_CPUMASK_OFFSTACK's
-value.
-
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/982
-Link: https://lkml.kernel.org/r/20200408205323.44490-1-natechancellor@gmail.com
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/mmio-mod.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/smsc/smsc911x.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/mm/mmio-mod.c b/arch/x86/mm/mmio-mod.c
-index 0057a7accfb1..5448ad4d0703 100644
---- a/arch/x86/mm/mmio-mod.c
-+++ b/arch/x86/mm/mmio-mod.c
-@@ -385,7 +385,7 @@ static void enter_uniprocessor(void)
- 	int cpu;
- 	int err;
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c b/drivers/net/ethernet/smsc/smsc911x.c
+index 4143659615e1..264136dba674 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -2506,20 +2506,20 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
  
--	if (downed_cpus == NULL &&
-+	if (!cpumask_available(downed_cpus) &&
- 	    !alloc_cpumask_var(&downed_cpus, GFP_KERNEL)) {
- 		pr_notice("Failed to allocate mask\n");
- 		goto out;
-@@ -415,7 +415,7 @@ static void leave_uniprocessor(void)
- 	int cpu;
- 	int err;
+ 	retval = smsc911x_init(dev);
+ 	if (retval < 0)
+-		goto out_disable_resources;
++		goto out_init_fail;
  
--	if (downed_cpus == NULL || cpumask_weight(downed_cpus) == 0)
-+	if (!cpumask_available(downed_cpus) || cpumask_weight(downed_cpus) == 0)
- 		return;
- 	pr_notice("Re-enabling CPUs...\n");
- 	for_each_cpu(cpu, downed_cpus) {
+ 	netif_carrier_off(dev);
+ 
+ 	retval = smsc911x_mii_init(pdev, dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i initialising mii", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	}
+ 
+ 	retval = register_netdev(dev);
+ 	if (retval) {
+ 		SMSC_WARN(pdata, probe, "Error %i registering device", retval);
+-		goto out_disable_resources;
++		goto out_init_fail;
+ 	} else {
+ 		SMSC_TRACE(pdata, probe,
+ 			   "Network interface: \"%s\"", dev->name);
+@@ -2560,9 +2560,10 @@ static int smsc911x_drv_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
+-out_disable_resources:
++out_init_fail:
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++out_disable_resources:
+ 	(void)smsc911x_disable_resources(pdev);
+ out_enable_resources_fail:
+ 	smsc911x_free_resources(pdev);
 -- 
 2.25.1
 
