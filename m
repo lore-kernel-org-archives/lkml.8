@@ -2,90 +2,134 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3470CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9793EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1699220888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C9120888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:23:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LAJbzZIP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hb637UWk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404362AbgE1PW0 (ORCPT
+        id S2404375AbgE1PXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404237AbgE1PWX (ORCPT
+        Thu, 28 May 2020 11:23:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44445 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404237AbgE1PXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:22:23 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F666C08C5C6;
-        Thu, 28 May 2020 08:22:22 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id e2so316395eje.13;
-        Thu, 28 May 2020 08:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aO7HB3OY4vvptjuX4LbhmnN07enGDH14/ugvjwzLnnY=;
-        b=LAJbzZIPjY54xOfhd19TofjJ3SmQw7Nm+UnbCL/LKcvsjbsUr0UfweZZ1qlcc1p4+A
-         ttyVlteL9NDABV5OzWvlEsZlm2982NHi8qCfMA6wKrQ7Z9xSm7WfEYhr6KPzXW+TOqQz
-         qINdTTUO8t9l9t8uxATnwPpGTuW9PyS4Bhfd60uF7tJpTisrKq9xnTLoHtlO1PG+nieR
-         Rd6rzTXXNcJs8plfr1GbU8F1qUf+3zA8hVb0w7JfrMYIep487AqI7HIX0JP0tX9nW7vG
-         JJlT35lLEXcMWHu5Y5dRd0tSeulfezFEiLYSj2ECphSwyYa/Ew+oy8UWmpAB8lbWDcft
-         tnuQ==
+        Thu, 28 May 2020 11:23:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590679381;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZuC/L4LcDUQosJwmTOJaBouUsy+HI9M3EMosoVjkVI8=;
+        b=Hb637UWkwxQAfxV5T2Sc8Wf7SlFJ5whVFpcFWaFyrWtS/jI8SYiZ4LMBm1H4FZhBz2ifu6
+        tMNOyr7hhcsCd3ydCd8Z6csZO9qyzeH3qitpY+R7NRt4mRRYqKlExi9h62srFIT8i3jgwU
+        +DiWrC4t8U4vWRQbf1JpKKKpLVC3YjY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-_JMtYzskPuewjT31wHQg0g-1; Thu, 28 May 2020 11:23:00 -0400
+X-MC-Unique: _JMtYzskPuewjT31wHQg0g-1
+Received: by mail-wr1-f70.google.com with SMTP id s7so6201237wrm.16
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:22:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aO7HB3OY4vvptjuX4LbhmnN07enGDH14/ugvjwzLnnY=;
-        b=Nx/pu9Xzfew3kcZX19mWqIuBlO9etNLxGOG255IzLmvBmweJ4GAGQ3/MT4muzApZ2Q
-         mE5wAeIFatnc2us9rbqsCNt7jcuFdTH/b2PdEu9Xt0uVta0xyCkZwBnUChcO8lEm9x4M
-         od2GbaTh7hfGumXCCA9OEl8Ow3mAJXh1lYuWVfphAPJx+5QytapTBGpRTLGOjxCoYTwj
-         4TAJ4HoHXh4ZEIEGZvAnPsD5f25CO6prOLZ/N5EHljnD1btDHObm/AA30Z5WbMMuAzQ2
-         Le4k8qSqqnJ+PBlZDryS5OnXNt4LF2Yx6JGIYavj3+YxBnuBEXSZNIweN4OMuK2SIf6F
-         wa1A==
-X-Gm-Message-State: AOAM531LwXSNBynwDaayk6LjwR9RlGnS6/3KIevonyUjsl44gXFnxZ4a
-        tpxkVlnvbjo7ufwE4MhPM1L5oTIT
-X-Google-Smtp-Source: ABdhPJyfWf4LRMY8tHPgfcxrJHSdy/IYyN05y94+E89QNog4PgPPpHUGwT/KXgIzJIypxEi+IwVrTg==
-X-Received: by 2002:a17:906:4803:: with SMTP id w3mr3365570ejq.316.1590679340109;
-        Thu, 28 May 2020 08:22:20 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:e4ff:e63d:9072:506a])
-        by smtp.gmail.com with ESMTPSA id j16sm1143058edp.35.2020.05.28.08.22.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:22:19 -0700 (PDT)
-Date:   Thu, 28 May 2020 17:22:18 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Borislav Petkov <bp@suse.de>, kbuild test robot <lkp@intel.com>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-sparse@vger.kernel.org, arnd@arndb.de,
-        will@kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [tip:locking/kcsan 12/12] /bin/bash: line 1: 61526 Segmentation
- fault  sparse ...
-Message-ID: <20200528152218.npq53zode7hh7qh4@ltop.local>
-References: <202005280727.lXn1VnTw%lkp@intel.com>
- <20200527235442.GC1805@zn.tnic>
- <20200528075900.GA236442@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZuC/L4LcDUQosJwmTOJaBouUsy+HI9M3EMosoVjkVI8=;
+        b=oINqBzBItDl/L8L7gFGJ9lg3wLJQTUf6r51vxj2Y/FC0K9t30buWlDu0wFn6YcCkxW
+         U8PZ+wZ4GgJvsbl20OVsDy6V+oE4/pSWHMKp0qTcaTKeUhillHrZDEHzNW/d6QPZbV7U
+         Hoq/hugNAf9POm5/JY3qBTLZsTtEx0VhAdzZ6fHuby9NrXOlopwBt30V4izCqQOkh4yJ
+         TujlygTASOnFmSiTMg56pjuxQWDRfD7zaDQxkifaL0Y689vqUKRF427QK/whbQYZVoV+
+         oZJr+mHpDOA/lFuCFEH3mKdHsD9nXuN4AazUxEGvHYUg0xwyu+TeiKZpsB07GRx5QmI/
+         dfrQ==
+X-Gm-Message-State: AOAM531uNKDY/5fbxLgoVIKgowvtqKtT5p4/fkaRMiPeDFU4242G+BYP
+        Lilc6jWawG0c5xWgaUWEwPyalmpOS+Mss7HH8MhOAIMTqBCYQYMNcnukdSciqFOCiafjbIMrk0v
+        OIZXrQDAieFBcwnS8jg1pjO93
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr3841204wmh.119.1590679378714;
+        Thu, 28 May 2020 08:22:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwTmSSMQgVYva8gWo2WxK+oGBmB8n1AVJ05WziwKhiiGjicjbvjOqXX3JnAd8Eg83WQtxqINA==
+X-Received: by 2002:a7b:cc06:: with SMTP id f6mr3841178wmh.119.1590679378459;
+        Thu, 28 May 2020 08:22:58 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
+        by smtp.gmail.com with ESMTPSA id o10sm3583419wrj.37.2020.05.28.08.22.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 08:22:58 -0700 (PDT)
+Subject: Re: [PATCH] KVM: X86: Call kvm_x86_ops.cpuid_update() after CPUIDs
+ fully updated
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+References: <20200528151927.14346-1-xiaoyao.li@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b639a333-d7fe-74fd-ee11-6daede184676@redhat.com>
+Date:   Thu, 28 May 2020 17:22:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528075900.GA236442@google.com>
+In-Reply-To: <20200528151927.14346-1-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:59:00AM +0200, Marco Elver wrote:
+On 28/05/20 17:19, Xiaoyao Li wrote:
+> kvm_x86_ops.cpuid_update() is used to update vmx/svm settings based on
+> updated CPUID settings. So it's supposed to be called after CPUIDs are
+> fully updated, not in the middle stage.
 > 
-> Ouch. The below should be all we need, assuming it's the best we can do
-> for sparse right now.
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 
-Upstream sparse should be OK with it now.
+Are you seeing anything bad happening from this?
 
--- Luc 
+Paolo
+
+> ---
+>  arch/x86/kvm/cpuid.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index cd708b0b460a..753739bc1bf0 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -208,8 +208,11 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>  	vcpu->arch.cpuid_nent = cpuid->nent;
+>  	cpuid_fix_nx_cap(vcpu);
+>  	kvm_apic_set_version(vcpu);
+> -	kvm_x86_ops.cpuid_update(vcpu);
+>  	r = kvm_update_cpuid(vcpu);
+> +	if (r)
+> +		goto out;
+> +
+> +	kvm_x86_ops.cpuid_update(vcpu);
+>  
+>  out:
+>  	vfree(cpuid_entries);
+> @@ -231,8 +234,11 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>  		goto out;
+>  	vcpu->arch.cpuid_nent = cpuid->nent;
+>  	kvm_apic_set_version(vcpu);
+> -	kvm_x86_ops.cpuid_update(vcpu);
+>  	r = kvm_update_cpuid(vcpu);
+> +	if (r)
+> +		goto out;
+> +
+> +	kvm_x86_ops.cpuid_update(vcpu);
+>  out:
+>  	return r;
+>  }
+> 
+
