@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A687AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F55C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0472089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B1F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590666968;
-	bh=6lfb7wQDy8XOEZ/WYA0tSYBztD39KIGmFvRx0mhnJ4I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=pA0PVp7q+revq5xVvsr1JNcw4I9WM6hulORIphCmdaXhi4nS5VmZGKYKoFwQOE717
-	 Er8GmTeQ3QIXFDjWZ65Z+L4NFgQ5/VjmHzvSZJ3CMx0L/jSrvn4YDgODJqqJY5aNrA
-	 WwJmv+xtLtse/TZ4nB8x6MszN389qloDiSiBnrz0=
+	s=default; t=1590666985;
+	bh=5EMxD/AfSpLyjuXNqb5ixny+nHiT+Kx9uhypSmTttzI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EAfeX17T7JEuOtB6Ea0D0pAUy/BEgpleANiofpFfz8RJAdgLpDApCfd4uafh3X5cR
+	 /nSCH9W8/TXh24xVyctc7/WV97CiRBEWolfc9wl4FFce2hxY9vNla9lBBnVu6iQ+rt
+	 OyZ+uEYvHRIsFWTX9HCMzas/qhemiGDN7HJG4olM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388629AbgE1L4G (ORCPT
+        id S2388714AbgE1L4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:56:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48036 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:56:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388532AbgE1L4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:03 -0400
+        id S2388647AbgE1L4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F8822074B;
-        Thu, 28 May 2020 11:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC37E21531;
+        Thu, 28 May 2020 11:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666962;
-        bh=6lfb7wQDy8XOEZ/WYA0tSYBztD39KIGmFvRx0mhnJ4I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Un11iNc8BIRTa2BM2RYESzieHWAxGnY96wdWqVg1xr1le/ExaFA8HluM6TEZ8Ln6w
-         gyAKqZV4GNjCKC0IC79JoFIe1BFuTv+mCDrbM7RUChvHZAhz4ufNNusJSdMuKg9fNk
-         eIsLfkecp1SGpjh8XSnlMAAntuoPoWgdtCGhS7RQ=
+        s=default; t=1590666971;
+        bh=5EMxD/AfSpLyjuXNqb5ixny+nHiT+Kx9uhypSmTttzI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eoXXFhoyH60ylIhe285pCSmxnHsUiCzb3InJOF0+bK6niT8A7gDnAycxEAV7g78H8
+         d7yQSaJ7JxwU89zvyavV+ktULkJ7zHdsgVc5aPzqr90sx+AnALUtv+Qo4L04trRCzR
+         5fBWfp1HBFwsjO+iU1KPiNj78HYeQ3STLXlzU1BM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Paul Greco <pmgreco@us.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 01/47] ARC: Fix ICCM & DCCM runtime size checks
-Date:   Thu, 28 May 2020 07:55:14 -0400
-Message-Id: <20200528115600.1405808-1-sashal@kernel.org>
+Cc:     Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 09/47] i2c: altera: Fix race between xfer_msg and isr thread
+Date:   Thu, 28 May 2020 07:55:22 -0400
+Message-Id: <20200528115600.1405808-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
+References: <20200528115600.1405808-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,52 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
 
-[ Upstream commit 43900edf67d7ef3ac8909854d75b8a1fba2d570c ]
+[ Upstream commit 5d4c7977499a736f3f80826bdc9744344ad55589 ]
 
-As of today the ICCM and DCCM size checks are incorrectly using
-mismatched units (KiB checked against bytes). The CONFIG_ARC_DCCM_SZ
-and CONFIG_ARC_ICCM_SZ are in KiB, but the size calculated in
-runtime and stored in cpu->dccm.sz and cpu->iccm.sz is in bytes.
+Use a mutex to protect access to idev->msg_len, idev->buf, etc. which
+are modified by both altr_i2c_xfer_msg() and altr_i2c_isr().
 
-Fix that.
+This is the minimal fix for easy backporting. A cleanup to remove the
+spinlock will be added later.
 
-Reported-by: Paul Greco <pmgreco@us.ibm.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+[wsa: updated commit message]
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/setup.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-altera.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index aa41af6ef4ac..efdedf83b954 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -11,6 +11,7 @@
- #include <linux/clocksource.h>
- #include <linux/console.h>
- #include <linux/module.h>
-+#include <linux/sizes.h>
- #include <linux/cpu.h>
- #include <linux/of_clk.h>
- #include <linux/of_fdt.h>
-@@ -409,12 +410,12 @@ static void arc_chk_core_config(void)
- 	if ((unsigned int)__arc_dccm_base != cpu->dccm.base_addr)
- 		panic("Linux built with incorrect DCCM Base address\n");
+diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
+index 92d2c706c2a7..a60042431370 100644
+--- a/drivers/i2c/busses/i2c-altera.c
++++ b/drivers/i2c/busses/i2c-altera.c
+@@ -70,6 +70,7 @@
+  * @isr_mask: cached copy of local ISR enables.
+  * @isr_status: cached copy of local ISR status.
+  * @lock: spinlock for IRQ synchronization.
++ * @isr_mutex: mutex for IRQ thread.
+  */
+ struct altr_i2c_dev {
+ 	void __iomem *base;
+@@ -86,6 +87,7 @@ struct altr_i2c_dev {
+ 	u32 isr_mask;
+ 	u32 isr_status;
+ 	spinlock_t lock;	/* IRQ synchronization */
++	struct mutex isr_mutex;
+ };
  
--	if (CONFIG_ARC_DCCM_SZ != cpu->dccm.sz)
-+	if (CONFIG_ARC_DCCM_SZ * SZ_1K != cpu->dccm.sz)
- 		panic("Linux built with incorrect DCCM Size\n");
- #endif
+ static void
+@@ -245,10 +247,11 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+ 	struct altr_i2c_dev *idev = _dev;
+ 	u32 status = idev->isr_status;
  
- #ifdef CONFIG_ARC_HAS_ICCM
--	if (CONFIG_ARC_ICCM_SZ != cpu->iccm.sz)
-+	if (CONFIG_ARC_ICCM_SZ * SZ_1K != cpu->iccm.sz)
- 		panic("Linux built with incorrect ICCM Size\n");
- #endif
++	mutex_lock(&idev->isr_mutex);
+ 	if (!idev->msg) {
+ 		dev_warn(idev->dev, "unexpected interrupt\n");
+ 		altr_i2c_int_clear(idev, ALTR_I2C_ALL_IRQ);
+-		return IRQ_HANDLED;
++		goto out;
+ 	}
+ 	read = (idev->msg->flags & I2C_M_RD) != 0;
  
+@@ -301,6 +304,8 @@ static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+ 		complete(&idev->msg_complete);
+ 		dev_dbg(idev->dev, "Message Complete\n");
+ 	}
++out:
++	mutex_unlock(&idev->isr_mutex);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -312,6 +317,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+ 	u32 value;
+ 	u8 addr = i2c_8bit_addr_from_msg(msg);
+ 
++	mutex_lock(&idev->isr_mutex);
+ 	idev->msg = msg;
+ 	idev->msg_len = msg->len;
+ 	idev->buf = msg->buf;
+@@ -336,6 +342,7 @@ static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+ 		altr_i2c_int_enable(idev, imask, true);
+ 		altr_i2c_fill_tx_fifo(idev);
+ 	}
++	mutex_unlock(&idev->isr_mutex);
+ 
+ 	time_left = wait_for_completion_timeout(&idev->msg_complete,
+ 						ALTR_I2C_XFER_TIMEOUT);
+@@ -409,6 +416,7 @@ static int altr_i2c_probe(struct platform_device *pdev)
+ 	idev->dev = &pdev->dev;
+ 	init_completion(&idev->msg_complete);
+ 	spin_lock_init(&idev->lock);
++	mutex_init(&idev->isr_mutex);
+ 
+ 	ret = device_property_read_u32(idev->dev, "fifo-size",
+ 				       &idev->fifo_size);
 -- 
 2.25.1
 
