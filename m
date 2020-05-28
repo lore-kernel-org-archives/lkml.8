@@ -2,91 +2,121 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78494C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A2A2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590709574;
-	bh=uX+eSdcO/DIgdDmSTDpI+/YNfcp4gO5ROpXr5BCS3Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LQIFphRQJ3e73sNP/7wuISi7b2pwgD/QLpcEI5C8fTNtfKmg72ZYxwVJ/RROVN/Pg
-	 zcOAI4Csp8J13djSK0RVtcKTPw11/FBORo0YzO1zVICSZwG2NkUQ6zNgfb8quFoz/u
-	 dXl1YbgZl+WRu7rzK2N+CuJVJDQXukzPuCyuNihg=
+	by mail.kernel.org (Postfix) with ESMTP id 5B3EE2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437710AbgE1XqN (ORCPT
+        id S2437723AbgE1Xqe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:46:13 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41882 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437697AbgE1XqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:46:04 -0400
-Received: by mail-il1-f193.google.com with SMTP id d1so720194ila.8;
-        Thu, 28 May 2020 16:46:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cIzL006tPJXl6TcjStQ4xNmtimYxPC51Ou9j+METahw=;
-        b=CWSgcw3AoqdDPaao/PgbvDNAUccxeGi86dq3/nyDetEHOils8XPbYxbxisO6J46kAj
-         3WdCQkc4S0RosrsVGCiDztAh18ip8+NqI+luMhAhcW+YmWQ8U0SN1kR3Up9uf0H61rTo
-         FzO7dviH059insnxfdZV4MCjf5t0HjurJSaw9ehj/Tr3I1mP1QwKkTNpyLIwIpldyapq
-         v11kC3Mu+ljVesfnAXhclBS8IvXzlur6+E/ycZe9BdXaOJSXNFc+Xnj+i7xCFrniMee5
-         vDebaoygJuPkDptYpKwuK5A8t0i/lYT+WqlQOQOb9rVukRelZHfeQByS1K/Lb3zeJfzD
-         WBGg==
-X-Gm-Message-State: AOAM533uipXdrGzpupT1hailqnr3nNBkTq55pEais5lSAGy/aGqWYBBu
-        IvvhbrasLmY2yydIegOBMg==
-X-Google-Smtp-Source: ABdhPJwsEvAwKlSvei9EgovqazyWfvjOiBVyad3OgWBA++KzA8tpGxaeYM57w2I5UHwBiPNj22h2fQ==
-X-Received: by 2002:a92:1906:: with SMTP id 6mr5075088ilz.144.1590709563459;
-        Thu, 28 May 2020 16:46:03 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id g4sm3878889ilj.45.2020.05.28.16.46.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 16:46:02 -0700 (PDT)
-Received: (nullmailer pid 908079 invoked by uid 1000);
-        Thu, 28 May 2020 23:46:01 -0000
-Date:   Thu, 28 May 2020 17:46:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        dmaengine@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 5/8] dt-bindings: usb: usb-xhci: Document r8a7742 support
-Message-ID: <20200528234601.GA907981@bogus>
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1590356277-19993-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 28 May 2020 19:46:34 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2256 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2437677AbgE1Xq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 19:46:27 -0400
+Received: from lhreml704-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 3416019FFA0122A31601;
+        Fri, 29 May 2020 00:46:25 +0100 (IST)
+Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
+ lhreml704-chm.china.huawei.com (10.201.108.53) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Fri, 29 May 2020 00:46:24 +0100
+Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
+ lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1913.007;
+ Fri, 29 May 2020 00:46:24 +0100
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     Jakub Kicinski <kuba@kernel.org>,
+        tanhuazhong <tanhuazhong@huawei.com>
+CC:     David Miller <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
+Thread-Topic: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
+Thread-Index: AQHWL2SRCDH7TdC4jUyLacrsUtfjv6iy2UmAgAAnNACAAMiEAIAHZXCAgAEck4CAAbd90A==
+Date:   Thu, 28 May 2020 23:46:24 +0000
+Message-ID: <a3129e7c11e94b2ca2acf77bc08284a2@huawei.com>
+References: <1590061105-36478-1-git-send-email-tanhuazhong@huawei.com>
+        <20200521121707.6499ca6b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200521.143726.481524442371246082.davem@davemloft.net>
+        <cb427604-05ee-504c-03d0-fcce16b3cfcc@huawei.com>
+        <356be994-7cf9-e7b2-8992-46a70bc6a54b@huawei.com>
+ <20200527123031.7fd4834d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <20200527123031.7fd4834d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.29.93]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590356277-19993-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 24 May 2020 22:37:54 +0100, Lad Prabhakar wrote:
-> Document r8a7742 xhci support. The driver will use the fallback
-> compatible string "renesas,rcar-gen2-xhci", therefore no driver
-> change is needed.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hi Jakub/David,
 
-Applied, thanks!
+> From: Jakub Kicinski [mailto:kuba@kernel.org]
+> Sent: Wednesday, May 27, 2020 8:31 PM
+> To: tanhuazhong <tanhuazhong@huawei.com>
+> Cc: David Miller <davem@davemloft.net>; netdev@vger.kernel.org;
+> linux-kernel@vger.kernel.org; Salil Mehta <salil.mehta@huawei.com>;
+> Zhuangyuzeng (Yisen) <yisen.zhuang@huawei.com>; Linuxarm <linuxarm@huawei.com>
+> Subject: Re: [PATCH V2 net-next 0/2] net: hns3: adds two VLAN feature
+> 
+> On Wed, 27 May 2020 10:31:59 +0800 tanhuazhong wrote:
+> > Hi, Jakub & David.
+> >
+> > For patch#1, is it acceptable adding "ethtool --get-priv-flags"
+> > to query the VLAN. If yes, I will send a RFC for it.
+> 
+> The recommended way of implementing vfs with advanced vlan
+> configurations is via "switchdev mode" & representors.
+
+AFAIK, switchdev ops only facilitates the standard abstract
+interface to any underlying standard or proprietary hardware
+which could be ASIC, eswitch etc. Therefore, standard tools
+like ip, bridge or even stacks like FRR etc. could be used
+while leveraging the below hardware forwarding.
+
+Not sure how will switchdev ops will be of help here?
+
+
+Just curious how does Mellanox supports Hybrid port mode?
+
+In general, 
+We can have port being configured as Access/Trunk ports.
+
+Access port = Only untagged packets are sent or are expected.
+                RX'ed Tagged packets are dropped.
+Trunk Port  = Only Tagged packet are received or sent and any
+                Untagged packets received are dropped.
+
+Mellanox also support Hybrid mode in Onyx platform:
+
+Hybrid - packets are sent tagged or untagged, the port
+expects both tagged and untagged packets. This mode is
+a combination of Access and Trunk modes. There is an
+option to configure multiple VLANs on the hybrid port.
+PVID is configured on the port for untagged ingress
+packets.
+
+First two configuration are easy to realize using the
+standard Linux configuration tools like ip/bridge but
+not sure about the hybrid? also, why do we even need
+to create a bridge to realize any of above port modes?
+
+Note: HNS hardware does not have eswitch support.
+
+
+Salil.
+
