@@ -2,128 +2,90 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8701C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4321B207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEE9121534
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:21:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HVoUlYFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388817AbgE1MRk (ORCPT
+        id S2389231AbgE1MVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:17:40 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:50337 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388556AbgE1MRj (ORCPT
+        Thu, 28 May 2020 08:21:52 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47076 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389064AbgE1MVu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:17:39 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MnpwC-1jFMmh2RMA-00pJ48; Thu, 28 May 2020 14:17:37 +0200
-Received: by mail-qk1-f180.google.com with SMTP id 205so2817522qkg.3;
-        Thu, 28 May 2020 05:17:37 -0700 (PDT)
-X-Gm-Message-State: AOAM533bgo6TjMvJSO3UclDAwLw+NxLXP2deLshGtUYdT1PaSeksKGeQ
-        X51tKRT7XpjxRCRk+mMpn2MszHdXMS/1rmKCOuo=
-X-Google-Smtp-Source: ABdhPJyiHEmoUm3FgC49M+sAFInaSyXEhI+ENZgqiHVILIEFEm3iu5eYV31B+JBF1JL4HsB5MZy3H6qqFVw84hdPWmg=
-X-Received: by 2002:a37:554:: with SMTP id 81mr2415677qkf.394.1590668253191;
- Thu, 28 May 2020 05:17:33 -0700 (PDT)
+        Thu, 28 May 2020 08:21:50 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SCLm6A066908;
+        Thu, 28 May 2020 07:21:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590668508;
+        bh=H5wQhbAf7EbFcp4UF+yz3FmYW/WRDlwOcLl1wgcMIXE=;
+        h=From:To:CC:Subject:Date;
+        b=HVoUlYFC7TrfhaK5hllzWsc+b/+t22cgHSkdl+XtvLLaMXVFwc1tWNdzCp157dzbk
+         f8R0p5fvRz1ghPGCzDyXihvB17I5+cl4wkqXmTB2RCsB+oyGtglJYwzS8agMcxt4CJ
+         vMPXO2cCTkZCh0CkCU+zkmBP+8rwTyRlhnJ6Bikc=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SCLmRi106101
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 07:21:48 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 07:21:48 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 07:21:48 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SCLmrB105324;
+        Thu, 28 May 2020 07:21:48 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <sre@kernel.org>, <afd@ti.com>, <pali@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <robh@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2 1/4] dt-bindings: power: Add BQ27561 compatible
+Date:   Thu, 28 May 2020 07:21:44 -0500
+Message-ID: <20200528122147.6171-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru> <20200526125928.17096-6-Sergey.Semin@baikalelectronics.ru>
-In-Reply-To: <20200526125928.17096-6-Sergey.Semin@baikalelectronics.ru>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 14:17:17 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1KT6G0pcLt56spm2O_Q5m_s+cdHfUrp2YUStS0wGigwQ@mail.gmail.com>
-Message-ID: <CAK8P3a1KT6G0pcLt56spm2O_Q5m_s+cdHfUrp2YUStS0wGigwQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/6] bus: Add Baikal-T1 APB-bus driver
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-List-Id: <soc.lore.kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        SoC Team <soc@kernel.org>, DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:gqcTypKXfegn+1FpWmAP3n0+FQ9w9DRUmoRGQ4CSelsVN7rW9dK
- VQAFPqi42JplsyqjwaZnq0WcLU5gj69quvid6hDFo/UTxD2FDS0sa/1VOr5Dr99WQVeRGmb
- VSw8jiVv8qAa48tQGZdXkHnceIfjLftCQ5rfSVVohZycXgWBD6wwFA9s/I6P7ZbKsDqGnTN
- 5LGqjOUxLOWXLgGQzPw9g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P56ZwZSwquU=:qpr2EqGmU9lbPi3OyeTA9i
- 37XBmap/IJqHROq+u/+agEArsMC1lcttFfogmHre99NpDNa9r+N2AgUA4kh8ALXpFoHOdQJZa
- a/AOHTIKpFNzY9jghEFB+1iSzAKILulaWdbp0+mohJignXwJY2JlTrPDXMaRVDG11Sa1UldPB
- hB3EqaKE67yY+q/rGlkq9wOFMKHS26zdJ5jymxZeD3dhEihE1xYFYFWJzQ7UozbrUuKzHGcZD
- 10EzwJuiBP305SOzK8B9NM6BY9xzXDiRgQpf0PWAz015FrsljtxhalTxZSbo/xLwUCcepFp/M
- S4Aktm2kzRl0/fF6L41EEfzu9tKIfd2ZRgAFbqeRvccuTj90u8LRG6b9HaY04dxPmCZPlRr1D
- IF7Z3RVF1qcthSjrtpbYtwoboiEpKJNYP9N8eEhYuUw/QWmmcjz9uurjRtd/xTeTBjx96dGK5
- bnPMQJIwZekUHJhK+8PWEALanmV6wjN8BXx26SPUS8/FQcrPiobdgUjzNXLP+/QMOnDGurQnn
- YpkZm0rxspJ5ZYPgfiIzuTubKgr6nHRDHO6EBbP2YDPbGmtqPZeQszPFbDE6w5nIG4Z+dKcJR
- rDg0lYnzEz+dtavWnelfHYb6m4T3JE679FbDR3uli/FtG+mxi+CpCC5NmbdNSk8+lFoYAogIX
- GgqipjSvDsBBE5QGG2kMJNtyQzZkHwo3hfSiwxfEWGJZupzlZsWhQCB+KQhDuAcRgNcevC92K
- ovcmzY684e/52qCoX8hC91plAO5OElu1JIHV1p84repTv6GrMnsV9QdQCoqf9A0P25C+NqJgy
- QLMOWPhe0rNuNAahxe26asnAfJGElpVXV9LeNEndTpNImmvXIM=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 2:59 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
->
-> Baikal-T1 AXI-APB bridge is used to access the SoC subsystem CSRs.
-> IO requests are routed to this bus by means of the DW AMBA 3 AXI
-> Interconnect. In case if an attempted APB transaction stays with no
-> response for a pre-defined time an interrupt occurs and the bus gets
-> freed for a next operation. This driver provides the interrupt handler
-> to detect the erroneous address, prints an error message about the
-> address fault, updates an errors counter. The counter and the APB-bus
-> operations timeout can be accessed via corresponding sysfs nodes.
-> A dedicated sysfs-node can be also used to artificially cause the
-> bus errors described above.
->
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: soc@kernel.org
-> Cc: devicetree@vger.kernel.org
->
-> ---
+Add the Texas Instruments bq27561 battery monitor to the bq27xxx
+binding.
 
-Applied with this fixup:
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ Documentation/devicetree/bindings/power/supply/bq27xxx.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/bus/bt1-apb.c
-+++ b/drivers/bus/bt1-apb.c
-@@ -16,6 +16,7 @@
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
- #include <linux/nmi.h>
-+#include <linux/of.h>
- #include <linux/regmap.h>
- #include <linux/clk.h>
- #include <linux/reset.h>
-@@ -309,13 +310,13 @@ static ssize_t timeout_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(timeout);
+diff --git a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+index 03d1020a2e47..51cb1f685dcf 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
++++ b/Documentation/devicetree/bindings/power/supply/bq27xxx.yaml
+@@ -49,6 +49,7 @@ properties:
+       - ti,bq27426
+       - ti,bq27441
+       - ti,bq27621
++      - ti,bq27561
+ 
+   reg:
+     maxItems: 1
+-- 
+2.26.2
 
--static int inject_error_show(struct device *dev, struct device_attribute *attr,
-+static ssize_t inject_error_show(struct device *dev, struct
-device_attribute *attr,
-                             char *buf)
- {
-        return scnprintf(buf, PAGE_SIZE, "Error injection: nodev irq\n");
- }
-
--static int inject_error_store(struct device *dev,
-+static ssize_t inject_error_store(struct device *dev,
-                              struct device_attribute *attr,
-                              const char *data, size_t count)
- {
