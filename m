@@ -2,51 +2,52 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B643CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE708C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95914215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8816C207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667017;
-	bh=93U4NeV0j3o7YcuUCIuCRbRZcRPgqv//uz/oCsfli08=;
+	s=default; t=1590667019;
+	bh=2+TLxM3G8QfbMlQcupi4uaoiUaXyEpZ8gudy8Moj2iY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9LPlhNiip8AmwiWScI9o13jdGILWEqYCcXtKFEIPq02qvPFHUCuAQhZXZiCecTk3
-	 HwMGMsWqL2erZGnlV+RKdwGxMNM+K+SccK6Wfdq7qh9yLgcLaYNCsgLW3PrlZ24Hvq
-	 r29w3GaIFDwq8IFYz1DCIg0NlVESJGs7d3aRMtzo=
+	b=1P1xhCLX7JTByrw8SBA1b787uN5qS7443zH6KH7IWvLGRQMaFZ7YlcIK9TyG8sfSi
+	 yAXUQByCxBdQ3TWpU9PcrZgzkLzvpIIIIQvE8VeRkR5vYJmEcsuXtOq9HrUztQYlS3
+	 sN4zC6GDnDkPx1iWWq9mkxMTjaQj93dZOaqomBxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388880AbgE1L44 (ORCPT
+        id S2388892AbgE1L46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:56:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48540 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:56:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388735AbgE1L41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:27 -0400
+        id S2388746AbgE1L4b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E7FD214F1;
-        Thu, 28 May 2020 11:56:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A21EF20DD4;
+        Thu, 28 May 2020 11:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666987;
-        bh=93U4NeV0j3o7YcuUCIuCRbRZcRPgqv//uz/oCsfli08=;
+        s=default; t=1590666990;
+        bh=2+TLxM3G8QfbMlQcupi4uaoiUaXyEpZ8gudy8Moj2iY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvjpE1QGtl7hKF86Eom+8YwiBPfRdHBvZ+y1xmvYni/pYYtrAwAjZB5e71NlOgQad
-         +/+8nUH63MaNbshiMtji6wAbOL05HpfJf179YyhFC5I9tFOFov5pjeJTFNFMc6BFc7
-         chVAupi5hUzqGgPMtQxFBmA1rtwlyJnQMNjyq5uc=
+        b=11ZU5ZtYuHUSQlv7qcPbzAlohhYmV3xxq5IzQd+a73VdlEF6QPw3X4J6Y1PUeRn5z
+         kvzRFA3FeqMPXgndUFqvFqbuhFiGRq74526Sie2tfImLQz12ak+xgE5N6qYHFo90IX
+         ieRR8Tev2Klrve3eIo+Upeh4w4UHLQDb/Qc6BOIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 23/47] wireguard: selftests: use newer iproute2 for gcc-10
-Date:   Thu, 28 May 2020 07:55:36 -0400
-Message-Id: <20200528115600.1405808-23-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 26/47] net: ethernet: ti: fix some return value check of cpsw_ale_create()
+Date:   Thu, 28 May 2020 07:55:39 -0400
+Message-Id: <20200528115600.1405808-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -59,36 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit ee3c1aa3f34b7842c1557cfe5d8c3f7b8c692de8 ]
+[ Upstream commit 3469660d1b15ccfdf7b33295c306b6298ca730aa ]
 
-gcc-10 switched to defaulting to -fno-common, which broke iproute2-5.4.
-This was fixed in iproute-5.6, so switch to that. Because we're after a
-stable testing surface, we generally don't like to bump these
-unnecessarily, but in this case, being able to actually build is a basic
-necessity.
+cpsw_ale_create() can return both NULL and PTR_ERR(), but all of
+the caller only check NULL for error handling. This patch convert
+it to only return PTR_ERR() in all error cases, and the caller using
+IS_ERR() instead of NULL test.
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Fixes: 4b41d3436796 ("net: ethernet: ti: cpsw: allow untagged traffic on host port")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/wireguard/qemu/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/ti/cpsw_ale.c    | 2 +-
+ drivers/net/ethernet/ti/cpsw_priv.c   | 4 ++--
+ drivers/net/ethernet/ti/netcp_ethss.c | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/wireguard/qemu/Makefile b/tools/testing/selftests/wireguard/qemu/Makefile
-index 90598a425c18..4bdd6c1a19d3 100644
---- a/tools/testing/selftests/wireguard/qemu/Makefile
-+++ b/tools/testing/selftests/wireguard/qemu/Makefile
-@@ -44,7 +44,7 @@ endef
- $(eval $(call tar_download,MUSL,musl,1.2.0,.tar.gz,https://musl.libc.org/releases/,c6de7b191139142d3f9a7b5b702c9cae1b5ee6e7f57e582da9328629408fd4e8))
- $(eval $(call tar_download,IPERF,iperf,3.7,.tar.gz,https://downloads.es.net/pub/iperf/,d846040224317caf2f75c843d309a950a7db23f9b44b94688ccbe557d6d1710c))
- $(eval $(call tar_download,BASH,bash,5.0,.tar.gz,https://ftp.gnu.org/gnu/bash/,b4a80f2ac66170b2913efbfb9f2594f1f76c7b1afd11f799e22035d63077fb4d))
--$(eval $(call tar_download,IPROUTE2,iproute2,5.4.0,.tar.xz,https://www.kernel.org/pub/linux/utils/net/iproute2/,fe97aa60a0d4c5ac830be18937e18dc3400ca713a33a89ad896ff1e3d46086ae))
-+$(eval $(call tar_download,IPROUTE2,iproute2,5.6.0,.tar.xz,https://www.kernel.org/pub/linux/utils/net/iproute2/,1b5b0e25ce6e23da7526ea1da044e814ad85ba761b10dd29c2b027c056b04692))
- $(eval $(call tar_download,IPTABLES,iptables,1.8.4,.tar.bz2,https://www.netfilter.org/projects/iptables/files/,993a3a5490a544c2cbf2ef15cf7e7ed21af1845baf228318d5c36ef8827e157c))
- $(eval $(call tar_download,NMAP,nmap,7.80,.tar.bz2,https://nmap.org/dist/,fcfa5a0e42099e12e4bf7a68ebe6fde05553383a682e816a7ec9256ab4773faa))
- $(eval $(call tar_download,IPUTILS,iputils,s20190709,.tar.gz,https://github.com/iputils/iputils/archive/s20190709.tar.gz/#,a15720dd741d7538dd2645f9f516d193636ae4300ff7dbc8bfca757bf166490a))
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index ecdbde539eb7..4eb14b174c1a 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -917,7 +917,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
+ 
+ 	ale = devm_kzalloc(params->dev, sizeof(*ale), GFP_KERNEL);
+ 	if (!ale)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ale->p0_untag_vid_mask =
+ 		devm_kmalloc_array(params->dev, BITS_TO_LONGS(VLAN_N_VID),
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index 97a058ca60ac..d0b6c418a870 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -490,9 +490,9 @@ int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
+ 	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
+ 
+ 	cpsw->ale = cpsw_ale_create(&ale_params);
+-	if (!cpsw->ale) {
++	if (IS_ERR(cpsw->ale)) {
+ 		dev_err(dev, "error initializing ale engine\n");
+-		return -ENODEV;
++		return PTR_ERR(cpsw->ale);
+ 	}
+ 
+ 	dma_params.dev		= dev;
+diff --git a/drivers/net/ethernet/ti/netcp_ethss.c b/drivers/net/ethernet/ti/netcp_ethss.c
+index fb36115e9c51..fdbae734acce 100644
+--- a/drivers/net/ethernet/ti/netcp_ethss.c
++++ b/drivers/net/ethernet/ti/netcp_ethss.c
+@@ -3704,9 +3704,9 @@ static int gbe_probe(struct netcp_device *netcp_device, struct device *dev,
+ 		ale_params.nu_switch_ale = true;
+ 	}
+ 	gbe_dev->ale = cpsw_ale_create(&ale_params);
+-	if (!gbe_dev->ale) {
++	if (IS_ERR(gbe_dev->ale)) {
+ 		dev_err(gbe_dev->dev, "error initializing ale engine\n");
+-		ret = -ENODEV;
++		ret = PTR_ERR(gbe_dev->ale);
+ 		goto free_sec_ports;
+ 	} else {
+ 		dev_dbg(gbe_dev->dev, "Created a gbe ale engine\n");
 -- 
 2.25.1
 
