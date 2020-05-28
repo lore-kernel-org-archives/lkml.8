@@ -2,120 +2,172 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8196C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63429C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8565320888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="g0HFkoJK"
+	by mail.kernel.org (Postfix) with ESMTP id 4601920888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404641AbgE1Pp6 (ORCPT
+        id S2404653AbgE1PqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404511AbgE1PpK (ORCPT
+        Thu, 28 May 2020 11:46:10 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:47054 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404511AbgE1PqB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:45:10 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CCCFC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:45:08 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id r15so3697475wmh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RRcpe0H3lCAzNpSzTtIGdoPxExC1gnrWV04XMN1Ki5Y=;
-        b=g0HFkoJKIY9iSEkgGQr+z2ngQ5RvAXjSLWxFjTtoZKt7hmDAuvtCGVOiKVewJ4rQqt
-         T2/8s2EPboAsw2RPb5z3xfaPEiobgw2PMqFJ1KOvmAxxWtVsHP9U0UvlOUIuZFjX4prO
-         EROm0xvcPNCKxVAQ4MY81faMt0ml8cV0vQj1lO/w0BPMLaIBrby2hr1ncD0+i5Oordpy
-         EMCYu6kRDEgoyGD2TDNNS7Uc4me45W8sJuzMWwUmnF6BmQH2E+ng5a6R0eqKr6M8kiXi
-         zeJapxgvsGZrHT30JbNBOTMLluxih3uG2BT13+Qk13hcumfHzLaDzvuwG3Q7yAmDOOAc
-         +mLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=RRcpe0H3lCAzNpSzTtIGdoPxExC1gnrWV04XMN1Ki5Y=;
-        b=fu/7+f++LZLkFqPI4xU9GHp0HJmb8PmrBn1xUpZDH5Zd6sVelXJgMTO9wWrRQsIVm4
-         +JVgPuFYea2r6oz+YuaYxGWjRVqfsUfFT/1K8ZWmJOSBz5OEwnURqCzJ26IVN8BcheJJ
-         bDtKcbdGKWUcJMl5qcZe+IpWHiCXEGz/zDmvGpNwMBhMRfSumDPaYhoruF0l0TJL8370
-         rRSjaKX1C8CH8yiKfHR6owwEe+/0Fr+z77yoEnh1gizbNOmmGQVPb8/gJwJUEe/J6WbV
-         HUSCvBSwRBJ0siiJUScXz1L+fIfcmeBgcI9N4u7q8CHG0ZI8naz6xUhBlQW3E4GMdMkw
-         2aIQ==
-X-Gm-Message-State: AOAM5308z9TlwhlxZNWKO5bScNqfqDsQuph0D/AKEUrCr8fIXuINVxy+
-        Zu578jh5hwRe8j9VEMOZWp70PQ==
-X-Google-Smtp-Source: ABdhPJxsoz5O8Wu+pBo3JregNWfan6WrHopy2c2n+D7n8gRcdVSFiDJEqbgTrXNos0B2dRpaa0ksxg==
-X-Received: by 2002:a05:600c:2201:: with SMTP id z1mr3945929wml.70.1590680707286;
-        Thu, 28 May 2020 08:45:07 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id n1sm6285650wrp.10.2020.05.28.08.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:45:06 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 0/2] regmap: provide simple bitops and use them in a driver
-Date:   Thu, 28 May 2020 17:45:01 +0200
-Message-Id: <20200528154503.26304-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Thu, 28 May 2020 11:46:01 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeKjH-0003Zc-Mm; Thu, 28 May 2020 09:45:59 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeKjF-0006q8-Rr; Thu, 28 May 2020 09:45:59 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
+Date:   Thu, 28 May 2020 10:42:06 -0500
+In-Reply-To: <87k10wysqz.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Thu, 28 May 2020 10:38:28 -0500")
+Message-ID: <878shcyskx.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jeKjF-0006q8-Rr;;;mid=<878shcyskx.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+Bo5/YnCMJYnYnBAcEfoRXNYXUapdUns8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 02/11] exec: Introduce active_per_clear the per file version of per_clear
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-I noticed that oftentimes I use regmap_update_bits() for simple bit
-setting or clearing. In this case the fourth argument is superfluous as
-it's always 0 or equal to the mask argument.
+When the credentials have been recomputed per file the per_clear
+status has not been recomputed.  Update the per file calcuations to
+recompute per_clear on a per file basis in a separate variable and to
+combine that variable into the final per_clear value.
 
-This series proposes to add simple bit operations for setting, clearing
-and testing specific bits with regmap.
+This makes which personality bits are clear not depend on the
+permissions of shell scripts with interpreters, but instead only on
+the final bprm->file that bprm_fill_uid and
+security_bprm_repopulate_creds are called upon.
 
-The second patch uses all three in a driver that got recently picked into
-the net-next tree.
+History Tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+Fixes: 1bb0fa189c6a ("[PATCH] NX: clean up legacy binary support")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ fs/exec.c                 | 7 ++++---
+ include/linux/binfmts.h   | 3 +++
+ include/linux/lsm_hooks.h | 2 +-
+ security/commoncap.c      | 2 +-
+ 4 files changed, 9 insertions(+), 5 deletions(-)
 
-The patches obviously target different trees so - if you're ok with
-the change itself - I propose you pick the first one into your regmap
-tree for v5.8 and then I'll resend the second patch to add the first
-user for these macros for v5.9.
-
-v1 -> v2:
-- convert the new macros to static inline functions
-
-v2 -> v3:
-- drop unneeded ternary operator
-
-Bartosz Golaszewski (2):
-  regmap: provide helpers for simple bit operations
-  net: ethernet: mtk-star-emac: use regmap bitops
-
- drivers/base/regmap/regmap.c                  | 22 +++++
- drivers/net/ethernet/mediatek/mtk_star_emac.c | 80 ++++++++-----------
- include/linux/regmap.h                        | 36 +++++++++
- 3 files changed, 93 insertions(+), 45 deletions(-)
-
+diff --git a/fs/exec.c b/fs/exec.c
+index 51fab62b9fca..221d12dcaa3e 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1354,7 +1354,7 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+ 					PF_NOFREEZE | PF_NO_SETAFFINITY);
+ 	flush_thread();
+-	if (bprm->per_clear)
++	if (bprm->per_clear || bprm->active_per_clear)
+ 		me->personality &= ~PER_CLEAR_ON_SETID;
+ 
+ 	/*
+@@ -1629,12 +1629,12 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+ 		return;
+ 
+ 	if (mode & S_ISUID) {
+-		bprm->per_clear = 1;
++		bprm->active_per_clear = 1;
+ 		bprm->cred->euid = uid;
+ 	}
+ 
+ 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
+-		bprm->per_clear = 1;
++		bprm->active_per_clear = 1;
+ 		bprm->cred->egid = gid;
+ 	}
+ }
+@@ -1655,6 +1655,7 @@ static int prepare_binprm(struct linux_binprm *bprm)
+ 
+ 		/* Recompute parts of bprm->cred based on bprm->file */
+ 		bprm->active_secureexec = 0;
++		bprm->active_per_clear = 0;
+ 		bprm_fill_uid(bprm);
+ 		retval = security_bprm_repopulate_creds(bprm);
+ 		if (retval)
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index e7959a6a895a..89231a689957 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -26,6 +26,9 @@ struct linux_binprm {
+ 	unsigned long p; /* current top of mem */
+ 	unsigned long argmin; /* rlimit marker for copy_strings() */
+ 	unsigned int
++		/* Does bprm->file warrant clearing personality bits? */
++		active_per_clear:1,
++
+ 		/* Should unsafe personality bits be cleared? */
+ 		per_clear:1,
+ 
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 0ca68ad53592..62e60e55cb99 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -57,7 +57,7 @@
+  *	transitions between security domains).
+  *	The hook must set @bprm->active_secureexec to 1 if AT_SECURE should be set to
+  *	request libc enable secure mode.
+- *	The hook must set @bprm->per_clear to 1 if the dangerous personality
++ *	The hook must set @bprm->active_per_clear to 1 if the dangerous personality
+  *	bits must be cleared from current->personality.
+  *	@bprm contains the linux_binprm structure.
+  *	Return 0 if the hook is successful and permission is granted.
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 48b556046483..0b72d7bf23e1 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -826,7 +826,7 @@ int cap_bprm_repopulate_creds(struct linux_binprm *bprm)
+ 
+ 	/* if we have fs caps, clear dangerous personality flags */
+ 	if (__cap_gained(permitted, new, old))
+-		bprm->per_clear = 1;
++		bprm->active_per_clear = 1;
+ 
+ 	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
+ 	 * credentials unless they have the appropriate permit.
 -- 
-2.26.1
+2.25.0
 
