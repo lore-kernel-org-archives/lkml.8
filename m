@@ -2,119 +2,137 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A682C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E28E220814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590675351;
-	bh=5rkdDhvLnr0HQbP4/kDxx+h7aXgJ7zet0owDXLHQxJc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IAvAsNtZBANi3xC/q7SrqXyIEXR7jf77duvtwg7Q+ckO/b/mNSJDDIJuv03yVcNyZ
-	 D3aO/DhetrEnPltviZZk6TOHkjEjzbQK1SE6dFaymddkwdEm4datBHxMWjAehLjZyx
-	 2SzXCbUPs/fmNPLOvDHahCRSK8Z5RQAHK8H7RD0g=
+	by mail.kernel.org (Postfix) with ESMTP id 3943C2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zLpIZu/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390986AbgE1OPt (ORCPT
+        id S2390995AbgE1OQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:15:49 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43561 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390900AbgE1OPq (ORCPT
+        Thu, 28 May 2020 10:16:56 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:33046 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390866AbgE1OQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:15:46 -0400
-Received: by mail-il1-f195.google.com with SMTP id l20so229544ilj.10;
-        Thu, 28 May 2020 07:15:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Je+Wciu3uBC2CRy874Nn2/ScwzmE+3jA16l+4SU5qIk=;
-        b=WHuqkKqVPMQGfqiAln1ZOIOdYRXaUMhmuAwijW0ZDSWK/K9WFZjKj7L+A11U3Zrvfv
-         5DkDAOsNSuLYHIjBcisq93rDfwTPund4ubzcBL1SUZ5qTH+HL/a880/Zmh0mju9ZYiXC
-         KrAhgoVyFWN2M27f+r8n8neKvWLcPDYubwBCYZUocR+ij1qY71UHyw6Zslq/1HMXgUNK
-         p886nCEwuWl/ZVQdQsxmT4wT4HlWmy9cRMkmNd/qJ97wnislLMdCtFe+Y576oNLte7+g
-         nfUVbSgFMbYWwUH8z+VDt4/Pnsiv2aE/2PfPar3xKN8avLBx27VlLCPFpmDyiJKKMLZi
-         3VSw==
-X-Gm-Message-State: AOAM5314Rpic8aqMfgQlZoIpp+yLb4G8wAgOdSa3Giv/PCmkCrsrxfpZ
-        A11qQW6iSYM7xwsH5nzfIw==
-X-Google-Smtp-Source: ABdhPJxqgYgQsTnkwnSdGoqz/4f0E7HlZ7jvhwSGKnRTHkVRl/yC0BQTNyjlTd0+HmAG45bgvBjFLA==
-X-Received: by 2002:a92:8c0d:: with SMTP id o13mr2892315ild.117.1590675344761;
-        Thu, 28 May 2020 07:15:44 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id q6sm3419232ill.59.2020.05.28.07.15.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:15:43 -0700 (PDT)
-Received: (nullmailer pid 4186889 invoked by uid 1000);
-        Thu, 28 May 2020 14:15:42 -0000
-Date:   Thu, 28 May 2020 08:15:42 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Steve Lee <steves.lee@maximintegrated.com>
-Cc:     robh+dt@kernel.org, ryans.lee@maximintegrated.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        ryan.lee.maxim@gmail.com, devicetree@vger.kernel.org,
-        lgirdwood@gmail.com, steves.lee.maxim@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [V6 PATCH 1/2] dt-bindings: Added device tree binding for
- max98390
-Message-ID: <20200528141542.GA4186430@bogus>
-References: <20200528103755.17381-1-steves.lee@maximintegrated.com>
+        Thu, 28 May 2020 10:16:54 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGp14098090;
+        Thu, 28 May 2020 09:16:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590675411;
+        bh=HK7CIXSj8i46BQmDUrCSsRlBvvZmdKuuQKRIbzW1ZlA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zLpIZu/fzYxPLkDiHtSjc5YRXzSzbYQrNN1MSi9OU2JnFqWL/Poxzw4fEjBEwZEsr
+         H3E11fEShawKz/Ljq6mNRS7ejrYAxqlRBHDZFFDE8XAqXx+iQ6Q8P0+Fw+0qKU2MMT
+         kwSo9gzjbi5qhqDsb8KwQsSJ7y+uAhNGUIvIly+8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGp3Q039378;
+        Thu, 28 May 2020 09:16:51 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 09:16:51 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 09:16:51 -0500
+Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEGn6o049544;
+        Thu, 28 May 2020 09:16:50 -0500
+Subject: Re: [PATCH v11 1/4] power_supply: Add additional health properties to
+ the header
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
+        <pali@kernel.org>, <robh@kernel.org>
+CC:     <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <sspatil@android.com>, Guru Das Srinagesh <gurus@codeaurora.org>
+References: <20200528140546.25260-1-r-rivera-matos@ti.com>
+ <20200528140546.25260-2-r-rivera-matos@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <66823f18-dc74-107f-39ae-aade2d3738c0@ti.com>
+Date:   Thu, 28 May 2020 10:16:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528103755.17381-1-steves.lee@maximintegrated.com>
+In-Reply-To: <20200528140546.25260-2-r-rivera-matos@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 19:37:55 +0900, Steve Lee wrote:
-> Add DT binding of max98390 amplifier driver.
+On 5/28/20 10:05 AM, Ricardo Rivera-Matos wrote:
+> From: Dan Murphy <dmurphy@ti.com>
 > 
-> Signed-off-by: Steve Lee <steves.lee@maximintegrated.com>
+> Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+> 
+> HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
+
+
+Wouldn't hurt to list the specific version of the spec these are from,
+but not super important,
+
+Acked-by: Andrew F. Davis <afd@ti.com>
+
+
+> 
+> Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
-> Changed since V5:
-> 	* Change txt to yaml and fix up the examples.
-> Changed since V4:
-> 	* No changes.
-> Changed since V3:
-> 	* No changes.
-> Changed since V2:
-> 	* No changes.
-> Changed since V1:
-> 	* Modified sample text in example
+>  Documentation/ABI/testing/sysfs-class-power | 2 +-
+>  drivers/power/supply/power_supply_sysfs.c   | 2 +-
+>  include/linux/power_supply.h                | 3 +++
+>  3 files changed, 5 insertions(+), 2 deletions(-)
 > 
->  .../bindings/sound/maxim,max98390.yaml        | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/maxim,max98390.yaml
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
+> index bf3b48f022dc..9f3fd01a9373 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -190,7 +190,7 @@ Description:
+>  		Valid values: "Unknown", "Good", "Overheat", "Dead",
+>  			      "Over voltage", "Unspecified failure", "Cold",
+>  			      "Watchdog timer expire", "Safety timer expire",
+> -			      "Over current"
+> +			      "Over current", "Warm", "Cool", "Hot"
+>  
+>  What:		/sys/class/power_supply/<supply_name>/precharge_current
+>  Date:		June 2017
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
+> index f37ad4eae60b..d0d549611794 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
+>  static const char * const power_supply_health_text[] = {
+>  	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
+>  	"Unspecified failure", "Cold", "Watchdog timer expire",
+> -	"Safety timer expire", "Over current"
+> +	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
+>  };
+>  
+>  static const char * const power_supply_technology_text[] = {
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index dcd5a71e6c67..8670e90c1d51 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -61,6 +61,9 @@ enum {
+>  	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
+>  	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
+>  	POWER_SUPPLY_HEALTH_OVERCURRENT,
+> +	POWER_SUPPLY_HEALTH_WARM,
+> +	POWER_SUPPLY_HEALTH_COOL,
+> +	POWER_SUPPLY_HEALTH_HOT,
+>  };
+>  
+>  enum {
 > 
-
-
-My bot found errors running 'make dt_binding_check' on your patch:
-
-Documentation/devicetree/bindings/sound/maxim,max98390.yaml:  mapping values are not allowed in this context
-  in "<unicode string>", line 22, column 97
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/sound/maxim,max98390.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/sound/maxim,max98390.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/maxim,max98390.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/maxim,max98390.yaml: ignoring, error parsing file
-warning: no schema found in file: ./Documentation/devicetree/bindings/sound/maxim,max98390.yaml
-Makefile:1300: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-See https://patchwork.ozlabs.org/patch/1299651
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
