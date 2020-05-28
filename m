@@ -2,143 +2,125 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D75F206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDW5ODyy"
+	by mail.kernel.org (Postfix) with ESMTP id C1E03206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406202AbgE1THe (ORCPT
+        id S2406209AbgE1THk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406193AbgE1THY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:07:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC40C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:07:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id t16so11973611plo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:07:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VwOVkU0O5MPTy6BNN6XbEIcSAUqdb5AHofI+QJezuPI=;
-        b=uDW5ODyyxREse/z9nXtUVNzYSUM3rxmiKouMrW0jQ4pjS6v1fwxsd/yw3a/ZOhLjGv
-         +jxGfyDsoKrn60aSTMmdCEZ2GchIZiuChuz/1AE6nf0dyurPkh4aVOWLNA/wdcuWoQmU
-         oOrU3dKuigLmoTXchnDB47CeNglHPROppF6lxw+UKA//5w9cqkkW8LdHMQHyPK6SUGyO
-         GCbw8fY9NUY6foqe4PtpNWnbJ82ESuHOCefXC/FkqMmVTJWfp1TBB+jyO+x91mphMZEI
-         wdves0btscFepzUrFDrHsvalWOOYRZfS5Kyq0euFgY4kpm6EmhBKzRzD4vzd8i8gIdpz
-         gLHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VwOVkU0O5MPTy6BNN6XbEIcSAUqdb5AHofI+QJezuPI=;
-        b=krsb966nqOVHWsIv7o6BE2ziiomGEIueSr1uiB8MYAcN1PiM7ghfCa4B4h3T7S0+2D
-         hQjfXDUHCk/IUIAyFMzRHqtPmNaYj3GGjc+8vRGji1JcjnjQB5atXcUqqS3Qc1bzQHuw
-         Dheo+odItZ90Dp2cYWGSaz6PqPxOk72SnQ9w+hXSQrirOYWmZ1fSwi1EMUFcmP0LT3DP
-         GHP2nIGvWqM3TRbb6vc1yo3PuUK45a2/ubaBdE76NKfhh9mba6a7GDTOJi03NxA0/oQp
-         rSXujp8lPWjurfwYDlazA30HiPCCOrAkCLxDC/Ub9Y8DTy2IONeAGiM+hsPENDUIrHzr
-         SyUQ==
-X-Gm-Message-State: AOAM53064aYadqWo3jieglR1kFAgDT6SangxgtLQLUw38y/4qy7xJnAD
-        XaqZG1pAZd2kKWoo1zWBqMhJcVjI7OsbovZ8DhZvCw==
-X-Google-Smtp-Source: ABdhPJyHjlcrtJrC+9HghnaFLvsYtvx90pMxGJn0t37UYFwj6H/4l9P4f/thKbVZ/294rQqkIqrgjWfA3AjwOQYQKbs=
-X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr4950842pja.80.1590692843445;
- Thu, 28 May 2020 12:07:23 -0700 (PDT)
+        Thu, 28 May 2020 15:07:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:13720 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406118AbgE1THc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:07:32 -0400
+IronPort-SDR: EH3QLrK9f0B9TqFHFHT8B9ECEeaJ86fBfYsjH3yZjuRM1g1N3RUVA15eAwHQhbTPWDpvm3k69N
+ M6lQLrWwoKlQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 12:07:31 -0700
+IronPort-SDR: c2+n63ZwHY+qgdjCq+YtpiNCWzaPGq5MxEgaU8pCPicDaCtnhMkFp8GhaRLiY3YQd847BNFQG8
+ Ka9t5ZR4ziiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="443080722"
+Received: from jtitox-mobl.ger.corp.intel.com (HELO localhost) ([10.252.56.171])
+  by orsmga005.jf.intel.com with ESMTP; 28 May 2020 12:07:22 -0700
+Date:   Thu, 28 May 2020 22:07:18 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200528190718.GA2147934@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
+ <20200526125207.GE28228@zn.tnic>
+ <20200527042111.GI31696@linux.intel.com>
+ <20200527204638.GG1721@zn.tnic>
+ <20200528012319.GA7577@linux.intel.com>
+ <20200528013617.GD25962@linux.intel.com>
+ <20200528065223.GB188849@linux.intel.com>
+ <20200528171635.GB382@zn.tnic>
 MIME-Version: 1.0
-References: <20200511131350.29638-1-anders.roxell@linaro.org> <CADYN=9LkA2h6dANREfPQq4iDvVEJX1wAdxjv31mpVBkaM_g0ZQ@mail.gmail.com>
-In-Reply-To: <CADYN=9LkA2h6dANREfPQq4iDvVEJX1wAdxjv31mpVBkaM_g0ZQ@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 28 May 2020 12:07:13 -0700
-Message-ID: <CAFd5g452oiRpMa3S=F9wFsb9SRKBYXJFuusge+6=zCEFX74kYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Enable as many KUnit tests as possible
-To:     Anders Roxell <anders.roxell@linaro.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Marco Elver <elver@google.com>, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528171635.GB382@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 4:49 AM Anders Roxell <anders.roxell@linaro.org> wrote:
->
-> Hi all,
->
-> Friendly ping: who can take this?
+On Thu, May 28, 2020 at 07:16:35PM +0200, Borislav Petkov wrote:
+> Lemme reply to all mails with one. :-)
+> 
+> I think Sean almost had it:
+> 
+> >  sgx_alloc_epc_section -> sgx_map_epc_section
+> >  sgx_free_epc_section  -> sgx_unmap_epc_section
+> 
+> Or even
+> 
+>   sgx_setup_epc_section()
+>   sgx_free_epc_section()
 
-Sorry, I just reviewed the last patch.
+I like these. Lets lock in.
 
-Shuah, do you mind picking this up for 5.8?
+> And except those last two. Those are allocating a page from the EPC
+> sections so I'd call them:
+> 
+> sgx_try_alloc_page    -> sgx_alloc_epc_page_section
+> __sgx_try_alloc_page  -> __sgx_alloc_epc_page_section
+> 
+> former doing the loop, latter doing the per-section list games.
 
-> Cheers,
-> Anders
->
-> On Mon, 11 May 2020 at 15:14, Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > Hi,
-> >
-> > This patchset will try to enable as many KUnit test fragments as
-> > possible for the current .config file.
-> > This will make it easier for both developers that tests their specific
-> > feature and also for test-systems that would like to get as much as
-> > possible for their current .config file.
-> >
-> > I will send a separate KCSAN KUnit patch after this patchset since that
-> > isn't in mainline yet.
-> >
-> > Since v2:
-> > Fixed David's comments. KUNIT_RUN_ALL -> KUNIT_ALL_TESTS, and he
-> > suggested a great help text.
-> >
-> > Since v1:
-> > Marco commented to split up the patches, and change a "." to a ",".
-> >
-> >
-> > Cheers,
-> > Anders
-> >
-> > Anders Roxell (6):
-> >   kunit: Kconfig: enable a KUNIT_ALL_TESTS fragment
-> >   kunit: default KUNIT_* fragments to KUNIT_ALL_TESTS
-> >   lib: Kconfig.debug: default KUNIT_* fragments to KUNIT_ALL_TESTS
-> >   drivers: base: default KUNIT_* fragments to KUNIT_ALL_TESTS
-> >   fs: ext4: default KUNIT_* fragments to KUNIT_ALL_TESTS
-> >   security: apparmor: default KUNIT_* fragments to KUNIT_ALL_TESTS
-> >
-> >  drivers/base/Kconfig      |  3 ++-
-> >  drivers/base/test/Kconfig |  3 ++-
-> >  fs/ext4/Kconfig           |  3 ++-
-> >  lib/Kconfig.debug         |  6 ++++--
-> >  lib/kunit/Kconfig         | 23 ++++++++++++++++++++---
-> >  security/apparmor/Kconfig |  3 ++-
-> >  6 files changed, 32 insertions(+), 9 deletions(-)
-> >
-> > --
-> > 2.20.1
-> >
+sgx_alloc_epc_page_section() is a bit nasty and long name to use for
+grabbing a page. And even the documentation spoke about grabbing before
+this naming discussion. I think it is a great description what is going
+on.  Everytime I talk about the subject I talk about grabbing.
 
-Thanks!
+Lets just say that your suggestion, I could not use in a conference
+talk as a verb when I describe what is going on. That function
+signature does not fit to my mouth :-) I would talk about
+grabbing a page.
+
+This how I refactored yesterday (is in my GIT tree already):
+
+/**
+ * sgx_grab_page() - Grab a free EPC page
+ * @owner:	the owner of the EPC page
+ * @reclaim:	reclaim pages if necessary
+ *
+ * Iterate through EPC sections and borrow a free EPC page to the caller. When a
+ * page is no longer needed it must be released with sgx_free_page(). If
+ * @reclaim is set to true, directly reclaim pages when we are out of pages. No
+ * mm's can be locked when @reclaim is set to true.
+ *
+ * Finally, wake up ksgxswapd when the number of pages goes below the watermark
+ * before returning back to the caller.
+ *
+ * Return:
+ *   an EPC page,
+ *   -errno on error
+ */
+
+I also rewrote the kdoc.
+
+I do agree that sgx_try_grab_page() should be renamed as __sgx_grab_page().
+
+/Jarkko
