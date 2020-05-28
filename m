@@ -2,120 +2,107 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BE5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3821F20814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rs9Pjsv/"
+	by mail.kernel.org (Postfix) with ESMTP id 8E045207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391090AbgE1OTR (ORCPT
+        id S2390945AbgE1OUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:19:17 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9442 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390924AbgE1OTI (ORCPT
+        Thu, 28 May 2020 10:20:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56096 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390924AbgE1OUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:19:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ecfc8010000>; Thu, 28 May 2020 07:17:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 28 May 2020 07:19:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 28 May 2020 07:19:07 -0700
-Received: from [10.2.171.246] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 28 May
- 2020 14:19:07 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 03/36] mm: Allow hpages to be arbitrary order
-Date:   Thu, 28 May 2020 10:19:04 -0400
-X-Mailer: MailMate (1.13.1r5690)
-Message-ID: <8525A9D1-6551-42C6-BF19-CAC4926FA500@nvidia.com>
-In-Reply-To: <20200515131656.12890-4-willy@infradead.org>
-References: <20200515131656.12890-1-willy@infradead.org>
- <20200515131656.12890-4-willy@infradead.org>
+        Thu, 28 May 2020 10:20:52 -0400
+Received: from mail-qt1-f198.google.com ([209.85.160.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <gpiccoli@canonical.com>)
+        id 1jeJOs-0002Ip-07
+        for linux-kernel@vger.kernel.org; Thu, 28 May 2020 14:20:50 +0000
+Received: by mail-qt1-f198.google.com with SMTP id o11so118817qti.23
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:20:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:in-reply-to:from:subject:autocrypt
+         :message-id:date:user-agent:mime-version:content-language
+         :content-transfer-encoding;
+        bh=GL47WqaNh0Bxpyg70k1tnSp6HYgAjXbkmzgdit/0Vrk=;
+        b=NNYL/gxXZSxWxjyn/QIZFPSn5BPGu0vKrmBVuwfujx4R0QfmsqJkv3spzJ7QlWQw0x
+         qZErvNqw9wmyRB1z2cP2UxMfDUJfu8sPbuEBI0cE13GouT4W5Kn3xNKNWws2Vp+PLEpq
+         kKSEndNGXkXYvffhfCUnNUOPHIso/ysWzxzmD2y/Newwu+jsl0mb5Sd1NOGY0dHDekZH
+         kfWhVrpdtCF0bshCSPzL4Yyhv50V34W9aZnXAI/YuKFbpYmvBX5A/jVi1hLlm6CcKzVp
+         UEq0XGBdlrgaYPaAnbT7ARbxvHdwYomg/TaSXoZiJxNYRxKf7CkMZ1GnYjYcoxdqL/4n
+         2k+g==
+X-Gm-Message-State: AOAM5307TlHkZY6oaqdVGCbxBHzYtfpaOIQ5TeXHD4HusgCp1Gaq/pPu
+        cqHS42S5w64n2djyQb0iekOViSQ0rFai8HOo9011pVXRoq39/Ms0XNO41QXwl5sRKnlGeO0Qr3j
+        W6LuzePsEBVNmIq9HdcUJlKeyhPP9LB/2ghQZunXv1Q==
+X-Received: by 2002:ae9:e901:: with SMTP id x1mr2838244qkf.131.1590675645854;
+        Thu, 28 May 2020 07:20:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzfLsLHRDVTzCMMlEhcaEuL7V6F7lbQ8otswg8xlmGEJtSPm6X/ZKu9EoeL9JWyyFLQl2fIyg==
+X-Received: by 2002:ae9:e901:: with SMTP id x1mr2838216qkf.131.1590675645576;
+        Thu, 28 May 2020 07:20:45 -0700 (PDT)
+Received: from [192.168.1.75] ([179.110.231.191])
+        by smtp.gmail.com with ESMTPSA id n75sm846338qke.52.2020.05.28.07.20.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 07:20:44 -0700 (PDT)
+To:     jan@schnhrr.de
+Cc:     linux-kernel@vger.kernel.org, Thomas.Lendacky@amd.com,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        pmenzel@molgen.mpg.de, Thomas Gleixner <tglx@linutronix.de>,
+        x86@kernel.org, gpiccoli@canonical.com
+In-Reply-To: 
+From:   "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [PATCH v2] x86/tsc: Allow quick PIT calibration despite
+ interruptions
+Autocrypt: addr=gpiccoli@canonical.com; prefer-encrypt=mutual; keydata=
+ xsBNBFpVBxcBCADPNKmu2iNKLepiv8+Ssx7+fVR8lrL7cvakMNFPXsXk+f0Bgq9NazNKWJIn
+ Qxpa1iEWTZcLS8ikjatHMECJJqWlt2YcjU5MGbH1mZh+bT3RxrJRhxONz5e5YILyNp7jX+Vh
+ 30rhj3J0vdrlIhPS8/bAt5tvTb3ceWEic9mWZMsosPavsKVcLIO6iZFlzXVu2WJ9cov8eQM/
+ irIgzvmFEcRyiQ4K+XUhuA0ccGwgvoJv4/GWVPJFHfMX9+dat0Ev8HQEbN/mko/bUS4Wprdv
+ 7HR5tP9efSLucnsVzay0O6niZ61e5c97oUa9bdqHyApkCnGgKCpg7OZqLMM9Y3EcdMIJABEB
+ AAHNLUd1aWxoZXJtZSBHLiBQaWNjb2xpIDxncGljY29saUBjYW5vbmljYWwuY29tPsLAdwQT
+ AQgAIQUCWmClvQIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRDOR5EF9K/7Gza3B/9d
+ 5yczvEwvlh6ksYq+juyuElLvNwMFuyMPsvMfP38UslU8S3lf+ETukN1S8XVdeq9yscwtsRW/
+ 4YoUwHinJGRovqy8gFlm3SAtjfdqysgJqUJwBmOtcsHkmvFXJmPPGVoH9rMCUr9s6VDPox8f
+ q2W5M7XE9YpsfchS/0fMn+DenhQpV3W6pbLtuDvH/81GKrhxO8whSEkByZbbc+mqRhUSTdN3
+ iMpRL0sULKPVYbVMbQEAnfJJ1LDkPqlTikAgt3peP7AaSpGs1e3pFzSEEW1VD2jIUmmDku0D
+ LmTHRl4t9KpbU/H2/OPZkrm7809QovJGRAxjLLPcYOAP7DUeltvezsBNBFpVBxcBCADbxD6J
+ aNw/KgiSsbx5Sv8nNqO1ObTjhDR1wJw+02Bar9DGuFvx5/qs3ArSZkl8qX0X9Vhptk8rYnkn
+ pfcrtPBYLoux8zmrGPA5vRgK2ItvSc0WN31YR/6nqnMfeC4CumFa/yLl26uzHJa5RYYQ47jg
+ kZPehpc7IqEQ5IKy6cCKjgAkuvM1rDP1kWQ9noVhTUFr2SYVTT/WBHqUWorjhu57/OREo+Tl
+ nxI1KrnmW0DbF52tYoHLt85dK10HQrV35OEFXuz0QPSNrYJT0CZHpUprkUxrupDgkM+2F5LI
+ bIcaIQ4uDMWRyHpDbczQtmTke0x41AeIND3GUc+PQ4hWGp9XABEBAAHCwF8EGAEIAAkFAlpV
+ BxcCGwwACgkQzkeRBfSv+xv1wwgAj39/45O3eHN5pK0XMyiRF4ihH9p1+8JVfBoSQw7AJ6oU
+ 1Hoa+sZnlag/l2GTjC8dfEGNoZd3aRxqfkTrpu2TcfT6jIAsxGjnu+fUCoRNZzmjvRziw3T8
+ egSPz+GbNXrTXB8g/nc9mqHPPprOiVHDSK8aGoBqkQAPZDjUtRwVx112wtaQwArT2+bDbb/Y
+ Yh6gTrYoRYHo6FuQl5YsHop/fmTahpTx11IMjuh6IJQ+lvdpdfYJ6hmAZ9kiVszDF6pGFVkY
+ kHWtnE2Aa5qkxnA2HoFpqFifNWn5TyvJFpyqwVhVI8XYtXyVHub/WbXLWQwSJA4OHmqU8gDl
+ X18zwLgdiQ==
+Message-ID: <9bfbe39b-fcf1-0e05-ae36-e13e7e63194d@canonical.com>
+Date:   Thu, 28 May 2020 11:20:40 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_FD669B2F-AEAF-47A4-97AA-FCD5FE99CAAC_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1590675457; bh=Wlo8+HURmTm34DNdJz6dWr6yZsksCAAqTCXZJbkhVbE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=Rs9Pjsv/BsgE+4GnQaXYQ2zC00rQvevnynjjFoLpA6dZxvUmsVfllz57KctZN/93p
-         nQWiSglzChbezUyqV3K9OgmVOJMDudQRjTail2WOCFWYCr7YezkPAsSUgv//KNBHDN
-         wiTjymfMy52PDItX8lZgx5Om1dKPliiFcmqIlaOSo7dONIWI0kgzyOAbUgCTognOkq
-         jnS8sPkFlhBX+Z17T8H6IeIXAHa7qAf0TmWtTE3DnwWToBeGuXBK/JpTMqew0cHjQN
-         Pd2Q6tyBDtlk2K6UhIro8blHcsiODEN1/dUWteITriORMrugk8GUOhgpo9Wo39PeDr
-         zgbQcD8ko0y8w==
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_FD669B2F-AEAF-47A4-97AA-FCD5FE99CAAC_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Jan and all involved here, I'd like to know if there was any news on
+this patch - seems users are still facing this issue on AMD systems.
 
-On 15 May 2020, at 9:16, Matthew Wilcox wrote:
+Thanks in advance,
 
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
->
-> Remove the assumption in hpage_nr_pages() that compound pages are
-> necessarily PMD sized.  Move the relevant parts of mm.h to before the
-> include of huge_mm.h so we can use an inline function rather than a mac=
-ro.
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  include/linux/huge_mm.h |  5 +--
->  include/linux/mm.h      | 96 ++++++++++++++++++++---------------------=
 
->  2 files changed, 50 insertions(+), 51 deletions(-)
->
-Glad to see this change. Thanks.
-
-Reviewed-by: Zi Yan <ziy@nvidia.com>
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_FD669B2F-AEAF-47A4-97AA-FCD5FE99CAAC_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl7PyFgPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKz6oP/iNKzP4qN28njUEd3e1klGCPQ+FIxbVvsd6j
-vnWoNATamPXz7wGWxlpdmZggbEmnsU3NZp55eSWq8N2iD9N6W5D6IqzS/whsuLFB
-hI3Bk7Qin6mXUVMj3NHzdYIGSbnBpayTfslxDG16pHiaRBDShn+Dms8Sq7Jb9b92
-ZuDh+tP1qW3QIREdVkRFfiEwDuN2C8VvHZD63g5bmyNFfA8s+JDyycuUWTyLrsi1
-b8cvb0IbhW8KbR2WsIEO0GtoKToKHLqqWo/BeElZSL+3Q1W/dHZKACEMsY2DpJgX
-ePPw5pYjPtGTY7fjtnK4alaCCZmmRNaJMjaZk44uW54k1S+ScKBs0RJRBC8Lw3CZ
-TrCY8SpDVSZf5Kls7yKl7ekkh7BFMwfe2ks7gvL65PAaGr/+IYy9htE20urLKFiK
-NJMsNnM6unujfQw2AmkOrZUuLvUGsjkIVTkfnpM50E0MR6xaEu60HOcY94ZFLaZB
-qesZi7+5nlw6dKircty9mwDP4mFO4yAWCNhY2/fgiqvs9k0Dnb0G+uO77UcAUtxm
-Hij82oW8pUyNXrxX8cffrPd3VG69e1/3Gz7AStWAvM17QECkksepN5FBtmsgIrmr
-3EH7IZahdA7kRZZz6Nfd1n5bchhPgFTSCoJulz0rR+FtrD+Rz4z2jADCTd6LDatH
-7dWVogzJ
-=Hw9v
------END PGP SIGNATURE-----
-
---=_MailMate_FD669B2F-AEAF-47A4-97AA-FCD5FE99CAAC_=--
+Guilherme
