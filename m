@@ -2,226 +2,216 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B92C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63576C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1EC208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40FC4208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEo8442R"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="trdjOkn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgE1Hbp (ORCPT
+        id S1726635AbgE1HcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:31:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE1Hbo (ORCPT
+        Thu, 28 May 2020 03:32:04 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:39907 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgE1HcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:31:44 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DBFC05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:31:43 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id n123so2472792ybf.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PYE6p5UwpkWq7bxp4EB9q/2Nru5zecAQppMwLOCRTN8=;
-        b=rEo8442RE1GAFP0Nvyz9c/sAvJx4qjqL6Ry7UlBf0fzMjXUUb9sMB4jyCVEWrg5dHL
-         hgBUyMyhfxQ2viBU6ZMmydoycqTGREyreIjw0969gbEVe79+uTd75kr2XSUMoS+PKlx+
-         n70R+abwCzsm7WVgGVElW3YEocGO9hZVgOUNmlDVwUaTDAYx+HM8TJRCLEb7K67cGmpT
-         L/RO+nku5yB6SqF+qeliTKTO8XW29yGYHC/WlfTlS1Qrndx/50UPyBUK2evQJ7dEaLj4
-         X9I07b0LbffXvXVabZwBwFIC4lUIaTmR7DPSzxIbVcMaQ4D+ehaF6kswxZ0HoFnzYTpS
-         J+jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PYE6p5UwpkWq7bxp4EB9q/2Nru5zecAQppMwLOCRTN8=;
-        b=RP7hK18rQRkS30gI6YO6ZbTtGh/xatSymqtpmdpzkLTFXL2seVUM6FLOajWdrI5QoY
-         qJBKrccAApbI8ZMT0Kav3RW8vP2nvwXMd2CmALBDa9XfencE0ebE6qHKrI2Tj+rI69CL
-         Vq84YccXtX9p7t6g/5ulgSyWMLdA8fRpL7ymxryNsAGcDAJrKD8M4GlvrzwvM/7JZLsB
-         QIbVr/WlQNRUrHv+MJgaw4nl8Zd08LKU+dwFgxIPMvNhaRelQIENdAQ6wTefWKcWIfs2
-         +YHDtqDmFi/73m/C2GngaB7b4WdB5jBE+G3Y9kIMwJQeLiOlfdYie2gBctkvUXjclyvI
-         t6cA==
-X-Gm-Message-State: AOAM530h0lApA27DFN4DyF2Aet2WUHn8O9OaxqLW7KHmE78bQR+PwjQk
-        4r7yYcd49og/lZMXDEHSZcEvvhltZ9FM0+Fx6mZceQ==
-X-Google-Smtp-Source: ABdhPJwSOv8m66f6lrkyqRtiTjAFaVHdWEmyC8xBfIrG3gWjE3lb1PL33rE980aWbkjOi5f00QXwtepSJJV9x5JIKlw=
-X-Received: by 2002:a25:5387:: with SMTP id h129mr2888046ybb.47.1590651102358;
- Thu, 28 May 2020 00:31:42 -0700 (PDT)
+        Thu, 28 May 2020 03:32:03 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200528073159epoutp018029fa76f3eaff7c4dd880cace308c19~TIMQXbIQt0317003170epoutp01A
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:31:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200528073159epoutp018029fa76f3eaff7c4dd880cace308c19~TIMQXbIQt0317003170epoutp01A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590651120;
+        bh=1u5f9mHjA455o1d+uNuMnxBAjVQOMkQ7sV8wA55+hdc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=trdjOkn0Oq3D9IsEaKB/Df7IdR7y6weEBS4r2bXm4DHkQ16t/RtX2tUSNCg9h+7eh
+         Ws0Bpn7kEQxZfLa50wKPfP/znx7PhFJ00tPdrF6D9K3EZckIBuoiv5neq+K5eWviQC
+         oH7Rx+GGvQA6OIglN8CvLI3exriXlefCzpZX76Vo=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200528073159epcas1p32ba7986a21e8bfa2d9cb8d1082e062c2~TIMP1w7Wl0579705797epcas1p3G;
+        Thu, 28 May 2020 07:31:59 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 49XfXX29f9zMqYlv; Thu, 28 May
+        2020 07:31:56 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        51.06.04645.CE86FCE5; Thu, 28 May 2020 16:31:56 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200528073155epcas1p430317922f66de75d7f3c3b87db1a951b~TIMMaD4rx3273632736epcas1p4F;
+        Thu, 28 May 2020 07:31:55 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200528073155epsmtrp15b0474f5c8070c83fc6cf3a7c243d14c~TIMMYktc42350823508epsmtrp1g;
+        Thu, 28 May 2020 07:31:55 +0000 (GMT)
+X-AuditID: b6c32a36-f67ff70000001225-c6-5ecf68ec6a25
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        92.A5.08382.BE86FCE5; Thu, 28 May 2020 16:31:55 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200528073155epsmtip28024469710e4156a1c97c4f61e342f3e~TIML9YcXC1131011310epsmtip2c;
+        Thu, 28 May 2020 07:31:55 +0000 (GMT)
+Subject: Re: [PATCH 08/12] dt-bindings: devfreq: add compatible for mt8183
+ cci devfreq
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <4087bcdb-a247-3d2d-96b2-16f965e8ba5c@samsung.com>
+Date:   Thu, 28 May 2020 16:42:16 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <20200528054049.13662-1-nick.gasson@arm.com>
-In-Reply-To: <20200528054049.13662-1-nick.gasson@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 28 May 2020 00:31:31 -0700
-Message-ID: <CAP-5=fWcMKtPa3C9Jbyf=zY=YmTRaoiyc837nYJcK9pC+NJ-LA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf jvmti: Remove redundant jitdump line table entries
-To:     Nick Gasson <nick.gasson@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200520034307.20435-9-andrew-sh.cheng@mediatek.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAJsWRmVeSWpSXmKPExsWy7bCmvu6bjPNxBlNf81tsX/+C1WLqwyds
+        FvOPnGO1ONv0ht3i25UOJotNj6+xWlzeNYfN4nLzRUaLz71HGC2WXr/IZNHUYmxxu3EFm8Wb
+        H2eZLM6cvsRq0br3CLvFv2sbWSym3xWy2PjVw0HIY828NYweO2fdZffYtKqTzePOtT1sHpuX
+        1Hu0nNzP4rHlajuLR9+WVYwex29sZ/L4vEkugCsq2yYjNTEltUghNS85PyUzL91WyTs43jne
+        1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6CUlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1S
+        akFKToFlgV5xYm5xaV66XnJ+rpWhgYGRKVBhQnbG82WmBW3CFVNXPmRvYNzN38XIySEhYCJx
+        6cp99i5GLg4hgR2MEpvmb2KBcD4xSqxp+sEG4XxjlFhy7y0bTMu5LdMYIRJ7GSUOn9vNDOG8
+        Z5SYfGU1UxcjB4ewQITEvWUaIA0iAreZJSbMDgGpYRY4yCgx/dJFJpAEm4CWxP4XN8Cm8gso
+        Slz98ZgRxOYVsJOYOfMPC8gcFgFViR3v7EHCogJhEie3tUCVCEqcnPmEBcTmFHCSeHOtGcxm
+        FhCXuPVkPhOELS+x/e0csNskBCZzSny7sQHqAxeJx71f2SFsYYlXx7dA2VISL/vboOxqiZUn
+        j7BBNHcwSmzZf4EVImEssX/pZLAnmQU0Jdbv0ocIK0rs/D2XEWIxn8S7rz2sICUSArwSHW1C
+        ECXKEpcf3GWCsCUlFrd3sk1gVJqF5J1ZSF6YheSFWQjLFjCyrGIUSy0ozk1PLTYsMEKO7E2M
+        4NSuZbaDcdE5n0OMAhyMSjy8HV7n4oRYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sa
+        k1p8iNEUGNgTmaVEk/OBeSevJN7Q1MjY2NjCxNDM1NBQSZx3/o8zcUIC6YklqdmpqQWpRTB9
+        TBycUg2MEi844j+f0PA5veK+YAbnqcaVZ78ZqarWxid5bKlTnsR2t/iMlV2ML3flfd2ivmN6
+        YTtfy71+7BfhfW35vSVc+qmLfI7s2Lxm06eJvT++buENCZJoXJntnPbs+7Kbb1avveRYq6v9
+        R1DButiqZKfphZW7/4RXiCiGzS+R9L2h2LI5SWP1PR5FJZbijERDLeai4kQAkLRX9gMEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsWy7bCSvO7rjPNxBhdblCy2r3/BajH14RM2
+        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
+        j7NMFmdOX2K1aN17hN3i37WNLBbT7wpZbPzq4SDksWbeGkaPnbPusntsWtXJ5nHn2h42j81L
+        6j1aTu5n8dhytZ3Fo2/LKkaP4ze2M3l83iQXwBXFZZOSmpNZllqkb5fAlfF8mWlBm3DF1JUP
+        2RsYd/N3MXJySAiYSJzbMo2xi5GLQ0hgN6NE44wXTBAJSYlpF48ydzFyANnCEocPF0PUvGWU
+        2HriNTtIjbBAhMSRX4dYQBIiAveZJZbfvcoG4jALHGSUeNb9hx2i5SyjxO+lE1lBWtgEtCT2
+        v7jBBmLzCyhKXP3xmBHE5hWwk5g58w8LyDoWAVWJHe/sQcKiAmESO5c8ZoIoEZQ4OfMJC4jN
+        KeAk8eZaM5jNLKAu8WfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKz0LSPgtJyywkLbOQtCxgZFnF
+        KJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREc51qaOxi3r/qgd4iRiYPxEKMEB7OSCK/T
+        2dNxQrwpiZVVqUX58UWlOanFhxilOViUxHlvFC6MExJITyxJzU5NLUgtgskycXBKNTAp7HQM
+        YhDNmXKlxTg/9fBhIbmtKTomYus3/F7tHp/VP3Pvh3BnFs1jdpeur3RatYRhP2fVwoVan9o1
+        DVe9b67huhtcULO1k+8zZ0Ny0PbqO996TRwt93/fwXEzlk1nT99E5g2nX+sed5KWfSPv+2rJ
+        76Iy52g7FZvSDLZbS1+VqfH+5hdyXvT2eY8r33Venmvz8zML97fffPUt4so8hgtbvB6xSXAf
+        qb271ULr/8WnbieOffc58fhXsGmmidMCReH/P+Zccwhb0popKqvVeL6+RzLm36wqdzXGTTLc
+        6mwpmxWmbRGKevfTt05J/bzTf8sUdja/qQri27YHOESX7L93nuXu4S2LwtvCe46XRiqxFGck
+        GmoxFxUnAgDII881YgMAAA==
+X-CMS-MailID: 20200528073155epcas1p430317922f66de75d7f3c3b87db1a951b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520034339epcas1p1524dea2d7089cb3492384bbe917dcffe
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+        <CGME20200520034339epcas1p1524dea2d7089cb3492384bbe917dcffe@epcas1p1.samsung.com>
+        <20200520034307.20435-9-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:41 PM Nick Gasson <nick.gasson@arm.com> wrote:
->
-> For each PC/BCI pair in the JVMTI compiler inlining record table, the
-> jitdump plugin emits debug line table entries for every source line in
-> the method preceding that BCI. Instead only emit one source line per
-> PC/BCI pair. Reported by Ian Rogers. This reduces the .dump size for
-> SPECjbb from ~230MB to ~40MB.
->
-> Signed-off-by: Nick Gasson <nick.gasson@arm.com>
+Hi,
+
+On 5/20/20 12:43 PM, Andrew-sh.Cheng wrote:
+> This adds dt-binding documentation of cci devfreq
+> for Mediatek MT8183 SoC platform.
+> 
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
 > ---
-> Changes in v2:
-> - Split the unrelated DWARF debug fix into a separate patch
-> - Added a comment about the use of c->methods
->
->  tools/perf/jvmti/libjvmti.c | 78 ++++++++++++++++---------------------
->  1 file changed, 33 insertions(+), 45 deletions(-)
->
-> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
-> index c5d30834a64c..fcca275e5bf9 100644
-> --- a/tools/perf/jvmti/libjvmti.c
-> +++ b/tools/perf/jvmti/libjvmti.c
-> @@ -32,38 +32,41 @@ static void print_error(jvmtiEnv *jvmti, const char *msg, jvmtiError ret)
->
->  #ifdef HAVE_JVMTI_CMLR
->  static jvmtiError
-> -do_get_line_numbers(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
-> -                   jvmti_line_info_t *tab, jint *nr)
-> +do_get_line_number(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
-> +                  jvmti_line_info_t *tab)
->  {
-> -       jint i, lines = 0;
-> -       jint nr_lines = 0;
-> +       jint i, nr_lines = 0;
->         jvmtiLineNumberEntry *loc_tab = NULL;
->         jvmtiError ret;
-> +       jint src_line = -1;
->
->         ret = (*jvmti)->GetLineNumberTable(jvmti, m, &nr_lines, &loc_tab);
->         if (ret == JVMTI_ERROR_ABSENT_INFORMATION || ret == JVMTI_ERROR_NATIVE_METHOD) {
->                 /* No debug information for this method */
-> -               *nr = 0;
-> -               return JVMTI_ERROR_NONE;
-> +               return ret;
->         } else if (ret != JVMTI_ERROR_NONE) {
->                 print_error(jvmti, "GetLineNumberTable", ret);
->                 return ret;
->         }
->
-> -       for (i = 0; i < nr_lines; i++) {
-> -               if (loc_tab[i].start_location < bci) {
-> -                       tab[lines].pc = (unsigned long)pc;
-> -                       tab[lines].line_number = loc_tab[i].line_number;
-> -                       tab[lines].discrim = 0; /* not yet used */
-> -                       tab[lines].methodID = m;
-> -                       lines++;
-> -               } else {
-> -                       break;
-> -               }
-> +       for (i = 0; i < nr_lines && loc_tab[i].start_location <= bci; i++) {
-> +               src_line = i;
-> +       }
+>  .../devicetree/bindings/devfreq/mt8183-cci.yaml    | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml b/Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
+> new file mode 100644
+> index 000000000000..a7341fd94097
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: https://protect2.fireeye.com/url?k=33f1f15d-6e23ea05-33f07a12-0cc47a31c8b4-91b3f8aeecce95dc&q=1&u=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fdevfreq%2Fmt8183-cci.yaml%23
+> +$schema: https://protect2.fireeye.com/url?k=fc7d9089-a1af8bd1-fc7c1bc6-0cc47a31c8b4-b46f5afc59faf86d&q=1&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23
 > +
-> +       if (src_line != -1) {
-> +               tab->pc = (unsigned long)pc;
-> +               tab->line_number = loc_tab[src_line].line_number;
-> +               tab->discrim = 0; /* not yet used */
-> +               tab->methodID = m;
+> +title: CCI_DEVFREQ driver for MT8183.
 > +
-> +               ret = JVMTI_ERROR_NONE;
-> +       } else {
-> +               ret = JVMTI_ERROR_ABSENT_INFORMATION;
->         }
+> +maintainers:
+> +  - Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
 > +
->         (*jvmti)->Deallocate(jvmti, (unsigned char *)loc_tab);
-> -       *nr = lines;
-> -       return JVMTI_ERROR_NONE;
+> +description: |
+> +  This module is used to create CCI DEVFREQ.
+> +  The performance will depend on both CCI frequency and CPU frequency.
+> +  For MT8183, CCI co-buck with Little core.
+> +  Contain CCI opp table for voltage and frequency scaling.
 > +
-> +       return ret;
->  }
->
->  static jvmtiError
-> @@ -71,9 +74,8 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
->  {
->         const jvmtiCompiledMethodLoadRecordHeader *hdr;
->         jvmtiCompiledMethodLoadInlineRecord *rec;
-> -       jvmtiLineNumberEntry *lne = NULL;
->         PCStackInfo *c;
-> -       jint nr, ret;
-> +       jint ret;
->         int nr_total = 0;
->         int i, lines_total = 0;
->
-> @@ -86,24 +88,7 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
->         for (hdr = compile_info; hdr != NULL; hdr = hdr->next) {
->                 if (hdr->kind == JVMTI_CMLR_INLINE_INFO) {
->                         rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
-> -                       for (i = 0; i < rec->numpcs; i++) {
-> -                               c = rec->pcinfo + i;
-> -                               nr = 0;
-> -                               /*
-> -                                * unfortunately, need a tab to get the number of lines!
-> -                                */
-> -                               ret = (*jvmti)->GetLineNumberTable(jvmti, c->methods[0], &nr, &lne);
-> -                               if (ret == JVMTI_ERROR_NONE) {
-> -                                       /* free what was allocated for nothing */
-> -                                       (*jvmti)->Deallocate(jvmti, (unsigned char *)lne);
-> -                                       nr_total += (int)nr;
-> -                               } else if (ret == JVMTI_ERROR_ABSENT_INFORMATION ||
-> -                                          ret == JVMTI_ERROR_NATIVE_METHOD) {
-> -                                       /* No debug information for this method */
-> -                               } else {
-> -                                       print_error(jvmti, "GetLineNumberTable", ret);
-> -                               }
-> -                       }
-> +                       nr_total += rec->numpcs;
->                 }
->         }
->
-> @@ -122,14 +107,17 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
->                         rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
->                         for (i = 0; i < rec->numpcs; i++) {
->                                 c = rec->pcinfo + i;
-> -                               nr = 0;
-> -                               ret = do_get_line_numbers(jvmti, c->pc,
-> -                                                         c->methods[0],
-> -                                                         c->bcis[0],
-> -                                                         *tab + lines_total,
-> -                                                         &nr);
-> +                                /*
-> +                                 * c->methods is the stack of inlined method calls
-> +                                 * at c->pc. [0] is the leaf method. Caller frames
-> +                                 * are ignored at the moment.
-> +                                 */
+> +properties:
+> +  compatible:
+> +    const: "mediatek,mt8183-cci"
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: "cci"
+> +
+> +  operating-points-v2: true
+> +  opp-table: true
+> +
+> +  proc-supply:
+> +    description:
+> +      Phandle of the regulator that provides the supply voltage.
+> +
+> +required:
+> +  - compatible
+> +  - clocks
+> +  - clock-names
+> +  - proc-supply
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/mt8183-clk.h>
+> +    cci: cci {
+> +      compatible = "mediatek,mt8183-cci";
+> +      clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
+> +      clock-names = "cci";
+> +      operating-points-v2 = <&cci_opp>;
+> +      proc-supply = <&mt6358_vproc12_reg>;
+> +    };
+> +
+> 
 
-Thanks!
+I recommend that add the more detailed example
+with OPP table with CPU node.
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-> +                               ret = do_get_line_number(jvmti, c->pc,
-> +                                                        c->methods[0],
-> +                                                        c->bcis[0],
-> +                                                        *tab + lines_total);
->                                 if (ret == JVMTI_ERROR_NONE)
-> -                                       lines_total += nr;
-> +                                       lines_total++;
->                         }
->                 }
->         }
-> --
-> 2.26.2
->
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
