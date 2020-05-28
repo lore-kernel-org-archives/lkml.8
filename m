@@ -2,129 +2,80 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15427C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD665C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E39A5208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WeIYDG9i"
+	by mail.kernel.org (Postfix) with ESMTP id B9E5820B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgE1Gxf (ORCPT
+        id S1725920AbgE1Gzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgE1Gxe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:53:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48890C08C5C2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:53:34 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k2so1594167pjs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=zbKuT3nrBchNOXLtoqggayeJJOXuYIPFyuAneEl5VZE=;
-        b=WeIYDG9i+HPcpC+T7wLyd72laBytTR0RvEwehEj45sRWw4OKQzXYNNFynXnVehee4d
-         Xz6/jjgw409iODdX8f+4nfB4ksOmJlLeRUjPatyd73dc4YdD/O6i/XN42ATrsS/CHqC2
-         Hj1KqTS/6K1rdwTjZSmW73Clu5pi1g+wvul9mqCnXjpkHb3po6GXlCny3fXX4LNkVWWh
-         +Rf0+FfG/tiIkuRFgH2XUOnYBAJUB98HYAgq5RhcSvah+qLAhflgOXk0g/sakA7NLXbh
-         qEjIntovK2YBpTUr74m+FL9V9Iy1pdy/deZKUseiSeBwZTjQlJikyz4UUCdSr+OwEHgX
-         9Dug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zbKuT3nrBchNOXLtoqggayeJJOXuYIPFyuAneEl5VZE=;
-        b=mz3sYbCNH788Ks3Vtjv9rQPREqyO4Ku+9PH3dLsgrLDeEEAAXhyYUEjzNPwn1I8308
-         q/AToLVpZ9wdLwkmNxgpX8HMhGjRM2crS3j5/pN2dSVlbHMuD9kKUIpIDuq1BuwweqYA
-         iopktNO7iYrKyTUQDnL9QZIacMniZUbOLZG3IQ9OHlGAiL1nhlHub2/WMMv+61irp+fF
-         B17TjccX8IXCtLfF3MgCMy7fRgEY8kdZ95xzPwv0a3vl63Mw/+W/ixZ1YZuIUPDDkCis
-         Fv6Wxvoy378RExSNsPHJn2yYBrwXyS7VfzCugPTOV1mitvq/CAF1845HadSkh7d0Tslu
-         ZKaQ==
-X-Gm-Message-State: AOAM531c17Dw8aVZqhL5GdmcIX7gDDd7u+axMKYd48QmBx87gKNmVSkZ
-        JOeX/4dn+Lji++I+SsQsqQ4QPg==
-X-Google-Smtp-Source: ABdhPJzZUXUIWStr7BtNwklBZN744dC8lv7AAZWH3qxAABW36QOxKh3qydTDu9mclcxQ1QgO9lDG4g==
-X-Received: by 2002:a17:90a:d317:: with SMTP id p23mr2285917pju.107.1590648813784;
-        Wed, 27 May 2020 23:53:33 -0700 (PDT)
-Received: from [10.140.6.42] ([45.135.186.12])
-        by smtp.gmail.com with ESMTPSA id g18sm3799582pfq.146.2020.05.27.23.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 23:53:33 -0700 (PDT)
-Subject: Re: [PATCH 2/2] iommu: calling pci_fixup_iommu in iommu_fwspec_init
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        jean-philippe <jean-philippe@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
-References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
- <1590493749-13823-3-git-send-email-zhangfei.gao@linaro.org>
- <20200527090115.GB179718@kroah.com>
-From:   Zhangfei Gao <zhangfei.gao@linaro.org>
-Message-ID: <e8293663-7fb8-ee57-0b9f-b3057b8aae7d@linaro.org>
-Date:   Thu, 28 May 2020 14:53:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Thu, 28 May 2020 02:55:38 -0400
+Received: from mga01.intel.com ([192.55.52.88]:23389 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbgE1Gzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:55:38 -0400
+IronPort-SDR: YJCV4C/c7o61HAwkwuKP2Y2ePdQTPC4RCJ/uXqk7fQ3FF1hmlVL81aNrncwpnp0xSgMAPXzYwf
+ 79dZHe/S8Ufw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 23:55:35 -0700
+IronPort-SDR: 3IEqIiEUBBetwpf/IvyCFg/yD1qwQb21ZmP+w11fkr+Uf/TJ5arGx3UyKKNQBMnnVHgfgQrxGv
+ Mi92cHz9rh0w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="267117506"
+Received: from dmescala-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.59.102])
+  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 23:55:29 -0700
+Date:   Thu, 28 May 2020 09:55:27 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tadeusz Struk <tstruk@gmail.com>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Alex Guzman <alex@guzman.io>
+Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
+ mode"
+Message-ID: <20200528065527.GE188849@linux.intel.com>
+References: <20200526183213.20720-1-mario.limonciello@dell.com>
+ <1590520454.11810.40.camel@HansenPartnership.com>
+ <f63afdc1-6c40-dc0d-bb9a-154bc51d3b95@gmail.com>
+ <20200528003040.GA4781@linux.intel.com>
+ <e939739d-d193-95e8-c142-4efa57be2502@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527090115.GB179718@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e939739d-d193-95e8-c142-4efa57be2502@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 09:40:25PM -0700, Tadeusz Struk wrote:
+> On 5/27/20 5:30 PM, Jarkko Sakkinen wrote:
+> >> This won't help if the message is read by an async tcti. If the problem lies
+> >> in the chip get locality code, perhaps this could help to debug the root-cause
+> >> instead of masking it out in the upper layer code:
+> > What is TCTI and async TCTI? Not following.
+> 
+> TPM Command Transmission Interface (TCTI) as defined by TCG in
+> https://trustedcomputinggroup.org/resource/tss-tcti-specification/
+> 
+> the reason we added the O_NONBLOCK mode was to satisfy the TCG spec for async TCTI.
+> 
+> Thanks,
+> Tadeusz
 
+OK, thanks recalling.
 
-On 2020/5/27 下午5:01, Greg Kroah-Hartman wrote:
-> On Tue, May 26, 2020 at 07:49:09PM +0800, Zhangfei Gao wrote:
->> Calling pci_fixup_iommu in iommu_fwspec_init, which alloc
->> iommu_fwnode. Some platform devices appear as PCI but are
->> actually on the AMBA bus, and they need fixup in
->> drivers/pci/quirks.c handling iommu_fwnode.
->> So calling pci_fixup_iommu after iommu_fwnode is allocated.
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> ---
->>   drivers/iommu/iommu.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 7b37542..fb84c42 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
->>   	fwspec->iommu_fwnode = iommu_fwnode;
->>   	fwspec->ops = ops;
->>   	dev_iommu_fwspec_set(dev, fwspec);
->> +
->> +	if (dev_is_pci(dev))
->> +		pci_fixup_device(pci_fixup_iommu, to_pci_dev(dev));
-> Why can't the caller do this as it "knows" it is a PCI device at that
-> point in time, right?
-Putting fixup here is because
-1. iommu_fwspec has been allocated
-2. iommu_fwspec_init will be called by of_pci_iommu_init and 
-iort_pci_iommu_init, covering both acpi and dt
-
-Thanks
+/Jarkko
