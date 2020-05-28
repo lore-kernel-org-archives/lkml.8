@@ -2,314 +2,173 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C75C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750102075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710FE2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:27:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XuOAqieP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="pmXxheEz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388366AbgE1L00 (ORCPT
+        id S2388370AbgE1L1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388198AbgE1L0Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:26:25 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21232C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:26:25 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id n5so2788890wmd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:26:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QI0uMyRpyUVfiyQ9A21+QmHITWKpvKBb6pl7ZlVnkLU=;
-        b=XuOAqieP0JKPBcrD4JXy7Ahd8AL5ann4RiGJwda152wXgscSvpSEnsGYN0KglRNEGo
-         W4V022k6MW0ywFfN2si52bTvMb/hBGQ1Dkz1OMcpdSL1K76IgZpchB7vxNHPNjkgn3L5
-         AhbgB3PVX9+5vbPaPudL42VPfSdnDzpb1hvhxQQ+YaL0h5mtnefYNZX2jqT3nhSvMYnA
-         ogIz5jCs/F+kU1xx5cWZ3yx6f44OReozWAsU+zBj7vR0DB+ZeRH/Q0PgFKhlXMxTi8Fi
-         CQLooY5EWNWH/Q/aO3eHAhNJxEqcbKIDq6u3/weNX/6Wqziw9LjzFPukK9Nwa0wOUIPW
-         dqzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QI0uMyRpyUVfiyQ9A21+QmHITWKpvKBb6pl7ZlVnkLU=;
-        b=syMdckhbSrbcnCoe33bmPifGfY1g68CqkHdoGecoSYAogvgHtGVknvWGj2EGMwJVo5
-         4ICJSkYT3RhKXlH8NgTjn+VSd/Z17qNitI2/ec0UX6oBhT069/+v4Lua+QYFlGjlDs6l
-         FRk+Suof2pBUN2kaL3IK8vxjAoCAa9vRNduL+koI2XMevDoeCGIycEK0kJniSWxKGV4r
-         2ckJCaRsJwmA7fmlKqmv+dFmVOpq4ryT4O65LgIOzwcbPRiZO/OK91TgPBEG/DCPy3e+
-         J/vtsCfzMgbzQ7zvT42snDRk7PaDym0OXNPYFjLPz3peNOD/sxPvJgjNqGjxzUKlGdKy
-         +mWg==
-X-Gm-Message-State: AOAM531q4ohlkCdX/zcPfOmxrd4jkc+52lStr0M66wj48sECVaA9kTQf
-        fIVgllVNQQZzwKamvHM9aicO5A==
-X-Google-Smtp-Source: ABdhPJyw1K/UTv9s3mKkITvD/45g7/asPJYuE10f7jwMjiiAQtQEDrlLcheyNvZIzJ3fgjcPaYrnUA==
-X-Received: by 2002:a1c:4b02:: with SMTP id y2mr2845308wma.115.1590665183165;
-        Thu, 28 May 2020 04:26:23 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id w10sm5680363wrp.16.2020.05.28.04.26.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 04:26:22 -0700 (PDT)
-Date:   Thu, 28 May 2020 12:26:20 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] kdb: Switch kdb_msg_write() to use safer polling
- I/O
-Message-ID: <20200528112620.a6zhgnkl2izuggsa@holly.lan>
-References: <1590560759-21453-1-git-send-email-sumit.garg@linaro.org>
- <1590560759-21453-5-git-send-email-sumit.garg@linaro.org>
- <20200527133115.x5hqzttsg73saiky@holly.lan>
- <CAFA6WYNeBDRdRqb8dB5HA923ujD3zq7JEQQnV4WJr_fthCc=GQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYNeBDRdRqb8dB5HA923ujD3zq7JEQQnV4WJr_fthCc=GQ@mail.gmail.com>
+        Thu, 28 May 2020 07:27:41 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:51930 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388270AbgE1L1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:27:40 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590665259; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=PxcTF5qcXa2+jnUc/8q+qdeZeapYDpOgOomfvwsus1c=; b=pmXxheEzenpAj/GEmT8iUBWrn8/H4z+dnYwDe8REjIpx0fBES6lvsvQccQOtfRyE30HKFVcp
+ mjSiiu8XGHUio7AI5OO2JRkEdOCG57WLS3dHE2aH2y+PSysk/e1qKOYum9ZA7TG3kjNTc6W0
+ 9lfoEHGcV6JrzyejbIL5DLiz3+0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5ecfa01f3131442d9512b868 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:27:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4D040C43387; Thu, 28 May 2020 11:27:26 +0000 (UTC)
+Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 69921C433C6;
+        Thu, 28 May 2020 11:27:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 69921C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+From:   Zijun Hu <zijuhu@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org, zijuhu@codeaurora.org
+Subject: [PATCH v3] bluetooth: hci_qca: Fix QCA6390 memdump failure
+Date:   Thu, 28 May 2020 19:27:19 +0800
+Message-Id: <1590665239-18993-1-git-send-email-zijuhu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 11:48:48AM +0530, Sumit Garg wrote:
-> On Wed, 27 May 2020 at 19:01, Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Wed, May 27, 2020 at 11:55:59AM +0530, Sumit Garg wrote:
-> > > In kgdb NMI context, calling console handlers isn't safe due to locks
-> > > used in those handlers which could lead to a deadlock. Although, using
-> > > oops_in_progress increases the chance to bypass locks in most console
-> > > handlers but it might not be sufficient enough in case a console uses
-> > > more locks (VT/TTY is good example).
-> > >
-> > > Currently when a driver provides both polling I/O and a console then kdb
-> > > will output using the console. We can increase robustness by using the
-> > > currently active polling I/O driver (which should be lockless) instead
-> > > of the corresponding console. For several common cases (e.g. an
-> > > embedded system with a single serial port that is used both for console
-> > > output and debugger I/O) this will result in no console handler being
-> > > used.
-> >
-> > Not sure I would have predicted all those changes to kgdboc.c based on
-> > this patch description. I assume this is to help identify which console
-> > matches our dbg_io_ops but it would be good to spell this out.
-> >
-> 
-> Okay, will add the corresponding description.
-> 
-> >
-> > > Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > ---
-> > >  drivers/tty/serial/kgdboc.c | 17 ++++++++---------
-> > >  include/linux/kgdb.h        |  2 ++
-> > >  kernel/debug/kdb/kdb_io.c   | 46 +++++++++++++++++++++++++++++++--------------
-> > >  3 files changed, 42 insertions(+), 23 deletions(-)
-> > >
-> > > diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-> > > index c9f94fa..6199fe1 100644
-> > > --- a/drivers/tty/serial/kgdboc.c
-> > > +++ b/drivers/tty/serial/kgdboc.c
-> > > @@ -35,7 +35,6 @@ static struct kparam_string kps = {
-> > >  };
-> > >
-> > >  static int kgdboc_use_kms;  /* 1 if we use kernel mode switching */
-> > > -static struct tty_driver     *kgdb_tty_driver;
-> > >  static int                   kgdb_tty_line;
-> > >
-> > >  #ifdef CONFIG_KDB_KEYBOARD
-> > > @@ -154,7 +153,7 @@ static int configure_kgdboc(void)
-> > >       }
-> > >
-> > >       kgdboc_io_ops.is_console = 0;
-> > > -     kgdb_tty_driver = NULL;
-> > > +     kgdboc_io_ops.tty_drv = NULL;
-> > >
-> > >       kgdboc_use_kms = 0;
-> > >       if (strncmp(cptr, "kms,", 4) == 0) {
-> > > @@ -178,7 +177,7 @@ static int configure_kgdboc(void)
-> > >               }
-> > >       }
-> > >
-> > > -     kgdb_tty_driver = p;
-> > > +     kgdboc_io_ops.tty_drv = p;
-> > >       kgdb_tty_line = tty_line;
-> > >
-> > >  do_register:
-> > > @@ -216,18 +215,18 @@ static int __init init_kgdboc(void)
-> > >
-> > >  static int kgdboc_get_char(void)
-> > >  {
-> > > -     if (!kgdb_tty_driver)
-> > > +     if (!kgdboc_io_ops.tty_drv)
-> > >               return -1;
-> > > -     return kgdb_tty_driver->ops->poll_get_char(kgdb_tty_driver,
-> > > -                                             kgdb_tty_line);
-> > > +     return kgdboc_io_ops.tty_drv->ops->poll_get_char(kgdboc_io_ops.tty_drv,
-> > > +                                                      kgdb_tty_line);
-> > >  }
-> > >
-> > >  static void kgdboc_put_char(u8 chr)
-> > >  {
-> > > -     if (!kgdb_tty_driver)
-> > > +     if (!kgdboc_io_ops.tty_drv)
-> > >               return;
-> > > -     kgdb_tty_driver->ops->poll_put_char(kgdb_tty_driver,
-> > > -                                     kgdb_tty_line, chr);
-> > > +     kgdboc_io_ops.tty_drv->ops->poll_put_char(kgdboc_io_ops.tty_drv,
-> > > +                                               kgdb_tty_line, chr);
-> > >  }
-> > >
-> > >  static int param_set_kgdboc_var(const char *kmessage,
-> > > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > > index b072aeb..05d165d 100644
-> > > --- a/include/linux/kgdb.h
-> > > +++ b/include/linux/kgdb.h
-> > > @@ -275,6 +275,7 @@ struct kgdb_arch {
-> > >   * for the I/O driver.
-> > >   * @is_console: 1 if the end device is a console 0 if the I/O device is
-> > >   * not a console
-> > > + * @tty_drv: Pointer to polling tty driver.
-> > >   */
-> > >  struct kgdb_io {
-> > >       const char              *name;
-> > > @@ -285,6 +286,7 @@ struct kgdb_io {
-> > >       void                    (*pre_exception) (void);
-> > >       void                    (*post_exception) (void);
-> > >       int                     is_console;
-> > > +     struct tty_driver       *tty_drv;
-> >
-> > Should this be a struct tty_driver or a struct console?
-> >
-> > In other words if the lifetime the console structure is the same as the
-> > tty_driver then isn't it better to capture the console instead
-> > (easier to compare and works with non-tty devices such as the
-> > USB debug mode).
-> >
-> 
-> IIUC, you mean to say we can easily replace "is_console" with "struct
-> console". This sounds feasible and should be a straightforward
-> comparison in order to prefer "dbg_io_ops" over console handlers. So I
-> will switch to use "struct console" instead.
+QCA6390 memdump VSE sometimes come to bluetooth driver
+with wrong sequence number as illustrated as follows:
+frame # in DEC: frame data in HEX
+1396: ff fd 01 08 74 05 00 37 8f 14
+1397: ff fd 01 08 75 05 00 ff bf 38
+1414: ff fd 01 08 86 05 00 fb 5e 4b
+1399: ff fd 01 08 77 05 00 f3 44 0a
+1400: ff fd 01 08 78 05 00 ca f7 41
+it is mistook for controller missing packets, so results
+in page fault after overwriting memdump buffer allocated.
 
-My comment contains an if ("if the lifetime of the console structure is
-the same") so you need to check that it is true before sharing a patch to
-make the change.
+it is fixed by ignoring QCA6390 sequence number error
+and checking buffer space before writing.
 
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 38 insertions(+), 7 deletions(-)
 
-Daniel.
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index e4a6823..f5f4508 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -114,6 +114,7 @@ struct qca_memdump_data {
+ 	char *memdump_buf_tail;
+ 	u32 current_seq_no;
+ 	u32 received_dump;
++	u32 ram_dump_size;
+ };
+ 
+ struct qca_memdump_event_hdr {
+@@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
+ 	char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
+ 	u16 seq_no;
+ 	u32 dump_size;
++	u32 rx_size;
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+ 
+ 	while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
+ 
+@@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
+ 
+ 			skb_pull(skb, sizeof(dump_size));
+ 			memdump_buf = vmalloc(dump_size);
++			qca_memdump->ram_dump_size = dump_size;
+ 			qca_memdump->memdump_buf_head = memdump_buf;
+ 			qca_memdump->memdump_buf_tail = memdump_buf;
+ 		}
+@@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
+ 		 * packets in the buffer.
+ 		 */
+ 		while ((seq_no > qca_memdump->current_seq_no + 1) &&
++		       (soc_type != QCA_QCA6390) &&
+ 			seq_no != QCA_LAST_SEQUENCE_NUM) {
+ 			bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
+ 				   qca_memdump->current_seq_no);
++			rx_size = qca_memdump->received_dump;
++			rx_size += QCA_DUMP_PACKET_SIZE;
++			if (rx_size > qca_memdump->ram_dump_size) {
++				bt_dev_err(hu->hdev,
++					   "QCA memdump received %d, no space for missed packet",
++					   qca_memdump->received_dump);
++				break;
++			}
+ 			memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
+ 			memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
+ 			qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
+ 			qca_memdump->current_seq_no++;
+ 		}
+ 
+-		memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
+-		memdump_buf = memdump_buf + skb->len;
+-		qca_memdump->memdump_buf_tail = memdump_buf;
+-		qca_memdump->current_seq_no = seq_no + 1;
+-		qca_memdump->received_dump += skb->len;
++		rx_size = qca_memdump->received_dump + skb->len;
++		if (rx_size <= qca_memdump->ram_dump_size) {
++			if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
++			    (seq_no != qca_memdump->current_seq_no))
++				bt_dev_err(hu->hdev,
++					   "QCA memdump unexpected packet %d",
++					   seq_no);
++			bt_dev_dbg(hu->hdev,
++				   "QCA memdump packet %d with length %d",
++				   seq_no, skb->len);
++			memcpy(memdump_buf, (unsigned char *)skb->data,
++			       skb->len);
++			memdump_buf = memdump_buf + skb->len;
++			qca_memdump->memdump_buf_tail = memdump_buf;
++			qca_memdump->current_seq_no = seq_no + 1;
++			qca_memdump->received_dump += skb->len;
++		} else {
++			bt_dev_err(hu->hdev,
++				   "QCA memdump received %d, no space for packet %d",
++				   qca_memdump->received_dump, seq_no);
++		}
+ 		qca->qca_memdump = qca_memdump;
+ 		kfree_skb(skb);
+ 		if (seq_no == QCA_LAST_SEQUENCE_NUM) {
+-			bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
+-				   qca_memdump->received_dump);
++			bt_dev_info(hu->hdev,
++				    "QCA memdump Done, received %d, total %d",
++				    qca_memdump->received_dump,
++				    qca_memdump->ram_dump_size);
+ 			memdump_buf = qca_memdump->memdump_buf_head;
+ 			dev_coredumpv(&hu->serdev->dev, memdump_buf,
+ 				      qca_memdump->received_dump, GFP_KERNEL);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
-> 
-> >
-> > >  };
-> > >
-> > >  extern const struct kgdb_arch                arch_kgdb_ops;
-> > > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> > > index f848482..c2efa52 100644
-> > > --- a/kernel/debug/kdb/kdb_io.c
-> > > +++ b/kernel/debug/kdb/kdb_io.c
-> > > @@ -24,6 +24,7 @@
-> > >  #include <linux/kgdb.h>
-> > >  #include <linux/kdb.h>
-> > >  #include <linux/kallsyms.h>
-> > > +#include <linux/tty_driver.h>
-> > >  #include "kdb_private.h"
-> > >
-> > >  #define CMD_BUFLEN 256
-> > > @@ -542,13 +543,18 @@ static int kdb_search_string(char *searched, char *searchfor)
-> > >       return 0;
-> > >  }
-> > >
-> > > -static void kdb_io_write(char *cp, int len, void (*io_put_char)(u8 ch))
-> > > +static void kdb_io_write(char *cp, int len, void (*io_put_char)(u8),
-> > > +                      struct tty_driver *p, int line,
-> > > +                      void (*poll_put_char)(struct tty_driver *, int, char))
-> >
-> > Judging from your reply to comment 1 I guess this is already on the list
-> > to eliminate ;-).
-> >
-> 
-> Yeah.
-> 
-> -Sumit
-> 
-> >
-> > Daniel.
-> >
-> >
-> > >  {
-> > >       if (len <= 0)
-> > >               return;
-> > >
-> > >       while (len--) {
-> > > -             io_put_char(*cp);
-> > > +             if (io_put_char)
-> > > +                     io_put_char(*cp);
-> > > +             if (poll_put_char)
-> > > +                     poll_put_char(p, line, *cp);
-> > >               cp++;
-> > >       }
-> > >  }
-> > > @@ -561,22 +567,34 @@ static void kdb_msg_write(char *msg, int msg_len)
-> > >               return;
-> > >
-> > >       if (dbg_io_ops && !dbg_io_ops->is_console)
-> > > -             kdb_io_write(msg, msg_len, dbg_io_ops->write_char);
-> > > +             kdb_io_write(msg, msg_len, dbg_io_ops->write_char,
-> > > +                          NULL, 0, NULL);
-> > >
-> > >       for_each_console(c) {
-> > > +             int line;
-> > > +             struct tty_driver *p;
-> > > +
-> > >               if (!(c->flags & CON_ENABLED))
-> > >                       continue;
-> > > -             /*
-> > > -              * While rounding up CPUs via NMIs, its possible that
-> > > -              * a rounded up CPU maybe holding a console port lock
-> > > -              * leading to kgdb master CPU stuck in a deadlock during
-> > > -              * invocation of console write operations. So in order
-> > > -              * to avoid such a deadlock, enable oops_in_progress
-> > > -              * prior to invocation of console handlers.
-> > > -              */
-> > > -             ++oops_in_progress;
-> > > -             c->write(c, msg, msg_len);
-> > > -             --oops_in_progress;
-> > > +
-> > > +             p = c->device ? c->device(c, &line) : NULL;
-> > > +             if (p && dbg_io_ops && p == dbg_io_ops->tty_drv && p->ops &&
-> > > +                 p->ops->poll_put_char) {
-> > > +                     kdb_io_write(msg, msg_len, NULL, p, line,
-> > > +                                  p->ops->poll_put_char);
-> > > +             } else {
-> > > +                     /*
-> > > +                      * While rounding up CPUs via NMIs, its possible that
-> > > +                      * a rounded up CPU maybe holding a console port lock
-> > > +                      * leading to kgdb master CPU stuck in a deadlock during
-> > > +                      * invocation of console write operations. So in order
-> > > +                      * to avoid such a deadlock, enable oops_in_progress
-> > > +                      * prior to invocation of console handlers.
-> > > +                      */
-> > > +                     ++oops_in_progress;
-> > > +                     c->write(c, msg, msg_len);
-> > > +                     --oops_in_progress;
-> > > +             }
-> > >               touch_nmi_watchdog();
-> > >       }
-> > >  }
-> > > --
-> > > 2.7.4
-> > >
