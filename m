@@ -2,140 +2,189 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43052C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC04CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E64320721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Uxp1IEw9"
+	by mail.kernel.org (Postfix) with ESMTP id C704320888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbgE1EHE (ORCPT
+        id S1726793AbgE1EHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 00:07:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgE1EHE (ORCPT
+        Thu, 28 May 2020 00:07:46 -0400
+Received: from smtprelay0226.hostedemail.com ([216.40.44.226]:53618 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725830AbgE1EHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 00:07:04 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30459C05BD1E;
-        Wed, 27 May 2020 21:07:04 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8BCEB22FB3;
-        Thu, 28 May 2020 06:07:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590638822;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rP/kD6XYOuzcQV7m9i+yyBmNxwXR7ezLBzXdA5CrG0A=;
-        b=Uxp1IEw9dzZEY2Cpv1whwF4Rc6RpbWmkhCpJsdiqMoNX8zl9m+vQzeKzuoiCJNWjxumixK
-        vew4n+U9W1nhXW7b3u7Ra4vyuP4FoMd4aTjkSy24OIQsyfjTTJRrZvpt/rn/Qnnikmt95v
-        4JN36LCZ7eeKCYzlyI3tRKQ2pdDliC0=
+        Thu, 28 May 2020 00:07:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 8167D18029597;
+        Thu, 28 May 2020 04:07:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: hill77_1b1293126d57
+X-Filterd-Recvd-Size: 8369
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 28 May 2020 04:07:43 +0000 (UTC)
+Message-ID: <d46604df8e64fd91c6fea5073c6cb5eb20184baf.camel@perches.com>
+Subject: Re: [PATCH 1/2] xen-pciback: Use dev_printk() when possible
+From:   Joe Perches <joe@perches.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Juergen Gross <jgross@suse.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed, 27 May 2020 21:07:41 -0700
+In-Reply-To: <612fee00-4e7c-9b90-511d-4efb7676cbed@oracle.com>
+References: <20200527174326.254329-1-helgaas@kernel.org>
+         <20200527174326.254329-2-helgaas@kernel.org>
+         <612fee00-4e7c-9b90-511d-4efb7676cbed@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 28 May 2020 06:07:02 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <fe44039a-4fa9-dab3-cd14-04967b729158@linux.intel.com>
-References: <20200525160741.21729-1-michael@walle.cc>
- <20200525160741.21729-3-michael@walle.cc>
- <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com>
- <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
- <fe44039a-4fa9-dab3-cd14-04967b729158@linux.intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <143ec2f44c881706db9744465328329f@walle.cc>
-X-Sender: michael@walle.cc
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Am 2020-05-28 02:31, schrieb Pierre-Louis Bossart:
-> Hi Michael,
+On Wed, 2020-05-27 at 15:34 -0700, Boris Ostrovsky wrote:
+> On 5/27/20 1:43 PM, Bjorn Helgaas wrote:
+> > @@ -155,8 +157,8 @@ int xen_pcibk_config_read(struct pci_dev *dev, int offset, int size,
+> >  	u32 value = 0, tmp_val;
+> >  
+> >  	if (unlikely(verbose_request))
+> > -		printk(KERN_DEBUG DRV_NAME ": %s: read %d bytes at 0x%x\n",
+> > -		       pci_name(dev), size, offset);
+> > +		dev_printk(KERN_DEBUG, &dev->dev, "read %d bytes at 0x%x\n",
+> > +			   size, offset);
 > 
->>>> +struct gpio_regmap_config {
->>>> +    struct device *parent;
->>>> +    struct regmap *regmap;
->>>> +
->>>> +    const char *label;
->>>> +    int ngpio;
->>> 
->>> could we add a .names field for the gpio_chip, I found this useful 
->>> for
->>> PCM512x GPIO support, e.g.
->> 
->> Sure, I have the names in the device tree.
->> 
->> But I'd prefer that you'd do a patch on top of this (assuming it is
->> applied soon), because you can actually test it and there might be
->> missing more.
-> 
-> I am happy to report that this gpio-regmap worked like a charm for me,
-> after I applied the minor diff below (complete code at
-> https://github.com/plbossart/sound/tree/fix/regmap-gpios).
-> 
-> I worked around my previous comments by forcing the GPIO internal
-> routing directly in regmap, and that allowed me to only play with the
-> _set and _dir bases. I see the LEDs and clock selected as before,
-> quite nice indeed.
-> 
-> The chip->label test is probably wrong, since the gpio_chip structure
-> is zeroed out if(!chip->label) is always true so the label is always
-> set to the device name. I don't know what the intent was so just
-> removed that test - maybe the correct test should be if
-> (!config->label) ?
+> Maybe then dev_dbg() ?
 
-yes, that was a typo. should have been if (!config->label).
+It likely would be better to remove verbose_request altogether
+and just use dynamic debugging and dev_dbg for all the output.
 
-I've send a v5 with that fix and your names property.
+$ git grep -w -A3 verbose_request
+drivers/pci/xen-pcifront.c:static int verbose_request;
+drivers/pci/xen-pcifront.c:module_param(verbose_request, int, 0644);
+drivers/pci/xen-pcifront.c-
+drivers/pci/xen-pcifront.c-static int errno_to_pcibios_err(int errno)
+drivers/pci/xen-pcifront.c-{
+--
+drivers/pci/xen-pcifront.c:	if (verbose_request)
+drivers/pci/xen-pcifront.c-		dev_info(&pdev->xdev->dev,
+drivers/pci/xen-pcifront.c-			 "read dev=%04x:%02x:%02x.%d - offset %x size %d\n",
+drivers/pci/xen-pcifront.c-			 pci_domain_nr(bus), bus->number, PCI_SLOT(devfn),
+--
+drivers/pci/xen-pcifront.c:		if (verbose_request)
+drivers/pci/xen-pcifront.c-			dev_info(&pdev->xdev->dev, "read got back value %x\n",
+drivers/pci/xen-pcifront.c-				 op.value);
+drivers/pci/xen-pcifront.c-
+--
+drivers/pci/xen-pcifront.c:	if (verbose_request)
+drivers/pci/xen-pcifront.c-		dev_info(&pdev->xdev->dev,
+drivers/pci/xen-pcifront.c-			 "write dev=%04x:%02x:%02x.%d - "
+drivers/pci/xen-pcifront.c-			 "offset %x size %d val %x\n",
+--
+drivers/xen/xen-pciback/conf_space.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space.c-		printk(KERN_DEBUG DRV_NAME ": %s: read %d bytes at 0x%x\n",
+drivers/xen/xen-pciback/conf_space.c-		       pci_name(dev), size, offset);
+drivers/xen/xen-pciback/conf_space.c-
+--
+drivers/xen/xen-pciback/conf_space.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space.c-		printk(KERN_DEBUG DRV_NAME ": %s: read %d bytes at 0x%x = %x\n",
+drivers/xen/xen-pciback/conf_space.c-		       pci_name(dev), size, offset, value);
+drivers/xen/xen-pciback/conf_space.c-
+--
+drivers/xen/xen-pciback/conf_space.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space.c-		printk(KERN_DEBUG
+drivers/xen/xen-pciback/conf_space.c-		       DRV_NAME ": %s: write request %d bytes at 0x%x = %x\n",
+drivers/xen/xen-pciback/conf_space.c-		       pci_name(dev), size, offset, value);
+--
+drivers/xen/xen-pciback/conf_space_header.c:		if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space_header.c-			printk(KERN_DEBUG DRV_NAME ": %s: enable\n",
+drivers/xen/xen-pciback/conf_space_header.c-			       pci_name(dev));
+drivers/xen/xen-pciback/conf_space_header.c-		err = pci_enable_device(dev);
+--
+drivers/xen/xen-pciback/conf_space_header.c:		if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space_header.c-			printk(KERN_DEBUG DRV_NAME ": %s: disable\n",
+drivers/xen/xen-pciback/conf_space_header.c-			       pci_name(dev));
+drivers/xen/xen-pciback/conf_space_header.c-		pci_disable_device(dev);
+--
+drivers/xen/xen-pciback/conf_space_header.c:		if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space_header.c-			printk(KERN_DEBUG DRV_NAME ": %s: set bus master\n",
+drivers/xen/xen-pciback/conf_space_header.c-			       pci_name(dev));
+drivers/xen/xen-pciback/conf_space_header.c-		pci_set_master(dev);
+--
+drivers/xen/xen-pciback/conf_space_header.c:		if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space_header.c-			printk(KERN_DEBUG DRV_NAME ": %s: clear bus master\n",
+drivers/xen/xen-pciback/conf_space_header.c-			       pci_name(dev));
+drivers/xen/xen-pciback/conf_space_header.c-		pci_clear_master(dev);
+--
+drivers/xen/xen-pciback/conf_space_header.c:		if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space_header.c-			printk(KERN_DEBUG
+drivers/xen/xen-pciback/conf_space_header.c-			       DRV_NAME ": %s: enable memory-write-invalidate\n",
+drivers/xen/xen-pciback/conf_space_header.c-			       pci_name(dev));
+--
+drivers/xen/xen-pciback/conf_space_header.c:		if (unlikely(verbose_request))
+drivers/xen/xen-pciback/conf_space_header.c-			printk(KERN_DEBUG
+drivers/xen/xen-pciback/conf_space_header.c-			       DRV_NAME ": %s: disable memory-write-invalidate\n",
+drivers/xen/xen-pciback/conf_space_header.c-			       pci_name(dev));
+--
+drivers/xen/xen-pciback/pciback.h:extern int verbose_request;
+drivers/xen/xen-pciback/pciback.h-
+drivers/xen/xen-pciback/pciback.h-void xen_pcibk_test_and_schedule_op(struct xen_pcibk_device *pdev);
+drivers/xen/xen-pciback/pciback.h-#endif
+--
+drivers/xen/xen-pciback/pciback_ops.c:int verbose_request;
+drivers/xen/xen-pciback/pciback_ops.c:module_param(verbose_request, int, 0644);
+drivers/xen/xen-pciback/pciback_ops.c-
+drivers/xen/xen-pciback/pciback_ops.c-static irqreturn_t xen_pcibk_guest_interrupt(int irq, void *dev_id);
+drivers/xen/xen-pciback/pciback_ops.c-
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: enable MSI\n", pci_name(dev));
+drivers/xen/xen-pciback/pciback_ops.c-
+drivers/xen/xen-pciback/pciback_ops.c-	if (dev->msi_enabled)
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: MSI: %d\n", pci_name(dev),
+drivers/xen/xen-pciback/pciback_ops.c-			op->value);
+drivers/xen/xen-pciback/pciback_ops.c-
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: disable MSI\n",
+drivers/xen/xen-pciback/pciback_ops.c-		       pci_name(dev));
+drivers/xen/xen-pciback/pciback_ops.c-
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: MSI: %d\n", pci_name(dev),
+drivers/xen/xen-pciback/pciback_ops.c-			op->value);
+drivers/xen/xen-pciback/pciback_ops.c-	return 0;
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: enable MSI-X\n",
+drivers/xen/xen-pciback/pciback_ops.c-		       pci_name(dev));
+drivers/xen/xen-pciback/pciback_ops.c-
+--
+drivers/xen/xen-pciback/pciback_ops.c:				if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-					printk(KERN_DEBUG DRV_NAME ": %s: " \
+drivers/xen/xen-pciback/pciback_ops.c-						"MSI-X[%d]: %d\n",
+drivers/xen/xen-pciback/pciback_ops.c-						pci_name(dev), i,
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: disable MSI-X\n",
+drivers/xen/xen-pciback/pciback_ops.c-			pci_name(dev));
+drivers/xen/xen-pciback/pciback_ops.c-
+--
+drivers/xen/xen-pciback/pciback_ops.c:	if (unlikely(verbose_request))
+drivers/xen/xen-pciback/pciback_ops.c-		printk(KERN_DEBUG DRV_NAME ": %s: MSI-X: %d\n",
+drivers/xen/xen-pciback/pciback_ops.c-		       pci_name(dev), op->value);
+drivers/xen/xen-pciback/pciback_ops.c-	return 0;
 
-> I added the names support as well, and btw I don't understand how one
-> would get them through device tree?
 
-gpio-line-names property, see
-Documentation/devicetree/bindings/gpio/gpio.txt.
-
-> I still have a series of odd warnings I didn't have before:
-> 
-> [  101.400263] WARNING: CPU: 3 PID: 1129 at
-> drivers/gpio/gpiolib.c:4084 gpiod_set_value+0x3f/0x50
-> 
-> This seems to come from
-> 	/* Should be using gpiod_set_value_cansleep() */
-> 	WARN_ON(desc->gdev->chip->can_sleep);
-
-Right now, gpio-regmap hardcodes can_sleep to true. But the only regmap
-which don't sleep is regmap-mmio. The PCM512x seems to be either I2C or
-SPI, which can both sleep. So this warning is actually correct and
-wherever this gpio is set should do it by calling the _cansleep()
-version.
-
-> so maybe we need an option here as well? Or use a different function?
-> 
-> Anyways, that gpio-regmap does simplify my code a great deal so thanks
-> for this work, much appreciated.
-
-Glad to see that there are more users for it ;)
-
--michael
