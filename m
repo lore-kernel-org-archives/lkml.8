@@ -2,173 +2,157 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E79C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2665BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DA020776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OmJBhJ/0"
+	by mail.kernel.org (Postfix) with ESMTP id F35D120776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590707564;
+	bh=VGj2i8flL9JlQmAgKNzGrKzB+vOOk0rvJ232QmrQW+U=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=snUV6WD4WwMaHG+8L3C8hNeNUjP0GQjm15JE6kBNwPWrmeDG7ZtS6BK+Kz+DzLXLD
+	 CosPIcl5Ijn+fN46HLv54CGQo9z1nm4aFh+Q4NOBnW/7xaLIyjVvpxCRcuUiJJBeAP
+	 RRKj6MptE4HP9twR62sUl/g9LixQddmajO8dvrMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391558AbgE1XLM (ORCPT
+        id S2391562AbgE1XMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389436AbgE1XLE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:11:04 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C02FC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:11:03 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh7so197417plb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hhHN359Ew47gJ5gX5WV0SNMAZS6D9j63wv90uny4S/0=;
-        b=OmJBhJ/0IOIFDk5mPrGlIKKqb2/s3ePzbjtaWJQDOCZlPx/tukVzOJxLUVy8+usxc9
-         ie2xnQk1GQKWJFPEEfspASUg4SxD6HOIkE3LbppNsxHjIOu1OpFsAj8zTc/AcsY+rjaZ
-         jRReSg1yY82ZNFp0NLVC3jH2lqR5KyWzJ63Wg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hhHN359Ew47gJ5gX5WV0SNMAZS6D9j63wv90uny4S/0=;
-        b=QKAUvxsRKgEX7rwvMM74VpBr4VGqSbZbKVYUjYm3Gfq7ZDccMoMDGAwQVwo9BUPzmG
-         zO9WuQXpHwXTJtE9lIPvoKoTQMIv+QXBNhu75P/sLv0aEtH/ZCI+MWInsxGa8C+KJr94
-         xqeq8FTMQu51UdmiM1ug6Ftlbdpln2in9+kzS0ERojQsep1praNgs0JWK2i+BQJygYIw
-         dLGpgj8EMdwSfL0Xu1rG0ygPuT32GLfuh11LQGqS5k70QUlOon09iO7EYhr87t2N5lcK
-         GRKmTqBIDOyE8jeM5gK6WUtYnSMNsl6Bj8ahpPoJilY3ayvA4GxN/Ib4nyp6pZJRumq5
-         8zUg==
-X-Gm-Message-State: AOAM532XvIxnO6aVbGUgKKl5seO4RbzUmYLlzh4gpu/32Ra4HW3aDmxT
-        Kb/cAy3b8qyR7R2/PBGdTDLGRSMCmVzTjg==
-X-Google-Smtp-Source: ABdhPJwLHjBFG1zCoyVNQBoVW72L17zkcrxlZ82pL3WrE04iAHIMsfVEpLPHDZHbFqpOFoBq2SV78g==
-X-Received: by 2002:a17:90a:f0cd:: with SMTP id fa13mr6055915pjb.95.1590707462976;
-        Thu, 28 May 2020 16:11:02 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x20sm5422372pfc.211.2020.05.28.16.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 16:11:01 -0700 (PDT)
-Date:   Thu, 28 May 2020 16:11:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Matt Denton <mpdenton@google.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Robert Sesek <rsesek@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Linux Containers <containers@lists.linux-foundation.org>
-Subject: Re: [PATCH v2 1/2] seccomp: notify user trap about unused filter
-Message-ID: <202005281404.276641223F@keescook>
-References: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+        Thu, 28 May 2020 19:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389436AbgE1XMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 19:12:39 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B6E520776;
+        Thu, 28 May 2020 23:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590707558;
+        bh=VGj2i8flL9JlQmAgKNzGrKzB+vOOk0rvJ232QmrQW+U=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=SObhxzW0L9TD8+lQKsRJoVJbBChIFc11d9J4X/Xct+03ugNYxr56U2xTRNwgn7dHB
+         aExWegMQLCmeVfn7ykME1aGYMtvOKHaaYYjziXI/cHRzY7cDqQV20dImop//7idsQ9
+         id34cjmGl/0MApGajyGtOqF4UTajggOQNMSVEIZ0=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528151412.265444-1-christian.brauner@ubuntu.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2c8cd31a-46ba-ec6a-67a7-f3d9abe561ff@xilinx.com>
+References: <1584048699-24186-1-git-send-email-jolly.shah@xilinx.com> <1584048699-24186-3-git-send-email-jolly.shah@xilinx.com> <159054169658.88029.371843532116000844@swboyd.mtv.corp.google.com> <2c8cd31a-46ba-ec6a-67a7-f3d9abe561ff@xilinx.com>
+Subject: Re: [PATCH v2 2/2] drivers: clk: zynqmp: Update fraction clock check from custom type flags
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>
+To:     Jolly Shah <jolly.shah@xilinx.com>, arm@kernel.org,
+        linux-clk@vger.kernel.org, michal.simek@xilinx.com,
+        mturquette@baylibre.com, olof@lixom.net
+Date:   Thu, 28 May 2020 16:12:37 -0700
+Message-ID: <159070755756.69627.18401650656284023600@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:14:11PM +0200, Christian Brauner wrote:
->   * @usage: reference count to manage the object lifetime.
->   *         get/put helpers should be used when accessing an instance
->   *         outside of a lifetime-guarded section.  In general, this
->   *         is only needed for handling filters shared across tasks.
-> [...]
-> + * @live: Number of tasks that use this filter directly and number
-> + *	  of dependent filters that have a non-zero @live counter.
-> + *	  Altered during fork(), exit(), and filter installation
-> [...]
->  	refcount_set(&sfilter->usage, 1);
-> +	refcount_set(&sfilter->live, 1);
+Quoting Jolly Shah (2020-05-28 10:44:01)
+> Hi Stephan,
+>=20
+> Thanks for the review.
+>=20
+>  > ------Original Message------
+>  > From: Stephen Boyd <sboyd@kernel.org>
+>  > Sent:  Tuesday, May 26, 2020 6:08PM
+>  > To: Jolly Shah <jolly.shah@xilinx.com>, Arm <arm@kernel.org>,=20
+> Linux-clk <linux-clk@vger.kernel.org>, Michal Simek=20
+> <michal.simek@xilinx.com>, Mturquette <mturquette@baylibre.com>, Olof=20
+> <olof@lixom.net>
+>  > Cc: Rajan Vaja <rajanv@xilinx.com>,=20
+> Linux-arm-kernel@lists.infradead.org=20
+> <linux-arm-kernel@lists.infradead.org>, Linux-kernel@vger.kernel.org=20
+> <linux-kernel@vger.kernel.org>, Tejas Patel <tejas.patel@xilinx.com>,=20
+> Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jolly.shah@xilinx.com>
+>  > Subject: Re: [PATCH v2 2/2] drivers: clk: zynqmp: Update fraction=20
+> clock check from custom type flags
+>  >
+> > Quoting Jolly Shah (2020-03-12 14:31:39)
+> >> From: Tejas Patel <tejas.patel@xilinx.com>
+> >>
+> >> Older firmware version sets BIT(13) in clkflag to mark a
+> >> divider as fractional divider. Updated firmware version sets BIT(4)
+> >> in type flags to mark a divider as fractional divider since
+> >> BIT(13) is defined as CLK_DUTY_CYCLE_PARENT in the common clk
+> >> framework flags.
+> >>
+> >> To support both old and new firmware version, consider BIT(13) from
+> >> clkflag and BIT(4) from type_flag to check if divider is fractional
+> >> or not.
+> >>
+> >> To maintain compatibility BIT(13) of clkflag in firmware will not be
+> >> used in future for any purpose and will be marked as unused.
+> >=20
+> > Why are we mixing the firmware flags with the ccf flags? They shouldn't
+> > be the same. The firmware should have its own 'flag numberspace' that is
+> > distinct from the common clk framework's 'flag numberspace'. Please fix
+> > the code.
+> >=20
+>=20
+> Yes firmware flags are using separate numberspace now. Firmware=20
+> maintains CCF and firmware specific flags separately but earlier=20
+> CLK_FRAC was mistakenly defined in ccf flagspace and hence handled here=20
+> for backward compatibility. Driver takes care of not registering same=20
+> with CCF. Let me know if I misunderstood.
 
-I'd like these reference counters to have more descriptive names. "usage"
-by what? "live" from what perspective? At the least, I think we need
-to be explicit in the comment, and at best we should do that and rename
-them to be a bit more clear.
+Why is the firmware maintaining CCF specific flags? The firmware
+shouldn't know about the CCF flag numbering at all. We can change the
+numbers that the CCF flags are assigned to randomly and that shouldn't
+mean that the firmware needs to change. Maybe I should apply this patch?
 
-A filter's "usage" is incremented for each directly-attached task
-(task::seccomp_data.filter, via fork() or thread_sync), once for the
-dependent filter (filter::prev), and once for an open user_notif file
-(file::private_data). When it reaches zero, there are (should be) no more
-active memory references back to the struct filter and it can be freed.
-
-A filter's "live" is incremented for each directly-attached task
-(task::seccomp_data.filter, via fork() or thread_sync), and once for
-the dependent filter (filter::prev). When it reaches zero there is no
-way for new tasks to get associated with the filter, but there may still
-be user_notif file::private_data references pointing at the filter.
-
-But we're tracking "validity lifetime" (live) and "memory reference
-safety" (usage).
-
-signal_struct has "sigcnt" and "live". I find "sigcnt" to be an
-unhelpful name too. (And why isn't it refcount_t?)
-
-So, perhaps leave "live", but rename "usage" -> "references".
-
-After looking at these other lifetime management examples in the kernel,
-I'm convinced that tracking these states separately is correct, but I
-remain uncomfortable about task management needing to explicitly make
-two calls to let go of the filter.
-
-I wonder if release_task() should also detach the filter from the task
-and do a put_seccomp_filter() instead of waiting for task_free(). This
-is supported by the other place where seccomp_filter_release() is
-called:
-
-> @@ -396,6 +400,7 @@ static inline void seccomp_sync_threads(unsigned long flags)
->  		 * allows a put before the assignment.)
->  		*/
->   		put_seccomp_filter(thread);
-> +		seccomp_filter_release(thread);
-
-This would also remove the only put_seccomp_filter() call outside of
-seccomp.c, since the free_task() call will be removed now in favor of
-the task_release() call.
-
-So, is it safe to detach the filter in release_task()? Has dethreading
-happened yet? i.e. can we race TSYNC? -- is there a possible
-inc-from-zero? (Actually, all our refcount_inc()s should be
-refcount_inc_not_zero() just for robustness.) I *think* we can do it
-before the release_thread() call (instead of after cgroup_release()).
-
-With that, then seccomp_filter_release() could assign the filter to NULL
-and do the clean up:
-
-void seccomp_filter_release(const struct task_struct *tsk)
-{
-	struct seccomp_filter *orig = READ_ONCE(tsk->seccomp.filter);
-
-	smp_store_release(&tsk->seccomp.filter, NULL);
-	__seccomp_filter_release(orig);
-}
-
-All other refcounting is then internal to seccomp.c. Which brings me
-back to TSYNC, since we don't want to write NULL to task->seccomp.filter
-during TSYNC. TSYNC can use:
-
-void __seccomp_filter_release(struct seccomp_filter *filter)
-{
-	while (filter && refcount_dec_and_test(&filter->live)) {
-		if (waitqueue_active(&filter->wqh))
-			wake_up_poll(&filter->wqh, EPOLLHUP);
-		filter = filter->prev;
-	}
-	__put_seccomp_filter(filter);
-}
-
-Thoughts?
-
--- 
-Kees Cook
+---8<----
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index bd1ee9039558..c1f36bca85b0 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -16,22 +16,22 @@
+  *
+  * Please update clk_flags[] in drivers/clk/clk.c when making changes here!
+  */
+-#define CLK_SET_RATE_GATE	BIT(0) /* must be gated across rate change */
+-#define CLK_SET_PARENT_GATE	BIT(1) /* must be gated across re-parent */
+-#define CLK_SET_RATE_PARENT	BIT(2) /* propagate rate change up one level */
+-#define CLK_IGNORE_UNUSED	BIT(3) /* do not gate even if unused */
++#define CLK_SET_RATE_GATE	BIT(13) /* must be gated across rate change */
++#define CLK_SET_PARENT_GATE	BIT(2) /* must be gated across re-parent */
++#define CLK_SET_RATE_PARENT	BIT(3) /* propagate rate change up one level */
++#define CLK_IGNORE_UNUSED	BIT(4) /* do not gate even if unused */
+ 				/* unused */
+ 				/* unused */
+-#define CLK_GET_RATE_NOCACHE	BIT(6) /* do not use the cached clk rate */
+-#define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate change =
+*/
+-#define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk accur=
+acy */
+-#define CLK_RECALC_NEW_RATES	BIT(9) /* recalc rates after notifications */
+-#define CLK_SET_RATE_UNGATE	BIT(10) /* clock needs to run to set rate */
+-#define CLK_IS_CRITICAL		BIT(11) /* do not gate, ever */
++#define CLK_GET_RATE_NOCACHE	BIT(5) /* do not use the cached clk rate */
++#define CLK_SET_RATE_NO_REPARENT BIT(6) /* don't re-parent on rate change =
+*/
++#define CLK_GET_ACCURACY_NOCACHE BIT(7) /* do not use the cached clk accur=
+acy */
++#define CLK_RECALC_NEW_RATES	BIT(8) /* recalc rates after notifications */
++#define CLK_SET_RATE_UNGATE	BIT(9) /* clock needs to run to set rate */
++#define CLK_IS_CRITICAL		BIT(10) /* do not gate, ever */
+ /* parents need enable during gate/ungate, set rate and re-parent */
+-#define CLK_OPS_PARENT_ENABLE	BIT(12)
++#define CLK_OPS_PARENT_ENABLE	BIT(11)
+ /* duty cycle call may be forwarded to the parent clock */
+-#define CLK_DUTY_CYCLE_PARENT	BIT(13)
++#define CLK_DUTY_CYCLE_PARENT	BIT(12)
+=20
+ struct clk;
+ struct clk_hw;
