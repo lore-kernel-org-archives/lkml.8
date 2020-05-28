@@ -2,128 +2,85 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8834C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C16C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B607E2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:55:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwLfe/3a"
+	by mail.kernel.org (Postfix) with ESMTP id 4E263206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590677731;
+	bh=1+0Mgnz53w/RdoAvOb2WEd3xtONTE02iakPJTjv6xSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TqNgDMJCZdrcmpf018atWXHQJOky1iA77e1XN3V76H8XV3aTD84JAiuXMlivDb//7
+	 OHAhzvMUTQqj4ur3pJBBizWk8MGPAYfRno5rR0O2qjTyYXRwHBZBnepMj6uEquUCvn
+	 LehP8c0Mojq6AJ71n9PcURcMB+Qp+vyDb7kFG5jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391397AbgE1OzP (ORCPT
+        id S2391407AbgE1Oza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391243AbgE1OzM (ORCPT
+        Thu, 28 May 2020 10:55:30 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37170 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391314AbgE1Oz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:55:12 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C954C08C5C6;
-        Thu, 28 May 2020 07:55:11 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x12so237622qts.9;
-        Thu, 28 May 2020 07:55:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8fDtT8fxoWMZKuCE4A3ueXu/4+g3beNQHT10KDX2tp4=;
-        b=XwLfe/3ameHGyYmFJctvjYyZ/Hrqqdv/LhlnNE9jH36lB9bMhIDDazYPJys17C9F95
-         mpws0ttpYW4c+5zkXfs9Eqd1izrUC0d2khJXFbRnuz7QkJ6bSCpGYIyGzDXQm31ohIEY
-         ip50hxZattFBxScSoD2C86SrbNS+GqtJt0kiKaaVPI0l4KKLUT217Juam32wKJvdxHLS
-         /uU+ARFwalWJnWeglc/lrNy6M6WCjV6w4VeUdNoFpyfByS38Agq6Y+0glXExDy7RCK0o
-         zItr5c34ysJAhDgsi+QZD/xwIshd/8Fhs1HCEMjZMtg7tYMHpZBvB/GRXoHAkJhnmjpP
-         5C8w==
+        Thu, 28 May 2020 10:55:28 -0400
+Received: by mail-io1-f68.google.com with SMTP id r2so19953710ioo.4;
+        Thu, 28 May 2020 07:55:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8fDtT8fxoWMZKuCE4A3ueXu/4+g3beNQHT10KDX2tp4=;
-        b=E/06O7YvpIKA3Q4Dh0x/WqF5NdfxebrFLw2jUTNixWIJalV+mXwnyuVkUf3RpzOh+a
-         CU5nL8Hhbli6m0dsh2ZylJthlybZME74XhZSajQ8LRdYM+aaqgPIz1oHUw8ErhTEnlDI
-         UwNX2SiyW6/thsTjkPo0lHxJ2yG0Iw5TnOZm9gi0WlFR/qEytthSOWkIz0kZOdoFHBuh
-         Mw4z4khuj6KzNF5iAaUjw48OjBcER47+QATN+oc0B83nGGxT9Smyn7Rx6emSm5IJlKGt
-         aq40wVUBgX8fEeZJIq23CLrd5XBhB9GNz9+uMzZbPS/Mmq3OzElTCs6jbFfCG7+REUw4
-         wHGg==
-X-Gm-Message-State: AOAM531jEup6HPxCoo909g2MKBFixfbw4UwsNGsxTSHugazKu0MTP/iA
-        wlsjrVwknep6f/ipz9su0BhwNhRcOHY=
-X-Google-Smtp-Source: ABdhPJzd+miIG7j3zJsRi4acaIMp0KEZ79MrrFoqs2EUvHOu+NFhJhZeq3D0AgiZcleoNKvhzDUz5Q==
-X-Received: by 2002:ac8:754c:: with SMTP id b12mr3514774qtr.282.1590677710647;
-        Thu, 28 May 2020 07:55:10 -0700 (PDT)
-Received: from ?IPv6:2601:282:803:7700:2840:9137:669d:d1e7? ([2601:282:803:7700:2840:9137:669d:d1e7])
-        by smtp.googlemail.com with ESMTPSA id g47sm3253687qtk.53.2020.05.28.07.55.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 07:55:09 -0700 (PDT)
-Subject: Re: [PATCH][net-next] nexthop: fix incorrect allocation failure on
- nhg->spare
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Colin King <colin.king@canonical.com>,
-        David Ahern <dsahern@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200528145114.420100-1-colin.king@canonical.com>
- <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <c557d49d-b3ab-be82-d879-39f2e2098c47@gmail.com>
-Date:   Thu, 28 May 2020 08:55:08 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V9q1pziYt0m1nKSry3Jo6IofP6yHLLawIxH8HrvbkSs=;
+        b=eYAGGGqR6Mh7wTfu4GebqMW/1iwZsS3J0fxs+PbJH1RgeSjgolEXffTrn4OVYZQP+G
+         kSDVHLHFcXxsRcu46rKNn276I6UPdbpdwLM991yeSqDx8OOkXYGWEr7B2zVl6J6ru3v5
+         IhFZkZ3JiLM12QQ337xWGG3MT5UeQGHCEEUWdwMPqUU13RvjCOtMGTC21Rtz8X4DSHF/
+         7sIbO0Vkbw1gycTsuHADF+hHNSsQXnZHVWrsB6obGYFs9upFeJeANNwyoSNV3iMQn57N
+         cj9VHN0j5KaHovSXW4U/XHRhmOArADO9MZY48e945ii5kqxUzKngGBHqcVA9mbFf+Bl3
+         +Ebw==
+X-Gm-Message-State: AOAM531CmrQVJMlwTwUi6XyzAIWow4TIUAMLEwybH1w01zRM7H2dsElJ
+        xDCImTqnRE7dBsr71oPZ2w==
+X-Google-Smtp-Source: ABdhPJxgsg0zCerw2qnN08IcsRx2AWNyPK9QS8PlC0mEQceT82QnF20dOb575GIlcF9ISPrl8ADfXQ==
+X-Received: by 2002:a5d:860b:: with SMTP id f11mr2576671iol.104.1590677725988;
+        Thu, 28 May 2020 07:55:25 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id w26sm3482778ill.19.2020.05.28.07.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:55:24 -0700 (PDT)
+Received: (nullmailer pid 52001 invoked by uid 1000);
+        Thu, 28 May 2020 14:55:23 -0000
+Date:   Thu, 28 May 2020 08:55:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, agross@kernel.org,
+        linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        balbi@kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v3 3/3] dt-bindings: usb: dwc3: Add entry for tx-fifo-resize
+Message-ID: <20200528145523.GA51866@bogus>
+References: <1590630363-3934-1-git-send-email-wcheng@codeaurora.org>
+ <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590630363-3934-4-git-send-email-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 8:53 AM, Nikolay Aleksandrov wrote:
-> On 28/05/2020 17:51, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> The allocation failure check for nhg->spare is currently checking
->> the pointer nhg rather than nhg->spare which is never false. Fix
->> this by checking nhg->spare instead.
->>
->> Addresses-Coverity: ("Logically dead code")
->> Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  net/ipv4/nexthop.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
->> index ebafa5ed91ac..97423d6f2de9 100644
->> --- a/net/ipv4/nexthop.c
->> +++ b/net/ipv4/nexthop.c
->> @@ -1185,7 +1185,7 @@ static struct nexthop *nexthop_create_group(struct net *net,
->>  
->>  	/* spare group used for removals */
->>  	nhg->spare = nexthop_grp_alloc(num_nh);
->> -	if (!nhg) {
->> +	if (!nhg->spare) {
->>  		kfree(nhg);
->>  		kfree(nh);
->>  		return NULL;
->>
+On Wed, 27 May 2020 18:46:03 -0700, Wesley Cheng wrote:
+> Re-introduce the comment for the tx-fifo-resize setting for the DWC3
+> controller.  This allows for vendors to control if they require the TX FIFO
+> resizing logic on their HW, as the default FIFO size configurations may
+> already be sufficient.
 > 
-> Good catch, embarrassing copy paste error :-/
-> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 
-I missed that as well.
-
-Reviewed-by: David Ahern <dsahern@gmail.com>
-
-Patch needs to go to -net
+Acked-by: Rob Herring <robh@kernel.org>
