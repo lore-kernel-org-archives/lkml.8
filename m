@@ -2,88 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3671DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7222072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:54:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590688452;
-	bh=+Ve9zokIrQzTVNOgy8RCXY3l+nBlJOKxQ+nR8Acns7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UxX6ZEmRkDm3XB5NRXcqVuYsJKOn5P8IuEHUG99sjrae5adf7g2Uj3boaQ7Y3/esM
-	 rcsYl8lIdYTHDMhMB1fGSyWJnf/JcFzmo4dFSSdwcJTotInJAiOTqGfUhm2elz6ZND
-	 U5ptz+n6sTAFBhKnGP02y/ZbEI1ZLH+peUmjrIr8=
+	by mail.kernel.org (Postfix) with ESMTP id 0170A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="t561ZdNZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405665AbgE1RyL (ORCPT
+        id S2405687AbgE1R4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:54:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35117 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405636AbgE1RyI (ORCPT
+        Thu, 28 May 2020 13:56:04 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36186 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405666AbgE1R4C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:54:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id s18so17067655ioe.2;
-        Thu, 28 May 2020 10:54:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BXLE+hw0w6RsVL8ujWxDddinVNOPcbe8oeBiGx4U4y0=;
-        b=Omn6ncrsA0wqpeEsY8d0dQtfshZ75h0jp1aP0iJPskVjw81XLu3Y14+8wRXuh9KKZb
-         6I8VH+UWsG5itUGKzBjPGzTG4hANxG0HsHw7VTIslxefe8hlVT78a6dJf5u+e2UjAx3Q
-         P1arSfMORRfTWNO0Mdno2coA3/fBt3zA3LgYUNb4ntsh0byL0QNKmF/HLRqgR1qjppCk
-         xYbEvgso1TCfgLXzynpmxQHVuJ+UONWPYFX0J+pwR7/l/FKCI1i8TL8hF1VJNr+dR3w5
-         nOvJGx/+dBNwu5ni2cWAg3ebpdCpUofPo+0cqHLRbWydLftsys/9WhY7OCYZz4yrrvv7
-         yv1w==
-X-Gm-Message-State: AOAM530/jZclg2tR55RypHGddv3Ud/lJSQzc17In+wSy8ey/wgWZLSgF
-        w2WcSjEETWenWFWQcYub/w==
-X-Google-Smtp-Source: ABdhPJzdsnGxr8r+P/rlFxY5YLuI/SYV2Z9WGs0abHlvHKPzWqYRrgz+p4NnKzOb6gC0k77vqvF6Xg==
-X-Received: by 2002:a5d:965a:: with SMTP id d26mr3299182ios.33.1590688447831;
-        Thu, 28 May 2020 10:54:07 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v14sm3418726ilm.66.2020.05.28.10.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 10:54:07 -0700 (PDT)
-Received: (nullmailer pid 399169 invoked by uid 1000);
-        Thu, 28 May 2020 17:54:06 -0000
-Date:   Thu, 28 May 2020 11:54:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     sre@kernel.org, krzk@kernel.org, jonghwa3.lee@samsung.com,
-        tglx@linutronix.de, kstewart@linuxfoundation.org,
-        baolin.wang7@gmail.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/10] dt-bindings: power: supply: Cleanup
- charger-manager bindings
-Message-ID: <20200528175406.GA391088@bogus>
-References: <20200514230435.11798-1-xc-racer2@live.ca>
- <BN6PR04MB0660E57423994D19C84370A3A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Thu, 28 May 2020 13:56:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SHWB8p183841;
+        Thu, 28 May 2020 17:55:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Vtk1hI60ceUqtfvvIssc64/X2M+5Zc6s3CCA7Ch7H/s=;
+ b=t561ZdNZeLWgHo2cppHZZ2OxxnqjM2w7fvoAFV+MC5hwpEERhkGN1RmVOKh6/8aaSmLV
+ qnKQ/myHGb2j4QKdDSn1MPPhFkPCuImNQ/Sk4KtXxdpZ3OX5eka/KOJ90SkXxWzshIbG
+ q+gJHZmlV12SbSDhoDeZsjA3BCJQjTv+s5AhKLhyfsNxcsowVnUZGmfmzTyWUu5Z8xIx
+ 3n4GOKYo7/bu86kDsgB3eGjnOI1h21F0fCtb9TbCJx8XdAvLswCSrJNEo3JJTAi8t88f
+ lvDCuprlYo2sRg92M1LeBj4rEccjwJYJA+4ViKUKjdQElobaLrcg6sHOZkYFr7bo+xtJ Ig== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 318xe1peqq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 17:55:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SHWwPL158636;
+        Thu, 28 May 2020 17:53:56 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 317ds30m4w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 May 2020 17:53:56 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04SHrtAe010100;
+        Thu, 28 May 2020 17:53:55 GMT
+Received: from localhost (/10.159.250.122)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 10:53:54 -0700
+Date:   Thu, 28 May 2020 10:53:53 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH 09/12] xfs: flag files as supporting buffered async reads
+Message-ID: <20200528175353.GB8204@magnolia>
+References: <20200526195123.29053-1-axboe@kernel.dk>
+ <20200526195123.29053-10-axboe@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660E57423994D19C84370A3A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <20200526195123.29053-10-axboe@kernel.dk>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 suspectscore=1 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 cotscore=-2147483648 mlxscore=0 bulkscore=0
+ priorityscore=1501 phishscore=0 lowpriorityscore=0 malwarescore=0
+ clxscore=1011 impostorscore=0 suspectscore=1 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 04:04:35PM -0700, Jonathan Bakker wrote:
-> The bindings for charger-manager were very unclear and didn't
-> specify allowable values in many cases.  Clean these up to show
-> what each value does and make sure all properties are documented
-> here rather than using wildcards.
+On Tue, May 26, 2020 at 01:51:20PM -0600, Jens Axboe wrote:
+> XFS uses generic_file_read_iter(), which already supports this.
 > 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+
+Er... I guess that looks ok?  Assuming you've done enough qa on
+io_uring to be able to tell if this breaks anything, since touching the
+mm always feels murky to me:
+
+Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+--D
+
 > ---
->  .../bindings/power/supply/charger-manager.txt | 30 ++++++++++++-------
->  1 file changed, 20 insertions(+), 10 deletions(-)
-
-I guess you're just documenting what already exists, but I think this is 
-not really a binding we want to continue using...
-
-Acked-by: Rob Herring <robh@kernel.org>
+>  fs/xfs/xfs_file.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 4b8bdecc3863..97f44fbf17f2 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -1080,7 +1080,7 @@ xfs_file_open(
+>  		return -EFBIG;
+>  	if (XFS_FORCED_SHUTDOWN(XFS_M(inode->i_sb)))
+>  		return -EIO;
+> -	file->f_mode |= FMODE_NOWAIT;
+> +	file->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.26.2
+> 
