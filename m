@@ -2,126 +2,128 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3BCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4C2207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F68207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="tbyE9CsE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VDbKzp31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405339AbgE1RDS (ORCPT
+        id S2405347AbgE1REJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405249AbgE1RDG (ORCPT
+        Thu, 28 May 2020 13:04:09 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48912 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405249AbgE1REG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:03:06 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82581C08C5C6;
-        Thu, 28 May 2020 10:03:06 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 36CAE22F00;
-        Thu, 28 May 2020 19:03:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590685383;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kRkWyHSLP+PL3/CxPz0W0cQ0NOZCetcZm+7o0UT7twM=;
-        b=tbyE9CsEUfcgu9qiNTD4RRHyuT8jaCqXf8fhiMhYakyCflnyrP0+rzLBNxzepbyDYFU9CU
-        QF4t94w/I1IbVDRB5XsmMo7TWtt02BuApwgCcqtFPGXslSpZp/RlloZPIkCUubSAGfWyAm
-        1qI5UU0X5vczZ2464tBCKGymJPCVVeE=
+        Thu, 28 May 2020 13:04:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sPK2AUkVbYrlBIuEiT/LezDNFauHztnHTLMpmUaLaBQ=; b=VDbKzp31VwCdMbkSQ//1HtPXzL
+        FOrZOd4XaGbi+3rVJzohXjInNfJEH9pLvG8MplMMPD0ZBy7cCVzwG5rdyA8mcZAHXwPmjrXRFQbj1
+        +wO5lranokB6cgL+Z+OkN/WLfs14z0VoRKZJOlJ4MKHWO9ElQXAGCVWQ6XmrH+mQZhL41cgumt/cc
+        lAkQ4hlF5wt61fH8+WwVXShA060OwlfcZQesZVJU8Uvw8BAJVV8t7TalZqKpb+gbM9yDJnmYeYsts
+        6ckUUh0W7TD7D57ka0+kuBoDuARPGfuVn3iwr5Hf9SgIPFPo05ZJreTE7qYXMa6RsbbC9izz7X2dL
+        SY9n9xzg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeLuM-0006fT-Po; Thu, 28 May 2020 17:01:30 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4057E9836F8; Thu, 28 May 2020 19:01:28 +0200 (CEST)
+Date:   Thu, 28 May 2020 19:01:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
+Message-ID: <20200528170128.GN2483@worktop.programming.kicks-ass.net>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520222642.70679-1-joel@joelfernandes.org>
+ <20200521085122.GF325280@hirez.programming.kicks-ass.net>
+ <20200521134705.GA140701@google.com>
+ <20200522125905.GM325280@hirez.programming.kicks-ass.net>
+ <20200522213524.GD213825@google.com>
+ <20200524140046.GA5598@lorien.usersys.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 May 2020 19:03:02 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v6 2/3] gpio: add a reusable generic gpio_chip using
- regmap
-In-Reply-To: <adb4eba6-c6c4-a403-dead-1951050eec26@linux.intel.com>
-References: <20200528145845.31436-1-michael@walle.cc>
- <20200528145845.31436-3-michael@walle.cc>
- <adb4eba6-c6c4-a403-dead-1951050eec26@linux.intel.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <7d281a1e30ea40837ab1a156c561ca6b@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200524140046.GA5598@lorien.usersys.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-28 17:55, schrieb Pierre-Louis Bossart:
->> +    /* if we have a direction register we need both input and
->> output */
->> +    if ((config->reg_dir_out_base || config->reg_dir_in_base) &&
->> +        (!config->reg_dat_base || !config->reg_set_base))
->> +        return ERR_PTR(-EINVAL);
->  This failed for me since I didn't have the 'dat' base assigned. I
-> still can't figure out what 'dat' stands for...I just assigned it to
-> the same offset as the 'set' base but really don't understand what
-> this is supposed to do.
+On Sun, May 24, 2020 at 10:00:46AM -0400, Phil Auld wrote:
+> On Fri, May 22, 2020 at 05:35:24PM -0400 Joel Fernandes wrote:
+> > On Fri, May 22, 2020 at 02:59:05PM +0200, Peter Zijlstra wrote:
+> > [..]
+> > > > > It doens't allow tasks for form their own groups (by for example setting
+> > > > > the key to that of another task).
+> > > > 
+> > > > So for this, I was thinking of making the prctl pass in an integer. And 0
+> > > > would mean untagged. Does that sound good to you?
+> > > 
+> > > A TID, I think. If you pass your own TID, you tag yourself as
+> > > not-sharing. If you tag yourself with another tasks's TID, you can do
+> > > ptrace tests to see if you're allowed to observe their junk.
+> > 
+> > But that would require a bunch of tasks agreeing on which TID to tag with.
+> > For example, if 2 tasks tag with each other's TID, then they would have
+> > different tags and not share.
 
-DAT is the data register, aka input register, if the GPIO is in input
-mode.
+Well, don't do that then ;-)
 
-If I read the datasheet correctly you should use the following:
+> > What's wrong with passing in an integer instead? In any case, we would do the
+> > CAP_SYS_ADMIN check to limit who can do it.
 
-PCM512x_GPIO_EN should be reg_dir_out_base
-PCM512x_GPIO_CONTROL_1 should be reg_set_base
-PCM512x_GPIN should be reg_dat_base
+So the actual permission model can be different depending on how broken
+the hardware is.
 
-no custom xlate necessary. GPIN looks a bit fishy in that datasheet:
-  http://www.ti.com/lit/ds/symlink/pcm5121.pdf?ts=1590684141147
-
-PCM512x_GPIO_OUTPUT_1..6 is pinmux control and shouldn't be part of
-the gpio-regmap. Your driver needs to take care of that.
-
->> +
->> +    /* we don't support having both registers simultaneously for
->> now */
->> +    if (config->reg_dir_out_base && config->reg_dir_in_base)
->> +        return ERR_PTR(-EINVAL);
+> > Also, one thing CGroup interface allows is an external process to set the
+> > cookie, so I am wondering if we should use sched_setattr(2) instead of, or in
+> > addition to, the prctl(2). That way, we can drop the CGroup interface
+> > completely. How do you feel about that?
+> >
 > 
-> and this second test seems to contradict the notion of 'both input and
-> output' above?
-
-dir_out_base is used if the register is high active to select an output.
-dir_in_base is used for a low active register. Thus both bases are used
-to switch a GPIO between input and output.
-
-> re-adding comment from previous series:
->  >> I still have a series of odd warnings I didn't have before: >> >>
-> [  101.400263] WARNING: CPU: 3 PID: 1129 at >>
-> drivers/gpio/gpiolib.c:4084 gpiod_set_value+0x3f/0x50 >> >> This seems
-> to come from >>     /* Should be using gpiod_set_value_cansleep() */
->>>     WARN_ON(desc->gdev->chip->can_sleep); > > Right now,
-> gpio-regmap hardcodes can_sleep to true. But the only regmap > which
-> don't sleep is regmap-mmio. The PCM512x seems to be either I2C or >
-> SPI, which can both sleep. So this warning is actually correct and >
-> wherever this gpio is set should do it by calling the _cansleep() >
-> version.
+> I think it should be an arbitrary 64bit value, in both interfaces to avoid
+> any potential reuse security issues.
 > 
-> I still have the warnings with this version, not sure if you wanted to
-> fix it in the v6 or is this needs to be fixed in another piece of
-> code/patch. How would we go about removing this warning?
+> I think the cgroup interface could be extended not to be a boolean but take
+> the value. With 0 being untagged as now.
 
-There is no fix in gpio-regmap. wherever this GPIO is connected to must
-not call gpiod_set_value() but have to use gpiod_set_value_cansleep().
+How do you avoid reuse in such a huge space? That just creates yet
+another problem for the kernel to keep track of who is who.
 
--michael
+With random u64 numbers, it even becomes hard to determine if you're
+sharing at all or not.
+
+Now, with the current SMT+MDS trainwreck, any sharing is bad because it
+allows leaking kernel privates. But under a less severe thread scenario,
+say where only user data would be at risk, the ptrace() tests make
+sense, but those become really hard with random u64 numbers too.
+
+What would the purpose of random u64 values be for cgroups? That only
+replicates the problem of determining uniqueness there. Then you can get
+two cgroups unintentionally sharing because you got lucky.
+
+Also, fundamentally, we cannot have more threads than TID space, it's a
+natural identifier.
