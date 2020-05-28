@@ -2,119 +2,84 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5106FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD91C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2813C20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F071B20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="aQvEiZuj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404392AbgE1P2R (ORCPT
+        id S2404282AbgE1P2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:28:17 -0400
-Received: from lists.gateworks.com ([108.161.130.12]:57323 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404080AbgE1P2P (ORCPT
+        Thu, 28 May 2020 11:28:48 -0400
+Received: from vultr.net.flygoat.com ([149.28.68.211]:34564 "EHLO
+        vultr.net.flygoat.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404080AbgE1P2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:28:15 -0400
-Received: from 068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <tharvey@gateworks.com>)
-        id 1jeKUi-0000Yg-Hz; Thu, 28 May 2020 15:30:56 +0000
-From:   Tim Harvey <tharvey@gateworks.com>
-To:     Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Sean Nyekjaer <sean@geanix.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Timo=20Schl=C3=BC=C3=9Fler?= <schluessler@krause.de>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH] can: mcp251x: add support for half duplex controllers
-Date:   Thu, 28 May 2020 08:27:57 -0700
-Message-Id: <1590679677-2678-1-git-send-email-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 28 May 2020 11:28:45 -0400
+Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 17B9C20F0E;
+        Thu, 28 May 2020 15:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
+        t=1590679723; bh=/Ixh27PBvMYRfXZQb8LgHMfG0KTPCk5wgWM8dpeEr7c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=aQvEiZujSef6TU/HwlGHcOd4VU2sUCSplbXoDgeA38yzDsLwn4h6FSauBeLBNvCOF
+         5bF5LSVqtJ7PIuIhPdxcTHi3mRpv25MTrjNnnosCV6AU0ExBCnl/dh1ub6LIvIY9nl
+         vsgB9axrPiiPUYm/NF32ky7VWYL4S7Tdpx2mTy4DS8Ce2f4cUCbOJGMsa2iFiOTiah
+         bEs7/gH+s64WzC6bUR9iChWSqoi5T11lwDdreTX0S22RTlcztGKfMTmmXlbr7fkJaW
+         fPW15cxgcWP4G2Dwqgn0gb6u0j+V+hPPE8TmX01AsHzqpexque2lWtYmXk8OrdhHvE
+         fEAPQiTLUohYg==
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     maz@kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mips@vger.kernel.org
+Subject: [PATCH v5 0/6] Three Loongson irqchip support
+Date:   Thu, 28 May 2020 23:27:48 +0800
+Message-Id: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.27.0.rc0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some SPI host controllers do not support full-duplex SPI and are
-marked as such via the SPI_CONTROLLER_HALF_DUPLEX controller flag.
+v5:
+  - Add some range checks in dt-schema
 
-For such controllers use half duplex transactions but retain full
-duplex transactions for the controllers that can handle those.
+Jiaxun Yang (6):
+  irqchip: Add Loongson HyperTransport Vector support
+  dt-bindings: interrupt-controller: Add Loongson HTVEC
+  irqchip: Add Loongson PCH PIC controller
+  dt-bindings: interrupt-controller: Add Loongson PCH PIC
+  irqchip: Add Loongson PCH MSI controller
+  dt-bindings: interrupt-controller: Add Loongson PCH MSI
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- drivers/net/can/spi/mcp251x.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
+ .../interrupt-controller/loongson,htvec.yaml  |  57 ++++
+ .../loongson,pch-msi.yaml                     |  62 +++++
+ .../loongson,pch-pic.yaml                     |  56 ++++
+ drivers/irqchip/Kconfig                       |  27 ++
+ drivers/irqchip/Makefile                      |   3 +
+ drivers/irqchip/irq-loongson-htvec.c          | 214 +++++++++++++++
+ drivers/irqchip/irq-loongson-pch-msi.c        | 255 ++++++++++++++++++
+ drivers/irqchip/irq-loongson-pch-pic.c        | 243 +++++++++++++++++
+ 8 files changed, 917 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-msi.yaml
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+ create mode 100644 drivers/irqchip/irq-loongson-htvec.c
+ create mode 100644 drivers/irqchip/irq-loongson-pch-msi.c
+ create mode 100644 drivers/irqchip/irq-loongson-pch-pic.c
 
-diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
-index 5009ff2..203ef20 100644
---- a/drivers/net/can/spi/mcp251x.c
-+++ b/drivers/net/can/spi/mcp251x.c
-@@ -290,8 +290,12 @@ static u8 mcp251x_read_reg(struct spi_device *spi, u8 reg)
- 	priv->spi_tx_buf[0] = INSTRUCTION_READ;
- 	priv->spi_tx_buf[1] = reg;
- 
--	mcp251x_spi_trans(spi, 3);
--	val = priv->spi_rx_buf[2];
-+	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+		spi_write_then_read(spi, priv->spi_tx_buf, 2, &val, 1);
-+	} else {
-+		mcp251x_spi_trans(spi, 3);
-+		val = priv->spi_rx_buf[2];
-+	}
- 
- 	return val;
- }
-@@ -303,10 +307,18 @@ static void mcp251x_read_2regs(struct spi_device *spi, u8 reg, u8 *v1, u8 *v2)
- 	priv->spi_tx_buf[0] = INSTRUCTION_READ;
- 	priv->spi_tx_buf[1] = reg;
- 
--	mcp251x_spi_trans(spi, 4);
-+	if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+		u8 val[2] = { 0 };
- 
--	*v1 = priv->spi_rx_buf[2];
--	*v2 = priv->spi_rx_buf[3];
-+		spi_write_then_read(spi, priv->spi_tx_buf, 2, val, 2);
-+		*v1 = val[0];
-+		*v2 = val[1];
-+	} else {
-+		mcp251x_spi_trans(spi, 4);
-+
-+		*v1 = priv->spi_rx_buf[2];
-+		*v2 = priv->spi_rx_buf[3];
-+	}
- }
- 
- static void mcp251x_write_reg(struct spi_device *spi, u8 reg, u8 val)
-@@ -409,8 +421,16 @@ static void mcp251x_hw_rx_frame(struct spi_device *spi, u8 *buf,
- 			buf[i] = mcp251x_read_reg(spi, RXBCTRL(buf_idx) + i);
- 	} else {
- 		priv->spi_tx_buf[RXBCTRL_OFF] = INSTRUCTION_READ_RXB(buf_idx);
--		mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
--		memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
-+		if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX) {
-+			spi_write_then_read(spi, priv->spi_tx_buf, 1,
-+					    priv->spi_rx_buf,
-+					    SPI_TRANSFER_BUF_LEN);
-+			memcpy(buf + 1, priv->spi_rx_buf,
-+			       SPI_TRANSFER_BUF_LEN - 1);
-+		} else {
-+			mcp251x_spi_trans(spi, SPI_TRANSFER_BUF_LEN);
-+			memcpy(buf, priv->spi_rx_buf, SPI_TRANSFER_BUF_LEN);
-+		}
- 	}
- }
- 
 -- 
-2.7.4
+2.27.0.rc0
 
