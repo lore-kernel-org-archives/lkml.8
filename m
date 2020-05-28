@@ -2,176 +2,219 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C985AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76E92084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5AF2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="IDRJir4z";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="E0HIZurX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxqJKHjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403948AbgE1O62 (ORCPT
+        id S2403954AbgE1O7R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:58:28 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:37414 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403770AbgE1O6Z (ORCPT
+        Thu, 28 May 2020 10:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403770AbgE1O7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:58:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590677905; x=1622213905;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=7Rbg+fpxveZyYmBJCf2fzaHoUltLb5FDdPTSlCWwK/U=;
-  b=IDRJir4zUurARgNyaWWj+LVEBqRdgeBOvFe8aoxpeAjMWkM+ZhCxa+7d
-   S7Ak+LKU9JnXvyQFsTMp8nUM01kHSq8U3z8Z0YTxhCQh9M8ypxzLQDO9F
-   44lwISL6FOW5mfM44SC9AS9ok1Oc+UPdWOO1Yn9IrpCYFYPW7Vl89dz8l
-   KEZFdfnifVGtxgX3xL+g9g0lQG9UiWpmGX11QMMB6IEZHOo7qLtLc2KqY
-   Pu5/ksUdHgk0jHVjwrA0kd6KqmTYDituJXJ5azoOeNUCeGkK26W8WsBwM
-   5jyamd7OXZwYP/RywUaz6XlH6+YiKp4VzB6jbL8y1EaQEoxkOte8e35V2
-   Q==;
-IronPort-SDR: 00Ai3wkTbUDxmrkH4dhmlHIZbUlcINxTRtiRQuBsXpnY2QdQ1wLiJgPwir8H0TjySgf8ffAFY4
- 0/6VMhR8BZ0POfTL1+d2jAOv8FcUUxvNw6YXvlgamYVWQKKcXGx0TFCNSrx8qPmaGaYYWXYrfB
- Eit67PO9E7NgXFapHOO+DB0HRSc5DU1w/OlsBkKzec7CK5ZHh7bogEFqzITxHGnOWVnhx48kIr
- U6LfWSuWN1mBnG4bhahaFCBA8zzORm5OcFHj+Y8COTloFL4BpfG7vvWJZ5uWCxpY/9Qaqzdiu2
- EdA=
-X-IronPort-AV: E=Sophos;i="5.73,445,1583164800"; 
-   d="scan'208";a="143042279"
-Received: from mail-sn1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.52])
-  by ob1.hgst.iphmx.com with ESMTP; 28 May 2020 22:58:24 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X1Yn/9mwO+//PY/4XJ7WJSm3kG0mZDserOTW0B8o8novydSWqsfnhdiKdvvUL/nCUIsH0wLuxESrtRaDtJyKBVJS4SdDBDFzlNPjIoUG3k7lPmB5Tb6ANXu2MUkaEWhqyl2K8sLa72v+zH/uV/Iq9Uc/ND7B4XX8mz4aSh63AjjiivOEVI2QDOvG+H0hi4JxMncfCAbOdBMoHictt2U59LBmXYpxX6TXKAIW1aMLl1KTyWBycD3oRDnis4DTrie2fYfSyU2liUKIP5aLpvik5AQd/jupauE0XeKUUPAI7sGf/3I7CuPjniy54sJshiq1K6bGmUQlcS6t4VeKo8dOAw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TLXjBbCuD8rQJ8nfOKVhEvGVQxvceGsvOBLoEwbdkLE=;
- b=jlsbIFH7Ir8Mi1Z6jTPGcNNn7GSNwlgFuQjLbj9+2SmEsiLQzYbiuL9o9Uis+YM6q68wEqxrlxjC4MogB/uQLPqZDKbGD7sYwhkkzAEMSWpN1K7/1ziVFNKW8BREc3nHEO4L0kgEiWPRFgbwNPmt3BZ0aYlWti9JFSY+T0+pwX1MnT6LOYgHMmUk/vLWEyScK+SXeKrUHIOK2JZe+awTedID0M1N4R/aRQ/XG6J5vqkTDn+LZes4KuROTqFzt8sMQURUE7cfqITcwOcms5IE41SvJTs1T9sdA1nuGqN7q7qedYtMnylxDXgeEEmY/kHbSIwmdEC8GHWGpsVyIPVUag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 28 May 2020 10:59:16 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B56C08C5C6;
+        Thu, 28 May 2020 07:59:16 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id f89so13052080qva.3;
+        Thu, 28 May 2020 07:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TLXjBbCuD8rQJ8nfOKVhEvGVQxvceGsvOBLoEwbdkLE=;
- b=E0HIZurXUZDmrwLb48TEo7NPFbnaYx7+r9GxBcIrnXm0zQmdJix8KgvTIoqTL9PquHiPmxcxucVPRhCeHkHDHVsYHg4TDryLLqPXpxlO2PxUsQ62X3r3f5O4DzYBhu/5hdb2wcrhroSl6MiP+KeS3GZz6UY7k4thaayNwmZPZ8o=
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
- by SN6PR04MB5213.namprd04.prod.outlook.com (2603:10b6:805:fa::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 14:58:22 +0000
-Received: from SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288]) by SN6PR04MB4640.namprd04.prod.outlook.com
- ([fe80::9cbe:995f:c25f:d288%6]) with mapi id 15.20.3045.016; Thu, 28 May 2020
- 14:58:22 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Bean Huo <huobean@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 3/3] scsi: ufs: cleanup ufs initialization path
-Thread-Topic: [PATCH v2 3/3] scsi: ufs: cleanup ufs initialization path
-Thread-Index: AQHWNOcS9knWlNkkEEihSjLjCZj2TKi9j3+Q
-Date:   Thu, 28 May 2020 14:58:22 +0000
-Message-ID: <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <20200528115616.9949-1-huobean@gmail.com>
- <20200528115616.9949-4-huobean@gmail.com>
-In-Reply-To: <20200528115616.9949-4-huobean@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2a00:a040:188:8f6c:a5cd:360c:eac5:60d4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0ef18296-6ed1-4cc9-f85e-08d803179119
-x-ms-traffictypediagnostic: SN6PR04MB5213:
-x-microsoft-antispam-prvs: <SN6PR04MB5213138190C992079FC2BB67FC8E0@SN6PR04MB5213.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:330;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xyfv1lUWxXxkvasQVLSe2rjXaQcDPJf56oNCiw6M7ZB14bCV5LqS3ApnmgF6i6srxaAy3DpmlgK5LbxqTiA5B+tqaKh7GPwP11HaheQAJABm5DyR0WZlIoUVfW+sMvSYBMFMYaXO8A230YCRdMpqEvjdFr8pCzFZvXC9mqwVNU1BYvXfdhucNuQwBHwCWiIUGuVaw9KtG0IB/AAlPGn61DAkcn0txD8ukcFluFWbSFDC0eI3QjWotpEaVbDfubGB+VOFfWtbNmpHqjJFnus150BHVbakD1gNWfGAHpexZBpKmdgFK8WhRKwjQFDa6bWY+dHoaGQK7ONPs0yR8sIIQLVRzJk2UnGGrqgsWKefu6C7XtSFAuChMetaiq0WeLVn
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR04MB4640.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(71200400001)(54906003)(478600001)(110136005)(66556008)(66476007)(66446008)(76116006)(52536014)(5660300002)(66946007)(64756008)(6506007)(8676002)(186003)(83380400001)(7696005)(33656002)(4326008)(9686003)(86362001)(55016002)(8936002)(2906002)(7416002)(316002)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: LkoWfdp3GeqEvgOzHMZTKxJRT7mQGO7CIffQ/b6z9J8u081pSvy81x95AerEizbwL6fdcqsbDbnN3VaRd79JtCAFCeIGG5qRMi41ePT/N2vstEQMcx6VPxGdbT5NwnJ4kswmV80pNi6dc+TtgD/Cb6t7x637IUuyJxJPXJJkI3AdJbkmn/28VB02c0EymaaUqcvErVGutHj0DpZFAngF6itQGb0V24jeHYHOoWEcdj3pGQ29mX6Lev/Q+5SREjEEHwt4MWpJEPfuuIdVqYEkuw4n2Uax+vlNcXn8WjuIyyRdXtMzqTDpE4y1ApQzDkdvkcnZ9IdwJMQqrDGFi+QGlKW0Dk8wg004AaUnozZLeBvVH8rH98HR7UrFI2h/8pSPGllLHFWVCA1lS/b5WS35RAOQg55YrKeJ96HoMwAFdNOwBOWU9BLDrlBuw4d0MZazGetLkBEXqotr4lzTbRYBhjfJugpAq+QqNNLA5Am0lJbQHy6XwHTnx437vqAXbtTEFt1JbJCJDXPmcsn2WxB5ZTznE/D0K6hOBzJlTLrw7gX4WRz9HdLh7f50IEBD9Ehg
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ef18296-6ed1-4cc9-f85e-08d803179119
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 14:58:22.5025
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lvhL3Sspv8uG2Xr6e6oVYlLGCURGdVNSJN8KzNXDBwfCs8+2hEU6F3sxOF0v8xzEHP5aSG9k7qd5l8KiYLUiuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5213
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=sSqgkSNWDchYX02JVpVT7h410DZp94lYcg1ZkOOZGG8=;
+        b=dxqJKHjbf3vz2c+HsLxNVXRgyUpKB9D/by0n4SDRC7uj3LcyC28/W7GG6SjSE3QxhY
+         OR6/KtJDY8EiqOp6Wid+ewb4u0Iw8Lu+JgX/pGimHsTDJtXiUS6C85SPFHwhgQlVDC4d
+         enSEhUQloqxKHFcEGIgtNur7SWZc/0+anhhEdClRCiDJP+NAtzEsX1ocNjh7I5NgX992
+         yFv1OjCk+ZhP7/AfedurA9eQYuADAxBK7nBu5QxWC87di41ouI4U0dUko2pMwXOxknfx
+         lgPE7BljfoWLBr6SMrZFKEpmF6vl8lYTvh5vTvz3DkzhF4aJg1PpglQXNLNJO5x0dEWx
+         +z1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=sSqgkSNWDchYX02JVpVT7h410DZp94lYcg1ZkOOZGG8=;
+        b=G1AwKnQJs1uBOjvvhbUiaCGFnxx/RIfSI216REP5vr/lxzLL2kx4C3D+zf7xDf4INR
+         6xVBfwpz1rnD5elbEbKI5iYjeVgXqctUJubsm5UDrv1ewAJ15F2GU3sNxinqDYpusFzi
+         fCP63mlcuxas1DhdcjSrDPit1fyQkb0d5WIK9ZI1zq3PyioB3CD3nrHiXI4GEiWUPd5h
+         9zIbceOu96y7ZSnrLrUFXb85mAq0WcFW8sox4UAAf08NuSRlfBHqyF8+rO+LpN80EcMn
+         Lxcte9xknPFxRDZTkKEbaM/voe9M5qioZMeOgYIM1RUi7MHecWvHWtpBgmkwNegZCdfk
+         2sfQ==
+X-Gm-Message-State: AOAM532inSJvTQm6Qo9seMsUl2pjhATdqVGD9ktbirouAY+/BP3WXTXA
+        McH8UbgAjNDep63Q3/+6VFCGtVaIU5A=
+X-Google-Smtp-Source: ABdhPJyh5ype8e2Rhru9HLZygxSVaTRGvDlXVteUVArcbFUMVzuofGOdlOErf/E1it5Viebfdx12nA==
+X-Received: by 2002:a0c:8c4a:: with SMTP id o10mr3542223qvb.123.1590677954685;
+        Thu, 28 May 2020 07:59:14 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id a38sm5925179qtb.37.2020.05.28.07.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:59:13 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH v7 2/5] dt-bindings: iio: magnetometer: ak8975: convert format to yaml, add maintainer
+Date:   Thu, 28 May 2020 16:58:47 +0200
+Message-Id: <20200528145851.11791-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Converts documentation from txt format to yaml.
 
-> From: Bean Huo <beanhuo@micron.com>
->=20
-> At UFS initialization stage, to get the length of the descriptor,
-> ufshcd_read_desc_length() being called 6 times.
-May I suggest one more clarifying sentence to your commit log:
-"Instead, we will capture the descriptor size the first time we'll read it.=
-"
+Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+---
+ .../bindings/iio/magnetometer/ak8975.txt      | 37 ---------
+ .../iio/magnetometer/asahi-kasei,ak8975.yaml  | 77 +++++++++++++++++++
+ 2 files changed, 77 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
 
->This patch is to
-> delete unnecessary reduntant code, remove ufshcd_read_desc_length()
-typo: redundant
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+deleted file mode 100644
+index 0576b9df0bf2..000000000000
+--- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-* AsahiKASEI AK8975 magnetometer sensor
+-
+-Required properties:
+-
+-  - compatible : should be "asahi-kasei,ak8975".
+-  - reg : the I2C address of the magnetometer.
+-
+-Optional properties:
+-
+-  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
+-      is ready to be read and is possible to listen on it. If used,
+-      this should be active high. Prefer interrupt over this.
+-
+-  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
+-
+-  - vdd-supply: an optional regulator that needs to be on to provide VDD.
+-
+-  - mount-matrix: an optional 3x3 mounting rotation matrix.
+-
+-Example:
+-
+-ak8975@c {
+-        compatible = "asahi-kasei,ak8975";
+-        reg = <0x0c>;
+-        interrupt-parent = <&gpio6>;
+-        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+-        vdd-supply = <&ldo_3v3_gnss>;
+-        mount-matrix = "-0.984807753012208",  /* x0 */
+-                       "0",                   /* y0 */
+-                       "-0.173648177666930",  /* z0 */
+-                       "0",                   /* x1 */
+-                       "-1",                  /* y1 */
+-                       "0",                   /* z1 */
+-                       "-0.173648177666930",  /* x2 */
+-                       "0",                   /* y2 */
+-                       "0.984807753012208";   /* z2 */
+-};
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+new file mode 100644
+index 000000000000..55b18784e503
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/magnetometer/asahi-kasei,ak8975.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AsahiKASEI AK8975 magnetometer sensor
++
++maintainers:
++  - Jonathan Albrieux <jonathan.albrieux@gmail.com>
++
++properties:
++  compatible:
++    oneOf:
++      - enum:
++        - asahi-kasei,ak8975
++        - asahi-kasei,ak8963
++        - asahi-kasei,ak09911
++        - asahi-kasei,ak09912
++      - enum:
++        - ak8975
++        - ak8963
++        - ak09911
++        - ak09912
++        deprecated: true
++
++  reg:
++    maxItems: 1
++
++  gpios:
++    maxItems: 1
++    description: |
++      AK8975 has a "Data ready" pin (DRDY) which informs that data
++      is ready to be read and is possible to listen on it. If used,
++      this should be active high. Prefer interrupt over this.
++
++  interrupts:
++    maxItems: 1
++    description: interrupt for DRDY pin. Triggered on rising edge.
++
++  vdd-supply:
++    maxItems: 1
++    description: |
++      an optional regulator that needs to be on to provide VDD power to
++      the sensor.
++
++  mount-matrix:
++    description: an optional 3x3 mounting rotation matrix.
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        magnetometer@c {
++            compatible = "asahi-kasei,ak8975";
++            reg = <0x0c>;
++            interrupt-parent = <&gpio6>;
++            interrupts = <15 IRQ_TYPE_EDGE_RISING>;
++            vdd-supply = <&ldo_3v3_gnss>;
++            mount-matrix = "-0.984807753012208",  /* x0 */
++                           "0",                   /* y0 */
++                           "-0.173648177666930",  /* z0 */
++                           "0",                   /* x1 */
++                           "-1",                  /* y1 */
++                           "0",                   /* z1 */
++                           "-0.173648177666930",  /* x2 */
++                           "0",                   /* y2 */
++                           "0.984807753012208";   /* z2 */
++        };
++    };
+-- 
+2.17.1
 
-> and boost UFS initialization.
->=20
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-
-> +       if (desc_id >=3D QUERY_DESC_IDN_MAX) {
->                 *desc_len =3D 0;
->                 return -EINVAL;
->         }
-if (desc_id =3D=3D QUERY_DESC_IDN_RFU_0 || desc_id =3D=3D QUERY_DESC_IDN_RF=
-U_1)
-	*desc_len =3D 0;
-else
-> +
-> +       *desc_len =3D hba->desc_size[desc_id];
->         return 0;
->  }
->  EXPORT_SYMBOL(ufshcd_map_desc_id_to_length);
->=20
-> +static void ufshcd_update_desc_length(struct ufs_hba *hba,
-> +                                     enum desc_idn desc_id, int desc_len=
-)
-desc_len is at most 255 so maybe u8?
-
-> +{
-> +       if (hba->desc_size[desc_id] =3D=3D QUERY_DESC_MAX_SIZE &&
-> +           desc_id !=3D QUERY_DESC_IDN_STRING)
-> +               hba->desc_size[desc_id] =3D desc_len;
-> +}
-> +
-
-
-Thanks,
-Avri
