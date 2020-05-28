@@ -2,193 +2,143 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B71A208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D75F206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TRXdzlLI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDW5ODyy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406187AbgE1THM (ORCPT
+        id S2406202AbgE1THe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57120 "EHLO
+        Thu, 28 May 2020 15:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406108AbgE1TG7 (ORCPT
+        with ESMTP id S2406193AbgE1THY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:06:59 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF13AC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:06:58 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id u5so36153pgn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:06:58 -0700 (PDT)
+        Thu, 28 May 2020 15:07:24 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC40C08C5C8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:07:24 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t16so11973611plo.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=D0Z0uljIaa9E7sK/osUj/lAD10bbouNo4XeXPu5yFDM=;
-        b=TRXdzlLIM4wpBQ8hPBW7hxSfD0Jr4goyv9wU1EAFBC9KRmAlbBDFHKjVr2prIT0/kf
-         wlKqKe16cBDzsbYLavX6WUYXtgU9L32Fyu+x2HEOrk539fgCJ+GOXs77TbH1Q4WyTPur
-         Cxh7L4qfwu1ht8DnmFW077Zbp7hmeSa6n4hw1ETzlcTDC3asc4tkufKSCToWUBrdccR3
-         RUEsaMjZCZCuP0PdRyYYqzea+lRHHow61ShzPBSRTXCC46askwaFgZ3iT/H25lIPY8Jk
-         BtHtwkCCoJdBn9AQNncLhhtlTvn58iJ1SJryfEu/WWBz/eJzcMTeipoRVWYgJxG00lLe
-         4HZw==
+        bh=VwOVkU0O5MPTy6BNN6XbEIcSAUqdb5AHofI+QJezuPI=;
+        b=uDW5ODyyxREse/z9nXtUVNzYSUM3rxmiKouMrW0jQ4pjS6v1fwxsd/yw3a/ZOhLjGv
+         +jxGfyDsoKrn60aSTMmdCEZ2GchIZiuChuz/1AE6nf0dyurPkh4aVOWLNA/wdcuWoQmU
+         oOrU3dKuigLmoTXchnDB47CeNglHPROppF6lxw+UKA//5w9cqkkW8LdHMQHyPK6SUGyO
+         GCbw8fY9NUY6foqe4PtpNWnbJ82ESuHOCefXC/FkqMmVTJWfp1TBB+jyO+x91mphMZEI
+         wdves0btscFepzUrFDrHsvalWOOYRZfS5Kyq0euFgY4kpm6EmhBKzRzD4vzd8i8gIdpz
+         gLHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=D0Z0uljIaa9E7sK/osUj/lAD10bbouNo4XeXPu5yFDM=;
-        b=TgzZ3P9gqpkOs3QpjmAfj8GDW+vM9UkzU9aVLcVpIBOVeX4SRkXtGh5Gji9hxUVbCV
-         6t8KCz/2kzdGGrpJ45fK73amM83DGErcvI+Y4is/oyjuPuyTrIp5ProDk5pgnRyChGDh
-         gXgG6gjtU974uTLfuOeC6JWJOnA4f5yaJPlQ0cGUABvtBgmKZNFpokZ5BOQqN37yBIu9
-         6zvWJAN9iaHHCfS1iV4bz1N05SYOjBR4+OL06XsecB2NpHiuf1K9O1/cnkokxaTZgwdD
-         C3h/YQl1wKenFymdioERmphRpEumAYpjofw5PmnXNVarOqxDguO70ZwoztxwqEsshLl3
-         xmoA==
-X-Gm-Message-State: AOAM532Unn1WQ2PRayXxxseFQLd//Fi7d2ycAUFGCShOlfP6B73M/cJZ
-        EGqz20LgnT51h1F2GvGEfjBikzOoQp8UK9I0hMbWKg==
-X-Google-Smtp-Source: ABdhPJzjdonwSCmxhwOgf6j5Q3qfjEg4fja6HZmRRq1xYAcjAb2iKvsWyznkcVzMWdm1slQXc6yF3mCz826Aodt1kn4=
-X-Received: by 2002:a63:f00d:: with SMTP id k13mr4503675pgh.263.1590692818044;
- Thu, 28 May 2020 12:06:58 -0700 (PDT)
+        bh=VwOVkU0O5MPTy6BNN6XbEIcSAUqdb5AHofI+QJezuPI=;
+        b=krsb966nqOVHWsIv7o6BE2ziiomGEIueSr1uiB8MYAcN1PiM7ghfCa4B4h3T7S0+2D
+         hQjfXDUHCk/IUIAyFMzRHqtPmNaYj3GGjc+8vRGji1JcjnjQB5atXcUqqS3Qc1bzQHuw
+         Dheo+odItZ90Dp2cYWGSaz6PqPxOk72SnQ9w+hXSQrirOYWmZ1fSwi1EMUFcmP0LT3DP
+         GHP2nIGvWqM3TRbb6vc1yo3PuUK45a2/ubaBdE76NKfhh9mba6a7GDTOJi03NxA0/oQp
+         rSXujp8lPWjurfwYDlazA30HiPCCOrAkCLxDC/Ub9Y8DTy2IONeAGiM+hsPENDUIrHzr
+         SyUQ==
+X-Gm-Message-State: AOAM53064aYadqWo3jieglR1kFAgDT6SangxgtLQLUw38y/4qy7xJnAD
+        XaqZG1pAZd2kKWoo1zWBqMhJcVjI7OsbovZ8DhZvCw==
+X-Google-Smtp-Source: ABdhPJyHjlcrtJrC+9HghnaFLvsYtvx90pMxGJn0t37UYFwj6H/4l9P4f/thKbVZ/294rQqkIqrgjWfA3AjwOQYQKbs=
+X-Received: by 2002:a17:90a:17ed:: with SMTP id q100mr4950842pja.80.1590692843445;
+ Thu, 28 May 2020 12:07:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200526173117.155339-1-ndesaulniers@google.com>
- <2f58c2a4-0f37-d507-7767-00161c6b5d98@arm.com> <CAKwvOd=Oy_OfRbL6-q-3CAHxWBNBKE+HkfNfgCiP726u+4dU1Q@mail.gmail.com>
- <34f261f7-c4b5-a628-9a4c-eb97b75fba52@arm.com> <CAKwvOdn1W4C5HRJEch5PS-Atcmysh0UD+VZX_wi8tviGwhmM7Q@mail.gmail.com>
- <CAKwvOd=Zxm9TDPNd4Qvn6Ru==FLasiP1xWXMM7ji08VWRjBu2g@mail.gmail.com>
- <VI1PR08MB319868AFBEDCD0925C53701AF88E0@VI1PR08MB3198.eurprd08.prod.outlook.com>
- <20200528094154.GB2961@gaia>
-In-Reply-To: <20200528094154.GB2961@gaia>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 28 May 2020 12:06:46 -0700
-Message-ID: <CAKwvOdkBr9Y+J0ZgZT8RR60Kh-kG7Q_annQU+s=+RXg=qeLFNQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: vdso32: force vdso32 to be compiled as -marm
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Smith <Peter.Smith@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     Robin Murphy <Robin.Murphy@arm.com>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Stephen Boyd <swboyd@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Manoj Gupta <manojgupta@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kristof Beyls <Kristof.Beyls@arm.com>,
-        Victor Campos <Victor.Campos@arm.com>,
-        "david.spickett@linaro.org" <david.spickett@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
+References: <20200511131350.29638-1-anders.roxell@linaro.org> <CADYN=9LkA2h6dANREfPQq4iDvVEJX1wAdxjv31mpVBkaM_g0ZQ@mail.gmail.com>
+In-Reply-To: <CADYN=9LkA2h6dANREfPQq4iDvVEJX1wAdxjv31mpVBkaM_g0ZQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 28 May 2020 12:07:13 -0700
+Message-ID: <CAFd5g452oiRpMa3S=F9wFsb9SRKBYXJFuusge+6=zCEFX74kYQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Enable as many KUnit tests as possible
+To:     Anders Roxell <anders.roxell@linaro.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Marco Elver <elver@google.com>, David Gow <davidgow@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:20 AM Will Deacon <will@kernel.org> wrote:
-> > Yes, I know that :)
-
-Right, I forgot; you wrote the 64b one. :)
-
-On Thu, May 28, 2020 at 2:41 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+On Wed, May 27, 2020 at 4:49 AM Anders Roxell <anders.roxell@linaro.org> wrote:
 >
-> On Thu, May 28, 2020 at 09:05:08AM +0100, Peter Smith wrote:
-> > I suggest using Arm if you need a frame pointer, and disable the
-> > frame pointer if you want/need to use Thumb. My understanding is that
-> > runtime unwinding using the frame pointer in Thumb is already difficult
-> > due to Arm and Thumb functions using different registers for the frame
-> > pointer.
+> Hi all,
 >
-> IIRC from the Thumb-2 kernel porting days, even in the absence of
-> ARM/Thumb interworking, the Thumb-2 frame pointer was pretty useless for
-> unwinding since it points to the bottom of the current stack frame (the
-> reason I think is that some LDR/STR instructions with negative indexing
-> are not available). So finding the previous frame pointer was not
-> possible and had to rely on the exception unwinding information.
+> Friendly ping: who can take this?
 
-Eureka!  That's it!  Implicit state of -fomit-frame-pointer.
+Sorry, I just reviewed the last patch.
 
-Ok, forgetting ARCH=arm64 for a second, for ARCH=arm we have the
-choice CONFIG_THUMB2_KERNEL.  Regardless of which is chosen, we
-*always* explicitly set -mthumb or -marm, but we never rely on
-implicit defaults.  Again for ARCH=arm, we have a choice of unwinders,
-or at least we do when *not* targeting thumb.  If we select
-CONFIG_THUMB2_KERNEL, then CONFIG_UNWINDER_FRAME_POINTER cannot be
-selected.
+Shuah, do you mind picking this up for 5.8?
 
-arch/arm/Kconfig.debug:
-  57 config UNWINDER_FRAME_POINTER
-  58   bool "Frame pointer unwinder"
-  59   depends on !THUMB2_KERNEL
-...
+> Cheers,
+> Anders
+>
+> On Mon, 11 May 2020 at 15:14, Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > This patchset will try to enable as many KUnit test fragments as
+> > possible for the current .config file.
+> > This will make it easier for both developers that tests their specific
+> > feature and also for test-systems that would like to get as much as
+> > possible for their current .config file.
+> >
+> > I will send a separate KCSAN KUnit patch after this patchset since that
+> > isn't in mainline yet.
+> >
+> > Since v2:
+> > Fixed David's comments. KUNIT_RUN_ALL -> KUNIT_ALL_TESTS, and he
+> > suggested a great help text.
+> >
+> > Since v1:
+> > Marco commented to split up the patches, and change a "." to a ",".
+> >
+> >
+> > Cheers,
+> > Anders
+> >
+> > Anders Roxell (6):
+> >   kunit: Kconfig: enable a KUNIT_ALL_TESTS fragment
+> >   kunit: default KUNIT_* fragments to KUNIT_ALL_TESTS
+> >   lib: Kconfig.debug: default KUNIT_* fragments to KUNIT_ALL_TESTS
+> >   drivers: base: default KUNIT_* fragments to KUNIT_ALL_TESTS
+> >   fs: ext4: default KUNIT_* fragments to KUNIT_ALL_TESTS
+> >   security: apparmor: default KUNIT_* fragments to KUNIT_ALL_TESTS
+> >
+> >  drivers/base/Kconfig      |  3 ++-
+> >  drivers/base/test/Kconfig |  3 ++-
+> >  fs/ext4/Kconfig           |  3 ++-
+> >  lib/Kconfig.debug         |  6 ++++--
+> >  lib/kunit/Kconfig         | 23 ++++++++++++++++++++---
+> >  security/apparmor/Kconfig |  3 ++-
+> >  6 files changed, 32 insertions(+), 9 deletions(-)
+> >
+> > --
+> > 2.20.1
+> >
 
-CONFIG_UNWINDER_FRAME_POINTER selects CONFIG_FRAME_POINTER which sets
--fno-omit-frame-pointer.  Otherwise, it looks like the choice of
--f{no-}omit-frame-pointer is left unspecified, relying on compiler
-defaults.
-
-And that's just for ARCH=arm.  Returning to ARCH=arm64, and the compat
-vdso in particular, it doesn't look like we ever set
--f{no-}omit-frame-pointer either, so again we're looking at the
-compiler defaults.
-
-And when we look at the default behavior for the implicit state of
--f{no-}omit-frame-pointer, we find differences.
-
-Here's a test case you can play around with:
-https://godbolt.org/z/0oY39t
-
-For Clang, can you tell what the default state is if left off?
-For GCC, can you tell what the default state is if left off?
-Do they match?
-Is this specific to -mthumb?
-(Bonus: what happens when you remove `-O2`?)
-
-Answers:
--fno-omit-frame-pointer
--fomit-frame-pointer
-No.
-No.
--fno-omit-frame-pointer in GCC (-fomit-frame-pointer is an optimization)
-
-Deja vu, I fixed a very similar discrepancy reported by Linus not too long ago.
-https://reviews.llvm.org/D74698
-Looking at the relevant logic in Clang:
-https://github.com/llvm/llvm-project/blob/58beb76b7bd2f7caa1df461b9db6629521c3b60b/clang/lib/Driver/ToolChains/Clang.cpp#L527-L591
-Noticely absent are arm, thumb, aarch64, and big endian variants,
-specifically here:
-https://github.com/llvm/llvm-project/blob/58beb76b7bd2f7caa1df461b9db6629521c3b60b/clang/lib/Driver/ToolChains/Clang.cpp#L556-L571
-
-I should fix that in Clang.
-
-That should also speed up our 32b ARM kernels that select
-CONFIG_THUMB2_KERNEL (ie. CrOS veyron-minnie platform, rk3288).
-Shouldn't make a difference for 64b ARM kernels since those select
-frame pointers.  Though I am curious about the userspaces now for CrOS
-and Android...
-
-On Thu, May 28, 2020 at 1:05 AM Peter Smith <Peter.Smith@arm.com> wrote:
-> > Hope this helps
-
-Always, m8, you're the expert.
-
-So r11 will be the frame pointer for arm and thumb according to latest
-aapcs, but the compilers haven't yet made any changes related to this,
-and can still use r7 in a bunch of cases (-mthumb
---target=arm-linux-gnueabi being the most relevant one for our
-discussion).
-
-> On Thu, May 28, 2020 at 12:20 AM Will Deacon <will@kernel.org> wrote:
-> your
-> patch is papering over a deeper issue.
-
-Ah, your right.  Sorry, I was wrong.  I owe you (another) beer?  I'm
-going into debt over these and will have to take out a loan, soon!
--- 
-Thanks,
-~Nick Desaulniers
+Thanks!
