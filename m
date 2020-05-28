@@ -6,40 +6,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465622075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D972075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404333AbgE1PVU (ORCPT
+        id S2404341AbgE1PV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:21:20 -0400
+        Thu, 28 May 2020 11:21:26 -0400
 Received: from mga11.intel.com ([192.55.52.93]:30135 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404275AbgE1PVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:21:16 -0400
-IronPort-SDR: mhD/vpkrcdAlahgKOC/gY15rdfKC7SGOA0SHCwVvg9tSaZK/BnhTOnlCA3Fjg77HVlGkWdVh3I
- nt8DxMFofChQ==
+        id S2404290AbgE1PVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:21:18 -0400
+IronPort-SDR: MRJbJ1tn7XNByalsxpVOdwtboMij+yOpKZYuIPn9XOPTdPGddy3er8wjsX22aj3F1zEnDHx7sP
+ fZEfS/wsXHdA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:21:16 -0700
-IronPort-SDR: 7ucLHshLl2AMxNgFByV1lWF73iJL7u1ygXYlHc0PoSthsPljenDmlmy2Am3bvdXe9WXd9mR8WV
- b+cf1cp5y0oQ==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:21:18 -0700
+IronPort-SDR: C1qRLtjYKRU1b7lYDMVUeGxjKvoQGGEO4ce4DRrs/hLp1gmye4F6KRZ0EScA+45Fgn0mX5tkeV
+ 6tidSVMJVE3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="292031374"
+   d="scan'208";a="292031381"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by fmsmga004.fm.intel.com with ESMTP; 28 May 2020 08:21:16 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 28 May 2020 08:21:18 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     ak@linux.intel.com, David.Laight@ACULAB.COM,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 2/3] perf/x86/intel/uncore: Record the size of mapped area
-Date:   Thu, 28 May 2020 08:19:28 -0700
-Message-Id: <1590679169-61823-2-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V3 3/3] perf/x86/intel/uncore: Validate MMIO address before accessing
+Date:   Thu, 28 May 2020 08:19:29 -0700
+Message-Id: <1590679169-61823-3-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590679169-61823-1-git-send-email-kan.liang@linux.intel.com>
 References: <1590679169-61823-1-git-send-email-kan.liang@linux.intel.com>
@@ -50,158 +50,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Perf cannot validate an address before the actual access to MMIO space
-of some uncore units, e.g. IMC on TGL. Accessing an invalid address,
-which exceeds mapped area, can trigger oops.
+An oops will be triggered, if perf tries to access an invalid address
+which exceeds the mapped area.
 
-Perf never records the size of mapped area. Generic functions, e.g.
-uncore_mmio_read_counter(), cannot get the correct size for address
-validation.
+Check the address before the actual access to MMIO sapce of an uncore
+unit.
 
-Add mmio_map_size in intel_uncore_type to record the size of mapped
-area. Print warning message if ioremap fails.
-
+Suggested-by: David Laight <David.Laight@ACULAB.COM>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
 Changes since V2:
-- Check box->io_addr instead of mmio_map_size
-- Print warning message if ioremap fails
+- Rename is_valid_mmio_offset() to uncore_mmio_is_valid_offset()
+- Swap over the sequence of conditional check
+- Dump invalid offset
 
- arch/x86/events/intel/uncore.h       |  1 +
- arch/x86/events/intel/uncore_snb.c   | 13 +++++++++++--
- arch/x86/events/intel/uncore_snbep.c | 11 +++++++++--
- 3 files changed, 21 insertions(+), 4 deletions(-)
+ arch/x86/events/intel/uncore.c       |  3 +++
+ arch/x86/events/intel/uncore.h       | 12 ++++++++++++
+ arch/x86/events/intel/uncore_snbep.c |  6 ++++++
+ 3 files changed, 21 insertions(+)
 
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index cf76d66..1c339ca 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -132,6 +132,9 @@ u64 uncore_mmio_read_counter(struct intel_uncore_box *box,
+ 	if (!box->io_addr)
+ 		return 0;
+ 
++	if (!uncore_mmio_is_valid_offset(box, event->hw.event_base))
++		return 0;
++
+ 	return readq(box->io_addr + event->hw.event_base);
+ }
+ 
 diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 0da4a46..c2e5725 100644
+index c2e5725..1de7cc3 100644
 --- a/arch/x86/events/intel/uncore.h
 +++ b/arch/x86/events/intel/uncore.h
-@@ -61,6 +61,7 @@ struct intel_uncore_type {
- 		unsigned msr_offset;
- 		unsigned mmio_offset;
- 	};
-+	unsigned mmio_map_size;
- 	unsigned num_shared_regs:8;
- 	unsigned single_fixed:1;
- 	unsigned pair_ctr_ctl:1;
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 1038e9f..639de75 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -415,6 +415,7 @@ static const struct attribute_group snb_uncore_imc_format_group = {
+@@ -197,6 +197,18 @@ static inline bool uncore_pmc_freerunning(int idx)
+ 	return idx == UNCORE_PMC_IDX_FREERUNNING;
+ }
  
- static void snb_uncore_imc_init_box(struct intel_uncore_box *box)
- {
-+	struct intel_uncore_type *type = box->pmu->type;
- 	struct pci_dev *pdev = box->pci_dev;
- 	int where = SNB_UNCORE_PCI_IMC_BAR_OFFSET;
- 	resource_size_t addr;
-@@ -430,7 +431,10 @@ static void snb_uncore_imc_init_box(struct intel_uncore_box *box)
- 
- 	addr &= ~(PAGE_SIZE - 1);
- 
--	box->io_addr = ioremap(addr, SNB_UNCORE_PCI_IMC_MAP_SIZE);
-+	box->io_addr = ioremap(addr, type->mmio_map_size);
-+	if (!box->io_addr)
-+		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
++static inline bool uncore_mmio_is_valid_offset(struct intel_uncore_box *box,
++					       unsigned long offset)
++{
++	if (offset < box->pmu->type->mmio_map_size)
++		return true;
 +
- 	box->hrtimer_duration = UNCORE_SNB_IMC_HRTIMER_INTERVAL;
- }
- 
-@@ -586,6 +590,7 @@ static struct intel_uncore_type snb_uncore_imc = {
- 	.num_counters   = 2,
- 	.num_boxes	= 1,
- 	.num_freerunning_types	= SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
-+	.mmio_map_size	= SNB_UNCORE_PCI_IMC_MAP_SIZE,
- 	.freerunning	= snb_uncore_imc_freerunning,
- 	.event_descs	= snb_uncore_imc_events,
- 	.format_group	= &snb_uncore_imc_format_group,
-@@ -1091,6 +1096,7 @@ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
++	pr_warn_once("perf uncore: Invalid offset 0x%lx exceeds mapped area of %s.\n",
++		     offset, box->pmu->type->name);
++
++	return false;
++}
++
+ static inline
+ unsigned int uncore_mmio_box_ctl(struct intel_uncore_box *box)
  {
- 	struct pci_dev *pdev = tgl_uncore_get_mc_dev();
- 	struct intel_uncore_pmu *pmu = box->pmu;
-+	struct intel_uncore_type *type = pmu->type;
- 	resource_size_t addr;
- 	u32 mch_bar;
- 
-@@ -1113,7 +1119,9 @@ static void tgl_uncore_imc_freerunning_init_box(struct intel_uncore_box *box)
- 	addr |= ((resource_size_t)mch_bar << 32);
- #endif
- 
--	box->io_addr = ioremap(addr, TGL_UNCORE_PCI_IMC_MAP_SIZE);
-+	box->io_addr = ioremap(addr, type->mmio_map_size);
-+	if (!box->io_addr)
-+		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
- }
- 
- static struct intel_uncore_ops tgl_uncore_imc_freerunning_ops = {
-@@ -1139,6 +1147,7 @@ static struct intel_uncore_type tgl_uncore_imc_free_running = {
- 	.num_counters		= 3,
- 	.num_boxes		= 2,
- 	.num_freerunning_types	= TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX,
-+	.mmio_map_size		= TGL_UNCORE_PCI_IMC_MAP_SIZE,
- 	.freerunning		= tgl_uncore_imc_freerunning,
- 	.ops			= &tgl_uncore_imc_freerunning_ops,
- 	.event_descs		= tgl_uncore_imc_events,
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 07652fa..bffb755 100644
+index bffb755..045c2d2 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4421,6 +4421,7 @@ static void __snr_uncore_mmio_init_box(struct intel_uncore_box *box,
- 				       unsigned int box_ctl, int mem_offset)
- {
- 	struct pci_dev *pdev = snr_uncore_get_mc_dev(box->dieid);
-+	struct intel_uncore_type *type = box->pmu->type;
- 	resource_size_t addr;
- 	u32 pci_dword;
- 
-@@ -4435,9 +4436,11 @@ static void __snr_uncore_mmio_init_box(struct intel_uncore_box *box,
- 
- 	addr += box_ctl;
- 
--	box->io_addr = ioremap(addr, SNR_IMC_MMIO_SIZE);
--	if (!box->io_addr)
-+	box->io_addr = ioremap(addr, type->mmio_map_size);
-+	if (!box->io_addr) {
-+		pr_warn("perf uncore: Failed to ioremap for %s.\n", type->name);
+@@ -4483,6 +4483,9 @@ static void snr_uncore_mmio_enable_event(struct intel_uncore_box *box,
+ 	if (!box->io_addr)
  		return;
-+	}
  
- 	writel(IVBEP_PMON_BOX_CTL_INT, box->io_addr);
++	if (!uncore_mmio_is_valid_offset(box, hwc->config_base))
++		return;
++
+ 	writel(hwc->config | SNBEP_PMON_CTL_EN,
+ 	       box->io_addr + hwc->config_base);
  }
-@@ -4530,6 +4533,7 @@ static struct intel_uncore_type snr_uncore_imc = {
- 	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
- 	.box_ctl	= SNR_IMC_MMIO_PMON_BOX_CTL,
- 	.mmio_offset	= SNR_IMC_MMIO_OFFSET,
-+	.mmio_map_size	= SNR_IMC_MMIO_SIZE,
- 	.ops		= &snr_uncore_mmio_ops,
- 	.format_group	= &skx_uncore_format_group,
- };
-@@ -4570,6 +4574,7 @@ static struct intel_uncore_type snr_uncore_imc_free_running = {
- 	.num_counters		= 3,
- 	.num_boxes		= 1,
- 	.num_freerunning_types	= SNR_IMC_FREERUNNING_TYPE_MAX,
-+	.mmio_map_size		= SNR_IMC_MMIO_SIZE,
- 	.freerunning		= snr_imc_freerunning,
- 	.ops			= &snr_uncore_imc_freerunning_ops,
- 	.event_descs		= snr_uncore_imc_freerunning_events,
-@@ -4987,6 +4992,7 @@ static struct intel_uncore_type icx_uncore_imc = {
- 	.event_mask	= SNBEP_PMON_RAW_EVENT_MASK,
- 	.box_ctl	= SNR_IMC_MMIO_PMON_BOX_CTL,
- 	.mmio_offset	= SNR_IMC_MMIO_OFFSET,
-+	.mmio_map_size	= SNR_IMC_MMIO_SIZE,
- 	.ops		= &icx_uncore_mmio_ops,
- 	.format_group	= &skx_uncore_format_group,
- };
-@@ -5044,6 +5050,7 @@ static struct intel_uncore_type icx_uncore_imc_free_running = {
- 	.num_counters		= 5,
- 	.num_boxes		= 4,
- 	.num_freerunning_types	= ICX_IMC_FREERUNNING_TYPE_MAX,
-+	.mmio_map_size		= SNR_IMC_MMIO_SIZE,
- 	.freerunning		= icx_imc_freerunning,
- 	.ops			= &icx_uncore_imc_freerunning_ops,
- 	.event_descs		= icx_uncore_imc_freerunning_events,
+@@ -4495,6 +4498,9 @@ static void snr_uncore_mmio_disable_event(struct intel_uncore_box *box,
+ 	if (!box->io_addr)
+ 		return;
+ 
++	if (!uncore_mmio_is_valid_offset(box, hwc->config_base))
++		return;
++
+ 	writel(hwc->config, box->io_addr + hwc->config_base);
+ }
+ 
 -- 
 2.7.4
 
