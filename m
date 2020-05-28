@@ -6,89 +6,86 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB378C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41160C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0998207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228E4207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590633312;
-	bh=YjUVOOtDwn4d3cVCrABZcd+2aGtjoVQ+8dNoUnsfrxQ=;
+	s=default; t=1590633470;
+	bh=MwMUv2HQCDfRQkk7gBlgsYSBbHe3WlVCYhzmEGYFv/s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qr08VGwqzSXgBJVaQkZ3LZtmzoNldJCVCOtn1fbeWP9rTLFv9nBycUDw1x1aZjicc
-	 u4Bkx56dk7cCpBU5ELihR0EFZXgn9mCzqMND1y+IwZuTBDVcSXeVUx+QwNIrDubuvf
-	 cnIA6qGY3qh2I/4O8vXYXxI3+7FkRnl5HYwCSbKg=
+	b=VaI3v1IKvhUpGxidDW3AJJsIHYXwOEUE64YL1bwsNIO8KKhaGwKbre623yKEyOLh4
+	 16btUhpH9KKrJcH0z/kdmVn7qD0MbFrKcPIFMoSDUGtJqaq1+UArcEUQh3Ye/VFV1K
+	 RMDeSBLqJT4WxAhi2afcZ+J8SYiT34M+ifwpycm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgE1CfM (ORCPT
+        id S1726750AbgE1Cht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:35:12 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44905 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725896AbgE1CfL (ORCPT
+        Wed, 27 May 2020 22:37:49 -0400
+Received: from mail-il1-f173.google.com ([209.85.166.173]:36430 "EHLO
+        mail-il1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgE1Cht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:35:11 -0400
-Received: by mail-io1-f66.google.com with SMTP id p20so14943733iop.11;
-        Wed, 27 May 2020 19:35:10 -0700 (PDT)
+        Wed, 27 May 2020 22:37:49 -0400
+Received: by mail-il1-f173.google.com with SMTP id 17so26190144ilj.3;
+        Wed, 27 May 2020 19:37:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=u/PpNpDq33wQ8xTbOoeK0ybsgUquiVhQDT9k1mJd3Ww=;
-        b=OGuzkBXduGCKBYi8qGmvnOYDPFl0HKOvrI6cUz+P5x0mR3D0thd83cPQ/BVHbjiu1A
-         vRBFTIV/Vor5MWwFc8bs7HtkEyUjEpTe9SfXPku/7AirE482XWOkrhsJKUpPvaFsYhKk
-         H9paTKmrmBHpDWnsNd7alfuPERh6K/bUsp6/oZAWG/e9wVei6WWSiCwKRdW5/hhNHJAC
-         yAKRc9AbmxDcQbLYQHTck2nyy99jgwtH+e+05J2viGo/8mBs7pqlwfZB52rrFV88bCTV
-         /fcapsOYnDglhe2CIvgSLExuWJmtf70vWcTUV8Z32o8pIfBxVUFLBMN98mn6VybkW1Ei
-         L21g==
-X-Gm-Message-State: AOAM533W40xGywxtMFkKedVDTjG5u2GL6MSaP/0A7AahfFYkS+1GfkRO
-        m+XI/ZrgeRuSy0Oy1/pNmg==
-X-Google-Smtp-Source: ABdhPJyqrqqmOmLOGh+9h8XWMQ5/kD3UO07/QUdxEeNf8swgGrODBM+jiAODXcQp9bhZRn9CeHtJqg==
-X-Received: by 2002:a05:6602:2408:: with SMTP id s8mr696349ioa.78.1590633310262;
-        Wed, 27 May 2020 19:35:10 -0700 (PDT)
+        bh=Z4hq3G7x3ppxeCNs2d4Tddnb3w+t9fJRDF8t6tEJy78=;
+        b=IyopJv4BxIDS690BLE2JVB2YgeANHTReaRiOwf5cG2m7hczqOuLM8pmeGTGQlF9a4V
+         vGAJw8anWLeILxKfOImk/DDNqeQDIoAqET8DhCMhJiiHMcS6GTats3SzKSNarMi4rWAu
+         s3hmZYa+cHrsnPOf75UhrfJyYRM8R7VEfjfVTwtjhFfwp+HvkXJ5cvcmIUZufAB1lB4f
+         q9wMEHQGdU+OWwFHEARkgXYO/Q8w9Y3FsO/e7W+V8nzNUgX3dY/rAoQEs0USUm0nBvnW
+         pmHWspVBG1iTWiNbYwVVTIiySLjYlYX/SXcd4/bSHvY+bRHtjRvWZYvoOktedCx7lrCy
+         Bxtw==
+X-Gm-Message-State: AOAM530cwGReT40jeCCWXFscHoa76NQycqpTPaOLN+J6PpNYSrLpx2+q
+        vKc3JBjOtZVOXztOxSjEpw==
+X-Google-Smtp-Source: ABdhPJwBxgsdgMbJfm1wkXmxJAFNeJK0GwcD0ZSIcUpww4e79m8N3gPGaWxpZHNuoxuy1YTg8wuMAQ==
+X-Received: by 2002:a92:cb91:: with SMTP id z17mr1008436ilo.305.1590633467906;
+        Wed, 27 May 2020 19:37:47 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id u25sm1931639iob.19.2020.05.27.19.35.09
+        by smtp.gmail.com with ESMTPSA id f9sm2570509ile.39.2020.05.27.19.37.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:35:09 -0700 (PDT)
-Received: (nullmailer pid 3251663 invoked by uid 1000);
-        Thu, 28 May 2020 02:35:08 -0000
-Date:   Wed, 27 May 2020 20:35:08 -0600
+        Wed, 27 May 2020 19:37:47 -0700 (PDT)
+Received: (nullmailer pid 3255257 invoked by uid 1000);
+        Thu, 28 May 2020 02:37:46 -0000
+Date:   Wed, 27 May 2020 20:37:46 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     robh+dt@kernel.org, patches@opensource.cirrus.com,
-        linus.walleij@linaro.org, lee.jones@linaro.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        cw00.choi@samsung.com, devicetree@vger.kernel.org,
-        broonie@kernel.org, myungjoo.ham@samsung.com
-Subject: Re: [PATCH v3 7/7] mfd: madera: Move binding over to dtschema
-Message-ID: <20200528023508.GC3251118@bogus>
-References: <20200513095720.8867-1-ckeepax@opensource.cirrus.com>
- <20200513095720.8867-7-ckeepax@opensource.cirrus.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv1 05/19] power: supply: sbs-battery: Add TI BQ20Z65
+ support
+Message-ID: <20200528023746.GA3255207@bogus>
+References: <20200513185615.508236-1-sebastian.reichel@collabora.com>
+ <20200513185615.508236-6-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513095720.8867-7-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20200513185615.508236-6-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 10:57:20 +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+On Wed, 13 May 2020 20:56:01 +0200, Sebastian Reichel wrote:
+> Add support for BQ20Z65 manufacturer data to the sbs-battery
+> driver. Implementation has been verified using the public TRM
+> available from [0] and tested using a GE Flex 3S2P battery.
+> 
+> [0] http://www.ti.com/lit/pdf/sluu386
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 > ---
-> 
-> Changes since v2:
->  - Removed some more redundant descriptions
->  - Updated pinctrl node naming in the example
-> 
-> Thanks,
-> Charles
-> 
->  .../devicetree/bindings/mfd/cirrus,madera.yaml     | 311 +++++++++++++++++++++
->  Documentation/devicetree/bindings/mfd/madera.txt   | 114 --------
->  MAINTAINERS                                        |   6 +-
->  3 files changed, 314 insertions(+), 117 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
+>  .../bindings/power/supply/sbs_sbs-battery.txt     |  1 +
+>  drivers/power/supply/sbs-battery.c                | 15 ++++++++++-----
+>  2 files changed, 11 insertions(+), 5 deletions(-)
 > 
 
-Applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
