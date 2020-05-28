@@ -2,120 +2,70 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 110E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8913BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBBB7206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nYn3psEF"
+	by mail.kernel.org (Postfix) with ESMTP id 64DC8206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590710049;
+	bh=gXZYavOYVxcImwq5BLCVSLLMCyz5KZa/MjCXgWwsFOg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=zBl0AYhuNDJCOqT6VGiUNJPCvlwSPsyBlyLFso4tYrw65fp0vtLE+2vPRztYklp8l
+	 79ApwW0yuhcywCemOwEOOaWTjFk7H7OiHKf14n8whgMPp6vyf71jOrgS4t0p65295B
+	 d5uArNpunYEMofq2qPzDWBB0MNbHAEDVheFDc1JU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437851AbgE1Xxr (ORCPT
+        id S2437862AbgE1XyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437677AbgE1Xxo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:53:44 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9411C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:53:43 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id a13so247169pls.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MsZSmU61OLe136r//qttOvmTDf94o4Xes23hd9beBhc=;
-        b=nYn3psEFlsAo+l4qjLcV/PPFHdSi/yh4Ak7xlfTqvsuuGV0fmcl5epZboPlP0qPDie
-         bhpqMExiCSK+2twDheP4//o41BF4oowsaXRpQkFp89iHqzAeQnbdErfzkyrXmnb7BSZz
-         uiSrLz3eYN7fipm8yg74y/x/sJD3WeduEtkEA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MsZSmU61OLe136r//qttOvmTDf94o4Xes23hd9beBhc=;
-        b=devPpLRZ7L7ycUMQc59RI9oPyKIN/OpGDxvwW6LV1fQvIE7sOkh3dYsZXGEG86U7NO
-         sKeV3LO3iCQ79BOSEWuRbYeRK4r8pWkfiDxOzjSTkYP2moQd79LoopcED8f0gj8aNb2s
-         pe/Od3VHjgd604/3qApJZ1n3qTiUIqMZvIC0KUzVTxXVuIOgsd9/kCYjn2Dcxt/08r4t
-         PoCc2Ix665EjgJcYKfS8jOqDt2CWLRXZwBJZWtZ3aMv/r1gbJgZGEulXJr2OwgLVcHvV
-         RVaVp3Wi/2ACbqAniWF+FovfuyRcy5hthtNSq3yCZp/MEanYx/NmHoy3t2eG9qyftmLN
-         sXRA==
-X-Gm-Message-State: AOAM531CgVI1kZ+K8wMORaAWls4LNInLNZZejbInhtWIoFbKiQ4bfH2c
-        RqHjvT6K91WJULJTAaHOl1x/iw==
-X-Google-Smtp-Source: ABdhPJzIS+ng7A7E9YeduAOageV51r0tFW3WRVx27/g0uUHRZMUKYgeSlFrSrKc4soQTtOvN9PK9zg==
-X-Received: by 2002:a17:90a:ad87:: with SMTP id s7mr749166pjq.225.1590710023485;
-        Thu, 28 May 2020 16:53:43 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id i197sm5735574pfe.30.2020.05.28.16.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 16:53:43 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     evgreen@chromium.org, Ravi Kumar Bokka <rbokka@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: Enforce nvmem stride in the sysfs interface
-Date:   Thu, 28 May 2020 16:53:02 -0700
-Message-Id: <20200528165250.1.Iad7dec5afecba175c816773a0088be805476453f@changeid>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+        Thu, 28 May 2020 19:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437677AbgE1XyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 19:54:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE043206E2;
+        Thu, 28 May 2020 23:54:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590710041;
+        bh=gXZYavOYVxcImwq5BLCVSLLMCyz5KZa/MjCXgWwsFOg=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=HhmXX5C1cr60i/bHtezec2SbWBEAMbgIl0+g1A/6CxNW1brrD/Qn83sKWrbJkIy1j
+         IHx3KVvhiNtqev7GHE6EsK9J8siUq8b7mM84GO485huQNfYLWK/dnysYCLVdgD8C3D
+         4Nh5WOdEZ0vyAuzT+bTSJC0eRPRdE91jEnjz7cIY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200528142205.44003-1-jeffrey.l.hugo@gmail.com>
+References: <20200528142205.44003-1-jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH] clk: qcom: Add missing msm8998 ufs_unipro_core_clk_src
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, mturquette@baylibre.com,
+        robh+dt@kernel.org
+Date:   Thu, 28 May 2020 16:54:01 -0700
+Message-ID: <159071004112.69627.18281821446546395989@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'struct nvmem_config' has a stride attribute that specifies the
-needed alignment for accesses into the nvmem.  This is used in
-nvmem_cell_info_to_nvmem_cell() but not in the sysfs read/write
-functions.  If the alignment is important in one place it's important
-everywhere, so let's add enforcement.
+Quoting Jeffrey Hugo (2020-05-28 07:22:05)
+> ufs_unipro_core_clk_src is required to allow UFS to clock scale for power
+> savings.
+>=20
+> Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) d=
+river")
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
 
-For now we'll consider it totally invalid to access with the wrong
-alignment.  We could relax this in the read case where we could just
-read some extra bytes and throw them away.  Relaxing it in the write
-case seems harder (and less safe?) since we'd have to read some data
-first and then write it back.  To keep it symmetric we'll just
-disallow it in both cases.
-
-Reported-by: Ravi Kumar Bokka <rbokka@codeaurora.org>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/nvmem/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 05c6ae4b0b97..1c0e7953f90d 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -111,6 +111,9 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
- 	if (pos >= nvmem->size)
- 		return 0;
- 
-+	if (!IS_ALIGNED(pos, nvmem->stride))
-+		return -EINVAL;
-+
- 	if (count < nvmem->word_size)
- 		return -EINVAL;
- 
-@@ -148,6 +151,9 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
- 	if (pos >= nvmem->size)
- 		return -EFBIG;
- 
-+	if (!IS_ALIGNED(pos, nvmem->stride))
-+		return -EINVAL;
-+
- 	if (count < nvmem->word_size)
- 		return -EINVAL;
- 
--- 
-2.27.0.rc0.183.gde8f92d652-goog
-
+Applied to clk-next
