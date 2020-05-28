@@ -2,216 +2,115 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63576C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5677C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FC4208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC0920B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="trdjOkn0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGd0jlJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgE1HcE (ORCPT
+        id S1726761AbgE1HcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:32:04 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:39907 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgE1HcD (ORCPT
+        Thu, 28 May 2020 03:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgE1HcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:32:03 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200528073159epoutp018029fa76f3eaff7c4dd880cace308c19~TIMQXbIQt0317003170epoutp01A
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:31:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200528073159epoutp018029fa76f3eaff7c4dd880cace308c19~TIMQXbIQt0317003170epoutp01A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590651120;
-        bh=1u5f9mHjA455o1d+uNuMnxBAjVQOMkQ7sV8wA55+hdc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=trdjOkn0Oq3D9IsEaKB/Df7IdR7y6weEBS4r2bXm4DHkQ16t/RtX2tUSNCg9h+7eh
-         Ws0Bpn7kEQxZfLa50wKPfP/znx7PhFJ00tPdrF6D9K3EZckIBuoiv5neq+K5eWviQC
-         oH7Rx+GGvQA6OIglN8CvLI3exriXlefCzpZX76Vo=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200528073159epcas1p32ba7986a21e8bfa2d9cb8d1082e062c2~TIMP1w7Wl0579705797epcas1p3G;
-        Thu, 28 May 2020 07:31:59 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 49XfXX29f9zMqYlv; Thu, 28 May
-        2020 07:31:56 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        51.06.04645.CE86FCE5; Thu, 28 May 2020 16:31:56 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200528073155epcas1p430317922f66de75d7f3c3b87db1a951b~TIMMaD4rx3273632736epcas1p4F;
-        Thu, 28 May 2020 07:31:55 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200528073155epsmtrp15b0474f5c8070c83fc6cf3a7c243d14c~TIMMYktc42350823508epsmtrp1g;
-        Thu, 28 May 2020 07:31:55 +0000 (GMT)
-X-AuditID: b6c32a36-f67ff70000001225-c6-5ecf68ec6a25
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        92.A5.08382.BE86FCE5; Thu, 28 May 2020 16:31:55 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200528073155epsmtip28024469710e4156a1c97c4f61e342f3e~TIML9YcXC1131011310epsmtip2c;
-        Thu, 28 May 2020 07:31:55 +0000 (GMT)
-Subject: Re: [PATCH 08/12] dt-bindings: devfreq: add compatible for mt8183
- cci devfreq
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <4087bcdb-a247-3d2d-96b2-16f965e8ba5c@samsung.com>
-Date:   Thu, 28 May 2020 16:42:16 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
-MIME-Version: 1.0
-In-Reply-To: <20200520034307.20435-9-andrew-sh.cheng@mediatek.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrAJsWRmVeSWpSXmKPExsWy7bCmvu6bjPNxBlNf81tsX/+C1WLqwyds
-        FvOPnGO1ONv0ht3i25UOJotNj6+xWlzeNYfN4nLzRUaLz71HGC2WXr/IZNHUYmxxu3EFm8Wb
-        H2eZLM6cvsRq0br3CLvFv2sbWSym3xWy2PjVw0HIY828NYweO2fdZffYtKqTzePOtT1sHpuX
-        1Hu0nNzP4rHlajuLR9+WVYwex29sZ/L4vEkugCsq2yYjNTEltUghNS85PyUzL91WyTs43jne
-        1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMH6CUlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1S
-        akFKToFlgV5xYm5xaV66XnJ+rpWhgYGRKVBhQnbG82WmBW3CFVNXPmRvYNzN38XIySEhYCJx
-        6cp99i5GLg4hgR2MEpvmb2KBcD4xSqxp+sEG4XxjlFhy7y0bTMu5LdMYIRJ7GSUOn9vNDOG8
-        Z5SYfGU1UxcjB4ewQITEvWUaIA0iAreZJSbMDgGpYRY4yCgx/dJFJpAEm4CWxP4XN8Cm8gso
-        Slz98ZgRxOYVsJOYOfMPC8gcFgFViR3v7EHCogJhEie3tUCVCEqcnPmEBcTmFHCSeHOtGcxm
-        FhCXuPVkPhOELS+x/e0csNskBCZzSny7sQHqAxeJx71f2SFsYYlXx7dA2VISL/vboOxqiZUn
-        j7BBNHcwSmzZf4EVImEssX/pZLAnmQU0Jdbv0ocIK0rs/D2XEWIxn8S7rz2sICUSArwSHW1C
-        ECXKEpcf3GWCsCUlFrd3sk1gVJqF5J1ZSF6YheSFWQjLFjCyrGIUSy0ozk1PLTYsMEKO7E2M
-        4NSuZbaDcdE5n0OMAhyMSjy8HV7n4oRYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sa
-        k1p8iNEUGNgTmaVEk/OBeSevJN7Q1MjY2NjCxNDM1NBQSZx3/o8zcUIC6YklqdmpqQWpRTB9
-        TBycUg2MEi844j+f0PA5veK+YAbnqcaVZ78ZqarWxid5bKlTnsR2t/iMlV2ML3flfd2ivmN6
-        YTtfy71+7BfhfW35vSVc+qmLfI7s2Lxm06eJvT++buENCZJoXJntnPbs+7Kbb1avveRYq6v9
-        R1DButiqZKfphZW7/4RXiCiGzS+R9L2h2LI5SWP1PR5FJZbijERDLeai4kQAkLRX9gMEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsWy7bCSvO7rjPNxBhdblCy2r3/BajH14RM2
-        i/lHzrFanG16w27x7UoHk8Wmx9dYLS7vmsNmcbn5IqPF594jjBZLr19ksmhqMba43biCzeLN
-        j7NMFmdOX2K1aN17hN3i37WNLBbT7wpZbPzq4SDksWbeGkaPnbPusntsWtXJ5nHn2h42j81L
-        6j1aTu5n8dhytZ3Fo2/LKkaP4ze2M3l83iQXwBXFZZOSmpNZllqkb5fAlfF8mWlBm3DF1JUP
-        2RsYd/N3MXJySAiYSJzbMo2xi5GLQ0hgN6NE44wXTBAJSYlpF48ydzFyANnCEocPF0PUvGWU
-        2HriNTtIjbBAhMSRX4dYQBIiAveZJZbfvcoG4jALHGSUeNb9hx2i5SyjxO+lE1lBWtgEtCT2
-        v7jBBmLzCyhKXP3xmBHE5hWwk5g58w8LyDoWAVWJHe/sQcKiAmESO5c8ZoIoEZQ4OfMJC4jN
-        KeAk8eZaM5jNLKAu8WfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKz0LSPgtJyywkLbOQtCxgZFnF
-        KJlaUJybnltsWGCYl1quV5yYW1yal66XnJ+7iREc51qaOxi3r/qgd4iRiYPxEKMEB7OSCK/T
-        2dNxQrwpiZVVqUX58UWlOanFhxilOViUxHlvFC6MExJITyxJzU5NLUgtgskycXBKNTAp7HQM
-        YhDNmXKlxTg/9fBhIbmtKTomYus3/F7tHp/VP3Pvh3BnFs1jdpeur3RatYRhP2fVwoVan9o1
-        DVe9b67huhtcULO1k+8zZ0Ny0PbqO996TRwt93/fwXEzlk1nT99E5g2nX+sed5KWfSPv+2rJ
-        76Iy52g7FZvSDLZbS1+VqfH+5hdyXvT2eY8r33Venmvz8zML97fffPUt4so8hgtbvB6xSXAf
-        qb271ULr/8WnbieOffc58fhXsGmmidMCReH/P+Zccwhb0popKqvVeL6+RzLm36wqdzXGTTLc
-        6mwpmxWmbRGKevfTt05J/bzTf8sUdja/qQri27YHOESX7L93nuXu4S2LwtvCe46XRiqxFGck
-        GmoxFxUnAgDII881YgMAAA==
-X-CMS-MailID: 20200528073155epcas1p430317922f66de75d7f3c3b87db1a951b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200520034339epcas1p1524dea2d7089cb3492384bbe917dcffe
-References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
-        <CGME20200520034339epcas1p1524dea2d7089cb3492384bbe917dcffe@epcas1p1.samsung.com>
-        <20200520034307.20435-9-andrew-sh.cheng@mediatek.com>
+        Thu, 28 May 2020 03:32:07 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BEB0C05BD1E;
+        Thu, 28 May 2020 00:32:06 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id nu7so2712712pjb.0;
+        Thu, 28 May 2020 00:32:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5yZQIGMYiVPY5h18FvZodR8RDlk59u/8VE8/pzlbR3w=;
+        b=mGd0jlJENSJp8gOh04gBoYQd/gn3/3FX18LV1iXU+RjRDJa1jIgdtzY7EsbdIKbq1K
+         9KrEoXlYbCBRhOeub1L0OKhgB1BeJfw9hX8R1WE0nwcTxhDrcoxJwU4ecGlUvewfgnzJ
+         qKNb25o7R9FUO5PAV9EA5blEKT7NhOaTt1OAAhPHDvgL5fdnqS4Lk00rHmdIeMD9iHjX
+         C+i6XvD9cD7/0NSS+KqBS6N9znJWNtSRC1sBszNKAPCQCrdwpK/PEYiGu7WT38UK46gk
+         7xH3jFHYad7gRF5LnWonJEq8TYy8dw1sm7JDiEDv2WYkkTFG3wjY9zooVPVHj8jkhdSz
+         4kXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5yZQIGMYiVPY5h18FvZodR8RDlk59u/8VE8/pzlbR3w=;
+        b=XZwMWhIXGN7fZpPJisEGk7g0hEAxMSo7KUAepTdlZxbDcDxlO4zUmFqM5AJBFRnJlK
+         X0Iu1OWJLXOuSNJYuBxxn6jaWwlIZuIRjJy/HXK6Sp98Dhm95+Z5VG4g+QOnRPcnCmte
+         YnB9swD/DgAkqnN7Fmr/6T2aO30Ko8d1NxHgip7CbiT8jKPTgR1z5/c8BFrOqL72wR7H
+         JD0uqS9rXmQekG9CdxI+ae7GPWBOC7a9167yzCsR32RFSsyxdTlFxyYTkz3I4tYPj9Ls
+         9wM/PxkmXg7RDL/mkCV2pN6kpiC1OFY7SH4ZlcBHfSY4790tuYye0yKn/+xdS+ctw8hl
+         oUsg==
+X-Gm-Message-State: AOAM533zIZvAlVE4Tu9GU8SutGMescIKpZxb5j1IHLX/O6UAv+br4T6U
+        0tqfGX7YIMsDcxknVB8mKQ==
+X-Google-Smtp-Source: ABdhPJxcHAiGb3cR67Py3+uLUxchrLMIS5xTg8PaCiR/WIh3MXNqxcixXVmIONgmWv6QMVtBOnCjQQ==
+X-Received: by 2002:a17:90a:a613:: with SMTP id c19mr2350193pjq.155.1590651126100;
+        Thu, 28 May 2020 00:32:06 -0700 (PDT)
+Received: from he-cluster.localdomain ([67.216.221.250])
+        by smtp.gmail.com with ESMTPSA id 10sm3980395pfx.138.2020.05.28.00.32.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 May 2020 00:32:05 -0700 (PDT)
+From:   xiakaixu1987@gmail.com
+X-Google-Original-From: newtongao@tencent.com
+To:     kashyap.desai@broadcom.com, sumit.saxena@broadcom.com,
+        shivasharan.srikanteshwara@broadcom.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiaoming Gao <newtongao@tencent.com>
+Subject: [PATCH] scsi: megaraid_sas: fix kdump kernel boot hung caused by JBOD
+Date:   Thu, 28 May 2020 15:31:55 +0800
+Message-Id: <1590651115-9619-1-git-send-email-newtongao@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Xiaoming Gao <newtongao@tencent.com>
 
-On 5/20/20 12:43 PM, Andrew-sh.Cheng wrote:
-> This adds dt-binding documentation of cci devfreq
-> for Mediatek MT8183 SoC platform.
-> 
-> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> ---
->  .../devicetree/bindings/devfreq/mt8183-cci.yaml    | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml b/Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
-> new file mode 100644
-> index 000000000000..a7341fd94097
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/mt8183-cci.yaml
-> @@ -0,0 +1,51 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: https://protect2.fireeye.com/url?k=33f1f15d-6e23ea05-33f07a12-0cc47a31c8b4-91b3f8aeecce95dc&q=1&u=http%3A%2F%2Fdevicetree.org%2Fschemas%2Fdevfreq%2Fmt8183-cci.yaml%23
-> +$schema: https://protect2.fireeye.com/url?k=fc7d9089-a1af8bd1-fc7c1bc6-0cc47a31c8b4-b46f5afc59faf86d&q=1&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23
-> +
-> +title: CCI_DEVFREQ driver for MT8183.
-> +
-> +maintainers:
-> +  - Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
-> +
-> +description: |
-> +  This module is used to create CCI DEVFREQ.
-> +  The performance will depend on both CCI frequency and CPU frequency.
-> +  For MT8183, CCI co-buck with Little core.
-> +  Contain CCI opp table for voltage and frequency scaling.
-> +
-> +properties:
-> +  compatible:
-> +    const: "mediatek,mt8183-cci"
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: "cci"
-> +
-> +  operating-points-v2: true
-> +  opp-table: true
-> +
-> +  proc-supply:
-> +    description:
-> +      Phandle of the regulator that provides the supply voltage.
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - clock-names
-> +  - proc-supply
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/mt8183-clk.h>
-> +    cci: cci {
-> +      compatible = "mediatek,mt8183-cci";
-> +      clocks = <&apmixedsys CLK_APMIXED_CCIPLL>;
-> +      clock-names = "cci";
-> +      operating-points-v2 = <&cci_opp>;
-> +      proc-supply = <&mt6358_vproc12_reg>;
-> +    };
-> +
-> 
+when kernel crash, and kexec into kdump kernel, megaraid_sas will hung and
+print follow error logs
 
-I recommend that add the more detailed example
-with OPP table with CPU node.
+24.1485901 sd 0:0:G:0: [sda 1 tag809 BRCfl Debug mfi stat 0x2(1, data len requested/conpleted 0X100
+0/0x0)]
+24.1867171 sd 0:0:G :9: [sda I tag861 BRCfl Debug mfft stat 0x2d, data len reques ted/conp1e Led 0X100
+0/0x0]
+24.2054191 sd 0:O:6:O: [sda 1 tag861 FAILED Result: hustbyte=DIDGK drioerbyte-DRIUCR SENSE]
+24.2549711 bik_update_ request ! 1/0 error , dev sda, sector 937782912 op 0x0:(READ) flags 0x0 phys_seg 1 prio class
+21.2752791 buffer_io_error 2 callbacks suppressed
+21.2752731 Duffer IO error an dev sda, logical block 117212064, async page read
 
+this bug is caused by commit '59db5a931bbe73f ("scsi: megaraid_sas: Handle sequence JBOD map failure at
+ driver level
+")'
+and can be fixed by not set JOB when reset_devices on
 
+Signed-off-by: Xiaoming Gao <newtongao@tencent.com>
+---
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index b2ad965..24e7f1b 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -3127,7 +3127,7 @@ static void megasas_build_ld_nonrw_fusion(struct megasas_instance *instance,
+ 		<< MR_RAID_CTX_RAID_FLAGS_IO_SUB_TYPE_SHIFT;
+ 
+ 	/* If FW supports PD sequence number */
+-	if (instance->support_seqnum_jbod_fp) {
++	if (!reset_devices && instance->support_seqnum_jbod_fp) {
+ 		if (instance->use_seqnum_jbod_fp &&
+ 			instance->pd_list[pd_index].driveType == TYPE_DISK) {
+ 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+1.8.3.1
+
