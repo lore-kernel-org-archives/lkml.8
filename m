@@ -2,126 +2,101 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F974C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A267C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D0912078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC0B2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="GgwTeWRs"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IZC/B70C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgE1Tok (ORCPT
+        id S1728642AbgE1Tos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:44:40 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:58432 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728456AbgE1Toi (ORCPT
+        Thu, 28 May 2020 15:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbgE1Tok (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:44:38 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49Xynw5VKlz9vBss
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 19:44:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9QOv1jpIcJ5l for <linux-kernel@vger.kernel.org>;
-        Thu, 28 May 2020 14:44:36 -0500 (CDT)
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49Xynw3qg2z9vYwf
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:44:36 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49Xynw3qg2z9vYwf
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49Xynw3qg2z9vYwf
-Received: by mail-il1-f200.google.com with SMTP id p81so234939ill.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:44:36 -0700 (PDT)
+        Thu, 28 May 2020 15:44:40 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A89C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:44:38 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f21so63657pgg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=PfzknLmfX2Bjtf5+K+UAI2zCUlxWnyr31FaRztaH9EY=;
-        b=GgwTeWRsrJf6uCZBd7WIQP/vQw66yUYSI/IfKQP4/Nqx0gXbfaqNYSjwaJghfc7Its
-         VNBzs7Yf5oj4ZQ2zRIUDaSA3o/aMAKiiEH0Ftk9jT4icfOYKFSwzIT53RwVyh68zFnVc
-         Hb7MNIURqQd4TN3LIVHG9F8/vpp2seM6ozkVM7NJ58FH0obdTcPT+eDpBHNRB1PU1rhd
-         lH3hsuKfEkMkPSg3i3fzjyK56HNHWvQs3d3mTE0j4G84MGbMXRDr5kjHFx5JheVkhlzv
-         Jrxp4+VzCS9X8bQi1AntSp4fIYAEiCFBgNISwYBDcW4ovqPffcIP5L28ZEjenIj1lpXV
-         dNTQ==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ib/FHwgaIOdIUIJ7nCiAVwkn44DXgxvEAL/KIsGPktg=;
+        b=IZC/B70CaBM17tiwjaASXWaq3p1H5KmrmkfylzojgEvAQlJ+Y2ljEL9eqnbgXRWXGh
+         nd4QXppBun3LwTQGBG+yX7USHmP1+y0DAbZ5hmfVlIzMcN/gQMs0klo1DYBBRtZyMEhD
+         rCLF32H0H4eJGsdFTodijrGcYwWLCVFdydaPjxEBab0eAXeqAZf1NQak/eJOjMAOwhcX
+         WIjIBSEohCYvodjjwj1W6NyDxBREpTlhylFywm7lVQNDQR4okJ2rTwto7lslQ/7Ww/Uw
+         oh+RTb25OgoMX1rHbS6Hg6+GYQIPwaxQBOKXDrZRa2c/6GPSDaoHnTrCqQTwSk7LHX0q
+         42Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=PfzknLmfX2Bjtf5+K+UAI2zCUlxWnyr31FaRztaH9EY=;
-        b=s1X0bEu8oEEzIh/oThefrNb9ZmAqlI1cwCyn2Hm7CqRHXJV46UK125J0BGcCpmOuhf
-         BiJuIsFLQuGN/poLzUjGzW1p5lC6AnARnWuR3P42fFipX5VvweFvmlusQU62TnrVg7e6
-         f7CDSIXXGvY218FelNsqng5pagiUoDTN0kKw+pBKd220lmJ8QPFtm7Y/4GHAUlEdlsyj
-         B+6IhoR/NXFUbILstpSTab1umPaN9j0Dh51tpPsRMB9RqVYoPW5cxulRz7xyJUUEryu2
-         RbHbX0pcskcHMouqFwOQUmzRCY2YxWKoTAD1MJiVmlUnRfasW3SJ9szZS9tth1zcBVM0
-         NTIA==
-X-Gm-Message-State: AOAM5333mmkN6a1hqfSxSUmgEilC8WmNWabFCpJLLwd1n7LplhFX8eJF
-        eS53bbOM/5bFAmh20sgJKYiDJWSvlSCCyPMmYHqO5RXlhgTLSASbY7y97R3ZBQfh/wAQ8aXRIxA
-        SNBTvsPZ5elsIDcsPp8xJJRP1bfO0
-X-Received: by 2002:a6b:4413:: with SMTP id r19mr3702487ioa.162.1590695076080;
-        Thu, 28 May 2020 12:44:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzyzHOXdfF7fbsziLAX3p+sQwgpWqimkngVD+dlB/SgAXob/nxTRKphQmLbUKH8qsco8UxYGg==
-X-Received: by 2002:a6b:4413:: with SMTP id r19mr3702460ioa.162.1590695075587;
-        Thu, 28 May 2020 12:44:35 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id s66sm3096905ilb.25.2020.05.28.12.44.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:44:34 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Allison Randal <allison@lohutok.net>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Dave Airlie <airlied@gmail.com>, linux-omap@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] omapfb: Fix reference count leak in display_init_sysfs.
-Date:   Thu, 28 May 2020 14:44:23 -0500
-Message-Id: <20200528194424.11596-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ib/FHwgaIOdIUIJ7nCiAVwkn44DXgxvEAL/KIsGPktg=;
+        b=cU7hAkGz4DHsdftA3qvLzSdtWQak1rEEi84qQKCm4sL8RdxWls15Ohwzhqd1NispDu
+         hPqH0NDXILD+GwR9T5cnD2ZF2Q/yAoyKdahImMxiomTB1eeYnuolAKIuZMYwlK6m3UWJ
+         CQ+x2ziCB15jvcyM2eZuiDR5WCv7VtVpMgibk8wyU79CUv8sE/3BrYd1TT2HD3zdKeUb
+         DZMWqa3ztu149pOjE9xWS0nYTlmDS2kE7jMSRbyNZoTdnTjiQz02GcXI5OULE3ofIKaG
+         c1nKYF3wCF0PzssZCeFKn+bPo8TFA8QXo6+DZk1BqpxEsDwikKAEsyGmLuPhZN3mDsx8
+         xKJA==
+X-Gm-Message-State: AOAM530M9kpsFCRGPydvDWnpbcdH7rPtcHjGAQg+kJktxsIxYg1OVMmY
+        Hy07HHJjek6kelJTvviKES6S+g==
+X-Google-Smtp-Source: ABdhPJxLCqYWjMiwubKEzX6kGygF5TG67qqXu02lJxE3KeGC6VmXsQv6RzRQm2eIk0fpB5AQVlFzcA==
+X-Received: by 2002:a63:d547:: with SMTP id v7mr4537973pgi.413.1590695078382;
+        Thu, 28 May 2020 12:44:38 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id y5sm6607079pjp.27.2020.05.28.12.44.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 12:44:37 -0700 (PDT)
+Subject: Re: [PATCH -next] block: add another struct gendisk to
+ <linux/blkdev.h>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+References: <9a8676b1-c79e-9963-3ffc-c113b11d988d@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c2c78d99-272f-eec3-993e-ef6684792d8e@kernel.dk>
+Date:   Thu, 28 May 2020 13:44:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <9a8676b1-c79e-9963-3ffc-c113b11d988d@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On 5/28/20 11:21 AM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Add a forward declaration for struct gendisk when CONFIG_BLOCK is
+> not set/enabled to prevent multiple (30 - 50) build warnings.
+> 
+> In file included from ../kernel/sched/sched.h:39:0,
+>                  from ../kernel/sched/core.c:9:
+> ../include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside parameter list will not be visible outside of this definition or declaration
+>  unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
-Because function omap_dss_put_device() doesn't handle dssdev->kobj,
-thus we need insert kobject_put() to clean up the kobject,
-when kobject_init_and_add() fails.
+Should be fixed already:
 
-Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c | 1 +
- 1 file changed, 1 insertion(+)
+https://git.kernel.dk/cgit/linux-block/commit/?h=for-5.8/block&id=dc35ada4251f183137ee3a524543c9329d7a4fa2
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c b/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c
-index 6dbe265b312d..51322ac7df07 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/display-sysfs.c
-@@ -316,6 +316,7 @@ int display_init_sysfs(struct platform_device *pdev)
- 			&pdev->dev.kobj, "%s", dssdev->alias);
- 		if (r) {
- 			DSSERR("failed to create sysfs files\n");
-+			kobject_put(&dssdev->kobj);
- 			omap_dss_put_device(dssdev);
- 			goto err;
- 		}
 -- 
-2.17.1
+Jens Axboe
 
