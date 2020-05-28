@@ -2,108 +2,110 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A90D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B3882071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:20:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="afY0mSX4"
+	by mail.kernel.org (Postfix) with ESMTP id AF2AC2073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590704443;
+	bh=gILXXRtvqSncq0mCCj8kjzwNxR2trvvwP4Z3q4foa10=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A4LzsWsQwwo/dF+ggN/yPSc6u4Xmw/kC3AWsg6f6aA0CapBl4U+l2icvtxGziAdy6
+	 c9oemU0xqm2OxrJjPr2Szp0/tiIkN5Zyv71MafbAfp+vhm7oSjioxlJkJ1H90Muo07
+	 fOEv16cN9DTriQGd1Ald6m7FePFPpXGLroLRAvUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436965AbgE1WUc (ORCPT
+        id S2436974AbgE1WUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436952AbgE1WUV (ORCPT
+        Thu, 28 May 2020 18:20:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43436 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436902AbgE1WUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:20:21 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3984C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:20:20 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id m7so159260plt.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 15:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=NIrmsov8fCmRXlFvg/QT7vVocTnt+ne2gI6KC0HBK0s=;
-        b=afY0mSX4ecEhor/wnhCdYO9il2Qtq7+n+SMWBVmU+POSzCk+3OpQZWwmv7EVvRA818
-         1/xOb28Rt8SImGKI/oRgohVUXOtsGfffbAFwMcGZYFHDW8aYoSNHechWOLGk5al4qV7z
-         vSI8HsqGIo6mCTOjm919fK1nnMI69ZuEw3k30=
+        Thu, 28 May 2020 18:20:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id h10so197890iob.10;
+        Thu, 28 May 2020 15:20:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=NIrmsov8fCmRXlFvg/QT7vVocTnt+ne2gI6KC0HBK0s=;
-        b=MNPkQamXzTAY7p+GVUlZxLRUDWh3BPQLqmxtctfb7HbCJ+nZF8kNL5rrGxm/u73fjA
-         r8QiULyDDzvi0x0gc5x9PBdxcuoRe02evp0DgiX1JIYyAdbb3St6Mahu26w/bO3XYOMc
-         MoNxj0TPSkIJtsbU+tOj+zJsgs74vMh/PIZ56DDy8GsV36WcOnsE4VrOn1hSFuAqLT4L
-         SqoTxwXdohXoGUlIDQzQkU6LBNF5jzO9LfFqcuLx9aBZPkPBDNRUBuUmvfQGdDLQuX8q
-         eVUS7Xed95nhwnuuDS0CSLgZ2o3LHFVop72RkCbW6ACCJK+NAd7F2Z6LGa/ft/U7dGiK
-         fYCw==
-X-Gm-Message-State: AOAM532/6Xj66XTZNtsA0H6ueFLkwaAjLE7Q/QIkxuMtr2yRrXBCIUY6
-        nDZQOI4AKSUM3UYp+8IpvFmBdg==
-X-Google-Smtp-Source: ABdhPJzUwecS9O4N+0Q5MiuUxbCuwmR873e50Cqr3EvQobTbxJBzbn00SvqWBzMofBCP1ZKG8DsPNQ==
-X-Received: by 2002:a17:902:a604:: with SMTP id u4mr5665326plq.196.1590704420073;
-        Thu, 28 May 2020 15:20:20 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id v1sm6539323pjn.9.2020.05.28.15.20.19
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=V1pVNRBWzHZ1G6jffgYB9BbYesxXCexItPOb/g+HRwk=;
+        b=rqHhrMh13t6cZ8yJFpoi9AQLJbqrhIGCSiAtIzY3TSGsJbzGWvs6PM9aENGygzSvjG
+         0b2kprJIvS7K+yfx93J4XBMMKMdH9LJ9MpUztDDtCWZ+jquuVI6AJi5j1LSCvzIP9hvH
+         0qwXyGyY2iHNbMw7C1OR29xRYlNav4SXEZFGjq+GwiTHZ/E1PYN2yl0FxAGEzguSrwEs
+         goDSrCfhHbU9QR7YfRiWbxplxFeYib6utIrQa5G3iDKf/QYh3cEcyLNnuPbZYBsZRLHn
+         JDtbkD1akCl8BgGALQaDk/cQZI0erqEzi38McK0Jo65r1dIrnILZQzUh1UDlteBw/R9F
+         umJQ==
+X-Gm-Message-State: AOAM53052nP0n3KPwBwhlyQ8uLNyCcI/Qr93L0mGmIWN0s5AYsNxcVCo
+        pNZI9XyU04uPsW7pL7tD+g==
+X-Google-Smtp-Source: ABdhPJwj8PCtzTwAhMry0miLqUZxr77A1fRZS29Pm/8O3Pm0xpLEjyn2R+dRN+D30uJ90Rg4+GEwtA==
+X-Received: by 2002:a5e:d903:: with SMTP id n3mr3603677iop.93.1590704422191;
+        Thu, 28 May 2020 15:20:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id q6sm3787197ilj.72.2020.05.28.15.20.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 15:20:19 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 28 May 2020 15:20:21 -0700 (PDT)
+Received: (nullmailer pid 785342 invoked by uid 1000);
+        Thu, 28 May 2020 22:20:20 -0000
+Date:   Thu, 28 May 2020 16:20:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: omap: Update PRM binding for genpd
+Message-ID: <20200528222020.GA783133@bogus>
+References: <20200520211334.61814-1-tony@atomide.com>
+ <20200520211334.61814-2-tony@atomide.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1590655103-21568-1-git-send-email-mkrishn@codeaurora.org>
-References: <1590655103-21568-1-git-send-email-mkrishn@codeaurora.org>
-Subject: Re: [v1] drm/msm: add shutdown support for display platform_driver
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org, mka@chromium.org
-To:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org
-Date:   Thu, 28 May 2020 15:20:18 -0700
-Message-ID: <159070441846.69627.1650074507855844615@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520211334.61814-2-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Krishna Manikandan (2020-05-28 01:38:23)
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index e4b750b..7a8953f 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -1322,6 +1322,18 @@ static int msm_pdev_remove(struct platform_device =
-*pdev)
->         return 0;
->  }
-> =20
-> +static void msm_pdev_shutdown(struct platform_device *pdev)
-> +{
-> +       struct drm_device *drm =3D platform_get_drvdata(pdev);
-> +
-> +       if (!drm) {
-> +               DRM_ERROR("Invalid drm device node\n");
-> +               return;
-> +       }
+On Wed, May 20, 2020 at 02:13:29PM -0700, Tony Lindgren wrote:
+> The PRM (Power and Reset Module) has registers to enable and disable
+> power domains, so let's update the binding for that.
 
-When would this ever happen? Please drop this useless check.
+multiple domains? Then why 0 cells?
 
-> +
-> +       drm_atomic_helper_shutdown(drm);
-> +}
-> +
->  static const struct of_device_id dt_match[] =3D {
->         { .compatible =3D "qcom,mdp4", .data =3D (void *)KMS_MDP4 },
->         { .compatible =3D "qcom,mdss", .data =3D (void *)KMS_MDP5 },
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  Documentation/devicetree/bindings/arm/omap/prm-inst.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> --- a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+> @@ -18,6 +18,7 @@ Required properties:
+>  		(base address and length)
+>  
+>  Optional properties:
+> +- #power-domain-cells:	Should be 0 if the PRM instance is a power domain.
+
+...power domain provider.
+
+>  - #reset-cells:	Should be 1 if the PRM instance in question supports resets.
+>  
+>  Example:
+> @@ -25,5 +26,6 @@ Example:
+>  prm_dsp2: prm@1b00 {
+>  	compatible = "ti,dra7-prm-inst", "ti,omap-prm-inst";
+>  	reg = <0x1b00 0x40>;
+> +	#power-domain-cells = <0>;
+>  	#reset-cells = <1>;
+>  };
+> -- 
+> 2.26.2
