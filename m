@@ -2,109 +2,178 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0492072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2586A206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436748AbgE1Vx1 (ORCPT
+        id S2436816AbgE1Vy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:53:27 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:58496 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436690AbgE1VxY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:53:24 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 28 May 2020 14:53:20 -0700
-Received: from ubuntu.eng.vmware.com (unknown [10.20.113.240])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id 1321AB26B0;
-        Thu, 28 May 2020 17:53:24 -0400 (EDT)
-From:   Ronak Doshi <doshir@vmware.com>
-To:     <netdev@vger.kernel.org>
-CC:     Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 net-next 0/4] vmxnet3: upgrade to version 4
-Date:   Thu, 28 May 2020 14:53:18 -0700
-Message-ID: <20200528215322.31682-1-doshir@vmware.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 28 May 2020 17:54:26 -0400
+Received: from mga11.intel.com ([192.55.52.93]:63426 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2436802AbgE1VyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 17:54:20 -0400
+IronPort-SDR: GE38C1nDbQcpphXmhQGFrKwJVBzKVHGAml8U+hi+GX0nrhhTMTH+6xC/D/STZgCIDAZp4Jbo1X
+ yiMLmnKXV3Cw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 14:54:19 -0700
+IronPort-SDR: eO+Kl9oDStjHmcS70yoy4o+yy64ToFP18+zRaQYBdY1tP9NOd2yExlkgOb/XN5teEyzh5kvODQ
+ imGIuX5A4rvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,446,1583222400"; 
+   d="scan'208";a="469288930"
+Received: from ssp-nc-cdi361.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
+  by fmsmga006.fm.intel.com with ESMTP; 28 May 2020 14:54:18 -0700
+Date:   Thu, 28 May 2020 14:54:18 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Darrel Goeddel <DGoeddel@forcepoint.com>,
+        Mark Scott <mscott@forcepoint.com>,
+        Romil Sharma <rsharma@forcepoint.com>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] PCI: Relax ACS requirement for Intel RCiEP devices.
+Message-ID: <20200528215418.GA7173@otc-nc-03>
+References: <1590699462-7131-1-git-send-email-ashok.raj@intel.com>
+ <20200528153826.257a0145@x1.home>
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: doshir@vmware.com does not
- designate permitted sender hosts)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200528153826.257a0145@x1.home>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmxnet3 emulation has recently added several new features which includes
-offload support for tunnel packets, support for new commands the driver
-can issue to emulation, change in descriptor fields, etc. This patch
-series extends the vmxnet3 driver to leverage these new features.
+On Thu, May 28, 2020 at 03:38:26PM -0600, Alex Williamson wrote:
+> On Thu, 28 May 2020 13:57:42 -0700
+> Ashok Raj <ashok.raj@intel.com> wrote:
+> 
+> > All Intel platforms guarantee that all root complex implementations
+> > must send transactions up to IOMMU for address translations. Hence for
+> > RCiEP devices that are Vendor ID Intel, can claim exception for lack of
+> > ACS support.
+> > 
+> > 
+> > 3.16 Root-Complex Peer to Peer Considerations
+> > When DMA remapping is enabled, peer-to-peer requests through the
+> > Root-Complex must be handled
+> > as follows:
+> > • The input address in the request is translated (through first-level,
+> >   second-level or nested translation) to a host physical address (HPA).
+> >   The address decoding for peer addresses must be done only on the
+> >   translated HPA. Hardware implementations are free to further limit
+> >   peer-to-peer accesses to specific host physical address regions
+> >   (or to completely disallow peer-forwarding of translated requests).
+> > • Since address translation changes the contents (address field) of
+> >   the PCI Express Transaction Layer Packet (TLP), for PCI Express
+> >   peer-to-peer requests with ECRC, the Root-Complex hardware must use
+> >   the new ECRC (re-computed with the translated address) if it
+> >   decides to forward the TLP as a peer request.
+> > • Root-ports, and multi-function root-complex integrated endpoints, may
+> >   support additional peerto-peer control features by supporting PCI Express
+> >   Access Control Services (ACS) capability. Refer to ACS capability in
+> >   PCI Express specifications for details.
+> > 
+> > Since Linux didn't give special treatment to allow this exception, certain
+> > RCiEP MFD devices are getting grouped in a single iommu group. This
+> > doesn't permit a single device to be assigned to a guest for instance.
+> > 
+> > In one vendor system: Device 14.x were grouped in a single IOMMU group.
+> > 
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.3
+> > 
+> > After the patch:
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.0
+> > /sys/kernel/iommu_groups/5/devices/0000:00:14.2
+> > /sys/kernel/iommu_groups/6/devices/0000:00:14.3 <<< new group
+> > 
+> > 14.0 and 14.2 are integrated devices, but legacy end points.
+> > Whereas 14.3 was a PCIe compliant RCiEP.
+> > 
+> > 00:14.3 Network controller: Intel Corporation Device 9df0 (rev 30)
+> > Capabilities: [40] Express (v2) Root Complex Integrated Endpoint, MSI 00
+> > 
+> > This permits assigning this device to a guest VM.
+> > 
+> > Fixes: f096c061f552 ("iommu: Rework iommu_group_get_for_pci_dev()")
+> 
+> I don't really understand this Fixes tag.  This seems like a feature,
+> not a fix.  If you want it in stable releases as a feature, request it
+> via Cc: stable@vger.kernel.org.  I'd drop that tag, that's my nit.
+> Otherwise:
 
-Compatibility is maintained using existing vmxnet3 versioning mechanism as
-follows:
- - new features added to vmxnet3 emulation are associated with new vmxnet3
-   version viz. vmxnet3 version 4.
- - emulation advertises all the versions it supports to the driver.
- - during initialization, vmxnet3 driver picks the highest version number
- supported by both the emulation and the driver and configures emulation
- to run at that version.
+Yes, i should have Cced Stable instead. 
 
-In particular, following changes are introduced:
+Bjorn: Can you massage this in? or i can resend with Alex's Reviewed-by +
+adding stable in cc list.
 
-Patch 1:
-  This patch introduces utility macros for vmxnet3 version 4 comparison
-  and updates Copyright information.
-
-Patch 2:
-  This patch implements get_rss_hash_opts and set_rss_hash_opts methods
-  to allow querying and configuring different Rx flow hash configurations
-  which can be used to support UDP/ESP RSS.
-
-Patch 3:
-  This patch introduces segmentation and checksum offload support for
-  encapsulated packets. This avoids segmenting and calculating checksum
-  for each segment and hence gives performance boost.
-
-Patch 4:
-  With all vmxnet3 version 4 changes incorporated in the vmxnet3 driver,
-  with this patch, the driver can configure emulation to run at vmxnet3
-  version 4.
-
-Changes in v3 -> v4:
-   - Replaced BUG_ON() with WARN_ON_ONCE()
-
-Changes in v2 -> v3:
-   - fixed get_rss_hash_opts to return correct values for udp rss
-
-Changes in v2:
-   - Fixed compilation issue due to missing closed brace
-   - added fallthrough comment
-
-Ronak Doshi (4):
-  vmxnet3: prepare for version 4 changes
-  vmxnet3: add support to get/set rx flow hash
-  vmxnet3: add geneve and vxlan tunnel offload support
-  vmxnet3: update to version 4
-
- drivers/net/vmxnet3/Makefile          |   2 +-
- drivers/net/vmxnet3/upt1_defs.h       |   5 +-
- drivers/net/vmxnet3/vmxnet3_defs.h    |  31 ++--
- drivers/net/vmxnet3/vmxnet3_drv.c     | 164 ++++++++++++++++++---
- drivers/net/vmxnet3/vmxnet3_ethtool.c | 263 +++++++++++++++++++++++++++++++++-
- drivers/net/vmxnet3/vmxnet3_int.h     |  25 +++-
- 6 files changed, 448 insertions(+), 42 deletions(-)
-
--- 
-2.11.0
-
+> 
+> Reviewed-by: Alex Williamson <alex.williamson@redhat.com>
+> 
+> > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> > To: Joerg Roedel <joro@8bytes.org>
+> > To: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: iommu@lists.linux-foundation.org
+> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
+> > Cc: Alex Williamson <alex.williamson@redhat.com>
+> > Cc: Darrel Goeddel <DGoeddel@forcepoint.com>
+> > Cc: Mark Scott <mscott@forcepoint.com>,
+> > Cc: Romil Sharma <rsharma@forcepoint.com>
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > ---
+> > v2: Moved functionality from iommu to pci quirks - Alex Williamson
+> > 
+> >  drivers/pci/quirks.c | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 28c9a2409c50..63373ca0a3fe 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4682,6 +4682,20 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+> >  		PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_DT);
+> >  }
+> >  
+> > +static int pci_quirk_rciep_acs(struct pci_dev *dev, u16 acs_flags)
+> > +{
+> > +	/*
+> > +	 * RCiEP's are required to allow p2p only on translated addresses.
+> > +	 * Refer to Intel VT-d specification Section 3.16 Root-Complex Peer
+> > +	 * to Peer Considerations
+> > +	 */
+> > +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_END)
+> > +		return -ENOTTY;
+> > +
+> > +	return pci_acs_ctrl_enabled(acs_flags,
+> > +		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+> > +}
+> > +
+> >  static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+> >  {
+> >  	/*
+> > @@ -4764,6 +4778,7 @@ static const struct pci_dev_acs_enabled {
+> >  	/* I219 */
+> >  	{ PCI_VENDOR_ID_INTEL, 0x15b7, pci_quirk_mf_endpoint_acs },
+> >  	{ PCI_VENDOR_ID_INTEL, 0x15b8, pci_quirk_mf_endpoint_acs },
+> > +	{ PCI_VENDOR_ID_INTEL, PCI_ANY_ID, pci_quirk_rciep_acs },
+> >  	/* QCOM QDF2xxx root ports */
+> >  	{ PCI_VENDOR_ID_QCOM, 0x0400, pci_quirk_qcom_rp_acs },
+> >  	{ PCI_VENDOR_ID_QCOM, 0x0401, pci_quirk_qcom_rp_acs },
+> 
