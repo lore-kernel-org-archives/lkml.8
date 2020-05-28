@@ -2,144 +2,191 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF67C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6F5A208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:43:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="u1iRWfH7"
+	by mail.kernel.org (Postfix) with ESMTP id C39082145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgE1JnU (ORCPT
+        id S2387491AbgE1JtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:43:20 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:55180 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728300AbgE1JnT (ORCPT
+        Thu, 28 May 2020 05:49:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46125 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbgE1JtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:43:19 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04S9aM3B018629;
-        Thu, 28 May 2020 05:43:00 -0400
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-        by mx0b-00128a01.pphosted.com with ESMTP id 316wkb5n1j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 05:42:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OcZFZgQp2W0x6+CJ2DlmIC9z0cy1eURktvMI2CBfXcbKEejViDTTnQYHOC12L9mMyd/AqnsI/AzKUw+7M9LgjsWGibGSUF5GpNPY20YTSiojq3XIsdT7MnWZJ34a0askiP4R3hiXVAHn8edJh+wKmRNGQUDulXKy3j4XKs2bpaXWIWwGldgHwaffUXrRGyyPrrPsiBeDQWQ7W8AW50Qm0SIQi46fR8Qy36Ls5bbP3fWmI2lVDVkgziiNKiHmQyX+/+m2WL1EiWvvTZezkZAuQ6L8MFKpuMDNIL82Xs4iMg/FO6Z3fEgeamrX/1iHAqtigFFC/TECWb3hZwQhFrAFqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0Fk8IyUHuQa7Q+i/BR9vNy1BYJpdd4sRxo6RwsTBcA=;
- b=VvFEhJvfnej4Btk/eZ6NhosEaqY1bCSQZtBPiT4zuEzPQGjXlDYvMJE7ECWqn9Y28RUyUPsZ1J2L3MLXX9pNbIjHT+hsos1PQ9sRBrzASMLM/vUhgWJvhN0QUXTpK2LycJBOCk6OK3Pvrcuhne95PLGGe1ocPTdX2RmnJvPG78aB1dF/2RW2ZmrkRTbRv+vFo5ToCZHeaGZP4sWULdByjz/fL1uJzSKPu2CbtQJzbDAxGs52xvavLhvSJ+PwcoM0kGPuLyx8vfs3wJLix1PKts8b8LKzUhCYdGSv3998Wlri2xEL5Dt5aXp/spzEp8HrBcENR4nkiBI+0FoayfGyKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=w0Fk8IyUHuQa7Q+i/BR9vNy1BYJpdd4sRxo6RwsTBcA=;
- b=u1iRWfH762VNxvGILdwNZN0mlGKrLazzHijs5hcFSxQR4W3YS1P7mZHVJNu+4cJ4lyFnJLd+xqV9N8YiptDCISIabLoKl73t4WNdaCdYEsHp1JUzrpS7kK1C9D7T2I6laISXa3muyw5URixgjQz/eLICkVO7g73MOW5Mu90Pcqs=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4380.namprd03.prod.outlook.com (2603:10b6:5:10c::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18; Thu, 28 May
- 2020 09:42:56 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::e02f:b3c0:d1e9:5eaf]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::e02f:b3c0:d1e9:5eaf%3]) with mapi id 15.20.3021.030; Thu, 28 May 2020
- 09:42:56 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "hslester96@gmail.com" <hslester96@gmail.com>
-CC:     "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
+        Thu, 28 May 2020 05:49:08 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeF9V-0002NQ-9d; Thu, 28 May 2020 09:48:41 +0000
+Date:   Thu, 28 May 2020 11:48:39 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Nicolas Viennot <Nicolas.Viennot@twosigma.com>
+Cc:     Adrian Reber <areber@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        =?utf-8?B?TWljaGHFgiBDxYJhcGnFhHNraQ==?= <mclapinski@google.com>,
+        Kamil Yurtsever <kyurtsever@google.com>,
+        Dirk Petersen <dipeit@gmail.com>,
+        Christine Flood <chf@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Serge Hallyn <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "paul.cercueil@analog.com" <paul.cercueil@analog.com>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH v2] iio: amplifiers: ad8366: Add the missed check for
- devm_gpiod_get()
-Thread-Topic: [PATCH v2] iio: amplifiers: ad8366: Add the missed check for
- devm_gpiod_get()
-Thread-Index: AQHWNLrqjELUbIiCO02AUu0RU7WKsai9P0OA
-Date:   Thu, 28 May 2020 09:42:56 +0000
-Message-ID: <9d08ae7284e1b0b57c5328545c5c5bbe96b210ef.camel@analog.com>
-References: <20200528064027.546944-1-hslester96@gmail.com>
-In-Reply-To: <20200528064027.546944-1-hslester96@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=analog.com;
-x-originating-ip: [188.27.130.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bea55141-9ad1-4b30-4161-08d802eb8015
-x-ms-traffictypediagnostic: DM6PR03MB4380:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR03MB43803494EBB65CD2DD42A300F98E0@DM6PR03MB4380.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GljcM85qwXeGbu9l4GHLeGhz8iu3Mvrws3TX1/pCFe2RPgWwqKIehlT7WBWa5dz8G7/HO2vM3jxH4LVzlBP/J1AC3pRWHgy7V02ROxlsZrpO7fcyw7vF/4lpx8bV5WOZBh/U39eMuZB4eAaJRopJfZMM6cc9hp2MOa6R65qI6Csr5kO2f9tSHzeki/iC+7730ZnUr2pA+eYQaV+hqGUm8O/QRyRtDovraNJrgCB0COUwF5zMDq8/QscvtYbyVcaHe7OTbmQQEl9iuteSpqIc96SNgINETrKXCmU0ydWjCvx9BBrf1ysSc/h4BoZpyUAKhiKfCx2zpQHSPmCkGLPQiw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4411.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(366004)(376002)(39860400002)(346002)(4326008)(6486002)(6506007)(66446008)(2906002)(66476007)(64756008)(66556008)(26005)(186003)(316002)(8676002)(6916009)(54906003)(5660300002)(8936002)(86362001)(478600001)(76116006)(66946007)(91956017)(6512007)(36756003)(2616005)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: /YGCvb2X5SdMjljCmTfez3oaLke/uFQf1qurOt8A+CM843Tnibj3BexDkXGIMOXhG2VtAMIRogNhdzjfI6NHpaVTlFv5etrtLKP0/9PswjNARyWmM7MdMj1nzMPY5K8o99PbzFdFX7dy/f1XHrFABKPZc4LrmYnKLJvPtjmQ1mxh0CLQe9yr3+mUqY0hL2V+MPFrgGK/gd5JGyhPORGnBfrNIJizOk7gKRsYzwkcbExHIg0RxjzKqtI01ERsFBtwWNBvMfndSueidgtfwiuNMsfRv0MvcScOYtjpI0Ci0VHmNFQKBsP6Vk2vgGXrZbmy7nHgYcH+HGSZx0P+1CNdEc2ZQ0sS/8xJoxfjNQDZIChHPRp25t+3M6ulon5cT4Ugc2bEcbWyv7xojbIFjZTtlScn6FMGmnHlaZEqrmWzoP+bfxDraU5laoG+tp1SCPOkEbozIqWZZkbgPRRtn/yEyQawMo3y6bzSIOGi1aACj1XPXNYc1IG+8kHYl8drdZtX
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AB40F26227D5B142ABBA12D838E3031F@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Eric Paris <eparis@parisplace.org>,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH] capabilities: Introduce CAP_RESTORE
+Message-ID: <20200528094839.gw7aqd3xs3kix273@wittgenstein>
+References: <20200522055350.806609-1-areber@redhat.com>
+ <dc86dffb-c7f8-15bb-db4e-be135da650cc@schaufler-ca.com>
+ <20200525080541.GF104922@dcbz.redhat.com>
+ <877dwybxvi.fsf@x220.int.ebiederm.org>
+ <20200527141403.GC250149@dcbz.redhat.com>
+ <20200527152955.jbbipgb6icb4nwgv@wittgenstein>
+ <d5ecde0c94014a4fad090e44377e9852@EXMBDFT11.ad.twosigma.com>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bea55141-9ad1-4b30-4161-08d802eb8015
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 09:42:56.1092
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QnBNUK1U18PzzzPO/x9hjT+vT7B4ZvFhg8lJlPSyHGtKt8OcHcLYzIJMOtpZPIO0TdXok41isk+66hV/CaSHDffUwtIhdAw/qgNdsbhH6rc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4380
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-28_02:2020-05-28,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 priorityscore=1501 spamscore=0
- cotscore=-2147483648 adultscore=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1011 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280065
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d5ecde0c94014a4fad090e44377e9852@EXMBDFT11.ad.twosigma.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA1LTI4IGF0IDE0OjQwICswODAwLCBDaHVob25nIFl1YW4gd3JvdGU6DQo+
-IFtFeHRlcm5hbF0NCj4gDQo+IGFkODM2Nl9wcm9iZSgpIGZvcmdldHMgdG8gY2hlY2sgdGhlIHJl
-dHVybiB2YWx1ZSBvZiBkZXZtX2dwaW9kX2dldCgpLg0KPiBBZGQgdGhlIG1pc3NlZCBjaGVjayB0
-byBmaXggaXQuDQo+IA0KPiBGaXhlczogY2VlMjExZjRlNWEwICgiaWlvOiBhbXBsaWZpZXJzOiBh
-ZDgzNjY6IEFkZCBzdXBwb3J0IGZvciB0aGUNCj4gQURBNDk2MSBER0EiKQ0KPiBTaWduZWQtb2Zm
-LWJ5OiBDaHVob25nIFl1YW4gPGhzbGVzdGVyOTZAZ21haWwuY29tPg0KPiAtLS0NCj4gQ2hhbmdl
-cyBpbiB2MjoNCj4gICAtIEFkZCBmaXhlcyB0YWcuDQo+IA0KPiAgZHJpdmVycy9paW8vYW1wbGlm
-aWVycy9hZDgzNjYuYyB8IDQgKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2FtcGxpZmllcnMvYWQ4MzY2LmMNCj4g
-Yi9kcml2ZXJzL2lpby9hbXBsaWZpZXJzL2FkODM2Ni5jDQo+IGluZGV4IDYyMTY3Yjg3Y2FlYS4u
-Yjk5NjgyM2M4ZDUxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lpby9hbXBsaWZpZXJzL2FkODM2
-Ni5jDQo+ICsrKyBiL2RyaXZlcnMvaWlvL2FtcGxpZmllcnMvYWQ4MzY2LmMNCj4gQEAgLTI2NCw2
-ICsyNjQsMTAgQEAgc3RhdGljIGludCBhZDgzNjZfcHJvYmUoc3RydWN0IHNwaV9kZXZpY2UgKnNw
-aSkNCj4gIAljYXNlIElEX0hNQzExMTk6DQo+ICAJCXN0LT5yZXNldF9ncGlvID0gZGV2bV9ncGlv
-ZF9nZXQoJnNwaS0+ZGV2LCAicmVzZXQiLA0KPiAgCQkJR1BJT0RfT1VUX0hJR0gpOw0KDQp0aGlz
-IGlzIHNlbWktaW50ZW50aW9uYWwgaSBndWVzczsNCmluIHRoZSBzZW5zZSB0aGF0IGlmIHRoZXJl
-IGlzIG5vIEdQSU8sIG5vdGhpbmcgaGFwcGVuczsNCg0KbWF5YmUgY29udmVydCB0aGlzIHRvIGRl
-dm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKCkNCm90aGVyd2lzZSwgaWYgdGhlcmUgaXMgbm8gcmVzZXQg
-R1BJTywgdGhpcyBjYW4gZmFpbCB0aGUgcHJvYmU7IGFuZCB0aGUgR1BJTw0KaXMgbm90IG9wdGlv
-bmFsOw0KcmVzdCBvZiB0aGUgY29kZSBsb29rcyBmaW5lICh3aXRoIHRoZSBkZXZtX2dwaW9kX2dl
-dF9vcHRpb25hbCgpDQptb2RpZmljYXRpb24pDQoNCj4gKwkJaWYgKElTX0VSUihzdC0+cmVzZXRf
-Z3BpbykpIHsNCj4gKwkJCXJldCA9IFBUUl9FUlIoc3QtPnJlc2V0X2dwaW8pOw0KPiArCQkJZ290
-byBlcnJvcl9kaXNhYmxlX3JlZzsNCj4gKwkJfQ0KPiAgCQlpbmRpb19kZXYtPmNoYW5uZWxzID0g
-YWRhNDk2MV9jaGFubmVsczsNCj4gIAkJaW5kaW9fZGV2LT5udW1fY2hhbm5lbHMgPSBBUlJBWV9T
-SVpFKGFkYTQ5NjFfY2hhbm5lbHMpOw0KPiAgCQlicmVhazsNCg==
+On Wed, May 27, 2020 at 06:05:55PM +0000, Nicolas Viennot wrote:
+> > > Also in this thread Kamil mentioned that they also need calling prctl 
+> > > with PR_SET_MM during restore in their production setup.
+> >
+> > We're using that as well but it really feels like this:
+> >
+> >	prctl_map = (struct prctl_mm_map){
+> >	    .start_code = start_code,
+> >	    .end_code = end_code,
+> >	    .start_stack = start_stack,
+> >	    .start_data = start_data,
+> >	    .end_data = end_data,
+> >	    .start_brk = start_brk,
+> >	    .brk = brk_val,
+> >	    .arg_start = arg_start,
+> >	    .arg_end = arg_end,
+> >	    .env_start = env_start,
+> >	    .env_end = env_end,
+> >	    .auxv = NULL,
+> >	    .auxv_size = 0,
+> >	    .exe_fd = -1,
+> >	};
+> >
+> > should belong under ns_capable(CAP_SYS_ADMIN). Why is that necessary to relax?
+> 
+> When the prctl(PR_SET_MM_MAP...), the only privileged operation is to change the symlink of /proc/self/exe via set_mm_exe_file().
+> See https://github.com/torvalds/linux/blob/444fc5cde64330661bf59944c43844e7d4c2ccd8/kernel/sys.c#L2001-L2004
+> It needs CAP_SYS_ADMIN of the current namespace.
+
+This already has been relaxed before (see commit below) and why I'm at
+least symbolically pushing back is that I'm getting worried that we're
+just removing restrictions left and right and making kernel interfaces
+available to fully unprivileged user that very much seem to belong into
+the realm of local cap_sys_admin.
+
+    prctl: Allow local CAP_SYS_ADMIN changing exe_file
+
+    During checkpointing and restore of userspace tasks
+    we bumped into the situation, that it's not possible
+    to restore the tasks, which user namespace does not
+    have uid 0 or gid 0 mapped.
+
+    People create user namespace mappings like they want,
+    and there is no a limitation on obligatory uid and gid
+    "must be mapped". So, if there is no uid 0 or gid 0
+    in the mapping, it's impossible to restore mm->exe_file
+    of the processes belonging to this user namespace.
+
+    Also, there is no a workaround. It's impossible
+    to create a temporary uid/gid mapping, because
+    only one write to /proc/[pid]/uid_map and gid_map
+    is allowed during a namespace lifetime.
+    If there is an entry, then no more mapings can't be
+    written. If there isn't an entry, we can't write
+    there too, otherwise user task won't be able
+    to do that in the future.
+
+    The patch changes the check, and looks for CAP_SYS_ADMIN
+    instead of zero uid and gid. This allows to restore
+    a task independently of its user namespace mappings.
+
+> 
+> I would argue that setting the current process exe file check should just be reduced to a "can you ptrace a children" check.
+> Here's why: any process can masquerade into another executable with ptrace.
+> One can fork a child, ptrace it, have the child execve("target_exe"), then replace its memory content with an arbitrary program.
+
+Then it should probably be relaxed to CAP_SYS_PTRACE in the user
+namespace and not CAP_CHECKPOINT_RESTORE. (But apparently you also have
+a way of achieving what you want anyway. Imho, it's not necessarily
+wrong to require a bit more work when you want something like fully
+unprivileged c/r that's a rather special interest group.)
+
+> With CRIU's libcompel parasite mechanism (https://criu.org/Compel) this is fairly easy to implement.
+> In fact, we could modify CRIU to do just that (but with a fair amount of efforts due to the way CRIU is written),
+> and not rely on being able to SET_MM_EXE_FILE via prctl(). In turn, that would give an easy way to masquerade any process
+> into another one, provided that one can ptrace a child.
+> 
+> When not using PR_SET_MM_MAP, but using SET_MM_EXE_FILE, the CAP_RESOURCES at the root namespace level is required:
+> https://github.com/torvalds/linux/blob/444fc5cde64330661bf59944c43844e7d4c2ccd8/kernel/sys.c#L2109
+> This seems inconsistent. Also for some reason changing auxv is not privileged if using prctl via the MM_MAP mechanism, but is privileged otherwise.
+
+Fwiw, it always helps if people take the time to dig through the history
+of specifc changes. That usually helps explain why things ended up as
+confusing as they are now:
+
+	commit f606b77f1a9e362451aca8f81d8f36a3a112139e
+	Author: Cyrill Gorcunov <gorcunov@openvz.org>
+	Date:   Thu Oct 9 15:27:37 2014 -0700
+	
+	    prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation
+	
+	    During development of c/r we've noticed that in case if we need to support
+	    user namespaces we face a problem with capabilities in prctl(PR_SET_MM,
+	    ...) call, in particular once new user namespace is created
+	    capable(CAP_SYS_RESOURCE) no longer passes.
+	
+	    A approach is to eliminate CAP_SYS_RESOURCE check but pass all new values
+	    in one bundle, which would allow the kernel to make more intensive test
+
+[snip]
+
+	Still note that updating exe-file link now doesn't require sys-resource
+    	capability anymore, after all there is no much profit in preventing setup
+    	own file link (there are a number of ways to execute own code -- ptrace,
+    	ld-preload, so that the only reliable way to find which exactly code is
+    	executed is to inspect running program memory).  Still we require the
+    	caller to be at least user-namespace root user.
+
+    	I believe the old interface should be deprecated and ripped off in a
+    	couple of kernel releases if no one against.
+
+Sine you already have an interface that works and the argument for the
+new interface is that it let's the kernel do better validation if all
+arguments be passed at once I don't see the point in removing the
+CAP_SYS_RESOURCE restricting from the old interface possible introducing
+more maintenance burden or bugs when changing this. It would also
+encourage users to use an interface that even c/r people seemed to have
+viewed as being deprecated.
+
+Christian
