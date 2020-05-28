@@ -2,121 +2,143 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB83BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B16C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CB22084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:06:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ETKtEfdX"
+	by mail.kernel.org (Postfix) with ESMTP id CD1AA21532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgE1DGU (ORCPT
+        id S1726965AbgE1DHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 23:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgE1DGT (ORCPT
+        Wed, 27 May 2020 23:07:05 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:37862 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726530AbgE1DHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 23:06:19 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED6AC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 20:06:18 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id k3so1941662vsg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 20:06:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c0zRf9WTF0mM6R4rLoCl6Co+fSR9upGJzK30+eXsCrQ=;
-        b=ETKtEfdX4f87hvL+eN5+pIdyNmq0wY+7xdaPLxVaTXZ42GBITJENo0kA+8TlcsZaF5
-         Xluh6N64Pf46mJHA+DCu9/ektSbdItOS8crhEaj6B6a0AfsFuYS1/YNRAKXPhihGWVOh
-         lFgctf5UcsAxRAKLBTOmKAe9xcj+pQoznprDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c0zRf9WTF0mM6R4rLoCl6Co+fSR9upGJzK30+eXsCrQ=;
-        b=U96e3YdszoLjkF2SyU4icko2gw0X8njBzxxqcQNEBojpTVr8t6yJkAvbKIvbqHxCvS
-         5/QbGEKANHyBMz+YywbMn4HDWTRUWLN8hbOo8Ee2piDVxnMMvBUWb6ybvPXwDHtY2Gjt
-         49XZfqjB2feLCg7iiq6/hbL0ReCf0kkXULghKKw7givg5pCK4VD/dcAKxIJbU0N3Fi+w
-         hW1rAQBr0b/lZQTHGSTgyJZzyJH2AychI51gQ1zEhSHFrTYdqdmgaoI/dhvZ2orVMuEB
-         Zwhx0AYg/aVE7Kd2R91hQW1b5BcQQMo/CTC1ozdbkWjbAW3YkxFbrvB5Y4iR+zuENWeF
-         fZwQ==
-X-Gm-Message-State: AOAM532UIv9KU5Pw3dbWga1wGJruD9Eq9mSWSBzueOMlH9xOMELQ7zea
-        7ZfRSonrY86Ht4olvo28/MIkHMmFZyPMoxH1r09XxQ==
-X-Google-Smtp-Source: ABdhPJyRv5KIG7uAo2gx9DLqYFdLVEioWfhg8W/XAXDq9+AhgpxLCUHCVP+7cfxwa0TCIQBIbicDDN+po4i6IYEWEZI=
-X-Received: by 2002:a67:71c2:: with SMTP id m185mr581124vsc.186.1590635177072;
- Wed, 27 May 2020 20:06:17 -0700 (PDT)
+        Wed, 27 May 2020 23:07:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TzrLi3f_1590635222;
+Received: from localhost(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0TzrLi3f_1590635222)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 May 2020 11:07:03 +0800
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH 1/2] workqueue: pin the pool while it is managing
+Date:   Thu, 28 May 2020 03:06:55 +0000
+Message-Id: <20200528030657.1690-1-laijs@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200527194633.1660952-2-bigeasy@linutronix.de>
+References: <20200527194633.1660952-2-bigeasy@linutronix.de>
 MIME-Version: 1.0
-References: <20200528025503.24003-1-wuxy@bitland.com.cn>
-In-Reply-To: <20200528025503.24003-1-wuxy@bitland.com.cn>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 28 May 2020 11:06:04 +0800
-Message-ID: <CANMq1KDWp7ztviO+ZoXeEqek3uCzPDKjteahO32C3b-=OxerUQ@mail.gmail.com>
-Subject: Re: [PATCH] [v3]mtd: spi-nor: winbond: add 1.8v SPI NOR Flash IDs
-To:     wuxy@bitland.com.cn
-Cc:     lkml <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org,
-        stlin2@winbond.com, wuxy <wuxy@bitland.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 10:55 AM <wuxy@bitland.com.cn> wrote:
->
-> From: wuxy <wuxy@bitland.corp-partner.google.com>
->
-> Winbond has new 1.8V SPI NOR Flash IDs,we need to use the SPI
-> flash IDs in kukui series,this patch can support the new flash IDs.
->
-> TEST=boot to shell,get the spi information from 'dmesg'.
+So that put_unbound_pool() can ensure all workers in idle,
+no unfinished manager. And it doens't need to wait any manager
+and can go to delete all the idle workers straight away.
 
-TEST= is Chromium OS specific, you can drop this line.
+Also removes manager waitqueue, because it is unneeded and as
+Sebastian Andrzej Siewior said:
 
->
-> Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
-> Signed-off-by: ST Lin <stlin2@winbond.com>
+  The workqueue code has it's internal spinlock (pool::lock) and also
+  implicit spinlock usage in the wq_manager waitqueue. These spinlocks
+  are converted to 'sleeping' spinlocks on a RT-kernel.
 
-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
+  Workqueue functions can be invoked from contexts which are truly atomic
+  even on a PREEMPT_RT enabled kernel. Taking sleeping locks from such
+  contexts is forbidden.
 
->
-> This patch copied from:https://patchwork.ozlabs.org/patch/1150756/,
-> The original patch is invalid,so re-submit a new patch for this.
+  pool::lock can be converted to a raw spinlock as the lock held times
+  are short. But the workqueue manager waitqueue is handled inside of
+  pool::lock held regions which again violates the lock nesting rules
+  of raw and regular spinlocks.
 
-This belongs below the ---, but I guess the maintainer can help you with that.
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/lkml/20200527194633.1660952-2-bigeasy@linutronix.de
+Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+---
+ kernel/workqueue.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-> ---
->  drivers/mtd/spi-nor/winbond.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-> index 17deabad57e1..cda4f8847bd6 100644
-> --- a/drivers/mtd/spi-nor/winbond.c
-> +++ b/drivers/mtd/spi-nor/winbond.c
-> @@ -61,6 +61,15 @@ static const struct flash_info winbond_parts[] = {
->                              SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->         { "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
->                             SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
-> +       { "w25q64jwxxIM", INFO(0xef8017, 0, 64 * 1024, 128,
-> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-> +       { "w25q128jwxxIM", INFO(0xef8018, 0, 64 * 1024, 256,
-> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-> +       { "w25q256jwxxIM", INFO(0xef8019, 0, 64 * 1024, 512,
-> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
->  };
->
->  /**
-> --
-> 2.20.1
->
->
->
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 891ccad5f271..fde10a5dba82 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -301,7 +301,6 @@ static struct workqueue_attrs *wq_update_unbound_numa_attrs_buf;
+ static DEFINE_MUTEX(wq_pool_mutex);	/* protects pools and workqueues list */
+ static DEFINE_MUTEX(wq_pool_attach_mutex); /* protects worker attach/detach */
+ static DEFINE_SPINLOCK(wq_mayday_lock);	/* protects wq->maydays list */
+-static DECLARE_WAIT_QUEUE_HEAD(wq_manager_wait); /* wait for manager to go away */
+ 
+ static LIST_HEAD(workqueues);		/* PR: list of all workqueues */
+ static bool workqueue_freezing;		/* PL: have wqs started freezing? */
+@@ -2129,10 +2128,21 @@ __acquires(&pool->lock)
+ static bool manage_workers(struct worker *worker)
+ {
+ 	struct worker_pool *pool = worker->pool;
++	struct work_struct *work = list_first_entry(&pool->worklist,
++					struct work_struct, entry);
++	struct pool_workqueue *pwq = get_work_pwq(work);
+ 
+ 	if (pool->flags & POOL_MANAGER_ACTIVE)
+ 		return false;
+ 
++	/*
++	 * If @pwq is for an unbound wq, its base ref and the @pool's
++	 * ref may be put at any time due to an attribute change.
++	 * Pin @pwq to also pin the @pool until the manager is done
++	 * with it.
++	 */
++	get_pwq(pwq);
++
+ 	pool->flags |= POOL_MANAGER_ACTIVE;
+ 	pool->manager = worker;
+ 
+@@ -2140,7 +2150,7 @@ static bool manage_workers(struct worker *worker)
+ 
+ 	pool->manager = NULL;
+ 	pool->flags &= ~POOL_MANAGER_ACTIVE;
+-	wake_up(&wq_manager_wait);
++	put_pwq(pwq);
+ 	return true;
+ }
+ 
+@@ -3535,16 +3545,7 @@ static void put_unbound_pool(struct worker_pool *pool)
+ 		idr_remove(&worker_pool_idr, pool->id);
+ 	hash_del(&pool->hash_node);
+ 
+-	/*
+-	 * Become the manager and destroy all workers.  This prevents
+-	 * @pool's workers from blocking on attach_mutex.  We're the last
+-	 * manager and @pool gets freed with the flag set.
+-	 */
+ 	spin_lock_irq(&pool->lock);
+-	wait_event_lock_irq(wq_manager_wait,
+-			    !(pool->flags & POOL_MANAGER_ACTIVE), pool->lock);
+-	pool->flags |= POOL_MANAGER_ACTIVE;
+-
+ 	while ((worker = first_idle_worker(pool)))
+ 		destroy_worker(worker);
+ 	WARN_ON(pool->nr_workers || pool->nr_idle);
+-- 
+2.20.1
+
