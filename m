@@ -2,95 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E04C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4488C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4C1207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3361207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:00:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d2TuXafH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405252AbgE1Q76 (ORCPT
+        id S2405275AbgE1RAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:59:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:7797 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405172AbgE1Q75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:59:57 -0400
-IronPort-SDR: VFl719Le3/YhyYKHTMmnWaBvNaSwjTN0lHPp8Gk8j+wcc9KhY7Bzugjq//MOp+3BotJcwK6n0i
- T/XNviqU+44A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 09:59:56 -0700
-IronPort-SDR: /SJhqbZYThfntgjSQvaZupZa5nrhFNdOhLATo7BmrAKyoxHMV6BL71I46xS//OFGhtL3pk1z3l
- LkmLgy1iM/xw==
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="267279706"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.96]) ([10.249.174.96])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 09:59:54 -0700
-Subject: Re: [PATCH] KVM: X86: Call kvm_x86_ops.cpuid_update() after CPUIDs
- fully updated
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
-References: <20200528151927.14346-1-xiaoyao.li@intel.com>
- <b639a333-d7fe-74fd-ee11-6daede184676@redhat.com>
- <1f45de43-af43-24da-b7d3-00b9d2bd517c@intel.com>
- <5d8bc1da-f866-4741-7746-1fa2a3cfbafd@redhat.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <54497675-2b35-b351-4259-8eb819daca87@intel.com>
-Date:   Fri, 29 May 2020 00:59:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 13:00:19 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60733 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2405254AbgE1RAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 13:00:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590685216;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=k0AbgdM89I1fch23T6oXHrlkE5eBQV/JX1tB7m1TZRI=;
+        b=d2TuXafHBgTRGeBpvmUyU/pI9KJSX7ejwOSWDQm/7TRVU81kEGnK5yFtDz28IAKr+5HQlE
+        DdxaHiD59VaOsPBb8S7+O+tXYadNbNZgUodTeqY19CUAKeS0w0figjVeNwv5lsEgVD9S1g
+        hl2PihAU0ClbEIKPqbIsnW4kg3aKMA4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-ey1vtCkwMGKYtdV7WbWLtA-1; Thu, 28 May 2020 13:00:14 -0400
+X-MC-Unique: ey1vtCkwMGKYtdV7WbWLtA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A55B835B40;
+        Thu, 28 May 2020 17:00:13 +0000 (UTC)
+Received: from treble (ovpn-117-65.rdu2.redhat.com [10.10.117.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B689610013DB;
+        Thu, 28 May 2020 17:00:12 +0000 (UTC)
+Date:   Thu, 28 May 2020 12:00:10 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Matt Helsley <mhelsley@vmware.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [RFC][PATCH 2/3] objtool: Find relocation base section using
+ sh_info
+Message-ID: <20200528170010.xe46x3tvz4npvovj@treble>
+References: <cover.1590597288.git.mhelsley@vmware.com>
+ <d848189dac6c41193a6c55c3588b78114bbcb0f8.1590597288.git.mhelsley@vmware.com>
+ <20200528140916.6crguzfpehf6lext@treble>
+ <20200528160247.GW9040@rlwimi.vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <5d8bc1da-f866-4741-7746-1fa2a3cfbafd@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200528160247.GW9040@rlwimi.vmware.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/29/2020 12:15 AM, Paolo Bonzini wrote:
-> On 28/05/20 17:40, Xiaoyao Li wrote:
->>>
->>>> kvm_x86_ops.cpuid_update() is used to update vmx/svm settings based on
->>>> updated CPUID settings. So it's supposed to be called after CPUIDs are
->>>> fully updated, not in the middle stage.
->>>>
->>>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->>>
->>> Are you seeing anything bad happening from this?
->>
->> Not yet.
->>
->> IMO changing the order is more reasonable and less confusing.
+On Thu, May 28, 2020 at 09:02:47AM -0700, Matt Helsley wrote:
+> On Thu, May 28, 2020 at 09:09:16AM -0500, Josh Poimboeuf wrote:
+> > On Wed, May 27, 2020 at 09:42:32AM -0700, Matt Helsley wrote:
+> > > Currently objtool uses a naming heuristic to find the "base"
+> > > section to apply the relocation(s) to. The standard defines
+> > > the SHF_INFO_LINK flag (SHF => in the section header flags)
+> > > which indicates when the section header's sh_info field can
+> > > be used to find the necessary section.
+> > > 
+> > > Warns when the heuristic is used as a fallback and changes
+> > > the name heuristic calculation to handle rela (explicit
+> > > addend) and now rel (implicit addend) relocations.
+> > 
+> > Does this fallback case actually happen?
 > 
-> Indeed, I just could not decide whether to include it in 5.7 or not.
+> Not that I could see. I was thinking about taking it out but
+> I haven't tried this set with clang or other toolchains. So
+> I was wondering if you think holding off before removing it
+> would be wise or if you'd rather just remove it.
 
-Maybe for 5.8
+I just realized somebody already submitted an almost identical patch:
 
-I have a new idea to refactor a bit more that I find it does three 
-things in kvm_update_cpuid():
-- update cpuid;
-- update vcpu states, e.g., apic->lapic_timer.timer_mode_mask, 
-guest_supported_xcr0, maxphyaddr, ... etc,
-- cpuid check, for vaddr_bits
+  https://lkml.kernel.org/r/20200421182501.149101-1-samitolvanen@google.com
 
-I'm going to split it, and make the order as:
-1. kvm_check_cpuid(), if invalid value return error;
-2. kvm_update_cpuid();
-3. kvm_update_state_based_on_cpuid();
-    and kvm_x86_ops.kvm_x86_ops.cpuid_update() can be called inside it.
+Which I'll be merging soon... so you can just drop this one.
 
-If you feel OK, I'll do it tomorrow.
+Then you can base your next version of this set on top of that patch, if
+it hasn't been merged yet.
 
--Xiaoyao
-
+-- 
+Josh
 
