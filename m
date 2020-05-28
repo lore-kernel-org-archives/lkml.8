@@ -2,109 +2,127 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB36EC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44381C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E442145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:31:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WlMcAw4B"
+	by mail.kernel.org (Postfix) with ESMTP id 2E2D32145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgE1Ibd (ORCPT
+        id S1727054AbgE1Ib4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:31:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57878 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726085AbgE1Ibc (ORCPT
+        Thu, 28 May 2020 04:31:56 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40166 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbgE1Ib4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:31:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590654690;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gYZwLjj7CzD0ymsoazFzJV5eo30qTW4FW8DTfD17Jfg=;
-        b=WlMcAw4BtvB54XapuhP5/hR5aEp9c7YYDjKPJBE6gg2jYESy1Xug4f46QZeeGEhBzqABQs
-        lEvtky56OjU7xNonD1J6RYC6UdlB3EOKm6aSFDB9Ie28Q27MOIlt5S1YzQo8RsQ5AWhPlX
-        nbtWl6g9/d6JBPLQ0DChNcRmN+Worto=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-X8CmvGu5MHitdtBIJs14og-1; Thu, 28 May 2020 04:31:21 -0400
-X-MC-Unique: X8CmvGu5MHitdtBIJs14og-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E9FCBFC2;
-        Thu, 28 May 2020 08:31:19 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-113-50.ams2.redhat.com [10.36.113.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 09ADE62932;
-        Thu, 28 May 2020 08:31:16 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 450E616E2C; Thu, 28 May 2020 10:31:15 +0200 (CEST)
-Date:   Thu, 28 May 2020 10:31:15 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v4 0/3] Support virtio cross-device resources
-Message-ID: <20200528083115.a6p3y24x3vqzcj4k@sirius.home.kraxel.org>
-References: <20200526105811.30784-1-stevensd@chromium.org>
+        Thu, 28 May 2020 04:31:56 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 262EF80307C0;
+        Thu, 28 May 2020 08:31:47 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id mso_D6x-Sr2v; Thu, 28 May 2020 11:31:46 +0300 (MSK)
+Date:   Thu, 28 May 2020 11:31:44 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND v3 0/2] syscon: Alter syscon and reboot drivers
+Message-ID: <20200528083144.5r2qn3mule4dvvgf@mobilestation>
+References: <20200526135102.21236-1-Sergey.Semin@baikalelectronics.ru>
+ <20200528070311.uj6bxlplxe2bths5@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200526105811.30784-1-stevensd@chromium.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200528070311.uj6bxlplxe2bths5@earth.universe>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 26, 2020 at 07:58:08PM +0900, David Stevens wrote:
-> This patchset implements the current proposal for virtio cross-device
-> resource sharing [1]. It will be used to import virtio resources into
-> the virtio-video driver currently under discussion [2]. The patch
-> under consideration to add support in the virtio-video driver is [3].
-> It uses the APIs from v3 of this series, but the changes to update it
-> are relatively minor.
+On Thu, May 28, 2020 at 09:03:11AM +0200, Sebastian Reichel wrote:
+> Hi,
 > 
-> This patchset adds a new flavor of dma-bufs that supports querying the
-> underlying virtio object UUID, as well as adding support for exporting
-> resources from virtgpu.
+> On Tue, May 26, 2020 at 04:50:59PM +0300, Serge Semin wrote:
+> > This is a small patchset about tuning the syscon infrastructure a bit.
+> > As it's going to be general in the framework of the Baikal-T1 SoC support
+> > integration into the kernel, we suggest to replace the legacy text-based
+> > syscon-reboot-mode dts-bindings file with yaml-based one. Then seeing a
+> > syscon reboot block is normally expected to be a part of a system
+> > controller and based on the discussion
+> > https://lore.kernel.org/linux-pm/20200306130402.1F4F0803079F@mail.baikalelectronics.ru/
+> > we decided to alter the syscon reboot driver so one would also try to fetch
+> > the syscon registers map from a parental DT node. regmap property is left
+> > supported although it's marked as deprecated from now.
+> > 
+> > This patchset is rebased and tested on the mainline Linux kernel 5.7-rc4:
+> > 0e698dfa2822 ("Linux 5.7-rc4")
+> > tag: v5.7-rc4
+> > 
+> > Changelog v2:
+> > - Add Sebastian' Acked-by tag to patch 1.
+> > - Use a shorter summary describing the bindings modification patches.
+> > - Our corporate email server doesn't change Message-Id anymore, so the patchset
+> >   is resubmitted being in the cover-letter-threaded format.
+> > - Discard patch with syscon "-endian" property support. As Rob said It shall be
+> >   in the common dt-schema.
+> > - Replace patches of adding a regmap property support to the syscon-reboot-mode
+> >   with patches making syscon-reboot a sub-node of a system controller node.
+> > - Mark regmap property as deprecated from now.
+> > 
+> > Link: https://lore.kernel.org/linux-pm/20200507233846.11548-1-Sergey.Semin@baikalelectronics.ru/
+> > Changelog v3:
+> > - Discard the commit 6acd3ecd88ff ("dt-bindings: power: reset: Convert
+> >   syscon-reboot-mode to DT schema") since it has been merged in by Sebatian.
+> > - Add Rob's Reviewed-by tag to the patch "dt-bindings: power: reset: Unrequire
+> >   regmap property in syscon-reboot node"
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
+> > Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> > Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
+> > Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
+> > Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
+> > Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: linux-mips@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-pm@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > 
+> > Serge Semin (2):
+> >   dt-bindings: power: reset: Unrequire regmap property in syscon-reboot
+> >     node
+> >   power: reset: syscon-reboot: Add parental syscon support
+> > 
+> >  .../bindings/power/reset/syscon-reboot.yaml       | 15 ++++++++++-----
+> >  drivers/power/reset/syscon-reboot.c               |  7 +++++--
+> >  2 files changed, 15 insertions(+), 7 deletions(-)
 > 
-> [1] https://markmail.org/thread/2ypjt5cfeu3m6lxu
-> [2] https://markmail.org/thread/p5d3k566srtdtute
-> [3] https://markmail.org/thread/j4xlqaaim266qpks
+> Thanks, I queued both patches to power-supply's for-next branch.
 > 
-> v3 -> v4 changes:
->  - Replace dma-buf hooks with virtio dma-buf from v1.
->  - Remove virtio_attach callback, as the work that had been done
->    in that callback is now done on dma-buf export. The documented
->    requirement that get_uuid only be called on attached virtio
->    dma-bufs is also removed.
->  - Rebase and add call to virtio_gpu_notify for ASSIGN_UUID.
-> 
-> David Stevens (3):
->   virtio: add dma-buf support for exported objects
->   virtio-gpu: add VIRTIO_GPU_F_RESOURCE_UUID feature
->   drm/virtio: Support virtgpu exported resources
+> -- Sebastian
 
-Looks all sane to me.  mst, have you looked at the virtio core changes?
-How we are going to merge this?  If you ack I can merge via
-drm-misc-next.  Merging through virtio queue would be fine too.
+Great! Thanks.
 
-thanks,
-  Gerd
-
+-Sergey
