@@ -2,97 +2,88 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20994C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34230207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590696318;
-	bh=pOrsTltkcIJPA2cIPeY6EK0sAi0kvc7UhbcK/UOt7HM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sjBgiT4hvEkqBIb0hhRjn+cLHmXbhA69Vi5oke5Vw4oBLNgR0WWyH1dyCT17h4agB
-	 tGpUVzxXyu74c3P1vaKka+cU6c4Ec75+0TJhXyS5XJLsEBjDnqIbTJ7i49TS8KYUgH
-	 OCmeT11cWyU5DwwYGH/885VvtPvO66VbyQoAjjJQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0504E207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406979AbgE1UFP (ORCPT
+        id S2406984AbgE1UGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:05:15 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32959 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406787AbgE1UFG (ORCPT
+        Thu, 28 May 2020 16:06:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406779AbgE1UGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:05:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id k18so31613911ion.0;
-        Thu, 28 May 2020 13:05:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=G3oBLq5QliQ4IzU/NPxmbvWurf2zPONVKqHTn1jFm2o=;
-        b=piiAQC4F9Nkn/bp8Vn/nyeNHGm7QAi+HFvWw3PAIK+ogQEDtYM9Nm8S0dR3npLTY+O
-         NU999q0sA7KKnxxGBBy8QSK1bsPQX2tyOH5z9Odka6H3tFXrJMEkLMQOmrYsZEj2w1GQ
-         rBeu9lwFzIoaux4GOMADu8MuobqsbUDtSbBsBgud0OhIK7Ct0nJdck3mUBID4rNC/RqK
-         +ewL79iOec+Ljf7ydBIpmX7OPkMAjbkzUhYfGkTWf3Nt5TuQHBr5/AqgWCRNP0x1LvYK
-         gzrTt1Tj69JuqzloWBmRtiLUtVa0TbqyV+zSsd+g3ADtK5e9YVyEMAc1RIOooHZ99g6n
-         rINQ==
-X-Gm-Message-State: AOAM531bR9ife/uJ0G52EApiihFRPSJxiXULjU8Bi2AWM6rc9HzLJ9mA
-        lI7yvAM8o4uyMqnOZOkuPA==
-X-Google-Smtp-Source: ABdhPJw/9LwdK1Nn3Ofbo62Q4Ys6/0Wk46kqXtMKa1w/vugW8+zhezIAfkZycgoWQQ/d+JtykGMNZg==
-X-Received: by 2002:a5e:dd07:: with SMTP id t7mr3814841iop.21.1590696304973;
-        Thu, 28 May 2020 13:05:04 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id i2sm2905114ion.35.2020.05.28.13.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:05:04 -0700 (PDT)
-Received: (nullmailer pid 591807 invoked by uid 1000);
-        Thu, 28 May 2020 20:05:03 -0000
-Date:   Thu, 28 May 2020 14:05:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-watchdog@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        netdev@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-mmc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, devicetree@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Subject: Re: [PATCH 14/17] dt-bindings: power: renesas,apmu: Document r8a7742
- support
-Message-ID: <20200528200503.GA591757@bogus>
-References: <1589555337-5498-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1589555337-5498-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 28 May 2020 16:06:32 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D659C08C5C6;
+        Thu, 28 May 2020 13:06:32 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1jeOmu-00H6ZA-KK; Thu, 28 May 2020 20:06:00 +0000
+Date:   Thu, 28 May 2020 21:06:00 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: clean up kernel_{read,write} & friends v2
+Message-ID: <20200528200600.GS23230@ZenIV.linux.org.uk>
+References: <20200528054043.621510-1-hch@lst.de>
+ <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+ <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com>
+ <20200528193340.GR23230@ZenIV.linux.org.uk>
+ <20200528194441.GQ17206@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1589555337-5498-15-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200528194441.GQ17206@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 16:08:54 +0100, Lad Prabhakar wrote:
-> Document APMU and SMP enable method for RZ/G1H (also known as r8a7742)
-> SoC.
+On Thu, May 28, 2020 at 12:44:41PM -0700, Matthew Wilcox wrote:
+> On Thu, May 28, 2020 at 08:33:40PM +0100, Al Viro wrote:
+> > On Thu, May 28, 2020 at 12:22:08PM -0700, Joe Perches wrote:
+> > 
+> > > Hard limits at 80 really don't work well, especially with
+> > > some of the 25+ character length identifiers used today.
+> > 
+> > IMO any such identifier is a good reason for a warning.
+> > 
+> > The litmus test is actually very simple: how unpleasant would it be
+> > to mention the identifiers while discussing the code over the phone?
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/power/renesas,apmu.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> Here's a good example of a function which should be taken out and shot:
 > 
+> int amdgpu_atombios_get_leakage_vddc_based_on_leakage_params(struct amdgpu_devic
+> e *adev,
+> ...
+>         switch (frev) {
+>         case 2:
+>                 switch (crev) {
+> ...
+>                         if (profile->ucElbVDDC_Num > 0) {
+>                                 for (i = 0; i < profile->ucElbVDDC_Num; i++) {
+>                                         if (vddc_id_buf[i] == virtual_voltage_id) {
+>                                                 for (j = 0; j < profile->ucLeakageBinNum; j++) {
+>                                                         if (vbios_voltage_id <= leakage_bin[j]) {
+>                                                                 *vddc = vddc_buf[j * profile->ucElbVDDC_Num + i];
+> 
+> I mean, I get it that AMD want to show off just how studly a monitor they
+> support, but good grief ...
 
-Applied, thanks!
+I must respectfully disagree.  It clearly needs to be hanged, drawn and
+quartered...
