@@ -2,295 +2,286 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C9AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72795206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:56:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oEx9e+wR"
+	by mail.kernel.org (Postfix) with ESMTP id 1327B206DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590710243;
+	bh=daN49Kf+w+76LB2NhLVGwhUo5y3SqW4pEOfT1hp9NHU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=MKv5DGHaXsEo30xKIrjoJS/+nNVW6usn4zZvOo4ASC4SylsuEwsR+0em1wfEeYf37
+	 fcOJWu+un9LySLE5OZz8YBsyGwIC/4M9PaOsBGS2S5dzha+9FWgcmYnjqbYiaWgyTA
+	 pnxbhc6zvoCs/CGWChoofbshVSzr0iUWe+C38lXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437951AbgE1X4H (ORCPT
+        id S2437841AbgE1X5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45782 "EHLO
+        Thu, 28 May 2020 19:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437869AbgE1XzR (ORCPT
+        with ESMTP id S2437753AbgE1X5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:55:17 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C3DC08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:55:17 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bg4so256938plb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:55:17 -0700 (PDT)
+        Thu, 28 May 2020 19:57:10 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4926DC08C5C9
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:57:09 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 69so633391otv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 16:57:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4tWYn+OZGqld5yzYYoOp7tvbT27PKpSr1rap+/a2yfg=;
-        b=oEx9e+wRZ8Melg8KvpxagHHoEE6/Y99xUp26xBf7h+yduioFHHkV5MwFqL6kJTPc5d
-         y7P71HEv6vNeFJ9+xIZCI0ZxAZRRaqA/H50svikAwWXmTUY5aeY6G6tXFT3uy5qmg08W
-         jx9/1Rh5ETFR9BVpRzb/cBvsc5Ky4Ng7orqd4=
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xnF7bq7shkx7ZcZIcnn6B6sGwM0ZzIQoJAt50fdb1lY=;
+        b=g6wU66f8zXGdp21Ow/ISdTjTk2aewuSnho+SgCTmA88zRbjOXKq1JbE0GeZcvOoPly
+         guioGavkhd6Gv/CMMRThDWZL11FlvnsG2H3FGCSgE3vpcPndDDnPfhLge/Jpblfj7MVX
+         DWxwu5XybHZ9tHq7fB00zjuD2lScIT8/9Dd08=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4tWYn+OZGqld5yzYYoOp7tvbT27PKpSr1rap+/a2yfg=;
-        b=RaqFsHvECw+ra55aIkX1U7V7BYq0Vb9/G2Ij379CBVfHXfVHVtnPWRY7QfW//6oIx3
-         hAK67EaXV5P9cRKYQi+P0G1rQ0GzjKsAWX6VhikNYxPdz8ESy9MP9lmTVx4CBITiJ2oK
-         s2f7cS/BxUlFikohXpyt+59Q9ScdzOuDDh0V5Yv9UTG0VOBmIHALw/YEKCc8FZNoPw57
-         VSWD0ObBZ38HaegnEMCAwLXpG4k6hrSPIQZmDABlPyb8ct9fIk4RsXiQnc15w6sJwv+l
-         M+8XlX4HCAk/HqoDpWg4cSqYtkNUONa3jqcVZv10VFsHWqsI+T+HXtUI4tgojr1iahMr
-         hPDQ==
-X-Gm-Message-State: AOAM532YzzgFfSVouVKj47v2jJE3PWhw8gcBkYAAXO6LYnTvdP19aJ1O
-        LHgYcQmu1MbBC7iscs9G5VLXsGDcm30=
-X-Google-Smtp-Source: ABdhPJwaDE/Fyxh80I00aZskozEL8RXne9iEit6GBV1GHb6h7L+k8iB8XG/Y+DZ5SIbc0cEocvxayg==
-X-Received: by 2002:a17:902:bc82:: with SMTP id bb2mr6083664plb.107.1590710117324;
-        Thu, 28 May 2020 16:55:17 -0700 (PDT)
-Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
-        by smtp.gmail.com with ESMTPSA id f18sm5022591pga.75.2020.05.28.16.55.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 28 May 2020 16:55:16 -0700 (PDT)
-From:   Miao-chen Chou <mcchou@chromium.org>
-To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
-Cc:     Alain Michaud <alainm@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Manish Mandlik <mmandlik@chromium.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Yoni Shavit <yshavit@chromium.org>,
-        Michael Sun <michaelfsun@google.com>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v1 3/7] Bluetooth: Add handler of MGMT_OP_ADD_ADV_PATTERNS_MONITOR
-Date:   Thu, 28 May 2020 16:54:51 -0700
-Message-Id: <20200528165324.v1.3.Iea5d308a1936ac26177316c977977cdf7de42de8@changeid>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200528165324.v1.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
-References: <20200528165324.v1.1.I636f906bf8122855dfd2ba636352bbdcb50c35ed@changeid>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xnF7bq7shkx7ZcZIcnn6B6sGwM0ZzIQoJAt50fdb1lY=;
+        b=Ll8iIY/7TZAq0tMdoomWkLMsGobT7QFrCX0AaDutKPxrGUlgiN12NcDAL0VJkVZ/eG
+         3qdzUd8M4q9++U2HKjUER909vd/0VvzWl0M+M2sAzg80Ucem7EiUy/6RGapqx55exx6/
+         ba/5EtXj9SOTOWWxorWUdjlrvaVOjCBUjikRlVBugoAdpbgIuCYlo5sIVKs+97nW49Kv
+         IAPll2F/302XdFAMx7f4VFGgzQBlAuKbAbjGDCQ0QZD2vzwXY9uNxqMlOCK68HOl8HK8
+         Eeye80Cft1953E7hvcYflMCGHpaqLnjEA+zYfLcjUWhpQLXfM3+wyQp9dpS+E4nqsQr9
+         jK+A==
+X-Gm-Message-State: AOAM532/D55wlJnC87rLD9nx7jm0sgiWxgym2E/cU1w0GId5lWlxOm/W
+        TUYMp5LxLaRcaJVxLU/B7QfLMA==
+X-Google-Smtp-Source: ABdhPJy45otod0QGQWGG3vYYmcncDUzaXwvZhkSi7OEnoIuK/+N4n84/oWewfMcT7wnd/dwJJYRDuA==
+X-Received: by 2002:a9d:650a:: with SMTP id i10mr3926829otl.245.1590710228527;
+        Thu, 28 May 2020 16:57:08 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id u129sm2206799oou.19.2020.05.28.16.57.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 16:57:08 -0700 (PDT)
+Subject: Re: [RFC, WIP, v6 00/10] media: vidtv: implement a virtual DVB driver
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        mchehab+huawei@kernel.org, sean@mess.org,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        tglx@linutronix.de
+Cc:     linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200520070334.1778751-1-dwlsalmeida@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <aed92295-4057-ff21-36e4-48b6f238ab54@linuxfoundation.org>
+Date:   Thu, 28 May 2020 17:57:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200520070334.1778751-1-dwlsalmeida@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the request handler of MGMT_OP_ADD_ADV_PATTERNS_MONITOR command.
-Note that the controller-based monitoring is not yet in place. This tracks
-the content of the monitor without sending HCI traffic, so the request
-returns immediately.
+On 5/20/20 1:03 AM, Daniel W. S. Almeida wrote:
+> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+> 
+> This series is work in progress. It represents the current work done on a
+> virtual DVB driver for the Linux media subsystem. I am new to the media
+> subsystem and to kernel development in general.
+> 
+> This driver aims to:
+> 	- Serve as template for new DVB driver writers
+> 	- Help userspace application writers in general
+> 	- Push fake audio/video to userspace for testing
+> 		purposes
+> 	- Push debug information to userspace via debugfs
+> 
+> This should currently be able to feed PSI and PCM audio data to
+> userspace.
+> 
+> I appreciate any feedback!
+> 
+> Changes in v6:
+> 	Addressed the following issues:
+> 	- Makefile was not actually compiling everything;
+> 	- The bridge driver should be a platform driver;
+> 	- There are lots of warnings and other errors produced
+> 	by the driver.
+> 
+> Changes in v5:
+> 
+> Removed all calls to WARN_ON in favor of pr_warn_ratelimited
+> Add a #define for pr_fmt
+> Reworked the byte swapping logic for big/little endian support:
+> 	big endian fields now prepended with __beXX for 'sparse' checks
+> 	bitfields now laid in reverse order if LITTLE_ENDIAN_BITFIELD
+> 		is set
+> 
+> media: vidtv: implement a tuner driver
+> 	Return -EINVAL instead of -1 in vidtv_tuner_check_frequency_shift
+> media: vidtv: implement a demodulator driver
+> 	Add POLL_THRD_TIME #define
+> 	Implement dvb_frontend_ops as a single struct instead of three
+> media: vidtv: move config structs into a separate header
+> 	Removed this commit, configs are now in vidtv_tuner.h and vidtv_demod.h
+> media: vidtv: add a bridge driver
+> 	module_param: all fs permissions set to 0
+> 	removed param 'chosen_delsys'
+> 	module_param: removed "optional" string: all module_params are optional
+> 	renamed vidtv_bridge -> vidtv_bridg: so the source code and module names
+> 		are different
+> media: vidtv: add wrappers for memcpy and memset
+> 	Added kernel-docs
+> 	write address is now computed internally
+> media: vidtv: add MPEG TS common code
+> 	Drop packets if the buffer is full
+> media: vidtv: implement a PSI generator
+> 	Removed vidtv_psi_ts_psi_write_stuffing()
+> 	Forcibly align misaligned buffers
+> 	Drop packets if buffer is full
+> media: vidtv: implement a PES packetizer
+> 	Remove vidtv_extract_bits() in favor of GENMASK() and bitwise &
+> 	Forcibly align misaligned buffers
+> media: vidtv: Implement a SMPTE 302M encoder
+> 	Added kernel-docs for struct vidtv_encoder
+> media: vidtv: Add a MPEG Transport Stream Multiplexer
+> 	Added check for minimum and maximum buffer size.
+> 	Drop packets if buffer is full
+> 
+> 
+> Changes in v4:
+> Added a PES packetizer
+> Implemented a minimum version of the SMPTE 302m encoder for AES3 audio
+> Fixed endianness in the PSI generator, converting fields to big endian where applicable
+> Added a minimal TS mux abstraction
+> 
+> Changes in v3:
+> Added a bridge driver
+> Renamed the driver to vidtv
+> Renamed/reworked commits into smaller pieces
+> Moved the driver into its own directory
+> Fixed the code for the signal strength in the tuner
+> Removed useless enums in the tuner driver (e.g. lock_status, power_status...)
+> Reworked the logic for the poll_snr thread in the demodulator driver
+> Moved MPEG related code to the bridge driver, as it controls the demux logic
+> Changed literals to #defines, used sizeof in place of integer literals when
+> computing the size of PSI structs
+> Moved the MPEG PSI tables to the heap to reduce stack space usage
+> Now using usleep_range in place of msleep_interruptible in the MPEG TS thread
+> Wrapped memcpy and memset to protect against buffer overflow when writing to the
+> MPEG TS buffer.
+> 
+> Changes in v2:
+> Attempted not to break assignments into multiple lines as much as possible.
+> Code now passes checkpatch strict mode
+> 
+> media: dvb_dummy_tuner: implement driver skeleton	
+> Changed snr values to mili db
+> Return value from 0-100 to indicate how far off the requested
+> frequency is from a valid one
+> 
+> Use the frequency shift to interpolate between 34dB and 10dB if
+> we can not match against the SNR lookup table
+> Remove sleep calls for suspend/resume
+> 
+> Fix memcpy call for the config struct
+> 
+> media: dvb_dummy_fe.c: lose TS lock on bad snr
+> Randomly recover the TS lock if the signal quality improves
+> 
+> media: dvb_dummy_fe.c: write PSI information into DMX buffer
+> Split the patch into multiple header/source files
+> 
+> Hexadecimal literals are now lower case
+> 
+> Prefer short function names / reduce function signatures
+> 
+> Add #defines for constants when computing section lengths
+> 
+> Change signature for functions that take a dummy channel as
+> argument (i.e. channels* is now channels[NUM_CHANNELS])
+> 
+> Daniel W. S. Almeida (10):
+>    media: vidtv: add Kconfig entry
+>    media: vidtv: implement a tuner driver
 
-The following manual test was performed.
-- Issue btmgmt advmon-add with valid and invalid inputs.
-- Issue btmgmt advmon-add more the allowed number of monitors.
+You can collapse patch 1 and 2. I don't see why you need two
+separate patches.
 
-Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
----
+>    media: vidtv: implement a demodulator driver
+>    media: vidtv: add a bridge driver
+>    media: vidtv: add wrappers for memcpy and memset
+>    media: vidtv: add MPEG TS common code
+>    media: vidtv: implement a PSI generator
+>    media: vidtv: implement a PES packetizer
+>    media: vidtv: Implement a SMPTE 302M encoder
+>    media: vidtv: Add a MPEG Transport Stream Multiplexer
+> 
+>   arch/Kconfig                                  |    2 +-
 
- include/net/bluetooth/hci_core.h |   2 +
- net/bluetooth/hci_core.c         |  40 +++++++++++++
- net/bluetooth/mgmt.c             | 100 +++++++++++++++++++++++++++++++
- 3 files changed, 142 insertions(+)
+Why do you need this change. It is part of patch 04 with no
+explanation on why this change is necessary.
 
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 431fe0265dcfb..862d94f711bc0 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -1240,6 +1240,8 @@ int hci_remove_adv_instance(struct hci_dev *hdev, u8 instance);
- void hci_adv_instances_set_rpa_expired(struct hci_dev *hdev, bool rpa_expired);
- 
- void hci_adv_monitors_clear(struct hci_dev *hdev);
-+void hci_free_adv_monitor(struct adv_monitor *monitor);
-+int hci_add_adv_monitor(struct hci_dev *hdev, struct adv_monitor *monitor);
- 
- void hci_event_packet(struct hci_dev *hdev, struct sk_buff *skb);
- 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 23bfe4f1d1e9d..93c16bfc6da15 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -2998,9 +2998,49 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
- /* This function requires the caller holds hdev->lock */
- void hci_adv_monitors_clear(struct hci_dev *hdev)
- {
-+	struct adv_monitor *monitor;
-+	int handle;
-+
-+	idr_for_each_entry(&hdev->adv_monitors_idr, monitor, handle)
-+		hci_free_adv_monitor(monitor);
-+
- 	idr_destroy(&hdev->adv_monitors_idr);
- }
- 
-+void hci_free_adv_monitor(struct adv_monitor *monitor)
-+{
-+	struct adv_pattern *pattern;
-+	struct adv_pattern *tmp;
-+
-+	if (!monitor)
-+		return;
-+
-+	list_for_each_entry_safe(pattern, tmp, &monitor->patterns, list)
-+		kfree(pattern);
-+
-+	kfree(monitor);
-+}
-+
-+/* This function requires the caller holds hdev->lock */
-+int hci_add_adv_monitor(struct hci_dev *hdev, struct adv_monitor *monitor)
-+{
-+	int min, max, handle;
-+
-+	if (!monitor)
-+		return -EINVAL;
-+
-+	min = HCI_MIN_ADV_MONITOR_HANDLE;
-+	max = HCI_MIN_ADV_MONITOR_HANDLE + HCI_MAX_ADV_MONITOR_NUM_HANDLES;
-+	handle = idr_alloc(&hdev->adv_monitors_idr, monitor, min, max,
-+			   GFP_KERNEL);
-+	if (handle < 0)
-+		return handle;
-+
-+	hdev->adv_monitors_cnt++;
-+	monitor->handle = handle;
-+	return 0;
-+}
-+
- struct bdaddr_list *hci_bdaddr_list_lookup(struct list_head *bdaddr_list,
- 					 bdaddr_t *bdaddr, u8 type)
- {
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index 8d8275ee9718b..9c1704ca6ad1e 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -113,6 +113,7 @@ static const u16 mgmt_commands[] = {
- 	MGMT_OP_READ_EXP_FEATURES_INFO,
- 	MGMT_OP_SET_EXP_FEATURE,
- 	MGMT_OP_READ_ADV_MONITOR_FEATURES,
-+	MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
- };
- 
- static const u16 mgmt_events[] = {
-@@ -3894,6 +3895,103 @@ static int read_adv_monitor_features(struct sock *sk, struct hci_dev *hdev,
- 				 MGMT_STATUS_SUCCESS, rp, rp_size);
- }
- 
-+static int add_adv_patterns_monitor(struct sock *sk, struct hci_dev *hdev,
-+				    void *data, u16 len)
-+{
-+	struct mgmt_cp_add_adv_patterns_monitor *cp = data;
-+	struct mgmt_rp_add_adv_patterns_monitor rp;
-+	struct adv_monitor *m = NULL;
-+	struct adv_pattern *p = NULL;
-+	__u8 cp_ofst = 0, cp_len = 0;
-+	unsigned int mp_cnt = 0;
-+	int err, i;
-+
-+	BT_DBG("request for %s", hdev->name);
-+
-+	if (len <= sizeof(*cp) || cp->pattern_count == 0) {
-+		err = mgmt_cmd_status(sk, hdev->id,
-+				      MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+				      MGMT_STATUS_INVALID_PARAMS);
-+		goto failed;
-+	}
-+
-+	m = kmalloc(sizeof(*m), GFP_KERNEL);
-+	if (!m) {
-+		err = -ENOMEM;
-+		goto failed;
-+	}
-+
-+	INIT_LIST_HEAD(&m->patterns);
-+	m->active = false;
-+
-+	for (i = 0; i < cp->pattern_count; i++) {
-+		if (++mp_cnt > HCI_MAX_ADV_MONITOR_NUM_PATTERNS) {
-+			err = mgmt_cmd_status(sk, hdev->id,
-+					      MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+					      MGMT_STATUS_INVALID_PARAMS);
-+			goto failed;
-+		}
-+
-+		cp_ofst = cp->patterns[i].offset;
-+		cp_len = cp->patterns[i].length;
-+		if (cp_ofst >= HCI_MAX_AD_LENGTH ||
-+		    cp_len > HCI_MAX_AD_LENGTH ||
-+		    (cp_ofst + cp_len) > HCI_MAX_AD_LENGTH) {
-+			err = mgmt_cmd_status(sk, hdev->id,
-+					      MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+					      MGMT_STATUS_INVALID_PARAMS);
-+			goto failed;
-+		}
-+
-+		p = kmalloc(sizeof(*p), GFP_KERNEL);
-+		if (!p) {
-+			err = -ENOMEM;
-+			goto failed;
-+		}
-+
-+		p->ad_type = cp->patterns[i].ad_type;
-+		p->offset = cp->patterns[i].offset;
-+		p->length = cp->patterns[i].length;
-+		memcpy(p->value, cp->patterns[i].value, p->length);
-+
-+		INIT_LIST_HEAD(&p->list);
-+		list_add(&p->list, &m->patterns);
-+	}
-+
-+	if (mp_cnt != cp->pattern_count) {
-+		err = mgmt_cmd_status(sk, hdev->id,
-+				      MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+				      MGMT_STATUS_INVALID_PARAMS);
-+		goto failed;
-+	}
-+
-+	hci_dev_lock(hdev);
-+
-+	err = hci_add_adv_monitor(hdev, m);
-+	if (err) {
-+		if (err == -ENOSPC) {
-+			mgmt_cmd_status(sk, hdev->id,
-+					MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+					MGMT_STATUS_NO_RESOURCES);
-+		}
-+		goto unlock;
-+	}
-+
-+	hci_dev_unlock(hdev);
-+
-+	rp.monitor_handle = m->handle;
-+
-+	return mgmt_cmd_complete(sk, hdev->id, MGMT_OP_ADD_ADV_PATTERNS_MONITOR,
-+				 MGMT_STATUS_SUCCESS, &rp, sizeof(rp));
-+
-+unlock:
-+	hci_dev_unlock(hdev);
-+
-+failed:
-+	hci_free_adv_monitor(m);
-+	return err;
-+}
-+
- static void read_local_oob_data_complete(struct hci_dev *hdev, u8 status,
- 				         u16 opcode, struct sk_buff *skb)
- {
-@@ -7343,6 +7441,8 @@ static const struct hci_mgmt_handler mgmt_handlers[] = {
- 						HCI_MGMT_VAR_LEN |
- 						HCI_MGMT_HDEV_OPTIONAL },
- 	{ read_adv_monitor_features, MGMT_READ_ADV_MONITOR_FEATURES_SIZE },
-+	{ add_adv_patterns_monitor, MGMT_ADD_ADV_PATTERNS_MONITOR_SIZE,
-+						HCI_MGMT_VAR_LEN },
- };
- 
- void mgmt_index_added(struct hci_dev *hdev)
--- 
-2.26.2
 
+>   drivers/media/dvb-core/dvbdev.c               |    1 +
+
+Same here.
+
+>   drivers/media/test-drivers/Kconfig            |   10 +
+>   drivers/media/test-drivers/Makefile           |    1 +
+>   drivers/media/test-drivers/vidtv/Kconfig      |   11 +
+>   drivers/media/test-drivers/vidtv/Makefile     |    9 +
+>   .../media/test-drivers/vidtv/vidtv_bridge.c   |  511 ++++++++
+>   .../media/test-drivers/vidtv/vidtv_bridge.h   |   41 +
+>   .../media/test-drivers/vidtv/vidtv_channel.c  |  339 ++++++
+>   .../media/test-drivers/vidtv/vidtv_channel.h  |   66 ++
+>   .../media/test-drivers/vidtv/vidtv_common.c   |   86 ++
+>   .../media/test-drivers/vidtv/vidtv_common.h   |   34 +
+>   .../media/test-drivers/vidtv/vidtv_demod.c    |  444 +++++++
+>   .../media/test-drivers/vidtv/vidtv_demod.h    |   41 +
+>   .../media/test-drivers/vidtv/vidtv_encoder.h  |  103 ++
+>   drivers/media/test-drivers/vidtv/vidtv_mux.c  |  434 +++++++
+>   drivers/media/test-drivers/vidtv/vidtv_mux.h  |  105 ++
+>   drivers/media/test-drivers/vidtv/vidtv_pes.c  |  450 +++++++
+>   drivers/media/test-drivers/vidtv/vidtv_pes.h  |  186 +++
+>   drivers/media/test-drivers/vidtv/vidtv_psi.c  | 1055 +++++++++++++++++
+>   drivers/media/test-drivers/vidtv/vidtv_psi.h  |  420 +++++++
+>   .../media/test-drivers/vidtv/vidtv_s302m.c    |  636 ++++++++++
+>   .../media/test-drivers/vidtv/vidtv_s302m.h    |  119 ++
+>   drivers/media/test-drivers/vidtv/vidtv_ts.c   |  157 +++
+>   drivers/media/test-drivers/vidtv/vidtv_ts.h   |  120 ++
+>   .../media/test-drivers/vidtv/vidtv_tuner.c    |  408 +++++++
+>   .../media/test-drivers/vidtv/vidtv_tuner.h    |   26 +
+>   27 files changed, 5814 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/media/test-drivers/vidtv/Kconfig
+>   create mode 100644 drivers/media/test-drivers/vidtv/Makefile
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_bridge.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_bridge.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_channel.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_channel.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_common.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_common.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_demod.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_demod.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_encoder.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_mux.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_mux.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_pes.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_pes.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_psi.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_psi.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_s302m.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_s302m.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_ts.h
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_tuner.c
+>   create mode 100644 drivers/media/test-drivers/vidtv/vidtv_tuner.h
+> 
+
+thanks,
+-- Shuah
