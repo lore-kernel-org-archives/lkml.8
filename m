@@ -2,60 +2,115 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E81DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 165242071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FE120814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:11:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rA1d677t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404904AbgE1QKs (ORCPT
+        id S2404909AbgE1QLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:10:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42606 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404886AbgE1QKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:10:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7C516AC37;
-        Thu, 28 May 2020 16:10:43 +0000 (UTC)
-Subject: Re: [PATCH v2 02/12] mm/migrate: move migration helper from .h to .c
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1590561903-13186-3-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <e4f56ca1-15f0-e9ba-2dd7-52808710b900@suse.cz>
-Date:   Thu, 28 May 2020 18:10:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 12:11:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404835AbgE1QLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:11:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81410C08C5C6;
+        Thu, 28 May 2020 09:11:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kRC/+FIcZ4k+ifItO6DbNpd5GQju/3x9FnPOlNayotE=; b=rA1d677t4JDNdFjAL5EEHPVJsg
+        hn5MRkG1J7uKsvREMqJFTsCb/CzK6XjIwNqsbaYPNrkYsOu5pBnGO0QX9LJltIwsxqiLgmsjsv0Tr
+        ia/8QB9JZetagdeoKXkdD9mDZbVnDa8vIX4K+aKQC4P7AyZ+Y1KLpQkUM9uO4orKy3iJEXpcaBdEX
+        Kkqpu+VsqykVCfeu+3AHuWXfnnqy6xP6UQmlAp8TwZ3JRR8gYSIUfvF3q6mRlODZ0vxGXbJf3VFio
+        uX/souRgHWy8f8d39bliP/1vuGhX5SPZ1YeEuUxedNA5TSwzKT++veANQQhzsdW8N1pDzwDDnaOMu
+        yu/arHUw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeL7n-0004er-Qq; Thu, 28 May 2020 16:11:20 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 142119836F8; Thu, 28 May 2020 18:11:12 +0200 (CEST)
+Date:   Thu, 28 May 2020 18:11:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1590561903-13186-3-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 8:44 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> It's not performance sensitive function. Move it to .c.
-> This is a preparation step for future change.
-> 
-> Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On Thu, May 28, 2020 at 04:58:01PM +0100, Qais Yousef wrote:
+> On 05/28/20 15:23, Peter Zijlstra wrote:
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> > So afaict this is directly added to the enqueue/dequeue path, and we've
+> > recently already had complaints that uclamp is too slow.
+> 
+> I wanted to keep this function simpler.
+
+Right; I appreciate that, but as always it's a balance between simple
+and performance :-)
+
+> > Is there really no other way?
+> 
+> There is my first attempt which performs the sync @ task_woken_rt().
+> 
+> https://lore.kernel.org/lkml/20191220164838.31619-1-qais.yousef@arm.com/
+> 
+> I can revert the sync function to the simpler version defined in that patch
+> too.
+> 
+> I can potentially move this to uclamp_eff_value() too. Will need to think more
+> if this is enough. If task_woken_rt() is good for you, I'd say that's more
+> obviously correct and better to go with it.
+
+task_woken_rt() is better, because that only slows down RT tasks, but
+I'm thinking we can do even better by simply setting the default such
+that new tasks pick it up and then (rcu) iterating all existing tasks
+and modiying them.
+
+It's more code, but it is all outside of the normal paths where we care
+about performance.
+
+> FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
+> Trying to see what goes on in there.
+
+Indeed, that one. The fact that regular distros cannot enable this
+feature due to performance overhead is unfortunate. It means there is a
+lot less potential for this stuff.
