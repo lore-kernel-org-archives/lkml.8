@@ -2,183 +2,176 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A04C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85720C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2404221548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667777;
-	bh=A4ErLDkg+iKuLu7wJxcdIY1HcKsBkp1TkTpfBywLic0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=swF1bR2th5IZbW6oJwObQZ32TuQc5D7OoqZnslWjzZGN+3iFZyTV8fhWNrnIX5ery
-	 HIikLoo3Vhs3M7grDtn4Wy2n0ycFdg1pPuCNpIC+ez+YNtlcFmXZhWqKOKPCYlT0D4
-	 0R/OFHd1g5Pj4ejnqYug738Dqi7LoEIwegiZBoG8=
+	by mail.kernel.org (Postfix) with ESMTP id 654AF21548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389620AbgE1MJf (ORCPT
+        id S2389595AbgE1MJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48584 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:09:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:6222 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388650AbgE1L43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E05B21531;
-        Thu, 28 May 2020 11:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666988;
-        bh=A4ErLDkg+iKuLu7wJxcdIY1HcKsBkp1TkTpfBywLic0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01dNRwsBZ5i1yGch5KcM8AlwBumqDGtAVwOpDBW+Wgwl6EKdNcZRIkeN0qRaYrc5B
-         H8/f68+9IcvWpCHFpBGQ3gEpbh024oXXhKG4+qtd9aYv3iQN/kDN299hnysXLxxqLl
-         HhpOufbqgcyOFh39axpq/KCaTlAwo36Cs74eD7RM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Dave Taht <dave.taht@gmail.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 24/47] wireguard: queueing: preserve flow hash across packet scrubbing
-Date:   Thu, 28 May 2020 07:55:37 -0400
-Message-Id: <20200528115600.1405808-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
-References: <20200528115600.1405808-1-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2389606AbgE1MJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:09:33 -0400
+IronPort-SDR: gYBULXFrKWVOPYFxQeyhyo+/QKmL7+KKZR3RppU535WgSVxVqq7UPumCDPJuczehaa9Uww+6Fj
+ Mm6WZEcdnkCg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 05:09:32 -0700
+IronPort-SDR: yEqBFzBhFJBzCxZe5wTwFWbikt1bebQbKFHccRu7uTwdxRQQfW+uOem1sgQPOBoKeulwstEtwj
+ Y8TjfiaqUSbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="270831798"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.157])
+  by orsmga006.jf.intel.com with ESMTP; 28 May 2020 05:09:30 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: [PATCH 1/2] perf record: Respect --no-switch-events
+Date:   Thu, 28 May 2020 15:08:58 +0300
+Message-Id: <20200528120859.21604-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Context switch events are added automatically by Intel PT and Coresight.
+Make it possible to suppress them. That is useful for tracing the
+scheduler without the disturbance that the switch event processing
+creates.
 
-[ Upstream commit c78a0b4a78839d572d8a80f6a62221c0d7843135 ]
+Example:
 
-It's important that we clear most header fields during encapsulation and
-decapsulation, because the packet is substantially changed, and we don't
-want any info leak or logic bug due to an accidental correlation. But,
-for encapsulation, it's wrong to clear skb->hash, since it's used by
-fq_codel and flow dissection in general. Without it, classification does
-not proceed as usual. This change might make it easier to estimate the
-number of innerflows by examining clustering of out of order packets,
-but this shouldn't open up anything that can't already be inferred
-otherwise (e.g. syn packet size inference), and fq_codel can be disabled
-anyway.
+  Prerequisites:
 
-Furthermore, it might be the case that the hash isn't used or queried at
-all until after wireguard transmits the encrypted UDP packet, which
-means skb->hash might still be zero at this point, and thus no hash
-taken over the inner packet data. In order to address this situation, we
-force a calculation of skb->hash before encrypting packet data.
+    $ which perf
+    ~/bin/perf
+    $ sudo setcap "cap_sys_rawio,cap_sys_admin,cap_sys_ptrace,cap_syslog,cap_ipc_lock=ep" ~/bin/perf
+    $ sudo chmod +r /proc/kcore
 
-Of course this means that fq_codel might transmit packets slightly more
-out of order than usual. Toke did some testing on beefy machines with
-high quantities of parallel flows and found that increasing the
-reply-attack counter to 8192 takes care of the most pathological cases
-pretty well.
+  Before:
 
-Reported-by: Dave Taht <dave.taht@gmail.com>
-Reviewed-and-tested-by: Toke Høiland-Jørgensen <toke@toke.dk>
-Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    $ perf record --no-switch-events --kcore -a -e intel_pt//k -- sleep 0.001
+    [ perf record: Woken up 1 times to write data ]
+    [ perf record: Captured and wrote 0.938 MB perf.data ]
+    $ perf script -D | grep PERF_RECORD_SWITCH | wc -l
+    572
+
+  After:
+
+    $ perf record --no-switch-events --kcore -a -e intel_pt//k -- sleep 0.001
+    Warning:
+    Intel Processor Trace decoding will not be possible except for kernel tracing!
+    [ perf record: Woken up 1 times to write data ]
+    [ perf record: Captured and wrote 0.838 MB perf.data ]
+    $ perf script -D | grep PERF_RECORD_SWITCH | wc -l
+    0
+
+    $ sudo chmod go-r /proc/kcore
+    $ sudo setcap -r ~/bin/perf
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- drivers/net/wireguard/messages.h |  2 +-
- drivers/net/wireguard/queueing.h | 10 +++++++++-
- drivers/net/wireguard/receive.c  |  2 +-
- drivers/net/wireguard/send.c     |  7 ++++++-
- 4 files changed, 17 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-record.txt | 4 +++-
+ tools/perf/arch/arm/util/cs-etm.c        | 3 ++-
+ tools/perf/arch/x86/util/intel-pt.c      | 3 ++-
+ tools/perf/builtin-record.c              | 5 +++--
+ tools/perf/util/record.h                 | 6 ++++++
+ 5 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wireguard/messages.h b/drivers/net/wireguard/messages.h
-index b8a7b9ce32ba..208da72673fc 100644
---- a/drivers/net/wireguard/messages.h
-+++ b/drivers/net/wireguard/messages.h
-@@ -32,7 +32,7 @@ enum cookie_values {
- };
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 561ef55743e2..97b1a866ab22 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -458,7 +458,9 @@ This option sets the time out limit. The default value is 500 ms.
  
- enum counter_values {
--	COUNTER_BITS_TOTAL = 2048,
-+	COUNTER_BITS_TOTAL = 8192,
- 	COUNTER_REDUNDANT_BITS = BITS_PER_LONG,
- 	COUNTER_WINDOW_SIZE = COUNTER_BITS_TOTAL - COUNTER_REDUNDANT_BITS
- };
-diff --git a/drivers/net/wireguard/queueing.h b/drivers/net/wireguard/queueing.h
-index 3432232afe06..c58df439dbbe 100644
---- a/drivers/net/wireguard/queueing.h
-+++ b/drivers/net/wireguard/queueing.h
-@@ -87,12 +87,20 @@ static inline bool wg_check_packet_protocol(struct sk_buff *skb)
- 	return real_protocol && skb->protocol == real_protocol;
- }
+ --switch-events::
+ Record context switch events i.e. events of type PERF_RECORD_SWITCH or
+-PERF_RECORD_SWITCH_CPU_WIDE.
++PERF_RECORD_SWITCH_CPU_WIDE. In some cases (e.g. Intel PT or CoreSight)
++switch events will be enabled automatically, which can be suppressed by
++by the option --no-switch-events.
  
--static inline void wg_reset_packet(struct sk_buff *skb)
-+static inline void wg_reset_packet(struct sk_buff *skb, bool encapsulating)
- {
-+	u8 l4_hash = skb->l4_hash;
-+	u8 sw_hash = skb->sw_hash;
-+	u32 hash = skb->hash;
- 	skb_scrub_packet(skb, true);
- 	memset(&skb->headers_start, 0,
- 	       offsetof(struct sk_buff, headers_end) -
- 		       offsetof(struct sk_buff, headers_start));
-+	if (encapsulating) {
-+		skb->l4_hash = l4_hash;
-+		skb->sw_hash = sw_hash;
-+		skb->hash = hash;
-+	}
- 	skb->queue_mapping = 0;
- 	skb->nohdr = 0;
- 	skb->peeked = 0;
-diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
-index 2566e13a292d..758d6a019184 100644
---- a/drivers/net/wireguard/receive.c
-+++ b/drivers/net/wireguard/receive.c
-@@ -485,7 +485,7 @@ int wg_packet_rx_poll(struct napi_struct *napi, int budget)
- 		if (unlikely(wg_socket_endpoint_from_skb(&endpoint, skb)))
- 			goto next;
+ --clang-path=PATH::
+ Path to clang binary to use for compiling BPF scriptlets.
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index 607499b41bea..cea5e33d61d2 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -265,7 +265,8 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 	ptr->evlist = evlist;
+ 	ptr->snapshot_mode = opts->auxtrace_snapshot_mode;
  
--		wg_reset_packet(skb);
-+		wg_reset_packet(skb, false);
- 		wg_packet_consume_data_done(peer, skb, &endpoint);
- 		free = false;
+-	if (perf_can_record_switch_events())
++	if (!record_opts__no_switch_events(opts) &&
++	    perf_can_record_switch_events())
+ 		opts->record_switch_events = true;
  
-diff --git a/drivers/net/wireguard/send.c b/drivers/net/wireguard/send.c
-index e8a7d0a0cb88..0d64a7531f64 100644
---- a/drivers/net/wireguard/send.c
-+++ b/drivers/net/wireguard/send.c
-@@ -170,6 +170,11 @@ static bool encrypt_packet(struct sk_buff *skb, struct noise_keypair *keypair)
- 	struct sk_buff *trailer;
- 	int num_frags;
+ 	evlist__for_each_entry(evlist, evsel) {
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index fdb917fcf511..3fc547769707 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -779,7 +779,8 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
+ 	 * Per-cpu recording needs sched_switch events to distinguish different
+ 	 * threads.
+ 	 */
+-	if (have_timing_info && !perf_cpu_map__empty(cpus)) {
++	if (have_timing_info && !perf_cpu_map__empty(cpus) &&
++	    !record_opts__no_switch_events(opts)) {
+ 		if (perf_can_record_switch_events()) {
+ 			bool cpu_wide = !target__none(&opts->target) &&
+ 					!target__has_task(&opts->target);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 02d85f4e4517..dc6d5ba2fff8 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2490,8 +2490,9 @@ static struct option __record_options[] = {
+ 		    "Record namespaces events"),
+ 	OPT_BOOLEAN(0, "all-cgroups", &record.opts.record_cgroup,
+ 		    "Record cgroup events"),
+-	OPT_BOOLEAN(0, "switch-events", &record.opts.record_switch_events,
+-		    "Record context switch events"),
++	OPT_BOOLEAN_SET(0, "switch-events", &record.opts.record_switch_events,
++			&record.opts.record_switch_events_set,
++			"Record context switch events"),
+ 	OPT_BOOLEAN_FLAG(0, "all-kernel", &record.opts.all_kernel,
+ 			 "Configure all used events to run in kernel space.",
+ 			 PARSE_OPT_EXCLUSIVE),
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index dce6332f5071..84dbbc3f0204 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -36,6 +36,7 @@ struct record_opts {
+ 	bool	      record_namespaces;
+ 	bool	      record_cgroup;
+ 	bool	      record_switch_events;
++	bool	      record_switch_events_set;
+ 	bool	      all_kernel;
+ 	bool	      all_user;
+ 	bool	      kernel_callchains;
+@@ -77,4 +78,9 @@ extern struct option *record_options;
  
-+	/* Force hash calculation before encryption so that flow analysis is
-+	 * consistent over the inner packet.
-+	 */
-+	skb_get_hash(skb);
+ int record__parse_freq(const struct option *opt, const char *str, int unset);
+ 
++static inline bool record_opts__no_switch_events(const struct record_opts *opts)
++{
++	return opts->record_switch_events_set && !opts->record_switch_events;
++}
 +
- 	/* Calculate lengths. */
- 	padding_len = calculate_skb_padding(skb);
- 	trailer_len = padding_len + noise_encrypted_len(0);
-@@ -298,7 +303,7 @@ void wg_packet_encrypt_worker(struct work_struct *work)
- 		skb_list_walk_safe(first, skb, next) {
- 			if (likely(encrypt_packet(skb,
- 					PACKET_CB(first)->keypair))) {
--				wg_reset_packet(skb);
-+				wg_reset_packet(skb, true);
- 			} else {
- 				state = PACKET_STATE_DEAD;
- 				break;
+ #endif // _PERF_RECORD_H
 -- 
-2.25.1
+2.17.1
 
