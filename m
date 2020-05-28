@@ -2,138 +2,82 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F9AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35B46208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:17:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hw7GxZn+"
+	by mail.kernel.org (Postfix) with ESMTP id 306DB208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgE1JR6 (ORCPT
+        id S1728303AbgE1JSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:17:58 -0400
-Received: from mout.web.de ([212.227.15.3]:43509 "EHLO mout.web.de"
+        Thu, 28 May 2020 05:18:08 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:45938 "EHLO mail5.wrs.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728131AbgE1JR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:17:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1590657467;
-        bh=idng5Kr0BOpFJyssXXijBaX3uKHCBuc3xkHSzVXcUSc=;
-        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
-        b=hw7GxZn+fAaejnzj0rJaE8vehg/QpReJ5ifDip20ObBXkndW4OcIA27xhrnqYOohN
-         ICIFuITH2KN9tn6eP8Ma1KIhK7PdFw/N/k7w1Y5e6UgiIl+X+xkLhGTlxKjFoSp/82
-         wt1ozki3FKHXwO7V5aSz+talwYx09E6hI1tQ/gnQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.155.229]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MS29q-1jSngH28gk-00TCCt; Thu, 28
- May 2020 11:17:47 +0200
-To:     Chuhong Yuan <hslester96@gmail.com>, linux-rtc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>
-Subject: Re: [PATCH] rtc: rv3028: Add missed check for devm_regmap_init_i2c()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <6eb98232-bc84-0854-243a-e54b91f2bda6@web.de>
-Date:   Thu, 28 May 2020 11:17:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1728189AbgE1JSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:18:07 -0400
+Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 04S9GnEi027229
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Thu, 28 May 2020 02:17:01 -0700
+Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
+ ALA-HCB.corp.ad.wrs.com (147.11.189.41) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 28 May 2020 02:16:31 -0700
+From:   <qiang.zhang@windriver.com>
+To:     <tj@kernel.org>
+CC:     <jiangshanlai@gmail.com>, <markus.elfring@web.de>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7] workqueue: Remove unnecessary kfree() call in rcu_free_wq()
+Date:   Thu, 28 May 2020 17:25:18 +0800
+Message-ID: <20200528092518.29046-1-qiang.zhang@windriver.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:anDq+fzid6dh8DfhDlDsVj2Gsh8+7dmV0eqSmKcd425Patt5NXp
- yVB2IJEENHqDKkCpsmVnc+cDU8KOmfCTSE8mvElGa8tdF4xqP7heigyDxloELfiKWeQlKUi
- TvW4vsGevOJLtr6Yhhf1+Mohu7PS2woL0ArxwIE1ftHTe5E2Ysp+nuijzjVQpbVAFE3GHqd
- XWRhgCEYJtgD2KUt6ueOg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ne2764nO9Dw=:g7e+2+9YTcvj7a1/iRncXZ
- KdaFAE23goZG5d7EcL9xq0ZatT7XdToXFA/5fPCIvIK0CqzXH/swRAqiVIAs6IPQwtDbHTD9/
- 0Hh9TD8Qjl+b+l/teKqzSPArRyQnO2nx+Ili/hcgqfDSbCVvN0qZZ9crooSrjw1K/Q/23qt77
- zzpj6pagVV3NNB1b2yzIHkkf+hazdjtazNT7yRlng1celG4OaaRJNl0du3mtNZYsQzIiXklBD
- 5eAFWkN9ifmEBobzm2XOFp9XZjxND6lzoSSWAcl081SYNSF4n9UEc2HsWA85MGXnJoLiTI2NQ
- 2YQ/t+QrbT9f57HfPpK5kBbHiA8Sdo7oLkrMB2teZoa1kOT+VRqFiErChVwp7caKuXIee2VnX
- W4jEBJ35bVbY9WImX8sHWWfblt8fOlmX5XhwHzPT90wgwqpKuSGvW4dP6PW0XkxiMR71jjkHa
- r6m9geek6YhSUsq7cIxtyVo7NPqYh1S+pBzIcUSC/Q0KOgrcAawqy0/F9SaBkHnNbscpp2RPJ
- 3rUqMkd87CQxHBO+ThTavpdWghEpTxI1tKVAtaVH8SE3Utl9/vINA2d+HYbiweILMuvy1RsvA
- 46WYEcO2Xs8UZ7P3qOv+y5gQ9Cc2Bx9dpMm/stYnIUaa0Jg+Z9hezFB6zJvHUm0pmUbK7uDHe
- kXQrkKXRJvBL6j7Cqhqaci3WylE3482cC87aYxoN8v2FmTTaRiEvCdp/4dGS03mqWY6nlASn6
- Uehi20OGiETTepaAYCaPb4rJP1wJOM5ynvSaHF+uv7Y8PWDM/LVVJZaugmt2NMuZtqPLlJW4A
- JYF+hDNOdBA1DwOPggO+j097LobgmQVm9H3XC9wQWb/CXPQJ4T6JXsop1EuaXaLu2W/9XVrNw
- meh8indUltFi5dyEflqJV8MdEW57VrmJJ+ZHXIZ1/q+wmpyMS2z2YgIbq2cuKkMHRyphcCDU2
- a618Zac5heWpQ2PA4tqyGhdjcDNfdkWaHSIM+m5LaCAV2ZEgiwa7zXPWvyBPpHe05OrA+B4SR
- m0lVDcjE2mUCxJoB0s2WXnotFwME8xjwJL+FBXRTNFabafQ6fjhBWtKt84ZoCdBHlJogX+Op9
- JB5B0ftWRKo/oOsr36u7sw5lbI9TgtY8B6qRX8fhxn5Az9cfv3YFTw2awGLsdB1ssCnxO5X9B
- kL6DA84amoPamIUZ8gAxBLFklko+CTVa3J7eJK8QrvoL/flHwNomj1jLLOka7DofAnxnbpXba
- ojBN3ft02LPrrDdVI
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> rv3028_probe() misses a check for devm_regmap_init_i2c().
+From: Zhang Qiang <qiang.zhang@windriver.com>
 
-Such information is helpful.
+The data structure member "wq->rescuer" was reset to a null pointer
+in one if branch. It was passed to a call of the function "kfree"
+in the callback function "rcu_free_wq" (which was eventually executed).
+The function "kfree" does not perform more meaningful data processing
+for a passed null pointer (besides immediately returning from such a call).
+Thus delete this function call which became unnecessary with the referenced
+software update.
 
+Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
 
-> Add the missed check
+Co-developed-by: Markus Elfring <Markus.Elfring@web.de>
+Signed-off-by: Markus Elfring <Markus.Elfring@web.de>
+Co-developed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Signed-off-by: Lai Jiangshan <jiangshanlai@gmail.com>
+Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+---
+ v1->v2->v3->v4->v5->v6->v7:
+ Modify weakly submitted information and tag.
 
-Thanks for another completion of the exception handling.
+ kernel/workqueue.c | 1 -
+ 1 file changed, 1 deletion(-)
 
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 891ccad5f271..a2451cdcd503 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -3491,7 +3491,6 @@ static void rcu_free_wq(struct rcu_head *rcu)
+ 	else
+ 		free_workqueue_attrs(wq->unbound_attrs);
+ 
+-	kfree(wq->rescuer);
+ 	kfree(wq);
+ }
+ 
+-- 
+2.24.1
 
->                      to fix it.
-
-I suggest to replace this wording by the tag =E2=80=9CFixes=E2=80=9D for t=
-he commit message.
-How do you think about to take this possibility into account
-for any more patches?
-
-Regards,
-Markus
