@@ -2,94 +2,111 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BB8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0317AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7195E21532
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC25A21532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404980AbgE1QSW convert rfc822-to-8bit (ORCPT
+        id S2404993AbgE1QSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:18:22 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:33171 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404830AbgE1QSS (ORCPT
+        Thu, 28 May 2020 12:18:39 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41731 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404830AbgE1QSe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:18:18 -0400
-Received: from 1.general.jvosburgh.us.vpn ([10.172.68.206] helo=famine.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <jay.vosburgh@canonical.com>)
-        id 1jeLER-00083j-MH; Thu, 28 May 2020 16:18:12 +0000
-Received: by famine.localdomain (Postfix, from userid 1000)
-        id D800E5FEE8; Thu, 28 May 2020 09:18:09 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-        by famine.localdomain (Postfix) with ESMTP id D082F9F851;
-        Thu, 28 May 2020 09:18:09 -0700 (PDT)
-From:   Jay Vosburgh <jay.vosburgh@canonical.com>
-To:     wu000273@umn.edu
-cc:     kjlu@umn.edu, Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "sfeldma@cumulusnetworks.com" <sfeldma@cumulusnetworks.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bonding: Fix reference count leak in bond_sysfs_slave_add.
-In-reply-to: <20200528031029.11078-1-wu000273@umn.edu>
-References: <20200528031029.11078-1-wu000273@umn.edu>
-Comments: In-reply-to wu000273@umn.edu
-   message dated "Wed, 27 May 2020 22:10:29 -0500."
-X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
+        Thu, 28 May 2020 12:18:34 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a13so11745485pls.8;
+        Thu, 28 May 2020 09:18:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=KfsbVj6z63bsl5JP4iMltZwaQmXOUwSJ85dsdEa49v0=;
+        b=Q/gJa6Ofe8uHIf+UD/bW/tFXyUYXQtF977ngNyQZ3HOkxffijf/ZObUFsBYskdJPFZ
+         QJXMCILWyLx5FRpwXqLfo3tkXPN0y4zbTH2ov8VObxLQRIA9049RWdiMaYnEWf6swvCG
+         rYgozQ8Qy5Drp0y9l0+vtYndg1g56tsGbySqzJprUcydkdcJgqvMEtjL80/fpuWqvKZk
+         xBplf1rVk9K2UiDcGPu7SiwMTw1rIF2+KA9lliRn6jzXxqfTqOOGc2tqh4ztk9odeGJs
+         rFeInuWiHV+819Lnzz4QlhTJyakJovVCL1L0vCaeJD+1owwBbcdusRcynKKhAAum+V8i
+         vOaw==
+X-Gm-Message-State: AOAM530wyDPG9BCDqAJmJS8ydvEnkgek0CFSsT/57eDs4Lhuqs5KsFgr
+        LenmycZEXKyBgvZkiJh2YZ1eVvLKlYg=
+X-Google-Smtp-Source: ABdhPJzSojmBDRyhoDwHcIILc2Kh1NHXmgnQJLnmqXvVEmFLe3Tvu1PZhUmzw7X8xUVDoealvOpqVA==
+X-Received: by 2002:a17:90b:193:: with SMTP id t19mr4874703pjs.47.1590682712542;
+        Thu, 28 May 2020 09:18:32 -0700 (PDT)
+Received: from ?IPv6:2601:647:4000:d7:40e6:aa88:9c03:e0b4? ([2601:647:4000:d7:40e6:aa88:9c03:e0b4])
+        by smtp.gmail.com with ESMTPSA id u26sm5137592pfn.88.2020.05.28.09.18.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 09:18:31 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] scsi: ufs: cleanup ufs initialization path
+To:     Avri Altman <Avri.Altman@wdc.com>, Bean Huo <huobean@gmail.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200528115616.9949-1-huobean@gmail.com>
+ <20200528115616.9949-4-huobean@gmail.com>
+ <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <0cc529a9-10a5-2ccd-055e-b9b2a47e5183@acm.org>
+Date:   Thu, 28 May 2020 09:18:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2425.1590682689.1@famine>
-Content-Transfer-Encoding: 8BIT
-Date:   Thu, 28 May 2020 09:18:09 -0700
-Message-ID: <2426.1590682689@famine>
+In-Reply-To: <SN6PR04MB4640F8F4B293E6D3980952D5FC8E0@SN6PR04MB4640.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wu000273@umn.edu wrote:
+On 2020-05-28 07:58, Avri Altman wrote:
+>> From: Bean Huo <beanhuo@micron.com>
+>> +static void ufshcd_update_desc_length(struct ufs_hba *hba,
+>> +                                     enum desc_idn desc_id, int desc_len)
+> desc_len is at most 255 so maybe u8?
 
->From: Qiushi Wu <wu000273@umn.edu>
->
->kobject_init_and_add() takes reference even when it fails.
->If this function returns an error, kobject_put() must be called to
->properly clean up the memory associated with the object. Previous
->commit "b8eb718348b8" fixed a similar problem.
->
->Fixes: 07699f9a7c8d ("bonding: add sysfs /slave dir for bond slave devices.")
->Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+At least on x86 using types like 'u8' for function arguments may lead to
+suboptimal code because it may cause the compiler to insert a widening
+instruction. How about changing 'int desc_len' into 'unsigned desc_len'
+instead?
 
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Thanks,
 
-
->---
-> drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
->diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
->index 007481557191..9b8346638f69 100644
->--- a/drivers/net/bonding/bond_sysfs_slave.c
->+++ b/drivers/net/bonding/bond_sysfs_slave.c
->@@ -149,8 +149,10 @@ int bond_sysfs_slave_add(struct slave *slave)
-> 
-> 	err = kobject_init_and_add(&slave->kobj, &slave_ktype,
-> 				   &(slave->dev->dev.kobj), "bonding_slave");
->-	if (err)
->+	if (err) {
->+		kobject_put(&slave->kobj);
-> 		return err;
->+	}
-> 
-> 	for (a = slave_attrs; *a; ++a) {
-> 		err = sysfs_create_file(&slave->kobj, &((*a)->attr));
->-- 
->2.17.1
->
+Bart.
