@@ -2,101 +2,95 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A267C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5198C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDC0B2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B742078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="IZC/B70C"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tpJB5DRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgE1Tos (ORCPT
+        id S1728668AbgE1To6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34840 "EHLO
+        Thu, 28 May 2020 15:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728621AbgE1Tok (ORCPT
+        with ESMTP id S1728638AbgE1Toy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:44:40 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A89C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:44:38 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f21so63657pgg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=ib/FHwgaIOdIUIJ7nCiAVwkn44DXgxvEAL/KIsGPktg=;
-        b=IZC/B70CaBM17tiwjaASXWaq3p1H5KmrmkfylzojgEvAQlJ+Y2ljEL9eqnbgXRWXGh
-         nd4QXppBun3LwTQGBG+yX7USHmP1+y0DAbZ5hmfVlIzMcN/gQMs0klo1DYBBRtZyMEhD
-         rCLF32H0H4eJGsdFTodijrGcYwWLCVFdydaPjxEBab0eAXeqAZf1NQak/eJOjMAOwhcX
-         WIjIBSEohCYvodjjwj1W6NyDxBREpTlhylFywm7lVQNDQR4okJ2rTwto7lslQ/7Ww/Uw
-         oh+RTb25OgoMX1rHbS6Hg6+GYQIPwaxQBOKXDrZRa2c/6GPSDaoHnTrCqQTwSk7LHX0q
-         42Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ib/FHwgaIOdIUIJ7nCiAVwkn44DXgxvEAL/KIsGPktg=;
-        b=cU7hAkGz4DHsdftA3qvLzSdtWQak1rEEi84qQKCm4sL8RdxWls15Ohwzhqd1NispDu
-         hPqH0NDXILD+GwR9T5cnD2ZF2Q/yAoyKdahImMxiomTB1eeYnuolAKIuZMYwlK6m3UWJ
-         CQ+x2ziCB15jvcyM2eZuiDR5WCv7VtVpMgibk8wyU79CUv8sE/3BrYd1TT2HD3zdKeUb
-         DZMWqa3ztu149pOjE9xWS0nYTlmDS2kE7jMSRbyNZoTdnTjiQz02GcXI5OULE3ofIKaG
-         c1nKYF3wCF0PzssZCeFKn+bPo8TFA8QXo6+DZk1BqpxEsDwikKAEsyGmLuPhZN3mDsx8
-         xKJA==
-X-Gm-Message-State: AOAM530M9kpsFCRGPydvDWnpbcdH7rPtcHjGAQg+kJktxsIxYg1OVMmY
-        Hy07HHJjek6kelJTvviKES6S+g==
-X-Google-Smtp-Source: ABdhPJxLCqYWjMiwubKEzX6kGygF5TG67qqXu02lJxE3KeGC6VmXsQv6RzRQm2eIk0fpB5AQVlFzcA==
-X-Received: by 2002:a63:d547:: with SMTP id v7mr4537973pgi.413.1590695078382;
-        Thu, 28 May 2020 12:44:38 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id y5sm6607079pjp.27.2020.05.28.12.44.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 12:44:37 -0700 (PDT)
-Subject: Re: [PATCH -next] block: add another struct gendisk to
- <linux/blkdev.h>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-References: <9a8676b1-c79e-9963-3ffc-c113b11d988d@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c2c78d99-272f-eec3-993e-ef6684792d8e@kernel.dk>
-Date:   Thu, 28 May 2020 13:44:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 15:44:54 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16C19C08C5C6;
+        Thu, 28 May 2020 12:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=x7dH7/wqGQYUhGLFyHpl4QVuiKHZ8TJfm6m4hIlJFCU=; b=tpJB5DRG71JcOlL/QbiSxI7K5w
+        oTGjW2VsvhDjsXVucoZ70kvRuxv1QP/5c6OywuIyRmSMFFBr4MZ48Y+PzOo8Al+oarjiHEa1iN9wp
+        ky9phVHRj3h6fWDyhOw+BQWwEC/lxUYEZzEDzSstWeIYv2ZtkACb1XIlxIIQRKdofnwXVWypGd2Vy
+        pew9P2+Q6BwWzjPA9MhY6Nhh7LkdxQV5xtHiJM4VbpW/Qky0DsDu60zRwMaRRE0CnkNNtsuIGVtvP
+        fEy4NDcALXKejbtJKpi+3sD8qcpypSeLDoW55RsaD21f9C48TawCNL4A7G1OCAUgsyUPPIgzLzRKU
+        Rv5C03gw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeOSH-0001Tf-La; Thu, 28 May 2020 19:44:41 +0000
+Date:   Thu, 28 May 2020 12:44:41 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>
+Subject: Re: clean up kernel_{read,write} & friends v2
+Message-ID: <20200528194441.GQ17206@bombadil.infradead.org>
+References: <20200528054043.621510-1-hch@lst.de>
+ <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+ <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com>
+ <20200528193340.GR23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <9a8676b1-c79e-9963-3ffc-c113b11d988d@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528193340.GR23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 11:21 AM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, May 28, 2020 at 08:33:40PM +0100, Al Viro wrote:
+> On Thu, May 28, 2020 at 12:22:08PM -0700, Joe Perches wrote:
 > 
-> Add a forward declaration for struct gendisk when CONFIG_BLOCK is
-> not set/enabled to prevent multiple (30 - 50) build warnings.
+> > Hard limits at 80 really don't work well, especially with
+> > some of the 25+ character length identifiers used today.
 > 
-> In file included from ../kernel/sched/sched.h:39:0,
->                  from ../kernel/sched/core.c:9:
-> ../include/linux/blkdev.h:1895:41: warning: 'struct gendisk' declared inside parameter list will not be visible outside of this definition or declaration
->  unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,
+> IMO any such identifier is a good reason for a warning.
+> 
+> The litmus test is actually very simple: how unpleasant would it be
+> to mention the identifiers while discussing the code over the phone?
 
-Should be fixed already:
+Here's a good example of a function which should be taken out and shot:
 
-https://git.kernel.dk/cgit/linux-block/commit/?h=for-5.8/block&id=dc35ada4251f183137ee3a524543c9329d7a4fa2
+int amdgpu_atombios_get_leakage_vddc_based_on_leakage_params(struct amdgpu_devic
+e *adev,
+...
+        switch (frev) {
+        case 2:
+                switch (crev) {
+...
+                        if (profile->ucElbVDDC_Num > 0) {
+                                for (i = 0; i < profile->ucElbVDDC_Num; i++) {
+                                        if (vddc_id_buf[i] == virtual_voltage_id) {
+                                                for (j = 0; j < profile->ucLeakageBinNum; j++) {
+                                                        if (vbios_voltage_id <= leakage_bin[j]) {
+                                                                *vddc = vddc_buf[j * profile->ucElbVDDC_Num + i];
 
--- 
-Jens Axboe
-
+I mean, I get it that AMD want to show off just how studly a monitor they
+support, but good grief ...
