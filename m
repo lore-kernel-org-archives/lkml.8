@@ -2,84 +2,112 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C619DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A87207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:28:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590697726;
-	bh=75UaMrl6pvy9EXFBtm3li6Lwisiq3yOfd/LHwbtOaJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V7cl1sPb2krsVZcrDVP7A1/JQ43Jwrb/wbdpkEUW0kJoHPoNj20grMKGjapVrZPn9
-	 8Qi7vgM9bB0W3yfyXuiANaP2ibPsej4vlGnGRTbFt01YUyRLTRI65YIPtbcXJoXaBR
-	 laZdewCaJXdoy3o9FvjHKvyLh1Mnbve03i/qU8A8=
+	by mail.kernel.org (Postfix) with ESMTP id A69CD207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:29:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rSeD4DNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407175AbgE1U2n (ORCPT
+        id S2407215AbgE1U3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:28:43 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:44664 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407026AbgE1U2i (ORCPT
+        Thu, 28 May 2020 16:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41908 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407026AbgE1U3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:28:38 -0400
-Received: by mail-il1-f196.google.com with SMTP id j3so212921ilk.11;
-        Thu, 28 May 2020 13:28:36 -0700 (PDT)
+        Thu, 28 May 2020 16:29:34 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7014C08C5C6;
+        Thu, 28 May 2020 13:29:33 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id x18so32026pll.6;
+        Thu, 28 May 2020 13:29:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MtV5dW6W0wTHT1QljBO+2MIOLfwjQMefjp2+Ja+1XDw=;
+        b=rSeD4DNMsQ5cx/NMr/IjUmElVIIUsZGTYyg+i8h79mHu6F+pXjiselcoSQOlY0n56M
+         GjFDKMf8MMeuBGB0Kxf0Qk+Vf7CRTzFIEJjOgiXyxL1EHFDVWoE0opghUUC5bWUGLVDC
+         oynwU7aZfd2tw3eUinbMSgvOh4+r+fXV2PRkSqcRIFye48mk69IjEnM5Izt/UW4YCyhc
+         MM2cMPn1TO9QnSvIUboqDdRXgU7zUUQas7R4606Y0fzcKqya4JAqEAAG743spn5kyPj9
+         TLS6SOVAZts+wUUsuCk0TlURB8Ut63XFMCUNTWqEeV8tEB9KTODv1J/1w5M//2JdP51y
+         stEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tlbZ6Mr9e5Ay55YAAkLD4ho81QLBhLTS/l66ro00bxg=;
-        b=BLR1Ezm+R2JuJet16gNZabgkN0qpG+viYI+QrF+LPmf/l5pVNZmsIRh7MGYKPC21gd
-         4B4GqclljbK7VSK1hR2AKWEBwOkNCh63kY/Gy3OqUsbxfAuap348L3noR8tGmKJOy5Ii
-         2p7tRi2M4XM6pn4VMBTPzhNdvkbe6CS877swO2SGRDuNBFoaP7JQHTY1ek9r16K39pvq
-         ooDb7PfDvpgMKYD2tAM/cUSVqtQey42yCYnWA4dQeXr/hDFJkCRKm9jEKrcst2RDQiok
-         D61lKGrgOmVgoFGudgt9P+9RlMAQkJyhpPruWZWk9Q8ghhtmSl2E/S8xQjENKrW8AsRQ
-         XhEg==
-X-Gm-Message-State: AOAM531ZjKExgD655XWAmzs0g91B2mokev0iKf/sq7/8qbFWKEuBHOZj
-        XTDrJyuHODSnpvdW4WSZiBumWAo=
-X-Google-Smtp-Source: ABdhPJyIrUUeCDXweziG8G0La28ky8xA33nLZOXZqRvWjgUI1JNY4RRki5w34no1B/2hanqz4tn0rg==
-X-Received: by 2002:a92:4015:: with SMTP id n21mr4586732ila.137.1590697716290;
-        Thu, 28 May 2020 13:28:36 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id f9sm3123464iow.47.2020.05.28.13.28.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:28:35 -0700 (PDT)
-Received: (nullmailer pid 623579 invoked by uid 1000);
-        Thu, 28 May 2020 20:28:33 -0000
-Date:   Thu, 28 May 2020 14:28:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Eli Riggs <eli@rje.li>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        ~postmarketos/upstreaming@lists.sr.ht, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: arm: qcom: Add sm6125 SoC and
- xiaomi,willow
-Message-ID: <20200528202833.GA623550@bogus>
-References: <20200517115410.3374-1-eli@rje.li>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MtV5dW6W0wTHT1QljBO+2MIOLfwjQMefjp2+Ja+1XDw=;
+        b=ckxt9F+aFS5fkSvMa9aN587hm8DYXBjHGoGvsK4l1U6o5XWUEOiNUgaBafPC49LRrO
+         OHJnfJd65i2oHXMJZAx+44ENBYKyvzlNaJidpJP0mh0fvqDZ+2mpW3frN3zTQvx9L0IS
+         lDiqkxHl84+wWxB+1DqdzukegJXa6EwwNvimSUGWe/ARZDJvu+TMmBHOiGYvGSqpBLXn
+         pgP11BKzipAXnkt5WkAucUHUS7raWsRQH+IhS2Xr0o+VwC1aS3OniYhA0n3zHbkBh7+Y
+         1HNKKokDInQU2a5Eq+8TfdFhozOasTUffX2Az3ftfdNoctW1E2oxsS51g0GzNs4ni32F
+         fkFQ==
+X-Gm-Message-State: AOAM530hEw9hYCabtprfGVswL1D7w1FDG0HtNRtdvFuTqeoCO88JQ5pR
+        8nEjbNGwUWv0QesxqsI/gO05gO84mIVUFueFatM=
+X-Google-Smtp-Source: ABdhPJzzCIEyt/HEosdWqkQyoWkR9Y1Eya0FrV5VMnEDeOInwcqhIYJGYpZrpvvY2eEIJpyLwnByYtZB0NzqCqc8Xho=
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr5490278plt.18.1590697773198;
+ Thu, 28 May 2020 13:29:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200517115410.3374-1-eli@rje.li>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
+ <20200528145303.GU1634618@smile.fi.intel.com> <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
+In-Reply-To: <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 May 2020 23:29:16 +0300
+Message-ID: <CAHp75VdrOJF6R9YDpeV7x+9=DZJULM0hsfdr0o_Jmgf69CRKvQ@mail.gmail.com>
+Subject: Re: [PATCH v3 08/10] dmaengine: dw: Add dummy device_caps callback
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 May 2020 04:54:06 -0700, Eli Riggs wrote:
-> Add compatibles for SM6125 aka SDM665 aka Snapdragon 665, as well
-> as xiaomi,willow aka Xiaomi Redmi Note 8T, the international
-> edition of the Note 8.
-> 
-> Signed-off-by: Eli Riggs <eli@rje.li>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+On Thu, May 28, 2020 at 6:30 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Thu, May 28, 2020 at 05:53:03PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 01:50:19AM +0300, Serge Semin wrote:
+> > > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
+> > > have non-uniform DMA capabilities per device channels, let's add
+> > > the DW DMA specific device_caps callback to expose that specifics up to
+> > > the DMA consumer. It's a dummy function for now. We'll fill it in with
+> > > capabilities overrides in the next commits.
+> >
+> > I think per se it is not worth to have it separated. Squash into the next one.
+>
+> bikeshadding?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Actually no.
+
+> There is no any difference whether I add a dummy callback, then
+> fill it in in a following up patch, or have the callback added together
+> with some content. Let's see what Vinod thinks of it. Until then I'll stick with
+> the current solution.
+
+The rule of thumb that we don't add dead code or code which is useless
+per se. Go ahead and provide it with some usefulness.
+
+-- 
+With Best Regards,
+Andy Shevchenko
