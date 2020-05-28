@@ -8,67 +8,70 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A168C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA545C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4AEA208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE25208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fine7BNp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FocExwZg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387822AbgE1KU3 (ORCPT
+        id S2387823AbgE1KWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
+        Thu, 28 May 2020 06:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387717AbgE1KUP (ORCPT
+        with ESMTP id S2387717AbgE1KUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:20:15 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3B2C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:20:15 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m1so7022407pgk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:20:15 -0700 (PDT)
+        Thu, 28 May 2020 06:20:32 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9D4C05BD1E;
+        Thu, 28 May 2020 03:20:32 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id nu7so2990778pjb.0;
+        Thu, 28 May 2020 03:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=e4iqIqjqfcu2jYuHJ8gHDSAYpn6BV5cK7NWla5/OpCc=;
-        b=fine7BNps1tLaqQpOkYNnOzDQ8/3ewTYSNJNWmUlgZB+nOK9oFRr6YO+6eNAYgefpj
-         3toBPNdcodrpawwGpPOxJ/z7QtFW2O/syKMeDQ33u37dXb9HNvsJ4JdVhtqhlARAbems
-         IP0PMiW9mI132tXfYZwvp2J1KqunBZ+zIewl6NoNpa6ltMsEgdwpBSNEj7U9rWm2ggqX
-         +H5YPpSRz7ZT2uI6l8AJlBai98juS7J36UFJIX1NAwkWUTzrhFTv4eit7R0S1zfkhWgb
-         QMPW7sCxJLGoelFNNXt4TdFb8eM/oWBAWa8tblL/cnU1h/zqN/meyLpK/M0FT3Xxeunl
-         NgfQ==
+        bh=n8iipgJAi/NQyT9g10+jXpAAhQUJmCgX3ykzxFLrLKM=;
+        b=FocExwZgEGs3gT0g8mnUyvPa6RpF30FXKarH1WH9tVM3Qfk2UMDFsUGGktPrgs6eG8
+         oWa6KQ3j+BOpYt1wNostFfpItGTf7Nia2InQUTO4w8rOcch2k+RjAUsNbvmSK/nxbgDp
+         HOSdd++QHNr67yGxv/1ozdj8+NQjB7FB8qxJMmDpuAv0IP2tidoiPkWbNp4AAileJdUN
+         QdUH88+CtMfwJs0OtDlUNxQ4KSfvGtRsAtsXTTE9PD0sEuaBlzkpIWj9IJNujmvNiVNe
+         Dr9VGxowiAhoIecs4k25fXf/tzGz9WKaUTZ5NiqHo5NEQkJnHkq98nLVkPhtXHFA+mMw
+         +hTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=e4iqIqjqfcu2jYuHJ8gHDSAYpn6BV5cK7NWla5/OpCc=;
-        b=aIbFe52l09QjQgANrBcceBkL5Fqd5XV8+MifcFaei1Z+fslCzsbezhqTrjuLXzeyJQ
-         4MNEpJxi3DcsfQC9SgN1UE61fPiWI08etoUDWXsOzyBmX/B5hQXzD6Jhlud9jzKdZnrK
-         nGeBLhoDwxftgNbH4DabsRuR5D8/+fO/rViIE3a4LtJmYDgvAP8nXzssD5joeIKLP29G
-         L4cKtSpYsPlOIqloRpR/hGpyQVfORoClHHa/9K/BbUtAB2EaRcUNkSFBw74+9HftSNly
-         upnbfIOPokgKiRG8y8uXTP0p4QGbBKc5VTcWYtIb9Vl6aKWwflmefg/JNxqjJpoeTvP2
-         uFVQ==
-X-Gm-Message-State: AOAM533DPpO7AHQneQ26Z4SR3MvrVzpovEL90QVbYF0ddZfbHoc5jW/r
-        EmZDOIYanXObFiGn2/nSM5U=
-X-Google-Smtp-Source: ABdhPJwZuzNh6gjiqrMSHdQWV+rwqRu9NqCxiEoWpsPOyQ89Kk024C4ub7WOXC3CrVTFr3XeFqJzFQ==
-X-Received: by 2002:a63:d307:: with SMTP id b7mr2317587pgg.219.1590661214793;
-        Thu, 28 May 2020 03:20:14 -0700 (PDT)
+        bh=n8iipgJAi/NQyT9g10+jXpAAhQUJmCgX3ykzxFLrLKM=;
+        b=YklP6LXx4oECV0SSYmXgiqZbepkwFWyP8xO6sqMNDl87aFiDnqQ93A4+5OBV9Kboxy
+         vguPffM0h5oI1ETxtnEtQDsGzjlGJn4HsWTzHoSNwDl5oMHI8yaS8AiI6FTk2HwX90jI
+         7kRNOpJUw/PzOH9oriqlJK7s93em9wObm5HF0TJlf8r9JdpamWYgvF7ft4SZImV84zGZ
+         jNPrg/KN5EuVEoVeluQFwoptesN6dlcqZgJtGmisyrSh3MwWkmt4hli79seck2Zr5coh
+         eM7Y5qVEN5xWljone/2hUTIEmq2+BZkiTly3ROqEyyGqiFH4veYnNULMDfTAs1IEOyGr
+         gfEw==
+X-Gm-Message-State: AOAM531HDHOMXT5yQOujRrIZ8e5sXn80ap6zg6yoLXjIXOrKpSfDKxH+
+        /wi/JwUhetq2UuRcJRv6zNc=
+X-Google-Smtp-Source: ABdhPJywCGzsdw5guspTvAxKu+Juxq4ii0vQsLONLmhQYEB+Q72DtYuN3e5AP5ezkwffsfJqoQc9hQ==
+X-Received: by 2002:a17:90a:1485:: with SMTP id k5mr2995699pja.108.1590661231748;
+        Thu, 28 May 2020 03:20:31 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o201sm4643579pfd.115.2020.05.28.03.20.10
+        by smtp.gmail.com with ESMTPSA id e16sm4193122pgg.8.2020.05.28.03.20.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 03:20:14 -0700 (PDT)
+        Thu, 28 May 2020 03:20:30 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] ASoC: sta32x: add missed function calls in error paths
-Date:   Thu, 28 May 2020 18:20:04 +0800
-Message-Id: <20200528102004.911653-1-hslester96@gmail.com>
+Cc:     Sean Wang <sean.wang@mediatek.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-bluetooth@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] Bluetooth: btmtkuart: add missed functions in the error paths of btmtuart_probe()
+Date:   Thu, 28 May 2020 18:20:21 +0800
+Message-Id: <20200528102021.911709-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,48 +81,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sta32x_probe() forgets to call undo functions when it fails, add
-the missed function calls to fix it.
+btmtuart_probe() misses several function calls in its error paths,
+including hci_free_dev() and clk_disable_unprepare().
+Refactor the code and call correct undo functions to fix the error
+paths.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- sound/soc/codecs/sta32x.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/bluetooth/btmtkuart.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/codecs/sta32x.c b/sound/soc/codecs/sta32x.c
-index db4b3ec55311..e9ccebbc31e4 100644
---- a/sound/soc/codecs/sta32x.c
-+++ b/sound/soc/codecs/sta32x.c
-@@ -893,13 +893,13 @@ static int sta32x_probe(struct snd_soc_component *component)
- 				    sta32x->supplies);
- 	if (ret != 0) {
- 		dev_err(component->dev, "Failed to enable supplies: %d\n", ret);
--		return ret;
-+		goto err_clk_disable_unprepare;
+diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
+index e11169ad8247..8a81fbca5c9d 100644
+--- a/drivers/bluetooth/btmtkuart.c
++++ b/drivers/bluetooth/btmtkuart.c
+@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	if (btmtkuart_is_standalone(bdev)) {
+ 		err = clk_prepare_enable(bdev->osc);
+ 		if (err < 0)
+-			return err;
++			goto err_hci_free_dev;
+ 
+ 		if (bdev->boot) {
+ 			gpiod_set_value_cansleep(bdev->boot, 1);
+@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 
+ 		/* Power on */
+ 		err = regulator_enable(bdev->vcc);
+-		if (err < 0) {
+-			clk_disable_unprepare(bdev->osc);
+-			return err;
+-		}
++		if (err < 0)
++			goto err_clk_disable_unprepare;
+ 
+ 		/* Reset if the reset-gpios is available otherwise the board
+ 		 * -level design should be guaranteed.
+@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ 	err = hci_register_dev(hdev);
+ 	if (err < 0) {
+ 		dev_err(&serdev->dev, "Can't register HCI device\n");
+-		hci_free_dev(hdev);
+ 		goto err_regulator_disable;
  	}
  
- 	ret = sta32x_startup_sequence(sta32x);
- 	if (ret < 0) {
- 		dev_err(component->dev, "Failed to startup device\n");
--		return ret;
-+		goto err_regulator_bulk_disable;
- 	}
- 
- 	/* CONFA */
-@@ -983,6 +983,13 @@ static int sta32x_probe(struct snd_soc_component *component)
- 	regulator_bulk_disable(ARRAY_SIZE(sta32x->supplies), sta32x->supplies);
- 
- 	return 0;
-+
-+err_regulator_bulk_disable:
-+	regulator_bulk_disable(ARRAY_SIZE(sta32x->supplies), sta32x->supplies);
+@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
+ err_regulator_disable:
+ 	if (btmtkuart_is_standalone(bdev))
+ 		regulator_disable(bdev->vcc);
 +err_clk_disable_unprepare:
-+	if (sta32x->xti_clk)
-+		clk_disable_unprepare(sta32x->xti_clk);
-+	return ret;
- }
++	if (btmtkuart_is_standalone(bdev))
++		clk_disable_unprepare(bdev->osc);
++err_hci_free_dev:
++	hci_free_dev(hdev);
  
- static void sta32x_remove(struct snd_soc_component *component)
+ 	return err;
+ }
 -- 
 2.26.2
 
