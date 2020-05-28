@@ -2,121 +2,100 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24201C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F2F208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QMaBLY1D"
+	by mail.kernel.org (Postfix) with ESMTP id 03D91208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbgE1Kbp (ORCPT
+        id S2387888AbgE1Ked (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:31:45 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60956 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387758AbgE1Kbp (ORCPT
+        Thu, 28 May 2020 06:34:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:46279 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387758AbgE1Keb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:31:45 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SAVSRj081848;
-        Thu, 28 May 2020 05:31:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590661888;
-        bh=AEQTkef1+kNlzNaEHtQu4Pn0JuBaAy+rLXTEbnti/Us=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=QMaBLY1DCBcVNqupoVs0TM5pAtsLZi10NcXap32Gn+sTFLTJJGQAw68+uxr38Mdia
-         u98YUmnGEdA1a5nkDdbcyoW/KpjNRJv6eWG/HgYB1HDuquF/mFwhXiZx4HYNxEv/+l
-         /heW0alJzxC8z6R5D5eafJRU96x49KQZbRp2M//Q=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SAVSwP037047
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 05:31:28 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 05:30:42 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 05:30:42 -0500
-Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SAUdGW082256;
-        Thu, 28 May 2020 05:30:40 -0500
-Subject: Re: [PATCH v1 1/1] drivers: mtd: spi-nor: update read capabilities
- for w25q64 and s25fl064k
-To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20200521052608.32667-1-rayagonda.kokatanur@broadcom.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <9dc3722e-497f-b092-6a97-01e0f7e3843c@ti.com>
-Date:   Thu, 28 May 2020 16:00:38 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 06:34:31 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MjjGV-1jAjXB0U0p-00lG0I for <linux-kernel@vger.kernel.org>; Thu, 28 May
+ 2020 12:34:30 +0200
+Received: by mail-qt1-f178.google.com with SMTP id x29so8556199qtv.4
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:34:29 -0700 (PDT)
+X-Gm-Message-State: AOAM532T/3Bu6n9GsClpO6tytPBuD0pOLxxKWFZqJ9ESJNXqmRTQz9ja
+        A4lE0lr/jVa+S1BDEmya5pxaHkp10VzJhvXpNos=
+X-Google-Smtp-Source: ABdhPJz3yBNY0Y1l2GQgmddAe06/aLT/EPVNAi3qA1mW76+pW3uJJs+SQtKuVU4z4oIEEx0O1wqMAz/VPSEinL80rBs=
+X-Received: by 2002:ac8:691:: with SMTP id f17mr2292393qth.204.1590662069005;
+ Thu, 28 May 2020 03:34:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200521052608.32667-1-rayagonda.kokatanur@broadcom.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200527112608.3886105-1-anders.roxell@linaro.org> <CAL_JsqKDfcX1YUTmkMbMNfPHnW5YcB7FaAmvrb42wgmsdfTqng@mail.gmail.com>
+In-Reply-To: <CAL_JsqKDfcX1YUTmkMbMNfPHnW5YcB7FaAmvrb42wgmsdfTqng@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 28 May 2020 12:34:13 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2Y51exEP146yoZmcfti1-ihwfGk0Z8pf3SAX9gH43QgQ@mail.gmail.com>
+Message-ID: <CAK8P3a2Y51exEP146yoZmcfti1-ihwfGk0Z8pf3SAX9gH43QgQ@mail.gmail.com>
+Subject: Re: [PATCH 0/5] vexpress: modularize power reset driver
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        SoC Team <soc@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:5vR4c2juF5ptiL9fh3Myo5VC/CC8C7jpUGR+te6D6AtY9H7eeWg
+ Q4FoxCyYBtNi+8lu4AQzTJbruT1twyaemJ9TP6p1ucFkn+zVXFQsJaTcX6o0c5O80BeipRy
+ 406nmg/jjRuOtMZbh3Sl0Zk3bTwwY2A3eg104D+n8N2DS5T7nIxlTAUnbEcokBK+P2JBGTt
+ YcRC2ao76Uvc1uPyZkooA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:55TFgZHvrR8=:dnsKJCQr4uF2/zwL/6rI9H
+ IlEl7gjAXCg/t5JI2rtOB3R/1yNMuvixpwpaErVkYQy7MX8SjyFmbfp1ZyIBDqV8ZgbkevsY4
+ dnzpQE9vRdPm+E5p5GzBQIupUTegg9PfRG+/Bmu0pVkX2sHHJRHG5ogMaeP0v21yQqGyURDOA
+ wIFhVJ2y3UcJaR5l/Diz8k+vS/aCV8UbyCfpPdNtvLsDfhZO34TZXCO1t43UgihDi2OZB5Kvd
+ /v8crYoES4XdwRTJd9nfS9zvM45U0k21Z+dmsZ3BRcdhNQ5aDc4R5PVd+jH6V4h5gBcoFNloR
+ riz6XQ+Ub2frrLTWjdmCoMBvhkIvoJFgmtfZ9XVDIgbiVVTidZE6JER7/eYnxJS5OSR6Bl+vn
+ 1iL3/vF9dfr3iR7ES2+CqvEL3AwkDKRd43mv2PmT+bPkSlvPbztNQSw+jPuB6LyD5ZqP24+mk
+ 8qCZsOHc6ANQE+/0Tm6H1llP3uwZ+Kg1qJtdvxm2nvkj70+gHd8m98xFPlrch9HJCgxp6a7Ac
+ Jp/GkfxxpxUzdE56lPKehwMk4Veipr3WHjiYqIsOyDde36C06lFZ0okXT+xdNzXpfbdU8p+1v
+ Lov81zxURcnx2+ii6r7E8e9KqK49udIVxil9pb/x42GrXHx/oSax/ZRMYLjQSBZHf8oub0Yvk
+ ALJMegila7surNecVWW68BBlAHWBwMCmAuAnn0cDRRhA1DLgzRAOOGoShcxdt3rt+XwhXZhBZ
+ 7uYUU+uuInC7bQeJqPm7r2O5aKYeaM5EPKK/CxTcIoLHHXJpHIRQdL6kb7koCpqfgTLM9U+QL
+ CeVtYwIeY1COzj0IBtigv+44XRhtONvgmMfXV9bfNM2WbVCCEs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, May 27, 2020 at 3:35 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, May 27, 2020 at 5:26 AM Anders Roxell <anders.roxell@linaro.org> wrote:
+> >
+> > Hi,
+> >
+> > This patchset contains a bugfixe, a cleanup and fixes allmodconfig build breakages
+> > on arm and arm64. Also making the vexpress power reset driver a module.
+> >
+> > Cheers,
+> > Anders
+> >
+> > Anders Roxell (5):
+> >   power: vexpress: add suppress_bind_attrs to true
+> >   power: vexpress: cleanup: use builtin_platform_driver
+> >   Revert "ARM: vexpress: Don't select VEXPRESS_CONFIG"
+> >   power: reset: vexpress: fix build issue
+> >   power: vexpress: make the reset driver a module
+>
+> IMO, patches 3 and 4 should be applied to fix the kconfig issues.
+> Making the driver a module can be addressed separately.
 
-On 21/05/20 10:56 am, Rayagonda Kokatanur wrote:
-> Both w25q64 and s25fl064k nor flash support QUAD and DUAL read
-> command, hence update the same in flash_info table.
-> 
+I've applied patches 1 through 4 now but left the last one.
 
-I am guessing both modes were tested on some platform?
-Could you add that info here?
+If we can find someone to write and test a .remove callback,
+I'll prefer that for v5.9, otherwise I'd consider taking Anders'
+version instead.
 
-> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> ---
->  drivers/mtd/spi-nor/spansion.c | 3 ++-
->  drivers/mtd/spi-nor/winbond.c  | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spansion.c b/drivers/mtd/spi-nor/spansion.c
-> index 6756202ace4b..c91bbb8d9cd6 100644
-> --- a/drivers/mtd/spi-nor/spansion.c
-> +++ b/drivers/mtd/spi-nor/spansion.c
-> @@ -52,7 +52,8 @@ static const struct flash_info spansion_parts[] = {
->  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->  	{ "s25fl016k",  INFO(0xef4015,      0,  64 * 1024,  32,
->  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> -	{ "s25fl064k",  INFO(0xef4017,      0,  64 * 1024, 128, SECT_4K) },
-> +	{ "s25fl064k",  INFO(0xef4017,      0,  64 * 1024, 128,
-> +			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->  	{ "s25fl116k",  INFO(0x014015,      0,  64 * 1024,  32,
->  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->  	{ "s25fl132k",  INFO(0x014016,      0,  64 * 1024,  64, SECT_4K) },
-> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-> index 17deabad57e1..2028cab3eff9 100644
-> --- a/drivers/mtd/spi-nor/winbond.c
-> +++ b/drivers/mtd/spi-nor/winbond.c
-> @@ -39,7 +39,8 @@ static const struct flash_info winbond_parts[] = {
->  			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
->  			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
->  	{ "w25x64", INFO(0xef3017, 0, 64 * 1024, 128, SECT_4K) },
-> -	{ "w25q64", INFO(0xef4017, 0, 64 * 1024, 128, SECT_4K) },
-> +	{ "w25q64", INFO(0xef4017, 0, 64 * 1024, 128,
-> +			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->  	{ "w25q64dw", INFO(0xef6017, 0, 64 * 1024, 128,
->  			   SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
->  			   SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-> 
-
-Regards
-Vignesh
+     Arnd
