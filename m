@@ -2,138 +2,135 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 473D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB75C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2589421532
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3ED721532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JiWpVhyw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dnY861HI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404965AbgE1QQe (ORCPT
+        id S2404975AbgE1QRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:16:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58840 "EHLO
+        Thu, 28 May 2020 12:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404906AbgE1QQa (ORCPT
+        with ESMTP id S2404892AbgE1QRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:16:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2A5C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:16:30 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id a45so815102pje.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:16:30 -0700 (PDT)
+        Thu, 28 May 2020 12:17:15 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD844C08C5CA
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:17:14 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id z206so13267393lfc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S76ddrdGq/cBbQZ5tUQB2unFDdKjzHHbrT8hpYe9YzM=;
-        b=JiWpVhyw1smRR696kDsmG/PvNo7sZu5e24qbl+VPXErlBMim+HjZG2Z2tGTg+EQ3c6
-         5K/pnLuPLxYJWoQDn9cFgvvzrAYr2oaWTol8ilzpzHKI9n+DCLhZPLSDfA/RFV9JAUDD
-         dNZ7x5M2uU8VqhhdK5Om372FdLpWT3N2o341M=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IuyHwLJRnB6jxTc1IB7c0ys/rrbHpiCHBZYkZOd5+aA=;
+        b=dnY861HISlW7Skc3gzpG3vW0s3QiWx9O4snM0Q63YTXMKM+DTDIREHzF4vRDxhIvbZ
+         dYi7yQdeWR7/U7kdlDUHwOi9DdY7WbtDafHbadPk2OPyvMhIIkEiiUHeUss1TwcHy759
+         AkF2Q3ZVo/VG5Bdc4OEnX9FsUtb9Iw0ZFZ7YKTkSRlM9J0Gonu/ZDOEK5W9Y3RZ86gJk
+         S1HLfVmE5rjKgkr2zLBllzghwb3k4F7KnbS94qnb1iZAADxYXmu+D8Da7yx7DAEi6qD0
+         X7sm5OjbS/W1CtcsJY4DpGOA0rwpitIt381IGnI44rO6i4hfyMb9laFfBPVIGGQELoEg
+         Iv3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S76ddrdGq/cBbQZ5tUQB2unFDdKjzHHbrT8hpYe9YzM=;
-        b=idIdvqNo1WNSIcmfnsjY5NM8dYHkJVA4QGwGRrkB62ME9j424aGpSU9Jju8B6+wvu1
-         NUyJclPuH3Bu3F4DC0C9kZeuNQSqfUnUwuJsgAK07FT+fM+0sDlZd73jMoyQRjEDdQWr
-         +Lbfh0Mb9IIDEAlStqw//1rq9p80/htyDh9wr/WGA3QHbld9b+IMnDXX+OQjubNYgLeq
-         P5LcMvJs7MOkWOCY9FiAGPRAm3Qw4LRaxLZjwqOtU7I18M+Wnsa9bOXJq9JKI4VdPFZF
-         DRpBTqSFW+uIoWJb+q+OTx04V49Ej6xYUvSe7KeVwOa6FCWgBfvxIRqHUcrHIIhqUM10
-         z1Lw==
-X-Gm-Message-State: AOAM532nuDU2L0jJNgl/LlS0YSxKPN6zsquHCjJtkwrEEhqaPVRhy7vM
-        n8cyRUcwcnQYs1RbaQc1MvIlcvk+L6g=
-X-Google-Smtp-Source: ABdhPJx8NV9kadMCeflkmPi1yiAesNMW3uLpAf3Uo3Djp1f3fesJ94fSB9RULJ/7tXTLkUaRNCdO2A==
-X-Received: by 2002:a17:902:b289:: with SMTP id u9mr4327057plr.138.1590682589611;
-        Thu, 28 May 2020 09:16:29 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id lj12sm5932279pjb.21.2020.05.28.09.16.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 09:16:28 -0700 (PDT)
-Date:   Thu, 28 May 2020 09:16:27 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Zijun Hu <zijuhu@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        rjliao@codeaurora.org
-Subject: Re: [PATCH v1] bluetooth: hci_qca: Fix suspend/resume functionality
- failure
-Message-ID: <20200528161627.GK4525@google.com>
-References: <1590662302-10102-1-git-send-email-zijuhu@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IuyHwLJRnB6jxTc1IB7c0ys/rrbHpiCHBZYkZOd5+aA=;
+        b=Fvu0ImfdZ/5T4K8D2935eEfpzoAxcfrPmlKARw1UAxWzlAC4oZKF+eSE8aj7lLCHS7
+         2kxROj07qo7s4se4LuDhFEnuhIr+ki1I5cuHCcBxzCh67uGEKfloQLCLxiXU8cjwn3vg
+         XWpbe53cnb/l2nvRURGGs8O5BUwBLFogm5y5gwQZFlknMk7Kgsploweoq/Yj0kS/jgAb
+         CV3cCKl7fJMBzAz9VuhOcvQ4INFhTsJVqVW23nW+xMZCk8Us28J6OqdfKkh6TNE7ywoj
+         gMs/w+bQr1RNeK8rf2jHiwALg3j2cTbE8irYL4nYURtxK3AtRo8H5Shrsps3QBs4QwX3
+         lscg==
+X-Gm-Message-State: AOAM531bRcxk7k2mnfIxucIJfbN7HAP5IwUi6yGWKdSbG9p/EN+/+gRp
+        IzOtrz6ATro4IkrmdzkiXamQYB4gpJ+U/fY7ytHAlg==
+X-Google-Smtp-Source: ABdhPJzEYvmxkKtNlYwKn0L9QLyYj9aEx1L7dHIVoXaEJGqWJSEwrWbMRGZQUlzYp/hC+LakUnqJ3RfWneyXxhcdcOs=
+X-Received: by 2002:a05:6512:533:: with SMTP id o19mr2029203lfc.6.1590682632866;
+ Thu, 28 May 2020 09:17:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1590662302-10102-1-git-send-email-zijuhu@codeaurora.org>
+References: <20200519075213.GF32497@dhcp22.suse.cz> <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
+ <20200519084535.GG32497@dhcp22.suse.cz> <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
+ <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
+ <20200520190906.GA558281@chrisdown.name> <20200521095515.GK6462@dhcp22.suse.cz>
+ <20200521163450.GV6462@dhcp22.suse.cz> <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
+ <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com> <20200528150310.GG27484@dhcp22.suse.cz>
+In-Reply-To: <20200528150310.GG27484@dhcp22.suse.cz>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 28 May 2020 21:47:00 +0530
+Message-ID: <CA+G9fYvDXiZ9E9EfU6h0gsJ+xaXY77mRu9Jg+J7C=X4gJ3qvLg@mail.gmail.com>
+Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
+To:     Michal Hocko <mhocko@kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Linux F2FS DEV, Mailing List" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zijun,
+On Thu, 28 May 2020 at 20:33, Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Fri 22-05-20 02:23:09, Naresh Kamboju wrote:
+> > My apology !
+> > As per the test results history this problem started happening from
+> > Bad : next-20200430 (still reproducible on next-20200519)
+> > Good : next-20200429
+> >
+> > The git tree / tag used for testing is from linux next-20200430 tag and reverted
+> > following three patches and oom-killer problem fixed.
+> >
+> > Revert "mm, memcg: avoid stale protection values when cgroup is above
+> > protection"
+> > Revert "mm, memcg: decouple e{low,min} state mutations from protectinn checks"
+> > Revert "mm-memcg-decouple-elowmin-state-mutations-from-protection-checks-fix"
+>
+> The discussion has fragmented and I got lost TBH.
+> In http://lkml.kernel.org/r/CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com
+> you have said that none of the added tracing output has triggered. Does
+> this still hold? Because I still have a hard time to understand how
+> those three patches could have the observed effects.
 
-On Thu, May 28, 2020 at 06:38:22PM +0800, Zijun Hu wrote:
-> @dev parameter of qca_suspend()/qca_resume() represents
-> serdev_device, but it is mistook for hci_dev and causes
-> succedent unexpected memory access.
-> 
-> Fix by taking @dev as serdev_device.
-> 
-> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+On the other email thread [1] this issue is concluded.
 
-Please add:
+Yafang wrote on May 22 2020,
 
-Fixes: 41d5b25fed0 ("Bluetooth: hci_qca: add PM support")
+Regarding the root cause, my guess is it makes a similar mistake that
+I tried to fix in the previous patch that the direct reclaimer read a
+stale protection value.  But I don't think it is worth to add another
+fix. The best way is to revert this commit.
 
-and add stable@kernel.org to cc:
 
-> ---
->  drivers/bluetooth/hci_qca.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index e4a6823..c159161 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1977,8 +1977,10 @@ static void qca_serdev_remove(struct serdev_device *serdev)
->  
->  static int __maybe_unused qca_suspend(struct device *dev)
->  {
-> -	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-> -	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	struct serdev_device *serdev = to_serdev_device(dev);
-> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-> +	struct hci_uart *hu = &qcadev->serdev_hu;
-> +	struct hci_dev *hdev __maybe_unused = hu->hdev;
+[1]  [PATCH v3 2/2] mm, memcg: Decouple e{low,min} state mutations
+from protection checks
+https://lore.kernel.org/linux-mm/CALOAHbArZ3NsuR3mCnx_kbSF8ktpjhUF2kaaTa7Mb7ocJajsQg@mail.gmail.com/
 
-hdev is not used, please remove
+- Naresh
 
->  	struct qca_data *qca = hu->priv;
->  	unsigned long flags;
->  	int ret = 0;
-> @@ -2057,8 +2059,10 @@ static int __maybe_unused qca_suspend(struct device *dev)
->  
->  static int __maybe_unused qca_resume(struct device *dev)
->  {
-> -	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-> -	struct hci_uart *hu = hci_get_drvdata(hdev);
-> +	struct serdev_device *serdev = to_serdev_device(dev);
-> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-> +	struct hci_uart *hu = &qcadev->serdev_hu;
-> +	struct hci_dev *hdev __maybe_unused = hu->hdev;
-
-hdev is not used, please remove
-
->  	struct qca_data *qca = hu->priv;
->  
->  	clear_bit(QCA_SUSPENDING, &qca->flags);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
-> 
+> --
+> Michal Hocko
+> SUSE Labs
