@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7368DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4300215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E436215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667476;
-	bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
+	s=default; t=1590667479;
+	bh=ZhZPSssN0l0R0iPEyKYkxGNrxu4H7TAb2zwRX4z54t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=geiBtqaBWP6tSlCTXXZht1GMC1qlgaxvERnDUyO7hGfjmvaP8mscGwN8rGkLHp8Rt
-	 jdlPHp/RaHYumlzdospxv49ISUXz2pUpIZgtMkjlbfl4ZxKDcUiNs1FsFNb+3Q3jno
-	 /umW76cFhHv68vjuemf/xRMWkyxaR1Xf3Xpr3B/Q=
+	b=ST6XcZj69dn9YMBvWhXIHV5Br4bLdaN99rD588+ekx07/GCz7UZjHOPSqtozuLOJy
+	 UqDLc1J/ihQGtPNk/uELln/yQos+fCNoXQdzXBHLw5ZvWMw2WxyJysyQkc1ELQPi2M
+	 Js8HeNahg5LOdjRjBcYZiUQXvPAOxIe9dDKgfd20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389599AbgE1MEd (ORCPT
+        id S2389605AbgE1MEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:04:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:04:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388954AbgE1L5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:14 -0400
+        id S2388946AbgE1L5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030D1215A4;
-        Thu, 28 May 2020 11:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0EF221532;
+        Thu, 28 May 2020 11:57:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667033;
-        bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
+        s=default; t=1590667030;
+        bh=ZhZPSssN0l0R0iPEyKYkxGNrxu4H7TAb2zwRX4z54t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oFezxgOHRdv6SFiiALe9+yfN8Q2KDzVwq3Q35c2vAE68QWfbckrqtk/FckEl98ath
-         mLZK8UxCYMfQuStWTJkIeIT6lb6nnyF1lh/1sV0oJ1kcKazRuNGtpqsgHV4ktLqP1p
-         u8JIfRA6HvQXG1TNbjyp/S9JViQpokK+G/PhGKn8=
+        b=RpSkLybSz45nAM8d4DXPG+sTSr6dEa9UoZBFQQVCyBO3ikgiLCuP55NcdiLRb5XzJ
+         2iaPozkjVYtO2RiN05/liV3t+R71Epgjcq3JSbVcYv9vFpo19S/GINbVN0SUvPbvuT
+         Rsx5QkTDRVMyBJxFhgZq3GoOQqyRvZsF3JTn+jhs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amit Cohen <amitc@mellanox.com>, Petr Machata <petrm@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Matteo Croce <mcroce@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 17/26] selftests: mlxsw: qos_mc_aware: Specify arping timeout as an integer
-Date:   Thu, 28 May 2020 07:56:45 -0400
-Message-Id: <20200528115654.1406165-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 14/26] net: mvpp2: fix RX hashing for non-10G ports
+Date:   Thu, 28 May 2020 07:56:42 -0400
+Message-Id: <20200528115654.1406165-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
 References: <20200528115654.1406165-1-sashal@kernel.org>
@@ -60,42 +60,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Cohen <amitc@mellanox.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit 46ca11177ed593f39d534f8d2c74ec5344e90c11 ]
+[ Upstream commit 3138a07ce219acde4c0d7ea0b6d54ba64153328b ]
 
-Starting from iputils s20190709 (used in Fedora 31), arping does not
-support timeout being specified as a decimal:
+When rxhash is enabled on any ethernet port except the first in each CP
+block, traffic flow is prevented.  The analysis is below:
 
-$ arping -c 1 -I swp1 -b 192.0.2.66 -q -w 0.1
-arping: invalid argument: '0.1'
+I've been investigating this afternoon, and what I've found, comparing
+a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
 
-Previously, such timeouts were rounded to an integer.
+- The table programmed into the hardware via mvpp22_rss_fill_table()
+  appears to be identical with or without the commit.
 
-Fix this by specifying the timeout as an integer.
+- When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
+  that c2.attr[0] and c2.attr[2] are written back containing:
 
-Fixes: a5ee171d087e ("selftests: mlxsw: qos_mc_aware: Add a test for UC awareness")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Reviewed-by: Petr Machata <petrm@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+   - with 895586d5dc32, failing:    00200000 40000000
+   - without 895586d5dc32, working: 04000000 40000000
+
+- When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
+
+   04000000 00000000
+
+The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
+first value is the queue number, which comprises two fields. The high
+5 bits are 24:29 and the low three are 21:23 inclusive. This comes
+from:
+
+       c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
+                     MVPP22_CLS_C2_ATTR0_QLOW(ql);
+
+So, the working case gives eth2 a queue id of 4.0, or 32 as per
+port->first_rxq, and the non-working case a queue id of 0.1, or 1.
+The allocation of queue IDs seems to be in mvpp2_port_probe():
+
+        if (priv->hw_version == MVPP21)
+                port->first_rxq = port->id * port->nrxqs;
+        else
+                port->first_rxq = port->id * priv->max_port_rxqs;
+
+Where:
+
+        if (priv->hw_version == MVPP21)
+                priv->max_port_rxqs = 8;
+        else
+                priv->max_port_rxqs = 32;
+
+Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
+(eth2) be 32. It seems the idea is that the first 32 queues belong to
+port 0, the second 32 queues belong to port 1, etc.
+
+mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
+'ctx', which comes from mvpp22_rss_ctx(port, 0). This returns
+port->rss_ctx[0].
+
+mvpp22_rss_context_create() is responsible for allocating that, which
+it does by looking for an unallocated priv->rss_tables[] pointer. This
+table is shared amongst all ports on the CP silicon.
+
+When we write the tables in mvpp22_rss_fill_table(), the RSS table
+entry is defined by:
+
+                u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
+                          MVPP22_RSS_INDEX_TABLE_ENTRY(i);
+
+where rss_ctx is the context ID (queue number) and i is the index in
+the table.
+
+If we look at what is written:
+
+- The first table to be written has "sel" values of 00000000..0000001f,
+  containing values 0..3. This appears to be for eth1. This is table 0,
+  RX queue number 0.
+- The second table has "sel" values of 00000100..0000011f, and appears
+  to be for eth2.  These contain values 0x20..0x23. This is table 1,
+  RX queue number 0.
+- The third table has "sel" values of 00000200..0000021f, and appears
+  to be for eth3.  These contain values 0x40..0x43. This is table 2,
+  RX queue number 0.
+
+How do queue numbers translate to the RSS table?  There is another
+table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE field
+of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
+register. Before 895586d5dc32, it was:
+
+       mvpp2_write(priv, MVPP22_RSS_INDEX,
+                   MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
+       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
+                   MVPP22_RSS_TABLE_POINTER(port->id));
+
+and after:
+
+       mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
+       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
+
+Before the commit, for eth2, that would've contained '32' for the
+index and '1' for the table pointer - mapping queue 32 to table 1.
+Remember that this is queue-high.queue-low of 4.0.
+
+After the commit, we appear to map queue 1 to table 1. That again
+looks fine on the face of it.
+
+Section 9.3.1 of the A8040 manual seems indicate the reason that the
+queue number is separated. queue-low seems to always come from the
+classifier, whereas queue-high can be from the ingress physical port
+number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
+
+We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
+comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
+be where our bug comes from.
+
+mvpp2_cls_oversize_rxq_set() sets this up as:
+
+        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
+                    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
+
+        val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+        val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+
+Setting the MVPP2_CLS_SWFWD_PCTRL_MASK bit means that the queue-high
+for eth2 is _always_ 4, so only queues 32 through 39 inclusive are
+available to eth2. Yet, we're trying to tell the classifier to set
+queue-high, which will be ignored, to zero. Hence, the queue-high
+field (MVPP22_CLS_C2_ATTR0_QHIGH()) from the classifier will be
+ignored.
+
+This means we end up directing traffic from eth2 not to queue 1, but
+to queue 33, and then we tell it to look up queue 33 in the RSS table.
+However, RSS table has not been programmed for queue 33, and so it ends
+up (presumably) dropping the packets.
+
+It seems that mvpp22_rss_context_create() doesn't take account of the
+fact that the upper 5 bits of the queue ID can't actually be changed
+due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems that
+mvpp2_cls_oversize_rxq_set() has been missed in this commit. Either
+way, these two functions mutually disagree with what queue number
+should be used.
+
+Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
+validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is used
+for over-sized packets attempting to egress through this port. With
+the classifier having had RSS enabled and directing eth2 traffic to
+queue 1, we may still have packets appearing on queue 32 for this port.
+
+However, the only way we may end up with over-sized packets attempting
+to egress through eth2 - is if the A8040 forwards frames between its
+ports. From what I can see, we don't support that feature, and the
+kernel restricts the egress packet size to the MTU. In any case, if we
+were to attempt to transmit an oversized packet, we have no support in
+the kernel to deal with that appearing in the port's receive queue.
+
+So, this patch attempts to solve the issue by clearing the
+MVPP2_CLS_SWFWD_PCTRL_MASK() bit, allowing MVPP22_CLS_C2_ATTR0_QHIGH()
+from the classifier to define the queue-high field of the queue number.
+
+My testing seems to confirm my findings above - clearing this bit
+means that if I enable rxhash on eth2, the interface can then pass
+traffic, as we are now directing traffic to RX queue 1 rather than
+queue 33. Traffic still seems to work with rxhash off as well.
+
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Tested-by: Matteo Croce <mcroce@redhat.com>
+Fixes: 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 2 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-index 24dd8ed48580..b025daea062d 100755
---- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-+++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
-@@ -300,7 +300,7 @@ test_uc_aware()
- 	local i
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+index 4344a59c823f..6122057d60c0 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
+@@ -1070,7 +1070,7 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
+ 		    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
  
- 	for ((i = 0; i < attempts; ++i)); do
--		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 0.1; then
-+		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 1; then
- 			((passes++))
- 		fi
+ 	val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
+-	val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
++	val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
+ 	mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
+ }
  
 -- 
 2.25.1
