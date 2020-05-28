@@ -2,190 +2,115 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A7CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC90212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:31:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590669078;
-	bh=DhwnVIgovCUuYgtaX9XIPcX9wco8SiYlP+p9K4EhSQ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mI9PZeXCDqlQDhgtusjJaTE/isGTyF73cbpJGDCNE1VI93rKxwxqTKbBT2f1kUBwP
-	 SF8BrYbJGV3/UEYfnKzmYUJrbmD2lLwIeQg1OVUUssRUWeCs9EAYiP1UGS6Y0LAfmg
-	 ppYoYuH+qeNQA8kKl1/a67vLOTSFFjMRGQAAzWjk=
+	by mail.kernel.org (Postfix) with ESMTP id EF4E1206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RkHoTbjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389758AbgE1MbR (ORCPT
+        id S2389761AbgE1Mcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:31:17 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36561 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389439AbgE1MbQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:31:16 -0400
-Received: by mail-ot1-f68.google.com with SMTP id h7so2213994otr.3;
-        Thu, 28 May 2020 05:31:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h5oVREdc8mZHk5DmSeaXI8D6G4iopJ7pfcXrcSkFGrY=;
-        b=EVr4to3k3EHCkQeqabFyxc3GiuDkT4EVYWNm9QNpjSZuGyk4FX1uTSvtTA9L6oJf9x
-         NoBVUZfZ+DjCsbgNbshlcQFpY6XxcSBLc9BEOZEZaxGZ5H6dxu7Dt2c3nytM0rz8rOEK
-         A9ZiDVHIqTgni9z0D7znvdngGRUFduHkHZ0uyuAFKopWvHmpWcjLW3H+/Bs9Xpofe16i
-         g1aEIzlUQLP47MPa/WL2q6UmFfiB4GcoqcF3eezL19N3F7XWZ1kgtZviZ/4dSxfcDsUG
-         FroSa9vO/ifcOvEIXm3tt+GLNDW1Pc5RTYrs6s7Bcd280rJjrVaKNCRgxuCnyBy5Sc9o
-         jx5w==
-X-Gm-Message-State: AOAM5305o7do1ouzS4lDN2+nccBoOHDfO76SYYMywZmTEcsMfZcWeN0M
-        TT6P3EihsstKnICR8kLi//IzhTtI7DFOl0PjIhU=
-X-Google-Smtp-Source: ABdhPJyKoD2BsxDaFk6T06cjSPSPMBpWTdoeNgvL+Ub3VuSwISlOzyyyfmG5itLnmBGjAmW+MYKmN+Y05Xch3/WxUok=
-X-Received: by 2002:a05:6830:20d1:: with SMTP id z17mr375006otq.167.1590669073023;
- Thu, 28 May 2020 05:31:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
- <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com> <20200520150230.GC30374@kadam>
- <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
- <20200521091505.GF30374@kadam> <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
- <20200521173901.GA22310@kadam> <20200522131031.GL2163848@ulmo>
- <20200522132318.GM30374@kadam> <20200522144312.GA2374603@ulmo> <20200528120818.GO22511@kadam>
-In-Reply-To: <20200528120818.GO22511@kadam>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 28 May 2020 14:31:01 +0200
-Message-ID: <CAJZ5v0hJY3_z-wBrgbpetqOF44JB9x6uQrosgStD+Sr+KZdvWg@mail.gmail.com>
-Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
- on error
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        devel@driverdev.osuosl.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Kangjie Lu <kjlu@umn.edu>, Dmitry Osipenko <digetx@gmail.com>,
+        Thu, 28 May 2020 08:32:50 -0400
+Received: from mail-eopbgr80077.outbound.protection.outlook.com ([40.107.8.77]:24418
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389279AbgE1Mcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:32:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oTRhF46UoipCDrhTI57mc2lOC0onjt5GQ5glpspyXg6rgw8A9z+ozFK/QJMDEuzvb9bfRulTlMnlcM5q+6jWIyHc+w+yu/wR/tm0Irwx42Cf8EsCjavAnZVoQWXB2QUuu3SPVclC3FAWnq6KFbLhS4yuW7EjvCcr6s5mq5OATVuPeUFzmviNGj8+7bkx5YALOmHDSgi04fPqbWBQ2PAX4Ibf7MFdvgu0EOvKefOZDm+2Ohpm8DzNXxNONV8kT+f0LOZB2MJmlq1E6273xnK7/OKZvRjSllNG0MjpYutjgPRS/Jyz0VYjjA+zUAelrCm4mUpv/OjFnfH/WhNhhBBBeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MA0Ixfgt2t6+2BNKy5rniQQv7W86MoGdcA3p9aDbrVU=;
+ b=cFoBh10dAEfUOXHMUD9SvM8Xt3Co//pzVEHdlhUdFm4+mWDtr9jUynGyABeP4yA52IOC5HeyO08CcfsrCsf7d3dUgZKZiAQyfiWOYNYTAahbm2fi8G3YjW1vCY0cyjdI/fQIsn/YApAzAWoNjHQHvx73Oe6m4VXqtKA8LsKKUgmGE+pHSjoEkcAvMgbLBFah1ROcv1AsO5MbgpnapsAJgqxdzfxX01RVJ1QqLuICqbuNP/gFT/ElCvvVHywnOQPWxYQSUmJZfwWk2JUdWu6RbNExTwhAtM2NDlHvSg0uD9ZKudwfj/ydR0L2UEFfZiUQteJpLnVDgf4b/zzBL9cV/g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MA0Ixfgt2t6+2BNKy5rniQQv7W86MoGdcA3p9aDbrVU=;
+ b=RkHoTbjlsZeYOnQ+mx1DV0+cX6+hjfTOkuPdWcIP23EiFh9uxLaZ9sYSxX3YxCSqJAk4eACRdV3bTEXcNLPPKWMcshy57X4pWwbwCTNiPuiJ0w6StFzUOZFVy6EAZY/Yf7K38kFXyKCQH6GhX85j8cvOrL1NlOhEGYJh0AY37A4=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
+ by VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Thu, 28 May
+ 2020 12:32:43 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 12:32:43 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Kalle Valo <kvalo@codeaurora.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "b43-dev@lists.infradead.org" <b43-dev@lists.infradead.org>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
+        "libertas-dev@lists.infradead.org" <libertas-dev@lists.infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Subject: RE: [EXT] [PATCH 02/11] mmc: sdio: Change macro names for Marvell
+ 8688 modules
+Thread-Topic: [EXT] [PATCH 02/11] mmc: sdio: Change macro names for Marvell
+ 8688 modules
+Thread-Index: AQHWMEeuWeLcIUCYeUyYT+wggOmgN6i9d2kw
+Date:   Thu, 28 May 2020 12:32:43 +0000
+Message-ID: <VI1PR04MB43668C45F20EECE78179ECB78F8E0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200522144412.19712-1-pali@kernel.org>
+ <20200522144412.19712-3-pali@kernel.org>
+In-Reply-To: <20200522144412.19712-3-pali@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [103.54.18.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ca7b1354-c335-40ec-cada-08d803033840
+x-ms-traffictypediagnostic: VI1PR04MB4366:
+x-microsoft-antispam-prvs: <VI1PR04MB436666734DD809481C1A69A08F8E0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ESNnmwwBk9xw+EqpcDpDkIU1MClWcX9EIew2dSd5J4mQPHgs41NUZBPY468Ihk/tyBLDz0pSkXFvjO9N0tGa0Fx3O08I+8LaY/BycnLK8+717rN9E9rtoltgMzOncRt6dCAvnEp0VtvGZrvsc+b4HhhNrFbqRGDD14LAA0Xc6m4PDONdR04YOlSPTg4csJfSca6m2l3PNYWFw4z/cexXx8HTmgmEKMbN7UMSvQVcir3BmTta3R3RxhXX0Heemmlo3NgsIuVMBtwzZcTZYlZhkEikvmIvbS/G2YGb4yliP1wJL6/7NRoRsp3mhv2uadWw
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(346002)(396003)(39860400002)(376002)(316002)(33656002)(5660300002)(44832011)(558084003)(186003)(7696005)(9686003)(54906003)(76116006)(110136005)(71200400001)(66946007)(66476007)(66446008)(64756008)(2906002)(86362001)(52536014)(7416002)(66556008)(6506007)(26005)(8936002)(8676002)(478600001)(4326008)(55016002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: N+FxMGKvUKKHG8gJjgTFgOaRXptaDXLmPzTmm68kNQDYf75HCZTHZx5b3+9myP8CJj5+cdPWqvZU1HQRQm00nCn+CNeXCpE349KRZGJPO5/u5FGQaS3K7EeP/rCNih8nIai/LkkBlS08Jf5Uh/Ms91Jmvb9UubGcsXBd28QPexKeITZ2OJRbDNpwqUMHOkaS81Sme2hL5yuFhb7wtuJLfGAWfHMDSB3PhXhBQGx4SCJVRnuC2NxQx34n6iOp/mB5/H6jMniH5T+Ty2MDxFwLwpRPpy7v4FexYIbKPR4FxCis37aXBM9dL89Qv6JC9JPMu50ZfnjZThdka2J3EPUF9KiWKtHRCU1X2Co4CCycfMb/YLTQSyOTu8ZwFy2RYJJuykMReSnjR7V5WEf3aMpQ76YissVSGhkqHqPv1VsbULIih7kKe8eHHDXVWAjsGSsbkA8w0V18INjC1lLVuPH1pSByEAHjnxTV3oih+geTGA8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca7b1354-c335-40ec-cada-08d803033840
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 12:32:43.5251
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CbCG6NOquhkq8Bse3J2apcyRB/AzPvZDgSnFSUovTtFL1cJYZtBHwqzqJOIE0isEz+l23VR2U9C6kNmbWjUaUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4366
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 2:08 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Fri, May 22, 2020 at 04:43:12PM +0200, Thierry Reding wrote:
-> > On Fri, May 22, 2020 at 04:23:18PM +0300, Dan Carpenter wrote:
-> > > On Fri, May 22, 2020 at 03:10:31PM +0200, Thierry Reding wrote:
-> > > > On Thu, May 21, 2020 at 08:39:02PM +0300, Dan Carpenter wrote:
-> > > > > On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
-> > > > > > On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > > > > > >
-> > > > > > > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
-> > > > > > > > Hi, Dan,
-> > > > > > > >
-> > > > > > > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
-> > > > > > > > many cases that assume pm_runtime_get_sync() will change PM usage
-> > > > > > > > counter on error. According to my static analysis results, the number of these
-> > > > > > > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
-> > > > > > > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
-> > > > > > > >
-> > > > > > >
-> > > > > > > That's why I was saying that we may need to introduce a new replacement
-> > > > > > > function for pm_runtime_get_sync() that works as expected.
-> > > > > > >
-> > > > > > > There is no reason why we have to live with the old behavior.
-> > > > > >
-> > > > > > What exactly do you mean by "the old behavior"?
-> > > > >
-> > > > > I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
-> > > > > function which called pm_runtime_get_sync_resume() which does something
-> > > > > like this:
-> > > > >
-> > > > > static inline int pm_runtime_get_sync_resume(struct device *dev)
-> > > > > {
-> > > > >         int ret;
-> > > > >
-> > > > >         ret = __pm_runtime_resume(dev, RPM_GET_PUT);
-> > > > >         if (ret < 0) {
-> > > > >                 pm_runtime_put(dev);
-> > > > >                 return ret;
-> > > > >         }
-> > > > >         return 0;
-> > > > > }
-> > > > >
-> > > > > I'm not sure if pm_runtime_put() is the correct thing to do?  The other
-> > > > > thing is that this always returns zero on success.  I don't know that
-> > > > > drivers ever care to differentiate between one and zero returns.
-> > > > >
-> > > > > Then if any of the caller expect that behavior we update them to use the
-> > > > > new function.
-> > > >
-> > > > Does that really have many benefits, though? I understand that this
-> > > > would perhaps be easier to use because it is more in line with how other
-> > > > functions operate. On the other hand, in some cases you may want to call
-> > > > a different version of pm_runtime_put() on failure, as discussed in
-> > > > other threads.
-> > >
-> > > I wasn't CC'd on the other threads so I don't know.  :/
-> >
-> > It was actually earlier in this thread, see here for example:
-> >
-> >       http://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/#2438776
->
-> I'm not seeing what you're talking about.
->
-> The only thing I see in this thread is that we don't want to call
-> pm_runtime_mark_last_busy(dev) which updates the last_busy time that is
-> used for autosuspend.
-
-That shouldn't be a problem, though, because if pm_runtime_get_sync()
-returns an error, PM-runtime is not going to work for this device
-until it is explicitly disabled for it and fixed up.
-
-> The other thing that was discussed was pm_runtime_put_noidle() vs
-> pm_runtime_put_autosuspend().  "The pm_runtime_put_noidle() should have
-> the same effect as yours variant".  So apparently they are equivalent
-> in this situation.  How should we choose one vs the other?
-
-The point is that pm_runtime_put_noidle() is *sufficient* to drop the
-reference and nothing more is needed in the error path.
-
-So you can always do something like this:
-
-ret = pm_runtime_get_sync(dev);
-if (ret < 0) {
-        pm_runtime_put_noidle(dev);
-        return ret;
-}
-
-However, it would not be a bug to do something like this:
-
-        ret = pm_runtime_get_sync(dev);
-        if (ret < 0)
-                goto rpm_put;
-
-        ...
-
-rpm_put:
-        pm_runtime_put_autosuspend(dev);
-
-> I'm not trying to be obtuse.  I understand that probably if I worked in
-> PM then I wouldn't need documentation...  :/
-
-So Documentation/power/runtime_pm.rst says this:
-
-  `int pm_runtime_get_sync(struct device *dev);`
-    - increment the device's usage counter, run pm_runtime_resume(dev) and
-      return its result
-
-In particular, it doesn't say "decrement the device's usage counter on
-errors returned by pm_runtime_resume(dev)", so I'm not sure where that
-expectation comes from.
+SGkgUGFsaSwNCg0KPiBBZGQgdW5kZXJzY29yZSBhcyBzZXBhcmF0b3IgaW4gTWFydmVsbCA4Njg4
+IG1hY3JvIG5hbWVzIGZvciBiZXR0ZXINCj4gcmVhZGFiaWxpdHkgYW5kIGNvbnNpc3RlbmN5Lg0K
+PiANCg0KVGhhbmtzIGZvciB0aGUgY2hhbmdlOw0KDQpBY2tlZC1ieTogR2FuYXBhdGhpIEJoYXQg
+PGdhbmFwYXRoaS5iaGF0QG54cC5jb20+DQo=
