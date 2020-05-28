@@ -2,267 +2,218 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8504AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05E00207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:45:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="cK8xhMZK"
+	by mail.kernel.org (Postfix) with ESMTP id 5613121532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404628AbgE1Pph (ORCPT
+        id S2404557AbgE1Ppp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404500AbgE1PpO (ORCPT
+        Thu, 28 May 2020 11:45:45 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:58144 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404617AbgE1Pp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:45:14 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16603C08C5CB
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:45:11 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j10so12845067wrw.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Jw+8SfYlfUDAgIF9spfjdhK61J/Bd95zBvBrsjSxAUU=;
-        b=cK8xhMZKDzOmsTRRQEQcuqhqXPfbUpiWFAfsREb29O+myn1bfGY3IISqjlf4/H1BDP
-         DIplsvxDsR31jL6oXnLA0UzRGbdlvX+SBNcQSw7v6n8df6Up6MzRJM4LzJjmoiSXsKrk
-         KQnb4wLC3psE42BSbrTm3jaDV5ptiCsLKB1cVCuQImwgSpjFBfYWPZ8Vt1DDE1/caxQD
-         f5xR2NVF21b36xMkTeSM8EZdOPgyz3SjDVPeiwY+yAu7Gw6PbutAfh4skyAXSrPRyyMX
-         prHmgx5xRnkUXyaMVlzZUgZNZwF+oC+SbLX4NZhI45913NP20awTBPhI9NNOJmG0iI8Z
-         BKuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Jw+8SfYlfUDAgIF9spfjdhK61J/Bd95zBvBrsjSxAUU=;
-        b=L1iFGlH2/fl1nZZE/A6bcURmws3RHsY94BKr7yoEds8FMLJyaQeun8BFpxFyOFtvoJ
-         pcNlG04NH5IaoZZDrFHBw9hsFkts1FI9j4R5oQLJiPMp6YmemfDFujzjX3VjcyBYhsj7
-         ghunIoIAlko0IMZ3t+y2LesgC6MIlJ4FJ55cafFZDoInIlMP4k1xyG5rlCd9z7wIafAo
-         LdDqxmB0yMjsj10UKEjkyIKUK+w54BR4MgPmOMZHmzoD3GkjTl+TQ9/l6u3ZPKanLpB3
-         vc/6aRI8PzW6f9vU+d9IYzZTy7KEmD+IOjDxAX1rTVnpSFeVSCvEIgQYBp2hT1HcxnJB
-         QD6w==
-X-Gm-Message-State: AOAM533wYMUb+UErUtlFWbwGqAzj+jmILmlfGkN6ih9rTFw4ib3TfiNy
-        QsErWZzKu9VucUREv7XEV/U5/g==
-X-Google-Smtp-Source: ABdhPJyuTmrpPZh0lHXM+wLtVGFMTghPxLn7C2+maSV6/9h0yIDJ2MdhyAP9CMX++jUmqTbuYQU1Ng==
-X-Received: by 2002:a05:6000:100e:: with SMTP id a14mr4014706wrx.349.1590680709788;
-        Thu, 28 May 2020 08:45:09 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id n1sm6285650wrp.10.2020.05.28.08.45.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:45:09 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 2/2] net: ethernet: mtk-star-emac: use regmap bitops
-Date:   Thu, 28 May 2020 17:45:03 +0200
-Message-Id: <20200528154503.26304-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200528154503.26304-1-brgl@bgdev.pl>
-References: <20200528154503.26304-1-brgl@bgdev.pl>
+        Thu, 28 May 2020 11:45:28 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeKic-0000P5-1Z; Thu, 28 May 2020 09:45:18 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeKiZ-0006cv-J1; Thu, 28 May 2020 09:45:17 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
+Date:   Thu, 28 May 2020 10:41:22 -0500
+In-Reply-To: <87k10wysqz.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Thu, 28 May 2020 10:38:28 -0500")
+Message-ID: <87eer4ysm5.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jeKiZ-0006cv-J1;;;mid=<87eer4ysm5.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18haYcbIQZKo6eWp1tkySil7Dv2wO8d9Cs=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 01/11] exec: Reduce bprm->per_clear to a single bit
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Shrink the code visually by replacing regmap_update_bits() with
-appropriate regmap bit operations where applicable.
+The bprm->per_clear field only takes the values 0 and
+PER_CLEAR_ON_SETID.  Reduce the field to a signle bit to make it clear
+that the only question is should the dangerous personality bits be
+cleared or not.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Update the documentation of the security lsm hooks.
+
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- drivers/net/ethernet/mediatek/mtk_star_emac.c | 80 ++++++++-----------
- 1 file changed, 35 insertions(+), 45 deletions(-)
+ fs/exec.c                  | 7 ++++---
+ include/linux/binfmts.h    | 4 +++-
+ include/linux/lsm_hooks.h  | 4 ++++
+ security/apparmor/domain.c | 2 +-
+ security/commoncap.c       | 2 +-
+ security/selinux/hooks.c   | 2 +-
+ security/smack/smack_lsm.c | 2 +-
+ 7 files changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-index 8596ca0e60eb..326ac792a4a0 100644
---- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
-+++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-@@ -413,8 +413,8 @@ static void mtk_star_dma_unmap_tx(struct mtk_star_priv *priv,
+diff --git a/fs/exec.c b/fs/exec.c
+index c3c879a55d65..51fab62b9fca 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1354,7 +1354,8 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+ 					PF_NOFREEZE | PF_NO_SETAFFINITY);
+ 	flush_thread();
+-	me->personality &= ~bprm->per_clear;
++	if (bprm->per_clear)
++		me->personality &= ~PER_CLEAR_ON_SETID;
  
- static void mtk_star_nic_disable_pd(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_MAC_CFG,
--			   MTK_STAR_BIT_MAC_CFG_NIC_PD, 0);
-+	regmap_clear_bits(priv->regs, MTK_STAR_REG_MAC_CFG,
-+			  MTK_STAR_BIT_MAC_CFG_NIC_PD);
+ 	/*
+ 	 * We have to apply CLOEXEC before we change whether the process is
+@@ -1628,12 +1629,12 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
+ 		return;
+ 
+ 	if (mode & S_ISUID) {
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->per_clear = 1;
+ 		bprm->cred->euid = uid;
+ 	}
+ 
+ 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->per_clear = 1;
+ 		bprm->cred->egid = gid;
+ 	}
  }
+diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
+index 7fc05929c967..e7959a6a895a 100644
+--- a/include/linux/binfmts.h
++++ b/include/linux/binfmts.h
+@@ -26,6 +26,9 @@ struct linux_binprm {
+ 	unsigned long p; /* current top of mem */
+ 	unsigned long argmin; /* rlimit marker for copy_strings() */
+ 	unsigned int
++		/* Should unsafe personality bits be cleared? */
++		per_clear:1,
++
+ 		/* Should an execfd be passed to userspace? */
+ 		have_execfd:1,
  
- /* Unmask the three interrupts we care about, mask all others. */
-@@ -434,41 +434,38 @@ static void mtk_star_intr_disable(struct mtk_star_priv *priv)
+@@ -55,7 +58,6 @@ struct linux_binprm {
+ 	struct file * file;
+ 	struct cred *cred;	/* new credentials */
+ 	int unsafe;		/* how unsafe this exec is (mask of LSM_UNSAFE_*) */
+-	unsigned int per_clear;	/* bits to clear in current->personality */
+ 	int argc, envc;
+ 	const char * filename;	/* Name of binary as seen by procps */
+ 	const char * interp;	/* Name of the binary really executed. Most
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index d618ecc4d660..0ca68ad53592 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -42,6 +42,8 @@
+  *	(e.g. for transitions between security domains).
+  *	The hook must set @bprm->secureexec to 1 if AT_SECURE should be set to
+  *	request libc enable secure mode.
++ *	The hook must set @bprm->per_clear to 1 if the dangerous personality
++ *	bits must be cleared from current->personality.
+  *	@bprm contains the linux_binprm structure.
+  *	Return 0 if the hook is successful and permission is granted.
+  * @bprm_repopulate_creds:
+@@ -55,6 +57,8 @@
+  *	transitions between security domains).
+  *	The hook must set @bprm->active_secureexec to 1 if AT_SECURE should be set to
+  *	request libc enable secure mode.
++ *	The hook must set @bprm->per_clear to 1 if the dangerous personality
++ *	bits must be cleared from current->personality.
+  *	@bprm contains the linux_binprm structure.
+  *	Return 0 if the hook is successful and permission is granted.
+  * @bprm_check_security:
+diff --git a/security/apparmor/domain.c b/security/apparmor/domain.c
+index 0b870a647488..c6d00735a40a 100644
+--- a/security/apparmor/domain.c
++++ b/security/apparmor/domain.c
+@@ -962,7 +962,7 @@ int apparmor_bprm_creds_for_exec(struct linux_binprm *bprm)
+ 			aa_label_printk(new, GFP_KERNEL);
+ 			dbg_printk("\n");
+ 		}
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->per_clear = 1;
+ 	}
+ 	aa_put_label(cred_label(bprm->cred));
+ 	/* transfer reference, released when cred is freed */
+diff --git a/security/commoncap.c b/security/commoncap.c
+index 77b04cb6feac..48b556046483 100644
+--- a/security/commoncap.c
++++ b/security/commoncap.c
+@@ -826,7 +826,7 @@ int cap_bprm_repopulate_creds(struct linux_binprm *bprm)
  
- static void mtk_star_intr_enable_tx(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
--			   MTK_STAR_BIT_INT_STS_TNTC, 0);
-+	regmap_clear_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-+			  MTK_STAR_BIT_INT_STS_TNTC);
- }
+ 	/* if we have fs caps, clear dangerous personality flags */
+ 	if (__cap_gained(permitted, new, old))
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->per_clear = 1;
  
- static void mtk_star_intr_enable_rx(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
--			   MTK_STAR_BIT_INT_STS_FNRC, 0);
-+	regmap_clear_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-+			  MTK_STAR_BIT_INT_STS_FNRC);
- }
+ 	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
+ 	 * credentials unless they have the appropriate permit.
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 718345dd76bb..6bea1b879fdb 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2385,7 +2385,7 @@ static int selinux_bprm_creds_for_exec(struct linux_binprm *bprm)
+ 		}
  
- static void mtk_star_intr_enable_stats(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
--			   MTK_STAR_REG_INT_STS_MIB_CNT_TH, 0);
-+	regmap_clear_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-+			  MTK_STAR_REG_INT_STS_MIB_CNT_TH);
- }
+ 		/* Clear any possibly unsafe personality bits on exec: */
+-		bprm->per_clear |= PER_CLEAR_ON_SETID;
++		bprm->per_clear = 1;
  
- static void mtk_star_intr_disable_tx(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
--			   MTK_STAR_BIT_INT_STS_TNTC,
--			   MTK_STAR_BIT_INT_STS_TNTC);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-+			MTK_STAR_BIT_INT_STS_TNTC);
- }
+ 		/* Enable secure mode for SIDs transitions unless
+ 		   the noatsecure permission is granted between
+diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+index 0ac8f4518d07..a0d2fad27b33 100644
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -933,7 +933,7 @@ static int smack_bprm_creds_for_exec(struct linux_binprm *bprm)
+ 		return -EPERM;
  
- static void mtk_star_intr_disable_rx(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
--			   MTK_STAR_BIT_INT_STS_FNRC,
--			   MTK_STAR_BIT_INT_STS_FNRC);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-+			MTK_STAR_BIT_INT_STS_FNRC);
- }
+ 	bsp->smk_task = isp->smk_task;
+-	bprm->per_clear |= PER_CLEAR_ON_SETID;
++	bprm->per_clear = 1;
  
- static void mtk_star_intr_disable_stats(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_INT_MASK,
--			   MTK_STAR_REG_INT_STS_MIB_CNT_TH,
--			   MTK_STAR_REG_INT_STS_MIB_CNT_TH);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_INT_MASK,
-+			MTK_STAR_REG_INT_STS_MIB_CNT_TH);
- }
- 
- static unsigned int mtk_star_intr_read(struct mtk_star_priv *priv)
-@@ -524,12 +521,10 @@ static void mtk_star_dma_init(struct mtk_star_priv *priv)
- 
- static void mtk_star_dma_start(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
--			   MTK_STAR_BIT_TX_DMA_CTRL_START,
--			   MTK_STAR_BIT_TX_DMA_CTRL_START);
--	regmap_update_bits(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
--			   MTK_STAR_BIT_RX_DMA_CTRL_START,
--			   MTK_STAR_BIT_RX_DMA_CTRL_START);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
-+			MTK_STAR_BIT_TX_DMA_CTRL_START);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
-+			MTK_STAR_BIT_RX_DMA_CTRL_START);
- }
- 
- static void mtk_star_dma_stop(struct mtk_star_priv *priv)
-@@ -553,16 +548,14 @@ static void mtk_star_dma_disable(struct mtk_star_priv *priv)
- 
- static void mtk_star_dma_resume_rx(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
--			   MTK_STAR_BIT_RX_DMA_CTRL_RESUME,
--			   MTK_STAR_BIT_RX_DMA_CTRL_RESUME);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_RX_DMA_CTRL,
-+			MTK_STAR_BIT_RX_DMA_CTRL_RESUME);
- }
- 
- static void mtk_star_dma_resume_tx(struct mtk_star_priv *priv)
- {
--	regmap_update_bits(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
--			   MTK_STAR_BIT_TX_DMA_CTRL_RESUME,
--			   MTK_STAR_BIT_TX_DMA_CTRL_RESUME);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_TX_DMA_CTRL,
-+			MTK_STAR_BIT_TX_DMA_CTRL_RESUME);
- }
- 
- static void mtk_star_set_mac_addr(struct net_device *ndev)
-@@ -845,8 +838,8 @@ static int mtk_star_hash_wait_ok(struct mtk_star_priv *priv)
- 		return ret;
- 
- 	/* Check the BIST_OK bit. */
--	regmap_read(priv->regs, MTK_STAR_REG_HASH_CTRL, &val);
--	if (!(val & MTK_STAR_BIT_HASH_CTRL_BIST_OK))
-+	if (!regmap_test_bits(priv->regs, MTK_STAR_REG_HASH_CTRL,
-+			      MTK_STAR_BIT_HASH_CTRL_BIST_OK))
- 		return -EIO;
- 
- 	return 0;
-@@ -880,12 +873,10 @@ static int mtk_star_reset_hash_table(struct mtk_star_priv *priv)
- 	if (ret)
- 		return ret;
- 
--	regmap_update_bits(priv->regs, MTK_STAR_REG_HASH_CTRL,
--			   MTK_STAR_BIT_HASH_CTRL_BIST_EN,
--			   MTK_STAR_BIT_HASH_CTRL_BIST_EN);
--	regmap_update_bits(priv->regs, MTK_STAR_REG_TEST1,
--			   MTK_STAR_BIT_TEST1_RST_HASH_MBIST,
--			   MTK_STAR_BIT_TEST1_RST_HASH_MBIST);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_HASH_CTRL,
-+			MTK_STAR_BIT_HASH_CTRL_BIST_EN);
-+	regmap_set_bits(priv->regs, MTK_STAR_REG_TEST1,
-+			MTK_STAR_BIT_TEST1_RST_HASH_MBIST);
- 
- 	return mtk_star_hash_wait_ok(priv);
- }
-@@ -1016,13 +1007,13 @@ static int mtk_star_enable(struct net_device *ndev)
- 		return ret;
- 
- 	/* Setup the hashing algorithm */
--	regmap_update_bits(priv->regs, MTK_STAR_REG_ARL_CFG,
--			   MTK_STAR_BIT_ARL_CFG_HASH_ALG |
--			   MTK_STAR_BIT_ARL_CFG_MISC_MODE, 0);
-+	regmap_clear_bits(priv->regs, MTK_STAR_REG_ARL_CFG,
-+			  MTK_STAR_BIT_ARL_CFG_HASH_ALG |
-+			  MTK_STAR_BIT_ARL_CFG_MISC_MODE);
- 
- 	/* Don't strip VLAN tags */
--	regmap_update_bits(priv->regs, MTK_STAR_REG_MAC_CFG,
--			   MTK_STAR_BIT_MAC_CFG_VLAN_STRIP, 0);
-+	regmap_clear_bits(priv->regs, MTK_STAR_REG_MAC_CFG,
-+			  MTK_STAR_BIT_MAC_CFG_VLAN_STRIP);
- 
- 	/* Setup DMA */
- 	mtk_star_dma_init(priv);
-@@ -1204,9 +1195,8 @@ static void mtk_star_set_rx_mode(struct net_device *ndev)
- 	int ret;
- 
- 	if (ndev->flags & IFF_PROMISC) {
--		regmap_update_bits(priv->regs, MTK_STAR_REG_ARL_CFG,
--				   MTK_STAR_BIT_ARL_CFG_MISC_MODE,
--				   MTK_STAR_BIT_ARL_CFG_MISC_MODE);
-+		regmap_set_bits(priv->regs, MTK_STAR_REG_ARL_CFG,
-+				MTK_STAR_BIT_ARL_CFG_MISC_MODE);
- 	} else if (netdev_mc_count(ndev) > MTK_STAR_HASHTABLE_MC_LIMIT ||
- 		   ndev->flags & IFF_ALLMULTI) {
- 		for (i = 0; i < MTK_STAR_HASHTABLE_SIZE_MAX; i++) {
+ 	/* Decide if this is a secure exec. */
+ 	if (bsp->smk_task != bsp->smk_forked)
 -- 
-2.26.1
+2.25.0
 
