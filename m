@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CACC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 959CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D688D2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FD6D215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667507;
-	bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
+	s=default; t=1590667513;
+	bh=Lz6JIjaFdsda2WxpNs9dxBTzg1+WItPZVZQTm4UU+gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=istw6rt2eIeAuknvkJxCRNIBLUF6ngCFWFwikWvqf5o/iI++k7OsGsHdsYtYP4x3k
-	 gwbqAYFTTkyAWAqHZvGjo4v9tnN3HmkcuI4mANu/YO3aEDFTMhA5gAyGfObiVGRHxD
-	 OndEVFQzKc1GC8CbPgukygxoiJyrCtFdMC1AvHnQ=
+	b=PfM0nHXLavHosYnaLHVOx0Cd2cQHRGzE3+8MLtPYOv8/6glCigamV+11g6+MFnYX7
+	 ITL7KV+oHUhz2HIgahH2Siprpc6UC0iI/9MlsvIIlgJ8koTQznIEMNJdxUWbA96SmJ
+	 msgN4gW5/oxdsyrJ7AcfKeKtg0RFzU9+kOtQrtXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389639AbgE1MFH (ORCPT
+        id S2389650AbgE1MFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49502 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388921AbgE1L5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:05 -0400
+        id S2388912AbgE1L5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A88021501;
-        Thu, 28 May 2020 11:57:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DE321582;
+        Thu, 28 May 2020 11:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667025;
-        bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
+        s=default; t=1590667021;
+        bh=Lz6JIjaFdsda2WxpNs9dxBTzg1+WItPZVZQTm4UU+gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U2LtLCRf0lbhRxn7W56bcDPOAfOpiRPiKRzwjGxTWSimvzrrIgjOflzU0mkS4lr9I
-         gfm5+dSeXGtyN5mV3+TLEbEbpJZXbEzQ4jmkqUo7J5+KF3RenYcD4NTbJ5c7wHYbWz
-         62ftxDUrTfJbF2GRj/cbJt+yXR057h+YOsOBzVUg=
+        b=ixzBfpWpTogGeKkgqn94XcVLFXK2h06r2ihF4XtgLcX5PTRaDbnLlG4k+tXplSiR9
+         F8GLIDa3morRl4nC232WWE055bif0us1kgAyP2oDGWkuofG4moqIjTXwJPCekVeNGb
+         R10V0OI/uaWKScW4XRheNWxkBdmgMM26oR5OC3Lk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/26] net: bmac: Fix read of MAC address from ROM
-Date:   Thu, 28 May 2020 07:56:37 -0400
-Message-Id: <20200528115654.1406165-9-sashal@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/26] io_uring: initialize ctx->sqo_wait earlier
+Date:   Thu, 28 May 2020 07:56:34 -0400
+Message-Id: <20200528115654.1406165-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
 References: <20200528115654.1406165-1-sashal@kernel.org>
@@ -60,41 +59,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
+[ Upstream commit 583863ed918136412ddf14de2e12534f17cfdc6f ]
 
-In bmac_get_station_address, We're reading two bytes at a time from ROM,
-but we do that six times, resulting in 12 bytes of read & writes. This
-means we will write off the end of the six-byte destination buffer.
+Ensure that ctx->sqo_wait is initialized as soon as the ctx is allocated,
+instead of deferring it to the offload setup. This fixes a syzbot
+reported lockdep complaint, which is really due to trying to wake_up
+on an uninitialized wait queue:
 
-This change fixes the for-loop to only read/write six bytes.
+RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441319
+RDX: 0000000000000001 RSI: 0000000020000140 RDI: 000000000000047b
+RBP: 0000000000010475 R08: 0000000000000001 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402260
+R13: 00000000004022f0 R14: 0000000000000000 R15: 0000000000000000
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 1 PID: 7090 Comm: syz-executor222 Not tainted 5.7.0-rc1-next-20200415-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x188/0x20d lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:913 [inline]
+ register_lock_class+0x1664/0x1760 kernel/locking/lockdep.c:1225
+ __lock_acquire+0x104/0x4c50 kernel/locking/lockdep.c:4234
+ lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
+ __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
+ io_cqring_ev_posted+0xa5/0x1e0 fs/io_uring.c:1160
+ io_poll_remove_all fs/io_uring.c:4357 [inline]
+ io_ring_ctx_wait_and_kill+0x2bc/0x5a0 fs/io_uring.c:7305
+ io_uring_create fs/io_uring.c:7843 [inline]
+ io_uring_setup+0x115e/0x22b0 fs/io_uring.c:7870
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x441319
+Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffb1fb9aa8 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
 
-Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Reported-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Reported-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+8c91f5d054e998721c57@syzkaller.appspotmail.com
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/apple/bmac.c | 2 +-
+ fs/io_uring.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
-index a58185b1d8bf..3e3711b60d01 100644
---- a/drivers/net/ethernet/apple/bmac.c
-+++ b/drivers/net/ethernet/apple/bmac.c
-@@ -1182,7 +1182,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
- 	int i;
- 	unsigned short data;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index b2ccb908f6b6..2050100e6e84 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -409,6 +409,7 @@ static struct io_ring_ctx *io_ring_ctx_alloc(struct io_uring_params *p)
+ 	}
  
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < 3; i++)
- 		{
- 			reset_and_select_srom(dev);
- 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
+ 	ctx->flags = p->flags;
++	init_waitqueue_head(&ctx->sqo_wait);
+ 	init_waitqueue_head(&ctx->cq_wait);
+ 	init_completion(&ctx->ctx_done);
+ 	init_completion(&ctx->sqo_thread_started);
+@@ -3237,7 +3238,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+ {
+ 	int ret;
+ 
+-	init_waitqueue_head(&ctx->sqo_wait);
+ 	mmgrab(current->mm);
+ 	ctx->sqo_mm = current->mm;
+ 
 -- 
 2.25.1
 
