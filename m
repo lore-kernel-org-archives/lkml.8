@@ -2,173 +2,206 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D885CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1249DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A09207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5ACA207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590683319;
-	bh=LhqhtSC62DAR0q5esK0Nn10J6iR+qryXxFBC6MdsPfA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=SXbWdZVWQxvKQY8xh7mvop1mLaEY64u+cj5wXo8BrmV7TjCUWbnV1X4P9m3Tcv9hA
-	 y1CNrMq+kXSHdgdppFJf/jNB1b9IFaioWGWPN7nRTI9MMeXRgaIBxshQlBL43cvhum
-	 uAHjLvs13ppZeXVEOoY1WPy7CHxScxSWNqlzF3pw=
+	s=default; t=1590683469;
+	bh=aMpdGQeMtGkydlSBGNxDT6hR0I1gpCOz31QfosMeqeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z58K8F0ZtNMbHa5/TESityehpzJQlFbO1t5KXyRsTzUc4/ZP8BCUWkWjlkrfVyqxy
+	 zXF4XCN5AngjpZ1CLjb/7FM4Ru5n0pDnx8owLpXYKYrcrsJW6M83BFF5Ak5onao706
+	 +4EZyOwbaZKu2MJiXQsZLXsogvf8/ABdLSTp+3kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405036AbgE1Q2i (ORCPT
+        id S2405037AbgE1QbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404986AbgE1Q2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:28:35 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD302071A;
-        Thu, 28 May 2020 16:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590683314;
-        bh=LhqhtSC62DAR0q5esK0Nn10J6iR+qryXxFBC6MdsPfA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sQZE7iYW38p55QIfyS3Tamq+5JECSCsqlGVvUmjzTTDIzotzRb+T6AZNPpFU0W1Hk
-         y6m7PSvb8e6WpA9iAcrpxHpZ+SgpUn2P1qypB3jqL+okFbQCMb1JjhwhyW6/GowpRO
-         gMNlmBIgfalEPer6ZLoBSb6WeIDN5FNbTUkY6q4c=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8920835228F0; Thu, 28 May 2020 09:28:34 -0700 (PDT)
-Date:   Thu, 28 May 2020 09:28:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [rcu:dev.2020.05.26a 56/72] refperf.c:undefined reference to
- `__umoddi3'
-Message-ID: <20200528162834.GJ2869@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <202005280819.lJ4qjCcP%lkp@intel.com>
- <CAMuHMdUsD=xGa97tHmHZhohHiEqn5eD0QaOEwGNW7DGibkhB+g@mail.gmail.com>
- <20200528135141.GE2869@paulmck-ThinkPad-P72>
- <CAMuHMdXJOeQuA0+iT27vKAB+pNdrBBzvrfVTV=+cjm9r8=GwVQ@mail.gmail.com>
+        Thu, 28 May 2020 12:31:09 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46968 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405003AbgE1QbH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:31:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x6so15065321wrm.13;
+        Thu, 28 May 2020 09:31:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4XalwJaYGWFf0aCUMIGKcmEa/lHl73yMoLw+LggKu2U=;
+        b=U4Hm7QRSaYNpyYBZzejASLNDTjeER5N/awIb+DYz8BxQXGKbywnHNCMVTP28Bw6Bla
+         GaRETdfXaWWZhubQjp1UtNKI7GlFusEasJfC32tT4IgmRxM8M1QhFgmYPj/gpfpfMS7E
+         5mrXhf5+2jtm96ckMcrQ/GpHqCa9kiPal9mXc5rXrYN9fDM2JRb9WB/6aadn9ApekMLS
+         Xe4HfpnN2B6GgzEf9afT6o4A9lxEAEMrarGPQ8fVY+iB48p1XkHd0SuHuVu8aOZj9CP0
+         YG/XVb/l4LopEvHW9pCDOlU824kwiR9Uefo+Pp5DoEkG6ijynVj6YWhzhyeb1+pqWOVQ
+         mgDw==
+X-Gm-Message-State: AOAM532Y62mYe+L18DahEGYOycoBdBdO5dwO9mNLBI9pZ/HGpl4UXr7/
+        7s2j57oQZ0htGbwNMORf9Naew6eS
+X-Google-Smtp-Source: ABdhPJwmtb0i8EHWevCrRID0KPYlg3QniOw6ATKxJAqczO5h739aBdk6I/FoA/q6JKi+CghlhIUvIQ==
+X-Received: by 2002:adf:8023:: with SMTP id 32mr4550265wrk.247.1590683464666;
+        Thu, 28 May 2020 09:31:04 -0700 (PDT)
+Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
+        by smtp.gmail.com with ESMTPSA id t7sm6745931wrq.41.2020.05.28.09.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 09:31:03 -0700 (PDT)
+Date:   Thu, 28 May 2020 18:31:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Chris Down <chris@chrisdown.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200528163101.GJ27484@dhcp22.suse.cz>
+References: <20200520160756.GE6462@dhcp22.suse.cz>
+ <20200520165131.GB630613@cmpxchg.org>
+ <20200520170430.GG6462@dhcp22.suse.cz>
+ <20200520175135.GA793901@cmpxchg.org>
+ <20200521073245.GI6462@dhcp22.suse.cz>
+ <20200521135152.GA810429@cmpxchg.org>
+ <20200521143515.GU6462@dhcp22.suse.cz>
+ <20200521163833.GA813446@cmpxchg.org>
+ <20200521173701.GX6462@dhcp22.suse.cz>
+ <20200521184505.GA815980@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXJOeQuA0+iT27vKAB+pNdrBBzvrfVTV=+cjm9r8=GwVQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200521184505.GA815980@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:31:33PM +0200, Geert Uytterhoeven wrote:
-> Hi Paul,
+On Thu 21-05-20 14:45:05, Johannes Weiner wrote:
+> On Thu, May 21, 2020 at 07:37:01PM +0200, Michal Hocko wrote:
+> > On Thu 21-05-20 12:38:33, Johannes Weiner wrote:
+> > > On Thu, May 21, 2020 at 04:35:15PM +0200, Michal Hocko wrote:
+> > > > On Thu 21-05-20 09:51:52, Johannes Weiner wrote:
+> > > > > On Thu, May 21, 2020 at 09:32:45AM +0200, Michal Hocko wrote:
+> > > > [...]
+> > > > > > I am not saying the looping over try_to_free_pages is wrong. I do care
+> > > > > > about the final reclaim target. That shouldn't be arbitrary. We have
+> > > > > > established a target which is proportional to the requested amount of
+> > > > > > memory. And there is a good reason for that. If any task tries to
+> > > > > > reclaim down to the high limit then this might lead to a large
+> > > > > > unfairness when heavy producers piggy back on the active reclaimer(s).
+> > > > > 
+> > > > > Why is that different than any other form of reclaim?
+> > > > 
+> > > > Because the high limit reclaim is a best effort rather than must to
+> > > > either get over reclaim watermarks and continue allocation or meet the
+> > > > hard limit requirement to continue.
+> > > 
+> > > It's not best effort. It's a must-meet or get put to sleep. You are
+> > > mistaken about what memory.high is.
+> > 
+> > I do not see anything like that being documented. Let me remind you what
+> > the documentation says:
+> >   memory.high
+> >         A read-write single value file which exists on non-root
+> >         cgroups.  The default is "max".
+> > 
+> >         Memory usage throttle limit.  This is the main mechanism to
+> >         control memory usage of a cgroup.  If a cgroup's usage goes
+> >         over the high boundary, the processes of the cgroup are
+> >         throttled and put under heavy reclaim pressure.
+> > 
+> >         Going over the high limit never invokes the OOM killer and
+> >         under extreme conditions the limit may be breached.
+> > 
+> > My understanding is that breaching the limit is acceptable if the memory
+> > is not reclaimable after placing a heavy reclaim pressure. We can
+> > discuss what the heavy reclaim means but the underlying fact is that the
+> > keeping the consumption under the limit is a best effort.
 > 
-> On Thu, May 28, 2020 at 3:51 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > On Thu, May 28, 2020 at 09:04:38AM +0200, Geert Uytterhoeven wrote:
-> > > On Thu, May 28, 2020 at 5:26 AM kbuild test robot <lkp@intel.com> wrote:
-> > > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.05.26a
-> > > > head:   63fdce1252f16032c9e1eb7244bb674ba4f84855
-> > > > commit: bd5b16d6c88da451a46d068a25fafad8e83d14a6 [56/72] refperf: Allow decimal nanoseconds
-> > > > config: m68k-allyesconfig (attached as .config)
-> > > > compiler: m68k-linux-gcc (GCC) 9.3.0
-> > > > reproduce (this is a W=1 build):
-> > > >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > > >         chmod +x ~/bin/make.cross
-> > > >         git checkout bd5b16d6c88da451a46d068a25fafad8e83d14a6
-> > > >         # save the attached .config to linux build tree
-> > > >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=m68k
-> > > >
-> > > > If you fix the issue, kindly add following tag as appropriate
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > >
-> > > > All errors (new ones prefixed by >>, old ones prefixed by <<):
-> > > >
-> > > > m68k-linux-ld: kernel/rcu/refperf.o: in function `main_func':
-> > > > >> refperf.c:(.text+0x762): undefined reference to `__umoddi3'
-> > > > >> m68k-linux-ld: refperf.c:(.text+0x8f2): undefined reference to `__udivdi3'
-> > > > m68k-linux-ld: refperf.c:(.text+0x97c): undefined reference to `__udivdi3'
-> > >
-> > > | --- a/kernel/rcu/refperf.c
-> > > | +++ b/kernel/rcu/refperf.c
-> > > | @@ -375,7 +375,7 @@ static int main_func(void *arg)
-> > > |                 if (torture_must_stop())
-> > > |                         goto end;
-> > > |
-> > > | -               reader_tasks[exp].result_avg =
-> > > process_durations(exp) / ((exp + 1) * loops);
-> > > | +               reader_tasks[exp].result_avg = 1000 *
-> > > process_durations(exp) / ((exp + 1) * loops);
-> > >
-> > > div64_ul() for 64-by-unsigned-long division
+> It says it's the main mechanism to control memory usage, and that
+> "under extreme conditions the limit may be breached". This doesn't
+> sound like "let's try some reclaim and see how it goes" to me.
+> 
+> As the person who designed and implemented this feature, it certainly
+> wasn't the intention.
+> 
+> > Please also let me remind you that the best effort implementation has
+> > been there since the beginning when the memory.high has been introduced.
+> > Now you seem to be convinced that the semantic is _obviously_ different.
 > >
-> > Ah, thank you for the explanation!
-> >
-> > This is just a performance-test module intended for SMP systems, so
-> > I don't see much point in making it work on m68k, which looks to be
-> > UP-only.  But it is clearly useful to prevent the test bots from building
-> > refperf on m68k.  So one approach would be for me to make its Kconfig
-> > option depend on SMP.  Another would be to make it depend on 64BIT.
-> > Still another would be to make it depend on !M68K.
-> >
-> > I could potentially dump out the numbers in picoseconds, then
-> > do the averaging and other division operations in userspace,
-> > but that is strange enough to cause more trouble than it is worth.
-> > (An rcu_read_lock()/rcu_read_unlock() pair takes -how- long???)  Though if
-> > there was some point in running this on m68k, it might be worth it (with
-> > "PICOSECONDS" in all caps or some such), but in this case it is not.
-> > But this would probably require more data to be dumped to allow userspace
-> > to do the operations, increasing the probability of lost printk()s.  :-/
-> >
-> > Left to myself, I would take the easy way out and make this depend
-> > on 64BIT.
-> >
-> > But you must have run into this situation before.  Any thoughts?
+> > It is not the first time when the high limit behavior has changed.
+> > Mostly based on "what is currently happening in your fleet". And can see
+> > why it is reasonable to adopt to a real life usage. That is OK most of
+> > the time. But I haven't heard why keeping the existing approach and
+> > enforcing the reclaim target is not working properly so far. All I can
+> > hear is a generic statement that consistency matters much more than all
+> > potential problem it might introduce.
 > 
-> Oh, this is not just on m68k. I expect the build bots to start complaining
-> about other 32-bit platforms, too, like i386 and arm32 ;-)
+> The assumption when writing the first implementation was that the full
+> reclaim cycle that we impose on every subsequent allocation was enough
+> to 1) mount a significant effort to push back allocations or 2) if it
+> fails, at least hold up allocations enough to curb further growth.
 > 
-> While restricting this to 64BIT will fix the issue, are you sure people
-> on 32-bit SMP platforms don't want to run this code?
-
-In the unlikely event that they do, we can go from there.
-
-> So I'd go for div64_ul() and do_div().
-
-OK, I will bite...  Plus my feeble web search failed to satisfy my
-idle curiosity on this point.  ;-)
-
-Why can't these 32-bit SMP platforms supply the API that the compiler
-expects, so that normal C-language arithmetic just works?
-
-							Thanx, Paul
-
-> > > |         }
-> > > |
-> > > |         // Print the average of all experiments
-> > > | @@ -386,7 +386,7 @@ static int main_func(void *arg)
-> > > |         strcat(buf, "Threads\tTime(ns)\n");
-> > > |
-> > > |         for (exp = 0; exp < nreaders; exp++) {
-> > > | -               sprintf(buf1, "%d\t%llu\n", exp + 1,
-> > > reader_tasks[exp].result_avg);
-> > > | +               sprintf(buf1, "%d\t%llu.%03d\n", exp + 1,
-> > > reader_tasks[exp].result_avg / 1000,
-> > > (int)(reader_tasks[exp].result_avg % 1000));
-> > >
-> > > do_div() for 64-by-32 division/modulo
+> As it turned out when deploying this code at scale, reclaim is not
+> sufficient to achieve #2, because it simply may fail with not that
+> many pages to scan - especially on systems without swap. So after
+> observing a violation of the promised behavior, we added the sleeps
+> for situations where reclaim fails to contain the workload as stated.
 > 
-> Gr{oetje,eeting}s,
+> After adding the sleeps, we noticed - again after deploying at scale -
+> that in certain situations reclaim isn't failing but simply returning
+> early, and we go to sleep and get OOM killed on full file LRUs.
 > 
->                         Geert
+> After analyzing this problem, it's clear that we had an oversight
+> here: all other reclaimers are already familiar with the fact that
+> reclaim may not be able to complete the reclaim target in one call, or
+> that page reclaim is inherently racy and reclaim work can be stolen.
+
+There is no disagreement here.
+
+> We send a simple bug fix: bring this instance of reclaim in line with
+> how everybody else is using the reclaim API, to meet the semantics as
+> they are intendend and documented.
+
+Here is where we are not on the same page though. Once you have identified
+that the main problem is that the reclaim fails too early to meet the
+target then the fix would be to enforce that target. I have asked why
+this hasn't been done and haven't got any real answer for that. Instead
+what you call "a simple bug fix" has larger consequences which are not
+really explained in the changelog and they are also not really trivial
+to see. If the changelog explicitly stated that the proportional memory
+reclaim is not sufficient because XYZ and the implementation has been
+changed to instead meet the high limit target then this would be a
+completely different story and I believe we could have saved some
+discussion.
+
+> And somehow this is controversial, and we're just changing around user
+> promises as we see fit for our particular usecase?
 > 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> I don't even understand how the supposed alternate semantics you read
+> between the lines in the documentation would make for a useful
+> feature: It may fail to contain a group of offending tasks to the
+> configured limit, but it will be fair to those tasks while doing so?
 > 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> > But if your really want to push this through then let's do it
+> > properly at least. memcg->memcg_nr_pages_over_high has only very
+> > vague meaning if the reclaim target is the high limit.
+> 
+> task->memcg_nr_pages_over_high is not vague, it's a best-effort
+> mechanism to distribute fairness. It's the current task's share of the
+> cgroup's overage, and it allows us in the majority of situations to
+> distribute reclaim work and sleeps in proportion to how much the task
+> is actually at fault.
+
+Agreed. But this stops being the case as soon as the reclaim target has
+been reached and new reclaim attempts are enforced because the memcg is
+still above the high limit. Because then you have a completely different
+reclaim target - get down to the limit. This would be especially visible
+with a large memcg_nr_pages_over_high which could even lead to an over
+reclaim.
+-- 
+Michal Hocko
+SUSE Labs
