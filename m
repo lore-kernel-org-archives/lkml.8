@@ -2,120 +2,197 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8611CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499E3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF84208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241D5207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VeH6enC2"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="bQ5S1q6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388128AbgE1LFI (ORCPT
+        id S2388162AbgE1LFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:05:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40562 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388045AbgE1LFF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:05:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590663903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vz/KNQwtqPzPwwJ5/E8xlfolO32T1hV075nXyScUoSE=;
-        b=VeH6enC26B3Ko3r6u0TN+QceYnguswzLVPDMHgH6jcpetRfqfZrw3ewEchamBMnH6Zcwb0
-        9TdsRmLH2KJvyIjuDtQT6rKBqPkkiK7ZLedomwE1Phf0ZwYv0l2q2E0Wu91Q1P2CaHWbJX
-        uzGpYh6YzCkibVgUUDdLVlDzsePyT6M=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-s8nIGjpDP-qW12TYZUVXQA-1; Thu, 28 May 2020 07:05:00 -0400
-X-MC-Unique: s8nIGjpDP-qW12TYZUVXQA-1
-Received: by mail-ej1-f72.google.com with SMTP id i19so417756ejk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:05:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vz/KNQwtqPzPwwJ5/E8xlfolO32T1hV075nXyScUoSE=;
-        b=Kwqg8cojwjzbgLSzHSGhthpaf0wvK9Lq5g4lYKEa7KRfIfxuJ+8Eqapf+xy5+JLG3I
-         VTZuVYbMWUPV9SMAn/TyiBFvcbEhLCmPokuNXXQO0rjb0t502DTR0MdLIVNiP6UHDFWh
-         +xvypl12tRalf5WB41uXo4M9TqTM1FFy6rVleBTUQVPj+I+AbYoMUbZTr/6pgykaBVT3
-         QNtHzounYW7nAV/w2qCcTTxF58HGo1qruzlBEDawX91C365fJV060jn3GJRjdCC4d42k
-         ev/5e5bo0C4rjZWZA2bQn/0XH3wr1BCiq0TVwQMn7Rv8xjj4lGe3SuTKjY9xV4XoHR32
-         41jg==
-X-Gm-Message-State: AOAM532OcQlW3YMZBQnLouS/avoGOEQXzD2rhfPhsRYKnSJRiMRDlZSk
-        bfFo3NS2YEfnurId/k3zneqiko/EPhFKkYMmbZTFglPZ4TFjbozKJTuGQjDwG+59Bp41VvRWo66
-        duybwzDJYh2BmZPLPJ1iaXANB
-X-Received: by 2002:a50:b2e1:: with SMTP id p88mr2514351edd.198.1590663899271;
-        Thu, 28 May 2020 04:04:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzUxazYv/MMjFOoYXGoUSI8TzWHBa76vBlUwJk+N2FMgBjee032aatw377n1MJf50x2veTsRA==
-X-Received: by 2002:a50:b2e1:: with SMTP id p88mr2514320edd.198.1590663899011;
-        Thu, 28 May 2020 04:04:59 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
-        by smtp.gmail.com with ESMTPSA id g20sm5181115ejx.85.2020.05.28.04.04.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 04:04:57 -0700 (PDT)
-Subject: Re: [PATCH v2 00/10] KVM: x86: Interrupt-based mechanism for async_pf
- 'page present' notifications
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <20200525144125.143875-1-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
-Date:   Thu, 28 May 2020 13:04:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 28 May 2020 07:05:25 -0400
+Received: from mail-am6eur05on2089.outbound.protection.outlook.com ([40.107.22.89]:16992
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388148AbgE1LFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:05:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hd6KrV3o/S4K59MykVlVyNLP1Q1Bn7y93eATP7yTFPVKA7vcfEQbtIjk/XgQ3iMkQqHdADx+/HCIrNZ/rZzgLb53GdrZUxv3FnjIaAMA3I6RSREKyTPMC9BSbpC2VeeUV8IHO5Q0fIUZUcz77Sjl5iMxtxYku1/hy69J1bYyKKgcJP1/peyEyWVX6QmNjkR3JNtZYDtLN96jOpkkluVnRDwUIXeIKPYfxiVrTiWg7tygOHWXZVHYkqO+3vCUXCCu4lWtk2viu1gVWSEgNan7BW2czMwgy7B/MTvpN1ReXebd5D3WWSQnuGiqObrd+orNDtXQm9ZvGYhSscHU7pCMiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vx7BcKxHLeLCO54ROpM0unFeU4Yc4w0UNGQHCZyTWI8=;
+ b=Hlux+/64+BtSCG2WI93mKK3yTJE99uF/yrCikLz6qLJ/MQTwYyB5QG0LfZMKKk+S9+28zwNHwEHWyWiyF8MUU8Y8aj2ig2C8H6flqzIFH2g8HaL0CUyQso80qsy8pnaKZq/FsVnSwK9fH1UArC2AhoX//hDK95gwhIRopEeTabJ+iCjw/JJo5raXVhyea9ognyudaATr1sUtpQVDU1SYN5re1eXH0riWAHm8wSJVibtP2VkqD+8bnIlToZ51E7QwbYDI9/nN+X7KCHd/UXnMXH9htvpanx4MeUTpbgaHRquyONyvJFkj+Ewxx7r9FPG3kW7EW3ckX9+0bbfWi3fExA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vx7BcKxHLeLCO54ROpM0unFeU4Yc4w0UNGQHCZyTWI8=;
+ b=bQ5S1q6SC/rzo6I2Vvfeqln/lnDQVl3mZ5GtrfAnYmwyUZfhhbYc04TTdIdbRRtLoAkC75hhN04DzrvDAt1/l7GlKM3JC5dWF26IOUFMU/GyXUIU9MCPNYHHJruGPYG/DzVQX6dwh1GhvUBVEu6y3eS1RQLQHL2UiWAM6WpVwJM=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12)
+ by VE1PR04MB6558.eurprd04.prod.outlook.com (2603:10a6:803:11b::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Thu, 28 May
+ 2020 11:05:18 +0000
+Received: from VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::282c:7a7:6583:903b]) by VE1PR04MB6608.eurprd04.prod.outlook.com
+ ([fe80::282c:7a7:6583:903b%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 11:05:18 +0000
+From:   Andrei Botila <andrei.botila@oss.nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: caam/qi2 - add support for dpseci_reset()
+Date:   Thu, 28 May 2020 14:04:50 +0300
+Message-Id: <20200528110450.11279-1-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM4PR0101CA0081.eurprd01.prod.exchangelabs.com
+ (2603:10a6:200:41::49) To VE1PR04MB6608.eurprd04.prod.outlook.com
+ (2603:10a6:803:125::12)
 MIME-Version: 1.0
-In-Reply-To: <20200525144125.143875-1-vkuznets@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from lsv15007.swis.ro-buh01.nxp.com (83.217.231.2) by AM4PR0101CA0081.eurprd01.prod.exchangelabs.com (2603:10a6:200:41::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Thu, 28 May 2020 11:05:17 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 54e79a73-b42f-4668-2f4a-08d802f701c4
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6558:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB65584BC87C8E091259D74330B48E0@VE1PR04MB6558.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
+X-Forefront-PRVS: 0417A3FFD2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yDolNckV1U+6LSIaYqHAVtfXC83FDYGMLPC6lE6Ajpp3P5GRWKkIzab6bQ3WRDR+TUH19LPfc3eL+CZPRDI8OY8kqr7P8HvZIoJXbg6gFOp+ShXr3WIcCnWulmLyughFlzYW35M/y/4DIXgbRwgPrqLQwxxE6kckv0oVdaH2zlJUS0fmlXbVkhQdwa8SVcF4Mf0HqNos/KZDc09A/6ghg8o7lqupL+W+eGxaAzdw70VBt+tebsILSEbr8tEwMo4iycPhrRL+dywd1rEHzOfNBljFpwBFknkk4xn5iuiMWJlyobVOrDfVUH2hgFvUFM7M
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6608.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(44832011)(66556008)(66476007)(6666004)(4326008)(86362001)(2906002)(83380400001)(6486002)(316002)(6512007)(1076003)(66946007)(8936002)(110136005)(5660300002)(26005)(478600001)(52116002)(6506007)(16526019)(956004)(8676002)(2616005)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: dedseuTg+Kf44Y7FSvtBi5djQu2MHpjx5+wZEUaQ/uFfqtkyGaGLSMducd8fvW9kz483BFaX6S+k4YjD2bM3t+m+KguHBD6Q8wxVO8/f7cEgAALYFttvJhrBxWSmJOHkyblbjEnpZ/BDRHg26tVhuF/32gi1xhiJ1hs8ROqLx9stfyfTma4t56kNj6PBJe97txsNlaafkWjBgBouRQub8Hmum1MtNykkNs4xlY5yuLlOxIXD5pvBlIiABPENfDjQvxSsc5sgOD+4SO7DbT6vnubq2U1FVRK5LOG5WXgmnNsgbfTZr+EnCTQqRoZclLMLm2tPGYf+IDNIUNqFW7wVK/lTp/nILH84+3ztE2YeGWrDTFkxV0G3/fuZO5xCKn6k/3l89Nw1tXNgCYg3iqFdEnFToB3+LoCovJt93g+3xMthFQk3m+2HY1z9c21kYOrtRhp7UCm3QIIXvNOThQDjrX/S/xYavGVQK8JSnTrmDfo=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54e79a73-b42f-4668-2f4a-08d802f701c4
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 11:05:18.4176
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: roMIyF3BC6g6LSmeeWcijuQzwaAb1h/TkpThYKBHg8SG/AXblPPw4Ra254Gl2YpLnRlPLk1QgqEOPxWG7KuhBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6558
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/05/20 16:41, Vitaly Kuznetsov wrote:
-> Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
-> it seems that re-using #PF exception for a PV mechanism wasn't a great
-> idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
-> not present' events and normal APIC interrupts for 'page ready' events.
-> This series does the later.
-> 
-> Changes since v1:
-> - struct kvm_vcpu_pv_apf_data's fields renamed to 'flags' and 'token',
->   comments added [Vivek Goyal]
-> - 'type1/2' names for APF events dropped from everywhere [Vivek Goyal]
-> - kvm_arch_can_inject_async_page_present() renamed to 
->   kvm_arch_can_dequeue_async_page_present [Vivek Goyal]
-> - 'KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS' patch added.
-> 
-> v1: https://lore.kernel.org/kvm/20200511164752.2158645-1-vkuznets@redhat.com/
-> QEMU patches for testing: https://github.com/vittyvk/qemu.git (async_pf2_v2 branch)
+From: Andrei Botila <andrei.botila@nxp.com>
 
-I'll do another round of review and queue patches 1-7; 8-9 will be
-queued later and separately due to the conflicts with the interrupt
-entry rework, but it's my job and you don't need to do anything else.
+Add support for dpseci_reset() command for DPSECI objects.
+For DPSECI DPAA2 objects with version lower than v5.4 reset command
+was broken in MC f/w.
 
-Thanks,
+Signed-off-by: Andrei Botila <andrei.botila@nxp.com>
+---
+ drivers/crypto/caam/caamalg_qi2.c | 11 +++++++++++
+ drivers/crypto/caam/dpseci.c      | 18 ++++++++++++++++++
+ drivers/crypto/caam/dpseci.h      |  2 ++
+ drivers/crypto/caam/dpseci_cmd.h  |  1 +
+ 4 files changed, 32 insertions(+)
 
-Paolo
+diff --git a/drivers/crypto/caam/caamalg_qi2.c b/drivers/crypto/caam/caamalg_qi2.c
+index 28669cbecf77..ed52f0f4fb2c 100644
+--- a/drivers/crypto/caam/caamalg_qi2.c
++++ b/drivers/crypto/caam/caamalg_qi2.c
+@@ -4698,6 +4698,9 @@ static void dpaa2_dpseci_free(struct dpaa2_caam_priv *priv)
+ 	struct device *dev = priv->dev;
+ 	struct fsl_mc_device *ls_dev = to_fsl_mc_device(dev);
+ 
++	if (DPSECI_VER(priv->major_ver, priv->minor_ver) > DPSECI_VER(5, 3))
++		dpseci_reset(priv->mc_io, 0, ls_dev->mc_handle);
++
+ 	dpaa2_dpseci_congestion_free(priv);
+ 	dpseci_close(priv->mc_io, 0, ls_dev->mc_handle);
+ }
+@@ -4894,6 +4897,14 @@ static int __cold dpaa2_dpseci_setup(struct fsl_mc_device *ls_dev)
+ 
+ 	dev_info(dev, "dpseci v%d.%d\n", priv->major_ver, priv->minor_ver);
+ 
++	if (DPSECI_VER(priv->major_ver, priv->minor_ver) > DPSECI_VER(5, 3)) {
++		err = dpseci_reset(priv->mc_io, 0, ls_dev->mc_handle);
++		if (err) {
++			dev_err(dev, "dpseci_reset() failed\n");
++			goto err_get_vers;
++		}
++	}
++
+ 	err = dpseci_get_attributes(priv->mc_io, 0, ls_dev->mc_handle,
+ 				    &priv->dpseci_attr);
+ 	if (err) {
+diff --git a/drivers/crypto/caam/dpseci.c b/drivers/crypto/caam/dpseci.c
+index 8a68531ded0b..039df6c5790c 100644
+--- a/drivers/crypto/caam/dpseci.c
++++ b/drivers/crypto/caam/dpseci.c
+@@ -103,6 +103,24 @@ int dpseci_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
+ 	return mc_send_command(mc_io, &cmd);
+ }
+ 
++/**
++ * dpseci_reset() - Reset the DPSECI, returns the object to initial state
++ * @mc_io:	Pointer to MC portal's I/O object
++ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
++ * @token:	Token of DPSECI object
++ *
++ * Return:	'0' on success, error code otherwise
++ */
++int dpseci_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token)
++{
++	struct fsl_mc_command cmd = { 0 };
++
++	cmd.header = mc_encode_cmd_header(DPSECI_CMDID_RESET,
++					  cmd_flags,
++					  token);
++	return mc_send_command(mc_io, &cmd);
++}
++
+ /**
+  * dpseci_is_enabled() - Check if the DPSECI is enabled.
+  * @mc_io:	Pointer to MC portal's I/O object
+diff --git a/drivers/crypto/caam/dpseci.h b/drivers/crypto/caam/dpseci.h
+index 4550e134d166..6dcd9be8144b 100644
+--- a/drivers/crypto/caam/dpseci.h
++++ b/drivers/crypto/caam/dpseci.h
+@@ -59,6 +59,8 @@ int dpseci_enable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
+ 
+ int dpseci_disable(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
+ 
++int dpseci_reset(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token);
++
+ int dpseci_is_enabled(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
+ 		      int *en);
+ 
+diff --git a/drivers/crypto/caam/dpseci_cmd.h b/drivers/crypto/caam/dpseci_cmd.h
+index 6ab77ead6e3d..71a007c85adb 100644
+--- a/drivers/crypto/caam/dpseci_cmd.h
++++ b/drivers/crypto/caam/dpseci_cmd.h
+@@ -33,6 +33,7 @@
+ #define DPSECI_CMDID_ENABLE				DPSECI_CMD_V1(0x002)
+ #define DPSECI_CMDID_DISABLE				DPSECI_CMD_V1(0x003)
+ #define DPSECI_CMDID_GET_ATTR				DPSECI_CMD_V1(0x004)
++#define DPSECI_CMDID_RESET				DPSECI_CMD_V1(0x005)
+ #define DPSECI_CMDID_IS_ENABLED				DPSECI_CMD_V1(0x006)
+ 
+ #define DPSECI_CMDID_SET_RX_QUEUE			DPSECI_CMD_V1(0x194)
+-- 
+2.17.1
 
