@@ -2,101 +2,122 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71288C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BDC9207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C7DB207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gi6/TE78"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cxS6qz7n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405517AbgE1RUV (ORCPT
+        id S2405534AbgE1RUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40516 "EHLO
+        Thu, 28 May 2020 13:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405353AbgE1RUT (ORCPT
+        with ESMTP id S2405353AbgE1RUe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:20:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33963C08C5C6;
-        Thu, 28 May 2020 10:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=s1IXw8Twd2kdKrDd1HQy17LRiidIo6BNwR5yWekBZs8=; b=gi6/TE78wMNosleSSXyJToQtTf
-        VPE3tMvPQ1EZarGtzAiZQFW2khOCOa5YAYJGn8kyf4yEBtOW1N3V/zWuoe/2pi5W0c83ZKNHvDqSV
-        /XdxPCk0KYP2b3/f2758unr+G76cNAHyuBdOS+tAQ+lEedtN5NvuFkVlcN2rQhbhVWFQ25L9xg4wU
-        MoQzj1e+HJ7beYrcHGZHrZtzhMtQr8Vn7ABE0B9YY5lS/OcRY5FP3gAqIrmX63K0JKrBDW6svmdmy
-        J+oQsjOpUF5aKgMNBr1i7GCOcqOr7/ZD4T1GHA3tMY00meCBwuo0FaqwhUAAtymqmMEpKSHcZTfjQ
-        Bdy1gz8w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeMCO-000547-02; Thu, 28 May 2020 17:20:08 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A856C9836F8; Thu, 28 May 2020 19:20:05 +0200 (CEST)
-Date:   Thu, 28 May 2020 19:20:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        viro@ZenIV.linux.org.uk, hch@lst.de, x86@kernel.org
-Subject: Re: mmotm 2020-05-13-20-30 uploaded (objtool warnings)
-Message-ID: <20200528172005.GP2483@worktop.programming.kicks-ass.net>
-References: <20200514033104.kRFL_ctMQ%akpm@linux-foundation.org>
- <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <611fa14d-8d31-796f-b909-686d9ebf84a9@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 28 May 2020 13:20:34 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61253C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:20:34 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id dh11so8738067qvb.22
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=0xESSglLWrwf3x8cJUVzOxtDGHF6QQgQ1x5DUGqwYW8=;
+        b=cxS6qz7n7nK73o0Lj+qJGFAhUn+UOhTx6ZA+eY+Sg2neSU9N5rTgx2cQotnSgqWiOf
+         03ok3uW7ESY94XpGrPatKYoKP0//btqhv2svqBYYeaLe4r2x99BBSIZ7WxImPQBYIP7y
+         McCoCNjghMl+YGwgLyhEX8ZUIhXcEavFNjBq1UT8Y0FQ2Fes+WtrVkqCnwEO7kin8dRx
+         kPjVfxBMsM0LRUcNtKA6NVJyNhDRWABotgLHqR/tzEju5e/KzbVV0fsA1XaLMpg7xZZc
+         dqgxovGf7WprQk1BYrPge2Ch9VfYI+350LZRf3nB9xaz9Uh5DV0Tl0w1UbhtXkdbOTOs
+         1Yfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=0xESSglLWrwf3x8cJUVzOxtDGHF6QQgQ1x5DUGqwYW8=;
+        b=kgr/4CkRyVNdVrYK5/b8TgKEG0Yr1hejTA8UvpuQeTC21AeODtxSIFlWetfnu+T31A
+         yZO/Td56UUekFnA89jw+8shX2K7ciy5lTSEy2idEbq0ytRqvrPvJzjPTBDHftyrw1OIP
+         ySOFWUQl3fZxgjxXg1WpS/SBjAEK7Lc55/Wsy1g0cwU45UNzWqdBoPfWT+bne538DTkT
+         Sao1DtK1mAg3NSk6nfFVo9oz1IfNrrR+Ggn8weqWhdac1mIVYZu6YEtnV8iqJiYUaxKJ
+         292VxjlSDNgkIeCDHyYdYZvnCAcfL1T98t5FkQgC/zDDQP5zvrEowLKL0p5omkcrV4Pw
+         08kA==
+X-Gm-Message-State: AOAM530De/z51EeqSu/edBPcni2D4wuI7dF1tFQUosro9HhAoYxQb045
+        OSS0EWRYwKIUvAvxCj1K2SpxMUHu+SAiBntL
+X-Google-Smtp-Source: ABdhPJxwa5ISh+kbTLHHgwv4Bzn0zVfZaYols4w+3NSmpBbER4mllDE+WJYDXGJia5vp6ey7tJX9kkm2WKJMx0OL
+X-Received: by 2002:a0c:c3cf:: with SMTP id p15mr4264539qvi.10.1590686432904;
+ Thu, 28 May 2020 10:20:32 -0700 (PDT)
+Date:   Thu, 28 May 2020 19:20:29 +0200
+Message-Id: <ced83584eec86a1a9ce264013cf6c0da5e0add6a.1590686292.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
+Subject: [PATCH] kasan: fix clang compilation warning due to stack protector
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 08:32:22AM -0700, Randy Dunlap wrote:
-> On 5/13/20 8:31 PM, Andrew Morton wrote:
-> > The mm-of-the-moment snapshot 2020-05-13-20-30 has been uploaded to
-> > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> > 
-> > You will need quilt to apply these patches to the latest Linus release (5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > http://ozlabs.org/~akpm/mmotm/series
-> > 
-> > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > followed by the base kernel version against which this patch series is to
-> > be applied.
-> 
-> 
-> on x86_64:
-> 
-> arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_from_user()+0x2a4: call to memset() with UACCESS enabled
-> arch/x86/lib/csum-wrappers_64.o: warning: objtool: csum_and_copy_to_user()+0x243: return with UACCESS enabled
+KASAN uses a single cc-option invocation to disable both conserve-stack
+and stack-protector flags. The former flag is not present in Clang, which
+causes cc-option to fail, and results in stack-protector being enabled.
 
-Urgh, that's horrible code. That's got plain stac()/clac() calls on
-instead of the regular uaccess APIs.
+Fix by using separate cc-option calls for each flag. Also collect all
+flags in a variable to avoid calling cc-option multiple times for
+different files.
 
-Anybody any clue about what the best way forward here is?
+Reported-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ mm/kasan/Makefile | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-Also, I wonder how we get at memset() with AC set,..
+diff --git a/mm/kasan/Makefile b/mm/kasan/Makefile
+index de3121848ddf..bf6f7b1f6b18 100644
+--- a/mm/kasan/Makefile
++++ b/mm/kasan/Makefile
+@@ -15,14 +15,19 @@ CFLAGS_REMOVE_tags_report.o = $(CC_FLAGS_FTRACE)
+ 
+ # Function splitter causes unnecessary splits in __asan_load1/__asan_store1
+ # see: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=63533
+-CFLAGS_common.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_generic.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_generic_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_init.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_quarantine.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_tags.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
+-CFLAGS_tags_report.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) -DDISABLE_BRANCH_PROFILING
++CC_FLAGS_KASAN_CONFLICT := $(call cc-option, -fno-conserve-stack)
++CC_FLAGS_KASAN_CONFLICT += $(call cc-option, -fno-stack-protector)
++# Disable branch tracing to avoid recursion.
++CC_FLAGS_KASAN_CONFLICT += -DDISABLE_BRANCH_PROFILING
++
++CFLAGS_common.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_generic.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_generic_report.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_init.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_quarantine.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_report.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_tags.o := $(CC_FLAGS_KASAN_CONFLICT)
++CFLAGS_tags_report.o := $(CC_FLAGS_KASAN_CONFLICT)
+ 
+ obj-$(CONFIG_KASAN) := common.o init.o report.o
+ obj-$(CONFIG_KASAN_GENERIC) += generic.o generic_report.o quarantine.o
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
