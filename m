@@ -2,117 +2,128 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A80BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315062078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ieu+GmkC"
+	by mail.kernel.org (Postfix) with ESMTP id E7D47207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406404AbgE1TVw (ORCPT
+        id S2406491AbgE1TWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406344AbgE1TVZ (ORCPT
+        Thu, 28 May 2020 15:22:53 -0400
+Received: from smtprelay0016.hostedemail.com ([216.40.44.16]:35176 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406438AbgE1TWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:21:25 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3168C08C5C6;
-        Thu, 28 May 2020 12:21:24 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id v2so8976192pfv.7;
-        Thu, 28 May 2020 12:21:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mn9ohrlxKhWlCLsT8/tQGjuXefbQkhXfEEa1XEFrFM8=;
-        b=Ieu+GmkCMg7jmgthscjTaf2F4XyLjRN4/eSDhtKpTgfGoq6sIfW5LJ+7Qjx9HawsNl
-         AZXc6PkYulXnWMzIeGGZfVpBGX9rIzvwM22KBXedqeisJA2MKAHaubh+KExlsKHTZbe3
-         7AIUE2FJenGo0Q+bRv8n3CSVMS/Rg2OkvgtpzbOxEUlYZKkPtupuaEg7iK+caCUlRVNM
-         aBcOCzIh569EY1uIeKrsRm9sUevXDxgzu2xP0qS+yr4PIvTDoiU/o0ewAaDEqkOpmq0t
-         Z7w0EfApVjF0/9jVitcg7sgqk2gMh9+DDqcVtrEsR2CB2ATBmvBmCMD9EfUduCC19E/y
-         UGOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mn9ohrlxKhWlCLsT8/tQGjuXefbQkhXfEEa1XEFrFM8=;
-        b=bviJgO5GtAU3sckWywY74dXwObcrUAf6FnZf/qsWPQLcIwZk1GB/RikDc/U0hT2bVi
-         UA5Np6gD1u4oJahUj1fU2b8RIWkrrM7sw4Th070XrG8Q6xTPijqb8GAIi9+PmLuhC7p9
-         zvF4f2/FwEkKHvruXY5VMbsAsSNfmOQaXWcXS+XqaA+YbmUMxAmZvqfNhnvbJ8ABSGHF
-         pYNARH88vaGNJoTFBUmSEWs7oeZIjpQaFHRS+StwQCj9jSKsQLWbOnRmSUlRMLgyG31H
-         kXLSchoZu+wqeQ61jdmr4tNeL3cUO71iTTIRG8R9W5gnfv/O9ekojoWbuDyKS0eoh8WV
-         PT5w==
-X-Gm-Message-State: AOAM533+O7K9JgxpGEfLcRZERQgn6qqG751fXTS34OpuIZz/Vtmt7W0S
-        /kX2ED8OkryFmd8ols2lyu3oUK01
-X-Google-Smtp-Source: ABdhPJwRb+nr4rhFloIJTFA7lJNjNqO/d11rldmRfSoxQeHoYbRkWhxEAG1rw3MH8Ot6loYluXa8fA==
-X-Received: by 2002:a62:1a53:: with SMTP id a80mr4572305pfa.50.1590693684050;
-        Thu, 28 May 2020 12:21:24 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:21:23 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH 3/4] pinctrl: bcm2835: Match BCM7211 compatible string
-Date:   Thu, 28 May 2020 12:21:11 -0700
-Message-Id: <20200528192112.26123-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200528192112.26123-1-f.fainelli@gmail.com>
-References: <20200528192112.26123-1-f.fainelli@gmail.com>
+        Thu, 28 May 2020 15:22:16 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id E2F38AE562;
+        Thu, 28 May 2020 19:22:10 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: whip46_381349b26d5d
+X-Filterd-Recvd-Size: 3543
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 28 May 2020 19:22:09 +0000 (UTC)
+Message-ID: <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com>
+Subject: Re: clean up kernel_{read,write} & friends v2
+From:   Joe Perches <joe@perches.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        David Howells <dhowells@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>
+Date:   Thu, 28 May 2020 12:22:08 -0700
+In-Reply-To: <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+References: <20200528054043.621510-1-hch@lst.de>
+         <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.2-0ubuntu1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BCM7211 SoC uses the same pinconf_ops as the ones defined for the
-BCM2711 SoC, match the compatible string and use the correct set of
-options.
+On Thu, 2020-05-28 at 11:51 -0700, Linus Torvalds wrote:
+> On Wed, May 27, 2020 at 10:40 PM Christoph Hellwig <hch@lst.de> wrote:
+> > this series fixes a few issues and cleans up the helpers that read from
+> > or write to kernel space buffers, and ensures that we don't change the
+> > address limit if we are using the ->read_iter and ->write_iter methods
+> > that don't need the changed address limit.
+> 
+> Apart from the "please don't mix irrelevant whitespace changes with
+> other changes" comment, this looks fine to me.
+> 
+> And a rant related to that change: I'm really inclined to remove the
+> checkpatch check for 80 columns entirely, but it shouldn't have been
+> triggering for old lines even now.
+> 
+> Or maybe make it check for something more reasonable, like 100 characters.
+> 
+> I find it ironic and annoying how "checkpatch" warns about that silly
+> legacy limit, when checkpatch itself then on the very next few lines
+> has a line that is 124 columns wide
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Yeah.  perl ain't c.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 06bd2b70af3c..e8ad1824c6b3 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -1137,6 +1137,10 @@ static const struct of_device_id bcm2835_pinctrl_match[] = {
- 		.compatible = "brcm,bcm2711-gpio",
- 		.data = &bcm2711_plat_data,
- 	},
-+	{
-+		.compatible = "brcm,bcm7211-gpio",
-+		.data = &bcm2711_pinconf_ops,
-+	},
- 	{}
- };
- 
--- 
-2.17.1
+And this discussion has been had many times.
+
+Here's one from 2009
+https://lkml.org/lkml/2009/12/15/490
+
+Another from 2012
+https://lkml.org/lkml/2012/2/5/141
+
+Line lengths checks are normally pretty silly.
+
+Hard limits at 80 really don't work well, especially with
+some of the 25+ character length identifiers used today.
+
+I think a line length warning at 132 is generally reasonable
+but it could depend on complexity and identifier lengths.
+
+> And yes, that 124 character line has a good reason for it. But that's
+> kind of the point. There are lots of perfectly fine reasons for longer
+> lines.
+> 
+> I'd much rather check for "no deep indentation" or "no unnecessarily
+> complex conditionals" or other issues that are more likely to be
+> _real_ problems.
+
+That deep indentation test already exists at 6 tabs.
+Maybe it should be 5 instead.  Or maybe even 4, but
+that's a pretty easy to need and common use case.
+
+Tab depth use in the kernel is more or less
+
+$ git grep -Poh '^\t+(if|do|while|for|switch)\b' | \
+  sed -r 's/\w+//g' | \
+  awk '{print length($0);}' | \
+  sort | uniq -c | sort -rn
+ 903993 1
+ 339059 2
+  89334 3
+  18216 4
+   3282 5
+    605 6
+    148 7
+     36 8
+      4 9
+      1 10
+
+> But do we really have 80x25 terminals any more that
+> we'd care about?
+
+trivial btw: VT100s were 80x24 or 132x24, PCs were 80x25
+
 
