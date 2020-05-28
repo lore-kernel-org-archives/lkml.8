@@ -2,89 +2,149 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C8DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E95BD2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D09C20DD4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:52:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590709963;
-	bh=0F2RlU2jzr9n3M78bf+PMPzKhWnzVVUAlKWthXhlZHc=;
+	s=default; t=1590709977;
+	bh=fz5NOpaJCmT90u1VH64U/GD7MoGdxFBPAn9+XkyOwiE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KHAro/3M14/dQwDmrAZwtVUuWgBkXFzTqpyq+/rbMs+IDqW/tnZd4dhUIO0PR78pF
-	 RR8B8UCSTkTuPBdXH8HxsFInjdriRDxQohSnK+S8ybQFQgzYzdFreQIPpvyCXEN4ID
-	 p+Nq94UYPl9XCl8NqOlpDv94CumZlfQbyMgUp7U8=
+	b=UrTlvQHo90Xu2L6u5YorrGpFWTJHrYqDwQJzoHnZAX+c4y0TXw+e/NieMzhBY5HFF
+	 OqFgswMQ41teMYm/C87x/4O6Dr9088WyHuNM5LTYKQHqO0Dny54ATxIUh+DAoMnfqO
+	 +zkSS9Dh27VfAOY57mHyy1stWh29wz4Bp/2n3nv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437768AbgE1Xwm (ORCPT
+        id S2437848AbgE1Xwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:52:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
+        Thu, 28 May 2020 19:52:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437545AbgE1Xwj (ORCPT
+        with ESMTP id S2437703AbgE1Xwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:52:39 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C322DC08C5CA;
-        Thu, 28 May 2020 16:32:27 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id q18so719696ilm.5;
-        Thu, 28 May 2020 16:32:27 -0700 (PDT)
+        Thu, 28 May 2020 19:52:40 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FA5C08C5C9;
+        Thu, 28 May 2020 16:32:01 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id r2so418449ioo.4;
+        Thu, 28 May 2020 16:32:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=BZi6tHzaqVOINM6eCQ7Fjz2GRrahqrn6iNrzJqKN3TI=;
-        b=NSdSGab+9wxkHte3KclmnLInDM+Ozgw62lC7+Em79c3hEUajYVbtHBri+d1kAUbpXw
-         IXk4wmAFzkImWksmbU8F3FB00+MHBLE9UEHdwXeo3ObQEX1FRR9FqB8DbIldWI+su7aY
-         MgscDIJp70zugJhBsDeNhtdkrdmwoXsJ6k0SdIFyZBJwUeIAX3CKb8cH0avfQJ88vtoJ
-         /g9CI2OikyQ4VvIrgZ4wOdOYnBuoFRfh9vyh+L8JSoHdXQ+OK4HtZHTAwFeTyjP2snmA
-         eWfmXmhyTYrT9q+/1swwgXZy4lySaLBs92o/JjhcB6NbT1kTNAPFHbrasmvqvxh7NBGJ
-         1GLA==
-X-Gm-Message-State: AOAM531xkmM7k7UdNq+xLuozH2mPr0JyqI75mGykkSuD4WfPew2ONSb7
-        T4mmrmtW7PYScY5htVrUFA==
-X-Google-Smtp-Source: ABdhPJz6C7QcrvueupRQJa7HorI+iAXdaNb7Lq3g5NQJCL3NZrsyI7wQ7jCvvU+e4TRS5EU8jnaesw==
-X-Received: by 2002:a92:8818:: with SMTP id h24mr4741049ild.92.1590708747096;
-        Thu, 28 May 2020 16:32:27 -0700 (PDT)
+        bh=bQDJ/K/BGN1NpHjjxjlRqW+bJrkk3nC7ccS8jJry1GY=;
+        b=ZaRw6ans7TOiJdM2kRC4blfFpHglg+7xKc7xQwVVLWP1dPypzoPD/AwrEO785M4yy9
+         gLoMXPCPvI+wRU8PyYqiWZdTXNTTLtWxAvIsC6QaBbBzBl1D+T/E1VE/pdTFn5eeh7fs
+         Xc/iy7d8tRWRL4W1aQHbTOtcKJbjvx/IrwlxKWRQxLYInepwQQJp2JU1lnWxEMhl13bx
+         lrRhWyq4s8p9vPHsyaBGXl9ILHoJfFyDPp4ZPImzAZiH4Yn8CaTD/4JVrtZ4LCK4hT0u
+         rM54uAOnemZvAy3/CacjDvugEiQEYpGFZV6BvS4xDdYKdVsmredONwwqRvRAu8v0O5a9
+         11rw==
+X-Gm-Message-State: AOAM5323iY0UAvRVf5JVXnQFK692URnUUgNveweup4GsrfBsKFiOtGSw
+        qwA7u1T96tUoAsVUevWXwA==
+X-Google-Smtp-Source: ABdhPJzusT7uEAZWsJfwtK0/tbap4elm8WWwMNQ5e7+7HOm2fXq3XAviM98TIp5s4M6mHopuCwQaSA==
+X-Received: by 2002:a05:6602:809:: with SMTP id z9mr4320866iow.79.1590708721032;
+        Thu, 28 May 2020 16:32:01 -0700 (PDT)
 Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id z3sm3174482ior.45.2020.05.28.16.32.25
+        by smtp.gmail.com with ESMTPSA id l6sm3108508ioh.32.2020.05.28.16.31.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 16:32:26 -0700 (PDT)
-Received: (nullmailer pid 881280 invoked by uid 1000);
-        Thu, 28 May 2020 23:32:25 -0000
-Date:   Thu, 28 May 2020 17:32:25 -0600
+        Thu, 28 May 2020 16:32:00 -0700 (PDT)
+Received: (nullmailer pid 880564 invoked by uid 1000);
+        Thu, 28 May 2020 23:31:59 -0000
+Date:   Thu, 28 May 2020 17:31:59 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: thermal: tsens: Add cold interrupt
- support in yaml
-Message-ID: <20200528233225.GA881244@bogus>
-References: <20200522114626.28834-1-manafm@codeaurora.org>
- <20200522114626.28834-3-manafm@codeaurora.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        andriy.shevchenko@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 1/2] Add YAML schema for a new PWM driver
+Message-ID: <20200528233159.GA876777@bogus>
+References: <cover.1590132733.git.rahul.tanwar@linux.intel.com>
+ <53333e2a30f123065a68a3a24042ead982393164.1590132733.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200522114626.28834-3-manafm@codeaurora.org>
+In-Reply-To: <53333e2a30f123065a68a3a24042ead982393164.1590132733.git.rahul.tanwar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 22 May 2020 17:16:26 +0530, Manaf Meethalavalappu Pallikunhi wrote:
-> Add cold interrupt support for tsens in yaml.
-> 
-> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
-> ---
->  .../bindings/thermal/qcom-tsens.yaml          | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
+On Fri, May 22, 2020 at 03:41:58PM +0800, Rahul Tanwar wrote:
+> Add DT bindings YAML schema for PWM controller driver of
+> Lightning Mountain(LGM) SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+You need a better subject such as what h/w this is for. Bindings are for 
+h/w blocks, not drivers.
+
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-intel-lgm.yaml     | 43 ++++++++++++++++++++++
+
+Use the compatible string for filename.
+
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-intel-lgm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-intel-lgm.yaml b/Documentation/devicetree/bindings/pwm/pwm-intel-lgm.yaml
+> new file mode 100644
+> index 000000000000..adb33265aa5e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-intel-lgm.yaml
+> @@ -0,0 +1,43 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-intel-lgm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LGM SoC PWM controller
+> +
+> +maintainers:
+> +  - Rahul Tanwar <rahul.tanwar@intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#pwm-cells"
+> +  - clocks
+> +  - resets
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    pwm: pwm@e0d00000 {
+> +        compatible = "intel,lgm-pwm";
+> +        reg = <0xe0d00000 0x30>;
+> +        #pwm-cells = <2>;
+> +        clocks = <&cgu0 126>;
+> +        resets = <&rcu0 0x30 21>;
+> +    };
+> -- 
+> 2.11.0
+> 
