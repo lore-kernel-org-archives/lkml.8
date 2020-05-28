@@ -2,118 +2,114 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A05E207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="cTkpeQij"
+	by mail.kernel.org (Postfix) with ESMTP id B1A1120721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590692423;
+	bh=IBEXcJa5SZhZ23qO9uJI7HCaq75DLLMpP4eqn+jfAFM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Srdim9IfW4c8X/iCEbY2zRIaHx4PSW2dHb+jIYxgmsFcIzYvWBKY7/vbR/AMS4W/C
+	 e4jiZeQrFElkTWPTEyok2U1Zm840aUhjwNeO8xRXlepN5GsVa34JoDCACdguJ/02ES
+	 1OAUfP7c8dSf1lXoezaLgj9cZcXsNB8pu1FNIUlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406092AbgE1S7d (ORCPT
+        id S2406093AbgE1TAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:59:33 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:34710 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406018AbgE1S7b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:59:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id 49Xxnt64Sfz9vckH
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 18:59:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id W53IytI5m99N for <linux-kernel@vger.kernel.org>;
-        Thu, 28 May 2020 13:59:30 -0500 (CDT)
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 28 May 2020 15:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406018AbgE1TAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:00:12 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 49Xxnt0r7Tz9vYjX
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:59:30 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p5.oit.umn.edu 49Xxnt0r7Tz9vYjX
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p5.oit.umn.edu 49Xxnt0r7Tz9vYjX
-Received: by mail-il1-f199.google.com with SMTP id b8so116979ilr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tF8KjEwM7qOsnpMJACsTFh8FYnS65ml6lSyUkpw2tX8=;
-        b=cTkpeQijh/9oBDoILx1cIMvg79Suuum297Aw8r+SIb7zzsBq4CU9niqxs/bsBCkria
-         osUlSj8/XHhOqMXqKpA0HugUmg0DvLj/oG4HhFzCxXdlmGwKqJj54GvOC2IM5ciOsixj
-         miL2NF2bm8whvJjBDQLDt+aFOScETpadZRPI5dVzIcRcIoIg25EYn/U2bhwiaAk0kMst
-         p4Q4GSEd2bfA00SErtdToxJPxUM/F0YalB+7gFt5iAEDxN+EbLeBuNzojQv7xXPgeWvj
-         WMpAne+gMpeKs6vsQUnrcjD2nVt7nzTun6iWAwUxuVWCFReaodwovEGwRHc3xvTAuY/7
-         yQvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tF8KjEwM7qOsnpMJACsTFh8FYnS65ml6lSyUkpw2tX8=;
-        b=euhBGJa61mNHgJLcLyJVA8CyfcAw+1o3YCn7e0x33+EWmvn5hWSviWQ4lUtJrltdHW
-         RP2wsJoSW+WJIVQkurleaUfBgCCOV7JEqPzQAczEB0cNEIjOc9P3FNSsUaImWYN6DgvL
-         vZltURRmwErdkipOCkgL9O3S9DyIpm5Q6PCfFcDzdbcIgPGX8zR37cL5pKbHu75wCNcj
-         XUowI72bycgDj2++txLyVQg6BIKguNQP+OcUj3ObpTwrsOOXf2h7xGwTA9RnZ/pN307K
-         ZAYkGoWO9G4uUAWCPrfj0IDOGelJ2NPjcXEOf6MzjWNwULZqnbUf1pPYBUx+xkKFCiAF
-         uc1A==
-X-Gm-Message-State: AOAM5306ggQE4ACGEuFYqF4vnCbei4QJLDdwmBTAPmH+hIojDbmBcVql
-        Yzu/krHEXLUZ6l8xwnL9883IGbF1t8abgtm2D10EmEmXGZR4Umh4G4eQz4CQw1OOyFzAWc6vHVP
-        mNaiaoE2nyxHfG5Kj5FywJPKoeXPG
-X-Received: by 2002:a05:6e02:13e3:: with SMTP id w3mr3760086ilj.62.1590692369626;
-        Thu, 28 May 2020 11:59:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz1uoxU/j/spP4+apoVYeAYuLtLYSU/vnoV6LEnwUItWktUyDEabkqGqAgjdbuQ8iNSIEcCvg==
-X-Received: by 2002:a05:6e02:13e3:: with SMTP id w3mr3760062ilj.62.1590692369270;
-        Thu, 28 May 2020 11:59:29 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id t22sm2806202iom.49.2020.05.28.11.59.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 11:59:28 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] efi: Fix reference count leak in efivar_create_sysfs_entry.
-Date:   Thu, 28 May 2020 13:59:19 -0500
-Message-Id: <20200528185920.7314-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D8DD208A7;
+        Thu, 28 May 2020 19:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590692411;
+        bh=IBEXcJa5SZhZ23qO9uJI7HCaq75DLLMpP4eqn+jfAFM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YUCZZwbwvxE/dv74jVYYRkbAOdMaZ60UPrX80T8LV4B2i1Y88+ZdTIbc9gjcNbERe
+         IDtz1LMY9A2VZT/seUPpll60XHOAGxnS8FDdWgpp2D1lemfr0XbzXzIY1eHT5v2rcz
+         RyEXMS8zfSot99O/44ZbsAIWh53vW2KTlvSV/xIY=
+Date:   Thu, 28 May 2020 12:00:10 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 3/3] f2fs: fix to cover meta flush with cp_lock
+Message-ID: <20200528190010.GA162605@google.com>
+References: <20200527102753.15743-1-yuchao0@huawei.com>
+ <20200527102753.15743-3-yuchao0@huawei.com>
+ <20200527210233.GC206249@google.com>
+ <23245f6e-528d-43ab-57b6-4ca16db43fe5@huawei.com>
+ <20200528012615.GA232094@google.com>
+ <8e30b18d-bf8e-dd2f-35fa-08bbfd1b507e@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e30b18d-bf8e-dd2f-35fa-08bbfd1b507e@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On 05/28, Chao Yu wrote:
+> On 2020/5/28 9:26, Jaegeuk Kim wrote:
+> > On 05/28, Chao Yu wrote:
+> >> On 2020/5/28 5:02, Jaegeuk Kim wrote:
+> >>> On 05/27, Chao Yu wrote:
+> >>>> meta inode page should be flushed under cp_lock, fix it.
+> >>>
+> >>> It doesn't matter for this case, yes?
+> >>
+> >> It's not related to discard issue.
+> > 
+> > I meant we really need this or not. :P
+> 
+> Yes, let's keep that rule: flush meta pages under cp_lock, otherwise
+> checkpoint flush order may be broken due to race, right? as checkpoint
+> should write 2rd cp park page after flushing all meta pages.
 
-kobject_init_and_add() should be handled when it return an error,
-because kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+Well, this is for shutdown test, and thus we don't need to sync up here.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/firmware/efi/efivars.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
-index 78ad1ba8c987..26528a46d99e 100644
---- a/drivers/firmware/efi/efivars.c
-+++ b/drivers/firmware/efi/efivars.c
-@@ -522,8 +522,10 @@ efivar_create_sysfs_entry(struct efivar_entry *new_var)
- 	ret = kobject_init_and_add(&new_var->kobj, &efivar_ktype,
- 				   NULL, "%s", short_name);
- 	kfree(short_name);
--	if (ret)
-+	if (ret) {
-+		kobject_put(&new_var->kobj);
- 		return ret;
-+	}
- 
- 	kobject_uevent(&new_var->kobj, KOBJ_ADD);
- 	if (efivar_entry_add(new_var, &efivar_sysfs_list)) {
--- 
-2.17.1
-
+> 
+> > 
+> >>
+> >> Now, I got some progress, I can reproduce that bug occasionally.
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >>>> ---
+> >>>>  fs/f2fs/file.c | 2 ++
+> >>>>  1 file changed, 2 insertions(+)
+> >>>>
+> >>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >>>> index f7de2a1da528..0fcae4d90074 100644
+> >>>> --- a/fs/f2fs/file.c
+> >>>> +++ b/fs/f2fs/file.c
+> >>>> @@ -2260,7 +2260,9 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
+> >>>>  		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
+> >>>>  		break;
+> >>>>  	case F2FS_GOING_DOWN_METAFLUSH:
+> >>>> +		mutex_lock(&sbi->cp_mutex);
+> >>>>  		f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_META_IO);
+> >>>> +		mutex_unlock(&sbi->cp_mutex);
+> >>>>  		f2fs_stop_checkpoint(sbi, false);
+> >>>>  		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
+> >>>>  		break;
+> >>>> -- 
+> >>>> 2.18.0.rc1
+> >>> .
+> >>>
+> > .
+> > 
