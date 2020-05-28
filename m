@@ -2,135 +2,131 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28250C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 050C42075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:50:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dQH9ntwh"
+	by mail.kernel.org (Postfix) with ESMTP id 8791520829
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405236AbgE1QuZ (ORCPT
+        id S2405245AbgE1Qvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:50:25 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:58342 "EHLO m43-7.mailgun.net"
+        Thu, 28 May 2020 12:51:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:55284 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405212AbgE1QuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:50:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590684622; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=HtAusP7H7FCOmXD0AJPhL0pz3Yk6Y+AVzGbR3KNH1U8=; b=dQH9ntwhZArib7ZVl2bzYE/peCVcDtN9XcQkpIRoku4bQXTSOkhytuymsPL/tIrkqGOHFDad
- yeqvno0EUUDkzD5nMiGcTFGLvrGsvR4h5X8AIL0BcqNzAP8sNVIOAUKmOvNXyCxaPcl9hY3R
- sjvExdUFRteQd5FedHFsu3sA3w4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5ecfebc44776d1da6da45731 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 16:50:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A06C6C433CA; Thu, 28 May 2020 16:50:12 +0000 (UTC)
-Received: from [192.168.1.102] (unknown [157.47.99.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jprakash)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54FB0C433C9;
-        Thu, 28 May 2020 16:50:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54FB0C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
-Subject: Re: [PATCH V5 5/5] iio: adc: Clean up ADC code common to PMIC5 and
- PMIC7
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org,
-        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
-        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
- <1590157452-27179-6-git-send-email-jprakash@codeaurora.org>
- <20200524130440.250edb2e@archlinux>
-From:   Jishnu Prakash <jprakash@codeaurora.org>
-Message-ID: <0078a610-fed8-7a18-ecd1-27b8eb5a8feb@codeaurora.org>
-Date:   Thu, 28 May 2020 22:20:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S2405162AbgE1Qvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:51:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AB8030E;
+        Thu, 28 May 2020 09:51:36 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82DA13F6C4;
+        Thu, 28 May 2020 09:51:33 -0700 (PDT)
+Date:   Thu, 28 May 2020 17:51:31 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Quentin Perret <qperret@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
+ boost value
+Message-ID: <20200528165130.m5unoewcncuvxynn@e107158-lin.cambridge.arm.com>
+References: <20200511154053.7822-1-qais.yousef@arm.com>
+ <20200528132327.GB706460@hirez.programming.kicks-ass.net>
+ <20200528155800.yjrmx3hj72xreryh@e107158-lin.cambridge.arm.com>
+ <20200528161112.GI2483@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200524130440.250edb2e@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200528161112.GI2483@worktop.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan,
+On 05/28/20 18:11, Peter Zijlstra wrote:
+> On Thu, May 28, 2020 at 04:58:01PM +0100, Qais Yousef wrote:
+> > On 05/28/20 15:23, Peter Zijlstra wrote:
+> 
+> > > So afaict this is directly added to the enqueue/dequeue path, and we've
+> > > recently already had complaints that uclamp is too slow.
+> > 
+> > I wanted to keep this function simpler.
+> 
+> Right; I appreciate that, but as always it's a balance between simple
+> and performance :-)
 
-On 5/24/2020 5:34 PM, Jonathan Cameron wrote:
-> On Fri, 22 May 2020 19:54:12 +0530
-> Jishnu Prakash <jprakash@codeaurora.org> wrote:
->
->> This commit includes the following changes:
->>
->> Add a common function used for read_raw callback for both PMIC5
->> and PMIC7 ADCs.
->>
->> Add exit function for ADC.
-> Hi Jishnu,
->
-> I don't understand why one is needed, and if it is you can't do
-> what you have here without introducing some nasty races.
-> So if you need it clearly explain why in comments in the code
-> and also consider how it may race with new requests coming in etc
-> as the userspace interfaces are still visible.
->
-> Move the eoc_irq addition to the structure here as well as makes
-> no sense in earlier patch.
->
-> Thanks,
->
-> Jonathan
->
->
->> Add info_property under adc_data to more efficiently distinguish
->> PMIC5 and PMIC7 ADCs.
->>
->> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
->> ---
->>   drivers/iio/adc/qcom-spmi-adc5.c   | 81 +++++++++++++++++++++-----------------
->>   drivers/iio/adc/qcom-vadc-common.h |  1 +
->>   2 files changed, 46 insertions(+), 36 deletions(-)
->>
->>   
->> +static int adc5_exit(struct platform_device *pdev)
->> +{
->> +	struct adc5_chip *adc = platform_get_drvdata(pdev);
->> +
->> +	if (adc->irq_eoc >= 0)
->> +		disable_irq(adc->irq_eoc);
-> So here you are disabling an irq?  Why.  We should be removing it
-> cleanly in the managed flow shortly anyway.  If you did do this
-> here for some reason I'm not thinking of then you would have
-> a race against the userspace being removed on the unwind
-> of the iio device register.
->
->> +	return 0;
->> +}
->> +
-You're right about the exit function, the actions done in it are not 
-strictly required, so I'll remove it in the next post.
+Sure :-)
+
+In my head, the simpler version of
+
+	if (rt_task(p) && !uc->user_defined)
+		// update_uclamp_min
+
+Is a single branch and write to cache, so should be fast. I'm failing to see
+how this could generate an overhead tbh, but will not argue about it :-)
+
+> 
+> > > Is there really no other way?
+> > 
+> > There is my first attempt which performs the sync @ task_woken_rt().
+> > 
+> > https://lore.kernel.org/lkml/20191220164838.31619-1-qais.yousef@arm.com/
+> > 
+> > I can revert the sync function to the simpler version defined in that patch
+> > too.
+> > 
+> > I can potentially move this to uclamp_eff_value() too. Will need to think more
+> > if this is enough. If task_woken_rt() is good for you, I'd say that's more
+> > obviously correct and better to go with it.
+> 
+> task_woken_rt() is better, because that only slows down RT tasks, but
+> I'm thinking we can do even better by simply setting the default such
+> that new tasks pick it up and then (rcu) iterating all existing tasks
+> and modiying them.
+> 
+> It's more code, but it is all outside of the normal paths where we care
+> about performance.
+
+I am happy to take that direction if you think it's worth it. I'm thinking
+task_woken_rt() is good. But again, maybe I am missing something.
+
+> 
+> > FWIW, I think you're referring to Mel's notice in OSPM regarding the overhead.
+> > Trying to see what goes on in there.
+> 
+> Indeed, that one. The fact that regular distros cannot enable this
+> feature due to performance overhead is unfortunate. It means there is a
+> lot less potential for this stuff.
+
+I had a humble try to catch the overhead but wasn't successful. The observation
+wasn't missed by us too then.
+
+On my Ubuntu 18.04 machine uclamp is enabled by default by the way. 5.3 kernel
+though, so uclamp task group stuff not there yet. Should check how their server
+distro looks like.
+
+We don't want to lose that potential!
+
+Thanks
+
+--
+Qais Yousef
