@@ -2,94 +2,92 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86370C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4DF2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9F92075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590679168;
+	bh=+CRkV7ZElkEYdNm8SmxxDL7h8wBOFN8nVVgHius8h1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dq7bAft9Eg71su/WI1e9QwCwLGHS0+5KHuAfb6CGqnF5gq0eN0q3lp3NRbeCMWGJC
+	 //rh3mybs7mm0J+YlpcKkhuDuay9FFwOrZP+Z8aDZ0wk8ottiHFcyNip1vORt7vCXp
+	 1oQeyRHLeiQt1Q9WDgG12D9bNQasLIXzK+UK5S3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404240AbgE1PTL (ORCPT
+        id S2404307AbgE1PT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:19:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43040 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404149AbgE1PTG (ORCPT
+        Thu, 28 May 2020 11:19:27 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34743 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404149AbgE1PT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:19:06 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 420DA80307C0;
-        Thu, 28 May 2020 15:19:04 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id r6jQPtQkf7QC; Thu, 28 May 2020 18:19:03 +0300 (MSK)
-Date:   Thu, 28 May 2020 18:19:02 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 05/10] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200528151902.vemr7aolvtean2f3@mobilestation>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-6-Sergey.Semin@baikalelectronics.ru>
- <20200528144257.GS1634618@smile.fi.intel.com>
+        Thu, 28 May 2020 11:19:26 -0400
+Received: by mail-il1-f195.google.com with SMTP id v11so522331ilh.1;
+        Thu, 28 May 2020 08:19:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5kBEZPlNqzKPyCgrp/KWIwOTiSVLQMBol2Vgbb91EpM=;
+        b=MM1PuxzpqwTUehG7kwhCLrTNuKmCNylscFq0rcDhM6R7rFAGG3ZHG+hq0cRrsxO6Ku
+         sRMGYnY3c7x7LFWYEBah3koE+3Ut67yVZl27KE949sM+pL76+oshChxho2bucOFA76Ny
+         5Hqa/fTooJiZWVD1GcANLMuwOwjGI66hiXAs5c9NacgfHWXAHzN6koE7pceU5AzEhqmS
+         bXrTZbMqeVjvbaD55+4283EMhjn+QpxgcsvjKMFV3ev+hiGpkhxs0c0HHaAxJK5qIa+u
+         dunTDE2VyfofG8NxAeI8l1w9KEIj2upHlJyK5PMVkmjOtSIYXdhTepvtYwrBi8hSBmO5
+         Bf8w==
+X-Gm-Message-State: AOAM5335qDZG27izfSauiRbLwMe0+24cE1c9hJqwrX0Q2UW+wRBhi8aA
+        Ea+VFfY6TL5hT5ecxQ0iLw==
+X-Google-Smtp-Source: ABdhPJwibNiFPrIx377+XuzcIXNpytt1Fqw5yA5j7iuroWojsn3v5IBwUqhYpDxPaOr7/N2GzRdyqw==
+X-Received: by 2002:a92:1b86:: with SMTP id f6mr3430564ill.9.1590679165207;
+        Thu, 28 May 2020 08:19:25 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id u66sm3018630ilc.61.2020.05.28.08.19.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:19:24 -0700 (PDT)
+Received: (nullmailer pid 94809 invoked by uid 1000);
+        Thu, 28 May 2020 15:19:23 -0000
+Date:   Thu, 28 May 2020 09:19:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     linux-pci@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: Add UniPhier PCIe endpoint
+ controller description
+Message-ID: <20200528151923.GA94755@bogus>
+References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1589457801-12796-2-git-send-email-hayashi.kunihiko@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528144257.GS1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <1589457801-12796-2-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:42:57PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 01:50:16AM +0300, Serge Semin wrote:
-> > There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> > DMA capabilities non-uniformly redistributed amongst the device channels.
-> > In order to provide a way of exposing the channel-specific parameters to
-> > the DMA engine consumers, we introduce a new DMA-device callback. In case
-> > if provided it gets called from the dma_get_slave_caps() method and is
-> > able to override the generic DMA-device capabilities.
+On Thu, 14 May 2020 21:03:20 +0900, Kunihiko Hayashi wrote:
+> Add DT bindings for PCIe controller implemented in UniPhier SoCs
+> when configured in endpoint mode. This controller is based on
+> the DesignWare PCIe core.
 > 
-> > +	if (device->device_caps)
-> > +		device->device_caps(chan, caps);
-> > +
-> >  	return 0;
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../bindings/pci/socionext,uniphier-pcie-ep.yaml   | 92 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  2 +-
+>  2 files changed, 93 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
 > 
-> I dunno why this returns int, but either we get rid of this returned value
-> (perhaps in the future, b/c it's not directly related to this series), or
-> something like
-> 
-> 	if (device->device_caps)
-> 		return device->device_caps(chan, caps);
 
-It returns int because dma_get_slave_caps() check parameters and some other
-stuff.
-
-Regarding device_caps() callback having a return value. IMO it's redundant.
-The only thing what the callback should do is to update the caps and device
-is supposed to know it' capabilities, otherwise who else should know? So I
-don't see why device_caps would be needed.
-
--Sergey
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
