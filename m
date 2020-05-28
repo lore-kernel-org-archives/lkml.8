@@ -2,97 +2,107 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220E5207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A040207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:48:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NhnoiyLy"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="tqHUV/QE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406774AbgE1Tsc (ORCPT
+        id S2406783AbgE1Tsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:48:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35438 "EHLO
+        Thu, 28 May 2020 15:48:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406731AbgE1Try (ORCPT
+        with ESMTP id S2406704AbgE1Tse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:47:54 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C8DC08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:47:54 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id n15so14109661pfd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:47:54 -0700 (PDT)
+        Thu, 28 May 2020 15:48:34 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E30C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:48:33 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id l10so467669wrr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:48:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D/FdgxgI19k7/RKqJ/1UKTtp/t1yUz4BSjmKYARom7w=;
-        b=NhnoiyLyrHenDPN/ByLZft3pE/05o6EphRSK5zVl2eNUOny+2wX24yFoolbzQitLUx
-         r1GJXMjbbm/uPWj11cJZ0AuerxLLigaZsPLeD6BjBI4nIQcZfUzdv3Ma2fJ9el4c2Mdf
-         I2tbk9B6lqi1qJY5nBKMXroSqoQj+E4tNPXHZJyzOGOa40wcvmhJaOsVX2Dkjn6as5+N
-         H9n79lJcVEPFG7rwcG4FcNl+zCwgaSH+NoOjN+mYTzMdNLwTXyLsQVmm1TUL2+SWydmQ
-         a9S58luzSRtufXod/x4psb8i0Kyky1Fo7GHjE9FpMNuVMaz8XmjXJPtw2XlDn86Atmfn
-         2yPw==
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2+YFw/wWl/gn1xFnRRoYscp8dj86Zd6xiRRZw5MlcAI=;
+        b=tqHUV/QEgE202z+GHgPg+fGlRS0xZIz4uyNfmy01XYON7v71D5ZVVMVzwMsmXRUNCI
+         +wNnZXjkMRgh04H+0uTAJCwfBZkoEkVZ2TXn4uuWhvn/5WhRwgj7zAmDEeqDyjIBwvFQ
+         0yUVIbbFUXGJfXQzBRIqhjggve4tOXbOWWNl4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D/FdgxgI19k7/RKqJ/1UKTtp/t1yUz4BSjmKYARom7w=;
-        b=bhBryyY1X1B1v15+DtvN2Z1nnAemsk1g8vwTczp4hKVaQ0oKWqxpWkYjZi8pOLh/LK
-         ANPVQIeOvn2jyKXJ17Ajc6NppJyUja7EjIqREpW3MYrHahnYEIoVLth4JB2CPRvEgo8A
-         VJlszN1uG629xOQ0U8jQycZJaPwKARpMLirNuEqSkyyQEUWKICJpIXfXWLe0jWhPGPyR
-         jrPIcrWuog7ggIbmrxbnc+vsf3z0QkXgwR91eJQmlZ14O+GZkd97YLyq4LQU9Bb6SUjd
-         GYTGu4Bm+mx4/A+0bbFHSWuCEWGNVz2BPulbevcvPqKMc7JyrIhGxG/Ap9H+s8V9wuVq
-         S+Kg==
-X-Gm-Message-State: AOAM531/qMCHn+2bhGgwrGpl7XpTTcirPcbRe7mdVYKowepwS2dY+WbK
-        3togz6ATLCAFMweOq9UqkPMv5g9ZjKZdTRVAR/NA1w==
-X-Google-Smtp-Source: ABdhPJwgEtpb6jI3FOheNRBghe6AUmRsRvAFRwYEW6C/h7VOF9DNYfEAHMINt1bf+zlknXXh4+o9UNQsHuK9Q3SImW8=
-X-Received: by 2002:a62:8c42:: with SMTP id m63mr4739825pfd.106.1590695274111;
- Thu, 28 May 2020 12:47:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2+YFw/wWl/gn1xFnRRoYscp8dj86Zd6xiRRZw5MlcAI=;
+        b=AncZZmvPRD6ReOBH5fOSSOEP/bPq0cDXlyn2Rn/ZqSvSMFevGD8ndxpw1zxzdhCWwx
+         d8v0+simuk34OtTAEMxECKe27yv71g/kA3R940JtRXynkQWatii8LCKtAkBTkNl2sMSO
+         y6Aog69vAiVB7dZZpMLQUAph3QtKeYfdpOhnuVAu4eLa7gIAbwqZI6TIbTCGLdW2HTSv
+         k7Vei0zvPJQNfju9LJJKG+PK/o+qzNAGvmoLoIXi9UFuIfHfFx+Z0x6ZyqLk8J125f+M
+         ohCj+ai5lOP/t3882DMf4UaL7QFzH3uB0ZpdolsEwZQ8OZ9VB9+y7Lgblf0jKMweVwGl
+         uIsA==
+X-Gm-Message-State: AOAM531ZC5KYPHTNVJaegU6qEbCPz2qeRVUIZ9PAqDRiuAIUg9epmQuf
+        UYivvW/za9m/jkp8PHzgmZE7OA==
+X-Google-Smtp-Source: ABdhPJwbCOVC5ocul7Wfmi+oZbpyKXkSi2NcpQnG2t0XZ9mSJ4faNZIYvWaeTEZWugouk/oUeG8yXQ==
+X-Received: by 2002:adf:a283:: with SMTP id s3mr4706803wra.147.1590695312615;
+        Thu, 28 May 2020 12:48:32 -0700 (PDT)
+Received: from localhost ([2a01:4b00:8432:8a00:56e1:adff:fe3f:49ed])
+        by smtp.gmail.com with ESMTPSA id l204sm8225768wmf.19.2020.05.28.12.48.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:48:32 -0700 (PDT)
+Date:   Thu, 28 May 2020 20:48:31 +0100
+From:   Chris Down <chris@chrisdown.name>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Cgroups <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
+ allocator throttling
+Message-ID: <20200528194831.GA2017@chrisdown.name>
+References: <20200520143712.GA749486@chrisdown.name>
+ <CALvZod7rSeAKXKq_V0SggZWn4aL8pYWJiej4NdRd8MmuwUzPEw@mail.gmail.com>
 MIME-Version: 1.0
-References: <1585313122-26441-1-git-send-email-alan.maguire@oracle.com> <1585313122-26441-3-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1585313122-26441-3-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Thu, 28 May 2020 12:47:43 -0700
-Message-ID: <CAFd5g46uNRwDnKHjukU2gBu6wM0kzBragaWBJigbfJkFuQvsFw@mail.gmail.com>
-Subject: Re: [PATCH v3 kunit-next 2/2] kunit: add support for named resources
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     shuah <shuah@kernel.org>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CALvZod7rSeAKXKq_V0SggZWn4aL8pYWJiej4NdRd8MmuwUzPEw@mail.gmail.com>
+User-Agent: Mutt/1.14.2 (2020-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 27, 2020 at 5:46 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> The kunit resources API allows for custom initialization and
-> cleanup code (init/fini); here a new resource add function sets
-> the "struct kunit_resource" "name" field, and calls the standard
-> add function.  Having a simple way to name resources is
-> useful in cases such as multithreaded tests where a set of
-> resources are shared among threads; a pointer to the
-> "struct kunit *" test state then is all that is needed to
-> retrieve and use named resources.  Support is provided to add,
-> find and destroy named resources; the latter two are simply
-> wrappers that use a "match-by-name" callback.
->
-> If an attempt to add a resource with a name that already exists
-> is made kunit_add_named_resource() will return -EEXIST.
->
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Shakeel Butt writes:
+>What was the initial reason to have different behavior in the first place?
 
-FYI, I already gave a reviewed-by for this commit back in v1, so:
+This differing behaviour is simply a mistake, it was never intended to be this 
+deviate from what happens elsewhere. To that extent this patch is as much a bug 
+fix as it is an improvement.
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+>>  static void high_work_func(struct work_struct *work)
+>> @@ -2378,16 +2384,20 @@ void mem_cgroup_handle_over_high(void)
+>>  {
+>>         unsigned long penalty_jiffies;
+>>         unsigned long pflags;
+>> +       unsigned long nr_reclaimed;
+>>         unsigned int nr_pages = current->memcg_nr_pages_over_high;
+>
+>Is there any benefit to keep current->memcg_nr_pages_over_high after
+>this change? Why not just use SWAP_CLUSTER_MAX?
+
+I don't feel strongly either way, but current->memcg_nr_pages_over_high can be 
+very large for large allocations.
+
+That said, maybe we should just reclaim `max(SWAP_CLUSTER_MAX, current - high)` 
+for each loop? I agree that with this design it looks like perhaps we don't 
+need it any more.
+
+Johannes, what do you think?
