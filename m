@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77815C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D530C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 575B5207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D621207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvqTv5pY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZc05fC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404711AbgE1PrV (ORCPT
+        id S2404704AbgE1Pr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:47:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
+        Thu, 28 May 2020 11:47:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404686AbgE1PrI (ORCPT
+        with ESMTP id S2404693AbgE1PrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:47:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAB04C08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:47:07 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so10705178plv.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:47:07 -0700 (PDT)
+        Thu, 28 May 2020 11:47:11 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9C86C08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:47:11 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id v2so8622534pfv.7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:47:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=KY8aQRYELLAf9/2I3C13n0AvLroYbmfmwpkCrL98Gv0=;
-        b=CvqTv5pYPAdd6X3RyQls/VWekEcH11q0LJ7qJf5c56TvtFNlwd9Hq76OBcVcRIdXye
-         frAGiLIfKX9m8sWcdgMq7BMReQbM4jtYCQwewrbSa92Sn8keEoNVTKGtLuRsw33UDbDS
-         tJCxXprxz4EYFBGPBO/4WKEVpdayZ51g6BfqU5NyF8UsPWklu+YHZq7cFziV6zYX4NPR
-         /NnvhskEu0rJBGH8hn1Z+edDNEWzjIE+zG70ZEu/N0Er1D1nKymsHoOZ6gOuwx1P6Ill
-         D0Ilr1xNbViWFlkxkjXpevCn5+VswQ3S/gsvBpizyAfkOo6PHPPwvAI/+JLTQOAOtAPX
-         Gj3A==
+        bh=rABvwzpSHjK9Um87JqwSpNf8fC8athc+8D0QEbmnNrI=;
+        b=IZc05fC2hVRUdUctuTSvYWOzikAy0ps/zfWm31qMoGvq8hMp11Ml1/B1izUv24mB/z
+         qjx2bsJVmW1srtAT3T+hcQdqnAHP+f8TCZnv0y1UqVS7WbEAxeRk/WqixTbiB8RL0YY9
+         m8mWtnqA2MudUteutSztsLrsBGssFZyvS+onP1qztgMV+TgCpQxVFzTQkLZOzrGbkGc3
+         zPGdP8Fhnmfk91gHo3mKGpbZ2X+X46tO+8LcM0LCAdZCyS37HAvaUVoVl66RSVlIbIdY
+         eV6hRazLof97B8v4DgFZjJMi5fpUP/cmI439a9eTChRUvH1T2d9c9BKt3dPvlm0Yrqxh
+         7j8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=KY8aQRYELLAf9/2I3C13n0AvLroYbmfmwpkCrL98Gv0=;
-        b=G0ClkMyvcbm7/S3gsjkOYpSXwmPKo2pPbltHf1Ly9Xq417t6Z1ccTuQX2ynwXgBDBO
-         n5/VZCcdA/pyLnoCRBBKcL2mFAIfOhq3T4BmQIAL5YwcuTrnhHRR9HRMezFOEg6pTfZe
-         4+rDnMgJhRn8/uRXThCpNYg7iVV+Qi/wECzUp2nKGd/NgCQLeklkne9yXZgARM/v4sya
-         rl0x0eaCAA5m/IyEgGAiQ6ZIEjG/echzKehX5mtbQ/ckUrEg+0kRWoVWPZQ1j/ARhSiv
-         +IyxRkZwckvBjP/4b4yISbVpzWhrWtmhQsYnkDBFvNjdF0FyFUnNim8fqFfd1Gq8iq+B
-         NJ1A==
-X-Gm-Message-State: AOAM532XMEgdeeNYP1ofWBR/C6hc42aSWtvBSGDWa+PWT4iN4NR3Tghs
-        4n56yDpExNkRshrkG08BGEuiVQ==
-X-Google-Smtp-Source: ABdhPJy3Sol2FO0WDZNPj8c7jOKixvVKVciOZKOIyGeQHO4q9jqYHyeikxhpwzbAQlI2rsbc6NkQLg==
-X-Received: by 2002:a17:90a:e2cb:: with SMTP id fr11mr4678496pjb.72.1590680827443;
-        Thu, 28 May 2020 08:47:07 -0700 (PDT)
+        bh=rABvwzpSHjK9Um87JqwSpNf8fC8athc+8D0QEbmnNrI=;
+        b=lBN4ARwNuzz9XPcMr9HZzIu4L0KwnufBzlx9cvmfPXv3Y71vt5lyx0fVIF6mwXHXoV
+         vNTyFH+y8eLhNZaUUO+Fgjb0H7sC0S+z8m+/Ts6roHyq6fNI9i49fOxjotqxj6ObUnMY
+         7EgznhHwd0MwLzkc/9R0lSkKIRE6pHKE4b7ZYwKqX2JmRHr2Ike56HNcUp6yAZDywyvQ
+         YAh6OH6jcvz7POEbpT93rmLjyyGK4bFF5pjX8pD63TsrZBiUSPNWPIFHka2U6VU6wcjw
+         kQvQXsXAS7bFIwdrb+yWtK0Rn6NzInaI9bWAvBjwUN0BhfK4ZAZNHTa0BM7/gKuzjPy9
+         zuuA==
+X-Gm-Message-State: AOAM530AcTGpSOyPF9jzAy4Waq2FpYz7JArSXLoSTOaMfpTJ1AZijNBC
+        ehohcCRVmIMYRBmhgT6OgKoxVQ==
+X-Google-Smtp-Source: ABdhPJxdahc+f9DIB9SjORBE5j/wBNbjZIfowfCBK8fCGznSzu7kQcY5h/uN99JQRFhu2gKfrlSHyQ==
+X-Received: by 2002:a65:534d:: with SMTP id w13mr3471439pgr.18.1590680831305;
+        Thu, 28 May 2020 08:47:11 -0700 (PDT)
 Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id y22sm5212551pfc.132.2020.05.28.08.47.03
+        by smtp.gmail.com with ESMTPSA id y22sm5212551pfc.132.2020.05.28.08.47.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:47:06 -0700 (PDT)
+        Thu, 28 May 2020 08:47:10 -0700 (PDT)
 From:   Sumit Semwal <sumit.semwal@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         broonie@kernel.org, robh+dt@kernel.org
@@ -66,9 +66,9 @@ Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         kgunda@codeaurora.org, rnayak@codeaurora.org,
         Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v3 2/5] dt-bindings: regulator: Add labibb regulator
-Date:   Thu, 28 May 2020 21:16:22 +0530
-Message-Id: <20200528154625.17742-3-sumit.semwal@linaro.org>
+Subject: [PATCH v3 3/5] arm64: dts: qcom: pmi8998: Add nodes for LAB and IBB regulators
+Date:   Thu, 28 May 2020 21:16:23 +0530
+Message-Id: <20200528154625.17742-4-sumit.semwal@linaro.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200528154625.17742-1-sumit.semwal@linaro.org>
 References: <20200528154625.17742-1-sumit.semwal@linaro.org>
@@ -81,89 +81,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nisha Kumari <nishakumari@codeaurora.org>
 
-Adding the devicetree binding for labibb regulator.
+This patch adds devicetree nodes for LAB and IBB regulators.
 
 Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
 Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 
 --
-v2: updated for better compatible string and names.
-v3: moved to yaml
+v2: sumits: updated for better compatible string and names
+v3: sumits: updated interrupt-names as per review comments
 
 ---
- .../regulator/qcom-labibb-regulator.yaml      | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-new file mode 100644
-index 000000000000..5406601ecd65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
-@@ -0,0 +1,63 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/qcom-labibb-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/qcom/pmi8998.dtsi b/arch/arm64/boot/dts/qcom/pmi8998.dtsi
+index 23f9146a161e..1a72fe92f1a6 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8998.dtsi
+@@ -25,5 +25,19 @@ pmi8998_lsid1: pmic@3 {
+ 		reg = <0x3 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 +
-+title: Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
-+
-+maintainers:
-+  - Sumit Semwal <sumit.semwal@linaro.org>
-+
-+description:
-+  LAB can be used as a positive boost power supply and IBB can be used as a
-+  negative boost power supply for display panels. Currently implemented for
-+  pmi8998.
-+
-+allOf:
-+  - $ref: "regulator.yaml#"
-+
-+properties:
-+  compatible:
-+    const: qcom,pmi8998-lab-ibb
-+
-+  lab:
-+    type: object
-+    interrupts:
-+      items:
-+        - description: Short-circuit interrupt for lab.
-+    interrupt-names:
-+      maxItems: 1
-+      items:
-+        - const: sc-err
-+
-+  ibb:
-+    type: object
-+    interrupts:
-+      items:
-+        - description: Short-circuit interrupt for lab.
-+    interrupt-names:
-+      maxItems: 1
-+      items:
-+        - const: sc-err
-+
-+required:
-+  - compatible
-+
-+examples:
-+	pmi8998_lsid1: pmic@3 {
-+		labibb {
++		labibb: labibb {
 +			compatible = "qcom,pmi8998-lab-ibb";
-+
-+			lab: lab {
-+				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
-+				interrupt-names = "lab-sc-err";
-+			};
 +
 +			ibb: ibb {
 +				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
-+				interrupt-names = "ibb-sc-err";
++				interrupt-names = "sc-err";
 +			};
 +
++			lab: lab {
++				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
++				interrupt-names = "sc-err";
++			};
 +		};
-+	};
+ 	};
+ };
 -- 
 2.26.2
 
