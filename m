@@ -2,142 +2,110 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E90C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C492AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C0E2073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DB62078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404525AbgE1Pkb (ORCPT
+        id S2404537AbgE1Pkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:40:31 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43184 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404383AbgE1Pk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:40:27 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B52C880307C0;
-        Thu, 28 May 2020 15:40:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id YJY955QVHiku; Thu, 28 May 2020 18:40:23 +0300 (MSK)
-Date:   Thu, 28 May 2020 18:40:22 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
- <20200528145224.GT1634618@smile.fi.intel.com>
+        Thu, 28 May 2020 11:40:39 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26482 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404383AbgE1Pkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:40:32 -0400
+IronPort-SDR: yoXXCkfH8taa2aIKmIuUYKwNICND5YJJmquQHwBVvrBd7RDb2naKMEi2KiDbkPwwqE64rsLyVi
+ OXDHF/d9VfVQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:40:31 -0700
+IronPort-SDR: KOgzxl9gfcD5mTiB9IER1X+pGcXi3LOqDn7qdHo+JXYQRMDr66UDPVTEEA0XGGPVoXmW+AzV5Z
+ VfJukaq/kbrQ==
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="267254410"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.96]) ([10.249.174.96])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:40:29 -0700
+Subject: Re: [PATCH] KVM: X86: Call kvm_x86_ops.cpuid_update() after CPUIDs
+ fully updated
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>, linux-kernel@vger.kernel.org
+References: <20200528151927.14346-1-xiaoyao.li@intel.com>
+ <b639a333-d7fe-74fd-ee11-6daede184676@redhat.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <1f45de43-af43-24da-b7d3-00b9d2bd517c@intel.com>
+Date:   Thu, 28 May 2020 23:40:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200528145224.GT1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <b639a333-d7fe-74fd-ee11-6daede184676@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
-> > IP core of the DW DMA controller may be synthesized with different
-> > max burst length of the transfers per each channel. According to Synopsis
-> > having the fixed maximum burst transactions length may provide some
-> > performance gain. At the same time setting up the source and destination
-> > multi size exceeding the max burst length limitation may cause a serious
-> > problems. In our case the DMA transaction just hangs up. In order to fix
-> > this lets introduce the max burst length platform config of the DW DMA
-> > controller device and don't let the DMA channels configuration code
-> > exceed the burst length hardware limitation.
-> > 
-> > Note the maximum burst length parameter can be detected either in runtime
-> > from the DWC parameter registers or from the dedicated DT property.
-> > Depending on the IP core configuration the maximum value can vary from
-> > channel to channel so by overriding the channel slave max_burst capability
-> > we make sure a DMA consumer will get the channel-specific max burst
-> > length.
+On 5/28/2020 11:22 PM, Paolo Bonzini wrote:
+> On 28/05/20 17:19, Xiaoyao Li wrote:
+>> kvm_x86_ops.cpuid_update() is used to update vmx/svm settings based on
+>> updated CPUID settings. So it's supposed to be called after CPUIDs are
+>> fully updated, not in the middle stage.
+>>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > 
-> ...
+> Are you seeing anything bad happening from this?
+
+Not yet.
+
+IMO changing the order is more reasonable and less confusing.
+
+> Paolo
 > 
-> >  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
-> >  {
-> > +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
-> >  
+>> ---
+>>   arch/x86/kvm/cpuid.c | 10 ++++++++--
+>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>> index cd708b0b460a..753739bc1bf0 100644
+>> --- a/arch/x86/kvm/cpuid.c
+>> +++ b/arch/x86/kvm/cpuid.c
+>> @@ -208,8 +208,11 @@ int kvm_vcpu_ioctl_set_cpuid(struct kvm_vcpu *vcpu,
+>>   	vcpu->arch.cpuid_nent = cpuid->nent;
+>>   	cpuid_fix_nx_cap(vcpu);
+>>   	kvm_apic_set_version(vcpu);
+>> -	kvm_x86_ops.cpuid_update(vcpu);
+>>   	r = kvm_update_cpuid(vcpu);
+>> +	if (r)
+>> +		goto out;
+>> +
+>> +	kvm_x86_ops.cpuid_update(vcpu);
+>>   
+>>   out:
+>>   	vfree(cpuid_entries);
+>> @@ -231,8 +234,11 @@ int kvm_vcpu_ioctl_set_cpuid2(struct kvm_vcpu *vcpu,
+>>   		goto out;
+>>   	vcpu->arch.cpuid_nent = cpuid->nent;
+>>   	kvm_apic_set_version(vcpu);
+>> -	kvm_x86_ops.cpuid_update(vcpu);
+>>   	r = kvm_update_cpuid(vcpu);
+>> +	if (r)
+>> +		goto out;
+>> +
+>> +	kvm_x86_ops.cpuid_update(vcpu);
+>>   out:
+>>   	return r;
+>>   }
+>>
 > 
 
-> Perhaps,
-> 
-> 	/* DesignWare DMA supports burst value from 0 */
-> 	caps->min_burst = 0;
-
-Regarding min_burst being zero. I don't fully understand what it means.
-It means no burst or burst with minimum length or what?
-In fact DW DMA burst length starts from 1. Remember the burst-length run-time
-parameter we were arguing about? Anyway the driver makes sure that both
-0 and 1 requested burst length are setup as burst length of 1 in the
-CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
-
-I agree with the rest of your comments below.
-
--Sergey
-
-> 
-> > +	caps->max_burst = dwc->max_burst;
-> >  }
-> 
-> ...
-> 
-> > +	*maxburst = clamp(*maxburst, 0U, dwc->max_burst);
-> 
-> Shouldn't we do the same for iDMA 32-bit? Thus, perhaps do it in the core.c?
-> 
-> >  	*maxburst = *maxburst > 1 ? fls(*maxburst) - 2 : 0;
-> 
-> > +	if (!of_property_read_u32_array(np, "snps,max-burst-len", mb,
-> > +					nr_channels)) {
-> > +		for (tmp = 0; tmp < nr_channels; tmp++)
-> > +			pdata->max_burst[tmp] = mb[tmp];
-> 
-> I think we may read directly to the array. This ugly loops were introduced due
-> to type mismatch. (See below)
-> 
-> > +	} else {
-> > +		for (tmp = 0; tmp < nr_channels; tmp++)
-> > +			pdata->max_burst[tmp] = DW_DMA_MAX_BURST;
-> > +	}
-> 
-> And this will be effectively memset32().
-> 
-> >  	unsigned char	nr_masters;
-> >  	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
-> >  	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
-> > +	unsigned int	max_burst[DW_DMA_MAX_NR_CHANNELS];
-> 
-> I think we have to stop with this kind of types and use directly what is in the
-> properties, i.e.
-> 
-> 	u32 max_burst[...];
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
