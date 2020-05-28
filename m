@@ -2,101 +2,70 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE873C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3854920721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF0320829
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="osJKPQ6g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405046AbgE1QdR (ORCPT
+        id S2405078AbgE1Qdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:33:17 -0400
-Received: from mga17.intel.com ([192.55.52.151]:28295 "EHLO mga17.intel.com"
+        Thu, 28 May 2020 12:33:39 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54896 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404897AbgE1QdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:33:15 -0400
-IronPort-SDR: S1iTSRFFHhDlpaoa/fMjeg9/MogrLf9V8h52IQvop+1K7KlZOmrsR2xBFk4vErB91dtBmWXAUa
- cEeQ+ECUeUOA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 09:33:15 -0700
-IronPort-SDR: g+sBksrbZ/XPPBDhZNXgLL2wNxU+emyH9f97Pnz6m4VoyQfhHez3cx0vTlXK0xPEnkI0Os675G
- e4jdi87hHCwQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="310974192"
-Received: from ssp-nc-cdi361.jf.intel.com (HELO otc-nc-03) ([10.54.39.25])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2020 09:33:15 -0700
-Date:   Thu, 28 May 2020 09:33:15 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Darrel Goeddel <DGoeddel@forcepoint.com>,
-        Mark Scott <mscott@forcepoint.com>,
-        Romil Sharma <rsharma@forcepoint.com>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] iommu: Relax ACS requirement for Intel RCiEP devices.
-Message-ID: <20200528163315.GA6461@otc-nc-03>
-References: <1590531455-19757-1-git-send-email-ashok.raj@intel.com>
- <20200526170715.18c0ee98@x1.home>
+        id S2405048AbgE1Qde (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:33:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=prqncY2KTs77FYfZ6+mgx2VwmntSpVLJQSpZE3MLMBQ=; b=osJKPQ6gfJzsqoRf6vlfSANjeQ
+        Qydh8aBUHghgdRhzEm69eTopdwOBUSBekqlRDkHfP7otK2btWlBwYxK16hazZhd+I91EZWDhEJxsx
+        ofwNq3G/1P2OOtFMI/nOzke3efqoxI8Xf9K2pjPy5LNTxuvpUxPXDeDhqroEV3Ld0Np4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jeLTD-003YNL-E5; Thu, 28 May 2020 18:33:27 +0200
+Date:   Thu, 28 May 2020 18:33:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
+ 1000BaseX/2500BaseX ports
+Message-ID: <20200528163327.GF840827@lunn.ch>
+References: <20200528121121.125189-1-tbogendoerfer@suse.de>
+ <20200528130738.GT1551@shell.armlinux.org.uk>
+ <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
+ <20200528135608.GU1551@shell.armlinux.org.uk>
+ <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200526170715.18c0ee98@x1.home>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex
+On Thu, May 28, 2020 at 04:33:35PM +0200, Thomas Bogendoerfer wrote:
+> below is the dts part for the two network interfaces. The switch to
+> the outside has two ports, which correlate to the two internal ports.
+> And the switch propagates the link state of the external ports to
+> the internal ports.
 
-On Tue, May 26, 2020 at 05:07:15PM -0600, Alex Williamson wrote:
-> > ---
-> >  drivers/iommu/iommu.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> > index 2b471419e26c..31b595dfedde 100644
-> > --- a/drivers/iommu/iommu.c
-> > +++ b/drivers/iommu/iommu.c
-> > @@ -1187,7 +1187,18 @@ static struct iommu_group *get_pci_function_alias_group(struct pci_dev *pdev,
-> >  	struct pci_dev *tmp = NULL;
-> >  	struct iommu_group *group;
-> >  
-> > -	if (!pdev->multifunction || pci_acs_enabled(pdev, REQ_ACS_FLAGS))
-> > +	/*
-> > +	 * Intel VT-d Specification Section 3.16, Root-Complex Peer to Peer
-> > +	 * Considerations manadate that all transactions in RCiEP's and
-> > +	 * even Integrated MFD's *must* be sent up to the IOMMU. P2P is
-> > +	 * only possible on translated addresses. This gives enough
-> > +	 * guarantee that such devices can be forgiven for lack of ACS
-> > +	 * support.
-> > +	 */
-> > +	if (!pdev->multifunction ||
-> > +	    (pdev->vendor == PCI_VENDOR_ID_INTEL &&
-> > +	     pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_END) ||
-> > +	     pci_acs_enabled(pdev, REQ_ACS_FLAGS))
-> >  		return NULL;
-> >  
-> >  	for_each_pci_dev(tmp) {
-> 
-> Hi Ashok,
-> 
-> As this is an Intel/VT-d standard, not a PCIe standard, why not
-> implement this in pci_dev_specific_acs_enabled() with all the other
-> quirks?  Thanks,
+Hi Thomas
 
-Yes, that sounds like the right place.. I have a new patch, once its tested
-i'll resend it. Thanks for pointing it out.
+Any plans to add mainline support for this board?
+Contribute the DT files?
 
-Cheers,
-Ashok
+    Andrew
