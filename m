@@ -2,104 +2,98 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5548BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD620C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251292074B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KbvJi97G"
+	by mail.kernel.org (Postfix) with ESMTP id 93D9C2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590707002;
+	bh=VFnQ0wcEojmF59sR4hxTBimu6lf+tyHk4cmVoK2hwWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mGDc0dL+wfME6qc+Rs2USQd0dTF29uCEeuK0EBzI+G9UJPitU+J8T3TEz+soj3EHW
+	 smQtByrVBfm1lx8JiaZ/WzwwEHE5PBKJatu/HqpOgmmv92E2c+StE6IWdycRrYmBOa
+	 Hzt8BNFPb4P1GarcgwDWq1aNye1WBjJ49mIiZ+i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437343AbgE1XDM (ORCPT
+        id S2437434AbgE1XDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:03:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58807 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391479AbgE1XDL (ORCPT
+        Thu, 28 May 2020 19:03:21 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:41260 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437356AbgE1XDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:03:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590706990;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qUIox5FhQJ2z08jhZB7sfNniyrJZwWCLCZ4Ajtdwh7I=;
-        b=KbvJi97G0mAEKEK9mXcnqTYPiXH/5BFY7FE8720lC3/HlqMkiKeWaH/yDT1jO4mC0FcxUv
-        15B5jDxDVW39ZJOrAquu4DA1bVydrnwhZxjkS7j23/fRVfwY2Ij4OxExESHLK414wnBlqO
-        ViXuznoBGuOEnwEeo7lsbuV07g3B4gU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-9_wHkkfkNRKqvFNP88Dgeg-1; Thu, 28 May 2020 19:03:06 -0400
-X-MC-Unique: 9_wHkkfkNRKqvFNP88Dgeg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CCE351005510;
-        Thu, 28 May 2020 23:03:04 +0000 (UTC)
-Received: from localhost.localdomain (vpn2-54-130.bne.redhat.com [10.64.54.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 421C860C80;
-        Thu, 28 May 2020 23:03:01 +0000 (UTC)
-Reply-To: Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH RFCv2 9/9] arm64: Support async page fault
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvmarm@lists.cs.columbia.edu
-Cc:     maz@kernel.org, linux-kernel@vger.kernel.org, shan.gavin@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20200508032919.52147-1-gshan@redhat.com>
- <20200508032919.52147-10-gshan@redhat.com>
- <81adf013-3de7-23e6-7648-8aec821b033c@redhat.com>
- <a6addc25-29af-3690-8392-efa5e8381e98@redhat.com>
- <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
-From:   Gavin Shan <gshan@redhat.com>
-Message-ID: <6a4a82a4-af01-98c2-c854-9199f55f7bd3@redhat.com>
-Date:   Fri, 29 May 2020 09:02:58 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 28 May 2020 19:03:14 -0400
+Received: by mail-il1-f196.google.com with SMTP id d1so639821ila.8;
+        Thu, 28 May 2020 16:03:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6ctiRhZJqkq9GPLI1qnw2R8C8DD3A/KqAjotWPV/6zk=;
+        b=mmyaaBidu5VMqwjbfN7dNUiTULJGHJKt5gq/hkLEHiPR6ZOX/eAjVIGez3GklQPHd8
+         8l1Lvfp16T78s1yN77FTDsMtfrnyEqgXjjCF243Kc01XiBpNttBJygaMocvYWMFnv1G7
+         Q/JMJrSqkfO8PGoo2MCijtxF/JBtS0gAxGCStv4irRK8jMQvyjBwtvZPC8VytqdpmkWw
+         bwD07ph5wYdB/h2K3AAngoFod4NCTbr0CoTZFuSfwsHGCtuG1p6e+0rRLRx1tKazz5wA
+         f3YUDTzBI1RsAO29n1nnsBxm4dspm6UfZp9T9dI+SLS0+kQMqkA9alGdzU75koz7PDRA
+         vAsQ==
+X-Gm-Message-State: AOAM532Slh3tcC3nzPAf4s/eJ+4/kkil75H0YisOAXCy6ijltm9+4RPq
+        SsHs4ynnCnkezomIDVdZpw==
+X-Google-Smtp-Source: ABdhPJxEsCezKmw3TYs8HpLuM/wSex2W7FhhK1kpR3KO4YDloi5nu/AF+sDdd5riZydKHN5bukUDxQ==
+X-Received: by 2002:a92:5a5d:: with SMTP id o90mr4915661ilb.206.1590706993159;
+        Thu, 28 May 2020 16:03:13 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id t22sm3042515iom.49.2020.05.28.16.03.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 16:03:12 -0700 (PDT)
+Received: (nullmailer pid 842110 invoked by uid 1000);
+        Thu, 28 May 2020 23:03:11 -0000
+Date:   Thu, 28 May 2020 17:03:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 7/9] dt-bindings: spi: Convert spi-pxa2xx to
+ json-schema
+Message-ID: <20200528230311.GA842052@bogus>
+References: <20200521091356.2211020-1-lkundrak@v3.sk>
+ <20200521091356.2211020-8-lkundrak@v3.sk>
 MIME-Version: 1.0
-In-Reply-To: <8ab64c6a-582b-691d-79ab-21cdc0455cd3@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200521091356.2211020-8-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
-
-On 5/28/20 8:48 PM, Paolo Bonzini wrote:
-> On 28/05/20 08:14, Gavin Shan wrote:
->>> - for x86 we're also thinking of initiating the page fault from the
->>> exception handler, rather than doing so from the hypervisor before
->>> injecting the exception.  If ARM leads the way here, we would do our
->>> best to share code when x86 does the same.
->>
->> Sorry, Paolo, I don't follow your idea here. Could you please provide
->> more details?
+On Thu, 21 May 2020 11:13:54 +0200, Lubomir Rintel wrote:
+> A straightforward conversion of the the spi-pxa2xx binding to DT schema
+> format using json-schema.
 > 
-> The idea is to inject stage2 page faults into the guest even before the
-> host starts populates the page.  The guest then invokes a hypercall,
-> telling the host to populate the page table and inject the 'page ready'
-> event (interrupt) when it's done.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > 
-> For x86 the advantage is that the processor can take care of raising the
-> stage2 page fault in the guest, so it's faster.
+> ---
+> Changes since v1:
+> - Drop #address-cells and #size-cells
+> - s/GPL-2.0-or-later/GPL-2.0-only/
 > 
-I think there might be too much overhead if the page can be populated
-quickly by host. For example, it's fast to populate the pages if swapin
-isn't involved.
+>  .../bindings/spi/marvell,mmp2-ssp.yaml        | 56 +++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-pxa2xx.txt    | 27 ---------
+>  2 files changed, 56 insertions(+), 27 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/marvell,mmp2-ssp.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
+> 
 
-If I'm correct enough, it seems arm64 doesn't have similar mechanism,
-routing stage2 page fault to guest.
-
-Thanks,
-Gavin
-
+Applied, thanks!
