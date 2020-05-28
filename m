@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5976CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E41C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327352089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60D32084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tyq5sSYa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UaviI5C9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgE1FOX (ORCPT
+        id S1728290AbgE1FOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40536 "EHLO
+        Thu, 28 May 2020 01:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728092AbgE1FOH (ORCPT
+        with ESMTP id S1728214AbgE1FOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:14:07 -0400
+        Thu, 28 May 2020 01:14:25 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30745C08C5C4;
-        Wed, 27 May 2020 22:14:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65BABC05BD1E;
+        Wed, 27 May 2020 22:14:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=rkPSLt83JgtGQXMIhVazd1jON1AmWkQMFJTFZxl0OWU=; b=Tyq5sSYa9G10GlkbQvW78Dk2ex
-        M3xSVesP+2fGjwzr43486Tig80pF4p43ospcSpNKSyeK0iebc6ZzpklYnfUekSB0x56OR/GFnTF0m
-        Su3bgd4b10XJuuMQ+sz7ZRCn6hoiVFa+vC0puKPN2qxZz7JY7B8ZKLmZzm8CmaPSHKEpYtZAmPSI6
-        BBxIhFSXa5bczPHR6FL8AuXaOQkVuvAcnPDmqJwaNoM4yrImcnnRm+vFHjH53vyCw+ZpfacExy6TK
-        ZM+zcCmW7OVPAoya33Lt2ndc5y4P5DAfvxleTi+sI1LrTUQe4M+IGXWf/K5f0Gva75fD0ujVhj5Rt
-        s5IX4mtw==;
+        bh=ArfUN0byB3Uq+uJrbTK/3I3YkF2OfRio3Yy2O4aNtms=; b=UaviI5C9wMtc9Cj3+spf+9ZU69
+        mrryeoJ0Z24pMECma7sLfjamDNtvTIZHcvRX6hhmdhbV1gPc+qbf3wfcc8w7DtqWITfpHph9PYzLn
+        5ymVNaMWfn/XGub0CLh14e5L7USg2ZvzywnFuqkJwY3+3argGWy/9U9NDdYSnF46EhcCoKD+1B/Tv
+        7mKVIbG8oCz3QPehKktSh5Dkz3kvNspUdWuOTFhjLBkPfY5eJWpoj/IpcXEAmJPN5hWqWXzjWChn2
+        bGti+9Kq0PXPHviBYkG9jPARS5FbNooLqsUGcj9stkvGpjNl8u7q5HHk56NUt3VWkyncMBkoIJLPW
+        7G/1PxuQ==;
 Received: from p4fdb1ad2.dip0.t-ipconnect.de ([79.219.26.210] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeArL-0002Fz-6e; Thu, 28 May 2020 05:13:39 +0000
+        id 1jeArh-0002Z7-IZ; Thu, 28 May 2020 05:14:02 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>
@@ -53,11 +53,10 @@ Cc:     Eric Dumazet <edumazet@google.com>,
         cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
         netdev@vger.kernel.org, ceph-devel@vger.kernel.org,
         rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH 18/28] ipv4: add ip_sock_set_tos
-Date:   Thu, 28 May 2020 07:12:26 +0200
-Message-Id: <20200528051236.620353-19-hch@lst.de>
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH 25/28] ipv6: add ip6_sock_set_addr_preferences
+Date:   Thu, 28 May 2020 07:12:33 +0200
+Message-Id: <20200528051236.620353-26-hch@lst.de>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200528051236.620353-1-hch@lst.de>
 References: <20200528051236.620353-1-hch@lst.de>
@@ -69,130 +68,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to directly set the IP_TOS sockopt from kernel space without
-going through a fake uaccess.
+Add a helper to directly set the IPV6_ADD_PREFERENCES sockopt from kernel
+space without going through a fake uaccess.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Sagi Grimberg <sagi@grimberg.me>
 ---
- drivers/nvme/host/tcp.c   | 14 +++-----------
- drivers/nvme/target/tcp.c | 10 ++--------
- include/net/ip.h          |  2 ++
- net/ipv4/ip_sockglue.c    | 30 +++++++++++++++++++++---------
- 4 files changed, 28 insertions(+), 28 deletions(-)
+ include/net/ipv6.h       | 67 ++++++++++++++++++++++++++++++++++++++++
+ net/ipv6/ipv6_sockglue.c | 59 +----------------------------------
+ net/sunrpc/xprtsock.c    |  7 +++--
+ 3 files changed, 72 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 2872584f52f63..4c972d8abf317 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1313,7 +1313,7 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl,
- {
- 	struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
- 	struct nvme_tcp_queue *queue = &ctrl->queues[qid];
--	int ret, opt, rcv_pdu_size;
-+	int ret, rcv_pdu_size;
- 
- 	queue->ctrl = ctrl;
- 	INIT_LIST_HEAD(&queue->send_list);
-@@ -1352,16 +1352,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl,
- 		sock_set_priority(queue->sock->sk, so_priority);
- 
- 	/* Set socket type of service */
--	if (nctrl->opts->tos >= 0) {
--		opt = nctrl->opts->tos;
--		ret = kernel_setsockopt(queue->sock, SOL_IP, IP_TOS,
--				(char *)&opt, sizeof(opt));
--		if (ret) {
--			dev_err(nctrl->device,
--				"failed to set IP_TOS sock opt %d\n", ret);
--			goto err_sock;
--		}
--	}
-+	if (nctrl->opts->tos >= 0)
-+		ip_sock_set_tos(queue->sock->sk, nctrl->opts->tos);
- 
- 	queue->sock->sk->sk_allocation = GFP_ATOMIC;
- 	nvme_tcp_set_queue_io_cpu(queue);
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 55bc4c3c0a74a..4546049a96b37 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -1452,14 +1452,8 @@ static int nvmet_tcp_set_queue_sock(struct nvmet_tcp_queue *queue)
- 		sock_set_priority(sock->sk, so_priority);
- 
- 	/* Set socket type of service */
--	if (inet->rcv_tos > 0) {
--		int tos = inet->rcv_tos;
--
--		ret = kernel_setsockopt(sock, SOL_IP, IP_TOS,
--				(char *)&tos, sizeof(tos));
--		if (ret)
--			return ret;
--	}
-+	if (inet->rcv_tos > 0)
-+		ip_sock_set_tos(sock->sk, inet->rcv_tos);
- 
- 	write_lock_bh(&sock->sk->sk_callback_lock);
- 	sock->sk->sk_user_data = queue;
-diff --git a/include/net/ip.h b/include/net/ip.h
-index 5b317c9f4470a..2fc52e26fa88b 100644
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -765,4 +765,6 @@ static inline bool inetdev_valid_mtu(unsigned int mtu)
- 	return likely(mtu >= IPV4_MIN_MTU);
+diff --git a/include/net/ipv6.h b/include/net/ipv6.h
+index 49c4abf991489..9a90759830162 100644
+--- a/include/net/ipv6.h
++++ b/include/net/ipv6.h
+@@ -1195,4 +1195,71 @@ static inline void ip6_sock_set_recverr(struct sock *sk)
+ 	release_sock(sk);
  }
  
-+void ip_sock_set_tos(struct sock *sk, int val);
-+
- #endif	/* _IP_H */
-diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
-index f43d5f12aa86a..b43a29e11f4a5 100644
---- a/net/ipv4/ip_sockglue.c
-+++ b/net/ipv4/ip_sockglue.c
-@@ -560,6 +560,26 @@ int ip_recv_error(struct sock *sk, struct msghdr *msg, int len, int *addr_len)
- 	return err;
- }
- 
-+static void __ip_sock_set_tos(struct sock *sk, int val)
++static inline int __ip6_sock_set_addr_preferences(struct sock *sk, int val)
 +{
-+	if (sk->sk_type == SOCK_STREAM) {
-+		val &= ~INET_ECN_MASK;
-+		val |= inet_sk(sk)->tos & INET_ECN_MASK;
++	unsigned int pref = 0;
++	unsigned int prefmask = ~0;
++
++	/* check PUBLIC/TMP/PUBTMP_DEFAULT conflicts */
++	switch (val & (IPV6_PREFER_SRC_PUBLIC |
++		       IPV6_PREFER_SRC_TMP |
++		       IPV6_PREFER_SRC_PUBTMP_DEFAULT)) {
++	case IPV6_PREFER_SRC_PUBLIC:
++		pref |= IPV6_PREFER_SRC_PUBLIC;
++		prefmask &= ~(IPV6_PREFER_SRC_PUBLIC |
++			      IPV6_PREFER_SRC_TMP);
++		break;
++	case IPV6_PREFER_SRC_TMP:
++		pref |= IPV6_PREFER_SRC_TMP;
++		prefmask &= ~(IPV6_PREFER_SRC_PUBLIC |
++			      IPV6_PREFER_SRC_TMP);
++		break;
++	case IPV6_PREFER_SRC_PUBTMP_DEFAULT:
++		prefmask &= ~(IPV6_PREFER_SRC_PUBLIC |
++			      IPV6_PREFER_SRC_TMP);
++		break;
++	case 0:
++		break;
++	default:
++		return -EINVAL;
 +	}
-+	if (inet_sk(sk)->tos != val) {
-+		inet_sk(sk)->tos = val;
-+		sk->sk_priority = rt_tos2priority(val);
-+		sk_dst_reset(sk);
++
++	/* check HOME/COA conflicts */
++	switch (val & (IPV6_PREFER_SRC_HOME | IPV6_PREFER_SRC_COA)) {
++	case IPV6_PREFER_SRC_HOME:
++		prefmask &= ~IPV6_PREFER_SRC_COA;
++		break;
++	case IPV6_PREFER_SRC_COA:
++		pref |= IPV6_PREFER_SRC_COA;
++		break;
++	case 0:
++		break;
++	default:
++		return -EINVAL;
 +	}
++
++	/* check CGA/NONCGA conflicts */
++	switch (val & (IPV6_PREFER_SRC_CGA|IPV6_PREFER_SRC_NONCGA)) {
++	case IPV6_PREFER_SRC_CGA:
++	case IPV6_PREFER_SRC_NONCGA:
++	case 0:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	inet6_sk(sk)->srcprefs = (inet6_sk(sk)->srcprefs & prefmask) | pref;
++	return 0;
 +}
 +
-+void ip_sock_set_tos(struct sock *sk, int val)
++static inline int ip6_sock_set_addr_preferences(struct sock *sk, bool val)
 +{
++	int ret;
++
 +	lock_sock(sk);
-+	__ip_sock_set_tos(sk, val);
++	ret = __ip6_sock_set_addr_preferences(sk, val);
 +	release_sock(sk);
++	return ret;
 +}
-+EXPORT_SYMBOL(ip_sock_set_tos);
++
+ #endif /* _NET_IPV6_H */
+diff --git a/net/ipv6/ipv6_sockglue.c b/net/ipv6/ipv6_sockglue.c
+index e10258c2210e8..adbfed6adf11c 100644
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -845,67 +845,10 @@ static int do_ipv6_setsockopt(struct sock *sk, int level, int optname,
+ 		break;
  
- /*
-  *	Socket option code for IP. This is the end of the line after any
-@@ -823,15 +843,7 @@ static int do_ip_setsockopt(struct sock *sk, int level,
- 			inet->cmsg_flags &= ~IP_CMSG_RECVFRAGSIZE;
- 		break;
- 	case IP_TOS:	/* This sets both TOS and Precedence */
--		if (sk->sk_type == SOCK_STREAM) {
--			val &= ~INET_ECN_MASK;
--			val |= inet->tos & INET_ECN_MASK;
+ 	case IPV6_ADDR_PREFERENCES:
+-	    {
+-		unsigned int pref = 0;
+-		unsigned int prefmask = ~0;
+-
+ 		if (optlen < sizeof(int))
+ 			goto e_inval;
+-
+-		retv = -EINVAL;
+-
+-		/* check PUBLIC/TMP/PUBTMP_DEFAULT conflicts */
+-		switch (val & (IPV6_PREFER_SRC_PUBLIC|
+-			       IPV6_PREFER_SRC_TMP|
+-			       IPV6_PREFER_SRC_PUBTMP_DEFAULT)) {
+-		case IPV6_PREFER_SRC_PUBLIC:
+-			pref |= IPV6_PREFER_SRC_PUBLIC;
+-			break;
+-		case IPV6_PREFER_SRC_TMP:
+-			pref |= IPV6_PREFER_SRC_TMP;
+-			break;
+-		case IPV6_PREFER_SRC_PUBTMP_DEFAULT:
+-			break;
+-		case 0:
+-			goto pref_skip_pubtmp;
+-		default:
+-			goto e_inval;
 -		}
--		if (inet->tos != val) {
--			inet->tos = val;
--			sk->sk_priority = rt_tos2priority(val);
--			sk_dst_reset(sk);
+-
+-		prefmask &= ~(IPV6_PREFER_SRC_PUBLIC|
+-			      IPV6_PREFER_SRC_TMP);
+-pref_skip_pubtmp:
+-
+-		/* check HOME/COA conflicts */
+-		switch (val & (IPV6_PREFER_SRC_HOME|IPV6_PREFER_SRC_COA)) {
+-		case IPV6_PREFER_SRC_HOME:
+-			break;
+-		case IPV6_PREFER_SRC_COA:
+-			pref |= IPV6_PREFER_SRC_COA;
+-		case 0:
+-			goto pref_skip_coa;
+-		default:
+-			goto e_inval;
 -		}
-+		__ip_sock_set_tos(sk, val);
+-
+-		prefmask &= ~IPV6_PREFER_SRC_COA;
+-pref_skip_coa:
+-
+-		/* check CGA/NONCGA conflicts */
+-		switch (val & (IPV6_PREFER_SRC_CGA|IPV6_PREFER_SRC_NONCGA)) {
+-		case IPV6_PREFER_SRC_CGA:
+-		case IPV6_PREFER_SRC_NONCGA:
+-		case 0:
+-			break;
+-		default:
+-			goto e_inval;
+-		}
+-
+-		np->srcprefs = (np->srcprefs & prefmask) | pref;
+-		retv = 0;
+-
++		retv = __ip6_sock_set_addr_preferences(sk, val);
  		break;
- 	case IP_TTL:
- 		if (optlen < 1)
+-	    }
+ 	case IPV6_MINHOPCOUNT:
+ 		if (optlen < sizeof(int))
+ 			goto e_inval;
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 0d3ec055bc12f..3a143e250b9ac 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2150,7 +2150,6 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
+ 
+ 	if (!transport->inet) {
+ 		struct sock *sk = sock->sk;
+-		unsigned int addr_pref = IPV6_PREFER_SRC_PUBLIC;
+ 
+ 		/* Avoid temporary address, they are bad for long-lived
+ 		 * connections such as NFS mounts.
+@@ -2159,8 +2158,10 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
+ 		 *    knowledge about the normal duration of connections,
+ 		 *    MAY override this as appropriate.
+ 		 */
+-		kernel_setsockopt(sock, SOL_IPV6, IPV6_ADDR_PREFERENCES,
+-				(char *)&addr_pref, sizeof(addr_pref));
++		if (xs_addr(xprt)->sa_family == PF_INET6) {
++			ip6_sock_set_addr_preferences(sk,
++				IPV6_PREFER_SRC_PUBLIC);
++		}
+ 
+ 		xs_tcp_set_socket_timeouts(xprt, sock);
+ 
 -- 
 2.26.2
 
