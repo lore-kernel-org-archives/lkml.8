@@ -2,133 +2,137 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D90C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0982063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2EB2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgE1H7i (ORCPT
+        id S1727083AbgE1IAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:59:38 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:31330 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgE1H70 (ORCPT
+        Thu, 28 May 2020 04:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726161AbgE1IAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:59:26 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id 04S7wMHn030973;
-        Thu, 28 May 2020 15:58:34 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     broonie@kernel.org, tudor.ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        boris.brezillon@collabora.com, matthias.bgg@gmail.com
-Cc:     p.yadav@ti.com, juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v3 14/14] mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix mx25uw51245g
-Date:   Thu, 28 May 2020 15:58:16 +0800
-Message-Id: <1590652696-8844-15-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG4.macronix.com 04S7wMHn030973
+        Thu, 28 May 2020 04:00:02 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADECC05BD1E;
+        Thu, 28 May 2020 01:00:02 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id E4C8E2A3CC0
+Received: by earth.universe (Postfix, from userid 1000)
+        id AB0D83C08C7; Thu, 28 May 2020 09:59:58 +0200 (CEST)
+Date:   Thu, 28 May 2020 09:59:58 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 3/3] power: charger: max14577: Add proper
+ dt-compatible strings
+Message-ID: <20200528075958.3ck2gh7t2ubi4w6m@earth.universe>
+References: <20200522102448.30209-1-m.szyprowski@samsung.com>
+ <CGME20200522102455eucas1p13700db68b90ec05bd02d21014b81b656@eucas1p1.samsung.com>
+ <20200522102448.30209-3-m.szyprowski@samsung.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t4rywburgusgvb6o"
+Content-Disposition: inline
+In-Reply-To: <20200522102448.30209-3-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macronix mx25uw51245g is a SPI NOR that supports 1-1-1/8-8-8 mode.
 
-Correct the dummy cycles to device for various frequencies
-after xSPI profile 1.0 table parsed.
+--t4rywburgusgvb6o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Enable mx25uw51245g to Octal DTR mode by executing the command sequences
-to change to octal DTR mode.
+Hi,
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/spi-nor/macronix.c | 55 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+On Fri, May 22, 2020 at 12:24:48PM +0200, Marek Szyprowski wrote:
+> Add device tree compatible strings and create proper modalias structures
+> to let this driver load automatically if compiled as module, because
+> max14577 MFD driver creates MFD cells with such compatible strings.
+>=20
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 
-diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-index 96735d8..6c9a24c 100644
---- a/drivers/mtd/spi-nor/macronix.c
-+++ b/drivers/mtd/spi-nor/macronix.c
-@@ -8,6 +8,57 @@
- 
- #include "core.h"
- 
-+#define MXIC_CR2_DUMMY_SET_ADDR 0x300
-+
-+/* Fixup the dummy cycles to device and setup octa_dtr_enable() */
-+static void mx25uw51245g_post_sfdp_fixups(struct spi_nor *nor)
-+{
-+	struct spi_nor_flash_parameter *params = nor->params;
-+	int ret;
-+	u8 rdc, wdc;
-+
-+	ret = spi_nor_read_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &rdc);
-+	if (ret)
-+		return;
-+
-+	/* Refer to dummy cycle and frequency table(MHz) */
-+	switch (params->dummy_cycles) {
-+	case 10:	/* 10 dummy cycles for 104 MHz */
-+		wdc = 5;
-+		break;
-+	case 12:	/* 12 dummy cycles for 133 MHz */
-+		wdc = 4;
-+		break;
-+	case 16:	/* 16 dummy cycles for 166 MHz */
-+		wdc = 2;
-+		break;
-+	case 18:	/* 18 dummy cycles for 173 MHz */
-+		wdc = 1;
-+		break;
-+	case 20:	/* 20 dummy cycles for 200 MHz */
-+	default:
-+		wdc = 0;
-+	}
-+
-+	if (rdc != wdc)
-+		spi_nor_write_cr2(nor, MXIC_CR2_DUMMY_SET_ADDR, &wdc);
-+
-+	if (params->cmd_seq[0].len) {
-+		params->octal_dtr_enable = spi_nor_cmd_seq_octal_dtr;
-+		params->hwcaps.mask |= SNOR_HWCAPS_READ_8_8_8_DTR;
-+		params->hwcaps.mask |= SNOR_HWCAPS_PP_8_8_8_DTR;
-+
-+	} else {
-+		params->octal_dtr_enable = NULL;
-+		params->hwcaps.mask &= ~SNOR_HWCAPS_READ_8_8_8_DTR;
-+		params->hwcaps.mask &= ~SNOR_HWCAPS_PP_8_8_8_DTR;
-+	}
-+}
-+
-+static struct spi_nor_fixups mx25uw51245g_fixups = {
-+	.post_sfdp = mx25uw51245g_post_sfdp_fixups,
-+};
-+
- static int
- mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
- 			    const struct sfdp_parameter_header *bfpt_header,
-@@ -84,6 +135,10 @@
- 			      SPI_NOR_QUAD_READ) },
- 	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048,
- 			      SPI_NOR_QUAD_READ) },
-+	{ "mx25uw51245g", INFO(0xc2813a, 0, 64 * 1024, 1024,
-+			      SECT_4K | SPI_NOR_4B_OPCODES |
-+			      SPI_NOR_OCTAL_DTR_READ)
-+			      .fixups = &mx25uw51245g_fixups },
- };
- 
- static void macronix_default_init(struct spi_nor *nor)
--- 
-1.9.1
+I saw some discussion for patch 1, but still queued this considering
+the compatible string is already documented in the DT bindings and
+at least one of them is already being used in DT files.
 
+TL;DR: Thanks, queued.
+
+-- Sebastian
+
+> v3:
+> - sorted of_max14577_charger_dt_match
+> v2:
+> - added .of_match_table pointer
+> ---
+>  drivers/power/supply/max14577_charger.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supp=
+ly/max14577_charger.c
+> index 8a59feac6468..96f4cd1941b2 100644
+> --- a/drivers/power/supply/max14577_charger.c
+> +++ b/drivers/power/supply/max14577_charger.c
+> @@ -623,9 +623,19 @@ static const struct platform_device_id max14577_char=
+ger_id[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(platform, max14577_charger_id);
+> =20
+> +static const struct of_device_id of_max14577_charger_dt_match[] =3D {
+> +	{ .compatible =3D "maxim,max14577-charger",
+> +	  .data =3D (void *)MAXIM_DEVICE_TYPE_MAX14577, },
+> +	{ .compatible =3D "maxim,max77836-charger",
+> +	  .data =3D (void *)MAXIM_DEVICE_TYPE_MAX77836, },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, of_max14577_charger_dt_match);
+> +
+>  static struct platform_driver max14577_charger_driver =3D {
+>  	.driver =3D {
+>  		.name	=3D "max14577-charger",
+> +		.of_match_table =3D of_max14577_charger_dt_match,
+>  	},
+>  	.probe		=3D max14577_charger_probe,
+>  	.remove		=3D max14577_charger_remove,
+> --=20
+> 2.17.1
+>=20
+
+--t4rywburgusgvb6o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl7Pb2sACgkQ2O7X88g7
++ppNTQ//bZc44aH3MWRyOYyniSgeTQoZ+iZph/9Z70FlNCFCYuBw2XlsyE/4myyx
+1P1n6ynzHHCLpsiQUJYVhBxRiAf+/KYEVdniB8ZiIOapGuaqKxJvGebQQPKsRJf8
+ch+OVgpEYRwGatd9Y7bF0F5SEGKxxGEvApqkp+C5q+gL4Qt5yKg89lI9vc8pbNTL
+Rb8/tlI0GLmkF8REhB0gb0DQFukCXIb8ZBp786eNMocVn68nuISopop4p3zbh9oo
+FLWpWwaXBfZR7MeP80EAuhGrSPLXl3063FS/zgTZ4YSvNVqN3TjH+YiV2gdfrcE8
+oX9IZwHA5NY1sGo9dVt9fYIzFFv5sGP8oabdZCWlJawQDc7DZr5Lk/3kNntvsTA5
+FFQgjWor7QiprWGVtoKzjAOqeagY6GWK5KZO/nCLGqJ/nMvxadxiPzzKDRMrcskE
+aL7XlVgaPZ9oho4IboIXn8wjKvYOpICN3VO553rnzVxYLrKNBZqlEdqVFp+AGiAK
+nKg6SdVaQu6o3fY/8yNUoEe8ZmCiPOPl2DCSVSX/i5suZrHkt/n5/90DGH/DW0wo
+TbOd5eLaMzKSNkcK17TfoF2/g6ZKSUIQoaJJHXU8UDeX2xXrwPRT9t0kSoHWVy0g
+ZN+D/JMumOBi5Py6OMDPMrNscXIMZwW1AApSUBSK/EaEMcklQ98=
+=CSm8
+-----END PGP SIGNATURE-----
+
+--t4rywburgusgvb6o--
