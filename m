@@ -2,161 +2,129 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A8EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15427C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C39120B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E39A5208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WeIYDG9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgE1Gx3 (ORCPT
+        id S1726373AbgE1Gxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:53:29 -0400
-Received: from mga01.intel.com ([192.55.52.88]:23208 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725308AbgE1Gx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:53:27 -0400
-IronPort-SDR: NNwGzALuLadW46pYPgXiwVTJiHBFuRKVkx/orZqhK6vh1Aqhz4qIVjBUESS3meItjAuoy6mufm
- RTTjkHJE1r9g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 23:53:26 -0700
-IronPort-SDR: cSjsHPnMl5vLuW8G07ZkXD/BD6WGOI6Ax5qbqEpy415U8PtCxcSPIVqf9U9nXFtrsAXn9ogjz6
- FyYEI5sKHMqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="267116960"
-Received: from dmescala-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.59.102])
-  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 23:53:20 -0700
-Date:   Thu, 28 May 2020 09:53:18 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     James.Bottomley@HansenPartnership.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in, alex@guzman.io
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-Message-ID: <20200528065318.GC188849@linux.intel.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
- <1590520454.11810.40.camel@HansenPartnership.com>
- <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
- <1590521924.15108.1.camel@HansenPartnership.com>
- <37da2695fe6de09d69e27b77f3e29e068596205f.camel@linux.intel.com>
- <4d1a53596af44c7b84f97aa4ce04a53c@AUSX13MPC105.AMER.DELL.COM>
- <20200528004355.GA5877@linux.intel.com>
- <7072116bf16a45bca62913e7d8a0354e@AUSX13MPC105.AMER.DELL.COM>
+        Thu, 28 May 2020 02:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgE1Gxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:53:34 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48890C08C5C2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:53:34 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k2so1594167pjs.2
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=zbKuT3nrBchNOXLtoqggayeJJOXuYIPFyuAneEl5VZE=;
+        b=WeIYDG9i+HPcpC+T7wLyd72laBytTR0RvEwehEj45sRWw4OKQzXYNNFynXnVehee4d
+         Xz6/jjgw409iODdX8f+4nfB4ksOmJlLeRUjPatyd73dc4YdD/O6i/XN42ATrsS/CHqC2
+         Hj1KqTS/6K1rdwTjZSmW73Clu5pi1g+wvul9mqCnXjpkHb3po6GXlCny3fXX4LNkVWWh
+         +Rf0+FfG/tiIkuRFgH2XUOnYBAJUB98HYAgq5RhcSvah+qLAhflgOXk0g/sakA7NLXbh
+         qEjIntovK2YBpTUr74m+FL9V9Iy1pdy/deZKUseiSeBwZTjQlJikyz4UUCdSr+OwEHgX
+         9Dug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zbKuT3nrBchNOXLtoqggayeJJOXuYIPFyuAneEl5VZE=;
+        b=mz3sYbCNH788Ks3Vtjv9rQPREqyO4Ku+9PH3dLsgrLDeEEAAXhyYUEjzNPwn1I8308
+         q/AToLVpZ9wdLwkmNxgpX8HMhGjRM2crS3j5/pN2dSVlbHMuD9kKUIpIDuq1BuwweqYA
+         iopktNO7iYrKyTUQDnL9QZIacMniZUbOLZG3IQ9OHlGAiL1nhlHub2/WMMv+61irp+fF
+         B17TjccX8IXCtLfF3MgCMy7fRgEY8kdZ95xzPwv0a3vl63Mw/+W/ixZ1YZuIUPDDkCis
+         Fv6Wxvoy378RExSNsPHJn2yYBrwXyS7VfzCugPTOV1mitvq/CAF1845HadSkh7d0Tslu
+         ZKaQ==
+X-Gm-Message-State: AOAM531c17Dw8aVZqhL5GdmcIX7gDDd7u+axMKYd48QmBx87gKNmVSkZ
+        JOeX/4dn+Lji++I+SsQsqQ4QPg==
+X-Google-Smtp-Source: ABdhPJzZUXUIWStr7BtNwklBZN744dC8lv7AAZWH3qxAABW36QOxKh3qydTDu9mclcxQ1QgO9lDG4g==
+X-Received: by 2002:a17:90a:d317:: with SMTP id p23mr2285917pju.107.1590648813784;
+        Wed, 27 May 2020 23:53:33 -0700 (PDT)
+Received: from [10.140.6.42] ([45.135.186.12])
+        by smtp.gmail.com with ESMTPSA id g18sm3799582pfq.146.2020.05.27.23.53.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 27 May 2020 23:53:33 -0700 (PDT)
+Subject: Re: [PATCH 2/2] iommu: calling pci_fixup_iommu in iommu_fwspec_init
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        jean-philippe <jean-philippe@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+References: <1590493749-13823-1-git-send-email-zhangfei.gao@linaro.org>
+ <1590493749-13823-3-git-send-email-zhangfei.gao@linaro.org>
+ <20200527090115.GB179718@kroah.com>
+From:   Zhangfei Gao <zhangfei.gao@linaro.org>
+Message-ID: <e8293663-7fb8-ee57-0b9f-b3057b8aae7d@linaro.org>
+Date:   Thu, 28 May 2020 14:53:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7072116bf16a45bca62913e7d8a0354e@AUSX13MPC105.AMER.DELL.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200527090115.GB179718@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:59:59AM +0000, Mario.Limonciello@dell.com wrote:
-> > > > [EXTERNAL EMAIL]
-> > 
-> > What is this?
-> 
-> Something my employer's mail system automatically tags in external email.
-> 
-> My mistakes in forgetting to remove it on the response.
 
-NP, just asking :-)
 
-> > > > On Tue, 2020-05-26 at 12:38 -0700, James Bottomley wrote:
-> > > > > On Tue, 2020-05-26 at 19:23 +0000, Mario.Limonciello@dell.com wrote:
-> > > > > > > On Tue, 2020-05-26 at 13:32 -0500, Mario Limonciello wrote:
-> > > > > > > > This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
-> > > > > > > >
-> > > > > > > > This commit has caused regressions for the XPS 9560 containing
-> > > > > > > > a Nuvoton TPM.
-> > > > > > >
-> > > > > > > Presumably this is using the tis driver?
-> > > > > >
-> > > > > > Correct.
-> > > > > >
-> > > > > > > > As mentioned by the reporter all TPM2 commands are failing with:
-> > > > > > > >   ERROR:tcti:src/tss2-tcti/tcti-
-> > > > > > > > device.c:290:tcti_device_receive()
-> > > > > > > >   Failed to read response from fd 3, got errno 1: Operation not
-> > > > > > > > permitted
-> > > > > > > >
-> > > > > > > > The reporter bisected this issue back to this commit which was
-> > > > > > > > backported to stable as commit 4d6ebc4.
-> > > > > > >
-> > > > > > > I think the problem is request_locality ... for some inexplicable
-> > > > > > > reason a failure there returns -1, which is EPERM to user space.
-> > > > > > >
-> > > > > > > That seems to be a bug in the async code since everything else
-> > > > > > > gives a ESPIPE error if tpm_try_get_ops fails ... at least no-one
-> > > > > > > assumes it gives back a sensible return code.
-> > > > > > >
-> > > > > > > What I think is happening is that with the patch the TPM goes
-> > > > > > > through a quick sequence of request, relinquish, request,
-> > > > > > > relinquish and it's the third request which is failing (likely
-> > > > > > > timing out).  Without the patch, the patch there's only one
-> > > > > > > request,relinquish cycle because the ops are held while the async
-> > > > > > > work is executed.  I have a vague recollection that there is a
-> > > > > > > problem with too many locality request in quick succession, but
-> > > > > > > I'll defer to Jason, who I think understands the intricacies of
-> > > > > > > localities better than I do.
-> > > > > >
-> > > > > > Thanks, I don't pretend to understand the nuances of this particular
-> > > > > > code, but I was hoping that the request to revert got some attention
-> > > > > > since Alex's kernel Bugzilla and message a few months ago to linux
-> > > > > > integrity weren't.
-> > > > > >
-> > > > > > > If that's the problem, the solution looks simple enough: just move
-> > > > > > > the ops get down because the priv state is already protected by the
-> > > > > > > buffer mutex
-> > > > > >
-> > > > > > Yeah, if that works for Alex's situation it certainly sounds like a
-> > > > > > better solution than reverting this patch as this patch actually does
-> > > > > > fix a problem reported by Jeffrin originally.
-> > > > > >
-> > > > > > Could you propose a specific patch that Alex and Jeffrin can perhaps
-> > > > > > both try?
-> > > > >
-> > > > > Um, what's wrong with the one I originally attached and which you quote
-> > > > > below?  It's only compile tested, but I think it will work, if the
-> > > > > theory is correct.
-> > > >
-> > > > Please send a legit patch, thanks.
-> > > >
-> > > > /Jarkko
-> > >
-> > > Jarkko,
-> > >
-> > > After the confirmation from Alex that this patch attached to the end of the
-> > thread
-> > > worked, James did send a proper patch that can be accessed here:
-> > > https://lore.kernel.org/linux-
-> > integrity/20200527155800.ya43xm2ltuwduwjg@cantor/T/#t
-> > >
-> > > Thanks,
-> > 
-> > Hi thanks a lot! I did read the full discussions and agree with the
-> > conclusions as I get a patch in proper form.
-> > 
-> > Please ping next time a bit earlier. It's not that I don't want to deal
-> > with the issues quickly as possible. It's probably just that I've forgot
-> > something or missed.
-> > 
-> > /Jarkko
-> 
-> Thanks!
-> 
-> I completely forgot about it too, it was mentioned to me right after holidays
-> and I forgot to follow up and see that it got sorted.
+On 2020/5/27 下午5:01, Greg Kroah-Hartman wrote:
+> On Tue, May 26, 2020 at 07:49:09PM +0800, Zhangfei Gao wrote:
+>> Calling pci_fixup_iommu in iommu_fwspec_init, which alloc
+>> iommu_fwnode. Some platform devices appear as PCI but are
+>> actually on the AMBA bus, and they need fixup in
+>> drivers/pci/quirks.c handling iommu_fwnode.
+>> So calling pci_fixup_iommu after iommu_fwnode is allocated.
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>>   drivers/iommu/iommu.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 7b37542..fb84c42 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2418,6 +2418,10 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+>>   	fwspec->iommu_fwnode = iommu_fwnode;
+>>   	fwspec->ops = ops;
+>>   	dev_iommu_fwspec_set(dev, fwspec);
+>> +
+>> +	if (dev_is_pci(dev))
+>> +		pci_fixup_device(pci_fixup_iommu, to_pci_dev(dev));
+> Why can't the caller do this as it "knows" it is a PCI device at that
+> point in time, right?
+Putting fixup here is because
+1. iommu_fwspec has been allocated
+2. iommu_fwspec_init will be called by of_pci_iommu_init and 
+iort_pci_iommu_init, covering both acpi and dt
 
-Yeah, sure, lets try to get a fix landed asap :-)
-
-/Jarkko
+Thanks
