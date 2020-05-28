@@ -2,156 +2,121 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC2F6208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F2F208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:31:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QMaBLY1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387905AbgE1K3s convert rfc822-to-8bit (ORCPT
+        id S2387910AbgE1Kbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387891AbgE1K3W (ORCPT
+        Thu, 28 May 2020 06:31:45 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60956 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387758AbgE1Kbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:29:22 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E022C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:29:22 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jeFmk-0004AL-85; Thu, 28 May 2020 12:29:14 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 949F0100D01; Thu, 28 May 2020 12:29:13 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Don Porter <porter@cs.unc.edu>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
-        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-In-Reply-To: <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
-References: <20200511045311.4785-1-sashal@kernel.org> <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com> <20200515164013.GF29995@sasha-vm> <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com> <20200518153407.GA499505@tassilo.jf.intel.com> <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com> <87v9ksvoaq.fsf@nanos.tec.linutronix.de> <20200519164853.GA19706@linux.intel.com> <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu> <87h7w7qy18.fsf@nanos.tec.linutronix.de> <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
-Date:   Thu, 28 May 2020 12:29:13 +0200
-Message-ID: <87d06opd3a.fsf@nanos.tec.linutronix.de>
+        Thu, 28 May 2020 06:31:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SAVSRj081848;
+        Thu, 28 May 2020 05:31:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590661888;
+        bh=AEQTkef1+kNlzNaEHtQu4Pn0JuBaAy+rLXTEbnti/Us=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=QMaBLY1DCBcVNqupoVs0TM5pAtsLZi10NcXap32Gn+sTFLTJJGQAw68+uxr38Mdia
+         u98YUmnGEdA1a5nkDdbcyoW/KpjNRJv6eWG/HgYB1HDuquF/mFwhXiZx4HYNxEv/+l
+         /heW0alJzxC8z6R5D5eafJRU96x49KQZbRp2M//Q=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SAVSwP037047
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 05:31:28 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 05:30:42 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 05:30:42 -0500
+Received: from [10.250.234.195] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SAUdGW082256;
+        Thu, 28 May 2020 05:30:40 -0500
+Subject: Re: [PATCH v1 1/1] drivers: mtd: spi-nor: update read capabilities
+ for w25q64 and s25fl064k
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20200521052608.32667-1-rayagonda.kokatanur@broadcom.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <9dc3722e-497f-b092-6a97-01e0f7e3843c@ti.com>
+Date:   Thu, 28 May 2020 16:00:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200521052608.32667-1-rayagonda.kokatanur@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don,
+Hi,
 
-Don Porter <porter@cs.unc.edu> writes:
-> On 5/22/20 8:45 PM, Thomas Gleixner wrote:
-> The threat model for Graphene, and most SGX papers, is quite explicit: 
-> we assume that Intel’s CPU package, the software in the enclave, and 
-> possibly Intel’s Attestation Service (IAS) are the only trusted 
-> components.  Any other software should be assumed compromised, and one 
-> can even assume memory is physically tampered or that one has plugged in 
-> an adversarial device. It is not a question of the limitations of the 
-> kernel, the threat model assumes that the kernel is already rooted.
+On 21/05/20 10:56 am, Rayagonda Kokatanur wrote:
+> Both w25q64 and s25fl064k nor flash support QUAD and DUAL read
+> command, hence update the same in flash_info table.
+> 
 
-I'm well aware about that model and that the research is focussed on
-this.
+I am guessing both modes were tested on some platform?
+Could you add that info here?
 
-> For the community these papers are typically written to, this assumption 
-> would be well understood.  And thus it is common to see code artifacts 
-> that might emulate or even undermine security of untrusted
-> components.
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> ---
+>  drivers/mtd/spi-nor/spansion.c | 3 ++-
+>  drivers/mtd/spi-nor/winbond.c  | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spansion.c b/drivers/mtd/spi-nor/spansion.c
+> index 6756202ace4b..c91bbb8d9cd6 100644
+> --- a/drivers/mtd/spi-nor/spansion.c
+> +++ b/drivers/mtd/spi-nor/spansion.c
+> @@ -52,7 +52,8 @@ static const struct flash_info spansion_parts[] = {
+>  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "s25fl016k",  INFO(0xef4015,      0,  64 * 1024,  32,
+>  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+> -	{ "s25fl064k",  INFO(0xef4017,      0,  64 * 1024, 128, SECT_4K) },
+> +	{ "s25fl064k",  INFO(0xef4017,      0,  64 * 1024, 128,
+> +			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "s25fl116k",  INFO(0x014015,      0,  64 * 1024,  32,
+>  			     SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "s25fl132k",  INFO(0x014016,      0,  64 * 1024,  64, SECT_4K) },
+> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
+> index 17deabad57e1..2028cab3eff9 100644
+> --- a/drivers/mtd/spi-nor/winbond.c
+> +++ b/drivers/mtd/spi-nor/winbond.c
+> @@ -39,7 +39,8 @@ static const struct flash_info winbond_parts[] = {
+>  			    SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+>  			    SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+>  	{ "w25x64", INFO(0xef3017, 0, 64 * 1024, 128, SECT_4K) },
+> -	{ "w25q64", INFO(0xef4017, 0, 64 * 1024, 128, SECT_4K) },
+> +	{ "w25q64", INFO(0xef4017, 0, 64 * 1024, 128,
+> +			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "w25q64dw", INFO(0xef6017, 0, 64 * 1024, 128,
+>  			   SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+>  			   SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+> 
 
-No disagreement here.
-
-> Not appropriate for production use, but for the typical audience, this 
-> risk would be understood.  And, initially, when people started using 
-> Graphene, I checked who they were - almost exclusively SGX researchers 
-> who would have this context.  It has only been recently that the 
-> interest has grown to a level that these sorts of warnings need to be 
-> revised for a more general audience.  But the point that we should 
-> revise our readme and warnings for a more general audience is well
-> taken.
-
-The problem is that this has spread out. And it's not only Graphene.
-
-As at least two different incarnations originate from Intel written by
-two different Intel people, it's really on Intel to get the message out
-that enabling FSGSBASE behind the kernels back is a horrible idea.
-
->> It's beyond hillarious that the renewed attempt to get FSGSBASE support
->> merged does not come from the company which has the main interest to get
->> this solved, i.e Intel.
->
-> Yes!  I think we are in agreement that we expected Intel to upstream 
-> this support - it is their product. I don’t see why I am personally 
-> responsible to come to the aid of a multi-billion dollar corporation in 
-> my free time, or that it is wrong to at least let them try first and see 
-> how far they get.
-
-You surely are not responsible. It's definitely Intel's fault.
-
-> Until recently, we were doing proof-of-concept research, not product 
-> development, and there are limited hours in the day.  I also hasten to 
-> say that the product of research is an article, the software artifact 
-> serves as documentation of the experiment.  In contrast, the product of 
-> software development is software.  It takes significant time and effort 
-> to convert one to the other.  Upstreaming code is of little scientific 
-> interest.  But things have changed for our project; we had no users in 
-> 2015 and we are now un-cutting corners that are appropriate for research 
-> but inappropriate for production.  For a research artifact with an 
-> audience that knew the risks, we shipped a module because it was easier 
-> to maintain and install than a kernel patch.
-
-I understand that and with a big fat warning and documentation from
-start I wouldn't have complained so vehemently. 
-
-> Also, there is a chicken-and-egg problem here: AFAIU a kernel patch 
-> needs a userspace demonstration to motivate merging.  We can’t do a 
-> userspace demonstration without this feature.  My main interest in 
-> showing up for this discussion was to try to make the case that, 
-> compared to 2015, there is a more convincing userspace demonstration and 
-> larger population of interested users.
-
-As one of the X86 maintainers I have to say that we were perfectly
-willing to merge FSGSBASE even without the SGX background. There are
-perfect other reasons to do so.
-
-> As far as the patch and pull request, I personally think the right thing 
-> to do is add the warnings you suggest, help test this or another kernel 
-> patch, and advise users that patching their kernel is more secure than 
-> this module.  I am not in favor of fully deleting the module, in the 
-> interest of transparency and reproducibility.
-
-Fair enough.
-
-> Finally, I must rebut the claim that my research abuses public funds to 
-> advertise for Intel.  I have been working on this problem since before I 
-> knew SGX existed, and have been completely transparent regarding 
-> subsequent collaborations with Intel.  I believe that understanding the 
-> pros and cons of different techniques to harden an application against a 
-> compromised kernel is in the public interest, and my research projects 
-> have been reviewed and overseen according to standard practices at both 
-> the university and US government funding agencies.  The expectations of 
-> agencies in the US funding research are the paper, the insights, and 
-> proof-of-concept software; converting proof-of-concept software into 
-> production quality is generally considered a “nice to have”.
-
-Sorry for that innuendo. Now that my anger and general frustration about
-this whole disaster have calmed down, I surely would not write that
-again.
-
-Thanks,
-
-        Thomas
+Regards
+Vignesh
