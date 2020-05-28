@@ -2,97 +2,134 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13547C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E70DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72E02075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590677557;
-	bh=Ebx7jijUnpRPlvXA82f4pS2rM3VY7uO8uLut9YlHAhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=08y8GHbi0IJuFy0NTklGb/3xr6E8PIgrA60YTm0mJMv2BzwojOhvJ7vYmwgWVf976
-	 vdY5NsfaD3dTPsd8gCEtA6o12x2IAaRgdMhxTuaJVaZW9RNE510owHPJuCY7/b1ZQC
-	 vl+d4wEjVgam7znwrLfKgwH56jkm2/JcghDX1ptg=
+	by mail.kernel.org (Postfix) with ESMTP id 274F9208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403795AbgE1Owd (ORCPT
+        id S2403818AbgE1Owl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:52:33 -0400
-Received: from mail-il1-f171.google.com ([209.85.166.171]:46189 "EHLO
-        mail-il1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391322AbgE1Owa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:52:30 -0400
-Received: by mail-il1-f171.google.com with SMTP id h3so342667ilh.13;
-        Thu, 28 May 2020 07:52:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ovujcsIda1tQu8DKvfSwPVMWXijBMsT5Rkxd+Yb9Dnk=;
-        b=IIvWxR8xlD7wyUoW56uJAmAm5mPr7u8Axd+OQfy15opTwxB2L6qnMYL4sKSGr8VRym
-         CtSorwgKWKGWIcIB/nulXwyvHpc8Cwf2CgsOzXrv4IOFoWfjoaWOflmhZyFbvpjUFqtR
-         S1X/ex8mOjGpoNHlnDXwzUW5e+nZKSEvYXPBFuIvtXfcRO4S+dtkYUJV5ruI7ESa/ALZ
-         9AsnRceAFcsRuLFaTY5pS0SNDPCtrIG1+LV1wn7U++NqsuoEHuUqMikWkm781dM8pfSP
-         pGtbbvN+Avlcq8b+XIrhRAcVcSAbPusCv9Knwi37u/+kXurLCwEqHHbrrSCtnqRWm1GM
-         4tbQ==
-X-Gm-Message-State: AOAM533K/bW/tfgeX2UCe3JvRiRgdi0OmyoR3emniCnfGeh1TynKr+Iq
-        cTS8pL/Sgz/SVttPkzs11Q==
-X-Google-Smtp-Source: ABdhPJwJaHWbYr6tMVxKGIV9kSLXoW5j2Prp5ZBTkEyhui05nVoF73ZZHNCf37YB32pRpWomLQkBEw==
-X-Received: by 2002:a92:b10c:: with SMTP id t12mr2979301ilh.158.1590677549086;
-        Thu, 28 May 2020 07:52:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id v76sm3387048ill.73.2020.05.28.07.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:52:27 -0700 (PDT)
-Received: (nullmailer pid 44393 invoked by uid 1000);
-        Thu, 28 May 2020 14:52:26 -0000
-Date:   Thu, 28 May 2020 08:52:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Tingwei Zhang <tingwei@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-arm-msm@vger.kernel.org, coresight@lists.linaro.org,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCHv3 2/2] dt-bindings: arm: coresight: Add support to skip
- trace unit power up
-Message-ID: <20200528145226.GA44346@bogus>
-References: <cover.1589558615.git.saiprakash.ranjan@codeaurora.org>
- <7b69c9752713ce22f04688e83ec78f8aa67c63dc.1589558615.git.saiprakash.ranjan@codeaurora.org>
+        Thu, 28 May 2020 10:52:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:28867 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403790AbgE1Owh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:52:37 -0400
+IronPort-SDR: XDyuhNDsdZyK8R38J+MU/TdGAXRYiDZdZ8EeiwDHssxe74w2jX4TJwdsCBXor4Lzqpyvm3Ntt2
+ aCocO/X3WxMA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:52:24 -0700
+IronPort-SDR: EK3BBD6Ggz6zJo7E4j4JMagsNStfqspwS0XyjaL7vTKp2pfCYtq2YyTk0T4bFU8OmZQfE8C1RU
+ HDOXV+pbBKiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="376393864"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga001.fm.intel.com with ESMTP; 28 May 2020 07:52:21 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeJtQ-009Ram-6Q; Thu, 28 May 2020 17:52:24 +0300
+Date:   Thu, 28 May 2020 17:52:24 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200528145224.GT1634618@smile.fi.intel.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7b69c9752713ce22f04688e83ec78f8aa67c63dc.1589558615.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 15 May 2020 21:52:33 +0530, Sai Prakash Ranjan wrote:
-> From: Tingwei Zhang <tingwei@codeaurora.org>
+On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
+> IP core of the DW DMA controller may be synthesized with different
+> max burst length of the transfers per each channel. According to Synopsis
+> having the fixed maximum burst transactions length may provide some
+> performance gain. At the same time setting up the source and destination
+> multi size exceeding the max burst length limitation may cause a serious
+> problems. In our case the DMA transaction just hangs up. In order to fix
+> this lets introduce the max burst length platform config of the DW DMA
+> controller device and don't let the DMA channels configuration code
+> exceed the burst length hardware limitation.
 > 
-> Add "qcom,skip-power-up" property to identify systems which can
-> skip powering up of trace unit since they share the same power
-> domain as their CPU core. This is required to identify such
-> systems with hardware errata which stops the CPU watchdog counter
-> when the power up bit is set (TRCPDCR.PU).
-> 
-> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> Co-developed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+> Note the maximum burst length parameter can be detected either in runtime
+> from the DWC parameter registers or from the dedicated DT property.
+> Depending on the IP core configuration the maximum value can vary from
+> channel to channel so by overriding the channel slave max_burst capability
+> we make sure a DMA consumer will get the channel-specific max burst
+> length.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+...
+
+>  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  {
+> +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+>  
+
+Perhaps,
+
+	/* DesignWare DMA supports burst value from 0 */
+	caps->min_burst = 0;
+
+> +	caps->max_burst = dwc->max_burst;
+>  }
+
+...
+
+> +	*maxburst = clamp(*maxburst, 0U, dwc->max_burst);
+
+Shouldn't we do the same for iDMA 32-bit? Thus, perhaps do it in the core.c?
+
+>  	*maxburst = *maxburst > 1 ? fls(*maxburst) - 2 : 0;
+
+> +	if (!of_property_read_u32_array(np, "snps,max-burst-len", mb,
+> +					nr_channels)) {
+> +		for (tmp = 0; tmp < nr_channels; tmp++)
+> +			pdata->max_burst[tmp] = mb[tmp];
+
+I think we may read directly to the array. This ugly loops were introduced due
+to type mismatch. (See below)
+
+> +	} else {
+> +		for (tmp = 0; tmp < nr_channels; tmp++)
+> +			pdata->max_burst[tmp] = DW_DMA_MAX_BURST;
+> +	}
+
+And this will be effectively memset32().
+
+>  	unsigned char	nr_masters;
+>  	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
+>  	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
+> +	unsigned int	max_burst[DW_DMA_MAX_NR_CHANNELS];
+
+I think we have to stop with this kind of types and use directly what is in the
+properties, i.e.
+
+	u32 max_burst[...];
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
