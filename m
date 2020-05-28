@@ -2,114 +2,123 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F710C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAEC320B80
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:59:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="Jjh7JSIn"
+	by mail.kernel.org (Postfix) with ESMTP id 66DA2207E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590649329;
+	bh=fCUJQmwr/aKM661Ls+w61BeZtNki7as2j8d1qYO5xvU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pcVZeTF/BMu3QTMlT75r49Ue9ULhPVULesgK1AG0m0QMJg/8zCvqMfVQZVEpKKAs4
+	 hv0BCTKRfc1ekk6Sy8gZPw4AMAbgWzGrkLSnZZFd5egCUzmjNrNtH44Ltv7roOh98B
+	 kxTXiRBDWnqDnpVN2xM4s14adk+01LOymkKu7goI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725928AbgE1G7x (ORCPT
+        id S1726394AbgE1HCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE1G7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:59:52 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 788FDC05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:59:52 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id d7so1610157ote.6
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 23:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z0n00Sh0q9ugLL0M7jdyJtvzSqJImGm0OrDZwPdP+eM=;
-        b=Jjh7JSIn8/6N2Nkqi4tTtwzcgNFvf+6LPbujb4vVE8Bd7B2FMJDDYNZtaJ8wSz1zCg
-         jw2p+AKn+4Y8qErOKh+90t1VkJ3tMCkrZ01T0HMpOzSc8UnmMeiJnAZE+FbNYG7VYA+f
-         plpV9cAyYl6K1g6OKzgJpCrk4eYDwVWJ7IkJpyv0r0JJzMk/4E0dDinb9429J4hG1JXW
-         l2MfxEZ1LgjODAlygmnta442uyM/sOXN/jNfS96XuvENQl+3GKOrDAfv46Uh93pBk30M
-         wL/ThADrLKn52kAjjAopWxaCftMWuhzJtbbVTPC/zWjNHRV5k4aELUdTFpAzhHSrQKCC
-         fx0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z0n00Sh0q9ugLL0M7jdyJtvzSqJImGm0OrDZwPdP+eM=;
-        b=WXXF/FWa7T0gIZ4Hj8AGP8tLXdjBAKnT1Y6smFm71U+dc9SLmgT+kPBaHh6Xi72Pt/
-         Y3HHWLkbg6MNuDVdZrPiRnQXyEltp8Bi6P8xiN3qDw+igZk6gbBu2qLUOiRPQCjkZJcD
-         Oajj9r/XUQqsCnQcaDBe/vr7JIsZ7q/Rg79ylF+Pz+d85KV9v7SWkYPfEuof3PTSajVD
-         1EFi+Dgm4QFTD19JAGaVAq+kECxcRhs7HuWTYZ54T97yTIJdEgW+v3ewAiuAqEEzCUTs
-         b8hyBUQgn/YD9g/2jYbt47tNlm4sfORN3lF3sdlyomEYsvIxMVt02Ux7Xh34vDAElTgm
-         ekrw==
-X-Gm-Message-State: AOAM530hTShb+hpgppj7g/KCJOzdCJKkPT9nlqXwEaQ4vkmB5PG7jI2B
-        O7KVVcJ84YIXDCAx6rFosv/m1g==
-X-Google-Smtp-Source: ABdhPJybnG9kn7Fe9crlVczZYlhpR65Y825LDiyVC4sKtFMjvOcjAgUah0EBsUWFk+Pirh8OrpEMqA==
-X-Received: by 2002:a9d:124:: with SMTP id 33mr1206249otu.31.1590649191734;
-        Wed, 27 May 2020 23:59:51 -0700 (PDT)
-Received: from localhost ([51.19.80.112])
-        by smtp.gmail.com with ESMTPSA id p5sm191090oof.7.2020.05.27.23.59.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 23:59:51 -0700 (PDT)
-Date:   Thu, 28 May 2020 07:59:49 +0100
-From:   Matt Fleming <matt@codeblueprint.co.uk>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf ordered_events: Optimise event object reuse
-Message-ID: <20200528065949.GF19431@codeblueprint.co.uk>
-References: <20200526135928.946-1-matt@codeblueprint.co.uk>
- <20200527102533.GG350217@krava>
+        Thu, 28 May 2020 03:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726080AbgE1HCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 03:02:08 -0400
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1A0C207E8;
+        Thu, 28 May 2020 07:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590649327;
+        bh=fCUJQmwr/aKM661Ls+w61BeZtNki7as2j8d1qYO5xvU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Spe5F9H4rovlWiedWC5x7XaOgNYpp2k4lyKeLjqUi2bC9XLSFsO3Wrpg2AgsJMN1u
+         PYlu8xfAX9swVOnTn5UX+6/JN0BLoU+46MHRlVufIA2aEQavkB3bIfmuZu8pt02W1W
+         bGIJ98MdMsAJjMZ7XFK2SKziZuHkzRmC1G8/fjd8=
+Received: by mail-io1-f53.google.com with SMTP id f3so28896973ioj.1;
+        Thu, 28 May 2020 00:02:07 -0700 (PDT)
+X-Gm-Message-State: AOAM533cgk5WVW9XrLTD1Oqr3kZWsWlOdAdwaNQkRFaN7oHCO8Hr5ZuS
+        Z5HegFT2pbxwAOPSuBNFvcRyU4kfwIYkyjrX+O4=
+X-Google-Smtp-Source: ABdhPJzkoBeVUbPYFnX6FWRCiHse7vbYXOG2EbPeWBa1LF/vKTm/kFuEBy2trHjSjDxwnqR6GuDlCY6hdakk08TgKAE=
+X-Received: by 2002:a05:6638:a50:: with SMTP id 16mr1068249jap.71.1590649327232;
+ Thu, 28 May 2020 00:02:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200527102533.GG350217@krava>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200528090941.341ad93a@canb.auug.org.au> <20200527232257.GS1551@shell.armlinux.org.uk>
+In-Reply-To: <20200527232257.GS1551@shell.armlinux.org.uk>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 28 May 2020 09:01:55 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
+Message-ID: <CAMj1kXHRi3zUq-j30ptqUifOs+sn_h8i4ic+8xT9q1SrC+rjsw@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the arm tree with Linus' tree
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May, at 12:25:33PM, Jiri Olsa wrote:
-> On Tue, May 26, 2020 at 02:59:28PM +0100, Matt Fleming wrote:
-> > +/*
-> > + * Allocate a new event object from the free event cache.
-> > + *
-> > + * Find the first address range in the cache and carve out enough bytes
-> > + * for an ordered_event objects. The object with the lowest address is
-> > + * always returned so that subsequent allocations benefit from
-> > + * contiguous memory accesses (spatial locality).
-> > + */
-> > +static struct ordered_event *free_event_get_tree(struct ordered_events *oe)
-> > +{
-> > +	struct interval_tree_node *it;
-> > +	struct ordered_event *new;
-> > +	size_t bytes = sizeof(*new);
-> > +
-> > +	it = interval_tree_iter_first(&oe->cache.rb, 0, ULONG_MAX);
-> > +	if (!it)
-> > +		return NULL;
-> > +
-> > +	/* Has the cache memory been exhausted? */
-> > +	assert(cache_region_size(it) >= bytes);
-> > +
-> > +	new = (void *)it->start;
-> > +
-> > +	if (cache_region_size(it) == bytes) {
-> > +		interval_tree_remove(it, &oe->cache.rb);
-> > +		free(it);
-> > +	}
-> > +
-> > +	it->start += bytes;
-> 
-> this does not look right.. should this go to else path in above condition?
+On Thu, 28 May 2020 at 01:23, Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> Ard,
+>
+> Please take a look.  Obviously, whatever the resolution is going to be
+> needed when Linus opens the merge window.
+>
 
-Urgh, yes. You're right -- this should be in the else path.
+Sorry for that.
+
+I have pushed the signed tag below to resolve it. Those changes were
+already in v5.7-rc2, so I wouldn't expect this to cause more trouble.
+If you prefer, you could merge v5.7-rc2 into your tree directly
+instead.
+
+
+
+The following changes since commit d0f9ca9be11f25ef4151195eab7ea36d136084f6:
+
+  ARM: decompressor: run decompressor in place if loaded via UEFI
+(2020-05-19 18:23:22 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git
+efi-arm-resolve-conflict-v5.8-for-rmk
+
+for you to fetch changes up to 5aa87eb1b4e3f1b50ee4a42e8cd933d3d39927b3:
+
+  Merge commit 'a94691680bac' into efi-arm-no-relocate to resolve
+conflict (2020-05-28 08:50:46 +0200)
+
+----------------------------------------------------------------
+Resolve a merge conflict between v5.7-rc2 and rmk/for-next
+
+----------------------------------------------------------------
+
+Ard Biesheuvel (2):
+      efi/arm: Deal with ADR going out of range in efi_enter_kernel()
+      Merge commit 'a94691680bac' into efi-arm-no-relocate to resolve conflict
+
+Arvind Sankar (2):
+      efi/x86: Move efi stub globals from .bss to .data
+      efi/x86: Always relocate the kernel for EFI handover entry
+
+Colin Ian King (1):
+      efi/libstub/x86: Remove redundant assignment to pointer hdr
+
+Takashi Iwai (1):
+      efi/cper: Use scnprintf() for avoiding potential buffer overflow
+
+
+ drivers/firmware/efi/cper.c             |  2 +-
+ drivers/firmware/efi/libstub/efistub.h  |  2 +-
+ drivers/firmware/efi/libstub/x86-stub.c | 18 +++++++++++-------
+ 3 files changed, 13 insertions(+), 9 deletions(-)
