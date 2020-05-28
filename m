@@ -2,163 +2,90 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E50C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71D82078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:34:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LfsTq0Lx"
+	by mail.kernel.org (Postfix) with ESMTP id 379D12078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:35:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590694516;
+	bh=OWLKCU7KQGNacnB15hHj6riNDAs958qPxB6r1+7vpiA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lR3vx6mQWeaRffFb9NEmmOdGn4D/hyXMwYDy3/YrqXpFFwkARQSI/kNCmEMLXZomJ
+	 CHJqLcwTZpp7buE44NELJdHvKcRXSz8l9ByWDkSqeEeLZQTD6k+iJWCvzhuUX50JNx
+	 irtWPW0U9fN+S3RYmyBVh93EJn+FMClcHIlmozmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406623AbgE1Teq (ORCPT
+        id S2406660AbgE1TfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:34:46 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:45146 "EHLO m43-7.mailgun.net"
+        Thu, 28 May 2020 15:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406369AbgE1Ten (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:34:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590694483; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=97f0op9dV5Ke//A5mpE9oCtws3IsS0s/ZeTkOvq0s1w=; b=LfsTq0LxBrxV0fU8xJioPy+eP+dB9YDwdeHtk+vz6IUXH6fuhxlf2geOes8LbdwM7RkL6k7H
- GssNZ/pGZjVGj2Rsud8dy5gji9CJvRhTHfeRe1E68nybEwljsb0eF/lcpAZ2GJGeAAvWkKmA
- akxMrmZzqC3n0xKB82SRtnq8oPI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5ed01245809d904967be3c8a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 19:34:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9AB0CC433CA; Thu, 28 May 2020 19:34:29 +0000 (UTC)
-Received: from [10.253.14.55] (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2406647AbgE1TfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:35:08 -0400
+Received: from kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 982B2C433C6;
-        Thu, 28 May 2020 19:34:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 982B2C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-Subject: Re: [PATCH v3] bluetooth: hci_qca: Fix qca6390 enable failure after
- warm reboot
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        rjliao@codeaurora.org
-References: <1590546759-27387-1-git-send-email-zijuhu@codeaurora.org>
- <20200527164832.GH4525@google.com>
- <4c5c9fd8-e90c-c7e2-8f21-edad3c3ca7ff@codeaurora.org>
- <20200528154426.GJ4525@google.com>
-From:   Zijun Hu <zijuhu@codeaurora.org>
-Message-ID: <9c9d0e88-d817-14ce-7a09-cc89d3dd12fd@codeaurora.org>
-Date:   Fri, 29 May 2020 03:34:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 6936A2078C;
+        Thu, 28 May 2020 19:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590694507;
+        bh=OWLKCU7KQGNacnB15hHj6riNDAs958qPxB6r1+7vpiA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zNztFQPNPfdwkX38qiOCaeviJApt7/pupinol4AlwxiOHdYbDQzgoX/mP7c96myzf
+         W3nNb1HHGaBFCIuubWJFACKdwwD2uXJJz/WW7tyFgSzUxRSwbqn/4VufQAxYLf7eON
+         8nhTXLmBDCD0rWHCXMRL81JAZFgyA+0YfGDi4gao=
+Date:   Thu, 28 May 2020 12:35:05 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Ronak Doshi <doshir@vmware.com>
+Cc:     <netdev@vger.kernel.org>, "VMware, Inc." <pv-drivers@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 net-next 3/4] vmxnet3: add geneve and vxlan tunnel
+ offload support
+Message-ID: <20200528123505.25baf888@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <20200528183615.27212-4-doshir@vmware.com>
+References: <20200528183615.27212-1-doshir@vmware.com>
+        <20200528183615.27212-4-doshir@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <20200528154426.GJ4525@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 28 May 2020 11:36:14 -0700 Ronak Doshi wrote:
+> @@ -1168,13 +1220,21 @@ vmxnet3_rx_csum(struct vmxnet3_adapter *adapter,
+>  		    (le32_to_cpu(gdesc->dword[3]) &
+>  		     VMXNET3_RCD_CSUM_OK) == VMXNET3_RCD_CSUM_OK) {
+>  			skb->ip_summed = CHECKSUM_UNNECESSARY;
+> -			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp));
+> -			BUG_ON(gdesc->rcd.frg);
+> +			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
+> +			       !(le32_to_cpu(gdesc->dword[0]) &
+> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
+> +			BUG_ON(gdesc->rcd.frg &&
+> +			       !(le32_to_cpu(gdesc->dword[0]) &
+> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
+>  		} else if (gdesc->rcd.v6 && (le32_to_cpu(gdesc->dword[3]) &
+>  					     (1 << VMXNET3_RCD_TUC_SHIFT))) {
+>  			skb->ip_summed = CHECKSUM_UNNECESSARY;
+> -			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp));
+> -			BUG_ON(gdesc->rcd.frg);
+> +			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
+> +			       !(le32_to_cpu(gdesc->dword[0]) &
+> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
+> +			BUG_ON(gdesc->rcd.frg &&
+> +			       !(le32_to_cpu(gdesc->dword[0]) &
+> +				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
+>  		} else {
+>  			if (gdesc->rcd.csum) {
+>  				skb->csum = htons(gdesc->rcd.csum);
 
-
-On 5/28/2020 11:44 PM, Matthias Kaehlcke wrote:
-> On Thu, May 28, 2020 at 01:04:25PM +0800, Zijun Hu wrote:
->>
->>
->> On 5/28/2020 12:48 AM, Matthias Kaehlcke wrote:
->>> Hi Zijun,
->>>
->>> On Wed, May 27, 2020 at 10:32:39AM +0800, Zijun Hu wrote:
->>>> Warm reboot can not restore qca6390 controller baudrate
->>>> to default due to lack of controllable BT_EN pin or power
->>>> supply, so fails to download firmware after warm reboot.
->>>>
->>>> Fixed by sending EDL_SOC_RESET VSC to reset controller
->>>> within added device shutdown implementation.
->>>>
->>>> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
->>>> ---
->>>>  drivers/bluetooth/hci_qca.c | 29 +++++++++++++++++++++++++++++
->>>>  1 file changed, 29 insertions(+)
->>>>
->>>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->>>> index e4a6823..4b6f8b6 100644
->>>> --- a/drivers/bluetooth/hci_qca.c
->>>> +++ b/drivers/bluetooth/hci_qca.c
->>>> @@ -1975,6 +1975,34 @@ static void qca_serdev_remove(struct serdev_device *serdev)
->>>>  	hci_uart_unregister_device(&qcadev->serdev_hu);
->>>>  }
->>>>  
->>>> +static void qca_serdev_shutdown(struct device *dev)
->>>> +{
->>>> +	int ret;
->>>> +	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
->>>> +	struct serdev_device *serdev = to_serdev_device(dev);
->>>> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
->>>> +	const u8 ibs_wake_cmd[] = { 0xFD };
->>>> +	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
->>>> +
->>>> +	if (qcadev->btsoc_type == QCA_QCA6390) {
->>>> +		serdev_device_write_flush(serdev);
->>>> +		serdev_device_write_buf(serdev,
->>>> +				ibs_wake_cmd, sizeof(ibs_wake_cmd));
->>>> +		serdev_device_wait_until_sent(serdev, timeout);
->>>
->>> Why no check of the return value of serdev_device_write_buf() here,
->>> does it make sense to continue if sending the wakeup command failed?
->>>
->> i will correct it at v4 patch
->>> Couldn't serdev_device_write() be used instead of the _write_buf() +
->>> _wait_until_sent() combo?
->>>
->> i don't think so, serdev_device_write() is not appropriate at here.
->> serdev_device_write_wakeup() should be used to release completion hold
->> by serdev_device_write(), however @hci_serdev_client_ops doesn't use
->> serdev_device_write_wakeup() to implement its write_wakeup operation.
->> we don't want to touch common hci_serdev.c code.
-> 
-> Thanks for the clarification!
-> 
->>>> +		usleep_range(8000, 10000);
->>>> +
->>>> +		serdev_device_write_flush(serdev);
->>>
->>> I suppose the flush is done because _wait_until_sent() could have timed out.
->>> Another reason to use _device_write() (if suitable), since it returns
->>> -ETIMEDOUT in that case?
->>>
->> flush is prefixed at write operation to speed up
->> shutdown procedure in case of unexpected data injected
->> during waiting for controller wakeup.
-> 
-> hm, wouldn't it be a bug if unexpected data is injected during shutdown? It
-> seems it would be better to detect such a problem and fix the root cause,
-> rather than papering over it.
-> 
-> Also, a flush doesn't really guarantee that there is no unexpected data when
-> serdev_device_write_buf() is called, it could be injected just after returning
-> from _flush().
-> 
-actually, we never see these unexpected data injection scenario and it is impossible
-to happen theoretically. the main purpose of prefixing flush before the secondary
-writing is to make code look more perfect and harmonious visually.
-
-BTW, i have updated this patch to v5 version in order to fix these issue pointed.
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Seems fairly extreme to trigger BUG_ONs if rx descriptor doesn't
+contain valid checksum offload flags :S WARN_ON_ONCE() and ignore 
+checsum or drop packet would be more than sufficient.
