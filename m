@@ -2,177 +2,110 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2189EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 467B220814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="i8189QXo"
+	by mail.kernel.org (Postfix) with ESMTP id F314820814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:43:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590673429;
+	bh=Wp2FVjSuQdQM5nY27/MBV/jRvPYPLJEl3U9GGXuCNz8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xJSo1ZzbJZOckfSvD45yluAIDBPrbFiUfqEoImm8HD7LZf/SVUSw7aaMy2mCwENnW
+	 jG7fYxmAJQd+R/CYhVJasHiAyKTK/e81NUR0sstrLxYtX+2JxDAL12+NYguKvKebtW
+	 L1+OFsSfykQ9Jure6/qwD4gDS9z2qa1Hb4lgLg5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390521AbgE1Nni (ORCPT
+        id S2390531AbgE1Nnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:43:38 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:33920 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390468AbgE1Nng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:43:36 -0400
-X-Greylist: delayed 352 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 09:43:35 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id D92C53F3E6;
-        Thu, 28 May 2020 15:37:40 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=i8189QXo;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tWEVle6VlQ0m; Thu, 28 May 2020 15:37:36 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 4772F3F398;
-        Thu, 28 May 2020 15:37:33 +0200 (CEST)
-Received: from Gunillas-MacBook-Pro.local (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 5B030360165;
-        Thu, 28 May 2020 15:37:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1590673053; bh=hzBvGtdMVY1yFDhX6vHBpO0alm4n63ua22McT7gZosc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=i8189QXoVaRwcn+moTSIMQD7TJ7H9n0I1yFj2IMYL7PullzNred3UO8BAAnz2DeMq
-         j/VrfOha1hYBt/0oje3SsVmDflH1Wva31htryiedFwwGczZJYD1NmbCNmJNQfVSK5z
-         6PWj3YdF/MSpTB+pJ0H/4RhVF8RvgNw2PZv4Ful4=
-Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Cc:     linux-rdma@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        linaro-mm-sig@lists.linaro.org,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        linux-media@vger.kernel.org
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-3-daniel.vetter@ffwll.ch>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>
-Message-ID: <81b3a3be-b818-9e7c-e93e-ecf161bec94c@shipmail.org>
-Date:   Thu, 28 May 2020 15:36:56 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        Thu, 28 May 2020 09:43:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45276 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390468AbgE1Nnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:43:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D30820814;
+        Thu, 28 May 2020 13:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590673422;
+        bh=Wp2FVjSuQdQM5nY27/MBV/jRvPYPLJEl3U9GGXuCNz8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KL6i5+zxr7qdEUS+an9gMNhOV6YmeiVg9QCnDHeRvlTgyPT3L9oUh/ULiwgUwqC2H
+         CtIr9Q4vsabzxAkCFhJ6G+dhN7TeXGNpUbQvjENrCL8VsEA7cIJ8DjkATdZcByN1S5
+         FVm4wRNC/0Gsl38YMGjH65aDyWyjEgVQXd7AzKGM=
+Date:   Thu, 28 May 2020 14:43:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>, peron.clem@gmail.com,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        linux-samsung-soc@vger.kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] regulator: do not balance regulators without constraints
+Message-ID: <20200528134338.GD3606@sirena.org.uk>
+References: <CGME20200528131144eucas1p121b9151996fa3f780a5028f68c69d5ba@eucas1p1.samsung.com>
+ <20200528131130.17984-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512085944.222637-3-daniel.vetter@ffwll.ch>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+B+y8wtTXqdUj1xM"
+Content-Disposition: inline
+In-Reply-To: <20200528131130.17984-1-m.szyprowski@samsung.com>
+X-Cookie: Small is beautiful.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-12 10:59, Daniel Vetter wrote:
-> Design is similar to the lockdep annotations for workers, but with
-> some twists:
->
-> - We use a read-lock for the execution/worker/completion side, so that
->    this explicit annotation can be more liberally sprinkled around.
->    With read locks lockdep isn't going to complain if the read-side
->    isn't nested the same way under all circumstances, so ABBA deadlocks
->    are ok. Which they are, since this is an annotation only.
->
-> - We're using non-recursive lockdep read lock mode, since in recursive
->    read lock mode lockdep does not catch read side hazards. And we
->    _very_ much want read side hazards to be caught. For full details of
->    this limitation see
->
->    commit e91498589746065e3ae95d9a00b068e525eec34f
->    Author: Peter Zijlstra <peterz@infradead.org>
->    Date:   Wed Aug 23 13:13:11 2017 +0200
->
->        locking/lockdep/selftests: Add mixed read-write ABBA tests
->
-> - To allow nesting of the read-side explicit annotations we explicitly
->    keep track of the nesting. lock_is_held() allows us to do that.
->
-> - The wait-side annotation is a write lock, and entirely done within
->    dma_fence_wait() for everyone by default.
->
-> - To be able to freely annotate helper functions I want to make it ok
->    to call dma_fence_begin/end_signalling from soft/hardirq context.
->    First attempt was using the hardirq locking context for the write
->    side in lockdep, but this forces all normal spinlocks nested within
->    dma_fence_begin/end_signalling to be spinlocks. That bollocks.
->
->    The approach now is to simple check in_atomic(), and for these cases
->    entirely rely on the might_sleep() check in dma_fence_wait(). That
->    will catch any wrong nesting against spinlocks from soft/hardirq
->    contexts.
->
-> The idea here is that every code path that's critical for eventually
-> signalling a dma_fence should be annotated with
-> dma_fence_begin/end_signalling. The annotation ideally starts right
-> after a dma_fence is published (added to a dma_resv, exposed as a
-> sync_file fd, attached to a drm_syncobj fd, or anything else that
-> makes the dma_fence visible to other kernel threads), up to and
-> including the dma_fence_wait(). Examples are irq handlers, the
-> scheduler rt threads, the tail of execbuf (after the corresponding
-> fences are visible), any workers that end up signalling dma_fences and
-> really anything else. Not annotated should be code paths that only
-> complete fences opportunistically as the gpu progresses, like e.g.
-> shrinker/eviction code.
->
-> The main class of deadlocks this is supposed to catch are:
->
-> Thread A:
->
-> 	mutex_lock(A);
-> 	mutex_unlock(A);
->
-> 	dma_fence_signal();
->
-> Thread B:
->
-> 	mutex_lock(A);
-> 	dma_fence_wait();
-> 	mutex_unlock(A);
->
-> Thread B is blocked on A signalling the fence, but A never gets around
-> to that because it cannot acquire the lock A.
->
-> Note that dma_fence_wait() is allowed to be nested within
-> dma_fence_begin/end_signalling sections. To allow this to happen the
-> read lock needs to be upgraded to a write lock, which means that any
-> other lock is acquired between the dma_fence_begin_signalling() call and
-> the call to dma_fence_wait(), and still held, this will result in an
-> immediate lockdep complaint. The only other option would be to not
-> annotate such calls, defeating the point. Therefore these annotations
-> cannot be sprinkled over the code entirely mindless to avoid false
-> positives.
->
-> v2: handle soft/hardirq ctx better against write side and dont forget
-> EXPORT_SYMBOL, drivers can't use this otherwise.
->
-> Cc: linux-media@vger.kernel.org
-> Cc: linaro-mm-sig@lists.linaro.org
-> Cc: linux-rdma@vger.kernel.org
-> Cc: amd-gfx@lists.freedesktop.org
-> Cc: intel-gfx@lists.freedesktop.org
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Christian König <christian.koenig@amd.com>
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 
-LGTM. Perhaps some in-code documentation on how to use the new functions 
-are called.
+--+B+y8wtTXqdUj1xM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Otherwise for patch 2 and 3,
+On Thu, May 28, 2020 at 03:11:30PM +0200, Marek Szyprowski wrote:
 
-Reviewed-by: Thomas Hellstrom <thomas.hellstrom@intel.com>
+> Balancing coupled regulators must wait until the clients for all of the
+> coupled regualtors set their constraints, otherwise the balancing code
+> might change the voltage of the not-yet-constrained regulator to the
+> value below the bootloader-configured operation point, what might cause a
+> system crash.
 
+This forces every supply to have something which explicitly manages
+voltages which means that if one of the coupled supplies doesn't really
+care about the voltage (perhaps doesn't even have any explicit
+consumers) and just needs to be within a certain range of another supply
+then it'll end up restricting things needlessly.
 
+Saravana was trying to do some stuff with sync_state() which might be
+interesting here although I have concerns with that approach too:
+
+   https://lore.kernel.org/lkml/20200527074057.246606-1-saravanak@google.com/
+
+--+B+y8wtTXqdUj1xM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7PwAkACgkQJNaLcl1U
+h9Cwxwf+OSNkA77PUJZjj12IQJX7dCNdc8t8C/rK9BDvMjxY2PfFPsPlffbc0g5B
+pvA8cYyRD61MXZHFMQMcTz/padm+6CkIqNqdx3KYzBqjCe0fLhHPEzvmS0ha5rIJ
+QWjf6ItLBSBriLcqZxGaAfFa5wljpxsChd4rr2qO8+ye4BiAkfBP25XP2b33JFYI
+tJarx/8e2nvdZcQWao8WTzVcfEXoQZjYuD6OeZGME34cY+9F6MgGaPHqQbnhggC1
+0HB0AWoOb/NeGCNCB8qa5k3qClZY2UzTXSz7/qr+cprSrakjdKyBlW7PBOkOAYYc
+fJiKt3aeBIihleWiAyfBXrRfHlg89A==
+=rsUY
+-----END PGP SIGNATURE-----
+
+--+B+y8wtTXqdUj1xM--
