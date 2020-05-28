@@ -2,94 +2,105 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEEAE20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1477B20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:36:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=notmuch.email header.i=@notmuch.email header.b="kRfbURVx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YhKv3XDU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388430AbgE1LgG (ORCPT
+        id S2388437AbgE1Lg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:36:06 -0400
-Received: from mx.h4ck.space ([159.69.146.50]:33350 "EHLO mx.h4ck.space"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388326AbgE1LgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:36:04 -0400
-Date:   Thu, 28 May 2020 13:36:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=notmuch.email;
-        s=mail; t=1590665761;
-        bh=kfSMeWv1tDa6JpUtOKsModDfCKY6+eHNJv6lWWzZ+z4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=kRfbURVxI6yeCflzKOErdME/nWFhpHzVTJ+vuOXKCcz8i8i7EA1pdToUC53v9BVGn
-         BpNjXi3xWSSDT4BVtKwVa8hHP+hug0ksm7L90PCSvUtw/Cr2vZC4CQZN2BvmpQ/sMP
-         1q0k+o1a+nTPYqJUZvJ2TdygAKYbupCKu6UgwhlY=
-From:   Andreas Rammhold <andi@notmuch.email>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc:     Brendan Shanks <bshanks@codeweavers.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: umip: AMD Ryzen 3900X, pagefault after emulate SLDT/SIDT
- instruction
-Message-ID: <20200528113600.napo64uaxxexlgxj@wrt>
-References: <20200519143815.cpsd2xfx2kl3khsq@wrt>
- <2330FAB4-A6CE-49E7-921C-B7D55763BDED@codeweavers.com>
- <20200519194320.GA25138@ranerica-svr.sc.intel.com>
- <20200523021739.bbq5m6ze63ctouh6@wrt>
- <20200526133318.GA3796@ranerica-svr.sc.intel.com>
+        Thu, 28 May 2020 07:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388326AbgE1LgX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:36:23 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4248C05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:36:23 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 131so5050106pfv.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fad3eBoL47RObuH9V/3Rnk6J6MR5mdA+fugdf/ETXNc=;
+        b=YhKv3XDUoqOrGa+J+dM4F35V/jbDpzsQw+fhjNAemqGieG8O6zJalxdN0GFNZxUr1s
+         p+dYtlkPDBinp1enyDSAHAGl+4mNcrnmSRsVlUbWihTk5Z/hS0X11nMDxGPYMuScPy7M
+         qBmsvxhz7tl/zMI0nkZ4u9+WKpG4pJydU7z5s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fad3eBoL47RObuH9V/3Rnk6J6MR5mdA+fugdf/ETXNc=;
+        b=jsyUc0OxdKvvkQgU30YHXPPDYP2C3VFxY0fwbrTD6CUm+8OhiuVpwzuR3hJiX1RTsA
+         KEZcAhGZqAlPMCzT8nvC+aSkhoepL0dlE2l1pxrwC47j5KycAfT06ewvhwIAiRexDCPd
+         2vw8qyHi7uvqTqx2GS0bOcCxvH0y3sdNsFlMtP4V0YbDqTMQuJz2zCNzOI7voND4Ut2r
+         RFea4n+9SgYlMfGBITFofeu01cIuay8JLKUqKeZ92oXAw7QFoJCUdXb8b3ySk2NG2/L8
+         aH6fFggyDKnkjPduyOg+Pqwaz7vK8AOUz18YGcsSv6fEKeeD6GRn3bNUGe9oue0i/Va2
+         Gpbg==
+X-Gm-Message-State: AOAM530RvZOUZHrADibaZ5xLccVMhwb2ke+ttlqMirXD70PwdmZcCW9b
+        1gxDAv7DHGlcj57GnBusGQanugIaWuk=
+X-Google-Smtp-Source: ABdhPJznEatG4DCJyfFLr3qB24QWKZDsfngfnonMleJEWcPLQpUaXU/lK0U8kCCbTFJPwJvn9MibAQ==
+X-Received: by 2002:a63:d102:: with SMTP id k2mr2530181pgg.178.1590665782413;
+        Thu, 28 May 2020 04:36:22 -0700 (PDT)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
+        by smtp.gmail.com with ESMTPSA id g7sm4519961pjs.48.2020.05.28.04.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 04:36:21 -0700 (PDT)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@linux.intel.com,
+        Prashant Malani <pmalani@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tzung-Bi Shih <tzungbi@google.com>
+Subject: [PATCH 0/4] platform/chrome: typec: Add mux support
+Date:   Thu, 28 May 2020 04:36:01 -0700
+Message-Id: <20200528113607.120841-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200526133318.GA3796@ranerica-svr.sc.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06:33 26.05.20, Ricardo Neri wrote:
-> On Sat, May 23, 2020 at 04:17:39AM +0200, Andreas Rammhold wrote:
-> > On 12:43 19.05.20, Ricardo Neri wrote:
-> > > I have a patch for this already that I wrote for testing purposes:
-> > > https://github.com/ricardon/tip/commit/1692889cb3f8accb523d44b682458e234b93be50
-> > > Perhaps it can be used as a starting point? Not sure what the spoofing
-> > > value should be, though. Perhaps 0?
-> > 
-> > I tried the above patch (in modified/rebased version; hope that didn't
-> > kill it [0]). The results are negative, as without the patch.
-> 
-> Ah. My patch above is based on a rather old kernel. There is a check in
-> fixup_umip_exception() for SLDT and STR. I think this causes the
-> exception you see. Perhaps you can try by removing such check:
-> 
-> diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-> @@ -383,10 +389,6 @@ bool fixup_umip_exception(struct pt_regs *regs)
->  	umip_pr_warn(regs, "%s instruction cannot be used by applications.\n",
->  			umip_insns[umip_inst]);
-> 
-> -	/* Do not emulate (spoof) SLDT or STR. */
-> -	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT)
-> -		return false;
-> -
-> 	umip_pr_warn(regs, "For now, expensive software emulation returns the result.\n");
-> 
-> 	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size,
-> 
-> You would still need my old patch.
+This series adds mux control support for USB and DP alternate modes on
+devices using the cros-ec-typec driver with Type C switch handles
+provided by firmware bindings.
 
-Thanks, that works for my application.
+The first patch imports some recent updates to the
+EC_CMD_USB_PD_MUX_INFO bit fields from the Chrome EC
+code base[1], while the rest add the aforementioned functionality.
 
-Regards,
+This series depends on the following patch :
+https://lkml.org/lkml/2020/5/19/1219
 
-Andi
+[1] : https://chromium.googlesource.com/chromiumos/platform/ec/+/refs/heads/master/include/ec_commands.h
+
+Prashant Malani (4):
+  platform/chrome: cros_ec: Update mux state bits
+  platform/chrome: typec: Register PD CTRL cmd v2
+  platform/chrome: typec: Add USB mux control
+  platform/chrome: typec: Support DP alt mode
+
+ drivers/platform/chrome/cros_ec_typec.c       | 190 ++++++++++++++++--
+ .../linux/platform_data/cros_ec_commands.h    |  14 +-
+ 2 files changed, 187 insertions(+), 17 deletions(-)
+
+-- 
+2.27.0.rc0.183.gde8f92d652-goog
+
