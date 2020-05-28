@@ -2,239 +2,103 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81579C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB4AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57EB0207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9076920721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="F7LTjjfA"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="etNjUDmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405443AbgE1RO6 (ORCPT
+        id S2405456AbgE1RQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39686 "EHLO
+        Thu, 28 May 2020 13:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405400AbgE1RO4 (ORCPT
+        with ESMTP id S2405372AbgE1RQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:14:56 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A601C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:14:55 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t16so11835221plo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:14:55 -0700 (PDT)
+        Thu, 28 May 2020 13:16:13 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2EADC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:16:11 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id g18so629914qtu.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:16:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mTrbZNR8Zw2bMCtvn88e5CLJgJyltUs0UJYDwI4z6zA=;
-        b=F7LTjjfAl5IaK7NnHh5FAPCqT2WkR8FlKsddgFAAphw6ED1AseXvigpv8UfgBj1nGj
-         wmoECd117Aw4JMgQMFss2bCtx6Sh0+s9nAF1+6jUy8yIWz+lQNlUwYDPfQ1qPNea0bNh
-         XVoV5cLLeMKyFtyd1byeZ3MuS0ArsPq30ort7StmNreonCY+hwmXZeuRFKTlPpNdZyau
-         Gmnk6093J7O5sX/9x8pb5ARB6Ir1MN9SRWKWK37Xc/TJUJ1+lOwCKtr8ndy6BE6KO/HV
-         q0RvHllZc6kmcA+Q719fGVrp5bwyOVbNSI2PFbC7ZXFfcqdzjKd8L8QggcxTVAj6l9Dx
-         +GFQ==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=atthkvZPtmuffgqI3U1N92nhhfohScsuYraFPx1a33w=;
+        b=etNjUDmYG/GoUh6tlvW65FzID7MhbLN6fmu5w4+qhKKoJPNlpoymnwadrQfmgoqUiQ
+         lRYk6V4zjlAp1JoiKlZG7EnTqD9m/LUK2LUxhTjK6XSYT1Qm5Wm13M/uiw0pbGdyJz84
+         G4lqCSxJgN5+v+05NyelPzHo0kpcv6Ih5o4w6a6n68b318tTQF7/zNt8STf2OTad3Cx6
+         c+5+5OIB9NVG04+b0XA4N+rWS376QGJKQC45cnbq29In09VIZYjftadLqnIw8Jro0HHB
+         Uzpsy0cJlADEg5EH40MR2pIpshdxFwaahEEMvaLa2M1R8R0GrhmwOUGvKvbY4ZaT5aVC
+         /H2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mTrbZNR8Zw2bMCtvn88e5CLJgJyltUs0UJYDwI4z6zA=;
-        b=GEorgpyZ0wazDsm1HaK2ofxsnJLbk701gNGsdFaBtJTWAcfEV47JGuoMyYnoRLCFqq
-         ir3CqWteSlcP7ngMqkpAptYEk0lk2l04ewxPcvtj6rYuvb8tDn00+7W3iKfg3H1YDoOY
-         +getJKkyIQCwkjvMZScJ9VGhTlu+RbX3W3tFlWyGpN4Q/X9cp2Gg6bYCpSRpmaGmSw0Y
-         tqaAcyslbm3kgK1VaY7u9z/3qysAs4xH8r9ioPmMVWBUbAyP5115XJj4ctbuGFHAQz9Z
-         Mv8YzozpHXbs7yaXQo0iyfCrUJqpZirWEfH7kDaLHu3Mq2Kh/yHCrqy9HATXe3sb8Sk6
-         2eMw==
-X-Gm-Message-State: AOAM532MfR2EhR4IIlvvJ/Kxgsa46/rhu6LDoDlJqxfo6UkAo8TtCJIs
-        f41VqM7LxSy0zC9HWVf18Cts0w==
-X-Google-Smtp-Source: ABdhPJyjsxFsx6BuD+kv/XrY3yZGUMEPgE8RKLMKN0gcI9ykVdwgJ97ySsoaV+D9uNKGT3HGHlPjxg==
-X-Received: by 2002:a17:902:6943:: with SMTP id k3mr4525890plt.81.1590686094433;
-        Thu, 28 May 2020 10:14:54 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t201sm2202482pfc.104.2020.05.28.10.14.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 10:14:53 -0700 (PDT)
-Subject: Re: [PATCHSET v5 0/12] Add support for async buffered reads
-To:     sedat.dilek@gmail.com
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <CA+icZUWfX+QmroE6j74C7o-BdfMF5=6PdYrA=5W_JCKddqkJgQ@mail.gmail.com>
- <bab2d6f8-4c65-be21-6a8e-29b76c06807d@kernel.dk>
- <CA+icZUWbGGXRaRt1yyXiFXR5y0NkMxzkWdnVrmADCbAajSdEmw@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <fd169130-6ac4-f135-d85f-56daa25c8c9f@kernel.dk>
-Date:   Thu, 28 May 2020 11:14:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=atthkvZPtmuffgqI3U1N92nhhfohScsuYraFPx1a33w=;
+        b=kSSh/MbuZMsb2IK9sZVZeftT+xuSl8GdfPFBUyHt24cgG3m4LHfQrbjf97BYErxXVi
+         P9w8jRHoFvZnEs6USmMBtqbRcz25qcRpbpkP+PTx7inxC0l6GCXcswTzhwx22w89sLt3
+         6Np4XYqivgiRDBIyvHjpt2B7DYwk6hlq+xQ0ju0VjiA6F/HCAM1HADaH2NeIjcxCY6hJ
+         p5/nO40orAQks9ZEHL9nFS4TGrBsVs8UDfawR8Zlc/JKVKISgWxcy/C4zWbm3DAcUZ81
+         6YRSXSNJae2+Qkss4Sp4xqUhfGOxwZs+hZjqO2DzIPRHUqX5+WZgHSFcs/IzPQaVcEGH
+         n09Q==
+X-Gm-Message-State: AOAM530dEngKWJZ9dYtF1M5FY5c/ns5x153tcZJOCbQKJOYM+8vDmdK/
+        FC1KaZPB9em3c9hzwYf2SaeL3g==
+X-Google-Smtp-Source: ABdhPJwCS97f+Iq6+tL1/KnrLqj2AxEmCpMkEGzROblPiVDpZcR44Tj9rcHcOqb5SgmD+uPHIgwdJg==
+X-Received: by 2002:ac8:7112:: with SMTP id z18mr4329049qto.274.1590686171203;
+        Thu, 28 May 2020 10:16:11 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:2535])
+        by smtp.gmail.com with ESMTPSA id 10sm5614427qkv.136.2020.05.28.10.16.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 10:16:10 -0700 (PDT)
+Date:   Thu, 28 May 2020 13:15:43 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yafang Shao <laoar.shao@gmail.com>, Tejun Heo <tj@kernel.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: memcontrol: fix an unused-function warning
+Message-ID: <20200528171543.GB69521@cmpxchg.org>
+References: <20200528095640.151454-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <CA+icZUWbGGXRaRt1yyXiFXR5y0NkMxzkWdnVrmADCbAajSdEmw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528095640.151454-1-arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 11:12 AM, Sedat Dilek wrote:
-> On Thu, May 28, 2020 at 7:06 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 5/28/20 11:02 AM, Sedat Dilek wrote:
->>> On Tue, May 26, 2020 at 10:59 PM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>> We technically support this already through io_uring, but it's
->>>> implemented with a thread backend to support cases where we would
->>>> block. This isn't ideal.
->>>>
->>>> After a few prep patches, the core of this patchset is adding support
->>>> for async callbacks on page unlock. With this primitive, we can simply
->>>> retry the IO operation. With io_uring, this works a lot like poll based
->>>> retry for files that support it. If a page is currently locked and
->>>> needed, -EIOCBQUEUED is returned with a callback armed. The callers
->>>> callback is responsible for restarting the operation.
->>>>
->>>> With this callback primitive, we can add support for
->>>> generic_file_buffered_read(), which is what most file systems end up
->>>> using for buffered reads. XFS/ext4/btrfs/bdev is wired up, but probably
->>>> trivial to add more.
->>>>
->>>> The file flags support for this by setting FMODE_BUF_RASYNC, similar
->>>> to what we do for FMODE_NOWAIT. Open to suggestions here if this is
->>>> the preferred method or not.
->>>>
->>>> In terms of results, I wrote a small test app that randomly reads 4G
->>>> of data in 4K chunks from a file hosted by ext4. The app uses a queue
->>>> depth of 32. If you want to test yourself, you can just use buffered=1
->>>> with ioengine=io_uring with fio. No application changes are needed to
->>>> use the more optimized buffered async read.
->>>>
->>>> preadv for comparison:
->>>>         real    1m13.821s
->>>>         user    0m0.558s
->>>>         sys     0m11.125s
->>>>         CPU     ~13%
->>>>
->>>> Mainline:
->>>>         real    0m12.054s
->>>>         user    0m0.111s
->>>>         sys     0m5.659s
->>>>         CPU     ~32% + ~50% == ~82%
->>>>
->>>> This patchset:
->>>>         real    0m9.283s
->>>>         user    0m0.147s
->>>>         sys     0m4.619s
->>>>         CPU     ~52%
->>>>
->>>> The CPU numbers are just a rough estimate. For the mainline io_uring
->>>> run, this includes the app itself and all the threads doing IO on its
->>>> behalf (32% for the app, ~1.6% per worker and 32 of them). Context
->>>> switch rate is much smaller with the patchset, since we only have the
->>>> one task performing IO.
->>>>
->>>> Also ran a simple fio based test case, varying the queue depth from 1
->>>> to 16, doubling every time:
->>>>
->>>> [buf-test]
->>>> filename=/data/file
->>>> direct=0
->>>> ioengine=io_uring
->>>> norandommap
->>>> rw=randread
->>>> bs=4k
->>>> iodepth=${QD}
->>>> randseed=89
->>>> runtime=10s
->>>>
->>>> QD/Test         Patchset IOPS           Mainline IOPS
->>>> 1               9046                    8294
->>>> 2               19.8k                   18.9k
->>>> 4               39.2k                   28.5k
->>>> 8               64.4k                   31.4k
->>>> 16              65.7k                   37.8k
->>>>
->>>> Outside of my usual environment, so this is just running on a virtualized
->>>> NVMe device in qemu, using ext4 as the file system. NVMe isn't very
->>>> efficient virtualized, so we run out of steam at ~65K which is why we
->>>> flatline on the patched side (nvme_submit_cmd() eats ~75% of the test app
->>>> CPU). Before that happens, it's a linear increase. Not shown is context
->>>> switch rate, which is massively lower with the new code. The old thread
->>>> offload adds a blocking thread per pending IO, so context rate quickly
->>>> goes through the roof.
->>>>
->>>> The goal here is efficiency. Async thread offload adds latency, and
->>>> it also adds noticable overhead on items such as adding pages to the
->>>> page cache. By allowing proper async buffered read support, we don't
->>>> have X threads hammering on the same inode page cache, we have just
->>>> the single app actually doing IO.
->>>>
->>>> Been beating on this and it's solid for me, and I'm now pretty happy
->>>> with how it all turned out. Not aware of any missing bits/pieces or
->>>> code cleanups that need doing.
->>>>
->>>> Series can also be found here:
->>>>
->>>> https://git.kernel.dk/cgit/linux-block/log/?h=async-buffered.5
->>>>
->>>> or pull from:
->>>>
->>>> git://git.kernel.dk/linux-block async-buffered.5
->>>>
->>>
->>> Hi Jens,
->>>
->>> I have pulled linux-block.git#async-buffered.5 on top of Linux v5.7-rc7.
->>>
->>> From first feelings:
->>> The booting into the system (until sddm display-login-manager) took a
->>> bit longer.
->>> The same after login and booting into KDE/Plasma.
->>
->> There is no difference for "regular" use cases, only io_uring with
->> buffered reads will behave differently. So I don't think you have longer
->> boot times due to this.
->>
->>> I am building/linking with LLVM/Clang/LLD v10.0.1-rc1 on Debian/testing AMD64.
->>>
->>> Here I have an internal HDD (SATA) and my Debian-system is on an
->>> external HDD connected via USB-3.0.
->>> Primarily, I use Ext4-FS.
->>>
->>> As said above is the "emotional" side, but I need some technical instructions.
->>>
->>> How can I see Async Buffer Reads is active on a Ext4-FS-formatted partition?
->>
->> You can't see that. It'll always be available on ext4 with this series,
->> and you can watch io_uring instances to see if anyone is using it.
->>
+On Thu, May 28, 2020 at 11:56:26AM +0200, Arnd Bergmann wrote:
+> On NOMMU kernels without CONFIG_MEMCG_KMEM, we now get a harmless
+> warning about an unused function:
 > 
-> Thanks for answering my questions.
+> mm/memcontrol.c:2595:13: error: unused function 'cancel_charge' [-Werror,-Wunused-function]
 > 
-> How can I "watch io_uring instances"?
+> Hide this function in a matching #ifdef.
+> 
+> Fixes: 5bd144bf764c ("mm: memcontrol: drop unused try/commit/cancel charge API")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-You can enable io_uring tracing:
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-# echo 1 > /sys/kernel/debug/tracing/events/io_uring/io_uring_create/enable
-# tail /sys/kernel/debug/tracing/trace
-
-and see if you get any events for setup. Generally you can also look for
-the existence of io_wq_manager processes, these will exist for an
-io_uring instance.
-
-> FIO?
-> Debian has fio version 3.19-2 in its apt repositories.
-> Version OK?
-
-Yeah that should work.
-
--- 
-Jens Axboe
-
+Thanks Arnd!
