@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2611EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D30A9215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E750420776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667211;
-	bh=GELtTFp9ruuM9aY2aXlJwocB5WM+c31I0FreOGmeJjo=;
+	s=default; t=1590667223;
+	bh=k001eEf5CLExcWv0jpkcsGYlWKNLQH8dqQpCxSJ/W54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j4sASLQMatIMrwHY75Z2EGLhwua3e55P74ZA4DFNw2cRZzDRAyKWgNPECz/582bN+
-	 ZDcaJFrzFDkKCQnMFTRSoqO9lRnxk5/mG5exEPG32LZHYgTZg98MWcwwvqx5iygIHd
-	 8ZNQ/4cAdZY/pFwv1IAP8cQYC/gA6prKTy5lqAlg=
+	b=OP38qgU68z805ANs0bEbgkmhQ4UP3eXLnct2p9f7HuoQ7vFKINOE0mzNwfKWVi0JF
+	 nNhLg2/8vjFZeBOMWl+WTTLpvWtYzzO3Qak/dS5wphikxStVL9BG4aG4L7OAznSj/8
+	 8IftEGUoyiJHTNGwUFWguQQ1jvtYtt9RX1A3+G9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389378AbgE1MAL (ORCPT
+        id S2389391AbgE1MAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51038 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389185AbgE1L6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:58:10 -0400
+        id S2389181AbgE1L6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:58:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD3C21655;
-        Thu, 28 May 2020 11:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8CD21741;
+        Thu, 28 May 2020 11:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667090;
-        bh=GELtTFp9ruuM9aY2aXlJwocB5WM+c31I0FreOGmeJjo=;
+        s=default; t=1590667089;
+        bh=k001eEf5CLExcWv0jpkcsGYlWKNLQH8dqQpCxSJ/W54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u2VKOXTF86B3FXIJkvTXLMZRYe6+1QdkI8HLYyxok2rKDh65zY+/CwJITKwaOqZzA
-         MU+8V5C/XayQWOc2VYJKRyIA1SOsXpU7frtDsxxQeRkBjMfVdnN8c2bM9ziEqUA3yW
-         L9I9Qg1fpgueZgK/NvwRAQeXdL8dwHqxtCxq6QWw=
+        b=KHS9k62J9MLBY1MxLWUuXjS0HAHcTznAZLGfwYtX7icq+xFB09Y2jUm6BwvKcQV+D
+         bSfbdS7rBvP8jRYQ6dhY6IQBPDdAOmEoRRb7LxcE0WH7j/dSeelRoMkltqz63N0rHv
+         iPIKApE3CgyUpM/32JZXGH1S4+7fc7rFbyWXCXSI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Qiushi Wu <wu000273@umn.edu>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 8/9] net/mlx4_core: fix a memory leak bug.
-Date:   Thu, 28 May 2020 07:57:59 -0400
-Message-Id: <20200528115800.1406703-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 7/9] net: sun: fix missing release regions in cas_init_one().
+Date:   Thu, 28 May 2020 07:57:58 -0400
+Message-Id: <20200528115800.1406703-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115800.1406703-1-sashal@kernel.org>
 References: <20200528115800.1406703-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,34 +62,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit febfd9d3c7f74063e8e630b15413ca91b567f963 ]
+[ Upstream commit 5a730153984dd13f82ffae93d7170d76eba204e9 ]
 
-In function mlx4_opreq_action(), pointer "mailbox" is not released,
-when mlx4_cmd_box() return and error, causing a memory leak bug.
-Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
-free this pointer.
+In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
+was not released after a call of the function “pci_write_config_byte”
+failed. Thus replace the jump target “err_write_cacheline” by
+"err_out_free_res".
 
-Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
+Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
 Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/sun/cassini.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
-index 9af0887c8a29..fe9dc1b3078c 100644
---- a/drivers/net/ethernet/mellanox/mlx4/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
-@@ -2704,7 +2704,7 @@ void mlx4_opreq_action(struct work_struct *work)
- 		if (err) {
- 			mlx4_err(dev, "Failed to retrieve required operation: %d\n",
- 				 err);
--			return;
-+			goto out;
+diff --git a/drivers/net/ethernet/sun/cassini.c b/drivers/net/ethernet/sun/cassini.c
+index 062bce9acde6..bfe7b55f9714 100644
+--- a/drivers/net/ethernet/sun/cassini.c
++++ b/drivers/net/ethernet/sun/cassini.c
+@@ -4980,7 +4980,7 @@ static int cas_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 					  cas_cacheline_size)) {
+ 			dev_err(&pdev->dev, "Could not set PCI cache "
+ 			       "line size\n");
+-			goto err_write_cacheline;
++			goto err_out_free_res;
  		}
- 		MLX4_GET(modifier, outbox, GET_OP_REQ_MODIFIER_OFFSET);
- 		MLX4_GET(token, outbox, GET_OP_REQ_TOKEN_OFFSET);
+ 	}
+ #endif
+@@ -5151,7 +5151,6 @@ err_out_iounmap:
+ err_out_free_res:
+ 	pci_release_regions(pdev);
+ 
+-err_write_cacheline:
+ 	/* Try to restore it in case the error occurred after we
+ 	 * set it.
+ 	 */
 -- 
 2.25.1
 
