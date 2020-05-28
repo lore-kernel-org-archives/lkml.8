@@ -2,119 +2,152 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8D320888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F3920888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cglb7SE0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kHBw8hU4";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="iLHhQKjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbgE1Lja (ORCPT
+        id S2388461AbgE1Ll4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:39:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28940 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388392AbgE1Lj2 (ORCPT
+        Thu, 28 May 2020 07:41:56 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:59765 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388441AbgE1Llz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:39:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590665966;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tU/P76gUgCUjIYLmfhLoBs07Rafiz+cVEPVVpjAFAAk=;
-        b=Cglb7SE0sTjcpsSBBGlNHAR5TN4Lc4W8bzWMS1OyFTXs0qEJwCXz1Cyy/DoXiPAC4I/RTc
-        E+Uoke5q3hJrg5aUAcz1xmCm2jdzoRb9xIMKLhqZ1UTfBa3fM4i1LbM+lgXsYL+Mn2iJ30
-        8ap2dJzkXwjzaAK/L7ArSbvzKOHQ0II=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-XYRcPQTxM6iHkNXUMsGsmQ-1; Thu, 28 May 2020 07:39:25 -0400
-X-MC-Unique: XYRcPQTxM6iHkNXUMsGsmQ-1
-Received: by mail-ed1-f70.google.com with SMTP id c10so11361034edw.17
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:39:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=tU/P76gUgCUjIYLmfhLoBs07Rafiz+cVEPVVpjAFAAk=;
-        b=mc2YudK+ySJ7KIyN4swZQoP9mseTK93kdfyxxtjHmYxGeRBL7egO5vexNUL2nLI8kz
-         XnBZ+LC0mwWVGDcCUoBNX+GSW+d8rxdJjFr/pDLwnS/0dVbbWHzDs/g6pwtQEXgEFWJ9
-         0QflzcVCJrnwhXJ+Bpgi/BAnPDjMzLchbRFN+R5BJKkyvs86PyDJMmqhYrkl1OjanIZM
-         cTag5ZMzAv6rweAEAn7XaQEBVJWUNfcLIFhTQAZ0Gz6MRXk4Wt6B+nQBerGTMXBaHptJ
-         CAmbNE0Dw6GyrfhdOD4S2AAYY9ySOnobp+JlNE71PtpMOxS/uwXb02yKn9VWIEKhkXsI
-         MjjA==
-X-Gm-Message-State: AOAM531YGQeON7P4RBX4dga+Tho3fxWhC+ICScEMuVBYgY10VCPkkAzb
-        NzdRCfqfOcy0CQNDe3KgN7Y/0ybbDNYevaGLL0WwYcMgjlt1WnPo5E2nQ2KQWql2hF8jYuPmJqn
-        dC/01tOi8jtQZxBT7WMOKcauM
-X-Received: by 2002:aa7:c887:: with SMTP id p7mr2576191eds.269.1590665963639;
-        Thu, 28 May 2020 04:39:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyAC0sFE6cKf2uAh541PEavwlw1Pez2X0cPDx1gikDvelrU7CmH5jbuidUWxsG3tn4K+fXDuQ==
-X-Received: by 2002:aa7:c887:: with SMTP id p7mr2576164eds.269.1590665963456;
-        Thu, 28 May 2020 04:39:23 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id i4sm4671308eja.92.2020.05.28.04.39.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 04:39:22 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/10] KVM: x86: acknowledgment mechanism for async pf page ready notifications
-In-Reply-To: <f9d32c25-9167-f1a7-cda7-182a785b92aa@redhat.com>
-References: <20200525144125.143875-1-vkuznets@redhat.com> <20200525144125.143875-7-vkuznets@redhat.com> <f9d32c25-9167-f1a7-cda7-182a785b92aa@redhat.com>
-Date:   Thu, 28 May 2020 13:39:21 +0200
-Message-ID: <87wo4w2sra.fsf@vitty.brq.redhat.com>
+        Thu, 28 May 2020 07:41:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590666115; x=1622202115;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=JUbfJ/grhJxrmxMI/oPm120rZDkN7Hmpw01cYXHJ9dY=;
+  b=kHBw8hU4AGXsn8eFYbwF238euhJ2wQss3l+oogo+GSFVA7m/7vnSa4kl
+   w5AIKHFFKLmRTdC0AeBZbc6U3U2jbcONgYMjlLDAvL5yojkXuZx/Qo3Qf
+   pRFb/HO4IzZLjVAOTxVSV4ZCEX5fhVVJ+sOqKzScACvonI317oAgjUMxA
+   d7bBejUwYX4k066nxiUHtGvgtoTsLo6d0ADoW3Bj3J6ahHpJ+Vaq8pYip
+   IxTa+IT2VF7kUyjBm4mYV1MMlt/EepcAWaTJ3ILWeXCLmwrE5EDyNaGI3
+   J2iGumI4n2G3CCBTOxC9d1Mei7AkLgg7/3dstfxwkpYg70J/Cz9n1xKNh
+   w==;
+IronPort-SDR: a7pGp6+oj069KOC7r5VWT1Htpwy8sY0tMJV6RYrQoWE1/BjWXs++i3N2cMbUndK9A9eay6XVMU
+ L/54xWWPEs655iKicgb2+d3bT8RcAH5uBnDFVq/dST40szQBHzbllKaoYcj6ct0vCJhRnlQL1U
+ 2xwYvg/o3MsknkyluVGzL8s1j4ouunefDBIfuVJdfygBG+oJpditYWpNEuqZmfucw3y6qUFFjy
+ FrGqMydsvE8yFaWPjb6rqXdKx/sC57OLSdixCYOzIclJPobtNMhJE20oZ82fUe5n6GYD1jBoy0
+ z3w=
+X-IronPort-AV: E=Sophos;i="5.73,444,1583218800"; 
+   d="scan'208";a="76630723"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 May 2020 04:41:54 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 28 May 2020 04:41:53 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 28 May 2020 04:41:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oftR6w/RzFrsGudlG2dnkuTW1NHPfHwa0tvNSfuJuFrpV9lQvU6uviIZJBmrwidSBk0jZvR04bQZkLpkKZdg0vTAJFJYL5pwqjWP7YZss1VHM3IcywbtH6ZHA/nocjmparBJXqSWscGVUSyUcKrOYEc8bh3maIG2ImDRgBb2IaHSsihQFDbvV8v0VIhBYboidlSAHEdpTdpUB8CRxNk9RZ56FIkJk/Elts2vdkmAYJ5G0E6FgubS/Xs8TZyqJoETqxhscABlMVc18FxQPl1CNYFUyy1FvsVFfibgeZmWDsW1wZ0uIK7JnbBwjuZMFeh05u0HvZQMCxTyDfEY2/Qq6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aeTYXWsxjySzl0PIFbR/C1JOTy3mq7Z/MvfNUykkXco=;
+ b=gwrTB7I4C6JqfG7/g8e8GL91JJANBEzxJj4ud0x13BZC8xFO/9LsyeavZG/8RYp0AmiOO/bxLnpcx0PnOSfVwUVMn2skcGwCb/EBt08th1PP1PpreZ763YkLOiJrIdJNOcQEwZnLgGF48lgRMumA0RhZ5OAYt50svgzKPcyLKKcS3nHgQaPisXjJ5reNSbD8bb6Rfr7XjNEOfcnS6qkRDrQ3z5nuktEQSbzLnJN1IqtxqTKwxlsBs7JejvfRdRDdQj5KCRNlKlFyb4URpttWvaQmWP/n0gLf39MLg1l5jXdlI4pQsWpiSnA8cCs+IvemNSspXpN725A12j4uGrM0xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aeTYXWsxjySzl0PIFbR/C1JOTy3mq7Z/MvfNUykkXco=;
+ b=iLHhQKjsmQLo83MhYUDwPtsl7Q9mDQWa1SReGHKBZDB7tLY0VNdq7TAkBbG0z9y1jOH1HrlhhA4oHekLLwbbeBmfsCb7rFtF5kOfBIjnXNiiuWX5ffMmABUvZm9gMvoYd/JOL+ohR5E+IYdTnwQcRgYHmGGOijlyqHnmWL15iiM=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB3991.namprd11.prod.outlook.com (2603:10b6:a03:186::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Thu, 28 May
+ 2020 11:41:52 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 11:41:52 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>
+CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH v2 1/6] mtd: spi-nor: cadence-quadspi: Make driver
+ independent of flash geometry
+Thread-Topic: [PATCH v2 1/6] mtd: spi-nor: cadence-quadspi: Make driver
+ independent of flash geometry
+Thread-Index: AQHWM0FZFb5dBCwkWUGeiULRbnlz0Ki9Y2+A
+Date:   Thu, 28 May 2020 11:41:52 +0000
+Message-ID: <1873244.LXWL5g5pfh@192.168.0.120>
+References: <20200526093604.11846-1-vigneshr@ti.com>
+ <20200526093604.11846-2-vigneshr@ti.com>
+In-Reply-To: <20200526093604.11846-2-vigneshr@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af228cdd-6b87-4a99-beac-08d802fc1d6c
+x-ms-traffictypediagnostic: BY5PR11MB3991:
+x-microsoft-antispam-prvs: <BY5PR11MB3991AD97A483D63F91E9A6A2F08E0@BY5PR11MB3991.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jZR1qZS2xvDLpofo0BT8Wd6U24hLeeVt2O5Lh2cgFr5RsPslq2uAhgQOXrDFP7pZTJYnSm2Hz31hN8b+FjXD7mFNcJS6+nSq8zd8OLcoUvTjf6dqRJBNtVyB8p1xelS/LeT7qMq7mO7R1a6vJzvem9t19EakNhlPr0XYpZDlIrXPEp9LOYzy3NBV+ntdC+CdLg1kyrpTwfmyE1cnmoXcEzfc4FXPdD769SyDteHh1DryxXC7cW1lbGktedW+TpwMddLwi8EItQJB2SufhxU0d2qTihKVyKoLEHDN3q0loKKWUFD2pxWxU7xpAjXU4DpHxJE+QW53kZWGfEO2lpQMz6/8IBQVlHsk9tuRXncqIyIk014MhIsknw3lruhuWtWh
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(39860400002)(346002)(366004)(376002)(6486002)(86362001)(4744005)(14286002)(8676002)(316002)(2906002)(9686003)(6512007)(54906003)(478600001)(26005)(66446008)(71200400001)(83380400001)(64756008)(66946007)(76116006)(66556008)(6916009)(53546011)(6506007)(66476007)(8936002)(5660300002)(186003)(4326008)(7416002)(39026012);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ZMyCWGbfSI2PhMmllIabsxWuaAodLIsWULrXHLgCDqEjFn3iovKqFtrZ/46oW/jtTKDb5V91FeKXkI2pIGzOp9+5AfYcfKv227iaF9bKvj+hC6FSbrMu1o3qu1iDZ6yVSdLQkdMBnZYOzMhVD/MjIIsicxKe7gbJqJKZDNahkxR6QxlEEYqYupI7llFqUNj7q/k70RQJkoslbsnLt5FNp6EDr0Tu/xciPuhyqx1UdUGoi+oyZoGmJ95T+U0PmOI+pA8AOnzJr4t8WUGQV7WAXZAq0ikJnDQ2JdfnEtzlRtlIZYr6Q7j1MqMCtw+SoQ+ykrJOb1e5ww0Ypfo5MlM8LJFQrrdmbdA5RasGHLrlBq3rRptM9MxiRn9qw1s+pxwEM9KEXIqc78wskQJV+tVkXUP80RTiQs0R8QSnh4Z9RIjt4Qp07ts0Sp4t1OdiWzXv4LoOJlplZBFuuCDKFEsRuw4b0FrTR4aKjx7GcEA/oSY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <107AB70B0512164CAB04DCFA413C114A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-Network-Message-Id: af228cdd-6b87-4a99-beac-08d802fc1d6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 11:41:52.0186
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3AGHmC4EdhSFHRJyacN3NRT1uGk4BQTn5eyg1onQAar6Vtnr3nesLGCpICdvnbi71S4U8R74g4cD5p+KU71ImM3rwmTimFkrAGQwVdFIuAc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3991
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+On Tuesday, May 26, 2020 12:35:59 PM EEST Vignesh Raghavendra wrote:
+> Drop configuration of Flash size, erase size and page size
+> configuration. Flash size is needed only if using AHB decoder (BIT 23 of
+> CONFIG_REG) which is not used by the driver.
+> Erase size and page size are needed if IP is configured to send WREN
+> automatically. But since SPI NOR layer takes care of sending WREN, there
+> is no need to configure these fields either.
+>=20
+> Therefore drop these in preparation to move the driver to spi-mem
+> framework where flash geometry is not visible to controller driver.
+>=20
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  .../mtd/spi-nor/controllers/cadence-quadspi.c | 36 +------------------
+>  1 file changed, 1 insertion(+), 35 deletions(-)
 
-> On 25/05/20 16:41, Vitaly Kuznetsov wrote:
->> +	case MSR_KVM_ASYNC_PF_ACK:
->> +		if (data & 0x1) {
->> +			vcpu->arch.apf.pageready_pending = false;
->> +			kvm_check_async_pf_completion(vcpu);
->> +		}
->> +		break;
->>  	case MSR_KVM_STEAL_TIME:
->>  
->>  		if (unlikely(!sched_info_on()))
->> @@ -3183,6 +3189,9 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>  	case MSR_KVM_ASYNC_PF_INT:
->>  		msr_info->data = vcpu->arch.apf.msr_int_val;
->>  		break;
->> +	case MSR_KVM_ASYNC_PF_ACK:
->> +		msr_info->data = 0;
->> +		break;
->
-> How is the pageready_pending flag migrated?  Should we revert the
-> direction of the MSR (i.e. read the flag, and write 0 to clear it)?
-
-The flag is not migrated so it will be 'false'. This can just cause an
-extra kick in kvm_arch_async_page_present_queued() but this shouldn't be
-a big deal. Also, after migration we will just send 'wakeup all' event,
-async pf queue will be empty. MSR_KVM_ASYNC_PF_ACK by itself is not
-migrated, we don't even store it, not sure how invering it would change
-things.
-
--- 
-Vitaly
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
