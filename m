@@ -2,127 +2,102 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB38C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8985C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:52:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D6F2078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NzIkgi+C"
+	by mail.kernel.org (Postfix) with ESMTP id 7F13620888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725897AbgE1Apq (ORCPT
+        id S1725865AbgE1AwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE1Apq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:45:46 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44AF5C05BD1E
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 17:45:46 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id z13so2326194vsn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 17:45:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mOyV+8glbcu6N2O5AHi5Pyxl+TFF1nsMtfV6jrysXBE=;
-        b=NzIkgi+C9aoCRXuizHK0IN3/1UWp3rB9C78+Fu8iCfQyXPPu9XSrwtUVI2/k1SFdoJ
-         Z/PyPjnt92umAAcqUhTEVYo/6kEitkEWgaMV9ygDT3ySlPshePmyGR0yH1yg2xGGadHw
-         YCloRpjKw5pmVGHx8A/9ebL5ofLznvjFJZ3ag=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mOyV+8glbcu6N2O5AHi5Pyxl+TFF1nsMtfV6jrysXBE=;
-        b=EcRzsGQe+Hw6LSMzaSmM1znyMUg98HmIgthm/oJTSglcyZbBjIyrAXXuYPJxlzq5Js
-         PG0wB5xvCRFkU39EOYT30O+RtpMZmrA719BDdGHybjs8dHq8iael1vaCV9FNSOd+jvmx
-         cO8sBc3mAG7HvPHlsOfO+TE0o1+IOI03RxharTo3zDoc11NX0e7Bczj81aDVtxw3+mxu
-         5ApPpaFDtXuQSWCb1aRMjaP80bE4/aW54URhM9Lz4TOTY4D9W5BPdOYkjXl9O72QblNq
-         hjPyIOkmQ2DLmXVtkyWu+SQC4payENjpS5i5WoszhMtDPxoXQDZjeN2wLscHmbJyBrD6
-         VYug==
-X-Gm-Message-State: AOAM532uyCFunc+Ccxda/+KuQf90WgF33GT42rAz34I3DKOviu0jiwqh
-        R2g+q/bb6T21wS+TdwePrfMMUWOtu0HTKPirqfcIRACzNRg=
-X-Google-Smtp-Source: ABdhPJy0rgy7XX2ynNb8BJWONXf8j4cobkfuON7kUlM1eQUrELAc8vQERAxSUCeRIoDrwswXMm5huyE7Rq/8bM863lk=
-X-Received: by 2002:a05:6102:242b:: with SMTP id l11mr301820vsi.14.1590626745389;
- Wed, 27 May 2020 17:45:45 -0700 (PDT)
+        Wed, 27 May 2020 20:52:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:1024 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbgE1AwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:52:18 -0400
+IronPort-SDR: EKks5ebqe/U7NxJgRc8VGiEGkoupNVpSOY+f1b79SSsnPO0RGFDVH77RFtIfYxrvk/2UEQNR1V
+ oMDXnexj93Dw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 17:52:17 -0700
+IronPort-SDR: oQi8CNCBU1mRyQiLvHGTY0sdjHVbPPzBwBiLK+1bHcCsONAX7XiFWU3zeEGRAYzzBZd+072pL7
+ BiP73rM1aW7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="267033001"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga003.jf.intel.com with ESMTP; 27 May 2020 17:52:17 -0700
+Date:   Wed, 27 May 2020 17:52:17 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com, puiterwijk@redhat.com,
+        Jethro Beekman <jethro@fortanix.com>
+Subject: Re: [PATCH v30 08/20] x86/sgx: Add functions to allocate and free
+ EPC pages
+Message-ID: <20200528005217.GB25962@linux.intel.com>
+References: <20200515004410.723949-1-jarkko.sakkinen@linux.intel.com>
+ <20200515004410.723949-9-jarkko.sakkinen@linux.intel.com>
+ <20200526125207.GE28228@zn.tnic>
+ <20200527042111.GI31696@linux.intel.com>
+ <20200527204638.GG1721@zn.tnic>
 MIME-Version: 1.0
-References: <20200426032410.10425-1-wuxy@bitland.com.cn>
-In-Reply-To: <20200426032410.10425-1-wuxy@bitland.com.cn>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Thu, 28 May 2020 08:45:34 +0800
-Message-ID: <CANMq1KAGtMMC7SW7aeDQuogF+Ux40=AFYO8V-F_JkEMtAa3eUQ@mail.gmail.com>
-Subject: Re: [PATCH] [v3]mtd: spi-nor: winbond: add 1.8v SPI NOR Flash IDs
-To:     wuxy@bitland.com.cn
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        wuxy <wuxy@bitland.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527204638.GG1721@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, May 27, 2020 at 10:46:38PM +0200, Borislav Petkov wrote:
+> On Tue, May 26, 2020 at 09:21:11PM -0700, Sean Christopherson wrote:
+> > In other words, sgx_alloc_epc_section() is poorly named.  It doesn't
+> > actually allocate EPC, it allocates kernel structures to map and track EPC.
+> > sgx_(un)map_epc_section() would be more accurate and would hopefully
+> > alleviate some of the confusion.
+> 
+> Makes sense.
+> 
+> > I have no objection to renaming __sgx_alloc_try_alloc_page() to something
+> > like sgx_alloc_epc_page_section or whatever, but IMO using get/put will be
+> > horrendously confusing.
+> 
+> Ok. My only issue is that the naming nomenclature sounds strange and
+> confusing as it is. "try" in an "alloc" function is kinda tautological -
+> of course the function will try to do its best. :)
 
-First, you need to cc linux-mtd@lists.infradead.org, make sure to use
-the get_maintainer.pl script to get the cc list (you're cc-ing mm
-people here, but you should cc mtd folks instead).
+Heh, so what you're saying is we should add __sgx_really_try_alloc_page()?
 
-On Sun, Apr 26, 2020 at 11:24 AM <wuxy@bitland.com.cn> wrote:
->
-> From: wuxy <wuxy@bitland.corp-partner.google.com>
->
-> Winbond has new 1.8V SPI NOR Flash IDs,we need to use the SPI
-> flash ID in kukui series,this patch can support the new flash IDs.
-> This patch copied from:https://patchwork.ozlabs.org/patch/1150756/,
-> The original patch is invalid,so re-submit a new patch for this.
+> And there are three functions having "alloc" in the name so I can
+> imagine someone getting very confused when having to stare at that code.
+> 
+> So at least naming them in a way so that it is clear what kind of pages
+> they "allocate" - i.e., what they actually do - would be a step in the
+> right direction...
 
-This is historical stuff, and does not belong in the commit message,
-please move that below the ---.
+Ya, and things will only get more confusing when actual NUMA awareness gets
+thrown into the mix.
 
-Also, since you're merely rebasing/fixing a patch authored by ST Lin,
-I'd keep the original author and signed off:
-Signed-off-by: ST Lin <stlin2@winbond.com>
+Jarkko, splicing in the NUMA awareness code, what do you think about:
 
-Thanks!
+  sgx_alloc_epc_section -> sgx_map_epc_section
+  sgx_free_epc_section  -> sgx_unmap_epc_section
 
->
-> TEST=boot to shell,get the spi information from 'dmesg'.
->
-> Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
-> ---
->  drivers/mtd/spi-nor/winbond.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
-> index 17deabad57e1..cda4f8847bd6 100644
-> --- a/drivers/mtd/spi-nor/winbond.c
-> +++ b/drivers/mtd/spi-nor/winbond.c
-> @@ -61,6 +61,15 @@ static const struct flash_info winbond_parts[] = {
->                              SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
->         { "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
->                             SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
-> +       { "w25q64jwxxIM", INFO(0xef8017, 0, 64 * 1024, 128,
-> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-> +       { "w25q128jwxxIM", INFO(0xef8018, 0, 64 * 1024, 256,
-> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
-> +       { "w25q256jwxxIM", INFO(0xef8019, 0, 64 * 1024, 512,
-> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
->  };
->
->  /**
-> --
-> 2.20.1
->
->
->
+  sgx_alloc_page        -> sgx_alloc_epc_page
+  sgx_free_page         -> sgx_free_epc_page
+
+  sgx_try_alloc_page    -> sgx_alloc_epc_page_node
+  __sgx_try_alloc_page  -> sgx_alloc_epc_page_section
