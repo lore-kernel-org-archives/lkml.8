@@ -2,134 +2,82 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E70DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC06C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274F9208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6D72075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:52:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590677573;
+	bh=czaYCN6eqWR7GuJTWJzQRoAJaa0eRrF2WnNBmRdRUT4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AL5+eeb24XW+nqmQuJYOusq+8tjVJwr9VjALQ0UkLhFIshZ0I223miavbAmhE9QFG
+	 kaA/Pl7j8EhLHGdBKvPjFHovT3CGzFZRofdsFA17xJjR39pF6VP+yuObRRzVUq0BFz
+	 RKTUsO+94q51cHpLPDpf6zkhO38f6a2baVfxDhKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403818AbgE1Owl (ORCPT
+        id S2391339AbgE1Owu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:52:41 -0400
-Received: from mga04.intel.com ([192.55.52.120]:28867 "EHLO mga04.intel.com"
+        Thu, 28 May 2020 10:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403790AbgE1Owh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:52:37 -0400
-IronPort-SDR: XDyuhNDsdZyK8R38J+MU/TdGAXRYiDZdZ8EeiwDHssxe74w2jX4TJwdsCBXor4Lzqpyvm3Ntt2
- aCocO/X3WxMA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:52:24 -0700
-IronPort-SDR: EK3BBD6Ggz6zJo7E4j4JMagsNStfqspwS0XyjaL7vTKp2pfCYtq2YyTk0T4bFU8OmZQfE8C1RU
- HDOXV+pbBKiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="376393864"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 28 May 2020 07:52:21 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeJtQ-009Ram-6Q; Thu, 28 May 2020 17:52:24 +0300
-Date:   Thu, 28 May 2020 17:52:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
- config
-Message-ID: <20200528145224.GT1634618@smile.fi.intel.com>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
+        id S2403790AbgE1Owm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:52:42 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A952075F;
+        Thu, 28 May 2020 14:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590677561;
+        bh=czaYCN6eqWR7GuJTWJzQRoAJaa0eRrF2WnNBmRdRUT4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Kcklip7nlRYJiaSCAQqnvdJk3dX5xAuRoJWISKrM3l/KvJx4NYK6CCDylh6Ixk6/E
+         VNVQqi4y4iariGF3FywLKVijz/1eMcJIc2uAVquqpnPkmHkoijd+eYz4zJ+9cwkrHH
+         Y4+Pyw6sRxcZENcEkPoOmF2929/8glkEOQ9dzwv4=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Luis R . Rodriguez" <mcgrof@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Subject: [PATCH 4/4] selftests/sysctl: Make sysctl test driver as a module
+Date:   Thu, 28 May 2020 23:52:37 +0900
+Message-Id: <159067755690.229397.12060049846042042480.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159067751438.229397.6746886115540895104.stgit@devnote2>
+References: <159067751438.229397.6746886115540895104.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
-> IP core of the DW DMA controller may be synthesized with different
-> max burst length of the transfers per each channel. According to Synopsis
-> having the fixed maximum burst transactions length may provide some
-> performance gain. At the same time setting up the source and destination
-> multi size exceeding the max burst length limitation may cause a serious
-> problems. In our case the DMA transaction just hangs up. In order to fix
-> this lets introduce the max burst length platform config of the DW DMA
-> controller device and don't let the DMA channels configuration code
-> exceed the burst length hardware limitation.
-> 
-> Note the maximum burst length parameter can be detected either in runtime
-> from the DWC parameter registers or from the dedicated DT property.
-> Depending on the IP core configuration the maximum value can vary from
-> channel to channel so by overriding the channel slave max_burst capability
-> we make sure a DMA consumer will get the channel-specific max burst
-> length.
+Fix config file to require CONFIG_TEST_SYSCTL=m instead of y
+because this driver introduces a test sysctl interfaces which
+are normally not used, and only used for the selftest.
 
-...
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/testing/selftests/sysctl/config |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
->  {
-> +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
->  
-
-Perhaps,
-
-	/* DesignWare DMA supports burst value from 0 */
-	caps->min_burst = 0;
-
-> +	caps->max_burst = dwc->max_burst;
->  }
-
-...
-
-> +	*maxburst = clamp(*maxburst, 0U, dwc->max_burst);
-
-Shouldn't we do the same for iDMA 32-bit? Thus, perhaps do it in the core.c?
-
->  	*maxburst = *maxburst > 1 ? fls(*maxburst) - 2 : 0;
-
-> +	if (!of_property_read_u32_array(np, "snps,max-burst-len", mb,
-> +					nr_channels)) {
-> +		for (tmp = 0; tmp < nr_channels; tmp++)
-> +			pdata->max_burst[tmp] = mb[tmp];
-
-I think we may read directly to the array. This ugly loops were introduced due
-to type mismatch. (See below)
-
-> +	} else {
-> +		for (tmp = 0; tmp < nr_channels; tmp++)
-> +			pdata->max_burst[tmp] = DW_DMA_MAX_BURST;
-> +	}
-
-And this will be effectively memset32().
-
->  	unsigned char	nr_masters;
->  	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
->  	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
-> +	unsigned int	max_burst[DW_DMA_MAX_NR_CHANNELS];
-
-I think we have to stop with this kind of types and use directly what is in the
-properties, i.e.
-
-	u32 max_burst[...];
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+diff --git a/tools/testing/selftests/sysctl/config b/tools/testing/selftests/sysctl/config
+index 6ca14800d755..fc263efd1fad 100644
+--- a/tools/testing/selftests/sysctl/config
++++ b/tools/testing/selftests/sysctl/config
+@@ -1 +1 @@
+-CONFIG_TEST_SYSCTL=y
++CONFIG_TEST_SYSCTL=m
 
