@@ -2,111 +2,172 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263EC208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29BE221508
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ZOH/Rv4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgE1JTp (ORCPT
+        id S1728222AbgE1JWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:19:45 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:52751 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728190AbgE1JTn (ORCPT
+        Thu, 28 May 2020 05:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728161AbgE1JWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:19:43 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M7v18-1ji6JC3P7K-004y2k; Thu, 28 May 2020 11:19:24 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     arm@kernel.org, Tony Lindgren <tony@atomide.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>,
-        Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Olof Johansson <olof@lixom.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: omap2: drop broken broadcast timer hack
-Date:   Thu, 28 May 2020 11:19:12 +0200
-Message-Id: <20200528091923.2951100-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.26.2
+        Thu, 28 May 2020 05:22:19 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7C7C05BD1E;
+        Thu, 28 May 2020 02:22:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Xhzm2Lltz9sSJ;
+        Thu, 28 May 2020 19:22:12 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590657735;
+        bh=Fp4GVOzcbEnK6RqBJSixgdXUegD8+m1wTRF4rLXA8uE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZOH/Rv4/V12lXoLDkgggMxYq4i04upO/0MpPYwMvwW0p0reAI1zM5fpKiqif4TPIx
+         Ly9n6fV3ys7GFE2dAF93e7HwFy6AgTWulXeQj3o18jIqtQsUp2T3bzyuVj/xvT+/L2
+         WA4n5Uwm/hMYjNTa0LT7UIiudY0HL90mDFPyiBBswOWvGqT2651emvERRW9GA41A0M
+         tc/esK+byQK7h7WtwnRHbf+e7xUs+Y5t2wU+12vQgY9NCfSHqXqDRxElwxSbMa85gN
+         2tGYYWRCHP6i2eNTjMjV/qTf+edMI8CLuNzedg4ChzUzm9R0/+ool2r4OAdvVbO/0E
+         bd4HHCqeDuxQA==
+Date:   Thu, 28 May 2020 19:22:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul@pwsan.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Zong Li <zong.li@sifive.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: linux-next: manual merge of the akpm-current tree with the rsic-v
+ tree
+Message-ID: <20200528192211.2449bd4f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ATdn30GjCa5VNK5LMgEqCYCr6k0Rv5NDMW8ItvRx618qB5cT2J7
- 7iWumw21v50yEnwmwJL287o1FpY+SfqpqZcPQyoXstzll+OuO4d9LDvoPrPq7EKMugUFnsv
- XqHZQ5OWZaVxwTaun9JU1+YtBJJMQX7BoRjjZdSz7ZxY/O3Hmz/HuafwO5ZmWknK+NIKnIa
- 51GT45DLpjVPdKAO4RVXw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CXAD4bL1BoM=:+Z/iCh1MkE4iwHBSzVAxnC
- 9iR6ZNpgbrqVHr5ok5qJuQRQS7466T1SOncy+46ZYlL6Y4vk2ibvIjjwViG+Z0PP4U90TTs58
- PtR1WVwhvLfiYmyeL+Zr2jlgN5WCSuBXLunvXUfvjQel/7/L+OP2mXEZF1ZpO9ZD2mVnKh1OK
- s4Hyus0alRsaDVSX0mFI5RsM5PojO2piEDPe+A5IcuuFO/dx84G4kJFaotR6i3T3NxIo7x2kO
- iJndMivXR/Hr8neplvXE7lSbS040emeds6mtkztoiVAnN0J4G4AttA8n+YFz3rMKpg9s9LLRu
- GY86NDFpcHmhy6A+42U5b7V4lmI598W/+mZEd28eh8bPCjG+5NdQEnlEWiDUnr7xzUupOOK7E
- feSqZas5/lcvj5IdB/cm+GDuZZ+4TfJw3XQf4EAQ1vZNyFQwl1WSubqQ6mrfKqmtWEqROq0tu
- iYbTrYJSHLXIJ5zLmklhKKwUGQWuCMfjRagLDjghnkKvNQkuujujTsJ7tgU8E+R+2lvfw+oOt
- 7DSIL5kC2Hf/qVQQtUshSD7kpbTTDR93jNfwPxcSPbejwdOACJUZ6u+DSgUtgAMukg3zmsRbd
- ywRAXGS+UTP8rUSv2R2ty26wJhknv21rAlNm1UPUt2xSdhPvDTd5vP9qdyafbWxYfB2JpScnP
- ChEnT4d63fjbgibQQs1qj61w/9onh82UK+JfIyUIYs0wjxf4g2HCAevlH/G140vszM8Wehq/G
- tLmt+1LnMzu2RgYC0tfHywhF3V6vpqHrE5gZATc3xh+7FDR1AGo/jB73/IprjsCQk7ccRIFEs
- hpbloZCOtR9o+1dIje+0DvDpm5TTKTk6IW1SUUvfpzZOk1hyGA=
+Content-Type: multipart/signed; boundary="Sig_/G4jwG.GiBQmy5HOToZ+j._7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OMAP4 timer code had a special hack for using the broadcast timer
-without SMP. Since the dmtimer is now gone, this also needs to be dropped
-to avoid a link failure for non-SMP AM43xx configurations:
+--Sig_/G4jwG.GiBQmy5HOToZ+j._7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel/time/tick-broadcast.o: in function `tick_device_uses_broadcast':
-tick-broadcast.c:(.text+0x130): undefined reference to `tick_broadcast'
+Hi all,
 
-Fixes: 2ee04b88547a ("ARM: OMAP2+: Drop old timer code for dmtimer and 32k counter")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-omap2/Kconfig | 1 -
- arch/arm/mach-omap2/timer.c | 6 ------
- 2 files changed, 7 deletions(-)
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-index ca74473f01df..ec4450a5c296 100644
---- a/arch/arm/mach-omap2/Kconfig
-+++ b/arch/arm/mach-omap2/Kconfig
-@@ -67,7 +67,6 @@ config SOC_AM43XX
- 	select ARM_GIC
- 	select MACH_OMAP_GENERIC
- 	select HAVE_ARM_SCU
--	select GENERIC_CLOCKEVENTS_BROADCAST
- 	select HAVE_ARM_TWD
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_775420
-diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-index 2d4ea386fc38..786336ee27ef 100644
---- a/arch/arm/mach-omap2/timer.c
-+++ b/arch/arm/mach-omap2/timer.c
-@@ -46,12 +46,6 @@ void set_cntfreq(void)
- 	omap_smc1(OMAP5_DRA7_MON_SET_CNTFRQ_INDEX, arch_timer_freq);
- }
- 
--#if !defined(CONFIG_SMP) && defined(CONFIG_GENERIC_CLOCKEVENTS_BROADCAST)
--void tick_broadcast(const struct cpumask *mask)
--{
--}
--#endif
--
- #if defined(CONFIG_SOC_OMAP5) || defined(CONFIG_SOC_DRA7XX)
- 
- /*
--- 
-2.26.2
+  arch/riscv/Kconfig
 
+between commit:
+
+  b151fefd23b7 ("riscv: sort select statements alphanumerically")
+
+from the rsic-v tree and commits:
+
+  e8d3552c4f20 ("mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP option")
+  4d01b8e6220f ("riscv: support DEBUG_WX")
+
+from the akpm-current tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/riscv/Kconfig
+index de5c95119de9,68418201734a..000000000000
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@@ -12,47 -12,29 +12,47 @@@ config 32BI
+ =20
+  config RISCV
+  	def_bool y
+ -	select OF
+ -	select OF_EARLY_FLATTREE
+ -	select OF_IRQ
+  	select ARCH_HAS_BINFMT_FLAT
+ +	select ARCH_HAS_DEBUG_VIRTUAL if MMU
++ 	select ARCH_HAS_DEBUG_WX
+ +	select ARCH_HAS_GCOV_PROFILE_ALL
+ +	select ARCH_HAS_GIGANTIC_PAGE
+ +	select ARCH_HAS_MMIOWB
+ +	select ARCH_HAS_PTE_SPECIAL
+ +	select ARCH_HAS_SET_DIRECT_MAP
+ +	select ARCH_HAS_SET_MEMORY
+ +	select ARCH_HAS_STRICT_KERNEL_RWX if MMU
+ +	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+  	select ARCH_WANT_FRAME_POINTERS
+ +	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+  	select CLONE_BACKWARDS
+  	select COMMON_CLK
+ +	select EDAC_SUPPORT
+ +	select GENERIC_ARCH_TOPOLOGY if SMP
+ +	select GENERIC_ATOMIC64 if !64BIT
+  	select GENERIC_CLOCKEVENTS
+ +	select GENERIC_IOREMAP
+ +	select GENERIC_IRQ_MULTI_HANDLER
+  	select GENERIC_IRQ_SHOW
+  	select GENERIC_PCI_IOMAP
+ +	select GENERIC_PTDUMP if MMU
+  	select GENERIC_SCHED_CLOCK
+ +	select GENERIC_SMP_IDLE_THREAD
+  	select GENERIC_STRNCPY_FROM_USER if MMU
+  	select GENERIC_STRNLEN_USER if MMU
+ -	select GENERIC_SMP_IDLE_THREAD
+ -	select GENERIC_ATOMIC64 if !64BIT
+ -	select GENERIC_IOREMAP
+ -	select GENERIC_PTDUMP if MMU
+  	select HAVE_ARCH_AUDITSYSCALL
+ +	select HAVE_ARCH_KASAN if MMU && 64BIT
+ +	select HAVE_ARCH_KGDB
+ +	select HAVE_ARCH_KGDB_QXFER_PKT
+ +	select HAVE_ARCH_MMAP_RND_BITS if MMU
+  	select HAVE_ARCH_SECCOMP_FILTER
+ +	select HAVE_ARCH_TRACEHOOK
+  	select HAVE_ASM_MODVERSIONS
+ +	select HAVE_COPY_THREAD_TLS
+  	select HAVE_DMA_CONTIGUOUS if MMU
+ +	select HAVE_EBPF_JIT if MMU
+  	select HAVE_FUTEX_CMPXCHG if FUTEX
+- 	select HAVE_MEMBLOCK_NODE_MAP
+ +	select HAVE_PCI
+  	select HAVE_PERF_EVENTS
+  	select HAVE_PERF_REGS
+  	select HAVE_PERF_USER_STACK_DUMP
+
+--Sig_/G4jwG.GiBQmy5HOToZ+j._7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PgsMACgkQAVBC80lX
+0GyzTggAilHQ0D6JscPlzKcd95bmH2hEEHQSF1YaSsfdjhbF6j+TmfRDTLA64zKr
+pslx5bbBTdLZQeYTOgmZCJim3mCIBRITsfiyOnetcGLN5G70oOrI6jpf3rHy5rH0
+zCcQ6xf77v1dcMHNL8L0GOtFlGrQNQo19/LI9lhZSDH2Sxt/vjPOIQAImZ2/PrBu
+S84YvMUnc65t3hpIhDE0PbkMULQ0pjg1eiFAhuaFvj4ojyGY2hvaOSXfbIfBYVNK
+XxP1jc2MLyS19DEGuBA+yjFbjhqdwGdHcCf1xwRF+p1Krpf6EXLSQr/5FPAc60yG
+ESHAEKrd3LqMebqLW14ZtheXqN21Rw==
+=0l/H
+-----END PGP SIGNATURE-----
+
+--Sig_/G4jwG.GiBQmy5HOToZ+j._7--
