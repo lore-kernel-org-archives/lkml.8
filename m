@@ -2,92 +2,160 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0572AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8A6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF6AC2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A760F2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yb3ihQC6"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nq8f2RZF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407438AbgE1VBk (ORCPT
+        id S2407480AbgE1VCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407395AbgE1VA4 (ORCPT
+        Thu, 28 May 2020 17:02:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:53682 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407471AbgE1VBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:00:56 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E7FAC08C5C6;
-        Thu, 28 May 2020 14:00:56 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y0Tx4jpCz9sSn;
-        Fri, 29 May 2020 07:00:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590699654;
-        bh=wLYHzL/mcZeb8818+XIZiJAx0cHJCqrE8aFQSWPnBgA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Yb3ihQC6DmxJ9V/ZY5NfHiOnqZRMowr6290IF6aMk5k0T74nMCVh/HFRod15qKxWw
-         5kHbS035yfCXJpqJ5QCKB45uCJgcNRF2XZXRl1ccU9Atql5egWvCzyQ6f3UE3kHvEC
-         70C+jrwrq2euyvzV+tHoNDLX8YNGjrhV58XgthienCPEpvpeohTZVEizsawLWKlHGu
-         0lg7APeBY3dNf7DEdelBul4DmaFJNHCJnPSTXtcJdyD0MNGGjTjM7NbVV3/Gqlm+RB
-         hhwdq8/4jcXLcgw0hF53CZFTZJyEL/yHK5CbD4MrxLbtC+0H16R1MkbbKLOB5uxCXl
-         tydt7HhJnqYxQ==
-Date:   Fri, 29 May 2020 07:00:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: linux-next: Signed-off-by missing for commit in the net-next tree
-Message-ID: <20200529070052.2c171fd3@canb.auug.org.au>
+        Thu, 28 May 2020 17:01:46 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SKBfKY120264;
+        Thu, 28 May 2020 21:01:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=6o6IG4PaUZVYP05KoABvyzMEsMWMZIDBFpnDQktXQQg=;
+ b=Nq8f2RZF+94ho8W4EH/YHSsyAfGdzMRljWNJycQ6LyaIhRsqlCLtPQ+W+ZipiaNwu8lf
+ Kto1R7tGS+X7Rb7nMzY43E8y6Ci2viK0F3NjfWxSi5/rbu8fhGgcjSoDoj7RD8Hitdjm
+ npnhplBqCoC6e/2fauxyzA9kSRIMGwi/ky+mzm9lAJdmeEYXdZb9qJwT89CZ3wlb4Lxs
+ iUlFvJQ/bBmNk7d9MX80KPLi5ufNC05dFho9+jr+KMmfLAKPljRTkmuyt7Y1fg5ylVTK
+ +QWuqMq77gINHfJL70aahnX2RUe1H1OG7dFjC7GKx/rRv16w5Zsqqoht5ns5juh4ASkc TA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 316u8r792v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 21:01:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SK8w9n177071;
+        Thu, 28 May 2020 21:01:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 317ds38qex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 May 2020 21:01:30 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04SL1Rwl012580;
+        Thu, 28 May 2020 21:01:28 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 14:01:27 -0700
+Subject: Re: [PATCH v2] ovl: provide real_file() and overlayfs
+ get_unmapped_area()
+To:     kbuild test robot <lkp@intel.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Cc:     kbuild-all@lists.01.org, Colin Walters <walters@verbum.org>,
+        syzbot <syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-unionfs@vger.kernel.org
+References: <4ebd0429-f715-d523-4c09-43fa2c3bc338@oracle.com>
+ <202005281652.QNakLkW3%lkp@intel.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <365d83b8-3af7-2113-3a20-2aed51d9de91@oracle.com>
+Date:   Thu, 28 May 2020 14:01:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yV9Kli2BjNSFa9uZ1NGtJGa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <202005281652.QNakLkW3%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9635 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=0
+ phishscore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2005280132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yV9Kli2BjNSFa9uZ1NGtJGa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/28/20 1:37 AM, kbuild test robot wrote:
+> Hi Mike,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on miklos-vfs/overlayfs-next]
+> [also build test ERROR on linus/master v5.7-rc7]
+> [cannot apply to linux/master next-20200526]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Mike-Kravetz/ovl-provide-real_file-and-overlayfs-get_unmapped_area/20200528-080533
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git overlayfs-next
+> config: h8300-randconfig-r036-20200528 (attached as .config)
+> compiler: h8300-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=h8300 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All error/warnings (new ones prefixed by >>, old ones prefixed by <<):
+> 
+> fs/overlayfs/file.c: In function 'ovl_get_unmapped_area':
+>>> fs/overlayfs/file.c:768:14: error: 'struct mm_struct' has no member named 'get_unmapped_area'
+> 768 |   current->mm->get_unmapped_area)(realfile,
+> |              ^~
+>>> fs/overlayfs/file.c:770:1: warning: control reaches end of non-void function [-Wreturn-type]
+> 770 | }
+> | ^
+> 
+> vim +768 fs/overlayfs/file.c
+> 
+>    760	
+>    761	static unsigned long ovl_get_unmapped_area(struct file *file,
+>    762					unsigned long uaddr, unsigned long len,
+>    763					unsigned long pgoff, unsigned long flags)
+>    764	{
+>    765		struct file *realfile = real_file(file);
+>    766	
+>    767		return (realfile->f_op->get_unmapped_area ?:
+>  > 768			current->mm->get_unmapped_area)(realfile,
+>    769							uaddr, len, pgoff, flags);
+>  > 770	}
+>    771	
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
 
-Hi all,
+Well yuck!  get_unmapped_area is not part of mm_struct if !CONFIG_MMU.
 
-Commit
+Miklos, would adding '#ifdef CONFIG_MMU' around the overlayfs code be too
+ugly for you?  Another option is to use real_file() in the mmap code as
+done in [1].
 
-  07bab9502641 ("net/mlx5: E-Switch, Refactor eswitch ingress acl codes")
+Sorry for all the questions.  However, I want to make sure you are happy
+with any overlayfs changes.
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/yV9Kli2BjNSFa9uZ1NGtJGa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QJoQACgkQAVBC80lX
-0Gzb/wf+IQy0vyjWMHkRQTtl7Yd75nQbRY30Y5Z1fIA5S0t8r2NxXDjkcZzd13Zo
-wRLm6Ne7Pby5kuxRyVe9xfXkCzOACloLiAaocPyPKFP2n4O67bAdPZUaBYyDbYhu
-FWNqJnhZwNw0YiMxC0czhlxq3iX0ef+8Grl5FDDqU58YOddZKyy6iTVaobBW+b46
-JMdWZg9j4asx4d3DNm1OyFma4vw2iKpvwVAiDi/ftHFj7PvaZkrpu3qEKRngiiBc
-DU5TD183U4lrYgrGIHwvfhcJB26XKrOU0JT3+idYZvcz434bbzty7svXuobbpBmp
-g1lSdcCP2WvojhIvSvcuFCeedk2Zvg==
-=fbfH
------END PGP SIGNATURE-----
-
---Sig_/yV9Kli2BjNSFa9uZ1NGtJGa--
+[1] https://lore.kernel.org/linux-mm/04a00e3b-539c-236f-e43b-0024ef94b7cb@oracle.com/
+-- 
+Mike Kravetz
