@@ -2,108 +2,89 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3507FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91804C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169032073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B802088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1cMDUG4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Du8oCqtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407336AbgE1Uis (ORCPT
+        id S2407333AbgE1Um5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
+        Thu, 28 May 2020 16:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407218AbgE1Uip (ORCPT
+        with ESMTP id S2407238AbgE1Umy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:38:45 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9010CC08C5C6;
-        Thu, 28 May 2020 13:38:45 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d10so143813pgn.4;
-        Thu, 28 May 2020 13:38:45 -0700 (PDT)
+        Thu, 28 May 2020 16:42:54 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F507C08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:42:54 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id a45so996879pje.1
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uUmAHxoLCci70CIyQKHJVkgQVBujsUNyRL0aI0R0aqo=;
-        b=I1cMDUG4Wbl6ZX/z5HWJTm2du5yh0gMU/JPmyLOA29gjDIaqZCuFlq1Akwl3x2elMt
-         ocKJz6UFSs9RV8uUTGDo6qDUWd3ujnAqcC0wVQzxSf5C4KAdnYFrC2ux/mp9wHzQoU3I
-         8sxF6hLFmWwdrvdGrJQR23vCVeXjvY3uf4ee+i0j7VVO7ldGgG6UHkEwvEs7NSJvucXr
-         u/HX7g9A/JHwTmtNm/pizzgaEFtaHRhTXL/OSQZU6alHCgQkzALi5i6A9EqjaPivx4Ho
-         YuugbZTUH2NeinzeiTFXp2XiO++0eeSonK5SMIVAiaoA3IMaWw/M6AJvPgZqSbvhlFLk
-         lFIQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zdyzLimXPKb8loA9eaNOpZUzWfyNaM5PR6IwlYxpXo4=;
+        b=Du8oCqtJwgbtosFY4o395cLSrMzX/msg37UKQjYvLS6QQ7YLGyN638DSsEQsaeeY2f
+         bqbrcEjJlSpY6oGKOTay+04QHpGFV1ORhJ2E99xg625at5WwGQU/jk9eV7vTuwMOTN6p
+         1mVDkyGnQ7Q/uF/evtjPW1Vaf4PbR95+GWbNY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uUmAHxoLCci70CIyQKHJVkgQVBujsUNyRL0aI0R0aqo=;
-        b=IxfjS8uS3RD4gupLgRT3aQi0J1qxkiIQW8burB1ym+nuF6AbCWIJwtbFL5h1xsBNH+
-         eU7ycey3at/NcmDQMpKsMYM9IRqMz0hdNjD2ZioW6pdWdPIA3I9jWc6o6jDHcJKOjWBS
-         rt53vx1V3BJy53ODlDc/PZI5jwN/5xYVVY4OgnGjTZrceKGGDQr57eVXaUhc7qvxCcll
-         M00oitiocwwMAQo3gs4HvIiLoLzLlBElYDyG0JBOa2tbxZPs2WrJkKYREhUp3yC/s0Zv
-         hLGh0bJwK5Ja+mUXQQCrhqZqCXS1WaIxjKFmYc8VQDwqaXqKGvolOWD4C6BS6uWG1ec1
-         A1nA==
-X-Gm-Message-State: AOAM531wGp0ZtG3xBvNfUpzdu9rBHP+Pd5VibI6KiUHzhzTmvCl5wPr5
-        bgzA1RdRMbH5Iu2FxCh4FvYL6UwO90DnPSm0Qfc=
-X-Google-Smtp-Source: ABdhPJwe8DmfXiHurV89f6av71936kl+HM4lp/ZzAxpMRXlN2Qv/GB4+dYblIxf4soDqHWyWkLuJ27OfLk4KVGGMVXw=
-X-Received: by 2002:aa7:99c8:: with SMTP id v8mr5137217pfi.36.1590698325132;
- Thu, 28 May 2020 13:38:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zdyzLimXPKb8loA9eaNOpZUzWfyNaM5PR6IwlYxpXo4=;
+        b=JS2MFKlOhunfMEbbNejEAIeD0AM17C0rZbRPw96RRrOGVc/MRrb61b2SK9flaMjTtc
+         r8Z7GbU8oAmqUoRvIiPcwWW26EMd0GwMosTOeIFhKdp7iFYdwoKckDDGP6c7PI2zoWvE
+         Zp3El19vWirH6DolyflHKBlMKqXyHZlWWSm5YE/mmuNPxEksR2r7FIvhAH8H7pCECqwI
+         nVKLzbmo9La/idGqhmPwxPVJoNPlzMoPlL8M3vnwtk0lInjggUwfI/fv133UiqekJNkl
+         g7PYNNTl02ro36ubY/d5kcH+HGvS4iXX5cZJMGZOvOWUu+SHoOHwpmmMyhtsFk3witbQ
+         VfWg==
+X-Gm-Message-State: AOAM533ieIo0H7vebxHnGJyAImRn1iGzn/zrr3kAmm6c+Rz/8IS4jtb5
+        ISZxEb8Snz6UrRZenhnbt6rHOQ==
+X-Google-Smtp-Source: ABdhPJyc5Y33yZEJNPHkyz6Y9xrbOnyBsYt39W75M0ByokE/SZClzan4j2p7o8JcmfA/bBrPWvSJPw==
+X-Received: by 2002:a17:90a:23e7:: with SMTP id g94mr6003805pje.210.1590698573489;
+        Thu, 28 May 2020 13:42:53 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id m12sm5860434pjf.44.2020.05.28.13.42.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 13:42:52 -0700 (PDT)
+Date:   Thu, 28 May 2020 13:42:51 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Zijun Hu <zijuhu@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
+        rjliao@codeaurora.org, stable@kernel.org, tientzu@chromium.org
+Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix suspend/resume functionality
+ failure
+Message-ID: <20200528204251.GM4525@google.com>
+References: <1590697867-7618-1-git-send-email-zijuhu@codeaurora.org>
 MIME-Version: 1.0
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
- <20200528145224.GT1634618@smile.fi.intel.com> <20200528154022.3reghhjcd4dnsr3g@mobilestation>
-In-Reply-To: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 28 May 2020 23:38:28 +0300
-Message-ID: <CAHp75VcPVO6yOmyrSBfjVk5eSYhC4J0QXAfOhjRXGd4=FemezA@mail.gmail.com>
-Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw config
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1590697867-7618-1-git-send-email-zijuhu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 6:43 PM Serge Semin
-<Sergey.Semin@baikalelectronics.ru> wrote:
-> On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
-> > On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
+On Fri, May 29, 2020 at 04:31:07AM +0800, Zijun Hu wrote:
+> @dev parameter of qca_suspend()/qca_resume() represents
+> serdev_device, but it is mistook for hci_dev and causes
+> succedent unexpected memory access.
+> 
+> Fix by taking @dev as serdev_device.
+> 
+> Fixes: 41d5b25fed0 ("Bluetooth: hci_qca: add PM support")
+> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
 
-...
-
-> > Perhaps,
-> >
-> >       /* DesignWare DMA supports burst value from 0 */
-> >       caps->min_burst = 0;
->
-> Regarding min_burst being zero. I don't fully understand what it means.
-> It means no burst or burst with minimum length or what?
-> In fact DW DMA burst length starts from 1. Remember the burst-length run-time
-> parameter we were arguing about? Anyway the driver makes sure that both
-> 0 and 1 requested burst length are setup as burst length of 1 in the
-> CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
-
-Yeah, I also thought about it after I sent a message. 1 sounds better.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
