@@ -2,136 +2,92 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 912F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89DE2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1C52075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEvXp2ET"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2hjQjRWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403932AbgE1O6K (ORCPT
+        id S2403814AbgE1O6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:58:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403787AbgE1O6B (ORCPT
+        Thu, 28 May 2020 10:58:18 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37342 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403773AbgE1O6D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:58:01 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E6EC08C5C6;
-        Thu, 28 May 2020 07:58:00 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id w1so3344095qkw.5;
-        Thu, 28 May 2020 07:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gzI5VT3HoLRyAyzvufJuU0rnVQlP8Cfplvh+aTwNJOI=;
-        b=KEvXp2ETmxGb5UfS97Z7dC86BLXH8Ke8H2UHphVLV36mliF1c493OnRDRHcaC3mPRt
-         BgFIq0i00r31XTm2i92stxp0f97+Bvuo1egxIvIYKUhDKEKQSDSz5Zhi5lH06pkutnN4
-         SUvJRIJRgMxMBG1kilAEhkj5MIT0k2VJceHU92x+D7aCJpHg9hQLnJxAigjsZ848z/E7
-         Tt/2kA4JfUPpfu6RyM+p5MQYLC/xH8R4ul1wf/hJJAZKNpnBThoWZObOmqmZcBY353dp
-         IRs8Mf7plbctXT32WZFqCM9f+HgV1SeDNSpOBngcv1YUvhFXr4muwiazli7bIyMPOPys
-         f7UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gzI5VT3HoLRyAyzvufJuU0rnVQlP8Cfplvh+aTwNJOI=;
-        b=tvpWgwXvwRd6fbVMJfOvollXEwjPifZog9gKfEiwmPd4jTlhsY7nPBPXnCZsrGD2Py
-         8gI3mHz4bl0Ch3GZILP8g7zGzYBX89Eu8Z3FZz+QqQfKI/P/S6KdYnvX9fPyQ+FQWtAE
-         GZlOmFW1DICps+OsWKVwP2JPROy9EItWeDQufteJ/KVXKPuJ0a2ZPafyz0yxVUSl2eX5
-         QpZTOOb0w+/xr+UxTcUfxo7M8S/dXdHIhspiefmeGnIY+zLxZmE+TMJkr1jBFDMCtqx3
-         Mgir1vBAxULnHe0a7n6EBp2G2E7wfRKazbiyfTzsXXkWZ/4iMhtQuORmrkSHXeI+z9ML
-         2plw==
-X-Gm-Message-State: AOAM532rErXRx7xin4VNNCfbBNEXFz6S4dal+8kFDOFN23JxDv+VKrRs
-        f6uKwPp8OOG61nlYRgXpWfDUTGRXhXk=
-X-Google-Smtp-Source: ABdhPJzUaDMzlKbRDkRY5VshnmUm0YPFb9V/m5sbZPcSMyqNGIlrVoK/gPx5NP9LGcwp+tVnN556Dw==
-X-Received: by 2002:a37:a74a:: with SMTP id q71mr3273396qke.446.1590677879288;
-        Thu, 28 May 2020 07:57:59 -0700 (PDT)
-Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
-        by smtp.googlemail.com with ESMTPSA id s74sm5116876qka.54.2020.05.28.07.57.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:57:47 -0700 (PDT)
-From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v7 1/5] dt-bindings: iio: magnetometer: ak8975: reword gpios, add interrupts, fix style
-Date:   Thu, 28 May 2020 16:56:04 +0200
-Message-Id: <20200528145631.11608-2-jonathan.albrieux@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200528145631.11608-1-jonathan.albrieux@gmail.com>
-References: <20200528145631.11608-1-jonathan.albrieux@gmail.com>
+        Thu, 28 May 2020 10:58:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XfDBa6L5beYtY9Mm6rzbZ08MMV6LAgrWZgziccfPExk=; b=2hjQjRWxqtCnbGeD8fBkZSGqOy
+        HJNJVsY4UHmFTBSAiHibHn+yESXpMZIHT8lrOtHuXQeqa9IqGo0948KIWACXK+La1VlTKioEj4ThK
+        MPw11b4tERh9bXYPPXs3vMD4BQhE49MYn3g+nZfYBY5806qkTRW/CJdd4QSeT/MIIkgqVNkemYNQ5
+        TRfqk9DTiRz41a9cjBq+nxS8hlvISxtENsvmD4tr8vhdMRigKJITZzK8varrK6BlSaaZMNf2hQ/3o
+        aueutvbdJDWsrqcED1JGLETAHBAW6iZ/uX4fafsdxIP9Y68nzp5mBWN6QJQeAoz7IZLMgNnCDPSMT
+        DnBXLzjg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeJwS-00037f-Sp; Thu, 28 May 2020 14:55:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7270F301205;
+        Thu, 28 May 2020 16:55:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 555032B9FB566; Thu, 28 May 2020 16:55:30 +0200 (CEST)
+Date:   Thu, 28 May 2020 16:55:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 2/3] kasan: move kasan_report() into report.c
+Message-ID: <20200528145530.GG706495@hirez.programming.kicks-ass.net>
+References: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
+ <78a81fde6eeda9db72a7fd55fbc33173a515e4b1.1589297433.git.andreyknvl@google.com>
+ <20200528134913.GA1810@lca.pw>
+ <20200528143341.ntxtnq4rw5ypu3k5@treble>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528143341.ntxtnq4rw5ypu3k5@treble>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reword gpios documentation, add interrupt documentation and fix styles.
-Update example to use interrupts instead of gpios.
+On Thu, May 28, 2020 at 09:33:41AM -0500, Josh Poimboeuf wrote:
+> On Thu, May 28, 2020 at 09:49:13AM -0400, Qian Cai wrote:
+> > On Tue, May 12, 2020 at 05:33:20PM +0200, 'Andrey Konovalov' via kasan-dev wrote:
+> > > The kasan_report() functions belongs to report.c, as it's a common
+> > > functions that does error reporting.
+> > > 
+> > > Reported-by: Leon Romanovsky <leon@kernel.org>
+> > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > 
+> > Today's linux-next produced this with Clang 11.
+> > 
+> > mm/kasan/report.o: warning: objtool: kasan_report()+0x8a: call to __stack_chk_fail() with UACCESS enabled
+> > 
+> > kasan_report at mm/kasan/report.c:536
+> 
+> Peter, this was also reported with GCC about a month ago.  Should we add
+> __stack_chk_fail() to the uaccess safe list?
 
-Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/iio/magnetometer/ak8975.txt      | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+It calls panic(), which I suppose is pretty safe, it kills the entire
+machine dead :-)
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-index aa67ceb0d4e0..0576b9df0bf2 100644
---- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-@@ -2,21 +2,28 @@
- 
- Required properties:
- 
--  - compatible : should be "asahi-kasei,ak8975"
--  - reg : the I2C address of the magnetometer
-+  - compatible : should be "asahi-kasei,ak8975".
-+  - reg : the I2C address of the magnetometer.
- 
- Optional properties:
- 
--  - gpios : should be device tree identifier of the magnetometer DRDY pin
--  - vdd-supply: an optional regulator that needs to be on to provide VDD
--  - mount-matrix: an optional 3x3 mounting rotation matrix
-+  - gpios : AK8975 has a "Data ready" pin (DRDY) which informs that data
-+      is ready to be read and is possible to listen on it. If used,
-+      this should be active high. Prefer interrupt over this.
-+
-+  - interrupts : interrupt for DRDY pin. Triggered on rising edge.
-+
-+  - vdd-supply: an optional regulator that needs to be on to provide VDD.
-+
-+  - mount-matrix: an optional 3x3 mounting rotation matrix.
- 
- Example:
- 
- ak8975@c {
-         compatible = "asahi-kasei,ak8975";
-         reg = <0x0c>;
--        gpios = <&gpj0 7 0>;
-+        interrupt-parent = <&gpio6>;
-+        interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-         vdd-supply = <&ldo_3v3_gnss>;
-         mount-matrix = "-0.984807753012208",  /* x0 */
-                        "0",                   /* y0 */
--- 
-2.17.1
-
+Ok.
