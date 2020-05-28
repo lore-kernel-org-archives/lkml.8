@@ -2,78 +2,84 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C82C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339A1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD8942075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F64320814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:16:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590679002;
+	bh=fM4F1w6NV1k7auo1H+fbUWfZ78d+B9IuoHTVg3AINx0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qKgwxhWEjGEmbFBeM2qKehL1aoF7ni5UnHyJFbCLX2E+IFjYRMZZcYQ5q9rE/M5aJ
+	 gp6qfrvz0TkVKzxkOUWvk5hkK7cJYMDzM5VoLcHy84bNcp4yLeu7ewegxrgy/Jk8pH
+	 qEO6ag+B3QG0owJn5vkNO5nupNVCWVNCjkAp4z5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404322AbgE1PQf (ORCPT
+        id S2404330AbgE1PQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:16:35 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64923 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404142AbgE1PQ2 (ORCPT
+        Thu, 28 May 2020 11:16:40 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33074 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404316AbgE1PQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 11:16:28 -0400
-Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 04SFGQWf065430;
-        Fri, 29 May 2020 00:16:26 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
- Fri, 29 May 2020 00:16:26 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 04SFGQOM065427
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Fri, 29 May 2020 00:16:26 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
- snprintf()
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
- <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
- <20200528110646.GC11286@linux-b0ei>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
-Date:   Fri, 29 May 2020 00:16:22 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+Received: by mail-io1-f66.google.com with SMTP id k18so30433478ion.0;
+        Thu, 28 May 2020 08:16:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SK1AraOAAlqE21Qv8uTbFSbwYc166rll0a90faCZX3A=;
+        b=n2Ni6MA9ApkNFpOWC8AuIg6j0ezi/T+RdJBQ5Ks3GvO2GJizgq+t3Qq63iYY65HhbM
+         mY7k8jYZINkqrOPQcn+eeYWP3ab0dIxhKx25u3Aq98Xaow1xn6AVzKnwMIY2uqZOIX27
+         g8SrYbsCG1pV060qKH2NTpKG/tcO0Qyq3vkTDIxiZyMhS47uP9MhruVAgZ6m0Z9UURJT
+         Tzbu7ioezCK4+PwcoFRXHUlfiqwFDrNu6jbEDoljnNmxUgMfK5mKFYSk8hgnqFpYc3iR
+         krxUzV3WHRe4zkaAHhJtLczTlggAxcrdPqoiNoXV9VSh5F2dPvNfWSfN+NqXWxQtWsyK
+         PTlw==
+X-Gm-Message-State: AOAM533dtlKrz0QObif225WMslsdTI3yC8A2QFTo0EYYwYXyfgN0x+MC
+        UNmN6cHsntUGMqtaEyXbqw==
+X-Google-Smtp-Source: ABdhPJzmgPWUpkGPyzRGjKihzjiiWgeQjD31EW0rWTqKLz0Ks44iHfmJ3jSZTagSQSChiX3iKeEzJw==
+X-Received: by 2002:a02:3002:: with SMTP id q2mr2972953jaq.19.1590678987065;
+        Thu, 28 May 2020 08:16:27 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j9sm3295362ilr.18.2020.05.28.08.16.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:16:26 -0700 (PDT)
+Received: (nullmailer pid 87549 invoked by uid 1000);
+        Thu, 28 May 2020 15:16:25 -0000
+Date:   Thu, 28 May 2020 09:16:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: auxdisplay: hd44780: Convert to json-schema
+Message-ID: <20200528151625.GA87494@bogus>
+References: <20200514113003.19067-1-geert@linux-m68k.org>
 MIME-Version: 1.0
-In-Reply-To: <20200528110646.GC11286@linux-b0ei>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200514113003.19067-1-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/05/28 20:06, Petr Mladek wrote:
-> Now, it requires lib/Kconfig.twist that is added by a patch in
-> Andrew's tree. One approach is to push this into linux-next
-> via Andrew's -mm tree.
+On Thu, 14 May 2020 13:30:02 +0200, Geert Uytterhoeven wrote:
+> Convert the Hitachi HD44780 Character LCD Controller Device Tree binding
+> documentation to json-schema.
 > 
-> Another possibility would be to remove lib/Kconfig.twist
-> changes from this patch and replace
-> CONFIG_TWIST_ALWAYS_EVALUATE_PRINTK_ARGUMENTS with
-> CONFIG_TWIST_FOR_SYZKALLER_TESTING.
-> Then I could push it into linux-next via printk/linux.git tree.
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+>  .../bindings/auxdisplay/hit,hd44780.txt       | 45 ---------
+>  .../bindings/auxdisplay/hit,hd44780.yaml      | 96 +++++++++++++++++++
+>  2 files changed, 96 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+>  create mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+> 
 
-CONFIG_TWIST_FOR_SYZKALLER_TESTING is meant for linux-next only.
-But CONFIG_TWIST_KERNEL_BEHAVIOR is meant for Linus's tree.
-
-That is, lib/Kconfig.twist will be there in printk/linux.git tree
-after 5.8-rc1. But maybe twist related patches should be gathered
-into one tree for easier management.
+Applied, thanks!
