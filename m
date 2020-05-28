@@ -2,110 +2,139 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73701C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83632053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486242053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="o6VEYz6g"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="XfMisC5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404833AbgE1PzZ (ORCPT
+        id S2404823AbgE1PzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:55:25 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:51923 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404654AbgE1PzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:55:15 -0400
-X-Greylist: delayed 431 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 11:55:14 EDT
-IronPort-SDR: ju0s3cShC548PVB0OFvt3B1Fc0gbVAl0k1p7+rfUk+DmeMA7RbHCHHzs7GnluNPf+DWNeWSTlH
- sKGVLoBDbvNaXuO4C4+rgqj3GGaweNazLeqp63Bpa4kLVzdl8je3Y8YIdTirQ8MNoU3xUQ1pKu
- AbgsDZyaGyeBgw5sRBAWVkmjdHASJK6fUuWysldp4G5F16BntA36+eNdq1Lpe/QtSyXYiNAk67
- r6K1/2RM8fUZLQbszihlFowdzT90Ms/NaSP/OfSu+ob4FDfSpxS25dkmICZVpcbvCNPeUGUpNj
- QwU=
-X-IronPort-AV: E=Sophos;i="5.73,445,1583190000"; 
-   d="scan'208";a="12467472"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 28 May 2020 17:48:01 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 28 May 2020 17:48:01 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 28 May 2020 17:48:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1590680881; x=1622216881;
-  h=from:to:cc:subject:date:message-id;
-  bh=Sw9zOSroZ9SJ13/VWfo6J3/CTkEe0YQ1ov3hXyiqHjU=;
-  b=o6VEYz6g2+uUCIm6pOwgrfz/+MQTuWCV+uE3fh0ueXURKM7vqkTT8p5l
-   39F1FyW06A7/wLOkN+fTggsyCXKENzJs4bqLpHhM19nzszD3NnIc6O/Nm
-   PcBl2zma1DqO1Bassg/NG89dUJNARNtjmJ7G89IPyFD7R6JYDegFdSUe3
-   FGQvgYDuxq1DOdVcQ58VEw38iRe6+KQxL2wpMOhdJ3P5ePGILrMkMgT/O
-   EFexqVCSgiI0G/JzSsrl+NOolvGWetWesUBh4fl9nd3bTr1DyBGDHL1nP
-   ZU4qNp4qs+X3TBLlBehL9i+X92JLq6Z5fwwdff8cKJNM8UirEwf6FNVD9
-   g==;
-IronPort-SDR: RrXTpHqHWtOzMSM6Sus6P6W4/PMG5G2AVnztXyMkjiMfLXzXgNWpNtue6Z0+Vi5LV5JTU0iYdi
- Xqv9zqfnfzB4jlhxvs/RNlqXSCV0/5aKNy6ykd54R4XYxNs29AyIPd8qOiZgzpa6cqpXXjq7Xw
- ctD8232wIvotrcu8wJClvJXpNUwDFiL5UfuNi8xvjhgbUSDNrMzfqVcXjZ9koDdqJ0QbSFJ7Q8
- 0VLiAYH/ulF+IxWGPssFJds4XldgSdM7Z0HPYT/RjUiMwcLceIdO3SG4MVe8PwLoN7PMsclkLN
- N3s=
-X-IronPort-AV: E=Sophos;i="5.73,445,1583190000"; 
-   d="scan'208";a="12467471"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 28 May 2020 17:48:00 +0200
-Received: from schifferm-ubuntu4.tq-net.de (unknown [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 90B93280065;
-        Thu, 28 May 2020 17:48:08 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH tty-next] tty: serial: imx: clear Ageing Timer Interrupt in handler
-Date:   Thu, 28 May 2020 17:47:47 +0200
-Message-Id: <20200528154747.14201-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 May 2020 11:55:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404808AbgE1PzO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:55:14 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397F9C08C5C8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:55:13 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id l10so5744344wrr.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rPnjGxRsCWeo1VTeDEJmk4OeDZHaRPMkdFbDM+u0itI=;
+        b=XfMisC5oOam+U4xw6XrPGGVCSfLiK/gq2dhLxiol2VGNCge2T7s/WJbv2fzeF+qT7L
+         9kiXhrXs+6QaM5DKfmK40xckvafwDHPbqR6h+9931sThTrH6zNwfGVEw9v82UtrcHGhr
+         Qgzn9YdyjKRqLw09txzM22qJ647mLxizuT1KQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rPnjGxRsCWeo1VTeDEJmk4OeDZHaRPMkdFbDM+u0itI=;
+        b=nDK3NRqaP6sjb5B7cS17Y2TB6HvfD+t0YWBZv3YorR+gc59KDbphqS1H7qBPdFuOkj
+         yn0JihJAHAws4jImyJ4g6POAO+fFIU+NxXzayYE36zb3+ES6LOj+ElEjZgX3+jO2jeWp
+         yWGDsLp/5tNgd4i6ewsshmh/7gui8LTHgnmRE+4FtOxThqw0Rv+mfzfe1rPaA7pdiSzy
+         fnYkeVyQJUHeV7VqRPbzjFm80BImPo1FCw95ug24Qw9kpMhjI9C1Ag8RlwMEBhBop7bU
+         DIbltPap7wKrI7HPDxN4pP78TUsCrWEPUwaj+DlVHfwGU2lEUA4MxIRWWfu5DvEkCP7c
+         4maw==
+X-Gm-Message-State: AOAM533SBCoi4SMy3zIaH+2fWwLO3EfnWWJpMLwh4Fb1y5rhmNSt/DJa
+        OKUmcRe28M/toU9Kr/mHePM52mJQJm3LiQ==
+X-Google-Smtp-Source: ABdhPJz2Yq5gIDJWXEeL+lkV+hX987rQm2RhtCDhU9wMvl60O/uC897n1c/+s40srdnjxMDgkdO35w==
+X-Received: by 2002:adf:a55c:: with SMTP id j28mr4004820wrb.369.1590681311222;
+        Thu, 28 May 2020 08:55:11 -0700 (PDT)
+Received: from [192.168.51.243] ([78.128.78.220])
+        by smtp.gmail.com with ESMTPSA id h15sm6158467wrt.73.2020.05.28.08.55.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 08:55:10 -0700 (PDT)
+Subject: Re: [PATCH][net-next] nexthop: fix incorrect allocation failure on
+ nhg->spare
+To:     Colin Ian King <colin.king@canonical.com>,
+        David Ahern <dsahern@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528145114.420100-1-colin.king@canonical.com>
+ <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
+ <b0852a83-c3a5-a1be-6554-dc035e5b3d6e@cumulusnetworks.com>
+ <b9cedb4b-d1bf-fd6d-f85e-444840c3924b@canonical.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <e2c038f3-4990-d958-84a8-2aeaba8195f5@cumulusnetworks.com>
+Date:   Thu, 28 May 2020 18:55:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <b9cedb4b-d1bf-fd6d-f85e-444840c3924b@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AGTIM flag must be cleared explicitly, otherwise the IRQ handler
-will be called in an endless loop.
+On 28/05/2020 18:53, Colin Ian King wrote:
+> On 28/05/2020 15:55, Nikolay Aleksandrov wrote:
+>> On 28/05/2020 17:53, Nikolay Aleksandrov wrote:
+>>> On 28/05/2020 17:51, Colin King wrote:
+>>>> From: Colin Ian King <colin.king@canonical.com>
+>>>>
+>>>> The allocation failure check for nhg->spare is currently checking
+>>>> the pointer nhg rather than nhg->spare which is never false. Fix
+>>>> this by checking nhg->spare instead.
+>>>>
+>>>> Addresses-Coverity: ("Logically dead code")
+>>>> Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>>> ---
+>>>>  net/ipv4/nexthop.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
+>>>> index ebafa5ed91ac..97423d6f2de9 100644
+>>>> --- a/net/ipv4/nexthop.c
+>>>> +++ b/net/ipv4/nexthop.c
+>>>> @@ -1185,7 +1185,7 @@ static struct nexthop *nexthop_create_group(struct net *net,
+>>>>  
+>>>>  	/* spare group used for removals */
+>>>>  	nhg->spare = nexthop_grp_alloc(num_nh);
+>>>> -	if (!nhg) {
+>>>> +	if (!nhg->spare) {
+>>>>  		kfree(nhg);
+>>>>  		kfree(nh);
+>>>>  		return NULL;
+>>>>
+>>>
+>>> Good catch, embarrassing copy paste error :-/
+>>> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+>>>
+>>
+>> Wait - that should be targeted at -net, that's where the fixes went.
+>> And the fixes tag is wrong, nhg->spare was very recently added by:
+>> commit 90f33bffa382
+>> Author: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+>> Date:   Tue May 26 12:56:15 2020 -0600
+>>
+>>     nexthops: don't modify published nexthop groups
+>>
+> 
+> Do you require me to fix this up and re-send?
+> 
+> Colin
+> 
 
-Fortunately, this issue currently doesn't affect mainline kernels in
-practice, as the the RX FIFO trigger level is set to 1 in UFCR. When
-setting the trigger level to a higher number, the issue is trivially
-reproducible by any RX without DMA that doesn't fill the FIFO up to the
-configured level.
-
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/tty/serial/imx.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 6b078e395931..1265e8d86d8a 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -909,6 +909,8 @@ static irqreturn_t imx_uart_int(int irq, void *dev_id)
- 		usr2 &= ~USR2_ORE;
- 
- 	if (usr1 & (USR1_RRDY | USR1_AGTIM)) {
-+		imx_uart_writel(sport, USR1_AGTIM, USR1);
-+
- 		__imx_uart_rxint(irq, dev_id);
- 		ret = IRQ_HANDLED;
- 	}
--- 
-2.17.1
+Up to you, it will go to the same stable releases as that fix used the same
+Fixes tag, so it's really not an issue.
 
