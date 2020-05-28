@@ -2,133 +2,123 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E689C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCDEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A080207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9A4207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oCffCv1k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0lTwkvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390382AbgE1NXv (ORCPT
+        id S2390280AbgE1NZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
+        Thu, 28 May 2020 09:25:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390295AbgE1NXt (ORCPT
+        with ESMTP id S2390161AbgE1NZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:23:49 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B27C05BD1E;
-        Thu, 28 May 2020 06:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=876zKjaeAoHItKy5v6K+oJgLPOJlwJDj+y9Y+u5ub3Q=; b=oCffCv1kWlYM7vfE13NaT/An7r
-        FivxfRrag/U7kCLFWrdaTBOn1MfgamU6vtb7+86bOlktrTuPU0RMc7tN8UBT66EdDHqq9wKLsBQwB
-        BheUjDeh1TCkHl904kAKiyVFjkgm9qGMjitFbP0vIBf7o9YDTUSegr2VGOoABaxqQs0adNbRROgFK
-        bvNf6ZMqbKBfKdm18q8XE4YAYrMT2/cEq2caDtfQ2VJiJ8QUZB/w6gPJSQVNqMOp1J1RjMcDYU2Kb
-        sRZdgxRBV7TY0InZfFLKWsUxav6oCggbvU7rLVIx6d97gCuIe5HxWQtqUre10DFvb21uVR8jTDgLJ
-        n2Vl6v4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeIVQ-00056k-0N; Thu, 28 May 2020 13:23:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C9832307643;
-        Thu, 28 May 2020 15:23:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BD35D20D0904E; Thu, 28 May 2020 15:23:27 +0200 (CEST)
-Date:   Thu, 28 May 2020 15:23:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Quentin Perret <qperret@google.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 1/2] sched/uclamp: Add a new sysctl to control RT default
- boost value
-Message-ID: <20200528132327.GB706460@hirez.programming.kicks-ass.net>
-References: <20200511154053.7822-1-qais.yousef@arm.com>
+        Thu, 28 May 2020 09:25:53 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4646C05BD1E;
+        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y11so3268222plt.12;
+        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
+        b=f0lTwkvPsjEGSI+BRI7kDWY7T7QMJZBBjNSt80WryFEz5AtJUDysU0IozJWfDpadRX
+         +SQ9hum9XQJrvIIcdEf21QUlcTu+sc1p+fcbM+1U2ZLrXzWpf0dgNbq1o9mMi1H8R9Oc
+         7H5AakLypHuixotL+DR9NLguz8BRhuzL4+Y1Qa3NEHEb7midtfFz6hEW6uKkZLAwh9HF
+         uQhT/laUdwHt7V4gziNDIEiHUPmnNq0BI4WsbZUN/jwNeIRIceaNDpTUikfKBPxpfJNM
+         YsoCB0YB8/DvJEBjrczbb15h5uke20uYjL9YZHXWXui5/o92/lf7BIXAOefSQeDYJ7LR
+         M73g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
+        b=fqhpflhQ/XYe5JmQM6VNi70pvRvs0tXhuOsc2JYqmlsIfmJuff22IYo4ePK0c3B1dz
+         gWxf87oI6V2GlqDMPDBMumzOgSuGvke9ZzR46aeS3gk7CLkEabjQJ8pWpRj0P4ff/TWP
+         26c1H8WjNBscye0+rezdqr7x1ESKFbwA/7RN+jt5422yzMJl28kJfuvD1hS4VVv4ttf1
+         MtdOAy5H1aunuytd3Kw+qPjjUeNAEgZoVscFSe+qOUThtELRVPKDfokJ1X9EY9dFUfD4
+         0S8ZkUwas3zgCAlWiWs78MFeQlYSsDKfBUi3hPKm4BaBjylqOGp1CntqjIRCyjLokfjk
+         vNLg==
+X-Gm-Message-State: AOAM533+HXbZSRR5CksRa5on/D7zvP6ptQMTpyJXdF3Osg7QNAsUEZ11
+        QlSZLD791/6dSA81/dROlz/NL1tvK+g=
+X-Google-Smtp-Source: ABdhPJz8VC7DQMsEmrHiOxWQ16KQoUAxc+7rIER6X1Qw+ve5Duj50GcgF9uNeOXubcm5LHp+efFVgg==
+X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr3414568plb.243.1590672351462;
+        Thu, 28 May 2020 06:25:51 -0700 (PDT)
+Received: from localhost.localdomain ([198.211.10.140])
+        by smtp.gmail.com with ESMTPSA id j26sm4869359pfr.215.2020.05.28.06.25.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 06:25:50 -0700 (PDT)
+From:   Qi Zheng <arch0.zheng@gmail.com>
+To:     robh+dt@kernel.org, robh@kernel.org, frowand.list@gmail.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qi Zheng <arch0.zheng@gmail.com>
+Subject: [PATCH v2] of/fdt: Remove redundant kbasename function call
+Date:   Thu, 28 May 2020 21:25:41 +0800
+Message-Id: <20200528132541.463300-1-arch0.zheng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200511154053.7822-1-qais.yousef@arm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 11, 2020 at 04:40:52PM +0100, Qais Yousef wrote:
-> +/*
-> + * By default RT tasks run at the maximum performance point/capacity of the
-> + * system. Uclamp enforces this by always setting UCLAMP_MIN of RT tasks to
-> + * SCHED_CAPACITY_SCALE.
-> + *
-> + * This knob allows admins to change the default behavior when uclamp is being
-> + * used. In battery powered devices, particularly, running at the maximum
-> + * capacity and frequency will increase energy consumption and shorten the
-> + * battery life.
-> + *
-> + * This knob only affects RT tasks that their uclamp_se->user_defined == false.
-> + *
-> + * This knob will not override the system default sched_util_clamp_min defined
-> + * above.
-> + *
-> + * Any modification is applied lazily on the next attempt to calculate the
-> + * effective value of the task.
-> + */
-> +unsigned int sysctl_sched_uclamp_util_min_rt_default = SCHED_CAPACITY_SCALE;
-> +
->  /* All clamps are required to be less or equal than these values */
->  static struct uclamp_se uclamp_default[UCLAMP_CNT];
->  
-> @@ -872,6 +892,28 @@ unsigned int uclamp_rq_max_value(struct rq *rq, enum uclamp_id clamp_id,
->  	return uclamp_idle_value(rq, clamp_id, clamp_value);
->  }
->  
-> +static inline void uclamp_sync_util_min_rt_default(struct task_struct *p,
-> +						   enum uclamp_id clamp_id)
-> +{
-> +	unsigned int default_util_min = sysctl_sched_uclamp_util_min_rt_default;
-> +	struct uclamp_se *uc_se;
-> +
-> +	/* Only sync for UCLAMP_MIN and RT tasks */
-> +	if (clamp_id != UCLAMP_MIN || !rt_task(p))
-> +		return;
-> +
-> +	uc_se = &p->uclamp_req[UCLAMP_MIN];
-> +
-> +	/*
-> +	 * Only sync if user didn't override the default request and the sysctl
-> +	 * knob has changed.
-> +	 */
-> +	if (uc_se->user_defined || uc_se->value == default_util_min)
-> +		return;
-> +
-> +	uclamp_se_set(uc_se, default_util_min, false);
-> +}
+For version 1 to 3 of the device tree, this is the node full
+path as a zero terminated string, starting with "/". The
+following equation will not hold, since the node name has
+been processed in the fdt_get_name().
 
-So afaict this is directly added to the enqueue/dequeue path, and we've
-recently already had complaints that uclamp is too slow.
+	*pathp == '/'
 
-Is there really no other way?
+For version 16 and later, this is the node unit name only
+(or an empty string for the root node). So the above
+equation will still not hold.
+
+So the kbasename() is redundant, just remove it.
+
+Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+---
+
+Change in v2:
+	remove another kbasename() also.
+
+ drivers/of/fdt.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 38619e9ef6b2..4602e467ca8b 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -643,8 +643,6 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ 	     offset = fdt_next_node(blob, offset, &depth)) {
+ 
+ 		pathp = fdt_get_name(blob, offset, NULL);
+-		if (*pathp == '/')
+-			pathp = kbasename(pathp);
+ 		rc = it(offset, pathp, depth, data);
+ 	}
+ 	return rc;
+@@ -671,8 +669,6 @@ int __init of_scan_flat_dt_subnodes(unsigned long parent,
+ 		int rc;
+ 
+ 		pathp = fdt_get_name(blob, node, NULL);
+-		if (*pathp == '/')
+-			pathp = kbasename(pathp);
+ 		rc = it(node, pathp, data);
+ 		if (rc)
+ 			return rc;
+-- 
+2.25.1
+
