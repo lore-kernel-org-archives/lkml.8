@@ -2,105 +2,99 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B27EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0871DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 482D6208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:23:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Om+LVat9"
+	by mail.kernel.org (Postfix) with ESMTP id E0FBF207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590693834;
+	bh=KWIzbnUdC0/WL0P4Z1bjwKBGnAgV6PACPp1qBqkmfOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=14e22V1VqeC9egTpm/G7ARdOpKv9NKxVj1jzmHMDHZSrsj4d2pQ/F/kq0TQ2zOoMh
+	 V/xhZZDASzOrECpXtk8pnEQqSJPzgNc+L/PQZOCpi3xOXaJfZ0GIFBbNZKhIivctZJ
+	 dzaezaMVsgvEqt/xabvpwcZGJOYElDEHNn6BeUqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406205AbgE1TXi (ORCPT
+        id S2406510AbgE1TXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406300AbgE1TX3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:23:29 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB5BC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:23:29 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id f3so1219661pfd.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:23:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0gA7Ac+73j/XnZFQi1m6vn3pC8smRbdUm5Fe8cbDyhk=;
-        b=Om+LVat92f7RfQwrzgyYFTaU+jb22Q8KiUAmJI9TaxaK/Z2+G02Sv/9APyzywDHAQn
-         Ln7QkPtqftmBgBAB4LCMNXyvhNZcFe8XgdR+LctT7cHTb7V1DqY9dhhRoe985ljMbbmu
-         jnAscOpB5boyeZ/+SkqORtmWOqSkQoGaXxGTGvwSDDd1XkBBBQGdLBLlrKaHV2mH2EMx
-         P/kfVgurkkRRin6rXHRfXKstHnWkUQmCEWiv4r734Ng8gwmHlxhUggxP37jQ0QixIPnG
-         2WV+sl52+rHWgakZ+AFjDeD7H5Vru2/of/jrruf+PyAE9qImbd6R88VyiHjemZDp27+0
-         GdJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0gA7Ac+73j/XnZFQi1m6vn3pC8smRbdUm5Fe8cbDyhk=;
-        b=ejrqqubkXgUNgM8ZfhkyM9Vbi+gMvwzLSUjZdUyNgRL8zS+9BU/sBZFjXEI9FrCS5D
-         ZGm0P0mGKuawSN50pSTnfKqEU5T0CHvm1uWA/+T+iWzCJx4xJ/asMMt6u5B2oFCaa0YK
-         X6tSn4xneWpkwQKla9LCBtll/eWzpExHjuacGtLP6V592+E0umMMHI48UG83sb3QjzAP
-         O94CxWh8tsIa6pOsAoRjIZ2Qcjyzjtmcg+O3p+bhpFrd9slBw0MI5ycwqt3rKGzvgOZ6
-         7LUeF7Mhk+RH9YfThvhLTJVlHlr2ly+vU5VfWNKbxy86XPdCuw3i40Z4nF44ujsWNndy
-         QCdg==
-X-Gm-Message-State: AOAM533h/ppwcTGmvzKM5Yl4/JMP2xe1CxZ3ghJ4ATk3vxUyNyeXMnGR
-        JPtcCPdBLPqoAF2UN6vzlu9Cuw==
-X-Google-Smtp-Source: ABdhPJxvks363x29yek8RaALXXC0cYu2SwUDsZ1gCb7momK0fY3oVgT+N23LBhPU5BtU9iTGBDhkUg==
-X-Received: by 2002:a63:c5a:: with SMTP id 26mr4386530pgm.270.1590693808617;
-        Thu, 28 May 2020 12:23:28 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id t2sm5089134pgh.89.2020.05.28.12.23.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 12:23:28 -0700 (PDT)
-Subject: Re: [PATCH 09/12] xfs: flag files as supporting buffered async reads
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org
-References: <20200526195123.29053-1-axboe@kernel.dk>
- <20200526195123.29053-10-axboe@kernel.dk> <20200528175353.GB8204@magnolia>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <d723cd33-2fed-1438-d1ed-b3851edf4b98@kernel.dk>
-Date:   Thu, 28 May 2020 13:23:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200528175353.GB8204@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Thu, 28 May 2020 15:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406300AbgE1TXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:23:44 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B275207BC;
+        Thu, 28 May 2020 19:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590693823;
+        bh=KWIzbnUdC0/WL0P4Z1bjwKBGnAgV6PACPp1qBqkmfOE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IW/bkGhIbncJGc2idclnVVmK54Dm09dZ8pvN2ZYPXRa9osghjVdrkr5zdOQNP4yPk
+         h4mf680CpeabAzzXMzZBnMQVROL1MW1W9oIPunSyKYRkxNqBDhI/isso0zFpMeBjdS
+         NbY+A39KRCp8HPTEvyg7cFxsfQjFlQTVpee8GO60=
+Date:   Thu, 28 May 2020 12:23:42 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Dmitry Korotin <dkorotin@wavecomp.com>,
+        Philippe =?ISO-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "Maciej W. Rozycki" <macro@wdc.com>, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v7 2/4] mm/memory.c: Update local TLB if PTE entry
+ exists
+Message-Id: <20200528122342.11e51dd9c7698d68632f2a81@linux-foundation.org>
+In-Reply-To: <1590546320-21814-3-git-send-email-maobibo@loongson.cn>
+References: <1590546320-21814-1-git-send-email-maobibo@loongson.cn>
+        <1590546320-21814-3-git-send-email-maobibo@loongson.cn>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/20 11:53 AM, Darrick J. Wong wrote:
-> On Tue, May 26, 2020 at 01:51:20PM -0600, Jens Axboe wrote:
->> XFS uses generic_file_read_iter(), which already supports this.
->>
->> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+On Wed, 27 May 2020 10:25:18 +0800 Bibo Mao <maobibo@loongson.cn> wrote:
+
+> If two threads concurrently fault at the same page, the thread that
+> won the race updates the PTE and its local TLB. For now, the other
+> thread gives up, simply does nothing, and continues.
 > 
-> Er... I guess that looks ok?  Assuming you've done enough qa on
-> io_uring to be able to tell if this breaks anything, since touching the
-> mm always feels murky to me:
+> It could happen that this second thread triggers another fault, whereby
+> it only updates its local TLB while handling the fault. Instead of
+> triggering another fault, let's directly update the local TLB of the
+> second thread. Function update_mmu_tlb is used here to update local
+> TLB on the second thread, and it is defined as empty on other arches.
 > 
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -2752,6 +2752,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+>  		new_page = old_page;
+>  		page_copied = 1;
+>  	} else {
+> +		update_mmu_tlb(vma, vmf->address, vmf->pte);
+>  		mem_cgroup_cancel_charge(new_page, memcg, false);
+>  	}
+>  
 
-The mm bits should be fine, haven't seen anything odd in testing.
-And it's not like the mm changes are super complicated, I think
-they turned out pretty clean and straight forward.
+When applying your patches on top of the -mm tree's changes, the above
+hunk didn't apply.  The entire `else' block was removed by
+https://ozlabs.org/~akpm/mmotm/broken-out/mm-memcontrol-convert-anon-and-file-thp-to-new-mem_cgroup_charge-api.patch
 
-> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
-
-Thanks!
-
--- 
-Jens Axboe
-
+I assumed that dropping this hunk was appropriate.  Please check?
