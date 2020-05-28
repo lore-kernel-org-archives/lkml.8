@@ -2,146 +2,92 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1337C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198482075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VfT9vvve"
+	by mail.kernel.org (Postfix) with ESMTP id B82AA208B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590699817;
+	bh=agEaof6MpDGFOPjG017BhHJsuSFW58ckIR+2SITSxqQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=l0JaaFJmOj3GPyUAC5YikuKp1JqiBhBUDYqx0hzIHE9TyEUA6dtoXugwqnngHK9DD
+	 WojkhzBI6HQ2hH+XZDqOebs3sjLZAo3ldZJ/J8zNRX92bog6NOdkbr6uWjcEMyFuDP
+	 bmgsSLw3adhXugXBPx/zTu8HS/YazgfIL1fnqTSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436471AbgE1VCq (ORCPT
+        id S2407499AbgE1VDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:02:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407418AbgE1VCh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:02:37 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590A0C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:02:37 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id e125so17425096lfd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OKXkd/2Goa9jMS89Q94W0ujkvkQZZc4XoblLXbs8npU=;
-        b=VfT9vvveDYPm9Ryth8faOYkMaXrBtezGHU2cIz3grKvOlKpU8UUiJtMaij5vwXdW6c
-         MdF+q4O4dv+Jcb8D5cFvQ1NJMY+og5fVguE2A9OfoPMqsVw4L0Ys54+bGGMFewoVziYQ
-         I19+A4AjOq2Syf5MqR79HZ1F/ONCu86nWMh23r2Mt/ZHnchlc/NfKuw3KtyCBOoeEA2U
-         I2ooyEe7iOvV59F5vNcHsuMdRmiaF40OXrPlQxhj1Kx2iO7yklM43zS+UdLMIcuawhef
-         6XF7vJbPNkWQmaMi/0UuVksVuaFlAvo7OKkZaNJdBRLauXunE5A0gi7f+t16KjS1/7uU
-         eQVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OKXkd/2Goa9jMS89Q94W0ujkvkQZZc4XoblLXbs8npU=;
-        b=ru9eC1OcKtADHyu07JoEMLg5FDrvfGQYx8gv0U8ConKJ1NP4GA5oMbq59432NL4xUp
-         RMTjbopQovYxjmXWqpc7Lyc/FTn7eWaV+RXZBU5pOmanELf3ZevXSVL7mkvrKODK153c
-         8QYGT/TE1/isPRW0f8R7G7Y7mvsCjA4EZ4yy89DECOwcubNNpjLonc/93wRk29k+uXxt
-         xEGrku7skt9n0npgIpx4FuCxNDlFPxLBo8HV7b9fMjJyPeXL6JTyTLYFARPcIjUF4mUN
-         v4QWlm4x//i/GOWg+oVIO2UmomO818RCtO+XQlhniZ7RB3AmPzDsyX8ydsSaV3XcvQfS
-         sc2g==
-X-Gm-Message-State: AOAM5304v7v4q3llm6GrNa44MkwiGaKUOYR101qx6DISTkaSrF1+2QtB
-        3S+KHDN6KZEq0HPbOOmlFGVSkxGSmoC6zCZrik877Q==
-X-Google-Smtp-Source: ABdhPJzsrob+TxrXT/0Qxvf0fgqGmcH4Xue4XBajqa+4Mv7HoQYtZH7bYZw06Z/fs+xonMgNz+UV+FKJ3O5OyaiTy2M=
-X-Received: by 2002:a19:6cd:: with SMTP id 196mr2622048lfg.216.1590699755398;
- Thu, 28 May 2020 14:02:35 -0700 (PDT)
+        Thu, 28 May 2020 17:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407418AbgE1VDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 17:03:21 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 228402075F;
+        Thu, 28 May 2020 21:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590699801;
+        bh=agEaof6MpDGFOPjG017BhHJsuSFW58ckIR+2SITSxqQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=QYVLb6ZnCegT+zMGUCQyyBTtCThMi0d4hJ3yn4hDlU3jVf4GlLXfISHfQltE8ebvM
+         P+GiIdO3RWSFtgbhHK0oOlZZYPPG0ZLH1rvUiRlULUBgmleIjLTz8C+oYal4n9bzil
+         GTXoqE2MlDpZ/o/ezZDHYc9OUjutBg4eX3pdK1i8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0BC5C35229BA; Thu, 28 May 2020 14:03:21 -0700 (PDT)
+Date:   Thu, 28 May 2020 14:03:21 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: linux-next: build failure after merge of the rcu tree
+Message-ID: <20200528210320.GA22278@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200528190501.10135e9f@canb.auug.org.au>
+ <20200528163358.GK2869@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200520143712.GA749486@chrisdown.name> <CALvZod7rSeAKXKq_V0SggZWn4aL8pYWJiej4NdRd8MmuwUzPEw@mail.gmail.com>
- <20200528194831.GA2017@chrisdown.name> <20200528202944.GA76514@cmpxchg.org>
-In-Reply-To: <20200528202944.GA76514@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 28 May 2020 14:02:24 -0700
-Message-ID: <CALvZod62+Me-n_54W+GiJrXafwFOzd8nfvkLmOBM190sEGJF=g@mail.gmail.com>
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Chris Down <chris@chrisdown.name>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528163358.GK2869@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 1:30 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Thu, May 28, 2020 at 08:48:31PM +0100, Chris Down wrote:
-> > Shakeel Butt writes:
-> > > What was the initial reason to have different behavior in the first place?
-> >
-> > This differing behaviour is simply a mistake, it was never intended to be
-> > this deviate from what happens elsewhere. To that extent this patch is as
-> > much a bug fix as it is an improvement.
->
-> Yes, it was an oversight.
->
-> > > >  static void high_work_func(struct work_struct *work)
-> > > > @@ -2378,16 +2384,20 @@ void mem_cgroup_handle_over_high(void)
-> > > >  {
-> > > >         unsigned long penalty_jiffies;
-> > > >         unsigned long pflags;
-> > > > +       unsigned long nr_reclaimed;
-> > > >         unsigned int nr_pages = current->memcg_nr_pages_over_high;
-> > >
-> > > Is there any benefit to keep current->memcg_nr_pages_over_high after
-> > > this change? Why not just use SWAP_CLUSTER_MAX?
->
-> It's there for the same reason why try_to_free_pages() takes a reclaim
-> argument in the first place: we want to make the thread allocating the
-> most also do the most reclaim work. Consider a thread allocating THPs
-> in a loop with another thread allocating regular pages.
->
-> Remember that all callers loop. They could theoretically all just ask
-> for SWAP_CLUSTER_MAX pages over and over again.
->
-> The idea is to have fairness in most cases, and avoid allocation
-> failure, premature OOM, and containment failure in the edge cases that
-> are caused by the inherent raciness of page reclaim.
->
+On Thu, May 28, 2020 at 09:33:59AM -0700, Paul E. McKenney wrote:
+> On Thu, May 28, 2020 at 07:05:01PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the rcu tree, today's linux-next build (powercp
+> > allyesconfig) failed like this:
+> > 
+> > ld: kernel/rcu/refperf.o:(.discard+0x0): multiple definition of `__pcpu_unique_srcu_ctl_perf_srcu_data'; kernel/rcu/rcuperf.o:(.discard+0x0): first defined here
+> > 
+> > Caused by commit
+> > 
+> >   786a25497743 ("refperf: Add a test to measure performance of read-side synchronization")
+> > 
+> > From srcutree.h:
+> > 
+> >  * Note that although DEFINE_STATIC_SRCU() hides the name from other
+> >  * files, the per-CPU variable rules nevertheless require that the
+> >  * chosen name be globally unique.
+> > 
+> > I have applied the following patch for today.
+> 
+> I have a patch queued, but it is currently blocked by other broken
+> commits which I expect to have straightened out today.
+> 
+> Yet again, please accept my apologies for the hassle!
 
-Thanks for the explanation.
+And this is now in rcu/next.
 
-> > I don't feel strongly either way, but current->memcg_nr_pages_over_high can
-> > be very large for large allocations.
-> >
-> > That said, maybe we should just reclaim `max(SWAP_CLUSTER_MAX, current -
-> > high)` for each loop? I agree that with this design it looks like perhaps we
-> > don't need it any more.
-> >
-> > Johannes, what do you think?
->
-> How about this:
->
-> Reclaim memcg_nr_pages_over_high in the first iteration, then switch
-> to SWAP_CLUSTER_MAX in the retries.
->
-> This acknowledges that while the page allocator and memory.max reclaim
-> every time an allocation is made, memory.high is currently batched and
-> can have larger targets. We want the allocating thread to reclaim at
-> least the batch size, but beyond that only what's necessary to prevent
-> premature OOM or failing containment.
->
-> Add a comment stating as much.
->
-> Once we reclaim memory.high synchronously instead of batched, this
-> exceptional handling is no longer needed and can be deleted again.
->
-> Does that sound reasonable?
-
-SGTM. It does not seem controversial to me to let the task do the work
-to resolve the condition for which it is being throttled.
+							Thanx, Paul
