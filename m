@@ -2,117 +2,70 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D2F220814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:59:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="miP7UbEn"
+	by mail.kernel.org (Postfix) with ESMTP id D117A2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390799AbgE1N7M (ORCPT
+        id S2390705AbgE1OC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37294 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390751AbgE1N7H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:59:07 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B72C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 06:59:06 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f185so2163804wmf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 06:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z4Mht0hOJ/x269vYNUbhZmvFvBpXKo/z9k8ZE3MlgiM=;
-        b=miP7UbEnqGNLwbuCqX3AjlcLiVr/EEW+iM9ZpMml9MEg9sEtBhsE1bnK0HHD2uRhfF
-         ADhtu3NmeTdU1c/V4b/dzY7krJThryWtxqu9nO06W+kDnFqn9IS9Sfknoz7lVfmo899S
-         eDnBBRKKKyv6X5DgQFNmSm6ReWWv49Rd3VQbPJ2J0GJTRVXxJVR4yKEPRHo/F/K2rrur
-         wtwbTHAPGLqhAzcaiKZCw8Sxw3dIK8TCHAMTYW2WnbKUh9rmUlyYwoziHLLhZm6zhmnw
-         XokQF5+qlAi+Y/cFuLWs/+HMfeny26GRAeu553j7xxdsSymRXQPvz3pB+w/CKf3GFHJX
-         0S9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z4Mht0hOJ/x269vYNUbhZmvFvBpXKo/z9k8ZE3MlgiM=;
-        b=gKx4BviHfA0jNN0DjEDUnGOfta3kR/RBEH9brbm9k7BEDM2vR8soDN/ZsjzqbP0fap
-         ZQSbAxeyN7C0PN7d9pdbVKcHF4PUuJoXzHtM5EfdOxH0YwjzTfOuR+VuABqeb7n8Oq/7
-         0q/6TPuWJLDXPCv4g427FdWci1CL5cNSKhmwgB9CBqMGknRSMpcDvLBdCki2j8GHsc51
-         TtqQdbpNvM+5hsDJuxGBf7rXZxT9CsdNOuDLZlSqB53ZF5VByrUqw2Sr6a5whb49jZ1e
-         KKl9Kevr2nTsdLU33Dbp2ALSYfqum5oddBqp7zLwwWDwtm1MNP4vz41ZEflc+FS0H+R8
-         jZ5w==
-X-Gm-Message-State: AOAM530uH8AX8l0YTFwcDuIBvyD3WpgWhzjdLSjdBHdiITx3wo0CdX7r
-        HkMufnrVxpqU6mW6O1P35YT5tQ==
-X-Google-Smtp-Source: ABdhPJwa2kiLYWJHItumPfhGeufMSpJNKjrDcHYRwjVY19oFSl+hS6FpEyyraLAC5F2EWT/iMGIlLA==
-X-Received: by 2002:a7b:ca47:: with SMTP id m7mr1760608wml.173.1590674345652;
-        Thu, 28 May 2020 06:59:05 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id f2sm6395917wrg.17.2020.05.28.06.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 06:59:04 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH net-next v2] dt-bindings: net: rename the bindings document for MediaTek STAR EMAC
-Date:   Thu, 28 May 2020 15:59:02 +0200
-Message-Id: <20200528135902.14041-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
+        Thu, 28 May 2020 10:02:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23319 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390540AbgE1OC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:02:26 -0400
+IronPort-SDR: h6bPnYEg5gBrlQDEHGc3TbOt2Tox5kxXA3y7CErvfLI3kTNyuckYwdaKcuPmOMbgKnc41C8ie5
+ Zjydsylj0HtQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:02:26 -0700
+IronPort-SDR: FecJ5r7Uq94DHHhmghjJ99Hvb8ZmtORb1/VYFUzXzQZYhvqyvxiHHpVDK/trA5Xr61fSY10z0b
+ 2Rj89oBj22nA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="292004382"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga004.fm.intel.com with ESMTP; 28 May 2020 07:02:26 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 0B799301C60; Thu, 28 May 2020 07:02:26 -0700 (PDT)
+Date:   Thu, 28 May 2020 07:02:26 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 3/3] perf/x86/intel/uncore: Validate MMIO address
+ before accessing
+Message-ID: <20200528140226.GI611145@tassilo.jf.intel.com>
+References: <1590671727-99311-1-git-send-email-kan.liang@linux.intel.com>
+ <1590671727-99311-3-git-send-email-kan.liang@linux.intel.com>
+ <de3b847eddd143998997d70a1ba161b8@AcuMS.aculab.com>
+ <79403443-e893-da26-ee6d-1fd7f252bbfe@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <79403443-e893-da26-ee6d-1fd7f252bbfe@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > +
+> > > +	pr_warn_once("perf uncore: Access invalid address of %s.\n",
+> > > +		     box->pmu->type->name);
+> > 
+> > Pretty hard to debug without the invalid offset.
+> > 
+> 
+> I will dump the box->io_addr and offset for debugging.
 
-The driver itself was renamed before getting merged into mainline, but
-the binding document kept the old name. This makes both names consistent.
+Please don't overengineer.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
-v1 -> v2:
-- update the id field as well
-
- .../net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml}      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/net/{mediatek,eth-mac.yaml => mediatek,star-emac.yaml} (96%)
-
-diff --git a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml b/Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
-similarity index 96%
-rename from Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-rename to Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
-index f85d91a9d6e5..aea88e621792 100644
---- a/Documentation/devicetree/bindings/net/mediatek,eth-mac.yaml
-+++ b/Documentation/devicetree/bindings/net/mediatek,star-emac.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/net/mediatek,eth-mac.yaml#
-+$id: http://devicetree.org/schemas/net/mediatek,star-emac.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: MediaTek STAR Ethernet MAC Controller
--- 
-2.26.1
-
+-Andi
