@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D49C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C202C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2CA8207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C172207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590696891;
-	bh=Cbug4Zw6pLdPJMyM6ewVPi8za9fxR3JM1cojC9EnM+s=;
+	s=default; t=1590696895;
+	bh=KO7jFfZjKsu09S4znpcAoZqYM7eD7tNncFeM+2E0bgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=spG/HZj2B278uod1wLZTM7ww8x9EiBsdLu/KMuIMvN95z6H8uhh2+NHjgT1ecYnq6
-	 axBmTq4i8jre5MJfm9Rz1pyLgck9q7ivrzTebrk8XgQjIw8Zn39IHfkAFpsGClvMCJ
-	 AnMMJuCiGPymgeLTJtNwvVvmxKNSfpE9KT1mQZ1Y=
+	b=wU8IvAjm3/P7nZek0TR5eUYwO6cztcpzJcjPvxnYTb6IzeiukxUejC18SyibYV4rR
+	 6QY5cFkNmWIqnrN5hXUF//PH9zVKMdPfDD9Uo2mFb+CqRkGHJWJnxknMTYcWl6Ryl8
+	 EZk3uUpBYK1nUt1ts4DS0gHuY37bqeddyBp/HS10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407070AbgE1UOu (ORCPT
+        id S2407078AbgE1UOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:14:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41870 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 16:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407019AbgE1UO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:14:26 -0400
+        id S2407024AbgE1UO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 16:14:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE06E2088E;
-        Thu, 28 May 2020 20:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF97208DB;
+        Thu, 28 May 2020 20:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590696865;
-        bh=Cbug4Zw6pLdPJMyM6ewVPi8za9fxR3JM1cojC9EnM+s=;
+        s=default; t=1590696867;
+        bh=KO7jFfZjKsu09S4znpcAoZqYM7eD7tNncFeM+2E0bgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4AEdmZm0JNgL/s0oKV0nM8NQEtvV6FVP+zpgtOHyGsyffMn6AxwzOQXx0Qhl5raN
-         rQdeD3rlf9SHPYNeGSHLlkQLrUSO5SQaJKvouupTtButX4L8jUewo3SCzNZMTMx2eJ
-         a+dSGyhGVU/1cRPAohlORhLGnA1RlgocBEFGsmEs=
+        b=m2pwkA4Pw5oT51aPumiJ9+yjnd9Oy0FqSydKhGIeGPVOHp6WgAC0c2A61E7hitogR
+         eYCeZfhgdemceBMw06ec4BaB52nQC+N0/d3dkFT/19YzsJu4MbH0P+kC/ZcTrx5onp
+         BjOHmy1ADOnx8FlPQcMvzVBb/NJnXzbpVLci9zN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     tglx@linutronix.de, luto@kernel.org, ak@linux.intel.com
 Cc:     corbet@lwn.net, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
@@ -47,11 +47,11 @@ Cc:     corbet@lwn.net, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
         peterz@infradead.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
         "H . Peter Anvin" <hpa@zytor.com>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v13 07/16] x86/process/64: Use FSGSBASE instructions on thread copy and ptrace
-Date:   Thu, 28 May 2020 16:13:53 -0400
-Message-Id: <20200528201402.1708239-8-sashal@kernel.org>
+Subject: [PATCH v13 08/16] x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+Date:   Thu, 28 May 2020 16:13:54 -0400
+Message-Id: <20200528201402.1708239-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528201402.1708239-1-sashal@kernel.org>
 References: <20200528201402.1708239-1-sashal@kernel.org>
@@ -62,77 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chang S. Bae" <chang.seok.bae@intel.com>
+From: Tony Luck <tony.luck@intel.com>
 
-When FSGSBASE is enabled, copying threads and reading fsbase and gsbase
-using ptrace must read the actual values.
+Before enabling FSGSBASE the kernel could safely assume that the content
+of GS base was a user address. Thus any speculative access as the result
+of a mispredicted branch controlling the execution of SWAPGS would be to
+a user address. So systems with speculation-proof SMAP did not need to
+add additional LFENCE instructions to mitigate.
 
-When copying a thread, use save_fsgs() and copy the saved values.  For
-ptrace, the bases must be read from memory regardless of the selector if
-FSGSBASE is enabled.
+With FSGSBASE enabled a hostile user can set GS base to a kernel address.
+So they can make the kernel speculatively access data they wish to leak
+via a side channel. This means that SMAP provides no protection.
 
-[ tglx: Invoke __rdgsbase_inactive() with interrupts disabled ]
-[ luto: Massage changelog ]
+Add FSGSBASE as an additional condition to enable the fence-based SWAPGS
+mitigation.
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: H. Peter Anvin <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/1557309753-24073-9-git-send-email-chang.seok.bae@intel.com
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/process.c    | 10 ++++++----
- arch/x86/kernel/process_64.c |  6 ++++--
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 9da70b279dad..0264d9bb8991 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -140,10 +140,12 @@ int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
- 	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
- 
- #ifdef CONFIG_X86_64
--	savesegment(gs, p->thread.gsindex);
--	p->thread.gsbase = p->thread.gsindex ? 0 : current->thread.gsbase;
--	savesegment(fs, p->thread.fsindex);
--	p->thread.fsbase = p->thread.fsindex ? 0 : current->thread.fsbase;
-+	current_save_fsgs();
-+	p->thread.fsindex = current->thread.fsindex;
-+	p->thread.fsbase = current->thread.fsbase;
-+	p->thread.gsindex = current->thread.gsindex;
-+	p->thread.gsbase = current->thread.gsbase;
-+
- 	savesegment(es, p->thread.es);
- 	savesegment(ds, p->thread.ds);
- #else
-diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
-index aefb30bc56bc..0bcb48a1264a 100644
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -423,7 +423,8 @@ unsigned long x86_fsbase_read_task(struct task_struct *task)
- 
- 	if (task == current)
- 		fsbase = x86_fsbase_read_cpu();
--	else if (task->thread.fsindex == 0)
-+	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
-+		 (task->thread.fsindex == 0))
- 		fsbase = task->thread.fsbase;
- 	else
- 		fsbase = x86_fsgsbase_read_task(task, task->thread.fsindex);
-@@ -437,7 +438,8 @@ unsigned long x86_gsbase_read_task(struct task_struct *task)
- 
- 	if (task == current)
- 		gsbase = x86_gsbase_read_cpu_inactive();
--	else if (task->thread.gsindex == 0)
-+	else if (static_cpu_has(X86_FEATURE_FSGSBASE) ||
-+		 (task->thread.gsindex == 0))
- 		gsbase = task->thread.gsbase;
- 	else
- 		gsbase = x86_fsgsbase_read_task(task, task->thread.gsindex);
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index ed54b3b21c39..487603ea51cd 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -450,14 +450,12 @@ static void __init spectre_v1_select_mitigation(void)
+ 		 * If FSGSBASE is enabled, the user can put a kernel address in
+ 		 * GS, in which case SMAP provides no protection.
+ 		 *
+-		 * [ NOTE: Don't check for X86_FEATURE_FSGSBASE until the
+-		 *	   FSGSBASE enablement patches have been merged. ]
+-		 *
+ 		 * If FSGSBASE is disabled, the user can only put a user space
+ 		 * address in GS.  That makes an attack harder, but still
+ 		 * possible if there's no SMAP protection.
+ 		 */
+-		if (!smap_works_speculatively()) {
++		if (boot_cpu_has(X86_FEATURE_FSGSBASE) ||
++		    !smap_works_speculatively()) {
+ 			/*
+ 			 * Mitigation can be provided from SWAPGS itself or
+ 			 * PTI as the CR3 write in the Meltdown mitigation
 -- 
 2.25.1
 
