@@ -2,88 +2,199 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AAFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78812214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F3D2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9KdapEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgE1Djp (ORCPT
+        id S1726999AbgE1DnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 23:39:45 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:42817 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgE1Djo (ORCPT
+        Wed, 27 May 2020 23:43:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgE1DnA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 23:39:44 -0400
-X-Originating-IP: 86.202.110.81
-Received: from localhost (lfbn-lyo-1-15-81.w86-202.abo.wanadoo.fr [86.202.110.81])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 0F3A8FF806;
-        Thu, 28 May 2020 03:39:41 +0000 (UTC)
-Date:   Thu, 28 May 2020 05:39:41 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Guenter Roeck <linux@roeck-us.net>, SoC Team <soc@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] arm64: dts: sparx5: Add hwmon temperature sensor
-Message-ID: <20200528033941.GQ3972@piout.net>
-References: <20200513134140.25357-1-lars.povlsen@microchip.com>
- <20200513134140.25357-3-lars.povlsen@microchip.com>
- <20200528022931.GA3238321@bogus>
+        Wed, 27 May 2020 23:43:00 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2820AC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 20:43:00 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id l15so15009459vsr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 20:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bPaEtIz9pymnQ3zlLT7ky3GdzrpI5LZJGnrujJgXsc0=;
+        b=c9KdapEUJSPKNZeQyNnqiFrr6KubgXJeNvxUNO3s2hHeydiVxTVWyJmV7sGy63xdHL
+         5u8E+yrHjREHQPMLEuL2E3UkkkAQbONyrSQsVq8l/EpwP4xCYD2wzPXrZia+25uAnH0U
+         iBmmbZYYjcBr0vV5SVG54wPyyE8aX9epXx750=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bPaEtIz9pymnQ3zlLT7ky3GdzrpI5LZJGnrujJgXsc0=;
+        b=A33mPi4/ZfD1AsnbxhYlnRU9uh7EheweNS1l3oF2Z3KajkFkFoscdoz8ZCRGj15fz/
+         IbypxCywpHSOwhjChoBWTHIkQ4EAPcqIJMpNNCRkkA7g8X/gS1QZQN9fsgB5Ntjc8Cb1
+         Um6RBDPEIz3His7ofAFwS2k8LJdGW+b4/oC0w3KiZ1Izd4d59tHCIAuGj7yBiGQFyDEt
+         tkSEHGsPZtyL6ZPzjms5TaPmF72zZ0/sm2Ow72npRlwneJjpkCKtQSE7Do1rln43aTfG
+         nKERKqQhpYPyJFR9lF+kE1GQP9nyAsRbjWfHvDsW/jShFTxzp6hZ7QALEdwIv1w9cRWp
+         gQfg==
+X-Gm-Message-State: AOAM533yfQiJwgX/UXDMXmpG+AV/KuDuRUPHbeWOwd5wkIyZ/dgDSqYB
+        opftoJ1RIiGL25Szf1rTL5Q8cQM8wWJbXFOQZQ4UOA==
+X-Google-Smtp-Source: ABdhPJyeD7CvriJPtSeRzw8WUSVDYFhVUzo6FlAFfBfHtHPhZb+maNEaAfevvGRTkmo+hfxiYZ5Kvr4W1jIDx7B+XcA=
+X-Received: by 2002:a67:8d48:: with SMTP id p69mr617029vsd.86.1590637379005;
+ Wed, 27 May 2020 20:42:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528022931.GA3238321@bogus>
+References: <1590550627-24618-1-git-send-email-zijuhu@codeaurora.org>
+In-Reply-To: <1590550627-24618-1-git-send-email-zijuhu@codeaurora.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Wed, 27 May 2020 20:42:46 -0700
+Message-ID: <CANFp7mXMiYKY-33xZX2MaHd5RyicbRb2fZHo8mk4-VM_Jf47UQ@mail.gmail.com>
+Subject: Re: [PATCH v2] bluetooth: hci_qca: Fix QCA6390 memdump failure
+To:     Zijun Hu <zijuhu@codeaurora.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
+        Matthias Kaehlcke <mka@chromium.org>, rjliao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Zijun,
 
-On 27/05/2020 20:29:31-0600, Rob Herring wrote:
-> On Wed, May 13, 2020 at 03:41:39PM +0200, Lars Povlsen wrote:
-> > This adds a hwmon temperature node sensor to the Sparx5 SoC.
-> > 
-> > Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> > ---
-> >  arch/arm64/boot/dts/microchip/sparx5.dtsi | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-> > index f09a49c41ce19..b5f2d088af30e 100644
-> > --- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-> > +++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-> > @@ -233,5 +233,11 @@ i2c1: i2c@600103000 {
-> >  			clock-frequency = <100000>;
-> >  			clocks = <&ahb_clk>;
-> >  		};
-> > +
-> > +		tmon0: tmon@610508110 {
-> > +			compatible = "microchip,sparx5-temp";
-> > +			reg = <0x6 0x10508110 0xc>;
-> 
-> These nodes are all very odd with a couple of registers spread out at 
-> randomish addresses. DT nodes should roughly correlate to h/w blocks, 
-> not sets of registers for a driver like this seems to be.
-> 
+On Tue, May 26, 2020 at 8:37 PM Zijun Hu <zijuhu@codeaurora.org> wrote:
+>
+> QCA6390 memdump VSE sometimes come to bluetooth driver
+> with wrong sequence number as illustrated as follows:
+> frame # in DEC: frame data in HEX
+> 1396: ff fd 01 08 74 05 00 37 8f 14
+> 1397: ff fd 01 08 75 05 00 ff bf 38
+> 1414: ff fd 01 08 86 05 00 fb 5e 4b
+> 1399: ff fd 01 08 77 05 00 f3 44 0a
+> 1400: ff fd 01 08 78 05 00 ca f7 41
+> it is mistook for controller missing packets, so results
+> in page fault after overwriting memdump buffer allocated.
+>
+> it is fixed by ignoring QCA6390 sequence number error
+> and checking buffer space before writing.
+>
+> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 45 ++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 38 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index e4a6823..388fe01b 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -114,6 +114,7 @@ struct qca_memdump_data {
+>         char *memdump_buf_tail;
+>         u32 current_seq_no;
+>         u32 received_dump;
+> +       u32 ram_dump_size;
+>  };
+>
+>  struct qca_memdump_event_hdr {
+> @@ -976,6 +977,8 @@ static void qca_controller_memdump(struct work_struct *work)
+>         char nullBuff[QCA_DUMP_PACKET_SIZE] = { 0 };
+>         u16 seq_no;
+>         u32 dump_size;
+> +       u32 rx_size;
+> +       enum qca_btsoc_type soc_type = qca_soc_type(hu);
+>
+>         while ((skb = skb_dequeue(&qca->rx_memdump_q))) {
+>
+> @@ -1029,6 +1032,7 @@ static void qca_controller_memdump(struct work_struct *work)
+>
+>                         skb_pull(skb, sizeof(dump_size));
+>                         memdump_buf = vmalloc(dump_size);
+> +                       qca_memdump->ram_dump_size = dump_size;
+>                         qca_memdump->memdump_buf_head = memdump_buf;
+>                         qca_memdump->memdump_buf_tail = memdump_buf;
+>                 }
+> @@ -1052,25 +1056,52 @@ static void qca_controller_memdump(struct work_struct *work)
+>                  * packets in the buffer.
+>                  */
+>                 while ((seq_no > qca_memdump->current_seq_no + 1) &&
+> +                       (soc_type != QCA_QCA6390) &&
 
-The DT nodes correlates to HW block, this and the previous families of
-SoCs were designed with packed registers. There is no padding between HW
-block registers.
+This probably shouldn't be SOC specific.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+>                         seq_no != QCA_LAST_SEQUENCE_NUM) {
+>                         bt_dev_err(hu->hdev, "QCA controller missed packet:%d",
+>                                    qca_memdump->current_seq_no);
+> +                       rx_size = qca_memdump->received_dump;
+> +                       rx_size += QCA_DUMP_PACKET_SIZE;
+> +                       if (rx_size > qca_memdump->ram_dump_size) {
+> +                               bt_dev_err(hu->hdev,
+> +                                               "QCA memdump received %d, no space for missed packet",
+> +                                               qca_memdump->received_dump);
+> +                               break;
+> +                       }
+>                         memcpy(memdump_buf, nullBuff, QCA_DUMP_PACKET_SIZE);
+>                         memdump_buf = memdump_buf + QCA_DUMP_PACKET_SIZE;
+>                         qca_memdump->received_dump += QCA_DUMP_PACKET_SIZE;
+>                         qca_memdump->current_seq_no++;
+>                 }
+
+You can replace this loop with a memset(memdump_buf, 0, (seq_no -
+qca_memdump->current_seq_no) * QCA_DUMP_PACKET_SIZE). This simplifies
+the ram_dump_size check as well because it won't zero fill until the
+end anymore (meaning a single bad seq_no doesn't make the rest of the
+dump incorrect).
+
+>
+> -               memcpy(memdump_buf, (unsigned char *) skb->data, skb->len);
+> -               memdump_buf = memdump_buf + skb->len;
+> -               qca_memdump->memdump_buf_tail = memdump_buf;
+> -               qca_memdump->current_seq_no = seq_no + 1;
+> -               qca_memdump->received_dump += skb->len;
+> +               rx_size = qca_memdump->received_dump + skb->len;
+> +               if (rx_size <= qca_memdump->ram_dump_size) {
+> +                       if ((seq_no != QCA_LAST_SEQUENCE_NUM) &&
+> +                                       (seq_no != qca_memdump->current_seq_no))
+> +                               bt_dev_err(hu->hdev,
+> +                                               "QCA memdump unexpected packet %d",
+> +                                               seq_no);
+> +                       bt_dev_dbg(hu->hdev,
+> +                                       "QCA memdump packet %d with length %d",
+> +                                       seq_no, skb->len);
+> +                       memcpy(memdump_buf, (unsigned char *)skb->data,
+> +                                       skb->len);
+> +                       memdump_buf = memdump_buf + skb->len;
+> +                       qca_memdump->memdump_buf_tail = memdump_buf;
+> +                       qca_memdump->current_seq_no = seq_no + 1;
+> +                       qca_memdump->received_dump += skb->len;
+> +               } else {
+> +                       bt_dev_err(hu->hdev,
+> +                                       "QCA memdump received %d, no space for packet %d",
+> +                                       qca_memdump->received_dump, seq_no);
+> +               }
+>                 qca->qca_memdump = qca_memdump;
+>                 kfree_skb(skb);
+>                 if (seq_no == QCA_LAST_SEQUENCE_NUM) {
+> -                       bt_dev_info(hu->hdev, "QCA writing crash dump of size %d bytes",
+> -                                  qca_memdump->received_dump);
+> +                       bt_dev_info(hu->hdev,
+> +                                       "QCA memdump Done, received %d, total %d",
+> +                                       qca_memdump->received_dump,
+> +                                       qca_memdump->ram_dump_size);
+>                         memdump_buf = qca_memdump->memdump_buf_head;
+>                         dev_coredumpv(&hu->serdev->dev, memdump_buf,
+>                                       qca_memdump->received_dump, GFP_KERNEL);
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+>
