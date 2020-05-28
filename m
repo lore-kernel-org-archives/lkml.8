@@ -6,42 +6,39 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B09F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F92C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89A5C208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6007208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgE1CPd (ORCPT
+        id S1726897AbgE1CQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:15:33 -0400
-Received: from mga06.intel.com ([134.134.136.31]:22236 "EHLO mga06.intel.com"
+        Wed, 27 May 2020 22:16:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:65126 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgE1CPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:15:32 -0400
-IronPort-SDR: uchrLjJhGqkfY1psT2qsxRaS0/A9bwL5EfHY6aVSJQeeMO3P4wpVDQSbZHGASHQim7dzXuyB7X
- aNIZFWw35ZVQ==
+        id S1726086AbgE1CQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 22:16:25 -0400
+IronPort-SDR: 0s3OLJt46aCvM27fGNn0BJuSuOaDIevXtwxSmwTobwk3RGkDAZV9RsiT/OhHh5SYSsWQJZAxOG
+ RVy5vTKx27BQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 19:15:31 -0700
-IronPort-SDR: ZsxugPmsaGgauJHajFMQGUnZ6XilY3GjFeF91lsi/lhAwQe6yrP2U+awZ3oR0Yq9oqUgvuwlpf
- MliaLxRu/0YQ==
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 19:16:25 -0700
+IronPort-SDR: KxXTxRiR8qvwMya+n1jxtQezw59GWa09vyxuwlNF/iejGh6wo2QsaRZyeSxRzsF+P2meBPWdFv
+ zSoaz2qjtxQw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="376218319"
+   d="scan'208";a="442767711"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.152])
-  by fmsmga001.fm.intel.com with ESMTP; 27 May 2020 19:15:31 -0700
+  by orsmga005.jf.intel.com with ESMTP; 27 May 2020 19:16:24 -0700
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>,
-        Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>,
-        Peter Xu <peterx@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] KVM: selftests: Ignore KVM 5-level paging support for VM_MODE_PXXV48_4K
-Date:   Wed, 27 May 2020 19:15:30 -0700
-Message-Id: <20200528021530.28091-1-sean.j.christopherson@intel.com>
+Subject: [PATCH] KVM: selftests: Add .gitignore entry for KVM_SET_GUEST_DEBUG test
+Date:   Wed, 27 May 2020 19:16:24 -0700
+Message-Id: <20200528021624.28348-1-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -50,50 +47,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly set the VA width to 48 bits for the x86_64-only PXXV48_4K VM
-mode instead of asserting the guest VA width is 48 bits.  The fact that
-KVM supports 5-level paging is irrelevant unless the selftests opt-in to
-5-level paging by setting CR4.LA57 for the guest.  The overzealous
-assert prevents running the selftests on a kernel with 5-level paging
-enabled.
+Add the KVM_SET_GUEST_DEBUG test's output binary to .gitignore.
 
-Incorporate LA57 into the assert instead of removing the assert entirely
-as a sanity check of KVM's CPUID output.
-
-Fixes: 567a9f1e9deb ("KVM: selftests: Introduce VM_MODE_PXXV48_4K")
-Reported-by: Sergio Perez Gonzalez <sergio.perez.gonzalez@intel.com>
-Cc: Adriana Cervantes Jimenez <adriana.cervantes.jimenez@intel.com>
-Cc: Peter Xu <peterx@redhat.com>
+Fixes: 449aa906e67e ("KVM: selftests: Add KVM_SET_GUEST_DEBUG test")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- tools/testing/selftests/kvm/lib/kvm_util.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/testing/selftests/kvm/.gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index c9cede5c7d0de..74776ee228f2d 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -195,11 +195,18 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages, int perm)
- 	case VM_MODE_PXXV48_4K:
- #ifdef __x86_64__
- 		kvm_get_cpu_address_width(&vm->pa_bits, &vm->va_bits);
--		TEST_ASSERT(vm->va_bits == 48, "Linear address width "
--			    "(%d bits) not supported", vm->va_bits);
-+		/*
-+		 * Ignore KVM support for 5-level paging (vm->va_bits == 57),
-+		 * it doesn't take effect unless a CR4.LA57 is set, which it
-+		 * isn't for this VM_MODE.
-+		 */
-+		TEST_ASSERT(vm->va_bits == 48 || vm->va_bits == 57,
-+			    "Linear address width (%d bits) not supported",
-+			    vm->va_bits);
- 		pr_debug("Guest physical address width detected: %d\n",
- 			 vm->pa_bits);
- 		vm->pgtable_levels = 4;
-+		vm->va_bits = 48;
- #else
- 		TEST_FAIL("VM_MODE_PXXV48_4K not supported on non-x86 platforms");
- #endif
+diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+index 222e50104296a..d0079fce1764f 100644
+--- a/tools/testing/selftests/kvm/.gitignore
++++ b/tools/testing/selftests/kvm/.gitignore
+@@ -3,6 +3,7 @@
+ /s390x/resets
+ /s390x/sync_regs_test
+ /x86_64/cr4_cpuid_sync_test
++/x86_64/debug_regs
+ /x86_64/evmcs_test
+ /x86_64/hyperv_cpuid
+ /x86_64/mmio_warning_test
 -- 
 2.26.0
 
