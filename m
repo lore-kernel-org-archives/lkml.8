@@ -6,92 +6,152 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06156208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC2F6208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387898AbgE1K33 (ORCPT
+        id S2387905AbgE1K3s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:29:29 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:54951 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387842AbgE1K3G (ORCPT
+        Thu, 28 May 2020 06:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387891AbgE1K3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:29:06 -0400
-Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MQ5nK-1jR6cR3J4a-00M11t for <linux-kernel@vger.kernel.org>; Thu, 28 May
- 2020 12:29:03 +0200
-Received: by mail-qt1-f172.google.com with SMTP id a23so21775044qto.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:29:03 -0700 (PDT)
-X-Gm-Message-State: AOAM532jmwbvJQ280XM1MnmAvw2LOR6EVzwdb7C5kmmAHojYLRj3cC/L
-        LMqcNVoy0tF4t8Bu8OhdFOyrvHDuyIEI416SQhM=
-X-Google-Smtp-Source: ABdhPJz2a2WytWmIneIq2G9OpjaO/RzuEzD9ej4GIQPy/ppJNSDQ6lV/bFBZfFaxAIKkS/hUB94Bg+Cs4mG8X8OBWbA=
-X-Received: by 2002:ac8:1844:: with SMTP id n4mr2210189qtk.142.1590661742672;
- Thu, 28 May 2020 03:29:02 -0700 (PDT)
+        Thu, 28 May 2020 06:29:22 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E022C05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:29:22 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jeFmk-0004AL-85; Thu, 28 May 2020 12:29:14 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 949F0100D01; Thu, 28 May 2020 12:29:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Don Porter <porter@cs.unc.edu>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andi Kleen <ak@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
+        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
+        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
+Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
+In-Reply-To: <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
+References: <20200511045311.4785-1-sashal@kernel.org> <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com> <20200515164013.GF29995@sasha-vm> <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com> <20200518153407.GA499505@tassilo.jf.intel.com> <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com> <87v9ksvoaq.fsf@nanos.tec.linutronix.de> <20200519164853.GA19706@linux.intel.com> <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu> <87h7w7qy18.fsf@nanos.tec.linutronix.de> <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
+Date:   Thu, 28 May 2020 12:29:13 +0200
+Message-ID: <87d06opd3a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200527112608.3886105-1-anders.roxell@linaro.org>
- <20200527112608.3886105-6-anders.roxell@linaro.org> <CAL_Jsq+bwnwQBpxf_Q5GNhCz8+-psH-ovpW80LMk=MK=zcbYcA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+bwnwQBpxf_Q5GNhCz8+-psH-ovpW80LMk=MK=zcbYcA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 12:28:46 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3_5pHCc0WqDNt1Aim2M67cicyq27f0ggqPbJuu97i=Nw@mail.gmail.com>
-Message-ID: <CAK8P3a3_5pHCc0WqDNt1Aim2M67cicyq27f0ggqPbJuu97i=Nw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] power: vexpress: make the reset driver a module
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        SoC Team <soc@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RQzF1yQzx+K2cLpqpCusoYSQA4uv03CisgmvX1deqeHfNiEWKfS
- JQbQ9CCCZcSJVbmrDB3ve8hjR5GFztB1bHHBjxOC+KdsUpOj2Xa0MPZDK1aiSazBEsNdbAW
- TvAsqim+ALTcJohHUgHTefHr6obVaB9JQf8kAREwuPcshzxcblfVfg9PgyE+RUxyKH9Bwdy
- pfFTlLakx3l6VVhhk93Ug==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EvMnaEqN+Kk=:I0dZKNV77g33RHmZ+9q2gz
- e+zHIq0pHHDBBFivIlZHrkmo58NTGYg/H63E66BS96NYxmFFxM+HJDsOQFZz4hlbAykLJFXWg
- rXdSMrnmZWk/5kWfcjBusVXtsGsLfpeV/GBiJ84rTxiA8DaswtNWyr83G3uTadZAQ4SCh+58Y
- wNpWrZ4AfLq2WyfygF9v7zLiqdQsekoYYaIVoi5ea96SD1fhE11Zwlo2L+8kllye9HQsXd3oi
- zwoWHRHdZHd/FNTG4P9Kq3T3TMZvowxWQO3p7VxatGkAJpiX7fYpn7k0IH5zZc+GMw/5phTbM
- RHpV1NXV9Rc7kUqEzdU7EkI0AcFLyOVVCIpqHUFmMo28a56FKoCtXa34mG2KpjpRVNJZQTpc6
- nzi41QsWmikRT7bAxLGw44QZU5f31MaMFxFytD5zCPTXl33rLvPiWWsXZdM5A3+wggsWha3oj
- joZaQPBo+7dcbY+pZ1+YHhYd6Tcwmaqid8XMZRZQ+pCVvUiyhd0pLgrXjot56V93H07TULXMj
- 3eu1Ng+k0vwLNQW79Pwfs8+0hONmSI+AiL61EaT3060xgVFOe9Rv6AtQ6Awx6XlJiGrb8/C2c
- pfRVO91TE+L6eBIpWSy7DGlhOJbiTzol+G0Eqd5+ou5WHbgZ6O/+cz7izdLbiKqyVrlMuLk95
- uTyCtOR8Lre4ym3Vg4ucPWNSItD9FLdytmvoHMyo5+ALpxuHukb1Hf1dHNm0raCZSGwABTXWv
- guDfhwXn5XV9xljTf/B4YLrickiYg02TkJgbBFfbQ5kP65YihSmm5ip9suohgm5vP86j6QF8n
- CCmpD95qnXEg2TGGaOKAtEUI09+a//ZpyRYdhn2Q+3JnrI4wQ8=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 3:32 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, May 27, 2020 at 5:26 AM Anders Roxell <anders.roxell@linaro.org> wrote:
-> >
-> > Today the vexpress power driver can only be builtin.  Rework so it's
-> > possible for the vexpress power driver to be a module.
->
-> This is the same incomplete patch I did[1]. As a module, it needs to
-> clean-up everything probe did like overwriting global variables.
->
-> Rob
->
-> [1] https://lore.kernel.org/linux-arm-kernel/20200419170810.5738-5-robh@kernel.org/
+Don,
 
-Your version was actually broken because it allowed unloading the
-driver again. The version that Anders sent is a bit better because it
-explicitly forbids unloading by having a module_init but not module_exit
-function, so as long as the .suppress_bind_attrs flag is set, this will
-not crash the kernel.
+Don Porter <porter@cs.unc.edu> writes:
+> On 5/22/20 8:45 PM, Thomas Gleixner wrote:
+> The threat model for Graphene, and most SGX papers, is quite explicit: 
+> we assume that Intel’s CPU package, the software in the enclave, and 
+> possibly Intel’s Attestation Service (IAS) are the only trusted 
+> components.  Any other software should be assumed compromised, and one 
+> can even assume memory is physically tampered or that one has plugged in 
+> an adversarial device. It is not a question of the limitations of the 
+> kernel, the threat model assumes that the kernel is already rooted.
 
-It would be nice to have a .remove callback, but for the merge window
-I'm happy with a patch that fixes the build regression.
+I'm well aware about that model and that the research is focussed on
+this.
 
-        Arnd
+> For the community these papers are typically written to, this assumption 
+> would be well understood.  And thus it is common to see code artifacts 
+> that might emulate or even undermine security of untrusted
+> components.
+
+No disagreement here.
+
+> Not appropriate for production use, but for the typical audience, this 
+> risk would be understood.  And, initially, when people started using 
+> Graphene, I checked who they were - almost exclusively SGX researchers 
+> who would have this context.  It has only been recently that the 
+> interest has grown to a level that these sorts of warnings need to be 
+> revised for a more general audience.  But the point that we should 
+> revise our readme and warnings for a more general audience is well
+> taken.
+
+The problem is that this has spread out. And it's not only Graphene.
+
+As at least two different incarnations originate from Intel written by
+two different Intel people, it's really on Intel to get the message out
+that enabling FSGSBASE behind the kernels back is a horrible idea.
+
+>> It's beyond hillarious that the renewed attempt to get FSGSBASE support
+>> merged does not come from the company which has the main interest to get
+>> this solved, i.e Intel.
+>
+> Yes!  I think we are in agreement that we expected Intel to upstream 
+> this support - it is their product. I don’t see why I am personally 
+> responsible to come to the aid of a multi-billion dollar corporation in 
+> my free time, or that it is wrong to at least let them try first and see 
+> how far they get.
+
+You surely are not responsible. It's definitely Intel's fault.
+
+> Until recently, we were doing proof-of-concept research, not product 
+> development, and there are limited hours in the day.  I also hasten to 
+> say that the product of research is an article, the software artifact 
+> serves as documentation of the experiment.  In contrast, the product of 
+> software development is software.  It takes significant time and effort 
+> to convert one to the other.  Upstreaming code is of little scientific 
+> interest.  But things have changed for our project; we had no users in 
+> 2015 and we are now un-cutting corners that are appropriate for research 
+> but inappropriate for production.  For a research artifact with an 
+> audience that knew the risks, we shipped a module because it was easier 
+> to maintain and install than a kernel patch.
+
+I understand that and with a big fat warning and documentation from
+start I wouldn't have complained so vehemently. 
+
+> Also, there is a chicken-and-egg problem here: AFAIU a kernel patch 
+> needs a userspace demonstration to motivate merging.  We can’t do a 
+> userspace demonstration without this feature.  My main interest in 
+> showing up for this discussion was to try to make the case that, 
+> compared to 2015, there is a more convincing userspace demonstration and 
+> larger population of interested users.
+
+As one of the X86 maintainers I have to say that we were perfectly
+willing to merge FSGSBASE even without the SGX background. There are
+perfect other reasons to do so.
+
+> As far as the patch and pull request, I personally think the right thing 
+> to do is add the warnings you suggest, help test this or another kernel 
+> patch, and advise users that patching their kernel is more secure than 
+> this module.  I am not in favor of fully deleting the module, in the 
+> interest of transparency and reproducibility.
+
+Fair enough.
+
+> Finally, I must rebut the claim that my research abuses public funds to 
+> advertise for Intel.  I have been working on this problem since before I 
+> knew SGX existed, and have been completely transparent regarding 
+> subsequent collaborations with Intel.  I believe that understanding the 
+> pros and cons of different techniques to harden an application against a 
+> compromised kernel is in the public interest, and my research projects 
+> have been reviewed and overseen according to standard practices at both 
+> the university and US government funding agencies.  The expectations of 
+> agencies in the US funding research are the paper, the insights, and 
+> proof-of-concept software; converting proof-of-concept software into 
+> production quality is generally considered a “nice to have”.
+
+Sorry for that innuendo. Now that my anger and general frustration about
+this whole disaster have calmed down, I surely would not write that
+again.
+
+Thanks,
+
+        Thomas
