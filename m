@@ -2,80 +2,175 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D791C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E06F20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CED20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CvoRxINZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbgE1B27 (ORCPT
+        id S1726282AbgE1Bca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:28:59 -0400
-Received: from mail.windriver.com ([147.11.1.11]:60236 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE1B26 (ORCPT
+        Wed, 27 May 2020 21:32:30 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:63006 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725896AbgE1Bc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:28:58 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 04S1Spg2015775
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 27 May 2020 18:28:52 -0700 (PDT)
-Received: from pek-lpg-core1-vm1.wrs.com (128.224.156.106) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 27 May 2020 18:28:50 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <tj@kernel.org>
-CC:     <jiangshanlai@gmail.com>, <markus.elfring@web.de>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6] workqueue: Remove unnecessary kfree() call in rcu_free_wq()
-Date:   Thu, 28 May 2020 09:37:36 +0800
-Message-ID: <20200528013736.39356-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+        Wed, 27 May 2020 21:32:29 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200528013226epoutp018639ad7ea4555983e47630cae8254b09~TDSU98MwQ2174221742epoutp01e
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:32:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200528013226epoutp018639ad7ea4555983e47630cae8254b09~TDSU98MwQ2174221742epoutp01e
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590629547;
+        bh=HK/1/VP5ov7EOoNpQ0X08DtlhI52O+2EyAZ3cTvlQkI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CvoRxINZ+mTA0agfax3yn8vaVWRUB4f66icmLId8+zfOpcwEMhCYxa0k+OYZEi70Z
+         Mucv/EMsS5s7qmzsXpGQwvHBgWolcatxZoJxXRgWUiRlD8T4AnUlsOTxOPQ1/4fwu3
+         3dPCOoABm1KZ89Whsp0WX/xXVNzZy36RYPAGx5mg=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20200528013226epcas5p17c56ec6d989480e834855950b36e2334~TDSUe02Wh1882918829epcas5p1c;
+        Thu, 28 May 2020 01:32:26 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        76.00.09467.AA41FCE5; Thu, 28 May 2020 10:32:26 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528013226epcas5p1c73527c71424679443c10daf8bf561df~TDSUD0My00728507285epcas5p10;
+        Thu, 28 May 2020 01:32:26 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200528013226epsmtrp2285c64bdb564c4513d91654752e6b269~TDSUC227J2107921079epsmtrp2d;
+        Thu, 28 May 2020 01:32:26 +0000 (GMT)
+X-AuditID: b6c32a49-fba88a80000024fb-0d-5ecf14aa192c
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D8.77.08303.9A41FCE5; Thu, 28 May 2020 10:32:25 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+        [107.108.73.139]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528013223epsmtip1efd3432a48365af5ec1348fbaaf4812d~TDSSJ3bxJ1673116731epsmtip1k;
+        Thu, 28 May 2020 01:32:23 +0000 (GMT)
+From:   Alim Akhtar <alim.akhtar@samsung.com>
+To:     robh@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-scsi@vger.kernel.org,
+        krzk@kernel.org, avri.altman@wdc.com, martin.petersen@oracle.com,
+        kwmad.kim@samsung.com, stanley.chu@mediatek.com,
+        cang@codeaurora.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>
+Subject: [PATCH v10 01/10] scsi: ufs: add quirk to fix mishandling
+ utrlclr/utmrlclr
+Date:   Thu, 28 May 2020 06:46:49 +0530
+Message-Id: <20200528011658.71590-2-alim.akhtar@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200528011658.71590-1-alim.akhtar@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpileLIzCtJLcpLzFFi42LZdlhTS3eVyPk4g7XnJS0ezNvGZvHy51U2
+        i0/rl7FazD9yjtXi/PkN7BY3txxlsdj0+BqrxeVdc9gsZpzfx2TRfX0Hm8Xy4/+YLP7v2cFu
+        sXTrTUYHXo/Lfb1MHptWdbJ5bF5S79Fycj+Lx8ent1g8+rasYvT4vEnOo/1AN1MARxSXTUpq
+        TmZZapG+XQJXxouja1gKdgtU7P9wnLmB8TVvFyMnh4SAicTHD2vZuxi5OIQEdjNKHGx/zArh
+        fGKUeLziDhOE85lRYvGUB4wwLSvWLGGBSOxilPhxajkrSEJIoIVJYsVsXRCbTUBb4u70LUwg
+        toiAsMSRb21gzcwCN5gkHqx0AbGFBUIljuztZAexWQRUJa6dfgtWzytgI3F+z0ZWiGXyEqs3
+        HGDuYuTg4BSwldg7wQFkr4RAL4fEn7XT2SFqXCR+rfrNBGELS7w6vgUqLiXx+d1eNpBeCYFs
+        iZ5dxhDhGoml846xQNj2EgeuzGEBKWEW0JRYv0sf4ko+id7fT5ggOnklOtqEIKpVJZrfXYXq
+        lJaY2N0NdaSHxKpDB9kgITKBUWLbr7/sExhlZyFMXcDIuIpRMrWgODc9tdi0wDAvtVyvODG3
+        uDQvXS85P3cTIziZaHnuYLz74IPeIUYmDsZDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYf
+        YpTmYFES51X6cSZOSCA9sSQ1OzW1ILUIJsvEwSnVwDStxFvUST1otld5oEWxBwdf0d1ck2gt
+        wXa2pM4CP8PkdTYTH98QY+s3sJwZcuHye/kTJY4JokvtHE4r6+0IFnutnLhvmcilWfHNClsb
+        sjZ+vc29/ZWs+Je383u9jJrrJneEFllonvzRUXlc+9WP28y6c5pfiV2/tl3D67TFjtVy/urf
+        olcaS71RvSt1Ty+S0+w/e9zjc/bKnesVhVgVdbR2HD64eE7t7ZWad56rztRZN617ZarQC75t
+        nXVJX6uzA65lil+8fCirp5fv3m+51z/Fn8lIzo/M3shVv0DG5J7d5Cti1lzVynunySVnN7C4
+        vF6+pNlof5Zum8XdGznRp0716hl8uR57VFTccFOTEktxRqKhFnNRcSIAqIW44ZUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsWy7bCSnO5KkfNxBidfmFk8mLeNzeLlz6ts
+        Fp/WL2O1mH/kHKvF+fMb2C1ubjnKYrHp8TVWi8u75rBZzDi/j8mi+/oONovlx/8xWfzfs4Pd
+        YunWm4wOvB6X+3qZPDat6mTz2Lyk3qPl5H4Wj49Pb7F49G1ZxejxeZOcR/uBbqYAjigum5TU
+        nMyy1CJ9uwSujBdH17AU7Bao2P/hOHMD42veLkZODgkBE4kVa5awdDFycQgJ7GCUeNP7gA0i
+        IS1xfeMEdghbWGLlv+fsEEVNTBKdDxcwgiTYBLQl7k7fwgRiiwAVHfnWBhZnFnjGJHHqYSmI
+        LSwQLHG67z8LiM0ioCpx7fRbsHpeARuJ83s2skIskJdYveEAcxcjBwengK3E3gkOIGEhoJIJ
+        q/YyTmDkW8DIsIpRMrWgODc9t9iwwCgvtVyvODG3uDQvXS85P3cTIziYtbR2MO5Z9UHvECMT
+        B+MhRgkOZiURXqezp+OEeFMSK6tSi/Lji0pzUosPMUpzsCiJ836dtTBOSCA9sSQ1OzW1ILUI
+        JsvEwSnVwJTxSLjlzsKc9XKPWGZpbv98ZcEv/73uR20Cvi+/f5nxzceo03c2s+Zv5Os04fj/
+        dseaKkn27g/HFwQEyv7w15zmsH9Fg7j4nmtXPr1inMd3miXL5N7b/TExDSznvpYav2xauUAt
+        Ii1x8QaXx+czah5Yh9212fP4VPO27nlRT/PWbLeMWLhgv4RrwsNL3Ndz2SyUzSqD2ydOFE2b
+        WZp6XPpGbSXzx/MPdV1rGE3/r001VZq2+GQt16Fcw2AV940TjsbfilQJ5st0/eAvlH93ffub
+        EMbpN77+3vfptm12+nyHF9/li7o4zHdIGlu+sz9zOuI6f3BOjIhquvoCdx5Fw00lTc8+PPug
+        Nfl7snTfmRtKLMUZiYZazEXFiQAvvvT61QIAAA==
+X-CMS-MailID: 20200528013226epcas5p1c73527c71424679443c10daf8bf561df
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200528013226epcas5p1c73527c71424679443c10daf8bf561df
+References: <20200528011658.71590-1-alim.akhtar@samsung.com>
+        <CGME20200528013226epcas5p1c73527c71424679443c10daf8bf561df@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Qiang <qiang.zhang@windriver.com>
+In the right behavior, setting the bit to '0' indicates clear and '1'
+indicates no change. If host controller handles this the other way,
+UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR can be used.
 
-The data structure member "wq->rescuer" was reset to a null pointer
-in one if branch. It was passed to a call of the function "kfree"
-in the callback function "rcu_free_wq" (which was eventually executed).
-The function "kfree" does not perform more meaningful data processing
-for a passed null pointer (besides immediately returning from such a call).
-Thus delete this function call which became unnecessary with the referenced
-software update.
-
-Fixes: def98c84b6cd ("workqueue: Fix spurious sanity check failures in destroy_workqueue()")
-
-Co-developed-by: Markus Elfring <Markus.Elfring@web.de> 
-Signed-off-by: Zhang Qiang <qiang.zhang@windriver.com>
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 ---
- v1->v2->v3->v4->v5->v6:
- Modify weakly submitted information and tag.
+ drivers/scsi/ufs/ufshcd.c | 11 +++++++++--
+ drivers/scsi/ufs/ufshcd.h |  5 +++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
- kernel/workqueue.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 891ccad5f271..a2451cdcd503 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -3491,7 +3491,6 @@ static void rcu_free_wq(struct rcu_head *rcu)
- 	else
- 		free_workqueue_attrs(wq->unbound_attrs);
- 
--	kfree(wq->rescuer);
- 	kfree(wq);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 698e8d20b4ba..3655b88fc862 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -645,7 +645,11 @@ static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
+  */
+ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
+ {
+-	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
++		ufshcd_writel(hba, (1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
++	else
++		ufshcd_writel(hba, ~(1 << pos),
++				REG_UTP_TRANSFER_REQ_LIST_CLEAR);
  }
  
+ /**
+@@ -655,7 +659,10 @@ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
+  */
+ static inline void ufshcd_utmrl_clear(struct ufs_hba *hba, u32 pos)
+ {
+-	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
++		ufshcd_writel(hba, (1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
++	else
++		ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
+ }
+ 
+ /**
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index 6ffc08ad85f6..071f0edf3f64 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -518,6 +518,11 @@ enum ufshcd_quirks {
+ 	 * ops (get_ufs_hci_version) to get the correct version.
+ 	 */
+ 	UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		= 1 << 5,
++
++	/*
++	 * Clear handling for transfer/task request list is just opposite.
++	 */
++	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
+ };
+ 
+ enum ufshcd_caps {
 -- 
-2.24.1
+2.17.1
 
