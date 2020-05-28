@@ -2,178 +2,106 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AC2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 191B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B119C21548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nUj6qZ87"
+	by mail.kernel.org (Postfix) with ESMTP id E00D821548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590667764;
+	bh=+8PAQumLNMOPEAjYCtJadvmFe6vCUWYN4D2zbv03ne4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1FQp7HPfas+++H2iLsOqL8ZxxJCRSfxFs42OeGQwOEOU4fGH8Ogu0DyrINbdBI6ZK
+	 fLftisi62cNSLYKbKNQTClYFRnJroVmHBli+1Q/167wdImbd+ep33VmX/lbN1nQ2X8
+	 7rHAu04bIfUsF5r//XpADMOl5dNechnr6j97e2oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388759AbgE1MI7 (ORCPT
+        id S2389127AbgE1MJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:08:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33690 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388769AbgE1MIx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:08:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SC7eHU096738;
-        Thu, 28 May 2020 12:08:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qcIsNVi0wvZGA81ns5t/6g7btQGknY8Bh4yUt78pyTY=;
- b=nUj6qZ87t7W5q+Ao5Jo7TVPU46xmgqP6A3Ok65J42ozQFt6pjh9M4ga4GcvvdWU/b1s9
- aSnmlyOLDlYkALrr6oR5HbtiPheeCXP+XSwpBjZ8VfsV5e84MYQ7ne83NWcz3yLYpa3U
- YTIgdHYuF+fz00IC1FLnucuY+zvixh/xJRjWGcbpYEPa9MogmECfL598HG2NfbIwzvXH
- MpW8q1abR/2TSDQ5zwmavuUXgJMm4IfJRwIg+bcpUST4xYAwmjvFJPt48gP4xaFYze/n
- Bju3SPGT01K5bNGr059rgkFoKQkSMfUzOQ7FK3/SHa752kCBjxTnkk9J0/Cy9N4GV5uR IA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 316u8r4kjk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 12:08:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SC38KS124411;
-        Thu, 28 May 2020 12:08:38 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 317ddsnvd6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 12:08:38 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 04SC8TXf014768;
-        Thu, 28 May 2020 12:08:29 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 May 2020 05:08:28 -0700
-Date:   Thu, 28 May 2020 15:08:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     devel@driverdev.osuosl.org, Len Brown <len.brown@intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        dinghao.liu@zju.edu.cn, Kangjie Lu <kjlu@umn.edu>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: Re: [PATCH] media: staging: tegra-vde: fix runtime pm imbalance
- on error
-Message-ID: <20200528120818.GO22511@kadam>
-References: <20200520095148.10995-1-dinghao.liu@zju.edu.cn>
- <2b5d64f5-825f-c081-5d03-02655c2d9491@gmail.com>
- <20200520150230.GC30374@kadam>
- <2a46539d.b977f.1723553aa81.Coremail.dinghao.liu@zju.edu.cn>
- <20200521091505.GF30374@kadam>
- <CAJZ5v0irLayBUPRWNT1tcZivz9inS1YbUgGj5WXvucLKKwRQAw@mail.gmail.com>
- <20200521173901.GA22310@kadam>
- <20200522131031.GL2163848@ulmo>
- <20200522132318.GM30374@kadam>
- <20200522144312.GA2374603@ulmo>
+        Thu, 28 May 2020 08:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388752AbgE1L4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:32 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5BC821534;
+        Thu, 28 May 2020 11:56:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590666991;
+        bh=+8PAQumLNMOPEAjYCtJadvmFe6vCUWYN4D2zbv03ne4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aBN/bjSJ1cvIrUJnpBFGev57u3s9ooHV25MPDL4Yp0kan8NuafSGiu2dRIJtwSu65
+         w/jpQAYnV0ggAch2A1j9gK2K9U47m6n8QPH7BlJkoEGdGgn7wtAnCrg52tBgwp1AuA
+         jVTYJdE//J9HcOcSQrk9ReRQA/K/Lt7CAZtdXhQc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@linux-mips.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 27/47] net: sgi: ioc3-eth: Fix return value check in ioc3eth_probe()
+Date:   Thu, 28 May 2020 07:55:40 -0400
+Message-Id: <20200528115600.1405808-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
+References: <20200528115600.1405808-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200522144312.GA2374603@ulmo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- phishscore=0 adultscore=0 suspectscore=21 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280084
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=21
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005280084
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 22, 2020 at 04:43:12PM +0200, Thierry Reding wrote:
-> On Fri, May 22, 2020 at 04:23:18PM +0300, Dan Carpenter wrote:
-> > On Fri, May 22, 2020 at 03:10:31PM +0200, Thierry Reding wrote:
-> > > On Thu, May 21, 2020 at 08:39:02PM +0300, Dan Carpenter wrote:
-> > > > On Thu, May 21, 2020 at 05:22:05PM +0200, Rafael J. Wysocki wrote:
-> > > > > On Thu, May 21, 2020 at 11:15 AM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > > > > >
-> > > > > > On Thu, May 21, 2020 at 11:42:55AM +0800, dinghao.liu@zju.edu.cn wrote:
-> > > > > > > Hi, Dan,
-> > > > > > >
-> > > > > > > I agree the best solution is to fix __pm_runtime_resume(). But there are also
-> > > > > > > many cases that assume pm_runtime_get_sync() will change PM usage
-> > > > > > > counter on error. According to my static analysis results, the number of these
-> > > > > > > "right" cases are larger. Adjusting __pm_runtime_resume() directly will introduce
-> > > > > > > more new bugs. Therefore I think we should resolve the "bug" cases individually.
-> > > > > > >
-> > > > > >
-> > > > > > That's why I was saying that we may need to introduce a new replacement
-> > > > > > function for pm_runtime_get_sync() that works as expected.
-> > > > > >
-> > > > > > There is no reason why we have to live with the old behavior.
-> > > > > 
-> > > > > What exactly do you mean by "the old behavior"?
-> > > > 
-> > > > I'm suggesting we leave pm_runtime_get_sync() alone but we add a new
-> > > > function which called pm_runtime_get_sync_resume() which does something
-> > > > like this:
-> > > > 
-> > > > static inline int pm_runtime_get_sync_resume(struct device *dev)
-> > > > {
-> > > > 	int ret;
-> > > > 
-> > > > 	ret = __pm_runtime_resume(dev, RPM_GET_PUT);
-> > > > 	if (ret < 0) {
-> > > > 		pm_runtime_put(dev);
-> > > > 		return ret;
-> > > > 	}
-> > > > 	return 0;
-> > > > }
-> > > > 
-> > > > I'm not sure if pm_runtime_put() is the correct thing to do?  The other
-> > > > thing is that this always returns zero on success.  I don't know that
-> > > > drivers ever care to differentiate between one and zero returns.
-> > > > 
-> > > > Then if any of the caller expect that behavior we update them to use the
-> > > > new function.
-> > > 
-> > > Does that really have many benefits, though? I understand that this
-> > > would perhaps be easier to use because it is more in line with how other
-> > > functions operate. On the other hand, in some cases you may want to call
-> > > a different version of pm_runtime_put() on failure, as discussed in
-> > > other threads.
-> > 
-> > I wasn't CC'd on the other threads so I don't know.  :/
-> 
-> It was actually earlier in this thread, see here for example:
-> 
-> 	http://patchwork.ozlabs.org/project/linux-tegra/patch/20200520095148.10995-1-dinghao.liu@zju.edu.cn/#2438776
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-I'm not seeing what you're talking about.
+[ Upstream commit a7654211d0ffeaa8eb0545ea00f8445242cbce05 ]
 
-The only thing I see in this thread is that we don't want to call
-pm_runtime_mark_last_busy(dev) which updates the last_busy time that is
-used for autosuspend.
+In the function devm_platform_ioremap_resource(), if get resource
+failed, the return value is ERR_PTR() not NULL. Thus it must be
+replaced by IS_ERR(), or else it may result in crashes if a critical
+error path is encountered.
 
-The other thing that was discussed was pm_runtime_put_noidle() vs
-pm_runtime_put_autosuspend().  "The pm_runtime_put_noidle() should have
-the same effect as yours variant".  So apparently they are equivalent
-in this situation.  How should we choose one vs the other?
+Fixes: 0ce5ebd24d25 ("mfd: ioc3: Add driver for SGI IOC3 chip")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/sgi/ioc3-eth.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I'm not trying to be obtuse.  I understand that probably if I worked in
-PM then I wouldn't need documentation...  :/
+diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+index db6b2988e632..f4895777f5e3 100644
+--- a/drivers/net/ethernet/sgi/ioc3-eth.c
++++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+@@ -865,14 +865,14 @@ static int ioc3eth_probe(struct platform_device *pdev)
+ 	ip = netdev_priv(dev);
+ 	ip->dma_dev = pdev->dev.parent;
+ 	ip->regs = devm_platform_ioremap_resource(pdev, 0);
+-	if (!ip->regs) {
+-		err = -ENOMEM;
++	if (IS_ERR(ip->regs)) {
++		err = PTR_ERR(ip->regs);
+ 		goto out_free;
+ 	}
+ 
+ 	ip->ssram = devm_platform_ioremap_resource(pdev, 1);
+-	if (!ip->ssram) {
+-		err = -ENOMEM;
++	if (IS_ERR(ip->ssram)) {
++		err = PTR_ERR(ip->ssram);
+ 		goto out_free;
+ 	}
+ 
+-- 
+2.25.1
 
-regards,
-dan carpenter
