@@ -2,118 +2,97 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C29EC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B3EC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02EA4207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 987C42088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407291AbgE1UeO (ORCPT
+        id S2407301AbgE1Uef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:34:14 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:60063 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407020AbgE1UeL (ORCPT
+        Thu, 28 May 2020 16:34:35 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:44194 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407190AbgE1Uee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:34:11 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MLzSD-1jN9ST1zHt-00HxmW; Thu, 28 May 2020 22:34:08 +0200
-Received: by mail-qk1-f169.google.com with SMTP id q8so189060qkm.12;
-        Thu, 28 May 2020 13:34:08 -0700 (PDT)
-X-Gm-Message-State: AOAM53019TbOTyNAzJ28LSBVyxyYKKfQPlavHZUd/nt5UfcNqrfbaz2o
-        DCrSnE5f5SFWY1ubfmA3JYZ+HlgiIEGpb1E1hec=
-X-Google-Smtp-Source: ABdhPJw35+vBI63bF7SfK+zLRpe/uowGSJPEFF3GisVzMhFz/CLIpy+Xs9Ye1mQuxA5jYglGf/r9jzeY5QW4ONbtd8k=
-X-Received: by 2002:ae9:de85:: with SMTP id s127mr3586078qkf.352.1590698047221;
- Thu, 28 May 2020 13:34:07 -0700 (PDT)
+        Thu, 28 May 2020 16:34:34 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C741C80307C1;
+        Thu, 28 May 2020 20:34:30 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jdv7qOIYXcJH; Thu, 28 May 2020 23:34:30 +0300 (MSK)
+Date:   Thu, 28 May 2020 23:34:29 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 08/10] dmaengine: dw: Add dummy device_caps callback
+Message-ID: <20200528203429.n23gi65zndfo4zti@mobilestation>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-9-Sergey.Semin@baikalelectronics.ru>
+ <20200528145303.GU1634618@smile.fi.intel.com>
+ <20200528152740.ggld7wkmaqiq4g6o@mobilestation>
+ <CAHp75VdrOJF6R9YDpeV7x+9=DZJULM0hsfdr0o_Jmgf69CRKvQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200528091923.2951100-1-arnd@arndb.de> <20200528134621.GN37466@atomide.com>
- <20200528135057.GO37466@atomide.com> <20200528155759.GP37466@atomide.com> <34e8fb61-b452-529b-b2c6-3849b2395096@oracle.com>
-In-Reply-To: <34e8fb61-b452-529b-b2c6-3849b2395096@oracle.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 28 May 2020 22:33:50 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0AaH+pAdhu7jzEAGC-bECgmz7w=D8PN6NOUjj2kxevkg@mail.gmail.com>
-Message-ID: <CAK8P3a0AaH+pAdhu7jzEAGC-bECgmz7w=D8PN6NOUjj2kxevkg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: omap2: drop broken broadcast timer hack
-To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Cc:     Tony Lindgren <tony@atomide.com>, arm-soc <arm@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Olof Johansson <olof@lixom.net>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:dTgnDJci0MeHtLUnNuT55fdZMzCKbWbDgHGAo7MqI955pVb+bPO
- ksWB2ZJmwKkDagByGouBJnVMv41N9B5ct5Hvzpo99i+UUz7jFIRW8EItJJ3PNkQtZYlcgOi
- sU2sIpN1nucmmNQysdXOYNorrJ6cmUIaDFIq9o+fM2kuVmCcFYCdhb4srDQg4xavtKkEp68
- 2fCMqB8n1P6nCJJBDn0ww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TzSOWCib3zs=:Q/eh1aK8wnA0/6Pi6Cp5zB
- g4/tbCPUYq0KTyYvLkkbF6x0weq2icg4EmUDtr087yzWTh74SFAUqQHVsZTxRChCQy3/6Qrcz
- dsKUSAaSG+X/HaVklFFW+EX0j6b2dytTKkQRvE94XfI8bK5IoxIx8d54G7n+vCnysWMiFggxm
- ngmWo5cWsMInzm5sezqrdTKYG1XUCBQ1C3YCKZU38tTXkrO5Xdb/jf2GMAm+A+sb3mpbC46Kn
- SbaR08nrG5/coCEl3HGR8BEP60S24DP7l370R9ne9VEhXNgGW9gh+fCB+Rq89JEfygJEOE+MN
- ShxHfBCun/6x/eCqwHXbMJUDRvobawMQqD1yoWkvoe7Le7LiaVJcuSF3PIyWfLMyH/jGQg06a
- r2ITwu7taaL01mndHUIrue0LUyH1Mfa/7Ir/3qRsP0TUZbiwhZf6x1Pr65G+Zl/fxUitZ+Tll
- 9SPKkuwP2xx7O1Pboqs4nyR0Hc1Pjb6QfJip6jBcXGJR/G0GQBskPtFPb9OBL/Rkan4rG9zNX
- ++3e8pbP4GJAIym62ODfg/+9i5jNzedTB2M3bUxu31ySwEh8901CypP2onQ4CLNKtM88oij3Q
- oLylLYjBsqIw20Vz0gA55x/KXTf6Buk39T03d8h4dKSPy4HRVJT4LrBS0nSF/tl4WAwRY4BCA
- lceFiqNlfwoJkkxgGz2pNMbYKe3HK+yCYBL3dWrcehsTKONsNQqI7IvAtAhEDep2Tt27DckBx
- CEtTvDM3Z12TO4uuoZkxCev8OsIwrZWA5T0I5Aem29eWyETbBKGT4KCuMNr+jnGo9hTfOT6f+
- l5YCkUeq6PB51fRrGSAMEyfEm2YKilx/bFqKkGkcOQdCsBwjGQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdrOJF6R9YDpeV7x+9=DZJULM0hsfdr0o_Jmgf69CRKvQ@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 6:18 PM <santosh.shilimkar@oracle.com> wrote:
-> On 5/28/20 8:57 AM, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [200528 13:51]:
-> >> * Tony Lindgren <tony@atomide.com> [200528 13:47]:
-> >>> * Arnd Bergmann <arnd@arndb.de> [200528 09:20]:
-> >>>> The OMAP4 timer code had a special hack for using the broadcast timer
-> >>>> without SMP. Since the dmtimer is now gone, this also needs to be dropped
-> >>>> to avoid a link failure for non-SMP AM43xx configurations:
-> >>>>
-> >>>> kernel/time/tick-broadcast.o: in function `tick_device_uses_broadcast':
-> >>>> tick-broadcast.c:(.text+0x130): undefined reference to `tick_broadcast'
-> >>>
-> >>> Hmm this sounds like a regression though. Isn't this needed for using
-> >>> the ARM local timers on non-SMP SoC, so a separate timer from dmtimer?
-> >>>
-> >>> I've probably removed something accidentally to cause this.
-> >>
-> >> Sounds like arch/arm/mach-omap2/Makefile change needs to be removed
-> >> to always still build in timer.o. And probably timer.c needs back
-> >> the ifdef for CONFIG_SOC_HAS_REALTIME_COUNTER.
-> >>
-> >> I'll take a look today.
+On Thu, May 28, 2020 at 11:29:16PM +0300, Andy Shevchenko wrote:
+> On Thu, May 28, 2020 at 6:30 PM Serge Semin
+> <Sergey.Semin@baikalelectronics.ru> wrote:
 > >
-> > I've sent a patch along those lines as:
+> > On Thu, May 28, 2020 at 05:53:03PM +0300, Andy Shevchenko wrote:
+> > > On Wed, May 27, 2020 at 01:50:19AM +0300, Serge Semin wrote:
+> > > > Since some DW DMA controllers (like one installed on Baikal-T1 SoC) may
+> > > > have non-uniform DMA capabilities per device channels, let's add
+> > > > the DW DMA specific device_caps callback to expose that specifics up to
+> > > > the DMA consumer. It's a dummy function for now. We'll fill it in with
+> > > > capabilities overrides in the next commits.
+> > >
+> > > I think per se it is not worth to have it separated. Squash into the next one.
 > >
-> > [PATCH] ARM: OMAP2+: Fix regression for using local timer on non-SMP SoCs
-> >
-> > A link for the patch at [0] below.
-> >
-> CPU local timers not being in always ON power domain use to be the
-> reason on early version of the SOCs but later SOC moved the CPU local
-> timer also in always on domain. Probably AM43xx does loose local timer
-> on CPU PD in low power so yes broadcast would be needed with dmtimer
-> help.
->
-> >
-> > [0] https://lore.kernel.org/linux-omap/20200528155453.8585-1-tony@atomide.com/T/#u
-> >
-> This should restore it.
+> > bikeshadding?
+> 
+> Actually no.
+> 
+> > There is no any difference whether I add a dummy callback, then
+> > fill it in in a following up patch, or have the callback added together
+> > with some content. Let's see what Vinod thinks of it. Until then I'll stick with
+> > the current solution.
+> 
+> The rule of thumb that we don't add dead code or code which is useless
+> per se. Go ahead and provide it with some usefulness.
 
-Should I apply the fix directly to the arm/soc branch that has the
-other changes then?
+Actually yes. I've seen examples, which preparation patches first added
+prototypes with empty functionality, that in follow-up patches have been
+filled with a required code. I've seen Greg accepted such approach. So it's
+absolutely normal and acceptable.
 
-     Arnd
+-Sergey
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
