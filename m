@@ -2,128 +2,104 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF865C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF9E62088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OmYrkihA"
+	by mail.kernel.org (Postfix) with ESMTP id 700EC2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388235AbgE1LPD (ORCPT
+        id S2388269AbgE1LPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:15:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:24430 "EHLO m43-7.mailgun.net"
+        Thu, 28 May 2020 07:15:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49492 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388081AbgE1LPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:15:02 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590664501; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=bbIcS2ile0UWrHdN+EYpLOxgL801zKH0nwHraH+ONWU=; b=OmYrkihAzAxCmU9KcisoF7h/e2yCfzXeB4drjy/QsNieHmx64J5U7xo02KEo1T3fjoEaNFxj
- jdIfZhgcukXZ5UhwO50Cdy51oy+5Tr/po3n8IzMO937M6R2nfd4K5o/Eioz3w/lxzRsf28NA
- ohKhYWDcsj9yJ1PwDBEfoMDDiOE=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ecf9d352c54998475640064 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:15:01
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 333C1C433CB; Thu, 28 May 2020 11:15:00 +0000 (UTC)
-Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F2F3C433C6;
-        Thu, 28 May 2020 11:14:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F2F3C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-From:   Zijun Hu <zijuhu@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        rjliao@codeaurora.org, zijuhu@codeaurora.org
-Subject: [PATCH v5] bluetooth: hci_qca: Fix qca6390 enable failure after warm reboot
-Date:   Thu, 28 May 2020 19:14:48 +0800
-Message-Id: <1590664488-18128-1-git-send-email-zijuhu@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S2388243AbgE1LPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:15:20 -0400
+IronPort-SDR: qM0JWs1/SeoLNIDo4H4L8fJPnV2hBAPZGscfJlPzF1X7M+y0XFuf93uxR5sCeV9O4KPdHerTPI
+ T2uQD53Hds3w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 04:15:19 -0700
+IronPort-SDR: lzwrNbDJy/zXwX3C7CwXLxw3KkWOLT7VbR7XhzYmpIoQK7g7gY6AdSSB28DdIOFqbdx1GoqU9d
+ qfhd6wAYoAlg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="414568779"
+Received: from dmescala-mobl1.amr.corp.intel.com (HELO localhost) ([10.252.59.102])
+  by orsmga004.jf.intel.com with ESMTP; 28 May 2020 04:15:09 -0700
+Date:   Thu, 28 May 2020 14:15:07 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Haitao Huang <haitao.huang@linux.intel.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>
+Subject: Re: [PATCH v29 00/20] Intel SGX foundations
+Message-ID: <20200528111507.GA1666298@linux.intel.com>
+References: <20200421215316.56503-1-jarkko.sakkinen@linux.intel.com>
+ <CAOASepPFe_ucuwe7JW_-+VBQ4=+sHqyGXOdA9kUbcYA_9=v0sA@mail.gmail.com>
+ <20200506221422.GK3329@linux.intel.com>
+ <op.0j8dm0zzwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+ <CAOASepNVckens=wiWpHj291EAo0ndi7GCVHd9j7BPn8rjy7Ykg@mail.gmail.com>
+ <20200507193459.GA24519@linux.intel.com>
+ <op.0j9qdhziwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
+ <20200508002555.GA24964@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200508002555.GA24964@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Warm reboot can not restore qca6390 controller baudrate
-to default due to lack of controllable BT_EN pin or power
-supply, so fails to download firmware after warm reboot.
+On Thu, May 07, 2020 at 05:25:55PM -0700, Sean Christopherson wrote:
+> Ah, fudge.  shmem_zero_setup() triggers shmem_acct_size() and thus
+> __vm_enough_memory().  Which I should have rememered because I've stared
+> at that code several times when dealing with the enclave's backing store.
+> I wasn't seeing the issue because I happened to use MAP_PRIVATE.
+> 
+> So, bad analysis, good conclusion, i.e. the kernel is still doing the
+> right thing, it's just not ideal for userspace.
+> 
+> 
+> Jarkko, we should update the docs and selftest to recommend and use
+> 
+>   PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS
+> 
+> or
+> 
+>   PROT_NONE, MAP_SHARED | MAP_NORESERVE | MAP_ANONYMOUS"
+> 
+> when carving out ELRANGE, with an explicit comment that all the normal
+> rules for mapping memory still apply.
 
-Fixed by sending EDL_SOC_RESET VSC to reset controller
-within added device shutdown implementation.
+Ugh, had forgotten this.
 
-Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+OK, I guess this comment explains it all:
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index e4a6823..f525656 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1975,6 +1975,38 @@ static void qca_serdev_remove(struct serdev_device *serdev)
- 	hci_uart_unregister_device(&qcadev->serdev_hu);
- }
- 
-+static void qca_serdev_shutdown(struct device *dev)
-+{
-+	int ret;
-+	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
-+	struct serdev_device *serdev = to_serdev_device(dev);
-+	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
-+	const u8 ibs_wake_cmd[] = { 0xFD };
-+	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
-+
-+	if (qcadev->btsoc_type == QCA_QCA6390) {
-+		serdev_device_write_flush(serdev);
-+		ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
-+					      sizeof(ibs_wake_cmd));
-+		if (ret < 0) {
-+			BT_ERR("QCA send IBS_WAKE_IND error: %d", ret);
-+			return;
-+		}
-+		serdev_device_wait_until_sent(serdev, timeout);
-+		usleep_range(8000, 10000);
-+
-+		serdev_device_write_flush(serdev);
-+		ret = serdev_device_write_buf(serdev, edl_reset_soc_cmd,
-+					      sizeof(edl_reset_soc_cmd));
-+		if (ret < 0) {
-+			BT_ERR("QCA send EDL_RESET_REQ error: %d", ret);
-+			return;
-+		}
-+		serdev_device_wait_until_sent(serdev, timeout);
-+		usleep_range(8000, 10000);
-+	}
-+}
-+
- static int __maybe_unused qca_suspend(struct device *dev)
- {
- 	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
-@@ -2100,6 +2132,7 @@ static struct serdev_device_driver qca_serdev_driver = {
- 		.name = "hci_uart_qca",
- 		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
- 		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
-+		.shutdown = qca_serdev_shutdown,
- 		.pm = &qca_pm_ops,
- 	},
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+"
+/*
+ * shmem_file_setup pre-accounts the whole fixed size of a VM object,
+ * for shared memory and for shared anonymous (/dev/zero) mappings
+ * (unless MAP_NORESERVE and sysctl_overcommit_memory <= 1),
+ * consistent with the pre-accounting of private mappings ...
+ */
+static inline int shmem_acct_size(unsigned long flags, loff_t size)
+"
 
+/Jarkko
