@@ -2,136 +2,126 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FED8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC1B208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:13:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="WfjCj9PA"
+	by mail.kernel.org (Postfix) with ESMTP id 925F4208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgE1CNe (ORCPT
+        id S1726864AbgE1CNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:13:34 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:36466 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbgE1CNd (ORCPT
+        Wed, 27 May 2020 22:13:36 -0400
+Received: from out28-5.mail.aliyun.com ([115.124.28.5]:35673 "EHLO
+        out28-5.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgE1CNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:13:33 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 49XWT85v0dz9vKZB
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:13:32 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id e1dgzPmyRaE4 for <linux-kernel@vger.kernel.org>;
-        Wed, 27 May 2020 21:13:32 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 49XWT84J4Cz9vKYS
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 21:13:32 -0500 (CDT)
-DMARC-Filter: OpenDMARC Filter v1.3.2 mta-p8.oit.umn.edu 49XWT84J4Cz9vKYS
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-p8.oit.umn.edu 49XWT84J4Cz9vKYS
-Received: by mail-io1-f69.google.com with SMTP id j23so10566317iok.2
-        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 19:13:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+A1YPokMCKgyjret0UYYQzUqVLYn99l1EAUInCbVEoQ=;
-        b=WfjCj9PAtlXuuLhDKdQnyvqFbqNeBfy1HXfmSE8DB9kEXmc8aiyV8STRsAEanfe7ER
-         zIXDQ2/YCJpIlGPgtva8TsOiHNpribBlXJrWzHLan836r2t0jFYN6EBQjqUuCdDEQALL
-         x4n7xX7lOAujaEnUYH18h+qHElRDE3Ob9xkLwSdY0JeIuhcw8sSD3vz8E++kfCZlRZdp
-         SMlp8XtbGU112kLPVGCw0bakf+OiHmbOxTcHVTqxQWAvrGp6azx7HtTDCT4WwZwkyJZu
-         gneTskObuI1l6Ml/vY0HR2C/oV35nVKzu7wZaMka/xzZHTk9vKqseADdyhSRO9R3qd6G
-         rWkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+A1YPokMCKgyjret0UYYQzUqVLYn99l1EAUInCbVEoQ=;
-        b=bvpDRn8WdSN42jBJPv/s4tcVTXF5q5xB3c9BzvsCKyk6dwho0Y+yjN4opXB5UQu1Mz
-         WcQqG5xtI2IHOfLkd70YzwUa8p0rwpYZroB2jVL+Og6eZbBn2RKxhd7RafRvXwulaEwt
-         Ak03RGCZSYDi2mJRbC5F69eInoHOLRhaIgz7RtddBgTs7Gwg2bGeikGUj28BFfDiw1AY
-         iBeOjjniOVOfoL+RorkifXqU5xUMTDGg2OTeEJHZ5upr3dUrejJhd3cQ/4CYgGSodZrV
-         uA9Kj/oPN7ZuCMP1rqR+a6xoLdCRRpBr5ZE6PF2BJ8F+IkI6A9miSeOc3cOSAaRtGepB
-         WY9A==
-X-Gm-Message-State: AOAM533/mRgE3eQyzeOWRyxCb4cM0oKH51aQgPOIvdU8wpbPYojBIxVh
-        4tg7NcRR3rG1cduRgBUNRGt6Q59eDuP6pJ/7UzlzSbbb/q6Mjf11mJzLfTpNlXn51ozJb8t4HiL
-        peK981nZzz8lHh7F8EeNXLXEBS3d4
-X-Received: by 2002:a02:3e06:: with SMTP id s6mr712720jas.57.1590632011202;
-        Wed, 27 May 2020 19:13:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwpledpmRFG225p3UpKzQBSus1wf525XSOOKNI6xG7lhRUn81N/jpiuF4hbYE89ppULJCPG8Q==
-X-Received: by 2002:a02:3e06:: with SMTP id s6mr712708jas.57.1590632010942;
-        Wed, 27 May 2020 19:13:30 -0700 (PDT)
-Received: from qiushi.dtc.umn.edu (cs-kh5248-02-umh.cs.umn.edu. [128.101.106.4])
-        by smtp.gmail.com with ESMTPSA id h5sm2398411ile.35.2020.05.27.19.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 19:13:30 -0700 (PDT)
-From:   wu000273@umn.edu
-To:     kjlu@umn.edu
-Cc:     wu000273@umn.edu, Bjorn Helgaas <bhelgaas@google.com>,
-        Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>,
-        Jesse Barnes <jbarnes@virtuousgeek.org>,
-        Alex Chiang <achiang@hp.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix reference count leak in pci_create_slot
-Date:   Wed, 27 May 2020 21:13:22 -0500
-Message-Id: <20200528021322.1984-1-wu000273@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Wed, 27 May 2020 22:13:34 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0747892|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0187187-0.000297441-0.980984;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.HecKNKN_1590632008;
+Received: from 192.168.10.205(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HecKNKN_1590632008)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Thu, 28 May 2020 10:13:29 +0800
+Subject: Re: [PATCH v12 7/7] clk: X1000: Add FIXDIV for SSI clock of X1000.
+To:     Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com, paul@crapouillou.net
+References: <20200527175635.5558-1-zhouyanjie@wanyeetech.com>
+ <20200527175635.5558-8-zhouyanjie@wanyeetech.com>
+ <159062837338.69627.14365746093599072888@swboyd.mtv.corp.google.com>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5e0f2920-b503-d1c1-26d9-fc3fcf7394ba@wanyeetech.com>
+Date:   Thu, 28 May 2020 10:13:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <159062837338.69627.14365746093599072888@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+Hi Stephen,
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Thus,
-when call of kobject_init_and_add() fail, we should call kobject_put()
-instead of kfree(). Previous commit "b8eb718348b8" fixed a similar problem.
+在 2020/5/28 上午9:12, Stephen Boyd 写道:
+> Quoting Zhou Yanjie (2020-05-27 10:56:35)
+>> @@ -40,8 +43,47 @@
+>>   #define OPCR_SPENDN0           BIT(7)
+>>   #define OPCR_SPENDN1           BIT(6)
+>>   
+>> +/* bits within the USBPCR register */
+>> +#define USBPCR_SIDDQ           BIT(21)
+>> +#define USBPCR_OTG_DISABLE     BIT(20)
+>> +
+>>   static struct ingenic_cgu *cgu;
+>>   
+>> +static int x1000_usb_phy_enable(struct clk_hw *hw)
+>> +{
+>> +       void __iomem *reg_opcr          = cgu->base + CGU_REG_OPCR;
+>> +       void __iomem *reg_usbpcr        = cgu->base + CGU_REG_USBPCR;
+>> +
+>> +       writel(readl(reg_opcr) | OPCR_SPENDN0, reg_opcr);
+> Please include linux/io.h for writel/readl.
 
-Fixes: 5fe6cc60680d ("PCI: prevent duplicate slot names")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
----
- drivers/pci/slot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index cc386ef2fa12..3861505741e6 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -268,13 +268,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	slot_name = make_slot_name(name);
- 	if (!slot_name) {
- 		err = -ENOMEM;
-+		kfree(slot);
- 		goto err;
- 	}
- 
- 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
- 				   "%s", slot_name);
--	if (err)
-+	if (err) {
-+		kobject_put(&slot->kobj);
- 		goto err;
-+	}
- 
- 	INIT_LIST_HEAD(&slot->list);
- 	list_add(&slot->list, &parent->slots);
-@@ -293,7 +296,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	mutex_unlock(&pci_slot_mutex);
- 	return slot;
- err:
--	kfree(slot);
- 	slot = ERR_PTR(err);
- 	goto out;
- }
--- 
-2.17.1
+Sure, I'll add it.
+
+
+>> +       writel(readl(reg_usbpcr) & ~USBPCR_OTG_DISABLE & ~USBPCR_SIDDQ, reg_usbpcr);
+>> +       return 0;
+>> +}
+>> +
+>> +static void x1000_usb_phy_disable(struct clk_hw *hw)
+>> +{
+>> +       void __iomem *reg_opcr          = cgu->base + CGU_REG_OPCR;
+>> +       void __iomem *reg_usbpcr        = cgu->base + CGU_REG_USBPCR;
+>> +
+>> +       writel(readl(reg_opcr) & ~OPCR_SPENDN0, reg_opcr);
+>> +       writel(readl(reg_usbpcr) | USBPCR_OTG_DISABLE | USBPCR_SIDDQ, reg_usbpcr);
+>> +}
+>> +
+>> +static int x1000_usb_phy_is_enabled(struct clk_hw *hw)
+>> +{
+>> +       void __iomem *reg_opcr          = cgu->base + CGU_REG_OPCR;
+>> +       void __iomem *reg_usbpcr        = cgu->base + CGU_REG_USBPCR;
+>> +
+>> +       return (readl(reg_opcr) & OPCR_SPENDN0) &&
+>> +               !(readl(reg_usbpcr) & USBPCR_SIDDQ) &&
+>> +               !(readl(reg_usbpcr) & USBPCR_OTG_DISABLE);
+>> +}
+>> +
+>> +static const struct clk_ops x1000_otg_phy_ops = {
+>> +       .enable         = x1000_usb_phy_enable,
+>> +       .disable        = x1000_usb_phy_disable,
+>> +       .is_enabled     = x1000_usb_phy_is_enabled,
+>> +};
+>> +
+>>   static const s8 pll_od_encoding[8] = {
+>>          0x0, 0x1, -1, 0x2, -1, -1, -1, 0x3,
+>>   };
+>> @@ -277,4 +377,4 @@ static void __init x1000_cgu_init(struct device_node *np)
+>>   
+>>          ingenic_cgu_register_syscore_ops(cgu);
+>>   }
+>> -CLK_OF_DECLARE(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
+>> +CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-cgu", x1000_cgu_init);
+> Why does this change to DECLARE_DRIVER? Can you please add a comment
+> here in the code indicating what other driver is probing this compatible
+> string?
+
+
+Yes, CGU has some children devices, this is useful for probing children 
+devices in the case where the device node is compatible with 
+"simple-mfd" (see commit 03d570e1a4dc for a reference).
+
+Thanks and best regards!
+
 
