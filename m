@@ -2,81 +2,96 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9420CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF7520707
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aisp8qRE"
+	by mail.kernel.org (Postfix) with ESMTP id 67B7920707
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:37:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389815AbgE1Mgx (ORCPT
+        id S2389821AbgE1Mh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:36:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43488 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389734AbgE1Mgu (ORCPT
+        Thu, 28 May 2020 08:37:27 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:41708 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389734AbgE1MhY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:36:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590669408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GRwkxAXKadNb8L6vblVDH1YHL3lLq/VSX5Jl4TgNeUQ=;
-        b=aisp8qREGtJsTbhPQlr2s8xSZwp7hGPo1T28LgtDPb5QIxQIwcQYEhGT491TzHBOzU8x35
-        7GyoCgLjPa/s4OYmJIr9YVFm/gGS092UoYxLMP9CMMbp4VusWw3PvfHZqFpzVKkPtFunbI
-        YQ5kzlTrzrE0soVaAApCl+ZX5hO0hKI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-EyyxwPu9Nla98fHg1KPQ8w-1; Thu, 28 May 2020 08:36:45 -0400
-X-MC-Unique: EyyxwPu9Nla98fHg1KPQ8w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 81F52108597B;
-        Thu, 28 May 2020 12:36:43 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.7])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A969F1001268;
-        Thu, 28 May 2020 12:36:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 28 May 2020 14:36:43 +0200 (CEST)
-Date:   Thu, 28 May 2020 14:36:40 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     guoren@linux.alibaba.com, vincent.chen@sifive.com,
-        paul.walmsley@sifive.com, palmerdabbelt@google.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5 01/13] ptrace: Use regset_size() for dynamic regset
-Message-ID: <20200528123639.GA19813@redhat.com>
-References: <cover.1590646208.git.greentime.hu@sifive.com>
- <e490cf0a1b57b7cb34a5ea1252e7a71109d6ffee.1590646208.git.greentime.hu@sifive.com>
+        Thu, 28 May 2020 08:37:24 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id A320280307C1;
+        Thu, 28 May 2020 12:37:21 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id U2DxeE0TpbnE; Thu, 28 May 2020 15:37:21 +0300 (MSK)
+Date:   Thu, 28 May 2020 15:37:20 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
+Message-ID: <20200528123720.4wv2cmbownc4ejb7@mobilestation>
+References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com>
+ <CAK8P3a2WMqTRitUU86hSV3HSK12-hF_RDoFg51PRGTLmXwznvA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <e490cf0a1b57b7cb34a5ea1252e7a71109d6ffee.1590646208.git.greentime.hu@sifive.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <CAK8P3a2WMqTRitUU86hSV3HSK12-hF_RDoFg51PRGTLmXwznvA@mail.gmail.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28, Greentime Hu wrote:
->
-> --- a/kernel/ptrace.c
-> +++ b/kernel/ptrace.c
-> @@ -888,7 +888,7 @@ static int ptrace_regset(struct task_struct *task, int req, unsigned int type,
->  
->  	regset_no = regset - view->regsets;
->  	kiov->iov_len = min(kiov->iov_len,
-> -			    (__kernel_size_t) (regset->n * regset->size));
-> +			    (__kernel_size_t) regset_size(task, regset));
+On Thu, May 28, 2020 at 02:14:58PM +0200, Arnd Bergmann wrote:
+> On Thu, May 28, 2020 at 12:01 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru> wrote:
+> >>
+> >> AXI3-bus is the main communication bus connecting all high-speed
+> >> peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
+> >> SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
+> >> Interconnect (so called AXI Main Interconnect) routing IO requests from
+> >> one SoC block to another. This driver provides a way to detect any bus
+> >> protocol errors and device not responding situations by means of an
+> >> embedded on top of the interconnect errors handler block (EHB). AXI
+> >> Interconnect QoS arbitration tuning is currently unsupported.
+> >> The bus doesn't provide a way to detect the interconnected devices,
+> >> so they are supposed to be statically defined like by means of the
+> >> simple-bus sub-nodes.
+> >
+> >
+> >
+> > Few comments in case if you need a new version. Main point is about sysfs_streq().
+> 
+> I've applied the patch now and folded in fixes for the build warnings and
+> errors pointed out by the test robot, but I did not include the changes you
+> suggested.
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+On the other hand if you haven't pushed the patches to the public repo yet,
+I could just resend the series. So have you?
 
+-Sergey
+
+> 
+> Serge, could you send a follow-up patch to address those?
+
+
+> 
+>      Arnd
