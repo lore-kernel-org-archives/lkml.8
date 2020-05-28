@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43887C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220FC215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A9C215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667353;
-	bh=T8ilXLh6Wb48IuM9rx/Ah3w1do57P6skY1lGbkzJuf4=;
+	s=default; t=1590667358;
+	bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMsnBofU8+xbEChXoCJEd2Z1VHXfh2dATstitpO6PVuKa385mp+UhLmbvt90A/Hny
-	 IMEdAaVUnZy/7xrCk9fKz+WXGxpXwPAYxvtw5lbSJByABjhz/54LkXdQEdQ6gXVTEs
-	 OGCB5GM+4puaHjJpX5MfnDDbFQ7zxrg8Wo3QynXA=
+	b=TWnJly+7OWv7nfF0M8SoMbP+OQ7Zf6TY+7AE1FzmDBo6VPv2cqsniwPdVOzOvYoYX
+	 oAvQqZzA0GjA9ajzFqgKNjCFBRHy6Dhk7WoKcjxZNao1rAs9iFxEbmVFoe/k3awwBK
+	 D+X6WyfJwDKxjGNwipMINnA2RbokuO//ACQN+HTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389506AbgE1MCc (ORCPT
+        id S2388744AbgE1MCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389050AbgE1L5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:38 -0400
+        id S2389047AbgE1L5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0BB521534;
-        Thu, 28 May 2020 11:57:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F054E21655;
+        Thu, 28 May 2020 11:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667057;
-        bh=T8ilXLh6Wb48IuM9rx/Ah3w1do57P6skY1lGbkzJuf4=;
+        s=default; t=1590667056;
+        bh=ZmwBUR7+DZZ6gNJAh78+DU1YLOyaYWC2FmNmChYEAxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3FuDz+8/PXgQKmrVaMeMoaWfs/McjHxH+5FT3kQh9FMzWXc16LZZPICddWCCwoSN
-         l5RpDLbKQNNGMhvD2BsQ0RSGD86dChk60W992y7B2YmKcGZmnzd/QtsWf3+Mh1L4mx
-         7VLRfrZoDHEgNOXeQY1XkxjHsUipAoqd6kTfIPys=
+        b=dss6cV5xrmmHczLF3A0XBDXJ59outdcWuQcvft0KTh0QtkIg1cDGLZo3adWe7E99m
+         iHFKU+DjyQgvYfh5uJfgosvaID7xWOadg5s6cMa3VVXMqEtAnHkHzvGSg47TavZB1e
+         CFBSki8NKEuanjN6dcVYGR33EWYuW2IzTJnNB/bE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 11/17] null_blk: return error for invalid zone size
-Date:   Thu, 28 May 2020 07:57:18 -0400
-Message-Id: <20200528115724.1406376-11-sashal@kernel.org>
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/17] s390/mm: fix set_huge_pte_at() for empty ptes
+Date:   Thu, 28 May 2020 07:57:17 -0400
+Message-Id: <20200528115724.1406376-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115724.1406376-1-sashal@kernel.org>
 References: <20200528115724.1406376-1-sashal@kernel.org>
@@ -58,63 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
 
-[ Upstream commit e274832590211c4b1b1e807ca66fad8b5bb8b328 ]
+[ Upstream commit ac8372f3b4e41015549b331a4f350224661e7fc6 ]
 
-In null_init_zone_dev() check if the zone size is larger than device
-capacity, return error if needed.
+On s390, the layout of normal and large ptes (i.e. pmds/puds) differs.
+Therefore, set_huge_pte_at() does a conversion from a normal pte to
+the corresponding large pmd/pud. So, when converting an empty pte, this
+should result in an empty pmd/pud, which would return true for
+pmd/pud_none().
 
-This also fixes the following oops :-
+However, after conversion we also mark the pmd/pud as large, and
+therefore present. For empty ptes, this will result in an empty pmd/pud
+that is also marked as large, and pmd/pud_none() would not return true.
 
-null_blk: changed the number of conventional zones to 4294967295
-BUG: kernel NULL pointer dereference, address: 0000000000000010
-PGD 7d76c5067 P4D 7d76c5067 PUD 7d240c067 PMD 0
-Oops: 0002 [#1] SMP NOPTI
-CPU: 4 PID: 5508 Comm: nullbtests.sh Tainted: G OE 5.7.0-rc4lblk-fnext0
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e4
-RIP: 0010:null_init_zoned_dev+0x17a/0x27f [null_blk]
-RSP: 0018:ffffc90007007e00 EFLAGS: 00010246
-RAX: 0000000000000020 RBX: ffff8887fb3f3c00 RCX: 0000000000000007
-RDX: 0000000000000000 RSI: ffff8887ca09d688 RDI: ffff888810fea510
-RBP: 0000000000000010 R08: ffff8887ca09d688 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8887c26e8000
-R13: ffffffffa05e9390 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fcb5256f740(0000) GS:ffff888810e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 000000081e8fe000 CR4: 00000000003406e0
-Call Trace:
- null_add_dev+0x534/0x71b [null_blk]
- nullb_device_power_store.cold.41+0x8/0x2e [null_blk]
- configfs_write_file+0xe6/0x150
- vfs_write+0xba/0x1e0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x60/0x250
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7fcb51c71840
+There is currently no issue with this behaviour, as set_huge_pte_at()
+does not seem to be called for empty ptes. It would be valid though, so
+let's fix this by not marking empty ptes as large in set_huge_pte_at().
 
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This was found by testing a patch from from Anshuman Khandual, which is
+currently discussed on LKML ("mm/debug: Add more arch page table helper
+tests").
+
+Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_zoned.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/s390/mm/hugetlbpage.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
-index 7c6b86d98700..d1725ac636c0 100644
---- a/drivers/block/null_blk_zoned.c
-+++ b/drivers/block/null_blk_zoned.c
-@@ -20,6 +20,10 @@ int null_zone_init(struct nullb_device *dev)
- 		pr_err("null_blk: zone_size must be power-of-two\n");
- 		return -EINVAL;
- 	}
-+	if (dev->zone_size > dev->size) {
-+		pr_err("Zone size larger than device capacity\n");
-+		return -EINVAL;
-+	}
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index 5674710a4841..7dfae86afa47 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -159,10 +159,13 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 		rste &= ~_SEGMENT_ENTRY_NOEXEC;
  
- 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
- 	dev->nr_zones = dev_size >>
+ 	/* Set correct table type for 2G hugepages */
+-	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3)
+-		rste |= _REGION_ENTRY_TYPE_R3 | _REGION3_ENTRY_LARGE;
+-	else
++	if ((pte_val(*ptep) & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
++		if (likely(pte_present(pte)))
++			rste |= _REGION3_ENTRY_LARGE;
++		rste |= _REGION_ENTRY_TYPE_R3;
++	} else if (likely(pte_present(pte)))
+ 		rste |= _SEGMENT_ENTRY_LARGE;
++
+ 	clear_huge_pte_skeys(mm, rste);
+ 	pte_val(*ptep) = rste;
+ }
 -- 
 2.25.1
 
