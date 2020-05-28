@@ -2,161 +2,98 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62389C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FC8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 455CD207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033B42088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590697057;
+	bh=OSBe7qKpLqiW7yeZog4bi/dvRdo7s3Iw01w0lbvFbYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g4NDlNicq19KWO6VZGfKgTQ/8lKaugxaSGW8YsiLarwN7N0jxOTSWZdj84zg5BguV
+	 WQh5FKl6mxZPcm5GBkaZzNpBVFOKEkHqk5GeUCjZnra9FtjgYdSAaHiM8Q5gJF3c7F
+	 D7hJ+ZQJviqYRMbaWoF/wkICqOezs22sUxtOxGBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407231AbgE1UQu (ORCPT
+        id S2407028AbgE1URg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:16:50 -0400
-Received: from mail-oln040092004026.outbound.protection.outlook.com ([40.92.4.26]:19330
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2407222AbgE1UQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:16:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NxDoJcTPyX3DbcFPhez/r0zdiN5BIHxtNiW+o02r2mUL1/ZJW+yK25RQk6wU8K3olr+6ZFU6mxJNbOeDlMqTw5/ahDb28I2d8lkH/HCYXEKfLt0/N9xHOFyjgn9+PV6KIu3CK2eH780es+DBPs87+roLjmd4rGiO/CA43yAmNc5mX2mvUxyn+9ZZmpMJYaU1iqsXUPKB891lx3Jjy2mRyYIVbPsAMIL7wOeSHtOu1+GzEX/P70b59JTYmn6LMcPPPT+fDQHr28KK913O2xcVT731Wi2nUn1CFaYY+JzJmyDCvsqxL2im4YkBBYL8hB4RIGCM7RabK2xq0LIijk8Fgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CUF3NIu4vH1658hnuHA4f8fvw9xlqzRmrF4oL5xv7KQ=;
- b=fep6n6jYhHmuXoCbCRWC94ZMnaApExb80w14l2Ia5YX0FNxIFNe6MYy1XCxTRLh9vGvc3SzhbzPnXIMqNzupT5aYne6Ng75m5+oCwQN7UW8jssqWay+LNh62cff1dgUQgpxLWXi79c0yCllOHEOA1P7r4YbSszOpU2KGGarQGAIJdQWzEVAUxtxswjsQbhHn7bx1VAPcJE5bYdz7nRYrxhuiaQ996dgvJD26dUgFlo4dvMTJhRT3aSYWLmjdy0lQwoTqa4irwNabpmF8n/YM9TvMTjD4wy9g1lmubrKI8Q1V1Y3hZl7bLtaIT/iAzkSNkkBmHe4ArqCcAXfJEbTU1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from CY1NAM02FT029.eop-nam02.prod.protection.outlook.com
- (10.152.74.59) by CY1NAM02HT119.eop-nam02.prod.protection.outlook.com
- (10.152.74.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17; Thu, 28 May
- 2020 20:16:43 +0000
-Received: from CY4PR04MB0663.namprd04.prod.outlook.com
- (2a01:111:e400:7e45::4d) by CY1NAM02FT029.mail.protection.outlook.com
- (2a01:111:e400:7e45::399) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend
- Transport; Thu, 28 May 2020 20:16:43 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:DD68A043FF37481702F0489AA8B89A4C3FB41AC1A00EA816F2C6BFC7DA555A22;UpperCasedChecksum:3091E124705B9F3557917C5565148C3AB13E644E5DA37BC08819D98A8F542112;SizeAsReceived:9179;Count:50
-Received: from CY4PR04MB0663.namprd04.prod.outlook.com
- ([fe80::a537:5f2:5317:2c25]) by CY4PR04MB0663.namprd04.prod.outlook.com
- ([fe80::a537:5f2:5317:2c25%5]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 20:16:43 +0000
-Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: Add binding for
- current-from-voltage
-To:     Rob Herring <robh@kernel.org>
-Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org
-References: <20200516022619.30779-1-xc-racer2@live.ca>
- <BN6PR04MB06600A3AFE160C6E07BF5B2CA3BA0@BN6PR04MB0660.namprd04.prod.outlook.com>
- <20200528201306.GA594238@bogus>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <CY4PR04MB06639E2715E2E965F12360DBA38E0@CY4PR04MB0663.namprd04.prod.outlook.com>
-Date:   Thu, 28 May 2020 13:16:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200528201306.GA594238@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR04CA0055.namprd04.prod.outlook.com
- (2603:10b6:300:6c::17) To CY4PR04MB0663.namprd04.prod.outlook.com
- (2603:10b6:903:e1::20)
-X-Microsoft-Original-Message-ID: <27636618-a043-1e33-6307-b256d19c64a5@live.ca>
+        Thu, 28 May 2020 16:17:36 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44134 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406952AbgE1URb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 16:17:31 -0400
+Received: by mail-il1-f194.google.com with SMTP id j3so174329ilk.11;
+        Thu, 28 May 2020 13:17:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=89I7qlCTtqr412/2HNZ2mWAqiaX7Wsv+rz/qqSYUNPk=;
+        b=ZOxHurfzqxDSztnXtmGMtYG4jK9ChSGJf1BNLnZn69UsR+FhXOqtcI9reveiK5FAfs
+         PbEYmrFjIPwgPFw3QgWuMT/NweE/GfFs+bgMZUxYUX5/4GCjz+gKBmzQ+8eOm/IaD+Mx
+         Lrvo9ZR96lLs2Q3Zs3bEerGP+b7WalWrYpkgrkjS+0b2vtakmTUkWIBY7V3npojfZH3W
+         +3t5FyeURQt08QgtzNjbNC/DaZZNrImIhZJjqQsWaT2qjYhURCkOHXF46DPo7n59QLGP
+         2qN23gP3ZWLfkoGlJqcIyDFXcGH6lidSnCYbGufG4wnRKpE8HPQtqjCRqQbPjda9xjoK
+         a5rA==
+X-Gm-Message-State: AOAM533vMAPFIi6RXZogCZo6S8Y1COiLO7cawDyMKjLpABJJQ2yS+6I2
+        mdtAjgbYEA8tQzBy6Yf7vA==
+X-Google-Smtp-Source: ABdhPJw5xVvbW66Siyuk+HvVdcGCUwANpqhOcL7xjknAhMFGF/KmArF+e8Aj9e202XVt5qf+XKjY7Q==
+X-Received: by 2002:a92:ce8e:: with SMTP id r14mr4563184ilo.265.1590697050149;
+        Thu, 28 May 2020 13:17:30 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v15sm3828753ila.57.2020.05.28.13.17.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 13:17:29 -0700 (PDT)
+Received: (nullmailer pid 608748 invoked by uid 1000);
+        Thu, 28 May 2020 20:17:28 -0000
+Date:   Thu, 28 May 2020 14:17:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        od@zcrc.me, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        dri-devel@lists.freedesktop.org,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 01/12] dt-bindings: display: Convert ingenic,lcd.txt to
+ YAML
+Message-ID: <20200528201728.GA608691@bogus>
+References: <20200516215057.392609-1-paul@crapouillou.net>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR04CA0055.namprd04.prod.outlook.com (2603:10b6:300:6c::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.18 via Frontend Transport; Thu, 28 May 2020 20:16:42 +0000
-X-Microsoft-Original-Message-ID: <27636618-a043-1e33-6307-b256d19c64a5@live.ca>
-X-TMN:  [/Xah2Df2zcUXqx0IAaryNncU7V4r1BvNTOhMCk2xorRc/sXsDY9PcZ04mOtqeEHD]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 50
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 67096e1b-b9c8-465f-9b0a-08d803440990
-X-MS-TrafficTypeDiagnostic: CY1NAM02HT119:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ObmKISK1maBDDAI80aKpU/qLIc7XKO4KTL/LBdiPhCp4lvbh/ie0iU2F0Uja52MNa7SGA6ijYt3y4Cwdw0ll/wxSrfbzCfF9Yq9jkj2Hf3ikzB9bm2e3rCMfizzJrgeBkUSsE/BSOZeCY+gIbJueppw9lQeIDz3OQ2A2tQWqMId6ht/xk4hZXcXEyazxvCenI+piy5wgfwDbY1Ia2xNQo8KqUK8jWLb2yMziZ8jzl674dox8WRLX68jKBA+htAxQ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:0;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB0663.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:;DIR:OUT;SFP:1901;
-X-MS-Exchange-AntiSpam-MessageData: s4e8VwcqvuF8M6Ci7L7IAHi+ya/EUifwkemkLjTTdhFB7muKIHzdWCJXJKCxEGxJa/f6/hG4yOndITZeDy0GHzBUxJil1/npc4ltVsX/PcYja3B4sMZZl73WDn/YxZFUTP36sG1ruYPUFjMZxtml23UDIhgLP9Zz1S+mGo+22h5vbETXQYFgjGAkJfr1OAsWU33PWz/XNBJdWKFwqUKFgg==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67096e1b-b9c8-465f-9b0a-08d803440990
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 20:16:43.1923
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1NAM02HT119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200516215057.392609-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 2020-05-28 1:13 p.m., Rob Herring wrote:
-> On Fri, May 15, 2020 at 07:26:18PM -0700, Jonathan Bakker wrote:
->> Some devices may require a current adc, but only have a voltage
->> ADC onboard.  In order to read the current, they have a resistor
->> connected to the ADC.  Add bindings for this possibility.
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> ---
->>  .../iio/adc/linux,current-from-voltage.yaml   | 47 +++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml b/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
->> new file mode 100644
->> index 000000000000..385d317607c3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/linux,current-from-voltage.yaml
->> @@ -0,0 +1,47 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/iio/adc/linux,current-from-voltage.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Current ADC from voltage ADC and resistor
->> +
->> +maintainers:
->> +  - Jonathan Bakker <xc-racer2@live.ca>
->> +
->> +properties:
->> +  compatible:
->> +    const: linux,current-from-voltage
+On Sat, 16 May 2020 23:50:46 +0200, Paul Cercueil wrote:
+> Convert the ingenic,lcd.txt to a new ingenic,lcd.yaml file.
 > 
-> How is an ADC with a resistor attached a Linux thing? So you don't need 
-> 'linux', but then 'current-from-voltage' isn't the best naming. I don't 
-> have a suggestion ATM.
+> In the process, the new ingenic,jz4780-lcd compatible string has been
+> added.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     This patch comes from a different patchset so it's effectively a V2.
+> 
+>     Changes were:
+>     - lcd_pclk and lcd clocks are in the correct order now,
+>     - Add 'port' and 'ports' properties, and document the valid ports.
+> 
+>  .../bindings/display/ingenic,lcd.txt          |  45 -------
+>  .../bindings/display/ingenic,lcd.yaml         | 126 ++++++++++++++++++
+>  2 files changed, 126 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/ingenic,lcd.yaml
 > 
 
-The good/bad news is that I was re-implementing an existing driver under a new name :)
-
-The compatible is current-sense-shunt for this exact same purpose.
-
-Thanks,
-Jonathan
-
->> +
->> +  io-channel-names:
->> +    const: adc
->> +
->> +  io-channels:
->> +    maxItems: 1
->> +    description: Voltage ADC channel
->> +
->> +  linux,resistor-ohms:
->> +    description: Strength of resistor connected to voltage ADC
-> 
-> Wouldn't you need this to be micro-ohms? Otherwise, there'd be too much 
-> voltage drop?
-> 
-> Rob
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
