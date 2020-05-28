@@ -2,246 +2,265 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1860CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBCC9207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49621207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:47:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UmyhKM4J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404580AbgE1Prd (ORCPT
+        id S2404730AbgE1Prk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:47:33 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:50642 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404679AbgE1PrF (ORCPT
+        Thu, 28 May 2020 11:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404707AbgE1PrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:47:05 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeKkJ-0004Qw-2N; Thu, 28 May 2020 09:47:03 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeKkH-00024D-UJ; Thu, 28 May 2020 09:47:02 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
-Date:   Thu, 28 May 2020 10:43:09 -0500
-In-Reply-To: <87k10wysqz.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Thu, 28 May 2020 10:38:28 -0500")
-Message-ID: <87wo4wxdyq.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 28 May 2020 11:47:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BA5C08C5C8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:47:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t7so11694281plr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 08:47:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LsQCDM2neDPMHnH/0t80dBq+lQkYA0nzb5LOU64sDRo=;
+        b=UmyhKM4Jpks9J00t8FKaJjhwAp3CWXCfbjL0jeNN7H8h731llMvtFA/1uul7nDsSW2
+         r8lXAjZppv+TRe5sk5OVwRVS6NZpwNufyz7lViBxNmscU7XlWTvv/lpCQa1JA/1yofpT
+         FJ+u7puB6jtYSEkZSTzF//xkcIvATOriQAypxMkieuU+topZgBCiB11v3kPtuO8XpZam
+         6DiqgMRySkj6CFgQJbEwT2VaI+MUYJv4HL9RQ5JcTsPn1z8ysZeOlNZXZorE/M6c8DgK
+         0nQv9rse0TS88b5U/AjkWMPuzVM0WTMRWkAqLP1rBt2Szu7f3FBLcBq4flH0YlSO2vj1
+         pphA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LsQCDM2neDPMHnH/0t80dBq+lQkYA0nzb5LOU64sDRo=;
+        b=nt1OVxon+osaNsGwocjsP4El/HIQUC13DFQ3aY3znUMyMPN7PhRfn0kUB4vtT3Uf4P
+         5VtluDosgjIXd5HAeioJT/diH8GY5zgIwCtoJ+zTFOm0/Z1V24ETDbAdZzx/T3EU1lVD
+         UIyNnxkyBnTGo1czHNCMABSW+1VxoFXOWJBVDbwZ3nB8RAJwHyXcmNCNVCT3Uyth8S2q
+         tmsAiEG2gOQfCFnMJalqbrJdRjgpw99WSVzyOMGB0daKNDZPDsL6F4If07sTtApGAjkq
+         Pzjsnq7K/RgpgdjVo/A85huhWG3Vmsfi4oqqcGPOaltqola3xdeLiPNkHgClKsBtdYar
+         nSFQ==
+X-Gm-Message-State: AOAM5308ldTqs5W9O/DVtcyXgDu8mQwAT827Jd91I1Gx4OmRsLtsmZOM
+        vjw2IeKIE62xQC5JPpF1+lQOjQ==
+X-Google-Smtp-Source: ABdhPJwrGVxnRHPAj6hGG65lrdgZ7wwXriSr+ERPGBBU3/A2TNUzw23m8eel0A7JJcN7JnWbDwY3XA==
+X-Received: by 2002:a17:90a:c788:: with SMTP id gn8mr4431712pjb.230.1590680838985;
+        Thu, 28 May 2020 08:47:18 -0700 (PDT)
+Received: from nagraj.local ([49.206.21.239])
+        by smtp.gmail.com with ESMTPSA id y22sm5212551pfc.132.2020.05.28.08.47.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 08:47:18 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org
+Cc:     nishakumari@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v3 5/5] regulator: qcom: labibb: Add SC interrupt handling
+Date:   Thu, 28 May 2020 21:16:25 +0530
+Message-Id: <20200528154625.17742-6-sumit.semwal@linaro.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200528154625.17742-1-sumit.semwal@linaro.org>
+References: <20200528154625.17742-1-sumit.semwal@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jeKkH-00024D-UJ;;;mid=<87wo4wxdyq.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+4yct8JYeIUy8W9FZXXCz8gjMVFKhpUuQ=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 04/11] exec: Move uid/gid handling from creds_from_file into bprm_fill_uid
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nisha Kumari <nishakumari@codeaurora.org>
 
-The logic in cap_bprm_creds_from_file is difficult to follow in part
-because it handles both uids/gids and capabilities.  That difficulty
-in following the code has resulted in several small bugs.  Move the
-handling of uids/gids into bprm_fill_uid to make the code clearer.
+Add Short circuit interrupt handling and recovery for the lab and
+ibb regulators on qcom platforms.
 
-A small bug is fixed where the ambient capabilities were unnecessarily
-cleared when the presence of a ptracer or a shared fs_struct resulted
-in the setuid or setgid not being honored.  This bug was not possible
-to leave in place with the movement of the uids and gids handling
-out of cap_bprm_repopultate_creds.
+The client panel drivers need to register for REGULATOR_EVENT_OVER_CURRENT
+notification which will be triggered on short circuit. They should
+try to enable the regulator once, and if it doesn't get enabled,
+handle shutting down the panel accordingly.
 
-The rest of the bugs I have tried to make more apparent but left
-in tact when moving the code into bprm_fill_uid.
+Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
+Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
 
-Ref: ee67ae7ef6ff ("commoncap: Move cap_elevated calculation into bprm_set_creds")
-Fixes: 58319057b784 ("capabilities: ambient capabilities")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+--
+v2: sumits: reworked handling to user regmap_read_poll_timeout, and handle it
+     per-regulator instead of clearing both lab and ibb errors on either irq
+     triggering. Also added REGULATOR_EVENT_OVER_CURRENT handling and
+     notification to clients.
+v3: sumits: updated as per review comments of v2: removed spurious check for
+     irq in handler and some unused variables; inlined some of the code,
+     omitted IRQF_TRIGGER_RISING as it's coming from DT.
+
 ---
- fs/exec.c            | 49 ++++++++++++++++++++++++++++++++++++--------
- security/commoncap.c | 25 +++++++---------------
- 2 files changed, 48 insertions(+), 26 deletions(-)
+ drivers/regulator/qcom-labibb-regulator.c | 92 +++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 091ff6269610..956ee3a0d824 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1590,21 +1590,23 @@ static void check_unsafe_exec(struct linux_binprm *bprm)
- static void bprm_fill_uid(struct linux_binprm *bprm)
- {
- 	/* Handle suid and sgid on files */
-+	struct cred *new = bprm->cred;
- 	struct inode *inode;
- 	unsigned int mode;
-+	bool need_cap;
- 	kuid_t uid;
- 	kgid_t gid;
+diff --git a/drivers/regulator/qcom-labibb-regulator.c b/drivers/regulator/qcom-labibb-regulator.c
+index 634d08461c6e..695ffac71e81 100644
+--- a/drivers/regulator/qcom-labibb-regulator.c
++++ b/drivers/regulator/qcom-labibb-regulator.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ // Copyright (c) 2020, The Linux Foundation. All rights reserved.
  
- 	if (!mnt_may_suid(bprm->file->f_path.mnt))
--		return;
-+		goto after_setid;
++#include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of_irq.h>
+ #include <linux/of.h>
+@@ -18,6 +19,7 @@
+ #define REG_LABIBB_ENABLE_CTL		0x46
+ #define LABIBB_STATUS1_VREG_OK_BIT	BIT(7)
+ #define LABIBB_CONTROL_ENABLE		BIT(7)
++#define LABIBB_STATUS1_SC_DETECT_BIT	BIT(6)
  
- 	if (task_no_new_privs(current))
--		return;
-+		goto after_setid;
+ #define LAB_ENABLE_CTL_MASK		BIT(7)
+ #define IBB_ENABLE_CTL_MASK		(BIT(7) | BIT(6))
+@@ -27,12 +29,17 @@
+ #define IBB_POLL_ENABLED_TIME		(LABIBB_ENABLE_TIME * 10)
+ #define LABIBB_OFF_ON_DELAY		(8200)
  
- 	inode = bprm->file->f_path.dentry->d_inode;
- 	mode = READ_ONCE(inode->i_mode);
- 	if (!(mode & (S_ISUID|S_ISGID)))
--		return;
-+		goto after_setid;
++#define POLLING_SCP_DONE_INTERVAL_US	5000
++#define POLLING_SCP_TIMEOUT		16000
++
+ struct labibb_regulator {
+ 	struct regulator_desc		desc;
+ 	struct device			*dev;
+ 	struct regmap			*regmap;
+ 	struct regulator_dev		*rdev;
+ 	u16				base;
++	int				sc_irq;
++	int				vreg_enabled;
+ 	u8				type;
+ };
  
- 	/* Be careful if suid/sgid is set */
- 	inode_lock(inode);
-@@ -1616,19 +1618,50 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
- 	inode_unlock(inode);
+@@ -65,6 +72,8 @@ static int qcom_labibb_regulator_enable(struct regulator_dev *rdev)
+ 	if (ret < 0)
+ 		dev_err(reg->dev, "Write failed: enable %s regulator\n",
+ 			reg->desc.name);
++	else
++		reg->vreg_enabled = 1;
  
- 	/* We ignore suid/sgid if there are no mappings for them in the ns */
--	if (!kuid_has_mapping(bprm->cred->user_ns, uid) ||
--		 !kgid_has_mapping(bprm->cred->user_ns, gid))
--		return;
-+	if (!kuid_has_mapping(new->user_ns, uid) ||
-+	    !kgid_has_mapping(new->user_ns, gid))
-+		goto after_setid;
+ 	return ret;
+ }
+@@ -78,6 +87,8 @@ static int qcom_labibb_regulator_disable(struct regulator_dev *rdev)
+ 	if (ret < 0)
+ 		dev_err(reg->dev, "Disable failed: disable %s\n",
+ 			reg->desc.name);
++	else
++		reg->vreg_enabled = 0;
  
- 	if (mode & S_ISUID) {
- 		bprm->per_clear = 1;
--		bprm->cred->euid = uid;
-+		new->euid = uid;
- 	}
+ 	return ret;
+ }
+@@ -88,11 +99,70 @@ static struct regulator_ops qcom_labibb_ops = {
+ 	.is_enabled		= qcom_labibb_regulator_is_enabled,
+ };
  
- 	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
- 		bprm->per_clear = 1;
--		bprm->cred->egid = gid;
-+		new->egid = gid;
++static irqreturn_t labibb_sc_err_handler(int irq, void *_reg)
++{
++	int ret;
++	u16 reg;
++	unsigned int val;
++	struct labibb_regulator *labibb_reg = _reg;
++	bool in_sc_err, scp_done = false;
++
++	ret = regmap_read(labibb_reg->regmap,
++			  labibb_reg->base + REG_LABIBB_STATUS1, &val);
++	if (ret < 0) {
++		dev_err(labibb_reg->dev, "sc_err_irq: Read failed, ret=%d\n",
++			ret);
++		return IRQ_HANDLED;
 +	}
 +
-+after_setid:
-+	/* Will the new creds have multiple uids or gids? */
-+	if (!uid_eq(new->euid, new->uid) || !gid_eq(new->egid, new->gid)) {
-+		bprm->secureexec = 1;
++	dev_dbg(labibb_reg->dev, "%s SC error triggered! STATUS1 = %d\n",
++		labibb_reg->desc.name, val);
 +
-+		/*
-+		 * Is the root directory and working directory shared or is
-+		 * the process traced and the tracing process does not have
-+		 * CAP_SYS_PTRACE?
-+		 *
-+		 * In either case it is not safe to change the euid or egid
-+		 * unless the current process has the appropriate cap and so
-+		 * chaning the euid or egid was already possible.
-+		 */
-+		need_cap = bprm->unsafe & LSM_UNSAFE_SHARE ||
-+			!ptracer_capable(current, new->user_ns);
-+		if (need_cap && !uid_eq(new->euid, new->uid) &&
-+		    (!ns_capable(new->user_ns, CAP_SETUID) ||
-+		     (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS))) {
-+			new->euid = new->uid;
-+		}
-+		if (need_cap && !gid_eq(new->egid, new->gid) &&
-+		    (!ns_capable(new->user_ns, CAP_SETUID) ||
-+		     (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS))) {
-+			new->egid = new->gid;
-+		}
- 	}
++	in_sc_err = !!(val & LABIBB_STATUS1_SC_DETECT_BIT);
 +
-+	new->suid = new->fsuid = new->euid;
-+	new->sgid = new->fsgid = new->egid;
- }
++	/*
++	 * The SC(short circuit) fault would trigger PBS(Portable Batch
++	 * System) to disable regulators for protection. This would
++	 * cause the SC_DETECT status being cleared so that it's not
++	 * able to get the SC fault status.
++	 * Check if the regulator is enabled in the driver but
++	 * disabled in hardware, this means a SC fault had happened
++	 * and SCP handling is completed by PBS.
++	 */
++	if (!in_sc_err) {
++
++		reg = labibb_reg->base + REG_LABIBB_ENABLE_CTL;
++
++		ret = regmap_read_poll_timeout(labibb_reg->regmap,
++					reg, val,
++					!(val & LABIBB_CONTROL_ENABLE),
++					POLLING_SCP_DONE_INTERVAL_US,
++					POLLING_SCP_TIMEOUT);
++
++		if (!ret && labibb_reg->vreg_enabled) {
++			dev_dbg(labibb_reg->dev,
++				"%s has been disabled by SCP\n",
++				labibb_reg->desc.name);
++			scp_done = true;
++		}
++	}
++
++	if (in_sc_err || scp_done) {
++		regulator_lock(labibb_reg->rdev);
++		regulator_notifier_call_chain(labibb_reg->rdev,
++						REGULATOR_EVENT_OVER_CURRENT,
++						NULL);
++		regulator_unlock(labibb_reg->rdev);
++	}
++	return IRQ_HANDLED;
++}
++
+ static int register_labibb_regulator(struct labibb_regulator *reg,
+ 				const struct labibb_regulator_data *reg_data,
+ 				struct device_node *of_node)
+ {
+ 	struct regulator_config cfg = {};
++	int ret;
  
- /*
-diff --git a/security/commoncap.c b/security/commoncap.c
-index 2bd1f24f3796..b39c7511862e 100644
---- a/security/commoncap.c
-+++ b/security/commoncap.c
-@@ -809,7 +809,7 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm)
- 	/* Process setpcap binaries and capabilities for uid 0 */
- 	const struct cred *old = current_cred();
- 	struct cred *new = bprm->cred;
--	bool effective = false, has_fcap = false, is_setid;
-+	bool effective = false, has_fcap = false;
- 	int ret;
- 	kuid_t root_uid;
+ 	reg->base = reg_data->base;
+ 	reg->type = reg_data->type;
+@@ -108,6 +178,28 @@ static int register_labibb_regulator(struct labibb_regulator *reg,
+ 	reg->desc.poll_enabled_time = reg_data->poll_enabled_time;
+ 	reg->desc.off_on_delay = LABIBB_OFF_ON_DELAY;
  
-@@ -828,31 +828,21 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm)
- 	if (__cap_gained(permitted, new, old))
- 		bprm->per_clear = 1;
- 
--	/* Don't let someone trace a set[ug]id/setpcap binary with the revised
-+	/* Don't let someone trace a setpcap binary with the revised
- 	 * credentials unless they have the appropriate permit.
- 	 *
- 	 * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
- 	 */
--	is_setid = __is_setuid(new, old) || __is_setgid(new, old);
--
--	if ((is_setid || __cap_gained(permitted, new, old)) &&
-+	if (__cap_gained(permitted, new, old) &&
- 	    ((bprm->unsafe & ~LSM_UNSAFE_PTRACE) ||
- 	     !ptracer_capable(current, new->user_ns))) {
- 		/* downgrade; they get no more than they had, and maybe less */
--		if (!ns_capable(new->user_ns, CAP_SETUID) ||
--		    (bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS)) {
--			new->euid = new->uid;
--			new->egid = new->gid;
--		}
- 		new->cap_permitted = cap_intersect(new->cap_permitted,
- 						   old->cap_permitted);
- 	}
- 
--	new->suid = new->fsuid = new->euid;
--	new->sgid = new->fsgid = new->egid;
--
- 	/* File caps or setid cancels ambient. */
--	if (has_fcap || is_setid)
-+	if (has_fcap || __is_setuid(new, old) || __is_setgid(new, old))
- 		cap_clear(new->cap_ambient);
- 
- 	/*
-@@ -885,10 +875,9 @@ int cap_bprm_creds_from_file(struct linux_binprm *bprm)
- 		return -EPERM;
- 
- 	/* Check for privilege-elevated exec. */
--	if (is_setid ||
--	    (!__is_real(root_uid, new) &&
--	     (effective ||
--	      __cap_grew(permitted, ambient, new))))
-+	if (!__is_real(root_uid, new) &&
-+	    (effective ||
-+	     __cap_grew(permitted, ambient, new)))
- 		bprm->secureexec = 1;
- 
- 	return 0;
++	reg->sc_irq = -EINVAL;
++	ret = of_irq_get_byname(of_node, "sc-err");
++	if (ret < 0) {
++		dev_err(reg->dev, "Unable to get sc-err, ret = %d\n",
++			ret);
++		return ret;
++	} else
++		reg->sc_irq = ret;
++
++	if (reg->sc_irq > 0) {
++		ret = devm_request_threaded_irq(reg->dev,
++						reg->sc_irq,
++						NULL, labibb_sc_err_handler,
++						IRQF_ONESHOT,
++						"sc-err", reg);
++		if (ret) {
++			dev_err(reg->dev, "Failed to register sc-err irq ret=%d\n",
++				ret);
++			return ret;
++		}
++	}
++
+ 	cfg.dev = reg->dev;
+ 	cfg.driver_data = reg;
+ 	cfg.regmap = reg->regmap;
 -- 
-2.25.0
+2.26.2
 
