@@ -2,196 +2,104 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F37208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wc1u2gs1"
+	by mail.kernel.org (Postfix) with ESMTP id E40D42145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590651889;
+	bh=JQovPRzRildkfK94RqErFvrfrdiBQzI+HhRl0V5TBkU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H6Dneav0fYUhte4I0Wzjl5IEWnrE4DLWM+sClJ8r6ftFMsb7FYS+CoMEso+8SNP0i
+	 2BVK7UsoWaoRUfeq7cfp1KY3XFdxas3XaUEAVEbNPhsrpvwZnn4yIal9ZVUNzJ11X4
+	 Oo/zUjHB8IOZJEGy5BOmqhu51qJwoGVQCY4E6XHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbgE1HoF (ORCPT
+        id S1726734AbgE1Hos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:44:05 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26644 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725811AbgE1HoE (ORCPT
+        Thu, 28 May 2020 03:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgE1Hor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:44:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590651843;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=z7gq34X5+FDApO6RZCSsyS3w0y0KfODq2sN2I24ixnw=;
-        b=Wc1u2gs1AQ+eILQgqEREbzCvY0xte2aSNU4qYPxnUEWEFLm2rNPavEghIva64Qk7fvufhc
-        nzP3nu/rmPVTRrXsY5kV6Oz8BkFcP9vUWBYJplj776Ihisx6ry3qDrT7xpEk+FcNlKe9OP
-        C1hyloQbqd2HHDFX7Mf2zRgB4WM1cvo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-303-4WhxdBjLP32hekYeZl9eLA-1; Thu, 28 May 2020 03:43:55 -0400
-X-MC-Unique: 4WhxdBjLP32hekYeZl9eLA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBD061005510;
-        Thu, 28 May 2020 07:43:53 +0000 (UTC)
-Received: from [10.36.113.56] (ovpn-113-56.ams2.redhat.com [10.36.113.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8EBB162932;
-        Thu, 28 May 2020 07:43:48 +0000 (UTC)
-Subject: Re: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
- address
-To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Will Deacon <will@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
- <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
- <CABe79T7WwD2AyWp2e5pAi8TO2r5=-v5gPb2Gjtf8EhHOn3dogQ@mail.gmail.com>
- <20200528072308.GA414784@myrica>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <527f25a4-ca5a-10da-150f-0b4ea3839635@redhat.com>
-Date:   Thu, 28 May 2020 09:43:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 28 May 2020 03:44:47 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50473C05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:44:46 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id g9so22376698edw.10
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MxtFmPxsx2QLpxqRiRjosE9zDHzIOqgaK1Ln9E8J5Wk=;
+        b=MDZ0Hyla0vij8gZtFndPn/KfM/hS0wvjYUGWft1tfhbG0pU6ZGt7atfIXQ5b7b7z/T
+         3LyJ6Eee6zMOPIvML5uvgrpCou7YURDnmhhkJU8VgAV0SyZjh2YvWhmgalnsoThWuk4a
+         8NaLsKDDHpnLPjySR/rVJsr+hByzyZDhzNFlXdc9Dx16ZTmSj8xYD4fi0NAqlrw56bzF
+         qiVDs1PfMMLBK/RIsndTpg3j71xn+LfGr28zv5+I/VOZCkIC0dyMuhuOjUmr2yLoR81p
+         ZxuQ0UL7gi3vkE3NV8h+Kt565HWKjVarPkxF1dfOtNH4fQcSj0bQCHpqQCnyK8aQ7t2E
+         3MYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=MxtFmPxsx2QLpxqRiRjosE9zDHzIOqgaK1Ln9E8J5Wk=;
+        b=Mmfg02MFrLn6QPcrGXO3VccdbbGFGWTaiiUVDfAhYEDijbRThTBSUa0/nCFA7utVyO
+         ck9ewHraCoKBwcUlMgqE88pE+n8zcxLM7aKJzY913OsC61MgJNJgSAQj/qbN1CEOodWB
+         a7adBi7E29nBVQdo3GoM4IlZ+aFeYt/Zuma1mUIIDHldy4OrYO4IqndE0Jhi+1zH/TZi
+         F9qs+Be4dLlwnmoAhrcjumNnBH94nuiXljdh+K5fRaC1DK+LQExs679Ov6vT86blKxUd
+         JZ8Ncm+L/oQ7ee4wAe2e0GOO9ZjxsI9qA+QUHxgbHNszU4Al6eS5/0RowmQZi8FlcBcw
+         sFeA==
+X-Gm-Message-State: AOAM530SENogZSRhqMBPgrpM0Tcv4AtAByfLjb4NXU+ZiohTaftXPIaw
+        cdTlR3ztEYLR0hjy0KbDQ9s=
+X-Google-Smtp-Source: ABdhPJzrOP9f0vBgk3VCRYh6KvIrcCjAt5BDMpQk8bcsNZIYcbVEjhcirApDUmmi6x3XRvzeU+GjZA==
+X-Received: by 2002:a50:8d42:: with SMTP id t2mr1705746edt.170.1590651885152;
+        Thu, 28 May 2020 00:44:45 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id q22sm4420821edg.97.2020.05.28.00.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 00:44:44 -0700 (PDT)
+Date:   Thu, 28 May 2020 09:44:42 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [git pull] coredump infoleak fix
+Message-ID: <20200528074442.GB790247@gmail.com>
+References: <20200527213447.GH23230@ZenIV.linux.org.uk>
+ <20200528070255.GA790247@gmail.com>
+ <20200528070552.GJ23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200528072308.GA414784@myrica>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528070552.GJ23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 5/28/20 9:23 AM, Jean-Philippe Brucker wrote:
-> On Thu, May 28, 2020 at 10:45:14AM +0530, Srinath Mannam wrote:
->> On Wed, May 27, 2020 at 11:00 PM Robin Murphy <robin.murphy@arm.com> wrote:
->>>
->> Thanks Robin for your quick response.
->>> On 2020-05-27 17:03, Srinath Mannam wrote:
->>>> This patch gives the provision to change default value of MSI IOVA base
->>>> to platform's suitable IOVA using module parameter. The present
->>>> hardcoded MSI IOVA base may not be the accessible IOVA ranges of platform.
->>>
->>> That in itself doesn't seem entirely unreasonable; IIRC the current
->>> address is just an arbitrary choice to fit nicely into Qemu's memory
->>> map, and there was always the possibility that it wouldn't suit everything.
->>>
->>>> Since commit aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible
->>>> DMA address"), inaccessible IOVA address ranges parsed from dma-ranges
->>>> property are reserved.
+* Al Viro <viro@zeniv.linux.org.uk> wrote:
+
+> On Thu, May 28, 2020 at 09:02:55AM +0200, Ingo Molnar wrote:
 > 
-> I don't understand why we only reserve the PCIe windows for DMA domains.
-> Shouldn't VFIO also prevent userspace from mapping them?
-
-VFIO prevents userspace from DMA mapping iovas within reserved regions:
-9b77e5c79840  vfio/type1: check dma map request is within a valid iova range
-
-but it does not prevent the SW MSI region chosen by the kernel from
-colliding with other reserved regions (esp. PCIe host bridge windows).
-
-  If they were
-> part of the common reserved regions then we could have VFIO choose a
-> SW_MSI region among the remaining free space.
-As Robin said this was the initial chosen approach
-[PATCH 10/10] vfio: allow the user to register reserved iova range for
-MSI mapping
-https://patchwork.kernel.org/patch/8121641/
-
-Some additional background about why the static SW MSI region chosen by
-the kernel was later chosen:
-Summary of LPC guest MSI discussion in Santa Fe (was: Re: [RFC 0/8] KVM
-PCIe/MSI passthrough on ARM/ARM64 (Alt II))
-https://lists.linuxfoundation.org/pipermail/iommu/2016-November/019060.html
-
-Thanks
-
-Eric
-
-
- It would just need a
-> different way of asking the IOMMU driver if a SW_MSI is needed, for
-> example with a domain attribute.
+> > Looks good to me.
+> > 
+> > I'm wondering, shouldn't we also zero-initialize the dump data to 
+> > begin with? See the patch below (untested).
 > 
-> Thanks,
-> Jean
-> 
->>>
->>> That, however, doesn't seem to fit here; iommu-dma maps MSI doorbells
->>> dynamically, so they aren't affected by reserved regions any more than
->>> regular DMA pages are. In fact, it explicitly ignores the software MSI
->>> region, since as the comment says, it *is* the software that manages those.
->> Yes you are right, we don't see any issues with kernel drivers(PCI EP) because
->> MSI IOVA allocated dynamically by honouring reserved regions same as DMA pages.
->>>
->>> The MSI_IOVA_BASE region exists for VFIO, precisely because in that case
->>> the kernel *doesn't* control the address space, but still needs some way
->>> to steal a bit of it for MSIs that the guest doesn't necessarily know
->>> about, and give userspace a fighting chance of knowing what it's taken.
->>> I think at the time we discussed the idea of adding something to the
->>> VFIO uapi such that userspace could move this around if it wanted or
->>> needed to, but decided we could live without that initially. Perhaps now
->>> the time has come?
->> Yes, we see issues only with user-space drivers(DPDK) in which MSI_IOVA_BASE
->> region is considered to map MSI registers. This patch helps us to fix the issue.
->>
->> Thanks,
->> Srinath.
->>>
->>> Robin.
->>>
->>>> If any platform has the limitaion to access default MSI IOVA, then it can
->>>> be changed using "arm-smmu.msi_iova_base=0xa0000000" command line argument.
->>>>
->>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->>>> ---
->>>>   drivers/iommu/arm-smmu.c | 5 ++++-
->>>>   1 file changed, 4 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>>> index 4f1a350..5e59c9d 100644
->>>> --- a/drivers/iommu/arm-smmu.c
->>>> +++ b/drivers/iommu/arm-smmu.c
->>>> @@ -72,6 +72,9 @@ static bool disable_bypass =
->>>>   module_param(disable_bypass, bool, S_IRUGO);
->>>>   MODULE_PARM_DESC(disable_bypass,
->>>>       "Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
->>>> +static unsigned long msi_iova_base = MSI_IOVA_BASE;
->>>> +module_param(msi_iova_base, ulong, S_IRUGO);
->>>> +MODULE_PARM_DESC(msi_iova_base, "msi iova base address.");
->>>>
->>>>   struct arm_smmu_s2cr {
->>>>       struct iommu_group              *group;
->>>> @@ -1566,7 +1569,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
->>>>       struct iommu_resv_region *region;
->>>>       int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
->>>>
->>>> -     region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
->>>> +     region = iommu_alloc_resv_region(msi_iova_base, MSI_IOVA_LENGTH,
->>>>                                        prot, IOMMU_RESV_SW_MSI);
->>>>       if (!region)
->>>>               return;
->>>>
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+> Note that this hides the bug from KASAN, though ;-)  And the bug
+> is not just infoleak - not all components are "all zeroes" in the
+> init state.
 
+Yeah, but is zero-init really a problem though? Wouldn't it be 
+'better' to have all zeroes if the dump doesn't fit? But I might be 
+missing something ...
+
+Thanks,
+
+	Ingo
