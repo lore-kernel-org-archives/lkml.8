@@ -2,110 +2,95 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C35BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0DC920814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9D52078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+7cOlU1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFNMFRLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405965AbgE1Sr1 (ORCPT
+        id S2406002AbgE1Sr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54036 "EHLO
+        Thu, 28 May 2020 14:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405966AbgE1SrY (ORCPT
+        with ESMTP id S2405966AbgE1Sr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:47:24 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFB7C08C5C6;
-        Thu, 28 May 2020 11:47:23 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id bs4so915426edb.6;
-        Thu, 28 May 2020 11:47:23 -0700 (PDT)
+        Thu, 28 May 2020 14:47:56 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8587C08C5C6;
+        Thu, 28 May 2020 11:47:56 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id g5so2514313pfm.10;
+        Thu, 28 May 2020 11:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=C0hYqHcMOeGmeNkFJaRKYE9LRqgonnvy7dyDwDZLMKk=;
-        b=Z+7cOlU1Z+FswU1WSwnvV2gStkFRPyxQ8ZhAIpohlCoCBMIOFhAF9UdQZq2dMxTVi/
-         u3vdVfV7ZgPht/zGL1mG4HDugozPSsHUyRB+brGbftGi6PoVjvR1+33I517fD/zazGhZ
-         22yyHsv384ySypfY0RphM2zS72g5YV+i8VJiq/j6FvPDGQBQs48cWtW/CQja5Trr5QBw
-         0E4gy64WdaNuRPObBHndMGtCyGfoAg2AT0uv9bt72g3uCAhZZIODedBHkQ44q4PeNfkM
-         y1y2DuIsOdYMLcn9L/lAeG/S+mG0o5HWxvwrVeUM63UZ9a2x3P/ON2Su7CwMskmE7ggY
-         Rpag==
+        h=from:to:cc:subject:date:message-id;
+        bh=AhPc+WQEnRknCyiVWiYGN5zVm2rCAmISMS8pUXVe9wY=;
+        b=NFNMFRLe0XdUEh3rJHAwgjhbA/HkgWMH+u/20KPpzp7vGsYcZPF/n6jqFSLT21EyhL
+         qvNmiKD60uVYu7YT0SJUrSHVy7PSMhc2C2bO6Ts6CKrD+w0YuMzO6NOeF2ZA0nTLtOY5
+         WWkk9GeWe+G7osAtaVaVIdION/12nMsUEQt+mK5wUk3XntdDRpVRe60jeJXUAfICJOFQ
+         X8nj97pLCDMHMsoQuUNIQYxp6Xmn08gjb6sNKzChnZkI/mou9zQkbN8a4QLfnW9C2qFf
+         S9M3r0e7dLefk7ecuJiAUcgjSyBBFl8dmSQGFvgUxsSkT4p2PEevOnj38vrkLkWXm8g5
+         pCJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=C0hYqHcMOeGmeNkFJaRKYE9LRqgonnvy7dyDwDZLMKk=;
-        b=PRvC/ctv7qcDvuXyZD1ogVGArQUKatuS/fTBYruuiZm6jhHAkl5ZdeXY6ZttcHasMF
-         As6ppHFqww/Om9RxbOcs+ENkU3jvLpWhWgYYLJxuV6i0fB4Ww5uDyDaDerZ8DfO9reY9
-         zKOYObmgnOr8nyuBLBAOX149UJmQbIEXhSCchzHa7qFYHEw2iwuP1idd+e2XLdH6b70K
-         5wFbwy/SpCswfJQZ7H4JDibocPtXTBwSrj2w5b6pCAG5vVa08prqbcW9izreyIlE3BaL
-         PjppzKjDjNDkIGsnQ4NZF0LTVINIRHOMPAmDQfnO+oYe9Ed25yIH/HUDU780rTx3/9FA
-         tdEA==
-X-Gm-Message-State: AOAM530ang6rQX16F9ZKqRw76NtsYLs0dl5gEr/guQ350cxXzRetRUWG
-        HR/AWqHSv/LyZQYT84u2cvF3L7rZ
-X-Google-Smtp-Source: ABdhPJzH6sLGHOUWeATOskSrI00u0rH4Gx95oCEfcaPwrXya9BwAfrI8AVrNG0c/wPk2P1BUcJ6MdQ==
-X-Received: by 2002:a50:a412:: with SMTP id u18mr4739604edb.192.1590691641603;
-        Thu, 28 May 2020 11:47:21 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f28:5200:593c:f5d:44cf:3de4? (p200300ea8f285200593c0f5d44cf3de4.dip0.t-ipconnect.de. [2003:ea:8f28:5200:593c:f5d:44cf:3de4])
-        by smtp.googlemail.com with ESMTPSA id b14sm5038552edx.93.2020.05.28.11.47.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 11:47:21 -0700 (PDT)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: PCI: Disable not requested resource types in pci_enable_resources
-Message-ID: <18bb3264-9901-135d-8b40-1ee98dd672f1@gmail.com>
-Date:   Thu, 28 May 2020 20:47:12 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AhPc+WQEnRknCyiVWiYGN5zVm2rCAmISMS8pUXVe9wY=;
+        b=fEVkKtXF/6jiayTA1syTytoEmGx4t3GbCLskl7Bh3diBA47vQI6ShBGuAfIb4+5HPa
+         CCvchuSjK/d7QeLyPvHa0ey7y70hHWmKn+DJq2alaq0yuWc3r06XG5a8tN9GVoNbGDEU
+         dFFabQR3aGtOTiZ+lS0cuG15PcLVNQO2xGQ6aYM6umKeRNhfzLNXvSEBMY5cBU0D0g3e
+         rh2m8q6XpkEfP8UvZAkc339wwATd9esunadCzUgCe8XQN0uaX7ZsEZi+l3Jt/MFI4Ixu
+         +Lc5+U9ffjGwNxlm3EVVputvzWZnZSIdM/FHflYUNXjfQRkcbL4G437RCp+Y1+V6VWGU
+         Oc3Q==
+X-Gm-Message-State: AOAM532OT3DV9a5vyuZ2upg0cZ8W0f6xrMtBQBhTq9AQcuoc9cuglgdV
+        G8mDxYXwwDtStEuKkE2DcpY=
+X-Google-Smtp-Source: ABdhPJwHn9kL5TvA8UDoV5v3CUxebAecr07tCzPTVygbVakEPiNaQd+TL3XRV33sGJW8ZY4+JmFAOg==
+X-Received: by 2002:aa7:8bcd:: with SMTP id s13mr4584968pfd.321.1590691676283;
+        Thu, 28 May 2020 11:47:56 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id c2sm6558636pjg.51.2020.05.28.11.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 11:47:55 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     bjorn.andersson@linaro.org, agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] arm64: defconfig: Add CONFIG_QCOM_RPMPD
+Date:   Thu, 28 May 2020 11:47:52 -0700
+Message-Id: <20200528184752.4747-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, if both resource types are enabled before the call, the mask
-value doesn't matter. Means as of today I wouldn't be able to e.g.
-disable PCI_COMMAND_IO. At least my interpretation is that mask defines
-which resource types are enabled after the call. Therefore change the
-behavior to disable not requested resource types.
+RPMPD provides us the CS/MX power domains needed to boot the modem
+subsystem on msm8998 for wifi.
 
-At least on my x86 devices this change doesn't have side effects.
-
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- drivers/pci/setup-res.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-index d21fa04fa..6ef458c10 100644
---- a/drivers/pci/setup-res.c
-+++ b/drivers/pci/setup-res.c
-@@ -459,8 +459,8 @@ int pci_enable_resources(struct pci_dev *dev, int mask)
- 	int i;
- 	struct resource *r;
- 
--	pci_read_config_word(dev, PCI_COMMAND, &cmd);
--	old_cmd = cmd;
-+	pci_read_config_word(dev, PCI_COMMAND, &old_cmd);
-+	cmd = old_cmd & ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
- 
- 	for (i = 0; i < PCI_NUM_RESOURCES; i++) {
- 		if (!(mask & (1 << i)))
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5212e9c0883f..dc7d0f3b2a14 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -843,6 +843,7 @@ CONFIG_QCOM_GLINK_SSR=m
+ CONFIG_QCOM_RMTFS_MEM=m
+ CONFIG_QCOM_RPMH=y
+ CONFIG_QCOM_RPMHPD=y
++CONFIG_QCOM_RPMPD=y
+ CONFIG_QCOM_SMEM=y
+ CONFIG_QCOM_SMD_RPM=y
+ CONFIG_QCOM_SMP2P=y
 -- 
-2.26.2
+2.17.1
 
