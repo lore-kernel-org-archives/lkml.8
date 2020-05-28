@@ -2,114 +2,132 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD06C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD6FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB44207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YaxKCe17"
+	by mail.kernel.org (Postfix) with ESMTP id 05030207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404574AbgE1PmE (ORCPT
+        id S2404585AbgE1Pma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:42:04 -0400
-Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:26086
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404445AbgE1PmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:42:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NGQLYTpfb59OWxk0RND3ci5x1F+lB5AnGguhh3tMvTMq/akwMwgvfEBwCoBKDG9Po8N5u/0sTHJ8h5uub4ybp16eQcc3FvskAhKNLFNvq+FHnr5MmiY3ptWvFE0b9sVupYmFFVxkejkJMbWkRLuNftJRIdTkO04g7ZMvKrCdX90cdCnmoFm8kmLch1ddm0NHAzXfSTsc8XN75Xsb8It/oDCwXaJu574eyjGAidm4bkA81AzeTPEY5vljDqVj7HbSaKJEezYd3ZEwyrm216e481jm73/nHI/AsR4wT1N92nqiValoHdcpkEyewOEsmjuHGEQFc7J/3I9yEEcrWJP9hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uaNt60oByRSxZWIhbZsqCAjydNRv4pjGU7evR7F2PAw=;
- b=P1wfjkAm+32kO4JXT2+W1oavPXSklZRrOxDv5nbzpiBiUsoZy7kFz32/mByQ7i3e9+gaCu/eMSiw1dK65YRZEevHSBkDXUOCV8lflSYSHzRlohKQTtHVA84TeaeitYUCd6NWqYfdjimySTF/fWBQdkVASqgPRZ/cmWgtKmsHWQtQnDhxFzip5y6Y+aPqWDVyuaSmp2cFJVdeDrePonWO/6eA3JiwE43+HvOLcZXgi8neH4fUBC7iwpBEF3mkn6a7QYEjDCp+rKpOb7kL6fyMzZ2jRGSDuboCns3o8oPQHpqkNxxYv3XR6TwT+ZvKgSv3FAJst2NQ2F/JIyWF0/Kc4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uaNt60oByRSxZWIhbZsqCAjydNRv4pjGU7evR7F2PAw=;
- b=YaxKCe17yL09X3kqmo+3eHKs5WYXbyOqkE7qTVMIPRoZ7eyCN+L30LMY6mvIk7ebO41aYJbYNxw2voBgEGWbPODEhS+e+hnY32uTKc49IfteQB07exhIec9ADJUmlnv/WE5WlxhiYoYpMkF6MB+6av15AUA6ZJFaI2WL/M9tM50=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com (2603:10a6:803:4d::29)
- by VI1PR04MB5917.eurprd04.prod.outlook.com (2603:10a6:803:ec::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.27; Thu, 28 May
- 2020 15:41:57 +0000
-Received: from VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd]) by VI1PR04MB4046.eurprd04.prod.outlook.com
- ([fe80::4cf0:3c9c:ed2:aacd%4]) with mapi id 15.20.3021.029; Thu, 28 May 2020
- 15:41:57 +0000
-Subject: Re: [PATCH] crypto: caam/qi2 - add support for dpseci_reset()
-To:     "Andrei Botila (OSS)" <andrei.botila@oss.nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200528110450.11279-1-andrei.botila@oss.nxp.com>
-From:   =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>
-Message-ID: <7474713b-93b1-6f8b-600b-08d473ca92c4@nxp.com>
-Date:   Thu, 28 May 2020 18:41:55 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-In-Reply-To: <20200528110450.11279-1-andrei.botila@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR07CA0003.eurprd07.prod.outlook.com
- (2603:10a6:205:1::16) To VI1PR04MB4046.eurprd04.prod.outlook.com
- (2603:10a6:803:4d::29)
+        Thu, 28 May 2020 11:42:30 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:56374 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404436AbgE1Pm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:42:26 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeKfl-0008Ja-PN; Thu, 28 May 2020 09:42:21 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jeKfk-00062n-79; Thu, 28 May 2020 09:42:21 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-security-module@vger.kernel.org,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
+        <87sgga6ze4.fsf@x220.int.ebiederm.org>
+        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
+        <877dx822er.fsf_-_@x220.int.ebiederm.org>
+Date:   Thu, 28 May 2020 10:38:28 -0500
+In-Reply-To: <877dx822er.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 18 May 2020 19:29:00 -0500")
+Message-ID: <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.0.129] (84.117.251.185) by AM4PR07CA0003.eurprd07.prod.outlook.com (2603:10a6:205:1::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.7 via Frontend Transport; Thu, 28 May 2020 15:41:56 +0000
-X-Originating-IP: [84.117.251.185]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 78b835ed-c830-4988-668b-08d8031da792
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5917:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB59175E782F73202BD1B56B7C988E0@VI1PR04MB5917.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
-X-Forefront-PRVS: 0417A3FFD2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S92/nENXv06zwKk6XHQ4pYiT8t6dEWS5EsKISTWzte0uwpoL2b0Q6KQ0sx3IlnJ9K9b1IhBb61SfO9BOKl07CisOBRqB63KxZGjm6fWgptklQ9vevEe9D2bjRgvyqRahkWQ1AdbQ2iWKBdedYnsJkgfWt+d5HMIfF+UkE3bgAtUdKKnHy9B75WUDWszE9b2xyQ/04oZFJbJpDMI2ZIoXzTudFoO2rG0sM9kPkY7FNPo60zbigA2XVSn+++zG5JzdfELGYaOEhpqWdbtqMF2EQFUnvWaNwS0EcWNGtcOYQbAFYLeMbCka/4J/q6uH6T/0aQ75U9fiKsbsjfAj2YL2hsQkfXEZskbCBCyITII3qqrqk3NY75oQVZoxa4i12C0t
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(376002)(136003)(346002)(39860400002)(66946007)(4744005)(4326008)(5660300002)(83380400001)(2906002)(110136005)(16576012)(316002)(2616005)(86362001)(478600001)(66556008)(66476007)(54906003)(956004)(8676002)(36756003)(26005)(8936002)(6486002)(53546011)(31686004)(31696002)(52116002)(186003)(16526019)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 0XsrGfxYGGNhcWUh6QWu82V215qt+ZLVaANPeFIKuVb02C+KlxiHaZfLGT1nPvPgqY+fVmK+lL4K//NDoCQawe6E8VUBenl9fg2yGO2HEFmsGTR70P/fgRj4O0lwexlYl0FTiIkFDJo1nEIqkEO1KGhrB3OwC2BsMMnvaVCm2i6kkOboo8Il1ASjV7kcO+tZOK46gC9Xzr4iSvUgmfP2iCi7FAbbgPTO5z8HMeuIQFbZU6GwhaWZvZOTVBwHEL4MetCtvf/2c/jjCn1hicsM/mUCO9UOhJLIo3At52SJkjEVuVhBhck8nzOIVHp0nD8E4vhpLWGC45K3pzd2lkslzIw7amvXxk4gWyqU7wQqmnKACiV61hbe+ednBH0DyX5ee3DMPfdyFeMZNToJvzGYxWkEb0cA843nu1UA7SP6BGs3phANYWHvPtmOs5Z3z03FkiATKrRrVhxyab0qBIjovNvUR6wqufg0xCynUQZa5TjdMD5fjUY4CqovFjHrojy+
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78b835ed-c830-4988-668b-08d8031da792
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 15:41:57.5128
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oX8zyhLGqwp69uAPgtf6MwDK2g9OQng8P1lkUjmPmGV+68TqctUgPHoaNnXNbDe7X7kZ0pbaqXeMnpTWEVuozg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5917
+Content-Type: text/plain
+X-XM-SPF: eid=1jeKfk-00062n-79;;;mid=<87k10wysqz.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19hjQ7mkEqSTblmWNbJmpDHrq/w9JRB1jw=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH  0/11] exec: cred calculation simplifications
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/28/2020 2:05 PM, Andrei Botila (OSS) wrote:
-> @@ -4698,6 +4698,9 @@ static void dpaa2_dpseci_free(struct dpaa2_caam_priv *priv)
->  	struct device *dev = priv->dev;
->  	struct fsl_mc_device *ls_dev = to_fsl_mc_device(dev);
->  
-> +	if (DPSECI_VER(priv->major_ver, priv->minor_ver) > DPSECI_VER(5, 3))
-> +		dpseci_reset(priv->mc_io, 0, ls_dev->mc_handle);
-Even though dpseci_close() should be called in all cases,
-a warning when reset fails would be useful.
 
-> +
->  	dpaa2_dpseci_congestion_free(priv);
->  	dpseci_close(priv->mc_io, 0, ls_dev->mc_handle);
->  }
+Recomputing the uids, gids, capabilities, and related flags each time a
+new bprm->file is set is error prone, and as it turns out unnecessary.
+
+Further our decisions on when to clear personality bits and when to tell
+userspace privileges have been gained so please be extra careful, is
+imperfect and our current code overshoots in inconsistent ways making
+it hard to understand what is happening, and why.
+
+Building upon my previous exec clean up work this set of changes moves
+the bprm->cred calculations a little later so they only need to be done
+once, moves all of the uid and gid handling into bprm_fill_uid, and
+then cleans up setting secureexec and per_clear so they happen when they
+make sense from a semantic perspective.
+
+One of the largest challenges is dealing with how we revert the
+credential change if it is discovered the process calling exec is
+ptraced and the tracer does not have enough credentials.  It looks
+like that code was tacked on as an after thought to a bug fix that
+went into 2.4.0-prerelease.
+
+I don't know if we have ever gotten all of the details just right when
+the credentials are rolled back.  So this set of changes causes the
+credentials not to be changed when ptraced, instead of attempting to
+rollback the credential change.
+
+Folks please give this code a review and let me know if you see
+anything.
+
+Eric W. Biederman (11):
+      exec: Reduce bprm->per_clear to a single bit
+      exec: Introduce active_per_clear the per file version of per_clear
+      exec: Compute file based creds only once
+      exec: Move uid/gid handling from creds_from_file into bprm_fill_uid
+      exec: In bprm_fill_uid use CAP_SETGID to see if a gid change is safe
+      exec: Don't set secureexec when the uid or gid changes are abandoned
+      exec: Set saved, fs, and effective ids together in bprm_fill_uid
+      exec: In bprm_fill_uid remove unnecessary no new privs check
+      exec: In bprm_fill_uid only set per_clear when honoring suid or sgid
+      exec: In bprm_fill_uid set secureexec at same time as per_clear
+      exec: Remove the label after_setid from bprm_fill_uid
+
+ fs/binfmt_misc.c              |  2 +-
+ fs/exec.c                     | 95 +++++++++++++++++++++++++------------------
+ include/linux/binfmts.h       | 13 +++---
+ include/linux/lsm_hook_defs.h |  2 +-
+ include/linux/lsm_hooks.h     | 21 ++++++----
+ include/linux/security.h      |  8 ++--
+ security/apparmor/domain.c    |  2 +-
+ security/commoncap.c          | 37 ++++++-----------
+ security/security.c           |  4 +-
+ security/selinux/hooks.c      |  2 +-
+ security/smack/smack_lsm.c    |  2 +-
+ 11 files changed, 98 insertions(+), 90 deletions(-)
+
+---
+
+This builds upon my previous exec cleanup work at:
+git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git exec-next
+
+Thank you,
+Eric
