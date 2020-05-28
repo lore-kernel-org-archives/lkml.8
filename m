@@ -2,257 +2,100 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67498C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC3C21475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:13:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uMCaXWSP"
+	by mail.kernel.org (Postfix) with ESMTP id A7AD1207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgE1HNN (ORCPT
+        id S1725959AbgE1HOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:13:13 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:34524 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbgE1HNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:13:13 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590649991; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=4Wp8FUOA+gtgDBp4CnR6tacVRDKfqb4xSu2rmvMHUck=; b=uMCaXWSPfN9GpSeUT5zPr84UsWLNJL2LhUKAXCIELdpPnFspJCUKL9q491g4+dwAdOWz8oml
- NiAcd+Svy43wNMLcpVRpYGjANoJhFuIgA6JmIL/d6LZP8YBPxcJVeHWgVrhi7j0DthOPZMI1
- rK5b6DID1qg8qtvM8bnFV9IZc5Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ecf648776fccbb4c8b22ecb (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 07:13:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5184AC43387; Thu, 28 May 2020 07:13:10 +0000 (UTC)
-Received: from [192.168.0.106] (unknown [183.83.65.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 570CBC433C6;
-        Thu, 28 May 2020 07:13:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 570CBC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V2 2/3] mmc: sdhci-msm: Use internal voltage control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        robh+dt@kernel.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Asutosh Das <asutoshd@codeaurora.org>,
-        Vijay Viswanath <vviswana@codeaurora.org>,
-        Andy Gross <agross@kernel.org>
-References: <1589541535-8523-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-1-git-send-email-vbadigan@codeaurora.org>
- <1590074615-10787-3-git-send-email-vbadigan@codeaurora.org>
- <20200521190739.GC1331782@builder.lan>
- <08d11687-7aee-2c62-9435-670be1afb21e@codeaurora.org>
- <20200522170415.GI11847@yoga>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <b2db3743-63bd-9a34-3fcb-d9faac96dfee@codeaurora.org>
-Date:   Thu, 28 May 2020 12:43:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Thu, 28 May 2020 03:14:40 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:23218 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbgE1HOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 03:14:40 -0400
+Received: by ajax-webmail-mail-app4 (Coremail) ; Thu, 28 May 2020 15:13:41
+ +0800 (GMT+08:00)
+X-Originating-IP: [222.205.60.151]
+Date:   Thu, 28 May 2020 15:13:41 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     "Herbert Xu" <herbert@gondor.apana.org.au>
+Cc:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>,
+        "kjlu@umn.edu" <kjlu@umn.edu>, "mpm@selenic.com" <mpm@selenic.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "rfontana@redhat.com" <rfontana@redhat.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: Re: [PATCH] hwrng: ks-sa - fix runtime pm imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.10 build 20190906(84e8bf8f)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <20200528065519.GA26960@gondor.apana.org.au>
+References: <20200520132957.18776-1-dinghao.liu@zju.edu.cn>
+ <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
+ <20200520164556.GC11084@rowland.harvard.edu>
+ <20200528065519.GA26960@gondor.apana.org.au>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-In-Reply-To: <20200522170415.GI11847@yoga>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Message-ID: <70e24bdf.d2de0.1725a2125ba.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cS_KCgDn7welZM9eDfU1AA--.6637W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoOBlZdtOWMMAABsn
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbtIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJr0_GcWlV2xY628EF7xvwVC2z280aVAFwI0_Gc
+        CE3s1lV2xY628EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wCS07vEe2I262IYc4CY6c8I
+        j28IcVAaY2xG8wCS07vE5I8CrVACY4xI64kE6c02F40Ex7xfMIAIbVAv7VC0I7IYx2IY67
+        AKxVWUJVWUGwCS07vEYx0Ex4A2jsIE14v26r1j6r4UMIAIbVAm72CE4IkC6x0Yz7v_Jr0_
+        Gr1lV2xY64IIrI8v6xkF7I0E8cxan2IY04v7MIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwV
+        W8CwCS07vEc2IjII80xcxEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1l
+        V2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67
+        AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_
+        Jw0_GFylV2xY6IIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVW8JVWxJwCS07vEIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lV2xY6IIF0xvE
+        x4A2jsIE14v26r1j6r4UMIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73U
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/22/2020 10:34 PM, Bjorn Andersson wrote:
-> On Fri 22 May 06:27 PDT 2020, Veerabhadrarao Badiganti wrote:
->
->> Hi Bjorn,
->>
->> On 5/22/2020 12:37 AM, Bjorn Andersson wrote:
->>> On Thu 21 May 08:23 PDT 2020, Veerabhadrarao Badiganti wrote:
->>>
->>>> On qcom SD host controllers voltage switching be done after the HW
->>>> is ready for it. The HW informs its readiness through power irq.
->>>> The voltage switching should happen only then.
->>>>
->>>> Use the internal voltage switching and then control the voltage
->>>> switching using power irq.
->>>>
->>>> Set the regulator load as well so that regulator can be configured
->>>> in LPM mode when in is not being used.
->>>>
->>>> Co-developed-by: Asutosh Das <asutoshd@codeaurora.org>
->>>> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
->>>> Co-developed-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>> Looks better, thanks.
->>>
->>>> ---
->>>>    drivers/mmc/host/sdhci-msm.c | 207 +++++++++++++++++++++++++++++++++++++++++--
->>>>    1 file changed, 198 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>> [..]
->>>>    static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct sdhci_host *host)
->>>> @@ -1298,6 +1302,71 @@ static void sdhci_msm_set_uhs_signaling(struct sdhci_host *host,
->>>>    		sdhci_msm_hs400(host, &mmc->ios);
->>>>    }
->>>> +static int sdhci_msm_set_vmmc(struct mmc_host *mmc)
->>>> +{
->>>> +	int ret;
->>>> +
->>>> +	if (IS_ERR(mmc->supply.vmmc))
->>>> +		return 0;
->>>> +
->>>> +	ret = mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, mmc->ios.vdd);
->>>> +	if (ret)
->>>> +		dev_err(mmc_dev(mmc), "%s: vmmc set ocr with vdd=%d failed: %d\n",
->>>> +			mmc_hostname(mmc), mmc->ios.vdd, ret);
->>> Missed this one on v1, in the event that mmc_regulator_set_ocr() return
->>> a non-zero value it has already printed an error message. So please
->>> replace the tail with just:
->>>
->>> 	return mmc_regulator_set_ocr(...);
->>>
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
->>>> +			      struct mmc_host *mmc, bool level)
->>>> +{
->>>> +	int load, ret;
->>>> +	struct mmc_ios ios;
->>>> +
->>>> +	if (IS_ERR(mmc->supply.vqmmc)			 ||
->>>> +	    (mmc->ios.power_mode == MMC_POWER_UNDEFINED) ||
->>>> +	    (msm_host->vqmmc_enabled == level))
->>>> +		return 0;
->>>> +
->>>> +	if (msm_host->vqmmc_load) {
->>>> +		load = level ? msm_host->vqmmc_load : 0;
->>>> +		ret = regulator_set_load(mmc->supply.vqmmc, load);
->>> Sorry for the late reply on v1, but please see my explanation regarding
->>> load and always-on regulators there.
->> <Merging your comment from V1 here>
->>
->>>> You should still call regulator_enable()/regulator_disable() on your
->>>> consumer regulator in this driver. When you do this the regulator core
->>>> will conclude that the regulator_dev (i.e. the part that represents the
->>>> hardware) is marked always_on and will not enable/disable the regulator.
->>>> But it will still invoke _regulator_handle_consumer_enable() and
->>>> _regulator_handle_consumer_disable(), which will aggregate the "load" of
->>>> all client regulators and update the regulator's load.
->>>> So this will apply the load as you expect regardless of it being
->>>> supplied by a regulator marked as always_on.
->> Since I'm not turning off this regulator for eMMC, I wanted to keep it in
->> LPM mode
->> to save some power.
->> When the regulator configured in auto mode (RPMH_REGULATOR_MODE_AUTO) it
->> switches to LPM/HPM mode based on the active load.
->> So i have to minimize my driver load requirement so that I can let this
->> regulator
->> in LPM mode.
->> So i need to set load every-time I disable/enable the regulator.
->>
-> You call regulator_enable(vqmmc) and regulator_disable() below, so you
-> are telling the regulator framework that your struct regulator should be
-> "on" or "off".
->
-> This will cause the sum of all struct regulator's for the underlying
-> struct regulator_dev to be recalculated. So after calling
-> regulator_disable() below your effective addition to the load
-> calculation is 0, regardless of which load you have specified.
->
-> Independent of this the property regulator-always-on (always_on in
-> struct regulator_dev) will determine if the enable/disable request will
-> actually be sent to the RPMh.
->
->
-> So, if you where to not call regulator_disable() for eMMC your argument
-> is correct, but as far as I can see you are and you're relying on the
-> regulator core to keep it always-on - and then the load logic is in
-> effect still.
-Thanks for the details Bjorn.
-My requirement is, for eMMC i shouldn't be turning this regulator off. 
-But has to configure in LPM mode.
-For SD-card, i have to turn-off this regulator.
-So I'm planning to update the logic as below, let me know if you have 
-any other suggestions.
-
-+static int sdhci_msm_set_vqmmc(struct sdhci_msm_host *msm_host,
-+                             struct mmc_host *mmc, bool level)
-+{
-+       int ret;
-+       bool always_on;
-+
-+       if (IS_ERR(mmc->supply.vqmmc)           ||
-+           (mmc->ios.power_mode == MMC_POWER_UNDEFINED))
-+               return 0;
-+       /*
-+        * For eMMC don't turn off Vqmmc, Instead just configure it in LPM
-+        * and HPM modes by setting the right amount of load.
-+        */
-+       always_on = mmc->card && mmc_card_mmc(mmc->card);
-+
-+       if (always_on)
-+               ret = msm_config_vqmmc_mode(msm_host, mmc, level);
-+       else
-+               ret = msm_toggle_vqmmc(msm_host, mmc, level);
-+
-+       return ret;
-+}
-> Regards,
-> Bjorn
->
->>>> +		if (ret) {
->>>> +			dev_err(mmc_dev(mmc), "%s: vqmmc set load failed: %d\n",
->>>> +				mmc_hostname(mmc), ret);
->>>> +			goto out;
->>>> +		}
->>>> +	}
->>>> +
->>>> +	if (level) {
->>>> +		/* Set the IO voltage regulator to default voltage level */
->>>> +		if (msm_host->caps_0 & CORE_3_0V_SUPPORT)
->>>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_330;
->>>> +		else if (msm_host->caps_0 & CORE_1_8V_SUPPORT)
->>>> +			ios.signal_voltage = MMC_SIGNAL_VOLTAGE_180;
->>>> +
->>>> +		if (msm_host->caps_0 & CORE_VOLT_SUPPORT) {
->>>> +			ret = mmc_regulator_set_vqmmc(mmc, &ios);
->>>> +			if (ret < 0) {
->>>> +				dev_err(mmc_dev(mmc), "%s: vqmmc set volgate failed: %d\n",
->>>> +					mmc_hostname(mmc), ret);
->>>> +				goto out;
->>>> +			}
->>>> +		}
->>>> +		ret = regulator_enable(mmc->supply.vqmmc);
->>>> +	} else {
->>>> +		ret = regulator_disable(mmc->supply.vqmmc);
->>>> +	}
->>>> +
->>>> +	if (ret)
->>>> +		dev_err(mmc_dev(mmc), "%s: vqmm %sable failed: %d\n",
->>>> +			mmc_hostname(mmc), level ? "en":"dis", ret);
->>>> +	else
->>>> +		msm_host->vqmmc_enabled = level;
->>>> +out:
->>>> +	return ret;
->>>> +}
+PiBPbiBXZWQsIE1heSAyMCwgMjAyMCBhdCAxMjo0NTo1NlBNIC0wNDAwLCBzdGVybkByb3dsYW5k
+LmhhcnZhcmQuZWR1IHdyb3RlOgo+ID4gT24gV2VkLCBNYXkgMjAsIDIwMjAgYXQgMDM6NDI6MTdQ
+TSArMDAwMCwgU3ZlcmRsaW4sIEFsZXhhbmRlciAoTm9raWEgLSBERS9VbG0pIHdyb3RlOgo+ID4g
+PiBIZWxsbyBEaW5naGFvLAo+ID4gPiAKPiA+ID4gT24gV2VkLCAyMDIwLTA1LTIwIGF0IDIxOjI5
+ICswODAwLCBEaW5naGFvIExpdSB3cm90ZToKPiA+ID4gPiBwbV9ydW50aW1lX2dldF9zeW5jKCkg
+aW5jcmVtZW50cyB0aGUgcnVudGltZSBQTSB1c2FnZSBjb3VudGVyIGV2ZW4KPiA+ID4gPiB0aGUg
+Y2FsbCByZXR1cm5zIGFuIGVycm9yIGNvZGUuIFRodXMgYSBwYWlyaW5nIGRlY3JlbWVudCBpcyBu
+ZWVkZWQKPiA+ID4gPiBvbiB0aGUgZXJyb3IgaGFuZGxpbmcgcGF0aCB0byBrZWVwIHRoZSBjb3Vu
+dGVyIGJhbGFuY2VkLgo+ID4gPiAKPiA+ID4gSSBiZWxpZXZlLCB0aGlzIGlzIHRoZSB3cm9uZyBw
+bGFjZSBmb3Igc3VjaCBraW5kIG9mIGZpeC4KPiA+ID4gcG1fcnVudGltZV9nZXRfc3luYygpIGhh
+cyBvYnZpb3VzbHkgYSBicm9rZW4gc2VtYW50aWNzIHdpdGggcmVnYXJkcyB0bwo+ID4gPiB5b3Vy
+IG9ic2VydmF0aW9uIGJ1dCBubyBvdGhlciBkcml2ZXIgZG9lcyB3aGF0IHlvdSBwcm9wb3NlLgo+
+ID4gCj4gPiBMb29rIGFnYWluLiAgRm9yIGV4YW1wbGUsIHNlZSB3aGF0IHVzYl9hdXRvcmVzdW1l
+X2RldmljZSgpIGluIAo+ID4gZHJpdmVycy91c2IvY29yZS9kcml2ZXIuYyBkb2VzLgo+IAo+IEhv
+d2V2ZXIsIHRoZXJlIHNlZW1zIHRvIGJlIHNvbWUgZGlzYWdyZWVtZW50IGFzIHRvIHdoYXQgdG8g
+ZG8KPiB3aGVuIHBtX3J1bnRpbWVfZ2V0X3N5bmMgZmFpbHMuICBZb3VyIGRyaXZlciBjaG9vc2Vz
+IHRvIGNhbGwKPiBwdXRfc3luYyB3aGlsZSBvdGhlcnMgcHJlZmVyIHBtX3J1bnRpbWVfcHV0X25v
+aWRsZSAoZS5nLiwgc2VlCj4gZHJpdmVycy9iYXNlL3Bvd2VyL3J1bnRpbWUuYykuCj4gCj4gVGhp
+cyBBUEkgZG9lcyBzZWVtIHRvIGJlIGluIGEgYml0IG9mIGEgbWVzcy4KPiAKCkhlcmUgSSB0aGlu
+ayBfcHV0X25vaWRsZSgpIGlzIGJldHRlci4gSXQncyBlbm91Z2ggZm9yIHRoaXMgYnVnCmFuZCBo
+YXMgbm8gc2lkZSBlZmZlY3QgKGUuZy4sIF9wdXRfc3luYyBtYXkgc3VzcGVuZCB0aGUgZHJpdmVy
+KS4KSSB3aWxsIHNlbmQgYSBuZXcgcGF0Y2ggZm9yIHRoaXMgYnVnLgoKUmVnYXJkcywKRGluZ2hh
+bwo=
