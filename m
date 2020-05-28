@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3587C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5616EC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B5C2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283D42063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667888;
-	bh=15vT6BO6SLJKvTbMECpr6jSBvhkfxGZDulCbFJ6eCMc=;
+	s=default; t=1590667893;
+	bh=apuCjmo26NYIkrsmBlJnUuWxCVNtEFStOXDpG99cVcs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOa4qhbZUit0HrQYItljyVmdQh2LJ8kahBvQvFzR5nsVvR09aTy6WWobGq0i1d0pH
-	 kRbPIVuSThqm+822CJq4JdDCBVFnSEw/BpapSOujo2MFOloQXj4gMnNigQF1bS+YFf
-	 Vkh8ougqH+oNk/hG8HC3+B+csMNgqEBZaW2oSFvo=
+	b=x02hS+sNn7Isa9vkUaRM7MphdiEWgm8+0di1jK18EJlDBrBdrKkygX4HP5LAhMR+S
+	 XczaIJLNca0iU+YGtOy9nAc8t8BUPKOt76bbnfGQzgubbNiROEXydSJM/157+bXWEx
+	 +ZI3UVuIy6pclLUhlFfRLXxYWHiGvUR4VEX2Ue/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389674AbgE1ML1 (ORCPT
+        id S2389731AbgE1MLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:11:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388631AbgE1L4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:08 -0400
+        id S2388549AbgE1L4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BEDB21475;
-        Thu, 28 May 2020 11:56:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F75D207D3;
+        Thu, 28 May 2020 11:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666968;
-        bh=15vT6BO6SLJKvTbMECpr6jSBvhkfxGZDulCbFJ6eCMc=;
+        s=default; t=1590666963;
+        bh=apuCjmo26NYIkrsmBlJnUuWxCVNtEFStOXDpG99cVcs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OwLYj/yz0hVrt9cfz8s8sIG1J6tjLimtg909E7CujgWUS8hJMiYvzNFQSMuEzyDb1
-         Ky9tq6qmewzTcayEyg0dn0XNwjkUhLcQFsWIFKRAsOsi/JJ1MojR/gowP3TZscr/Ro
-         FectpEHnP8fN8c9xTw1VBo6g7fhW+CoRm5uQoNPU=
+        b=J/ublCAeiXrj9H/qCNPJWGXKVTICmWdOL96buihKb44On4bwj6LiR/pAEHU0x38lk
+         qPQXuKRHWeNRkK0FuiYX7Vx/PVXH3B12Y9bJXJ+2oq+VNZgCIRILFNtHhjknh+R7yQ
+         W9y0P2WnJUJMGZx2pF2o8P2DCEHtu1e2PLC6c3ZY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 06/47] efi/earlycon: Fix early printk for wider fonts
-Date:   Thu, 28 May 2020 07:55:19 -0400
-Message-Id: <20200528115600.1405808-6-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        kbuild test robot <lkp@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.6 02/47] ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
+Date:   Thu, 28 May 2020 07:55:15 -0400
+Message-Id: <20200528115600.1405808-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -58,52 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit 8f592ada59b321d248391bae175cd78a12972223 ]
+[ Upstream commit 799587d5731db9dcdafaac4002463aa7d9cd6cf7 ]
 
-When I play with terminus fonts I noticed the efi early printk does
-not work because the earlycon code assumes font width is 8.
+Elide invalid configuration EZNPS + ARCv2, triggered by a
+make allyesconfig build.
 
-Here add the code to adapt with larger fonts.  Tested with all kinds
-of kernel built-in fonts on my laptop. Also tested with a local draft
-patch for 14x28 !bold terminus font.
+Granted the root cause is in source code (asm/barrier.h) where we check
+for ARCv2 before PLAT_EZNPS, but it is better to avoid such combinations
+at onset rather then baking subtle nuances into code.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Link: https://lore.kernel.org/r/20200412024927.GA6884@dhcp-128-65.nay.redhat.com
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/earlycon.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/arc/plat-eznps/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/firmware/efi/earlycon.c b/drivers/firmware/efi/earlycon.c
-index 5d4f84781aa0..a52236e11e5f 100644
---- a/drivers/firmware/efi/earlycon.c
-+++ b/drivers/firmware/efi/earlycon.c
-@@ -114,14 +114,16 @@ static void efi_earlycon_write_char(u32 *dst, unsigned char c, unsigned int h)
- 	const u32 color_black = 0x00000000;
- 	const u32 color_white = 0x00ffffff;
- 	const u8 *src;
--	u8 s8;
--	int m;
-+	int m, n, bytes;
-+	u8 x;
+diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
+index a931d0a256d0..a645bca5899a 100644
+--- a/arch/arc/plat-eznps/Kconfig
++++ b/arch/arc/plat-eznps/Kconfig
+@@ -6,6 +6,7 @@
  
--	src = font->data + c * font->height;
--	s8 = *(src + h);
-+	bytes = BITS_TO_BYTES(font->width);
-+	src = font->data + c * font->height * bytes + h * bytes;
- 
--	for (m = 0; m < 8; m++) {
--		if ((s8 >> (7 - m)) & 1)
-+	for (m = 0; m < font->width; m++) {
-+		n = m % 8;
-+		x = *(src + m / 8);
-+		if ((x >> (7 - n)) & 1)
- 			*dst = color_white;
- 		else
- 			*dst = color_black;
+ menuconfig ARC_PLAT_EZNPS
+ 	bool "\"EZchip\" ARC dev platform"
++	depends on ISA_ARCOMPACT
+ 	select CPU_BIG_ENDIAN
+ 	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
+ 	select EZNPS_GIC
 -- 
 2.25.1
 
