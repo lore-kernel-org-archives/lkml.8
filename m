@@ -2,230 +2,639 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F569C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D9DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E065320829
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:02:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n/yOBUUw"
+	by mail.kernel.org (Postfix) with ESMTP id 87198208B8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391389AbgE1SCx (ORCPT
+        id S2391419AbgE1SDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391357AbgE1SCu (ORCPT
+        Thu, 28 May 2020 14:03:24 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:56427 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391400AbgE1SDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:02:50 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE62C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:02:49 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id e125so17116857lfd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:02:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9OK1+n6SxXEn9JNGRXaWGo1/ty0IYnCL8Tld6OXFjk4=;
-        b=n/yOBUUwD4nsHeaM98tpLc9F//6e2SajGthCpSwy3M6a6PPkyZ8E6vqKqhIEtrzFFo
-         fN7seVJumIO0Wnvkd+a7+pe9CN30AfHFwnb4pKQyHHxxvYxYF2C5HAl5Xn4FoT4J5Vyk
-         VMLsCsYE8efR1rx5M4AzX0hSzGPAFxkGZNr8ZqeKYTn8zZgF4nvsz2xgOJBOGK6nv6+o
-         seMMCkXpCofcZmPESV1JiXAMz16W3qld6J2+2VvqTKFKIVJR1qrWmrOVfesJEzRbR++N
-         IFBVokf/Sf+oiQwOerg0N/uYZu8ryIZMvjzvrESVST/H719wbQsK1ZHayVmxpokXctjN
-         pPGw==
+        Thu, 28 May 2020 14:03:16 -0400
+Received: by mail-io1-f72.google.com with SMTP id s126so13875792iod.23
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 11:03:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9OK1+n6SxXEn9JNGRXaWGo1/ty0IYnCL8Tld6OXFjk4=;
-        b=m9zd6F1HDRTUpTObS+Zr+h93kpcM5CtjL21wJcU2NkGZcLrG0styckNhw5ROMG909V
-         WyNkMMxntocVwLDH04YS228vIuhCIYDGT7ZMXBPZvRFcvQ7eieI9Xw+pBVydrWafQdqI
-         kxBwb02Lr2rECLJSysJB4RndOmKgjGqUQCEEWqfXVIw/8x+W1PqGLNIc5mPFegkjIGzD
-         ZV1K2kVY2m7dlZbgXJkOP4YZIvPWJgIQUJc7ZxG2d1sI1O6Pvk6f7+S0xlf3DrDoRlbC
-         ThbceW9I5apocPtn03i7nDGlRx7YpVc1hvDtGyPnrrTX9R7I8CDv45IBf9cdrFmPlok1
-         qEgQ==
-X-Gm-Message-State: AOAM530GSxh2HnJ9i+G/aygcohnOxZXnrYH4fXM2rCWbBAnNcyfPQ6bM
-        GmLdUCA3Pny13lP011Jwt1YERTg/brvwHKSFjXkJYg==
-X-Google-Smtp-Source: ABdhPJwQIjYP5V5f5uajcg1eYFPkalCiLWolqoPKjgd12tImJ7xotzNA7db+3KWty12FSvp38Mbe1LO2SsbAOC7SdEs=
-X-Received: by 2002:a05:6512:10c3:: with SMTP id k3mr2311998lfg.33.1590688967579;
- Thu, 28 May 2020 11:02:47 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=yv7cA9FoK0ge2NXknXoJO8E4gA2SHjoaGzsyBUcXZgA=;
+        b=XWhxZYHBev7s7PTwAeWT6W6720vwNFIRCnZ2s9mQ629cvR+lQPs2k3vcbiygsyaxix
+         qPcCU9lFPCUmRIlyYQzxEcMr8SClxB9Xpc32GQG1IeUlc5GYmSOXYQMc0JvZtPMiGl2D
+         qyU6NBIqjQZegDs3T5HnZdfeEyGqQtT3Us0QuHPH0D9Cztgvw+7H98KyAGQFAMQA+qdZ
+         Ga5h88g2snA4bmOwHmPjvhyNtN9WAFVryMREPx+AYC0sr/gsGM5Yq+KOfzF9wb9y5BXD
+         BSpM3zrh4F7i1odB/UIPghIfujmva77qBTSCtoUcX5dfTZ8ZT+DOOdF5ohgZ/x6LqnCY
+         48Tw==
+X-Gm-Message-State: AOAM533e4vihOTb+iOQ2e6izQThavL+xhEUaEX2uzD/gjP8RBlXzhacU
+        VGObNW8ZxBAE0f84e1m/gskW0dN2bA2HX5nLSTlZ36c8kXwH
+X-Google-Smtp-Source: ABdhPJwl6b9KTKG3pi+HvYIG2ZnXhHqtOW139IaRfZt3VNf36NRLxr0ugeDB3f83Us97Sct+jpjxCAbhZ4fzbS2bpLkro2rtbeVA
 MIME-Version: 1.0
-References: <20200520143712.GA749486@chrisdown.name>
-In-Reply-To: <20200520143712.GA749486@chrisdown.name>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 28 May 2020 11:02:35 -0700
-Message-ID: <CALvZod7rSeAKXKq_V0SggZWn4aL8pYWJiej4NdRd8MmuwUzPEw@mail.gmail.com>
-Subject: Re: [PATCH] mm, memcg: reclaim more aggressively before high
- allocator throttling
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
+X-Received: by 2002:a92:d94b:: with SMTP id l11mr4064523ilq.105.1590688993661;
+ Thu, 28 May 2020 11:03:13 -0700 (PDT)
+Date:   Thu, 28 May 2020 11:03:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006a575205a6b9242d@google.com>
+Subject: BUG: stack guard page was hit in mark_lock
+From:   syzbot <syzbot+1ea34900b9a6fb8526c4@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
+        hawk@kernel.org, jiri@mellanox.com, john.fastabend@gmail.com,
+        kafai@fb.com, kpsingh@chromium.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I haven't gone through the whole email-chain, so, I might be asking
-some repetitive questions. I will go through the email-chain later.
+Hello,
 
-On Wed, May 20, 2020 at 7:37 AM Chris Down <chris@chrisdown.name> wrote:
->
-> In Facebook production, we've seen cases where cgroups have been put
-> into allocator throttling even when they appear to have a lot of slack
-> file caches which should be trivially reclaimable.
->
-> Looking more closely, the problem is that we only try a single cgroup
-> reclaim walk for each return to usermode before calculating whether or
-> not we should throttle. This single attempt doesn't produce enough
-> pressure to shrink for cgroups with a rapidly growing amount of file
-> caches prior to entering allocator throttling.
+syzbot found the following crash on:
 
-In my experience it is usually shrink_slab which requires hammering
-multiple times to actually reclaim memory.
+HEAD commit:    54b9aca0 Merge branch 'r8169-remove-mask-argument-from-few..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13e710ee100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=85548e63e9ca83a9
+dashboard link: https://syzkaller.appspot.com/bug?extid=1ea34900b9a6fb8526c4
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
->
-> As an example, we see that threads in an affected cgroup are stuck in
-> allocator throttling:
->
->     # for i in $(cat cgroup.threads); do
->     >     grep over_high "/proc/$i/stack"
->     > done
->     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
->     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
->     [<0>] mem_cgroup_handle_over_high+0x10b/0x150
->
-> ...however, there is no I/O pressure reported by PSI, despite a lot of
-> slack file pages:
->
->     # cat memory.pressure
->     some avg10=78.50 avg60=84.99 avg300=84.53 total=5702440903
->     full avg10=78.50 avg60=84.99 avg300=84.53 total=5702116959
->     # cat io.pressure
->     some avg10=0.00 avg60=0.00 avg300=0.00 total=78051391
->     full avg10=0.00 avg60=0.00 avg300=0.00 total=78049640
->     # grep _file memory.stat
->     inactive_file 1370939392
->     active_file 661635072
->
-> This patch changes the behaviour to retry reclaim either until the
-> current task goes below the 10ms grace period, or we are making no
-> reclaim progress at all. In the latter case, we enter reclaim throttling
-> as before.
->
-> To a user, there's no intuitive reason for the reclaim behaviour to
-> differ from hitting memory.high as part of a new allocation, as opposed
-> to hitting memory.high because someone lowered its value. As such this
-> also brings an added benefit: it unifies the reclaim behaviour between
-> the two.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-What was the initial reason to have different behavior in the first place?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1ea34900b9a6fb8526c4@syzkaller.appspotmail.com
 
->
-> There's precedent for this behaviour: we already do reclaim retries when
-> writing to memory.{high,max}, in max reclaim, and in the page allocator
-> itself.
->
-> Signed-off-by: Chris Down <chris@chrisdown.name>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> ---
->  mm/memcontrol.c | 28 +++++++++++++++++++++++-----
->  1 file changed, 23 insertions(+), 5 deletions(-)
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 2df9510b7d64..b040951ccd6b 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -73,6 +73,7 @@ EXPORT_SYMBOL(memory_cgrp_subsys);
->
->  struct mem_cgroup *root_mem_cgroup __read_mostly;
->
-> +/* The number of times we should retry reclaim failures before giving up. */
->  #define MEM_CGROUP_RECLAIM_RETRIES     5
->
->  /* Socket memory accounting disabled? */
-> @@ -2228,17 +2229,22 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
->         return 0;
->  }
->
-> -static void reclaim_high(struct mem_cgroup *memcg,
-> -                        unsigned int nr_pages,
-> -                        gfp_t gfp_mask)
-> +static unsigned long reclaim_high(struct mem_cgroup *memcg,
-> +                                 unsigned int nr_pages,
-> +                                 gfp_t gfp_mask)
->  {
-> +       unsigned long nr_reclaimed = 0;
-> +
->         do {
->                 if (page_counter_read(&memcg->memory) <= READ_ONCE(memcg->high))
->                         continue;
->                 memcg_memory_event(memcg, MEMCG_HIGH);
-> -               try_to_free_mem_cgroup_pages(memcg, nr_pages, gfp_mask, true);
-> +               nr_reclaimed += try_to_free_mem_cgroup_pages(memcg, nr_pages,
-> +                                                            gfp_mask, true);
->         } while ((memcg = parent_mem_cgroup(memcg)) &&
->                  !mem_cgroup_is_root(memcg));
-> +
-> +       return nr_reclaimed;
->  }
->
->  static void high_work_func(struct work_struct *work)
-> @@ -2378,16 +2384,20 @@ void mem_cgroup_handle_over_high(void)
->  {
->         unsigned long penalty_jiffies;
->         unsigned long pflags;
-> +       unsigned long nr_reclaimed;
->         unsigned int nr_pages = current->memcg_nr_pages_over_high;
+BUG: stack guard page was hit at 00000000714cd75e (stack is 00000000aa311719..00000000d060b614)
+kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 31367 Comm: syz-executor.2 Not tainted 5.7.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:mark_lock+0x16/0xf10 kernel/locking/lockdep.c:3900
+Code: 6c 58 00 eb 80 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 41 57 41 56 41 55 41 54 41 89 d4 48 ba 00 00 00 00 00 fc ff df 55 <53> 48 81 ec 90 00 00 00 48 c7 44 24 30 b3 8a b5 41 48 8d 5c 24 30
+RSP: 0018:ffffc90007600000 EFLAGS: 00010002
+RAX: 000000000000000c RBX: 000000000000001d RCX: ffff888045176cec
+RDX: dffffc0000000000 RSI: ffff888045176d30 RDI: ffff888045176440
+RBP: ffff888045176d30 R08: 0000000000000000 R09: fffffbfff1860938
+R10: ffffffff8c3049bf R11: fffffbfff1860937 R12: 0000000000000008
+R13: 0000000000000000 R14: ffff888045176d52 R15: dffffc0000000000
+FS:  00007ff061e16700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc900075ffff8 CR3: 0000000089edb000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ mark_usage kernel/locking/lockdep.c:3860 [inline]
+ __lock_acquire+0x9a4/0x4c50 kernel/locking/lockdep.c:4309
+ lock_acquire+0x1f2/0x8f0 kernel/locking/lockdep.c:4934
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x8c/0xbf kernel/locking/spinlock.c:159
+ rmqueue mm/page_alloc.c:3349 [inline]
+ get_page_from_freelist+0x14c7/0x3590 mm/page_alloc.c:3759
+ __alloc_pages_nodemask+0x29f/0x810 mm/page_alloc.c:4812
+ __alloc_pages include/linux/gfp.h:504 [inline]
+ __alloc_pages_node include/linux/gfp.h:517 [inline]
+ kmem_getpages mm/slab.c:1367 [inline]
+ cache_grow_begin+0x8c/0xc10 mm/slab.c:2600
+ cache_alloc_refill mm/slab.c:2972 [inline]
+ ____cache_alloc mm/slab.c:3055 [inline]
+ ____cache_alloc mm/slab.c:3038 [inline]
+ slab_alloc_node mm/slab.c:3250 [inline]
+ kmem_cache_alloc_node_trace+0x6c3/0x790 mm/slab.c:3593
+ __do_kmalloc_node mm/slab.c:3615 [inline]
+ __kmalloc_node_track_caller+0x38/0x60 mm/slab.c:3630
+ __kmalloc_reserve.isra.0+0x39/0xe0 net/core/skbuff.c:142
+ __alloc_skb+0xef/0x5a0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ nlmsg_new include/net/netlink.h:940 [inline]
+ rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3702
+ rtmsg_ifinfo_event.part.0+0x49/0xe0 net/core/rtnetlink.c:3738
+ rtmsg_ifinfo_event net/core/rtnetlink.c:5519 [inline]
+ rtnetlink_event+0x11e/0x150 net/core/rtnetlink.c:5512
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_compute_features drivers/net/team/team.c:1026 [inline]
+ team_device_event+0x331/0x410 drivers/net/team/team.c:3006
+ notifier_call_chain+0xc0/0x230 kernel/notifier.c:83
+ call_netdevice_notifiers_info net/core/dev.c:2016 [inline]
+ call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2001
+ call_netdevice_notifiers_extack net/core/dev.c:2028 [inline]
+ call_netdevice_notifiers net/core/dev.c:2042 [inline]
+ netdev_features_change net/core/dev.c:1432 [inline]
+ netdev_sync_lower_features net/core/dev.c:9015 [inline]
+ __netdev_update_features+0x877/0x1320 net/core/dev.c:9146
+ netdev_change_features+0x61/0xb0 net/core/dev.c:9218
+ team_add_slave+0x1678/0x1790 drivers/net/team/team.c:1971
+ do_set_master net/core/rtnetlink.c:2477 [inline]
+ do_set_master+0x1d7/0x230 net/core/rtnetlink.c:2450
+ do_setlink+0xaa2/0x3680 net/core/rtnetlink.c:2612
+ __rtnl_newlink+0xad5/0x1590 net/core/rtnetlink.c:3273
+ rtnl_newlink+0x64/0xa0 net/core/rtnetlink.c:3398
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5461
+ netlink_rcv_skb+0x15a/0x410 net/netlink/af_netlink.c:2469
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x537/0x740 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x882/0xe10 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e6/0x810 net/socket.c:2352
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:295
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+RIP: 0033:0x45ca29
+Code: 0d b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff061e15c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000500f40 RCX: 000000000045ca29
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
+RBP: 000000000078c040 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000000000000a04 R14: 00000000004ccdcc R15: 00007ff061e166d4
+Modules linked in:
+---[ end trace 2d08b4afbacd7cf7 ]---
+RIP: 0010:mark_lock+0x16/0xf10 kernel/locking/lockdep.c:3900
+Code: 6c 58 00 eb 80 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 41 57 41 56 41 55 41 54 41 89 d4 48 ba 00 00 00 00 00 fc ff df 55 <53> 48 81 ec 90 00 00 00 48 c7 44 24 30 b3 8a b5 41 48 8d 5c 24 30
+RSP: 0018:ffffc90007600000 EFLAGS: 00010002
+RAX: 000000000000000c RBX: 000000000000001d RCX: ffff888045176cec
+RDX: dffffc0000000000 RSI: ffff888045176d30 RDI: ffff888045176440
+RBP: ffff888045176d30 R08: 0000000000000000 R09: fffffbfff1860938
+R10: ffffffff8c3049bf R11: fffffbfff1860937 R12: 0000000000000008
+R13: 0000000000000000 R14: ffff888045176d52 R15: dffffc0000000000
+FS:  00007ff061e16700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffc900075ffff8 CR3: 0000000089edb000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Is there any benefit to keep current->memcg_nr_pages_over_high after
-this change? Why not just use SWAP_CLUSTER_MAX?
 
-> +       int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
->         struct mem_cgroup *memcg;
->
->         if (likely(!nr_pages))
->                 return;
->
->         memcg = get_mem_cgroup_from_mm(current->mm);
-> -       reclaim_high(memcg, nr_pages, GFP_KERNEL);
->         current->memcg_nr_pages_over_high = 0;
->
-> +retry_reclaim:
-> +       nr_reclaimed = reclaim_high(memcg, nr_pages, GFP_KERNEL);
-> +
->         /*
->          * memory.high is breached and reclaim is unable to keep up. Throttle
->          * allocators proactively to slow down excessive growth.
-> @@ -2403,6 +2413,14 @@ void mem_cgroup_handle_over_high(void)
->         if (penalty_jiffies <= HZ / 100)
->                 goto out;
->
-> +       /*
-> +        * If reclaim is making forward progress but we're still over
-> +        * memory.high, we want to encourage that rather than doing allocator
-> +        * throttling.
-> +        */
-> +       if (nr_reclaimed || nr_retries--)
-> +               goto retry_reclaim;
-> +
->         /*
->          * If we exit early, we're guaranteed to die (since
->          * schedule_timeout_killable sets TASK_KILLABLE). This means we don't
-> --
-> 2.26.2
->
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
