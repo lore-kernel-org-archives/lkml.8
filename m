@@ -2,98 +2,160 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3F9C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF26C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDCE3206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F952075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590693009;
-	bh=AWB791hdxOALpZkZaAwpck1pW/sRtxgPjMn4x3etS/Q=;
+	s=default; t=1590693026;
+	bh=dAS4DXwHNeuhzpvWEgC5d100yXjW+kGcXfbxsRlTvG4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YJZsoiJPSGqS0b//IGWn0vZ9WeBheqBwmGN1i9CCbvRhVDOoMHfPX4DTlJh0jrAKq
-	 XPQVqAcMQuX0IaVE59Hx4yfsAuWyf73fBPeu+FHo/4YHju9JC0dq1YCmfyUEShJ53B
-	 AFStW8/Sx89btugjoX8VXIONy7UvEYGiaOpw0aMw=
+	b=DSmvcq5YxKBFJEvOMzMIp6fHjQYRt0phmHA0QXERjlc6Sy0Z12h31e2/238Vhv3Ej
+	 /UvlOulezjlTQX3jm/7Pt9OM3CMox+UWpQAmgilEQEebChb65GzWJKIR2BKJ8EWj1J
+	 bH8VSNvo+22tLy0D5pM30SpNSL6MPzf3DlM6Eks8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406173AbgE1TKJ (ORCPT
+        id S2406221AbgE1TK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57618 "EHLO
+        Thu, 28 May 2020 15:10:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406129AbgE1TKH (ORCPT
+        with ESMTP id S2406096AbgE1TKW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:10:07 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EB9C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:07 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id x27so17208806lfg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:07 -0700 (PDT)
+        Thu, 28 May 2020 15:10:22 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF95C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:22 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f7so857511ejq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=R5QaC7zkAZZvfEZZJnqo7rI0BwuGIzysoGf9yj6DhPY=;
-        b=Oyp8Kr588/cPDx5RD8b3bsiUnE+YQ2WkW3H4H3gawu0qmPA/QFVO2d69AH2CX4ouxv
-         L5CwQD2ftmMzzRUoAsCynb9v1hxvuA+JFAHDHgIFfDweDYc0sdqPbJ1edenfzl6FfJkY
-         YDfT/dq7werTzLi2TQz9MpGnKaUzqLQeAzrKI=
+        bh=xmGmOOl5gLGli7OvUQS4McOy7NB6xPaIApbCKtCeXYk=;
+        b=f8/b3x4fYWIUj58vxbwcT1zj5CSOCsV5h++6plCNXoHkOlz5+HIWFBcJy1hj9Iocmy
+         Q6KvNGUaf7Ktx8T3H3MKSb0yiSTTXPOtIV4i3w5okfxXhRQn9jfimGy2D5TlehUTq6Ly
+         3gZ8euFDfy2U4nl63gvxc9icwAuOlc7jkm8dM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=R5QaC7zkAZZvfEZZJnqo7rI0BwuGIzysoGf9yj6DhPY=;
-        b=C3RG7D6qWCAqqLKU6kCLSKuQpgf019y+L8qEXAylRzWGrzh7vM58b6/aj+YVaj/ZtB
-         g0AXZXf409sOdJ1KCNcb109aW5wbDOVQ54CHETL691OkGp8m7SQg6HWG1e8zE24Fx5nJ
-         g7cko8xYEObKEb+osgLcDktbtgqJfSAmmu7pfjFzv0BuCHg+n7fpFuTOCirZ45XAnO7D
-         5ozpp1p4+B8LaSeCUHvRAqrA/EYyvBNFhPvduZofZW+iG0hSwciNQ4ByGeim8FF+RCkw
-         fM/6f6Nzbos9BIY//yOPecncxix+2JQh1CrjyAOIFz/gsbm5dtHCIexSdJOLODMXCMFT
-         87Ww==
-X-Gm-Message-State: AOAM532WLn1k7XjetxFUIvzxkf1XIY6+qnIywutfRRHmUdJrSn0F7I8P
-        /DU13X9ioREC675vxnGNCPhNSaNry6o=
-X-Google-Smtp-Source: ABdhPJwVeYoWt5lzrV71+SZU5tvTG+xifFHsN37N0bI5lHJ9k+DwN3y9Evns/r6BUKsE0PfM6Z9dkQ==
-X-Received: by 2002:ac2:5314:: with SMTP id c20mr2399484lfh.75.1590693005303;
-        Thu, 28 May 2020 12:10:05 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id f9sm1812475ljf.99.2020.05.28.12.10.04
+        bh=xmGmOOl5gLGli7OvUQS4McOy7NB6xPaIApbCKtCeXYk=;
+        b=WQVzgg+j/z+VXFHUgpu3S5QrWttkYT7XAvoTQmtZPdwP2FSm5B5/J9azyFsaoJVvRe
+         e9wbWIdgoMhhztOv5o4mOaIOkaqM0My7INUng0+DGFjeLbbnLckCDFIsynYjA9GPJxxN
+         2HUqyxhvedpPkwRHkRva5q222D+zCeUgMFYerHPyNrEza6+OVbti1kNYbCNQolKvsePR
+         Vi7MSGRDaux5TysLziR3kXLRNj+NzpZrbi3QLyp/p7vIZXZLdp3zOJ7GyF3ZoMb/hxs7
+         3EIbWuXryy3RAXSczmwzdlf4mHCKhLLT4K8Y8hG2jMElPYgMJ41ovFkgA8SFwQYjozSc
+         9Zhg==
+X-Gm-Message-State: AOAM530eJKbizmHcq0L8K/tSmQ+XhsBqYmtAKHsgPJTnIIxP8augj6vn
+        XHqUroJOcI1FVKym7dkrSP4fh4hGkd4=
+X-Google-Smtp-Source: ABdhPJynhJZhvhH5QoDSQ/+1tCm0BEYdLBHKSGdvphUrVfnh7T9sQdPU90FSaDrdmqn9j/9a3nmUSQ==
+X-Received: by 2002:a17:906:c7d1:: with SMTP id dc17mr4822181ejb.166.1590693020264;
+        Thu, 28 May 2020 12:10:20 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id b16sm5242438edu.89.2020.05.28.12.10.19
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 12:10:04 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id c12so17228058lfc.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:04 -0700 (PDT)
-X-Received: by 2002:a05:6512:62:: with SMTP id i2mr2373367lfo.152.1590693004037;
- Thu, 28 May 2020 12:10:04 -0700 (PDT)
+        Thu, 28 May 2020 12:10:20 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id d24so935356eds.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:19 -0700 (PDT)
+X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr2405859lfn.10.1590692668401;
+ Thu, 28 May 2020 12:04:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200527213447.GH23230@ZenIV.linux.org.uk> <20200528070255.GA790247@gmail.com>
- <CAHk-=wgXqVTGA-HrzJZ_yboLrtQ4rK-qoz8AfwLV=PT7ke4fbA@mail.gmail.com> <20200528190555.GO23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200528190555.GO23230@ZenIV.linux.org.uk>
+References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org>
+ <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> <877dx822er.fsf_-_@x220.int.ebiederm.org>
+ <87k10wysqz.fsf_-_@x220.int.ebiederm.org> <87eer4ysm5.fsf_-_@x220.int.ebiederm.org>
+In-Reply-To: <87eer4ysm5.fsf_-_@x220.int.ebiederm.org>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 12:09:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi3dVgSn8xMC2Uqs8aahFfeqO0Wue2KqxnDYrbBM+6uZQ@mail.gmail.com>
-Message-ID: <CAHk-=wi3dVgSn8xMC2Uqs8aahFfeqO0Wue2KqxnDYrbBM+6uZQ@mail.gmail.com>
-Subject: Re: [git pull] coredump infoleak fix
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
+Date:   Thu, 28 May 2020 12:04:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgQAgKnEX3V_vep3Ah392tjiekDspnu+y6kkx2oFZBV=g@mail.gmail.com>
+Message-ID: <CAHk-=wgQAgKnEX3V_vep3Ah392tjiekDspnu+y6kkx2oFZBV=g@mail.gmail.com>
+Subject: Re: [PATCH 01/11] exec: Reduce bprm->per_clear to a single bit
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Rob Landley <rob@landley.net>,
+        Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Andy Lutomirski <luto@amacapital.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 12:06 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Thu, May 28, 2020 at 8:45 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
 >
-> It doesn't fix all problems, though - you don't get an infoleak, but
-> you do get incorrect data...
+> -       me->personality &= ~bprm->per_clear;
+> +       if (bprm->per_clear)
+> +               me->personality &= ~PER_CLEAR_ON_SETID;\
 
-Oh, I'm not saying it should replace any fix to regset->get(). I'm
-just saying it is in addition to.
+My only problem with this patch is that I find that 'per_clear' thing
+to be a horrid horrid name,
 
-So if a regset has a reason to return less than the asked-for data, it
-can do so and there's no leak.
+Obviously the name didn't change, but the use *did* change, and as
+such the name got worse. It used do do things like
 
-               Linus
+               bprm->per_clear |= PER_CLEAR_ON_SETID;
+
+and now it does
+
+               bprm->per_clear = 1;
+
+and honestly, there's a lot more semantic context in the old code that
+is now missing entirely. At least you used to be able to grep for
+PER_CLEAR_ON_SETID and it would make you go "Ahh.."
+
+Put another way, I can kind of see what a line like
+
+               bprm->per_clear |= PER_CLEAR_ON_SETID;
+
+does, simply because now it kind of hints at what is up.
+
+But what the heck does
+
+               bprm->per_clear = 1;
+
+mean? Nothing. You have to really know the code. "per_clear" makes no
+sense, and now it's a short line that doesn't need to be that short.
+
+I think "bprm->clear_personality_bits" would maybe describe what the
+_effect_ of that field is. It doesn't explain _why_, but it at least
+explains "what" much better than "per_clear", which just makes me go
+"per what?".
+
+Alternatively, "bprm->creds_changed" would describe what the bit
+conceptually is about, and code like
+
+          if (bprm->creds_changed)
+                  me->personality &= ~PER_CLEAR_ON_SETID;\
+
+looks sensible to me and kind of matches the comment about the
+PER_CLEAR_ON_SETID bits are.
+
+So I think that using a bitfield is fine, but I'd really like it to be
+named something much better.
+
+Plus changing the name means that you can't have any code that now
+mistakenly uses the new semantics but expects the old bitmask.
+Generally when something changes semantics that radically, you want to
+make sure the type changes sufficiently that any out-of-tree patch
+that hasn't been merged yet will get a clear warning or error if
+people don't realize.
+
+Please?
+
+           Linus
