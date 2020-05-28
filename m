@@ -2,95 +2,124 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CED4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB9E2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3602084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="mCN4khXk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403968AbgE1O7X (ORCPT
+        id S2403977AbgE1O72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:59:23 -0400
-Received: from mail-pl1-f178.google.com ([209.85.214.178]:44432 "EHLO
-        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403955AbgE1O7S (ORCPT
+        Thu, 28 May 2020 10:59:28 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:47803 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403962AbgE1O7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:59:18 -0400
-Received: by mail-pl1-f178.google.com with SMTP id bh7so4737945plb.11;
-        Thu, 28 May 2020 07:59:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6wNHbQ7BuhnL9mEMEfpHtQEX42rMfnfnrnd3XRVPWTc=;
-        b=f5le9YeO6gRR/gILHilOoggyzTImnQZQNjjcCCEp+laazLPrGQ4cufg4IizhOBXQ1Y
-         K7d7+q77C0AKozhGIeYfJbMV/hoQN7vOH0FzytEPtDqDRKcqEejW0AcJTYT5D7AlSP2i
-         AQOxK+uOnuBfGwHIWQ4SPnqghsVxyKNXabxgHp66MeR5LRUx6WK45lbiu0enFVpxbjjq
-         JXbKDDMTFza/WmbdfrRBTmeKPZxyVCgtcFYKXneCQ/Hm4GzDdgJdgCPHx2BYpSIXGIW8
-         kCfLdXEIJoQjcK6rzfyDfkjqUda3VSqCrxNgpltOoBjU5UD7zuEZnTQ3m8u5rpIla+Rl
-         LH0w==
-X-Gm-Message-State: AOAM531jQYoDeZ0Y/Yy0q/cWhsUpl5a5cI5VUBQWF/BjTHqR8Y9ckZ/k
-        zt7BEnjkJnfzfNRVrHLjPaF6/nuTuAU=
-X-Google-Smtp-Source: ABdhPJxQJFTgIA0Mi5HVb5GIoXtJXoeUeJQUEY4bOrGSnBdDRHgcJQUF7oWlzUPuOZmJafGiLcf1xg==
-X-Received: by 2002:a17:902:dc86:: with SMTP id n6mr3943127pld.17.1590677956964;
-        Thu, 28 May 2020 07:59:16 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:40e6:aa88:9c03:e0b4? ([2601:647:4000:d7:40e6:aa88:9c03:e0b4])
-        by smtp.gmail.com with ESMTPSA id k29sm4817049pgf.77.2020.05.28.07.59.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 07:59:16 -0700 (PDT)
-Subject: Re: [PATCH v2 2/3] scsi: ufs: delete ufshcd_read_desc()
-To:     Bean Huo <huobean@gmail.com>, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, asutoshd@codeaurora.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, tomas.winkler@intel.com, cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200528115616.9949-1-huobean@gmail.com>
- <20200528115616.9949-3-huobean@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <e8777f64-2b15-ebcd-3c4b-fcf103e6b54e@acm.org>
-Date:   Thu, 28 May 2020 07:59:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 10:59:22 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 6C03F22FA7;
+        Thu, 28 May 2020 16:59:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1590677957;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7np4wDKRiMQQf5ldFNBXoJfzP9Qd8PYygwxPlZayMKg=;
+        b=mCN4khXktNI7x5hJbclV6LyZ1+iPcMtpLa2sPs/2NT3phaqrZGyxDrYp/zeZZyeujq4ulq
+        CXOUGFUu9hwBOv+rKEQCnTY5iNSRDmZsGOKYyoPKbnbkyjVI8S6aeb6y9X6H2xgcWFlk8D
+        I1r6Re7zR06q2Xu8jSolg4nZi8rZnAs=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH v6 1/3] gpiolib: Introduce gpiochip_irqchip_add_domain()
+Date:   Thu, 28 May 2020 16:58:43 +0200
+Message-Id: <20200528145845.31436-2-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200528145845.31436-1-michael@walle.cc>
+References: <20200528145845.31436-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200528115616.9949-3-huobean@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-28 04:56, Bean Huo wrote:
-> Delete ufshcd_read_desc(). Instead, let caller directly call
-> ufshcd_read_desc_param().
+The function connects an IRQ domain to a gpiochip and reuses
+gpiochip_to_irq() which is provided by gpiolib.
 
-Reviewed-by: Bart van Assche <bvanassche@acm.org>
+gpiochip_irqchip_* and regmap_irq partially provide the same
+functionality. This function will help to connect just the
+minimal functionality of the gpiochip_irqchip which is needed to
+work together with regmap-irq.
+
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/gpio/gpiolib.c      | 20 ++++++++++++++++++++
+ include/linux/gpio/driver.h |  3 +++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index eaa0e209188d..d07f763c9c0b 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2756,6 +2756,26 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gc,
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_irqchip_add_key);
+ 
++/**
++ * gpiochip_irqchip_add_domain() - adds an irqdomain to a gpiochip
++ * @gc: the gpiochip to add the irqchip to
++ * @domain: the irqdomain to add to the gpiochip
++ *
++ * This function adds an IRQ domain to the gpiochip.
++ */
++int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
++				struct irq_domain *domain)
++{
++	if (!domain)
++		return -EINVAL;
++
++	gc->to_irq = gpiochip_to_irq;
++	gc->irq.domain = domain;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(gpiochip_irqchip_add_domain);
++
+ #else /* CONFIG_GPIOLIB_IRQCHIP */
+ 
+ static inline int gpiochip_add_irqchip(struct gpio_chip *gc,
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 8c41ae41b6bb..ee30065b6f61 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -599,6 +599,9 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gc,
+ bool gpiochip_irqchip_irq_valid(const struct gpio_chip *gc,
+ 				unsigned int offset);
+ 
++int gpiochip_irqchip_add_domain(struct gpio_chip *gc,
++				struct irq_domain *domain);
++
+ #ifdef CONFIG_LOCKDEP
+ 
+ /*
+-- 
+2.20.1
+
