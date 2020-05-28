@@ -2,264 +2,125 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9430C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E808C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B53C72072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590697532;
-	bh=4wBzg/ZLgeF1P6k8nzLExy4Gx8F+5gyWMCW5qqwSLbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r/BDS6jGzNiVYMT9SlkOGv9LPxFrJSHOaW1WFBIrHAURV02oqsWjrs4j96DtfCfmg
-	 MY3rmaw3uQbIxvL14ErPo51fBLUgFfY31mn7/Qdv+OifVMYf586Rr9qufyHUihCpCg
-	 xZlXvCc5OJrpsBvDUxbrueZjbIrO9y18b5iVMkHY=
+	by mail.kernel.org (Postfix) with ESMTP id 2989C2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hFQtq2Z/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407166AbgE1UZW (ORCPT
+        id S2407181AbgE1UZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:25:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36315 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407001AbgE1UZQ (ORCPT
+        Thu, 28 May 2020 16:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407173AbgE1UZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:25:16 -0400
-Received: by mail-io1-f67.google.com with SMTP id y18so11179638iow.3;
-        Thu, 28 May 2020 13:25:15 -0700 (PDT)
+        Thu, 28 May 2020 16:25:22 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BC1EC08C5C8
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:25:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p21so107014pgm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:25:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3jEHb7o98C7LTydu7uW3451vfLZG6eEw40N/JKdaSjg=;
+        b=hFQtq2Z/UkexUJS87ZXMK5dd/I/61tAxxU1YqXREhFrJ6CQLI+Oiq2KvJWPM4AcVga
+         pq/Xzk2fGahlqcUQTUmZPtMsZtxMZtbXNBqs4I/bmIcdGW/kplEMxsqqV8jZpUkL3LPQ
+         vxe8xlt4/lDvYm9ucASaaP1IfnlIToCEXzKtbDae0BuzgI1b6NHVNOUCNBaP4Jiwqwnq
+         J0i1CzReH3lwCpwSDq8xygbEzj4VlzMTTLL8/EbnZPBaz3bI6cjYs2mzwiZP/1ZwaD3d
+         tgIAJ1JGTX0PfSLd/pF9uqp3cRFa4EYFHPfqLB/ZViDskZBrjzNEzh7A9SVYcQmoMPjN
+         7Nuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Gf9w1HHhMX0hpWhDimv3fgQOrl9nmPDyVrb61+V6L70=;
-        b=stkb67ZU+sMFmO0KZZ7BATtCsUfM+3gcp4Cw8UX8QxzU/lWk1mjjZfdTpjsP4cjB4Z
-         prCFlP0s6muPk36f9G0wwwJTEVvzwWHNPdYw9OtSrVTxonk70iy9wIc9RwA2TSULLAmn
-         S3GIhim9U6QhNjWoNMQ4KO6G2HyMftMDtsE6EaZ/cEBSTl+fvf88TYxnZYip6c/XsJH6
-         QWkacX9flNoORPvGvVq48X9BT9timuQX7CWPK2rLAJL7BkYahFduDqUPIiBgZroM9rlc
-         GXZTqnySOIT2lh0D9ncu6PpyC2rqJ01Z/iWdQXmzmNvMjb0Z+4bxB5UmU5TMtbQ2hnrY
-         hYhQ==
-X-Gm-Message-State: AOAM531OJwFBymJG+nQYPuC11DfhCXtGFxnMi9G00WfrsZYVhuLFU+AS
-        /b4JFIpcD364a3bH7GSh9A==
-X-Google-Smtp-Source: ABdhPJyRf8uznFeEBdT/EySaFdFO3/y3X2/IqSISPTvo2JOwLA2i94yMEQohK9K64VmjTvNZGERDDg==
-X-Received: by 2002:a05:6602:2817:: with SMTP id d23mr3771962ioe.206.1590697515091;
-        Thu, 28 May 2020 13:25:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id s66sm3147015ilb.25.2020.05.28.13.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:25:13 -0700 (PDT)
-Received: (nullmailer pid 618934 invoked by uid 1000);
-        Thu, 28 May 2020 20:25:12 -0000
-Date:   Thu, 28 May 2020 14:25:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: clock: Add YAML schemas for LPASS
- clocks on SC7180
-Message-ID: <20200528202512.GA608913@bogus>
-References: <1589707344-8871-1-git-send-email-tdas@codeaurora.org>
- <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3jEHb7o98C7LTydu7uW3451vfLZG6eEw40N/JKdaSjg=;
+        b=n5JFlud0LcNOztLeNFOrjKmsdXxYtIPKlOEh5CjKlg4ln7mNEQu+8R99yYpghjnsik
+         4nzMO0pdm38bMt5PA2caXYXMqcEOcXUf+ILZM9aeP7l5pkRl++XJYgzxgGWa20XEOdGg
+         JIDRe8AEWRfkyMxunh5kGir2EVUvea8W4tJ1vhqhCIbE32ZpObGlo3e9TA4FBLwxAyYH
+         noILNnaEm6u+KEWveMUpW9d1I9GTs3TpMrEEuhXpIp9DKaiueq4z3fMjKNihf7AVTcjW
+         cFY9N6kKMdf+NNlBAqlF0HVVDkBiXeccaLnVIdQc0m3dQlCxmB7ZcuBU3JjwY5jHDo5o
+         dqNw==
+X-Gm-Message-State: AOAM532fOq1G7tCCqvK1LHy35wUcJVZCXMylizLTm0/Idki/WSfO5+v7
+        0/lHxD6T6HYJkraDeZmdbHs/XdSZwvOXDXhaCQKOegLRDlE=
+X-Google-Smtp-Source: ABdhPJw764Ssi01594KZzzLA4OtCp+IzpMdl6N6pdx/zUmHna7Zf+b7Og+jP/IpOd66J086hTbZTWNc6A47FHKkJIUs=
+X-Received: by 2002:a63:d04b:: with SMTP id s11mr4561837pgi.384.1590697521912;
+ Thu, 28 May 2020 13:25:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
+References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+In-Reply-To: <20200524153041.2361-1-gregkh@linuxfoundation.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Thu, 28 May 2020 13:25:10 -0700
+Message-ID: <CAFd5g45xJMgQ6AWgVxw0qQZw7g=jbfqNfUKpzbQre1rNYVZ5YQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] software node: implement software_node_unregister()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        kernel test robot <rong.a.chen@intel.com>,
+        stable <stable@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 17, 2020 at 02:52:22PM +0530, Taniya Das wrote:
-> The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
-> properties that are needed in a device tree. Also add clock ids for GCC
-> LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 101 +++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sc7180.h        |   1 +
->  .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    |  29 ++++++
->  3 files changed, 131 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
->  create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-> new file mode 100644
-> index 0000000..c025a0ae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
-> @@ -0,0 +1,101 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm LPASS core clock control module which supports the clocks and
-> +  power domains on SC7180.
-> +
-> +  See also:
-> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sc7180-lpasshm
-> +      - qcom,sc7180-lpasscorecc
-> +
-> +  clocks:
-> +    items:
-> +      - description: gcc_lpass_sway clock from GCC
-> +
-> +  clock-names:
-> +    items:
-> +      - const: gcc_lpass_sway
-> +
-> +  power-domains:
-> +    items:
-> +      - description: LPASS CORE HM GSDCR
+On Sun, May 24, 2020 at 8:31 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> Sometimes it is better to unregister individual nodes instead of trying
+> to do them all at once with software_node_unregister_nodes(), so create
+> software_node_unregister() so that you can unregister them one at a
+> time.
+>
+> This is especially important when creating nodes in a hierarchy, with
+> parent -> children representations.  Children always need to be removed
+> before a parent is, as the swnode logic assumes this is going to be the
+> case.
+>
+> Fix up the lib/test_printf.c fwnode_pointer() test which to use this new
+> function as it had the problem of tearing things down in the backwards
+> order.
+>
+> Fixes: f1ce39df508d ("lib/test_printf: Add tests for %pfw printk modifier")
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Cc: stable <stable@vger.kernel.org>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Brendan Higgins <brendanhiggins@google.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-For single entry, 'maxItems: 1' is enough.
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  '#power-domain-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: lpass audio cc register
-> +      - description: lpass core cc register
+Sorry, I was on vacation.
 
-audio then core
+Seems like this has already been sufficiently reviewed and applied.
+Nevertheless,
 
-> +
-> +  reg-names:
-> +    items:
-> +      - const: lpass_core_cc
-> +      - const: lpass_audio_cc
-
-core then audio?
-
-2 reg-names required, but 1 reg allowed?
-
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: qcom,sc7180-lpasshm
-> +then:
-> +  properties:
-> +    reg:
-> +      items:
-> +        - description: lpass hm core register
-
-reg-names allowed in this case?
-
-Ideally, this would have just 'maxItems: 1' to just disallow the 2nd 
-entry above.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +  - '#power-domain-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
-> +    clock-controller@63000000 {
-> +      compatible = "qcom,sc7180-lpasshm";
-> +        reg = <0 0x63000000 0 0x28>;
-> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-> +        clock-names = "gcc_lpass_sway";
-> +        #clock-cells = <1>;
-> +        #power-domain-cells = <1>;
-> +    };
-> +
-> +  - |
-> +    clock-controller@62d00000 {
-> +        compatible = "qcom,sc7180-lpasscorecc";
-> +        reg = <0 0x62d00000 0 0x50000>,
-> +            <0 0x62780000 0 0x30000>;
-> +        reg-names = "lpass_core_cc", "lpass_audio_cc";
-> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
-> +        clock-names = "gcc_lpass_sway";
-> +        power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> +        #clock-cells = <1>;
-> +        #power-domain-cells = <1>;
-> +    };
-> +...
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> index 1258fd0..439476c 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
-> @@ -137,6 +137,7 @@
->  #define GCC_MSS_NAV_AXI_CLK					127
->  #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
->  #define GCC_MSS_SNOC_AXI_CLK					129
-> +#define GCC_LPASS_CFG_NOC_SWAY_CLK				130
-> 
->  /* GCC resets */
->  #define GCC_QUSB2PHY_PRIM_BCR					0
-> diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> new file mode 100644
-> index 0000000..a55d01d
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
-> @@ -0,0 +1,29 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-> +#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
-> +
-> +/* LPASS_CORE_CC clocks */
-> +#define LPASS_LPAAUDIO_DIG_PLL				0
-> +#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
-> +#define CORE_CLK_SRC					2
-> +#define EXT_MCLK0_CLK_SRC				3
-> +#define LPAIF_PRI_CLK_SRC				4
-> +#define LPAIF_SEC_CLK_SRC				5
-> +#define LPASS_AUDIO_CORE_CORE_CLK			6
-> +#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
-> +#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
-> +#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
-> +#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
-> +
-> +/* LPASS Core power domains */
-> +#define LPASS_CORE_HM_GDSCR				0
-> +
-> +/* LPASS Audio power domains */
-> +#define LPASS_AUDIO_HM_GDSCR				0
-> +#define LPASS_PDC_HM_GDSCR				1
-> +
-> +#endif
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
