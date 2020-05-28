@@ -2,86 +2,142 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12061C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E90C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0FC720897
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8C0E2073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404517AbgE1PjV (ORCPT
+        id S2404525AbgE1Pkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:39:21 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:41099 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2404416AbgE1PjR (ORCPT
+        Thu, 28 May 2020 11:40:31 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:43184 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404383AbgE1Pk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:39:17 -0400
-Received: (qmail 13719 invoked by uid 1000); 28 May 2020 11:39:14 -0400
-Date:   Thu, 28 May 2020 11:39:14 -0400
-From:   "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     "Sverdlin, Alexander \(Nokia - DE/Ulm\)" 
-        <alexander.sverdlin@nokia.com>,
-        "dinghao.liu@zju.edu.cn" <dinghao.liu@zju.edu.cn>,
-        "kjlu@umn.edu" <kjlu@umn.edu>, "mpm@selenic.com" <mpm@selenic.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "rfontana@redhat.com" <rfontana@redhat.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] hwrng: ks-sa - fix runtime pm imbalance on error
-Message-ID: <20200528153914.GA11831@rowland.harvard.edu>
-References: <20200520132957.18776-1-dinghao.liu@zju.edu.cn>
- <ab400cba7523e69b15360b0928cb8fa8b9432d86.camel@nokia.com>
- <20200520164556.GC11084@rowland.harvard.edu>
- <20200528065519.GA26960@gondor.apana.org.au>
+        Thu, 28 May 2020 11:40:27 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id B52C880307C0;
+        Thu, 28 May 2020 15:40:23 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id YJY955QVHiku; Thu, 28 May 2020 18:40:23 +0300 (MSK)
+Date:   Thu, 28 May 2020 18:40:22 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw
+ config
+Message-ID: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
+ <20200528145224.GT1634618@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200528065519.GA26960@gondor.apana.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200528145224.GT1634618@smile.fi.intel.com>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 04:55:19PM +1000, Herbert Xu wrote:
-> On Wed, May 20, 2020 at 12:45:56PM -0400, stern@rowland.harvard.edu wrote:
-> > On Wed, May 20, 2020 at 03:42:17PM +0000, Sverdlin, Alexander (Nokia - DE/Ulm) wrote:
-> > > Hello Dinghao,
-> > > 
-> > > On Wed, 2020-05-20 at 21:29 +0800, Dinghao Liu wrote:
-> > > > pm_runtime_get_sync() increments the runtime PM usage counter even
-> > > > the call returns an error code. Thus a pairing decrement is needed
-> > > > on the error handling path to keep the counter balanced.
-> > > 
-> > > I believe, this is the wrong place for such kind of fix.
-> > > pm_runtime_get_sync() has obviously a broken semantics with regards to
-> > > your observation but no other driver does what you propose.
+On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
+> On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
+> > IP core of the DW DMA controller may be synthesized with different
+> > max burst length of the transfers per each channel. According to Synopsis
+> > having the fixed maximum burst transactions length may provide some
+> > performance gain. At the same time setting up the source and destination
+> > multi size exceeding the max burst length limitation may cause a serious
+> > problems. In our case the DMA transaction just hangs up. In order to fix
+> > this lets introduce the max burst length platform config of the DW DMA
+> > controller device and don't let the DMA channels configuration code
+> > exceed the burst length hardware limitation.
 > > 
-> > Look again.  For example, see what usb_autoresume_device() in 
-> > drivers/usb/core/driver.c does.
+> > Note the maximum burst length parameter can be detected either in runtime
+> > from the DWC parameter registers or from the dedicated DT property.
+> > Depending on the IP core configuration the maximum value can vary from
+> > channel to channel so by overriding the channel slave max_burst capability
+> > we make sure a DMA consumer will get the channel-specific max burst
+> > length.
 > 
-> However, there seems to be some disagreement as to what to do
-> when pm_runtime_get_sync fails.  Your driver chooses to call
-> put_sync while others prefer pm_runtime_put_noidle (e.g., see
-> drivers/base/power/runtime.c).
+> ...
+> 
+> >  static void dwc_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+> >  {
+> > +	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+> >  
+> 
 
-It doesn't matter which function gets called; in these circumstances 
-(device still suspended or in an error state because a resume attempt 
-failed) they will do the same thing.
+> Perhaps,
+> 
+> 	/* DesignWare DMA supports burst value from 0 */
+> 	caps->min_burst = 0;
 
-> This API does seem to be in a bit of a mess.
+Regarding min_burst being zero. I don't fully understand what it means.
+It means no burst or burst with minimum length or what?
+In fact DW DMA burst length starts from 1. Remember the burst-length run-time
+parameter we were arguing about? Anyway the driver makes sure that both
+0 and 1 requested burst length are setup as burst length of 1 in the
+CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
 
-Suggestions and patches are welcome.
+I agree with the rest of your comments below.
 
-Alan Stern
+-Sergey
+
+> 
+> > +	caps->max_burst = dwc->max_burst;
+> >  }
+> 
+> ...
+> 
+> > +	*maxburst = clamp(*maxburst, 0U, dwc->max_burst);
+> 
+> Shouldn't we do the same for iDMA 32-bit? Thus, perhaps do it in the core.c?
+> 
+> >  	*maxburst = *maxburst > 1 ? fls(*maxburst) - 2 : 0;
+> 
+> > +	if (!of_property_read_u32_array(np, "snps,max-burst-len", mb,
+> > +					nr_channels)) {
+> > +		for (tmp = 0; tmp < nr_channels; tmp++)
+> > +			pdata->max_burst[tmp] = mb[tmp];
+> 
+> I think we may read directly to the array. This ugly loops were introduced due
+> to type mismatch. (See below)
+> 
+> > +	} else {
+> > +		for (tmp = 0; tmp < nr_channels; tmp++)
+> > +			pdata->max_burst[tmp] = DW_DMA_MAX_BURST;
+> > +	}
+> 
+> And this will be effectively memset32().
+> 
+> >  	unsigned char	nr_masters;
+> >  	unsigned char	data_width[DW_DMA_MAX_NR_MASTERS];
+> >  	unsigned char	multi_block[DW_DMA_MAX_NR_CHANNELS];
+> > +	unsigned int	max_burst[DW_DMA_MAX_NR_CHANNELS];
+> 
+> I think we have to stop with this kind of types and use directly what is in the
+> properties, i.e.
+> 
+> 	u32 max_burst[...];
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
