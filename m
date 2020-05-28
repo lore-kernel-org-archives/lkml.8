@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB7C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83522215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4300215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667465;
-	bh=O4fs0ZwoEeFvu6pl2u/lAZOU60WQcSkGw7Wb3mbSYFI=;
+	s=default; t=1590667476;
+	bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zdRvw51PlRHHr+m2dgRO+K2xkgbTNfoqFNRDGY+69h555Bj93+Q++gdL9uHBe4Sqq
-	 D5nmEDyxx7WPoh7uHuFTNwS4mBJs5zf6f1VTkRVpQS5NIaIQ79kuoAv4gNMegdWzGA
-	 fRKGMuSPJ4bt6ivAElLfkSsWqULwqyBitm7yCyLE=
+	b=geiBtqaBWP6tSlCTXXZht1GMC1qlgaxvERnDUyO7hGfjmvaP8mscGwN8rGkLHp8Rt
+	 jdlPHp/RaHYumlzdospxv49ISUXz2pUpIZgtMkjlbfl4ZxKDcUiNs1FsFNb+3Q3jno
+	 /umW76cFhHv68vjuemf/xRMWkyxaR1Xf3Xpr3B/Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389593AbgE1MEZ (ORCPT
+        id S2389599AbgE1MEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49672 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388957AbgE1L5P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:15 -0400
+        id S2388954AbgE1L5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34E3E2168B;
-        Thu, 28 May 2020 11:57:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 030D1215A4;
+        Thu, 28 May 2020 11:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667034;
-        bh=O4fs0ZwoEeFvu6pl2u/lAZOU60WQcSkGw7Wb3mbSYFI=;
+        s=default; t=1590667033;
+        bh=gs9/lY+1QDQ5E52V460MMXznwqxNumfuWvVTDb9U+uo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZIrrSwh9qzI2V1EAeCZDyCbUY5lzjfpSh4nsOams6O0h0b7O7GImlOTyRSfmQbVVl
-         7Ooec11Ee3lU/PDLhLBtZ+XTwqWI2twqerRRBBzMht/r0VzGqVSA0M1rvNdEyO1BJs
-         1AgzeTf238LhvZdjO2ECnxYls6smLD6Wv4ezDD8Q=
+        b=oFezxgOHRdv6SFiiALe9+yfN8Q2KDzVwq3Q35c2vAE68QWfbckrqtk/FckEl98ath
+         mLZK8UxCYMfQuStWTJkIeIT6lb6nnyF1lh/1sV0oJ1kcKazRuNGtpqsgHV4ktLqP1p
+         u8JIfRA6HvQXG1TNbjyp/S9JViQpokK+G/PhGKn8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
+Cc:     Amit Cohen <amitc@mellanox.com>, Petr Machata <petrm@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/26] net: sun: fix missing release regions in cas_init_one().
-Date:   Thu, 28 May 2020 07:56:46 -0400
-Message-Id: <20200528115654.1406165-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 17/26] selftests: mlxsw: qos_mc_aware: Specify arping timeout as an integer
+Date:   Thu, 28 May 2020 07:56:45 -0400
+Message-Id: <20200528115654.1406165-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
 References: <20200528115654.1406165-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Amit Cohen <amitc@mellanox.com>
 
-[ Upstream commit 5a730153984dd13f82ffae93d7170d76eba204e9 ]
+[ Upstream commit 46ca11177ed593f39d534f8d2c74ec5344e90c11 ]
 
-In cas_init_one(), "pdev" is requested by "pci_request_regions", but it
-was not released after a call of the function “pci_write_config_byte”
-failed. Thus replace the jump target “err_write_cacheline” by
-"err_out_free_res".
+Starting from iputils s20190709 (used in Fedora 31), arping does not
+support timeout being specified as a decimal:
 
-Fixes: 1f26dac32057 ("[NET]: Add Sun Cassini driver.")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+$ arping -c 1 -I swp1 -b 192.0.2.66 -q -w 0.1
+arping: invalid argument: '0.1'
+
+Previously, such timeouts were rounded to an integer.
+
+Fix this by specifying the timeout as an integer.
+
+Fixes: a5ee171d087e ("selftests: mlxsw: qos_mc_aware: Add a test for UC awareness")
+Signed-off-by: Amit Cohen <amitc@mellanox.com>
+Reviewed-by: Petr Machata <petrm@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/sun/cassini.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/sun/cassini.c b/drivers/net/ethernet/sun/cassini.c
-index c91876f8c536..6e78a33aa5e4 100644
---- a/drivers/net/ethernet/sun/cassini.c
-+++ b/drivers/net/ethernet/sun/cassini.c
-@@ -4971,7 +4971,7 @@ static int cas_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 					  cas_cacheline_size)) {
- 			dev_err(&pdev->dev, "Could not set PCI cache "
- 			       "line size\n");
--			goto err_write_cacheline;
-+			goto err_out_free_res;
- 		}
- 	}
- #endif
-@@ -5144,7 +5144,6 @@ err_out_iounmap:
- err_out_free_res:
- 	pci_release_regions(pdev);
+diff --git a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+index 24dd8ed48580..b025daea062d 100755
+--- a/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
++++ b/tools/testing/selftests/drivers/net/mlxsw/qos_mc_aware.sh
+@@ -300,7 +300,7 @@ test_uc_aware()
+ 	local i
  
--err_write_cacheline:
- 	/* Try to restore it in case the error occurred after we
- 	 * set it.
- 	 */
+ 	for ((i = 0; i < attempts; ++i)); do
+-		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 0.1; then
++		if $ARPING -c 1 -I $h1 -b 192.0.2.66 -q -w 1; then
+ 			((passes++))
+ 		fi
+ 
 -- 
 2.25.1
 
