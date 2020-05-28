@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E40C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E06C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A2921548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3052063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667826;
-	bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
+	s=default; t=1590667831;
+	bh=wa6gO+L0hyvh69MnAos/uWPgEGhyjuAYeC+eZMTDkvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EXQT8xGjwqfc9s2OFb0NmjeSf/mVil3/HojWWiBiWnHcw8rLwQKPuAFw67xnofTyb
-	 FdSPB1T50JnSw6UCIUt451DuSIeshz3vzThoZ7Dm7TlBQgUGldDBwIse4xG1EeOX0s
-	 YVDLGyoPHktO7KwMDbmSVO9fh/xtSeCIGtq6eGWs=
+	b=EPnBXEN7LcqjBwmv1EmZCYPb6J332mWpSYUIuohGXwcE8geHusPnEPxGEAdRMwaCU
+	 2HZW+k+gPumY4lyn1cRnThrivrCdDS5+E6v56ZgiLMUfacCZio0uAuWyl4k6kBi9VH
+	 tQFT3rHfRVNpoaP83LgbKJzyLRhsWXxBzWDAG1jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389455AbgE1MKZ (ORCPT
+        id S2388680AbgE1L4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48358 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388686AbgE1L4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:19 -0400
+        id S2388627AbgE1L4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76612208E4;
-        Thu, 28 May 2020 11:56:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E24E2089D;
+        Thu, 28 May 2020 11:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666979;
-        bh=SoHylZ6iLn+VLc0OHY0aK98CsyxfdDPEAMQscWGk9iA=;
+        s=default; t=1590666964;
+        bh=wa6gO+L0hyvh69MnAos/uWPgEGhyjuAYeC+eZMTDkvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=grWxn/rFk284PwVWUq5pHEdH7pmffpTS7ja30QsO8+uCs9czuA+oII9pfssE8Yhzm
-         FhasNl7MUNmMj5iVcC4xnTfaD627yCxLFk21VtP3TSH1vgI7tANNNn7/pZDyYxSBSg
-         tfkx1+Uuqt8G7Ed+RXiGipUkTxBKHu73wqHb4hbg=
+        b=fTmpvVDKKWOcQUppyyCLtmomEctta478cZ2L19Ivj83IWYxVibKYprxeF4591ww+s
+         LL1zIsNAgwnhMorfU/IoLt1fyhldd5cYUhmIqOpMPAqiQDYCKQwAWLlQWvFk0dB4wd
+         YWwmI+7Q9va3k5gbmvRFnINpPY+4pZ47xeB9f+kk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>, Stan Johnson <userm57@yahoo.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 16/47] net: bmac: Fix read of MAC address from ROM
-Date:   Thu, 28 May 2020 07:55:29 -0400
-Message-Id: <20200528115600.1405808-16-sashal@kernel.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-efi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 03/47] efi/libstub: Avoid returning uninitialized data from setup_graphics()
+Date:   Thu, 28 May 2020 07:55:16 -0400
+Message-Id: <20200528115600.1405808-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -60,41 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
 
-[ Upstream commit ef01cee2ee1b369c57a936166483d40942bcc3e3 ]
+[ Upstream commit 081d5150845ba3fa49151a2f55d3cc03b0987509 ]
 
-In bmac_get_station_address, We're reading two bytes at a time from ROM,
-but we do that six times, resulting in 12 bytes of read & writes. This
-means we will write off the end of the six-byte destination buffer.
+Currently, setup_graphics() ignores the return value of efi_setup_gop(). As
+AllocatePool() does not zero out memory, the screen information table will
+contain uninitialized data in this case.
 
-This change fixes the for-loop to only read/write six bytes.
+We should free the screen information table if efi_setup_gop() returns an
+error code.
 
-Based on a proposed fix from Finn Thain <fthain@telegraphics.com.au>.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Reported-by: Stan Johnson <userm57@yahoo.com>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Reported-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Link: https://lore.kernel.org/r/20200426194946.112768-1-xypron.glpk@gmx.de
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/apple/bmac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/arm-stub.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/apple/bmac.c b/drivers/net/ethernet/apple/bmac.c
-index a58185b1d8bf..3e3711b60d01 100644
---- a/drivers/net/ethernet/apple/bmac.c
-+++ b/drivers/net/ethernet/apple/bmac.c
-@@ -1182,7 +1182,7 @@ bmac_get_station_address(struct net_device *dev, unsigned char *ea)
- 	int i;
- 	unsigned short data;
- 
--	for (i = 0; i < 6; i++)
-+	for (i = 0; i < 3; i++)
- 		{
- 			reset_and_select_srom(dev);
- 			data = read_srom(dev, i + EnetAddressOffset/2, SROMAddressBits);
+diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+index 7bbef4a67350..30e77a9e62b2 100644
+--- a/drivers/firmware/efi/libstub/arm-stub.c
++++ b/drivers/firmware/efi/libstub/arm-stub.c
+@@ -59,7 +59,11 @@ static struct screen_info *setup_graphics(void)
+ 		si = alloc_screen_info();
+ 		if (!si)
+ 			return NULL;
+-		efi_setup_gop(si, &gop_proto, size);
++		status = efi_setup_gop(si, &gop_proto, size);
++		if (status != EFI_SUCCESS) {
++			free_screen_info(si);
++			return NULL;
++		}
+ 	}
+ 	return si;
+ }
 -- 
 2.25.1
 
