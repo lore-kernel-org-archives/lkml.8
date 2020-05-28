@@ -2,145 +2,93 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE98BC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBC2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B14208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4306A20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:27:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyATqq7b"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LvnohYx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436578AbgE1V1K (ORCPT
+        id S2436594AbgE1V1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
+        Thu, 28 May 2020 17:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436519AbgE1V1G (ORCPT
+        with ESMTP id S2436560AbgE1V1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:27:06 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC36C08C5C6;
-        Thu, 28 May 2020 14:27:06 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id ci23so147629pjb.5;
-        Thu, 28 May 2020 14:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=AeK2+WIEfEwLtUDVbsBEaZ7tfHtM9zDOtrpFji4wsek=;
-        b=RyATqq7bbugKuEEPBIvRZsJSAYH/Oi5bi+puZfsWlM7SyKPsPNyddahSiTVhO4nySL
-         xVf4m/uaP0nr9NT44oTJl4M/qkuexLA/cw8I7+5YLndJs5KdIL6IfZf4pUIc/VBGB0rK
-         QcsnowxPpWBBo7Zl36eod04l3NI3U5UXaMOc90J70FIg9h/s4Gx1P4OUsBekzl6LZz/A
-         iT5TeFL5H7hhyu0xZBt9+jltNbbmzKIkoZ2qpkrpYaVqSdvSv2N5dYMTH+tNCWuP3zjM
-         GSY1KXGkhWfzQIJk75UOMoXwRHHhn1SP0XRoBM+R245SjHFqXJ76ZxsgLaFoa/jDcdcu
-         lhSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AeK2+WIEfEwLtUDVbsBEaZ7tfHtM9zDOtrpFji4wsek=;
-        b=gqr9ex+X7cps9ik4A1LYGNY3OoAAgNh723Na7TCWWzQZvyxwTMGAHj58qSZof8JC7d
-         nuqgWuReojTK2MSJwM8bwEbGUgQNP73fKkPsLTBTwEWZnfSK89tM+EOT7TX/M2ktuCrV
-         UbVzV9mrEDiEzzjhK+pmaw1QI9LSqgRLlATIYo35BOo/oZlilO12yHYufVWecuoy7mYN
-         v0RVKx4qcDJ0g8rZZPLin0uKSqOHsoEqjoaRRKFJmOi3d/mlLxAV3paZ+0Rmw4Fc3L/S
-         h/HtCVu5Q+LuYn00yjhhwekGozMixUvgtKpKF5f36jcNXD2rAl9Hr9cHqfLIICaFIQ4W
-         xNFQ==
-X-Gm-Message-State: AOAM530qJt4VPPvJH2zw/NIx/Q3Pxt7czz21ZMOXZLAsoy+MtBvVsGOV
-        VoNQL6eThQ3e6Ae3aValDepfk73P
-X-Google-Smtp-Source: ABdhPJxfsaV6eq2MYqpZPxDziZG9PWhwu9Oe5jM5l5/Kovw7Yh6786TB1q+xYJXYAYB9+B0jWmk15Q==
-X-Received: by 2002:a17:902:70c1:: with SMTP id l1mr5452023plt.178.1590701225469;
-        Thu, 28 May 2020 14:27:05 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id p8sm5235525pgs.29.2020.05.28.14.27.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 14:27:04 -0700 (PDT)
-Subject: Re: general protection fault in inet_unhash
-To:     Andrii Nakryiko <andriin@fb.com>,
-        syzbot <syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com>,
-        ast@kernel.org, davem@davemloft.net, guro@fb.com, kuba@kernel.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        yoshfuji@linux-ipv6.org, eric.dumazet@gmail.com
-References: <00000000000018e1d305a6b80a73@google.com>
- <d65c8424-e78c-63f9-3711-532494619dc6@fb.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <342a5525-e821-5cdd-487b-da6b5278a344@gmail.com>
-Date:   Thu, 28 May 2020 14:27:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 28 May 2020 17:27:09 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D9BC08C5C6;
+        Thu, 28 May 2020 14:27:09 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Y14C43qlz9sRK;
+        Fri, 29 May 2020 07:27:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590701227;
+        bh=vS3YZdXAUEa+9cvSj2VMaZPN9sl9lH/jFUiEJ0ngGp4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LvnohYx17l7ipQ76snveIRelqcYWd5FVifQ8RS2usY9yvm9hr560n3Mit46VNw++H
+         yOw0vhpb1dS3TS6PE5BcNp/ZGRmV7+hdLfkJyifY988ur+ryIa+zN5f/2wYcrCenic
+         Afplpy9gzV9VyU2xOZ4SevUHooRcxpQGiyoKvUA97gKbCUVWm5vMlp4rmg2g0m7DFW
+         Z8LxRMIEfXnJ2rVibWDU5oD97Je7IPWsFmwWAhluuensqfQVSjWVkW0I/hAVu7KxPg
+         1Ouwb6UX5dE0+nIKlzVgWbqgOU6oPImeXc3UGnJEYUyfWbowW0ekAQ6yisbS/JKo3i
+         Nvv7td+K+eMZw==
+Date:   Fri, 29 May 2020 07:27:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the coresight tree
+Message-ID: <20200529072706.4d59e066@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <d65c8424-e78c-63f9-3711-532494619dc6@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/eUxOSGqerFcXOX5ZR7ofCiS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/eUxOSGqerFcXOX5ZR7ofCiS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/28/20 2:01 PM, Andrii Nakryiko wrote:
-> On 5/28/20 9:44 AM, syzbot wrote:
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    dc0f3ed1 net: phy: at803x: add cable diagnostics support f..
->> git tree:       net-next
->> console output: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_log.txt-3Fx-3D17289cd2100000&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=t1v5ZakZM9Aw_9u_I6FbFZ28U0GFs0e9dMMUOyiDxO4&e=
->> kernel config:  https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_.config-3Fx-3D7e1bc97341edbea6&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=yeXCTODuJF6ExmCJ-ppqMHsfvMCbCQ9zkmZi3W6NGHo&e=
->> dashboard link: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_bug-3Fextid-3D3610d489778b57cc8031&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=8fAJHh81yojiinnGJzTw6hN4w4A6XRZST4463CWL9Y8&e=
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_repro.syz-3Fx-3D15f237aa100000&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=cPv-hQsGYs0CVz3I26BmauS0hQ8_YTWHeH5p-U5ElWY&e=
->> C reproducer:   https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_repro.c-3Fx-3D1553834a100000&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=r6sGJDOgosZDE9sRxqFnVibDNJFt_6IteSWeqEQLbNE&e=
->>
->> The bug was bisected to:
->>
->> commit af6eea57437a830293eab56246b6025cc7d46ee7
->> Author: Andrii Nakryiko <andriin@fb.com>
->> Date:   Mon Mar 30 02:59:58 2020 +0000
->>
->>      bpf: Implement bpf_link-based cgroup BPF program attachment
->>
->> bisection log:  https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_bisect.txt-3Fx-3D1173cd7e100000&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=rJIpYFSAMRfea3349dd7PhmLD_hriVwq8ZtTHcSagBA&e=
->> final crash:    https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_report.txt-3Fx-3D1373cd7e100000&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=TWpx5JNdxKiKPABUScn8WB7u3fXueCp7BXwQHg4Unz0&e=
->> console output: https://urldefense.proofpoint.com/v2/url?u=https-3A__syzkaller.appspot.com_x_log.txt-3Fx-3D1573cd7e100000&d=DwIBaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=vxqvl81C2rT6GOGdPyz8iQ&m=sMAtpavBBjBzFzT0V8c6FcH8cu2M9da3ZozO5Lc8do0&s=-SMhn-dVZI4W51EZQ8Im0sdThgwt9M6fxUt3_bcYvk8&e=
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+3610d489778b57cc8031@syzkaller.appspotmail.com
->> Fixes: af6eea57437a ("bpf: Implement bpf_link-based cgroup BPF program attachment")
->>
->> general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN
->> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
->> CPU: 0 PID: 7063 Comm: syz-executor654 Not tainted 5.7.0-rc6-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->> RIP: 0010:inet_unhash+0x11f/0x770 net/ipv4/inet_hashtables.c:600
-> 
-> No idea why it was bisected to bpf_link change. It seems completely struct sock-related. Seems like
-> 
-> struct inet_hashinfo *hashinfo = sk->sk_prot->h.hashinfo;
-> 
-> ends up being NULL.
-> 
-> Can some more networking-savvy people help with investigating this, please?
+Commits
 
-Well, the repro definitely uses BPF
+  bbea49e0ac80 ("dt-bindings: arm: coresight: Add optional property to repl=
+icators")
+  5b79308d90b9 ("dt-bindings: arm: coresight: Add support to skip trace uni=
+t power up")
 
-On the following run, my kernel does not have L2TP, so does not crash.
+are missing a Signed-off-by from their committer.
 
-[pid 817013] bpf(BPF_TASK_FD_QUERY, {task_fd_query={pid=0, fd=-1, flags=0, buf_len=7, buf="cgroup", prog_id=0, fd_type=BPF_FD_TYPE_RAW_TRACEPOINT, probe_offset=0, probe_addr=0}}, 48) = -1 ENOENT (No such file or directory)
-[pid 817013] openat(AT_FDCWD, "cgroup", O_RDWR|O_PATH) = 3
-[pid 817013] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_CGROUP_SOCK, insn_cnt=4, insns=0x20000000, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0}, 112) = -1 EPERM (Operation not permitted)
-[pid 817013] bpf(BPF_LINK_CREATE, {link_create={prog_fd=-1, target_fd=3, attach_type=BPF_CGROUP_INET_SOCK_CREATE, flags=0}}, 16) = -1 EBADF (Bad file descriptor)
-[pid 817013] socket(AF_INET, SOCK_DGRAM, IPPROTO_L2TP <unfinished ...>
-[pid 816180] <... nanosleep resumed>NULL) = 0
-[pid 816180] wait4(-1, 0x7fffa59867cc, WNOHANG|__WALL, NULL) = 0
-[pid 816180] nanosleep({tv_sec=0, tv_nsec=1000000},  <unfinished ...>
-[pid 817013] <... socket resumed>)      = -1 EPROTONOSUPPORT (Protocol not supported)
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/eUxOSGqerFcXOX5ZR7ofCiS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7QLKoACgkQAVBC80lX
+0GxuEAf/QDiFxuJ9y0ZwLkoLgxfOivSQI2UE67tNoiFNXNT8zTebjH/KTQhb6wzq
+5kMtLBelqubGgLiwtfAZ1GBXYszjhiVfRN+HY0q9i+SsTAHsbwPXBKW1esHGUO5j
+oIm0v7zY9A+WB/Acami16z+aMBhgSkXVf+ChtoaDsukDlq27tFTiGlSFWqS2fmga
+ksInjDvf1aQdoQz2TFUt93QaMalYlmPfm5tCI6X/L8H7rcrh0XDtrBPcN4ilrFLJ
+dAHV48VT3K5F99xNuPg5/4pocSNmKIYdEUOJ1SVNSXwNis6hs/26/+J+xsUlW9/R
+4PJtbdScpAV9xQJirAIjWG2JAOz3og==
+=Q4bI
+-----END PGP SIGNATURE-----
+
+--Sig_/eUxOSGqerFcXOX5ZR7ofCiS--
