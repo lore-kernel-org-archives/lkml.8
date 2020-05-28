@@ -2,127 +2,112 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDE720721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:06:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ezZa/1kJ"
+	by mail.kernel.org (Postfix) with ESMTP id 22BC120721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590674831;
+	bh=NDVL7WYswJcaFJa1OHcgnKTk5L0cgghzoiiIEwCJexQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=klXeauV8byesd/B5zRm5D4wUMQfk1vm4MzYX/yIPN5XtDJJuyIpyO+mf1y3vko8k/
+	 /ShMbZtHeS9h4D+SDMsrXZvlsvl0He8SX9HYEkpIqwin9XPOJVcD7r7Yw0qHyGQEdw
+	 8glT2NZ0bJxqOEysf2ZDosS0mlPm40yqm9KKo+0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390957AbgE1OGp (ORCPT
+        id S2390965AbgE1OHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:06:45 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51872 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390913AbgE1OGZ (ORCPT
+        Thu, 28 May 2020 10:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38542 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390838AbgE1OHH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:06:25 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SE6LpJ054759;
-        Thu, 28 May 2020 09:06:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1590674781;
-        bh=QIOM13dIxaMyLxjkwDypJQgBgow31wSAdopluu2z1e4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ezZa/1kJD6QHxS/5/V4zWaBWS1X3181RYPPVfa92mno1CoTJU9zrM+oIg7GxXzyor
-         qGYx2C6v4KCWrDudGuXyavDNUyGdLu+1Qvz9nqwrnvTGhGcVmOSjTvz3arJeLE2q/Z
-         WJ+l65BJ67dYS8IYOptQYEcKVckN3FSMDVHlD7xg=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SE6Ldh130597
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 09:06:21 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
- May 2020 09:06:21 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 28 May 2020 09:06:21 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SE6L2t074600;
-        Thu, 28 May 2020 09:06:21 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <pali@kernel.org>, <robh@kernel.org>
-CC:     <afd@ti.com>, <r-rivera-matos@ti.com>, <dmurphy@ti.com>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <sspatil@android.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>
-Subject: [PATCH v11 1/4] power_supply: Add additional health properties to the header
-Date:   Thu, 28 May 2020 09:05:43 -0500
-Message-ID: <20200528140546.25260-2-r-rivera-matos@ti.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200528140546.25260-1-r-rivera-matos@ti.com>
-References: <20200528140546.25260-1-r-rivera-matos@ti.com>
+        Thu, 28 May 2020 10:07:07 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2ADDC05BD1E;
+        Thu, 28 May 2020 07:07:06 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id h9so104194qtj.7;
+        Thu, 28 May 2020 07:07:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c5VdfREkwzP6jqIZOFDaLilS2V6xWZ7RlAK0qP0rVTk=;
+        b=abkUbCeVYyXvcNltdNzDUgkNUMN3nP0G3xnhUGHnZUuEMdO6cRsZZ7n/D5Rg8eIbNO
+         PacVhQuQPeB+TJiYa8kZyUeGuPxjdQY/gELpvgbCoMNtz8SUQmKZRrqI6M9CWx2gL8aV
+         je+gLtCguH3qjw0tUkfwThHVHnDklXRC2D6GGPGIWyBXVjCBZR7C1ZDVgZD6ovLN/BIT
+         16ld6VTwiz4Cl1I45loB2HA4yLHDyBxGZ9u39pWfemEE2/JIIdoNh0gDNniTuAJAFL80
+         jOW8cM2fxAQQya/uxtGanKJ6yfJ4gChPso1P2Fa5PhyoJ3jtpYZzVWQ2BzgYrpGCR7Pr
+         DS8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=c5VdfREkwzP6jqIZOFDaLilS2V6xWZ7RlAK0qP0rVTk=;
+        b=Y42W/maE+OLR5rD1+smIQOP5herxsiL3jh9j09zMbyWFS5TpFzfEYMDTczMLv/CxE6
+         mHDqEJmyHruVDBCZKLiK7FicOjaPAH8v5z/cTe1CbcJ5gUxqzryJfuvU7p+jQxp5XYKQ
+         QIlm62KZHA92CKctIrBfwCes5IDAAnakQXzHP5jzDxoWq1sVvsel++svUNL+TMrxKaQD
+         Z0MvOp1JmQFry/nZ4+eHrwYAp4Ze0RQhlLVjQW5z+4QKzPcVCBaYAVi4BoPzaKrpOUJX
+         cBskwub7617IIRHtH0E/3O1iLNh+sLG31BqIn6DhC4KmtQ1iJbUR9Eh3t3P8K8HXJy9Q
+         8xJg==
+X-Gm-Message-State: AOAM530WToqya1FDhWSbJu1RZwkGX8QX/mHQkwRpnL7M83IKotc3qwNk
+        M6vNbRnxbUASFaDsul86TFs=
+X-Google-Smtp-Source: ABdhPJx9AqNQeDf9fciJx3SDMxleg/u0TJjZ+jEiiOPW3cxsgZLFQKxCeDBOYtGjH666D5na98etJg==
+X-Received: by 2002:ac8:2a55:: with SMTP id l21mr3220535qtl.151.1590674825723;
+        Thu, 28 May 2020 07:07:05 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id e27sm4658703qkl.47.2020.05.28.07.07.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:07:04 -0700 (PDT)
+Date:   Thu, 28 May 2020 10:07:01 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Boris Burkov <boris@bur.io>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 cgroup/for-5.8] cgroup: add cpu.stat file to root
+ cgroup
+Message-ID: <20200528140701.GM83516@mtj.thefacebook.com>
+References: <20200527160821.GC42293@cmpxchg.org>
+ <20200527214316.524124-1-boris@bur.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200527214316.524124-1-boris@bur.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Murphy <dmurphy@ti.com>
+On Wed, May 27, 2020 at 02:43:19PM -0700, Boris Burkov wrote:
+> Currently, the root cgroup does not have a cpu.stat file. Add one which
+> is consistent with /proc/stat to capture global cpu statistics that
+> might not fall under cgroup accounting.
+> 
+> We haven't done this in the past because the data are already presented
+> in /proc/stat and we didn't want to add overhead from collecting root
+> cgroup stats when cgroups are configured, but no cgroups have been
+> created.
+> 
+> By keeping the data consistent with /proc/stat, I think we avoid the
+> first problem, while improving the usability of cgroups stats.
+> We avoid the second problem by computing the contents of cpu.stat from
+> existing data collected for /proc/stat anyway.
+> 
+> Signed-off-by: Boris Burkov <boris@bur.io>
+> Suggested-by: Tejun Heo <tj@kernel.org>
 
-Add HEALTH_WARM, HEALTH_COOL and HEALTH_HOT to the health enum.
+Applied to cgroup/for-5.8.
 
-HEALTH_WARM, HEALTH_COOL, and HEALTH_HOT properties are taken from the JEITA spec.
+Thanks.
 
-Tested-by: Guru Das Srinagesh <gurus@codeaurora.org>
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- Documentation/ABI/testing/sysfs-class-power | 2 +-
- drivers/power/supply/power_supply_sysfs.c   | 2 +-
- include/linux/power_supply.h                | 3 +++
- 3 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/ABI/testing/sysfs-class-power
-index bf3b48f022dc..9f3fd01a9373 100644
---- a/Documentation/ABI/testing/sysfs-class-power
-+++ b/Documentation/ABI/testing/sysfs-class-power
-@@ -190,7 +190,7 @@ Description:
- 		Valid values: "Unknown", "Good", "Overheat", "Dead",
- 			      "Over voltage", "Unspecified failure", "Cold",
- 			      "Watchdog timer expire", "Safety timer expire",
--			      "Over current"
-+			      "Over current", "Warm", "Cool", "Hot"
- 
- What:		/sys/class/power_supply/<supply_name>/precharge_current
- Date:		June 2017
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index f37ad4eae60b..d0d549611794 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -61,7 +61,7 @@ static const char * const power_supply_charge_type_text[] = {
- static const char * const power_supply_health_text[] = {
- 	"Unknown", "Good", "Overheat", "Dead", "Over voltage",
- 	"Unspecified failure", "Cold", "Watchdog timer expire",
--	"Safety timer expire", "Over current"
-+	"Safety timer expire", "Over current", "Warm", "Cool", "Hot"
- };
- 
- static const char * const power_supply_technology_text[] = {
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index dcd5a71e6c67..8670e90c1d51 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -61,6 +61,9 @@ enum {
- 	POWER_SUPPLY_HEALTH_WATCHDOG_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE,
- 	POWER_SUPPLY_HEALTH_OVERCURRENT,
-+	POWER_SUPPLY_HEALTH_WARM,
-+	POWER_SUPPLY_HEALTH_COOL,
-+	POWER_SUPPLY_HEALTH_HOT,
- };
- 
- enum {
 -- 
-2.26.2
-
+tejun
