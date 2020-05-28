@@ -2,85 +2,82 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC4DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5972C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1F6207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B4E207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725994AbgE1EjC (ORCPT
+        id S1726955AbgE1EkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 00:39:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:47000 "EHLO foss.arm.com"
+        Thu, 28 May 2020 00:40:01 -0400
+Received: from verein.lst.de ([213.95.11.211]:54138 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725298AbgE1EjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 00:39:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D20A31B;
-        Wed, 27 May 2020 21:39:01 -0700 (PDT)
-Received: from A010555 (unknown [10.169.38.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43AD03F6C4;
-        Wed, 27 May 2020 21:38:59 -0700 (PDT)
-References: <20200522065330.34872-1-nick.gasson@arm.com> <CAP-5=fU8CJzOttgVDSxqHQoRg_eZ1+sToywOiek+8vw4j2GykA@mail.gmail.com> <xgl9wo4ylyv5.fsf@arm.com> <CAP-5=fUXP7OVEAX+u7-t8VZ9d8xq747kWgdvC_s7=wiHg7iBSw@mail.gmail.com>
-User-agent: mu4e 1.4.5; emacs 26.3
-From:   Nick Gasson <nick.gasson@arm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf jvmti: remove redundant jitdump line table entries
-In-reply-to: <CAP-5=fUXP7OVEAX+u7-t8VZ9d8xq747kWgdvC_s7=wiHg7iBSw@mail.gmail.com>
-Date:   Thu, 28 May 2020 12:38:56 +0800
-Message-ID: <xgl9y2pcfzbz.fsf@arm.com>
+        id S1725298AbgE1EkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 00:40:01 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C991B68B05; Thu, 28 May 2020 06:39:57 +0200 (CEST)
+Date:   Thu, 28 May 2020 06:39:57 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>, x86@kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/23] bpf: handle the compat string in
+ bpf_trace_copy_string better
+Message-ID: <20200528043957.GA28494@lst.de>
+References: <20200521152301.2587579-1-hch@lst.de> <20200521152301.2587579-13-hch@lst.de> <20200527190432.e4af1fba00c13cb1421f5a37@linux-foundation.org> <2b64fae6-394c-c1e5-8963-c256f4284065@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b64fae6-394c-c1e5-8963-c256f4284065@fb.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28/20 02:08 AM, Ian Rogers wrote:
->>
->> I noticed it loses information when the Hotspot code cache is
->> resized. I've been working around that by setting
->> -XX:InitialCodeCacheSize and -XX:ReservedCodeCacheSize to large
->> values. Does this help in your case?
+On Wed, May 27, 2020 at 07:26:30PM -0700, Yonghong Song wrote:
+>> --- a/kernel/trace/bpf_trace.c~xxx
+>> +++ a/kernel/trace/bpf_trace.c
+>> @@ -588,15 +588,22 @@ BPF_CALL_5(bpf_seq_printf, struct seq_fi
+>>   		}
+>>     		if (fmt[i] == 's') {
+>> +			void *unsafe_ptr;
+>> +
+>>   			/* try our best to copy */
+>>   			if (memcpy_cnt >= MAX_SEQ_PRINTF_MAX_MEMCPY) {
+>>   				err = -E2BIG;
+>>   				goto out;
+>>   			}
+>>   -			err = strncpy_from_unsafe(bufs->buf[memcpy_cnt],
+>> -						  (void *) (long) args[fmt_cnt],
+>> -						  MAX_SEQ_PRINTF_STR_LEN);
+>> +			unsafe_ptr = (void *)(long)args[fmt_cnt];
+>> +			if ((unsigned long)unsafe_ptr < TASK_SIZE) {
+>> +				err = strncpy_from_user_nofault(
+>> +					bufs->buf[memcpy_cnt], unsafe_ptr,
+>> +					MAX_SEQ_PRINTF_STR_LEN);
+>> +			} else {
+>> +				err = -EFAULT;
+>> +			}
 >
-> Thanks, I tried and also with Steve's patch:
-> https://lore.kernel.org/lkml/1590544271-125795-1-git-send-email-steve.maclean@linux.microsoft.com/
+> This probably not right.
+> The pointer stored at args[fmt_cnt] is a kernel pointer,
+> but it could be an invalid address and we do not want to fault.
+> Not sure whether it exists or not, we should use 
+> strncpy_from_kernel_nofault()?
 
-Thanks for the reference! That patch fixes the problem I had with code
-cache resizing so the workaround above is no longer necessary.
-
->
-> Trying something very basic like just the -version command with compile only:
-> /tmp/perf/perf record -k 1 -e cycles:u -F 6500 -o /tmp/perf.data java
-> -agentpath:/tmp/perf/libperf-jvmti.so -XX:+PreserveFramePointer
-> -XX:InitialCodeCacheSize=2G -XX:ReservedCodeCacheSize=2G
-> -XX:CompileOnly=1 -version
-> /tmp/perf/perf inject -i /tmp/perf.data -o /tmp/perf-jit.data -j
-> /tmp/perf/perf report -i /tmp/perf-jit.data
->
-> I don't see any of the JDK classes but 35 unknown symbols out of 272.
-> The JDK classes are stripped to some degree iirc, but we should be
-> able to give a symbol name as we don't care about local variables and
-> like.
->
-
-I tried this with latest perf/core and JDK 11 but I don't see any
-[unknown] from jitted-*.so. All the events are in "Interpreter": I think
-the options you want are -Xcomp -Xbatch rather than -XX:CompileOnly=1?
-The latter restricts compilation to the named method/package.
-
-There was a bug where no jitdump debug info was written for classes
-compiled without line tables. That was fixed by d3ea46da3 ("perf jvmti:
-Fix jitdump for methods without debug info").
-
---
-Nick
+If you know it is a kernel pointer with this series it should be
+strncpy_from_kernel_nofault.  But even before the series it should have
+been strncpy_from_unsafe_strict.
