@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0212C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B4420707
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50FE206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389958AbgE1Mrs (ORCPT
+        id S2389988AbgE1Ms1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:47:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53518 "EHLO huawei.com"
+        Thu, 28 May 2020 08:48:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5369 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389827AbgE1Mrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:47:46 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 665B7D89C7569B9AB143;
-        Thu, 28 May 2020 20:46:43 +0800 (CST)
+        id S2389970AbgE1MsW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:48:22 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4C1685302C407AC1B015;
+        Thu, 28 May 2020 20:46:48 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 28 May 2020 20:46:36 +0800
+ 14.3.487.0; Thu, 28 May 2020 20:46:38 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 04/11] net: hns3: modify an incorrect type in struct hclge_cfg_gro_status_cmd
-Date:   Thu, 28 May 2020 20:45:05 +0800
-Message-ID: <1590669912-21867-5-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 09/11] net: hns3: remove two duplicated register macros in hclgevf_main.h
+Date:   Thu, 28 May 2020 20:45:10 +0800
+Message-ID: <1590669912-21867-10-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590669912-21867-1-git-send-email-tanhuazhong@huawei.com>
 References: <1590669912-21867-1-git-send-email-tanhuazhong@huawei.com>
@@ -46,44 +47,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify field .gro_en in struct hclge_cfg_gro_status_cmd to u8
-according to the UM, otherwise, it will overwrite the reserved
-byte which may be used for other purpose.
+HCLGEVF_CMDQ_INTR_SRC_REG and HCLGEVF_CMDQ_INTR_STS_REG are same
+as HCLGEVF_VECTOR0_CMDQ_SRC_REG and HCLGEVF_VECTOR0_CMDQ_STAT_REG,
+replace the former with the latter, and rename macro
+HCLGEVF_VECTOR0_CMDQ_STAT_REG since 'stat' is not abbreviation of
+'state'.
 
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h  | 4 ++--
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 6 +++---
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 4 +---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-index e3bab8f..463f291 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_cmd.h
-@@ -884,8 +884,8 @@ struct hclge_cfg_tso_status_cmd {
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index be5789b..a8c0e79 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -46,7 +46,7 @@ static const u32 cmdq_reg_addr_list[] = {HCLGEVF_CMDQ_TX_ADDR_L_REG,
+ 					 HCLGEVF_CMDQ_RX_TAIL_REG,
+ 					 HCLGEVF_CMDQ_RX_HEAD_REG,
+ 					 HCLGEVF_VECTOR0_CMDQ_SRC_REG,
+-					 HCLGEVF_CMDQ_INTR_STS_REG,
++					 HCLGEVF_VECTOR0_CMDQ_STATE_REG,
+ 					 HCLGEVF_CMDQ_INTR_EN_REG,
+ 					 HCLGEVF_CMDQ_INTR_GEN_REG};
  
- #define HCLGE_GRO_EN_B		0
- struct hclge_cfg_gro_status_cmd {
--	__le16 gro_en;
--	u8 rsv[22];
-+	u8 gro_en;
-+	u8 rsv[23];
- };
+@@ -1826,7 +1826,7 @@ static void hclgevf_dump_rst_info(struct hclgevf_dev *hdev)
+ 	dev_info(&hdev->pdev->dev, "vector0 interrupt enable status: 0x%x\n",
+ 		 hclgevf_read_dev(&hdev->hw, HCLGEVF_MISC_VECTOR_REG_BASE));
+ 	dev_info(&hdev->pdev->dev, "vector0 interrupt status: 0x%x\n",
+-		 hclgevf_read_dev(&hdev->hw, HCLGEVF_VECTOR0_CMDQ_STAT_REG));
++		 hclgevf_read_dev(&hdev->hw, HCLGEVF_VECTOR0_CMDQ_STATE_REG));
+ 	dev_info(&hdev->pdev->dev, "handshake status: 0x%x\n",
+ 		 hclgevf_read_dev(&hdev->hw, HCLGEVF_CMDQ_TX_DEPTH_REG));
+ 	dev_info(&hdev->pdev->dev, "function reset status: 0x%x\n",
+@@ -2250,7 +2250,7 @@ static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
  
- #define HCLGE_TSO_MSS_MIN	256
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 6c84413..87473f7 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1456,7 +1456,7 @@ static int hclge_config_gro(struct hclge_dev *hdev, bool en)
- 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_GRO_GENERIC_CONFIG, false);
- 	req = (struct hclge_cfg_gro_status_cmd *)desc.data;
+ 	/* fetch the events from their corresponding regs */
+ 	cmdq_stat_reg = hclgevf_read_dev(&hdev->hw,
+-					 HCLGEVF_VECTOR0_CMDQ_STAT_REG);
++					 HCLGEVF_VECTOR0_CMDQ_STATE_REG);
  
--	req->gro_en = cpu_to_le16(en ? 1 : 0);
-+	req->gro_en = en ? 1 : 0;
+ 	if (BIT(HCLGEVF_VECTOR0_RST_INT_B) & cmdq_stat_reg) {
+ 		rst_ing_reg = hclgevf_read_dev(&hdev->hw, HCLGEVF_RST_ING);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+index f19583c..738de12 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
+@@ -42,8 +42,6 @@
+ #define HCLGEVF_CMDQ_RX_DEPTH_REG		0x27020
+ #define HCLGEVF_CMDQ_RX_TAIL_REG		0x27024
+ #define HCLGEVF_CMDQ_RX_HEAD_REG		0x27028
+-#define HCLGEVF_CMDQ_INTR_SRC_REG		0x27100
+-#define HCLGEVF_CMDQ_INTR_STS_REG		0x27104
+ #define HCLGEVF_CMDQ_INTR_EN_REG		0x27108
+ #define HCLGEVF_CMDQ_INTR_GEN_REG		0x2710C
  
- 	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
- 	if (ret)
+@@ -88,7 +86,7 @@
+ /* Vector0 interrupt CMDQ event source register(RW) */
+ #define HCLGEVF_VECTOR0_CMDQ_SRC_REG	0x27100
+ /* Vector0 interrupt CMDQ event status register(RO) */
+-#define HCLGEVF_VECTOR0_CMDQ_STAT_REG	0x27104
++#define HCLGEVF_VECTOR0_CMDQ_STATE_REG	0x27104
+ /* CMDQ register bits for RX event(=MBX event) */
+ #define HCLGEVF_VECTOR0_RX_CMDQ_INT_B	1
+ /* RST register bits for RESET event */
 -- 
 2.7.4
 
