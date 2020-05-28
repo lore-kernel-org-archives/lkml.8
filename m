@@ -2,197 +2,176 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E54C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03B862084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WDzd8Sjj"
+	by mail.kernel.org (Postfix) with ESMTP id 2FC03207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391136AbgE1OX1 (ORCPT
+        id S2391133AbgE1OXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:23:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391061AbgE1OXE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:23:04 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8CDDC08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:23:03 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id u23so2457045otq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mfUajei3iY431nisNFP6PkBPo+jJ4W41Aia4LnYABWQ=;
-        b=WDzd8SjjNwXMO9jBFUV22UICn3QjNtcIylC9U7B5hY6KJbg26B2840mcDU5p4vDnUv
-         Nr2/JmqmCShZ5RHiRzLG/iiQrswuopP6l/PjjSpVLaGCA/ItEoLa3w9ZwykJpdQf2c6i
-         n28dNbkFyHKyZVM6cJTF+DTySwOnOIkSVXCnc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mfUajei3iY431nisNFP6PkBPo+jJ4W41Aia4LnYABWQ=;
-        b=PBm/9HqgKGeB3jxasdh2vYDFINYy0e0NQ2EzjocoshrX3gnBXq1HBocMXiOagXj37v
-         XCrVaZCuIRyoUY9bcxhyye39L8RwcAx8U5QpZaUWZfra2bIZP2AqcAvB31bKUDO6E/1v
-         uMc3teyk6IzbWN3q4ZX1tViOgarDPWHATUfsljf394q9h6mvTSkCQ8DkmkpNMMZ0LvcF
-         2zcF1eocmPOJ8i2yJheVjSLsDmmHg7YTy5QoaOHc4MBWyZmLs/Aqa7eVjpLQcBRZ85Rg
-         sWPLj5/B6nrGAyeubPbwOZj6FCYs5nMOf6c+gXetetY1XnA0dwvld3zIGouATW5HvQK5
-         j3qg==
-X-Gm-Message-State: AOAM530lrDXMhxgMy/esBaQ1UtLTMFe3bYTSTWNUTy+MVIJhxldwp1YW
-        AkpH9icFsgKzmLdxEGtJLcCEqLyOEYB0vHY917W94Q==
-X-Google-Smtp-Source: ABdhPJwNxg9CMM36a6ht/5xuPEOxoI2pKA/i8iJaW3IruTtJtLbKte8opXy9jpqttbU0T/qneElqZ9s39dTzaiuFbOY=
-X-Received: by 2002:a9d:1d1:: with SMTP id e75mr2300297ote.303.1590675782856;
- Thu, 28 May 2020 07:23:02 -0700 (PDT)
+        Thu, 28 May 2020 10:23:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:16004 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391124AbgE1OXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:23:20 -0400
+IronPort-SDR: lxxeuY1xtGBc8ReuYBabQ3YbmTCLgKOBZVaZBGat8znseOXQbEf8t8xzcrkTXY/ihdAGvjqkkk
+ LmyFF2JpMlsA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:22:21 -0700
+IronPort-SDR: gNo5fESEi88ICadxnRas20uQR259e56xhdit7Lv5R8UYFfHWazi64BmuzHavftCD2mQZeNAS9d
+ d118Lf7jKUyg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,444,1583222400"; 
+   d="scan'208";a="267231578"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga003.jf.intel.com with ESMTP; 28 May 2020 07:22:18 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jeJQL-009RLS-03; Thu, 28 May 2020 17:22:21 +0300
+Date:   Thu, 28 May 2020 17:22:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 04/10] dmaengine: Introduce max SG list entries
+ capability
+Message-ID: <20200528142220.GR1634618@smile.fi.intel.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-5-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-References: <20200512085944.222637-1-daniel.vetter@ffwll.ch>
- <20200512085944.222637-3-daniel.vetter@ffwll.ch> <81b3a3be-b818-9e7c-e93e-ecf161bec94c@shipmail.org>
-In-Reply-To: <81b3a3be-b818-9e7c-e93e-ecf161bec94c@shipmail.org>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Thu, 28 May 2020 16:22:51 +0200
-Message-ID: <CAKMK7uHb-DTKqiBKbcKuVeWPmRBsnq2QjWXQ44oLDE=qxLVvJA@mail.gmail.com>
-Subject: Re: [RFC 02/17] dma-fence: basic lockdep annotations
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28Intel=29?= 
-        <thomas_os@shipmail.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200526225022.20405-5-Sergey.Semin@baikalelectronics.ru>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 3:37 PM Thomas Hellstr=C3=B6m (Intel)
-<thomas_os@shipmail.org> wrote:
->
-> On 2020-05-12 10:59, Daniel Vetter wrote:
-> > Design is similar to the lockdep annotations for workers, but with
-> > some twists:
-> >
-> > - We use a read-lock for the execution/worker/completion side, so that
-> >    this explicit annotation can be more liberally sprinkled around.
-> >    With read locks lockdep isn't going to complain if the read-side
-> >    isn't nested the same way under all circumstances, so ABBA deadlocks
-> >    are ok. Which they are, since this is an annotation only.
-> >
-> > - We're using non-recursive lockdep read lock mode, since in recursive
-> >    read lock mode lockdep does not catch read side hazards. And we
-> >    _very_ much want read side hazards to be caught. For full details of
-> >    this limitation see
-> >
-> >    commit e91498589746065e3ae95d9a00b068e525eec34f
-> >    Author: Peter Zijlstra <peterz@infradead.org>
-> >    Date:   Wed Aug 23 13:13:11 2017 +0200
-> >
-> >        locking/lockdep/selftests: Add mixed read-write ABBA tests
-> >
-> > - To allow nesting of the read-side explicit annotations we explicitly
-> >    keep track of the nesting. lock_is_held() allows us to do that.
-> >
-> > - The wait-side annotation is a write lock, and entirely done within
-> >    dma_fence_wait() for everyone by default.
-> >
-> > - To be able to freely annotate helper functions I want to make it ok
-> >    to call dma_fence_begin/end_signalling from soft/hardirq context.
-> >    First attempt was using the hardirq locking context for the write
-> >    side in lockdep, but this forces all normal spinlocks nested within
-> >    dma_fence_begin/end_signalling to be spinlocks. That bollocks.
-> >
-> >    The approach now is to simple check in_atomic(), and for these cases
-> >    entirely rely on the might_sleep() check in dma_fence_wait(). That
-> >    will catch any wrong nesting against spinlocks from soft/hardirq
-> >    contexts.
-> >
-> > The idea here is that every code path that's critical for eventually
-> > signalling a dma_fence should be annotated with
-> > dma_fence_begin/end_signalling. The annotation ideally starts right
-> > after a dma_fence is published (added to a dma_resv, exposed as a
-> > sync_file fd, attached to a drm_syncobj fd, or anything else that
-> > makes the dma_fence visible to other kernel threads), up to and
-> > including the dma_fence_wait(). Examples are irq handlers, the
-> > scheduler rt threads, the tail of execbuf (after the corresponding
-> > fences are visible), any workers that end up signalling dma_fences and
-> > really anything else. Not annotated should be code paths that only
-> > complete fences opportunistically as the gpu progresses, like e.g.
-> > shrinker/eviction code.
-> >
-> > The main class of deadlocks this is supposed to catch are:
-> >
-> > Thread A:
-> >
-> >       mutex_lock(A);
-> >       mutex_unlock(A);
-> >
-> >       dma_fence_signal();
-> >
-> > Thread B:
-> >
-> >       mutex_lock(A);
-> >       dma_fence_wait();
-> >       mutex_unlock(A);
-> >
-> > Thread B is blocked on A signalling the fence, but A never gets around
-> > to that because it cannot acquire the lock A.
-> >
-> > Note that dma_fence_wait() is allowed to be nested within
-> > dma_fence_begin/end_signalling sections. To allow this to happen the
-> > read lock needs to be upgraded to a write lock, which means that any
-> > other lock is acquired between the dma_fence_begin_signalling() call an=
-d
-> > the call to dma_fence_wait(), and still held, this will result in an
-> > immediate lockdep complaint. The only other option would be to not
-> > annotate such calls, defeating the point. Therefore these annotations
-> > cannot be sprinkled over the code entirely mindless to avoid false
-> > positives.
-> >
-> > v2: handle soft/hardirq ctx better against write side and dont forget
-> > EXPORT_SYMBOL, drivers can't use this otherwise.
-> >
-> > Cc: linux-media@vger.kernel.org
-> > Cc: linaro-mm-sig@lists.linaro.org
-> > Cc: linux-rdma@vger.kernel.org
-> > Cc: amd-gfx@lists.freedesktop.org
-> > Cc: intel-gfx@lists.freedesktop.org
-> > Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
->
-> LGTM. Perhaps some in-code documentation on how to use the new functions
-> are called.
+On Wed, May 27, 2020 at 01:50:15AM +0300, Serge Semin wrote:
+> Some devices may lack the support of the hardware accelerated SG list
+> entries automatic walking through and execution. In this case a burden of
+> the SG list traversal and DMA engine re-initialization lies on the
+> DMA engine driver (normally implemented by using a DMA transfer completion
+> IRQ to recharge the DMA device with a next SG list entry). But such
+> solution may not be suitable for some DMA consumers. In particular SPI
+> devices need both Tx and Rx DMA channels work synchronously in order
+> to avoid the Rx FIFO overflow. In case if Rx DMA channel is paused for
+> some time while the Tx DMA channel works implicitly pulling data into the
+> Rx FIFO, the later will be eventually overflown, which will cause the data
+> loss. So if SG list entries aren't automatically fetched by the DMA
+> engine, but are one-by-one manually selected for execution in the
+> ISRs/deferred work/etc., such problem will eventually happen due to the
+> non-deterministic latencies of the service execution.
+> 
+> In order to let the DMA consumer know about the DMA device capabilities
+> regarding the hardware accelerated SG list traversal we introduce the
+> max_sg_list capability. It is supposed to be initialized by the DMA engine
+> driver with 0 if there is no limitation for the number of SG entries
+> atomically executed and with non-zero value if there is such constraints,
+> so the upper limit is determined by the number set to the property.
 
-See cover letter, that's going to be done for next round. For this one
-here I just wanted to showcase a bit how it's used in a few different
-places, mostly selected to get as much feedback from across different
-drivers. Hence e.g. annotating drm/scheduler.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Otherwise for patch 2 and 3,
->
-> Reviewed-by: Thomas Hellstrom <thomas.hellstrom@intel.com>
+But see below.
 
-I think I'll just cc you for the next round with docs, so you can make
-sure it looks ok :-)
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: linux-mips@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> 
+> ---
+> 
+> Changelog v3:
+> - This is a new patch created as a result of the discussion with Vinud and
+>   Andy in the framework of DW DMA burst and LLP capabilities.
+> ---
+>  drivers/dma/dmaengine.c   | 1 +
+>  include/linux/dmaengine.h | 8 ++++++++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index b332ffe52780..ad56ad58932c 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -592,6 +592,7 @@ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps)
+>  	caps->directions = device->directions;
+>  	caps->min_burst = device->min_burst;
+>  	caps->max_burst = device->max_burst;
+> +	caps->max_sg_nents = device->max_sg_nents;
+>  	caps->residue_granularity = device->residue_granularity;
+>  	caps->descriptor_reuse = device->descriptor_reuse;
+>  	caps->cmd_pause = !!device->device_pause;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 0c7403b27133..6801200c76b6 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -467,6 +467,9 @@ enum dma_residue_granularity {
+>   *	should be checked by controller as well
+>   * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+> + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> + *	value means unlimited number if entries.
+
+if -> of ?
+
+>   * @cmd_pause: true, if pause is supported (i.e. for reading residue or
+>   *	       for resume later)
+>   * @cmd_resume: true, if resume is supported
+> @@ -481,6 +484,7 @@ struct dma_slave_caps {
+>  	u32 directions;
+>  	u32 min_burst;
+>  	u32 max_burst;
+> +	u32 max_sg_nents;
+>  	bool cmd_pause;
+>  	bool cmd_resume;
+>  	bool cmd_terminate;
+> @@ -773,6 +777,9 @@ struct dma_filter {
+>   *	should be checked by controller as well
+>   * @min_burst: min burst capability per-transfer
+>   * @max_burst: max burst capability per-transfer
+> + * @max_sg_nents: max number of SG list entries executed in a single atomic
+> + *	DMA tansaction with no intermediate IRQ for reinitialization. Zero
+> + *	value means unlimited number if entries.
+
+Ditto.
+
+>   * @residue_granularity: granularity of the transfer residue reported
+>   *	by tx_status
+>   * @device_alloc_chan_resources: allocate resources and return the
+> @@ -844,6 +851,7 @@ struct dma_device {
+>  	u32 directions;
+>  	u32 min_burst;
+>  	u32 max_burst;
+> +	u32 max_sg_nents;
+>  	bool descriptor_reuse;
+>  	enum dma_residue_granularity residue_granularity;
+>  
+> -- 
+> 2.26.2
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
