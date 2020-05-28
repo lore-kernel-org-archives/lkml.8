@@ -2,116 +2,133 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D926FC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFD8208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:24:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFjCitPC"
+	by mail.kernel.org (Postfix) with ESMTP id C616B207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406524AbgE1TYx (ORCPT
+        id S2406368AbgE1TZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406339AbgE1TVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:21:23 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AABBC08C5C7;
-        Thu, 28 May 2020 12:21:23 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ci21so19764pjb.3;
-        Thu, 28 May 2020 12:21:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=vSuzW0Fxrw3Yl1GJT8aprzfotLQBAijlg/osXVZg1ZM=;
-        b=uFjCitPCaxYsDgzV4wY1TYNB22WXNriao+rasyTp6fx8oUZ/jZ7LgLdWFPCix2CDJc
-         z4qY3S0mUwvqMnika7IAV6uS4E86uY25zzhpyepLrEp5b1zRPkXDOjoB0+lYgNWDXX6h
-         vMWU0khZBLbCGrYW9folMLTTFn1jp6ztO4gRdezIfWp1n+z6E00zo1yw8NO8Qk8SyxHf
-         PvNj1FwA6pZJwNXWBRyXVE8yFxdvh9QPUIa08WFfmWY/f/HejHq+ivPHf328ty5i3BtO
-         KKMfa0DjB4e6NewHLjKz51JfVMJJsWyyL2Pvfa1/fUosoMEqT7mnwu8znYPWKWxmr+oo
-         Qu2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=vSuzW0Fxrw3Yl1GJT8aprzfotLQBAijlg/osXVZg1ZM=;
-        b=W/IaFzveKFBnyBN1gF6ePiqFKmnMY5hCPQ1MCHAVvvFoGWO2sW1EWLx1UprJUL7QJU
-         If4ojwuRiZnLBCLZGUsdBuLdCp9CRWvxlv6kOtpgIhEM+uV/RCR5XH967N9+50x12w8z
-         x2DKbHxAveDypgnBGwbla3dvhreV7FfQCXLsfjFbiovH2/t66IBF7zMH15bDPy77+UUb
-         22/jtyVjLbvr12T3g8Ae6SyjEVh1sRGYkJvkKRT6bUzEEDbtmhUIMH3CR8+fsym0OOMZ
-         /v7IA1xCEv2qt9h2nrEfQwxlRjvT0fTBw3clVO/DLQKA2GJe7CSA8amavr+wd2lRT43d
-         0tqw==
-X-Gm-Message-State: AOAM533e9QJS4pUJaMn7u/4RjzTklefAfPrwfIHjWJA8+Qd8qKfM2GSn
-        MqaihCpxtI7dWF74WOsAlq/nvS+m
-X-Google-Smtp-Source: ABdhPJxYZhtmszsYJLmUdd8l8q5G5dedGQN9zo/773iAKQPdmlh60srlYF2tMJPwXu8PQYIGNSV0lQ==
-X-Received: by 2002:a17:90a:268f:: with SMTP id m15mr5789502pje.190.1590693682172;
-        Thu, 28 May 2020 12:21:22 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:21:21 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH 2/4] dt-bindings: pinctrl: Document optional BCM7211 wake-up interrupts
-Date:   Thu, 28 May 2020 12:21:10 -0700
-Message-Id: <20200528192112.26123-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200528192112.26123-1-f.fainelli@gmail.com>
-References: <20200528192112.26123-1-f.fainelli@gmail.com>
+        Thu, 28 May 2020 15:25:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43406 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406316AbgE1TZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:25:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C9353AEE8;
+        Thu, 28 May 2020 19:25:03 +0000 (UTC)
+Subject: Re: [PATCH v2 00/12] clean-up the migration target allocation
+ functions
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <45a8ee8b-ec3a-df0f-fe23-6f64097cd263@suse.cz>
+Date:   Thu, 28 May 2020 21:25:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <1590561903-13186-1-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM7211 supports wake-up interrupts in the form of optional interrupt
-lines, one per bank, plus the "all banks" interrupt line.
+On 5/27/20 8:44 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> This patchset clean-up the migration target allocation functions.
+> 
+> * Changes on v2
+> - add acked-by tags
+> - fix missing compound_head() call for the patch #3
+> - remove thisnode field on alloc_control and use __GFP_THISNODE directly
+> - fix missing __gfp_mask setup for the patch
+> "mm/hugetlb: do not modify user provided gfp_mask"
+> 
+> * Cover-letter
+> 
+> Contributions of this patchset are:
+> 1. unify two hugetlb alloc functions. As a result, one is remained.
+> 2. make one external hugetlb alloc function to internal one.
+> 3. unify three functions for migration target allocation.
+> 
+> The patchset is based on next-20200526.
+> The patchset is available on:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt         | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+I went through the series and I'd like to make some high-level suggestions
+first, that should hopefully simplify the code a bit more and reduce churn:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-index dfc67b90591c..5682b2010e50 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-@@ -16,7 +16,9 @@ Required properties:
-   second cell is used to specify optional parameters:
-   - bit 0 specifies polarity (0 for normal, 1 for inverted)
- - interrupts : The interrupt outputs from the controller. One interrupt per
--  individual bank followed by the "all banks" interrupt.
-+  individual bank followed by the "all banks" interrupt. For BCM7211, an
-+  additional set of per-bank interrupt line and an "all banks" wake-up
-+  interrupt may be specified.
- - interrupt-controller: Marks the device node as an interrupt controller.
- - #interrupt-cells : Should be 2.
-   The first cell is the GPIO number.
--- 
-2.17.1
+- in the series, alloc_huge_page_nodemask() becomes the only caller of
+alloc_migrate_huge_page(). So you can inline the code there, and it's one less
+function out of many with similar name :)
+
+- after that, alloc_huge_page_nodemask(ac) uses ac mostly just to extract
+individual fields, and only pass it as a whole to dequeue_huge_page_nodemask().
+The only other caller of dequeue...() is dequeue_huge_page_vma() who has to
+construct ac from scratch. It might be probably simpler not to introduce struct
+alloc_control into hugetlb code at all, and only keep it for
+alloc_migrate_target(), at which point it can have a more specific name as
+discussed and there's less churn
+
+- I'd suggest not change signature of migrate_pages(), free_page_t and
+new_page_t, keeping the opaque private field is fine as not all callbacks use
+struct alloc_context pointer, and then e.g. compaction_alloc has to use the
+private field etc. alloc_migration_target() can simply cast the private to
+struct alloc_control *ac as the first thing
+
+Thanks!
+Vlastimil
+
+> https://github.com/JoonsooKim/linux/tree/cleanup-migration-target-allocation-v2.00-next-20200526
+> 
+> Thanks.
+> 
+> Joonsoo Kim (12):
+>   mm/page_isolation: prefer the node of the source page
+>   mm/migrate: move migration helper from .h to .c
+>   mm/hugetlb: introduce alloc_control structure to simplify migration
+>     target allocation APIs
+>   mm/hugetlb: use provided ac->gfp_mask for allocation
+>   mm/hugetlb: unify hugetlb migration callback function
+>   mm/hugetlb: make hugetlb migration target allocation APIs CMA aware
+>   mm/hugetlb: do not modify user provided gfp_mask
+>   mm/migrate: change the interface of the migration target alloc/free
+>     functions
+>   mm/migrate: make standard migration target allocation functions
+>   mm/gup: use standard migration target allocation function
+>   mm/mempolicy: use standard migration target allocation function
+>   mm/page_alloc: use standard migration target allocation function
+>     directly
+> 
+>  include/linux/hugetlb.h        | 33 ++++++---------
+>  include/linux/migrate.h        | 44 +++++---------------
+>  include/linux/page-isolation.h |  4 +-
+>  mm/compaction.c                | 15 ++++---
+>  mm/gup.c                       | 60 +++++-----------------------
+>  mm/hugetlb.c                   | 91 ++++++++++++++++++++----------------------
+>  mm/internal.h                  | 12 +++++-
+>  mm/memory-failure.c            | 14 ++++---
+>  mm/memory_hotplug.c            | 10 +++--
+>  mm/mempolicy.c                 | 38 ++++++------------
+>  mm/migrate.c                   | 72 +++++++++++++++++++++++++--------
+>  mm/page_alloc.c                |  9 ++++-
+>  mm/page_isolation.c            |  5 ---
+>  13 files changed, 191 insertions(+), 216 deletions(-)
+> 
 
