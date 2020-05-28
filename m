@@ -2,164 +2,100 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A04C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37907C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D72942078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E0F8208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590629177;
+	bh=FrkNrOnyuxxgqjKw18LCwgpFRO2g3jWI9Z3k+0njVXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gD1xY12su1iZWxc8eSAMXTcs1lP2xkxl7Q+cE0F9qQT8lscMIJJaxAxeybDVB2/aH
+	 8cNWu+6hQP+qdcKSXlwCoGk3iFauy0o1iaY0WTG8MKGVzldfVRxzvnkju6zt4Q7Hsz
+	 07k0npX2+0kp5WTam3rTFBK3kyjC34L6iwfJKmiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbgE1BYn (ORCPT
+        id S1726207AbgE1B0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:24:43 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43928 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbgE1BYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:24:42 -0400
-Received: from [10.130.0.52] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2vVEs9eUek5AA--.875S3;
-        Thu, 28 May 2020 09:24:39 +0800 (CST)
-Subject: Re: [PATCH] MIPS: DTS: Only build subdir of current platform
-To:     Guenter Roeck <linux@roeck-us.net>
-References: <1590027306-2137-1-git-send-email-yangtiezhu@loongson.cn>
- <20200527231055.GA141265@roeck-us.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1f29c8f8-730c-d8d4-c8ed-cdf9f02e981f@loongson.cn>
-Date:   Thu, 28 May 2020 09:24:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 27 May 2020 21:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbgE1B0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:26:15 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B1920888;
+        Thu, 28 May 2020 01:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590629175;
+        bh=FrkNrOnyuxxgqjKw18LCwgpFRO2g3jWI9Z3k+0njVXQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NR0QGGZyrKSAieQ6Pte0JsOsZzZtDrD/6rX7sz1N5YPNmxprW3x2V4nULOEE1cWRG
+         Dy4fT75efExtLjP7Zhl813wPkRRXrWe0utFYw/Ri3IeChB4nngDk6kCf0VN6dNqASl
+         aGG0gQHe6NM6lFMSuH31TZ/qwV9LI8z5h6y4Es8A=
+Date:   Wed, 27 May 2020 18:26:15 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH 3/3] f2fs: fix to cover meta flush with cp_lock
+Message-ID: <20200528012615.GA232094@google.com>
+References: <20200527102753.15743-1-yuchao0@huawei.com>
+ <20200527102753.15743-3-yuchao0@huawei.com>
+ <20200527210233.GC206249@google.com>
+ <23245f6e-528d-43ab-57b6-4ca16db43fe5@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527231055.GA141265@roeck-us.net>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxr2vVEs9eUek5AA--.875S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4xuF1xXr4UtFy3ZrW7XFb_yoWrXw4kpr
-        W3Aa1qqayxWF1Syr1fJrykWryfAr45JFZruFs8Gr17Aa9F9a40vr1ftFsayr1UZrWrta4I
-        grWfWFW7AFn5AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvj14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-        4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-        Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-        WUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07Al
-        zVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-        0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1l
-        IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-        AFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_
-        Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5W
-        lkUUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <23245f6e-528d-43ab-57b6-4ca16db43fe5@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/28/2020 07:10 AM, Guenter Roeck wrote:
-> On Thu, May 21, 2020 at 10:15:06AM +0800, Tiezhu Yang wrote:
->> Add config check in Makefile to only build the subdir of current platform.
->>
->> E.g. without this patch:
->>
->>    AR      arch/mips/built-in.a
->>    AR      arch/mips/boot/dts/brcm/built-in.a
->>    AR      arch/mips/boot/dts/cavium-octeon/built-in.a
->>    AR      arch/mips/boot/dts/img/built-in.a
->>    AR      arch/mips/boot/dts/ingenic/built-in.a
->>    AR      arch/mips/boot/dts/lantiq/built-in.a
->>    DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
->>    DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
->>    AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
->>    DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
->>    DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
->>    AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
->>    AR      arch/mips/boot/dts/loongson/built-in.a
->>    AR      arch/mips/boot/dts/mscc/built-in.a
->>    AR      arch/mips/boot/dts/mti/built-in.a
->>    AR      arch/mips/boot/dts/netlogic/built-in.a
->>    AR      arch/mips/boot/dts/ni/built-in.a
->>    AR      arch/mips/boot/dts/pic32/built-in.a
->>    AR      arch/mips/boot/dts/qca/built-in.a
->>    AR      arch/mips/boot/dts/ralink/built-in.a
->>    AR      arch/mips/boot/dts/xilfpga/built-in.a
->>    AR      arch/mips/boot/dts/built-in.a
->>
->> With this patch:
->>
->>    AR      arch/mips/built-in.a
->>    DTC     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb
->>    DTB     arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.S
->>    AS      arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dtb.o
->>    DTC     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb
->>    DTB     arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.S
->>    AS      arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dtb.o
->>    AR      arch/mips/boot/dts/loongson/built-in.a
->>    AR      arch/mips/boot/dts/built-in.a
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> With this patch applied, boston.dtb is no longer built with
-> 64r6el_defconfig, even though 64r6el_defconfig enables
-> CONFIG_FIT_IMAGE_FDT_BOSTON=y. This is because the img
-> subdirectory is now only included if CONFIG_MACH_PISTACHIO=y,
-> but that is not the case with 64r6el_defconfig.
+On 05/28, Chao Yu wrote:
+> On 2020/5/28 5:02, Jaegeuk Kim wrote:
+> > On 05/27, Chao Yu wrote:
+> >> meta inode page should be flushed under cp_lock, fix it.
+> > 
+> > It doesn't matter for this case, yes?
+> 
+> It's not related to discard issue.
 
-Thanks for your report, sorry for this issue.
+I meant we really need this or not. :P
 
-I received the build error report yesterday from
-kbuild test robot <lkp@intel.com>, I will fix it.
-
->
-> Please revisit.
->
-> Guenter
->
->> ---
->>   arch/mips/boot/dts/Makefile | 28 ++++++++++++++--------------
->>   1 file changed, 14 insertions(+), 14 deletions(-)
->>
->> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
->> index d429a69..dce32d1 100644
->> --- a/arch/mips/boot/dts/Makefile
->> +++ b/arch/mips/boot/dts/Makefile
->> @@ -1,17 +1,17 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> -subdir-y	+= brcm
->> -subdir-y	+= cavium-octeon
->> -subdir-y	+= img
->> -subdir-y	+= ingenic
->> -subdir-y	+= lantiq
->> -subdir-y	+= loongson
->> -subdir-y	+= mscc
->> -subdir-y	+= mti
->> -subdir-y	+= netlogic
->> -subdir-y	+= ni
->> -subdir-y	+= pic32
->> -subdir-y	+= qca
->> -subdir-y	+= ralink
->> -subdir-y	+= xilfpga
->> +subdir-$(CONFIG_BMIPS_GENERIC)		+= brcm
->> +subdir-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon
->> +subdir-$(CONFIG_MACH_PISTACHIO)		+= img
->> +subdir-$(CONFIG_MACH_INGENIC)		+= ingenic
->> +subdir-$(CONFIG_LANTIQ)			+= lantiq
->> +subdir-$(CONFIG_MACH_LOONGSON64)	+= loongson
->> +subdir-$(CONFIG_MSCC_OCELOT)		+= mscc
->> +subdir-$(CONFIG_MIPS_MALTA)		+= mti
->> +subdir-$(CONFIG_NLM_XLP_BOARD)		+= netlogic
->> +subdir-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= ni
->> +subdir-$(CONFIG_MACH_PIC32)		+= pic32
->> +subdir-$(CONFIG_ATH79)			+= qca
->> +subdir-$(CONFIG_RALINK)			+= ralink
->> +subdir-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= xilfpga
->>   
->>   obj-$(CONFIG_BUILTIN_DTB)	:= $(addsuffix /, $(subdir-y))
->> -- 
->> 2.1.0
->>
-
+> 
+> Now, I got some progress, I can reproduce that bug occasionally.
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >> ---
+> >>  fs/f2fs/file.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >> index f7de2a1da528..0fcae4d90074 100644
+> >> --- a/fs/f2fs/file.c
+> >> +++ b/fs/f2fs/file.c
+> >> @@ -2260,7 +2260,9 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
+> >>  		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
+> >>  		break;
+> >>  	case F2FS_GOING_DOWN_METAFLUSH:
+> >> +		mutex_lock(&sbi->cp_mutex);
+> >>  		f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_META_IO);
+> >> +		mutex_unlock(&sbi->cp_mutex);
+> >>  		f2fs_stop_checkpoint(sbi, false);
+> >>  		set_sbi_flag(sbi, SBI_IS_SHUTDOWN);
+> >>  		break;
+> >> -- 
+> >> 2.18.0.rc1
+> > .
+> > 
