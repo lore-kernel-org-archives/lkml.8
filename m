@@ -2,101 +2,106 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E48C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C10C207CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 021B3207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590631168;
+	bh=f+8uYByHjJyZ01uYG5pSv1ZMt/fLT2/K91SdYiWRq5U=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=V22w5KHQsLwbfMR44sZMRMrTXCZmGK5yEOmCbfHu7TTtqahwDOTfPbsSPm3Pebvn7
+	 REUNhXRwDMggtSlV8OX+s1NOmlCXM39At8vDTrmBROXM8MnWqLx164Rl+ROFTj9cRT
+	 v1ZfRtSe0r4QlvaCno6yqkRhF40jDsL0JQyyDM54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgE1B7O (ORCPT
+        id S1726890AbgE1B71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:59:14 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:50136 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725896AbgE1B7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:59:14 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2rmGs9ed+05AA--.979S2;
-        Thu, 28 May 2020 09:59:03 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        kbuild test robot <lkp@intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] MIPS: DTS: Fix build errors used with various configs
-Date:   Thu, 28 May 2020 09:59:01 +0800
-Message-Id: <1590631141-23904-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxD2rmGs9ed+05AA--.979S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF43Zw17Wr15ZF4UJw18Xwb_yoW8Cw17pa
-        95Arsrt34xXryUJrWxAF1DWr90yan8CFWDuF4kCw4UGrZ5X3yUZrn3trsxtF18Ww18Ja1x
-        KFs7KrZxArn8taUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkj14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0E
-        wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-        80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
-        I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
-        k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUywZ7UUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 27 May 2020 21:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbgE1B70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:59:26 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8062B207CB;
+        Thu, 28 May 2020 01:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590631165;
+        bh=f+8uYByHjJyZ01uYG5pSv1ZMt/fLT2/K91SdYiWRq5U=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=yD7Uu1nQC3xDzb9PlMBLlcHcr4LToVohxsPcF3NquhIallyf3+LUL9fUdQV+eOave
+         LRdvu88+vs9sedAjrVT/3+bQ0BoHF+ApEaZQ5sj9bvl3lvXe+znrcqnng0gnags5x7
+         g8cODBavPQ5F4DxJ5c+5JoNBJAAKmMBVFL+3eVEE=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1590582292-13314-5-git-send-email-sivaprak@codeaurora.org>
+References: <1590582292-13314-1-git-send-email-sivaprak@codeaurora.org> <1590582292-13314-5-git-send-email-sivaprak@codeaurora.org>
+Subject: Re: [PATCH V6 4/5] clk: qcom: Add ipq6018 apss clock controller
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     Sivaprakash Murugesan <sivaprak@codeaurora.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        robh+dt@kernel.org
+Date:   Wed, 27 May 2020 18:59:24 -0700
+Message-ID: <159063116486.69627.5280506237179820811@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_MIPS_MALTA is not set but CONFIG_LEGACY_BOARD_SEAD3 is set,
-the subdir arch/mips/boot/dts/mti will not be built, so the sead3.dts
-which depends on CONFIG_LEGACY_BOARD_SEAD3 in this subdir is also not
-built, and then there exists the following build error, fix it.
+Quoting Sivaprakash Murugesan (2020-05-27 05:24:51)
+> diff --git a/drivers/clk/qcom/apss-ipq6018.c b/drivers/clk/qcom/apss-ipq6=
+018.c
+> new file mode 100644
+> index 0000000..004f7e1
+> --- /dev/null
+> +++ b/drivers/clk/qcom/apss-ipq6018.c
+> @@ -0,0 +1,106 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/err.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/regmap.h>
+> +#include <linux/module.h>
+> +
+> +#include <dt-bindings/clock/qcom,apss-ipq.h>
+> +
+> +#include "common.h"
+> +#include "clk-regmap.h"
+> +#include "clk-branch.h"
+> +#include "clk-alpha-pll.h"
+> +#include "clk-regmap-mux.h"
+> +
+> +enum {
+> +       P_XO,
+> +       P_APSS_PLL_EARLY,
+> +};
+> +
+> +static const struct clk_parent_data parents_apcs_alias0_clk_src[] =3D {
+> +       { .fw_name =3D "xo" },
+> +       { .fw_name =3D "pll" },
 
-  LD      .tmp_vmlinux.kallsyms1
-arch/mips/generic/board-sead3.o:(.mips.machines.init+0x4): undefined reference to `__dtb_sead3_begin'
-Makefile:1106: recipe for target 'vmlinux' failed
-make: *** [vmlinux] Error 1
+This pll clk is not described in the binding. Please add it there.
 
-Additionally, add CONFIG_FIT_IMAGE_FDT_BOSTON check for subdir img to
-fix the following build error when CONFIG_MACH_PISTACHIO is not set but
-CONFIG_FIT_IMAGE_FDT_BOSTON is set.
-
-FATAL ERROR: Couldn't open "boot/dts/img/boston.dtb": No such file or directory
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Fixes: 41528ba6afe6 ("MIPS: DTS: Only build subdir of current platform")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/boot/dts/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index dce32d1..1902712 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -2,11 +2,13 @@
- subdir-$(CONFIG_BMIPS_GENERIC)		+= brcm
- subdir-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon
- subdir-$(CONFIG_MACH_PISTACHIO)		+= img
-+subdir-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= img
- subdir-$(CONFIG_MACH_INGENIC)		+= ingenic
- subdir-$(CONFIG_LANTIQ)			+= lantiq
- subdir-$(CONFIG_MACH_LOONGSON64)	+= loongson
- subdir-$(CONFIG_MSCC_OCELOT)		+= mscc
- subdir-$(CONFIG_MIPS_MALTA)		+= mti
-+subdir-$(CONFIG_LEGACY_BOARD_SEAD3)	+= mti
- subdir-$(CONFIG_NLM_XLP_BOARD)		+= netlogic
- subdir-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= ni
- subdir-$(CONFIG_MACH_PIC32)		+= pic32
--- 
-2.1.0
-
+> +};
+> +
+> +static const struct parent_map parents_apcs_alias0_clk_src_map[] =3D {
+> +       { P_XO, 0 },
+> +       { P_APSS_PLL_EARLY, 5 },
+> +};
+> +
