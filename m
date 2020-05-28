@@ -3,88 +3,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E17E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B56C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCE45208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB9C2088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590696852;
-	bh=mKTzCZU5AFOxovmWtHeaXEOI3N9uTGAkJumh83kx0Jc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wDpqdZYRaGncucBk48j70/u0tFzmZAvYrp82Pylu6jDPIBqHR/VgpZfHagqhcV334
-	 F4YwaGcEol8npwRvXnsEkjXf9uhXdUU/GJbTWyOv1E5AlDum+1uXfslKJsK6mC60t0
-	 pREfY341GCtcNYWwmu59fFV3JziEUqaReeq4mqkg=
+	s=default; t=1590696863;
+	bh=MV7WUd24PE8fRkx618Y03OhhvRP2m37PebgijiWKHpo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WT1Db33hkKAj9ZTcmhCCJBHd9EulBck3L7gAcv0FUtlKrvZW7BKxJu3aoNCCydvAC
+	 7Vu7sWzPpG8wW12zGrpUq93/WUY5hfUgqxn9qlzWZ4daa85By/Yhgv02n17Re3/sS1
+	 Tr5+T3+FznJOJH64hqHqOoHh4pm/emLC7ejPl6C8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406995AbgE1UOM (ORCPT
+        id S2407010AbgE1UOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 28 May 2020 16:14:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406993AbgE1UOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 16:14:12 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36542 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406973AbgE1UOG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:14:06 -0400
-Received: by mail-io1-f67.google.com with SMTP id y18so11137569iow.3;
-        Thu, 28 May 2020 13:14:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ordAPfbXh0vTNSOfZvda6IBNsIk8jcPKfQPA59PO4to=;
-        b=rNOJyA3UV9c8t5pVI3h0GYZ+nFv8Ug+cM91taFhqyuZSxgHfQfDRRIy0wjCrWWCmC3
-         65TqCwK2qDg3sRTVI+WTIrtnqpjqMemGxQQnETYHu1aP6sKr4xUPUbZ7GEdi9jG8Xd4g
-         GmY1r3s89pp8LWVusysSVpA2TlNi01kqYPEWRdSRpYwQCuMh9VNNSUjhzJsO363ssG0H
-         DB5cKf4fK036sjFip2vLFmG7+MqxnDao7tc5DHyJprclxfIURysxXx/MaW8mfA0FJEs4
-         CbRqZ1U1aNvZIKVsg3dg8s4vNRZbJF0fUTYhmSqi5NznNJB5UcJ0HAhSoCFZEapSfw7c
-         KenQ==
-X-Gm-Message-State: AOAM531C7Fa+TvE2B/lC0Bv/2ig3N6cbj+WphU8ATjOn+z91XMjc43Fm
-        0Q0wPUwMphXiC6udWX6/yxMm/B8=
-X-Google-Smtp-Source: ABdhPJxh7MERH4GHV2KajE30fu7LTfYiwUY/qTaDCstjWq7UDy4hWBP06+bJtHaPjrz4TakTgO7OaQ==
-X-Received: by 2002:a6b:e215:: with SMTP id z21mr3836350ioc.115.1590696844953;
-        Thu, 28 May 2020 13:14:04 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id y23sm956109ior.38.2020.05.28.13.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:14:04 -0700 (PDT)
-Received: (nullmailer pid 603972 invoked by uid 1000);
-        Thu, 28 May 2020 20:14:03 -0000
-Date:   Thu, 28 May 2020 14:14:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        maz@kernel.org
-Subject: Re: [PATCH v4 2/6] dt-bindings: interrupt-controller: Add Loongson
- HTVEC
-Message-ID: <20200528201403.GA603926@bogus>
-References: <20200427060551.1372591-1-jiaxun.yang@flygoat.com>
- <20200516082912.3673033-1-jiaxun.yang@flygoat.com>
- <20200516082912.3673033-2-jiaxun.yang@flygoat.com>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0562E207D3;
+        Thu, 28 May 2020 20:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590696851;
+        bh=MV7WUd24PE8fRkx618Y03OhhvRP2m37PebgijiWKHpo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ueeAsD827pWGQvqI5b7jxY/rSr+PdlR7sS+n0uA9yL670GGJKgca4NXb7nWrvuRgZ
+         NVJDD5tRdQI4vPhif+nVUg68Gk5NpqRVtgL2LY0o0CyCq3bvxmY1ZeDpwJPi6QAr7l
+         n+Ol6RVDsreD6qoY9dcToC49VFgmAZyGW815QPQE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     tglx@linutronix.de, luto@kernel.org, ak@linux.intel.com
+Cc:     corbet@lwn.net, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        shuah@kernel.org, gregkh@linuxfoundation.org, tony.luck@intel.com,
+        chang.seok.bae@intel.com, dave.hansen@linux.intel.com,
+        peterz@infradead.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jarkko.sakkinen@linux.intel.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH v13 00/16] Enable FSGSBASE instructions
+Date:   Thu, 28 May 2020 16:13:46 -0400
+Message-Id: <20200528201402.1708239-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200516082912.3673033-2-jiaxun.yang@flygoat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 16 May 2020 16:29:02 +0800, Jiaxun Yang wrote:
-> Add binding for Loongson-3 HyperTransport Interrupt Vector Controller.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> --
-> v4: Drop ref, '|', add additionalProperties, fix example
-> ---
->  .../interrupt-controller/loongson,htvec.yaml  | 58 +++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
-> 
+Benefits:
+Currently a user process that wishes to read or write the FS/GS base must
+make a system call. But recent X86 processors have added new instructions
+for use in 64-bit mode that allow direct access to the FS and GS segment
+base addresses.  The operating system controls whether applications can
+use these instructions with a %cr4 control bit.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+In addition to benefits to applications, performance improvements to the
+OS context switch code are possible by making use of these instructions. A
+third party reported out promising performance numbers out of their
+initial benchmarking of the previous version of this patch series.
+
+Enablement check:
+The kernel provides information about the enabled state of FSGSBASE to
+applications using the ELF_AUX vector. If the HWCAP2_FSGSBASE bit is set in
+the AUX vector, the kernel has FSGSBASE instructions enabled and
+applications can use them.
+
+Kernel changes:
+Major changes made in the kernel are in context switch, paranoid path, and
+ptrace. In a context switch, a task's FS/GS base will be secured regardless
+of its selector. In the paranoid path, GS base is unconditionally
+overwritten to the kernel GS base on entry and the original GS base is
+restored on exit. Ptrace includes divergence of FS/GS index and base
+values.
+
+Security:
+For mitigating the Spectre v1 SWAPGS issue, LFENCE instructions were added
+on most kernel entries. Those patches are dependent on previous behaviors
+that users couldn't load a kernel address into the GS base. These patches
+change that assumption since the user can load any address into GS base.
+The changes to the kernel entry path in this patch series take account of
+the SWAPGS issue.
+
+Changes from v12:
+ - Reformat the series to be closer to the reverted codebase for easier
+   review.
+ - Drop a few of the changes introduced in v8 and v9.
+
+
+Andi Kleen (2):
+  x86/fsgsbase/64: Add intrinsics for FSGSBASE instructions
+  x86/elf: Enumerate kernel FSGSBASE capability in AT_HWCAP2
+
+Andy Lutomirski (3):
+  x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+  x86/process/64: Use FSBSBASE in switch_to() if available
+  x86/cpu: Enable FSGSBASE on 64bit by default and add a chicken bit
+
+Chang S. Bae (8):
+  x86/ptrace: Prevent ptrace from clearing the FS/GS selector
+  x86/fsgsbase/64: Enable FSGSBASE instructions in helper functions
+  x86/process/64: Use FSGSBASE instructions on thread copy and ptrace
+  x86/entry/64: Switch CR3 before SWAPGS in paranoid entry
+  x86/entry/64: Introduce the FIND_PERCPU_BASE macro
+  x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit
+  selftests/x86/fsgsbase: Test GS selector on ptracer-induced GS base
+    write
+  selftests/x86/fsgsbase: Test ptracer-induced GS base write with
+    FSGSBASE
+
+Thomas Gleixner (2):
+  x86/process/64: Make save_fsgs() public available
+  Documentation/x86/64: Add documentation for GS/FS addressing mode
+
+Tony Luck (1):
+  x86/speculation/swapgs: Check FSGSBASE in enabling SWAPGS mitigation
+
+ .../admin-guide/kernel-parameters.txt         |   2 +
+ Documentation/x86/x86_64/fsgs.rst             | 199 ++++++++++++++++++
+ Documentation/x86/x86_64/index.rst            |   1 +
+ arch/x86/entry/calling.h                      |  40 ++++
+ arch/x86/entry/entry_64.S                     | 135 +++++++++---
+ arch/x86/include/asm/fsgsbase.h               |  45 +++-
+ arch/x86/include/asm/inst.h                   |  15 ++
+ arch/x86/include/asm/processor.h              |   4 +-
+ arch/x86/include/uapi/asm/hwcap2.h            |   3 +
+ arch/x86/kernel/cpu/bugs.c                    |   6 +-
+ arch/x86/kernel/cpu/common.c                  |  22 ++
+ arch/x86/kernel/process.c                     |  10 +-
+ arch/x86/kernel/process_64.c                  | 119 +++++++++--
+ arch/x86/kernel/ptrace.c                      |  17 +-
+ arch/x86/kvm/vmx/vmx.c                        |   2 +-
+ tools/testing/selftests/x86/fsgsbase.c        |  24 ++-
+ 16 files changed, 562 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/x86/x86_64/fsgs.rst
+
+-- 
+2.25.1
+
