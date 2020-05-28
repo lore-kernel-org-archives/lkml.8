@@ -2,161 +2,196 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2DC208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F37208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hui1DnMS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wc1u2gs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbgE1Hmy (ORCPT
+        id S1726563AbgE1HoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgE1Hmy (ORCPT
+        Thu, 28 May 2020 03:44:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26644 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725811AbgE1HoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:42:54 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B924FC05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:42:53 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id u16so14249246lfl.8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZSEppCnMjooqv/+hpmajhkWVfY46SE18er3CWPFn//o=;
-        b=hui1DnMSPQC8PalrmA2xNhPN47Qgt0NGSGYl98vRy0j+p5BNUKzW8ao4PnCHdNLZjf
-         8YMJvNVzze8CKA1S01XNUb5YZ+3hbOJqlL4hYKbqftLsRFamH3vto3EDzI2EeSgH1L2o
-         y/8XLjs8fOKBOHXLFirMZhvzwDKyjiB3/lCHq1hVsAbbiq5WqaY3YfdMizYkdgXoUk64
-         omQp38by/IReL9pn3bEj3wXKW6QJEdQAe9VOT7EWenE1dogEOCQj4aiQ34hwaaoO69vx
-         zg6gCmLT5Qa7RHGKa28X+dhsr5NLbOapGO5iqNAvitE/VArwygmcTv5Y6PycMvDoQztu
-         4sWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZSEppCnMjooqv/+hpmajhkWVfY46SE18er3CWPFn//o=;
-        b=DlHvB/FM2+6BC8zUFDArKcqxJUb4vSA2kpZdgkLLTvk+E5mw0Bb3pXZRCMzlxQYhad
-         lOBR8ARZRKbwjfaL4yhr1c2acAl51uOsejS0l8t30//WHNo1ccUMO7uFKiKCr8vL8UPd
-         IyDyxOogGcRIMLAFvq2Kry+9Z+qHRlFKLtRiQyd9tOfX8FYZ6u7GVXVfgxP78csL1Zvx
-         i8DYKJbUhaIm7VgV+CqRQIGTou/opWhrfp+yG6Lu0OuzyoEIs8k+f5dk1/5tpKzYmaxJ
-         LIgmJe4ZKbZSDkmikLS/YtiwRQJv5NGsqd5l/rEecPtytlNXXAAEGQ20CTvqPGX28QdP
-         Seew==
-X-Gm-Message-State: AOAM5326u9xh+UBIKXXIoB4Bt4YYUWn2cNb02ADbQRhJfaHafxObi9L4
-        a5bCoLkUNhvLFUfQPt9fijaGT4KqmBScW/i5hryi3w==
-X-Google-Smtp-Source: ABdhPJwYhDoQO6Cp5QbjY4T1T1tzuKF/ozZxhlC6wEzxvYQ17TmXwrSXZSVTlT7S0TURw1ma+1cobn5lIjFOjE7gGTY=
-X-Received: by 2002:ac2:4293:: with SMTP id m19mr1009321lfh.204.1590651772089;
- Thu, 28 May 2020 00:42:52 -0700 (PDT)
+        Thu, 28 May 2020 03:44:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590651843;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z7gq34X5+FDApO6RZCSsyS3w0y0KfODq2sN2I24ixnw=;
+        b=Wc1u2gs1AQ+eILQgqEREbzCvY0xte2aSNU4qYPxnUEWEFLm2rNPavEghIva64Qk7fvufhc
+        nzP3nu/rmPVTRrXsY5kV6Oz8BkFcP9vUWBYJplj776Ihisx6ry3qDrT7xpEk+FcNlKe9OP
+        C1hyloQbqd2HHDFX7Mf2zRgB4WM1cvo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-303-4WhxdBjLP32hekYeZl9eLA-1; Thu, 28 May 2020 03:43:55 -0400
+X-MC-Unique: 4WhxdBjLP32hekYeZl9eLA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBD061005510;
+        Thu, 28 May 2020 07:43:53 +0000 (UTC)
+Received: from [10.36.113.56] (ovpn-113-56.ams2.redhat.com [10.36.113.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8EBB162932;
+        Thu, 28 May 2020 07:43:48 +0000 (UTC)
+Subject: Re: [RFC PATCH] iommu/arm-smmu: Add module parameter to set msi iova
+ address
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Will Deacon <will@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <1590595398-4217-1-git-send-email-srinath.mannam@broadcom.com>
+ <f9b221cf-1c7f-9f95-133b-dca65197b6c2@arm.com>
+ <CABe79T7WwD2AyWp2e5pAi8TO2r5=-v5gPb2Gjtf8EhHOn3dogQ@mail.gmail.com>
+ <20200528072308.GA414784@myrica>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <527f25a4-ca5a-10da-150f-0b4ea3839635@redhat.com>
+Date:   Thu, 28 May 2020 09:43:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <1590560759-21453-1-git-send-email-sumit.garg@linaro.org>
- <1590560759-21453-4-git-send-email-sumit.garg@linaro.org> <20200527142617.t7dzal7ok5i3exra@holly.lan>
-In-Reply-To: <20200527142617.t7dzal7ok5i3exra@holly.lan>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 28 May 2020 13:12:40 +0530
-Message-ID: <CAFA6WYNY1tk=Md84tuSHOBgmB330eAAV8yWM1XLT0sDcbWus6A@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] kdb: Make kdb_printf robust to run in NMI context
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200528072308.GA414784@myrica>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 May 2020 at 19:56, Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Wed, May 27, 2020 at 11:55:58AM +0530, Sumit Garg wrote:
-> > While rounding up CPUs via NMIs, its possible that a rounded up CPU
->
-> This problem does not just impact NMI roundup (breakpoints,
+Hi,
 
-I guess here via breakpoints you meant if we add a compiled breakpoint
-or runtime breakpoint in console handler code while its holding the
-spin lock could lead to a deadlock, correct?
+On 5/28/20 9:23 AM, Jean-Philippe Brucker wrote:
+> On Thu, May 28, 2020 at 10:45:14AM +0530, Srinath Mannam wrote:
+>> On Wed, May 27, 2020 at 11:00 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>>>
+>> Thanks Robin for your quick response.
+>>> On 2020-05-27 17:03, Srinath Mannam wrote:
+>>>> This patch gives the provision to change default value of MSI IOVA base
+>>>> to platform's suitable IOVA using module parameter. The present
+>>>> hardcoded MSI IOVA base may not be the accessible IOVA ranges of platform.
+>>>
+>>> That in itself doesn't seem entirely unreasonable; IIRC the current
+>>> address is just an arbitrary choice to fit nicely into Qemu's memory
+>>> map, and there was always the possibility that it wouldn't suit everything.
+>>>
+>>>> Since commit aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible
+>>>> DMA address"), inaccessible IOVA address ranges parsed from dma-ranges
+>>>> property are reserved.
+> 
+> I don't understand why we only reserve the PCIe windows for DMA domains.
+> Shouldn't VFIO also prevent userspace from mapping them?
 
-> including
-> implicit breakpoint-on-oops can have the same effect).
->
+VFIO prevents userspace from DMA mapping iovas within reserved regions:
+9b77e5c79840  vfio/type1: check dma map request is within a valid iova range
 
-Isn't the breakpoint-on-oops case already handled via bust_spinlocks()
-usage in panic handler here [1]?
+but it does not prevent the SW MSI region chosen by the kernel from
+colliding with other reserved regions (esp. PCIe host bridge windows).
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/panic.c#n207
+  If they were
+> part of the common reserved regions then we could have VFIO choose a
+> SW_MSI region among the remaining free space.
+As Robin said this was the initial chosen approach
+[PATCH 10/10] vfio: allow the user to register reserved iova range for
+MSI mapping
+https://patchwork.kernel.org/patch/8121641/
 
->
-> > maybe holding a console port lock leading to kgdb master CPU stuck in
-> > a deadlock during invocation of console write operations. So in order
-> > to avoid such a deadlock, enable oops_in_progress prior to invocation
-> > of console handlers.
-> >
-> > Suggested-by: Petr Mladek <pmladek@suse.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  kernel/debug/kdb/kdb_io.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >
-> > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> > index 349dfcc..f848482 100644
-> > --- a/kernel/debug/kdb/kdb_io.c
-> > +++ b/kernel/debug/kdb/kdb_io.c
-> > @@ -566,7 +566,17 @@ static void kdb_msg_write(char *msg, int msg_len)
-> >       for_each_console(c) {
-> >               if (!(c->flags & CON_ENABLED))
-> >                       continue;
-> > +             /*
-> > +              * While rounding up CPUs via NMIs, its possible that
->
-> Ditto.
->
-> > +              * a rounded up CPU maybe holding a console port lock
-> > +              * leading to kgdb master CPU stuck in a deadlock during
-> > +              * invocation of console write operations. So in order
-> > +              * to avoid such a deadlock, enable oops_in_progress
-> > +              * prior to invocation of console handlers.
->
-> Actually looking at this comment as a whole I think it spends to many
-> words on what and not enough on why (e.g. what the tradeoffs are and
-> why we are not using bust_spinlocks() which would be a more obvious
-> approach).
->
->   Set oops_in_progress to encourage the console drivers to disregard
->   their internal spin locks: in the current calling context
->   the risk of deadlock is a bigger problem than risks due to
->   re-entering the console driver. We operate directly on
->   oops_in_progress rather than using bust_spinlocks() because
->   the calls bust_spinlocks() makes on exit are not appropriate
->   for this calling context.
+Some additional background about why the static SW MSI region chosen by
+the kernel was later chosen:
+Summary of LPC guest MSI discussion in Santa Fe (was: Re: [RFC 0/8] KVM
+PCIe/MSI passthrough on ARM/ARM64 (Alt II))
+https://lists.linuxfoundation.org/pipermail/iommu/2016-November/019060.html
 
-Sounds reasonable, will use it instead.
+Thanks
 
--Sumit
+Eric
 
->
->
-> Daniel.
->
->
-> > +              */
-> > +             ++oops_in_progress;
-> >               c->write(c, msg, msg_len);
-> > +             --oops_in_progress;
-> >               touch_nmi_watchdog();
-> >       }
-> >  }
-> > --
-> > 2.7.4
-> >
+
+ It would just need a
+> different way of asking the IOMMU driver if a SW_MSI is needed, for
+> example with a domain attribute.
+> 
+> Thanks,
+> Jean
+> 
+>>>
+>>> That, however, doesn't seem to fit here; iommu-dma maps MSI doorbells
+>>> dynamically, so they aren't affected by reserved regions any more than
+>>> regular DMA pages are. In fact, it explicitly ignores the software MSI
+>>> region, since as the comment says, it *is* the software that manages those.
+>> Yes you are right, we don't see any issues with kernel drivers(PCI EP) because
+>> MSI IOVA allocated dynamically by honouring reserved regions same as DMA pages.
+>>>
+>>> The MSI_IOVA_BASE region exists for VFIO, precisely because in that case
+>>> the kernel *doesn't* control the address space, but still needs some way
+>>> to steal a bit of it for MSIs that the guest doesn't necessarily know
+>>> about, and give userspace a fighting chance of knowing what it's taken.
+>>> I think at the time we discussed the idea of adding something to the
+>>> VFIO uapi such that userspace could move this around if it wanted or
+>>> needed to, but decided we could live without that initially. Perhaps now
+>>> the time has come?
+>> Yes, we see issues only with user-space drivers(DPDK) in which MSI_IOVA_BASE
+>> region is considered to map MSI registers. This patch helps us to fix the issue.
+>>
+>> Thanks,
+>> Srinath.
+>>>
+>>> Robin.
+>>>
+>>>> If any platform has the limitaion to access default MSI IOVA, then it can
+>>>> be changed using "arm-smmu.msi_iova_base=0xa0000000" command line argument.
+>>>>
+>>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>>> ---
+>>>>   drivers/iommu/arm-smmu.c | 5 ++++-
+>>>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>>>> index 4f1a350..5e59c9d 100644
+>>>> --- a/drivers/iommu/arm-smmu.c
+>>>> +++ b/drivers/iommu/arm-smmu.c
+>>>> @@ -72,6 +72,9 @@ static bool disable_bypass =
+>>>>   module_param(disable_bypass, bool, S_IRUGO);
+>>>>   MODULE_PARM_DESC(disable_bypass,
+>>>>       "Disable bypass streams such that incoming transactions from devices that are not attached to an iommu domain will report an abort back to the device and will not be allowed to pass through the SMMU.");
+>>>> +static unsigned long msi_iova_base = MSI_IOVA_BASE;
+>>>> +module_param(msi_iova_base, ulong, S_IRUGO);
+>>>> +MODULE_PARM_DESC(msi_iova_base, "msi iova base address.");
+>>>>
+>>>>   struct arm_smmu_s2cr {
+>>>>       struct iommu_group              *group;
+>>>> @@ -1566,7 +1569,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+>>>>       struct iommu_resv_region *region;
+>>>>       int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+>>>>
+>>>> -     region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+>>>> +     region = iommu_alloc_resv_region(msi_iova_base, MSI_IOVA_LENGTH,
+>>>>                                        prot, IOMMU_RESV_SW_MSI);
+>>>>       if (!region)
+>>>>               return;
+>>>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+
