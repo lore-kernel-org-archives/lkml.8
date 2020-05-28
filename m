@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCDFC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3858221655
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA5A0215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667142;
-	bh=Ixh+I5kU+DvxG8Qgl82jKqK0GAhQjdANO/gyeG14a0U=;
+	s=default; t=1590667144;
+	bh=Vt+tQ8r4JroSvjV9yqFTGu4XM4PnfjNQGVy7NaaM+X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LU4jZCozo2HQFyXSJNzyVUiHg3UHoz7UUfKFbo6ojJTHSqBBEFi77hKLI5McXxa30
-	 Q2u2pRDBIMss3sRt4ndwCDMnfETIY8TvYHMwb85V+nhfEC3Qfq+TpoKpd/D3i3ABgI
-	 sH17T35+eE9yCIfyF1jY01JiTMy5P21eqiwlGX+M=
+	b=0WP/EERU8P8UkqW1NxO0vQflfmFbxRAvX4d9ZQ93kg5F1NnUN5JdnH+iGtFThpzPr
+	 Ec4CZx2/w/PCOdKWqT8eEyZnCiT2EhiFDvNedubYhxnZcdrSqJimo7HURyH1wXoZmw
+	 uOYegh5w5L2rBryYaEyMzCBL2TT4P1Bd91uwsGZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389319AbgE1L7B (ORCPT
+        id S2389305AbgE1L64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51318 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:58:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389220AbgE1L6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:58:20 -0400
+        id S2389177AbgE1L6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:58:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA21421841;
-        Thu, 28 May 2020 11:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF5921841;
+        Thu, 28 May 2020 11:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667100;
-        bh=Ixh+I5kU+DvxG8Qgl82jKqK0GAhQjdANO/gyeG14a0U=;
+        s=default; t=1590667087;
+        bh=Vt+tQ8r4JroSvjV9yqFTGu4XM4PnfjNQGVy7NaaM+X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0HLuaKlmzoFOz2V9beXi1HH7OU3x3panrJPqG4Waug0tCibH9vWigL6IDH1U1aFK
-         ncY3ClmtRkA0JWPOJQ97iY4y7FDaA2smboi5Omkb1puT1UI4kIJhcRPvUYQgjU8Q5M
-         wg62M8MelO0+cYvDcPOUPQ0Y4IcYtbpWVbawHCyQ=
+        b=KmJSAOTjm54FsGdqdogboqEnUDuXz9SJqYkjPO1YXHKRsKzADKlcipCY8znW5gf7S
+         tp47nqs0r/dTGzwIcy83YvMCAVxAPl4RiwdedT0tiHa97rLnKL7DkQtAplKgzpbWUs
+         WPOKj7Q+ASxxBnENAvX8my+IV4pGZfm/5P4XpxAw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>,
+Cc:     Valentin Longchamp <valentin@longchamp.me>,
+        Matteo Ghidoni <matteo.ghidoni@ch.abb.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 7/7] net/mlx4_core: fix a memory leak bug.
-Date:   Thu, 28 May 2020 07:58:11 -0400
-Message-Id: <20200528115811.1406810-7-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 5/9] net/ethernet/freescale: rework quiesce/activate for ucc_geth
+Date:   Thu, 28 May 2020 07:57:56 -0400
+Message-Id: <20200528115800.1406703-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115811.1406810-1-sashal@kernel.org>
-References: <20200528115811.1406810-1-sashal@kernel.org>
+In-Reply-To: <20200528115800.1406703-1-sashal@kernel.org>
+References: <20200528115800.1406703-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,36 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Valentin Longchamp <valentin@longchamp.me>
 
-[ Upstream commit febfd9d3c7f74063e8e630b15413ca91b567f963 ]
+[ Upstream commit 79dde73cf9bcf1dd317a2667f78b758e9fe139ed ]
 
-In function mlx4_opreq_action(), pointer "mailbox" is not released,
-when mlx4_cmd_box() return and error, causing a memory leak bug.
-Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
-free this pointer.
+ugeth_quiesce/activate are used to halt the controller when there is a
+link change that requires to reconfigure the mac.
 
-Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+The previous implementation called netif_device_detach(). This however
+causes the initial activation of the netdevice to fail precisely because
+it's detached. For details, see [1].
+
+A possible workaround was the revert of commit
+net: linkwatch: add check for netdevice being present to linkwatch_do_dev
+However, the check introduced in the above commit is correct and shall be
+kept.
+
+The netif_device_detach() is thus replaced with
+netif_tx_stop_all_queues() that prevents any tranmission. This allows to
+perform mac config change required by the link change, without detaching
+the corresponding netdevice and thus not preventing its initial
+activation.
+
+[1] https://lists.openwall.net/netdev/2020/01/08/201
+
+Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
+Acked-by: Matteo Ghidoni <matteo.ghidoni@ch.abb.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/fw.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/ucc_geth.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
-index 5ac6e62f7dcc..0a4e9731d33b 100644
---- a/drivers/net/ethernet/mellanox/mlx4/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
-@@ -2522,7 +2522,7 @@ void mlx4_opreq_action(struct work_struct *work)
- 		if (err) {
- 			mlx4_err(dev, "Failed to retrieve required operation: %d\n",
- 				 err);
--			return;
-+			goto out;
- 		}
- 		MLX4_GET(modifier, outbox, GET_OP_REQ_MODIFIER_OFFSET);
- 		MLX4_GET(token, outbox, GET_OP_REQ_TOKEN_OFFSET);
+diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
+index 714593023bbc..af922bac19ae 100644
+--- a/drivers/net/ethernet/freescale/ucc_geth.c
++++ b/drivers/net/ethernet/freescale/ucc_geth.c
+@@ -45,6 +45,7 @@
+ #include <soc/fsl/qe/ucc.h>
+ #include <soc/fsl/qe/ucc_fast.h>
+ #include <asm/machdep.h>
++#include <net/sch_generic.h>
+ 
+ #include "ucc_geth.h"
+ 
+@@ -1551,11 +1552,8 @@ static int ugeth_disable(struct ucc_geth_private *ugeth, enum comm_dir mode)
+ 
+ static void ugeth_quiesce(struct ucc_geth_private *ugeth)
+ {
+-	/* Prevent any further xmits, plus detach the device. */
+-	netif_device_detach(ugeth->ndev);
+-
+-	/* Wait for any current xmits to finish. */
+-	netif_tx_disable(ugeth->ndev);
++	/* Prevent any further xmits */
++	netif_tx_stop_all_queues(ugeth->ndev);
+ 
+ 	/* Disable the interrupt to avoid NAPI rescheduling. */
+ 	disable_irq(ugeth->ug_info->uf_info.irq);
+@@ -1568,7 +1566,10 @@ static void ugeth_activate(struct ucc_geth_private *ugeth)
+ {
+ 	napi_enable(&ugeth->napi);
+ 	enable_irq(ugeth->ug_info->uf_info.irq);
+-	netif_device_attach(ugeth->ndev);
++
++	/* allow to xmit again  */
++	netif_tx_wake_all_queues(ugeth->ndev);
++	__netdev_watchdog_up(ugeth->ndev);
+ }
+ 
+ /* Called every time the controller might need to be made
 -- 
 2.25.1
 
