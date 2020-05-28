@@ -2,196 +2,98 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3414E20897
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4278A20897
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rveLcDkQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJE4F0se"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391237AbgE1OsR (ORCPT
+        id S2391254AbgE1Os2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:48:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40778 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728539AbgE1OsF (ORCPT
+        Thu, 28 May 2020 10:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391238AbgE1OsT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:48:05 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04SEbbVa101207;
-        Thu, 28 May 2020 10:47:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=UkbfAtvEfXUxa95+1LdoiI+mLq8Rx3rpSz0ltaUwu8I=;
- b=rveLcDkQKVDI8mst8gdty89143smgC7dB/bM4EBmyiicnMgvOG2fCJdEkVp6nZMDT6FT
- 1WC80pBGqzyfVDCHeMuHh08lAlvYIT5PAiXNRGnkajSuZ43+asrFX3ewsU6ABn2AIrX1
- 6uVZrwTw+itBQp/F2/JhXiKA4FwGol/Txc5bk4uBADTnPXkK9pi0aEIcwTDghir2juwk
- kaOveRRPleyER/dZEkzkReWsKTL+x250H4W7a5cpuRFgJQM1ymjKYlhcdUWKv4UdpNhp
- R+5KCuS9d85JFXILuXgM04MBSr/6Mu22/Mh8Rn3XGNWfVOLuL5TWgDfzf4wtpO1vBmNq hg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31a9nbcbjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 10:47:46 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 04SEbgLj101542;
-        Thu, 28 May 2020 10:47:46 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31a9nbcbj2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 10:47:46 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 04SEjMIb030278;
-        Thu, 28 May 2020 14:47:44 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 316uf8a43u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 28 May 2020 14:47:44 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 04SElguG40632372
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 14:47:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49A9F4203F;
-        Thu, 28 May 2020 14:47:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD6B042042;
-        Thu, 28 May 2020 14:47:39 +0000 (GMT)
-Received: from [9.163.54.87] (unknown [9.163.54.87])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 28 May 2020 14:47:39 +0000 (GMT)
-Subject: Re: [RFC PATCH v4] GCOV: profile by modules
-To:     gengcixi@gmail.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        Cixi Geng <cixi.geng1@unisoc.com>
-References: <20200525100054.17700-1-gengcixi@gmail.com>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-Message-ID: <917da283-5f1e-3fdb-13bb-4251312dc77a@linux.ibm.com>
-Date:   Thu, 28 May 2020 16:47:38 +0200
-MIME-Version: 1.0
-In-Reply-To: <20200525100054.17700-1-gengcixi@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-28_03:2020-05-28,2020-05-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 impostorscore=0 mlxscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 priorityscore=1501
- cotscore=-2147483648 suspectscore=1 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005280097
+        Thu, 28 May 2020 10:48:19 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7ACC05BD1E;
+        Thu, 28 May 2020 07:48:18 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id c75so13575879pga.3;
+        Thu, 28 May 2020 07:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8InrAz2MhUrOgrq+PmAJiNC3B7TqEPBo9SqsNjP+O0k=;
+        b=SJE4F0seUN//jFuZfCOVIagaBq71D5C3gP+r8zxrhnEFOnTbRDRMJIgaPFkPM7c7Ap
+         eIkRMZ8JLmRFcM+/16p0r4rrHZ8Ie7sNTRTukQDlDZOMkhcAQrLNcrDRXtUr3j15/Vdj
+         LRNeykS+p/Gm7VTCRi23sCwU6MJPqpt/lCOjWBXh2QU3pgDGURMdgowcp8JIT3FRYGHa
+         VhiJ7RyOEQXhC182Fa/tw7kPVBwbs0BxbSe18fDVy80ef56o5iU0WwcsKznca98JncNq
+         zm5qjYekMzyvcxNyxRDxntGcY5LI8uAFw2CiF9sUW72yvK9WY/dYjObhbz9wfZXnkG1n
+         MMZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8InrAz2MhUrOgrq+PmAJiNC3B7TqEPBo9SqsNjP+O0k=;
+        b=Ibu2wIovt4oQi4akiycJ+PxqjoPII6NHAvjS0BayMHW+pCS8zqOCxEliFRgEuH35zW
+         6yB5MuGjnJ56tRYxSHQbRfvyn+KKCgMRnD20gJ/8T8SYAqixmeXvI2gqGKnmC96/0PW7
+         uMCwkKBXUQty+zwXWZubAsi15uFLhgX6imq3ZhgMWNZM0Qjcclxj/UivIUh3QcraO22T
+         khmxtt31dKNbFRHHIWOnJv3ddyHlg6hSQMdKnTfKwzv1UUKWqgz//egbPqh/96DKCWz9
+         wV+826j6XS9FRuAKOYCRZXc91d1t/6ek6txtaEJ+opQKonnLRfmsynsE3faAgA/Znamj
+         Calg==
+X-Gm-Message-State: AOAM533FyYhAP/LpxxprGpkcVMygOY5ZDCqhh15wpKwSNa07225s0rYm
+        /RhfxL4H+ZgAlTU7+u+3OYE=
+X-Google-Smtp-Source: ABdhPJwaswyUJScc4k1GPKu4/4jtDU7unMNp+7zesaj3KNqxLSTvlmwNqvHnuVaY3fxm8C84obzOqg==
+X-Received: by 2002:a63:5054:: with SMTP id q20mr3306558pgl.117.1590677298406;
+        Thu, 28 May 2020 07:48:18 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id y14sm5158107pjr.31.2020.05.28.07.48.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:48:18 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] arm64: dts: qcom: msm8998-mtp: Fix label on l15 regulator
+Date:   Thu, 28 May 2020 07:48:14 -0700
+Message-Id: <20200528144814.44143-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.05.2020 12:00, gengcixi@gmail.com wrote:
-> From: Cixi Geng <cixi.geng1@unisoc.com>
-> 
-> The CONFIG_GCOV_PROFILE_ALL will compile kernel by profiling entire
-> kernel which will lead to kernel run slower.Use GCOV_PROFILE_PREREQS
-> to control part of the kernel modules to open gcov.
+The label on the l15 regulator node does not follow the style of the
+rest of the regulator nodes.  Luckily, no one has used the label yet,
+so lets fix it.
 
-Maybe rephrase the commit message to make the intention more obvious:
+Fixes: 31c1f0e33deb ("arm64: dts: qcom: msm8998: Add RPM and regulators for MTP")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Introduce new configuration option GCOV_PROFILE_PREREQS that can be used
-to check whether the prerequisites for enabling gcov profiling for
-specific files and directories are met.
-
-> 
-> Only add SERIAL_GCOV for an example.
-> 
-> Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
-> ---
->  drivers/tty/serial/Kconfig  |  7 +++++++
->  drivers/tty/serial/Makefile |  1 +
->  kernel/gcov/Kconfig         | 14 ++++++++++++++
->  3 files changed, 22 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index adf9e80e7dc9..6df002370f18 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1566,3 +1566,10 @@ endmenu
->  
->  config SERIAL_MCTRL_GPIO
->  	tristate
-> +
-> +config SERIAL_GCOV
-> +	bool "Enable profile gcov for serial directory"
-> +	depends on GCOV_PROFILE_PREREQS
-> +	help
-> +	  The SERIAL_GCOV will add Gcov profiling flags when kernel compiles.
-> +	  Say 'Y' here if you want the gcov data for the serial directory,
-> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-> index d056ee6cca33..17272733db95 100644
-> --- a/drivers/tty/serial/Makefile
-> +++ b/drivers/tty/serial/Makefile
-> @@ -3,6 +3,7 @@
->  # Makefile for the kernel serial device drivers.
->  #
->  
-> +GCOV_PROFILE := $(CONFIG_SERIAL_GCOV)
->  obj-$(CONFIG_SERIAL_CORE) += serial_core.o
->  
->  obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
-> diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-> index 3941a9c48f83..ea8b514f5676 100644
-> --- a/kernel/gcov/Kconfig
-> +++ b/kernel/gcov/Kconfig
-> @@ -51,6 +51,20 @@ config GCOV_PROFILE_ALL
->  	larger and run slower. Also be sure to exclude files from profiling
->  	which are not linked to the kernel image to prevent linker errors.
->  
-> +config GCOV_PROFILE_PREREQS
-> +	bool "Profile Kernel subsytem"
-> +	depends on !COMPILE_TEST
-> +	depends on GCOV_KERNEL
-> +	depends on !GCOV_PROFILE_ALL
-> +	help
-> +	  This options activates profiling for the specified kernel modules.
-> +
-> +	  When some modules need Gcov data, enable this config, then configure
-> +	  with gcov on the corresponding modules,The directories or files of
-> +	  these modules will be added profiling flags after kernel compile.
-> +
-> +	  If unsure, say N.
-
-This is not quite what I had in mind. A user still needs to manually
-select GCOV_PROFILE, then GCOV_PROFILE_PREREQS, then SERIAL_GCOV.
-
-My though was that you could provide an automatic config option that is
-invisible in the configuration dialog, and that is automatically
-selected when all prereqs for enabling GCOV in a module directory are met.
-
-Something like the following:
-
-config GCOV_PROFILE_PREREQS
-        bool
-        default y if GCOV_KERNEL && !COMPILE_TEST
-        default n
-
-There's no need to add GCOV_KERNEL_ALL here since that is about a user
-choice ("I want all code compiled with profiling") vs. this new symbol
-which is about an ability ("all prereqs for enabling profiling in
-specific directories are met).
-
-
-> +
->  choice
->  	prompt "Specify GCOV format"
->  	depends on GCOV_KERNEL
-> 
-
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 8a14b2bf7bca..cec42437b302 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -235,7 +235,7 @@
+ 			regulator-min-microvolt = <1880000>;
+ 			regulator-max-microvolt = <1880000>;
+ 		};
+-		vreg_15a_1p8: l15 {
++		vreg_l15a_1p8: l15 {
+ 			regulator-min-microvolt = <1800000>;
+ 			regulator-max-microvolt = <1800000>;
+ 		};
 -- 
-Peter Oberparleiter
-Linux on Z Development - IBM Germany
+2.17.1
+
