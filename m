@@ -2,120 +2,142 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7254C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA8132053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62E132053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404712AbgE1Pxl (ORCPT
+        id S2404742AbgE1Px7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:53:41 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:33472 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404511AbgE1Pxh (ORCPT
+        Thu, 28 May 2020 11:53:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60353 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404511AbgE1Px4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:53:37 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeKqe-0001Zi-I4; Thu, 28 May 2020 09:53:36 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeKqd-00085a-M7; Thu, 28 May 2020 09:53:36 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        <linux-fsdevel@vger.kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
-Date:   Thu, 28 May 2020 10:49:44 -0500
-In-Reply-To: <87k10wysqz.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Thu, 28 May 2020 10:38:28 -0500")
-Message-ID: <87y2pcvz3b.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 28 May 2020 11:53:56 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1jeKqt-00050n-V3; Thu, 28 May 2020 15:53:52 +0000
+Subject: Re: [PATCH][net-next] nexthop: fix incorrect allocation failure on
+ nhg->spare
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        David Ahern <dsahern@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528145114.420100-1-colin.king@canonical.com>
+ <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
+ <b0852a83-c3a5-a1be-6554-dc035e5b3d6e@cumulusnetworks.com>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <b9cedb4b-d1bf-fd6d-f85e-444840c3924b@canonical.com>
+Date:   Thu, 28 May 2020 16:53:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jeKqd-00085a-M7;;;mid=<87y2pcvz3b.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+Uao3hKNmbCnTKyFSqtDONOkhIC5W+4JQ=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 09/11] exec: In bprm_fill_uid only set per_clear when honoring suid or sgid
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <b0852a83-c3a5-a1be-6554-dc035e5b3d6e@cumulusnetworks.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 28/05/2020 15:55, Nikolay Aleksandrov wrote:
+> On 28/05/2020 17:53, Nikolay Aleksandrov wrote:
+>> On 28/05/2020 17:51, Colin King wrote:
+>>> From: Colin Ian King <colin.king@canonical.com>
+>>>
+>>> The allocation failure check for nhg->spare is currently checking
+>>> the pointer nhg rather than nhg->spare which is never false. Fix
+>>> this by checking nhg->spare instead.
+>>>
+>>> Addresses-Coverity: ("Logically dead code")
+>>> Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>>> ---
+>>>  net/ipv4/nexthop.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
+>>> index ebafa5ed91ac..97423d6f2de9 100644
+>>> --- a/net/ipv4/nexthop.c
+>>> +++ b/net/ipv4/nexthop.c
+>>> @@ -1185,7 +1185,7 @@ static struct nexthop *nexthop_create_group(struct net *net,
+>>>  
+>>>  	/* spare group used for removals */
+>>>  	nhg->spare = nexthop_grp_alloc(num_nh);
+>>> -	if (!nhg) {
+>>> +	if (!nhg->spare) {
+>>>  		kfree(nhg);
+>>>  		kfree(nh);
+>>>  		return NULL;
+>>>
+>>
+>> Good catch, embarrassing copy paste error :-/
+>> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+>>
+> 
+> Wait - that should be targeted at -net, that's where the fixes went.
+> And the fixes tag is wrong, nhg->spare was very recently added by:
+> commit 90f33bffa382
+> Author: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+> Date:   Tue May 26 12:56:15 2020 -0600
+> 
+>     nexthops: don't modify published nexthop groups
+> 
 
-It makes no sense to set active_per_clear when the kernel decides not
-to honor the executables setuid or or setgid bits.  Instead set
-active_per_clear when the kernel actually decides to honor the suid or
-sgid permission bits of an executable.
+Do you require me to fix this up and re-send?
 
-As far as I can tell this was the intended behavior but with the
-ptrace logic hiding out in security/commcap.c:cap_bprm_apply_creds I
-believe it was just overlooked that the setuid or setgid operation
-could be cancelled.
-
-History Tree: git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-Fixes: 1bb0fa189c6a ("[PATCH] NX: clean up legacy binary support")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- fs/exec.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/fs/exec.c b/fs/exec.c
-index af108ecf9632..347dade4bc54 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1634,15 +1634,16 @@ static void bprm_fill_uid(struct linux_binprm *bprm)
- 	need_cap = bprm->unsafe & LSM_UNSAFE_SHARE ||
- 		!ptracer_capable(current, new->user_ns);
- 
--	if (mode & S_ISUID) {
-+	if ((mode & S_ISUID) &&
-+	    (!need_cap || ns_capable(new->user_ns, CAP_SETUID))) {
- 		bprm->per_clear = 1;
--		if (!need_cap || ns_capable(new->user_ns, CAP_SETUID))
--			new->suid = new->fsuid = new->euid = uid;
-+		new->suid = new->fsuid = new->euid = uid;
- 	}
--	if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
-+
-+	if (((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) &&
-+	    (!need_cap || ns_capable(new->user_ns, CAP_SETGID))) {
- 		bprm->per_clear = 1;
--		if (!need_cap || ns_capable(new->user_ns, CAP_SETGID))
--			new->sgid = new->fsgid = new->egid = gid;
-+		new->sgid = new->fsgid = new->egid = gid;
- 	}
- 
- after_setid:
--- 
-2.25.0
-
+Colin
