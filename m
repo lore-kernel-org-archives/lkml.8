@@ -2,90 +2,87 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F21BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6414CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E41B207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFizhpQo"
+	by mail.kernel.org (Postfix) with ESMTP id 3AB1E2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590697603;
+	bh=H0wgNlSdkQgrrYC/Q0nyxRKZ28lnAdrMDQOov6sCZUo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ShyVIgSqYfl2Gw0kD/jr0Ga7EqgPxMVQlR+Fpl14fOBKFqNR7jkAAfo9omAh3N/YY
+	 IE/m3IVd7cs1wU/WpKOSPdjC1TelSwQ19SUv6Ev+FScTlaqX0TiLkV2rcKyOVVP+dH
+	 N5yi/fjkW/gqcyNPCKIreUxSWEjMZR1s467QF7v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407233AbgE1UZv (ORCPT
+        id S2407243AbgE1U0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407150AbgE1UZT (ORCPT
+        Thu, 28 May 2020 16:26:41 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43642 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407016AbgE1U0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:25:19 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C125C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:25:19 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id mb16so1372710ejb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GsDx1+HqzeOLmU2cGJB/R9l75f9GFU3ZdsBq6QSLDGI=;
-        b=OFizhpQoKTj+VMjm+xtOr8jLrdQcPeeFyLc5xmp5dfG8OID3H/OqffYeARfWnkuG5O
-         HA4PPwrUxFlvtay6z3ROI+GeI+6hTfY+YA+bzCn9qP86G9Mb7pI7ixgQtrheS4f5hlKV
-         o1C6bk5UVhaug3SZIz+ny19Q/Gklhs9Cpy6ez18yVRJUhthvX9uikrs2hblQddb0suCl
-         QK3eH7Mi1Iu3OcJjJyaYCG3WaZMgtVQgY1kAyq96dCjunRNRmyfsDlnxLd/Y10re4Sm5
-         zj8thhrJ7w3fAgtTj9HODOJSgCbggOHA4JJ2hEnuRZnQgMXC9MaSKPPSFIvZrTJ/YZK8
-         aF8w==
+        Thu, 28 May 2020 16:26:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id h10so31620392iob.10;
+        Thu, 28 May 2020 13:26:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GsDx1+HqzeOLmU2cGJB/R9l75f9GFU3ZdsBq6QSLDGI=;
-        b=eGI14BRmYkzzum4/4leXg9xJ7frh4yNPLPD8ku5RNgmS+QS3Gnb0Xn8w3yCCJgG5J5
-         dhwiBN7HbJu/3hX3nWcY9Rr+l0ioFCoTDKgaDVgyMe8YSuBvHmmn+PR+6pUrTSvBcBuK
-         HUeMxcic0iV2+jS+DMALI7+q5IfiV0Pg6HomaJIqOYYeKg7LSxmlmkQ9o1UnsoWmYhze
-         ffhRjhvChqwN54FWR2KnrdoLT4E58uWp4v7ytMzTcepvN1uEDZolCisoGaUr93wLOFxs
-         kiToYaTgEFzpy8926InLwD0NXTrV+AhMskRSIetb+pWlac8kO9RLGdjtpfsu4q+XRREm
-         g23g==
-X-Gm-Message-State: AOAM531lNuzDayV1ZHzNmNBWlH/DphPMeKh2yMvWBufg5zyFeTJpXU9x
-        c7yUfbLwMobbKbFQagZUsHmEbGJQ
-X-Google-Smtp-Source: ABdhPJwv8scYyg/T6ia9eYVXtnoO3bR+WYJHSHo6we7TJtceAx1CigwkOPlXTHvhMvnFawEQESRXxA==
-X-Received: by 2002:a17:906:bc4c:: with SMTP id s12mr4537442ejv.285.1590697518344;
-        Thu, 28 May 2020 13:25:18 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:d98f:8461:8d2c:e59b])
-        by smtp.gmail.com with ESMTPSA id y13sm5692736ejm.107.2020.05.28.13.25.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CnTYR1lY8ZOkI8xNqLhIayUWxms1+ukkgQb4iVjhgzQ=;
+        b=Cj6cP7tMNZgc7qIHonT0L6+bzGvpxCuHCe3svmySACJ0/T3V00cxqrr87BoLQCXEOP
+         gIRrAsJhJmn9UUIuyyMVaVia9iQDcBa7SSotxgSD9TC6HXYyf/X9OgPoEiyBrdxhFHXb
+         MsgGoxreI938X4i3Wp35zobcwee/HXi9WjoDMOf9FwCEONIm3eUtugP8nh05g+yQNqjc
+         HRS8miuj5drFvVxLYGmpKEP4aSNggMvNLig+aDmN5x2FuCf/b8qaquIGxI10jp2OgXlK
+         kAJ6/BSyISx44Voy3aUK3wY/TmYlN+ceb4yN8DY3mM9gEK90W72hYmS1GKTS/QoGif6y
+         0kPw==
+X-Gm-Message-State: AOAM530hfO7hcnOP81QuWO3INMNqpy4GSk5IoDxUdT2yspZtj4fusDX7
+        z7fPaiJP0zbQygYNUUmeUW0QCMQ=
+X-Google-Smtp-Source: ABdhPJy8hPLVFbURKpzt4JkKcaVfPLpOG6kL1j2S6lIetgpuuXVfA0JTlrPJA9FkG7UPnq7IBYsoNw==
+X-Received: by 2002:a6b:7017:: with SMTP id l23mr3953486ioc.140.1590697595804;
+        Thu, 28 May 2020 13:26:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id r10sm1796858ile.36.2020.05.28.13.26.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:25:17 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Ungerer <gerg@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH 0/2] fix missing handling of __user in nommu's uaccess()
-Date:   Thu, 28 May 2020 22:25:12 +0200
-Message-Id: <20200528202514.27175-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 28 May 2020 13:26:35 -0700 (PDT)
+Received: (nullmailer pid 620829 invoked by uid 1000);
+        Thu, 28 May 2020 20:26:34 -0000
+Date:   Thu, 28 May 2020 14:26:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+Cc:     linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dt-bindings: thermal: tsens: Add zeroc interrupt
+ support in yaml
+Message-ID: <20200528202634.GA620781@bogus>
+References: <20200517104627.29501-1-manafm@codeaurora.org>
+ <20200517104627.29501-3-manafm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200517104627.29501-3-manafm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I received a bug report for an unrelated patch when used with m68k-nommu.
-It appears that the origin of the problem is that __get_user() and
-__put_user() doesn't handle correctly __user. These 2 patches fix this.
+On Sun, 17 May 2020 16:16:27 +0530, Manaf Meethalavalappu Pallikunhi wrote:
+> Add zeroc interrupt support for tsens in yaml.
+> 
+> Signed-off-by: Manaf Meethalavalappu Pallikunhi <manafm@codeaurora.org>
+> ---
+>  .../bindings/thermal/qcom-tsens.yaml          | 21 +++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
 
-Note: this is only minimaly tested but is quite straightforward and
-      since this only change __user annotation it will not change the
-      generated code.
-
-Luc Van Oostenryck (2):
-  m68k,nommu: add missing __user in uaccess' __ptr() macro
-  m68k,nommu: fix implicit cast from __user in __{get,put}_user_asm()
-
- arch/m68k/include/asm/uaccess_no.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Reviewed-by: Rob Herring <robh@kernel.org>
