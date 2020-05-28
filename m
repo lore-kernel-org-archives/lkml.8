@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE6D62168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D54F2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590666999;
-	bh=EUyRpb3EQAr3VgeyKmxe4l/6m82tQ6ZFBOGR+llSCE0=;
+	s=default; t=1590667005;
+	bh=SXeOyrI9WO1tlCA+D5zsxsVgIxlxT1ShXur1AVJHTik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzlDZnu6S1WE4tedWjHnTgU2Hf02sP2WNCxLPHr7z69NusWTOwLa8LYLZypNHsCrG
-	 jEJXkZejt8xynDF0ypgh4NHMw1GAG97xKxVpsDxplYHlvzfWCYOjmoKW4faK4qc0zy
-	 bFADeZi2g5Ydd5gU8fIGQueo4PPzGMDL89XhgPiw=
+	b=ZJamcuw3zp6gS1uQAAJEB2f0kO+ZrECTruFi3G0tJQ7fNbbuX6cHa90VxPoI0JRy3
+	 25NkPNPmu4pQ1MyNnenoeZn5IlaXLFHMXARXT9Lv2yrjAUH8H5V+KiOY+HcOswHeR7
+	 g+zDv5v6KhYsvw2WceBLVTJl1F0loNDxFheYOalc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388787AbgE1L4i (ORCPT
+        id S2388801AbgE1L4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48130 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388652AbgE1L4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:16 -0400
+        id S2388630AbgE1L4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363892089D;
-        Thu, 28 May 2020 11:56:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAFE420C56;
+        Thu, 28 May 2020 11:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590666975;
-        bh=EUyRpb3EQAr3VgeyKmxe4l/6m82tQ6ZFBOGR+llSCE0=;
+        s=default; t=1590666980;
+        bh=SXeOyrI9WO1tlCA+D5zsxsVgIxlxT1ShXur1AVJHTik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+QGi3dl2A0bZwOowjTimc1ZQRmi5TT3xEaXiUM3fUVghQ8S1UCPw4CY1x4ZkvlAW
-         GF3qoLSiW5r9St/F96ma6FivHRdfrcTheCI5Pv22ssJkR+7IRSXqhDSYH3rNfaftpZ
-         M55FKLAcVWEnnQQdG1noNIgcp8u766bMYb+BFLlY=
+        b=ZoHH4YR5uikGe5gyTO5tdCcGEo+9UVEI0/o/gxs4tWSTH8Ly9b9NP17Ecd6U32JuF
+         iXc6dld4C6CxzmIEwSfULGgKs2F3DNupRqB/9m7P2WQrps642S3aC6ytXJb0qo50mG
+         9hS0iTm51TQzSBgDcmzaG8jdjoW39Y0HwY7ksoN8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
+Cc:     Marc Payne <marc.payne@mdpsys.co.uk>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.6 13/47] net: phy: propagate an error back to the callers of phy_sfp_probe
-Date:   Thu, 28 May 2020 07:55:26 -0400
-Message-Id: <20200528115600.1405808-13-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 17/47] r8152: support additional Microsoft Surface Ethernet Adapter variant
+Date:   Thu, 28 May 2020 07:55:30 -0400
+Message-Id: <20200528115600.1405808-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -59,50 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Marc Payne <marc.payne@mdpsys.co.uk>
 
-[ Upstream commit e3f2d5579c0b8ad9d1fb6a5813cee38a86386e05 ]
+[ Upstream commit c27a204383616efba5a4194075e90819961ff66a ]
 
-The compilation warning below reveals that the errors returned from
-the sfp_bus_add_upstream() call are not propagated to the callers.
-Fix it by returning "ret".
+Device id 0927 is the RTL8153B-based component of the 'Surface USB-C to
+Ethernet and USB Adapter' and may be used as a component of other devices
+in future. Tested and working with the r8152 driver.
 
-14:37:51 drivers/net/phy/phy_device.c: In function 'phy_sfp_probe':
-14:37:51 drivers/net/phy/phy_device.c:1236:6: warning: variable 'ret'
-   set but not used [-Wunused-but-set-variable]
-14:37:51  1236 |  int ret;
-14:37:51       |      ^~~
+Update the cdc_ether blacklist due to the RTL8153 'network jam on suspend'
+issue which this device will cause (personally confirmed).
 
-Fixes: 298e54fa810e ("net: phy: add core phylib sfp support")
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Marc Payne <marc.payne@mdpsys.co.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/phy_device.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/usb/cdc_ether.c | 11 +++++++++--
+ drivers/net/usb/r8152.c     |  1 +
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 28e3c5c0e3c3..faca0d84f5af 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1239,7 +1239,7 @@ int phy_sfp_probe(struct phy_device *phydev,
- 		  const struct sfp_upstream_ops *ops)
+diff --git a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+index 0cdb2ce47645..a657943c9f01 100644
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -815,14 +815,21 @@ static const struct usb_device_id	products[] = {
+ 	.driver_info = 0,
+ },
+ 
+-/* Microsoft Surface 3 dock (based on Realtek RTL8153) */
++/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153) */
  {
- 	struct sfp_bus *bus;
--	int ret;
-+	int ret = 0;
+ 	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x07c6, USB_CLASS_COMM,
+ 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+ 	.driver_info = 0,
+ },
  
- 	if (phydev->mdio.dev.fwnode) {
- 		bus = sfp_bus_find_fwnode(phydev->mdio.dev.fwnode);
-@@ -1251,7 +1251,7 @@ int phy_sfp_probe(struct phy_device *phydev,
- 		ret = sfp_bus_add_upstream(bus, phydev, ops);
- 		sfp_bus_put(bus);
- 	}
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL(phy_sfp_probe);
- 
+-	/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
++/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153B) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x0927, USB_CLASS_COMM,
++			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = 0,
++},
++
++/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(TPLINK_VENDOR_ID, 0x0601, USB_CLASS_COMM,
+ 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 95b19ce96513..7c8c45984a5c 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -6901,6 +6901,7 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
++	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
 -- 
 2.25.1
 
