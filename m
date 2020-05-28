@@ -6,122 +6,106 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D514C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198F0206DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 005D3207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.unc.edu header.i=@cs.unc.edu header.b="Gs95XU5o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lOvtkAjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405634AbgE1RkW (ORCPT
+        id S2405642AbgE1Rkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
+        Thu, 28 May 2020 13:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405580AbgE1RkU (ORCPT
+        with ESMTP id S2405618AbgE1Rku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:40:20 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FC6CC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:40:19 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id x29so748919qtv.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:40:19 -0700 (PDT)
+        Thu, 28 May 2020 13:40:50 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A543C08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:40:49 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t7so11898086plr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:40:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.unc.edu; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PwV3I/h9ECDK55LAKNKKbcQuL9ExS3G7llHSq4Tn6OA=;
-        b=Gs95XU5o8voiR0MyzEnx3Pe1EHTIADOKs3x96D1pnBgK8IIPc4I7dTu9+jtsloXPi4
-         hpWct0/+63vHQanp26kSh46Nmb9FgQ1dkblM+O/zlDYWHKMLhFAdArsoz7B0eyhM3pgp
-         Lmmg1x5xyGpHTfZGD3veOfRZlxMiFjW8FD/MY=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g7RTdEHDP9ZxhdJtmUAz3+YuWy4V9Urh/wbShjIVBQw=;
+        b=lOvtkAjJErBV9hxiZrbpl1VhnWTX21zU0sD6T9SdiHj050/LjXLjpELafzpPZK3D9G
+         QuCot0wSxFGSFkGsOa5J9qfKOWZKxlzir26JfPOBj1v3JyoZF5NEYKzwA4C7cHN8QH4M
+         BQRxfhElrl6IwXrffCSNLZZh5RwaU0R7MLmX+xSUENGlZktnmPkgTNXHbRp329VgNOUK
+         qxKs1wq3Wv+PSIFFTAhvI2HHBGxzL2dRABB0gMdNgct8TK5FMMeaKj0/+3zlFP/KpwqJ
+         ZdtZSuJTg6iSDXxhbHoeP5aYLjCYfTDAGX1NclG8PUjvpquNFyB3fPCN4001CX/YJLuK
+         Yc1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PwV3I/h9ECDK55LAKNKKbcQuL9ExS3G7llHSq4Tn6OA=;
-        b=p8Mb7TJTadNfEDFAAnMpnSGaATQo7B0e+OPNEFCiJCc9aRWVSjsxjmIh1T2K6yvnOy
-         UwWW9LbQgu6Op41gHTcE613anX6h4kX63FYfUMw/t3mRQ/6CaCcnKgk/FrR8mOpULJl9
-         HIK6OJqNYxV8Mr/K9/OVTOo+Zz5YL+2WwHLfzg0t1EroRhqC0aUNjiAjccDA0qivZXga
-         9Y0i1xElT5q5WnfMLY1PTkZbFG/Z9x/fzgIR+qa4yvg+7MLJOq5hatMWWBv6yt69Ico6
-         9uRl8/k6iC7g+iy50SnoScxkbFOpJjK7CdpdGfLpoyQ0NREIdZiTZGs8JGGZQ3YQVP2G
-         g5uA==
-X-Gm-Message-State: AOAM530f2johv2hxOilkqlsrTnJx1L+TK18sdqQlV3RfzAucUd/rp+c4
-        AfnEBk79mVM8HvXftQe1wR2Jeg==
-X-Google-Smtp-Source: ABdhPJw7fXFPO0x5h+WG2LE1CdLFAZBgy3kqvhe0DlhNL3pEuLp62K6IVw54/xei1v63L3zwbYJ62Q==
-X-Received: by 2002:ac8:6bc1:: with SMTP id b1mr4336072qtt.65.1590687618729;
-        Thu, 28 May 2020 10:40:18 -0700 (PDT)
-Received: from pepe.local (71-142-124-255.lightspeed.rlghnc.sbcglobal.net. [71.142.124.255])
-        by smtp.gmail.com with ESMTPSA id v1sm5318374qkb.19.2020.05.28.10.40.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 10:40:18 -0700 (PDT)
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andi Kleen <ak@linux.intel.com>, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, bp@alien8.de, luto@kernel.org,
-        hpa@zytor.com, dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-References: <20200511045311.4785-1-sashal@kernel.org>
- <0186c22a8a6be1516df0703c421faaa581041774.camel@linux.intel.com>
- <20200515164013.GF29995@sasha-vm>
- <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
- <20200518153407.GA499505@tassilo.jf.intel.com>
- <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
- <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
- <20200519164853.GA19706@linux.intel.com>
- <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
- <87h7w7qy18.fsf@nanos.tec.linutronix.de>
- <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
- <87d06opd3a.fsf@nanos.tec.linutronix.de>
-From:   Don Porter <porter@cs.unc.edu>
-Message-ID: <e9a0a521-104b-5c3a-a689-78f878e73d31@cs.unc.edu>
-Date:   Thu, 28 May 2020 13:40:16 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g7RTdEHDP9ZxhdJtmUAz3+YuWy4V9Urh/wbShjIVBQw=;
+        b=KhTvrRNawHRzsOS5iemegtkgNFzDrYkyPknIQ0ZP6r+LECEuzLm0CCEP8nIL4bkchN
+         elnZTbulMhy/K8X9Vvd3fVsG0XMShJGDIHh2T9O8rjinkhocbohVRKrY3wX7ECnK7Kcy
+         h/JH3OEsqNE1XeJXvl87M4nKhwt6J6ZLXIQ1MnZoiet7URuIfKF8hbJmiCs6W5i08mEl
+         lGPNw2rswbRD9F6cFmkupFCZojf6dfaJN4iuEscQZMLSl6f1vOkkFZb+tLq/qgGSUsxJ
+         sA0nncOs7NSl4Z9GBoLuB0fTSgSab17Z9ZLZj317H/03nt8VGtwKfGx4cosoqnP7LyKc
+         Ttzg==
+X-Gm-Message-State: AOAM531YpDiQNhoIbPu+KvR7ERJ/Ub3JPysK547rL6Ha/DITdm/i+ynL
+        RItqat5tZPUacDGf5z413QwXtw==
+X-Google-Smtp-Source: ABdhPJynO8BCn5H2WUjwIh/uB1cHKEqZ4BrjVdrxDGghjcKxVp3bh3SmfbOuqLDJycCRWXayY+wclg==
+X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr4558181pls.85.1590687649056;
+        Thu, 28 May 2020 10:40:49 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id v3sm5465547pja.8.2020.05.28.10.40.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 10:40:48 -0700 (PDT)
+Date:   Thu, 28 May 2020 11:40:46 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCHv3 0/2] Add support for replicators which loses context on
+ clock removal
+Message-ID: <20200528174046.GA26008@xps15>
+References: <cover.1590171891.git.saiprakash.ranjan@codeaurora.org>
+ <20200525161553.GA31527@xps15>
+ <20200528144803.GA36440@bogus>
 MIME-Version: 1.0
-In-Reply-To: <87d06opd3a.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528144803.GA36440@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
-
-On 5/28/20 6:29 AM, Thomas Gleixner wrote:
->> Until recently, we were doing proof-of-concept research, not product
->> development, and there are limited hours in the day.  I also hasten to
->> say that the product of research is an article, the software artifact
->> serves as documentation of the experiment.  In contrast, the product of
->> software development is software.  It takes significant time and effort
->> to convert one to the other.  Upstreaming code is of little scientific
->> interest.  But things have changed for our project; we had no users in
->> 2015 and we are now un-cutting corners that are appropriate for research
->> but inappropriate for production.  For a research artifact with an
->> audience that knew the risks, we shipped a module because it was easier
->> to maintain and install than a kernel patch.
+On Thu, May 28, 2020 at 08:48:03AM -0600, Rob Herring wrote:
+> On Mon, May 25, 2020 at 10:15:53AM -0600, Mathieu Poirier wrote:
+> > Hi Sai,
+> > 
+> > On Sat, May 23, 2020 at 12:06:50AM +0530, Sai Prakash Ranjan wrote:
+> > > This series is mainly to add support for replicators
+> > > which lose context on removing AMBA clock like on SC7180
+> > > SoC where replicator in AOSS domain loses context.
+> > > 
+> > 
+> > I am good with this set but need a reviewed-by on the DT binding before I can
+> > add it to my tree.  The same goes for your other set[1].
 > 
-> I understand that and with a big fat warning and documentation from
-> start I wouldn't have complained so vehemently.
+> Then why is it already in linux-next?
 
-This is a fair point.  We will fix this ASAP, and I will be more careful 
-about this going forward.
+I wanted the patches to get exposure to linux-next before sending them on to
+Greg for inclusion in the next merge window.  Rest assured that I would not have
+moved forward without your consent.
 
->
-> Sorry for that innuendo. Now that my anger and general frustration about
-> this whole disaster have calmed down, I surely would not write that
-> again.
+> 
+> In any case,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-I appreciate you saying so.  Thank you.
+Thank you for that.
 
-I can also understand how frustrating the history was with this feature, 
-and we missed an opportunity to help sooner.  There is a lot I still 
-don't understand about the process of merging and testing patches in 
-this community, but if it makes sense for us to help now, we would be 
-willing.
-
--Don
+Mathieu
