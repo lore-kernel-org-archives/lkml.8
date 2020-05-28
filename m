@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EBFC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E7C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4C4220776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8B6208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbgE1JeL (ORCPT
+        id S2387572AbgE1JeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:34:11 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:40574 "EHLO
+        Thu, 28 May 2020 05:34:14 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40578 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387411AbgE1Jdf (ORCPT
+        with ESMTP id S2387414AbgE1Jdf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 05:33:35 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 57FE18030772;
-        Thu, 28 May 2020 09:33:31 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C30958030776;
+        Thu, 28 May 2020 09:33:32 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id De2h5mldPOtA; Thu, 28 May 2020 12:33:30 +0300 (MSK)
+        with ESMTP id 7sMrcUKHbCUU; Thu, 28 May 2020 12:33:32 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>, <linux-mips@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 05/11] i2c: designware: slave: Set DW I2C core module dependency
-Date:   Thu, 28 May 2020 12:33:15 +0300
-Message-ID: <20200528093322.23553-6-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 07/11] i2c: designware: Discard Cherry Trail model flag
+Date:   Thu, 28 May 2020 12:33:17 +0300
+Message-ID: <20200528093322.23553-8-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,40 +53,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DW APB I2C slave code in fact depends on the DW I2C driver core, but not
-on the platform code as it used to be before commit 90bc1ee6de9f ("i2c:
-designware: Allow slave mode for PCI enumerated devices"). Yes, the I2C
-slave interface is currently supported by both the platform and PCI
-versions of the IP core, but it still depends on the DW I2C core
-functionality and must be available only if the last one is enabled.
-So make sure the DW APB I2C slave config is only available if the
-I2C_DESIGNWARE_CORE config is enabled.
+A PM workaround activated by the flag MODEL_CHERRYTRAIL has been removed
+since commit 9cbeeca05049 ("i2c: designware: Remove Cherry Trail PMIC I2C
+bus pm_disabled workaround"), but the flag most likely by mistake has been
+left in the Dw I2C drivers. Let's remove it. Since MODEL_MSCC_OCELOT is
+the only model-flag left, redefine it to be 0x100 so setting a very first
+bit in the MODEL_MASK bits range.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: linux-mips@vger.kernel.org
 Cc: devicetree@vger.kernel.org
----
- drivers/i2c/busses/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 1d940810e47e..7f92f6a96042 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -529,6 +529,7 @@ config I2C_DESIGNWARE_CORE
+---
+
+Changelog v3:
+- Since MSCC and Baikal-T1 will be a part of the platform driver code, we
+  have to preserve the MODEL_MASK macro to use it to filter the model
+  flags during the IP-specific quirks activation.
+---
+ drivers/i2c/busses/i2c-designware-core.h    | 3 +--
+ drivers/i2c/busses/i2c-designware-pcidrv.c  | 1 -
+ drivers/i2c/busses/i2c-designware-platdrv.c | 2 +-
+ 3 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+index 150de5e5c31b..b9ef9b0deef0 100644
+--- a/drivers/i2c/busses/i2c-designware-core.h
++++ b/drivers/i2c/busses/i2c-designware-core.h
+@@ -289,8 +289,7 @@ struct dw_i2c_dev {
+ #define ACCESS_INTR_MASK	0x00000004
+ #define ACCESS_NO_IRQ_SUSPEND	0x00000008
  
- config I2C_DESIGNWARE_SLAVE
- 	bool "Synopsys DesignWare Slave"
-+	depends on I2C_DESIGNWARE_CORE
- 	select I2C_SLAVE
- 	help
- 	  If you say yes to this option, support will be included for the
+-#define MODEL_CHERRYTRAIL	0x00000100
+-#define MODEL_MSCC_OCELOT	0x00000200
++#define MODEL_MSCC_OCELOT	0x00000100
+ #define MODEL_MASK		0x00000f00
+ 
+ u32 dw_readl(struct dw_i2c_dev *dev, int offset);
+diff --git a/drivers/i2c/busses/i2c-designware-pcidrv.c b/drivers/i2c/busses/i2c-designware-pcidrv.c
+index 11a5e4751eab..947c096f86e3 100644
+--- a/drivers/i2c/busses/i2c-designware-pcidrv.c
++++ b/drivers/i2c/busses/i2c-designware-pcidrv.c
+@@ -149,7 +149,6 @@ static struct dw_pci_controller dw_pci_controllers[] = {
+ 	},
+ 	[cherrytrail] = {
+ 		.bus_num = -1,
+-		.flags = MODEL_CHERRYTRAIL,
+ 		.scl_sda_cfg = &byt_config,
+ 	},
+ 	[elkhartlake] = {
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index f6d2c96e35ce..ca057aa9eac4 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -44,7 +44,7 @@ static const struct acpi_device_id dw_i2c_acpi_match[] = {
+ 	{ "INT3432", 0 },
+ 	{ "INT3433", 0 },
+ 	{ "80860F41", ACCESS_NO_IRQ_SUSPEND },
+-	{ "808622C1", ACCESS_NO_IRQ_SUSPEND | MODEL_CHERRYTRAIL },
++	{ "808622C1", ACCESS_NO_IRQ_SUSPEND },
+ 	{ "AMD0010", ACCESS_INTR_MASK },
+ 	{ "AMDI0010", ACCESS_INTR_MASK },
+ 	{ "AMDI0510", 0 },
 -- 
 2.26.2
 
