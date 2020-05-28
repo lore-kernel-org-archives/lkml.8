@@ -2,128 +2,135 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28250C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC9A207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590684590;
-	bh=ZvL1zlVb0aD8FKJBrJFoJZtl2vsqUfSH5YS12c2w2SM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Pq6H29xDXG3uPZkJJsL17MlZbvl47XOP21K88qpdUzQ0qUbKeQjWd8tZGJv+SAvZo
-	 E4z2RB3d1VPwKqxeH/PwMHSlct7gg6/VhR3zYOhtdDEtt3Zf8dw/ko9pITKhcF00Pj
-	 GhhNvn9zK5SrB3b5vmkXsTYBgOAaB8CzTqRX4RfY=
+	by mail.kernel.org (Postfix) with ESMTP id 050C42075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dQH9ntwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405224AbgE1Qtt (ORCPT
+        id S2405236AbgE1QuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44118 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 12:50:25 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:58342 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405212AbgE1Qtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:49:40 -0400
-Received: from localhost (mobile-166-175-190-200.mycingular.net [166.175.190.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2405212AbgE1QuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:50:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590684622; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=HtAusP7H7FCOmXD0AJPhL0pz3Yk6Y+AVzGbR3KNH1U8=; b=dQH9ntwhZArib7ZVl2bzYE/peCVcDtN9XcQkpIRoku4bQXTSOkhytuymsPL/tIrkqGOHFDad
+ yeqvno0EUUDkzD5nMiGcTFGLvrGsvR4h5X8AIL0BcqNzAP8sNVIOAUKmOvNXyCxaPcl9hY3R
+ sjvExdUFRteQd5FedHFsu3sA3w4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ecfebc44776d1da6da45731 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 16:50:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A06C6C433CA; Thu, 28 May 2020 16:50:12 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [157.47.99.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6F0D2075A;
-        Thu, 28 May 2020 16:49:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590684580;
-        bh=ZvL1zlVb0aD8FKJBrJFoJZtl2vsqUfSH5YS12c2w2SM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=sYevLuoNVsyrmYY7rW9ivvtRaYn2l5/dFD1SMhThUEUwgqBgx2xM4JoAwMmw4YZWx
-         Dzr1IMGNmQgl34snFo+oKIZ/ITX3HRABJ3tIplUBnyQwrZh9dOib2KXIhkt229uyWJ
-         3AXVQZOyeR0LWXJLEqlaQiw+AJ+d/BvhdrXnXQeM=
-Date:   Thu, 28 May 2020 11:49:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200528164938.GA325239@bjorn-Precision-5520>
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 54FB0C433C9;
+        Thu, 28 May 2020 16:50:05 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 54FB0C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+Subject: Re: [PATCH V5 5/5] iio: adc: Clean up ADC code common to PMIC5 and
+ PMIC7
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org,
+        Jonathan.Cameron@huawei.com, andy.shevchenko@gmail.com,
+        amit.kucheria@verdurent.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
+ <1590157452-27179-6-git-send-email-jprakash@codeaurora.org>
+ <20200524130440.250edb2e@archlinux>
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+Message-ID: <0078a610-fed8-7a18-ecd1-27b8eb5a8feb@codeaurora.org>
+Date:   Thu, 28 May 2020 22:20:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200528163809.54f5ldvphrjg3zg3@pali>
+In-Reply-To: <20200524130440.250edb2e@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
-> On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
-> > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
-> > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > root bridge, the aardvark driver throws the following error message:
-> > > 
-> > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > 
-> > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > 
-> > > Extend check in advk_pcie_valid_device() function for validating
-> > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > as Not Found and the driver does not try to access these registers.
-> > > 
-> > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > ---
-> > >  drivers/pci/controller/pci-aardvark.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > index 90ff291c24f0..53a4cfd7d377 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > >  		return false;
-> > >  
-> > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > +		return false;
-> > 
-> > I don't think this is the right fix.  This makes it racy because the
-> > link may go down after we call advk_pcie_valid_device() but before we
-> > perform the config read.
-> 
-> Yes, it is racy, but I do not think it cause problems. Trying to read
-> PCIe registers when device is not connected cause just those timeouts,
-> printing error message and increased delay in advk_pcie_wait_pio() due
-> to polling loop. This patch reduce unnecessary access to PCIe registers
-> when advk_pcie_wait_pio() polling just fail.
-> 
-> I think it is a good idea to not call blocking advk_pcie_wait_pio() when
-> it is not needed. We could have faster enumeration of PCIe buses when
-> card is not connected.
+Hi Jonathan,
 
-Maybe advk_pcie_check_pio_status() and advk_pcie_wait_pio() could be
-combined so we could get the correct error status as soon as it's
-available, without waiting for a timeout?
-
-In any event, the "return PCIBIOS_SET_FAILED" needs to be fixed.  Most
-callers of config read do not check for failure, but most of the ones
-that do, check for "val == ~0".  Only a few check for a status of
-other than PCIBIOS_SUCCESSFUL.
-
-> > I have no objection to removing the "config read/write timed out"
-> > message.  The "return PCIBIOS_SET_FAILED" in the read case probably
-> > should be augmented by setting "*val = 0xffffffff".
-> > 
-> > >  	return true;
-> > >  }
-> > >  
-> > > -- 
-> > > 2.20.1
-> > > 
+On 5/24/2020 5:34 PM, Jonathan Cameron wrote:
+> On Fri, 22 May 2020 19:54:12 +0530
+> Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>
+>> This commit includes the following changes:
+>>
+>> Add a common function used for read_raw callback for both PMIC5
+>> and PMIC7 ADCs.
+>>
+>> Add exit function for ADC.
+> Hi Jishnu,
+>
+> I don't understand why one is needed, and if it is you can't do
+> what you have here without introducing some nasty races.
+> So if you need it clearly explain why in comments in the code
+> and also consider how it may race with new requests coming in etc
+> as the userspace interfaces are still visible.
+>
+> Move the eoc_irq addition to the structure here as well as makes
+> no sense in earlier patch.
+>
+> Thanks,
+>
+> Jonathan
+>
+>
+>> Add info_property under adc_data to more efficiently distinguish
+>> PMIC5 and PMIC7 ADCs.
+>>
+>> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+>> ---
+>>   drivers/iio/adc/qcom-spmi-adc5.c   | 81 +++++++++++++++++++++-----------------
+>>   drivers/iio/adc/qcom-vadc-common.h |  1 +
+>>   2 files changed, 46 insertions(+), 36 deletions(-)
+>>
+>>   
+>> +static int adc5_exit(struct platform_device *pdev)
+>> +{
+>> +	struct adc5_chip *adc = platform_get_drvdata(pdev);
+>> +
+>> +	if (adc->irq_eoc >= 0)
+>> +		disable_irq(adc->irq_eoc);
+> So here you are disabling an irq?  Why.  We should be removing it
+> cleanly in the managed flow shortly anyway.  If you did do this
+> here for some reason I'm not thinking of then you would have
+> a race against the userspace being removed on the unwind
+> of the iio device register.
+>
+>> +	return 0;
+>> +}
+>> +
+You're right about the exit function, the actions done in it are not 
+strictly required, so I'll remove it in the next post.
