@@ -2,117 +2,77 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2786C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770A8C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC09021508
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:45:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LPpZpcfF"
+	by mail.kernel.org (Postfix) with ESMTP id 5E2B6215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgE1HpK (ORCPT
+        id S1726063AbgE1HqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:45:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725747AbgE1HpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:45:08 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8433C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:45:08 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id l67so9263595ybl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:45:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t3Mj/cWa4xpcUJ8BLSKg6bmXtb9cSqMOt8PTdoqJX30=;
-        b=LPpZpcfFS1dm7aNBfZmif9Jb3defh3gSd6L7uz2BNhwXhknyTdhTYHZsrWPGdzV5CK
-         WLK59cl+stQT7Bmmvx5rlwQN/pGtXJr/jQO+EwTz29kco1v3bW3iJ7McW1Ty7g0vRqXp
-         j3+d9jXDHhno8mUVj/5TIkEGc0BxNDDS44gzvzSu7RiDzcqkufZlIcF3S+b6lpsSaiIe
-         XZkNmSEjITnitZh5pS4cklsKC8RSs4kywGKYqvtz4tvSDxDYd/Z0wBGfqsN44FAFGBeO
-         yIIPJltuVKf9xeHPDCXo5eit8wBtJQSoaLh4JATHTTXffc+Uaj1Ih4QB8/VsvameBae1
-         LBMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t3Mj/cWa4xpcUJ8BLSKg6bmXtb9cSqMOt8PTdoqJX30=;
-        b=DiblS4hJd8o+z4Ce8nrfDdyowbT7jU3Ux17OHkYtyY/vgnE7qpHZgQJfct8ETvKLJw
-         yZJroFF//VGQ+zWyg7BK+qcwCB/obEVQjWzjQQJOZeqqm1/XWrerCmEUXyJS8g5qJ/Lx
-         MIRBI5NJw3EUbq2VgARUb0ZqXk+W9YPa5DtnRr95laa/FdN3x3eCMme+YgC2lWHFFleD
-         R2jIinL92S1Xx4PH2ToBJRs4Cj/F4dh7sdXJpit7h81HOcu+s5Ccom2e/GNbBtgLJr1Q
-         pseUlrHdImSdcxynVkKkb4dmJ5j2kIKyd2TuFDRwWcg6saX8jeaOtDodDcl8CWYTIpj9
-         QvOg==
-X-Gm-Message-State: AOAM533A4u8mxyzQQmLxD66oZxWNB4HFyIxttAn7OyqmNKgo39SAQryx
-        GYj6U2JTW70X06Wb17Lv+PYi8WQgmJajAr7YuO/9PQ==
-X-Google-Smtp-Source: ABdhPJy+mQj+Gzg5+KOOm8x8XkZXrRCbixq5tQ+QOrgyB2Irjtqy3UhzaOBWGIWOv63kwB9r6OUsoR7xFE23LjAz+IY=
-X-Received: by 2002:a25:790e:: with SMTP id u14mr3108965ybc.324.1590651907863;
- Thu, 28 May 2020 00:45:07 -0700 (PDT)
+        Thu, 28 May 2020 03:46:17 -0400
+Received: from elvis.franken.de ([193.175.24.41]:42141 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgE1HqR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 03:46:17 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jeDF0-0000aG-00; Thu, 28 May 2020 09:46:14 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id CE484C059F; Thu, 28 May 2020 09:44:31 +0200 (CEST)
+Date:   Thu, 28 May 2020 09:44:31 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        kbuild test robot <lkp@intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] MIPS: DTS: Fix build errors used with various configs
+Message-ID: <20200528074431.GA10708@alpha.franken.de>
+References: <1590631141-23904-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-References: <20200528051916.6722-1-nick.gasson@arm.com>
-In-Reply-To: <20200528051916.6722-1-nick.gasson@arm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 28 May 2020 00:44:56 -0700
-Message-ID: <CAP-5=fWCLq+2xjViJaYxFs9b=3BxSvKmVAdv6xX3re8AoBLHWg@mail.gmail.com>
-Subject: Re: [PATCH] perf jit: Fix inaccurate DWARF line table
-To:     Nick Gasson <nick.gasson@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1590631141-23904-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 10:19 PM Nick Gasson <nick.gasson@arm.com> wrote:
->
-> Fix an issue where addresses in the DWARF line table are offset by
-> -0x40 (GEN_ELF_TEXT_OFFSET). This can be seen with `objdump -S` on the
-> ELF files after perf inject.
-
-Without too much knowledge this looks good to me. The original code
-came from oprofile's jit support:
-https://sourceforge.net/p/oprofile/oprofile/ci/master/tree/opjitconv/debug_line.c#l325
-
-Acked-by: Ian Rogers <irogers@google.com>
-
-> Signed-off-by: Nick Gasson <nick.gasson@arm.com>
+On Thu, May 28, 2020 at 09:59:01AM +0800, Tiezhu Yang wrote:
+> If CONFIG_MIPS_MALTA is not set but CONFIG_LEGACY_BOARD_SEAD3 is set,
+> the subdir arch/mips/boot/dts/mti will not be built, so the sead3.dts
+> which depends on CONFIG_LEGACY_BOARD_SEAD3 in this subdir is also not
+> built, and then there exists the following build error, fix it.
+> 
+>   LD      .tmp_vmlinux.kallsyms1
+> arch/mips/generic/board-sead3.o:(.mips.machines.init+0x4): undefined reference to `__dtb_sead3_begin'
+> Makefile:1106: recipe for target 'vmlinux' failed
+> make: *** [vmlinux] Error 1
+> 
+> Additionally, add CONFIG_FIT_IMAGE_FDT_BOSTON check for subdir img to
+> fix the following build error when CONFIG_MACH_PISTACHIO is not set but
+> CONFIG_FIT_IMAGE_FDT_BOSTON is set.
+> 
+> FATAL ERROR: Couldn't open "boot/dts/img/boston.dtb": No such file or directory
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: 41528ba6afe6 ("MIPS: DTS: Only build subdir of current platform")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 > ---
->  tools/perf/util/genelf_debug.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
-> index 30e9f618f6cd..dd40683bd4c0 100644
-> --- a/tools/perf/util/genelf_debug.c
-> +++ b/tools/perf/util/genelf_debug.c
-> @@ -342,7 +342,7 @@ static void emit_lineno_info(struct buffer_ext *be,
->          */
->
->         /* start state of the state machine we take care of */
-> -       unsigned long last_vma = code_addr;
-> +       unsigned long last_vma = 0;
->         char const  *cur_filename = NULL;
->         unsigned long cur_file_idx = 0;
->         int last_line = 1;
-> @@ -473,7 +473,7 @@ jit_process_debug_info(uint64_t code_addr,
->                 ent = debug_entry_next(ent);
->         }
->         add_compilation_unit(di, buffer_ext_size(dl));
-> -       add_debug_line(dl, debug, nr_debug_entries, 0);
-> +       add_debug_line(dl, debug, nr_debug_entries, GEN_ELF_TEXT_OFFSET);
->         add_debug_abbrev(da);
->         if (0) buffer_ext_dump(da, "abbrev");
->
-> --
-> 2.26.2
->
+>  arch/mips/boot/dts/Makefile | 2 ++
+>  1 file changed, 2 insertions(+)
+
+applied to mips-next.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
