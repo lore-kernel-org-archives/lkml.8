@@ -2,170 +2,100 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C20C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF27DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AE142088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2462088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="iIg4txwx"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="1Cdnlxqy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgE1JgC (ORCPT
+        id S1728414AbgE1Jgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:36:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
+        Thu, 28 May 2020 05:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgE1JgC (ORCPT
+        with ESMTP id S1728393AbgE1Jge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:36:02 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69D1C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:36:01 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so21769059wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:36:01 -0700 (PDT)
+        Thu, 28 May 2020 05:36:34 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6194C08C5C5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:36:33 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id z18so32507122lji.12
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 02:36:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HLigFKoZxJnnvAQ0/slq9LtsKPu9OoevHAv5EJtiE/Q=;
-        b=iIg4txwxNphRwkyWUYTIdfMbaShaHiy+NWUQW5rl+yLZLTpYNucwz6/flPzvdaLBa/
-         ZbSslc966IC43y9kUMwnQi3jNP+iI2tFkM9ah8IC6d07SjXgtpUZIdvc2S6HuNEU9wt8
-         I8Unh6VICaKKrgAwCEZIoeusENozgLCDjuOqccKFGgAyvXwgSsRcVNyh7CwV3PZGPHee
-         Hoj8SFYu3qyZM1RnH6gGy45w1y5Pc8GORwrZLnsvtTJTfeLDwvFIRPJVo5y8LgKdodc9
-         o5QrUFYr+YSYcCpurz6jvMdujlCptI+SR+t7KlcbN/3pLAwZmmu9A+9vjFdItTQn7fKz
-         5RWA==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cGBjK9dCqo4dJlRsAbsmYEmaf4ENvwE2PZqmvJJX8M4=;
+        b=1CdnlxqyvBU7dZGaclXOqtXkchUtcx8j+YdkbFP1SpxOQD5+Z0QjNkcog7a7zJAM+X
+         6F29RiX4ZfqJqyZ7ODDujaG2SZXMgdQOnoflxf3LY0JLitj8xzT9BrIEyY8ErizM+fnQ
+         Vv5WFtvy/m/JBBS53FZaYgyxdFH8d3wLyOKB3wLIxvsZhkuteura0/Gkr5KP1bUMMQCT
+         gIfvBvs7cw8YtHFb13TS3sWxZO1S3aDSuNe+xTAqdhT5QM2CX8IsIS1khWRe6zCm+Hss
+         IEZx3K4VTofvQYeehMCaAd8Zl4lPgwvV0jYFHwJ0UqxZrqln4l59TSyBp7S7BTBp4rMw
+         MGDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=HLigFKoZxJnnvAQ0/slq9LtsKPu9OoevHAv5EJtiE/Q=;
-        b=qao38GF4A5qPxdytl+aMVYqOe/TlEfSmM/eykKD2/qa49Xk4eDHzNDPWkP2SsLn7OF
-         bbSF+YUDVwvgr8zFB26m1jk0eLodjbACSkTYlIGOfHrNrTaS4uk9Fy45ou9qrQlHGjij
-         XdKWL8ZEd7X/U+inlgUBNhnXxRLq1HaSupenJOtVQRmww3GxVWiQwL3kMXsMJNwwBeXH
-         iUf4jEwnUAEuIpO5XdvtL07T/t7lDUuRg7DvhRZTQqsLppmZMsh4DOfcadp935lu2oGD
-         5Bo2eQwEej51XcLykDTbsZVaIsWPOSmIH/+4E7Dn98gXBK0KCkw41ju51yMfavs9cO5L
-         B/tQ==
-X-Gm-Message-State: AOAM53022X1lx1HHzYBoFlcVqWuz1MQyb9K5WVP9CVtovMgxJRFEw3cr
-        RnyMZtCrAKiGaA+gZ8N0SbVIhw==
-X-Google-Smtp-Source: ABdhPJxRAyELTwseA0cA1weHd9Qbi/caPi324Kxi1F9917DchR5vs916B8o3dd0DJ4+CS1K9Z1ee+A==
-X-Received: by 2002:adf:8b55:: with SMTP id v21mr2776926wra.187.1590658560438;
-        Thu, 28 May 2020 02:36:00 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d18sm5298451wrn.34.2020.05.28.02.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 02:35:59 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] irqchip/irq-mtk-sysirq: replace spinlock with raw_spinlock
-Date:   Thu, 28 May 2020 11:35:50 +0200
-Message-Id: <20200528093550.11511-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        bh=cGBjK9dCqo4dJlRsAbsmYEmaf4ENvwE2PZqmvJJX8M4=;
+        b=EhdsFHKzD81qRz1MQuslvRlfSN9NFSj0YNJdwiGtlEEgsRhfrwI8jZXJ8ZtBXd0Gk7
+         lS2QiH3duud5uCL48SYUNlif006Ger5fdry2ouMFXwCLcOaChcZcKt59frV+c/afzqnN
+         TDx1rCx5dqfDmQEihNkUFjco0qr1CZwWSf8tk3c9Nqh4eEjjm2y8FgQwIXbK76P2PFjh
+         7rkV6cUiHW8b7tasgfNgw30JszXzj2ip7e92zPdKajdThuoQjn9kDOeKPMICMvpkuJBU
+         VNIoGsIrKwpH/lhD44GanSHKcmuKwncRCoNMRn5CslG9GwvM3gpXOq16J6OJNYx1Hgv7
+         +X+Q==
+X-Gm-Message-State: AOAM532aaS3S5kPPqnTAH95i/Z9MuDUeU8Tl4Lrga4CpFmDJFVCyypjJ
+        R4H/N7r5WCdm1i/+ye01I8pQqA==
+X-Google-Smtp-Source: ABdhPJxLh5yqRSdwkZzVilW71YX+8M+avD1C0OgSooGK0fXIccgCzTlLZmQDYcG+oevjO0jEnJ1Ecw==
+X-Received: by 2002:a2e:a171:: with SMTP id u17mr1102613ljl.225.1590658592283;
+        Thu, 28 May 2020 02:36:32 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:49a:1ab0:1dad:577d:c46b:c479? ([2a00:1fa0:49a:1ab0:1dad:577d:c46b:c479])
+        by smtp.gmail.com with ESMTPSA id s2sm1335424ljs.39.2020.05.28.02.36.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 02:36:31 -0700 (PDT)
+Subject: Re: [PATCH 1/3] ARM: dts: r8a7742-iwg21d-q7: Enable HSUSB, USB2.0 and
+ XHCI
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+References: <1590611013-26029-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1590611013-26029-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <ecd8d191-6e52-ebae-facb-c4a211dcb1ef@cogentembedded.com>
+Date:   Thu, 28 May 2020 12:36:19 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1590611013-26029-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hello!
 
-This driver may take a regular spinlock when a raw spinlock
-(irq_desc->lock) is already taken which results in the following
-lockdep splat:
+On 27.05.2020 23:23, Lad Prabhakar wrote:
 
-=============================
-[ BUG: Invalid wait context ]
-5.7.0-rc7 #1 Not tainted
------------------------------
-swapper/0/0 is trying to lock:
-ffffff800303b798 (&chip_data->lock){....}-{3:3}, at: mtk_sysirq_set_type+0x48/0xc0
-other info that might help us debug this:
-context-{5:5}
-2 locks held by swapper/0/0:
- #0: ffffff800302ee68 (&desc->request_mutex){....}-{4:4}, at: __setup_irq+0xc4/0x8a0
- #1: ffffff800302ecf0 (&irq_desc_lock_class){....}-{2:2}, at: __setup_irq+0xe4/0x8a0
-stack backtrace:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7 #1
-Hardware name: Pumpkin MT8516 (DT)
-Call trace:
- dump_backtrace+0x0/0x180
- show_stack+0x14/0x20
- dump_stack+0xd0/0x118
- __lock_acquire+0x8c8/0x2270
- lock_acquire+0xf8/0x470
- _raw_spin_lock_irqsave+0x50/0x78
- mtk_sysirq_set_type+0x48/0xc0
- __irq_set_trigger+0x58/0x170
- __setup_irq+0x420/0x8a0
- request_threaded_irq+0xd8/0x190
- timer_of_init+0x1e8/0x2c4
- mtk_gpt_init+0x5c/0x1dc
- timer_probe+0x74/0xf4
- time_init+0x14/0x44
- start_kernel+0x394/0x4f0
+> Enable support for HSUB, USB2.0 and xhci on iWave RZ/G1H carrier board.
 
-Replace the spinlock_t with raw_spinlock_t to avoid this warning.
+    HSUSB, xHCI.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/irqchip/irq-mtk-sysirq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+[...]
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 73eae5966a40..6ff98b87e5c0 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -15,7 +15,7 @@
- #include <linux/spinlock.h>
- 
- struct mtk_sysirq_chip_data {
--	spinlock_t lock;
-+	raw_spinlock_t lock;
- 	u32 nr_intpol_bases;
- 	void __iomem **intpol_bases;
- 	u32 *intpol_words;
-@@ -37,7 +37,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	reg_index = chip_data->which_word[hwirq];
- 	offset = hwirq & 0x1f;
- 
--	spin_lock_irqsave(&chip_data->lock, flags);
-+	raw_spin_lock_irqsave(&chip_data->lock, flags);
- 	value = readl_relaxed(base + reg_index * 4);
- 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
- 		if (type == IRQ_TYPE_LEVEL_LOW)
-@@ -53,7 +53,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 
- 	data = data->parent_data;
- 	ret = data->chip->irq_set_type(data, type);
--	spin_unlock_irqrestore(&chip_data->lock, flags);
-+	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
- 	return ret;
- }
- 
-@@ -212,7 +212,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		ret = -ENOMEM;
- 		goto out_free_which_word;
- 	}
--	spin_lock_init(&chip_data->lock);
-+	raw_spin_lock_init(&chip_data->lock);
- 
- 	return 0;
- 
--- 
-2.25.0
-
+MBR, Sergei
