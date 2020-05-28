@@ -7,122 +7,86 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EED3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313032063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AED12063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRx/7hQD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6foASzd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgE1IgJ (ORCPT
+        id S1727108AbgE1IiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
+        Thu, 28 May 2020 04:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgE1IgI (ORCPT
+        with ESMTP id S1726955AbgE1IiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:36:08 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DFB3C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:36:08 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id p20so15663026iop.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 01:36:08 -0700 (PDT)
+        Thu, 28 May 2020 04:38:02 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A546DC05BD1E;
+        Thu, 28 May 2020 01:38:01 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n15so2824379pjt.4;
+        Thu, 28 May 2020 01:38:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uT4eWMkMaTt5Zn1KFtI5xywQUYmU8P3QSNVJGXKzf1g=;
-        b=nRx/7hQDbzvh0zE2bELOPZMvmbyrBSSJchv7YXY7hu95TtsV0GImzIozBFVzixn3qq
-         9gOFv+hWi1rk/ctIxUw9SFTvh2yQnqnEm2pnia+vvvRJCvmBFWxlBZkpPmsbDLSFSbQq
-         3E+KuV3F2n366R2rnaGVuITocKBRjltpjv7o8StM4pZs7eZXp0Ky/EkSM7gxgig/ms18
-         Sokd3uVogGgu10zRre1esV6qy3LuFK4JrkJrNIi8XBnXai6KZtx9TekJkzNAeb5vbY7e
-         OQ7Og3yx1wcb+W/f/BQUoXgJM9lapSMlZQzXi5qFpv8Z+BloOflub5KkD0jRp9CsKzo1
-         nKPQ==
+         :cc;
+        bh=3FeLF9C4KrWkMchJbnEzZmVQQSmBZVMkSMWSfHFIMoo=;
+        b=X6foASzdCTwtc31HmvAT1LCYr1zbPvHeYlZBvlvVamztFkyV++dAqD4EoUMJIpvmu/
+         BubIg4ZM+eGNQOTOf8oJGG4ReUja2Iuuf9Y012KgU6voe7AU9fq9JO44C28cD98hxaiF
+         YSahDZ4NYSMgFvexgo9ZS0IUfROUfPlOWmdjrHY03kQMyqV9BlRL9Bfl8zMuCy2rNW8L
+         waHelqvvUuqaGdAJvdhiVmHgh9JaxR8Y5F8tNSt27QfbMOuEhP+dUBm/OQ94L309pUyl
+         iePoqHxCEXkvWWA/1ffx99FiLmPYUWUQz5DEs16IYjg9xiiXKEjJuO8But8iGris04+j
+         r7iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uT4eWMkMaTt5Zn1KFtI5xywQUYmU8P3QSNVJGXKzf1g=;
-        b=K5iF39HPA2ideey+4BcZjDMu7jjF9xqkTJjj7vj8Xk9wK1JMN6EKTP6Kila2itpbAw
-         QVxxhTCt4gKTfwMp+3RlHCZU7LeDmJaKfXTEDa23Uc61lJ0hqsoD2TGoPF4stomU9mgD
-         SgM1+YlhJu4wI/JuHwljAYtERFY4ITkABTxaqitRt6gHHn77WoaUBT8cZUGCvCF2W8KB
-         /Cy0hSxqQ6sPcD+rphp7Fn4PAbDgAaWsUXsDchbB7Fw4sfEhlj3JYiaafLVy45OPcsU6
-         dNnd7PNubXBSDIaZJb0UYq3jqO24whqqSboliYsHZeBNkkL1mp0mdZpsplaYrwYVH1im
-         JOMQ==
-X-Gm-Message-State: AOAM5305ciVptWg7JVaIrg8c3cp5K4n6s0ePG4HrXoqzozF6ojmxmRuZ
-        WjoPNHApcZYysp3+uG31+/BwBkOluLsx+RE5fvI=
-X-Google-Smtp-Source: ABdhPJyeFM2Qs4iPQhKzae7gJIe6e+GDWTcI/+u0v4jlKsDGWeXWEzm+1KOPAb8D1V/Gq9eT9KPXWrcEIUvDOTVMOiM=
-X-Received: by 2002:a05:6638:dc3:: with SMTP id m3mr1560724jaj.98.1590654967518;
- Thu, 28 May 2020 01:36:07 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=3FeLF9C4KrWkMchJbnEzZmVQQSmBZVMkSMWSfHFIMoo=;
+        b=fVCbXHvX/YKEvkrvFh33tV5cwyjKnW9iEdhoCpDFVlqppz+6N27OKCoTd8aqhdoykx
+         l7/RmLtoNa4K6EhmWmow1+Eyc+NsDZBuvPiYoc47KkY2gQHrEVHaj0KdhdbPYVH9jYZb
+         UJBWpLuLykkIL0hQXdvdjWf4r8TDXlh6ze1tEQTyCOnt0vpTQvdO8+XwetvK+nxNJOTm
+         eRX1MRhtzy7h90CM3x9tkEQJIxrt6uCjtpYZpSywBIinNSYNgRWQnE8x2IVd/WX2ZsIV
+         TNbAnXgrQzTm53CrKndURMUltq+gRrWoBvtWSClhgh6pyXer7FvzK6dE8xZdnUqef9y6
+         lSDQ==
+X-Gm-Message-State: AOAM531WK8jTE4FHGfSpZvpHqc0DACrtZzCIv2S1qcFob2GsS/tfivZ1
+        F6O9a4detBy0XxTAPAWc4yeSqSgN7X9Wf0zGfGU=
+X-Google-Smtp-Source: ABdhPJxUeGRUtaopPBCGbuHZA+j7iUZdoj7kYiqqCQGTb+RDEzEKRMsQbLc2m7fremZ0Lg+xUPDCWf/Pzcqgo8wEsfM=
+X-Received: by 2002:a17:902:d68e:: with SMTP id v14mr2413312ply.262.1590655081175;
+ Thu, 28 May 2020 01:38:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200527194633.1660952-2-bigeasy@linutronix.de>
- <20200528030657.1690-1-laijs@linux.alibaba.com> <20200528080844.37wgxcy77uu7pmmz@linutronix.de>
-In-Reply-To: <20200528080844.37wgxcy77uu7pmmz@linutronix.de>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Thu, 28 May 2020 16:35:56 +0800
-Message-ID: <CAJhGHyCa=GTb5rXsfO1DrJ8aT4WMrh6r8t9m-PCwDkHapfQG7w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] workqueue: pin the pool while it is managing
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
+References: <20200525160741.21729-1-michael@walle.cc> <20200525160741.21729-3-michael@walle.cc>
+ <d245b4f5-065f-4c82-ef8e-d906b363fdcf@linux.intel.com> <6d08ebbfbc9f656cb5650ede988cf36d@walle.cc>
+ <fe44039a-4fa9-dab3-cd14-04967b729158@linux.intel.com> <143ec2f44c881706db9744465328329f@walle.cc>
+In-Reply-To: <143ec2f44c881706db9744465328329f@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 May 2020 11:37:49 +0300
+Message-ID: <CAHp75Vf7XxNFJMSOr6SzKHm0tssEVKzokaEeZ8nts5xQ2hQLNA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] gpio: add a reusable generic gpio_chip using regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 4:08 PM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
->
-> On 2020-05-28 03:06:55 [+0000], Lai Jiangshan wrote:
-> > So that put_unbound_pool() can ensure all workers in idle,
-> > no unfinished manager. And it doens't need to wait any manager
-> > and can go to delete all the idle workers straight away.
-> >
-> > Also removes manager waitqueue, because it is unneeded and as
-> > Sebastian Andrzej Siewior said:
-> >
-> >   The workqueue code has it's internal spinlock (pool::lock) and also
-> >   implicit spinlock usage in the wq_manager waitqueue. These spinlocks
-> >   are converted to 'sleeping' spinlocks on a RT-kernel.
-> >
-> >   Workqueue functions can be invoked from contexts which are truly atom=
-ic
-> >   even on a PREEMPT_RT enabled kernel. Taking sleeping locks from such
-> >   contexts is forbidden.
-> >
-> >   pool::lock can be converted to a raw spinlock as the lock held times
-> >   are short. But the workqueue manager waitqueue is handled inside of
-> >   pool::lock held regions which again violates the lock nesting rules
-> >   of raw and regular spinlocks.
->
-> This seems to work for my test case I had test my chance. And lockdep
-> didn't complain so=E2=80=A6
->
-> If you prefer this over my 1/2 what do we do about 2/2? Do you want me
-> to repost it?
+On Thu, May 28, 2020 at 7:11 AM Michael Walle <michael@walle.cc> wrote:
+> Am 2020-05-28 02:31, schrieb Pierre-Louis Bossart:
 
-I think we can just wait until Tejun reviews them.
 
-If there is something wrong that I missed in my patch, your patches
-are the best choice.
+> I've send a v5 with that fix and your names property.
 
-If I need to update my patch, I will repost the 3 patches
-(2 of mine, the 2/2 of yours). At least I forgot to add
-"Reported-by Sebastian Andrzej Siewior <bigeasy@linutronix.de>"
-in the patch.
+Did you already? Because I have a question why we have gpio-regmap.h
+instead of gpio/regmap.h ?
 
-If Tejun queues my patches right away, you can rebase the 2/2
-of yours and repost it.
-
-Lai
-
->
-> Sebastian
+-- 
+With Best Regards,
+Andy Shevchenko
