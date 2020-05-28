@@ -2,160 +2,164 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05925C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466252075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDE472075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qzQNmOjJ"
+	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="IoB0+cg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgE1GGX (ORCPT
+        id S1727883AbgE1GJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbgE1GGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:06:22 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851E8C05BD1E;
-        Wed, 27 May 2020 23:06:21 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id nu7so2597808pjb.0;
-        Wed, 27 May 2020 23:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QRjmGZLeTYEO4i6MoF3PtMzQtXAOSemrWcRExVPUhU0=;
-        b=qzQNmOjJMfx76fCYwTzEmTuVwMGge0fL0GWMupqX0HLjuKhR49C7IW0linuKLYMFff
-         pT9IgB7pfjGuI9MGGOsNafL/gpkZxX0sO+68ICAkIeIYY9Cj+Cg/4FLq1i1cLiHVBNba
-         ME5L2kT617ELN+gNFH1URELQdmrhHJnIXJNaC4bU9a3mycImgez61p/gBrVzqmmu1WuL
-         pTLgmOjqEwGZoFvWR9UxP8CLtNKobiWraqdwe9AAlR+8aIRcWtGrQmt+MFYTtq4GAk+S
-         3ehH+LX/hC9ip2ZPrTomrcn2ecq4NR1RBJ7e3TQi3gkuyMnU1m4z/10Wem9GCg2+AznL
-         +HZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QRjmGZLeTYEO4i6MoF3PtMzQtXAOSemrWcRExVPUhU0=;
-        b=UMXYpFQafUQa0r9dSR789IEUX5n+XV3ysFqlUE7mGzYQHiMt4NsEX5C+fErjmjx3FT
-         qFLvMYXruxGiXwEBTSxfOAvuXpFCY7TUZfqglNTQXoJzZ+lLFMTRqDEsnsu7kq79Yyqk
-         wvlo0423+dq/SCzHGncWVGplC0+Cc0dvCvQZ5af7uobMQulCcnWvWAzE1pO7W/o94hg8
-         nmPe4wO4wZNVmbjiyIVqd61XVjCxLJNSdZt8Rn7GzJrXg3oN1auPm5Fu4twTo6av5zYt
-         9DCrx4A4uS79ciULOAkKJKu5PRs/FuOCVXBFjbUWL0eaYiIzQS9hxKARps7x54vOohpp
-         DI+w==
-X-Gm-Message-State: AOAM531Cr0IVihVCgJ/6XAyDyIKPumd3Arws3kUe54WiA/szjzrdBYLa
-        9nllDgfyWHBdK5HOxAexNFQ=
-X-Google-Smtp-Source: ABdhPJwgQh/1+ElEZy/GFWA/I0TiUP5DNcoygK4OlSyCCkgMjGUipBHyCB8x1THDdNmuLIZxE5pa7g==
-X-Received: by 2002:a17:902:7d89:: with SMTP id a9mr1924897plm.309.1590645980888;
-        Wed, 27 May 2020 23:06:20 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id w73sm3698863pfd.113.2020.05.27.23.06.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 23:06:20 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Fangrui Song <maskray@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] s390: vdso: Use $(LD) instead of $(CC) to link vDSO
-Date:   Wed, 27 May 2020 23:06:01 -0700
-Message-Id: <20200528060600.2732012-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.27.0.rc0
-MIME-Version: 1.0
-X-Patchwork-Bot: notify
+        Thu, 28 May 2020 02:09:08 -0400
+Received: from mail-vi1eur05on2072.outbound.protection.outlook.com ([40.107.21.72]:6228
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725859AbgE1GJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:09:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ff8Uq1dLQnEOm9m+d95HCPSiixMyAkbxKPuodtPIF8cJJkLG5ON6rmEOcC8ADj4RKdyAOgzlYZUO9SaV3UkcbgMlBE6axNsVlf1nD3zgizU3r1rVQ+5IKM6JDyc2TSMIFgEwXvcDF52JK00tw709Gp3Vj+x+Zd+0M+r06HhsxJyWoIvizFjtULN07KjcPJgiy8JfqFA/oZHppudFht5TGrNMk8AQDy3ZvNFr5FQEnfYBUZHH1T2QKpUpuwTzKSTAb8jO/lguidGQu6s5ANSjoihM9NXKsx82u+xkcDuWYCRF67VQ6BewksPqHZMoln9tueRUMLw5iVt9eB9fC25JMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tdtb7k0erezvtKZlDYfeoifDI1kv6qS2NbHBTD8Os34=;
+ b=KkzSH3Tut9yFS5We0sYG8+GMQj6a3bedEtk2F0zp1UWHXcwA5sP6x2hkvXwvJmsHIugARt4vEMLjAp2s1BPpZDWHPdHMy9TzWgZPSDQcRX/lcTXiezh2w8yJlFI/VM2uFQ+0hGoTOewmji/4BIzC6/xHE4gfcNJDIkEQje3IJx7MsRE/rKVv6PLueDoMyACT1QOXqVRABwMWmdP2qH+EsFR+uT1BiBMBYO0QeWUEfUpDYUr0PZ88VfuxSKYUmmn5BbNtV55SVYnHPrm+Z6jsEV58oa3mGQkKGMEY4JejmuI+XSfq2g+wncywAeUmbAziCp4SOoSdg4lh9lScClhi4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vaisala.com; dmarc=pass action=none header.from=vaisala.com;
+ dkim=pass header.d=vaisala.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tdtb7k0erezvtKZlDYfeoifDI1kv6qS2NbHBTD8Os34=;
+ b=IoB0+cg7WE74ExyeWjr0IGLJKLa6EYH9aW8nQnnrpTEotFFxxPoi1SKonsUbwM801ZBZe5vwRLxA5LruSpuW2DTn3qz+8Lahv464L4oTubT+DLw1O5Cd3EJKHLE39XG3c+1adUWApnugdtiu7Op1UpA1/OQvX7Ukq2g409b+EIE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=vaisala.com;
+Received: from HE1PR0601MB2251.eurprd06.prod.outlook.com (2603:10a6:3:98::19)
+ by HE1PR0601MB2156.eurprd06.prod.outlook.com (2603:10a6:3:2c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
+ 2020 06:09:03 +0000
+Received: from HE1PR0601MB2251.eurprd06.prod.outlook.com
+ ([fe80::9864:8c:829f:f47f]) by HE1PR0601MB2251.eurprd06.prod.outlook.com
+ ([fe80::9864:8c:829f:f47f%12]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 06:09:03 +0000
+Subject: Re: [PATCH] tee: fix crypto select
+To:     Jens Wiklander <jens.wiklander@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
+        Rijo Thomas <Rijo-john.Thomas@amd.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200527133924.724819-1-arnd@arndb.de>
+ <CAHUa44HXs_h5ZBizHXDtYWa9Ubk=64AgiM5zj7rGx0CxVcSbTA@mail.gmail.com>
+From:   =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= 
+        <vesa.jaaskelainen@vaisala.com>
+Message-ID: <06e95717-7b00-68ef-67c5-d01422839994@vaisala.com>
+Date:   Thu, 28 May 2020 09:08:58 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+In-Reply-To: <CAHUa44HXs_h5ZBizHXDtYWa9Ubk=64AgiM5zj7rGx0CxVcSbTA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: HE1PR05CA0377.eurprd05.prod.outlook.com
+ (2603:10a6:7:94::36) To HE1PR0601MB2251.eurprd06.prod.outlook.com
+ (2603:10a6:3:98::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.24.18.171] (193.143.230.131) by HE1PR05CA0377.eurprd05.prod.outlook.com (2603:10a6:7:94::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Thu, 28 May 2020 06:09:02 +0000
+X-Originating-IP: [193.143.230.131]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c43008fb-fbb9-4ac7-a94b-08d802cd9ed1
+X-MS-TrafficTypeDiagnostic: HE1PR0601MB2156:
+X-Microsoft-Antispam-PRVS: <HE1PR0601MB215696219B0D2BEEB5DB8488ED8E0@HE1PR0601MB2156.eurprd06.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0417A3FFD2
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yhaBTGdBshRF8Q3GA+DZAIYV2B/GgEghSM26Hz9RVN/Kekh9jnJKMPgFUJziWgmZN4E/5XoE9j8oKk0Iqv25QUPy9qIe1Ogeo4pJ4v+vQCdv/CJ8lmvuVTNPQFTAdFOvGD5HDShsWxQ6RRGivznBGaXUZMNrqZQKI3Zdr9bYf9lVhZjS+JcpqomRfJ8y1FPEzmlFCBhbkl+jOOHGyFYVMy2iL07kyaBroQEzMUO8lXLLQcUgZe/X5pl0fnZpSHkSsyzKfw3WvULYdj/fYzzqnrl+G+0QBMID+xlaH6o33eR+vW/byesjAz3lBL9dJ+edBB/sne5rlex9PcXySrQQMDBDzVCQGTNQWsvsX3Ix3//CQ1tiFRR4+driFaOKgG3e
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0601MB2251.eurprd06.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(396003)(346002)(366004)(39860400002)(136003)(316002)(5660300002)(66574014)(66556008)(8676002)(66946007)(36756003)(66476007)(31696002)(16576012)(31686004)(85202003)(53546011)(4326008)(16526019)(6666004)(6486002)(54906003)(8936002)(26005)(186003)(110136005)(2616005)(478600001)(956004)(52116002)(85182001)(2906002)(86362001)(83380400001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Hua6NIsumP+QOEc1tG2rGc1zARRToRY9J38Cyt/Xdf+5Y/f+pYpO6wzJXRxcsFfPpyd+cuYn2JanFCtdjAuLVz5MijnQ1Kk5rKxMKhMhxb0KgtI9E/8ZzBbGG7hKfMZwgl2B7hrnWQu3pkrP5ObCJ9o1xwYFBLZQUxkQ5khu3sFIM3z3B4kvWqVPK/tqIcdZrvNyc7PHc750+h5Bxl2rkkqMhnnp2S7aI93skh4GoUN/FMNM2tpkyK42C+cI0jvxpielIERvEqH94KIRO6gj0h7ozY9OF5U/oRt7vgGXNFq5MWB4582rSkyO4i/FgcngitE7mXOJarNQf2UQwz0Auyf8XTKhRs+vkLByOX+mykpY/k7g/ar4X64yn2Ob9kZzFP7X99aSQ5JiaZkI7TqtGuF/Osgrxr45lJ5MZsKfAz9cXGEnvLlws/OtQ9qQlw0TC8n4Vl/3RcfBKtqPGg5lmDdu1CtiMfBXA0sedhhjwOJajTEL4UJxCETf3Z9TkDxt
+X-OriginatorOrg: vaisala.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c43008fb-fbb9-4ac7-a94b-08d802cd9ed1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 06:09:03.1215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rQqCIhhXmSAlc6f5lBNKw12dGGX2pXhZOPX7vGb2y6vo+T8uQTjCsIGiE2H6RjgDN6wRgMucgKSTDmlg2f34rAnud20tBIsfsIUg3PMQlhs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0601MB2156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the VDSO is being linked through $(CC). This does not match
-how the rest of the kernel links objects, which is through the $(LD)
-variable.
+Hi Arnd & Jens,
 
-When clang is built in a default configuration, it first attempts to use
-the target triple's default linker, which is just ld. However, the user
-can override this through the CLANG_DEFAULT_LINKER cmake define so that
-clang uses another linker by default, such as LLVM's own linker, ld.lld.
-This can be useful to get more optimized links across various different
-projects.
+On 2020-05-27 18:07, Jens Wiklander wrote:
+> Hi Arnd,
+> 
+> On Wed, May 27, 2020 at 3:39 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>>
+>> When selecting a crypto cipher, we also need to select the
+>> subsystem itself:
+>>
+>> WARNING: unmet direct dependencies detected for CRYPTO_SHA1
+>>    Depends on [m]: CRYPTO [=m]
+>>    Selected by [y]:
+>>    - TEE [=y] && (HAVE_ARM_SMCCC [=n] || COMPILE_TEST [=y] || CPU_SUP_AMD [=y])
+>>    Selected by [m]:
+>>    - CRYPTO_DEV_QAT [=m] && CRYPTO [=m] && CRYPTO_HW [=y]
+>>    - CRYPTO_DEV_MEDIATEK [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && (ARM && ARCH_MEDIATEK || COMPILE_TEST [=y])
+>>    - CRYPTO_DEV_SAFEXCEL [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && (OF [=y] || PCI [=y] || COMPILE_TEST [=y]) && HAS_IOMEM [=y]
+>>    - CRYPTO_DEV_CCREE [=m] && CRYPTO [=m] && CRYPTO_HW [=y] && OF [=y] && HAS_DMA [=y]
+>>    - CRYPTO_DEV_SP_CCP [=y] && CRYPTO [=m] && CRYPTO_HW [=y] && CRYPTO_DEV_CCP [=y] && CRYPTO_DEV_CCP_DD [=m] && DMADEVICES [=y]
+>>
+>> Fixes: e33bcbab16d1 ("tee: add support for session's client UUID generation")
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>> The regression was introduced in the soc tree, I'd pick this patch
+>> up directly into that unless someone sees a problem
+> 
+> Thanks for taking care of this, please go ahead.
+> 
+> Cheers,
+> Jens
 
-However, this is problematic for the s390 vDSO because ld.lld does not
-have any s390 emulatiom support:
+I am also OK for the change. Sorry that we did not notice this during 
+the review.
 
-https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
+Feel free to merge it to the original commit or leave as separate commit.
 
-Thus, if a user is using a toolchain with ld.lld as the default, they
-will see an error, even if they have specified ld.bfd through the LD
-make variable:
+Reviewed-by: Vesa Jääskeläinen <vesa.jaaskelainen@vaisala.com>
 
-$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
-                       LD=s390x-linux-gnu-ld \
-                       defconfig arch/s390/kernel/vdso64/
-ld.lld: error: unknown emulation: elf64_s390
-clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
-
-Normally, '-fuse-ld=bfd' could be used to get around this; however, this
-can be fragile, depending on paths and variable naming. The cleaner
-solution for the kernel is to take advantage of the fact that $(LD) can
-be invoked directly, which bypasses the heuristics of $(CC) and respects
-the user's choice. Similar changes have been done for ARM, ARM64, and
-MIPS.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/1041
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/s390/kernel/vdso64/Makefile | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index bec19e7e6e1c..b8db1ffbc2b9 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
- 
- KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
- KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
--KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
--		    -Wl,--hash-style=both
-+ldflags-y := -shared -nostdlib -soname=linux-vdso64.so.1 \
-+	     --hash-style=both -T
- 
- $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
- $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
-@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
- 
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
--	$(call if_changed,vdso64ld)
-+$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
-+	$(call if_changed,ld)
- 
- # strip rule for the .so file
- $(obj)/%.so: OBJCOPYFLAGS := -S
-@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
- 	$(call if_changed_dep,vdso64as)
- 
- # actual build commands
--quiet_cmd_vdso64ld = VDSO64L $@
--      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
- quiet_cmd_vdso64as = VDSO64A $@
-       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
- 
-
-base-commit: 9cb1fd0efd195590b828b9b865421ad345a4a145
--- 
-2.27.0.rc0
-
+> 
+>> ---
+>>   drivers/tee/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/tee/Kconfig b/drivers/tee/Kconfig
+>> index 806eb87d4da0..e99d840c2511 100644
+>> --- a/drivers/tee/Kconfig
+>> +++ b/drivers/tee/Kconfig
+>> @@ -3,6 +3,7 @@
+>>   config TEE
+>>          tristate "Trusted Execution Environment support"
+>>          depends on HAVE_ARM_SMCCC || COMPILE_TEST || CPU_SUP_AMD
+>> +       select CRYPTO
+>>          select CRYPTO_SHA1
+>>          select DMA_SHARED_BUFFER
+>>          select GENERIC_ALLOCATOR
+>> --
+>> 2.26.2
+>>
