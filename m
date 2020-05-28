@@ -2,113 +2,87 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7899C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11857C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F739206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9FB206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 22:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590703417;
+	bh=YVK8Lpb2pcQzYPa+g9E7u52SbRROFJJiP5k3r+Piq9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AlHk8NgxemSkx+90DdWxqxXl20DEJL5N5ChEFGO3ZWoZ9yVI91vC12pxSxfYz0kSi
+	 1GQzERyrotasoMbaddq/PfwFfdcB8cInQGwUPB7k9P8cp7zRVMMjigVTvGecuHP5yK
+	 g2ZfuCncdQ/F/IT9SNXmRzYp1xCT4cTklLC7mQ1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436853AbgE1WDY convert rfc822-to-8bit (ORCPT
+        id S2436862AbgE1WDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 18:03:24 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:60762 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436834AbgE1WC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 18:02:56 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1jeQbx-0005Eo-Rk; Fri, 29 May 2020 00:02:49 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Johan Jonker <jbx6244@gmail.com>, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: input: touchscreen: edt-ft5x06: change reg property
-Date:   Fri, 29 May 2020 00:02:49 +0200
-Message-ID: <12739492.Qs6HZxOyHu@diego>
-In-Reply-To: <20200528220136.GA748777@bogus>
-References: <20200520073327.6016-1-jbx6244@gmail.com> <4727344.YYj2SkWT1V@diego> <20200528220136.GA748777@bogus>
+        Thu, 28 May 2020 18:03:36 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44872 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436845AbgE1WDE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 18:03:04 -0400
+Received: by mail-io1-f65.google.com with SMTP id p20so142738iop.11;
+        Thu, 28 May 2020 15:03:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BVo7bwcyHNQhbNQlvK9k2FqD/huUhkXJ3cTPpto8QjM=;
+        b=Xha2xGn9u+dU0dRqRg1JI4LTW2jA2Hs4bgFLLsEPTdstdLk3+wXs8DXGk1i0hrX1UF
+         8Ety1poX1I17LNYAoKDz6/xcIxaiIiFNSwdkmQZzXg03L26N2IPbvzRiuoDTTRfmGwpW
+         6cpeN5ocIng4Oy1mWV92Zz9kkpNiiJWHSH0OXo9umsH3MICyMxUumWrWKJlbQxr1XhUq
+         KD336NL9s8BHwxlzMWTCWc9C0zzSEL4J0V9F1VaGcoadHsBZGhSWLrS1sGMdBq67JFOZ
+         2IrCfDtmxcOPap7a7U28d4deLylSsWrcarBFpIthl310bd1PYkQhquDi7VTNQqYHpOAS
+         zduA==
+X-Gm-Message-State: AOAM533AbMb2hR3P7jlI2NHWEGRFAOnxSWkTUVTkgWeZeenJVLnkcKxw
+        u6MB0gW8LfzdrH9C3Qy3xg==
+X-Google-Smtp-Source: ABdhPJzNW5gQ4aaMX82/bIdYGNG7tdR9dwc4EDAGFh0RCIznKrCd+mSB4tA6dHiC/erY5Uap94ohQw==
+X-Received: by 2002:a5e:a705:: with SMTP id b5mr4126254iod.12.1590703383914;
+        Thu, 28 May 2020 15:03:03 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id v15sm3962090ila.57.2020.05.28.15.03.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 15:03:03 -0700 (PDT)
+Received: (nullmailer pid 762177 invoked by uid 1000);
+        Thu, 28 May 2020 22:03:02 -0000
+Date:   Thu, 28 May 2020 16:03:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: mailbox: Add devicetree binding for
+ Qcom IPCC
+Message-ID: <20200528220302.GA762089@bogus>
+References: <20200520084854.19729-1-manivannan.sadhasivam@linaro.org>
+ <20200520084854.19729-2-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520084854.19729-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 29. Mai 2020, 00:01:36 CEST schrieb Rob Herring:
-> On Wed, May 20, 2020 at 08:41:59PM +0200, Heiko Stübner wrote:
-> > Hi Dmitry,
-> > 
-> > Am Mittwoch, 20. Mai 2020, 19:13:24 CEST schrieb Dmitry Torokhov:
-> > > Hi Johan,
-> > > 
-> > > On Wed, May 20, 2020 at 09:33:27AM +0200, Johan Jonker wrote:
-> > > > A test with the command below gives this error:
-> > > > 
-> > > > arch/arm/boot/dts/rk3188-bqedison2qc.dt.yaml:
-> > > > touchscreen@3e: reg:0:0: 56 was expected
-> > > > 
-> > > > The touchscreen chip on 'rk3188-bqedison2qc' and other BQ models
-> > > > was shipped with different addresses then the binding currently allows.
-> > > > Change the reg property that any address will pass.
-> > > > 
-> > > > make ARCH=arm dtbs_check
-> > > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/touchscreen/
-> > > > edt-ft5x06.yaml
-> > > > 
-> > > > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > > > index 383d64a91..baa8e8f7e 100644
-> > > > --- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > > > @@ -42,7 +42,7 @@ properties:
-> > > >        - focaltech,ft6236
-> > > >  
-> > > >    reg:
-> > > > -    const: 0x38
-> > > > +    maxItems: 1
-> > > 
-> > > Should we have a list of valid addresses instead of allowing any
-> > > address? Controllers usually have only a couple of addresses that they
-> > > support.
-> > 
-> > from what I've read, the fdt touchscreen controllers are just a generic
-> > cpu with device-specific (or better panel-specific) firmware, which seems
-> > to include the address as well - so it looks to be variable.
-> > 
-> > But of course that is only 2nd hand knowledge for me ;-)
-> > 
-> > 
-> > But also, the i2c address is something you cannot really mess up,
-> > either it is correct and your touchscreen works, or it isn't and and
-> > adding entries to this list every time a new address variant pops up
-> > feels clumsy.
+On Wed, 20 May 2020 14:18:52 +0530, Manivannan Sadhasivam wrote:
+> Add devicetree YAML binding for Qualcomm Inter-Processor Communication
+> Controller (IPCC) block.
 > 
-> Is that an Ack?
-
-for the patch itself:
-Acked-by: Heiko Stuebner <heiko@sntech.de>
-
-
-> I'm fine either way. It's really only useful if there's a single 
-> address because with a list it could still be wrong just as any other 
-> data like an interrupt number could be wrong.
-> 
-> Rob
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../bindings/mailbox/qcom-ipcc.yaml           | 80 +++++++++++++++++++
+>  include/dt-bindings/mailbox/qcom-ipcc.h       | 33 ++++++++
+>  2 files changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
+>  create mode 100644 include/dt-bindings/mailbox/qcom-ipcc.h
 > 
 
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
