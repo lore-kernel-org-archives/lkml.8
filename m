@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DECC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB4B5208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A767720776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbgE1Jde (ORCPT
+        id S2387449AbgE1Jdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:33:34 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:40524 "EHLO
+        Thu, 28 May 2020 05:33:36 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:40510 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgE1Jdc (ORCPT
+        with ESMTP id S1728224AbgE1Jdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 05:33:32 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 3124B80307C3;
-        Thu, 28 May 2020 09:33:30 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id D0A5180307C7;
+        Thu, 28 May 2020 09:33:29 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uCLQzqIM2wCm; Thu, 28 May 2020 12:33:29 +0300 (MSK)
+        with ESMTP id D73ABvCPvBA9; Thu, 28 May 2020 12:33:29 +0300 (MSK)
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
         Wolfram Sang <wsa@the-dreams.de>,
@@ -39,9 +39,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 03/11] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C controller
-Date:   Thu, 28 May 2020 12:33:13 +0300
-Message-ID: <20200528093322.23553-4-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH v6 02/11] dt-bindings: i2c: Convert DW I2C slave to the DW I2C master example
+Date:   Thu, 28 May 2020 12:33:12 +0300
+Message-ID: <20200528093322.23553-3-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200528093322.23553-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
@@ -53,9 +53,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the "baikal,bt1-sys-i2c" compatible string to the DW I2C binding. Even
-though the corresponding node is supposed to be a child of the Baikal-T1
-System Controller, its reg property is left required for compatibility.
+dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
+i2c "reg" property. If dtc finds an i2c-slave sub-node having an address
+higher than ten-bits wide it'll print an ugly warning:
+
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
+Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
+
+In order to silence dtc up let's replace the corresponding DT binding
+example with a normal DW I2C master mode-based one. It's done by clearing
+the I2C_OWN_SLAVE_ADDRESS bit in the reg property and converting the
+sub-node to be compatible with normal EEPROM like "atmel,24c02".
+
+Just revert this commit when dtc is fixed.
 
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
@@ -66,31 +76,38 @@ Cc: linux-mips@vger.kernel.org
 
 ---
 
-Changelog v2:
-- Make the reg property being optional if it's Baikal-T1 System I2C DT
-  node.
+Rob, even though you asked for such modification, it might be a better to
+just ignore the warning until dtc is properly fixed. Andy and me agree
+with that. If you are also on the same side with us, just explicitly nack
+this patch so Jarkko or Wolfram would ignore it when merging in the series.
 
 Changelog v3:
-- Get back the reg property being mandatory even if it's Baikal-T1 System
-  I2C DT node. Rob says it has to be in the DT node if there is a
-  dedicated registers range in the System Controller registers space.
+- This is a new patch created as a result of the Rob request to remove
+  the EEPROM-slave bit setting in the DT binndings example until the dtc
+  is fixed.
+
+Changelog v6:
+- Replace the "linux,slave-24c02" compatible string with "atmel,24c02" one
+  so the example would be perceived as a normal DW I2C master mode.
 ---
- Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/i2c/snps,designware-i2c.yaml          | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-index dff3f267bdee..4f746bef2374 100644
+index 4bd430b2b41d..dff3f267bdee 100644
 --- a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
 +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-@@ -31,6 +31,8 @@ properties:
-         items:
-           - const: mscc,ocelot-i2c
-           - const: snps,designware-i2c
-+      - description: Baikal-T1 SoC System I2C controller
-+        const: baikal,bt1-sys-i2c
+@@ -136,8 +136,8 @@ examples:
+       interrupts = <0>;
  
-   reg:
-     minItems: 1
+       eeprom@64 {
+-        compatible = "linux,slave-24c02";
+-        reg = <0x40000064>;
++        compatible = "atmel,24c02";
++        reg = <0x64>;
+       };
+     };
+   - |
 -- 
 2.26.2
 
