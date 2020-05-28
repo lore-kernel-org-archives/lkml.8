@@ -2,74 +2,156 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3D4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D94BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9F320814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B4B20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uL9UixqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390689AbgE1Nve (ORCPT
+        id S2390573AbgE1NwS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:51:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5373 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390504AbgE1NvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:51:02 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3158975C121EB11C6843;
-        Thu, 28 May 2020 21:50:59 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 28 May 2020 21:50:52 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 11/12] net: hns3: remove some unused fields in struct hclge_dev
-Date:   Thu, 28 May 2020 21:48:18 +0800
-Message-ID: <1590673699-63819-12-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1590673699-63819-1-git-send-email-tanhuazhong@huawei.com>
-References: <1590673699-63819-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 28 May 2020 09:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390577AbgE1NvP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:51:15 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A13C08C5C8;
+        Thu, 28 May 2020 06:51:15 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ci21so3222588pjb.3;
+        Thu, 28 May 2020 06:51:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B1VCJJnYQntCaHq/bCL7ytqI8GL57Z8GxGPvzlNy5Jc=;
+        b=uL9UixqSt756rdZNvsXFJYNS/zS3+QPBkXCGeFXy4x6t+XA9XbJ2XVnjXZAAvNvkFW
+         c8cz8lKeHjYMTUWtCapDDRequ0hWqOuD0QafNpbd/2mH4ksrf7d/c8VN7fTtJqq/aWl2
+         rkDyVyzu0odHs3b4u1bK+EQHgFYPDnAawqVFwIVA9VBtNXpAa5SoNF0xSkPfCgvNF7X4
+         o3nqEPbKOleJVPrF0ywx7WG+RP6x5UjnLGJjpuimqu+oc2R/0bwkUGwfpA3vXGMdhOjS
+         2UmgwSXRZxxdJRiDyc3iwSyhGev1KyoWu5nzNCsWvRN0G0gqaJFOU6IQhp64I3+dQEey
+         aSlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B1VCJJnYQntCaHq/bCL7ytqI8GL57Z8GxGPvzlNy5Jc=;
+        b=E0pUiAHMpLLMtCzzyvoSjR3TPx0AkmrCsJJSjgF3ULtyQLnL/zqsr5yAgGtuJgOGAl
+         5+IuPmX7due+4hwqImSc3qwEVSK0FQEXRQ3G+g+dL+o/rBmnJkVfbl4qx7cVYmRnrHie
+         nHjsxNpcZfwFz39x2FZVK6zGhZZD1Sq6F5JFi9re8WMIgzxnTOEFp4o9alfdQtOKuf2u
+         kew5mH647L+L98XxCUkBXwqBJMD0PxW4a99uki5lcpqEurTAzwnMpE6bTyVTt6nHmmwp
+         +qaEXnvUd+XnQMqFkGMClJmuFBK6Qw88Cbsistxifjt5CyNLT8j4AzBCoP9j+jV0hLOh
+         6etA==
+X-Gm-Message-State: AOAM530v5F9HiwiD9v9kOC1+/fbw3TelwkdF88DYK2mJUU8ZEyoFIwcp
+        c7ELtvbQngRqxqy0BBn06xrvmOpsoUnt2VXOcgE=
+X-Google-Smtp-Source: ABdhPJyOPrVNPIxx9eAv48xneIkt1SACLcGfOZUeXikQzCHe7fIw9bajSfsIbkfCgstMRCZRJ9nAWtuKZ74GlGhw1A4=
+X-Received: by 2002:a17:90b:3651:: with SMTP id nh17mr4030548pjb.228.1590673874690;
+ Thu, 28 May 2020 06:51:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+References: <20200526125928.17096-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526125928.17096-5-Sergey.Semin@baikalelectronics.ru>
+ <CAHp75VcfkPPy5YjNrcv8c6doyQz5C47QyREE0v6tfQjXYrBijQ@mail.gmail.com> <20200528134046.scxig3she3wyjyko@mobilestation>
+In-Reply-To: <20200528134046.scxig3she3wyjyko@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 May 2020 16:51:03 +0300
+Message-ID: <CAHp75VfqnLTK-fT-KdzN-3=u=dLTJjo=9+b=oKXUoUOsbeg00Q@mail.gmail.com>
+Subject: Re: [PATCH v3 4/6] bus: Add Baikal-T1 AXI-bus driver
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+List-Id: <soc.lore.kernel.org>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove some fields in struct hclge_dev which have not been used.
+On Thu, May 28, 2020 at 4:40 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Thu, May 28, 2020 at 01:00:57AM +0300, Andy Shevchenko wrote:
+> > On Tuesday, May 26, 2020, Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > wrote:
+> >
+> > > AXI3-bus is the main communication bus connecting all high-speed
+> > > peripheral IP-cores with RAM controller and MIPS P5600 cores on Baikal-T1
+> > > SoC. Bus traffic arbitration is done by means of DW AMBA 3 AXI
+> > > Interconnect (so called AXI Main Interconnect) routing IO requests from
+> > > one SoC block to another. This driver provides a way to detect any bus
+> > > protocol errors and device not responding situations by means of an
+> > > embedded on top of the interconnect errors handler block (EHB). AXI
+> > > Interconnect QoS arbitration tuning is currently unsupported.
+> > > The bus doesn't provide a way to detect the interconnected devices,
+> > > so they are supposed to be statically defined like by means of the
+> > > simple-bus sub-nodes.
+> >
+> >
+> >
+> > Few comments in case if you need a new version. Main point is about
+> > sysfs_streq().
+>
+> Hello, Andy. Thanks for your comments. I'll address most of them in a follow-up
+> patches. See just one note below.
+>
+> >
+> >
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > > Cc: Paul Burton <paulburton@kernel.org>
+> > > Cc: Olof Johansson <olof@lixom.net>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: linux-mips@vger.kernel.org
+> > > Cc: soc@kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > >
+>
+> [nip]
+>
+> > > +
+> > > +static void bt1_axi_clear_data(void *data)
+> > > +{
+> > > +       struct bt1_axi *axi = data;
+> > > +       struct platform_device *pdev = to_platform_device(axi->dev);
+> > > +
+> > > +       platform_set_drvdata(pdev, NULL);
+> >
+> >
+>
+> > Doesn't device driver core do this already?
+>
+> It doesn't on remove.
 
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h | 6 ------
- 1 file changed, 6 deletions(-)
+__device_release_driver() calls dev_set_drvdata(dev, NULL);
+What did I miss?
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-index 913c4f6..46e6e0f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
-@@ -771,12 +771,6 @@ struct hclge_dev {
- 	u16 num_roce_msi;	/* Num of roce vectors for this PF */
- 	int roce_base_vector;
- 
--	u16 pending_udp_bitmap;
--
--	u16 rx_itr_default;
--	u16 tx_itr_default;
--
--	u16 adminq_work_limit; /* Num of admin receive queue desc to process */
- 	unsigned long service_timer_period;
- 	unsigned long service_timer_previous;
- 	struct timer_list reset_timer;
+> This cleanups the drvdata pointer when the driver is
+> unloaded at the moment of remove() callback calling. This is a good
+> practice to leave the device the same as it has been before usage including
+> the pointer value. In this case if theoretically someone (though very
+> unlikely, but anyway) would try to use the pointer without having it
+> initialized, the NULL-dereference would pop up, otherwise we may
+> corrupt someones memory, which is very nasty.
+
+The above is right and I agree with.
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
