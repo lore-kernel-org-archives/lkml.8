@@ -3,96 +3,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2239C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CEEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76C1A2089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B14C2089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590674652;
-	bh=9xwH3ve1krCLi8y1IXws3TlA6kQno3U7f/kCcQRsHcE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=2MGkrS1td5zotCSTMbfKrBUvX/PVyLTDXEtuBcoc6PLFJZK4SVKKQ932huuh035Wk
-	 YK8JTybnA76QBHcK9HrPjOkU3zDJ+Bl50Nbk1q2vP06QPaBL/SeBXDYjCu8LZelnbp
-	 W8qS+Up/DWA2CC+1FnBcZobBpkBeBPD7JzvS30WY=
+	s=default; t=1590674658;
+	bh=PJXHSQJR9LDniwGbOzpPoTTnRDnO3E50wMy5cZaC/mc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jkXoLLYg84Zw8UZw73mIvVI8v8r9Z2EYGqO27GhcdX2IwmY8L+BQsv5hfk3q/gMOv
+	 a8NoIEyMVj7F4g/WbbZxHSFaBX7KYBlbX+FHbP0/8pqI1bnUgX1EmrN8BUgzwrJhJ5
+	 Q21TChlu5fpS7KhHiI4guw6HLglKz6V0EBYgjH9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390865AbgE1OEK (ORCPT
+        id S2390874AbgE1OEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:04:10 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34192 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390540AbgE1OEC (ORCPT
+        Thu, 28 May 2020 10:04:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390644AbgE1OEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:04:02 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w4so124718oia.1
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:04:01 -0700 (PDT)
+        Thu, 28 May 2020 10:04:04 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1D8C05BD1E;
+        Thu, 28 May 2020 07:04:04 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id z1so122650qtn.2;
+        Thu, 28 May 2020 07:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EBD7IPZhPK6LYEpuUm9uYZgoKSKV6F+qQYG7TUFwOBk=;
+        b=qOzW1pAeJlvpU3IPXP5a+SZ03JGuxgKHseAl/bi7J7DqaZVwJa5QmrtrPr5e5etDfB
+         2Zjs3Jenivlp6HhzVugJ1rvqIWm9lau58W/4Ju1loK8vxQYYSMm2G2le6dt+crmwYLi7
+         2EH0IOA6U44/TDz6WEK4KEuiGeqcoPaTFcJSywkkZsUITScl6COflTq22fN89s7GSUQO
+         ebJCE/xZu1wSjfoQiKNvTXy+Y7rgrpU8ysy1D5kR1eRIDNsQe0EBnBYmylOIACQNhxhR
+         TUlV7kaMSEKfjzMmF6ROisX/YJ+vMXnuB0Et4Trc1jlqw0wT9KBLjLLr1OWlFtMkTM8q
+         Njig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9xwH3ve1krCLi8y1IXws3TlA6kQno3U7f/kCcQRsHcE=;
-        b=aype7HTAS44qDgFVgc0a0M4sGlj6y11BCLtVKFyNzofyMkce1Uzqqx3Dh4L5AJKKWu
-         i0DK0jY2r4XUaVNhixjs0WhebjwZH5+4ezkJxuIyNjbZALYSX8P2cQZcO5vsbioGe0BE
-         82cxb4DJ2B5XBBkLdipp6U7vZNtLuA/lcwUX+hQVH7909sL18ZFdZsoSHSp4pHrr0Ymq
-         8Wx7ljSKtDGo3Yh6oAXppSmJaKFve/DWerU71bOc+hvNVOxoINezAzKxHlq6h0trvwYq
-         rA1Ch/2qmRWJJ4k6KndIIDnm4K/S5rzyg5vzbq4E97pBQ4/GONuApxevdYcVEnE+noRu
-         aJfQ==
-X-Gm-Message-State: AOAM531qRyinuBlCan3OQKqJN0sMnUDjBuDG8BR6OJxmIAkB3s3ESuDT
-        ykkr0xLCW6HupMKrTh+yg+hnvdF41E3EmMo9tcQ=
-X-Google-Smtp-Source: ABdhPJxZGEdE0NTXrH7/roYIA4lfVOkHJIsKosvzgDBT5Xesc6EAkiDq23rUgiBC7IkB8ReEAYBXrjVNj79tIxddfaI=
-X-Received: by 2002:aca:eb56:: with SMTP id j83mr2379166oih.110.1590674641617;
- Thu, 28 May 2020 07:04:01 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=EBD7IPZhPK6LYEpuUm9uYZgoKSKV6F+qQYG7TUFwOBk=;
+        b=BAQ0eueq2UtpAdwX9SAZ88AatJ5Sa+PYURFjQy8ENdkayFY7sC01eFcW/18m7a2MJg
+         OXbxG/f65W1tO7F+bDgADtZ2s6+5gIBnvIOSUzpBTpew3oCd4/4zn1GsDqoj9kw/je4o
+         qhAfAoS+8OFIuOoUmbelJGH0W7EH6G3J5+Iu4ioCTouyvA8LAzliycVt5erExdiEz6Iu
+         1Twjo3fPR/jCxGfi5HPzDp1/l/i+mjBMncSdJbmoDjQrEGcUFePNw6eOTyzv83/hxjR6
+         UCG3zVCBKCRCdckZmZlZGuoAFiqxoYwfv+C+vbKuTFE1OA4rV6hjB17z+I1/HrHFCEsy
+         PB3Q==
+X-Gm-Message-State: AOAM533iGZ54MpL+MkeMg4ruwdrOe9pIAeFZfmmGUgz9B6CG5uebz5yw
+        8CZ0LiG67dV3wNF2pNwH+8w=
+X-Google-Smtp-Source: ABdhPJxLDJSpWjyDvtA1dv/WxHHofDQc5w+PCpAkPSnNcrs107St/oCxV6bvuJPWfG09qxgbbNbq9Q==
+X-Received: by 2002:ac8:4e4a:: with SMTP id e10mr3112122qtw.203.1590674640313;
+        Thu, 28 May 2020 07:04:00 -0700 (PDT)
+Received: from localhost ([199.96.181.106])
+        by smtp.gmail.com with ESMTPSA id w10sm5779166qtc.15.2020.05.28.07.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:03:59 -0700 (PDT)
+Date:   Thu, 28 May 2020 10:03:57 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
+        Markus Elfring <markus.elfring@web.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjU=?= =?utf-8?Q?=5D?= workqueue:
+ Remove unnecessary kfree() call in rcu_free_wq()
+Message-ID: <20200528140357.GL83516@mtj.thefacebook.com>
+References: <20200527075715.36849-1-qiang.zhang@windriver.com>
+ <284c7851-4e89-a00f-a2e6-aa8e2e1f3fce@web.de>
+ <DM6PR11MB32573F3884A864ECD586235EFF8E0@DM6PR11MB3257.namprd11.prod.outlook.com>
+ <DM6PR11MB3257D6E7E93A518392502809FF8E0@DM6PR11MB3257.namprd11.prod.outlook.com>
+ <20200528095703.GH30374@kadam>
+ <CAJhGHyD1nV=M=ccycqCMt86GMuZGkO9trbJ=4ti4EzP9kta6iA@mail.gmail.com>
+ <20200528122545.GP22511@kadam>
+ <CAJhGHyBUkMZ=cV+Qf-5+PMAFqgebbRLc46OZSSUSgoRROpUk2A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200524153041.2361-1-gregkh@linuxfoundation.org>
- <20200527075048.GD3284396@kuha.fi.intel.com> <CAJZ5v0h0Xjovm-eVyiOG+j7kNEPxB=PZF4rLVEgwUW+H+61DFg@mail.gmail.com>
- <2407984.idRd5kzSG0@kreacher> <20200527222515.GA89212@roeck-us.net>
- <CAJZ5v0jPoi+5d+jv0iAuKkObSr=EDxmMhNqMTvLQNUEc_i9zcg@mail.gmail.com> <64eb962a-eaef-9747-9408-eb9061cb42f6@roeck-us.net>
-In-Reply-To: <64eb962a-eaef-9747-9408-eb9061cb42f6@roeck-us.net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 28 May 2020 16:03:49 +0200
-Message-ID: <CAJZ5v0i+Kz9U7EHx-KMiqpKnzdbNc-u0gMZ7v0=fGDcqKa28vQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kobject: send KOBJ_REMOVE uevent when the object is
- removed from sysfs
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJhGHyBUkMZ=cV+Qf-5+PMAFqgebbRLc46OZSSUSgoRROpUk2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 3:56 PM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 5/28/20 3:57 AM, Rafael J. Wysocki wrote:
-> > On Thu, May 28, 2020 at 12:25 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >>
-> >> On Wed, May 27, 2020 at 11:01:16AM +0200, Rafael J. Wysocki wrote:
-> >>>
-> >>> So Guenter, can you please test the patch below to see if it still introduces
-> >>> the problems seen by you on ARM?
-> >>>
-> >>
-> >> arm64 and arm64be boot tests pass with the patch below.
-> >
-> > Great, thanks!
-> >
-> >> Some arm boot tests fail, but I think that is due to some other problem with -next.
-> >> Hard to say for sure at this point because -next is pretty badly broken
-> >> overall. I'll need to run some bisects to see what is going on.
-> >
-> > I see.
-> >
->
-> The failing arm boot tests are due to various dts changes (commit "arm64:
-> dts: vexpress: Move fixed devices out of bus node" and associated),
-> unrelated to this patch.
+Hello,
 
-Thanks for the confirmation!
+On Thu, May 28, 2020 at 09:27:03PM +0800, Lai Jiangshan wrote:
+> wq owns the ultimate or permanent references to itself by
+> owning references to wq->numa_pwq_tbl[node], wq->dfl_pwq.
+> The pwq's references keep the pwq in wq->pwqs.
+
+Yeah, regardless of who puts a wq the last time, the base reference is put
+by destroy_workqueue() and thus it's guaranteed that a wq can't be rcu freed
+without going through destroy_workqueue(). lol I'm undoing the revert.
+
+Thanks.
+
+-- 
+tejun
