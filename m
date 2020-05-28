@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D963C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABDFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B678208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6923A214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="FzuqW0/l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="miEDh9vz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404262AbgE1P3D (ORCPT
+        id S2404441AbgE1P3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:29:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51380 "EHLO
+        Thu, 28 May 2020 11:29:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404404AbgE1P2w (ORCPT
+        with ESMTP id S2404418AbgE1P3A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:28:52 -0400
+        Thu, 28 May 2020 11:29:00 -0400
 Received: from vultr.net.flygoat.com (vultr.net.flygoat.com [IPv6:2001:19f0:6001:3633:5400:2ff:fe8c:553])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08007C08C5C6;
-        Thu, 28 May 2020 08:28:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C66DC08C5C6;
+        Thu, 28 May 2020 08:29:00 -0700 (PDT)
 Received: from localhost.localdomain (unknown [IPv6:2001:da8:20f:4430:250:56ff:fe9a:7470])
-        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 2B5E120F11;
-        Thu, 28 May 2020 15:28:50 +0000 (UTC)
+        by vultr.net.flygoat.com (Postfix) with ESMTPSA id 4EDA620F12;
+        Thu, 28 May 2020 15:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com; s=vultr;
-        t=1590679731; bh=itQq/GtS9SPzJ5vE89BkS0b5jPSUmzZaIbqMNYrziTA=;
+        t=1590679740; bh=NqxmdRPeUycZfCLPTG84V3ZxjnAvqs76RNa18cYK7Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FzuqW0/lo6SZ29zIQXxPXq+Jx+2mIdhpFW1GunOjumykePHwpotGlJgxGzr1Ghc7T
-         nM/VIKG2b7+r5702pMnqbQdw5pe+SlOxgFZHdmQ4ScH6peV2AI+1kCb93w8r2hH+1J
-         ID3AH33I5HVmOu7pW7BRyDMf9Fiku/MxFKrXnhCDGToHOQf97sBdq1Uqt9ygOpKveH
-         GXNApTTpHm7VaewGaaqsplT4/BHfa/KkCU+VEZOOM1Eftn4M/YebKw3qA8FJ4Io6jO
-         YdXe+MEbfpaTW8Gs+AmgYDiWWfQZTGs4Tb3lhfR8Vetqsf1MzuaRJh4XUJdyMts1If
-         jyer7p0uERmag==
+        b=miEDh9vz5GzaD7YanDRa25KaSfXVV7UJ3y6bbu/V9/4DNKg5doxiwJXBubIrzhzNX
+         PopyaYMpL9sXo9mMvaQBsFBxq8dYK2biQoFpBmDj1oWWQpBZN1pANuvFegeHXx+/JG
+         KZTpfVeR5gtHmf/7WP55TsSYd5xNtoIRyMdhOIOCqK3Mor13io2whLFC9sF0JO3iD1
+         FklA5AmZlB1mgRVuWTrQHRGuE00jVoxRpIGwF9m6Y2NdFYd9+4BNo7fM2k691PJBYm
+         5cufk9wtTxQvdEaoHJFwMxQcrdNZmVPDGF8htmNsuH+tO3fN/6HZnlhSPZ2viYMoNF
+         TvkuN10b96+jA==
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     maz@kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -46,9 +46,9 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Rob Herring <robh+dt@kernel.org>,
         Huacai Chen <chenhc@lemote.com>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-mips@vger.kernel.org
-Subject: [PATCH v5 2/6] dt-bindings: interrupt-controller: Add Loongson HTVEC
-Date:   Thu, 28 May 2020 23:27:50 +0800
-Message-Id: <20200528152757.1028711-3-jiaxun.yang@flygoat.com>
+Subject: [PATCH v5 4/6] dt-bindings: interrupt-controller: Add Loongson PCH PIC
+Date:   Thu, 28 May 2020 23:27:52 +0800
+Message-Id: <20200528152757.1028711-5-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.27.0.rc0
 In-Reply-To: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
 References: <20200528152757.1028711-1-jiaxun.yang@flygoat.com>
@@ -59,77 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding for Loongson-3 HyperTransport Interrupt Vector Controller.
+Add binding for Loongson PCH PIC Controller.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 --
-v4: Drop ref, '|', add additionalProperties, fix example
+v2:
+	- Fix naming
+	- Mark loongson,pic-base-vec as required
+v5:
+	- Add range check for loongson,pic-base-vec
 ---
- .../interrupt-controller/loongson,htvec.yaml  | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+ .../loongson,pch-pic.yaml                     | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
 new file mode 100644
-index 000000000000..e865cd8f96a9
+index 000000000000..274adea13f33
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htvec.yaml
-@@ -0,0 +1,57 @@
++++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,pch-pic.yaml
+@@ -0,0 +1,56 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htvec.yaml#"
++$id: "http://devicetree.org/schemas/interrupt-controller/loongson,pch-pic.yaml#"
 +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+title: Loongson-3 HyperTransport Interrupt Vector Controller
++title: Loongson PCH PIC Controller
 +
 +maintainers:
 +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
 +
 +description:
-+  This interrupt controller is found in the Loongson-3 family of chips for
-+  receiving vectorized interrupts from PCH's interrupt controller.
++  This interrupt controller is found in the Loongson LS7A family of PCH for
++  transforming interrupts from on-chip devices into HyperTransport vectorized
++  interrupts.
 +
 +properties:
 +  compatible:
-+    const: loongson,htvec-1.0
++    const: loongson,pch-pic-1.0
 +
 +  reg:
 +    maxItems: 1
 +
-+  interrupts:
-+    minItems: 1
-+    maxItems: 4
-+    description: Four parent interrupts that receive chained interrupts.
++  loongson,pic-base-vec:
++    description:
++      u32 value of the base of parent HyperTransport vector allocated
++      to PCH PIC.
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - minimum: 0
++        maximum: 192
 +
 +  interrupt-controller: true
 +
 +  '#interrupt-cells':
-+    const: 1
++    const: 2
 +
 +required:
 +  - compatible
 +  - reg
-+  - interrupts
++  - loongson,pic-base-vec
 +  - interrupt-controller
 +  - '#interrupt-cells'
-+
-+additionalProperties: false
 +
 +examples:
 +  - |
 +    #include <dt-bindings/interrupt-controller/irq.h>
-+    htvec: interrupt-controller@fb000080 {
-+      compatible = "loongson,htvec-1.0";
-+      reg = <0xfb000080 0x40>;
++    pic: interrupt-controller@10000000 {
++      compatible = "loongson,pch-pic-1.0";
++      reg = <0x10000000 0x400>;
 +      interrupt-controller;
-+      #interrupt-cells = <1>;
-+
-+      interrupt-parent = <&liointc>;
-+      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+                    <25 IRQ_TYPE_LEVEL_HIGH>,
-+                    <26 IRQ_TYPE_LEVEL_HIGH>,
-+                    <27 IRQ_TYPE_LEVEL_HIGH>;
++      #interrupt-cells = <2>;
++      loongson,pic-base-vec = <64>;
++      interrupt-parent = <&htvec>;
 +    };
 +...
 -- 
