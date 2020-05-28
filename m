@@ -2,145 +2,226 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B92C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E0E2151B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1EC208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:31:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Uo/3TSRD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KJHyh6Xq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEo8442R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgE1HbB (ORCPT
+        id S1726575AbgE1Hbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 03:31:01 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:59857 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725747AbgE1HbA (ORCPT
+        Thu, 28 May 2020 03:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725747AbgE1Hbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:31:00 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id B1C135801E3;
-        Thu, 28 May 2020 03:30:58 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Thu, 28 May 2020 03:30:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=DzfmDTRER5Rc6vqd8K3tdl/h7IL
-        LPrzRW6G6nM/VnN8=; b=Uo/3TSRDGuNYFTVIWjo5nW8GLeNnjf4YCBm0RvH8OIa
-        d9NQOKxlUg1FESR6IAXM5mj3dCtfSgJ52b9QgX4BbQXpaWRZ0V2mj5pbElDNg9xY
-        WoBkTMIQyU/2uLCVme027EGhgYmAZ/kBGpvEUjaTK8tB8zh7qLFjUq2y9M7CQlM5
-        MD+a0zkII7ReHXvr3Myih7oiMCzLIr6qJSbkdU96GdrU2l4xHKx0zu9/9B+e9Nh/
-        lH2L+GyXcRjyXo0v1AxKmSNI6EF6GfjfH7d6FDHnMymDy0hH5jhxxXgSNGIWnmZI
-        Dq68N3mnkUh8ZEoFVa0f+C8rDUU8HPjXpGGWgHElAbg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DzfmDT
-        RER5Rc6vqd8K3tdl/h7ILLPrzRW6G6nM/VnN8=; b=KJHyh6XqKlTQ4MP0B3XhzN
-        YCyIFUWT+oDBebBgN3cMKQVzEx6whQoljUpQimvyyMAUdxHNajzjv1Eb6YfSvxem
-        Kz+iXJhMpOpKhzTHpkOkRjMEVzADfZLY+cFKzpJbQxpOcmDfZlIKouu8MTaOnwDa
-        b4zKDMS9u1OPxxiV65/Et3WpQ+XDk9rQbMJuPZVmi9Ge6EXdzLxWcD5C6D85TWyh
-        i65iIRKZS8OVmdVXgZEv0KZwdYv6exg7SwCRISRFiD/SiqzrDgGwpm4kLxFEKEil
-        Q8izo1OUn4kMo6xOquuuYDXVcBbgRiqAbztXNUGaU+tzRVfiGRRSTDWokeT4Qz1w
-        ==
-X-ME-Sender: <xms:sWjPXoONJgJEwoEq_FYCUe_RM3crKMcoo7E-FPok9IxHzYT67Q46Rw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedruddvhedguddtudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeevveefffduveeitdegtefhhfetueffteefffdvheevvdehteethedvleff
-    gfejvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeike
-    drjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomhep
-    mhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:sWjPXu8OSORrgT7dwCMcLRO_66K0n8kL-N8hkR8uECjCsK3NZ3NpZw>
-    <xmx:sWjPXvRtze0HzvnWIkUsiiK-OMC0eioiyU_5C_9VzsvjpWy-KMqdVQ>
-    <xmx:sWjPXgt1FAvnCaJsnGRpBcolBHLPyMjUSIl2wixGr4MHY17_SwWhmg>
-    <xmx:smjPXo7uLD9f6nuRyVwYhByDit7NnBfwK4Rpk_3NZeXwPXg38J9vyQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 32F0B30614FA;
-        Thu, 28 May 2020 03:30:57 -0400 (EDT)
-Date:   Thu, 28 May 2020 09:30:55 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Daniel Drake <drake@endlessm.com>
-Cc:     Jian-Hong Pan <jian-hong@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-Message-ID: <20200528073055.znutrhkryzu3grrl@gilmour.lan>
-References: <20200427072342.5499-1-jian-hong@endlessm.com>
- <20200428162152.ztsqp7nxqbwqrm6r@gilmour.lan>
- <CAPpJ_efvtVzb_hvoVOeaePh7UdE13wOiiGaDBH38cToB-yhkUg@mail.gmail.com>
- <20200507172158.cybtakpo6cxv6wcs@gilmour.lan>
- <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan>
- <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
- <20200527091335.7wc3uy67lbz7j4di@gilmour.lan>
- <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
+        Thu, 28 May 2020 03:31:44 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DBFC05BD1E
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:31:43 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id n123so2472792ybf.11
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 00:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PYE6p5UwpkWq7bxp4EB9q/2Nru5zecAQppMwLOCRTN8=;
+        b=rEo8442RE1GAFP0Nvyz9c/sAvJx4qjqL6Ry7UlBf0fzMjXUUb9sMB4jyCVEWrg5dHL
+         hgBUyMyhfxQ2viBU6ZMmydoycqTGREyreIjw0969gbEVe79+uTd75kr2XSUMoS+PKlx+
+         n70R+abwCzsm7WVgGVElW3YEocGO9hZVgOUNmlDVwUaTDAYx+HM8TJRCLEb7K67cGmpT
+         L/RO+nku5yB6SqF+qeliTKTO8XW29yGYHC/WlfTlS1Qrndx/50UPyBUK2evQJ7dEaLj4
+         X9I07b0LbffXvXVabZwBwFIC4lUIaTmR7DPSzxIbVcMaQ4D+ehaF6kswxZ0HoFnzYTpS
+         J+jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PYE6p5UwpkWq7bxp4EB9q/2Nru5zecAQppMwLOCRTN8=;
+        b=RP7hK18rQRkS30gI6YO6ZbTtGh/xatSymqtpmdpzkLTFXL2seVUM6FLOajWdrI5QoY
+         qJBKrccAApbI8ZMT0Kav3RW8vP2nvwXMd2CmALBDa9XfencE0ebE6qHKrI2Tj+rI69CL
+         Vq84YccXtX9p7t6g/5ulgSyWMLdA8fRpL7ymxryNsAGcDAJrKD8M4GlvrzwvM/7JZLsB
+         QIbVr/WlQNRUrHv+MJgaw4nl8Zd08LKU+dwFgxIPMvNhaRelQIENdAQ6wTefWKcWIfs2
+         +YHDtqDmFi/73m/C2GngaB7b4WdB5jBE+G3Y9kIMwJQeLiOlfdYie2gBctkvUXjclyvI
+         t6cA==
+X-Gm-Message-State: AOAM530h0lApA27DFN4DyF2Aet2WUHn8O9OaxqLW7KHmE78bQR+PwjQk
+        4r7yYcd49og/lZMXDEHSZcEvvhltZ9FM0+Fx6mZceQ==
+X-Google-Smtp-Source: ABdhPJwSOv8m66f6lrkyqRtiTjAFaVHdWEmyC8xBfIrG3gWjE3lb1PL33rE980aWbkjOi5f00QXwtepSJJV9x5JIKlw=
+X-Received: by 2002:a25:5387:: with SMTP id h129mr2888046ybb.47.1590651102358;
+ Thu, 28 May 2020 00:31:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3roh2l2ctvp5d3wy"
-Content-Disposition: inline
-In-Reply-To: <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
+References: <20200528054049.13662-1-nick.gasson@arm.com>
+In-Reply-To: <20200528054049.13662-1-nick.gasson@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 28 May 2020 00:31:31 -0700
+Message-ID: <CAP-5=fWcMKtPa3C9Jbyf=zY=YmTRaoiyc837nYJcK9pC+NJ-LA@mail.gmail.com>
+Subject: Re: [PATCH v2] perf jvmti: Remove redundant jitdump line table entries
+To:     Nick Gasson <nick.gasson@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 10:41 PM Nick Gasson <nick.gasson@arm.com> wrote:
+>
+> For each PC/BCI pair in the JVMTI compiler inlining record table, the
+> jitdump plugin emits debug line table entries for every source line in
+> the method preceding that BCI. Instead only emit one source line per
+> PC/BCI pair. Reported by Ian Rogers. This reduces the .dump size for
+> SPECjbb from ~230MB to ~40MB.
+>
+> Signed-off-by: Nick Gasson <nick.gasson@arm.com>
+> ---
+> Changes in v2:
+> - Split the unrelated DWARF debug fix into a separate patch
+> - Added a comment about the use of c->methods
+>
+>  tools/perf/jvmti/libjvmti.c | 78 ++++++++++++++++---------------------
+>  1 file changed, 33 insertions(+), 45 deletions(-)
+>
+> diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+> index c5d30834a64c..fcca275e5bf9 100644
+> --- a/tools/perf/jvmti/libjvmti.c
+> +++ b/tools/perf/jvmti/libjvmti.c
+> @@ -32,38 +32,41 @@ static void print_error(jvmtiEnv *jvmti, const char *msg, jvmtiError ret)
+>
+>  #ifdef HAVE_JVMTI_CMLR
+>  static jvmtiError
+> -do_get_line_numbers(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
+> -                   jvmti_line_info_t *tab, jint *nr)
+> +do_get_line_number(jvmtiEnv *jvmti, void *pc, jmethodID m, jint bci,
+> +                  jvmti_line_info_t *tab)
+>  {
+> -       jint i, lines = 0;
+> -       jint nr_lines = 0;
+> +       jint i, nr_lines = 0;
+>         jvmtiLineNumberEntry *loc_tab = NULL;
+>         jvmtiError ret;
+> +       jint src_line = -1;
+>
+>         ret = (*jvmti)->GetLineNumberTable(jvmti, m, &nr_lines, &loc_tab);
+>         if (ret == JVMTI_ERROR_ABSENT_INFORMATION || ret == JVMTI_ERROR_NATIVE_METHOD) {
+>                 /* No debug information for this method */
+> -               *nr = 0;
+> -               return JVMTI_ERROR_NONE;
+> +               return ret;
+>         } else if (ret != JVMTI_ERROR_NONE) {
+>                 print_error(jvmti, "GetLineNumberTable", ret);
+>                 return ret;
+>         }
+>
+> -       for (i = 0; i < nr_lines; i++) {
+> -               if (loc_tab[i].start_location < bci) {
+> -                       tab[lines].pc = (unsigned long)pc;
+> -                       tab[lines].line_number = loc_tab[i].line_number;
+> -                       tab[lines].discrim = 0; /* not yet used */
+> -                       tab[lines].methodID = m;
+> -                       lines++;
+> -               } else {
+> -                       break;
+> -               }
+> +       for (i = 0; i < nr_lines && loc_tab[i].start_location <= bci; i++) {
+> +               src_line = i;
+> +       }
+> +
+> +       if (src_line != -1) {
+> +               tab->pc = (unsigned long)pc;
+> +               tab->line_number = loc_tab[src_line].line_number;
+> +               tab->discrim = 0; /* not yet used */
+> +               tab->methodID = m;
+> +
+> +               ret = JVMTI_ERROR_NONE;
+> +       } else {
+> +               ret = JVMTI_ERROR_ABSENT_INFORMATION;
+>         }
+> +
+>         (*jvmti)->Deallocate(jvmti, (unsigned char *)loc_tab);
+> -       *nr = lines;
+> -       return JVMTI_ERROR_NONE;
+> +
+> +       return ret;
+>  }
+>
+>  static jvmtiError
+> @@ -71,9 +74,8 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
+>  {
+>         const jvmtiCompiledMethodLoadRecordHeader *hdr;
+>         jvmtiCompiledMethodLoadInlineRecord *rec;
+> -       jvmtiLineNumberEntry *lne = NULL;
+>         PCStackInfo *c;
+> -       jint nr, ret;
+> +       jint ret;
+>         int nr_total = 0;
+>         int i, lines_total = 0;
+>
+> @@ -86,24 +88,7 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
+>         for (hdr = compile_info; hdr != NULL; hdr = hdr->next) {
+>                 if (hdr->kind == JVMTI_CMLR_INLINE_INFO) {
+>                         rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
+> -                       for (i = 0; i < rec->numpcs; i++) {
+> -                               c = rec->pcinfo + i;
+> -                               nr = 0;
+> -                               /*
+> -                                * unfortunately, need a tab to get the number of lines!
+> -                                */
+> -                               ret = (*jvmti)->GetLineNumberTable(jvmti, c->methods[0], &nr, &lne);
+> -                               if (ret == JVMTI_ERROR_NONE) {
+> -                                       /* free what was allocated for nothing */
+> -                                       (*jvmti)->Deallocate(jvmti, (unsigned char *)lne);
+> -                                       nr_total += (int)nr;
+> -                               } else if (ret == JVMTI_ERROR_ABSENT_INFORMATION ||
+> -                                          ret == JVMTI_ERROR_NATIVE_METHOD) {
+> -                                       /* No debug information for this method */
+> -                               } else {
+> -                                       print_error(jvmti, "GetLineNumberTable", ret);
+> -                               }
+> -                       }
+> +                       nr_total += rec->numpcs;
+>                 }
+>         }
+>
+> @@ -122,14 +107,17 @@ get_line_numbers(jvmtiEnv *jvmti, const void *compile_info, jvmti_line_info_t **
+>                         rec = (jvmtiCompiledMethodLoadInlineRecord *)hdr;
+>                         for (i = 0; i < rec->numpcs; i++) {
+>                                 c = rec->pcinfo + i;
+> -                               nr = 0;
+> -                               ret = do_get_line_numbers(jvmti, c->pc,
+> -                                                         c->methods[0],
+> -                                                         c->bcis[0],
+> -                                                         *tab + lines_total,
+> -                                                         &nr);
+> +                                /*
+> +                                 * c->methods is the stack of inlined method calls
+> +                                 * at c->pc. [0] is the leaf method. Caller frames
+> +                                 * are ignored at the moment.
+> +                                 */
 
---3roh2l2ctvp5d3wy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks!
 
-Hi Daniel,
+Acked-by: Ian Rogers <irogers@google.com>
 
-On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
-> On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tech> wrote:
-> > I'm about to send a v3 today or tomorrow, I can Cc you (and Jian-Hong) =
-if you
-> > want.
->=20
-> That would be great, although given the potentially inconsistent
-> results we've been seeing so far it would be great if you could
-> additionally push a git branch somewhere.
-> That way we can have higher confidence that we are applying exactly
-> the same patches to the same base etc.
-
-So I sent a new iteration yesterday, and of course forgot to cc you... Sorr=
-y for
-that.
-
-I've pushed my current branch here:
-https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git/log/?h=3D=
-rpi4-kms
-
-Maxime
-
---3roh2l2ctvp5d3wy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXs9orwAKCRDj7w1vZxhR
-xWNfAQCCSr9BEd1oYBuyc+wf4o1Fm9s0OrK6oNnc5glpsNR6QAEAmnvx5c11Eczw
-/TJeEz41Q44p4bi3Fmipemloq5mY/g4=
-=elb0
------END PGP SIGNATURE-----
-
---3roh2l2ctvp5d3wy--
+> +                               ret = do_get_line_number(jvmti, c->pc,
+> +                                                        c->methods[0],
+> +                                                        c->bcis[0],
+> +                                                        *tab + lines_total);
+>                                 if (ret == JVMTI_ERROR_NONE)
+> -                                       lines_total += nr;
+> +                                       lines_total++;
+>                         }
+>                 }
+>         }
+> --
+> 2.26.2
+>
