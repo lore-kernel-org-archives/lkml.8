@@ -2,123 +2,116 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6845C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4DC1207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cnGYK2JC"
+	by mail.kernel.org (Postfix) with ESMTP id 8DF73206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388329AbgE1LUr (ORCPT
+        id S2388346AbgE1LWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:20:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30686 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388303AbgE1LUn (ORCPT
+        Thu, 28 May 2020 07:22:34 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:58278 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388202AbgE1LWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:20:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590664841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0pDdsaPJ9DSWTCG29xVVgPA72+92+ZpKaGKhvHYc8/o=;
-        b=cnGYK2JC5bYnTT2Pd08ImODjvO31mfBzx6DCuwCatJUslkIA68z3sN8V+SAI0uwCmF7riy
-        oZ98Ejx2vo6hC9D5lt4lZqF3Ah6wX+67qWpQUied2otSd9O0NlcXwKUJNXT0AMsTpkVBtM
-        qZOOCOQ7RFgWFcEOIQTt0/klvhEp9jc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-357-rz4JWXClNKyU_Z2vtGkSbw-1; Thu, 28 May 2020 07:20:37 -0400
-X-MC-Unique: rz4JWXClNKyU_Z2vtGkSbw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3F14805730;
-        Thu, 28 May 2020 11:20:32 +0000 (UTC)
-Received: from redhat.com (ovpn-113-1.rdu2.redhat.com [10.10.113.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E409A7A8B6;
-        Thu, 28 May 2020 11:20:26 +0000 (UTC)
-Date:   Thu, 28 May 2020 07:20:25 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Huang Ying <ying.huang@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Steven Capper <steve.capper@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Rabin Vincent <rabinv@axis.com>,
-        linux-arm-kernel@lists.infradead.org, rmk+kernel@arm.linux.org.uk,
-        Guo Ren <guoren@kernel.org>, linux-mips@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Ley Foon Tan <lftan@altera.com>,
-        nios2-dev@lists.rocketboards.org, linux-parisc@vger.kernel.org,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, Guan Xuetao <gxt@pku.edu.cn>,
-        linux-xtensa@linux-xtensa.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Chris Zankel <chris@zankel.net>
-Subject: Re: Cache flush issue with page_mapping_file() and swap back shmem
- page ?
-Message-ID: <20200528112025.GA10175@redhat.com>
-References: <20200528002033.GB1992500@redhat.com>
- <alpine.LSU.2.11.2005272021220.3857@eggly.anvils>
+        Thu, 28 May 2020 07:22:34 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4C7001C0351; Thu, 28 May 2020 13:22:32 +0200 (CEST)
+Date:   Thu, 28 May 2020 13:22:31 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     "Alessandrelli, Daniele" <daniele.alessandrelli@intel.com>
+Cc:     "arnd@arndb.de" <arnd@arndb.de>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "Murphy, Paul J" <paul.j.murphy@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniele.alessandrelli@linux.intel.com" 
+        <daniele.alessandrelli@linux.intel.com>
+Subject: Re: [PATCH 1/1] soc: keembay: Add Keem Bay IMR driver
+Message-ID: <20200528112231.GA22054@duo.ucw.cz>
+References: <cover.1587485099.git.daniele.alessandrelli@intel.com>
+ <13ca92165fab2827b6d439661e75f5b91ef083c2.1587485099.git.daniele.alessandrelli@intel.com>
+ <20200501081002.GA1055721@kroah.com>
+ <f60aece195cd0700728fc38b0398949a82b72fc3.camel@linux.intel.com>
+ <20200524212851.GG1192@bug>
+ <CAK8P3a225pqBfzQ19e6Gt0s_tYBp29xLb8EG==hhz=1wc7aVCA@mail.gmail.com>
+ <ac0534138facc25c4cbcbbff68fc0ba3c2de87b6.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.LSU.2.11.2005272021220.3857@eggly.anvils>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <ac0534138facc25c4cbcbbff68fc0ba3c2de87b6.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:46:22PM -0700, Hugh Dickins wrote:
-> Hi Jerome,
-> 
-> On Wed, 27 May 2020, Jerome Glisse wrote:
-> > So any arch code which uses page_mapping_file() might get the wrong
-> > answer, this function will return NULL for a swap backed page which
-> > can be a shmem pages. But shmem pages can still be shared among
-> > multiple process (and possibly at different virtual addresses if
-> > mremap was use).
-> > 
-> > Attached is a patch that changes page_mapping_file() to return the
-> > shmem mapping for swap backed shmem page. I have not tested it (no
-> > way for me to test all those architecture) and i spotted this while
-> > working on something else. So i hope someone can take a closer look.
-> 
-> I'm certainly no expert on flush_dcache_page() and friends, but I'd
-> be very surprised if such a problem exists, yet has gone unnoticed
-> for so long.  page_mapping_file() itself is fairly new, added when
-> a risk of crashing on a race with swapoff came in: but the previous
-> use of page_mapping() would have suffered equally if there were such
-> a cache flushinhg problem here.
-> 
-> And I'm afraid your patch won't do anything to help if there is a
-> problem: very soon after shmem calls add_to_swap_cache(), it calls
-> shmem_delete_from_page_cache(), which sets page->mapping to NULL.
-> 
-> But I can assure you that a shmem page (unlike an anon page) is never
-> put into swap cache while it is mapped into userspace, and never
-> mapped into userspace while it is still in swap cache: does that help?
-> 
 
-You are right i missed/forgot the part where shmem is never swapcache
-and mapped at the same time, thus page_mapping_file() can return NULL
-for those as they can no longer have alias mapping.
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you Hugh
-Jérôme
+Hi!
 
+> > Agreed, this sounds like an incompatible extension of the boot
+> > protocol
+> > that we should otherwise not merge.
+> >=20
+> > However, there is also a lot of missing information here, and it is
+> > always
+> > possible they are trying to something for a good reason. As long as
+> > the
+> > problem that the bootloader is trying to solve is explained well
+> > enough
+> > in the changelog, we can discuss it to see how it should be done
+> > properly.
+>=20
+>=20
+> Apologies, I should have provided more information. Here it is :)
+>=20
+> Basically, at boot time U-Boot code and core memory (.text, .data,
+> .bss, etc.) is protected by this Isolated Memory Region (IMR) which
+> prevents any device or processing units other than the ARM CPU to
+> access/modify the memory.
+>=20
+> This is done for security reasons, to reduce the risks that a potential
+> attacker can use "hijacked" HW devices to interfere with the boot
+> process (and break the secure boot flow in place).
+
+Dunno. You disable that after boot anyway. Whether it is disabled just
+before starting kernel or just after it makes very little difference.
+
+Plus, I'm not sure if this has much security value at all. If I can
+corrupt data u-boot works _with_ (such as kernel, dtb), I'll take over
+the system anyway.
+
+IOW I believe the best/simplest way is to simply disable this in
+u-boot before jumping to kernel entrypoint.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXs+e9wAKCRAw5/Bqldv6
+8kTnAJkBCFaIH+RgyEIJB348L5Z1U0EPAwCglTSJuvMLH/LegS0zeGTtaIRLU2s=
+=U8+S
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
