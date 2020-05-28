@@ -2,114 +2,113 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47412C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C224C208B8
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:12:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKLqcWmV"
+	by mail.kernel.org (Postfix) with ESMTP id 166FD20DD4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590624885;
+	bh=c+8hU4QGjJmmyXzl1rblMiEkuyhlWvbgj/aJLfZ++Rk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Zx5J9NpyKCI7BK+zcOch2wRCO3J7yY3JVSFCAZN1QCffLAHoedGeEtC4kIrwtdoU2
+	 O9erBtENP0AcpDTzHKNGL99/m3ug2ZgTb1y+w64qH4iXeUMs8U1h073Fr5DhtPmUXF
+	 9yfU7LVO3mP5Rt4CtZ4175WFbcBJNoKo/mR8aO1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgE1AM5 (ORCPT
+        id S1725882AbgE1AOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbgE1AM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:12:56 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6912EC05BD1E;
-        Wed, 27 May 2020 17:12:56 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id z26so12599173pfk.12;
-        Wed, 27 May 2020 17:12:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P8ZX6NswqYpmp7AerrBDt1jBaXqAyhSsaEu8p+L3oCE=;
-        b=iKLqcWmV5z5p/JypITIwKEFX2LyCZV9tu37lGMrCJvoOrB+JBVptoFiBh5FgHaUjF0
-         wOqAigXgQ4PhC/G9wWNnNPI4VG1aZsCSJZVY6Fo4s/xWgeXEeJbWGQuOn1XiZSDo2vTt
-         sIVJq4JN0uOo25JAznQVs7c8LVC0xmI++cZK+XSr5f5GeVvIKF+PJRtP1bFAud4HVWQy
-         3CAKwCM//8w28wWFoNKwy+qOQG5rnMDB9cjTm54fLySgkhnBeTGHJqFBHj+0Nd4qLgOe
-         RfWLucbAEZOnfsQRqdxWAUaPLzN5s0ggQNbKaMWdliVyILqQk1ocXrtPe+i86S5gTbF5
-         j7fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P8ZX6NswqYpmp7AerrBDt1jBaXqAyhSsaEu8p+L3oCE=;
-        b=nfRMEhBtbNZfiRmBIHFN7K/s+X4xdJmFSwqBDdvYa9rQNtMeBF9gDKSYPwkGPzfzAB
-         PIbJqpqeoMn6kdJiQ6cwgfziJ4IU/bXt5inISavF443IiS8YJ5xbOs8FdToH8neMHIZf
-         fXzHSjNQQadepUm7vFVcnG4G3BtQnY7042xAfFD9w+eCr0Yp9oCPU7IGkGWP5xoJ9Y3c
-         MKi6F2g01e6pxdoYcliyB50uEnh2VRDcYXe3d4DuCW7xcuHwNfg8rrtYtV5NZVu2GhxK
-         oKCs78CWFF1cMQb+a2CTKlLydJxdgJpvS+jHwaeyjDp2ZjYI9c5khSyX1fuJUzu245St
-         jl2Q==
-X-Gm-Message-State: AOAM532OViw58fl/o9Q31NKXirZoHz5r1s7dkVmQdToEkJcFP84cf9Xd
-        8AJ4E8cpkJOmtGm6GiWsW1hHUz6VI2E=
-X-Google-Smtp-Source: ABdhPJyybKRjHW/e8Wn8InRXBVk2d8dp4EgOWi6G1U18Odv3v3aOGhPI7vHfAxUxrSGaWJqSIn/WRg==
-X-Received: by 2002:a05:6a00:134c:: with SMTP id k12mr275880pfu.313.1590624775625;
-        Wed, 27 May 2020 17:12:55 -0700 (PDT)
-Received: from ?IPv6:::1? ([2404:7a87:83e0:f800:295a:ef64:e071:39ab])
-        by smtp.gmail.com with ESMTPSA id f136sm2915747pfa.59.2020.05.27.17.12.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 27 May 2020 17:12:54 -0700 (PDT)
-Subject: Re: [PATCH] exfat: optimize dir-cache
-To:     Sungjong Seo <sj1557.seo@samsung.com>,
-        'Namjae Jeon' <linkinjeon@kernel.org>,
-        "'Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp'" 
-        <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
-Cc:     "'Mori.Takahiro@ab.MitsubishiElectric.co.jp'" 
-        <Mori.Takahiro@ab.mitsubishielectric.co.jp>,
-        "'Motai.Hirotaka@aj.MitsubishiElectric.co.jp'" 
-        <Motai.Hirotaka@aj.mitsubishielectric.co.jp>,
-        'Namjae Jeon' <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200520075735epcas1p269372d222e25f3fd51b7979f5b7cdc61@epcas1p2.samsung.com>
- <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
- <055a01d63306$82b13440$88139cc0$@samsung.com>
- <TY1PR01MB15784E70CEACDA05F688AE6790B10@TY1PR01MB1578.jpnprd01.prod.outlook.com>
- <CAKYAXd_oG6dc7CNiHszKmhabHd2zrN_VOaNYaWRPES=7hRu+pA@mail.gmail.com>
- <000701d63432$ace24f10$06a6ed30$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <22dfcd8a-4416-e2a7-b8a7-0375660ba465@gmail.com>
-Date:   Thu, 28 May 2020 09:12:52 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
-MIME-Version: 1.0
-In-Reply-To: <000701d63432$ace24f10$06a6ed30$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Antivirus: Avast (VPS 200527-0, 2020/05/27), Outbound message
-X-Antivirus-Status: Clean
+        Wed, 27 May 2020 20:14:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbgE1AOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:14:43 -0400
+Received: from guoren-Inspiron-7460.lan (unknown [89.208.247.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A67B208C3;
+        Thu, 28 May 2020 00:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590624883;
+        bh=c+8hU4QGjJmmyXzl1rblMiEkuyhlWvbgj/aJLfZ++Rk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hb3/IUfRgLGleGmjj71E0M2pwcxGmVpkwViXEen7Twst7uvTO5KrpC9a5HfMK/pBR
+         5szAueHCGrxgmoBzmjFIR+JlAJt1goK+AQc5FZPw/DrzRqpFRxJZlCORD65Bb2uNQS
+         juEapUSzCV+t5/HUV8vmD9TD3BHe3m7+svdJfcUw=
+From:   guoren@kernel.org
+To:     arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
+Subject: [PATCH] csky: Fixup CONFIG_DEBUG_RSEQ
+Date:   Thu, 28 May 2020 08:14:29 +0800
+Message-Id: <1590624869-6594-1-git-send-email-guoren@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>   > In order to prevent illegal accesses to bh and dentries, it would
->>> be better to check validation for num and bh.
->>>
->>>   There is no new error checking for same reason as above.
->>>
->>>   I'll try to add error checking to this v2 patch.
->>>   Or is it better to add error checking in another patch?
->> The latter:)
->> Thanks!
-> 
-> Yes, the latter looks better.
+From: Guo Ren <guoren@linux.alibaba.com>
 
-I will do so.
+Put the rseq_syscall check point at the prologue of the syscall
+will break the a0 ... a7. This will casue system call bug when
+DEBUG_RSEQ is enabled.
 
-I will post additional patches for error checking, after this patch is merged into tree.
-OK?
+So move it to the epilogue of syscall, but before syscall_trace.
 
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+---
+ arch/csky/kernel/entry.S | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
+diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
+index 9595e86..f138003 100644
+--- a/arch/csky/kernel/entry.S
++++ b/arch/csky/kernel/entry.S
+@@ -128,15 +128,11 @@ tlbop_end 1
+ ENTRY(csky_systemcall)
+ 	SAVE_ALL TRAP0_SIZE
+ 	zero_fp
+-#ifdef CONFIG_RSEQ_DEBUG
+-	mov	a0, sp
+-	jbsr	rseq_syscall
+-#endif
+ 	psrset  ee, ie
+ 
+ 	lrw     r9, __NR_syscalls
+ 	cmphs   syscallid, r9		/* Check nr of syscall */
+-	bt      ret_from_exception
++	bt      1f
+ 
+ 	lrw     r9, sys_call_table
+ 	ixw     r9, syscallid
+@@ -162,6 +158,11 @@ ENTRY(csky_systemcall)
+ 	jsr     syscallid
+ #endif
+ 	stw     a0, (sp, LSAVE_A0)      /* Save return value */
++1:
++#ifdef CONFIG_DEBUG_RSEQ
++	mov	a0, sp
++	jbsr	rseq_syscall
++#endif
+ 	jmpi    ret_from_exception
+ 
+ csky_syscall_trace:
+@@ -187,6 +188,10 @@ csky_syscall_trace:
+ #endif
+ 	stw	a0, (sp, LSAVE_A0)	/* Save return value */
+ 
++#ifdef CONFIG_DEBUG_RSEQ
++	mov	a0, sp
++	jbsr	rseq_syscall
++#endif
+ 	mov     a0, sp                  /* right now, sp --> pt_regs */
+ 	jbsr    syscall_trace_exit
+ 	br	ret_from_exception
+-- 
+2.7.4
 
