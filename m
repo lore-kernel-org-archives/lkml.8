@@ -2,107 +2,107 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120B220814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590678356;
-	bh=+kL9LhCOGvjtZP4YPcHbUGU+IyjWZiXkw5UtPvN8QX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kRq446xiDGoBWfeOIxiFuKjIoelZ61+7q6XPj606+zt3Sah290L6P6PXBJLbaVwZz
-	 gIxPbk/m50+OaH4zCYe/yPiNl6haPiUwBBwB+sAMeT+ErvLRnpVuVXHKYbxGOQD58V
-	 lDXOiXeVmHjC9ufHH+Dv0GtP58l2yb9EfnT2PMic=
+	by mail.kernel.org (Postfix) with ESMTP id 82BE420814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:06:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404054AbgE1PFz (ORCPT
+        id S2404056AbgE1PG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:05:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50228 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2403787AbgE1PFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:05:54 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F9C2075F;
-        Thu, 28 May 2020 15:05:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590678353;
-        bh=+kL9LhCOGvjtZP4YPcHbUGU+IyjWZiXkw5UtPvN8QX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=02+DmjcYGsOPMYRrYToS00mFAOc3pQ4g19iM0Fy59nj933Nkv7+e5rx7sIb0VHqu9
-         8O43OO/vO5hIdQFf8GKi98VPOXae2ph3gzrRD6ys5uWZHSb08fWbJnzp8qeg+Vnx1z
-         0/J8Q79nSxN+47MxvnioDrdV3jHWdViSDcngxlSk=
-Date:   Thu, 28 May 2020 16:05:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Stephane Le Provost <stephane.leprovost@mediatek.com>,
-        Pedro Tsai <pedro.tsai@mediatek.com>,
-        Andrew Perepech <andrew.perepech@mediatek.com>
-Subject: Re: [PATCH v2 1/2] regmap: provide helpers for simple bit operations
-Message-ID: <20200528150550.GH3606@sirena.org.uk>
-References: <20200528142241.20466-1-brgl@bgdev.pl>
- <20200528142241.20466-2-brgl@bgdev.pl>
- <20200528144456.GG3606@sirena.org.uk>
- <CAMpxmJVB_L+otX2u80qwGjw4TXCJtwOXe=t11O4Daq3miMVk6Q@mail.gmail.com>
+        Thu, 28 May 2020 11:06:59 -0400
+Received: from www62.your-server.de ([213.133.104.62]:39948 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403787AbgE1PG6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:06:58 -0400
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jeK75-0001th-BD; Thu, 28 May 2020 17:06:31 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jeK74-000Ei1-Ul; Thu, 28 May 2020 17:06:30 +0200
+Subject: Re: [PATCH] powerpc/bpf: Enable bpf_probe_read{, str}() on powerpc
+ again
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, bpf@vger.kernel.org
+References: <20200527122844.19524-1-pmladek@suse.com>
+ <87ftbkkh00.fsf@mpe.ellerman.id.au> <20200528091351.GE3529@linux-b0ei>
+ <87d06ojlib.fsf@mpe.ellerman.id.au>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <aace2e9e-c63c-a1a2-a1e1-c7a46904e8c5@iogearbox.net>
+Date:   Thu, 28 May 2020 17:06:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zq44+AAfm4giZpo5"
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJVB_L+otX2u80qwGjw4TXCJtwOXe=t11O4Daq3miMVk6Q@mail.gmail.com>
-X-Cookie: Small is beautiful.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87d06ojlib.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25826/Thu May 28 14:33:30 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/28/20 2:23 PM, Michael Ellerman wrote:
+> Petr Mladek <pmladek@suse.com> writes:
+>> On Thu 2020-05-28 11:03:43, Michael Ellerman wrote:
+>>> Petr Mladek <pmladek@suse.com> writes:
+>>>> The commit 0ebeea8ca8a4d1d453a ("bpf: Restrict bpf_probe_read{, str}() only
+>>>> to archs where they work") caused that bpf_probe_read{, str}() functions
+>>>> were not longer available on architectures where the same logical address
+>>>> might have different content in kernel and user memory mapping. These
+>>>> architectures should use probe_read_{user,kernel}_str helpers.
+>>>>
+>>>> For backward compatibility, the problematic functions are still available
+>>>> on architectures where the user and kernel address spaces are not
+>>>> overlapping. This is defined CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
+>>>>
+>>>> At the moment, these backward compatible functions are enabled only
+>>>> on x86_64, arm, and arm64. Let's do it also on powerpc that has
+>>>> the non overlapping address space as well.
+>>>>
+>>>> Signed-off-by: Petr Mladek <pmladek@suse.com>
+>>>
+>>> This seems like it should have a Fixes: tag and go into v5.7?
+>>
+>> Good point:
+>>
+>> Fixes: commit 0ebeea8ca8a4d1d4 ("bpf: Restrict bpf_probe_read{, str}() only to archs where they work")
+>>
+>> And yes, it should ideally go into v5.7 either directly or via stable.
+>>
+>> Should I resend the patch with Fixes and
+>> Cc: stable@vger.kernel.org #v45.7 lines, please?
+> 
+> If it goes into v5.7 then it doesn't need a Cc: stable, and I guess a
+> Fixes: tag is nice to have but not so important as it already mentions
+> the commit that caused the problem. So a resend probably isn't
+> necessary.
+> 
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+> 
+> Daniel can you pick this up, or should I?
 
---zq44+AAfm4giZpo5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yeah I'll take it into bpf tree for v5.7.
 
-On Thu, May 28, 2020 at 04:49:06PM +0200, Bartosz Golaszewski wrote:
-> czw., 28 maj 2020 o 16:45 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
-
-> > The tenery here is redundant, it's converting a boolean value into a
-> > boolean value.  Otherwise this looks good.
-
-> Do you mind if I respin it right away? I don't want to spam the list.
-
-Sure, go ahead.
-
---zq44+AAfm4giZpo5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl7P000ACgkQJNaLcl1U
-h9AAggf4sQcyJHFUloflyzh/lLpY4EwFcuWbYHkDTzIGPDOo0qxyNCuTANexUK9i
-0rryGP7sH+5PPNWfafBj96tM6tU6efhmBlMm/rz/LC0aFvi4zSf1tDZ58UeDUJ8j
-CgEl1VwNyYXPOZ5Pyn1LyRddEBtBuohoC9+3ioc5bZKUT69FPscRSRDsqQ92fe2C
-ryplo9IicX5u3ztzQKa00PhLqvPMMiJD+Q1D4siBOXy4M2GDESYc0WSJSPrkizCH
-u9DaLdXZFPRpVpyKumF1eu60mtaZhS758X9gO3GHe+Vd+bng0C5ShbJ2w3rWcvsf
-AFB+my302HXqBrtpIsfJs877uHpg
-=efX/
------END PGP SIGNATURE-----
-
---zq44+AAfm4giZpo5--
+Thanks everyone,
+Daniel
