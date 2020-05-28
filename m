@@ -2,151 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB04C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C02BD207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A347207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8tJG5mv"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Ej4N7usl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391103AbgE1OWR (ORCPT
+        id S2391069AbgE1OXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
+        Thu, 28 May 2020 10:23:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391035AbgE1OWL (ORCPT
+        with ESMTP id S2391109AbgE1OWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:22:11 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 100D2C05BD1E;
-        Thu, 28 May 2020 07:22:11 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id n15so3166621pjt.4;
-        Thu, 28 May 2020 07:22:11 -0700 (PDT)
+        Thu, 28 May 2020 10:22:55 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C29CC08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:22:54 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id r15so3353094wmh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wWwF/bnn9ZcbJfYK+03lCeXiM0oqQHMOv1ojVW5AqE4=;
-        b=t8tJG5mvH1xzHtWy9lfolS8Z5SK+IeWq2bqqiIG8Uc9CJCBKzXghkXX8/p4F5WEHDV
-         PlHaJz7KxOcxKPrJvCSdFRqhx9pImpYNt6lYdpOuwTzrF0iOfTDJzDzgITmRwFhFoeOg
-         VtnQLhWm8iPr+UEc64Bdw6tTVfN04K/uAjk3Wdrf79rUiODGo1q+6mIl7xfPEPngc7RP
-         3/WxyUHz7rjkK+v937kOWyYXQzqFPYvddtoc8W577qoE5TEZd5hNSFu+45O3hesI/JUO
-         1I6toFDX3x3RytZqiPQSc9rfPHWKdSFAeMti4faxVlH1LwOLaTUOQ7KlTEaoWSjwF7Ou
-         6Zng==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fW1nO44AIOkd1DyHEXQPPUYlT6a8b9ESKOQqboJxrOI=;
+        b=Ej4N7uslJSputqEQa2xbVuKyL2M+K03+7SqLgEzI3Rn7DshHJgdM/1XfyTMJGnW2Vr
+         m0kkQeSvrJxgLmRBi4HalZPUSysYWSMvD8eFOAkLxWuFZhQhfy/KFGA/rhCdy4GUO4Pn
+         iKNJxxJUjDqambIIaNJHNZx7GdTpvLc5/YhqkdhU/HunYNdaEEHUWKYEKM/54NCX3mc4
+         7+4XyZJipYLbx5cPjsGshzE8ppHw/6xYyV6Z2MCCG8D1JcIbjXIceyeEUpdWsHqCAuhz
+         oq1OVCuUMCpbxDzIXVKaKNAUP6MtMrYwvPGK3qKZh8Z+oY7R5T9JWGFIadiTQ2msyWgZ
+         0lcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wWwF/bnn9ZcbJfYK+03lCeXiM0oqQHMOv1ojVW5AqE4=;
-        b=oSZjDTuT19/UNXvHvjzDao7dnNT4tqI5mEbpJnK9qLmwrMgzTjeliqfB9hPb20qPVA
-         nZrtEa7CT62ufkmRGLGCj/nV6x0kaJ1wxQJC+qfiE8Kfu1XWfbtS1mtQ0odSmlkJOa9I
-         EA2PxlKJ3DLw3D7887FxXtpj7q/hlas48nUnIU/x5SPsERtcxfTj2lSJcgsnNlWqCECg
-         tw3Z/VK2kBZmGytg99zQ3IF1XMt9FxRqLRdzzzCAvKdUqx1/2JkDmFVxiuZ/f8SyxB5O
-         wB2PwV6B09jw49U9VpQCzM2hF2+phJxDcgmB+24MWdl5IlLYkx8Otywt1a93qZFhpiA8
-         EDxg==
-X-Gm-Message-State: AOAM532sZAfF9nneqBtZLfZjR3rAoKIk7jgXumPkESvK73tl8cDGWcYg
-        L0ZoTrix+1Ekua+N6/BZr/O36/lJ
-X-Google-Smtp-Source: ABdhPJzdi2KceMqeO7E/63+tTlQhot38qwIjBd3zpxPWOZm2KCHm3nr1Tu8bVrtUl2/OVu534jXuHw==
-X-Received: by 2002:a17:902:b289:: with SMTP id u9mr3803290plr.138.1590675730628;
-        Thu, 28 May 2020 07:22:10 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id w4sm2188394pfq.57.2020.05.28.07.22.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fW1nO44AIOkd1DyHEXQPPUYlT6a8b9ESKOQqboJxrOI=;
+        b=nrMEALRKn9wB84ni/vBsrc30qkF70lwhEPnyx/os+OXZaHkLgSwBfmGNc7Jmo+ulhk
+         HAptKFjQ9zP2MzNudpLTd7FOp41grrT9r22uvecBqag4TlLaiMswrq84KMaBnjSv25Q9
+         3MN1Lf07y4KyW8lb12wJ5xoUlaLL920DrcbyuLQyNArCvM2P7bm9MX4DXBBYDRulnaer
+         FGxdVAtJ4kmkHLkwlq2PZgNdmukV5Na6j+FXyfLnb2j75zAeizK802y7sDcj93KMM7ul
+         UUoqraj1veWXle5e/VLSpSjsmDNUtJwz9Rhf76cFyP9WjCeSLnOSCcgYWZrP2FTRQ+zU
+         Uwbg==
+X-Gm-Message-State: AOAM532wQoxc9TsHOe8TWDY5LLKd3EABfa35KMhKKfex/N+7zv7XOYmR
+        +//ktVxDg9eS2Ag74bd2AnjMqg==
+X-Google-Smtp-Source: ABdhPJyjpo8fZxpr55zZ4EY0chHkdotq2Tr2sLbnnUHjIG5v+Aeelk58EK7UzA58W/G6CefodEUQ6A==
+X-Received: by 2002:a1c:4008:: with SMTP id n8mr1516082wma.118.1590675772064;
+        Thu, 28 May 2020 07:22:52 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id h74sm6258162wrh.76.2020.05.28.07.22.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 07:22:10 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     sboyd@kernel.org, robh+dt@kernel.org, mturquette@baylibre.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] clk: qcom: Add missing msm8998 ufs_unipro_core_clk_src
-Date:   Thu, 28 May 2020 07:22:05 -0700
-Message-Id: <20200528142205.44003-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 28 May 2020 07:22:51 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>,
+        Stephane Le Provost <stephane.leprovost@mediatek.com>,
+        Pedro Tsai <pedro.tsai@mediatek.com>,
+        Andrew Perepech <andrew.perepech@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/2] regmap: provide simple bitops and use them in a driver
+Date:   Thu, 28 May 2020 16:22:39 +0200
+Message-Id: <20200528142241.20466-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ufs_unipro_core_clk_src is required to allow UFS to clock scale for power
-savings.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) driver")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/clk/qcom/gcc-msm8998.c               | 27 ++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-msm8998.h |  1 +
- 2 files changed, 28 insertions(+)
+I noticed that oftentimes I use regmap_update_bits() for simple bit
+setting or clearing. In this case the fourth argument is superfluous as
+it's always 0 or equal to the mask argument.
 
-diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
-index df1d7056436c..9d7016bcd680 100644
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -1110,6 +1110,27 @@ static struct clk_rcg2 ufs_axi_clk_src = {
- 	},
- };
- 
-+static const struct freq_tbl ftbl_ufs_unipro_core_clk_src[] = {
-+	F(37500000, P_GPLL0_OUT_MAIN, 16, 0, 0),
-+	F(75000000, P_GPLL0_OUT_MAIN, 8, 0, 0),
-+	F(150000000, P_GPLL0_OUT_MAIN, 4, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 ufs_unipro_core_clk_src = {
-+	.cmd_rcgr = 0x76028,
-+	.mnd_width = 8,
-+	.hid_width = 5,
-+	.parent_map = gcc_parent_map_0,
-+	.freq_tbl = ftbl_ufs_unipro_core_clk_src,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "ufs_unipro_core_clk_src",
-+		.parent_names = gcc_parent_names_0,
-+		.num_parents = 4,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
- static const struct freq_tbl ftbl_usb30_master_clk_src[] = {
- 	F(19200000, P_XO, 1, 0, 0),
- 	F(60000000, P_GPLL0_OUT_MAIN, 10, 0, 0),
-@@ -2549,6 +2570,11 @@ static struct clk_branch gcc_ufs_unipro_core_clk = {
- 		.enable_mask = BIT(0),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_ufs_unipro_core_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_unipro_core_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
- 			.ops = &clk_branch2_ops,
- 		},
- 	},
-@@ -2904,6 +2930,7 @@ static struct clk_regmap *gcc_msm8998_clocks[] = {
- 	[SDCC4_APPS_CLK_SRC] = &sdcc4_apps_clk_src.clkr,
- 	[TSIF_REF_CLK_SRC] = &tsif_ref_clk_src.clkr,
- 	[UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
-+	[UFS_UNIPRO_CORE_CLK_SRC] = &ufs_unipro_core_clk_src.clkr,
- 	[USB30_MASTER_CLK_SRC] = &usb30_master_clk_src.clkr,
- 	[USB30_MOCK_UTMI_CLK_SRC] = &usb30_mock_utmi_clk_src.clkr,
- 	[USB3_PHY_AUX_CLK_SRC] = &usb3_phy_aux_clk_src.clkr,
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8998.h b/include/dt-bindings/clock/qcom,gcc-msm8998.h
-index 63e02dc32a0b..6a73a174f049 100644
---- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
-@@ -183,6 +183,7 @@
- #define GCC_MSS_SNOC_AXI_CLK					174
- #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
- #define GCC_BIMC_GFX_CLK					176
-+#define UFS_UNIPRO_CORE_CLK_SRC					177
- 
- #define PCIE_0_GDSC						0
- #define UFS_GDSC						1
+This series proposes to add simple bit operations for setting, clearing
+and testing specific bits with regmap.
+
+The second patch uses all three in a driver that got recently picked into
+the net-next tree.
+
+The patches obviously target different trees so - if you're ok with
+the change itself - I propose you pick the first one into your regmap
+tree for v5.8 and then I'll resend the second patch to add the first
+user for these macros for v5.9.
+
+v1 -> v2:
+- convert the new macros to static inline functions
+
+Bartosz Golaszewski (2):
+  regmap: provide helpers for simple bit operations
+  net: ethernet: mtk-star-emac: use regmap bitops
+
+ drivers/base/regmap/regmap.c                  | 22 +++++
+ drivers/net/ethernet/mediatek/mtk_star_emac.c | 80 ++++++++-----------
+ include/linux/regmap.h                        | 36 +++++++++
+ 3 files changed, 93 insertions(+), 45 deletions(-)
+
 -- 
-2.17.1
+2.26.1
 
