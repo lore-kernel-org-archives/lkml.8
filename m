@@ -2,149 +2,232 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F38C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5049EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5C02071A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:20:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TwSyLC8e"
+	by mail.kernel.org (Postfix) with ESMTP id 2D2522078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgE1BUU (ORCPT
+        id S1726734AbgE1BUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgE1BUT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:20:19 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C01DC05BD1E;
-        Wed, 27 May 2020 18:20:19 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q9so2316252pjm.2;
-        Wed, 27 May 2020 18:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VQ7LUQQZ/eVaGd5VEJD8oJklzM/fJyrG9ba3r7/1SoE=;
-        b=TwSyLC8eiHi2IO8CR/d7V5Qvb8xA2M9Nl35lijvJ4ZPWcZraZiDNuo8HfBWx7Sce0X
-         Bv6T8vUl/PB5CLJp1W7qmAOzmeZ9QHyynNj+YMnvfMcKbFghWLKAG5aGzrC/u8vi5e8W
-         0tMS0MLZLkC5NpVvwvIJffw9mqVRG9CtmOphbnhppofBjDvmZjURgRm07Vw7YZxOdw2w
-         z7w2kEp2z29Ih7QX+RuXo9B11yKEbFZL0N/GqusxSgtfWrWhShEwv+PgcB7UMrtDYKeL
-         LXxaHazBly6uVv34fK2vIy03U523QrWgP2a2wblyrA/JV5j/kh/v9+MO2rpiPOvETIYw
-         0d6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VQ7LUQQZ/eVaGd5VEJD8oJklzM/fJyrG9ba3r7/1SoE=;
-        b=hfFlmgEZni9gWALKYewoyTJ8BWMzJG+dwpnC3rJjSUYdG1HRCKEXDqTAIa9WAWWVCq
-         PgsXUac3GU81wigtK2zLt7PxtgUI4Vq1lcwZBjtRXmf8xYwBgGmuAm1ZyjZzCZykXyCO
-         Hd0N8P9l9gsuZYKUEjUuS+cMl+Ub7aFtLxME6J7PxEtfqxk5wM1r1w+bOXK5HFyvmZHN
-         lzBuM3T0Pgd6Ea9S8NL4zHvw5NJ0CcRXsmfIZJeKor2ojZ4Zl/1H2ETEgX57EAW1H28z
-         fl5wSmwC6rH4Ef1DEGJPSnAimyhKMhLA7GIPcJIkOaW2EacFp2DIzcmtfzpWxA2aPtgs
-         J/Hg==
-X-Gm-Message-State: AOAM531Aer0BGkNdWVWmV/S/iQV4n7xCQn+Guo5Y1f0I7MQCLzoMPbpY
-        5PuWlNM71bG1kSSsGFSHGFg=
-X-Google-Smtp-Source: ABdhPJxxtSCpYuqOC2VnFEhiZ9l6NIkOXrrUOJLnOaecuTiUxgsIzz0zpHcFLL8l6Z397kEPj5y8Aw==
-X-Received: by 2002:a17:90a:2ec1:: with SMTP id h1mr1161911pjs.145.1590628818740;
-        Wed, 27 May 2020 18:20:18 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:400::5:ccc9])
-        by smtp.gmail.com with ESMTPSA id n21sm3523989pjo.25.2020.05.27.18.20.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 27 May 2020 18:20:18 -0700 (PDT)
-Date:   Wed, 27 May 2020 18:20:11 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Subject: Re: [PATCH] usb: gadget: aspeed: fixup vhub port irq handling
-Message-ID: <20200528012010.GA30405@taoren-ubuntu-R90MNF91>
-References: <20200528011154.30355-1-rentao.bupt@gmail.com>
+        Wed, 27 May 2020 21:20:50 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48924 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725294AbgE1BUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:20:50 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1F5C510104ED80D4744C;
+        Thu, 28 May 2020 09:20:47 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 28 May
+ 2020 09:20:41 +0800
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: avoid inifinite loop to wait for
+ flushing node pages at cp_error
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200522144752.216197-1-jaegeuk@kernel.org>
+ <20200522233243.GA94020@google.com> <20200525035655.GA135148@google.com>
+ <565af47c-8364-d910-8d1c-93645c12e660@huawei.com>
+ <20200525150608.GA55033@google.com>
+ <92afae8b-2dd3-171a-562c-404a67f9aab2@huawei.com>
+ <a44f9c2e-3859-6c5d-6f06-7c4c6b4c01c5@huawei.com>
+ <20200526015650.GA207949@google.com>
+ <765a1ac5-a318-14d6-666f-eab46f892d01@huawei.com>
+ <20200527205603.GB206249@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <d2f2c623-b0e8-e875-410d-f542e86417e4@huawei.com>
+Date:   Thu, 28 May 2020 09:20:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528011154.30355-1-rentao.bupt@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200527205603.GB206249@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ben,
-
-I sent out the follow-on patch per Greg's suggestion, and the purpose is
-to include the latest version (v4) of the original commit. As v4 was
-already Acked-by you, can I add the tag for this patch? Or are you
-willing to Ack it again?
-
-
-Cheers,
-
-Tao
-
-On Wed, May 27, 2020 at 06:11:54PM -0700, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
+On 2020/5/28 4:56, Jaegeuk Kim wrote:
+> On 05/27, Chao Yu wrote:
+>> On 2020/5/26 9:56, Jaegeuk Kim wrote:
+>>> On 05/26, Chao Yu wrote:
+>>>> On 2020/5/26 9:11, Chao Yu wrote:
+>>>>> On 2020/5/25 23:06, Jaegeuk Kim wrote:
+>>>>>> On 05/25, Chao Yu wrote:
+>>>>>>> On 2020/5/25 11:56, Jaegeuk Kim wrote:
+>>>>>>>> Shutdown test is somtimes hung, since it keeps trying to flush dirty node pages
+>>
+>>     71.07%     0.01%  kworker/u256:1+  [kernel.kallsyms]  [k] wb_writeback
+>>             |
+>>              --71.06%--wb_writeback
+>>                        |
+>>                        |--68.96%--__writeback_inodes_wb
+>>                        |          |
+>>                        |           --68.95%--writeback_sb_inodes
+>>                        |                     |
+>>                        |                     |--65.08%--__writeback_single_inode
+>>                        |                     |          |
+>>                        |                     |           --64.35%--do_writepages
+>>                        |                     |                     |
+>>                        |                     |                     |--59.83%--f2fs_write_node_pages
+>>                        |                     |                     |          |
+>>                        |                     |                     |           --59.74%--f2fs_sync_node_pages
+>>                        |                     |                     |                     |
+>>                        |                     |                     |                     |--27.91%--pagevec_lookup_range_tag
+>>                        |                     |                     |                     |          |
+>>                        |                     |                     |                     |           --27.90%--find_get_pages_range_tag
+>>
+>> Before umount, kworker will always hold one core, that looks not reasonable,
+>> to avoid that, could we just allow node write, since it's out-place-update,
+>> and cp is not allowed, we don't need to worry about its effect on data on
+>> previous checkpoint, and it can decrease memory footprint cost by node pages.
 > 
-> This is a follow-on patch for commit a23be4ed8f48 ("usb: gadget: aspeed:
-> improve vhub port irq handling"): for_each_set_bit() is replaced with
-> simple for() loop because for() loop runs faster on ASPEED BMC.
+> It can cause some roll-forward recovery?
+
+Yup, recovery should be considered,
+
+Later fsync() will fail due to:
+
+int f2fs_sync_file(struct file *file, loff_t start, loff_t end, int datasync)
+{
+	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(file)))))
+		return -EIO;
+
+
+And we need to adjust f2fs_fsync_node_pages() to handle in-process fsyncing node
+pages as well:
+
+if (f2fs_cp_error()) {
+	set_fsync_mark(page, 0);
+	set_dentry_mark(page, 0);
+	if (atomic) {
+		unlock & put page;
+		ret = -EIO;
+		break;
+	}
+}
+
+ret = __write_node_page();
+
+Thanks,
+
 > 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> ---
->  drivers/usb/gadget/udc/aspeed-vhub/core.c | 10 +++-------
->  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  3 +++
->  2 files changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> index cdf96911e4b1..be7bb64e3594 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> @@ -135,13 +135,9 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
->  
->  	/* Handle device interrupts */
->  	if (istat & vhub->port_irq_mask) {
-> -		unsigned long bitmap = istat;
-> -		int offset = VHUB_IRQ_DEV1_BIT;
-> -		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
-> -
-> -		for_each_set_bit_from(offset, &bitmap, size) {
-> -			i = offset - VHUB_IRQ_DEV1_BIT;
-> -			ast_vhub_dev_irq(&vhub->ports[i].dev);
-> +		for (i = 0; i < vhub->max_ports; i++) {
-> +			if (istat & VHUB_DEV_IRQ(i))
-> +				ast_vhub_dev_irq(&vhub->ports[i].dev);
->  		}
->  	}
->  
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-> index 2e5a1ef14a75..87a5dea12d3c 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-> @@ -67,6 +67,9 @@
->  #define VHUB_IRQ_HUB_EP0_SETUP			(1 << 0)
->  #define VHUB_IRQ_ACK_ALL			0x1ff
->  
-> +/* Downstream device IRQ mask. */
-> +#define VHUB_DEV_IRQ(n)				(VHUB_IRQ_DEVICE1 << (n))
-> +
->  /* SW reset reg */
->  #define VHUB_SW_RESET_EP_POOL			(1 << 9)
->  #define VHUB_SW_RESET_DMA_CONTROLLER		(1 << 8)
-> -- 
-> 2.17.1
+>>
+>> Thanks,
+>>
+>>>>>>>
+>>>>>>> IMO, for umount case, we should drop dirty reference and dirty pages on meta/data
+>>>>>>> pages like we change for node pages to avoid potential dead loop...
+>>>>>>
+>>>>>> I believe we're doing for them. :P
+>>>>>
+>>>>> Actually, I mean do we need to drop dirty meta/data pages explicitly as below:
+>>>>>
+>>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>>>> index 3dc3ac6fe143..4c08fd0a680a 100644
+>>>>> --- a/fs/f2fs/checkpoint.c
+>>>>> +++ b/fs/f2fs/checkpoint.c
+>>>>> @@ -299,8 +299,15 @@ static int __f2fs_write_meta_page(struct page *page,
+>>>>>
+>>>>>  	trace_f2fs_writepage(page, META);
+>>>>>
+>>>>> -	if (unlikely(f2fs_cp_error(sbi)))
+>>>>> +	if (unlikely(f2fs_cp_error(sbi))) {
+>>>>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
+>>>>> +			ClearPageUptodate(page);
+>>>>> +			dec_page_count(sbi, F2FS_DIRTY_META);
+>>>>> +			unlock_page(page);
+>>>>> +			return 0;
+>>>>> +		}
+>>>>>  		goto redirty_out;
+>>>>> +	}
+>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+>>>>>  		goto redirty_out;
+>>>>>  	if (wbc->for_reclaim && page->index < GET_SUM_BLOCK(sbi, 0))
+>>>>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>>>>> index 48a622b95b76..94b342802513 100644
+>>>>> --- a/fs/f2fs/data.c
+>>>>> +++ b/fs/f2fs/data.c
+>>>>> @@ -2682,6 +2682,12 @@ int f2fs_write_single_data_page(struct page *page, int *submitted,
+>>>>>
+>>>>>  	/* we should bypass data pages to proceed the kworkder jobs */
+>>>>>  	if (unlikely(f2fs_cp_error(sbi))) {
+>>>>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
+>>>>> +			ClearPageUptodate(page);
+>>>>> +			inode_dec_dirty_pages(inode);
+>>>>> +			unlock_page(page);
+>>>>> +			return 0;
+>>>>> +		}
+>>>>
+>>>> Oh, I notice previously, we will drop non-directory inode's dirty pages directly,
+>>>> however, during umount, we'd better drop directory inode's dirty pages as well, right?
+>>>
+>>> Hmm, I remember I dropped them before. Need to double check.
+>>>
+>>>>
+>>>>>  		mapping_set_error(page->mapping, -EIO);
+>>>>>  		/*
+>>>>>  		 * don't drop any dirty dentry pages for keeping lastest
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>>
+>>>>>>>> in an inifinite loop. Let's drop dirty pages at umount in that case.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>>>>> ---
+>>>>>>>> v3:
+>>>>>>>>  - fix wrong unlock
+>>>>>>>>
+>>>>>>>> v2:
+>>>>>>>>  - fix typos
+>>>>>>>>
+>>>>>>>>  fs/f2fs/node.c | 9 ++++++++-
+>>>>>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>>>>>>>> index e632de10aedab..e0bb0f7e0506e 100644
+>>>>>>>> --- a/fs/f2fs/node.c
+>>>>>>>> +++ b/fs/f2fs/node.c
+>>>>>>>> @@ -1520,8 +1520,15 @@ static int __write_node_page(struct page *page, bool atomic, bool *submitted,
+>>>>>>>>  
+>>>>>>>>  	trace_f2fs_writepage(page, NODE);
+>>>>>>>>  
+>>>>>>>> -	if (unlikely(f2fs_cp_error(sbi)))
+>>>>>>>> +	if (unlikely(f2fs_cp_error(sbi))) {
+>>>>>>>> +		if (is_sbi_flag_set(sbi, SBI_IS_CLOSE)) {
+>>>>>>>> +			ClearPageUptodate(page);
+>>>>>>>> +			dec_page_count(sbi, F2FS_DIRTY_NODES);
+>>>>>>>> +			unlock_page(page);
+>>>>>>>> +			return 0;
+>>>>>>>> +		}
+>>>>>>>>  		goto redirty_out;
+>>>>>>>> +	}
+>>>>>>>>  
+>>>>>>>>  	if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING)))
+>>>>>>>>  		goto redirty_out;
+>>>>>>>>
+>>>>>> .
+>>>>>>
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> Linux-f2fs-devel mailing list
+>>>>> Linux-f2fs-devel@lists.sourceforge.net
+>>>>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
 > 
