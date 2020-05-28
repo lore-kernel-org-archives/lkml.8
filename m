@@ -2,151 +2,127 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F10C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB38C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 025E92078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D6F2078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NzIkgi+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgE1AoD (ORCPT
+        id S1725897AbgE1Apq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:44:03 -0400
-Received: from mga01.intel.com ([192.55.52.88]:64395 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgE1AoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:44:02 -0400
-IronPort-SDR: l+b7n0Rwp/xVrCT4yZ8JpHIyghTGkF1rJERRMwQ5+yAM6yKQ3gIoYRsrERqzaxm1qZpPqkRcyS
- 6FX/Y7o/BZqw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 17:44:01 -0700
-IronPort-SDR: VIXRo54WpUwzMQnC8rn7LxjmYU6ZeHdgGrpZ5NsbRgbwQY9+Ab9vF0ehhRLsN/1BmiJOk/K/nz
- Gupa6XT/VOZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="291806593"
-Received: from ederaloi-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.44.51])
-  by fmsmga004.fm.intel.com with ESMTP; 27 May 2020 17:43:57 -0700
-Date:   Thu, 28 May 2020 03:43:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Mario.Limonciello@dell.com
-Cc:     James.Bottomley@HansenPartnership.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in, alex@guzman.io
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-Message-ID: <20200528004355.GA5877@linux.intel.com>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
- <1590520454.11810.40.camel@HansenPartnership.com>
- <ccf055cbf1a14f28bc95a6b02e29a2f6@AUSX13MPC105.AMER.DELL.COM>
- <1590521924.15108.1.camel@HansenPartnership.com>
- <37da2695fe6de09d69e27b77f3e29e068596205f.camel@linux.intel.com>
- <4d1a53596af44c7b84f97aa4ce04a53c@AUSX13MPC105.AMER.DELL.COM>
+        Wed, 27 May 2020 20:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55648 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgE1Apq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:45:46 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44AF5C05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 17:45:46 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id z13so2326194vsn.10
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 17:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mOyV+8glbcu6N2O5AHi5Pyxl+TFF1nsMtfV6jrysXBE=;
+        b=NzIkgi+C9aoCRXuizHK0IN3/1UWp3rB9C78+Fu8iCfQyXPPu9XSrwtUVI2/k1SFdoJ
+         Z/PyPjnt92umAAcqUhTEVYo/6kEitkEWgaMV9ygDT3ySlPshePmyGR0yH1yg2xGGadHw
+         YCloRpjKw5pmVGHx8A/9ebL5ofLznvjFJZ3ag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mOyV+8glbcu6N2O5AHi5Pyxl+TFF1nsMtfV6jrysXBE=;
+        b=EcRzsGQe+Hw6LSMzaSmM1znyMUg98HmIgthm/oJTSglcyZbBjIyrAXXuYPJxlzq5Js
+         PG0wB5xvCRFkU39EOYT30O+RtpMZmrA719BDdGHybjs8dHq8iael1vaCV9FNSOd+jvmx
+         cO8sBc3mAG7HvPHlsOfO+TE0o1+IOI03RxharTo3zDoc11NX0e7Bczj81aDVtxw3+mxu
+         5ApPpaFDtXuQSWCb1aRMjaP80bE4/aW54URhM9Lz4TOTY4D9W5BPdOYkjXl9O72QblNq
+         hjPyIOkmQ2DLmXVtkyWu+SQC4payENjpS5i5WoszhMtDPxoXQDZjeN2wLscHmbJyBrD6
+         VYug==
+X-Gm-Message-State: AOAM532uyCFunc+Ccxda/+KuQf90WgF33GT42rAz34I3DKOviu0jiwqh
+        R2g+q/bb6T21wS+TdwePrfMMUWOtu0HTKPirqfcIRACzNRg=
+X-Google-Smtp-Source: ABdhPJy0rgy7XX2ynNb8BJWONXf8j4cobkfuON7kUlM1eQUrELAc8vQERAxSUCeRIoDrwswXMm5huyE7Rq/8bM863lk=
+X-Received: by 2002:a05:6102:242b:: with SMTP id l11mr301820vsi.14.1590626745389;
+ Wed, 27 May 2020 17:45:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d1a53596af44c7b84f97aa4ce04a53c@AUSX13MPC105.AMER.DELL.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200426032410.10425-1-wuxy@bitland.com.cn>
+In-Reply-To: <20200426032410.10425-1-wuxy@bitland.com.cn>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Thu, 28 May 2020 08:45:34 +0800
+Message-ID: <CANMq1KAGtMMC7SW7aeDQuogF+Ux40=AFYO8V-F_JkEMtAa3eUQ@mail.gmail.com>
+Subject: Re: [PATCH] [v3]mtd: spi-nor: winbond: add 1.8v SPI NOR Flash IDs
+To:     wuxy@bitland.com.cn
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        wuxy <wuxy@bitland.corp-partner.google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:18:56PM +0000, Mario.Limonciello@dell.com wrote:
-> > -----Original Message-----
-> > From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> > Sent: Wednesday, May 27, 2020 3:09 PM
-> > To: James Bottomley; Limonciello, Mario; peterhuewe@gmx.de; jgg@ziepe.ca
-> > Cc: arnd@arndb.de; gregkh@linuxfoundation.org; linux-integrity@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; jeffrin@rajagiritech.edu.in; alex@guzman.io
-> > Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING mode"
-> > 
-> > 
-> > [EXTERNAL EMAIL]
+Hi,
 
-What is this?
+First, you need to cc linux-mtd@lists.infradead.org, make sure to use
+the get_maintainer.pl script to get the cc list (you're cc-ing mm
+people here, but you should cc mtd folks instead).
 
-> > On Tue, 2020-05-26 at 12:38 -0700, James Bottomley wrote:
-> > > On Tue, 2020-05-26 at 19:23 +0000, Mario.Limonciello@dell.com wrote:
-> > > > > On Tue, 2020-05-26 at 13:32 -0500, Mario Limonciello wrote:
-> > > > > > This reverts commit d23d12484307b40eea549b8a858f5fffad913897.
-> > > > > >
-> > > > > > This commit has caused regressions for the XPS 9560 containing
-> > > > > > a Nuvoton TPM.
-> > > > >
-> > > > > Presumably this is using the tis driver?
-> > > >
-> > > > Correct.
-> > > >
-> > > > > > As mentioned by the reporter all TPM2 commands are failing with:
-> > > > > >   ERROR:tcti:src/tss2-tcti/tcti-
-> > > > > > device.c:290:tcti_device_receive()
-> > > > > >   Failed to read response from fd 3, got errno 1: Operation not
-> > > > > > permitted
-> > > > > >
-> > > > > > The reporter bisected this issue back to this commit which was
-> > > > > > backported to stable as commit 4d6ebc4.
-> > > > >
-> > > > > I think the problem is request_locality ... for some inexplicable
-> > > > > reason a failure there returns -1, which is EPERM to user space.
-> > > > >
-> > > > > That seems to be a bug in the async code since everything else
-> > > > > gives a ESPIPE error if tpm_try_get_ops fails ... at least no-one
-> > > > > assumes it gives back a sensible return code.
-> > > > >
-> > > > > What I think is happening is that with the patch the TPM goes
-> > > > > through a quick sequence of request, relinquish, request,
-> > > > > relinquish and it's the third request which is failing (likely
-> > > > > timing out).  Without the patch, the patch there's only one
-> > > > > request,relinquish cycle because the ops are held while the async
-> > > > > work is executed.  I have a vague recollection that there is a
-> > > > > problem with too many locality request in quick succession, but
-> > > > > I'll defer to Jason, who I think understands the intricacies of
-> > > > > localities better than I do.
-> > > >
-> > > > Thanks, I don't pretend to understand the nuances of this particular
-> > > > code, but I was hoping that the request to revert got some attention
-> > > > since Alex's kernel Bugzilla and message a few months ago to linux
-> > > > integrity weren't.
-> > > >
-> > > > > If that's the problem, the solution looks simple enough: just move
-> > > > > the ops get down because the priv state is already protected by the
-> > > > > buffer mutex
-> > > >
-> > > > Yeah, if that works for Alex's situation it certainly sounds like a
-> > > > better solution than reverting this patch as this patch actually does
-> > > > fix a problem reported by Jeffrin originally.
-> > > >
-> > > > Could you propose a specific patch that Alex and Jeffrin can perhaps
-> > > > both try?
-> > >
-> > > Um, what's wrong with the one I originally attached and which you quote
-> > > below?  It's only compile tested, but I think it will work, if the
-> > > theory is correct.
-> > 
-> > Please send a legit patch, thanks.
-> > 
-> > /Jarkko
-> 
-> Jarkko,
-> 
-> After the confirmation from Alex that this patch attached to the end of the thread
-> worked, James did send a proper patch that can be accessed here:
-> https://lore.kernel.org/linux-integrity/20200527155800.ya43xm2ltuwduwjg@cantor/T/#t
-> 
-> Thanks,
+On Sun, Apr 26, 2020 at 11:24 AM <wuxy@bitland.com.cn> wrote:
+>
+> From: wuxy <wuxy@bitland.corp-partner.google.com>
+>
+> Winbond has new 1.8V SPI NOR Flash IDs,we need to use the SPI
+> flash ID in kukui series,this patch can support the new flash IDs.
+> This patch copied from:https://patchwork.ozlabs.org/patch/1150756/,
+> The original patch is invalid,so re-submit a new patch for this.
 
-Hi thanks a lot! I did read the full discussions and agree with the
-conclusions as I get a patch in proper form.
+This is historical stuff, and does not belong in the commit message,
+please move that below the ---.
 
-Please ping next time a bit earlier. It's not that I don't want to deal
-with the issues quickly as possible. It's probably just that I've forgot
-something or missed.
+Also, since you're merely rebasing/fixing a patch authored by ST Lin,
+I'd keep the original author and signed off:
+Signed-off-by: ST Lin <stlin2@winbond.com>
 
-/Jarkko
+Thanks!
+
+>
+> TEST=boot to shell,get the spi information from 'dmesg'.
+>
+> Signed-off-by: Xingyu Wu <wuxy@bitland.corp-partner.google.com>
+> ---
+>  drivers/mtd/spi-nor/winbond.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/mtd/spi-nor/winbond.c b/drivers/mtd/spi-nor/winbond.c
+> index 17deabad57e1..cda4f8847bd6 100644
+> --- a/drivers/mtd/spi-nor/winbond.c
+> +++ b/drivers/mtd/spi-nor/winbond.c
+> @@ -61,6 +61,15 @@ static const struct flash_info winbond_parts[] = {
+>                              SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>         { "w25m512jv", INFO(0xef7119, 0, 64 * 1024, 1024,
+>                             SECT_4K | SPI_NOR_QUAD_READ | SPI_NOR_DUAL_READ) },
+> +       { "w25q64jwxxIM", INFO(0xef8017, 0, 64 * 1024, 128,
+> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+> +       { "w25q128jwxxIM", INFO(0xef8018, 0, 64 * 1024, 256,
+> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+> +       { "w25q256jwxxIM", INFO(0xef8019, 0, 64 * 1024, 512,
+> +                           SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> +                           SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB) },
+>  };
+>
+>  /**
+> --
+> 2.20.1
+>
+>
+>
