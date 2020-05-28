@@ -2,102 +2,122 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F231EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D28CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFDCB2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF1420721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590683622;
-	bh=BNYUydx9cMhds+skv5hyXaUcOxPhAzqdTN60PiA6NGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R5A7rDTvQJN0P6ApT6BcV4reUHH+jbcII2KqFZIqa/z+UzeUgywK9esSF8cae6Pjp
-	 lxGpAl6X0JOPes0bcCiRhVZVgCYv9Fh2FaKFanmDsDlLZnZBG6o2Guu61KbjwLPEBb
-	 KJGF7+Uok6MoNTlhDnu4tM3fcTuJ1WZ6OjOS5h0c=
+	s=default; t=1590683644;
+	bh=lp2SwfPlzvdvwArWtsuyPtJAzHI9heMo9lfveCAl0Zg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=SeSrSYtf/2g/J4x9k66OlQ5UzLkD4WZH0I2H45r63FEEZBTDKDnb4mMMp0IaBcVrn
+	 vJVCHH0DSaqLUa62PjB6CJjbTSkq4eMMrTQHcfG2C/W2Z3vz9OMfJf0cjLbdwicWsE
+	 j+EBhPSwIxwoMQpT8jh+3TF47hGGHv0OxS13XfSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405068AbgE1Qdh (ORCPT
+        id S2405086AbgE1QeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:33:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42500 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404897AbgE1Qdd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:33:33 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 124so7506759pgi.9;
-        Thu, 28 May 2020 09:33:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XxXOHuyOlTLP5clwe4Wfz+4oQPRkCpYLYjIK2vvc1Vc=;
-        b=V5M+o2gHEw668QnUY5F6f44G5KUR6NgQbGhYD/8t5UebEoI1A7tCaNCr2C8ftiVkLN
-         34J+wDay4hiC3L3UhEAPS8xtk6AeZNI5Xzw8T/ZrqSMVepQvgAc5PBnjVEjRpKunXgV2
-         nPcxBiTpQZAt4E6B/iO7xQu4akNlqGhV1oCb1P6meSSST90w5LgHrxIWAMr5fIFzGNAY
-         rkrd9udr4gbTF+n/olKDvjpmXJSZUYeTv9JMHvwojqSLm1XBD9T0sqsA9sROl++7SumZ
-         ldNgNVX3DzRXssODuYwN52kE+3cLd5AFrOMYXqv5tPK8OCU5UeaZLsGXElyO7YHXU0jo
-         j0uQ==
-X-Gm-Message-State: AOAM532NovqiXzIxhh+BtIsZD0CJpqmUlyH86/qqjO0OnpDx5Gv7vJx5
-        9bMLR+Zvq3wv2TEAqUxFNF7cynRVHpLoog==
-X-Google-Smtp-Source: ABdhPJx1jBQzRGhW2319wh/Cdnj+1/Ow9Nn2swZRY4W4Fm3QkC33znEjHcM8N6hO+Dn0qaSsElNinw==
-X-Received: by 2002:a63:c34a:: with SMTP id e10mr3799891pgd.412.1590683611946;
-        Thu, 28 May 2020 09:33:31 -0700 (PDT)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id i11sm5189778pfq.2.2020.05.28.09.33.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 09:33:30 -0700 (PDT)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 09B3640605; Thu, 28 May 2020 16:33:30 +0000 (UTC)
-Date:   Thu, 28 May 2020 16:33:29 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Ben Greear <greearb@candelatech.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, jeyu@kernel.org,
-        davem@davemloft.net, michael.chan@broadcom.com,
-        dchickles@marvell.com, sburla@marvell.com, fmanlunas@marvell.com,
-        aelior@marvell.com, GR-everest-linux-l2@marvell.com,
-        kvalo@codeaurora.org, johannes@sipsolutions.net,
-        akpm@linux-foundation.org, arnd@arndb.de, rostedt@goodmis.org,
-        mingo@redhat.com, aquini@redhat.com, cai@lca.pw, dyoung@redhat.com,
-        bhe@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        gpiccoli@canonical.com, pmladek@suse.com, tiwai@suse.de,
-        schlad@suse.de, andriy.shevchenko@linux.intel.com,
-        derosier@gmail.com, keescook@chromium.org, daniel.vetter@ffwll.ch,
-        will@kernel.org, mchehab+samsung@kernel.org, vkoul@kernel.org,
-        mchehab+huawei@kernel.org, robh@kernel.org, mhiramat@kernel.org,
-        sfr@canb.auug.org.au, linux@dominikbrodowski.net,
-        glider@google.com, paulmck@kernel.org, elver@google.com,
-        bauerman@linux.ibm.com, yamada.masahiro@socionext.com,
-        samitolvanen@google.com, yzaikin@google.com, dvyukov@google.com,
-        rdunlap@infradead.org, corbet@lwn.net, dianders@chromium.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v3 0/8] kernel: taint when the driver firmware crashes
-Message-ID: <20200528163329.GT11244@42.do-not-panic.com>
-References: <20200526145815.6415-1-mcgrof@kernel.org>
- <20200526154606.6a2be01f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <20200526230748.GS11244@42.do-not-panic.com>
- <20200526163031.5c43fc1d@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <20200527031918.GU11244@42.do-not-panic.com>
- <20200527143642.5e4ffba0@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <20200528142705.GQ11244@42.do-not-panic.com>
- <58639bf9-b67c-0cbb-d4c0-69c4e400daff@candelatech.com>
+        Thu, 28 May 2020 12:34:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405023AbgE1Qd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:33:59 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 221E020721;
+        Thu, 28 May 2020 16:33:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590683639;
+        bh=lp2SwfPlzvdvwArWtsuyPtJAzHI9heMo9lfveCAl0Zg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=J0FyzdG/RR5D6IvFOHZJlnVnTXlBRDXKN8PAfxYvVtK8VeITU3sxv3qGjvJuy7j3D
+         x/UZXjheUJ6neRycJD5aFrJqBa2L8g6UMXeH7VRNa3krcUrIMYYvpqi3i8e4A5J252
+         uEyyEtm8RAz8JSP3HoPL6FfE/Irwi44WKZ8CIKbs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0A29035228F0; Thu, 28 May 2020 09:33:59 -0700 (PDT)
+Date:   Thu, 28 May 2020 09:33:59 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: linux-next: build failure after merge of the rcu tree
+Message-ID: <20200528163358.GK2869@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200528190501.10135e9f@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58639bf9-b67c-0cbb-d4c0-69c4e400daff@candelatech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200528190501.10135e9f@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 08:04:50AM -0700, Ben Greear wrote:
+On Thu, May 28, 2020 at 07:05:01PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Could you post your devlink RFC patches somewhere public?
+> After merging the rcu tree, today's linux-next build (powercp
+> allyesconfig) failed like this:
+> 
+> ld: kernel/rcu/refperf.o:(.discard+0x0): multiple definition of `__pcpu_unique_srcu_ctl_perf_srcu_data'; kernel/rcu/rcuperf.o:(.discard+0x0): first defined here
+> 
+> Caused by commit
+> 
+>   786a25497743 ("refperf: Add a test to measure performance of read-side synchronization")
+> 
+> From srcutree.h:
+> 
+>  * Note that although DEFINE_STATIC_SRCU() hides the name from other
+>  * files, the per-CPU variable rules nevertheless require that the
+>  * chosen name be globally unique.
+> 
+> I have applied the following patch for today.
 
-This cover letter provided a URL to these.
+I have a patch queued, but it is currently blocked by other broken
+commits which I expect to have straightened out today.
 
-  Luis
+Yet again, please accept my apologies for the hassle!
+
+							Thanx, Paul
+
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Thu, 28 May 2020 18:57:17 +1000
+> Subject: [PATCH] refperf: uniqify name
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  kernel/rcu/refperf.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/rcu/refperf.c b/kernel/rcu/refperf.c
+> index 8c4a63257be9..47df72c492b3 100644
+> --- a/kernel/rcu/refperf.c
+> +++ b/kernel/rcu/refperf.c
+> @@ -133,8 +133,8 @@ static struct ref_perf_ops rcu_ops = {
+>  
+>  
+>  // Definitions for SRCU ref perf testing.
+> -DEFINE_STATIC_SRCU(srcu_ctl_perf);
+> -static struct srcu_struct *srcu_ctlp = &srcu_ctl_perf;
+> +DEFINE_STATIC_SRCU(ref_srcu_ctl_perf);
+> +static struct srcu_struct *srcu_ctlp = &ref_srcu_ctl_perf;
+>  
+>  static void srcu_ref_perf_read_section(int nloops)
+>  {
+> -- 
+> 2.26.2
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
