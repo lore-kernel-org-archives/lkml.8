@@ -2,123 +2,90 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCDEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C12C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9A4207F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A63207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:26:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0lTwkvP"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="urFcaOUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390280AbgE1NZz (ORCPT
+        id S2390319AbgE1N0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390161AbgE1NZx (ORCPT
+        Thu, 28 May 2020 09:26:52 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54280 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390282AbgE1N0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:25:53 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4646C05BD1E;
-        Thu, 28 May 2020 06:25:51 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y11so3268222plt.12;
-        Thu, 28 May 2020 06:25:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
-        b=f0lTwkvPsjEGSI+BRI7kDWY7T7QMJZBBjNSt80WryFEz5AtJUDysU0IozJWfDpadRX
-         +SQ9hum9XQJrvIIcdEf21QUlcTu+sc1p+fcbM+1U2ZLrXzWpf0dgNbq1o9mMi1H8R9Oc
-         7H5AakLypHuixotL+DR9NLguz8BRhuzL4+Y1Qa3NEHEb7midtfFz6hEW6uKkZLAwh9HF
-         uQhT/laUdwHt7V4gziNDIEiHUPmnNq0BI4WsbZUN/jwNeIRIceaNDpTUikfKBPxpfJNM
-         YsoCB0YB8/DvJEBjrczbb15h5uke20uYjL9YZHXWXui5/o92/lf7BIXAOefSQeDYJ7LR
-         M73g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZKHFIuRb8JFzqwgI1/TTV1c2cdYlcWtWooy7HhzqQ7o=;
-        b=fqhpflhQ/XYe5JmQM6VNi70pvRvs0tXhuOsc2JYqmlsIfmJuff22IYo4ePK0c3B1dz
-         gWxf87oI6V2GlqDMPDBMumzOgSuGvke9ZzR46aeS3gk7CLkEabjQJ8pWpRj0P4ff/TWP
-         26c1H8WjNBscye0+rezdqr7x1ESKFbwA/7RN+jt5422yzMJl28kJfuvD1hS4VVv4ttf1
-         MtdOAy5H1aunuytd3Kw+qPjjUeNAEgZoVscFSe+qOUThtELRVPKDfokJ1X9EY9dFUfD4
-         0S8ZkUwas3zgCAlWiWs78MFeQlYSsDKfBUi3hPKm4BaBjylqOGp1CntqjIRCyjLokfjk
-         vNLg==
-X-Gm-Message-State: AOAM533+HXbZSRR5CksRa5on/D7zvP6ptQMTpyJXdF3Osg7QNAsUEZ11
-        QlSZLD791/6dSA81/dROlz/NL1tvK+g=
-X-Google-Smtp-Source: ABdhPJz8VC7DQMsEmrHiOxWQ16KQoUAxc+7rIER6X1Qw+ve5Duj50GcgF9uNeOXubcm5LHp+efFVgg==
-X-Received: by 2002:a17:902:bc86:: with SMTP id bb6mr3414568plb.243.1590672351462;
-        Thu, 28 May 2020 06:25:51 -0700 (PDT)
-Received: from localhost.localdomain ([198.211.10.140])
-        by smtp.gmail.com with ESMTPSA id j26sm4869359pfr.215.2020.05.28.06.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 06:25:50 -0700 (PDT)
-From:   Qi Zheng <arch0.zheng@gmail.com>
-To:     robh+dt@kernel.org, robh@kernel.org, frowand.list@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qi Zheng <arch0.zheng@gmail.com>
-Subject: [PATCH v2] of/fdt: Remove redundant kbasename function call
-Date:   Thu, 28 May 2020 21:25:41 +0800
-Message-Id: <20200528132541.463300-1-arch0.zheng@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 28 May 2020 09:26:41 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SDQXuA062739;
+        Thu, 28 May 2020 08:26:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590672393;
+        bh=2/GRDmlrfZh+gIOxv9cg+3XWPTHFPysRHkDFU2wv73w=;
+        h=From:To:CC:Subject:Date;
+        b=urFcaOUs1aR5sGHtM2/HBNhnAu5BsTg9UlzzE605U+b4qGqDb15Ko2TsBfR259hqG
+         fTmdrNEFdTEWhU+iLALljpgr5N6AxAJk4axE2RCsAd9lPS3+h99EtuSbitBIhU+sVk
+         CWyhlPuiR0/z5z1FCbsQzYN57nnjeB1gjqhr8wHs=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SDQXEf022303
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 08:26:33 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 08:26:33 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 08:26:33 -0500
+Received: from ula0869644.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SDQWxR130696;
+        Thu, 28 May 2020 08:26:32 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 0/2] media: v4l2-rect.h: add enclosed rectangle helper
+Date:   Thu, 28 May 2020 08:26:03 -0500
+Message-ID: <20200528132605.18339-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For version 1 to 3 of the device tree, this is the node full
-path as a zero terminated string, starting with "/". The
-following equation will not hold, since the node name has
-been processed in the fdt_get_name().
+This series introduces a new v4l2_rect_enclosed helper function which
+already exist in some form in several drivers. It then proceed to
+update those drivers to use the new helper function.
 
-	*pathp == '/'
+Benoit Parrot (2):
+  media: v4l2-rect.h: add enclosed rectangle helper
+  media: use v4l2_rect_enclosed helper
 
-For version 16 and later, this is the node unit name only
-(or an empty string for the root node). So the above
-equation will still not hold.
+ drivers/media/platform/am437x/am437x-vpfe.c   | 19 +++---------------
+ .../media/platform/exynos4-is/fimc-capture.c  | 18 +++--------------
+ drivers/media/platform/exynos4-is/fimc-lite.c | 18 +++--------------
+ drivers/media/platform/s5p-jpeg/jpeg-core.c   | 16 ++-------------
+ include/media/v4l2-rect.h                     | 20 +++++++++++++++++++
+ 5 files changed, 31 insertions(+), 60 deletions(-)
 
-So the kbasename() is redundant, just remove it.
-
-Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
----
-
-Change in v2:
-	remove another kbasename() also.
-
- drivers/of/fdt.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 38619e9ef6b2..4602e467ca8b 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -643,8 +643,6 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 	     offset = fdt_next_node(blob, offset, &depth)) {
- 
- 		pathp = fdt_get_name(blob, offset, NULL);
--		if (*pathp == '/')
--			pathp = kbasename(pathp);
- 		rc = it(offset, pathp, depth, data);
- 	}
- 	return rc;
-@@ -671,8 +669,6 @@ int __init of_scan_flat_dt_subnodes(unsigned long parent,
- 		int rc;
- 
- 		pathp = fdt_get_name(blob, node, NULL);
--		if (*pathp == '/')
--			pathp = kbasename(pathp);
- 		rc = it(node, pathp, data);
- 		if (rc)
- 			return rc;
 -- 
-2.25.1
+2.17.1
 
