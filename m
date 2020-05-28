@@ -2,288 +2,264 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C93DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9430C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134A1208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="utBQmy33"
+	by mail.kernel.org (Postfix) with ESMTP id B53C72072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590697532;
+	bh=4wBzg/ZLgeF1P6k8nzLExy4Gx8F+5gyWMCW5qqwSLbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r/BDS6jGzNiVYMT9SlkOGv9LPxFrJSHOaW1WFBIrHAURV02oqsWjrs4j96DtfCfmg
+	 MY3rmaw3uQbIxvL14ErPo51fBLUgFfY31mn7/Qdv+OifVMYf586Rr9qufyHUihCpCg
+	 xZlXvCc5OJrpsBvDUxbrueZjbIrO9y18b5iVMkHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407131AbgE1UYp (ORCPT
+        id S2407166AbgE1UZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:24:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407005AbgE1UYc (ORCPT
+        Thu, 28 May 2020 16:25:22 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36315 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407001AbgE1UZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:24:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA138C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:24:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=qMCxHctrgB8Amxt8+Sy2C8EBmEEsBxJ2aZxwz+7Pd7g=; b=utBQmy337C8cWOxekKM9Iv6D14
-        SezsMwmljVldrXXtDmSRVgfrHb2DkdQMhdo8ImZ5vSFdDDVpedSZMquev6N76Q2JHshxWfoeYKSxu
-        0VnA5qGzz2099U36rfCH1d1rL2piaCSWY0wePG25ds9LI5EMn4s0QI0aUkBVMpPPUSOPLvrxC6jwi
-        fIj2RHrdXidzi4cAhek70eWfvuejkmxrKLX0f0aoewhqDmcgsZhaEn44Qt/2Ca/bOymsZJm2jFOC8
-        p0PwfiFGMa9thvZO/Cj60N51Ms96rzXMsPMMC4nO3b0qrf2fhr7vZLVAKdWxRG5NL+sU5prGV8++8
-        juY5KTzg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jeP4j-0005Zo-6e; Thu, 28 May 2020 20:24:25 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2C5C03062EA;
-        Thu, 28 May 2020 22:24:23 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id DC85C2BA01B19; Thu, 28 May 2020 22:24:22 +0200 (CEST)
-Message-ID: <20200528202328.651765983@infradead.org>
-User-Agent: quilt/0.66
-Date:   Thu, 28 May 2020 22:19:42 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, luto@amacapital.net, peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        sean.j.christopherson@intel.com, andrew.cooper3@citrix.com,
-        daniel.thompson@linaro.org
-Subject: [PATCH 5/6] x86/entry: Remove debug IDT frobbing
-References: <20200528201937.038455891@infradead.org>
+        Thu, 28 May 2020 16:25:16 -0400
+Received: by mail-io1-f67.google.com with SMTP id y18so11179638iow.3;
+        Thu, 28 May 2020 13:25:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Gf9w1HHhMX0hpWhDimv3fgQOrl9nmPDyVrb61+V6L70=;
+        b=stkb67ZU+sMFmO0KZZ7BATtCsUfM+3gcp4Cw8UX8QxzU/lWk1mjjZfdTpjsP4cjB4Z
+         prCFlP0s6muPk36f9G0wwwJTEVvzwWHNPdYw9OtSrVTxonk70iy9wIc9RwA2TSULLAmn
+         S3GIhim9U6QhNjWoNMQ4KO6G2HyMftMDtsE6EaZ/cEBSTl+fvf88TYxnZYip6c/XsJH6
+         QWkacX9flNoORPvGvVq48X9BT9timuQX7CWPK2rLAJL7BkYahFduDqUPIiBgZroM9rlc
+         GXZTqnySOIT2lh0D9ncu6PpyC2rqJ01Z/iWdQXmzmNvMjb0Z+4bxB5UmU5TMtbQ2hnrY
+         hYhQ==
+X-Gm-Message-State: AOAM531OJwFBymJG+nQYPuC11DfhCXtGFxnMi9G00WfrsZYVhuLFU+AS
+        /b4JFIpcD364a3bH7GSh9A==
+X-Google-Smtp-Source: ABdhPJyRf8uznFeEBdT/EySaFdFO3/y3X2/IqSISPTvo2JOwLA2i94yMEQohK9K64VmjTvNZGERDDg==
+X-Received: by 2002:a05:6602:2817:: with SMTP id d23mr3771962ioe.206.1590697515091;
+        Thu, 28 May 2020 13:25:15 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id s66sm3147015ilb.25.2020.05.28.13.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 13:25:13 -0700 (PDT)
+Received: (nullmailer pid 618934 invoked by uid 1000);
+        Thu, 28 May 2020 20:25:12 -0000
+Date:   Thu, 28 May 2020 14:25:12 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: clock: Add YAML schemas for LPASS
+ clocks on SC7180
+Message-ID: <20200528202512.GA608913@bogus>
+References: <1589707344-8871-1-git-send-email-tdas@codeaurora.org>
+ <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1589707344-8871-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is all unused now.
+On Sun, May 17, 2020 at 02:52:22PM +0530, Taniya Das wrote:
+> The LPASS(Low Power Audio Subsystem) clock provider have a bunch of generic
+> properties that are needed in a device tree. Also add clock ids for GCC
+> LPASS and LPASS Core clock IDs for LPASS client to request for the clocks.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../bindings/clock/qcom,sc7180-lpasscorecc.yaml    | 101 +++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h        |   1 +
+>  .../dt-bindings/clock/qcom,lpasscorecc-sc7180.h    |  29 ++++++
+>  3 files changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+> new file mode 100644
+> index 0000000..c025a0ae
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-lpasscorecc.yaml
+> @@ -0,0 +1,101 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,sc7180-lpasscorecc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm LPASS Core Clock Controller Binding for SC7180
+> +
+> +maintainers:
+> +  - Taniya Das <tdas@codeaurora.org>
+> +
+> +description: |
+> +  Qualcomm LPASS core clock control module which supports the clocks and
+> +  power domains on SC7180.
+> +
+> +  See also:
+> +  - dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - qcom,sc7180-lpasshm
+> +      - qcom,sc7180-lpasscorecc
+> +
+> +  clocks:
+> +    items:
+> +      - description: gcc_lpass_sway clock from GCC
+> +
+> +  clock-names:
+> +    items:
+> +      - const: gcc_lpass_sway
+> +
+> +  power-domains:
+> +    items:
+> +      - description: LPASS CORE HM GSDCR
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/include/asm/debugreg.h |   19 -------------------
- arch/x86/include/asm/desc.h     |   34 +---------------------------------
- arch/x86/kernel/cpu/common.c    |   17 -----------------
- arch/x86/kernel/idt.c           |   30 ------------------------------
- arch/x86/kernel/traps.c         |    9 ---------
- 5 files changed, 1 insertion(+), 108 deletions(-)
+For single entry, 'maxItems: 1' is enough.
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  '#power-domain-cells':
+> +    const: 1
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: lpass audio cc register
+> +      - description: lpass core cc register
 
---- a/arch/x86/include/asm/debugreg.h
-+++ b/arch/x86/include/asm/debugreg.h
-@@ -94,25 +94,6 @@ extern void aout_dump_debugregs(struct u
- 
- extern void hw_breakpoint_restore(void);
- 
--#ifdef CONFIG_X86_64
--DECLARE_PER_CPU(int, debug_stack_usage);
--static inline void debug_stack_usage_inc(void)
--{
--	__this_cpu_inc(debug_stack_usage);
--}
--static inline void debug_stack_usage_dec(void)
--{
--	__this_cpu_dec(debug_stack_usage);
--}
--void debug_stack_set_zero(void);
--void debug_stack_reset(void);
--#else /* !X86_64 */
--static inline void debug_stack_set_zero(void) { }
--static inline void debug_stack_reset(void) { }
--static inline void debug_stack_usage_inc(void) { }
--static inline void debug_stack_usage_dec(void) { }
--#endif /* X86_64 */
--
- static __always_inline void local_db_save(unsigned long *dr7)
- {
- 	if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active()) {
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -42,8 +42,6 @@ static inline void fill_ldt(struct desc_
- 
- extern struct desc_ptr idt_descr;
- extern gate_desc idt_table[];
--extern const struct desc_ptr debug_idt_descr;
--extern gate_desc debug_idt_table[];
- 
- struct gdt_page {
- 	struct desc_struct gdt[GDT_ENTRIES];
-@@ -390,31 +388,6 @@ void alloc_intr_gate(unsigned int n, con
- 
- extern unsigned long system_vectors[];
- 
--#ifdef CONFIG_X86_64
--DECLARE_PER_CPU(u32, debug_idt_ctr);
--static __always_inline bool is_debug_idt_enabled(void)
--{
--	if (this_cpu_read(debug_idt_ctr))
--		return true;
--
--	return false;
--}
--
--static __always_inline void load_debug_idt(void)
--{
--	load_idt((const struct desc_ptr *)&debug_idt_descr);
--}
--#else
--static inline bool is_debug_idt_enabled(void)
--{
--	return false;
--}
--
--static inline void load_debug_idt(void)
--{
--}
--#endif
--
- /*
-  * The load_current_idt() must be called with interrupts disabled
-  * to avoid races. That way the IDT will always be set back to the expected
-@@ -424,10 +397,7 @@ static inline void load_debug_idt(void)
-  */
- static __always_inline void load_current_idt(void)
- {
--	if (is_debug_idt_enabled())
--		load_debug_idt();
--	else
--		load_idt((const struct desc_ptr *)&idt_descr);
-+	load_idt((const struct desc_ptr *)&idt_descr);
- }
- 
- extern void idt_setup_early_handler(void);
-@@ -438,11 +408,9 @@ extern void idt_setup_apic_and_irq_gates
- #ifdef CONFIG_X86_64
- extern void idt_setup_early_pf(void);
- extern void idt_setup_ist_traps(void);
--extern void idt_setup_debugidt_traps(void);
- #else
- static inline void idt_setup_early_pf(void) { }
- static inline void idt_setup_ist_traps(void) { }
--static inline void idt_setup_debugidt_traps(void) { }
- #endif
- 
- extern void idt_invalidate(void *addr);
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1672,23 +1672,6 @@ void syscall_init(void)
- 	       X86_EFLAGS_IOPL|X86_EFLAGS_AC|X86_EFLAGS_NT);
- }
- 
--DEFINE_PER_CPU(int, debug_stack_usage);
--DEFINE_PER_CPU(u32, debug_idt_ctr);
--
--noinstr void debug_stack_set_zero(void)
--{
--	this_cpu_inc(debug_idt_ctr);
--	load_current_idt();
--}
--
--noinstr void debug_stack_reset(void)
--{
--	if (WARN_ON(!this_cpu_read(debug_idt_ctr)))
--		return;
--	if (this_cpu_dec_return(debug_idt_ctr) == 0)
--		load_current_idt();
--}
--
- #else	/* CONFIG_X86_64 */
- 
- DEFINE_PER_CPU(struct task_struct *, current_task) = &init_task;
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -158,14 +158,6 @@ static const __initconst struct idt_data
- static const __initconst struct idt_data early_pf_idts[] = {
- 	INTG(X86_TRAP_PF,		asm_exc_page_fault),
- };
--
--/*
-- * Override for the debug_idt. Same as the default, but with interrupt
-- * stack set to DEFAULT_STACK (0). Required for NMI trap handling.
-- */
--static const __initconst struct idt_data dbg_idts[] = {
--	INTG(X86_TRAP_DB,		asm_exc_debug),
--};
- #endif
- 
- /* Must be page-aligned because the real IDT is used in a fixmap. */
-@@ -177,9 +169,6 @@ struct desc_ptr idt_descr __ro_after_ini
- };
- 
- #ifdef CONFIG_X86_64
--/* No need to be aligned, but done to keep all IDTs defined the same way. */
--gate_desc debug_idt_table[IDT_ENTRIES] __page_aligned_bss;
--
- /*
-  * The exceptions which use Interrupt stacks. They are setup after
-  * cpu_init() when the TSS has been initialized.
-@@ -192,15 +181,6 @@ static const __initconst struct idt_data
- 	ISTG(X86_TRAP_MC,	asm_exc_machine_check,	IST_INDEX_MCE),
- #endif
- };
--
--/*
-- * Override for the debug_idt. Same as the default, but with interrupt
-- * stack set to DEFAULT_STACK (0). Required for NMI trap handling.
-- */
--const struct desc_ptr debug_idt_descr = {
--	.size		= IDT_ENTRIES * 16 - 1,
--	.address	= (unsigned long) debug_idt_table,
--};
- #endif
- 
- static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
-@@ -292,16 +272,6 @@ void __init idt_setup_ist_traps(void)
- {
- 	idt_setup_from_table(idt_table, ist_idts, ARRAY_SIZE(ist_idts), true);
- }
--
--/**
-- * idt_setup_debugidt_traps - Initialize the debug idt table with debug traps
-- */
--void __init idt_setup_debugidt_traps(void)
--{
--	memcpy(&debug_idt_table, &idt_table, IDT_ENTRIES * 16);
--
--	idt_setup_from_table(debug_idt_table, dbg_idts, ARRAY_SIZE(dbg_idts), false);
--}
- #endif
- 
- /**
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -798,12 +798,6 @@ static void noinstr handle_debug(struct
- 		return;
- 	}
- 
--	/*
--	 * Let others (NMI) know that the debug stack is in use
--	 * as we may switch to the interrupt stack.
--	 */
--	debug_stack_usage_inc();
--
- 	/* It's safe to allow irq's after DR6 has been saved */
- 	cond_local_irq_enable(regs);
- 
-@@ -831,7 +825,6 @@ static void noinstr handle_debug(struct
- 
- out:
- 	cond_local_irq_disable(regs);
--	debug_stack_usage_dec();
- 	instrumentation_end();
- }
- 
-@@ -1077,6 +1070,4 @@ void __init trap_init(void)
- 	cpu_init();
- 
- 	idt_setup_ist_traps();
--
--	idt_setup_debugidt_traps();
- }
+audio then core
 
+> +
+> +  reg-names:
+> +    items:
+> +      - const: lpass_core_cc
+> +      - const: lpass_audio_cc
 
+core then audio?
+
+2 reg-names required, but 1 reg allowed?
+
+> +
+> +if:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: qcom,sc7180-lpasshm
+> +then:
+> +  properties:
+> +    reg:
+> +      items:
+> +        - description: lpass hm core register
+
+reg-names allowed in this case?
+
+Ideally, this would have just 'maxItems: 1' to just disallow the 2nd 
+entry above.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +  - '#power-domain-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
+> +    #include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
+> +    clock-controller@63000000 {
+> +      compatible = "qcom,sc7180-lpasshm";
+> +        reg = <0 0x63000000 0 0x28>;
+> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +        clock-names = "gcc_lpass_sway";
+> +        #clock-cells = <1>;
+> +        #power-domain-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    clock-controller@62d00000 {
+> +        compatible = "qcom,sc7180-lpasscorecc";
+> +        reg = <0 0x62d00000 0 0x50000>,
+> +            <0 0x62780000 0 0x30000>;
+> +        reg-names = "lpass_core_cc", "lpass_audio_cc";
+> +        clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>;
+> +        clock-names = "gcc_lpass_sway";
+> +        power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
+> +        #clock-cells = <1>;
+> +        #power-domain-cells = <1>;
+> +    };
+> +...
+> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> index 1258fd0..439476c 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> @@ -137,6 +137,7 @@
+>  #define GCC_MSS_NAV_AXI_CLK					127
+>  #define GCC_MSS_Q6_MEMNOC_AXI_CLK				128
+>  #define GCC_MSS_SNOC_AXI_CLK					129
+> +#define GCC_LPASS_CFG_NOC_SWAY_CLK				130
+> 
+>  /* GCC resets */
+>  #define GCC_QUSB2PHY_PRIM_BCR					0
+> diff --git a/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> new file mode 100644
+> index 0000000..a55d01d
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,lpasscorecc-sc7180.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
+> +#define _DT_BINDINGS_CLK_QCOM_LPASS_CORE_CC_SC7180_H
+> +
+> +/* LPASS_CORE_CC clocks */
+> +#define LPASS_LPAAUDIO_DIG_PLL				0
+> +#define LPASS_LPAAUDIO_DIG_PLL_OUT_ODD			1
+> +#define CORE_CLK_SRC					2
+> +#define EXT_MCLK0_CLK_SRC				3
+> +#define LPAIF_PRI_CLK_SRC				4
+> +#define LPAIF_SEC_CLK_SRC				5
+> +#define LPASS_AUDIO_CORE_CORE_CLK			6
+> +#define LPASS_AUDIO_CORE_EXT_MCLK0_CLK			7
+> +#define LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK		8
+> +#define LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK		9
+> +#define LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK		10
+> +
+> +/* LPASS Core power domains */
+> +#define LPASS_CORE_HM_GDSCR				0
+> +
+> +/* LPASS Audio power domains */
+> +#define LPASS_AUDIO_HM_GDSCR				0
+> +#define LPASS_PDC_HM_GDSCR				1
+> +
+> +#endif
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
