@@ -2,113 +2,175 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47412C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166FD20DD4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590624885;
-	bh=c+8hU4QGjJmmyXzl1rblMiEkuyhlWvbgj/aJLfZ++Rk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Zx5J9NpyKCI7BK+zcOch2wRCO3J7yY3JVSFCAZN1QCffLAHoedGeEtC4kIrwtdoU2
-	 O9erBtENP0AcpDTzHKNGL99/m3ug2ZgTb1y+w64qH4iXeUMs8U1h073Fr5DhtPmUXF
-	 9yfU7LVO3mP5Rt4CtZ4175WFbcBJNoKo/mR8aO1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 20BC0207CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 00:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h1jtgxnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgE1AOo (ORCPT
+        id S1725850AbgE1AUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 20:14:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgE1AOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 20:14:43 -0400
-Received: from guoren-Inspiron-7460.lan (unknown [89.208.247.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 27 May 2020 20:20:53 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20413 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725793AbgE1AUx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 20:20:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590625251;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3NfM/YRWw8tWtCVntluiCugDqJX5J7Mi6y5RyulO5Co=;
+        b=h1jtgxnAzQph09mJabMY9jcpazYEL6ChAclXRyCVqvk48TUdURDvVLybKR2meXwzlrcDd9
+        MognWJ/M1FsGJrY4zUKWE4ffh7RjKWYAOjBNXcAf7zvgMgokqj9pOjguI3N62SODbJSRF0
+        08MFNT7zwUxvvkyf2sbdXlUcg7yXw4k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262--4PlExgtPwKJVseeIiuy9A-1; Wed, 27 May 2020 20:20:44 -0400
+X-MC-Unique: -4PlExgtPwKJVseeIiuy9A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A67B208C3;
-        Thu, 28 May 2020 00:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590624883;
-        bh=c+8hU4QGjJmmyXzl1rblMiEkuyhlWvbgj/aJLfZ++Rk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hb3/IUfRgLGleGmjj71E0M2pwcxGmVpkwViXEen7Twst7uvTO5KrpC9a5HfMK/pBR
-         5szAueHCGrxgmoBzmjFIR+JlAJt1goK+AQc5FZPw/DrzRqpFRxJZlCORD65Bb2uNQS
-         juEapUSzCV+t5/HUV8vmD9TD3BHe3m7+svdJfcUw=
-From:   guoren@kernel.org
-To:     arnd@arndb.de
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-csky@vger.kernel.org, Guo Ren <guoren@linux.alibaba.com>
-Subject: [PATCH] csky: Fixup CONFIG_DEBUG_RSEQ
-Date:   Thu, 28 May 2020 08:14:29 +0800
-Message-Id: <1590624869-6594-1-git-send-email-guoren@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D96EC460;
+        Thu, 28 May 2020 00:20:40 +0000 (UTC)
+Received: from redhat.com (ovpn-119-19.rdu2.redhat.com [10.10.119.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2FCE85D9CC;
+        Thu, 28 May 2020 00:20:35 +0000 (UTC)
+Date:   Wed, 27 May 2020 20:20:33 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Huang Ying <ying.huang@intel.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Steven Capper <steve.capper@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rabin Vincent <rabinv@axis.com>,
+        linux-arm-kernel@lists.infradead.org, rmk+kernel@arm.linux.org.uk,
+        Guo Ren <guoren@kernel.org>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Ley Foon Tan <lftan@altera.com>,
+        nios2-dev@lists.rocketboards.org, linux-parisc@vger.kernel.org,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, Guan Xuetao <gxt@pku.edu.cn>,
+        linux-xtensa@linux-xtensa.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Chris Zankel <chris@zankel.net>
+Subject: Cache flush issue with page_mapping_file() and swap back shmem page ?
+Message-ID: <20200528002033.GB1992500@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="/04w6evG8XlLl3ft"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
 
-Put the rseq_syscall check point at the prologue of the syscall
-will break the a0 ... a7. This will casue system call bug when
-DEBUG_RSEQ is enabled.
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-So move it to the epilogue of syscall, but before syscall_trace.
+So any arch code which uses page_mapping_file() might get the wrong
+answer, this function will return NULL for a swap backed page which
+can be a shmem pages. But shmem pages can still be shared among
+multiple process (and possibly at different virtual addresses if
+mremap was use).
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Attached is a patch that changes page_mapping_file() to return the
+shmem mapping for swap backed shmem page. I have not tested it (no
+way for me to test all those architecture) and i spotted this while
+working on something else. So i hope someone can take a closer look.
+
+Cheers,
+Jérôme
+
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: attachment;
+	filename="0001-mm-fix-cache-flush-for-shmem-page-that-are-swap-back.patch"
+Content-Transfer-Encoding: 8bit
+
+From 6c76b9f8baa87ff872f6be5a44805a74c1e07fea Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
+Date: Wed, 27 May 2020 20:18:59 -0400
+Subject: [PATCH] mm: fix cache flush for shmem page that are swap backed.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This might be a shmem page that is in a sense a file that
+can be mapped multiple times in different processes at
+possibly different virtual addresses (fork + mremap). So
+return the shmem mapping that will allow any arch code to
+find all mappings of the page.
+
+Note that even if page is not anonymous then the page might
+have a NULL page->mapping field if it is being truncated,
+but then it is fine as each pte poiting to the page will be
+remove and cache flushing should be handled properly by that
+part of the code.
+
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Cc: "Huang, Ying" <ying.huang@intel.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: "James E.J. Bottomley" <jejb@parisc-linux.org>
 ---
- arch/csky/kernel/entry.S | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ mm/util.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index 9595e86..f138003 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -128,15 +128,11 @@ tlbop_end 1
- ENTRY(csky_systemcall)
- 	SAVE_ALL TRAP0_SIZE
- 	zero_fp
--#ifdef CONFIG_RSEQ_DEBUG
--	mov	a0, sp
--	jbsr	rseq_syscall
--#endif
- 	psrset  ee, ie
+diff --git a/mm/util.c b/mm/util.c
+index 988d11e6c17c..ec8739ab0cc3 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -685,8 +685,24 @@ EXPORT_SYMBOL(page_mapping);
+  */
+ struct address_space *page_mapping_file(struct page *page)
+ {
+-	if (unlikely(PageSwapCache(page)))
++	if (unlikely(PageSwapCache(page))) {
++		/*
++		 * This might be a shmem page that is in a sense a file that
++		 * can be mapped multiple times in different processes at
++		 * possibly different virtual addresses (fork + mremap). So
++		 * return the shmem mapping that will allow any arch code to
++		 * find all mappings of the page.
++		 *
++		 * Note that even if page is not anonymous then the page might
++		 * have a NULL page->mapping field if it is being truncated,
++		 * but then it is fine as each pte poiting to the page will be
++		 * remove and cache flushing should be handled properly by that
++		 * part of the code.
++		 */
++		if (!PageAnon(page))
++			return page->mapping;
+ 		return NULL;
++	}
+ 	return page_mapping(page);
+ }
  
- 	lrw     r9, __NR_syscalls
- 	cmphs   syscallid, r9		/* Check nr of syscall */
--	bt      ret_from_exception
-+	bt      1f
- 
- 	lrw     r9, sys_call_table
- 	ixw     r9, syscallid
-@@ -162,6 +158,11 @@ ENTRY(csky_systemcall)
- 	jsr     syscallid
- #endif
- 	stw     a0, (sp, LSAVE_A0)      /* Save return value */
-+1:
-+#ifdef CONFIG_DEBUG_RSEQ
-+	mov	a0, sp
-+	jbsr	rseq_syscall
-+#endif
- 	jmpi    ret_from_exception
- 
- csky_syscall_trace:
-@@ -187,6 +188,10 @@ csky_syscall_trace:
- #endif
- 	stw	a0, (sp, LSAVE_A0)	/* Save return value */
- 
-+#ifdef CONFIG_DEBUG_RSEQ
-+	mov	a0, sp
-+	jbsr	rseq_syscall
-+#endif
- 	mov     a0, sp                  /* right now, sp --> pt_regs */
- 	jbsr    syscall_trace_exit
- 	br	ret_from_exception
 -- 
-2.7.4
+2.26.2
+
+
+--/04w6evG8XlLl3ft--
 
