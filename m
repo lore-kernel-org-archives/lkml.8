@@ -2,99 +2,107 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8167AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5114CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EEBB208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZOiJQDrO"
+	by mail.kernel.org (Postfix) with ESMTP id 3359D20DD4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387665AbgE1J5p (ORCPT
+        id S2387673AbgE1J5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:57:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5527 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387644AbgE1J5l (ORCPT
+        Thu, 28 May 2020 05:57:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46311 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387660AbgE1J5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:57:41 -0400
-X-UUID: 2eb1f388023944828e72e2a8620472e5-20200528
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Hhp4Gq/lAQxSghJRwoF92XaAxe8EL9n2NHwdPyaDOAY=;
-        b=ZOiJQDrOsxf+NlhP5UYip6cN6QhIqSKTsMaNft0avbZI9+0PBxsthMGhLaI+6onCF/hMgN3E0IDbnkSXfNTOxIpb6dtqf39F9vDFBtfbmo7VudvufHsUaVcpjJmFNAgEaXQSPozR+CRbV1m7ZCW3muQE+rZVxtKQDCbdYmhjrNc=;
-X-UUID: 2eb1f388023944828e72e2a8620472e5-20200528
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <eastl.lee@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1936306507; Thu, 28 May 2020 17:57:37 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 28 May 2020 17:57:29 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 28 May 2020 17:57:29 +0800
-From:   EastL <EastL.Lee@mediatek.com>
-To:     Sean Wang <sean.wang@mediatek.com>
-CC:     <vkoul@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <matthias.bgg@gmail.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, EastL <EastL.Lee@mediatek.com>
-Subject: [PATCH v4 4/4] dmaengine: mediatek-cqdma: add dma mask for capability
-Date:   Thu, 28 May 2020 17:57:12 +0800
-Message-ID: <1590659832-31476-5-git-send-email-EastL.Lee@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
-References: <1590659832-31476-1-git-send-email-EastL.Lee@mediatek.com>
+        Thu, 28 May 2020 05:57:45 -0400
+Received: from ip5f5af183.dynamic.kabel-deutschland.de ([95.90.241.131] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jeFIF-0002s4-9R; Thu, 28 May 2020 09:57:43 +0000
+Date:   Thu, 28 May 2020 11:57:42 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <20200528095742.cjwemtucwgvhxnxv@wittgenstein>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+ <CAG48ez3z4TTKHwQmZbeyb+egAdKsFb0kkReSLtJsA+9MP6VUBg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: F93B03554329BDCDD88F2B63E056675CC432FAFBAF2E0F0D0441441AD2A2C1902000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAG48ez3z4TTKHwQmZbeyb+egAdKsFb0kkReSLtJsA+9MP6VUBg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgZG1hIG1hc2sgZm9yIGNhcGFiaWxpdHkuDQoNCkNoYW5nZS1JZDogSTMx
-ZjQ2MjJmOTU0MWQ3Njk3MDIwMjk1MzJlNWY1ZjE4NTgxNWRkYTINClNpZ25lZC1vZmYtYnk6IEVh
-c3RMIDxFYXN0TC5MZWVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9kbWEvbWVkaWF0ZWsv
-bXRrLWNxZG1hLmMgfCAxMyArKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDEzIGluc2Vy
-dGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL21lZGlhdGVrL210ay1jcWRtYS5j
-IGIvZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMNCmluZGV4IGJjYTcxMTguLjE4MDVh
-NzYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2RtYS9tZWRpYXRlay9tdGstY3FkbWEuYw0KKysrIGIv
-ZHJpdmVycy9kbWEvbWVkaWF0ZWsvbXRrLWNxZG1hLmMNCkBAIC0xMTcsNiArMTE3LDcgQEAgc3Ry
-dWN0IG10a19jcWRtYV92Y2hhbiB7DQogICogQGNsazogICAgICAgICAgICAgICAgICAgIFRoZSBj
-bG9jayB0aGF0IGRldmljZSBpbnRlcm5hbCBpcyB1c2luZw0KICAqIEBkbWFfcmVxdWVzdHM6ICAg
-ICAgICAgICBUaGUgbnVtYmVyIG9mIFZDcyB0aGUgZGV2aWNlIHN1cHBvcnRzIHRvDQogICogQGRt
-YV9jaGFubmVsczogICAgICAgICAgIFRoZSBudW1iZXIgb2YgUENzIHRoZSBkZXZpY2Ugc3VwcG9y
-dHMgdG8NCisgKiBAZG1hX21hc2s6ICAgICAgICAgICAgICAgQSBtYXNrIGZvciBETUEgY2FwYWJp
-bGl0eQ0KICAqIEB2YzogICAgICAgICAgICAgICAgICAgICBUaGUgcG9pbnRlciB0byBhbGwgYXZh
-aWxhYmxlIFZDcw0KICAqIEBwYzogICAgICAgICAgICAgICAgICAgICBUaGUgcG9pbnRlciB0byBh
-bGwgdGhlIHVuZGVybHlpbmcgUENzDQogICovDQpAQCAtMTI2LDYgKzEyNyw3IEBAIHN0cnVjdCBt
-dGtfY3FkbWFfZGV2aWNlIHsNCiANCiAJdTMyIGRtYV9yZXF1ZXN0czsNCiAJdTMyIGRtYV9jaGFu
-bmVsczsNCisJdTMyIGRtYV9tYXNrOw0KIAlzdHJ1Y3QgbXRrX2NxZG1hX3ZjaGFuICp2YzsNCiAJ
-c3RydWN0IG10a19jcWRtYV9wY2hhbiAqKnBjOw0KIH07DQpAQCAtNTQ5LDYgKzU1MSw3IEBAIHN0
-YXRpYyB2b2lkIG10a19jcWRtYV9od19kZWluaXQoc3RydWN0IG10a19jcWRtYV9kZXZpY2UgKmNx
-ZG1hKQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXRrX2NxZG1hX21hdGNoKTsNCiAN
-CitzdGF0aWMgdTY0IGNxZG1hX2RtYW1hc2s7DQogc3RhdGljIGludCBtdGtfY3FkbWFfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBtdGtfY3FkbWFfZGV2
-aWNlICpjcWRtYTsNCkBAIC02MDcsNiArNjEwLDE2IEBAIHN0YXRpYyBpbnQgbXRrX2NxZG1hX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQljcWRtYS0+ZG1hX2NoYW5uZWxz
-ID0gTVRLX0NRRE1BX05SX1BDSEFOUzsNCiAJfQ0KIA0KKwlpZiAocGRldi0+ZGV2Lm9mX25vZGUg
-JiYgb2ZfcHJvcGVydHlfcmVhZF91MzIocGRldi0+ZGV2Lm9mX25vZGUsDQorCQkJCQkJICAgICAg
-ImRtYS1jaGFubmVsLW1hc2siLA0KKwkJCQkJCSAgICAgICZjcWRtYS0+ZG1hX21hc2spKSB7DQor
-CQlkZXZfaW5mbygmcGRldi0+ZGV2LA0KKwkJCSAiVXNpbmcgMCBhcyBtaXNzaW5nIGRtYS1jaGFu
-bmVsLW1hc2sgcHJvcGVydHlcbiIpOw0KKwl9IGVsc2Ugew0KKwkJY3FkbWFfZG1hbWFzayA9IERN
-QV9CSVRfTUFTSyhjcWRtYS0+ZG1hX21hc2spOw0KKwkJcGRldi0+ZGV2LmRtYV9tYXNrID0gJmNx
-ZG1hX2RtYW1hc2s7DQorCX0NCisNCiAJY3FkbWEtPnBjID0gZGV2bV9rY2FsbG9jKCZwZGV2LT5k
-ZXYsIGNxZG1hLT5kbWFfY2hhbm5lbHMsDQogCQkJCSBzaXplb2YoKmNxZG1hLT5wYyksIEdGUF9L
-RVJORUwpOw0KIAlpZiAoIWNxZG1hLT5wYykNCi0tIA0KMS45LjENCg==
+On Thu, May 28, 2020 at 06:04:48AM +0200, Jann Horn wrote:
+> On Wed, May 27, 2020 at 1:19 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > We've been making heavy use of the seccomp notifier to intercept and
+> > handle certain syscalls for containers. This patch allows a syscall
+> > supervisor listening on a given notifier to be notified when a seccomp
+> > filter has become unused.
+> [...]
+> > To fix this, we introduce a new "live" reference counter that tracks the
+> > live tasks making use of a given filter and when a notifier is
+> > registered waiting tasks will be notified that the filter is now empty
+> > by receiving a (E)POLLHUP event.
+> > The concept in this patch introduces is the same as for signal_struct,
+> > i.e. reference counting for life-cycle management is decoupled from
+> > reference counting live taks using the object.
+> [...]
+> > + * @live: tasks that actually use this filter, only to be altered
+> > + *          during fork(), exit()/free_task(), and filter installation
+> 
+> This comment is a bit off. Actually, @live counts the number of tasks
+> that use the filter directly plus the number of dependent filters that
+> have non-zero @live.
 
+I'll update the comment.
+
+> 
+> [...]
+> > +void seccomp_filter_notify(const struct task_struct *tsk)
+> > +{
+> > +       struct seccomp_filter *orig = tsk->seccomp.filter;
+> > +
+> > +       while (orig && refcount_dec_and_test(&orig->live)) {
+> > +               if (waitqueue_active(&orig->wqh))
+> > +                       wake_up_poll(&orig->wqh, EPOLLHUP);
+> > +               orig = orig->prev;
+> > +       }
+> > +}
+> 
+> /me fetches the paint bucket
+> 
+> Maybe name this seccomp_filter_unuse() or
+> seccomp_filter_unuse_notify() or something like that? The current name
+> isn't very descriptive.
+
+I think seccomp_filter_release() might be the right color. It would also
+line-up nicely with:
+- cgroup_release()
+- exit_mm_release()
+- exec_mm_release()
+- futex_exec_release()
+- ptrace_release_task()
+and others.
+
+Christian
