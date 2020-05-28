@@ -2,119 +2,131 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86035208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590654274;
-	bh=1XpzYMmYZp/Qk1kJtW0aiug2LeRfEo1uHDMQ6LmkHPA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A8iEOMJxlVT9LYHZ9i1mxUuZ9JpnCN0ukLf9QCFCWNNLImskGGDQwwRNUTMcHJuhK
-	 YyeWjO7f6gr+YpajpLvKapJ5UIl+3eUUKq8+5QU1gtJLXfr/UwooBPc8Ew5DIufXvZ
-	 NKomWicPmE82wtmFH+YbqT7hclu5sfa5C1MYrSHs=
+	by mail.kernel.org (Postfix) with ESMTP id 296B0208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgE1IYd (ORCPT
+        id S1726953AbgE1I0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:24:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34427 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbgE1IYd (ORCPT
+        Thu, 28 May 2020 04:26:15 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51382 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgE1I0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:24:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id b6so32328787ljj.1;
-        Thu, 28 May 2020 01:24:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=htN54AV/Ihu6JzPNFvenMo8mjoWrRH1sjEjPiN8cCzk=;
-        b=ulMG+2s1laMLyaQ/fBjFjyudzzlg7UtXeIjTVIUmI7fAj+LV6xjDjYHVh+qMcwd4v5
-         AgsBTyX6iz8C5hSEm+tuhvyVEHEjBCuXAXMrj6Uzay/OKj47Rm2IUPzQ2aikMF04RAtL
-         YsupteV2O9uk6Pwz0+fGUg/RenlHSq9rRB18cWkHe/s6c39SPi/WY67QX6l4LDN+LxPz
-         3ZvUHO7/Hqz3ikBplcMMDmcS82XaxHYTUZzNt0jHn2qUwp+okOWo2UJV+sVYV9Lt3lnC
-         flgaCihZ0sYEarDkfTl1FXP415xHiOFJ8KxT+Kq89wuQfqQextNpo0M8kTM2Gncgq97y
-         4G0Q==
-X-Gm-Message-State: AOAM531fSwjDNtKbA6tqDDAVw7pJGHep1v1H8deLs5sDeoCcWeUrcRc+
-        keyA8rU+bB/nAPs25VGn6rs=
-X-Google-Smtp-Source: ABdhPJw0lfniAdlAI2ff5VOzb5wHTOW7tmV6sPriJoXUvYGZu9htTeK/qTi3Nk+AwKcKnzJOR4uUXA==
-X-Received: by 2002:a2e:a171:: with SMTP id u17mr953864ljl.225.1590654269229;
-        Thu, 28 May 2020 01:24:29 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id u16sm1292531lji.58.2020.05.28.01.24.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 01:24:28 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1jeDps-00035C-Ur; Thu, 28 May 2020 10:24:21 +0200
-Date:   Thu, 28 May 2020 10:24:20 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv6 0/4] n_gsm serdev support and protocol driver for
- droid4 modem
-Message-ID: <20200528082420.GA10358@localhost>
-References: <20200421232752.3070-1-tony@atomide.com>
- <20200423114326.GQ18608@localhost>
- <20200423153756.GE37466@atomide.com>
+        Thu, 28 May 2020 04:26:14 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3A37B2A3D3D;
+        Thu, 28 May 2020 09:26:12 +0100 (BST)
+Date:   Thu, 28 May 2020 10:26:09 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     broonie@kernel.org, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        matthias.bgg@gmail.com, p.yadav@ti.com, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 00/14] mtd: spi-nor: add xSPI Octal DTR support
+Message-ID: <20200528102609.0dbb59a5@collabora.com>
+In-Reply-To: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1590652696-8844-1-git-send-email-masonccyang@mxic.com.tw>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200423153756.GE37466@atomide.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Thu, 28 May 2020 15:58:02 +0800
+Mason Yang <masonccyang@mxic.com.tw> wrote:
 
-Sorry about the late reply on this.
-
-On Thu, Apr 23, 2020 at 08:37:56AM -0700, Tony Lindgren wrote:
-> * Johan Hovold <johan@kernel.org> [200423 11:44]:
-
-> > I know the location of this driver has been up for discussion already,
-> > but drivers/tty/serdev/protocol still isn't right (e.g. we don't have an
-> > drivers/i2c/protocol directory where we stuff random i2c client
-> > drivers).
+> Hello,
 > 
-> Argh, the location of driver again.. So we do have the custom motorola
-> layer to deal with on top of TS 27.010, but the custom handling is
-> contained within the driver. So maybe just drivers/serial for the
-> custom driver then.
-
-Yeah, that should do for now; n_gsm is a serial driver (exposing tty
-devices) after all.
-
-> > Last, it seems you've based the serdev-ngsm-motmdm.c chardev
-> > implementation on a more or less verbatim copy of drivers/gnss/core.c.
-> > I'd appreciate if you could mention that in the file header and
-> > reproduce the copyright notice if you end up keeping that interface.
+> JESD216C has defined specification for Octal 8S-8S-8S and 8D-8D-8D.
+> Based on JEDEC216C Basic Flash Parameter Table (BFPT) driver extract
+> DWORD-18: command and command extension type.
+> DWORD-20: Maximum operation speed of device in Octal mode.
 > 
-> Oh yes indeed, thanks for pointing that out. I'll add it to the next
-> version. The chardev code is for sure based on drivers/gnss.
+> xSPI profile 1.0 table:
+> DWORD-1: Read Fast command, the number of dummy cycles and address nbytes
+> 	 for Read Status Register command.
+> DWORD-2: Read/Write volatile Register command for CFG Reg2.
+> DWORD-4 and DWORD-5: dummy cycles used for various frequencies based on
+> maximum speed of device from BFPT 20th DWORD.
 > 
-> To explain my ignorance, I added the chardev support initially as an
-> experiment to see if I can handle the motorola packet layer better
-> that way compared to the n_gsm ttys and userspace handling. It ended
-> up working quite nicely, so I kept it but then I accidentally left
-> out references to the source. Sorry about that.
+> Ccommand sequences to change to octal DTR mode:
+> The length of each command sequence is 8 per byte for single SPI mode and
+> patching driver to parse and execute these sequences for octal DTR mode.
+> 
+> By Vignesh's comments to patch these drivers based on Pratyush's patches
+> set [1].
+> 
+> This series adds support for Macronix mx25uw51245g works in octal DTR mode.
+> 
+> Tested on Macronix's Zynq PicoZed board with Macronix's SPI controller
+> (spi-mxic.c) driver patched on mx25uw51245g Octal flash.
+> 
+> 
+> [1] https://patchwork.ozlabs.org/project/linux-mtd/cover/20200525091544.17270-1-p.yadav@ti.com/
+> 
+> 
+> Summary of change log
+> v3:
+> Add support command sequences to change octal DTR mode and based on
+> part of Pratyush's patches set.
+> 
+> v2: 
+> Parse BFPT & xSPI table for Octal 8D-8D-8D mode parameters and enable Octal
+> mode in spi_nor_late_init_params().
+> Using Macros in spi_nor_spimem_read_data, spi_nor_spimem_write_data and
+> so on by Vignesh comments.
+> 
+> v1:
+> Without parsing BFPT & xSPI profile 1.0 table and enter Octal 8D-8D-8D
+> mode directly in spi_nor_fixups hooks.
+> 
+> 
+> thnaks for your time and review.
+> best regards,
+> Mason
+> 
+> --
+> Mason Yang (7):
+>   mtd: spi-nor: sfdp: get octal mode maximum speed from BFPT
+>   mtd: spi-nor: sfdp: parse xSPI Profile 1.0 table
+>   mtd: spi-nor: sfdp: parse command sequences to change octal DTR mode
+>   mtd: spi-nor: core: add configuration register 2 read & write support
+>   spi: mxic: patch for octal DTR mode support
+>   mtd: spi-nor: core: execute command sequences to change octal DTR mode
+>   mtd: spi-nor: macronix: Add Octal 8D-8D-8D supports for Macronix
+>     mx25uw51245g
+> 
+> Pratyush Yadav (7):
+>   spi: spi-mem: allow specifying whether an op is DTR or not
+>   spi: spi-mem: allow specifying a command's extension
+>   mtd: spi-nor: add support for DTR protocol
+>   mtd: spi-nor: sfdp: prepare BFPT parsing for JESD216 rev D
+>   mtd: spi-nor: sfdp: get command opcode extension type from BFPT
+>   mtd: spi-nor: core: use dummy cycle and address width info from SFDP
+>   mtd: spi-nor: core: enable octal DTR mode when possible
 
-No worries.
+Why are you doing that?! This series is being actively worked on by
+Pratyush, and all you gain by sending it on your own is more
+confusion. If you have patches on top of a series that's not been
+merged yet, mention the dependency in the cover letter, but don't
+resend patches that have already been sent and are being reviewed.
 
-Johan
+I think it's time you spend a bit of time learning about the submission
+process, because that's not the first mistake you do, and I'm pretty
+sure I already mentioned that in my previous reviews.
