@@ -2,125 +2,158 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1480DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2577A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B6220B80
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:18:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="XFyG/0ep";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="xW2OPHs0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NfS0GGu2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgE1JSU (ORCPT
+        id S1728333AbgE1JSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:18:20 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:13954 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728189AbgE1JST (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:18:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1590657499; x=1622193499;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=B5mvoXtXo7aA9WR/qvfMWyAk8VZ5DHNvhMzlXbftjjE=;
-  b=XFyG/0epyV7u1Fdd+dms/UVQPrfKTJwkD6Z+PrglMRbAeNKauKNYXEbW
-   Q+iqcpkGpnpg5Cz0TuJHORmZJLNVoTftv52HzD1pd4DJssW4sRjnG2o8d
-   NXSn1xb3tbD209ix1PCBBSi02mHa7x/HpwH8sjLMmX2bHfLKN8hd6k+fZ
-   Z6w558VH4tsleCxYPs2LzEpIbr3kexYUiYS5j4XCxHGmFX0NMZ/SwTALE
-   RvQh4O+oG7xiFXlaHxdmEaNXF8yQQvHU3Y6IQyVZFLDUOCnKBCvh/bTXj
-   aRrWkkHzHyVoSAY3dbqbAGwzTFXTe/oNnxpUW1YL6tZyLJh6ADq+A0YD3
-   w==;
-IronPort-SDR: HSXCcPS0kNz/M6VlesWwy1x1pOq1wt+YiT9mRxXWhZVHdozCtFp3IIOpmLZ5V0badzs9GQUUbe
- rce4Z0JGd6qIZ5mu/MZsJDj5+SAC79RlGQtUDls1nQ0IwTi5r8brkwlUm+MJFOj6tpSJ9PweBM
- aj3OC/unCnb+HL4GVGXRiRKy8Ig68TGd0bM1j0vXHex9K3Zc6VlGxaD45nKMMWEW4ivjNgRS9S
- ptDPiKrPjyTznqltlLyWKXt3oxSrgHOjrnoqnq/kIFy8LgbuuUmA4lQAt6VjhM8WeLqNXNaFj6
- IYk=
-X-IronPort-AV: E=Sophos;i="5.73,444,1583164800"; 
-   d="scan'208";a="139019912"
-Received: from mail-co1nam11lp2172.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.172])
-  by ob1.hgst.iphmx.com with ESMTP; 28 May 2020 17:18:18 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZoeCl0xmXYeMHFYSKeYWnbABfpyVWNi+oOsBoU0H/TJ4Tvt6UINRUiOAlLs/yOxJUXMBvxzzobOrhS9YB04j5jTCu1AK4uu1uIlGsXn/xB12mbeHJ0T+DvwKs8w/OZLSpp64OVB0IXG+8rckp9io/hfJIvPpVxWz54jX6FRsm5YNW2n1wQoPM3mOm5yI1GV7tzqgjDXSjWJdk60KQxMoJ5zMFtSoYxsnH5mlWqAVai8leG81OPMsoAgW0dQIla8bsWmZEnGpqgYn9jrBbHdYmhBpjiQrgbbVytzwhwKKwBl89sbWgdkgKy6L01rtdGwoLnuVXSE2AhVQukVyBPOpyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B5mvoXtXo7aA9WR/qvfMWyAk8VZ5DHNvhMzlXbftjjE=;
- b=i3VKfcThyJmlP2d2S7P78KnRVDUKjMu5+R1Xkyvo0aOFJtSTCuKOfsLALPbnsC+3lieLO4YLZoJr6wZ+TVQTvgPypF1QXtSAi6W19wdT+8rYFk42crCKkpYa0ZJPVNpH88eRK74lclREbJCMIzuvnMDhDOueNX9GvvwHwW+WAx5gdrOqvUXZW0v5zph3/uq+Up8FDMrVmoy1Dgu2WgerLz+Nzic/NrhXZ9117UrPyzk9LzwM5Rya5Lq08OJyV1j5CQRHl0U/qkcIg/bLa8LBfTUCqrxTbgipTXbMxhrZCJlIQ+pWe8Pda7I6C6DwsDiGyZy2ysY7EbxEHSoyC1dPig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B5mvoXtXo7aA9WR/qvfMWyAk8VZ5DHNvhMzlXbftjjE=;
- b=xW2OPHs0M/F/w7DrLQWrcwnn83jcoSm2vN4K+RR44LrVQx8OO9h9xEcCuWnPRZCHDWhToscUUygTiC8lFktyP3bl/QxN7qtw7a5Zveoq09F30vNmlTN8sLc8Nkcpp83Xq1UgPIJiw0HXdZ96AXp+cUXFJRSfAnCLt0phV1VtGGM=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN4PR0401MB3662.namprd04.prod.outlook.com
- (2603:10b6:803:47::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 09:18:16 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3021.030; Thu, 28 May 2020
- 09:18:16 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>
-CC:     Johannes Thumshirn <jthumshirn@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] btrfs: select FS_IOMAP
-Thread-Topic: [PATCH] btrfs: select FS_IOMAP
-Thread-Index: AQHWNNDJKkYBMs71QUykoFOpQuVVzg==
-Date:   Thu, 28 May 2020 09:18:16 +0000
-Message-ID: <SN4PR0401MB35989CC2310D560D96E4CD699B8E0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200528091649.2874627-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9783d94d-ffe7-4049-7820-08d802e80dff
-x-ms-traffictypediagnostic: SN4PR0401MB3662:
-x-microsoft-antispam-prvs: <SN4PR0401MB36621D3DE7F7E75B2D075E789B8E0@SN4PR0401MB3662.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gfiNb261fGSATe55wvpTBZSK6vMl57uf3rpto45UCDlFu9HXucd0A7lUwMI6ZQGpKVR3AcGMIpM4K73clRuQoCOQv/eSWta7xRR53ygAAPqZ8ICMUp0IrmyBeq1FsmYBOE/ykn+pVFfpwMZrgDTWy7VVtQCxwN79drZ4LdJLMId8nlQZJ2j0Gq3mw/smehevflOrPacji4bLgYYp553FCtEt8UCM6qPNcW3g5W/uctpVewP58cgFGI0XICazGrvPpjjCWlIIBwjQdtz41nrsTbVZwsXD45mVD9fAFI/ZV2NRVljpx8oxvYeK+v2lOPr6XvHM7FkXZX12YDPpH6Z+DA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(8936002)(33656002)(66556008)(64756008)(66446008)(558084003)(8676002)(5660300002)(4270600006)(186003)(66476007)(478600001)(71200400001)(54906003)(2906002)(26005)(19618925003)(316002)(110136005)(76116006)(91956017)(66946007)(9686003)(6506007)(7696005)(4326008)(86362001)(55016002)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4dDr2YneGg+rjfR0y8SThLuthPjehxmI8G3SjQBHFncxUwtemO9X/VnzK93lazNqObya5SV1+jF5blrHUII4HYZL0BqX93pPMRI1q+fuBMvW8NR1yf1p6YCbKiT9tzZ693pDgxVlQYdJTaTOSYFDQiMF9K1C8moeA6h3r9SGKSEIkIpyREBRwCZj55ttbmUGD+9OTIocIQ/4k6XuWglKkbMlKjJaU0KoGRRMkGJQExFFxmZh62mK+JAWntz25zMryLqMRoQX2Vp2Bz8MTj6lVN7X5fJ3WUQWCIcmLMx2bilcnHEjsmAAb0YVvbPycFDxgQtbabeS97J/t4/BdOc0ucoUtqB24H6orsV6IaB3rnctFm/9Ow9aFoq9HeOwf0XWTvw4uJeqw4hDiBozN0axZaQys6kZ5pqjC8nfzUDljdF9yc2V7t8qNK6focVRHh1nd7OUNzmWXfFnNxrHhfm9q2HXKqy9gANTMwRQ8sm/FjsRUS5DPjJZrc8tj6sUVTl7
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 May 2020 05:18:48 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:29709 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728189AbgE1JSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:18:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590657527; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=zGtoqNo2VGm+/4eivpOXGVgnUGuQdCx0t6qeUO6nWQw=; b=NfS0GGu2U1VmhM5jbRVssWayQIUVzhn90u80gJ2na+oDnpWBEmeFAFO+886vq3K+siW586bs
+ bVEOkXtXadwQjVRhryg8NbblAAA108kFXnIQ6IyUJ1IrriDSRNj9M1esxsdQpMoyLGDYCBT/
+ aa/6xRM+pxVN3fPrZH0S5XUSGZE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5ecf81f0c6d4683243cc39c7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 09:18:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B7FC6C433CB; Thu, 28 May 2020 09:18:39 +0000 (UTC)
+Received: from [10.253.38.28] (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47F5CC433C6;
+        Thu, 28 May 2020 09:18:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 47F5CC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+Subject: Re: [PATCH v4] bluetooth: hci_qca: Fix qca6390 enable failure after
+ warm reboot
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org
+References: <1590644248-9373-1-git-send-email-zijuhu@codeaurora.org>
+ <00A6B08C-CFDB-43A1-B813-CE3DF241FF33@holtmann.org>
+From:   Zijun Hu <zijuhu@codeaurora.org>
+Message-ID: <377e1840-e8e7-38f6-cb7a-2532b07249f0@codeaurora.org>
+Date:   Thu, 28 May 2020 17:18:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9783d94d-ffe7-4049-7820-08d802e80dff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 09:18:16.2780
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wNLmCc96n2dyCfRw1GN6Y+eKeOK/f/4qc4qiJer+yVZR1aFt9yudAZGSSJNqPc53LgDEvrenxiEzvubdY4ErB7tUklFHOOCcJYcJiEueS2k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3662
+In-Reply-To: <00A6B08C-CFDB-43A1-B813-CE3DF241FF33@holtmann.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+
+
+On 5/28/2020 4:19 PM, Marcel Holtmann wrote:
+> Hi Zijun,
+> 
+>> Warm reboot can not restore qca6390 controller baudrate
+>> to default due to lack of controllable BT_EN pin or power
+>> supply, so fails to download firmware after warm reboot.
+>>
+>> Fixed by sending EDL_SOC_RESET VSC to reset controller
+>> within added device shutdown implementation.
+>>
+>> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+>> ---
+>> drivers/bluetooth/hci_qca.c | 33 +++++++++++++++++++++++++++++++++
+>> 1 file changed, 33 insertions(+)
+>>
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index e4a6823..8e03bfe 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -1975,6 +1975,38 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+>> 	hci_uart_unregister_device(&qcadev->serdev_hu);
+>> }
+>>
+>> +static void qca_serdev_shutdown(struct device *dev)
+>> +{
+>> +	int ret;
+>> +	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
+>> +	struct serdev_device *serdev = to_serdev_device(dev);
+>> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+>> +	const u8 ibs_wake_cmd[] = { 0xFD };
+>> +	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
+> 
+> struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+> no.
+this dev is serdev_device not hci_dev
+>> +
+>> +	if (qcadev->btsoc_type == QCA_QCA6390) {
+>> +		serdev_device_write_flush(serdev);
+>> +		ret = serdev_device_write_buf(serdev,
+>> +				ibs_wake_cmd, sizeof(ibs_wake_cmd));
+>> +		if (ret < 0) {
+>> +			BT_ERR("QCA send IBS_WAKE_IND error: %d", ret);
+> 
+> And then use bt_dev_err here.
+as explained above about dev, bt_dev_err is not a good selection at
+this serdev_device shudown operation.
+> 
+>> +			return;
+>> +		}
+>> +		serdev_device_wait_until_sent(serdev, timeout);
+>> +		usleep_range(8000, 10000);
+>> +
+>> +		serdev_device_write_flush(serdev);
+>> +		ret = serdev_device_write_buf(serdev,
+>> +				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
+>> +		if (ret < 0) {
+>> +			BT_ERR("QCA send EDL_RESET_REQ error: %d", ret);
+>> +			return;
+>> +		}
+>> +		serdev_device_wait_until_sent(serdev, timeout);
+>> +		usleep_range(8000, 10000);
+>> +	}
+>> +}
+>> +
+>> static int __maybe_unused qca_suspend(struct device *dev)
+>> {
+>> 	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+>> @@ -2100,6 +2132,7 @@ static struct serdev_device_driver qca_serdev_driver = {
+>> 		.name = "hci_uart_qca",
+>> 		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
+>> 		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
+>> +		.shutdown = qca_serdev_shutdown,
+>> 		.pm = &qca_pm_ops,
+>> 	},
+>> };
+> 
+> Regards
+> 
+> Marcel
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
