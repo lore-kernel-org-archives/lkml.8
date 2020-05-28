@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783A3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4831C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568022176B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A370E20DD4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667049;
-	bh=mJ93CnXc9YSI6aOXXURM2kusgG8AVDTiDJs40asWSXg=;
+	s=default; t=1590667055;
+	bh=yU3uM29KX3qFLteU6zpD378KlUSl1Mc08N73Woceycc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TB9hLr3nCnhG9uPcIaPdehNjNPh3VmcwLTEgGpdcBq+TJCGSDvS4alv62T4PgrDY5
-	 nUcjiAxq3VB+Ay1lHiroPgt8i/seqjfc890A+97lGjnhcnvMTw1dsZarYwBwIPyTaz
-	 H/elmba5XrpB3aRhYodgoif3EsiilGH1yVFO4j0I=
+	b=bvtQx4svaNsIH+mvU1U6vwPNtpjuoDXN8HYqgLhKO7HXucEf8xJovYuwZ9M9nSMGo
+	 QX/wgJEi3FnR+wxVDzo9/5DFovDmtd1Lipc5gTAGS7bxJyIQEbVyVqAO2I4BKGyNNM
+	 blCW3USz2rmFBGK7brrNn+tuOP0Y35gT7Y/2dAE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbgE1L51 (ORCPT
+        id S2389043AbgE1L5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:57:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49062 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:57:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388844AbgE1L4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:56:51 -0400
+        id S2388597AbgE1L4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19EAE207D3;
-        Thu, 28 May 2020 11:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 418B221532;
+        Thu, 28 May 2020 11:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667010;
-        bh=mJ93CnXc9YSI6aOXXURM2kusgG8AVDTiDJs40asWSXg=;
+        s=default; t=1590667012;
+        bh=yU3uM29KX3qFLteU6zpD378KlUSl1Mc08N73Woceycc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLO+AGUk5CbQRxpLv4uy/vEiv+OifPojL5eOHd6cxR0uWnd+jwY2zxuT3Zqu7DZjp
-         DAqIjGoFphjq8C7OoDVp+C0HUxAU2TZF2h+mzt2w1wtteVM1FDlapRBZMqzTRm71kf
-         uoCMtKlJFHAoDK7BnpJvpMDOO7Uk6dHUQWcBXVS4=
+        b=a6ge4CrTEIYrJ7qD97xRa3KK7UDes8xgBsvFkT5XZUjYJNT35wltX2SQh/IXgwt2m
+         tJ1qRtFe5EK5g5GZtjRQTtpHFoEOtGk2zJ3DihgzRyFmRPsfOmKbPeLOl+gaoyLnhU
+         Dhc2m0THhXt5/9bzfQEKvg9TBreNNBxZjwv4EwRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+Cc:     Qiushi Wu <wu000273@umn.edu>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.6 44/47] net: Fix return value about devm_platform_ioremap_resource()
-Date:   Thu, 28 May 2020 07:55:57 -0400
-Message-Id: <20200528115600.1405808-44-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 46/47] net/mlx4_core: fix a memory leak bug.
+Date:   Thu, 28 May 2020 07:55:59 -0400
+Message-Id: <20200528115600.1405808-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
 References: <20200528115600.1405808-1-sashal@kernel.org>
@@ -60,79 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit ef24d6c3d6965158dfe23ae961d87e9a343e18a2 ]
+[ Upstream commit febfd9d3c7f74063e8e630b15413ca91b567f963 ]
 
-When call function devm_platform_ioremap_resource(), we should use IS_ERR()
-to check the return value and return PTR_ERR() if failed.
+In function mlx4_opreq_action(), pointer "mailbox" is not released,
+when mlx4_cmd_box() return and error, causing a memory leak bug.
+Fix this issue by going to "out" label, mlx4_free_cmd_mailbox() can
+free this pointer.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Fixes: fe6f700d6cbb ("net/mlx4_core: Respond to operation request by firmware")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/ifi_canfd/ifi_canfd.c     | 5 ++++-
- drivers/net/can/sun4i_can.c               | 2 +-
- drivers/net/dsa/b53/b53_srab.c            | 2 +-
- drivers/net/ethernet/marvell/pxa168_eth.c | 2 +-
- 4 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/fw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/ifi_canfd/ifi_canfd.c b/drivers/net/can/ifi_canfd/ifi_canfd.c
-index 04d59bede5ea..74503cacf594 100644
---- a/drivers/net/can/ifi_canfd/ifi_canfd.c
-+++ b/drivers/net/can/ifi_canfd/ifi_canfd.c
-@@ -947,8 +947,11 @@ static int ifi_canfd_plat_probe(struct platform_device *pdev)
- 	u32 id, rev;
- 
- 	addr = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(addr))
-+		return PTR_ERR(addr);
-+
- 	irq = platform_get_irq(pdev, 0);
--	if (IS_ERR(addr) || irq < 0)
-+	if (irq < 0)
- 		return -EINVAL;
- 
- 	id = readl(addr + IFI_CANFD_IP_ID);
-diff --git a/drivers/net/can/sun4i_can.c b/drivers/net/can/sun4i_can.c
-index e3ba8ab0cbf4..e2c6cf4b2228 100644
---- a/drivers/net/can/sun4i_can.c
-+++ b/drivers/net/can/sun4i_can.c
-@@ -792,7 +792,7 @@ static int sun4ican_probe(struct platform_device *pdev)
- 
- 	addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(addr)) {
--		err = -EBUSY;
-+		err = PTR_ERR(addr);
- 		goto exit;
- 	}
- 
-diff --git a/drivers/net/dsa/b53/b53_srab.c b/drivers/net/dsa/b53/b53_srab.c
-index 0a1be5259be0..38cd8285ac67 100644
---- a/drivers/net/dsa/b53/b53_srab.c
-+++ b/drivers/net/dsa/b53/b53_srab.c
-@@ -609,7 +609,7 @@ static int b53_srab_probe(struct platform_device *pdev)
- 
- 	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
--		return -ENOMEM;
-+		return PTR_ERR(priv->regs);
- 
- 	dev = b53_switch_alloc(&pdev->dev, &b53_srab_ops, priv);
- 	if (!dev)
-diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
-index 7a0d785b826c..17243bb5ba91 100644
---- a/drivers/net/ethernet/marvell/pxa168_eth.c
-+++ b/drivers/net/ethernet/marvell/pxa168_eth.c
-@@ -1418,7 +1418,7 @@ static int pxa168_eth_probe(struct platform_device *pdev)
- 
- 	pep->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pep->base)) {
--		err = -ENOMEM;
-+		err = PTR_ERR(pep->base);
- 		goto err_netdev;
- 	}
- 
+diff --git a/drivers/net/ethernet/mellanox/mlx4/fw.c b/drivers/net/ethernet/mellanox/mlx4/fw.c
+index 6e501af0e532..f6ff9620a137 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/fw.c
++++ b/drivers/net/ethernet/mellanox/mlx4/fw.c
+@@ -2734,7 +2734,7 @@ void mlx4_opreq_action(struct work_struct *work)
+ 		if (err) {
+ 			mlx4_err(dev, "Failed to retrieve required operation: %d\n",
+ 				 err);
+-			return;
++			goto out;
+ 		}
+ 		MLX4_GET(modifier, outbox, GET_OP_REQ_MODIFIER_OFFSET);
+ 		MLX4_GET(token, outbox, GET_OP_REQ_TOKEN_OFFSET);
 -- 
 2.25.1
 
