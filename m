@@ -2,112 +2,82 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78141C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E79D208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:11:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="o7d+xvIP"
+	by mail.kernel.org (Postfix) with ESMTP id DA895208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgE1JLs (ORCPT
+        id S1728188AbgE1JNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:11:48 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:51921 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgE1JLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:11:48 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 9311A23E44;
-        Thu, 28 May 2020 11:11:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590657106;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jQI9eKxgFwwqo7lAirfupMY1mvgzDKPVoZMhXExfpR4=;
-        b=o7d+xvIP36ic7ee5Au56p89Syr1PsUkuGH0H9KfGwIoShD9J7AVOlJyvHtEXbAk+6y4zSU
-        bmiqcn43mXeu70kr2lIoJZy9k9RMfXdG5b6P58hhpD6jmJ+W0dWmfBu87eMQgEJZIp41Di
-        W4AbgruL8QsTe+L5hTUdjLyOo+3TP5k=
+        Thu, 28 May 2020 05:13:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36824 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728062AbgE1JNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:13:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C186EAA7C;
+        Thu, 28 May 2020 09:13:52 +0000 (UTC)
+Date:   Thu, 28 May 2020 11:13:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] powerpc/bpf: Enable bpf_probe_read{, str}() on powerpc
+ again
+Message-ID: <20200528091351.GE3529@linux-b0ei>
+References: <20200527122844.19524-1-pmladek@suse.com>
+ <87ftbkkh00.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 May 2020 11:11:45 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH net-next v3 0/3] net: enetc: remove bootloader dependency
-In-Reply-To: <CA+h21hruQkYEYatnOSSc6r2EPR+SY-NbcKCRF6sX2oNLy84itg@mail.gmail.com>
-References: <20200528063847.27704-1-michael@walle.cc>
- <0130cb1878a47efc23f23cf239d0380f@walle.cc>
- <CA+h21hruQkYEYatnOSSc6r2EPR+SY-NbcKCRF6sX2oNLy84itg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <043ef77349823caa9e2b058f44a11a06@walle.cc>
-X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ftbkkh00.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-05-28 10:43, schrieb Vladimir Oltean:
-> On Thu, 28 May 2020 at 11:18, Michael Walle <michael@walle.cc> wrote:
->> 
->> Am 2020-05-28 08:38, schrieb Michael Walle:
->> > These patches were picked from the following series:
->> > https://lore.kernel.org/netdev/1567779344-30965-1-git-send-email-claudiu.manoil@nxp.com/
->> > They have never been resent. I've picked them up, addressed Andrews
->> > comments, fixed some more bugs and asked Claudiu if I can keep their
->> > SOB
->> > tags; he agreed. I've tested this on our board which happens to have a
->> > bootloader which doesn't do the enetc setup in all cases. Though, only
->> > SGMII mode was tested.
->> >
->> > changes since v2:
->> >  - removed SOBs from "net: enetc: Initialize SerDes for SGMII and
->> > USXGMII
->> >    protocols" because almost everything has changed.
->> >  - get a phy_device for the internal PCS PHY so we can use the phy_
->> >    functions instead of raw mdiobus writes
->> 
->> mhh after reading,
->> https://lore.kernel.org/netdev/CA+h21hoq2qkmxDFEb2QgLfrbC0PYRBHsca=0cDcGOr3txy9hsg@mail.gmail.com/
->> this seems to be the wrong way of doing it.
->> 
->> -michael
+On Thu 2020-05-28 11:03:43, Michael Ellerman wrote:
+> Petr Mladek <pmladek@suse.com> writes:
+> > The commit 0ebeea8ca8a4d1d453a ("bpf: Restrict bpf_probe_read{, str}() only
+> > to archs where they work") caused that bpf_probe_read{, str}() functions
+> > were not longer available on architectures where the same logical address
+> > might have different content in kernel and user memory mapping. These
+> > architectures should use probe_read_{user,kernel}_str helpers.
+> >
+> > For backward compatibility, the problematic functions are still available
+> > on architectures where the user and kernel address spaces are not
+> > overlapping. This is defined CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE.
+> >
+> > At the moment, these backward compatible functions are enabled only
+> > on x86_64, arm, and arm64. Let's do it also on powerpc that has
+> > the non overlapping address space as well.
+> >
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
 > 
-> FWIW, some time after the merge window closes, I plan to convert the
-> felix and seville drivers to mdio_device. It wouldn't be such a big
-> deal to also convert enetc to phylink then, and also do this
-> phy_device -> mdio_device for it too.
+> This seems like it should have a Fixes: tag and go into v5.7?
 
+Good point:
 
-Btw. you/we can also remove that magic SGMII link timer numbers:
+Fixes: commit 0ebeea8ca8a4d1d4 ("bpf: Restrict bpf_probe_read{, str}() only to archs where they work")
 
-#define ENETC_PCS_LINK_TIMER_VAL(ms) \
-    ((u32)(125000000 * (ms) / 1000))
+And yes, it should ideally go into v5.7 either directly or via stable.
 
-Then for SGMII its ENETC_PCS_LINK_TIMER_VAL(1.6) and for 1000BaseX
-(and 2500BaseX?) its ENETC_PCS_LINK_TIMER_VAL(10) (which also match
-to the default value in the registers).
+Should I resend the patch with Fixes and
+Cc: stable@vger.kernel.org #v45.7 lines, please?
 
-Please note, that the current hardcoded values doesn't match the
-calculated ones precisely. I don't know where these are coming from,
-but the 1.6ms matches the SGMII spec.
-
--michael
+Best Regards,
+Petr
