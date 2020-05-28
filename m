@@ -2,116 +2,128 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63385C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF865C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D75208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF9E62088E
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:15:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y7xw0WXi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OmYrkihA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbgE1LOH (ORCPT
+        id S2388235AbgE1LPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:14:07 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43396 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388080AbgE1LOG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:14:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590664444;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=acpHxn1a0do1eYSDNn0Gj48JIN5rgon7KXnl2Z/Teo8=;
-        b=Y7xw0WXiHEHQIhT2bjq91wOHPfPQwA89ylTlhlq12nEm9tvZlaTKwmYhpZwg4CS95tHe0f
-        USU2VAi4SnM1XQ9bghdi0kvohbiw5DDN4KUn+KKdScQw1psF8qYPb4XuJBGjRccz9wn/F8
-        W15k92yiy6Ic+FKXfyT+x3YX/7yWask=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-201-T3WXmPhmPpq1_29llSJ7-A-1; Thu, 28 May 2020 07:14:03 -0400
-X-MC-Unique: T3WXmPhmPpq1_29llSJ7-A-1
-Received: by mail-ed1-f72.google.com with SMTP id bo26so11334712edb.22
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:14:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=acpHxn1a0do1eYSDNn0Gj48JIN5rgon7KXnl2Z/Teo8=;
-        b=eozQ5MPmlXZIvzR+VKRmvbMGUgtG6UijTFtlB2bTKjgbYYsCxSdev6NvlgE/kzGp53
-         r9qHOZbR3yzE935IgqkN/EHLWBnjutddnhBEB3FeaUQjDOZuRVD6eghIea54zI5ynGEs
-         9/dFRAhih9davg9z49V2ji4aDktcsUX7OSTkP9Yngl0EUYMNozFiCX2BNkOPTiTHCwTn
-         zPLQnxgxWk3txEJ3KZCDS6UhR1ZNgcJNquuKmdLmdfv0EVIAE9pAVn3fear+ddXkUIc2
-         RhGPnZq3Jl0k66j7IKSIAYYtY0eVSSNX4np5E23cmHuL/GrW5VI/BKSXyKRC9MRbK5Pe
-         7y3g==
-X-Gm-Message-State: AOAM530qE1Wzc0Ndwo6DLE805/dL8XhvG0n0QwF5TGo1SEfQw6nc7gRs
-        QrrNEuQnig5rLnn4+8uSMZtDnYwFFZlS9cdtfUhijgJsS4KAj/EUXV2Yz9ERVaddw5L1yaxb61F
-        DXOIewaGozO5FjHsyUCMo8kn4
-X-Received: by 2002:aa7:d79a:: with SMTP id s26mr691036edq.202.1590664441905;
-        Thu, 28 May 2020 04:14:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwcIxMeWbuUuJrdgZ6nC5IX8oVcCIpZYD5OLHWNuGYJPlq8iLJvJHCCYGlH5ttb3a/cZT7dUw==
-X-Received: by 2002:aa7:d79a:: with SMTP id s26mr691015edq.202.1590664441737;
-        Thu, 28 May 2020 04:14:01 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id cq27sm3509764edb.41.2020.05.28.04.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 04:14:01 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        x86@kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 10/10] KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS
-In-Reply-To: <551b75f7-b022-313d-fac4-8b3dd83fe76c@redhat.com>
-References: <20200525144125.143875-1-vkuznets@redhat.com> <20200525144125.143875-11-vkuznets@redhat.com> <551b75f7-b022-313d-fac4-8b3dd83fe76c@redhat.com>
-Date:   Thu, 28 May 2020 13:14:00 +0200
-Message-ID: <87zh9s2txj.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 28 May 2020 07:15:03 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:24430 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388081AbgE1LPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:15:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590664501; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=bbIcS2ile0UWrHdN+EYpLOxgL801zKH0nwHraH+ONWU=; b=OmYrkihAzAxCmU9KcisoF7h/e2yCfzXeB4drjy/QsNieHmx64J5U7xo02KEo1T3fjoEaNFxj
+ jdIfZhgcukXZ5UhwO50Cdy51oy+5Tr/po3n8IzMO937M6R2nfd4K5o/Eioz3w/lxzRsf28NA
+ ohKhYWDcsj9yJ1PwDBEfoMDDiOE=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5ecf9d352c54998475640064 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 11:15:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 333C1C433CB; Thu, 28 May 2020 11:15:00 +0000 (UTC)
+Received: from zijuhu-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: zijuhu)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F2F3C433C6;
+        Thu, 28 May 2020 11:14:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F2F3C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
+From:   Zijun Hu <zijuhu@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        rjliao@codeaurora.org, zijuhu@codeaurora.org
+Subject: [PATCH v5] bluetooth: hci_qca: Fix qca6390 enable failure after warm reboot
+Date:   Thu, 28 May 2020 19:14:48 +0800
+Message-Id: <1590664488-18128-1-git-send-email-zijuhu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+Warm reboot can not restore qca6390 controller baudrate
+to default due to lack of controllable BT_EN pin or power
+supply, so fails to download firmware after warm reboot.
 
-> On 25/05/20 16:41, Vitaly Kuznetsov wrote:
->> Concerns were expressed around APF events delivery when CPU is not
->> in user mode (KVM_ASYNC_PF_SEND_ALWAYS), e.g.
->> https://lore.kernel.org/kvm/ed71d0967113a35f670a9625a058b8e6e0b2f104.1583547991.git.luto@kernel.org/
->> 
->> 'Page ready' events are already free from '#PF abuse' but 'page not ready'
->> notifications still go through #PF (to be changed in the future). Make the
->> probability of running into issues when APF collides with regular #PF lower
->> by deprecating KVM_ASYNC_PF_SEND_ALWAYS. The feature doesn't seem to be
->> important enough for any particular workload to notice the difference.
->
-> This has been disabled already in guest code, but I don't see a
-> particular reason to deprecate it in the host too.  Supporting it on the
-> host is just one line of code; if it's a problem *for the guest*, you
-> just don't use KVM_ASYNC_PF_SEND_ALWAYS.
->
-> Also, note that #VE will always be delivered to the guest even at CPL0;
-> the decision on whether to do sync or async page fault at CPL0 will move
-> to the guest, but enabling #VE will probably _require_ the
-> KVM_ASYNC_PF_SEND_ALWAYS bit to be set (and KVM_ASYNC_PF_DELIVERY_AS_INT
-> as well).
+Fixed by sending EDL_SOC_RESET VSC to reset controller
+within added device shutdown implementation.
 
-I actually missed the fact that guest side is already disabled (I can
-see it now in the queue), feel free to ignore this patch then.
+Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index e4a6823..f525656 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1975,6 +1975,38 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+ 	hci_uart_unregister_device(&qcadev->serdev_hu);
+ }
+ 
++static void qca_serdev_shutdown(struct device *dev)
++{
++	int ret;
++	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
++	struct serdev_device *serdev = to_serdev_device(dev);
++	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
++	const u8 ibs_wake_cmd[] = { 0xFD };
++	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
++
++	if (qcadev->btsoc_type == QCA_QCA6390) {
++		serdev_device_write_flush(serdev);
++		ret = serdev_device_write_buf(serdev, ibs_wake_cmd,
++					      sizeof(ibs_wake_cmd));
++		if (ret < 0) {
++			BT_ERR("QCA send IBS_WAKE_IND error: %d", ret);
++			return;
++		}
++		serdev_device_wait_until_sent(serdev, timeout);
++		usleep_range(8000, 10000);
++
++		serdev_device_write_flush(serdev);
++		ret = serdev_device_write_buf(serdev, edl_reset_soc_cmd,
++					      sizeof(edl_reset_soc_cmd));
++		if (ret < 0) {
++			BT_ERR("QCA send EDL_RESET_REQ error: %d", ret);
++			return;
++		}
++		serdev_device_wait_until_sent(serdev, timeout);
++		usleep_range(8000, 10000);
++	}
++}
++
+ static int __maybe_unused qca_suspend(struct device *dev)
+ {
+ 	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
+@@ -2100,6 +2132,7 @@ static struct serdev_device_driver qca_serdev_driver = {
+ 		.name = "hci_uart_qca",
+ 		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
+ 		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
++		.shutdown = qca_serdev_shutdown,
+ 		.pm = &qca_pm_ops,
+ 	},
+ };
 -- 
-Vitaly
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
 
