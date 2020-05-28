@@ -2,224 +2,75 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3118C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA41C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0F42084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="K4b0icFO";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Osw7WNTl"
+	by mail.kernel.org (Postfix) with ESMTP id 7FDBE2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:27:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbgE1C1T (ORCPT
+        id S1726936AbgE1C1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:27:19 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:11220 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725849AbgE1C1T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:27:19 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 04S2NAnA016270;
-        Wed, 27 May 2020 19:26:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=VpkCS8UwLIQfwOHYW6Zix77gZeckddU/lMQJVkDRmw8=;
- b=K4b0icFOTtTLoxuDl0v268VD6twcV6JoFgRJwLMwmkD4Y7SZEQVOtWMJSL6mYasjyoje
- bO9bFZWGm8nzydM9+tMsGrD3xADJdNow8vIow9O3HK8CV7wctIWB15YO8cp20SHt6H2o
- zLry9leJGKLnz1VFqyZ95ZABVRIRNbYecsk= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 317ktsv83y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 27 May 2020 19:26:55 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 27 May 2020 19:26:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YqI1J/XKjrEoNqEQv6w364WXX1vy3qYBAXtpbhF/LCg0aP7fz7vBDAKKsXPhlQ4eSzF0qFhDLx327lLf5TuQ8g17SMen0xVJ6ZvVN1XDwjMrtwUxg2TJ9+EkiQyW9hAyLXzJJhClgkt3yEB37+lZu2YaRH2JLcHmxWkuCso7OG8kKAFNQxkf7Tl3dG+fKQu1jxGQ4EPuK8BQ8yi4rVbWuFFp4Z9ZeAGoq26UQ/xyb+CyYwsTITWNIHnoNFwaQNxfBpdeZhQFcRWfJZ019kLqboODIPDt7gpSL/G1FGti7F3hHjIlcQE739J/MrNGQhbuTjwOj4nI6HbWGntVEC5W+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VpkCS8UwLIQfwOHYW6Zix77gZeckddU/lMQJVkDRmw8=;
- b=E7GMkh+Y87RQ/8KlAlUaNtHhj+hx5K4g20dfN1WWSk6lEOberqO/ux6tTCS9cbGTVHbtHuSsN6+Bvp63AKVE7J/RZwFIyJIL0D7Fze9MLN0ahxFHJ9zbZXnzSRAl8I9JMiyQstCHtqnT60+FFSz+ghaohwBQMXOg5v+JDYJDTKnu3SG9MRXOPPC2utExGi2eAQ2EaId+o+hlridOLZLzXeAMzL5foVlR5iKWspVa8U0G00s8fUegLgLtpiJeSNlx30e/G9lCNTLXMx5Gr55K0lKzj3yNjknq9xx5dyUtWULC9JqhCvtY4JoohAG/JUlHM2+DFEln/myUOgmTvQevJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VpkCS8UwLIQfwOHYW6Zix77gZeckddU/lMQJVkDRmw8=;
- b=Osw7WNTlwPU7FPks8m+tahYe0Vy413voz0kbf01OKTF89wSHsoC3K4KsddWj+Zr53Jrglsd5ZDe9cyoK/HMCvMaiF7RhAXedhgkt7MqKE7ImHqLr3p1lIRWs3Zc1PeGwuPXNRSR+cUxgEDrd5gHNNm+dwkBMLmctyv/tE+ECQ4k=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (52.135.225.146) by
- BYAPR15MB2566.namprd15.prod.outlook.com (20.179.155.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.24; Thu, 28 May 2020 02:26:53 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3021.030; Thu, 28 May 2020
- 02:26:53 +0000
-Subject: Re: [PATCH 12/23] bpf: handle the compat string in
- bpf_trace_copy_string better
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>
-CC:     <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-parisc@vger.kernel.org>, <linux-um@lists.infradead.org>,
-        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-References: <20200521152301.2587579-1-hch@lst.de>
- <20200521152301.2587579-13-hch@lst.de>
- <20200527190432.e4af1fba00c13cb1421f5a37@linux-foundation.org>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <2b64fae6-394c-c1e5-8963-c256f4284065@fb.com>
-Date:   Wed, 27 May 2020 19:26:30 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
-In-Reply-To: <20200527190432.e4af1fba00c13cb1421f5a37@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR17CA0053.namprd17.prod.outlook.com
- (2603:10b6:a03:167::30) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
+        Wed, 27 May 2020 22:27:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:22888 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725849AbgE1C1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 22:27:31 -0400
+IronPort-SDR: 8f3bTmbZuOGH7yXlZ3Y2GC8WA2sEtl34y6kr35CD8+9RILwhDldoSixBNYkxMGMx5OFR7SvXKp
+ 7TVS5tEJZj+Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 19:27:31 -0700
+IronPort-SDR: 6zwQDLrGWUi0I7d9r+VRi31OHGVG6seEkmHrcq1o8BsT639tTmyTSUKYYjypC2PChrLLZt2uyI
+ EjXdS/JnZrUA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="270692992"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga006.jf.intel.com with ESMTP; 27 May 2020 19:27:31 -0700
+Date:   Wed, 27 May 2020 19:27:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+904752567107eefb728c@syzkaller.appspotmail.com
+Subject: Re: [PATCH] KVM: x86: Initialize tdp_level during vCPU creation
+Message-ID: <20200528022730.GE25962@linux.intel.com>
+References: <20200527085400.23759-1-sean.j.christopherson@intel.com>
+ <875zch66fy.fsf@vitty.brq.redhat.com>
+ <c444fbcc-8ac3-2431-4cdb-2a37b93b1fa2@redhat.com>
+ <20200527162318.GD24461@linux.intel.com>
+ <e2b9d767-df19-2974-8457-737b925749d3@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from macbook-pro-52.local.dhcp.thefacebook.com (2620:10d:c090:400::5:730d) by BY5PR17CA0053.namprd17.prod.outlook.com (2603:10b6:a03:167::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.17 via Frontend Transport; Thu, 28 May 2020 02:26:50 +0000
-X-Originating-IP: [2620:10d:c090:400::5:730d]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 68f4f339-7cfa-44d5-e2c9-08d802ae9555
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2566:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB256681A825F92783F8E55456D38E0@BYAPR15MB2566.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0417A3FFD2
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cO+2vWK0q4q6n8OWfeoOpbjmCIQa4i075hzSJJgxcKQPQH3C6C6n+sau5NvtdB7YqSztLJitkvpkWMS8lpR3AgsKDxu0UDYkGfREzsvyHZu8lacnrYslJy2wWWy7+6hlu2Q5Pem/oCotGIAGATpB/IhRj0N2KQRMxTbgJqLKr6NtetTnA0RCYJSzzBifaxLG6JMV/ZdORe7PTj98bqX8qH3RSTnPzDeYNd/b7hnYLZq6HRsRswd7QB9haQ/ULY0cAjGfJpL1ZL2oXZZOv7gxzHKwpUpXCJvKpvMZLskCGyIrcXMO6fPybR/Mo8sI2rZnzYW5fZIQMClsD6W/ZLHN+9NBuWMg0qbZXmvsTjVBQdkCasJQ/W5niJMw9DacDiA5zYCnsdxNA7ffhWlBr0SWLw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(39860400002)(366004)(346002)(136003)(376002)(2616005)(110136005)(478600001)(316002)(31686004)(8676002)(53546011)(66556008)(8936002)(66946007)(6666004)(6506007)(66476007)(4326008)(6486002)(54906003)(31696002)(5660300002)(2906002)(7416002)(6512007)(16526019)(52116002)(86362001)(83380400001)(36756003)(186003)(21314003)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: iNLhMXT5NuIG4iVeuFVfwjB06rdGcGNs2C8tqo+TXTXDY+TH/8Q9gBe8ls+UJuDeRSDslARHpEav9QHth2wnXw3wpKSwEhdS99aQVuTCWNwVL4MRa7m+5GNmwVs3D4i6jx6l+AEc66mzFYzPL9qEkwTNAYdSFY658zd6aafW6N51Fv4DhnCSYhaaQ2z9nf8Ok3Y7SFWkEnSnzg95XgKj92NJxTxnB3ZsLqVjaeWd0FEABRXLrZBo9EzDijxzxf8Tzp/m0ery7UPqTFEzJw61+SMl5Itrw9NGUoMgTiiUViWLQtKLzmKhylogtWAqAFW41eB0OLttTLZ5k9iEQXnrLZHXWdbhNg8mtwRm1/W8gufIRTi1NWnQZ8/7XHCIMQSLwy8gQzLUyoXJoV0UzTK6m/fA/wV0su1JExQNkMesAyK3MgQDIsKdclrLsZYskD25QjbDCXbzarTd74mr66SDu7pCP4zvB8kgP8+l1m4SVeZo1uByKUoOF4EvQia4j4OEYRJdEaZ5VqDGn7OJ0QCaBw==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68f4f339-7cfa-44d5-e2c9-08d802ae9555
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2020 02:26:52.8842
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xDxFUc48sZRxKJAVibavYQjZJVrUNBgBKvL5de8isesxUeL39liqDVG8Z9aTyrSe
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2566
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-05-27_04:2020-05-27,2020-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- cotscore=-2147483648 phishscore=0 impostorscore=0 adultscore=0
- mlxlogscore=999 clxscore=1011 bulkscore=0 spamscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280009
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e2b9d767-df19-2974-8457-737b925749d3@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 27, 2020 at 06:56:02PM +0200, Paolo Bonzini wrote:
+> On 27/05/20 18:23, Sean Christopherson wrote:
+> > Hmm, one option would be to make .get_tdp_level() pure function by passing
+> > in vcpu->arch.maxphyaddr.  That should make the comment redundant.  I don't
+> > love bleeding VMX's implementation into the prototype, but that ship has
+> > kinda already sailed.
+> 
+> Well, it's not bleeding the implementation that much, guest MAXPHYADDR
+> is pretty much the only reason why it's a function and not a constant.
+> 
+> Another possibility BTW is to make the callback get_max_tdp_level and
+> make get_tdp_level a function in mmu.c.
 
-
-On 5/27/20 7:04 PM, Andrew Morton wrote:
-> On Thu, 21 May 2020 17:22:50 +0200 Christoph Hellwig <hch@lst.de> wrote:
-> 
->> User the proper helper for kernel or userspace addresses based on
->> TASK_SIZE instead of the dangerous strncpy_from_unsafe function.
->>
->> ...
->>
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -331,8 +331,11 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
->>   	switch (fmt_ptype) {
->>   	case 's':
->>   #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->> -		strncpy_from_unsafe(buf, unsafe_ptr, bufsz);
->> -		break;
->> +		if ((unsigned long)unsafe_ptr < TASK_SIZE) {
->> +			strncpy_from_user_nofault(buf, user_ptr, bufsz);
->> +			break;
->> +		}
->> +		fallthrough;
->>   #endif
->>   	case 'k':
->>   		strncpy_from_kernel_nofault(buf, unsafe_ptr, bufsz);
-> 
-> Another user of strncpy_from_unsafe() has popped up in linux-next's
-> bpf.  I did the below, but didn't try very hard - it's probably wrong
-> if CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE=n?
-> 
-> Anyway, please take a look at all the bpf_trace.c changes in
-> linux-next.
-> 
-> 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> Subject: bpf:bpf_seq_printf(): handle potentially unsafe format string better
-> 
-> User the proper helper for kernel or userspace addresses based on
-> TASK_SIZE instead of the dangerous strncpy_from_unsafe function.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@elte.hu>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->   kernel/trace/bpf_trace.c |   13 ++++++++++---
->   1 file changed, 10 insertions(+), 3 deletions(-)
-> 
-> --- a/kernel/trace/bpf_trace.c~xxx
-> +++ a/kernel/trace/bpf_trace.c
-> @@ -588,15 +588,22 @@ BPF_CALL_5(bpf_seq_printf, struct seq_fi
->   		}
->   
->   		if (fmt[i] == 's') {
-> +			void *unsafe_ptr;
-> +
->   			/* try our best to copy */
->   			if (memcpy_cnt >= MAX_SEQ_PRINTF_MAX_MEMCPY) {
->   				err = -E2BIG;
->   				goto out;
->   			}
->   
-> -			err = strncpy_from_unsafe(bufs->buf[memcpy_cnt],
-> -						  (void *) (long) args[fmt_cnt],
-> -						  MAX_SEQ_PRINTF_STR_LEN);
-> +			unsafe_ptr = (void *)(long)args[fmt_cnt];
-> +			if ((unsigned long)unsafe_ptr < TASK_SIZE) {
-> +				err = strncpy_from_user_nofault(
-> +					bufs->buf[memcpy_cnt], unsafe_ptr,
-> +					MAX_SEQ_PRINTF_STR_LEN);
-> +			} else {
-> +				err = -EFAULT;
-> +			}
-
-This probably not right.
-The pointer stored at args[fmt_cnt] is a kernel pointer,
-but it could be an invalid address and we do not want to fault.
-Not sure whether it exists or not, we should use 
-strncpy_from_kernel_nofault()?
-
->   			if (err < 0)
->   				bufs->buf[memcpy_cnt][0] = '\0';
->   			params[fmt_cnt] = (u64)(long)bufs->buf[memcpy_cnt];
-> _
-> 
+I like that idea.  We could even avoid get_max_tdp_level() by passing that
+info into kvm_configure_mmu(), though that may not actually be cleaner.
+I'll play around with it.
