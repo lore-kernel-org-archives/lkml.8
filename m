@@ -2,101 +2,88 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5905C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8516C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8652084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE9B2074B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 23:38:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590709123;
+	bh=xOc6jIfIBzDUCIiwBriGiB/QH5iSqrRwXB9T1VRVhtw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=1I8lx0DGqsXx2XAm6JN5/VD/oJp/HR8UJu8mQtBd3/EzSQchG9YW0nPP/LutJjnA0
+	 80tXv6X6/Xt0e0IqOwF8l4jEhennnaO5hkRRkjdksycrivQqb4OlD7TqQIQsJOieZ3
+	 zFUmrNzZ0Hy3a33WWeV7FaolYBCr0+dwXQyoK+Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437586AbgE1XiZ (ORCPT
+        id S2437612AbgE1Xil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 19:38:25 -0400
-Received: from muru.com ([72.249.23.125]:56102 "EHLO muru.com"
+        Thu, 28 May 2020 19:38:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437447AbgE1XiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 19:38:24 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 857E780BF;
-        Thu, 28 May 2020 23:39:12 +0000 (UTC)
-Date:   Thu, 28 May 2020 16:38:18 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 5/6] gnss: motmdm: Add support for Motorola Mapphone
- MDM6600 modem
-Message-ID: <20200528233818.GR37466@atomide.com>
-References: <20200512214713.40501-1-tony@atomide.com>
- <20200512214713.40501-6-tony@atomide.com>
- <20200528130653.GG10358@localhost>
+        id S2436651AbgE1Xii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 19:38:38 -0400
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B702074B;
+        Thu, 28 May 2020 23:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590709117;
+        bh=xOc6jIfIBzDUCIiwBriGiB/QH5iSqrRwXB9T1VRVhtw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JqYc/Mlkf2A1a5eOkXm2xA3qIK7+4L/10mENqkpOIQ8ZwlbkjlyvBATghs4tzH+/e
+         46+QB/uqIOftw4pLNgXiv3i9MJCT8dJgGnfa8KDoVP5AHTDtZw/rouyV2eI9Wzcodt
+         IbLiTuRDuNMl8lLGMnXn13QMXWXDZyy2+MEvxrNw=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>
+Subject: [PATCH] clk: ingenic: Mark ingenic_tcu_of_match as __maybe_unused
+Date:   Thu, 28 May 2020 16:38:37 -0700
+Message-Id: <20200528233837.70269-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528130653.GG10358@localhost>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This device id table is passed to of_match_node() later on in probe, but
+on CONFIG_OF=n builds of_match_node() doesn't do anything with the
+arguments. Lets just mark the table unused so that the compiler doesn't
+complain about this.
 
-* Johan Hovold <johan@kernel.org> [200528 13:07]:
-> On Tue, May 12, 2020 at 02:47:12PM -0700, Tony Lindgren wrote:
-> > +/*
-> > + * Motorola MDM GNSS device communicates over a dedicated TS 27.010 channel
-> > + * using custom data packets. The packets look like AT commands embedded into
-> > + * a Motorola invented packet using format like "U1234AT+MPDSTART=0,1,100,0".
-> > + * But it's not an AT compatible serial interface, it's a packet interface
-> > + * using AT like commands.
-> > + */
-> 
-> So this shouldn't depend on TS 27.010 and instead be a generic gnss
-> serial driver. 
+drivers/clk/ingenic/tcu.c:326:34: warning: unused variable 'ingenic_tcu_of_match' [-Wunused-const-variable]
+static const struct of_device_id ingenic_tcu_of_match[] __initconst = {
+^
+1 warning generated.
 
-Hmm not sure if it makes sense to try to represent packet data as
-a virtual serial port :) But sure let's at least investigate it.
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/ingenic/tcu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> What does the interface look like over the corresponding USB port?
-> AT-commands without the U1234 prefix?
+diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
+index 153a954b0d2f..9382dc3aa27e 100644
+--- a/drivers/clk/ingenic/tcu.c
++++ b/drivers/clk/ingenic/tcu.c
+@@ -323,7 +323,7 @@ static const struct ingenic_soc_info x1000_soc_info = {
+ 	.has_tcu_clk = false,
+ };
+ 
+-static const struct of_device_id ingenic_tcu_of_match[] __initconst = {
++static const struct of_device_id __maybe_unused ingenic_tcu_of_match[] __initconst = {
+ 	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
+ 	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
+ 	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4770_soc_info, },
+-- 
+Sent by a computer, using git, on the internet
 
-I don't know if it's using the same commands as the ttyUSB* GNSS device
-seems disabled. From what I understand, gobi2000 has just $gps_start and
-$gps_stop commands for the ttyUSB* GNSS device. Those don't exist
-here. Also the command style seems to follow the modem firmware for
-various other devices on the modem.
-
-> No module parameters please. Either pick a good default or we need to
-> come up with a generic (sysfs) interface for polled drivers like this
-> one.
-
-OK yeah this could be a generic sysfs option.
-
-> How does your "aggressive pm" gsmmux implementation work with the gps if
-> there are no other clients keeping the modem awake? It seems the modem
-> would be suspended after 600 milliseconds after being woken up every 10
-> seconds or so by the polling gnss driver?
-
-Well we still have /dev/gnss open, so GNSS stays active and won't get
-disabled until the device is closed. The shared GPIOs with the USB PHY
-are used to signal port traffic.
-
-> What happens to the satellite lock in between? Does the request block
-> until the gps has an updated position?
-
-It seems to regain the lock in about one or two seconds, so it's some
-kind of modem PM state for allowing the SoC to idle it seems.
-
-Regards,
-
-Tony
