@@ -2,111 +2,130 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0442C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E24C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C120B20C56
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB5D2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="g6eMNQ1Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukDcKmAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403994AbgE1O7p (ORCPT
+        id S2404004AbgE1O7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:59:45 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:51709 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403956AbgE1O7T (ORCPT
+        Thu, 28 May 2020 10:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403995AbgE1O7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:59:19 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DA16422F2D;
-        Thu, 28 May 2020 16:59:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590677957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=tW77hbmrRY90NEi12v0m/ZXytlyCCBmCao0Ek/zkAO4=;
-        b=g6eMNQ1Z+3QPBa+3PW3d9gOWQ5HMIjYjELVuE+iq1NepLUj+xlCSy0kK0KEuFmygBU4rY6
-        /+5ujibCNapTjI3oCeT8wpZrVI8LwqLdJtOEsKKw/M8FUsjqx2IYeYvvlZI3/Nr/3d1Y3k
-        bMBcjrqYSEPUBQ1M3vFRcEOVTB6GB4s=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v6 0/3] gpio: generic regmap implementation
-Date:   Thu, 28 May 2020 16:58:42 +0200
-Message-Id: <20200528145845.31436-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+        Thu, 28 May 2020 10:59:46 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C1DFC08C5C6;
+        Thu, 28 May 2020 07:59:46 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id 205so3358935qkg.3;
+        Thu, 28 May 2020 07:59:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HxV5jGRMaMIhiTrb1qlZZSiFIGJApXlv14Z1mpGykac=;
+        b=ukDcKmAF8Eyk89FEX8P/Naj1CvbDi/pwjCwLnyQdYLPGcLAYmY/crsCFPmGMAgQu19
+         r7i8BtTpX7PJwYx95PeGDnMupBxwUQfylDoC9Dv/D9ow7lHpgUMy5pBd4ltnagq2Yfny
+         gcEcX2cIzCb6HJBXftVJm0O/sQB8HeiznxS5upkNfOmgZ8KQLwPRs1rzDXwm1d73kJNN
+         MXjg9HJwVDD1c333wF0arqRg8G8Zzcgp0STjXR/4ENKDDb/zv4G45xtw7+XIO0nGyp1G
+         vc9p7hHcx7JJviqgUq0Mo6zEEVNov8fyFoFe70MNgvpOPfK66+/ojpqR4H4K2zuuRfnz
+         KwWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HxV5jGRMaMIhiTrb1qlZZSiFIGJApXlv14Z1mpGykac=;
+        b=ONBK/zPXswAHA+2eVjxSJ2vvCqGA88/D7kNFFRzn8aASGNsuP0ZcpRy2TVNq+jg0gs
+         I7eiOX+0Mb5+QXsg0GBKx6EBcVdWJbX/ySbFEGaoNNU6oSGRPJO/1FQZcIvhSLP5T5Zx
+         CEWipBs5mLJCID7uWsO0qZwb/OfxTZ7lGJppQ5lqAWjAvyogg+Vp0fGolceJxGGOsanj
+         eUoo7qjRmWwhQ1nqueqOmrGfIaoZh75XhdlClxQAEXqbyYH3Rx900aLs2lMqVY9hIbXG
+         uJ6UPFwXO+m1yEJpnSE6F4tADzkupiLoIbv00CSy53ldev5OCClkZqcwOYz+y/FNbO/H
+         Z00w==
+X-Gm-Message-State: AOAM531hgKFYoiwgxwSioc2/GskvokG5b+GldCzcMaWalamd+xc6RGz3
+        2VDSFduYEzBaXjgrjH138XrQWUGbK8M=
+X-Google-Smtp-Source: ABdhPJx722RPlPsKanxgT6Dbrrw9LtVN7k6Vyepei3i08dN+GSgh62YqgZGjo/9eKYdXMMdUpk467Q==
+X-Received: by 2002:a37:a9d7:: with SMTP id s206mr3144096qke.6.1590677985028;
+        Thu, 28 May 2020 07:59:45 -0700 (PDT)
+Received: from ict14-OptiPlex-980.kataweb.it ([178.23.248.46])
+        by smtp.googlemail.com with ESMTPSA id p11sm1136947qtb.4.2020.05.28.07.59.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:59:44 -0700 (PDT)
+From:   Jonathan Albrieux <jonathan.albrieux@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        Jonathan Albrieux <jonathan.albrieux@gmail.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH v7 3/5] dt-bindings: iio: magnetometer: ak8975: add gpio reset support
+Date:   Thu, 28 May 2020 16:59:28 +0200
+Message-Id: <20200528145930.11860-1-jonathan.albrieux@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is a split off of the sl28cpld series:
-https://lore.kernel.org/linux-gpio/20200423174543.17161-1-michael@walle.cc/
+Add reset-gpio support.
 
-I wasn't sure if I should also include the gpiochip_irqchip_add_domain()
-patch here. So feel free to skip it. OTOH if you use interrupts with
-gpio-regmap it is quite handy.
+Without reset's deassertion during ak8975_power_on(), driver's probe fails
+on ak8975_who_i_am() while checking for device identity for AK09911 chip.
 
-For an actual user see the patch 11/16 ("gpio: add support for the sl28cpld
-GPIO controller") of the series above.
+AK09911 has an active low reset gpio to handle register's reset.
+AK09911 datasheet says that, if not used, reset pin should be connected
+to VID. This patch emulates this situation.
 
-Changes since v5:
- - add names property
- - addressed Alex' remarks:
-   - moved header from i/l/gpio-regmap.h to i/l/gpio/regmap.h
-   - fixed kernel doc
-   - described rules how to use the register base offsets
-   - missing forward declarations
-   - style changes
-   - return -EOPNOTSUPP, in code path we should never reach
- - added check to have input and output base regs if there is a direction
-   register
- - added MAINTAINERS patch
+Signed-off-by: Jonathan Albrieux <jonathan.albrieux@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/iio/magnetometer/asahi-kasei,ak8975.yaml      | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes since v4:
- - add comment about can_sleep
- - fix config->label typo
- - add config->names property
-
-Changes since v3:
- - set reg_dat_base, that was actually broken
- - fix typo
- - fix swapped reg_in_dir/reg_out_dir documentation
- - use "goto err" in error path in gpio_regmap_register()
-
-Michael Walle (3):
-  gpiolib: Introduce gpiochip_irqchip_add_domain()
-  gpio: add a reusable generic gpio_chip using regmap
-  MAINTAINERS: Add gpio regmap section
-
- MAINTAINERS                 |   6 +
- drivers/gpio/Kconfig        |   4 +
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-regmap.c  | 349 ++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpiolib.c      |  20 +++
- include/linux/gpio/driver.h |   3 +
- include/linux/gpio/regmap.h |  86 +++++++++
- 7 files changed, 469 insertions(+)
- create mode 100644 drivers/gpio/gpio-regmap.c
- create mode 100644 include/linux/gpio/regmap.h
-
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+index 55b18784e503..e8af53d60759 100644
+--- a/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
++++ b/Documentation/devicetree/bindings/iio/magnetometer/asahi-kasei,ak8975.yaml
+@@ -47,6 +47,11 @@ properties:
+   mount-matrix:
+     description: an optional 3x3 mounting rotation matrix.
+ 
++  reset-gpios:
++    description: |
++      an optional pin needed for AK09911 to set the reset state. This should
++      be usually active low
++
+ required:
+   - compatible
+   - reg
+@@ -54,6 +59,7 @@ required:
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/gpio/gpio.h>
+     i2c {
+         #address-cells = <1>;
+         #size-cells = <0>;
+@@ -64,6 +70,7 @@ examples:
+             interrupt-parent = <&gpio6>;
+             interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+             vdd-supply = <&ldo_3v3_gnss>;
++            reset-gpios = <&msmgpio 111 GPIO_ACTIVE_LOW>;
+             mount-matrix = "-0.984807753012208",  /* x0 */
+                            "0",                   /* y0 */
+                            "-0.173648177666930",  /* z0 */
 -- 
-2.20.1
+2.17.1
 
