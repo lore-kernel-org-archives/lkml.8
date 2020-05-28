@@ -2,92 +2,170 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B339CC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9579B2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:47:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8745D207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:47:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QkZc78ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405177AbgE1QrH (ORCPT
+        id S2405189AbgE1QrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:47:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:55218 "EHLO foss.arm.com"
+        Thu, 28 May 2020 12:47:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:62151 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405105AbgE1QrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:47:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 890F830E;
-        Thu, 28 May 2020 09:47:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12BB13F6C4;
-        Thu, 28 May 2020 09:47:02 -0700 (PDT)
-Date:   Thu, 28 May 2020 17:46:57 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH v4 0/2]  PCI: Add new UniPhier PCIe endpoint driver
-Message-ID: <20200528164657.GA30482@e121166-lin.cambridge.arm.com>
-References: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S2405180AbgE1QrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 12:47:22 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1590684441; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=T4tupt5NAgmORde5nrj9W65EYS8aJc0xInYBse0Y2do=; b=QkZc78caVcfCiFm86N00BjrGcxtISVGLd2Uf3cVmncyhmBTJgeOs+tEgDyY8IRbSi4EHo3oP
+ vQkyFPoMxoSckA4oZB9aA1nDu/Pjo5blrtwmgfPTopQgW+eH1zsC7/8QYyhXO4NvYnzc8Q71
+ WBZ4fz7uhM6xhNBuclrT0ot/oio=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5ecfeb173ac6f4f603eb2b88 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 16:47:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 21FA2C433CA; Thu, 28 May 2020 16:47:19 +0000 (UTC)
+Received: from [192.168.1.102] (unknown [157.47.99.82])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9B2C2C43391;
+        Thu, 28 May 2020 16:47:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9B2C2C43391
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+Subject: Re: [PATCH V5 3/5] iio: adc: Add support for PMIC7 ADC
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     agross@kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        smohanad@codeaurora.org, kgunda@codeaurora.org,
+        aghayal@codeaurora.org, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-arm-msm@vger.kernel.org,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1590157452-27179-1-git-send-email-jprakash@codeaurora.org>
+ <1590157452-27179-4-git-send-email-jprakash@codeaurora.org>
+ <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+Message-ID: <81ef429e-48d5-48b3-b344-3a48c2287907@codeaurora.org>
+Date:   Thu, 28 May 2020 22:17:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1589457801-12796-1-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHp75Vfgk0-Rye2We1A6_WTWMCK3D-WW4_T3CGPHc=-tB=6M9g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 14, 2020 at 09:03:19PM +0900, Kunihiko Hayashi wrote:
-> This series adds PCIe endpoint controller driver for Socionext UniPhier
-> SoCs. This controller is based on the DesignWare PCIe core.
-> 
-> This driver supports Pro5 SoC only, so Pro5 needs multiple clocks and
-> resets in devicetree node.
-> 
-> Changes since v3:
-> - dt-bindings: Convert with dt-schema
-> - Replace with devm_platform_ioremap_resource()
-> - Add a commnet that mutex covers raising legacy IRQ
-> 
-> Changes since v2:
-> - dt-bindings: Add clock-names, reset-names, and fix example for Pro5
-> - Remove 'is_legacy' indicating that the compatible is for legacy SoC
-> - Use pci_epc_features instead of defining uniphier_soc_data
-> - Remove redundant register read access
-> - Clean up return code on uniphier_add_pcie_ep()
-> - typo: intx -> INTx
-> 
-> Changes since v1:
-> - dt-bindings: Add Reviewed-by line
-> - Fix register value to set EP mode
-> - Add error message when failed to get phy
-> - Replace INTx assertion time with macro
-> 
-> Kunihiko Hayashi (2):
->   dt-bindings: PCI: Add UniPhier PCIe endpoint controller description
->   PCI: uniphier: Add Socionext UniPhier Pro5 PCIe endpoint controller
->     driver
-> 
->  .../bindings/pci/socionext,uniphier-pcie-ep.yaml   |  92 +++++
->  MAINTAINERS                                        |   4 +-
->  drivers/pci/controller/dwc/Kconfig                 |  13 +-
->  drivers/pci/controller/dwc/Makefile                |   1 +
->  drivers/pci/controller/dwc/pcie-uniphier-ep.c      | 383 +++++++++++++++++++++
->  5 files changed, 489 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/socionext,uniphier-pcie-ep.yaml
->  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
+Hi Andy,
 
-Applied to pci/dwc, thanks !
+On 5/22/2020 9:07 PM, Andy Shevchenko wrote:
+> On Fri, May 22, 2020 at 5:25 PM Jishnu Prakash <jprakash@codeaurora.org> wrote:
+>> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
+>> major change from PMIC5 is that all SW communication to ADC goes through
+>> PMK8350, which communicates with other PMICs through PBS when the ADC
+>> on PMK8350 works in master mode. The SID register is used to identify the
+>> PMICs with which the PBS needs to communicate. Add support for the same.
+> Below should be in a separate patch, but it's a bikeshedding. So, I
+> left it to maintainers to decide.
+> Fine with me
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>
+> ...
+>
+>> @@ -285,7 +304,7 @@ static int adc5_configure(struct adc5_chip *adc,
+>>
+>>          /* Read registers 0x42 through 0x46 */
+>>          ret = adc5_read(adc, ADC5_USR_DIG_PARAM, buf, sizeof(buf));
+>> -       if (ret < 0)
+>> +       if (ret)
+>>                  return ret;
+>>
+>>          /* Digital param selection */
+> ...
+>
+>> @@ -331,7 +391,7 @@ static int adc5_do_conversion(struct adc5_chip *adc,
+>>
+>>          if (adc->poll_eoc) {
+>>                  ret = adc5_poll_wait_eoc(adc);
+>> -               if (ret < 0) {
+>> +               if (ret) {
+>>                          pr_err("EOC bit not set\n");
+>>                          goto unlock;
+>>                  }
+>> @@ -341,7 +401,7 @@ static int adc5_do_conversion(struct adc5_chip *adc,
+>>                  if (!ret) {
+>>                          pr_debug("Did not get completion timeout.\n");
+>>                          ret = adc5_poll_wait_eoc(adc);
+>> -                       if (ret < 0) {
+>> +                       if (ret) {
+>>                                  pr_err("EOC bit not set\n");
+>>                                  goto unlock;
+>>                          }
+> ...
+>
+>> @@ -406,8 +519,38 @@ static int adc5_read_raw(struct iio_dev *indio_dev,
+>>          default:
+>>                  return -EINVAL;
+>>          }
+>> +}
+>>
+>> -       return 0;
+> (this one looks like standalone change from above)
+>
+> ...
+>
+>> @@ -570,7 +762,7 @@ static int adc5_get_dt_channel_data(struct adc5_chip *adc,
+>>
+>>                  ret = adc5_read(adc, ADC5_USR_REVISION1, dig_version,
+>>                                                          sizeof(dig_version));
+>> -               if (ret < 0) {
+>> +               if (ret) {
+>>                          dev_err(dev, "Invalid dig version read %d\n", ret);
+>>                          return ret;
+>>                  }
+> ...
+>
+>> +       if (of_device_is_compatible(node, "qcom,spmi-adc7"))
+>> +               indio_dev->info = &adc7_info;
+>> +       else
+>> +               indio_dev->info = &adc5_info;
+> Can we use driver_data?
+I'll make the change in a patch before this one in the next post.
+>
+> ...
+>
+>> +       if (adcmap7_die_temp[0].x > voltage) {
+>> +               *result_mdec = DIE_TEMP_ADC7_SCALE_1;
+>> +               return 0;
+>> +       } else if (adcmap7_die_temp[i].x <= voltage) {
+> As per previous comment, redundant 'else' and please use value of i
+> directly here.
+I'll add the change in the next post.
 
-Lorenzo
+>
+>
