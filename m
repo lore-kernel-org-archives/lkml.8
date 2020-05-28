@@ -2,146 +2,93 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E0D2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF59C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F84B2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C036207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXv+0Oeh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391229AbgE1Odm convert rfc822-to-8bit (ORCPT
+        id S1725836AbgE1Od4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:33:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60110 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391207AbgE1Odk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:33:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 18420AD09;
-        Thu, 28 May 2020 14:33:37 +0000 (UTC)
-Date:   Thu, 28 May 2020 16:33:35 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-Id: <20200528163335.8f730b5a3ddc8cd9beab367f@suse.de>
-In-Reply-To: <20200528135608.GU1551@shell.armlinux.org.uk>
-References: <20200528121121.125189-1-tbogendoerfer@suse.de>
-        <20200528130738.GT1551@shell.armlinux.org.uk>
-        <20200528151733.f1bc2fcdcb312b19b2919be9@suse.de>
-        <20200528135608.GU1551@shell.armlinux.org.uk>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Thu, 28 May 2020 10:33:56 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26988 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725308AbgE1Odw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:33:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590676431;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pBQOiMcyjxJF5KMUzY58hCHngjZNJvMhsoqslwe6gEA=;
+        b=YXv+0Oeh1Q0yutAWk4URrAAvVh6i/aRW9cwk5OME/lf3tc6+SGMRJ49VniXkoTEV0SElvc
+        KeuXycQ/ivnwDx5f0fYkiedLT4MR4NQSqU8I9Il/ux00BsYmjqOBg4VAlPLSXX0QHm1s4R
+        9WxMFE4fwTy2lRXDzeCSLF78ODpXZzM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-MJXjkSsVN8mXu_JMQ8LJVQ-1; Thu, 28 May 2020 10:33:46 -0400
+X-MC-Unique: MJXjkSsVN8mXu_JMQ8LJVQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CDE4083DB39;
+        Thu, 28 May 2020 14:33:44 +0000 (UTC)
+Received: from treble (ovpn-117-65.rdu2.redhat.com [10.10.117.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B5692C24F;
+        Thu, 28 May 2020 14:33:43 +0000 (UTC)
+Date:   Thu, 28 May 2020 09:33:41 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 2/3] kasan: move kasan_report() into report.c
+Message-ID: <20200528143341.ntxtnq4rw5ypu3k5@treble>
+References: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
+ <78a81fde6eeda9db72a7fd55fbc33173a515e4b1.1589297433.git.andreyknvl@google.com>
+ <20200528134913.GA1810@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200528134913.GA1810@lca.pw>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 14:56:08 +0100
-Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-
-> On Thu, May 28, 2020 at 03:17:33PM +0200, Thomas Bogendoerfer wrote:
-> > On Thu, 28 May 2020 14:07:38 +0100
-> > Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+On Thu, May 28, 2020 at 09:49:13AM -0400, Qian Cai wrote:
+> On Tue, May 12, 2020 at 05:33:20PM +0200, 'Andrey Konovalov' via kasan-dev wrote:
+> > The kasan_report() functions belongs to report.c, as it's a common
+> > functions that does error reporting.
 > > 
-> > > On Thu, May 28, 2020 at 02:11:21PM +0200, Thomas Bogendoerfer wrote:
-> > > > Commit d14e078f23cc ("net: marvell: mvpp2: only reprogram what is necessary
-> > > >  on mac_config") disabled auto negotiation bypass completely, which breaks
-> > > > platforms enabling bypass via firmware (not the best option, but it worked).
-> > > > Since 1000BaseX/2500BaseX ports neither negotiate speed nor duplex mode
-> > > > we could enable auto negotiation bypass to get back information about link
-> > > > state.
-> > > 
-> > > Thanks, but your commit is missing some useful information.
-> > > 
-> > > Which platforms have broken?
-> > 
-> > it's an Ambedded MARS-400
-> >  
-> > > Can you describe the situation where you require this bit to be set?
-> > 
-> > as I have no exact design details I'm just talking about what I can see
-> > on that platform. It looks like the switch connecting the internal nodes
-> > doesn't run autoneg on the internal links. So the link to the internal
-> > nodes will never come up. These links are running 2500BaseX so speed/duplex
-> > is clean and by enabling bypass I'll get a proper link state, too.
-> > 
-> > > We should not be enabling bypass mode as a matter of course, it exists
-> > > to work around broken setups which do not send the control word.
-> > 
-> > if you call it a broken setup I'm fine, but this doesn't solve the problem,
-> > which exists now. What would be your solution ?
+> > Reported-by: Leon Romanovsky <leon@kernel.org>
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 > 
-> What I was after was additional information about the problem, so
-> that we can start thinking about how to deal with the AN bypass bit
-> in a sensible way.
+> Today's linux-next produced this with Clang 11.
 > 
-> How is the connection between the switch and network interface
-> described?  I don't think I see a .dts file in mainline for this
-> platform.
+> mm/kasan/report.o: warning: objtool: kasan_report()+0x8a: call to __stack_chk_fail() with UACCESS enabled
+> 
+> kasan_report at mm/kasan/report.c:536
 
-below is the dts part for the two network interfaces. The switch to
-the outside has two ports, which correlate to the two internal ports.
-And the switch propagates the link state of the external ports to
-the internal ports.
-
-Thomas.
-
-&cp0_eth1 {
-        status = "okay";
-        phy-mode = "2500base-x";
-        mac-address = [00 00 00 00 00 01];
-        interrupts = <41 IRQ_TYPE_LEVEL_HIGH>,
-        <45 IRQ_TYPE_LEVEL_HIGH>,
-        <49 IRQ_TYPE_LEVEL_HIGH>,
-        <53 IRQ_TYPE_LEVEL_HIGH>,
-        <57 IRQ_TYPE_LEVEL_HIGH>,
-        <61 IRQ_TYPE_LEVEL_HIGH>,
-        <65 IRQ_TYPE_LEVEL_HIGH>,
-        <69 IRQ_TYPE_LEVEL_HIGH>,
-        <73 IRQ_TYPE_LEVEL_HIGH>,
-        <127 IRQ_TYPE_LEVEL_HIGH>;
-        interrupt-names = "hif0", "hif1", "hif2",
-        "hif3", "hif4", "hif5", "hif6", "hif7",
-        "hif8", "link";
-        port-id = <2>;
-        gop-port-id = <3>;
-        managed = "in-band-status";
-};
-
-&cp0_eth2 {
-        status = "okay";
-        phy-mode = "2500base-x";
-        mac-address = [00 00 00 00 00 02];
-        interrupts = <40 IRQ_TYPE_LEVEL_HIGH>,
-        <44 IRQ_TYPE_LEVEL_HIGH>,
-        <48 IRQ_TYPE_LEVEL_HIGH>,
-        <52 IRQ_TYPE_LEVEL_HIGH>,
-        <56 IRQ_TYPE_LEVEL_HIGH>,
-        <60 IRQ_TYPE_LEVEL_HIGH>,
-        <64 IRQ_TYPE_LEVEL_HIGH>,
-        <68 IRQ_TYPE_LEVEL_HIGH>,
-        <72 IRQ_TYPE_LEVEL_HIGH>,
-        <128 IRQ_TYPE_LEVEL_HIGH>;
-        interrupt-names = "hif0", "hif1", "hif2",
-        "hif3", "hif4", "hif5", "hif6", "hif7",
-        "hif8", "link";
-        port-id = <1>;
-        gop-port-id = <2>;
-        managed = "in-band-status";
-};
-
+Peter, this was also reported with GCC about a month ago.  Should we add
+__stack_chk_fail() to the uaccess safe list?
 
 -- 
-SUSE Software Solutions Germany GmbH
-HRB 36809 (AG Nürnberg)
-Geschäftsführer: Felix Imendörffer
+Josh
+
