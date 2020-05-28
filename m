@@ -2,88 +2,156 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92ED2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE87CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 713DA207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE85207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nXOHM8aF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgE1Om7 (ORCPT
+        id S1728535AbgE1OnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:42:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:64050 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgE1Om6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:42:58 -0400
-IronPort-SDR: vtbITcFiQ2YbsosHlotZ5TWQ5ITJQR6NtriOT2pykokRI0Q0Q+/Wc+ndcx+CvzhtxZj2Zmgz6C
- dfUly+lqGkhQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 07:42:57 -0700
-IronPort-SDR: MkO6wj4WQWMceXjZfzB5XHP7m55tPSxlWuNtkLPz3OT58GauzV8oD1s5UGLHxx51H7En4fHf0p
- /rVqHKTsQh0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="310944024"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 28 May 2020 07:42:55 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jeJkH-009RVq-OY; Thu, 28 May 2020 17:42:57 +0300
-Date:   Thu, 28 May 2020 17:42:57 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Vinod Koul <vkoul@kernel.org>, Viresh Kumar <vireshk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/10] dmaengine: Introduce DMA-device device_caps
- callback
-Message-ID: <20200528144257.GS1634618@smile.fi.intel.com>
-References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
- <20200526225022.20405-6-Sergey.Semin@baikalelectronics.ru>
+        Thu, 28 May 2020 10:43:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36406 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgE1OnL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:43:11 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04SEh7Cx105543;
+        Thu, 28 May 2020 09:43:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590676987;
+        bh=8w7N6d8TeqStNOG9atDqyPq6+qdBCR//aeinIO2X+Bc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nXOHM8aFVxfRCKrDNQMs7+g6idWLEaku57TGsddMo56tKxQaeilmM3y/ubxHpDAeU
+         78cvR+qBxkuZ2m8Q/hnrYPMlUKelnAQYCZEyr3IeHeRTv7mVNYyxpUELRZux9BLzd5
+         KIRvvEwkQTmANPZyqcGZxa1pkh8008jYxKT/Nl3o=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04SEh7DQ052484
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 09:43:07 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 09:43:07 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 09:43:07 -0500
+Received: from [10.250.38.163] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04SEh6Um003235;
+        Thu, 28 May 2020 09:43:06 -0500
+Subject: Re: [PATCH v11 4/4] power: supply: bq25150 introduce the bq25150
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>, <sre@kernel.org>,
+        <pali@kernel.org>, <robh@kernel.org>
+CC:     <dmurphy@ti.com>, <linux-pm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <sspatil@android.com>
+References: <20200528140546.25260-1-r-rivera-matos@ti.com>
+ <20200528140546.25260-5-r-rivera-matos@ti.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <95fcf5ae-cf49-4618-08cc-da7487450e53@ti.com>
+Date:   Thu, 28 May 2020 10:43:05 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200526225022.20405-6-Sergey.Semin@baikalelectronics.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200528140546.25260-5-r-rivera-matos@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 01:50:16AM +0300, Serge Semin wrote:
-> There are DMA devices (like ours version of Synopsys DW DMAC) which have
-> DMA capabilities non-uniformly redistributed amongst the device channels.
-> In order to provide a way of exposing the channel-specific parameters to
-> the DMA engine consumers, we introduce a new DMA-device callback. In case
-> if provided it gets called from the dma_get_slave_caps() method and is
-> able to override the generic DMA-device capabilities.
+On 5/28/20 10:05 AM, Ricardo Rivera-Matos wrote:
+> +static int bq2515x_set_precharge_current(struct bq2515x_device *bq2515x,
+> +					int val)
+> +{
+> +	int ret;
+> +	unsigned int pchrgctrl;
+> +	unsigned int icharge_range;
+> +	unsigned int precharge_reg_code;
+> +	u16 precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
+> +	u16 precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA;
 
-> +	if (device->device_caps)
-> +		device->device_caps(chan, caps);
+
+Why u16? looks like it gets promoted everywhere it's used anyway.
+
+
 > +
->  	return 0;
+> +	ret = regmap_read(bq2515x->regmap, BQ2515X_PCHRGCTRL, &pchrgctrl);
+> +	if (ret)
+> +		return ret;
+> +
+> +	icharge_range = pchrgctrl & BQ2515X_ICHARGE_RANGE;
+> +
+> +	if (icharge_range) {
+> +		precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_3750_UA;
+> +		precharge_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
 
-I dunno why this returns int, but either we get rid of this returned value
-(perhaps in the future, b/c it's not directly related to this series), or
-something like
-
-	if (device->device_caps)
-		return device->device_caps(chan, caps);
-
--- 
-With Best Regards,
-Andy Shevchenko
+This is a little hard to read when we have a default value overwritten
+in an if, it basically hides the else logic, suggest:
 
 
+if (icharge_range) {
+	precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_3750_UA;
+	precharge_multiplier = BQ2515X_ICHG_RNG_1B1_UA;
+} else {
+	precharge_max_ua = BQ2515X_PRECHRG_ICHRG_RNGE_1875_UA;
+	precharge_multiplier = BQ2515X_ICHG_RNG_1B0_UA;
+}
+
+
+> +	}
+> +	if (val > precharge_max_ua || val < BQ2515X_ICHG_MIN_UA)
+> +		return -EINVAL;
+> +
+> +	precharge_reg_code = val / precharge_multiplier;
+> +
+> +	ret = bq2515x_set_charge_disable(bq2515x, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_update_bits(bq2515x->regmap, BQ2515X_PCHRGCTRL,
+> +				BQ2515X_PRECHARGE_MASK, precharge_reg_code);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return bq2515x_set_charge_disable(bq2515x, 0);
+> +}
+
+[snip]
+
+> +
+> +static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
+> +{
+> +	int i = 0;
+> +	unsigned int array_size = ARRAY_SIZE(bq2515x_ilim_lvl_values);
+> +
+> +	if (val >= bq2515x_ilim_lvl_values[array_size - 1]) {
+
+
+Isn't this check the same as is done in first iteration of the below loop?
+
+Andrew
+
+
+> +		i = array_size - 1;
+> +	} else {
+> +		for (i = array_size - 1; i > 0; i--) {
+> +			if (val >= bq2515x_ilim_lvl_values[i])
+> +				break;
+> +		}
+> +	}
+> +	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
+> +}
+> +
