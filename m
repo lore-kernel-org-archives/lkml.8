@@ -2,107 +2,144 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E843DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E361FC433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3CC32088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:57:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dDFAiz1S"
+	by mail.kernel.org (Postfix) with ESMTP id CEA7F207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 03:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgE1D5X (ORCPT
+        id S1727062AbgE1D5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 23:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56928 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgE1D5W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 23:57:22 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B98C05BD1E;
-        Wed, 27 May 2020 20:57:21 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XYmt6Zcpz9sRY;
-        Thu, 28 May 2020 13:57:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590638239;
-        bh=2BUcHYpkW+gU9UE65n32G+Jloswo8dh+G03/XVbNDc8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dDFAiz1SUyd6OWzJZK0EK+FpxdUrdyIRMXvRdVYBThfzXSUR22EWOz/vDyET1r9T9
-         c70k8hQtI/Ao7Ollx2ou6mxbdK49z4rUpZa78CdsQVfPNw8f25YlK3tHMye0+Xkueb
-         jQ+8RsG4vgCvxk7Tw4MPz/oaDNTfZmuXvXpEsGHL9ASPipvIMWvFc5tri4nRUFRipG
-         N5x3kIZzqEf32+FqGc3N5oLnInRs0ezjK/2YmNmJIDInKvsqOHi7Hv29dzXO7HvPDX
-         WMlazUmnLchORaRsPLQU16Sk/5ID+Vz1/vYCAQRVXsKsK9RfNCnM96Lxp8PwgAuhGq
-         DKZzwd//6QpOw==
-Date:   Thu, 28 May 2020 13:57:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Subject: linux-next: build warning after merge of the sound-asoc tree
-Message-ID: <20200528135717.3e2d5169@canb.auug.org.au>
+        Wed, 27 May 2020 23:57:25 -0400
+Received: from mga09.intel.com ([134.134.136.24]:61851 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgE1D5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 23:57:24 -0400
+IronPort-SDR: kkNArJ+smRrZ9sjhjx+bvXgPRL9jbTlNPwjW+0ptniy7p6zmZL0pGoSSYIm2+FIqx1rYfF7f5P
+ lQDYgWMus1EA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 20:57:24 -0700
+IronPort-SDR: 3S6L/iXfskcvbYhIzRmImXaUvfA2+HKW5UtcpSeXhdWNdrII+EDGo/MfL2BQhBOrSfj2BQ2edd
+ z31UXpJcgA5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
+   d="scan'208";a="414459895"
+Received: from davidowe-mobl.amr.corp.intel.com (HELO [10.255.229.1]) ([10.255.229.1])
+  by orsmga004.jf.intel.com with ESMTP; 27 May 2020 20:57:23 -0700
+Subject: Re: [PATCH v1 1/1] PCI/ERR: Handle fatal error recovery for
+ non-hotplug capable devices
+To:     Yicong Yang <yangyicong@hisilicon.com>, bhelgaas@google.com
+Cc:     jay.vosburgh@canonical.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ashok.raj@intel.com
+References: <18609.1588812972@famine>
+ <f4bbacd3af453285271c8fc733652969e11b84f8.1588821160.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <dbb211ba-a5f1-0e4f-64c9-6eb28cd1fb7f@hisilicon.com>
+ <2569c75c-41a6-d0f3-ee34-0d288c4e0b61@linux.intel.com>
+ <8dd2233c-a636-59fa-4c6e-5da08556d09e@hisilicon.com>
+ <d59e5312-9f0b-f6b2-042a-363022989b8f@linux.intel.com>
+ <d7a392e0-4be0-1afb-b917-efa03e2ea2fb@hisilicon.com>
+ <f9a46300-ef4b-be19-b8cf-bcb876c75d62@linux.intel.com>
+ <d59a5ec4-1a83-6cd4-805e-24e0a611cc3c@hisilicon.com>
+ <9b2aecd8-b474-31b7-7cd2-1a8633a2485d@linux.intel.com>
+ <a4bb15a1-2524-b4f7-524b-840ae41f9b49@hisilicon.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <7b15ffd4-ac9b-6753-63a7-dc6e2bfa30c8@linux.intel.com>
+Date:   Wed, 27 May 2020 20:57:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/R6ixqlpR7xRooxsW0X2YY_4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <a4bb15a1-2524-b4f7-524b-840ae41f9b49@hisilicon.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/R6ixqlpR7xRooxsW0X2YY_4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the sound-asoc tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+On 5/26/20 11:41 PM, Yicong Yang wrote:
+>>> We should do slot reset if driver required, but it's different from the `slot reset` in pci_bus_error_reset().
+>>> Previously we don't do a slot reset and call ->slot_reset() directly, I don't know the certain reason.
+>> IIUC, your concern is whether it is correct to trigger reset for
+>> pci_channel_io_normal case right ? Please correct me if my
+>> assumption is incorrect.
+> right.
+> 
+>> If its true, then why would report_error_detected() will return
+>> PCI_ERS_*_NEED_RESET for pci_channel_io_normal case ? If
+>> report_error_detected() requests reset in pci_channel_io_normal
+>> case then I think we should give preference to it.
+> If we get PCI_ERS_*_NEED_RESET, we should do slot reset, no matter it's a
+> hotpluggable slot or not.
 
-sound/soc/sof/intel/byt.c:464:12: warning: 'byt_remove' defined but not use=
-d [-Wunused-function]
-  464 | static int byt_remove(struct snd_sof_dev *sdev)
-      |            ^~~~~~~~~~
-sound/soc/sof/intel/byt.c:454:12: warning: 'byt_resume' defined but not use=
-d [-Wunused-function]
-  454 | static int byt_resume(struct snd_sof_dev *sdev)
-      |            ^~~~~~~~~~
-sound/soc/sof/intel/byt.c:447:12: warning: 'byt_suspend' defined but not us=
-ed [-Wunused-function]
-  447 | static int byt_suspend(struct snd_sof_dev *sdev, u32 target_state)
-      |            ^~~~~~~~~~~
+pci_slot_reset() function itself has dependency on hotplug ops. So
+what kind of slot reset is needed for non-hotplug case?
 
-Introduced by commits
+static int pci_slot_reset(struct pci_slot *slot, int probe)
+{
+	int rc;
 
-  ddcccd543f5d ("ASoC: SOF: Intel: byt: Add PM callbacks")
-  c691f0c6e267 ("ASoC: SOF: Intel: BYT: add .remove op")
+	if (!slot || !pci_slot_resetable(slot))
+		return -ENOTTY;
 
---=20
-Cheers,
-Stephen Rothwell
+	if (!probe)
+		pci_slot_lock(slot);
 
---Sig_/R6ixqlpR7xRooxsW0X2YY_4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+	might_sleep();
 
------BEGIN PGP SIGNATURE-----
+	rc = pci_reset_hotplug_slot(slot->hotplug, probe);
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PNp0ACgkQAVBC80lX
-0GyFngf+NMiUS0XuzKdTbfnYxdX4rOM+uKdhmLSW37YWgNagEBv0IvY+F3MR0R88
-gHMUNuMXQ3UZYsenMzZG0oegwQLGoPA/GUwRZMWbWUz4DwS0LUKE7qpJcXcja0fw
-fOnY9C0aCWQihQIXtxBVCXMY+LjZd561nRuCGNLY40j1aq3y40d8IEzgiWfYVI0D
-t19Yl1n2HACQ/mGDDltqJy/BrqZJ+mFBFZIZvnjBQuSMGlj9JH3Xf2EZWZXQGrcM
-XxLptGBPKUIpgIrCcKXr8013CNOSIIGXcGd0uzXyvqu5OnpUNdUU07s9FAc2laB+
-agKU+j8mD2AodO8zOjcMutwu6NXsSQ==
-=kD9P
------END PGP SIGNATURE-----
+	if (!probe)
+		pci_slot_unlock(slot);
 
---Sig_/R6ixqlpR7xRooxsW0X2YY_4--
+	return rc;
+}
+
+static int pci_reset_hotplug_slot(struct hotplug_slot *hotplug, int probe)
+{
+	int rc = -ENOTTY;
+
+	if (!hotplug || !try_module_get(hotplug->owner))
+		return rc;
+
+	if (hotplug->ops->reset_slot)
+		rc = hotplug->ops->reset_slot(hotplug, probe);
+
+	module_put(hotplug->owner);
+
+	return rc;
+}
+   And we shouldn't do it here in reset_link(), that's
+> two separate things.  The `slot reset` done in aer_root_reset() is only for *link
+> reset*, as there may have some side effects to perform secondary bus reset directly
+> for hotpluggable slot, as mentioned in commit c4eed62a2143, so it use slot reset
+> to do the reset link things.
+> 
+> As for slot reset required by the driver, we should perform it later just before the
+> ->slot_reset(). I noticed the TODO comments there and we should implement
+> it if it's necessary.
+I agree.
+> 
+> It lies in line 183, drivers/pcie/err.c:
+> 
+>      if (status == PCI_ERS_RESULT_NEED_RESET) {
+>          /*
+>           * TODO: Should call platform-specific
+>           * functions to reset slot before calling
+>           * drivers' slot_reset callbacks?
+>           */
+>          status = PCI_ERS_RESULT_RECOVERED;
+>          pci_dbg(dev, "broadcast slot_reset message\n");
+>          pci_walk_bus(bus, report_slot_reset, &status);
+>      }
+> 
+> 
