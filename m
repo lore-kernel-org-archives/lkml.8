@@ -2,866 +2,671 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B16C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D8F207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57C7207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:36:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nXjBld8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404507AbgE1PgB (ORCPT
+        id S2404515AbgE1Pg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:36:01 -0400
-Received: from mga14.intel.com ([192.55.52.115]:5073 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404447AbgE1Pf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:35:58 -0400
-IronPort-SDR: fbr5gl/Saia/l/olkGU632/pGCs8Oy9ogjGHS/17jHjYvL8T5iUgCqVV/yqGAQPtbjaa4orNHG
- gt2RC4aLy/Hg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:35:56 -0700
-IronPort-SDR: Yaw10c7HA5Uv04Mp3o4iFOrJdFsAI8t2b1inI9SlcltRWi8/we/Y4bQrH4kifNcDmAlJJ6CfjH
- wJmH+AgZUTug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
-   d="scan'208";a="270888931"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga006.jf.intel.com with ESMTP; 28 May 2020 08:35:52 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com
-Cc:     richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v9 2/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
-Date:   Thu, 28 May 2020 23:34:19 +0800
-Message-Id: <20200528153419.46775-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200528153419.46775-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200528153419.46775-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Thu, 28 May 2020 11:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404424AbgE1Pgz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:36:55 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4182C08C5C6;
+        Thu, 28 May 2020 08:36:55 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 185so5405058pgb.10;
+        Thu, 28 May 2020 08:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iUcJohyaN09S3OSOlzUXknVRLMZFzPBBl2ghSn2VPQY=;
+        b=nXjBld8OH5AgCTWvC3auvtGbx2a7IIxy7YGcRyYN3poAtm/iMbqAvzOxQvq/SANbvf
+         PejCw6y8kh0Og2EDQPqvIzyY3vXeWd3Ia6YYlwKIT2Rhi8eN2t+CCZvONNVBW6fJe7eo
+         l706cIiG8w+WTzrC5RcPO8XJoBS2itIKSJpe6CFj5FTX5V+cVlll5rD+TaZhnjzlIm4L
+         2Dn3uMBQG2GLkXK+nn4ZYeYzpKJW1UVkPeoQygIi6YUYwdi+/Dy/rrCEnqRe4I5l+Lyy
+         tJyXGgiDQcqzGeEjK0r0L01DH4IQeJ16jEMYCeHrCCFBudlUX7VOUeDNYmS15zDTDFGk
+         48qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iUcJohyaN09S3OSOlzUXknVRLMZFzPBBl2ghSn2VPQY=;
+        b=JeUQO4ghKaKEwgFa/oq3MfGbI1NKsd5LAa1skxPK0sb4J9ACtxDUgD3f9JJ4h7hXTR
+         UIGmsyKKF5hfVvYEsrCduQvAIluEhxnpx5u9WZT07js1B+83M30tclZHOI0oVXoOSJ/k
+         X7MdQUpDblKMMcrak0jFsi7DaaQ8Mtpm8nWYK+P7acGN0kbd3O+SnWq6awImkndLEbdI
+         U/o7/AO620o3Whx/kT4mXcenbusRp/kL0SjiUveJOOmII5i13gLDzkDDivEPgwU8KpUA
+         qe/YiB7O/rMsTi+63usTYAwTOcU2xqUDV/hoT6Kl6jNcAtygsz+A5UAOBrwzOw8IQVW/
+         CW4g==
+X-Gm-Message-State: AOAM5302oaqnBocXNOeyWEPvYMfpacnnamZAIvAIU63NQfeHy+ehIHYd
+        E731jbAskub3um+Av1+7V0c=
+X-Google-Smtp-Source: ABdhPJysI9YG620MytGVBr4Hg7VTzDBtyJrWZ0H47U/pfuEM0bxKS8Ae4MJ2t3h2TOoD9Ya3Vu9ViA==
+X-Received: by 2002:a63:f854:: with SMTP id v20mr3638569pgj.0.1590680215006;
+        Thu, 28 May 2020 08:36:55 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k18sm4916052pfg.217.2020.05.28.08.36.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 May 2020 08:36:54 -0700 (PDT)
+Date:   Thu, 28 May 2020 08:36:52 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ugur Usug <Ugur.Usug@maximintegrated.com>
+Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] hwmon (pmbus/max20730): add max20710 and debugfs access
+ support
+Message-ID: <20200528153652.GA7755@roeck-us.net>
+References: <MWHPR11MB1661A23F609D54EAAC93FDE7FDB00@MWHPR11MB1661.namprd11.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MWHPR11MB1661A23F609D54EAAC93FDE7FDB00@MWHPR11MB1661.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Tue, May 26, 2020 at 09:42:19AM +0000, Ugur Usug wrote:
+> This change has 2 parts:
+> 1. Add support for max20710 into the existing max20730 driver.
+> 
+> 2. Add debugfs interface support for accessing device specific registers 
+> (MFR_VOUT_MIN, MFR_DEVSET1 and MFR_DEVSET2) and others 
+> including OPERATION, ON_OFF_CONFIG, SMB_ALERT_MASK, 
+> VOUT_MODE, VOUT_COMMAND and VOUT_MAX.
 
-This patch adds the new IP of Nand Flash Controller(NFC) support
-on Intel's Lightning Mountain(LGM) SoC.
+This should be two separate patches. Please split and resubmit.
 
-DMA is used for burst data transfer operation, also DMA HW supports
-aligned 32bit memory address and aligned data access by default.
-DMA burst of 8 supported. Data register used to support the read/write
-operation from/to device.
+Thanks,
+Guenter
 
-NAND controller driver implements ->exec_op() to replace legacy hooks,
-these specific call-back method to execute NAND operations.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- drivers/mtd/nand/raw/Kconfig                 |   8 +
- drivers/mtd/nand/raw/Makefile                |   1 +
- drivers/mtd/nand/raw/intel-nand-controller.c | 747 +++++++++++++++++++++++++++
- 3 files changed, 756 insertions(+)
- create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
-
-diff --git a/drivers/mtd/nand/raw/Kconfig b/drivers/mtd/nand/raw/Kconfig
-index a80a46bb5b8b..75ab2afb78cf 100644
---- a/drivers/mtd/nand/raw/Kconfig
-+++ b/drivers/mtd/nand/raw/Kconfig
-@@ -457,6 +457,14 @@ config MTD_NAND_CADENCE
- 	  Enable the driver for NAND flash on platforms using a Cadence NAND
- 	  controller.
- 
-+config MTD_NAND_INTEL_LGM
-+	tristate "Support for NAND controller on Intel LGM SoC"
-+	depends on OF || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  Enables support for NAND Flash chips on Intel's LGM SoC.
-+	  NAND flash controller interfaced through the External Bus Unit.
-+
- comment "Misc"
- 
- config MTD_SM_COMMON
-diff --git a/drivers/mtd/nand/raw/Makefile b/drivers/mtd/nand/raw/Makefile
-index 2d136b158fb7..bfc8fe4d2cb0 100644
---- a/drivers/mtd/nand/raw/Makefile
-+++ b/drivers/mtd/nand/raw/Makefile
-@@ -58,6 +58,7 @@ obj-$(CONFIG_MTD_NAND_TEGRA)		+= tegra_nand.o
- obj-$(CONFIG_MTD_NAND_STM32_FMC2)	+= stm32_fmc2_nand.o
- obj-$(CONFIG_MTD_NAND_MESON)		+= meson_nand.o
- obj-$(CONFIG_MTD_NAND_CADENCE)		+= cadence-nand-controller.o
-+obj-$(CONFIG_MTD_NAND_INTEL_LGM)	+= intel-nand-controller.o
- 
- nand-objs := nand_base.o nand_legacy.o nand_bbt.o nand_timings.o nand_ids.o
- nand-objs += nand_onfi.o
-diff --git a/drivers/mtd/nand/raw/intel-nand-controller.c b/drivers/mtd/nand/raw/intel-nand-controller.c
-new file mode 100644
-index 000000000000..564d28978943
---- /dev/null
-+++ b/drivers/mtd/nand/raw/intel-nand-controller.c
-@@ -0,0 +1,747 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* Copyright (c) 2020 Intel Corporation. */
-+
-+#include <linux/clk.h>
-+#include <linux/completion.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-direction.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/rawnand.h>
-+#include <linux/mtd/nand_ecc.h>
-+#include <linux/mtd/nand.h>
-+#include <linux/resource.h>
-+#include <linux/sched.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/platform_device.h>
-+
-+#define EBU_CLC			0x000
-+#define EBU_CLC_RST		0x00000000u
-+
-+#define EBU_ADDR_SEL(n)		(0x20 + (n) * 4)
-+/* 5 bits 26:22 included for comparison in the ADDR_SELx */
-+#define EBU_ADDR_MASK(x)	((x) << 4)
-+#define EBU_ADDR_SEL_REGEN	0x1
-+
-+#define EBU_BUSCON(n)		(0x60 + (n) * 4)
-+#define EBU_BUSCON_CMULT_V4	0x1
-+#define EBU_BUSCON_RECOVC(n)	((n) << 2)
-+#define EBU_BUSCON_HOLDC(n)	((n) << 4)
-+#define EBU_BUSCON_WAITRDC(n)	((n) << 6)
-+#define EBU_BUSCON_WAITWRC(n)	((n) << 8)
-+#define EBU_BUSCON_BCGEN_CS	0x0
-+#define EBU_BUSCON_SETUP_EN	BIT(22)
-+#define EBU_BUSCON_ALEC		0xC000
-+
-+#define EBU_CON			0x0B0
-+#define EBU_CON_NANDM_EN	BIT(0)
-+#define EBU_CON_NANDM_DIS	0x0
-+#define EBU_CON_CSMUX_E_EN	BIT(1)
-+#define EBU_CON_ALE_P_LOW	BIT(2)
-+#define EBU_CON_CLE_P_LOW	BIT(3)
-+#define EBU_CON_CS_P_LOW	BIT(4)
-+#define EBU_CON_SE_P_LOW	BIT(5)
-+#define EBU_CON_WP_P_LOW	BIT(6)
-+#define EBU_CON_PRE_P_LOW	BIT(7)
-+#define EBU_CON_IN_CS_S(n)	((n) << 8)
-+#define EBU_CON_OUT_CS_S(n)	((n) << 10)
-+#define EBU_CON_LAT_EN_CS_P	((0x3D) << 18)
-+
-+#define EBU_WAIT		0x0B4
-+#define EBU_WAIT_RDBY		BIT(0)
-+#define EBU_WAIT_WR_C		BIT(3)
-+
-+#define HSNAND_CTL1		0x110
-+#define HSNAND_CTL1_ADDR_SHIFT	24
-+
-+#define HSNAND_CTL2		0x114
-+#define HSNAND_CTL2_ADDR_SHIFT	8
-+#define HSNAND_CTL2_CYC_N_V5	(0x2 << 16)
-+
-+#define HSNAND_INT_MSK_CTL	0x124
-+#define HSNAND_INT_MSK_CTL_WR_C	BIT(4)
-+
-+#define HSNAND_INT_STA		0x128
-+#define HSNAND_INT_STA_WR_C	BIT(4)
-+
-+#define HSNAND_CTL		0x130
-+#define HSNAND_CTL_ENABLE_ECC	BIT(0)
-+#define HSNAND_CTL_GO		BIT(2)
-+#define HSNAND_CTL_CE_SEL_CS(n)	BIT(3 + (n))
-+#define HSNAND_CTL_RW_READ	0x0
-+#define HSNAND_CTL_RW_WRITE	BIT(10)
-+#define HSNAND_CTL_ECC_OFF_V8TH	BIT(11)
-+#define HSNAND_CTL_CKFF_EN	0x0
-+#define HSNAND_CTL_MSG_EN	BIT(17)
-+
-+#define HSNAND_PARA0		0x13c
-+#define HSNAND_PARA0_PAGE_V8192	0x3
-+#define HSNAND_PARA0_PIB_V256	(0x3 << 4)
-+#define HSNAND_PARA0_BYP_EN_NP	0x0
-+#define HSNAND_PARA0_BYP_DEC_NP	0x0
-+#define HSNAND_PARA0_TYPE_ONFI	BIT(18)
-+#define HSNAND_PARA0_ADEP_EN	BIT(21)
-+
-+#define HSNAND_CMSG_0		0x150
-+#define HSNAND_CMSG_1		0x154
-+
-+#define HSNAND_ALE_OFFS		BIT(2)
-+#define HSNAND_CLE_OFFS		BIT(3)
-+#define HSNAND_CS_OFFS		BIT(4)
-+
-+#define HSNAND_ECC_OFFSET	0x008
-+
-+#define NAND_DATA_IFACE_CHECK_ONLY	-1
-+
-+#define MAX_CS	2
-+
-+struct ebu_nand_cs {
-+	void __iomem *chipaddr;
-+	dma_addr_t nand_pa;
-+	u32 addr_sel;
-+};
-+
-+struct ebu_nand_controller {
-+	struct nand_controller controller;
-+	struct nand_chip chip;
-+	struct device *dev;
-+	void __iomem *ebu;
-+	void __iomem *hsnand;
-+	struct dma_chan *dma_tx;
-+	struct dma_chan *dma_rx;
-+	struct completion dma_access_complete;
-+	unsigned long clk_rate;
-+	struct clk *clk;
-+	u32 nd_para0;
-+	u8 cs_num;
-+	struct ebu_nand_cs cs[MAX_CS];
-+};
-+
-+static inline struct ebu_nand_controller *nand_to_ebu(struct nand_chip *chip)
-+{
-+	return container_of(chip, struct ebu_nand_controller, chip);
-+}
-+
-+static u8 ebu_nand_readb(struct nand_chip *chip)
-+{
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+	void __iomem *nand_wait = ebu_host->ebu + EBU_WAIT;
-+	u8 cs_num = ebu_host->cs_num;
-+	u32 stat;
-+	int ret;
-+	u8 val;
-+
-+	val = readb(ebu_host->cs[cs_num].chipaddr + HSNAND_CS_OFFS);
-+
-+	ret = readl_poll_timeout(nand_wait, stat, stat & EBU_WAIT_WR_C,
-+				 20, 1000);
-+	if (ret)
-+		dev_warn(ebu_host->dev,
-+			 "ebu nand write timeout. nand_wait(0x%p)=0x%x\n",
-+			 nand_wait, readl(nand_wait));
-+
-+	return val;
-+}
-+
-+static void ebu_nand_writeb(struct nand_chip *chip, u32 offset, u8 value)
-+{
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+	void __iomem *nand_wait = ebu_host->ebu + EBU_WAIT;
-+	u8 cs_num = ebu_host->cs_num;
-+	u32 stat;
-+	int ret;
-+
-+	writeb(value, ebu_host->cs[cs_num].chipaddr + offset);
-+
-+	ret = readl_poll_timeout(nand_wait, stat, stat & EBU_WAIT_WR_C,
-+				 20, 1000);
-+	if (ret)
-+		dev_warn(ebu_host->dev,
-+			 "ebu nand write timeout. nand_wait(0x%p)=0x%x\n",
-+			 nand_wait, readl(nand_wait));
-+}
-+
-+static void ebu_read_buf(struct nand_chip *chip, u_char *buf, unsigned int len)
-+{
-+	int i;
-+
-+	for (i = 0; i < len; i++)
-+		buf[i] = ebu_nand_readb(chip);
-+}
-+
-+static void ebu_write_buf(struct nand_chip *chip, const u_char *buf, int len)
-+{
-+	int i;
-+
-+	for (i = 0; i < len; i++)
-+		ebu_nand_writeb(chip, HSNAND_CS_OFFS, buf[i]);
-+}
-+
-+static void ebu_nand_disable(struct nand_chip *chip)
-+{
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+
-+	writel(0, ebu_host->ebu + EBU_CON);
-+}
-+
-+static void ebu_select_chip(struct nand_chip *chip)
-+{
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+	void __iomem *nand_con = ebu_host->ebu + EBU_CON;
-+	u32 cs = ebu_host->cs_num;
-+
-+	writel(EBU_CON_NANDM_EN | EBU_CON_CSMUX_E_EN | EBU_CON_CS_P_LOW |
-+	       EBU_CON_SE_P_LOW | EBU_CON_WP_P_LOW | EBU_CON_PRE_P_LOW |
-+	       EBU_CON_IN_CS_S(cs) | EBU_CON_OUT_CS_S(cs) |
-+	       EBU_CON_LAT_EN_CS_P, nand_con);
-+}
-+
-+static void ebu_nand_setup_timing(struct ebu_nand_controller *ctrl,
-+				  const struct nand_sdr_timings *timings)
-+{
-+	unsigned int rate = clk_get_rate(ctrl->clk) / 1000000;
-+	unsigned int period = DIV_ROUND_UP(1000000, rate);
-+	u32 trecov, thold, twrwait, trdwait;
-+	u32 reg = 0;
-+
-+	trecov = DIV_ROUND_UP(max(timings->tREA_max, timings->tREH_min),
-+			      period);
-+	reg |= EBU_BUSCON_RECOVC(trecov);
-+
-+	thold = DIV_ROUND_UP(max(timings->tDH_min, timings->tDS_min), period);
-+	reg |= EBU_BUSCON_HOLDC(thold);
-+
-+	trdwait = DIV_ROUND_UP(max(timings->tRC_min, timings->tREH_min),
-+			       period);
-+	reg |= EBU_BUSCON_WAITRDC(trdwait);
-+
-+	twrwait = DIV_ROUND_UP(max(timings->tWC_min, timings->tWH_min), period);
-+	reg |= EBU_BUSCON_WAITWRC(twrwait);
-+
-+	reg |= EBU_BUSCON_CMULT_V4 | EBU_BUSCON_BCGEN_CS | EBU_BUSCON_ALEC |
-+		EBU_BUSCON_SETUP_EN;
-+
-+	writel(reg, ctrl->ebu + EBU_BUSCON(ctrl->cs_num));
-+}
-+
-+static int ebu_nand_setup_data_interface(struct nand_chip *chip, int csline,
-+					 const struct nand_data_interface *conf)
-+{
-+	struct ebu_nand_controller *ctrl = nand_to_ebu(chip);
-+	const struct nand_sdr_timings *timings;
-+
-+	timings = nand_get_sdr_timings(conf);
-+	if (IS_ERR(timings))
-+		return PTR_ERR(timings);
-+
-+	if (csline == NAND_DATA_IFACE_CHECK_ONLY)
-+		return 0;
-+
-+	ebu_nand_setup_timing(ctrl, timings);
-+
-+	return 0;
-+}
-+
-+static int ebu_nand_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				  struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	oobregion->offset = HSNAND_ECC_OFFSET;
-+	oobregion->length = chip->ecc.total;
-+
-+	return 0;
-+}
-+
-+static int ebu_nand_ooblayout_free(struct mtd_info *mtd, int section,
-+				   struct mtd_oob_region *oobregion)
-+{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
-+
-+	if (section)
-+		return -ERANGE;
-+
-+	oobregion->offset = chip->ecc.total + HSNAND_ECC_OFFSET;
-+	oobregion->length = mtd->oobsize - oobregion->offset;
-+
-+	return 0;
-+}
-+
-+static const struct mtd_ooblayout_ops ebu_nand_ooblayout_ops = {
-+	.ecc = ebu_nand_ooblayout_ecc,
-+	.free = ebu_nand_ooblayout_free,
-+};
-+
-+static void ebu_dma_rx_callback(void *cookie)
-+{
-+	struct ebu_nand_controller *ebu_host = cookie;
-+
-+	dmaengine_terminate_async(ebu_host->dma_rx);
-+
-+	complete(&ebu_host->dma_access_complete);
-+}
-+
-+static void ebu_dma_tx_callback(void *cookie)
-+{
-+	struct ebu_nand_controller *ebu_host = cookie;
-+
-+	dmaengine_terminate_async(ebu_host->dma_tx);
-+
-+	complete(&ebu_host->dma_access_complete);
-+}
-+
-+static int ebu_dma_start(struct ebu_nand_controller *ebu_host, u32 dir,
-+			 const u8 *buf, u32 len)
-+{
-+	struct dma_async_tx_descriptor *tx;
-+	struct completion *dma_completion;
-+	dma_async_tx_callback callback;
-+	struct dma_chan *chan;
-+	dma_cookie_t cookie;
-+	unsigned long flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-+	dma_addr_t buf_dma;
-+	int ret;
-+	u32 timeout;
-+
-+	if (dir == DMA_DEV_TO_MEM) {
-+		chan = ebu_host->dma_rx;
-+		dma_completion = &ebu_host->dma_access_complete;
-+		callback = ebu_dma_rx_callback;
-+	} else {
-+		chan = ebu_host->dma_tx;
-+		dma_completion = &ebu_host->dma_access_complete;
-+		callback = ebu_dma_tx_callback;
-+	}
-+
-+	buf_dma = dma_map_single(chan->device->dev, (void *)buf, len, dir);
-+	if (dma_mapping_error(chan->device->dev, buf_dma)) {
-+		dev_err(ebu_host->dev, "Failed to map DMA buffer\n");
-+		ret = -EIO;
-+		goto err_unmap;
-+	}
-+
-+	tx = dmaengine_prep_slave_single(chan, buf_dma, len, dir, flags);
-+	if (!tx)
-+		return -ENXIO;
-+
-+	tx->callback = callback;
-+	tx->callback_param = ebu_host;
-+	cookie = tx->tx_submit(tx);
-+
-+	ret = dma_submit_error(cookie);
-+	if (ret) {
-+		dev_err(ebu_host->dev, "dma_submit_error %d\n", cookie);
-+		ret = -EIO;
-+		goto err_unmap;
-+	}
-+
-+	init_completion(dma_completion);
-+	dma_async_issue_pending(chan);
-+
-+	/* Wait DMA to finish the data transfer.*/
-+	timeout =
-+	wait_for_completion_timeout(dma_completion, msecs_to_jiffies(1000));
-+	if (!timeout) {
-+		dev_err(ebu_host->dev, "I/O Error in DMA RX (status %d)\n",
-+			dmaengine_tx_status(chan, cookie, NULL));
-+		dmaengine_terminate_sync(chan);
-+		ret = -ETIMEDOUT;
-+		goto err_unmap;
-+	}
-+
-+	return 0;
-+
-+err_unmap:
-+	dma_unmap_single(ebu_host->dev, buf_dma, len, dir);
-+
-+	return ret;
-+}
-+
-+static void ebu_nand_trigger(struct ebu_nand_controller *ebu_host,
-+			     int page, u32 cmd)
-+{
-+	unsigned int val;
-+
-+	val = cmd | (page & 0xFF) << HSNAND_CTL1_ADDR_SHIFT;
-+	writel(val, ebu_host->hsnand + HSNAND_CTL1);
-+	val = (page & 0xFFFF00) >> 8 | HSNAND_CTL2_CYC_N_V5;
-+	writel(val, ebu_host->hsnand + HSNAND_CTL2);
-+
-+	writel(ebu_host->nd_para0, ebu_host->hsnand + HSNAND_PARA0);
-+
-+	/* clear first, will update later */
-+	writel(0xFFFFFFFF, ebu_host->hsnand + HSNAND_CMSG_0);
-+	writel(0xFFFFFFFF, ebu_host->hsnand + HSNAND_CMSG_1);
-+
-+	writel(HSNAND_INT_MSK_CTL_WR_C,
-+	       ebu_host->hsnand + HSNAND_INT_MSK_CTL);
-+
-+	val = cmd == NAND_CMD_READ0 ? HSNAND_CTL_RW_READ : HSNAND_CTL_RW_WRITE;
-+
-+	writel(HSNAND_CTL_MSG_EN | HSNAND_CTL_CKFF_EN |
-+	       HSNAND_CTL_ECC_OFF_V8TH | HSNAND_CTL_CE_SEL_CS(ebu_host->cs_num) |
-+	       HSNAND_CTL_ENABLE_ECC | HSNAND_CTL_GO | val,
-+	       ebu_host->hsnand + HSNAND_CTL);
-+}
-+
-+static int ebu_nand_read_page_hwecc(struct nand_chip *chip, u8 *buf,
-+				    int oob_required, int page)
-+{
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+	int ret, x;
-+
-+	ebu_nand_trigger(ebu_host, page, NAND_CMD_READ0);
-+
-+	ret = ebu_dma_start(ebu_host, DMA_DEV_TO_MEM, buf, mtd->writesize);
-+	if (ret)
-+		return ret;
-+
-+	if (oob_required)
-+		chip->ecc.read_oob(chip, page);
-+
-+	x = readl(ebu_host->hsnand + HSNAND_CTL);
-+	x &= ~HSNAND_CTL_GO;
-+	writel(x, ebu_host->hsnand + HSNAND_CTL);
-+
-+	return 0;
-+}
-+
-+static int ebu_nand_write_page_hwecc(struct nand_chip *chip, const u8 *buf,
-+				     int oob_required, int page)
-+{
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+	void __iomem *int_sta = ebu_host->hsnand + HSNAND_INT_STA;
-+	int ret, val, x;
-+	u32 reg;
-+
-+	ebu_nand_trigger(ebu_host, page, NAND_CMD_SEQIN);
-+
-+	ret = ebu_dma_start(ebu_host, DMA_MEM_TO_DEV, buf, mtd->writesize);
-+	if (ret)
-+		return ret;
-+
-+	if (oob_required) {
-+		reg = (chip->oob_poi[3] << 24) | (chip->oob_poi[2] << 16) |
-+			(chip->oob_poi[1] << 8) | chip->oob_poi[0];
-+
-+		writel(reg, ebu_host->hsnand + HSNAND_CMSG_0);
-+
-+		reg = (chip->oob_poi[7] << 24) | (chip->oob_poi[6] << 16) |
-+			(chip->oob_poi[5] << 8) | chip->oob_poi[4];
-+
-+		writel(reg, ebu_host->hsnand + HSNAND_CMSG_1);
-+	}
-+
-+	ret = readl_poll_timeout_atomic(int_sta, val,
-+					!(val & HSNAND_INT_STA_WR_C), 10, 1000);
-+	if (ret)
-+		return -EIO;
-+
-+	x = readl(ebu_host->hsnand + HSNAND_CTL);
-+	x &= ~HSNAND_CTL_GO;
-+	writel(x, ebu_host->hsnand + HSNAND_CTL);
-+
-+	return 0;
-+}
-+
-+static const u8 ecc_strength[] = { 1, 1, 4, 8, 24, 32, 40, 60, };
-+
-+static int ebu_nand_attach_chip(struct nand_chip *chip)
-+{
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	struct ebu_nand_controller *ebu_host = nand_get_controller_data(chip);
-+	u32 eccsize, eccsteps, eccbytes, ecctotal, pagesize, pg_per_blk;
-+	u32 eccstrength = chip->ecc.strength;
-+	u32 writesize = mtd->writesize;
-+	u32 blocksize = mtd->erasesize;
-+	int start, val, i;
-+
-+	if (chip->ecc.mode != NAND_ECC_HW)
-+		return 0;
-+
-+	/* Check whether eccsize is 0x0 or wrong. assign eccsize = 512 if YES */
-+	if (!chip->ecc.size)
-+		chip->ecc.size = 512;
-+	eccsize = chip->ecc.size;
-+
-+	switch (eccsize) {
-+	case 512:
-+		start = 1;
-+		if (!eccstrength)
-+			eccstrength = 4;
-+		break;
-+	case 1024:
-+		start = 4;
-+		if (!eccstrength)
-+			eccstrength = 32;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	i = round_up(start + 1, 4);
-+	for (val = start; val < i; val++) {
-+		if (eccstrength == ecc_strength[val])
-+			break;
-+	}
-+	if (val == i)
-+		return -EINVAL;
-+
-+	if (eccstrength == 8)
-+		eccbytes = 14;
-+	else
-+		eccbytes = DIV_ROUND_UP(eccstrength * fls(8 * eccsize), 8);
-+
-+	eccsteps = writesize / eccsize;
-+	ecctotal = eccsteps * eccbytes;
-+	if ((ecctotal + 8) > mtd->oobsize)
-+		return -ERANGE;
-+
-+	chip->ecc.total = ecctotal;
-+	pagesize = fls(writesize >> 11);
-+	if (pagesize > HSNAND_PARA0_PAGE_V8192)
-+		return -ERANGE;
-+
-+	pg_per_blk = fls((blocksize / writesize) >> 6) << 4;
-+	if (pg_per_blk > HSNAND_PARA0_PIB_V256)
-+		return -ERANGE;
-+
-+	ebu_host->nd_para0 = pagesize | pg_per_blk | HSNAND_PARA0_BYP_EN_NP |
-+			     HSNAND_PARA0_BYP_DEC_NP | HSNAND_PARA0_ADEP_EN |
-+			     HSNAND_PARA0_TYPE_ONFI | (val << 29);
-+
-+	mtd_set_ooblayout(mtd, &ebu_nand_ooblayout_ops);
-+	chip->ecc.read_page = ebu_nand_read_page_hwecc;
-+	chip->ecc.write_page = ebu_nand_write_page_hwecc;
-+
-+	return 0;
-+}
-+
-+static int ebu_nand_exec_op(struct nand_chip *chip,
-+			    const struct nand_operation *op, bool check_only)
-+{
-+	struct ebu_nand_controller *ctrl = nand_to_ebu(chip);
-+	const struct nand_op_instr *instr = NULL;
-+	unsigned int op_id;
-+	int i, time_out, ret = 0;
-+	u32 stat;
-+
-+	ebu_select_chip(chip);
-+
-+	for (op_id = 0; op_id < op->ninstrs; op_id++) {
-+		instr = &op->instrs[op_id];
-+
-+		switch (instr->type) {
-+		case NAND_OP_CMD_INSTR:
-+			ebu_nand_writeb(chip, HSNAND_CLE_OFFS | HSNAND_CS_OFFS,
-+					instr->ctx.cmd.opcode);
-+			break;
-+
-+		case NAND_OP_ADDR_INSTR:
-+			for (i = 0; i < instr->ctx.addr.naddrs; i++)
-+				ebu_nand_writeb(chip,
-+						HSNAND_ALE_OFFS | HSNAND_CS_OFFS,
-+						instr->ctx.addr.addrs[i]);
-+			break;
-+
-+		case NAND_OP_DATA_IN_INSTR:
-+			ebu_read_buf(chip, instr->ctx.data.buf.in,
-+				     instr->ctx.data.len);
-+			break;
-+
-+		case NAND_OP_DATA_OUT_INSTR:
-+			ebu_write_buf(chip, instr->ctx.data.buf.out,
-+				      instr->ctx.data.len);
-+			break;
-+
-+		case NAND_OP_WAITRDY_INSTR:
-+			time_out = instr->ctx.waitrdy.timeout_ms * 1000;
-+			ret = readl_poll_timeout(ctrl->ebu + EBU_WAIT,
-+						 stat, stat & EBU_WAIT_RDBY,
-+						 20, time_out);
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct nand_controller_ops ebu_nand_controller_ops = {
-+	.attach_chip = ebu_nand_attach_chip,
-+	.exec_op = ebu_nand_exec_op,
-+	.setup_data_interface = ebu_nand_setup_data_interface,
-+};
-+
-+static void ebu_dma_cleanup(struct ebu_nand_controller *ebu_host)
-+{
-+	if (ebu_host->dma_rx)
-+		dma_release_channel(ebu_host->dma_rx);
-+
-+	if (ebu_host->dma_tx)
-+		dma_release_channel(ebu_host->dma_tx);
-+}
-+
-+static int ebu_nand_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ebu_nand_controller *ebu_host;
-+	struct nand_chip *nand;
-+	struct mtd_info *mtd;
-+	struct resource *res;
-+	char *resname;
-+	int ret, i;
-+	u32 reg;
-+
-+	ebu_host = devm_kzalloc(dev, sizeof(*ebu_host), GFP_KERNEL);
-+	if (!ebu_host)
-+		return -ENOMEM;
-+
-+	ebu_host->dev = dev;
-+	nand_controller_init(&ebu_host->controller);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ebunand");
-+	ebu_host->ebu = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(ebu_host->ebu))
-+		return PTR_ERR(ebu_host->ebu);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hsnand");
-+	ebu_host->hsnand = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(ebu_host->hsnand))
-+		return PTR_ERR(ebu_host->hsnand);
-+
-+	ret = device_property_read_u32(dev, "nand,cs", &reg);
-+	if (ret) {
-+		dev_err(dev, "failed to get chip select: %d\n", ret);
-+		return ret;
-+	}
-+	ebu_host->cs_num = reg;
-+
-+	for (i = 0; i < MAX_CS; i++) {
-+		resname = devm_kasprintf(dev, GFP_KERNEL, "nand_cs%d", i);
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   resname);
-+		if (!res)
-+			return -EINVAL;
-+		ebu_host->cs[i].chipaddr = devm_ioremap_resource(dev, res);
-+		ebu_host->cs[i].nand_pa = res->start;
-+		if (IS_ERR(ebu_host->cs[i].chipaddr))
-+			return PTR_ERR(ebu_host->cs[i].chipaddr);
-+	}
-+
-+	ebu_host->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(ebu_host->clk)) {
-+		ret = PTR_ERR(ebu_host->clk);
-+		dev_err(dev, "failed to get clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(ebu_host->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock: %d\n", ret);
-+		return ret;
-+	}
-+	ebu_host->clk_rate = clk_get_rate(ebu_host->clk);
-+
-+	ebu_host->dma_tx = dma_request_chan(dev, "tx");
-+	if (IS_ERR(ebu_host->dma_tx)) {
-+		ret = PTR_ERR(ebu_host->dma_tx);
-+		dev_err(dev, "DMA tx channel request fail!.\n");
-+		goto err_cleanup_dma;
-+	}
-+
-+	ebu_host->dma_rx = dma_request_chan(dev, "rx");
-+	if (IS_ERR(ebu_host->dma_rx)) {
-+		ret = PTR_ERR(ebu_host->dma_rx);
-+		dev_err(dev, "DMA rx channel request fail!.\n");
-+		goto err_cleanup_dma;
-+	}
-+
-+	for (i = 0; i < MAX_CS; i++) {
-+		resname = devm_kasprintf(dev, GFP_KERNEL, "addr_sel%d", i);
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						   resname);
-+		if (!res)
-+			return -EINVAL;
-+		ebu_host->cs[i].addr_sel = res->start;
-+		writel(ebu_host->cs[i].addr_sel | EBU_ADDR_MASK(5) |
-+		       EBU_ADDR_SEL_REGEN, ebu_host->ebu + EBU_ADDR_SEL(i));
-+	}
-+
-+	nand_set_flash_node(&ebu_host->chip, dev->of_node);
-+	mtd = nand_to_mtd(&ebu_host->chip);
-+	mtd->dev.parent = dev;
-+	ebu_host->dev = dev;
-+
-+	platform_set_drvdata(pdev, ebu_host);
-+	nand_set_controller_data(&ebu_host->chip, ebu_host);
-+
-+	nand = &ebu_host->chip;
-+	nand->controller = &ebu_host->controller;
-+	nand->controller->ops = &ebu_nand_controller_ops;
-+
-+	/* Scan to find existence of the device */
-+	ret = nand_scan(&ebu_host->chip, 1);
-+	if (ret)
-+		goto err_cleanup_dma;
-+
-+	ret = mtd_device_register(mtd, NULL, 0);
-+	if (ret)
-+		goto err_clean_nand;
-+
-+	return 0;
-+
-+err_clean_nand:
-+	nand_cleanup(&ebu_host->chip);
-+err_cleanup_dma:
-+	ebu_dma_cleanup(ebu_host);
-+	clk_disable_unprepare(ebu_host->clk);
-+
-+	return ret;
-+}
-+
-+static int ebu_nand_remove(struct platform_device *pdev)
-+{
-+	struct ebu_nand_controller *ebu_host = platform_get_drvdata(pdev);
-+
-+	mtd_device_unregister(nand_to_mtd(&ebu_host->chip));
-+	nand_cleanup(&ebu_host->chip);
-+	ebu_nand_disable(&ebu_host->chip);
-+	ebu_dma_cleanup(ebu_host);
-+	clk_disable_unprepare(ebu_host->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ebu_nand_match[] = {
-+	{ .compatible = "intel,nand-controller", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ebu_nand_match);
-+
-+static struct platform_driver ebu_nand_driver = {
-+	.probe = ebu_nand_probe,
-+	.remove = ebu_nand_remove,
-+	.driver = {
-+		.name = "intel-nand-controller",
-+		.of_match_table = ebu_nand_match,
-+	},
-+
-+};
-+module_platform_driver(ebu_nand_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@intel.com>");
-+MODULE_DESCRIPTION("Intel's LGM External Bus NAND Controller driver");
--- 
-2.11.0
-
+> 
+> Signed-off-by: Ugur Usug <ugur.usug@maximintegrated.com>
+> ---
+>  Documentation/hwmon/max20730.rst |  10 +-
+>  drivers/hwmon/pmbus/Kconfig      |   4 +-
+>  drivers/hwmon/pmbus/max20730.c   | 412 ++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 414 insertions(+), 12 deletions(-)
+>  mode change 100644 => 100755 drivers/hwmon/pmbus/max20730.c
+> 
+> diff --git a/Documentation/hwmon/max20730.rst b/Documentation/hwmon/max20730.rst
+> index cea7ae5..cb0c95b 100644
+> --- a/Documentation/hwmon/max20730.rst
+> +++ b/Documentation/hwmon/max20730.rst
+> @@ -5,6 +5,14 @@ Kernel driver max20730
+>  
+>  Supported chips:
+>  
+> +  * Maxim MAX20710
+> +
+> +    Prefix: 'max20710'
+> +
+> +    Addresses scanned: -
+> +
+> +    Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX20710.pdf
+> +
+>    * Maxim MAX20730
+>  
+>      Prefix: 'max20730'
+> @@ -35,7 +43,7 @@ Author: Guenter Roeck <linux@roeck-us.net>
+>  Description
+>  -----------
+>  
+> -This driver implements support for Maxim MAX20730, MAX20734, and MAX20743
+> +This driver implements support for Maxim MAX20710, MAX20730, MAX20734, and MAX20743
+>  Integrated, Step-Down Switching Regulators with PMBus support.
+>  
+>  The driver is a client driver to the core PMBus driver.
+> diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+> index de12a56..cac96e0 100644
+> --- a/drivers/hwmon/pmbus/Kconfig
+> +++ b/drivers/hwmon/pmbus/Kconfig
+> @@ -147,10 +147,10 @@ config SENSORS_MAX16064
+>  	  be called max16064.
+>  
+>  config SENSORS_MAX20730
+> -	tristate "Maxim MAX20730, MAX20734, MAX20743"
+> +	tristate "Maxim MAX20710, MAX20730, MAX20734, MAX20743"
+>  	help
+>  	  If you say yes here you get hardware monitoring support for Maxim
+> -	  MAX20730, MAX20734, and MAX20743.
+> +	  MAX20710, MAX20730, MAX20734, and MAX20743.
+>  
+>  	  This driver can also be built as a module. If so, the module will
+>  	  be called max20730.
+> diff --git a/drivers/hwmon/pmbus/max20730.c b/drivers/hwmon/pmbus/max20730.c
+> old mode 100644
+> new mode 100755
+> index c0bb054..fc38be0
+> --- a/drivers/hwmon/pmbus/max20730.c
+> +++ b/drivers/hwmon/pmbus/max20730.c
+> @@ -1,12 +1,14 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  /*
+> - * Driver for MAX20730, MAX20734, and MAX20743 Integrated, Step-Down
+> - * Switching Regulators
+> + * Driver for MAX20710, MAX20730, MAX20734, and MAX20743 Integrated, 
+> + * Step-Down Switching Regulators
+>   *
+>   * Copyright 2019 Google LLC.
+> + * Copyright 2020 Maxim Integrated
+>   */
+>  
+>  #include <linux/bits.h>
+> +#include <linux/debugfs.h>
+>  #include <linux/err.h>
+>  #include <linux/i2c.h>
+>  #include <linux/init.h>
+> @@ -19,21 +21,283 @@
+>  #include "pmbus.h"
+>  
+>  enum chips {
+> +	max20710,
+>  	max20730,
+>  	max20734,
+>  	max20743
+>  };
+>  
+> +enum {
+> +	MAX20730_DEBUGFS_VOUT_MIN = 0,
+> +	MAX20730_DEBUGFS_FREQUENCY,
+> +	MAX20730_DEBUGFS_PG_DELAY,
+> +	MAX20730_DEBUGFS_INTERNAL_GAIN,
+> +	MAX20730_DEBUGFS_BOOT_VOLTAGE,
+> +	MAX20730_DEBUGFS_OUT_V_RAMP_RATE,
+> +	MAX20730_DEBUGFS_OC_PROTECT_MODE,
+> +	MAX20730_DEBUGFS_SS_TIMING,
+> +	MAX20730_DEBUGFS_IMAX,
+> +	MAX20730_DEBUGFS_OPERATION,
+> +	MAX20730_DEBUGFS_ON_OFF_CONFIG,
+> +	MAX20730_DEBUGFS_SMBALERT_MASK,
+> +	MAX20730_DEBUGFS_VOUT_MODE,
+> +	MAX20730_DEBUGFS_VOUT_COMMAND,
+> +	MAX20730_DEBUGFS_VOUT_MAX,
+> +	MAX20730_DEBUGFS_NUM_ENTRIES
+> +};
+> +
+>  struct max20730_data {
+>  	enum chips id;
+>  	struct pmbus_driver_info info;
+>  	struct mutex lock;	/* Used to protect against parallel writes */
+>  	u16 mfr_devset1;
+> +	u16 mfr_devset2;
+> +	u16 mfr_voutmin;
+>  };
+>  
+>  #define to_max20730_data(x)  container_of(x, struct max20730_data, info)
+>  
+> +#define PMBUS_SMB_ALERT_MASK	0x1B
+> +
+> +#define MAX20730_MFR_VOUT_MIN	0xd1
+>  #define MAX20730_MFR_DEVSET1	0xd2
+> +#define MAX20730_MFR_DEVSET2	0xd3
+> +
+> +#define MAX20730_MFR_VOUT_MIN_MASK			GENMASK(9, 0)
+> +#define MAX20730_MFR_VOUT_MIN_BIT_POS		0
+> +
+> +#define MAX20730_MFR_DEVSET1_RGAIN_MASK		(BIT(13) | BIT(14))
+> +#define MAX20730_MFR_DEVSET1_OTP_MASK		(BIT(11) | BIT(12))
+> +#define MAX20730_MFR_DEVSET1_VBOOT_MASK		(BIT(8) | BIT(9))
+> +#define MAX20730_MFR_DEVSET1_OCP_MASK		(BIT(5) | BIT(6))
+> +#define MAX20730_MFR_DEVSET1_FSW_MASK		GENMASK(4, 2)
+> +#define MAX20730_MFR_DEVSET1_TSTAT_MASK		(BIT(0) | BIT(1))
+> +
+> +#define MAX20730_MFR_DEVSET1_RGAIN_BIT_POS	13
+> +#define MAX20730_MFR_DEVSET1_OTP_BIT_POS	11
+> +#define MAX20730_MFR_DEVSET1_VBOOT_BIT_POS	8
+> +#define MAX20730_MFR_DEVSET1_OCP_BIT_POS	5
+> +#define MAX20730_MFR_DEVSET1_FSW_BIT_POS	2
+> +#define MAX20730_MFR_DEVSET1_TSTAT_BIT_POS	0
+> +
+> +#define MAX20730_MFR_DEVSET2_IMAX_MASK		GENMASK(10, 8)
+> +#define MAX20730_MFR_DEVSET2_VRATE			(BIT(6) | BIT(7))
+> +#define MAX20730_MFR_DEVSET2_OCPM_MASK		BIT(5)
+> +#define MAX20730_MFR_DEVSET2_SS_MASK		(BIT(0) | BIT(1))
+> +
+> +#define MAX20730_MFR_DEVSET2_IMAX_BIT_POS	8
+> +#define MAX20730_MFR_DEVSET2_VRATE_BIT_POS	6
+> +#define MAX20730_MFR_DEVSET2_OCPM_BIT_POS	5
+> +#define MAX20730_MFR_DEVSET2_SS_BIT_POS		0
+> +
+> +#define DEBUG_FS_DATA_MAX					8
+> +
+> +struct max20730_debugfs_data {
+> +	struct i2c_client *client;
+> +	int debugfs_entries[MAX20730_DEBUGFS_NUM_ENTRIES];
+> +};
+> +
+> +#define to_psu(x, y) container_of((x), \
+> +			struct max20730_debugfs_data, debugfs_entries[(y)])
+> +
+> +static ssize_t max20730_debugfs_read(struct file *file, char __user *buf,
+> +				      size_t count, loff_t *ppos)
+> +{
+> +	int ret, len;
+> +	int *idxp = file->private_data;
+> +	int idx = *idxp;
+> +	struct max20730_debugfs_data *psu = to_psu(idxp, idx);
+> +	const struct pmbus_driver_info *info;
+> +	const struct max20730_data *data;
+> +	char tbuf[DEBUG_FS_DATA_MAX + 2] = { 0 };
+> +	u16 val;
+> +
+> +	info = pmbus_get_driver_info(psu->client);
+> +	data = to_max20730_data(info);
+> +
+> +	switch (idx) {
+> +	case MAX20730_DEBUGFS_VOUT_MIN:
+> +		len = snprintf(tbuf, 5, "%d", data->mfr_voutmin);
+> +		break;
+> +	case MAX20730_DEBUGFS_FREQUENCY:
+> +		val = (data->mfr_devset1 & MAX20730_MFR_DEVSET1_FSW_MASK)
+> +			>> MAX20730_MFR_DEVSET1_FSW_BIT_POS;
+> +		if (val == 0)
+> +			ret = 400;
+> +		else if (val == 1)
+> +			ret = 500;
+> +		else if (val == 2 || val == 3)
+> +			ret = 600;
+> +		else if (val == 4)
+> +			ret = 700;
+> +		else if (val == 5)
+> +			ret = 800;
+> +		else
+> +			ret = 900;
+> +		len = snprintf(tbuf, 4, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_PG_DELAY:
+> +		val = (data->mfr_devset1 & MAX20730_MFR_DEVSET1_TSTAT_MASK)
+> +			>> MAX20730_MFR_DEVSET1_TSTAT_BIT_POS;
+> +
+> +		if (val == 0)
+> +			strcpy(tbuf, "2000");
+> +		else if (val == 1)
+> +			strcpy(tbuf, "125");
+> +		else if (val == 2)
+> +			strcpy(tbuf, "62.5");
+> +		else
+> +			strcpy(tbuf, "32");
+> +		len = strnlen(tbuf, DEBUG_FS_DATA_MAX);
+> +		break;
+> +
+> +	case MAX20730_DEBUGFS_INTERNAL_GAIN:
+> +		val = (data->mfr_devset1 & MAX20730_MFR_DEVSET1_RGAIN_MASK)
+> +			>> MAX20730_MFR_DEVSET1_RGAIN_BIT_POS;
+> +
+> +		if (data->id == max20734) {
+> +			/* AN6209 */
+> +			if (val == 0)
+> +				strcpy(tbuf, "0.8");
+> +			else if (val == 1)
+> +				strcpy(tbuf, "3.2");
+> +			else if (val == 2)
+> +				strcpy(tbuf, "1.6");
+> +			else
+> +				strcpy(tbuf, "6.4");
+> +		} else if (data->id == max20730 || data->id == max20710) {
+> +			/* AN6042 or AN6140 */
+> +			if (val == 0)
+> +				strcpy(tbuf, "0.9");
+> +			else if (val == 1)
+> +				strcpy(tbuf, "3.6");
+> +			else if (val == 2)
+> +				strcpy(tbuf, "1.8");
+> +			else
+> +				strcpy(tbuf, "7.2");
+> +		} else if (data->id == max20743) {
+> +			/* AN6042 */
+> +			if (val == 0)
+> +				strcpy(tbuf, "0.45");
+> +			else if (val == 1)
+> +				strcpy(tbuf, "1.8");
+> +			else if (val == 2)
+> +				strcpy(tbuf, "0.9");
+> +			else
+> +				strcpy(tbuf, "3.6");
+> +		} else
+> +			return -EINVAL;
+> +
+> +		len = strnlen(tbuf, DEBUG_FS_DATA_MAX);
+> +		break;
+> +	case MAX20730_DEBUGFS_BOOT_VOLTAGE:
+> +		val = (data->mfr_devset1 & MAX20730_MFR_DEVSET1_VBOOT_MASK)
+> +			>> MAX20730_MFR_DEVSET1_VBOOT_BIT_POS;
+> +
+> +		if (val == 0)
+> +			strcpy(tbuf, "0.6484");
+> +		else if (val == 1)
+> +			strcpy(tbuf, "0.8984");
+> +		else if (val == 2)
+> +			strcpy(tbuf, "1.0");
+> +		else
+> +			return -EINVAL;
+> +
+> +		len = strnlen(tbuf, DEBUG_FS_DATA_MAX);
+> +		break;
+> +	case MAX20730_DEBUGFS_OUT_V_RAMP_RATE:
+> +		val = (data->mfr_devset2 & MAX20730_MFR_DEVSET2_VRATE)
+> +			>> MAX20730_MFR_DEVSET2_VRATE_BIT_POS;
+> +
+> +		if (val == 0)
+> +			ret = 4;
+> +		else if (val == 1)
+> +			ret = 2;
+> +		else if (val == 2)
+> +			ret = 1;
+> +		else
+> +			return -EINVAL;
+> +
+> +		len = snprintf(tbuf, 2, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_OC_PROTECT_MODE:
+> +		ret = (data->mfr_devset2 & MAX20730_MFR_DEVSET2_OCPM_MASK)
+> +			>> MAX20730_MFR_DEVSET2_OCPM_BIT_POS;
+> +		len = snprintf(tbuf, 2, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_SS_TIMING:
+> +		val = (data->mfr_devset2 & MAX20730_MFR_DEVSET2_SS_MASK)
+> +			>> MAX20730_MFR_DEVSET2_SS_BIT_POS;
+> +
+> +		if (val == 0)
+> +			strcpy(tbuf, "0.75");
+> +		else if (val == 1)
+> +			strcpy(tbuf, "1.5");
+> +		else if (val == 2)
+> +			strcpy(tbuf, "3");
+> +		else
+> +			strcpy(tbuf, "6");
+> +
+> +		len = strnlen(tbuf, DEBUG_FS_DATA_MAX);
+> +		break;
+> +	case MAX20730_DEBUGFS_IMAX:
+> +		ret = (data->mfr_devset2 & MAX20730_MFR_DEVSET2_IMAX_MASK)
+> +			>> MAX20730_MFR_DEVSET2_IMAX_BIT_POS;
+> +		len = snprintf(tbuf, 2, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_OPERATION:
+> +		ret = i2c_smbus_read_byte_data(psu->client, PMBUS_OPERATION);
+> +		if(ret < 0)
+> +			return ret;
+> +		len = snprintf(tbuf, 2, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_ON_OFF_CONFIG:
+> +		ret = i2c_smbus_read_byte_data(psu->client, PMBUS_ON_OFF_CONFIG);
+> +		if(ret < 0)
+> +			return ret;
+> +		len = snprintf(tbuf, 2, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_SMBALERT_MASK:
+> +		ret = i2c_smbus_read_word_data(psu->client, 
+> +							PMBUS_SMB_ALERT_MASK);
+> +		if(ret < 0)
+> +			return ret;
+> +		len = snprintf(tbuf, 3, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_VOUT_MODE:
+> +		ret = i2c_smbus_read_byte_data(psu->client, PMBUS_VOUT_MODE);
+> +		if(ret < 0)
+> +			return ret;
+> +		len = snprintf(tbuf, 2, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_VOUT_COMMAND:
+> +		ret = i2c_smbus_read_word_data(psu->client, PMBUS_VOUT_COMMAND);
+> +		if(ret < 0)
+> +			return ret;
+> +		len = snprintf(tbuf, 3, "%d", ret);
+> +		break;
+> +	case MAX20730_DEBUGFS_VOUT_MAX:
+> +		ret = i2c_smbus_read_word_data(psu->client, PMBUS_VOUT_MAX);
+> +		if(ret < 0)
+> +			return ret;
+> +		len = snprintf(tbuf, 3, "%d", ret);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	tbuf[len] = '\n';
+> +	len += 2;
+> +
+> +	return simple_read_from_buffer(buf, count, ppos, tbuf, len);
+> +}
+> +
+> +static const struct file_operations max20730_fops = {
+> +	.llseek = noop_llseek,
+> +	.read = max20730_debugfs_read,
+> +	.write = NULL,
+> +	.open = simple_open,
+> +};
+>  
+>  /*
+>   * Convert discreet value to direct data format. Strictly speaking, all passed
+> @@ -80,6 +344,7 @@ static long direct_to_val(u16 w, enum pmbus_sensor_classes class,
+>  }
+>  
+>  static u32 max_current[][5] = {
+> +	[max20710] = { 6200, 8000, 9700, 11600 },
+>  	[max20730] = { 13000, 16600, 20100, 23600 },
+>  	[max20734] = { 21000, 27000, 32000, 38000 },
+>  	[max20743] = { 18900, 24100, 29200, 34100 },
+> @@ -164,6 +429,45 @@ static int max20730_write_word_data(struct i2c_client *client, int page,
+>  }
+>  
+>  static const struct pmbus_driver_info max20730_info[] = {
+> +	[max20710] = {
+> +		.pages = 1,
+> +		.read_word_data = max20730_read_word_data,
+> +		.write_word_data = max20730_write_word_data,
+> +
+> +		/* Source : Maxim AN6140 and AN6042 */
+> +		.format[PSC_TEMPERATURE] = direct,
+> +		.m[PSC_TEMPERATURE] = 21,
+> +		.b[PSC_TEMPERATURE] = 5887,
+> +		.R[PSC_TEMPERATURE] = -1,
+> +
+> +		.format[PSC_VOLTAGE_IN] = direct,
+> +		.m[PSC_VOLTAGE_IN] = 3609,
+> +		.b[PSC_VOLTAGE_IN] = 0,
+> +		.R[PSC_VOLTAGE_IN] = -2,
+> +
+> +		/*
+> +		 * Values in the datasheet are adjusted for temperature and
+> +		 * for the relationship between Vin and Vout.
+> +		 * Unfortunately, the data sheet suggests that Vout measurement
+> +		 * may be scaled with a resistor array. This is indeed the case
+> +		 * at least on the evaulation boards. As a result, any in-driver
+> +		 * adjustments would either be wrong or require elaborate means
+> +		 * to configure the scaling. Instead of doing that, just report
+> +		 * raw values and let userspace handle adjustments.
+> +		 */
+> +		.format[PSC_CURRENT_OUT] = direct,
+> +		.m[PSC_CURRENT_OUT] = 153,
+> +		.b[PSC_CURRENT_OUT] = 4976,
+> +		.R[PSC_CURRENT_OUT] = -1,
+> +
+> +		.format[PSC_VOLTAGE_OUT] = linear,
+> +
+> +		.func[0] = PMBUS_HAVE_VIN |
+> +			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+> +			PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP |
+> +			PMBUS_HAVE_STATUS_INPUT,
+> +	},
+>  	[max20730] = {
+>  		.pages = 1,
+>  		.read_word_data = max20730_read_word_data,
+> @@ -200,7 +504,8 @@ static const struct pmbus_driver_info max20730_info[] = {
+>  		.func[0] = PMBUS_HAVE_VIN |
+>  			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+>  			PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+> -			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
+> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP |
+> +			PMBUS_HAVE_STATUS_INPUT,
+>  	},
+>  	[max20734] = {
+>  		.pages = 1,
+> @@ -228,7 +533,8 @@ static const struct pmbus_driver_info max20730_info[] = {
+>  		.func[0] = PMBUS_HAVE_VIN |
+>  			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+>  			PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+> -			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
+> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP |
+> +			PMBUS_HAVE_STATUS_INPUT,
+>  	},
+>  	[max20743] = {
+>  		.pages = 1,
+> @@ -256,7 +562,8 @@ static const struct pmbus_driver_info max20730_info[] = {
+>  		.func[0] = PMBUS_HAVE_VIN |
+>  			PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
+>  			PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+> -			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
+> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP |
+> +			PMBUS_HAVE_STATUS_INPUT,
+>  	},
+>  };
+>  
+> @@ -267,14 +574,17 @@ static int max20730_probe(struct i2c_client *client,
+>  	u8 buf[I2C_SMBUS_BLOCK_MAX + 1];
+>  	struct max20730_data *data;
+>  	enum chips chip_id;
+> -	int ret;
+> +	int i, ret;
+> +	struct dentry *debugfs;
+> +	struct dentry *max20730_dir;
+> +	struct max20730_debugfs_data *psu;
+>  
+>  	if (!i2c_check_functionality(client->adapter,
+>  				     I2C_FUNC_SMBUS_READ_BYTE_DATA |
+>  				     I2C_FUNC_SMBUS_READ_WORD_DATA |
+>  				     I2C_FUNC_SMBUS_BLOCK_DATA))
+>  		return -ENODEV;
+> -
+> +	
+>  	ret = i2c_smbus_read_block_data(client, PMBUS_MFR_ID, buf);
+>  	if (ret < 0) {
+>  		dev_err(&client->dev, "Failed to read Manufacturer ID\n");
+> @@ -335,10 +645,93 @@ static int max20730_probe(struct i2c_client *client,
+>  		return ret;
+>  	data->mfr_devset1 = ret;
+>  
+> -	return pmbus_do_probe(client, id, &data->info);
+> +	ret = pmbus_do_probe(client, id, &data->info);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +#if IS_ENABLED(CONFIG_DEBUG_FS)
+> +	ret = i2c_smbus_read_word_data(client, MAX20730_MFR_DEVSET2);
+> +	if (ret < 0)
+> +		return ret;
+> +	data->mfr_devset2 = ret;
+> +
+> +	ret = i2c_smbus_read_word_data(client, MAX20730_MFR_VOUT_MIN);
+> +	if (ret < 0)
+> +		return ret;
+> +	data->mfr_voutmin = ret;
+> +
+> +	/*
+> +	 * Don't fail the probe if there isn't enough memory for debugfs.
+> +	 */
+> +	psu = devm_kzalloc(&client->dev, sizeof(*psu), GFP_KERNEL);
+> +	if (!psu)
+> +		return 0;
+> +	psu->client = client;
+> +
+> +	/* Don't fail the probe if we can't create debugfs */
+> +	debugfs = pmbus_get_debugfs_dir(client);
+> +	if (!debugfs)
+> +		return 0;
+> +
+> +	max20730_dir = debugfs_create_dir(client->name, debugfs);
+> +	if (!max20730_dir)
+> +		return 0;
+> +
+> +	for (i = 0; i < MAX20730_DEBUGFS_NUM_ENTRIES; ++i)
+> +		psu->debugfs_entries[i] = i;
+> +
+> +	debugfs_create_file("vout_min", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_VOUT_MIN],
+> +			    &max20730_fops);
+> +	debugfs_create_file("frequency", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_FREQUENCY],
+> +			    &max20730_fops);
+> +	debugfs_create_file("power_good_delay", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_PG_DELAY],
+> +			    &max20730_fops);
+> +	debugfs_create_file("internal_gain", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_INTERNAL_GAIN],
+> +			    &max20730_fops);
+> +	debugfs_create_file("boot_voltage", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_BOOT_VOLTAGE],
+> +			    &max20730_fops);
+> +	debugfs_create_file("out_voltage_ramp_rate", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_OUT_V_RAMP_RATE],
+> +			    &max20730_fops);
+> +	debugfs_create_file("oc_protection_mode", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_OC_PROTECT_MODE],
+> +			    &max20730_fops);
+> +	debugfs_create_file("soft_start_timing", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_SS_TIMING],
+> +			    &max20730_fops);
+> +	debugfs_create_file("imax", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_IMAX],
+> +			    &max20730_fops);	    
+> +	debugfs_create_file("operation", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_OPERATION],
+> +			    &max20730_fops);
+> +	debugfs_create_file("on_off_config", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_ON_OFF_CONFIG],
+> +			    &max20730_fops);
+> +	debugfs_create_file("smbalert_mask", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_SMBALERT_MASK],
+> +			    &max20730_fops);
+> +	debugfs_create_file("vout_mode", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_VOUT_MODE],
+> +			    &max20730_fops);
+> +	debugfs_create_file("vout_command", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_VOUT_COMMAND],
+> +			    &max20730_fops);
+> +	debugfs_create_file("vout_max", 0444, max20730_dir,
+> +			    &psu->debugfs_entries[MAX20730_DEBUGFS_VOUT_MAX],
+> +			    &max20730_fops);
+> +#endif
+> +	
+> +	return 0;
+>  }
+>  
+>  static const struct i2c_device_id max20730_id[] = {
+> +	{ "max20710", max20710 },
+>  	{ "max20730", max20730 },
+>  	{ "max20734", max20734 },
+>  	{ "max20743", max20743 },
+> @@ -348,6 +741,7 @@ static const struct i2c_device_id max20730_id[] = {
+>  MODULE_DEVICE_TABLE(i2c, max20730_id);
+>  
+>  static const struct of_device_id max20730_of_match[] = {
+> +	{ .compatible = "maxim,max20710", .data = (void *)max20710 },
+>  	{ .compatible = "maxim,max20730", .data = (void *)max20730 },
+>  	{ .compatible = "maxim,max20734", .data = (void *)max20734 },
+>  	{ .compatible = "maxim,max20743", .data = (void *)max20743 },
+> @@ -369,5 +763,5 @@ static struct i2c_driver max20730_driver = {
+>  module_i2c_driver(max20730_driver);
+>  
+>  MODULE_AUTHOR("Guenter Roeck <linux@roeck-us.net>");
+> -MODULE_DESCRIPTION("PMBus driver for Maxim MAX20730 / MAX20734 / MAX20743");
+> +MODULE_DESCRIPTION("PMBus driver for Maxim MAX20710 / MAX20730 / MAX20734 / MAX20743");
+>  MODULE_LICENSE("GPL");
+> -- 
+> 2.7.4
+> 
