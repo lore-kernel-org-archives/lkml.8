@@ -2,153 +2,113 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B95C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C17C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E62502078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FA42078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEwS6Ikm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406375AbgE1TVi (ORCPT
+        id S2406395AbgE1TVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:21:38 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:54248 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406320AbgE1TVU (ORCPT
+        Thu, 28 May 2020 15:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59380 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406317AbgE1TVV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:21:20 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeO5a-0000xN-0J; Thu, 28 May 2020 13:21:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jeO5Y-0002Ld-TF; Thu, 28 May 2020 13:21:13 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org>
-        <87sgga6ze4.fsf@x220.int.ebiederm.org>
-        <87v9l4zyla.fsf_-_@x220.int.ebiederm.org>
-        <877dx822er.fsf_-_@x220.int.ebiederm.org>
-        <87k10wysqz.fsf_-_@x220.int.ebiederm.org>
-        <87eer4ysm5.fsf_-_@x220.int.ebiederm.org>
-        <CAHk-=wgQAgKnEX3V_vep3Ah392tjiekDspnu+y6kkx2oFZBV=g@mail.gmail.com>
-Date:   Thu, 28 May 2020 14:17:19 -0500
-In-Reply-To: <CAHk-=wgQAgKnEX3V_vep3Ah392tjiekDspnu+y6kkx2oFZBV=g@mail.gmail.com>
-        (Linus Torvalds's message of "Thu, 28 May 2020 12:04:12 -0700")
-Message-ID: <87pnanvphc.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jeO5Y-0002Ld-TF;;;mid=<87pnanvphc.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+Syvr95fcCE2Yrct5NG1ay+23m265eGRY=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 01/11] exec: Reduce bprm->per_clear to a single bit
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Thu, 28 May 2020 15:21:21 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B503C08C5C6;
+        Thu, 28 May 2020 12:21:21 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 185so41280pgb.10;
+        Thu, 28 May 2020 12:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=CzfV181nJ0czd6Anf4yOzm4xivtTHh+yTDjv58w4w70=;
+        b=SEwS6IkmE/Vm6DfcfMAtkS88bdBGDTwOipqJzGzYUEgqSlmUGL4CsRcYnbhDYsTOc/
+         iVXx6qAo+DcuR+V46NVIWhweiXhNraus2SQxu7AwRoJ4pk6mmLSPsf5sopuYqkZkLVJS
+         O3XJAR/cdyjuFqgxmiCazRx+p9dZnmviVkapsfPgfrkoaXV4raK3mFMMrkUe5oYbVW3L
+         a6s1s3Zz0r/vK6f/u/tgrGhDWGd9ufQo4YdcYZm1jaL2RskV2JzWZmZCVKPfyEF84ax0
+         KHCFfNfquzsilCbDgQ8BqlhTLJOPFIBJgYpUZoIu3kqfxXr2SItKP9HU/YNtrnC9EB1b
+         100g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=CzfV181nJ0czd6Anf4yOzm4xivtTHh+yTDjv58w4w70=;
+        b=LK2XYI5bqpEFQW66RjZxqL7gscjBDFUAKFaNxMNxxKJC/AtR0VhPratWvBqlP5PFxa
+         Ostgypaac8AigbhUZZra9xJGGxMnlyf0MhpqQqlXq9NHjeV7cXJ0uATYxr3odJYW8wZ0
+         l6Mgo+dqK6e3+rxoBxB5rTWitOOKeMaqJLhE0ho0BS9k2nOGyNFTGRGplajEUBwyARlH
+         NiDgQ6dSkt90gH7cROlyoqrCtRKN3k1a0YnKxUQA1S3skiiB17jjCujBXYiaqyjY+8Ts
+         PUk0kxeynZreSGJlyEn2UxpfbeaI1MOjq8V8rqesskINObvOWFgIyWUhkjrBRGtoNV2K
+         kTcw==
+X-Gm-Message-State: AOAM530IZzrsIJBGeOXpuMSOdmUs/ItxwtaBCXJW7uv0avv4scaWSCcr
+        jNO4Pjl2IanDhJIUZpzvnSaYkjCZ
+X-Google-Smtp-Source: ABdhPJwajHR+L1XGUzSZpZbJ6JCmAwM42UTuf8mYpiuyGtE7PLwR/qlqTJZGYpaZv9PvQQpzp7KA2A==
+X-Received: by 2002:a62:1845:: with SMTP id 66mr4749410pfy.192.1590693680279;
+        Thu, 28 May 2020 12:21:20 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 12:21:19 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH 1/4] dt-bindings: pinctrl: Document 7211 compatible for brcm,bcm2835-gpio.txt
+Date:   Thu, 28 May 2020 12:21:09 -0700
+Message-Id: <20200528192112.26123-2-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200528192112.26123-1-f.fainelli@gmail.com>
+References: <20200528192112.26123-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+Document the brcm,bcm7211-gpio compatible string in the
+brcm,bcm2835-gpio.txt document.
 
-> On Thu, May 28, 2020 at 8:45 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->>
->> -       me->personality &= ~bprm->per_clear;
->> +       if (bprm->per_clear)
->> +               me->personality &= ~PER_CLEAR_ON_SETID;\
->
-> My only problem with this patch is that I find that 'per_clear' thing
-> to be a horrid horrid name,
->
-> Obviously the name didn't change, but the use *did* change, and as
-> such the name got worse. It used do do things like
->
->                bprm->per_clear |= PER_CLEAR_ON_SETID;
->
-> and now it does
->
->                bprm->per_clear = 1;
->
-> and honestly, there's a lot more semantic context in the old code that
-> is now missing entirely. At least you used to be able to grep for
-> PER_CLEAR_ON_SETID and it would make you go "Ahh.."
->
-> Put another way, I can kind of see what a line like
->
->                bprm->per_clear |= PER_CLEAR_ON_SETID;
->
-> does, simply because now it kind of hints at what is up.
->
-> But what the heck does
->
->                bprm->per_clear = 1;
->
-> mean? Nothing. You have to really know the code. "per_clear" makes no
-> sense, and now it's a short line that doesn't need to be that short.
->
-> I think "bprm->clear_personality_bits" would maybe describe what the
-> _effect_ of that field is. It doesn't explain _why_, but it at least
-> explains "what" much better than "per_clear", which just makes me go
-> "per what?".
->
-> Alternatively, "bprm->creds_changed" would describe what the bit
-> conceptually is about, and code like
->
->           if (bprm->creds_changed)
->                   me->personality &= ~PER_CLEAR_ON_SETID;\
->
-> looks sensible to me and kind of matches the comment about the
-> PER_CLEAR_ON_SETID bits are.
->
-> So I think that using a bitfield is fine, but I'd really like it to be
-> named something much better.
->
-> Plus changing the name means that you can't have any code that now
-> mistakenly uses the new semantics but expects the old bitmask.
-> Generally when something changes semantics that radically, you want to
-> make sure the type changes sufficiently that any out-of-tree patch
-> that hasn't been merged yet will get a clear warning or error if
-> people don't realize.
->
-> Please?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes.  That will make a very nice change to the patch.
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+index 3cab7336a326..dfc67b90591c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+@@ -9,6 +9,7 @@ Required properties:
+   "brcm,bcm2835-gpio" - BCM2835 compatible pinctrl
+   "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
+   "brcm,bcm2711-gpio" - BCM2711 compatible pinctrl
++  "brcm,bcm7211-gpio" - BCM7211 compatible pinctrl
+ - reg: Should contain the physical address of the GPIO module's registers.
+ - gpio-controller: Marks the device node as a GPIO controller.
+ - #gpio-cells : Should be two. The first cell is the pin number and the
+-- 
+2.17.1
 
-I think I will go with bprm->clear_unsafe_personality_bits or
-something to that effect. 
-
-I would really love to have a bit that means creds_changes or
-privilegeds_elevated.  But right now we have 2 of two fields that mean
-essentially that (per_clear and secureexec) and they don't agree on when
-they get set.
-
-I will make them agree as much as possible, and this patchset is a first
-step in that direction but until we can actually make them agree, I want
-to keep them both grounded in what they do.  That way it is possible to
-have a reasonable discussion on when they should be set.
-
-Eric
