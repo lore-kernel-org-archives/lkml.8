@@ -2,102 +2,108 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AB6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3507FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD922073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169032073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1cMDUG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407328AbgE1UiT (ORCPT
+        id S2407336AbgE1Uis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:38:19 -0400
-Received: from muru.com ([72.249.23.125]:56084 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407218AbgE1UiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:38:15 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 8EE1580BF;
-        Thu, 28 May 2020 20:39:03 +0000 (UTC)
-Date:   Thu, 28 May 2020 13:38:10 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        arm-soc <arm@kernel.org>, Rob Herring <robh@kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, Olof Johansson <olof@lixom.net>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: omap2: drop broken broadcast timer hack
-Message-ID: <20200528203810.GQ37466@atomide.com>
-References: <20200528091923.2951100-1-arnd@arndb.de>
- <20200528134621.GN37466@atomide.com>
- <20200528135057.GO37466@atomide.com>
- <20200528155759.GP37466@atomide.com>
- <34e8fb61-b452-529b-b2c6-3849b2395096@oracle.com>
- <CAK8P3a0AaH+pAdhu7jzEAGC-bECgmz7w=D8PN6NOUjj2kxevkg@mail.gmail.com>
+        Thu, 28 May 2020 16:38:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407218AbgE1Uip (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 16:38:45 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9010CC08C5C6;
+        Thu, 28 May 2020 13:38:45 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d10so143813pgn.4;
+        Thu, 28 May 2020 13:38:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uUmAHxoLCci70CIyQKHJVkgQVBujsUNyRL0aI0R0aqo=;
+        b=I1cMDUG4Wbl6ZX/z5HWJTm2du5yh0gMU/JPmyLOA29gjDIaqZCuFlq1Akwl3x2elMt
+         ocKJz6UFSs9RV8uUTGDo6qDUWd3ujnAqcC0wVQzxSf5C4KAdnYFrC2ux/mp9wHzQoU3I
+         8sxF6hLFmWwdrvdGrJQR23vCVeXjvY3uf4ee+i0j7VVO7ldGgG6UHkEwvEs7NSJvucXr
+         u/HX7g9A/JHwTmtNm/pizzgaEFtaHRhTXL/OSQZU6alHCgQkzALi5i6A9EqjaPivx4Ho
+         YuugbZTUH2NeinzeiTFXp2XiO++0eeSonK5SMIVAiaoA3IMaWw/M6AJvPgZqSbvhlFLk
+         lFIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uUmAHxoLCci70CIyQKHJVkgQVBujsUNyRL0aI0R0aqo=;
+        b=IxfjS8uS3RD4gupLgRT3aQi0J1qxkiIQW8burB1ym+nuF6AbCWIJwtbFL5h1xsBNH+
+         eU7ycey3at/NcmDQMpKsMYM9IRqMz0hdNjD2ZioW6pdWdPIA3I9jWc6o6jDHcJKOjWBS
+         rt53vx1V3BJy53ODlDc/PZI5jwN/5xYVVY4OgnGjTZrceKGGDQr57eVXaUhc7qvxCcll
+         M00oitiocwwMAQo3gs4HvIiLoLzLlBElYDyG0JBOa2tbxZPs2WrJkKYREhUp3yC/s0Zv
+         hLGh0bJwK5Ja+mUXQQCrhqZqCXS1WaIxjKFmYc8VQDwqaXqKGvolOWD4C6BS6uWG1ec1
+         A1nA==
+X-Gm-Message-State: AOAM531wGp0ZtG3xBvNfUpzdu9rBHP+Pd5VibI6KiUHzhzTmvCl5wPr5
+        bgzA1RdRMbH5Iu2FxCh4FvYL6UwO90DnPSm0Qfc=
+X-Google-Smtp-Source: ABdhPJwe8DmfXiHurV89f6av71936kl+HM4lp/ZzAxpMRXlN2Qv/GB4+dYblIxf4soDqHWyWkLuJ27OfLk4KVGGMVXw=
+X-Received: by 2002:aa7:99c8:: with SMTP id v8mr5137217pfi.36.1590698325132;
+ Thu, 28 May 2020 13:38:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0AaH+pAdhu7jzEAGC-bECgmz7w=D8PN6NOUjj2kxevkg@mail.gmail.com>
+References: <20200526225022.20405-1-Sergey.Semin@baikalelectronics.ru>
+ <20200526225022.20405-10-Sergey.Semin@baikalelectronics.ru>
+ <20200528145224.GT1634618@smile.fi.intel.com> <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+In-Reply-To: <20200528154022.3reghhjcd4dnsr3g@mobilestation>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 28 May 2020 23:38:28 +0300
+Message-ID: <CAHp75VcPVO6yOmyrSBfjVk5eSYhC4J0QXAfOhjRXGd4=FemezA@mail.gmail.com>
+Subject: Re: [PATCH v3 09/10] dmaengine: dw: Introduce max burst length hw config
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Arnd Bergmann <arnd@arndb.de> [200528 20:35]:
-> On Thu, May 28, 2020 at 6:18 PM <santosh.shilimkar@oracle.com> wrote:
-> > On 5/28/20 8:57 AM, Tony Lindgren wrote:
-> > > * Tony Lindgren <tony@atomide.com> [200528 13:51]:
-> > >> * Tony Lindgren <tony@atomide.com> [200528 13:47]:
-> > >>> * Arnd Bergmann <arnd@arndb.de> [200528 09:20]:
-> > >>>> The OMAP4 timer code had a special hack for using the broadcast timer
-> > >>>> without SMP. Since the dmtimer is now gone, this also needs to be dropped
-> > >>>> to avoid a link failure for non-SMP AM43xx configurations:
-> > >>>>
-> > >>>> kernel/time/tick-broadcast.o: in function `tick_device_uses_broadcast':
-> > >>>> tick-broadcast.c:(.text+0x130): undefined reference to `tick_broadcast'
-> > >>>
-> > >>> Hmm this sounds like a regression though. Isn't this needed for using
-> > >>> the ARM local timers on non-SMP SoC, so a separate timer from dmtimer?
-> > >>>
-> > >>> I've probably removed something accidentally to cause this.
-> > >>
-> > >> Sounds like arch/arm/mach-omap2/Makefile change needs to be removed
-> > >> to always still build in timer.o. And probably timer.c needs back
-> > >> the ifdef for CONFIG_SOC_HAS_REALTIME_COUNTER.
-> > >>
-> > >> I'll take a look today.
-> > >
-> > > I've sent a patch along those lines as:
-> > >
-> > > [PATCH] ARM: OMAP2+: Fix regression for using local timer on non-SMP SoCs
-> > >
-> > > A link for the patch at [0] below.
-> > >
-> > CPU local timers not being in always ON power domain use to be the
-> > reason on early version of the SOCs but later SOC moved the CPU local
-> > timer also in always on domain. Probably AM43xx does loose local timer
-> > on CPU PD in low power so yes broadcast would be needed with dmtimer
-> > help.
+On Thu, May 28, 2020 at 6:43 PM Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+> On Thu, May 28, 2020 at 05:52:24PM +0300, Andy Shevchenko wrote:
+> > On Wed, May 27, 2020 at 01:50:20AM +0300, Serge Semin wrote:
+
+...
+
+> > Perhaps,
 > >
-> > >
-> > > [0] https://lore.kernel.org/linux-omap/20200528155453.8585-1-tony@atomide.com/T/#u
-> > >
-> > This should restore it.
-> 
-> Should I apply the fix directly to the arm/soc branch that has the
-> other changes then?
+> >       /* DesignWare DMA supports burst value from 0 */
+> >       caps->min_burst = 0;
+>
+> Regarding min_burst being zero. I don't fully understand what it means.
+> It means no burst or burst with minimum length or what?
+> In fact DW DMA burst length starts from 1. Remember the burst-length run-time
+> parameter we were arguing about? Anyway the driver makes sure that both
+> 0 and 1 requested burst length are setup as burst length of 1 in the
+> CTLx.SRC_MSIZE, CTLx.DST_MSIZE fields.
 
-Sure please do, that saves a single-fix pull request.
+Yeah, I also thought about it after I sent a message. 1 sounds better.
 
-Regards,
-
-Tony
+-- 
+With Best Regards,
+Andy Shevchenko
