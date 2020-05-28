@@ -2,112 +2,126 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A92CC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AB7C433E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71233207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79942207F5
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 17:39:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.unc.edu header.i=@cs.unc.edu header.b="MZQChu7X"
+	dkim=pass (2048-bit key) header.d=nitingupta.dev header.i=@nitingupta.dev header.b="AMSzGREp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405623AbgE1Rhe (ORCPT
+        id S2405627AbgE1RjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 13:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43158 "EHLO
+        Thu, 28 May 2020 13:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405372AbgE1Rhb (ORCPT
+        with ESMTP id S2405577AbgE1RjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 13:37:31 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E06BC08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:37:31 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id e16so766611qtg.0
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:37:31 -0700 (PDT)
+        Thu, 28 May 2020 13:39:11 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C01C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:39:10 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id c11so32304099ljn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 10:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.unc.edu; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4D6oc2aAM2Z3zwgP8rvrzBXzf14PvHe0z0eLDVTjiR0=;
-        b=MZQChu7Xs6nShlS7SiHlThZ/i/aBsOsT86aPA/kMrDQ8RZftybTUf4gmtmOlSwJgW8
-         5r0i3br0PpiKXaawz9HHPY0fHpS/pfwfRXhRfY9fq3+K0O9PmH0+rBsGiRWgKxIfGno2
-         f+RzadBkWYiRnolsVYIm2YCqng/k0GLRPwf4Q=
+        d=nitingupta.dev; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GSyn/GzlUuBVZreRe5FoudqPDQtAy00iQYfXxKL+O/Q=;
+        b=AMSzGREpSnoqwtwv9pZaGx8ez0dlArn60F3wpoUwlsaAoeLWH+YHNw44SgBlBc7vag
+         nn2sp9vyKpRzVPN2on4hlPXML8hzV9g2MyHMr3GY249VZJRGGaUIZ5yc10CadFZiTtzk
+         vcuNxha92NhynzKiT0b3k8qSRW7e8dp7oNXB84i2wREsncxeDD9rVNkm2JqJALwopBVm
+         S+YRP+Hb5qUqPmxTTMYrYWWTXXwJKyQATZ+qjgYUdJ/8fG61hiGWvtHweD/MIWMX0a2a
+         y8r66OlLZHSCB4BwPYW16zxiL2qM9iDqfxCMWJfACPLhLqsM2icegfAyoFt0HgTWVS4Q
+         vlQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4D6oc2aAM2Z3zwgP8rvrzBXzf14PvHe0z0eLDVTjiR0=;
-        b=cB2shxouS6VpSCvboEccKe7SSXHn9yAdqdskkIIs7x9dxabZUdP5f9+CgGY5Z3rdW0
-         0zrSCnAQq1+auE3Syl7GSvAHyGNrWZoQyCbeZyC/yAKLCZdRBGQ5GkrsxJgnjMfFzhJ5
-         V35lttXDyX1L33A6Tld6rOIBEYmobtGBqY4mOmTbDs/8hxNvggkFi6WEeEy2HnSlKOyW
-         dt5OOC3SLv70APsOgPoDUpE5DXwJ3EiPP+oTULHZfpfK2bRPF02Etl1sfzNxM7CNkt7h
-         8SdHtxc+XpdR2ImZ4nXdkD8Kfwu+Wc+voDiggjUABNsTLcFs7HGg4z4AeXNLgpg8uFGu
-         MY/g==
-X-Gm-Message-State: AOAM531S0k845mZTJfirCyCfr6HDpzJ7Cce60oYReFQq64+Ep+S40hYW
-        M3UsxvIGvEhg/LOurM2sM3e7cg==
-X-Google-Smtp-Source: ABdhPJzmBexkt2yGDZeAZQKSW78lFZM+3/zMd8hLMDLQMWzYMlCzbWVJ6AkfklehmzH+Wo88mSEupA==
-X-Received: by 2002:ac8:6d1c:: with SMTP id o28mr4358558qtt.388.1590687450408;
-        Thu, 28 May 2020 10:37:30 -0700 (PDT)
-Received: from pepe.local (71-142-124-255.lightspeed.rlghnc.sbcglobal.net. [71.142.124.255])
-        by smtp.gmail.com with ESMTPSA id a82sm5410800qkb.29.2020.05.28.10.37.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 10:37:29 -0700 (PDT)
-Subject: Re: [PATCH v12 00/18] Enable FSGSBASE instructions
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
-        bp@alien8.de, luto@kernel.org, hpa@zytor.com,
-        dave.hansen@intel.com, tony.luck@intel.com,
-        ravi.v.shankar@intel.com, chang.seok.bae@intel.com
-References: <c566b89cc3ef6c164160cc56a820abac3fd70839.camel@linux.intel.com>
- <20200518153407.GA499505@tassilo.jf.intel.com>
- <371e6a92cad25cbe7a8489785efa7d3457ecef3b.camel@linux.intel.com>
- <87v9ksvoaq.fsf@nanos.tec.linutronix.de>
- <20200519164853.GA19706@linux.intel.com>
- <7eb45e02-03bf-0af0-c915-794bf49d66d7@cs.unc.edu>
- <87h7w7qy18.fsf@nanos.tec.linutronix.de>
- <c5fffcd1-c262-7046-a047-67de2bbccd78@cs.unc.edu>
- <20200526202739.GG33628@sasha-vm>
- <7a25e82a-9ef1-f13b-be42-2d7a693592b4@cs.unc.edu>
- <20200526225120.GH33628@sasha-vm>
-From:   Don Porter <porter@cs.unc.edu>
-Message-ID: <39df26f2-9d17-b0f2-6a55-48195542637b@cs.unc.edu>
-Date:   Thu, 28 May 2020 13:37:27 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.8.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GSyn/GzlUuBVZreRe5FoudqPDQtAy00iQYfXxKL+O/Q=;
+        b=dphoZE8fDn7A2hwwp1ORnno4S1B7IflvXdME63wLE5bzslapPP+7vialMJ1HLzeUg1
+         a24zZZCdspJTHopkrZ+AcKtHAhmrQEvS6G4ociF3eA6R+3UVz0I+9lrVYtBR31GaPC55
+         e4qE/z1j8fFJPHOckMAGOYmh4Ym3kRsIDBkyTiajRJZAS6t1MfzY9fyrIQUVuddsNFq9
+         +Ym7qGDTnwLP91wW7XrBZgsVBB2nldKGwSUjFEfaB8Mmi1qf3RCO4vAb3dZvvUiNNPnq
+         KgOBd4hHlR4S0PL5fo3G4bqkhvlC+mMfQP7nBliyM1BwsMSugEet40kmuV+pJOheikVc
+         Ek8w==
+X-Gm-Message-State: AOAM5318n0xdPRDeym/AWilJT6PKCaLvpc4ucncWFvHr1i63qsPmvue/
+        Ct9BHDaL1Y+Rc9lnh4lCuoOITDrmHXHWq8K+4AhmgA==
+X-Google-Smtp-Source: ABdhPJztXzq3yXMj4FT3uUbqkiTJL24i9SV+yD18Z6q5cM2dbT2DdkdzT9A9pFh+q0gqZ0uWQC5J3lj/V1fV3PrxgyM=
+X-Received: by 2002:a2e:9099:: with SMTP id l25mr2082879ljg.82.1590687549294;
+ Thu, 28 May 2020 10:39:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526225120.GH33628@sasha-vm>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200518181446.25759-1-nigupta@nvidia.com> <27b39956-2a21-8eef-8ebb-cb3a93a41a36@applied-asynchrony.com>
+ <ab3e4c38-a7f9-01fc-f25f-f13f8e30985f@suse.cz>
+In-Reply-To: <ab3e4c38-a7f9-01fc-f25f-f13f8e30985f@suse.cz>
+From:   Nitin Gupta <ngupta@nitingupta.dev>
+Date:   Thu, 28 May 2020 10:38:57 -0700
+Message-ID: <CAB6CXpCpr=rmokWS14tTvgkYaiFac-QKPg8xXFbKYn1uD5k0pg@mail.gmail.com>
+Subject: Re: [PATCH v5] mm: Proactive compaction
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     =?UTF-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>,
+        Nitin Gupta <nigupta@nvidia.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/26/20 6:51 PM, Sasha Levin wrote:
-> On Tue, May 26, 2020 at 06:03:35PM -0400, Don Porter wrote:
->> On 5/26/20 4:27 PM, Sasha Levin wrote:
->>> I'm really worried about the disconnect between how you view the current
->>> state of Graphene (and the industry) vs Intel and the various cloud
->>> providers.
->>>
-> 
-> Sorry, I wasn't trying to suggest that all cloud vendors are pushing
-> Graphene, but rather than SGX enabled platforms became a commodity
-> product, users will end up using Graphene-like applications.
-> 
-> Let me provide an example:
-> https://www.alibabacloud.com/blog/protecting-go-language-applications-with-the-graphene-library-os-on-intel%C2%AE-sgx%C2%AE-secured-alibaba-cloud_594889 
-> 
-> - a "practical" guide on how to run Graphene in production environment
->    on one of the big cloud vendor platforms.
+On Thu, May 28, 2020 at 2:50 AM Vlastimil Babka <vbabka@suse.cz> wrote:
+>
+> On 5/28/20 11:15 AM, Holger Hoffst=C3=A4tte wrote:
+> >
+> > On 5/18/20 8:14 PM, Nitin Gupta wrote:
+> > [patch v5 :)]
+> >
+> > I've been successfully using this in my tree and it works great, but a =
+friend
+> > who also uses my tree just found a bug (actually an improvement ;) due =
+to the
+> > change from HUGETLB_PAGE_ORDER to HPAGE_PMD_ORDER in v5.
+> >
+> > When building with CONFIG_TRANSPARENT_HUGEPAGE=3Dn (for some reason it =
+was off)
+> > HPAGE_PMD_SHIFT expands to BUILD_BUG() and compilation fails like this:
+>
+> Oops, I forgot about this. Still I believe HPAGE_PMD_ORDER is the best ch=
+oice as
+> long as THP's are enabled. I guess fallback to HUGETLB_PAGE_ORDER would b=
+e
+> possible if THPS are not enabled, but AFAICS some architectures don't def=
+ine
+> that. Such architectures perhaps won't benefit from proactive compaction =
+anyway?
+>
 
-You have convinced me there is a concerning disconnect here, and we need 
-to be proactive as a project to correct this.  We are adding warnings to 
-the project with all due haste.
+I am not sure about such architectures but in such cases, we would end
+up calculating
+"fragmentation score" based on a page size which does not match the
+architecture's
+view of the "default hugepage size" which is not a terrible thing in
+itself as compaction
+can still be done in the background, after all.
+
+Since we always need a target order to calculate the fragmentation score, h=
+ow
+about this fallack scheme:
+
+HPAGE_PMD_ORDER -> HUGETLB_PAGE_ORDER -> PMD_ORDER
+
+Thanks,
+Nitin
