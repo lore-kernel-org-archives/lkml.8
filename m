@@ -2,65 +2,70 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B663C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2913C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2A0207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAFB0207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391456AbgE1SJA (ORCPT
+        id S2391449AbgE1SLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:09:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48014 "EHLO
+        Thu, 28 May 2020 14:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391412AbgE1SI4 (ORCPT
+        with ESMTP id S2405700AbgE1SLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:08:56 -0400
+        Thu, 28 May 2020 14:11:12 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEBF0C08C5C6;
-        Thu, 28 May 2020 11:08:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91E57C08C5CB;
+        Thu, 28 May 2020 11:11:10 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 34CF71295A274;
-        Thu, 28 May 2020 11:08:56 -0700 (PDT)
-Date:   Thu, 28 May 2020 11:08:55 -0700 (PDT)
-Message-Id: <20200528.110855.1734440342981569253.davem@davemloft.net>
-To:     wu000273@umn.edu
-Cc:     kjlu@umn.edu, j.vosburgh@gmail.com, vfalico@gmail.com,
-        andy@greyhouse.net, kuba@kernel.org, sfeldma@cumulusnetworks.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bonding: Fix reference count leak in
- bond_sysfs_slave_add.
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 20C1A1295A290;
+        Thu, 28 May 2020 11:11:10 -0700 (PDT)
+Date:   Thu, 28 May 2020 11:11:09 -0700 (PDT)
+Message-Id: <20200528.111109.1342245458513992889.davem@davemloft.net>
+To:     doshir@vmware.com
+Cc:     netdev@vger.kernel.org, pv-drivers@vmware.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 0/4] vmxnet3: upgrade to version 4
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200528031029.11078-1-wu000273@umn.edu>
-References: <20200528031029.11078-1-wu000273@umn.edu>
+In-Reply-To: <20200528.110746.401143968929865213.davem@davemloft.net>
+References: <20200528015426.8285-1-doshir@vmware.com>
+        <20200528.110746.401143968929865213.davem@davemloft.net>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 May 2020 11:08:56 -0700 (PDT)
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 28 May 2020 11:11:10 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: wu000273@umn.edu
-Date: Wed, 27 May 2020 22:10:29 -0500
-
-> From: Qiushi Wu <wu000273@umn.edu>
-> 
-> kobject_init_and_add() takes reference even when it fails.
-> If this function returns an error, kobject_put() must be called to
-> properly clean up the memory associated with the object. Previous
-> commit "b8eb718348b8" fixed a similar problem.
-> 
-> Fixes: 07699f9a7c8d ("bonding: add sysfs /slave dir for bond slave devices.")
-> Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-
-Applied and queued up for -stable, thanks.
+RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogVGh1LCAyOCBN
+YXkgMjAyMCAxMTowNzo0NiAtMDcwMCAoUERUKQ0KDQo+IFNlcmllcyBhcHBsaWVkLCB0aGFuayB5
+b3UuDQoNClRoaXMgZG9lc24ndCBldmVuIGNvbXBpbGUgc3VjY2Vzc2Z1bGx5LCByZXZlcnRlZC4u
+LiA6KA0KDQpkcml2ZXJzL25ldC92bXhuZXQzL3ZteG5ldDNfZHJ2LmM6IEluIGZ1bmN0aW9uIKF2
+bXhuZXQzX3RxX3htaXSiOg0KZHJpdmVycy9uZXQvdm14bmV0My92bXhuZXQzX2Rydi5jOjExNDU6
+NTogZXJyb3I6IGV4cGVjdGVkIKF9oiBiZWZvcmUgoWVsc2WiDQogMTE0NSB8ICAgfSBlbHNlIHsN
+CiAgICAgIHwgICAgIF5+fn4NCmRyaXZlcnMvbmV0L3ZteG5ldDMvdm14bmV0M19ldGh0b29sLmM6
+IEluIGZ1bmN0aW9uIKF2bXhuZXQzX2dldF9yc3NfaGFzaF9vcHRzojoNCmRyaXZlcnMvbmV0L3Zt
+eG5ldDMvdm14bmV0M19ldGh0b29sLmM6NzQ0OjY6IHdhcm5pbmc6IHRoaXMgc3RhdGVtZW50IG1h
+eSBmYWxsIHRocm91Z2ggWy1XaW1wbGljaXQtZmFsbHRocm91Z2g9XQ0KICA3NDQgfCAgIGlmIChy
+c3NfZmllbGRzICYgVk1YTkVUM19SU1NfRklFTERTX0VTUElQNCkNCiAgICAgIHwgICAgICBeDQpk
+cml2ZXJzL25ldC92bXhuZXQzL3ZteG5ldDNfZXRodG9vbC5jOjc0NjoyOiBub3RlOiBoZXJlDQog
+IDc0NiB8ICBjYXNlIFNDVFBfVjRfRkxPVzoNCiAgICAgIHwgIF5+fn4NCm1ha2VbM106ICoqKiBb
+c2NyaXB0cy9NYWtlZmlsZS5idWlsZDoyNjc6IGRyaXZlcnMvbmV0L3ZteG5ldDMvdm14bmV0M19k
+cnYub10gRXJyb3IgMQ0KbWFrZVszXTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNoZWQgam9icy4u
+Li4NCm1ha2VbMl06ICoqKiBbc2NyaXB0cy9NYWtlZmlsZS5idWlsZDo0ODg6IGRyaXZlcnMvbmV0
+L3ZteG5ldDNdIEVycm9yIDINCm1ha2VbMV06ICoqKiBbc2NyaXB0cy9NYWtlZmlsZS5idWlsZDo0
+ODg6IGRyaXZlcnMvbmV0XSBFcnJvciAyDQptYWtlWzFdOiAqKiogV2FpdGluZyBmb3IgdW5maW5p
+c2hlZCBqb2JzLi4uLg0KbWFrZTogKioqIFtNYWtlZmlsZToxNzI5OiBkcml2ZXJzXSBFcnJvciAy
+DQo=
