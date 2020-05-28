@@ -2,116 +2,106 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63411C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A965DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44FF02084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590678203;
-	bh=yCrRflPa+owv3moiIgb+n52ywNy7D1ovIWfQG7sa6Jc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RPtO9IteMN9//FSCx17VU7X24u7jg8uAig/U2rJXcvk5raJQ5sN0KcCMtHC5OONBl
-	 4okcedlQTnJd8GO2SJk292QoveCIuGqI48ClcBOzrIAp+K1MD6VD7SlrgInXNffXpe
-	 9Ljr/lYFDrIKRAjomvfwlrbGZdCREln/SGjtc0P4=
+	by mail.kernel.org (Postfix) with ESMTP id 8BF9D2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404166AbgE1PDW (ORCPT
+        id S2403959AbgE1PDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:03:22 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35115 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403912AbgE1PDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:03:16 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n5so3561883wmd.0;
-        Thu, 28 May 2020 08:03:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=evz1lutsdd2Eqt9o4+KgC57g/gR26qB8cQ2KV6NODWs=;
-        b=VJx/HwbXl5o/d18rL9jXFWIru48CRcbu6zMa/nbL8uHL5RkpLFzluxqMPSHkiUACnq
-         8fpdo/KWej952ZGVeM52GUKte5NExvG3LpYfxGglSAuy0TBPmQxlIIK82X7RgOLgJmXB
-         +pjpUIOL/bVQorU96JoWT/ysuQZBRxRchyXcPh4B01yzJEnbYuNZSzg4Di2PgdvnQw22
-         ksF9CdT4clBfpm1g7Phqf34d9bI09L/NOjel519iuryPdW9UVpqHeITg1pNWQgwAcNU0
-         V4UJuQwu9Zb4g6+2NLS3L5y+wF758rtkI/+FjSh/df4TUBaKBHx9YBdCX2ufGjpBOo78
-         eMbg==
-X-Gm-Message-State: AOAM5335KeIBGypNdrt0JATwyrPXP/uVxG66RygJwBLuKrIswRUKlp8s
-        U+85bywfUrHGjRi+1zXV9K4=
-X-Google-Smtp-Source: ABdhPJzniI6Aw1b/FqGaEPNB/a6M/vRt8hKQ5Zx5UYlLdgljMoGjhh+KSxCloB6yCJzH8NHlfHrceg==
-X-Received: by 2002:a1c:b0c8:: with SMTP id z191mr3947280wme.165.1590678193035;
-        Thu, 28 May 2020 08:03:13 -0700 (PDT)
-Received: from localhost (ip-37-188-185-40.eurotel.cz. [37.188.185.40])
-        by smtp.gmail.com with ESMTPSA id k14sm6163539wrq.97.2020.05.28.08.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 08:03:11 -0700 (PDT)
-Date:   Thu, 28 May 2020 17:03:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>,
-        Chris Down <chris@chrisdown.name>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Linux F2FS DEV, Mailing List" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Chao Yu <chao@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Chao Yu <yuchao0@huawei.com>, lkft-triage@lists.linaro.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>, Cgroups <cgroups@vger.kernel.org>
-Subject: Re: mm: mkfs.ext4 invoked oom-killer on i386 - pagecache_get_page
-Message-ID: <20200528150310.GG27484@dhcp22.suse.cz>
-References: <20200519075213.GF32497@dhcp22.suse.cz>
- <CAK8P3a2T_j-Ynvhsqe_FCqS2-ZdLbo0oMbHhHChzMbryE0izAQ@mail.gmail.com>
- <20200519084535.GG32497@dhcp22.suse.cz>
- <CA+G9fYvzLm7n1BE7AJXd8_49fOgPgWWTiQ7sXkVre_zoERjQKg@mail.gmail.com>
- <CA+G9fYsXnwyGetj-vztAKPt8=jXrkY8QWe74u5EEA3XPW7aikQ@mail.gmail.com>
- <20200520190906.GA558281@chrisdown.name>
- <20200521095515.GK6462@dhcp22.suse.cz>
- <20200521163450.GV6462@dhcp22.suse.cz>
- <CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com>
- <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
+        Thu, 28 May 2020 11:03:53 -0400
+Received: from mga05.intel.com ([192.55.52.43]:26365 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403901AbgE1PDt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:03:49 -0400
+IronPort-SDR: T0Gx3S+1NnyGgLRJKpvK8ZqMaC/usWv+kn5tDWPRuBLdyDMoPJf0EI4LNQy8XBy68xZy20hSf8
+ JzdV5+YreAmQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:03:48 -0700
+IronPort-SDR: VCP24WwpwTZQMISVT31BpFmDM2ZKPpBO2QU5tNkPxtdm/saoNw2Q2QS82qfDVk1hdz1UxhZQdu
+ 4XiBex7pwm4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="469143502"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 28 May 2020 08:03:47 -0700
+Received: from [10.214.148.6] (vramuthx-mobl1.gar.corp.intel.com [10.214.148.6])
+        by linux.intel.com (Postfix) with ESMTP id 8928D5803E3;
+        Thu, 28 May 2020 08:03:41 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v9 1/2] dt-bindings: mtd: Add Nand Flash Controller
+ support for Intel LGM SoC
+To:     Rob Herring <robh@kernel.org>
+Cc:     vigneshr@ti.com, linux-kernel@vger.kernel.org, arnd@arndb.de,
+        hauke.mehrtens@intel.com, linux-mips@vger.kernel.org,
+        richard@nod.at, qi-ming.wu@intel.com, tglx@linutronix.de,
+        brendanhiggins@google.com, linux-mtd@lists.infradead.org,
+        boris.brezillon@collabora.com, anders.roxell@linaro.org,
+        cheol.yong.kim@intel.com, devicetree@vger.kernel.org,
+        miquel.raynal@bootlin.com, andriy.shevchenko@intel.com,
+        robh+dt@kernel.org, masonccyang@mxic.com.tw
+References: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200528051211.3063-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200528140606.GA4173978@bogus>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <9ef6560e-9981-57a8-8d6d-88ba40b2be88@linux.intel.com>
+Date:   Thu, 28 May 2020 23:03:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYs2jg-j_5fdb0OW0G-JzDjN7b8d9qnX7uuk9p4c7mVSig@mail.gmail.com>
+In-Reply-To: <20200528140606.GA4173978@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 22-05-20 02:23:09, Naresh Kamboju wrote:
-> My apology !
-> As per the test results history this problem started happening from
-> Bad : next-20200430 (still reproducible on next-20200519)
-> Good : next-20200429
-> 
-> The git tree / tag used for testing is from linux next-20200430 tag and reverted
-> following three patches and oom-killer problem fixed.
-> 
-> Revert "mm, memcg: avoid stale protection values when cgroup is above
-> protection"
-> Revert "mm, memcg: decouple e{low,min} state mutations from protectinn checks"
-> Revert "mm-memcg-decouple-elowmin-state-mutations-from-protection-checks-fix"
+Hi Rob,
 
-The discussion has fragmented and I got lost TBH.
-In http://lkml.kernel.org/r/CA+G9fYuDWGZx50UpD+WcsDeHX9vi3hpksvBAWbMgRZadb0Pkww@mail.gmail.com
-you have said that none of the added tracing output has triggered. Does
-this still hold? Because I still have a hard time to understand how
-those three patches could have the observed effects.
--- 
-Michal Hocko
-SUSE Labs
+On 28/5/2020 10:06 pm, Rob Herring wrote:
+> On Thu, 28 May 2020 13:12:10 +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add YAML file for dt-bindings to support NAND Flash Controller
+>> on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/mtd/intel,lgm-nand.yaml    | 93 ++++++++++++++++++++++
+>>   1 file changed, 93 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
+>>
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: '#address-cells', '#size-cells' do not match any of the regexes: '^nand@[a-f0-9]+$', 'pinctrl-[0-9]+'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mtd/intel,lgm-nand.example.dt.yaml: nand-controller@e0f00000: nand@0: '#address-cells', '#size-cells', 'nand-on-flash-bbt' do not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> See https://patchwork.ozlabs.org/patch/1299399
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+Thank you!!!
+
+Oh my bad, used old dtc compiler path and didn't see the error, will fix.
+
+Regards
+Vadivel
+
+> 
