@@ -7,156 +7,146 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC20C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6CF20776
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B0F20776
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0SfhFNx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cc6qe0Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387762AbgE1KTm (ORCPT
+        id S2387796AbgE1KTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:19:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59638 "EHLO
+        Thu, 28 May 2020 06:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387717AbgE1KTh (ORCPT
+        with ESMTP id S2387717AbgE1KTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:19:37 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34F9FC08C5C5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:19:37 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id g7so9460189uap.7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 03:19:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f5eLdtnXoyYrMReynJ8g23vP6dcjH2deBArK9MBPsOA=;
-        b=E0SfhFNxQyV6Kh+9tWKDRG4U5sfqRQI5rDSruFXsJJLQLir/rQrwWI5QcOYlJwuQCk
-         Ruo3Kc+DPz+HBMfcM6GbV1XHVkZe0rw+E3qMRvnSVOqNyTHAsbH4p/KTS1HBOOyY9OJ7
-         gwSQCv7QRvOw0nYZID/1WqcBILuTP0HvtDQukSUUyNfedVG/STJ3rno6I2hz2ReBDWHw
-         TQbImKFmrPZG+EeG4rcQ/ueL0EJitzGg+WJkdcT92NegsshP3LkwQE2Tr6QoLqS0dwdB
-         CnyZcA32OQkkzto7OzjPl15fgpmq/ebuhyHafa6nfguLRUeHUbwTA0LatnSm5j1cLqbG
-         BPYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f5eLdtnXoyYrMReynJ8g23vP6dcjH2deBArK9MBPsOA=;
-        b=iXXfcSyBSOs+drzt22BDwqJF0crGC3Ez0gW1QLLFpguM/f4B5t9ncAQhGzo+dEZiWW
-         WbNCK3Iv+YuXimrVzGZ0gHXgEw9uaqGGV5SU+LGv/KikE7OIeljU7wro/UhOrGoXFpTb
-         5XN+QAgev0FyQCqr8H1MEUFCOAnP96WXn+amiAgpnYnYU3zQ+gl9miNK5aZxCbl5Ro9E
-         DtkB8VNaokazmBrP8+1VnADJxbwDmzJizIcuKbTsBpwHQvSR2DmjUFXIsM7IHovh3Qp0
-         vVjkDKfXQvtQSeJeGAypTfAWyJ2VNp++lXHLZ0hUOy0b7cCDqnfSJBhCk7f94a0jAWnW
-         Q4ZQ==
-X-Gm-Message-State: AOAM530/bS47KNLa63LM+Rz2MO7xlQhLZPWYB1KsWta7qLjwqmhxYhHp
-        jh9qLFmwkmdZQ4gN96V2BP7F62ob483Wto2yw1kNwg==
-X-Google-Smtp-Source: ABdhPJwU4FQfKxI8zbZS6DJQ0er77d6//XOhOdE8ysvkLwNHc++5I8kqqLBnsndpoGGUHLv4GXHsMapzXESGeGZ950s=
-X-Received: by 2002:ab0:70c9:: with SMTP id r9mr1364877ual.15.1590661175270;
- Thu, 28 May 2020 03:19:35 -0700 (PDT)
+        Thu, 28 May 2020 06:19:44 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B8E0C05BD1E;
+        Thu, 28 May 2020 03:19:44 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49XkG56Yryz9sRY;
+        Thu, 28 May 2020 20:19:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1590661182;
+        bh=IszKvvDOxq/C0cwGvrIkv686ESl0u0/FYLJoye6b6ms=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Cc6qe0AgGyw/1T9j6tw1VLeCUEz8VoG+BB9WE0GVKrJJr8O+hIrtzBOHe13ZSLWdA
+         Udpwv5VGrabc/aaFEJUGGymSJEn3mqF68IwuDL44MdN3Unr+Hbk5sviNoaA/imOCiE
+         bR3zgxOliDCcgv/jn5YRARl57+19Ke/ZYA5pH0oqpsMOO6XKDspmJLatkZ1R7VfasF
+         Ta8BqcUw56dVuSRvA+A42fyXcxpOaxVZ61zA99ibkxD6u/63fMDYM4mItQA18SHnLm
+         M6heLhKXy25nzFheP+ujFz/L21sgUyvpxldkNRTJJPbLC+ilwR7LED3nUWZzZyO4Hd
+         IsFOTHAnPdtUg==
+Date:   Thu, 28 May 2020 20:19:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mukul Joshi <mukul.joshi@amd.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200528201940.759c58ff@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200527082334.20774-1-tomi.valkeinen@ti.com> <CGME20200528091458eucas1p13645743b402f161dfa2fcd2b1e0e3b60@eucas1p1.samsung.com>
- <CAPDyKFqRa81q9EYFKB52kr6+EPJBK5u+4_hC0+ZnxU_axbxAZQ@mail.gmail.com> <53acbff5-ccb2-1f26-c1e3-54a540ac537f@samsung.com>
-In-Reply-To: <53acbff5-ccb2-1f26-c1e3-54a540ac537f@samsung.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 28 May 2020 12:18:59 +0200
-Message-ID: <CAPDyKFqgf=G3U3wRkiZaskVGYVzM=HBfuZwfsQA7N48Su7-NPg@mail.gmail.com>
-Subject: Re: [PATCHv2] media: videobuf2-dma-contig: fix bad kfree in vb2_dma_contig_clear_max_seg_size
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/ynU0manH9YL0PYqxaSew.4t";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 28 May 2020 at 11:24, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->
-> Hi Ulf,
->
-> On 28.05.2020 11:14, Ulf Hansson wrote:
-> > On Wed, 27 May 2020 at 10:23, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> >> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
-> >> Initialize dma_parms for platform devices") in v5.7-rc5 causes
-> >> vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
-> >> allocated by vb2_dma_contig_set_max_seg_size().
-> >>
-> >> The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
-> >> dev->dma_parms is always NULL when the driver is probed, and the case
-> >> where dev->dma_parms has bee initialized by someone else than the driver
-> >> (by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
-> >>
-> >> All the current users of these functions are platform devices, which now
-> >> always have dma_parms set by the driver core. To fix the issue for v5.7,
-> >> make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
-> >> NULL to be on the safe side, and remove the kfree code from
-> >> vb2_dma_contig_clear_max_seg_size().
-> >>
-> >> For v5.8 we should remove the two functions and move the
-> >> dma_set_max_seg_size() calls into the drivers.
-> >>
-> >> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> >> Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
-> >> Cc: stable@vger.kernel.org
-> > Thanks for fixing this!
-> >
-> > However, as I tried to point out in v1, don't you need to care about
-> > drivers/media/platform/s5p-mfc/s5p_mfc.c, which allocates its own type
-> > of struct device (non-platform). No?
->
-> I will send a patch for the S5P MFC driver separately. It is not so
-> critical, because the mentioned 2port memory case is not used on any
-> board with the default exynos_defconfig from mainline. On Exynos4-based
-> boards it is only used when IOMMU is disabled. It is mainly for
-> S5PV210/S5PC110 boards, which are still not fully functional after
-> conversion to device-tree.
+--Sig_/ynU0manH9YL0PYqxaSew.4t
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Okay, makes sense to me. Feel free to add:
+Hi all,
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+After merging the akpm tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-For the s5p_mfc issue, here's how I would have done it (just pick the
-code if you want).
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c: In function 'kfd_sdma_a=
+ctivity_worker':
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:117:2: error: implicit d=
+eclaration of function 'use_mm' [-Werror=3Dimplicit-function-declaration]
+  117 |  use_mm(mm);
+      |  ^~~~~~
+drivers/gpu/drm/amd/amdgpu/../amdkfd/kfd_process.c:144:2: error: implicit d=
+eclaration of function 'unuse_mm' [-Werror=3Dimplicit-function-declaration]
+  144 |  unuse_mm(mm);
+      |  ^~~~~~~~
 
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-index 5c2a23b953a4..7acf2a03812d 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-@@ -1070,6 +1070,7 @@ static const struct v4l2_file_operations s5p_mfc_fops = {
- /* DMA memory related helper functions */
- static void s5p_mfc_memdev_release(struct device *dev)
- {
-+       kfree(dev->dma_parms);
-        of_reserved_mem_device_release(dev);
+Caused by commit
+
+  d21760f76006 ("kernel: better document the use_mm/unuse_mm API contract")
+
+interacting with commit
+
+  522b89c63370 ("drm/amdkfd: Track SDMA utilization per process")
+
+from the amdgpu tree.
+
+I have added the following patch for today:
+
+rom: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 28 May 2020 20:15:34 +1000
+Subject: [PATCH] drm/amdkfd: fix up for {un}use_mm() rename
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd=
+/amdkfd/kfd_process.c
+index db010c5da144..25636789f3d3 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -114,7 +114,7 @@ static void kfd_sdma_activity_worker(struct work_struct=
+ *work)
+ 		return;
+ 	}
+=20
+-	use_mm(mm);
++	kthread_use_mm(mm);
+=20
+ 	dqm_lock(dqm);
+=20
+@@ -141,7 +141,7 @@ static void kfd_sdma_activity_worker(struct work_struct=
+ *work)
+ 	}
+=20
+ 	dqm_unlock(dqm);
+-	unuse_mm(mm);
++	kthread_unuse_mm(mm);
+ 	mmput(mm);
  }
+=20
+--=20
+2.26.2
 
-@@ -1090,6 +1091,10 @@ static struct device
-*s5p_mfc_alloc_memdev(struct device *dev,
-        child->dma_mask = dev->dma_mask;
-        child->release = s5p_mfc_memdev_release;
+--=20
+Cheers,
+Stephen Rothwell
 
-+       child->dma_parms = kzalloc(sizeof(*child->dma_parms), GFP_KERNEL);
-+       if (!child->dma_parms)
-+               goto err;
-+
-        /*
-         * The memdevs are not proper OF platform devices, so in order for them
-         * to be treated as valid DMA masters we need a bit of a hack to force
-@@ -1105,6 +1110,7 @@ static struct device
-*s5p_mfc_alloc_memdev(struct device *dev,
-                device_del(child);
-        }
+--Sig_/ynU0manH9YL0PYqxaSew.4t
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-+err:
-        put_device(child);
-        return NULL;
- }
+-----BEGIN PGP SIGNATURE-----
 
-Kind regards
-Uffe
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PkDwACgkQAVBC80lX
+0GwLZgf/f8fma9ON/CWmYBr8ou68R7zXknO8hP7vQ6YvYsPWNCjr+5dW63cj/hWk
+SsdMxblbC3J4JKJ0w3meyNjR75ipV+W292mVfVk8gErGbNv1FRaQqbWzpxqvXTcn
+G/LSMvbQpY4Cu/oHB2hFx0cFMl5dd2cb9DcojXq7CQUsMpqHVDZsTZRQs8FSHPoc
+1j1DeFheCcA6o7Kd0/KqwHzv8ityNWd96PRAapuFbUYQfjDiN0MWb78Ng8j7JEy/
+xovei7zkz7D/PJW88TljauzhPCeTtUErjXBNNsneWmUfurNE2/9shT4Zq99DkXSZ
+R3s6ZYgnGFG+j+y13xxtaZYRr93STg==
+=ABD0
+-----END PGP SIGNATURE-----
+
+--Sig_/ynU0manH9YL0PYqxaSew.4t--
