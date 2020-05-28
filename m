@@ -2,104 +2,132 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1308C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC32A207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94837207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUMu+Kpz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U3Tsc1uJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbgE1Ek3 (ORCPT
+        id S1726827AbgE1EnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 00:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgE1Ek2 (ORCPT
+        Thu, 28 May 2020 00:43:05 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:54275 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE1EnE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 00:40:28 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59ED5C05BD1E;
-        Wed, 27 May 2020 21:40:27 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x10so11011973plr.4;
-        Wed, 27 May 2020 21:40:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SEFEjOeVaCb6nRVJJoHwrwcnuKr7Yd2WmIU8A9Wz24w=;
-        b=gUMu+KpzmcRaYBU3gFRGvFKQqtwZpCg/gRJKUF0aRETBDeFJ7Ei88kCtWIUF1VzI/N
-         DUXzKkdoRhcH1MC3CsrigOaqUpojb/ol9B1tL5RY4VXO6UPyGb6xwamjluCvDtbRzyhp
-         gpHUXBDBZtMYK1qlCvFSDoSEmlTlboRJxvRFN8JmfV8orlCJwGKMeXKZ3s31Mb20qHXH
-         JFIs+4cLo7FXGjYkoM4Nvrj0d7+HVq/PUNdJFLifxie0t7YJlVq3eYbPMffgPS8zcj9P
-         9x+X0ERXkoa87dOfsTKOS1RR4sfGzzgHKxoZbUV/UC4Cu4qBlpgcNX1ehhKVJcol8Rsr
-         B+Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SEFEjOeVaCb6nRVJJoHwrwcnuKr7Yd2WmIU8A9Wz24w=;
-        b=HRdy11BAVkmmSDhxWgFwbzv/HZj94nedyIFq3nhM+thQxC9g0ChWQRbFM3r5NeTenh
-         WNymQRm13VUg0ENnZ08rQ0wiogTU/hk0Pl6+BOJFx7t+MK7bTc3HZ5X1MTaZKd0k+oxz
-         gaBfZtPxJE9em1fWzIvid0pdXtTJdcgEJ9/DTV/vocp6TYzol+XbbENzj2BDPlEgGH5O
-         bFV3X2R5BrB+9g5x6YLHwiyK9sDyk312cVUhsMYwT0uzdaul0AAoXb3vguUhYZdpCokH
-         DWJ6y0wq02rFAvCS120dPpKLOngCPT2jHhje+pfDGtUFmVLOJj0kedQ3A5x1oClqcGmR
-         2Reg==
-X-Gm-Message-State: AOAM53098QPHuCQ/Dz82hOFRJhqFSlQyjsq6K5jBfDMOdFG2Gpt943JP
-        cQYIbsugFVYjTJszOl74Kqw=
-X-Google-Smtp-Source: ABdhPJyjB8szJpiEjE7QVqILRUwFv3h+Joj2z5+3aAbN8VXbd1T5YQksO13/m9WhGbwQmgW/OChQQg==
-X-Received: by 2002:a17:902:9b88:: with SMTP id y8mr1754669plp.171.1590640826833;
-        Wed, 27 May 2020 21:40:26 -0700 (PDT)
-Received: from [192.168.1.5] ([75.164.7.205])
-        by smtp.gmail.com with ESMTPSA id i29sm3450648pfk.38.2020.05.27.21.40.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 27 May 2020 21:40:26 -0700 (PDT)
-Subject: Re: [PATCH] tpm: Revert "tpm: fix invalid locking in NONBLOCKING
- mode"
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Alex Guzman <alex@guzman.io>
-References: <20200526183213.20720-1-mario.limonciello@dell.com>
- <1590520454.11810.40.camel@HansenPartnership.com>
- <f63afdc1-6c40-dc0d-bb9a-154bc51d3b95@gmail.com>
- <20200528003040.GA4781@linux.intel.com>
-From:   Tadeusz Struk <tstruk@gmail.com>
-Message-ID: <e939739d-d193-95e8-c142-4efa57be2502@gmail.com>
-Date:   Wed, 27 May 2020 21:40:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 00:43:04 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200528044301epoutp01ae1d6c90f01c780e9eb685aa80f8e2ef~TF4tw29gG2199321993epoutp01f
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:43:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200528044301epoutp01ae1d6c90f01c780e9eb685aa80f8e2ef~TF4tw29gG2199321993epoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590640981;
+        bh=Ifl6upRPYldFInrD+MnQOAMq5IXbw4SSBWckwLPYgA4=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=U3Tsc1uJ34LahG/N9pHCOdVH3/LwudF+QfoqENKsB10fD7MZKP6pneM7LIiZnRNHo
+         m9f6KlXOT0gqvB4AgQUw6MpawX5vADuCM21LkPRkJnteFpVzKWLYJyh10D2An6kMLy
+         FVE2CMPPiP21ewipRkEvJBZYmbP/XpVsj1vCKw70=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200528044300epcas1p22579ec3b77e60304827bf31084b2dfae~TF4tXTpGj1659616596epcas1p2g;
+        Thu, 28 May 2020 04:43:00 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49XZnb2KvNzMqYkV; Thu, 28 May
+        2020 04:42:59 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A9.38.04392.2514FCE5; Thu, 28 May 2020 13:42:58 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200528044257epcas1p29993d86ddc9e7880fc3e024eb28a818e~TF4qcJmYc0783007830epcas1p2K;
+        Thu, 28 May 2020 04:42:57 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200528044257epsmtrp12933f7bfad9c1eaa8ef1f5ff315f52dd~TF4qbZj6S0434504345epsmtrp10;
+        Thu, 28 May 2020 04:42:57 +0000 (GMT)
+X-AuditID: b6c32a37-cabff70000001128-7e-5ecf4152bdaf
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F0.D5.08303.1514FCE5; Thu, 28 May 2020 13:42:57 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200528044257epsmtip1a2c27d2ba70913a4ac42381210a8d27f~TF4qK-x4K1265112651epsmtip1S;
+        Thu, 28 May 2020 04:42:57 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+Subject: RE: [PATCH] exfat: optimize dir-cache
+Date:   Thu, 28 May 2020 13:42:57 +0900
+Message-ID: <015001d634aa$7588c2b0$609a4810$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200528003040.GA4781@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQIppg9uhSXp+fpSRiclI8Xh/geTfAMD/7F2p/3na3A=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmrm6Q4/k4g97f3BZvTk5lsdiz9ySL
+        xeVdc9gsLv//xGKx7MtkFost/46wOrB5fJlznN2jbfI/do/mYyvZPPq2rGL0+LxJLoA1Kscm
+        IzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+gCJYWyxJxS
+        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BoUGBXnFibnFpXrpecn6ulaGBgZEpUGVCTsac
+        Fb/YCp6xVPxdcoa5gbGVpYuRk0NCwETiTNd5ti5GLg4hgR2MEl+vLmOGcD4xSlzvnswC4Xxm
+        lPj9/RMrXEv7QiaIxC5Gied3H7FDOC8ZJeZ8u84IUsUmoCvx789+NhBbRMBdYsfCA2CjmAXO
+        M0os3twAluAUCJJYc2EOWIOwgJ7Ex28vgcZycLAIqErsPFEOEuYVsJS4c/sgM4QtKHFy5hOw
+        w5kF5CW2v53DDHGRgsTPp8tYIXZZSZx6OoERokZEYnZnG9g/EgITOSSWf7wI9bWLxMr1+6Fs
+        YYlXx7ewQ9hSEi/729hBbpAQqJb4uB9qfgejxIvvthC2scTN9RtYQUqYBTQl1u/ShwgrSuz8
+        PRdqLZ/Eu689rBBTeCU62oQgSlQl+i4dZoKwpSW62j+wT2BUmoXksVlIHpuF5IFZCMsWMLKs
+        YhRLLSjOTU8tNiwwRo7sTYzg1KllvoNxwzmfQ4wCHIxKPLwGHufihFgTy4orcw8xSnAwK4nw
+        Op09HSfEm5JYWZValB9fVJqTWnyI0RQY7BOZpUST84FpPa8k3tDUyNjY2MLEzNzM1FhJnHf+
+        jzNxQgLpiSWp2ampBalFMH1MHJxSDYyFwaeywj5FWsb77StiZzEIerw5drPcNe+bfDcrrwfF
+        HgywX/U0ZIIP/60lD/eyPtst8DZ1t+2M+a3rSz/tavzwZrm/Y1H7LM0L38z1//QF5mi/ffOu
+        sc3jk3T9vvUTf+TxzuV586zF9e62r98SdPROVKQzHDDyY78+Vepz58THiQtnt7dPt16lxFKc
+        kWioxVxUnAgAZHUI2LMDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSnG6g4/k4g08XRSzenJzKYrFn70kW
+        i8u75rBZXP7/icVi2ZfJLBZb/h1hdWDz+DLnOLtH2+R/7B7Nx1ayefRtWcXo8XmTXABrFJdN
+        SmpOZllqkb5dAlfGnBW/2AqesVT8XXKGuYGxlaWLkZNDQsBE4kz7QqYuRi4OIYEdjBLvplyB
+        SkhLHDtxhrmLkQPIFpY4fLgYouY5o0RP21lmkBo2AV2Jf3/2s4HYIgLuEjsWHmABKWIWuMgo
+        sW3PSnaIjsWMEn+mLgHr4BQIklhzYQ4jiC0soCfx8dtLJpANLAKqEjtPlIOEeQUsJe7cPsgM
+        YQtKnJz5hAWkhBmovG0jWCezgLzE9rdzmCHuVJD4+XQZK8QNVhKnnk6AqhGRmN3ZxjyBUXgW
+        kkmzECbNQjJpFpKOBYwsqxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgiNIS2sH455V
+        H/QOMTJxMB5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OEBNITS1Kz
+        U1MLUotgskwcnFINTAYGDoqHTwauPrPs35HuRJYmUyfDEPdWub1lLw4d0xORPbvj8qOqeM8/
+        /buNGc7aTVZhtr8clsa0sbt0wYHnnnc1lD9d3n1KWfSOTmPnTyur247v6hQ39P2PTPj0YIao
+        9L6WkqLUX3OEm8rmeNx7qnyjsu6AzzYhSbOZnLF6OqxW8i/bdH+cjvkfxTn9TeoVbv/Kg8wO
+        6t0VB4sdP5SV3GN2e/nmlI+i7kf91XIffNx2+n5lf6PIOt3mtZPclZINz0STA3sKW3mUJMJW
+        NLScN7z8RWV64JWOf5ICpxv2H3d/1rT909QKIev/m//czu9nnRxsu1UgOmbrsU0Hw+qzeYs3
+        uWh725/ep9jQJHhDiaU4I9FQi7moOBEAhLZZTw8DAAA=
+X-CMS-MailID: 20200528044257epcas1p29993d86ddc9e7880fc3e024eb28a818e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520075735epcas1p482c10e2ea2e5af1af36894677691cbc8
+References: <CGME20200520075735epcas1p482c10e2ea2e5af1af36894677691cbc8@epcas1p4.samsung.com>
+        <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 5:30 PM, Jarkko Sakkinen wrote:
->> This won't help if the message is read by an async tcti. If the problem lies
->> in the chip get locality code, perhaps this could help to debug the root-cause
->> instead of masking it out in the upper layer code:
-> What is TCTI and async TCTI? Not following.
+> +struct exfat_dentry *exfat_get_dentry_cached(
+> +	struct exfat_entry_set_cache *es, int num);
+You used a single tab for the continuing line of the prototype here.
+We usually use two tabs for this.
+>  struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
+> -		struct exfat_chain *p_dir, int entry, unsigned int type,
+> -		struct exfat_dentry **file_ep);
+> +		struct exfat_chain *p_dir, int entry, unsigned int type); void
+> +exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
+>  int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
+> 
 
-TPM Command Transmission Interface (TCTI) as defined by TCG in
-https://trustedcomputinggroup.org/resource/tss-tcti-specification/
-
-the reason we added the O_NONBLOCK mode was to satisfy the TCG spec for async TCTI.
-
-Thanks,
-Tadeusz
