@@ -2,91 +2,133 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A71C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9FC1207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7D7207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590647705;
+	bh=NuGCPmxAGBI2XK8Nm9wCfXWioEgp2KAM821Yx4GB6vY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=fouKaMM3c22N+nyAQoftFRoJudpTVUHF7jjnhI+1DOBQ4O3IfhB6r966EzgiZ3fvJ
+	 8tuM7qsu1M6hWo5suI/FOX2T8rbF+wplgwIueO49+LAHSFZV1EieftCmKkGr3Pc60t
+	 dSfVNetBfngJ+IhGrnZo4r7VP/9LwCjdIStaQHRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgE1Ge3 (ORCPT
+        id S1726036AbgE1GfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:34:29 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:34684 "EHLO fornost.hmeau.com"
+        Thu, 28 May 2020 02:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725601AbgE1Ge2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:34:28 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jeC6w-0007mj-Vx; Thu, 28 May 2020 16:33:52 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 28 May 2020 16:33:50 +1000
-Date:   Thu, 28 May 2020 16:33:50 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, jsrikanth@marvell.com, phemadri@marvell.com,
-        gustavo@embeddedor.com, tglx@linutronix.de,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] crypto: cavium/nitrox - Fix 'nitrox_get_first_device()'
- when ndevlist is fully iterated
-Message-ID: <20200528063350.GA26818@gondor.apana.org.au>
-References: <20200519204503.281872-1-christophe.jaillet@wanadoo.fr>
+        id S1725601AbgE1GfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 02:35:03 -0400
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00181207D3;
+        Thu, 28 May 2020 06:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590647703;
+        bh=NuGCPmxAGBI2XK8Nm9wCfXWioEgp2KAM821Yx4GB6vY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hBkGKwKaOLoXTSF2wTsqB3XRiFaK9iNxYq4NWm8JGcWnlrm4CKncsJCylmJkXMdel
+         SpQ/qZUXC0Z78TuhINGVMQ94Vu/RvBi4+0KYrIyOZwediIFmRY+Jv7Aol/OfdTUDgr
+         ytFM2BNE7Bjq5YA7WBPLJRAsmyTMb3b37fqQLi+A=
+Received: by mail-io1-f42.google.com with SMTP id c8so8427529iob.6;
+        Wed, 27 May 2020 23:35:02 -0700 (PDT)
+X-Gm-Message-State: AOAM530keRgFmV+8xsMlkiuBRXWK+Xl3Celi6A4oK95yBvx2H1WGzyZP
+        ZO8jxFC6M0ONnrHek7cB6Guba1khrm9VUVUpjhM=
+X-Google-Smtp-Source: ABdhPJznn4Cx3G1U8IfKievX2GTQvjlLB94d6qrtuij0ra7aauuhDyzjASGycwEt2xh3e/kXI5QpCJHBTCdgwh4eNYM=
+X-Received: by 2002:a02:3341:: with SMTP id k1mr1322375jak.74.1590647702377;
+ Wed, 27 May 2020 23:35:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200519204503.281872-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAPcyv4hO1XEMHPLY-W6g_=TK2Dv=rLgJoVeKrBEHP63zTeq-sA@mail.gmail.com>
+ <20200527232602.21596-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200527232602.21596-1-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 28 May 2020 08:34:50 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXH+FAdSbM7BEmMY7KOKnuUetx8zo42zPuhfnmf206AunQ@mail.gmail.com>
+Message-ID: <CAMj1kXH+FAdSbM7BEmMY7KOKnuUetx8zo42zPuhfnmf206AunQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/x86: Don't blow away existing initrd
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 19, 2020 at 10:45:03PM +0200, Christophe JAILLET wrote:
-> When a list is completely iterated with 'list_for_each_entry(x, ...)', x is
-> not NULL at the end.
-> 
-> Introduce an intermediate variable and test it instead, in order to
-> reliably know if something was found or not.
-> 
-> Fixes: f2663872f073 ("crypto: cavium - Register the CNN55XX supported crypto algorithms.")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+(+ Stephen, Boris)
+
+On Thu, 28 May 2020 at 01:26, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Commit
+>   987053a30016 ("efi/x86: Move command-line initrd loading to efi_main")
+> moved the command-line initrd loading into efi_main, with a check to
+> ensure that it was attempted only if the EFI stub was booted via
+> efi_pe_entry rather than the EFI handover entry.
+>
+> However, in the case where it was booted via handover entry, and thus an
+> initrd may have already been loaded by the bootloader, it then wrote 0
+> for the initrd address and size, removing any existing initrd.
+>
+> Fix this by checking if size is positive before setting the fields in
+> the bootparams structure.
+>
+> Fixes: 987053a30016 ("efi/x86: Move command-line initrd loading to efi_main")
+> Reported-by: Dan Williams <dan.j.williams@intel.com>
+> Tested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+
+Apologies to all for the breakage, and for not catching this in review.
+
+Ingo, Thomas, Boris: please apply this directly to efi/core asap.
+
+Stephen: gives that this breaks the boot for a lot of people, you
+might want to pull this into -next directly.
+
+Thanks,
+Ard.
+
+
 > ---
->  drivers/crypto/cavium/nitrox/nitrox_main.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/crypto/cavium/nitrox/nitrox_main.c b/drivers/crypto/cavium/nitrox/nitrox_main.c
-> index 788c6607078b..172cafe7c039 100644
-> --- a/drivers/crypto/cavium/nitrox/nitrox_main.c
-> +++ b/drivers/crypto/cavium/nitrox/nitrox_main.c
-> @@ -278,15 +278,18 @@ static void nitrox_remove_from_devlist(struct nitrox_device *ndev)
->  
->  struct nitrox_device *nitrox_get_first_device(void)
->  {
-> -	struct nitrox_device *ndev = NULL;
-> +	struct nitrox_device *ndev;
-> +	bool found = false;
->  
->  	mutex_lock(&devlist_lock);
->  	list_for_each_entry(ndev, &ndevlist, list) {
-> -		if (nitrox_ready(ndev))
-> +		if (nitrox_ready(ndev)) {
-> +			found = true;
->  			break;
-> +		}
->  	}
->  	mutex_unlock(&devlist_lock);
-> -	if (!ndev)
-
-Instead of adding found, you could fix this by changing the test to
-
-	if (&ndev->list == &nevlist)
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+>  drivers/firmware/efi/libstub/x86-stub.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 072b7cf40475..ceb8e16c8b75 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -774,10 +774,12 @@ unsigned long efi_main(efi_handle_t handle,
+>                         efi_err("Failed to load initrd!\n");
+>                         goto fail;
+>                 }
+> -               efi_set_u64_split(addr, &hdr->ramdisk_image,
+> -                                 &boot_params->ext_ramdisk_image);
+> -               efi_set_u64_split(size, &hdr->ramdisk_size,
+> -                                 &boot_params->ext_ramdisk_size);
+> +               if (size > 0) {
+> +                       efi_set_u64_split(addr, &hdr->ramdisk_image,
+> +                                         &boot_params->ext_ramdisk_image);
+> +                       efi_set_u64_split(size, &hdr->ramdisk_size,
+> +                                         &boot_params->ext_ramdisk_size);
+> +               }
+>         }
+>
+>         /*
+> --
+> 2.26.2
+>
