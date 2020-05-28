@@ -2,143 +2,113 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F527207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AC7207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 06:40:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="l3Ii8A5y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhZlk94F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbgE1GjO (ORCPT
+        id S1726114AbgE1Gkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 02:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53666 "EHLO
+        Thu, 28 May 2020 02:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbgE1GjL (ORCPT
+        with ESMTP id S1725811AbgE1Gkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 02:39:11 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FBBC05BD1E;
-        Wed, 27 May 2020 23:39:11 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 0AE4B22F2D;
-        Thu, 28 May 2020 08:39:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1590647946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TcSDnB+Fbe6GBxPMYdKLSnl0KzcLZPnoPN7AAEh0TW8=;
-        b=l3Ii8A5yQE69p9HKM9Gz0MEANP5p9oyrfG1juibpxMxWlLvaWqDn+FJp280x9fgKEXGSVn
-        Aji+CEc3N0wPEmO4v9XauWvc3p24TidWURPWrlKuxJlD5mlcYEnASl9cLs1v22gbGr/c3D
-        9TyNEou2CfeS78o8LC6VjbWMexKcTq0=
-From:   Michael Walle <michael@walle.cc>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Michael Walle <michael@walle.cc>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Alex Marginean <alexandru.marginean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Heiko Thiery <heiko.thiery@gmail.com>
-Subject: [PATCH net-next v3 1/3] net: dsa: felix: move USXGMII defines to common place
-Date:   Thu, 28 May 2020 08:38:45 +0200
-Message-Id: <20200528063847.27704-2-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200528063847.27704-1-michael@walle.cc>
-References: <20200528063847.27704-1-michael@walle.cc>
+        Thu, 28 May 2020 02:40:39 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCB8C05BD1E;
+        Wed, 27 May 2020 23:40:38 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d66so277216pfd.6;
+        Wed, 27 May 2020 23:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f153Oiv6V0dDvFVZ6jioj2CuCS8APNuYD3It8Lwcg+4=;
+        b=UhZlk94F98Aj/hZGx61pLSICB2FDY7I6hJdQWOtN9kJ4NJLvVTCYnWR0LU7v9B7N2B
+         FE8DgnAHdXmCi/QeMS0zRp4d61ujJy6bubDqAS6TQT3wwX9nomojpLmXPjnlHH/e+t9S
+         MRbcwT9ByYEIcOrpWHXMFVOolCLJzLBYSUTMoszVTQz2ke7BMHARE4dKh8PSmftbdRmm
+         ouGHfcTvKstVClY14Q8m4e2IzrhW5qD+O7fqp9bvzIV9DuTJDmgnoJvehByfGUBwtNm+
+         +KjcSrSet0Ak5Zms30vcHBGuchPi9FR2OcJ3u+xl3IoxIidWPvv6+WNH3ztOygESKQhf
+         oxpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f153Oiv6V0dDvFVZ6jioj2CuCS8APNuYD3It8Lwcg+4=;
+        b=BKkRyIUfdOt3IqhMXc993y63jks8n7bG1Y9Mpc3kd3rOMMjNqWw96WsYMWKOMhYxwh
+         r7z990BW38n5KdguoYnfXk7ZDVb4p+9Y3U4wF+PsK/Vp+TZj+kXGcKOEGOERH6nzaIMm
+         5CCAeXr4LwapGQpliGTNYOpjlY6KCZRxKApqSWLfrmLQPNaQOxJ7tWwAKyl44KNnxviB
+         yA5Sm56E8Fj757f6RsvL0+C1nbtfYTBp8RLThx2TCtKqiE4p7GqLTXPvRNohraoY0Xhj
+         rQt/9cmtityGt/mVDOdt5vt1v31Xqah7/8jZiWzekEeC6EmD+w5BejUSiPdqFlBnaOzu
+         o8mQ==
+X-Gm-Message-State: AOAM530iNtexcJc221lSRLsj/E9c+Wd1hXojP8aAK23LhVqgydsOs9qH
+        mUPiHqIbXFWIajYF8YFuDuo=
+X-Google-Smtp-Source: ABdhPJx9md1AR61lHBvpJgMZk46aFkX7hlTdIy0H6XrIhkCvZNH9cFhp1yfYraE3awUeUEtqBAaWnA==
+X-Received: by 2002:a63:3101:: with SMTP id x1mr1423569pgx.392.1590648038543;
+        Wed, 27 May 2020 23:40:38 -0700 (PDT)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id n8sm4338580pjq.49.2020.05.27.23.40.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 23:40:37 -0700 (PDT)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Paul Cercueil <paul.cercueil@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] iio: amplifiers: ad8366: Add the missed check for devm_gpiod_get()
+Date:   Thu, 28 May 2020 14:40:27 +0800
+Message-Id: <20200528064027.546944-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ENETC has the same PCS PHY and thus needs the same definitions. Move
-them into the common enetc_mdio.h header which has already the macros
-for the SGMII PCS.
+ad8366_probe() forgets to check the return value of devm_gpiod_get().
+Add the missed check to fix it.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
+Fixes: cee211f4e5a0 ("iio: amplifiers: ad8366: Add support for the ADA4961 DGA")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/net/dsa/ocelot/felix_vsc9959.c | 21 ---------------------
- include/linux/fsl/enetc_mdio.h         | 19 +++++++++++++++++++
- 2 files changed, 19 insertions(+), 21 deletions(-)
+Changes in v2:
+  - Add fixes tag.
 
-diff --git a/drivers/net/dsa/ocelot/felix_vsc9959.c b/drivers/net/dsa/ocelot/felix_vsc9959.c
-index 1dd9e348152d..986d4d26aa3c 100644
---- a/drivers/net/dsa/ocelot/felix_vsc9959.c
-+++ b/drivers/net/dsa/ocelot/felix_vsc9959.c
-@@ -16,29 +16,8 @@
- #define VSC9959_VCAP_IS2_CNT		1024
- #define VSC9959_VCAP_IS2_ENTRY_WIDTH	376
- #define VSC9959_VCAP_PORT_CNT		6
--
--/* TODO: should find a better place for these */
--#define USXGMII_BMCR_RESET		BIT(15)
--#define USXGMII_BMCR_AN_EN		BIT(12)
--#define USXGMII_BMCR_RST_AN		BIT(9)
--#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
--#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
--#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
--#define USXGMII_ADVERTISE_FDX		BIT(12)
--#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
--#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
--#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
--#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
--
- #define VSC9959_TAS_GCL_ENTRY_MAX	63
- 
--enum usxgmii_speed {
--	USXGMII_SPEED_10	= 0,
--	USXGMII_SPEED_100	= 1,
--	USXGMII_SPEED_1000	= 2,
--	USXGMII_SPEED_2500	= 4,
--};
--
- static const u32 vsc9959_ana_regmap[] = {
- 	REG(ANA_ADVLEARN,			0x0089a0),
- 	REG(ANA_VLANMASK,			0x0089a4),
-diff --git a/include/linux/fsl/enetc_mdio.h b/include/linux/fsl/enetc_mdio.h
-index 4875dd38af7e..0129366fa47a 100644
---- a/include/linux/fsl/enetc_mdio.h
-+++ b/include/linux/fsl/enetc_mdio.h
-@@ -27,6 +27,25 @@ enum enetc_pcs_speed {
- 	ENETC_PCS_SPEED_2500	= 2,
- };
- 
-+#define USXGMII_BMCR_RESET		BIT(15)
-+#define USXGMII_BMCR_AN_EN		BIT(12)
-+#define USXGMII_BMCR_RST_AN		BIT(9)
-+#define USXGMII_BMSR_LNKS(status)	(((status) & GENMASK(2, 2)) >> 2)
-+#define USXGMII_BMSR_AN_CMPL(status)	(((status) & GENMASK(5, 5)) >> 5)
-+#define USXGMII_ADVERTISE_LNKS(x)	(((x) << 15) & BIT(15))
-+#define USXGMII_ADVERTISE_FDX		BIT(12)
-+#define USXGMII_ADVERTISE_SPEED(x)	(((x) << 9) & GENMASK(11, 9))
-+#define USXGMII_LPA_LNKS(lpa)		((lpa) >> 15)
-+#define USXGMII_LPA_DUPLEX(lpa)		(((lpa) & GENMASK(12, 12)) >> 12)
-+#define USXGMII_LPA_SPEED(lpa)		(((lpa) & GENMASK(11, 9)) >> 9)
-+
-+enum usxgmii_speed {
-+	USXGMII_SPEED_10	= 0,
-+	USXGMII_SPEED_100	= 1,
-+	USXGMII_SPEED_1000	= 2,
-+	USXGMII_SPEED_2500	= 4,
-+};
-+
- struct enetc_hw;
- 
- struct enetc_mdio_priv {
+ drivers/iio/amplifiers/ad8366.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
+index 62167b87caea..b996823c8d51 100644
+--- a/drivers/iio/amplifiers/ad8366.c
++++ b/drivers/iio/amplifiers/ad8366.c
+@@ -264,6 +264,10 @@ static int ad8366_probe(struct spi_device *spi)
+ 	case ID_HMC1119:
+ 		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
+ 			GPIOD_OUT_HIGH);
++		if (IS_ERR(st->reset_gpio)) {
++			ret = PTR_ERR(st->reset_gpio);
++			goto error_disable_reg;
++		}
+ 		indio_dev->channels = ada4961_channels;
+ 		indio_dev->num_channels = ARRAY_SIZE(ada4961_channels);
+ 		break;
 -- 
-2.20.1
+2.26.2
 
