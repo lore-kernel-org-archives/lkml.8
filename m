@@ -2,120 +2,243 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 048552088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED11A20C56
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 21:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590701994;
-	bh=yi/mRuoypw6iFv+WgE/DZiO2CFYRKIBvUB6rKHm5Urw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=1SxKJrkWhFoxPlzT/3pBbzKiF+otCjou/cGUGX8if9AqXCuWeHK3H95ailUs28BRZ
-	 YgeEvQNJsncRL3weSPPtmuEF3dm891APeAzIN/n56E+MPTzIPRXUvtQWm7xeVAcFvY
-	 u608nSpWak4SFcXTpG4h9vz3Ab29D0J/q5dmcJfY=
+	s=default; t=1590702169;
+	bh=SIudycdY7PVCiLE2RROg6WuByw5DbBOQ+t3p7L2629I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wjW3YS4A/x6/jRrUKJ/S2aaYiLWjPcjG68MWp0oSDstQRWAGFAzcrDMD/ZsVkmIDm
+	 u7E6VYIOoT9rDHiaI5tojeWHkU52B90HID5RK+IHAKBmxqhOxRsVcMdQyqGvofz+gw
+	 2ZbSA0bvfCxQo42o7o9LvEj6hh6TSSJV8AIQb6Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436649AbgE1Vjx (ORCPT
+        id S2436671AbgE1Vms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 17:39:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436583AbgE1Vjv (ORCPT
+        Thu, 28 May 2020 17:42:48 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:40495 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2436581AbgE1Vmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 17:39:51 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DCBC08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:39:51 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id j145so596687oib.5
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 14:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OfpLvfnX8lVDByHQBLU++09A6lqwgIjSdFJ0GhgD8hk=;
-        b=hIVO7OwdAzZtChKnv8phSDuayJ+63ecs/81LzyUetJxvJGcNQl0EKlode3KULfZYA0
-         WbFCk1e0mN5ekoaToQEaKxEZGUTfEMc2KOLVZVyXU8zETrxdHowGewLMsHqjyA90DtP5
-         g16TOAaa0Kr64Dyept/QTpXdV0rmAAYO+aw9E=
+        Thu, 28 May 2020 17:42:46 -0400
+Received: by mail-il1-f194.google.com with SMTP id a18so458496ilp.7;
+        Thu, 28 May 2020 14:42:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OfpLvfnX8lVDByHQBLU++09A6lqwgIjSdFJ0GhgD8hk=;
-        b=CitBp7LfHjOzV2YhL4/yjYTSdpwG7dUF4gS2NHLX/jCc87jn7+xiFV5wq4Wtgia5Xe
-         UAk70NV4IWFYY2Pj1kdHcC8FohCoKKPojxK13SOfBlzGTogqsBWbO+9CYG/ccCH73MV+
-         GMDk6ZiKUN5wj8XbPET/huWLhaINtRbEsQXlHj3VD1t9d53ajnqg3Y9rGtnkr14hP9bl
-         6uja0liNAfxhnm3GlbVTumnF05PzKiap4l5RG3Rp43R6QENlUwytzHqDbtZhCHkmusZ1
-         Wi4Q/CX41JK5JrXoN3KhKRPpSX7B4W5V2+C+yiG11pkJTO01segJyf4GBp4Ic+dDiXRY
-         LAzQ==
-X-Gm-Message-State: AOAM530jg5uyRShWjz1xm7DKJ7S+U/sJHl8t87v5PQ1r/6Z3fRA7gj/i
-        BKEWV8evGgApeTye1680OlDPH5l2Wow=
-X-Google-Smtp-Source: ABdhPJx1Ja1TbtJq4hRHGE828SF8s6kg5n3Pc0HsFwOSf1AlxMilKtg9NShPCTujKWJmEAj2a/LTkg==
-X-Received: by 2002:aca:53ca:: with SMTP id h193mr3676158oib.12.1590701990596;
-        Thu, 28 May 2020 14:39:50 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id g10sm1251573otn.34.2020.05.28.14.39.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 14:39:49 -0700 (PDT)
-Subject: Re: [RFC, WIP, v6 00/10] media: vidtv: implement a virtual DVB driver
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        mchehab+huawei@kernel.org, sean@mess.org,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de
-Cc:     linux-media@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200520070334.1778751-1-dwlsalmeida@gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <4df08eaa-7a96-c769-d3ef-9cf4bae77454@linuxfoundation.org>
-Date:   Thu, 28 May 2020 15:39:48 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kKfMEdEPf1qQORIeLe3Cv29R1EeXGe6brVInGMzh/i8=;
+        b=bbtrpU57Eb48sz9j5rF7mf9ITYpOwEmLH1+ZRRptqPYHKqZQeK5XOAs5gqCG4l9zCQ
+         VBx3XUWy/mxw9VQ93lKLd64w0D+gwZCANRcZzENq8ArWccbWwp5a50o8nxMYECZU0tel
+         DxA4p71XO+a/C1coIUMJcwbi9OuIu7gfNNRzjoUDIeyLGZfplxry2gtEQ186Ex810/vO
+         ldFMIp7mSSPIbu1GowRIt3b3iYTuGZG8sF8A6lAVpONQFjv95/iDeJK9wLxW9Bsear4q
+         cFnGL39ADlkWnG/W12SJhT9vlElfyBLgQaNtTUoeNVu/Bpu6DhhsolDtq5cR3q746ZXA
+         RGgA==
+X-Gm-Message-State: AOAM532XWTob9/xdu6PUmDYjRxNy3j+OUhyA4VO/u5fuVYeTcLuIAjMB
+        8XCHyuSwmx7wOTQrIiqcpg==
+X-Google-Smtp-Source: ABdhPJwzMqJMjsR6qnJhFZThxIFACTIgnQWqf3/oGxPMvS4qxVMWPovqxkHZ6ABDo7bKbNCpywwDYQ==
+X-Received: by 2002:a05:6e02:11a5:: with SMTP id 5mr4857068ilj.108.1590702165155;
+        Thu, 28 May 2020 14:42:45 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id h10sm3115504ioe.3.2020.05.28.14.42.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 14:42:44 -0700 (PDT)
+Received: (nullmailer pid 735075 invoked by uid 1000);
+        Thu, 28 May 2020 21:42:43 -0000
+Date:   Thu, 28 May 2020 15:42:43 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>, od@zcrc.me,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Convert ingenic,pinctrl.txt
+ to YAML
+Message-ID: <20200528214243.GA711753@bogus>
+References: <20200520002234.418025-1-paul@crapouillou.net>
 MIME-Version: 1.0
-In-Reply-To: <20200520070334.1778751-1-dwlsalmeida@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200520002234.418025-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/20/20 1:03 AM, Daniel W. S. Almeida wrote:
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On Wed, May 20, 2020 at 02:22:32AM +0200, Paul Cercueil wrote:
+> Convert the ingenic,pinctrl.txt doc file to ingenic,pinctrl.yaml.
 > 
-> This series is work in progress. It represents the current work done on a
-> virtual DVB driver for the Linux media subsystem. I am new to the media
-> subsystem and to kernel development in general.
+> In the process, some compatible strings now require a fallback, as the
+> corresponding SoCs are pin-compatible with their fallback variant.
 > 
-> This driver aims to:
-> 	- Serve as template for new DVB driver writers
-> 	- Help userspace application writers in general
-> 	- Push fake audio/video to userspace for testing
-> 		purposes
-> 	- Push debug information to userspace via debugfs
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
 > 
-> This should currently be able to feed PSI and PCM audio data to
-> userspace.
-> 
-> I appreciate any feedback!
-> 
+> Notes:
+>     v2: - Use 'pinctrl' instead of 'pin-controller' as the node name
+>         - remove 'additionalProperties: false' since we will have pin conf nodes
 
-Run checkpatch --strict on these. There are several warns and an error
-which could improve the code as well as the improving Kconfig entry
-as suggested below.
+You need to describe those nodes and not just allow anything.
 
-WARNING: please write a paragraph that describes the config symbol fully
-#108: FILE: drivers/media/test-drivers/Kconfig:7:
-+menuconfig DVB_TEST_DRIVERS
+> 
+>  .../bindings/pinctrl/ingenic,pinctrl.txt      |  81 -----------
+>  .../bindings/pinctrl/ingenic,pinctrl.yaml     | 136 ++++++++++++++++++
+>  2 files changed, 136 insertions(+), 81 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
 
-I will send review comments on individual patches.
 
-thanks,
--- Shuah
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+> new file mode 100644
+> index 000000000000..5be2b1e95b36
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+> @@ -0,0 +1,136 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/ingenic,pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic SoCs pin controller devicetree bindings
+> +
+> +description: >
+> +  Please refer to pinctrl-bindings.txt in this directory for details of the
+> +  common pinctrl bindings used by client devices, including the meaning of the
+> +  phrase "pin configuration node".
+> +
+> +  For the Ingenic SoCs, pin control is tightly bound with GPIO ports. All pins
+> +  may be used as GPIOs, multiplexed device functions are configured within the
+> +  GPIO port configuration registers and it is typical to refer to pins using the
+> +  naming scheme "PxN" where x is a character identifying the GPIO port with
+> +  which the pin is associated and N is an integer from 0 to 31 identifying the
+> +  pin within that GPIO port. For example PA0 is the first pin in GPIO port A,
+> +  and PB31 is the last pin in GPIO port B. The JZ4740, the X1000 and the X1830
+> +  contains 4 GPIO ports, PA to PD, for a total of 128 pins. The JZ4760, the
+> +  JZ4770 and the JZ4780 contains 6 GPIO ports, PA to PF, for a total of 192
+> +  pins.
+> +
+> +maintainers:
+> +  - Paul Cercueil <paul@crapouillou.net>
+> +
+> +properties:
+> +  nodename:
+
+It's $nodename as that's not a real property. And that will expose the 
+error in the example for you.
+
+> +    pattern: "^pinctrl@[0-9a-f]+$"
+> +
+> +  compatible:
+> +    oneOf:
+> +      - enum:
+> +        - ingenic,jz4740-pinctrl
+> +        - ingenic,jz4725b-pinctrl
+> +        - ingenic,jz4760-pinctrl
+> +        - ingenic,jz4770-pinctrl
+> +        - ingenic,jz4780-pinctrl
+> +        - ingenic,x1000-pinctrl
+> +        - ingenic,x1500-pinctrl
+> +        - ingenic,x1830-pinctrl
+> +      - items:
+> +        - const: ingenic,jz4760b-pinctrl
+> +        - const: ingenic,jz4760-pinctrl
+> +      - items:
+> +        - const: ingenic,x1000e-pinctrl
+> +        - const: ingenic,x1000-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^gpio@[0-9]$":
+> +    type: object
+> +    properties:
+> +      compatible:
+> +        enum:
+> +          - ingenic,jz4740-gpio
+> +          - ingenic,jz4725b-gpio
+> +          - ingenic,jz4760-gpio
+> +          - ingenic,jz4770-gpio
+> +          - ingenic,jz4780-gpio
+> +          - ingenic,x1000-gpio
+> +          - ingenic,x1500-gpio
+> +          - ingenic,x1830-gpio
+> +
+> +      reg:
+> +        items:
+> +          - description: The GPIO bank number
+> +
+> +      gpio-controller: true
+> +
+> +      "#gpio-cells":
+> +        const: 2
+> +
+> +      gpio-ranges:
+> +        maxItems: 1
+> +
+> +      interrupt-controller: true
+> +
+> +      "#interrupt-cells":
+> +        const: 2
+> +        description:
+> +          Refer to ../interrupt-controller/interrupts.txt for more details.
+> +
+> +      interrupts:
+> +        maxItems: 1
+> +
+> +    required:
+> +      - compatible
+> +      - reg
+> +      - gpio-controller
+> +      - "#gpio-cells"
+> +      - interrupts
+> +      - interrupt-controller
+> +      - "#interrupt-cells"
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +examples:
+> +  - |
+> +    pin-controller@10010000 {
+> +      compatible = "ingenic,jz4770-pinctrl";
+> +      reg = <0x10010000 0x600>;
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      gpio@0 {
+> +        compatible = "ingenic,jz4770-gpio";
+> +        reg = <0>;
+> +
+> +        gpio-controller;
+> +        gpio-ranges = <&pinctrl 0 0 32>;
+> +        #gpio-cells = <2>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        interrupt-parent = <&intc>;
+> +        interrupts = <17>;
+> +      };
+> +    };
+> -- 
+> 2.26.2
+> 
