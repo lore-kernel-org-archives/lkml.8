@@ -2,90 +2,109 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9C8C433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C08A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFC0212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590629691;
-	bh=woKO7HJ9mnkaTPsmPBdNbwbHdLix88c2g+RKMTPCsMY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mKkM5DV3Pl4JA+oPW3hoiLFv3RDdI+s6JuHjK6Ra/WrCy01U7SmkU1MF7l+b4UZ0G
-	 weziBdVKXiyssKi8S5g8Y1sUNY6vD5yZlrkVRCfyqg147C7FHifvQoY3OgwQIYztHS
-	 6B+uCb1ko3R7D244vkD8s/YVSaxI0AS8ZMZRa8ms=
+	by mail.kernel.org (Postfix) with ESMTP id 9CA222151B
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726549AbgE1Beu (ORCPT
+        id S1726612AbgE1BfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:34:50 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46974 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbgE1Beu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:34:50 -0400
-Received: by mail-il1-f195.google.com with SMTP id h3so3523168ilh.13;
-        Wed, 27 May 2020 18:34:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nc1xYCw1KD9ef91XiAdzK+QPSDWo/LFHJ3pQwzb/o8c=;
-        b=D7nm92qkKmlxxc3ZQk2SOda/m6atE7TkoGgw6fSTSEQ8qM1WrBJghX6N+IvsCX3W89
-         efeD+aKQvaDDyoN4RyN5RQgri4AT4BkqVa8e9INfeJG71e9sy22WuWqNcgFEAqx7hbOT
-         732mGeJuWF9C3sR5m0Ts5+PoLYao5vtgSjy1HbtxAZ4RtKUgQ6OkfRurzhmuLfHN4hyf
-         WNFEZrDQUEvBFFNbJKzUOm1uDqJbyUBq6X3M796zeLiTW7PP+xw4Du8ZyfMmeph+SS1V
-         sNSLnWFrUhydRS5LaqAW1+8zzPSZQTwSgL1BC0AKk8+GdQCt+8wmBGGfPmY58bldD1FS
-         n2fg==
-X-Gm-Message-State: AOAM53010Nqs0TIVn30Ie4zJyU8Zkz/3sgU4OeesTgzAgLh8xZ1pYOmg
-        gOrk9u+Lpndua+vLs7UVxg==
-X-Google-Smtp-Source: ABdhPJwymYNAx4sILLom9EnIknxnjsBziqxYdE/dhdeJiSyDuDoWGYDh8BcOShip3SBpBmyPzfQqxA==
-X-Received: by 2002:a92:5dd4:: with SMTP id e81mr959365ilg.288.1590629688029;
-        Wed, 27 May 2020 18:34:48 -0700 (PDT)
-Received: from xps15 ([64.188.179.252])
-        by smtp.gmail.com with ESMTPSA id d16sm2507512ilg.71.2020.05.27.18.34.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 May 2020 18:34:47 -0700 (PDT)
-Received: (nullmailer pid 3167518 invoked by uid 1000);
-        Thu, 28 May 2020 01:34:44 -0000
-Date:   Wed, 27 May 2020 19:34:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Clark <robdclark@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: vendor-prefixes: Add Lontium vendor
- prefix
-Message-ID: <20200528013444.GA3166896@bogus>
-References: <20200513100533.42996-1-vkoul@kernel.org>
- <20200513100533.42996-2-vkoul@kernel.org>
+        Wed, 27 May 2020 21:35:22 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5294 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725747AbgE1BfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 21:35:21 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4A5E2CDD85FBA056B940;
+        Thu, 28 May 2020 09:35:19 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 28 May 2020
+ 09:35:12 +0800
+Subject: Re: [PATCH V1 RESEND 1/3] perf/imx_ddr: Add system PMU identifier for
+ userspace
+To:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        "Rob Herring" <robh@kernel.org>
+References: <20200512073115.14177-1-qiangqing.zhang@nxp.com>
+ <20200512073115.14177-2-qiangqing.zhang@nxp.com>
+ <20200519185125.GB453195@bogus> <20200520073304.GA23534@willie-the-truck>
+ <CAL_JsqJfQ0PFy5mmwSG4aM91ghq5xiAEPR2YZOymws+BfGa+uA@mail.gmail.com>
+ <20200521130415.GB5949@willie-the-truck>
+ <c3be06c5-781f-384f-768b-d809da99b7e0@huawei.com>
+ <51aa7cbc-0ce2-b96d-b056-fcc6013ccecf@huawei.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        "Joakim Zhang" <qiangqing.zhang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <36a5bf0c-fcf5-ad74-b5ee-1b4502705aec@hisilicon.com>
+Date:   Thu, 28 May 2020 09:35:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200513100533.42996-2-vkoul@kernel.org>
+In-Reply-To: <51aa7cbc-0ce2-b96d-b056-fcc6013ccecf@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 May 2020 15:35:31 +0530, Vinod Koul wrote:
-> Add prefix for Lontium Semiconductor Corporation
+Hi,
+
+On 2020/5/27 22:34, John Garry wrote:
+>>>>>
+>>>>> I also really dislike this. What's the preferred way to identify the SoC
+>>>>> from userspace?
+>>>>
+>>>> /proc/cpuinfo? ;)
+>>>
+>>> The *SoC*!
+>>>
+>>>> For an non-firmware specific case, I'd say soc_device should be. I'd
+>>>> guess ACPI systems don't use it and for them it's dmidecode typically.
+>>>> The other problem I have with soc_device is it is optional.
+>>>
+>>
+>> Hi Will,
+>>
+>>> John -- what do you think about using soc_device to expose this information,
+>>> with ACPI systems using DMI data instead?
+>>
+>> Generally I don't think that DMI is reliable, and I saw this as the least preferred choice. I'm looking at the sysfs DMI info for my dev board, and I don't even see anything like a SoC identifier.
+>>
+>> As for the event_source device sysfs identifier file, it would not always contain effectively the same as the SoC ID.
+>>
+>> Certain PMUs which I'm interested in plan to have probe-able identification info available in future.
+>>
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> BTW, Shaokun now tells me that the HiSi uncore PMU HW have such registers to identify the implementation. I didn't know.
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Right, we have this register which shows the PMU version.
+
+Thanks,
+Shaokun
+
+
+> So we could add that identifier file for those PMUs as proof-of-concept, exposing that register.
+> 
+> As for other PMUs which I'm interested in, again, future versions should have such registers to self-identify.
+> 
+> So using something derived from the DT compat string would hopefully be the uncommon case.
+> 
+> Cheers,
+> John
+> 
+> .
+> 
+
