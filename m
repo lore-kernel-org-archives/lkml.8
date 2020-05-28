@@ -2,93 +2,228 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF59C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE27C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C036207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFAE207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YXv+0Oeh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iimzCxLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgE1Od4 (ORCPT
+        id S1726321AbgE1Oer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:33:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26988 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725308AbgE1Odw (ORCPT
+        Thu, 28 May 2020 10:34:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42852 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbgE1Oep (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:33:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1590676431;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pBQOiMcyjxJF5KMUzY58hCHngjZNJvMhsoqslwe6gEA=;
-        b=YXv+0Oeh1Q0yutAWk4URrAAvVh6i/aRW9cwk5OME/lf3tc6+SGMRJ49VniXkoTEV0SElvc
-        KeuXycQ/ivnwDx5f0fYkiedLT4MR4NQSqU8I9Il/ux00BsYmjqOBg4VAlPLSXX0QHm1s4R
-        9WxMFE4fwTy2lRXDzeCSLF78ODpXZzM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-MJXjkSsVN8mXu_JMQ8LJVQ-1; Thu, 28 May 2020 10:33:46 -0400
-X-MC-Unique: MJXjkSsVN8mXu_JMQ8LJVQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CDE4083DB39;
-        Thu, 28 May 2020 14:33:44 +0000 (UTC)
-Received: from treble (ovpn-117-65.rdu2.redhat.com [10.10.117.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B5692C24F;
-        Thu, 28 May 2020 14:33:43 +0000 (UTC)
-Date:   Thu, 28 May 2020 09:33:41 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 2/3] kasan: move kasan_report() into report.c
-Message-ID: <20200528143341.ntxtnq4rw5ypu3k5@treble>
-References: <29bd753d5ff5596425905b0b07f51153e2345cc1.1589297433.git.andreyknvl@google.com>
- <78a81fde6eeda9db72a7fd55fbc33173a515e4b1.1589297433.git.andreyknvl@google.com>
- <20200528134913.GA1810@lca.pw>
+        Thu, 28 May 2020 10:34:45 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83A1C05BD1E;
+        Thu, 28 May 2020 07:34:44 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d3so11630890pln.1;
+        Thu, 28 May 2020 07:34:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hjoI/U6bg7DFkwk9kr0gcJqlMcgi/p4xIsK/OlPqaRY=;
+        b=iimzCxLUMSNVF4D1Csp6nKVJdEylGywOKSOK+eVXAegAnF/a4TKYYgrCQdL4Iz7b6m
+         6cSn1tq6NNJ90jYYW/siTIGrW39a4w43lxJCLLcZzL/xpF1lTtPbmlDcPbG+MVBHc0Aw
+         xoGVhO5pnWSnO6AiGnjpxrpcOG++/I7jGCbKRyfydEiFkKe5LvX0BgiqLLdLupaeZXmI
+         y0mCUEqUdu6RBtMHQNhtH9sNVNktO3jmPNcqJ0Xnb9Qi2RordMKT7os14TtrkwtcxQVY
+         T0kgJlrfeEcAfXoUvdwwycI5UW38RmWBBr1+9TXHPgORgUsD8mCGw0cmKTqgTc45T7uR
+         dMVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hjoI/U6bg7DFkwk9kr0gcJqlMcgi/p4xIsK/OlPqaRY=;
+        b=dIILnZrGZBCofU97luN2tgj2eyGfBY/0YEHxgNyODxXUtcLc5jKgs4DjibJY5t0wvi
+         JzUzcYnyFYRODdixVGDVZ6VDApZYIRyXxr8I8gTYe909dztPviZNr9xI6ygL1tr9Yl+N
+         mg9pFsj3dWb02knIc16qhTaLFn7M4bfw/cE9/2SAyrrFy2+jShfFEDWeU3k96P2Sw4yZ
+         neMMmRNMICdgyMUvKMvBLUjPZcRf9qp+P0oLL3OYSE3wX7uQniQ9Xn3YqlAqoIkYsqel
+         8imC+en2hvz93bI2fTrTbwJRNUm/uk6KaUMyi7P6WpyVqqUq308vF5izwp9k8mmuF792
+         zwag==
+X-Gm-Message-State: AOAM530wSQfm44GAo0B6l8au/TKhnmMKDXkBKQGYj57HN1wv+GRJpDa0
+        ojuNpXRsUxixB/ub/mMeN4w=
+X-Google-Smtp-Source: ABdhPJx1PTl3qGEofBe38Y0amhNRMPJHzhqVZH3iN36nPBDqlippHHMEL7cEkrfqV7s6Qe7xdF6Dkg==
+X-Received: by 2002:a17:90a:cc05:: with SMTP id b5mr4085220pju.102.1590676484294;
+        Thu, 28 May 2020 07:34:44 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id q26sm4857467pfh.74.2020.05.28.07.34.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:34:43 -0700 (PDT)
+Date:   Thu, 28 May 2020 07:34:40 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        allan.nielsen@microchip.com, foss@0leil.net
+Subject: Re: [PATCH net-next 6/8] net: phy: mscc: timestamping and PHC support
+Message-ID: <20200528143440.GB14844@localhost>
+References: <20200527164158.313025-1-antoine.tenart@bootlin.com>
+ <20200527164158.313025-7-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528134913.GA1810@lca.pw>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200527164158.313025-7-antoine.tenart@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 09:49:13AM -0400, Qian Cai wrote:
-> On Tue, May 12, 2020 at 05:33:20PM +0200, 'Andrey Konovalov' via kasan-dev wrote:
-> > The kasan_report() functions belongs to report.c, as it's a common
-> > functions that does error reporting.
-> > 
-> > Reported-by: Leon Romanovsky <leon@kernel.org>
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> 
-> Today's linux-next produced this with Clang 11.
-> 
-> mm/kasan/report.o: warning: objtool: kasan_report()+0x8a: call to __stack_chk_fail() with UACCESS enabled
-> 
-> kasan_report at mm/kasan/report.c:536
+On Wed, May 27, 2020 at 06:41:56PM +0200, Antoine Tenart wrote:
 
-Peter, this was also reported with GCC about a month ago.  Should we add
-__stack_chk_fail() to the uaccess safe list?
+> +static struct vsc85xx_ptphdr *get_ptp_header(struct sk_buff *skb)
+> +{
+> +	struct ethhdr *ethhdr = eth_hdr(skb);
+> +	struct iphdr *iphdr = ip_hdr(skb);
+> +	struct udphdr *udphdr;
+> +	__u8 proto;
+> +
+> +	if (ethhdr->h_proto == htons(ETH_P_1588))
+> +		return (struct vsc85xx_ptphdr *)(((unsigned char *)ethhdr) +
+> +					 skb_mac_header_len(skb));
+> +
+> +	if (ethhdr->h_proto != htons(ETH_P_IP))
+> +		return NULL;
+> +
+> +	proto = iphdr->protocol;
+> +	if (proto != IPPROTO_UDP)
+> +		return NULL;
+> +
+> +	udphdr = udp_hdr(skb);
+> +
+> +	if (udphdr->source != ntohs(PTP_EV_PORT) ||
+> +	    udphdr->dest != ntohs(PTP_EV_PORT))
+> +		return NULL;
+> +
+> +	return (struct vsc85xx_ptphdr *)(((unsigned char *)udphdr) + UDP_HLEN);
+> +}
 
--- 
-Josh
+This looks a lot like get_ptp_header_rx() below.  Are you sure you
+need two almost identical methods?
 
+> +static void vsc85xx_get_tx_ts(struct vsc85xx_ptp *ptp)
+> +{
+> +	struct skb_shared_hwtstamps shhwtstamps;
+> +	struct sk_buff *skb, *first_skb = NULL;
+> +	struct vsc85xx_ts_fifo fifo;
+> +	u8 i, skb_sig[16], *p;
+> +	unsigned long ns;
+> +	s64 secs;
+> +	u32 reg;
+> +
+> +next_in_fifo:
+> +	memset(&fifo, 0, sizeof(fifo));
+> +	p = (u8 *)&fifo;
+> +
+> +	reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
+> +				  MSCC_PHY_PTP_EGR_TS_FIFO(0));
+> +	if (reg & PTP_EGR_TS_FIFO_EMPTY)
+> +		goto out;
+> +
+> +	*p++ = reg & 0xff;
+> +	*p++ = (reg >> 8) & 0xff;
+> +
+> +	/* Reading FIFO6 pops the FIFO item */
+> +	for (i = 1; i < 7; i++) {
+> +		reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
+> +					  MSCC_PHY_PTP_EGR_TS_FIFO(i));
+> +		*p++ = reg & 0xff;
+> +		*p++ = (reg >> 8) & 0xff;
+> +		*p++ = (reg >> 16) & 0xff;
+> +		*p++ = (reg >> 24) & 0xff;
+> +	}
+> +
+> +next_in_queue:
+> +	skb = skb_dequeue(&ptp->tx_queue);
+> +	if (!skb || skb == first_skb)
+> +		goto out;
+> +
+> +	/* Keep the first skb to avoid looping over it again. */
+> +	if (!first_skb)
+> +		first_skb = skb;
+> +
+> +	/* Can't get the signature of the packet, won't ever
+> +	 * be able to have one so let's dequeue the packet.
+> +	 */
+> +	if (get_sig(skb, skb_sig) < 0)
+> +		goto next_in_queue;
+> +
+> +	/* Valid signature but does not match the one of the
+> +	 * packet in the FIFO right now, reschedule it for later
+> +	 * packets.
+> +	 */
+> +	if (memcmp(skb_sig, fifo.sig, sizeof(fifo.sig))) {
+> +		skb_queue_tail(&ptp->tx_queue, skb);
+> +		goto next_in_queue;
+> +	}
+> +
+> +	ns = fifo.ns;
+> +	secs = fifo.secs;
+> +
+> +	memset(&shhwtstamps, 0, sizeof(shhwtstamps));
+> +	shhwtstamps.hwtstamp = ktime_set(secs, ns);
+> +	skb_complete_tx_timestamp(skb, &shhwtstamps);
+> +
+> +out:
+> +	/* If other timestamps are available in the FIFO, process them. */
+> +	reg = vsc85xx_ts_read_csr(ptp->phydev, PROCESSOR,
+> +				  MSCC_PHY_PTP_EGR_TS_FIFO_CTRL);
+> +	if (PTP_EGR_FIFO_LEVEL_LAST_READ(reg) > 1)
+> +		goto next_in_fifo;
+> +}
+
+AFAICT, there is no need for labels and jumps here.  Two nested 'for'
+loops will do nicely.  The inner skb loop can be in a helper function
+for clarity.  Be sure to use the "safe" iterator over the skbs.
+
+
+> +static void vsc85xx_txtstamp(struct mii_timestamper *mii_ts,
+> +			     struct sk_buff *skb, int type)
+> +{
+> +	struct vsc8531_private *vsc8531 =
+> +		container_of(mii_ts, struct vsc8531_private, mii_ts);
+> +
+> +	if (!skb || !vsc8531->ptp->configured)
+
+The skb cannot be NULL here.  See net/core/timestamping.c
+
+> +		return;
+> +
+> +	if (vsc8531->ptp->tx_type == HWTSTAMP_TX_OFF) {
+> +		kfree_skb(skb);
+> +		return;
+> +	}
+> +
+> +	skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+> +	skb_queue_tail(&vsc8531->ptp->tx_queue, skb);
+> +	/* Scheduling the work for the TS FIFO is handled by the IRQ routine */
+> +}
+> +
+> +static bool vsc85xx_rxtstamp(struct mii_timestamper *mii_ts,
+> +			     struct sk_buff *skb, int type)
+> +{
+> +	struct vsc8531_private *vsc8531 =
+> +		container_of(mii_ts, struct vsc8531_private, mii_ts);
+> +	struct skb_shared_hwtstamps *shhwtstamps = NULL;
+> +	struct vsc85xx_ptphdr *ptphdr;
+> +	struct timespec64 ts;
+> +	unsigned long ns;
+> +
+> +	if (!skb || !vsc8531->ptp->configured)
+
+Again, skb can't be null.
+
+Thanks,
+Richard
