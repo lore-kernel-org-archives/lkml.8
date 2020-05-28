@@ -2,210 +2,164 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9216DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 602EE2075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7WZC/iU"
+	by mail.kernel.org (Postfix) with ESMTP id 5BE6F2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 15:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404063AbgE1PIZ (ORCPT
+        id S2404089AbgE1PK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 11:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403913AbgE1PIX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 11:08:23 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7351C08C5C6;
-        Thu, 28 May 2020 08:08:21 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x11so10666278plv.9;
-        Thu, 28 May 2020 08:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XgjPT1CpvLdTclhvGSPDFjsGLGS7dmDrFHCixnqmkK0=;
-        b=G7WZC/iUW83qSLmqcByCFOwo/48VrK/nS0OFqFnuS2jbmK33kG8l+KGRwFS4oPbr8v
-         5HFB2aG+GvDp8TNYdhaZLRCBm5LsL0AYNvY1U92Oo2BMBn9tF52ZAjTcODjo6gaoR+TQ
-         25KH4h7tQgCaDvgfgw5NlMjmMVPIMB0e0+y0M5XMOnmWriILvOH2Jdu0YuIZ9XYNHHXI
-         q/hn1kYRA0BidbG0BBBlnFZ0eaSS5Iy+Id0EHwHmW5ESUUR4anW8P0/Mbz9Pe4QAv0xE
-         Arj9qWDdRcAVe98K41ysTtCEbryeBUPFSTiLK0PvtsB44IOdRJYtazgz6163u1Yrg5EP
-         YCwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XgjPT1CpvLdTclhvGSPDFjsGLGS7dmDrFHCixnqmkK0=;
-        b=pUiWNP98E48u3mPFnFNScF7+Hbpyl8bf7IAi80gV32XN01zLn9i130M/t20DQ6AYae
-         g0PmEdIpvCTdmzVXDxiyAcvh7cc/MzPx862sUK2rZk3B+5yAfajK+7GAM8zF9zNqC0Wl
-         vIR2/SumEkmVdjTWHucpLfSpier7lgXxIJTt4VyuJ8rCfMdG3NLtvo9cUJqEmFZZgSOR
-         RGzQvd+hp2I3K0stf8oQ81mS6Y21Ta2iVm4TOIwisPmWSRlnKpRqpr7Z8CWVj4rrW3x4
-         duP6JDwiRXyx0t9yb6Ru5/+l1pQpyEnn3c14zCjdZyBrk5nPLaDLdMfSDuM1EE63YLtl
-         QiJw==
-X-Gm-Message-State: AOAM530uzQFkazoSc8KydyP4feLWwjIMUuy2IU5rX8zlhpxnVL+eb7ap
-        PmJE0NLKdQkNZLhfOzXt7JY=
-X-Google-Smtp-Source: ABdhPJyeuHum3SRHlF90KSWyxZyc2UgOuEuCfD2Pg7fZRAbPapHyc+iQioyV7YlcooFx83CeDMv44A==
-X-Received: by 2002:a17:90a:cb91:: with SMTP id a17mr4489802pju.146.1590678501376;
-        Thu, 28 May 2020 08:08:21 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r3sm2220856pjb.20.2020.05.28.08.08.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 28 May 2020 08:08:20 -0700 (PDT)
-Date:   Thu, 28 May 2020 08:08:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] hwmon: Add Baikal-T1 SoC Process, Voltage and
- Temp sensor support
-Message-ID: <20200528150818.GA163809@roeck-us.net>
-References: <20200528142805.29115-1-Sergey.Semin@baikalelectronics.ru>
+        Thu, 28 May 2020 11:10:29 -0400
+Received: from mga02.intel.com ([134.134.136.20]:63214 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2403881AbgE1PK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 11:10:27 -0400
+IronPort-SDR: 2TH7a5u2BRoX74ADg8cRZsvv3jsYKudXILstXDFY85rg3l0Z36QcU4gf2dAX+PJMgaNbx6eUt1
+ OcFmC6mHNr5Q==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 08:10:25 -0700
+IronPort-SDR: He64HCINUW6aF8vbO7RLYbNE+qWrJn3zIBuDWLAaV4366eXoNR06rBrqejx90NlEGsfgsnaLnL
+ MGnnF7FMPDQA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="414628933"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga004.jf.intel.com with ESMTP; 28 May 2020 08:10:21 -0700
+Date:   Thu, 28 May 2020 23:10:20 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>, andi.kleen@intel.com,
+        tim.c.chen@intel.com, dave.hansen@intel.com, ying.huang@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] make vm_committed_as_batch aware of vm overcommit
+ policy
+Message-ID: <20200528151020.GF93879@shbuild999.sh.intel.com>
+References: <1588922717-63697-1-git-send-email-feng.tang@intel.com>
+ <20200521212726.GC6367@ovpn-112-192.phx2.redhat.com>
+ <20200526181459.GD991@lca.pw>
+ <20200527014647.GB93879@shbuild999.sh.intel.com>
+ <20200527022539.GK991@lca.pw>
+ <20200527104606.GE93879@shbuild999.sh.intel.com>
+ <20200528141802.GB1810@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200528142805.29115-1-Sergey.Semin@baikalelectronics.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200528141802.GB1810@lca.pw>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 05:28:02PM +0300, Serge Semin wrote:
-> In order to keep track of Baikal-T1 SoC power consumption and make sure
-> the chip heating is within the normal temperature limits, there is
-> a dedicated hardware monitor sensor embedded into the SoC. It is based
-> on the Analog Bits PVT sensor but equipped with a vendor-specific control
-> wrapper, which ease an access to the sensors functionality. Fist of all it
-> provides an accessed to the sampled Temperature, Voltage and
-> Low/Standard/High Voltage thresholds. In addition the wrapper generates
-> an interrupt in case if one enabled for alarm thresholds or data ready
-> event. All of these functionality is implemented in the Baikal-T1 PVT
-> driver submitted within this patchset. Naturally there is also a patch,
-> which creates a corresponding yaml-based dt-binding file for the sensor.
+On Thu, May 28, 2020 at 10:18:02AM -0400, Qian Cai wrote:
+> > > I have been reproduced this on both AMD and Intel. The test just
+> > > allocating memory and swapping.
+> > > 
+> > > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/oom/oom01.c
+> > > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/tunable/overcommit_memory.c
+> > > 
+> > > It might be better to run the whole LTP mm tests if none of the above
+> > > triggers it for you which has quite a few memory pressurers.
+> > > 
+> > > /opt/ltp/runltp -f mm
+> > 
+> > Thanks for sharing. I tried to reproduce this on 2 server plaforms,
+> > but can't reproduce it, and they are still under testing.
+> > 
+> > Meanwhile, could you help to try the below patch, which is based on
+> > Andi's suggestion and have some debug info. The warning is a little
+> > strange, as the condition is
+> > 
+> > 	(percpu_counter_read(&vm_committed_as) <
+> >                        -(s64)vm_committed_as_batch * num_online_cpus())
+> > 
+> > while for your platform (48 CPU + 128 GB RAM), the
+> > '-(s64)vm_committed_as_batch * num_online_cpus()'
+> > is a s64 value: '-32G', which makes the condition hard to be true,
+> > and when it is,  it could be triggered by some magic for s32/s64
+> > operations around the percpu-counter. 
 > 
-> This patchset is rebased and tested on the mainline Linux kernel 5.6-rc4:
-> base-commit: 0e698dfa2822 ("Linux 5.7-rc4")
-> tag: v5.7-rc4
-> 
+> The patch below does not fix anything.
 
-Series applied to hwmon-next.
+Thanks for the info.
+
+> 
+> [ 3160.275230][ T7955] LTP: starting oom01
+> [ 3160.306977][T106365] KK as:-59683  as_sum:6896 
+
+This does show that percpu_counter_read() is not accurate
+comparing to percpu_counter_sum(). And if we use 
+percpu_counter_sum() then the warning won't happen, as
+6896 >> -32768
+
+> check:-32768 batch:256
+
+-32768 means the RAM of the test platform  is either 512M
+or 32GB (more likely) depending on overcommit policy, and
+it has 128 CPUs. 
+
+So my guess of the root cause is the overcommit policy is
+changing while doing the memory stress test, so the
+vm_commited_as.count could have bigger deviation when the
+overcommit policy is !OVERCOMMIT_NEVER, and when the policy
+is changed to OVERCOMMIT_NEVER, the check value is hugely
+reduced, which trigger the warning.
+
+If it's true, then there could be 2 solutions, one is to
+skip the WARN_ONCE as it has no practical value, as the real
+check is the following code, the other is to rectify the
+percpu counter when the policy is changing to OVERCOMMIT_NEVER. 
 
 Thanks,
-Guenter
+Feng
 
-> Note new vendor prefix for Baikal-T1 PVT device will be added in the
-> framework of the next patchset:
-> https://lkml.org/lkml/2020/5/6/1047
-> 
-> Changelog v2:
-> - Don't use a multi-arg clock phandle reference in the examples dt-bindings
->   property. Thus reundant include pre-processor statement can be removed.
-> - Rearrange the SoBs with adding Maxim' co-development tag.
-> - Lowercase the node-name in the dt-schema example.
-> - Add dual license header to the dt-bindings file.
-> - Replace "additionalProperties: false" property with
->   "unevaluatedProperties: false".
-> - Discard label definition from the binding example.
-> - Discard handwritten IO-access wrappers. Use normal readl/writel instead.
-> - Use generic FIELD_{GET,PREP} macros instead of handwritten ones.
-> - Since the driver depends on the OF config we can remove of_match_ptr()
->   macro utilization.
-> - Don't print error-message if no platform IRQ found. Just return an error.
-> - Remove probe-status info string printout.
-> - Our corporate email server doesn't change Message-Id anymore, so the patchset
->   is resubmitted being in the cover-letter-threaded format.
-> 
-> Link: https://lore.kernel.org/linux-hwmon/20200510103211.27905-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v3:
-> - Add bt1-pvt into the Documentation/hwmon/index.rst file.
-> - Discard explicit "default n" from the SENSORS_BT1_PVT_ALARMS config.
-> - Use "depends on SENSORS_BT1_PVT" statement instead of if-endif kbuild
->   config clause.
-> - Alphabetically order the include macro operators.
-> - Discard unneeded include macro in the header file.
-> - Use new generic interface of the hwmon alarms notifications introduced
->   in the first patch (based on hwmon_notify_event()).
-> - Add more descriptive information regarding the temp1_trim attribute.
-> - Discard setting the platforms device private data by using
->   platform_set_drvdata(). It's redundant since unused in the driver.
-> - Pass "pvt" hwmon name instead of dev_name(dev) to
->   devm_hwmon_device_register_with_info().
-> - Add "baikal,pvt-temp-trim-millicelsius" temperature trim DT property
->   support.
-> - Discard kernel log warnings printed from the ISR when either min or
->   max threshold levels are crossed.
-> - Discard CONFIG_OF dependency since there is non at compile-time.
-> 
-> Link: https://lore.kernel.org/linux-hwmon/20200526133823.20466-1-Sergey.Semin@baikalelectronics.ru
-> Changelog v4:
-> - Rename temp1_trim to the temp1_offset and use the standard API to
->   expose the attribute.
-> - Rename "baikal,pvt-temp-trim-millicelsius" DT property to
->   "baikal,pvt-temp-offset-millicelsius".
-> - Switch "const static" order to be "static const" where it's applicable.
-> - Add missing headers "linux/io.h" and "linux/of.h".
-> - Add static qualifier to the pvt_hwmon_write() method, which has been
->   missed there by mistake.
-> 
-> Co-developed-by: Maxim Kaurkin <maxim.kaurkin@baikalelectronics.ru>
-> Signed-off-by: Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>
-> Cc: Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>
-> Cc: Vadim Vlasov <V.Vlasov@baikalelectronics.ru>
-> Cc: Alexey Kolotnikov <Alexey.Kolotnikov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-hwmon@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Guenter Roeck (1):
->   hwmon: Add notification support
-> 
-> Serge Semin (2):
->   dt-bindings: hwmon: Add Baikal-T1 PVT sensor binding
->   hwmon: Add Baikal-T1 PVT sensor driver
-> 
->  .../bindings/hwmon/baikal,bt1-pvt.yaml        |  107 ++
->  Documentation/hwmon/bt1-pvt.rst               |  117 ++
->  Documentation/hwmon/index.rst                 |    1 +
->  drivers/hwmon/Kconfig                         |   25 +
->  drivers/hwmon/Makefile                        |    1 +
->  drivers/hwmon/bt1-pvt.c                       | 1146 +++++++++++++++++
->  drivers/hwmon/bt1-pvt.h                       |  244 ++++
->  drivers/hwmon/hwmon.c                         |   69 +-
->  include/linux/hwmon.h                         |    3 +
->  9 files changed, 1710 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/baikal,bt1-pvt.yaml
->  create mode 100644 Documentation/hwmon/bt1-pvt.rst
->  create mode 100644 drivers/hwmon/bt1-pvt.c
->  create mode 100644 drivers/hwmon/bt1-pvt.h
-> 
-> -- 
-> 2.26.2
+> [ 3160.307161][T106365] ------------[ cut here ]------------
+> [ 3160.307184][T106365] memory commitment underflow
+> [ 3160.307216][T106365] WARNING: CPU: 103 PID: 106365 at mm/util.c:858 __vm_enough_memory+0x204/0x250
+> [ 3160.307275][T106365] Modules linked in: brd ext4 crc16 mbcache jbd2 loop kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci libahci mdio tg3 libata libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod
+> [ 3160.307341][T106365] CPU: 103 PID: 106365 Comm: oom01 Not tainted 5.7.0-rc7-next-20200528+ #3
+> [ 3160.307368][T106365] NIP:  c0000000003ee654 LR: c0000000003ee650 CTR: c000000000745b40
+> [ 3160.307382][T106365] REGS: c0002017f940f730 TRAP: 0700   Not tainted  (5.7.0-rc7-next-20200528+)
+> [ 3160.307409][T106365] MSR:  900000000282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28222482  XER: 00000000
+> [ 3160.307442][T106365] CFAR: c00000000010e428 IRQMASK: 0
+> [ 3160.307442][T106365] GPR00: c0000000003ee650 c0002017f940f9c0 c00000000130a300 000000000000001b
+> [ 3160.307442][T106365] GPR04: c0000000017b8d68 0000000000000006 0000000078154885 ffffffff6ca32090
+> [ 3160.307442][T106365] GPR08: 0000201cc61a0000 0000000000000000 0000000000000000 0000000000000003
+> [ 3160.307442][T106365] GPR12: 0000000000002000 c000201fff675100 0000000000000000 0000000000000000
+> [ 3160.307442][T106365] GPR16: 0000000000000000 0000000000000000 c000200350fe3b60 fffffffffff7dfff
+> [ 3160.307442][T106365] GPR20: c000201a36824928 c000201a3682c128 c000200ee33ad3a0 c000200ee33ad3a8
+> [ 3160.307442][T106365] GPR24: c000200ee33ad390 ffffffffffff16dd 0000000000000000 0000000000000001
+> [ 3160.307442][T106365] GPR28: c000201a36824880 0000000000000001 c000000003fa2a80 c0000000011fb0a8
+> [ 3160.307723][T106365] NIP [c0000000003ee654] __vm_enough_memory+0x204/0x250
+> [ 3160.307759][T106365] LR [c0000000003ee650] __vm_enough_memory+0x200/0x250
+> [ 3160.308310][T106365] ---[ end trace e2152aa44c190593 ]---
+> [ 3160.308478][T106365] KK as:-59683  as_sum:6897  check:-32768 batch:256
+> [ 3160.308614][T106365] KK as:-59683  as_sum:6898  check:-32768 batch:256
+> [ 3160.308714][T106365] KK as:-59683  as_sum:6901  check:-32768 batch:256
+> [ 3160.308806][T106365] KK as:-59683  as_sum:6902  check:-32768 batch:256
+> [ 3160.308900][T106365] KK as:-59683  as_sum:6903  check:-32768 batch:256
+> [ 3160.308979][T106365] KK as:-59683  as_sum:6904  check:-32768 batch:256
+> [ 3160.309064][T106365] KK as:-59683  as_sum:6905  check:-32768 batch:256
+> [ 3160.309160][T106365] KK as:-59683  as_sum:6906  check:-32768 batch:256
+> [ 3160.309275][T106365] KK as:-59683  as_sum:6907  check:-32768 batch:256
+> [ 3160.309356][T106365] KK as:-59683  as_sum:6908  check:-32768 batch:256
+> [ 3160.309437][T106365] KK as:-59683  as_sum:6909  check:-32768 batch:256
+> [ 3160.310939][T106366] KK as:-59683  as_sum:6912  check:-32768 batch:256
+> [ 3160.311134][T106366] KK as:-59270  as_sum:7040  check:-32768 batch:256
+> [ 3160.311240][T106367] KK as:-59270  as_sum:7168  check:-32768 batch:256
 > 
