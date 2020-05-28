@@ -2,71 +2,116 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE97FC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F82C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D01FE21548
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C84521548
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:06:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590667603;
+	bh=fJxAjeDEvRm4OWsDU+0shWN9BkZJZgIzTXJEgHRXUF4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ydh2AKYnINrNzYbYV6o030nSy+XUh2sywAsXui0CVjCeqsEI6p08OjaYHeiLqAkht
+	 wnWxX6v0v7V46F0Kt9EAegSxG0P7y49W1p77gR0oRtsDLlG/kWCI84irrLONZhHk8f
+	 OzlxFzPW4hloearrwzvxiOGQajOidZ9ggRRmO8T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389399AbgE1MGe (ORCPT
+        id S2389513AbgE1MGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389059AbgE1MG2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:06:28 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB29C05BD1E
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 05:06:27 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jeHIg-0006Uf-J5; Thu, 28 May 2020 14:06:18 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 09E65100D01; Thu, 28 May 2020 14:06:18 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>
-Cc:     x86@kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: TSC problems with Acer TravelMate 5735Z
-In-Reply-To: <20200524185800.GV325280@hirez.programming.kicks-ass.net>
-References: <a8c0c572-6dba-8d35-69bd-5e7b19bf6aba@molgen.mpg.de> <20200524185800.GV325280@hirez.programming.kicks-ass.net>
-Date:   Thu, 28 May 2020 14:06:17 +0200
-Message-ID: <874ks0p8li.fsf@nanos.tec.linutronix.de>
+        Thu, 28 May 2020 08:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388830AbgE1L4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:56:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B169821475;
+        Thu, 28 May 2020 11:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590667008;
+        bh=fJxAjeDEvRm4OWsDU+0shWN9BkZJZgIzTXJEgHRXUF4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mwOOi8XmDNd59Ap6/0EHT2QCaHQgQDo7aVUfOOOmbiocvPymLn/KNOMhqGNs8MfK5
+         3oInQnLTsrilmsDFyLqsq+N+ztRq1EAkyPv/kT1RFDvECFTOp+nfHDd6CgBy9MRNRU
+         vT7h3/cgXYWSzwVYkuXLOjawh0l5GljDqXINRKaE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 42/47] net/mlx5e: Update netdev txq on completions during closure
+Date:   Thu, 28 May 2020 07:55:55 -0400
+Message-Id: <20200528115600.1405808-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200528115600.1405808-1-sashal@kernel.org>
+References: <20200528115600.1405808-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Sun, May 24, 2020 at 07:09:18PM +0200, Paul Menzel wrote:
->> Dear Linux folks,
->> 
->> 
->> I got my hands on an old Acer TravelMate 5735Z (Intel GM45/Cantiga) and
->> installed Debian Sid/unstable with Linux 5.6.7 on it.
->> 
->> Booting the system it takes a long time, and the systemd units fail to
->> start. The logs contain that the TSC is unstable. Adding `tsc=unstable` to
->> the Linux kernel command line fixes this.
->
-> It fixes nothing; it just doesn't get you the warning because you told
-> it upfront.
+From: Moshe Shemesh <moshe@mellanox.com>
 
-Well, it prevents the kernel to use TSC upfront and not wait until it's
-discovered to be crap. That might make a difference.
+[ Upstream commit 5e911e2c06bd8c17df29147a5e2d4b17fafda024 ]
 
-Thanks,
+On sq closure when we free its descriptors, we should also update netdev
+txq on completions which would not arrive. Otherwise if we reopen sqs
+and attach them back, for example on fw fatal recovery flow, we may get
+tx timeout.
 
-        tglx
+Fixes: 29429f3300a3 ("net/mlx5e: Timeout if SQ doesn't flush during close")
+Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+index ee60383adc5b..c2b801b435cf 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -538,10 +538,9 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *cq, int napi_budget)
+ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
+ {
+ 	struct mlx5e_tx_wqe_info *wi;
++	u32 dma_fifo_cc, nbytes = 0;
++	u16 ci, sqcc, npkts = 0;
+ 	struct sk_buff *skb;
+-	u32 dma_fifo_cc;
+-	u16 sqcc;
+-	u16 ci;
+ 	int i;
+ 
+ 	sqcc = sq->cc;
+@@ -566,11 +565,15 @@ void mlx5e_free_txqsq_descs(struct mlx5e_txqsq *sq)
+ 		}
+ 
+ 		dev_kfree_skb_any(skb);
++		npkts++;
++		nbytes += wi->num_bytes;
+ 		sqcc += wi->num_wqebbs;
+ 	}
+ 
+ 	sq->dma_fifo_cc = dma_fifo_cc;
+ 	sq->cc = sqcc;
++
++	netdev_tx_completed_queue(sq->txq, npkts, nbytes);
+ }
+ 
+ #ifdef CONFIG_MLX5_CORE_IPOIB
+-- 
+2.25.1
+
