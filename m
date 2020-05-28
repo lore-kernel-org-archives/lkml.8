@@ -2,107 +2,208 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309A6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB68C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC4D208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31729207BC
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:24:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I9riZ1kC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmhEN8oi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406513AbgE1TYO (ORCPT
+        id S2406517AbgE1TYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:24:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59440 "EHLO
+        Thu, 28 May 2020 15:24:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406378AbgE1TVk (ORCPT
+        with ESMTP id S2406348AbgE1TV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:21:40 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4948CC08C5C8
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:21:40 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w20so50805pga.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:21:40 -0700 (PDT)
+        Thu, 28 May 2020 15:21:27 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38773C08C5C7;
+        Thu, 28 May 2020 12:21:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id g5so2556877pfm.10;
+        Thu, 28 May 2020 12:21:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y6S8UT7fOzgLP5qh6hspSGqd2CboLdcTSP/4m/p79vQ=;
-        b=I9riZ1kCTjkAjgZQb6aDNzAbdKeGBwRNOUJ4ULr4c5YCaT0tSFe32xf7r6vTQfi+Yz
-         HMmfSquN3oTGCbPb4eaETRVyLNIX4QrM4CpjGjMudXBkCfJlewS0v3NeBkAoiKpw4IYt
-         EQUChaK4yvPaG+0SWNOR+DG8Vqt4u13ZuykKY=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=EOwNR1IN+6tSpzRKC8EVCwTKESR+c+/dhEdssUNTwVU=;
+        b=BmhEN8oiwdt7ses/ggCwe2nC5jG+JmsBk1k6wD5mH/LH3tFZHc6yqkaJzKqD39rnOz
+         jdIPfZYQwt0fIhwGZDyr/LOc/nkLneaoI8yDUysKvpH0EK7mqZVQq18VdAoBLQ2etccr
+         /ek9fRbf4Ha51kF1YwCQ5/rvy4cD+N1krCKw2lsaJ5WqhOHBMvfL8Ci7bKpFkdwnrgUl
+         UTZPJc1+VxJmJO69yQG8F/x4IJewMrDNoRvncoHgRCvO/rncibQrMVEY4QhtclXsFftn
+         kPscS8LsRtKSVThXnGoJwZlJOxnIaLi7aveesRYJqpXwavFnJ2CyNCunGiXVHTsaqk0e
+         IPcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y6S8UT7fOzgLP5qh6hspSGqd2CboLdcTSP/4m/p79vQ=;
-        b=MXFTboLi4xwTW2QN6jRaWQFs3T0FZOjvaOlUBEhbn/TFRh4/yOT0kwXw9oIpDxvfH4
-         kYPtUO6CLQRGce32loJlciLAI11WVJAMIJ89Evx+GRunUTQu5WWZv7v7VusqiyezQcFs
-         23Ow1zMMp59yWJ9w/is4tZeLHoxrb6jA++uLXsKqfXgHM0f0VKFsgDLYLgXWV4Kp4/zk
-         pphekiCikCvqAItS3ZO/orhpLF5/Dc2bH6XF5Ks9x9BfpkJCgyVuTAdzDaK28Gl4fePM
-         yCD/Ogr8juKHMFd8VKiu41zciAfC+QAFeohQKpt6XgxsrMctGWpOGwOmrYuDrS1zGCSY
-         uiXQ==
-X-Gm-Message-State: AOAM532LymqNhc6uLteyyhO/A58eWYwtuStNbhUoOOtSGPmAVWv6YDfy
-        NUFA4FJxU/1Xs1ukjcj+WwoJlQ==
-X-Google-Smtp-Source: ABdhPJye6QMenut6Cdb/aFoZAscfJN27BnFnVZBdVCmU8aOVmFGacFa/HAo0AxTatDB/ZDw6FTNwrw==
-X-Received: by 2002:a62:8c15:: with SMTP id m21mr4752243pfd.59.1590693699587;
-        Thu, 28 May 2020 12:21:39 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v12sm5630151pjt.32.2020.05.28.12.21.38
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=EOwNR1IN+6tSpzRKC8EVCwTKESR+c+/dhEdssUNTwVU=;
+        b=JTPwwyGNsc0dlnCVk8gyLb/8bsHTsOFlSA0LVArYtLLop6vEX9t8bFjlFD4eK5u7Jr
+         r+rOnrsXMRm2d4yX0nxn7dH8venN8ZNjgeNHcFe2KNIze8BBshQBtfCc4mG322Dnbitd
+         sg68D0ac5keIWmg4OtbkgOpVo+xBkT7evvSh9ucmxD5U9tgN3GXNHRPHjSY3v/xM10lk
+         Qe9bBDHOQY51f/GADdhbh1Y6QQ4pHPZT8fxHVhDGDa5zaFHGaTYomIT4JBxqDw1amF31
+         6g/+0CsB8LzYu2GNZmD8Z9LlqBGPgyaI2KP+gxAeOQWCKH2CYBV7ZQM3P9hrBEmmfDlL
+         Bkow==
+X-Gm-Message-State: AOAM532IDBVYjKOtVNHLJrtYfXNHIGHGRAT5LuI99VtphUd094mPvAcH
+        4TcnKdYEEc56og70qE/eKblICSIJ
+X-Google-Smtp-Source: ABdhPJywtcGNOyCPafoSIsx60XaQRccc9364PFMH+dMdMlO1CwvlLtPzu9Qsruop2xhhzdtdsYEc8w==
+X-Received: by 2002:a63:ce0d:: with SMTP id y13mr4465577pgf.90.1590693686278;
+        Thu, 28 May 2020 12:21:26 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id h11sm5460561pjk.20.2020.05.28.12.21.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 12:21:39 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Govind Singh <govinds@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath10k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] ath10k: Remove ath10k_qmi_register_service_notifier() declaration
-Date:   Thu, 28 May 2020 12:21:09 -0700
-Message-Id: <20200528122105.1.I31937dce728b441fd72cbe23447bc4710fd56ddb@changeid>
-X-Mailer: git-send-email 2.27.0.rc0.183.gde8f92d652-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 28 May 2020 12:21:25 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH 4/4] pinctrl: bcm2835: Add support for wake-up interrupts
+Date:   Thu, 28 May 2020 12:21:12 -0700
+Message-Id: <20200528192112.26123-5-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200528192112.26123-1-f.fainelli@gmail.com>
+References: <20200528192112.26123-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ath10k/qmi.h header file contains a declaration for the function
-ath10k_qmi_register_service_notifier().  This function doesn't exist.
-Remove the declaration.
+Leverage the IRQCHIP_MASK_ON_SUSPEND flag in order to avoid having to
+specifically treat the GPIO interrupts during suspend and resume, and
+simply implement an irq_set_wake() callback that is responsible for
+enabling the parent wake-up interrupt as a wake-up interrupt.
 
-This patch is a no-op and was just found by code inspection.
-
-Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 58 ++++++++++++++++++++++++++-
+ 1 file changed, 57 insertions(+), 1 deletion(-)
 
- drivers/net/wireless/ath/ath10k/qmi.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.h b/drivers/net/wireless/ath/ath10k/qmi.h
-index dc257375f161..e03581182919 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.h
-+++ b/drivers/net/wireless/ath/ath10k/qmi.h
-@@ -112,7 +112,6 @@ int ath10k_qmi_wlan_enable(struct ath10k *ar,
- 			   enum wlfw_driver_mode_enum_v01 mode,
- 			   const char *version);
- int ath10k_qmi_wlan_disable(struct ath10k *ar);
--int ath10k_qmi_register_service_notifier(struct notifier_block *nb);
- int ath10k_qmi_init(struct ath10k *ar, u32 msa_size);
- int ath10k_qmi_deinit(struct ath10k *ar);
- int ath10k_qmi_set_fw_log_mode(struct ath10k *ar, u8 fw_log_mode);
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index e8ad1824c6b3..367fd8e19f92 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -19,6 +19,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdesc.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/of_address.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+@@ -76,6 +77,7 @@
+ struct bcm2835_pinctrl {
+ 	struct device *dev;
+ 	void __iomem *base;
++	int wake_irq[BCM2835_NUM_IRQS];
+ 
+ 	/* note: locking assumes each bank will have its own unsigned long */
+ 	unsigned long enabled_irq_map[BCM2835_NUM_BANKS];
+@@ -435,6 +437,11 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(host_chip, desc);
+ }
+ 
++static irqreturn_t bcm2835_gpio_wake_irq_handler(int irq, void *dev_id)
++{
++	return IRQ_HANDLED;
++}
++
+ static inline void __bcm2835_gpio_irq_config(struct bcm2835_pinctrl *pc,
+ 	unsigned reg, unsigned offset, bool enable)
+ {
+@@ -634,6 +641,31 @@ static void bcm2835_gpio_irq_ack(struct irq_data *data)
+ 	bcm2835_gpio_set_bit(pc, GPEDS0, gpio);
+ }
+ 
++static int bcm2835_gpio_irq_set_wake(struct irq_data *data, unsigned int on)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct bcm2835_pinctrl *pc = gpiochip_get_data(chip);
++	unsigned gpio = irqd_to_hwirq(data);
++	unsigned int irqgroup;
++	int ret = -EINVAL;
++
++	if (gpio <= 27)
++		irqgroup = 0;
++	else if (gpio >= 28 && gpio <= 45)
++		irqgroup = 1;
++	else if (gpio >= 46 && gpio <= 53)
++		irqgroup = 2;
++	else
++		return ret;
++
++	if (on)
++		ret = enable_irq_wake(pc->wake_irq[irqgroup]);
++	else
++		ret = disable_irq_wake(pc->wake_irq[irqgroup]);
++
++	return ret;
++}
++
+ static struct irq_chip bcm2835_gpio_irq_chip = {
+ 	.name = MODULE_NAME,
+ 	.irq_enable = bcm2835_gpio_irq_enable,
+@@ -642,6 +674,8 @@ static struct irq_chip bcm2835_gpio_irq_chip = {
+ 	.irq_ack = bcm2835_gpio_irq_ack,
+ 	.irq_mask = bcm2835_gpio_irq_disable,
+ 	.irq_unmask = bcm2835_gpio_irq_enable,
++	.irq_set_wake = bcm2835_gpio_irq_set_wake,
++	.flags = IRQCHIP_MASK_ON_SUSPEND,
+ };
+ 
+ static int bcm2835_pctl_get_groups_count(struct pinctrl_dev *pctldev)
+@@ -1221,8 +1255,30 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 	 * bank that was firing the IRQ and look up the per-group
+ 	 * and bank data.
+ 	 */
+-	for (i = 0; i < BCM2835_NUM_IRQS; i++)
++	for (i = 0; i < BCM2835_NUM_IRQS; i++) {
++		int len;
++		char *name;
++
+ 		girq->parents[i] = irq_of_parse_and_map(np, i);
++		/* Skip over the all banks interrupts */
++		pc->wake_irq[i] = irq_of_parse_and_map(np, i +
++						       BCM2835_NUM_IRQS + 1);
++
++		len = strlen(dev_name(pc->dev)) + 16;
++		name = devm_kzalloc(pc->dev, len, GFP_KERNEL);
++		if (!name)
++			return -ENOMEM;
++
++		snprintf(name, len, "%s:bank%d", dev_name(pc->dev), i);
++
++		/* These are optional interrupts */
++		err = devm_request_irq(dev, pc->wake_irq[i],
++				       bcm2835_gpio_wake_irq_handler,
++				       IRQF_SHARED, name, pc);
++		if (err)
++			dev_warn(dev, "unable to request wake IRQ %d\n",
++				 pc->wake_irq[i]);
++	}
+ 	girq->default_type = IRQ_TYPE_NONE;
+ 	girq->handler = handle_level_irq;
+ 
 -- 
-2.27.0.rc0.183.gde8f92d652-goog
+2.17.1
 
