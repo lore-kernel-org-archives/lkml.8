@@ -2,164 +2,148 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058ADC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E196120721
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD5420721
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:16:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QPEZGWIl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgE1FNl (ORCPT
+        id S1728025AbgE1FQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:13:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:1646 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727896AbgE1FNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:13:38 -0400
-IronPort-SDR: ImV7ws41MY1JqxolhFoZD72UmkhEpEPbFP1C9SUpv0x2nd9EymslzpcjHmkR3ZmphKapX3d0vJ
- ibcUBVo4lYEg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2020 22:13:37 -0700
-IronPort-SDR: nrT4BrWIWNwvR5rQfELYTwjIrfw8uZM85wNV6TkXXfnvdZk5VQryfNlw4Mklxbwihq46FNka7n
- bdnUPUadj9yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.73,443,1583222400"; 
-   d="scan'208";a="345789079"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga001.jf.intel.com with ESMTP; 27 May 2020 22:13:33 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        devicetree@vger.kernel.org, miquel.raynal@bootlin.com
-Cc:     richard@nod.at, vigneshr@ti.com, arnd@arndb.de,
-        brendanhiggins@google.com, tglx@linutronix.de,
-        boris.brezillon@collabora.com, anders.roxell@linaro.org,
-        masonccyang@mxic.com.tw, robh+dt@kernel.org,
-        linux-mips@vger.kernel.org, hauke.mehrtens@intel.com,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        cheol.yong.kim@intel.com,
-        "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v9 0/2] mtd: rawnand: Add NAND controller support on Intel LGM SoC
-Date:   Thu, 28 May 2020 13:12:09 +0800
-Message-Id: <20200528051211.3063-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 28 May 2020 01:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727890AbgE1FNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 01:13:36 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6ED7C05BD1E;
+        Wed, 27 May 2020 22:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=lR78mSGloKOw4Rm59o11Y3p0CvdJlgBCc0uACk8cE6g=; b=QPEZGWIlFdzkmtrM0IoDKMLNol
+        JPCziw5iBlWGCJFzMs05+0F/2knZ+OOeuVVlubew5fJjZrLiQw6rbNVwCGwhVaonbMlf5C6ZTNtA5
+        Jcry3c4fMDaGzEItff+X1hiRfyBcSZGD++fz8gQJ48vx27+FzR9jxR4iA+zn2/YoCG89X9UUi39Ns
+        oo46Q9sr2itZVGufaznYwVr+zPBGpvsH9TCKHw+uL6PJA7Romon6vVxccFocqonCRoJEkxXHRSEQP
+        XJmyhgIjPB6AA2bOl/MsgFn3oMV4hsN6Y77l8tpQsU//z/S2L5aFq5HlTWsyfrZ/V0JmZyuCck8Qc
+        oMiDenDQ==;
+Received: from p4fdb1ad2.dip0.t-ipconnect.de ([79.219.26.210] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jeAqr-0001oS-Dz; Thu, 28 May 2020 05:13:10 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nvme@lists.infradead.org, target-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        netdev@vger.kernel.org, ceph-devel@vger.kernel.org,
+        rds-devel@oss.oracle.com, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [PATCH 09/28] net: add sock_set_reuseport
+Date:   Thu, 28 May 2020 07:12:17 +0200
+Message-Id: <20200528051236.620353-10-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200528051236.620353-1-hch@lst.de>
+References: <20200528051236.620353-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the new IP of Nand Flash Controller(NFC) support
-on Intel's Lightning Mountain(LGM) SoC.
+Add a helper to directly set the SO_REUSEPORT sockopt from kernel space
+without going through a fake uaccess.
 
-DMA is used for burst data transfer operation, also DMA HW supports
-aligned 32bit memory address and aligned data access by default.
-DMA burst of 8 supported. Data register used to support the read/write
-operation from/to device.
-
-NAND controller also supports in-built HW ECC engine.
-
-NAND controller driver implements ->exec_op() to replace legacy hooks,
-these specific call-back method to execute NAND operations.
-
-Thanks Boris, Andy, Arnd and Rob for the review comments and suggestions.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
-v9:
-   No change 
-v8:
-  - fix the kbuild bot warnings
-  - correct the typo's
-v7:
-  - indentation issue is fixed
-  - add error check for retrieve the resource from dt
-v6:
-  - update EBU_ADDR_SELx register base value build it from DT
-  - Add tabs in in Kconfig
-v5:
-  - replace by 'HSNAND_CLE_OFFS | HSNAND_CS_OFFS' to NAND_WRITE_CMD and NAND_WRITE_ADDR
-  - remove the unused macros
-  - update EBU_ADDR_MASK(x) macro
-  - update the EBU_ADDR_SELx register values to be written
-v4:
-  - add ebu_nand_cs structure for multiple-CS support
-  - mask/offset encoding for 0x51 value
-  - update macro HSNAND_CTL_ENABLE_ECC
-  - drop the op argument and un-used macros.
-  - updated the datatype and macros
-  - add function disable nand module
-  - remove ebu_host->dma_rx = NULL;
-  - rename MMIO address range variables to ebu and hsnand
-  - implement ->setup_data_interface()
-  - update label err_cleanup_nand and err_cleanup_dma
-  - add return value check in the nand_remove function
-  - add/remove tabs and spaces as per coding standard
-  - encoded CS ids by reg property
-v3:
-  - Add depends on MACRO in Kconfig
-  - file name update in Makefile
-  - file name update to intel-nand-controller
-  - modification of MACRO divided like EBU, HSNAND and NAND
-  - add NAND_ALE_OFFS, NAND_CLE_OFFS and NAND_CS_OFFS
-  - rename lgm_ to ebu_ and _va suffix is removed in the whole file
-  - rename structure and varaibles as per review comments.
-  - remove lgm_read_byte(), lgm_dev_ready() and cmd_ctrl() un-used function
-  - update in exec_op() as per review comments
-  - rename function lgm_dma_exit() by lgm_dma_cleanup()
-  - hardcoded magic value  for base and offset replaced by MACRO defined
-  - mtd_device_unregister() + nand_cleanup() instead of nand_release()
-v2:
-  - implement the ->exec_op() to replaces the legacy hook-up.
-  - update the commit message
-  - add MIPS maintainers and xway_nand driver author in CC
+ include/net/sock.h    |  1 +
+ net/core/sock.c       |  8 ++++++++
+ net/sunrpc/xprtsock.c | 17 +----------------
+ 3 files changed, 10 insertions(+), 16 deletions(-)
 
-v1:
- - initial version
-
-dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
----
-v9:
-  - Rob's review comments address
-  - dual licensed
-  - compatible change
-  - add reg-names
-  - drop clock-names and clock-cells
-  - correct typo's
-v8:
-  No change
-v7:
-  - Rob's review comments addressed
-  - dt-schema build issue fixed with upgraded dt-schema
-v6:
-  - Rob's review comments addressed in YAML file
-  - add addr_sel0 and addr_sel1 reg-names in YAML example
-v5:
-  - add the example in YAML file
-v4:
-  - No change
-v3:
-  - No change
-v2:
-  YAML compatible string update to intel, lgm-nand-controller
-v1:
-  - initial version
-
-Ramuthevar Vadivel Murugan (2):
-  dt-bindings: mtd: Add Nand Flash Controller support for Intel LGM SoC
-  mtd: rawnand: Add NAND controller support on Intel LGM SoC
-
- .../devicetree/bindings/mtd/intel,lgm-nand.yaml    |  93 +++
- drivers/mtd/nand/raw/Kconfig                       |   8 +
- drivers/mtd/nand/raw/Makefile                      |   1 +
- drivers/mtd/nand/raw/intel-nand-controller.c       | 747 +++++++++++++++++++++
- 4 files changed, 849 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/intel,lgm-nand.yaml
- create mode 100644 drivers/mtd/nand/raw/intel-nand-controller.c
-
+diff --git a/include/net/sock.h b/include/net/sock.h
+index c997289aabbf9..d994daa418ec2 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -2695,6 +2695,7 @@ void sock_set_keepalive(struct sock *sk);
+ void sock_set_priority(struct sock *sk, u32 priority);
+ void sock_set_rcvbuf(struct sock *sk, int val);
+ void sock_set_reuseaddr(struct sock *sk);
++void sock_set_reuseport(struct sock *sk);
+ void sock_set_sndtimeo(struct sock *sk, s64 secs);
+ 
+ #endif	/* _SOCK_H */
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 3c6ebf952e9ad..2ca3425b519c0 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -729,6 +729,14 @@ void sock_set_reuseaddr(struct sock *sk)
+ }
+ EXPORT_SYMBOL(sock_set_reuseaddr);
+ 
++void sock_set_reuseport(struct sock *sk)
++{
++	lock_sock(sk);
++	sk->sk_reuseport = true;
++	release_sock(sk);
++}
++EXPORT_SYMBOL(sock_set_reuseport);
++
+ void sock_no_linger(struct sock *sk)
+ {
+ 	lock_sock(sk);
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 30082cd039960..399848c2bcb29 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1594,21 +1594,6 @@ static int xs_get_random_port(void)
+ 	return rand + min;
+ }
+ 
+-/**
+- * xs_set_reuseaddr_port - set the socket's port and address reuse options
+- * @sock: socket
+- *
+- * Note that this function has to be called on all sockets that share the
+- * same port, and it must be called before binding.
+- */
+-static void xs_sock_set_reuseport(struct socket *sock)
+-{
+-	int opt = 1;
+-
+-	kernel_setsockopt(sock, SOL_SOCKET, SO_REUSEPORT,
+-			(char *)&opt, sizeof(opt));
+-}
+-
+ static unsigned short xs_sock_getport(struct socket *sock)
+ {
+ 	struct sockaddr_storage buf;
+@@ -1801,7 +1786,7 @@ static struct socket *xs_create_sock(struct rpc_xprt *xprt,
+ 	xs_reclassify_socket(family, sock);
+ 
+ 	if (reuseport)
+-		xs_sock_set_reuseport(sock);
++		sock_set_reuseport(sock->sk);
+ 
+ 	err = xs_bind(transport, sock);
+ 	if (err) {
 -- 
-2.11.0
+2.26.2
 
