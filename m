@@ -2,102 +2,77 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A78C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43C832078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EB92078C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406577AbgE1Tax (ORCPT
+        id S2406583AbgE1TbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:30:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60906 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406318AbgE1Taw (ORCPT
+        Thu, 28 May 2020 15:31:22 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:43924 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406318AbgE1TbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:30:52 -0400
-Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA70C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:30:52 -0700 (PDT)
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jeOEa-0007Kx-PP; Thu, 28 May 2020 21:30:32 +0200
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 426ED100D01; Thu, 28 May 2020 21:30:32 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jay Lang <jaytlang@mit.edu>
-Cc:     jaytlang@mit.edu, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christian Brauner <christian@brauner.io>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Jan Beulich <jbeulich@suse.com>,
-        Benjamin Thiel <b.thiel@posteo.de>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Brian Gerst <brgerst@gmail.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        yu kuai <yukuai3@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/ioperm: fix a memory leak bug
-In-Reply-To: <20200524162742.253727-1-jaytlang@mit.edu>
-References: <20200524162742.253727-1-jaytlang@mit.edu>
-Date:   Thu, 28 May 2020 21:30:32 +0200
-Message-ID: <87k10voo13.fsf@nanos.tec.linutronix.de>
+        Thu, 28 May 2020 15:31:21 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C9B9B80307C3;
+        Thu, 28 May 2020 19:31:18 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id a4oQGUg_uqxW; Thu, 28 May 2020 22:31:18 +0300 (MSK)
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Olof Johansson <olof@lixom.net>, <soc@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] bus: bt1-apb: Build the driver into the kernel
+Date:   Thu, 28 May 2020 22:31:12 +0300
+Message-ID: <20200528193113.17372-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jay,
+Seeing trigger_all_cpu_backtrace() isn't exported from the kernel and
+since calling it is a very important part of driver, which may provide
+a better description of a possible cause of the error, let's disable the
+ability to build the driver as a loadable kernel module.
 
-Jay Lang <jaytlang@mit.edu> writes:
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: soc@kernel.org
+---
+ drivers/bus/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> In the copy_process() routine called by _do_fork(), failure to allocate
-> a PID (or further along in the function) will trigger an invocation to
-> exit_thread(). This is done to clean up from an earlier call to
-> copy_thread_tls(). Naturally, the child task is passed into exit_thread(),
-> however during the process, io_bitmap_exit() nullifies the parent's
-> io_bitmap rather than the child's.
->
-> As copy_thread_tls() has been called ahead of the failure, the reference
-> count on the calling thread's io_bitmap is incremented as we would expect.
-> However, io_bitmap_exit() doesn't accept any arguments, and thus assumes
-> it should trash the current thread's io_bitmap reference rather than the
-> child's. This is pretty sneaky in practice, because in all instances but
-> this one, exit_thread() is called with respect to the current task and
-> everything works out.
->
-> A determined attacker can issue an appropriate ioctl (i.e. KDENABIO) to
-> get a bitmap allocated, and force a clone3() syscall to fail by passing
-> in a zeroed clone_args structure. The kernel handles the erroneous struct
-> and the buggy code path is followed, and even though the parent's reference
-> to the io_bitmap is trashed, the child still holds a reference and thus
-> the structure will never be freed.
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index 030f0e59f193..18858f560d1f 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -30,7 +30,7 @@ config BRCMSTB_GISB_ARB
+ 	  and internal bus master decoding.
+ 
+ config BT1_APB
+-	tristate "Baikal-T1 APB-bus driver"
++	bool "Baikal-T1 APB-bus driver"
+ 	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
+ 	select REGMAP_MMIO
+ 	help
+-- 
+2.26.2
 
-Nice catch! I'm sure I thought about that at some point and then forgot
-again.
-
-> Fix this by tweaking io_bitmap_exit() and its subroutines to accept a
-> task_struct argument which to operate on.
-
-> This may not be the most elegant solution, but it mitigates the
-> trigger described above on an x86_64 kernel.
-
-It's well done and straight forward and comes with a well done change
-log. Appreciated!
-
-Thanks,
-
-        tglx
