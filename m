@@ -2,146 +2,239 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10672C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA11DC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E295C2084C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:04:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88AB7214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 02:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590631475;
-	bh=Bm2dTuY2AQspqM7SzMj2c/DT+ozxm6kUi6HWpA8TsHk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zAIKwc0kI9kWu99KPnrAM085GfPsoy/8PrxYt2q1KptmTKCDg7FjPxC172WvqMcPK
-	 o0/gcWtGKCC2z1GltvlOi9OtFoFcMkawjKfe5LzOjJr8xnecEJd0g4rmtcgt2khh9I
-	 mgBe3DeSwXhqw5LYnH3goJ0B8vXI9IubPCsu3bMo=
+	s=default; t=1590631596;
+	bh=Oz9w11MN25URxg3SBjO67dK0vS29Qyd85Hx1KDFN7l4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cbpsC/f5ECZeNPR6X4wCScmk9ZYpuCOM3obTbF/niCqrD4cNtjp/vAl8Kvmkxwl9O
+	 paQpUqXaacNaZqAsFqbmteBTxmr/uxILD5xikn/o40jLv/pF059Ja9PHqyf7qTImDF
+	 7shXFgSmsSc6lhwK8Pg45l4oCLwjhl7racO1S2S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgE1CEf (ORCPT
+        id S1726809AbgE1CGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 22:04:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725849AbgE1CEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 22:04:34 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7583D207CB;
-        Thu, 28 May 2020 02:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590631473;
-        bh=Bm2dTuY2AQspqM7SzMj2c/DT+ozxm6kUi6HWpA8TsHk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=P1CBXYMU6KgliH8T3/2k6OMetj5IIP9IfCeW6vXHFuAVES38CNoXgmhsLExw5WPRS
-         BGr2sIDNzBzrcfeE+DMAJESNZIIeUKJWWPI8HGY2ObOdmL8XyU7KUun0WVlXahBjEC
-         cDYAJp751q754Z0TTj9fuvNilxFW+islAyRbCf+k=
-Date:   Wed, 27 May 2020 19:04:32 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-parisc@vger.kernel.org, linux-um@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/23] bpf: handle the compat string in
- bpf_trace_copy_string better
-Message-Id: <20200527190432.e4af1fba00c13cb1421f5a37@linux-foundation.org>
-In-Reply-To: <20200521152301.2587579-13-hch@lst.de>
-References: <20200521152301.2587579-1-hch@lst.de>
-        <20200521152301.2587579-13-hch@lst.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 27 May 2020 22:06:36 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:38548 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725849AbgE1CGf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 27 May 2020 22:06:35 -0400
+Received: by mail-io1-f43.google.com with SMTP id d7so28362261ioq.5;
+        Wed, 27 May 2020 19:06:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=e0JdTAh/sH1xhLv5fA+UWq+PNY013b4LCOvIOpzDEg8=;
+        b=BUXpsZAX2eW+NlUi12xGcIdUM5KfEygCVBexXFiwFXPR+YGU4s8qzVvfEBd4Ly0ZVj
+         yyjncjr3otY4XjJI4yaavqT9oP7DuUOEf5LFpSaEv9D8xCobzrhEkTosxPcUB9ENjR4C
+         N1jTqUJss1zn3u21wPMq8mnZ3pTTKFOpk4zXEs9nZlLo/WyDy4vquAMB5pvVpM2f12BK
+         y9s+oMkM3JyDaAWPy51+5tMoGTfC2YRbYX0nrYjllqa89AmBcaitRPNQRsByHmGhDv0Z
+         4PHU8GEjUTda8LRbWcvcYgElUlBHucnti/SmPxs86qX/HlagsiFL3aB0ffRioTgWUTXF
+         umeg==
+X-Gm-Message-State: AOAM533jX06RYJqljC80id4ys48CU2M67XoiyHrVCJHA/ZMpZZ+7N8MN
+        dMBCR2HwDHZ+2CbHL5/ncw==
+X-Google-Smtp-Source: ABdhPJzBXlXqNm6zjTvpUegdAoReVOZFmSVXnwBwUSxdfkNW24PCybA278OPvjw9EwqDBZI4/cp0ag==
+X-Received: by 2002:a05:6638:134b:: with SMTP id u11mr715500jad.102.1590631594041;
+        Wed, 27 May 2020 19:06:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.252])
+        by smtp.gmail.com with ESMTPSA id j9sm2461867ilr.18.2020.05.27.19.06.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 19:06:33 -0700 (PDT)
+Received: (nullmailer pid 3214169 invoked by uid 1000);
+        Thu, 28 May 2020 02:06:32 -0000
+Date:   Wed, 27 May 2020 20:06:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCHv1 2/2] dt-bindings: power: supply: gpio-charger: convert
+ to yaml
+Message-ID: <20200528020632.GA3201271@bogus>
+References: <20200513115601.360642-1-sebastian.reichel@collabora.com>
+ <20200513115601.360642-2-sebastian.reichel@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200513115601.360642-2-sebastian.reichel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 May 2020 17:22:50 +0200 Christoph Hellwig <hch@lst.de> wrote:
-
-> User the proper helper for kernel or userspace addresses based on
-> TASK_SIZE instead of the dangerous strncpy_from_unsafe function.
+On Wed, May 13, 2020 at 01:56:01PM +0200, Sebastian Reichel wrote:
+> Convert the gpio-charger bindings from text format to
+> new YAML based representation.
 > 
-> ...
->
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -331,8 +331,11 @@ static void bpf_trace_copy_string(char *buf, void *unsafe_ptr, char fmt_ptype,
->  	switch (fmt_ptype) {
->  	case 's':
->  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> -		strncpy_from_unsafe(buf, unsafe_ptr, bufsz);
-> -		break;
-> +		if ((unsigned long)unsafe_ptr < TASK_SIZE) {
-> +			strncpy_from_user_nofault(buf, user_ptr, bufsz);
-> +			break;
-> +		}
-> +		fallthrough;
->  #endif
->  	case 'k':
->  		strncpy_from_kernel_nofault(buf, unsafe_ptr, bufsz);
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  .../bindings/power/supply/gpio-charger.txt    | 38 ----------
+>  .../bindings/power/supply/gpio-charger.yaml   | 75 +++++++++++++++++++
+>  2 files changed, 75 insertions(+), 38 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt b/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> deleted file mode 100644
+> index dbfd29029f69..000000000000
+> --- a/Documentation/devicetree/bindings/power/supply/gpio-charger.txt
+> +++ /dev/null
+> @@ -1,38 +0,0 @@
+> -gpio-charger
+> -
+> -Required properties :
+> - - compatible : "gpio-charger"
+> - - charger-type : power supply type, one of
+> -     unknown
+> -     battery
+> -     ups
+> -     mains
+> -     usb-sdp (USB standard downstream port)
+> -     usb-dcp (USB dedicated charging port)
+> -     usb-cdp (USB charging downstream port)
+> -     usb-aca (USB accessory charger adapter)
+> -
+> -Optional properties:
+> - - gpios : GPIO indicating the charger presence.
+> -   See GPIO binding in bindings/gpio/gpio.txt .
+> - - charge-status-gpios: GPIO indicating whether a battery is charging.
+> - - charge-current-limit-gpios: Output GPIOs specifiers for limiting the charge current
+> - - charge-current-limit-mapping: List of touples with current in uA and a GPIO bitmap (in this order).
+> -                                The GPIOs are encoded in the same order as specified in charge-current-limit-gpios.
+> -				The touples must be provided in descending order of the current limit.
+> -
+> -Example:
+> -
+> -	usb_charger: charger {
+> -		compatible = "gpio-charger";
+> -		charger-type = "usb-sdp";
+> -		gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
+> -		charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
+> -
+> -		charge-current-limit-gpios = <&gpioA 11 GPIO_ACTIVE_HIGH>, <&gpioA 12 GPIO_ACTIVE_HIGH>;
+> -		charge-current-limit-mapping = <2500000 0x00>, <700000 0x01>, <0 0x02>;
+> -	};
+> -
+> -	battery {
+> -		power-supplies = <&usb_charger>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> new file mode 100644
+> index 000000000000..14fb3e54f861
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/gpio-charger.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/supply/gpio-charger.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: simple battery chargers only communicating through GPIOs
+> +
+> +maintainers:
+> +  - Sebastian Reichel <sre@kernel.org>
+> +
+> +description: |
 
-Another user of strncpy_from_unsafe() has popped up in linux-next's
-bpf.  I did the below, but didn't try very hard - it's probably wrong
-if CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE=n?
+Can drop '|' if formatting is not important.
 
-Anyway, please take a look at all the bpf_trace.c changes in
-linux-next.
+> +  This binding is for all chargers, which are working more
+> +  or less autonomously, only providing some status GPIOs
+> +  and possibly some GPIOs for limited control over the
+> +  charging process.
+> +
+> +properties:
+> +  compatible:
+> +    const: gpio-charger
+> +
+> +  charger-type:
+> +    oneOf:
+> +      - const: unknown
+> +      - const: battery
+> +      - const: ups
+> +      - const: mains
+> +      - const: usb-sdp                   # USB standard downstream port
+> +      - const: usb-dcp                   # USB dedicated charging port
+> +      - const: usb-cdp                   # USB charging downstream port
+> +      - const: usb-aca                   # USB accessory charger adapter
 
+Use enum rather than oneOf+const
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: bpf:bpf_seq_printf(): handle potentially unsafe format string better
+Should have a description too.
 
-User the proper helper for kernel or userspace addresses based on
-TASK_SIZE instead of the dangerous strncpy_from_unsafe function.
+> +
+> +  gpios:
+> +    maxItems: 1
+> +    description: GPIO indicating the charger presence
+> +
+> +  charge-status-gpios:
+> +    maxItems: 1
+> +    description: GPIO indicating the charging status
+> +
+> +  charge-current-limit-gpios:
+> +    minItems: 1
+> +    maxItems: 32
+> +    description: GPIOs used for current limiting
+> +
+> +  charge-current-limit-mapping:
+> +    description: List of touples with current in uA and a GPIO bitmap (in
+> +      this order). The GPIOs are encoded in the same order as specified in
+> +      charge-current-limit-gpios. The touples must be provided in descending
+> +      order of the current limit.
+> +    $ref: "/meta-schemas/cell.yaml#array"
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
+That's a first... A meta-schema is what checks this document. Not what 
+you want. Should be like this:
 
- kernel/trace/bpf_trace.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+$ref: /schemas/types.yaml#/definitions/uint32-matrix
+items:
+  items:
+    - description: Current limit in uA
+    - description: Encoded GPIO setting...
 
---- a/kernel/trace/bpf_trace.c~xxx
-+++ a/kernel/trace/bpf_trace.c
-@@ -588,15 +588,22 @@ BPF_CALL_5(bpf_seq_printf, struct seq_fi
- 		}
- 
- 		if (fmt[i] == 's') {
-+			void *unsafe_ptr;
-+
- 			/* try our best to copy */
- 			if (memcpy_cnt >= MAX_SEQ_PRINTF_MAX_MEMCPY) {
- 				err = -E2BIG;
- 				goto out;
- 			}
- 
--			err = strncpy_from_unsafe(bufs->buf[memcpy_cnt],
--						  (void *) (long) args[fmt_cnt],
--						  MAX_SEQ_PRINTF_STR_LEN);
-+			unsafe_ptr = (void *)(long)args[fmt_cnt];
-+			if ((unsigned long)unsafe_ptr < TASK_SIZE) {
-+				err = strncpy_from_user_nofault(
-+					bufs->buf[memcpy_cnt], unsafe_ptr,
-+					MAX_SEQ_PRINTF_STR_LEN);
-+			} else {
-+				err = -EFAULT;
-+			}
- 			if (err < 0)
- 				bufs->buf[memcpy_cnt][0] = '\0';
- 			params[fmt_cnt] = (u64)(long)bufs->buf[memcpy_cnt];
-_
+I guess there's not any more constraints we can add here.
 
+> +
+> +required:
+> +  - compatible
+
+blank line
+
+At least 1 of the gpio properties is required, right? Can be expressed 
+with required entries under a oneOf or anyOf.
+
+> +additionalProperties: false
+> +
+> +dependencies:
+> +  charge-current-limit-gpios: [ charge-current-limit-mapping ]
+> +  charge-current-limit-mapping: [ charge-current-limit-gpios ]
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    charger {
+> +      compatible = "gpio-charger";
+> +      charger-type = "usb-sdp";
+> +
+> +      gpios = <&gpd 28 GPIO_ACTIVE_LOW>;
+> +      charge-status-gpios = <&gpc 27 GPIO_ACTIVE_LOW>;
+> +
+> +      charge-current-limit-gpios = <&gpioA 11 GPIO_ACTIVE_HIGH>,
+> +                                   <&gpioA 12 GPIO_ACTIVE_HIGH>;
+> +      charge-current-limit-mapping = <2500000 0x00>, <700000 0x01>, <0 0x02>;
+> +    };
+> -- 
+> 2.26.2
+> 
