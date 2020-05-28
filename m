@@ -2,85 +2,144 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23187C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DFEC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEDA20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PcsbN6yD"
+	by mail.kernel.org (Postfix) with ESMTP id C43AE20888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388274AbgE1LDJ (ORCPT
+        id S2388286AbgE1LDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:03:09 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44826 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387926AbgE1LDG (ORCPT
+        Thu, 28 May 2020 07:03:15 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:39088 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388224AbgE1LDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:03:06 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SB2204028445;
-        Thu, 28 May 2020 11:02:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=AbiKRX/dqvcBx3/Gr1Dt2VgVAqB6aC+uNXh9UFbdScg=;
- b=PcsbN6yDWZnVY8qqvNyrN9Cr9rObIpuLRgMNcImys3HhcW+qV/Avpg6h6QWF59CyfKh7
- 7BdjLtCF0SEqS/iJieg4+TKNfNEO2eN1C+cwZFeb51yDB4Cu+EFcG5XecQuRrwbfMsWn
- cT4FP6jvdxfyki6Lcc2TeDZGvdtBK+N4LNO04E9yT9/JIb9Y81OF8U8gEueoJ5UdXD4/
- G9z6c4WNF14F4CD03Kw/rftnSryrX8r7nv0FhOlrGpzKss6AsnJd/wthhJ5jgVyXTwTK
- mJ+OwVMTaduKcTRE/pP/V6wwcHVviX8TKyl02m7mCQTiGMlNTeAytXxKNEUwmD86isHb 9w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 318xbk4cfm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 11:02:29 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SAvc2V111379;
-        Thu, 28 May 2020 11:00:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 317j5uxn1f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 11:00:27 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04SB0MER019427;
-        Thu, 28 May 2020 11:00:23 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 May 2020 04:00:22 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH v4 00/36] Large pages in the page cache
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20200515131656.12890-1-willy@infradead.org>
-Date:   Thu, 28 May 2020 05:00:20 -0600
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <ABDA7F4D-8CBA-4D29-A46C-2359DE271AE8@oracle.com>
-References: <20200515131656.12890-1-willy@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
- suspectscore=0 bulkscore=0 clxscore=1015 impostorscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005280075
+        Thu, 28 May 2020 07:03:12 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0TztfJfN_1590663687;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TztfJfN_1590663687)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 28 May 2020 19:01:27 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrea Arcangeli <aarcange@redhat.com>
+Subject: [PATCH v11 07/16] mm/thp: narrow lru locking
+Date:   Thu, 28 May 2020 19:00:49 +0800
+Message-Id: <1590663658-184131-8-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1590663658-184131-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Except for [PATCH v4 36/36], which I can't approve for obvious reasons:
+lru_lock and page cache xa_lock have no reason with current sequence,
+put them together isn't necessary. let's narrow the lru locking, but
+left the local_irq_disable/preempt_disable to block interrupt
+re-entry and statistic update.
 
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/huge_memory.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index a4ba75e143b3..44d4b45281a3 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2418,8 +2418,6 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 	unsigned long offset = 0;
+ 	int i;
+ 
+-	lruvec = mem_cgroup_page_lruvec(head, pgdat);
+-
+ 	/* complete memcg works before add pages to LRU */
+ 	mem_cgroup_split_huge_fixup(head);
+ 
+@@ -2431,6 +2429,11 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 		xa_lock(&swap_cache->i_pages);
+ 	}
+ 
++	/* lock lru list/PageCompound, isolate freezed by page_ref_freeze */
++	spin_lock(&pgdat->lru_lock);
++
++	lruvec = mem_cgroup_page_lruvec(head, pgdat);
++
+ 	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
+ 		__split_huge_page_tail(head, i, lruvec, list);
+ 		/* Some pages can be beyond i_size: drop them from page cache */
+@@ -2448,8 +2451,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 					head + i, 0);
+ 		}
+ 	}
+-
+ 	ClearPageCompound(head);
++	spin_unlock(&pgdat->lru_lock);
+ 
+ 	split_page_owner(head, HPAGE_PMD_ORDER);
+ 
+@@ -2467,8 +2470,8 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+ 		page_ref_add(head, 2);
+ 		xa_unlock(&head->mapping->i_pages);
+ 	}
+-
+-	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
++	preempt_enable();
++	local_irq_restore(flags);
+ 
+ 	remap_page(head);
+ 
+@@ -2607,7 +2610,6 @@ bool can_split_huge_page(struct page *page, int *pextra_pins)
+ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ {
+ 	struct page *head = compound_head(page);
+-	struct pglist_data *pgdata = NODE_DATA(page_to_nid(head));
+ 	struct deferred_split *ds_queue = get_deferred_split_queue(head);
+ 	struct anon_vma *anon_vma = NULL;
+ 	struct address_space *mapping = NULL;
+@@ -2673,9 +2675,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 	unmap_page(head);
+ 	VM_BUG_ON_PAGE(compound_mapcount(head), head);
+ 
+-	/* prevent PageLRU to go away from under us, and freeze lru stats */
+-	spin_lock_irqsave(&pgdata->lru_lock, flags);
+-
++	local_irq_save(flags);
++	preempt_disable();
+ 	if (mapping) {
+ 		XA_STATE(xas, &mapping->i_pages, page_index(head));
+ 
+@@ -2724,7 +2725,8 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 		spin_unlock(&ds_queue->split_queue_lock);
+ fail:		if (mapping)
+ 			xa_unlock(&mapping->i_pages);
+-		spin_unlock_irqrestore(&pgdata->lru_lock, flags);
++		preempt_enable();
++		local_irq_restore(flags);
+ 		remap_page(head);
+ 		ret = -EBUSY;
+ 	}
+-- 
+1.8.3.1
+
