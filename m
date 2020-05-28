@@ -2,93 +2,151 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4907207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02BD207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:22:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t8tJG5mv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391095AbgE1OV7 (ORCPT
+        id S2391103AbgE1OWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:21:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:53386 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390958AbgE1OVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:21:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81A5FD6E;
-        Thu, 28 May 2020 07:21:53 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 682B73F52E;
-        Thu, 28 May 2020 07:21:51 -0700 (PDT)
-Date:   Thu, 28 May 2020 15:21:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 0/8] R8A7742 add support for HSUSB and USB2.0/3.0
-Message-ID: <20200528142139.GA28290@e121166-lin.cambridge.arm.com>
-References: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590356277-19993-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 28 May 2020 10:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391035AbgE1OWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 10:22:11 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 100D2C05BD1E;
+        Thu, 28 May 2020 07:22:11 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id n15so3166621pjt.4;
+        Thu, 28 May 2020 07:22:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wWwF/bnn9ZcbJfYK+03lCeXiM0oqQHMOv1ojVW5AqE4=;
+        b=t8tJG5mvH1xzHtWy9lfolS8Z5SK+IeWq2bqqiIG8Uc9CJCBKzXghkXX8/p4F5WEHDV
+         PlHaJz7KxOcxKPrJvCSdFRqhx9pImpYNt6lYdpOuwTzrF0iOfTDJzDzgITmRwFhFoeOg
+         VtnQLhWm8iPr+UEc64Bdw6tTVfN04K/uAjk3Wdrf79rUiODGo1q+6mIl7xfPEPngc7RP
+         3/WxyUHz7rjkK+v937kOWyYXQzqFPYvddtoc8W577qoE5TEZd5hNSFu+45O3hesI/JUO
+         1I6toFDX3x3RytZqiPQSc9rfPHWKdSFAeMti4faxVlH1LwOLaTUOQ7KlTEaoWSjwF7Ou
+         6Zng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wWwF/bnn9ZcbJfYK+03lCeXiM0oqQHMOv1ojVW5AqE4=;
+        b=oSZjDTuT19/UNXvHvjzDao7dnNT4tqI5mEbpJnK9qLmwrMgzTjeliqfB9hPb20qPVA
+         nZrtEa7CT62ufkmRGLGCj/nV6x0kaJ1wxQJC+qfiE8Kfu1XWfbtS1mtQ0odSmlkJOa9I
+         EA2PxlKJ3DLw3D7887FxXtpj7q/hlas48nUnIU/x5SPsERtcxfTj2lSJcgsnNlWqCECg
+         tw3Z/VK2kBZmGytg99zQ3IF1XMt9FxRqLRdzzzCAvKdUqx1/2JkDmFVxiuZ/f8SyxB5O
+         wB2PwV6B09jw49U9VpQCzM2hF2+phJxDcgmB+24MWdl5IlLYkx8Otywt1a93qZFhpiA8
+         EDxg==
+X-Gm-Message-State: AOAM532sZAfF9nneqBtZLfZjR3rAoKIk7jgXumPkESvK73tl8cDGWcYg
+        L0ZoTrix+1Ekua+N6/BZr/O36/lJ
+X-Google-Smtp-Source: ABdhPJzdi2KceMqeO7E/63+tTlQhot38qwIjBd3zpxPWOZm2KCHm3nr1Tu8bVrtUl2/OVu534jXuHw==
+X-Received: by 2002:a17:902:b289:: with SMTP id u9mr3803290plr.138.1590675730628;
+        Thu, 28 May 2020 07:22:10 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id w4sm2188394pfq.57.2020.05.28.07.22.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 07:22:10 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     sboyd@kernel.org, robh+dt@kernel.org, mturquette@baylibre.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] clk: qcom: Add missing msm8998 ufs_unipro_core_clk_src
+Date:   Thu, 28 May 2020 07:22:05 -0700
+Message-Id: <20200528142205.44003-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 24, 2020 at 10:37:49PM +0100, Lad Prabhakar wrote:
-> Hi All,
-> 
-> This patch series adds support for HSUSB, USB2.0 and USB3.0 to
-> R8A7742 SoC DT.
-> 
-> This patch series applies on-top of [1].
-> 
-> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=288491
+ufs_unipro_core_clk_src is required to allow UFS to clock scale for power
+savings.
 
-I think Geert will pull this series, so I'd drop it from the PCI
-patchwork unless there is a reason I should not, please let me know.
+Fixes: b5f5f525c547 ("clk: qcom: Add MSM8998 Global Clock Control (GCC) driver")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/clk/qcom/gcc-msm8998.c               | 27 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-msm8998.h |  1 +
+ 2 files changed, 28 insertions(+)
 
-Thanks,
-Lorenzo
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index df1d7056436c..9d7016bcd680 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1110,6 +1110,27 @@ static struct clk_rcg2 ufs_axi_clk_src = {
+ 	},
+ };
+ 
++static const struct freq_tbl ftbl_ufs_unipro_core_clk_src[] = {
++	F(37500000, P_GPLL0_OUT_MAIN, 16, 0, 0),
++	F(75000000, P_GPLL0_OUT_MAIN, 8, 0, 0),
++	F(150000000, P_GPLL0_OUT_MAIN, 4, 0, 0),
++	{ }
++};
++
++static struct clk_rcg2 ufs_unipro_core_clk_src = {
++	.cmd_rcgr = 0x76028,
++	.mnd_width = 8,
++	.hid_width = 5,
++	.parent_map = gcc_parent_map_0,
++	.freq_tbl = ftbl_ufs_unipro_core_clk_src,
++	.clkr.hw.init = &(struct clk_init_data){
++		.name = "ufs_unipro_core_clk_src",
++		.parent_names = gcc_parent_names_0,
++		.num_parents = 4,
++		.ops = &clk_rcg2_ops,
++	},
++};
++
+ static const struct freq_tbl ftbl_usb30_master_clk_src[] = {
+ 	F(19200000, P_XO, 1, 0, 0),
+ 	F(60000000, P_GPLL0_OUT_MAIN, 10, 0, 0),
+@@ -2549,6 +2570,11 @@ static struct clk_branch gcc_ufs_unipro_core_clk = {
+ 		.enable_mask = BIT(0),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_ufs_unipro_core_clk",
++			.parent_names = (const char *[]){
++				"ufs_unipro_core_clk_src",
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2904,6 +2930,7 @@ static struct clk_regmap *gcc_msm8998_clocks[] = {
+ 	[SDCC4_APPS_CLK_SRC] = &sdcc4_apps_clk_src.clkr,
+ 	[TSIF_REF_CLK_SRC] = &tsif_ref_clk_src.clkr,
+ 	[UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
++	[UFS_UNIPRO_CORE_CLK_SRC] = &ufs_unipro_core_clk_src.clkr,
+ 	[USB30_MASTER_CLK_SRC] = &usb30_master_clk_src.clkr,
+ 	[USB30_MOCK_UTMI_CLK_SRC] = &usb30_mock_utmi_clk_src.clkr,
+ 	[USB3_PHY_AUX_CLK_SRC] = &usb3_phy_aux_clk_src.clkr,
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8998.h b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+index 63e02dc32a0b..6a73a174f049 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8998.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8998.h
+@@ -183,6 +183,7 @@
+ #define GCC_MSS_SNOC_AXI_CLK					174
+ #define GCC_MSS_MNOC_BIMC_AXI_CLK				175
+ #define GCC_BIMC_GFX_CLK					176
++#define UFS_UNIPRO_CORE_CLK_SRC					177
+ 
+ #define PCIE_0_GDSC						0
+ #define UFS_GDSC						1
+-- 
+2.17.1
 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (8):
->   dt-bindings: phy: rcar-gen2: Add r8a7742 support
->   dt-bindings: PCI: pci-rcar-gen2: Add device tree support for r8a7742
->   dt-bindings: usb: renesas,usbhs: Add support for r8a7742
->   dt-bindings: dmaengine: renesas,usb-dmac: Add binding for r8a7742
->   dt-bindings: usb: usb-xhci: Document r8a7742 support
->   ARM: dts: r8a7742: Add USB 2.0 host support
->   ARM: dts: r8a7742: Add USB-DMAC and HSUSB device nodes
->   ARM: dts: r8a7742: Add xhci support
-> 
->  .../devicetree/bindings/dma/renesas,usb-dmac.yaml  |   1 +
->  .../devicetree/bindings/pci/pci-rcar-gen2.txt      |   3 +-
->  .../devicetree/bindings/phy/rcar-gen2-phy.txt      |   3 +-
->  .../devicetree/bindings/usb/renesas,usbhs.yaml     |   1 +
->  Documentation/devicetree/bindings/usb/usb-xhci.txt |   1 +
->  arch/arm/boot/dts/r8a7742.dtsi                     | 173 +++++++++++++++++++++
->  6 files changed, 180 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
