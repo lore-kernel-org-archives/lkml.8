@@ -2,88 +2,88 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96C51206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ZyPL7jsa"
+	by mail.kernel.org (Postfix) with ESMTP id 4EE892084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590671285;
+	bh=12Epg9vAaXMim+O4FTOBqKFL38ARs1D/yOOcXJzWAv8=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=fD1Qh5sGngji9zG6ZntXT0FxvujTXRWw6J6B6T5R0+1Zf3N035mm7rHKBPTdwK9lU
+	 89gX6Mrndzjsp8H1r8RYimTbv3MevyiQ+dPu5N//vy12Qhk0R8mmTRTxVHUzHViEYe
+	 c/5TKK4OntYu7+Q/1yIp+FwMIuyKRXwXEG08Zezc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390172AbgE1NIA (ORCPT
+        id S2390179AbgE1NID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390031AbgE1NH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:07:57 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:3201:214:fdff:fe10:1be6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B2EEC05BD1E;
-        Thu, 28 May 2020 06:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AgMZqRxoCy8rqfWHTToRmSRQg8xj5R1Vkp6Ow/licx4=; b=ZyPL7jsaUCBkamHr9S2fjPIhE
-        vSvABh6xa8JkUaP8do07SNACxsHAeVn4RUSEr0VDUKlLRfLJL86JAtARqgyZz6snVBirVZNe301cc
-        icm8k0sPqxQ29+/HwaqAkrVDYE1E1/l3jnrtJEvY5hByHNBMjUZN0izco9Q1JaRzWduqbkgEOawLZ
-        bICmBrFEFIWUQK11KDTMQCPrUlzd5igxilOklClfI8nJwHLbJWQZKk6MWJAptmOvR/ljVZn9HU24w
-        tpVSQCtoAo0OQSvhKO+WNnMMvDbF8BIuUtBYE5Y235A38zOQUL64gW6m+9M9wqspUBJ1TAr6XfQkA
-        IGmlVViAQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:35686)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1jeIG6-0005PA-R4; Thu, 28 May 2020 14:07:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1jeIG2-0007Ud-L2; Thu, 28 May 2020 14:07:38 +0100
-Date:   Thu, 28 May 2020 14:07:38 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Thu, 28 May 2020 09:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390155AbgE1NH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:07:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B2C207F5;
+        Thu, 28 May 2020 13:07:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590671278;
+        bh=12Epg9vAaXMim+O4FTOBqKFL38ARs1D/yOOcXJzWAv8=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=LpbVzDS0suyEwE5Ldj7OymOkSAWNP1+PH6eaxY4/2a9iuIXQS+NDXYV2gUEZB0xeJ
+         J8gS48kmxqpcE+VoT8xCcAWlZfbyjYgfsr/ARapFFy9s17jMPBNsbmvN4MVqmF3BTU
+         O4nojSOkLEjPwroxxysLrnHeqe6Dg5HWqebI/HXg=
+Date:   Thu, 28 May 2020 14:07:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     kjlu@umn.edu, Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>, linux-spi@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: mvpp2: Enable autoneg bypass for
- 1000BaseX/2500BaseX ports
-Message-ID: <20200528130738.GT1551@shell.armlinux.org.uk>
-References: <20200528121121.125189-1-tbogendoerfer@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200528121121.125189-1-tbogendoerfer@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200523122909.25247-1-dinghao.liu@zju.edu.cn>
+References: <20200523122909.25247-1-dinghao.liu@zju.edu.cn>
+Subject: Re: [PATCH] [v2] spi: tegra20-slink: Fix runtime PM imbalance on error
+Message-Id: <159067126729.55053.1525159932135385920.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 02:11:21PM +0200, Thomas Bogendoerfer wrote:
-> Commit d14e078f23cc ("net: marvell: mvpp2: only reprogram what is necessary
->  on mac_config") disabled auto negotiation bypass completely, which breaks
-> platforms enabling bypass via firmware (not the best option, but it worked).
-> Since 1000BaseX/2500BaseX ports neither negotiate speed nor duplex mode
-> we could enable auto negotiation bypass to get back information about link
-> state.
+On Sat, 23 May 2020 20:29:09 +0800, Dinghao Liu wrote:
+> pm_runtime_get_sync() increments the runtime PM usage counter even
+> when it returns an error code. Thus a pairing decrement is needed on
+> the error handling path to keep the counter balanced.
 
-Thanks, but your commit is missing some useful information.
+Applied to
 
-Which platforms have broken?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Can you describe the situation where you require this bit to be set?
+Thanks!
 
-We should not be enabling bypass mode as a matter of course, it exists
-to work around broken setups which do not send the control word.
+[1/1] spi: tegra20-slink: Fix runtime PM imbalance on error
+      commit: faedcc17ad183acfa5d74758ebc4f21aef341f11
 
-Thanks.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC for 0.8m (est. 1762m) line in suburbia: sync at 13.1Mbps down 424kbps up
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
