@@ -2,132 +2,156 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BF8C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B92DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94837207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16463207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 04:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="U3Tsc1uJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CAxY59Aw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbgE1EnF (ORCPT
+        id S1726977AbgE1Enr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 00:43:05 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:54275 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgE1EnE (ORCPT
+        Thu, 28 May 2020 00:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbgE1Enq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 00:43:04 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200528044301epoutp01ae1d6c90f01c780e9eb685aa80f8e2ef~TF4tw29gG2199321993epoutp01f
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:43:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200528044301epoutp01ae1d6c90f01c780e9eb685aa80f8e2ef~TF4tw29gG2199321993epoutp01f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590640981;
-        bh=Ifl6upRPYldFInrD+MnQOAMq5IXbw4SSBWckwLPYgA4=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=U3Tsc1uJ34LahG/N9pHCOdVH3/LwudF+QfoqENKsB10fD7MZKP6pneM7LIiZnRNHo
-         m9f6KlXOT0gqvB4AgQUw6MpawX5vADuCM21LkPRkJnteFpVzKWLYJyh10D2An6kMLy
-         FVE2CMPPiP21ewipRkEvJBZYmbP/XpVsj1vCKw70=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200528044300epcas1p22579ec3b77e60304827bf31084b2dfae~TF4tXTpGj1659616596epcas1p2g;
-        Thu, 28 May 2020 04:43:00 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49XZnb2KvNzMqYkV; Thu, 28 May
-        2020 04:42:59 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A9.38.04392.2514FCE5; Thu, 28 May 2020 13:42:58 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200528044257epcas1p29993d86ddc9e7880fc3e024eb28a818e~TF4qcJmYc0783007830epcas1p2K;
-        Thu, 28 May 2020 04:42:57 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200528044257epsmtrp12933f7bfad9c1eaa8ef1f5ff315f52dd~TF4qbZj6S0434504345epsmtrp10;
-        Thu, 28 May 2020 04:42:57 +0000 (GMT)
-X-AuditID: b6c32a37-cabff70000001128-7e-5ecf4152bdaf
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F0.D5.08303.1514FCE5; Thu, 28 May 2020 13:42:57 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200528044257epsmtip1a2c27d2ba70913a4ac42381210a8d27f~TF4qK-x4K1265112651epsmtip1S;
-        Thu, 28 May 2020 04:42:57 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
-Cc:     <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
-Subject: RE: [PATCH] exfat: optimize dir-cache
-Date:   Thu, 28 May 2020 13:42:57 +0900
-Message-ID: <015001d634aa$7588c2b0$609a4810$@samsung.com>
+        Thu, 28 May 2020 00:43:46 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA3B9C05BD1E;
+        Wed, 27 May 2020 21:43:46 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id z64so8352562pfb.1;
+        Wed, 27 May 2020 21:43:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=YkTz22E+TiGIERP3d3r6CMqsTVvO5LpEW2640eaokXU=;
+        b=CAxY59Awj+NfuCIVnBZJiLCAjSFTgL0gqh7Bu6QBLXLtGCmE/b1v77f4pBi/mSWmWC
+         tkmqAjeH+4nLhUfnVMSEZeYEFCpCIz7USlRmv9mQvznFD6HufOED7qynDLga52l2tsJR
+         faMN2cW51iapImxRsYodnDkDGNckw5K2mUxiG5lGpyVCl7qaR0NTgr5d4YEiOINjLphy
+         u7pnmr9VWgsWKh3cac6M7M9wkWCyq1YuT1u2Mghr4sNN+IzNd3I1MrISgrZqHxHYkbgj
+         Eg6jJhRtAPNoYEqskmFlkLOkfOwF4oCzBrV9eDrcvkTIjgvIBPZXnQu+rv9CyYGVsIbA
+         zOgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=YkTz22E+TiGIERP3d3r6CMqsTVvO5LpEW2640eaokXU=;
+        b=rLUsyztSdiii1ef05rfqn18+brZXBKiyRJB+QlLS4PNvucRlAAqAeeX2qBnBibVEWJ
+         yJ18hL/6S4a3YU0IEZ4EoC56Syw4vcHrcoM7+6OaPgbFK/1hCBUkKUbYDtyJTl3+p+cR
+         qNdylx8ReFqBdsIVEEl4KpnXvFzg32GMOZ+3gA647eiHb6OpbpKZNKWJtQ+aWyeYo/F1
+         rHyCFKUbvAOykK9UKUFy1IHe4gA4WgT4zELgU9jLJSfoTFWre4Hkni2T6iBNvFIO4WVl
+         3Qu/7/iXGptyimFZDbxvhDqWT1a8pP94aZRqgGwGZCrpk7cxgfqeOvE2ZCZEm6rW3pK+
+         4EXw==
+X-Gm-Message-State: AOAM531J8weHRNbk9fZc1IryBKAwol214SWvYQ+3HUkzsxvTY1JBfrZ2
+        IVVEk8DJLDC7n4WbGkrz5ik=
+X-Google-Smtp-Source: ABdhPJxAy+B1roZZH6w9NzGNPEl61+Lf7lB7dMxSBP8qd5CzvCo6ovz5CH+LoMOmT/NlwPwdLeruSQ==
+X-Received: by 2002:a62:1d48:: with SMTP id d69mr1225660pfd.27.1590641026157;
+        Wed, 27 May 2020 21:43:46 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id d8sm3322273pgb.42.2020.05.27.21.43.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 21:43:45 -0700 (PDT)
+Date:   Wed, 27 May 2020 21:43:43 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [git pull] Input updates for v5.7-rc7
+Message-ID: <20200528044343.GA109749@dtor-ws>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIppg9uhSXp+fpSRiclI8Xh/geTfAMD/7F2p/3na3A=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmrm6Q4/k4g97f3BZvTk5lsdiz9ySL
-        xeVdc9gsLv//xGKx7MtkFost/46wOrB5fJlznN2jbfI/do/mYyvZPPq2rGL0+LxJLoA1Kscm
-        IzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+gCJYWyxJxS
-        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BoUGBXnFibnFpXrpecn6ulaGBgZEpUGVCTsac
-        Fb/YCp6xVPxdcoa5gbGVpYuRk0NCwETiTNd5ti5GLg4hgR2MEl+vLmOGcD4xSlzvnswC4Xxm
-        lPj9/RMrXEv7QiaIxC5Gied3H7FDOC8ZJeZ8u84IUsUmoCvx789+NhBbRMBdYsfCA2CjmAXO
-        M0os3twAluAUCJJYc2EOWIOwgJ7Ex28vgcZycLAIqErsPFEOEuYVsJS4c/sgM4QtKHFy5hOw
-        w5kF5CW2v53DDHGRgsTPp8tYIXZZSZx6OoERokZEYnZnG9g/EgITOSSWf7wI9bWLxMr1+6Fs
-        YYlXx7ewQ9hSEi/729hBbpAQqJb4uB9qfgejxIvvthC2scTN9RtYQUqYBTQl1u/ShwgrSuz8
-        PRdqLZ/Eu689rBBTeCU62oQgSlQl+i4dZoKwpSW62j+wT2BUmoXksVlIHpuF5IFZCMsWMLKs
-        YhRLLSjOTU8tNiwwRo7sTYzg1KllvoNxwzmfQ4wCHIxKPLwGHufihFgTy4orcw8xSnAwK4nw
-        Op09HSfEm5JYWZValB9fVJqTWnyI0RQY7BOZpUST84FpPa8k3tDUyNjY2MLEzNzM1FhJnHf+
-        jzNxQgLpiSWp2ampBalFMH1MHJxSDYyFwaeywj5FWsb77StiZzEIerw5drPcNe+bfDcrrwfF
-        HgywX/U0ZIIP/60lD/eyPtst8DZ1t+2M+a3rSz/tavzwZrm/Y1H7LM0L38z1//QF5mi/ffOu
-        sc3jk3T9vvUTf+TxzuV586zF9e62r98SdPROVKQzHDDyY78+Vepz58THiQtnt7dPt16lxFKc
-        kWioxVxUnAgAZHUI2LMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDLMWRmVeSWpSXmKPExsWy7bCSnG6g4/k4g08XRSzenJzKYrFn70kW
-        i8u75rBZXP7/icVi2ZfJLBZb/h1hdWDz+DLnOLtH2+R/7B7Nx1ayefRtWcXo8XmTXABrFJdN
-        SmpOZllqkb5dAlfGnBW/2AqesVT8XXKGuYGxlaWLkZNDQsBE4kz7QqYuRi4OIYEdjBLvplyB
-        SkhLHDtxhrmLkQPIFpY4fLgYouY5o0RP21lmkBo2AV2Jf3/2s4HYIgLuEjsWHmABKWIWuMgo
-        sW3PSnaIjsWMEn+mLgHr4BQIklhzYQ4jiC0soCfx8dtLJpANLAKqEjtPlIOEeQUsJe7cPsgM
-        YQtKnJz5hAWkhBmovG0jWCezgLzE9rdzmCHuVJD4+XQZK8QNVhKnnk6AqhGRmN3ZxjyBUXgW
-        kkmzECbNQjJpFpKOBYwsqxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcxgiNIS2sH455V
-        H/QOMTJxMB5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQozQHi5I479dZC+OEBNITS1Kz
-        U1MLUotgskwcnFINTAYGDoqHTwauPrPs35HuRJYmUyfDEPdWub1lLw4d0xORPbvj8qOqeM8/
-        /buNGc7aTVZhtr8clsa0sbt0wYHnnnc1lD9d3n1KWfSOTmPnTyur247v6hQ39P2PTPj0YIao
-        9L6WkqLUX3OEm8rmeNx7qnyjsu6AzzYhSbOZnLF6OqxW8i/bdH+cjvkfxTn9TeoVbv/Kg8wO
-        6t0VB4sdP5SV3GN2e/nmlI+i7kf91XIffNx2+n5lf6PIOt3mtZPclZINz0STA3sKW3mUJMJW
-        NLScN7z8RWV64JWOf5ICpxv2H3d/1rT909QKIev/m//czu9nnRxsu1UgOmbrsU0Hw+qzeYs3
-        uWh725/ep9jQJHhDiaU4I9FQi7moOBEAhLZZTw8DAAA=
-X-CMS-MailID: 20200528044257epcas1p29993d86ddc9e7880fc3e024eb28a818e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200520075735epcas1p482c10e2ea2e5af1af36894677691cbc8
-References: <CGME20200520075735epcas1p482c10e2ea2e5af1af36894677691cbc8@epcas1p4.samsung.com>
-        <20200520075641.32441-1-kohada.tetsuhiro@dc.mitsubishielectric.co.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +struct exfat_dentry *exfat_get_dentry_cached(
-> +	struct exfat_entry_set_cache *es, int num);
-You used a single tab for the continuing line of the prototype here.
-We usually use two tabs for this.
->  struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *sb,
-> -		struct exfat_chain *p_dir, int entry, unsigned int type,
-> -		struct exfat_dentry **file_ep);
-> +		struct exfat_chain *p_dir, int entry, unsigned int type); void
-> +exfat_free_dentry_set(struct exfat_entry_set_cache *es, int sync);
->  int exfat_count_dir_entries(struct super_block *sb, struct exfat_chain *p_dir);
-> 
+Hi Linus,
 
+Please pull from:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+
+to receive updates for the input subsystem. Just a few random driver
+fixups.
+
+Changelog:
+---------
+
+Brendan Shanks (1):
+      Input: evdev - call input_flush_device() on release(), not flush()
+
+Christophe JAILLET (1):
+      Input: dlink-dir685-touchkeys - fix a typo in driver name
+
+Dennis Kadioglu (1):
+      Input: synaptics - add a second working PNP_ID for Lenovo T470s
+
+Dmitry Torokhov (1):
+      Revert "Input: i8042 - add ThinkPad S230u to i8042 nomux list"
+
+Enric Balletbo i Serra (1):
+      Input: cros_ec_keyb - use cros_ec_cmd_xfer_status helper
+
+Evan Green (1):
+      Input: synaptics-rmi4 - really fix attn_data use-after-free
+
+Gustavo A. R. Silva (1):
+      Input: applespi - replace zero-length array with flexible-array
+
+Hans de Goede (1):
+      Input: axp20x-pek - always register interrupt handlers
+
+James Hilliard (1):
+      Input: usbtouchscreen - add support for BonXeon TP
+
+Johnny Chuang (1):
+      Input: elants_i2c - support palm detection
+
+Kevin Locke (2):
+      Input: i8042 - add ThinkPad S230u to i8042 nomux list
+      Input: i8042 - add ThinkPad S230u to i8042 reset list
+
+Stephan Gerhold (1):
+      Input: mms114 - fix handling of mms345l
+
+Wei Yongjun (1):
+      Input: synaptics-rmi4 - fix error return code in rmi_driver_probe()
+
+Wolfram Sang (1):
+      Input: lm8333 - update contact email
+
+Łukasz Patron (1):
+      Input: xpad - add custom init packet for Xbox One S controllers
+
+Diffstat:
+--------
+
+ drivers/input/evdev.c                           | 19 ++-----
+ drivers/input/joystick/xpad.c                   | 12 +++++
+ drivers/input/keyboard/applespi.c               |  2 +-
+ drivers/input/keyboard/cros_ec_keyb.c           | 14 ++---
+ drivers/input/keyboard/dlink-dir685-touchkeys.c |  2 +-
+ drivers/input/misc/axp20x-pek.c                 | 72 +++++++++++++------------
+ drivers/input/mouse/synaptics.c                 |  1 +
+ drivers/input/rmi4/rmi_driver.c                 |  5 +-
+ drivers/input/serio/i8042-x86ia64io.h           |  7 +++
+ drivers/input/touchscreen/elants_i2c.c          | 11 +++-
+ drivers/input/touchscreen/mms114.c              | 12 ++---
+ drivers/input/touchscreen/usbtouchscreen.c      |  1 +
+ include/linux/input/lm8333.h                    |  2 +-
+ 13 files changed, 88 insertions(+), 72 deletions(-)
+
+Thanks.
+
+
+-- 
+Dmitry
