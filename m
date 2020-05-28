@@ -2,110 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A21C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81160C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD46208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF7C2084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n59iHBOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgE1FvE (ORCPT
+        id S1727863AbgE1Fvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:51:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60412 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgE1FvD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:51:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2308AF95;
-        Thu, 28 May 2020 05:51:03 +0000 (UTC)
-Subject: Re: [PATCH 5.6 086/126] virtio-balloon: Revert "virtio-balloon:
- Switch back to OOM handler for VIRTIO_BALLOON_F_DEFLATE_ON_OOM"
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200526183937.471379031@linuxfoundation.org>
- <20200526183945.237904570@linuxfoundation.org>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABtBtKaXJpIFNsYWJ5
- IDxqc2xhYnlAc3VzZS5jej6JAjgEEwECACIFAk6S6NgCGwMGCwkIBwMCBhUIAgkKCwQWAgMB
- Ah4BAheAAAoJEL0lsQQGtHBJgDsP/j9wh0vzWXsOPO3rDpHjeC3BT5DKwjVN/KtP7uZttlkB
- duReCYMTZGzSrmK27QhCflZ7Tw0Naq4FtmQSH8dkqVFugirhlCOGSnDYiZAAubjTrNLTqf7e
- 5poQxE8mmniH/Asg4KufD9bpxSIi7gYIzaY3hqvYbVF1vYwaMTujojlixvesf0AFlE4x8WKs
- wpk43fmo0ZLcwObTnC3Hl1JBsPujCVY8t4E7zmLm7kOB+8EHaHiRZ4fFDWweuTzRDIJtVmrH
- LWvRDAYg+IH3SoxtdJe28xD9KoJw4jOX1URuzIU6dklQAnsKVqxz/rpp1+UVV6Ky6OBEFuoR
- 613qxHCFuPbkRdpKmHyE0UzmniJgMif3v0zm/+1A/VIxpyN74cgwxjhxhj/XZWN/LnFuER1W
- zTHcwaQNjq/I62AiPec5KgxtDeV+VllpKmFOtJ194nm9QM9oDSRBMzrG/2AY/6GgOdZ0+qe+
- 4BpXyt8TmqkWHIsVpE7I5zVDgKE/YTyhDuqYUaWMoI19bUlBBUQfdgdgSKRMJX4vE72dl8BZ
- +/ONKWECTQ0hYntShkmdczcUEsWjtIwZvFOqgGDbev46skyakWyod6vSbOJtEHmEq04NegUD
- al3W7Y/FKSO8NqcfrsRNFWHZ3bZ2Q5X0tR6fc6gnZkNEtOm5fcWLY+NVz4HLaKrJuQINBE6S
- 54YBEADPnA1iy/lr3PXC4QNjl2f4DJruzW2Co37YdVMjrgXeXpiDvneEXxTNNlxUyLeDMcIQ
- K8obCkEHAOIkDZXZG8nr4mKzyloy040V0+XA9paVs6/ice5l+yJ1eSTs9UKvj/pyVmCAY1Co
- SNN7sfPaefAmIpduGacp9heXF+1Pop2PJSSAcCzwZ3PWdAJ/w1Z1Dg/tMCHGFZ2QCg4iFzg5
- Bqk4N34WcG24vigIbRzxTNnxsNlU1H+tiB81fngUp2pszzgXNV7CWCkaNxRzXi7kvH+MFHu2
- 1m/TuujzxSv0ZHqjV+mpJBQX/VX62da0xCgMidrqn9RCNaJWJxDZOPtNCAWvgWrxkPFFvXRl
- t52z637jleVFL257EkMI+u6UnawUKopa+Tf+R/c+1Qg0NHYbiTbbw0pU39olBQaoJN7JpZ99
- T1GIlT6zD9FeI2tIvarTv0wdNa0308l00bas+d6juXRrGIpYiTuWlJofLMFaaLYCuP+e4d8x
- rGlzvTxoJ5wHanilSE2hUy2NSEoPj7W+CqJYojo6wTJkFEiVbZFFzKwjAnrjwxh6O9/V3O+Z
- XB5RrjN8hAf/4bSo8qa2y3i39cuMT8k3nhec4P9M7UWTSmYnIBJsclDQRx5wSh0Mc9Y/psx9
- B42WbV4xrtiiydfBtO6tH6c9mT5Ng+d1sN/VTSPyfQARAQABiQIfBBgBAgAJBQJOkueGAhsM
- AAoJEL0lsQQGtHBJN7UQAIDvgxaW8iGuEZZ36XFtewH56WYvVUefs6+Pep9ox/9ZXcETv0vk
- DUgPKnQAajG/ViOATWqADYHINAEuNvTKtLWmlipAI5JBgE+5g9UOT4i69OmP/is3a/dHlFZ3
- qjNk1EEGyvioeycJhla0RjakKw5PoETbypxsBTXk5EyrSdD/I2Hez9YGW/RcI/WC8Y4Z/7FS
- ITZhASwaCOzy/vX2yC6iTx4AMFt+a6Z6uH/xGE8pG5NbGtd02r+m7SfuEDoG3Hs1iMGecPyV
- XxCVvSV6dwRQFc0UOZ1a6ywwCWfGOYqFnJvfSbUiCMV8bfRSWhnNQYLIuSv/nckyi8CzCYIg
- c21cfBvnwiSfWLZTTj1oWyj5a0PPgGOdgGoIvVjYXul3yXYeYOqbYjiC5t99JpEeIFupxIGV
- ciMk6t3pDrq7n7Vi/faqT+c4vnjazJi0UMfYnnAzYBa9+NkfW0w5W9Uy7kW/v7SffH/2yFiK
- 9HKkJqkN9xYEYaxtfl5pelF8idoxMZpTvCZY7jhnl2IemZCBMs6s338wS12Qro5WEAxV6cjD
- VSdmcD5l9plhKGLmgVNCTe8DPv81oDn9s0cIRLg9wNnDtj8aIiH8lBHwfUkpn32iv0uMV6Ae
- sLxhDWfOR4N+wu1gzXWgLel4drkCJcuYK5IL1qaZDcuGR8RPo3jbFO7Y
-Message-ID: <8f649042-bc3a-2809-0332-44a5d3202807@suse.cz>
-Date:   Thu, 28 May 2020 07:51:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 01:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbgE1Fvx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 01:51:53 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9863CC05BD1E;
+        Wed, 27 May 2020 22:51:52 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id c71so1853867wmd.5;
+        Wed, 27 May 2020 22:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HRgq7bWPbVQ6VGJrp0fBqbpNe57Tc4L7lPuzDuEESlg=;
+        b=n59iHBOs0c4xNGvFK3+wSzh5TPGRlTyQDPz1ALrbhYPHN3mCKBt74pDF7oxQVGF6gZ
+         TLzSKYlbuU5qaZwM2yzrt+i97z2eXsUv+xw9DfaYukVljsVyUdM5rlCEqP9LuKxIcz8X
+         1zzX7DuG1HZfDFycO4N9CbXq3nvStyvHAGU6l+Oi9PAt+wy4SPrLotkSv75sDGTUaZgO
+         teGi6SfsIw115R974AkwgxXDOiBR8HSkJm4k47C5D4aOgC3GcQ6WqJwQLyxInhXKl8xJ
+         qdLvjkXcDRK4MBzyZWZIeYeYhxCJ0jBmlRJkAkbvp+CiPm5m/OsKPrp0G4qOtKoaW4Ce
+         ayCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HRgq7bWPbVQ6VGJrp0fBqbpNe57Tc4L7lPuzDuEESlg=;
+        b=OQP93SHFyY4UZSguTFKsALk7NsKnMx8t6rpgqFKjs9t9/Apf9Y7qWLIu6PRCobyvLI
+         m/8diV39Sz3Pw8GpSIDT75jSlcDemu6xWye/VXKYXO8penZ99i5Ff2lHxMJ3xjIaNhgQ
+         UZfulxQW2bR0stUL38WoyTe5JokzJ5PC7xhwGakUX2H3dpzKXPofp+yDaoErofdnxRHV
+         NxErDnVxATOD4GhY0nmsgM2Dbp4EABZAzKCgVdMUspWdno076kdK4ECeEGda7jJdH3v6
+         oW9ZxxJj8FMn3S6FnhR+Uy6pKtazOhUnX601jh3lzcJn+Us98H3FkYi8PFkpndWHf/lF
+         w8UQ==
+X-Gm-Message-State: AOAM532dSfGEx6GzgwmK/KGeeZUShtPf63Je/YyjA4SR+eIv54b8bpgF
+        ZOhsLqj9w/xdYocldJCw+5PlVevxTYhCeeeP/H4=
+X-Google-Smtp-Source: ABdhPJw+ZEhrUFHQwLzvaDPoOl7NpS6cyRPzYipDAwFJdmB0gXgU7yXBzVHZbcd4OQZZLlzz0dvTQnUcs/SYsVro7lE=
+X-Received: by 2002:a1c:4189:: with SMTP id o131mr1695442wma.110.1590645110880;
+ Wed, 27 May 2020 22:51:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200526183945.237904570@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200527095640.270986-1-jonas.falkevik@gmail.com>
+In-Reply-To: <20200527095640.270986-1-jonas.falkevik@gmail.com>
+From:   Xin Long <lucien.xin@gmail.com>
+Date:   Thu, 28 May 2020 13:59:06 +0800
+Message-ID: <CADvbK_duBhNhPMrR2ZGkhgAhR555MNHLQM9SS95KVZDnJ=WiQQ@mail.gmail.com>
+Subject: Re: [PATCH v2] sctp: check assoc before SCTP_ADDR_{MADE_PRIM,ADDED} event
+To:     Jonas Falkevik <jonas.falkevik@gmail.com>
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        davem <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+        linux-sctp@vger.kernel.org, network dev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26. 05. 20, 20:53, Greg Kroah-Hartman wrote:
-> From: Michael S. Tsirkin <mst@redhat.com>
-> 
-> [ Upstream commit 835a6a649d0dd1b1f46759eb60fff2f63ed253a7 ]
-> 
-> This reverts commit 5a6b4cc5b7a1892a8d7f63d6cbac6e0ae2a9d031.
-> 
-> It has been queued properly in the akpm tree, this version is just
-> creating conflicts.
+On Wed, May 27, 2020 at 5:57 PM Jonas Falkevik <jonas.falkevik@gmail.com> wrote:
+>
+> Make sure SCTP_ADDR_{MADE_PRIM,ADDED} are sent only for associations
+> that have been established.
+>
+> These events are described in rfc6458#section-6.1
+> SCTP_PEER_ADDR_CHANGE:
+> This tag indicates that an address that is
+> part of an existing association has experienced a change of
+> state (e.g., a failure or return to service of the reachability
+> of an endpoint via a specific transport address).
+>
+> Signed-off-by: Jonas Falkevik <jonas.falkevik@gmail.com>
+Reviewed-by: Xin Long <lucien.xin@gmail.com>
 
-Should this be applied to stable trees at all?
-
-To me, it occurs to be a revert to avoid conflicts, not to fix something?
-
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-thanks,
--- 
-js
-suse labs
+> ---
+> Changes in v2:
+>  - Check asoc state to be at least established.
+>    Instead of associd being SCTP_FUTURE_ASSOC.
+>  - Common check for all peer addr change event
+>
+>  net/sctp/ulpevent.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/net/sctp/ulpevent.c b/net/sctp/ulpevent.c
+> index c82dbdcf13f2..77d5c36a8991 100644
+> --- a/net/sctp/ulpevent.c
+> +++ b/net/sctp/ulpevent.c
+> @@ -343,6 +343,9 @@ void sctp_ulpevent_nofity_peer_addr_change(struct sctp_transport *transport,
+>         struct sockaddr_storage addr;
+>         struct sctp_ulpevent *event;
+>
+> +       if (asoc->state < SCTP_STATE_ESTABLISHED)
+> +               return;
+> +
+>         memset(&addr, 0, sizeof(struct sockaddr_storage));
+>         memcpy(&addr, &transport->ipaddr, transport->af_specific->sockaddr_len);
+>
+> --
+> 2.25.4
+>
