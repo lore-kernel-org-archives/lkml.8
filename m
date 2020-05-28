@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84E5A215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3924215A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:05:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667491;
-	bh=AwfvXfjnTNJMGNoI9iVhy0FrSXDouyxhVUlCc0eNCaw=;
+	s=default; t=1590667503;
+	bh=KTTdY+P4YiOd/BUQzDIZn4WNKGXVwzofufSSUG2f+tg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0vrOcm//JGWKPiKTd/1sqL9IDs0b8RRWpjO5HdVeaMwwaWSET4mc9oQ6+k0zLfZUN
-	 /mRuBniBB7Y5u+4QDm1IlcbnfK8Ss09O9DMabBRQEZJ6x8lcuOy8rFAXxturQie9vX
-	 V8Ybhc65QZ+VGD7KhdIRU5rzWIrXp+FCK9Mbi8x0=
+	b=hpaIdDdRQPSNlDjACDUfTXP1s5FtohxIcJ2l8QZZ9JhcJ7cDyfHC+PB7say3MF30E
+	 vjMgBUKVaSCnDonMu5xHpd+BxzY2yuhU724mCU6io7uqwLUBrKHkIXegBiaAnuEHV+
+	 Q5Zd2w6oxX0u9AyikJhk+FP4LauDaGP8Clwqj7IU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389613AbgE1MEt (ORCPT
+        id S2389322AbgE1MFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49610 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 08:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388942AbgE1L5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:10 -0400
+        id S2388922AbgE1L5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD17F215A4;
-        Thu, 28 May 2020 11:57:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9673621655;
+        Thu, 28 May 2020 11:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667029;
-        bh=AwfvXfjnTNJMGNoI9iVhy0FrSXDouyxhVUlCc0eNCaw=;
+        s=default; t=1590667026;
+        bh=KTTdY+P4YiOd/BUQzDIZn4WNKGXVwzofufSSUG2f+tg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwmbAuHTnyoQgH9YA3WWmEYce+u0FSnLMEL9AflXmpfm0UZXvhk9bcBsk3cWdcC44
-         eKB1uvVdHozCvDeCxKECoBQgRbeIwz823Nb7ctOHjr25tJM/wn/lDjii9AB3+Y8y2j
-         +PBOAjF2ICPeC/Fa4HW2pCKduYl3V2Ug/3H21HIw=
+        b=BOUSaKd4EJE/zSuYE8uSFaPKmTo/z73GMnOMT4/SQhanyIr6M4dgYGXscY+IXatbt
+         ohhTtyX8RkhNXUvFmLjqcbuAqyZCQrO52C2IfWkWCktt7NuRisKcufbo09AAH/6Pyi
+         p/K6A1poXkOjOAf5t2+6AyE5wBqZt50E2uOypWzw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 13/26] null_blk: return error for invalid zone size
-Date:   Thu, 28 May 2020 07:56:41 -0400
-Message-Id: <20200528115654.1406165-13-sashal@kernel.org>
+Cc:     Marc Payne <marc.payne@mdpsys.co.uk>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/26] r8152: support additional Microsoft Surface Ethernet Adapter variant
+Date:   Thu, 28 May 2020 07:56:38 -0400
+Message-Id: <20200528115654.1406165-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
 References: <20200528115654.1406165-1-sashal@kernel.org>
@@ -58,63 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+From: Marc Payne <marc.payne@mdpsys.co.uk>
 
-[ Upstream commit e274832590211c4b1b1e807ca66fad8b5bb8b328 ]
+[ Upstream commit c27a204383616efba5a4194075e90819961ff66a ]
 
-In null_init_zone_dev() check if the zone size is larger than device
-capacity, return error if needed.
+Device id 0927 is the RTL8153B-based component of the 'Surface USB-C to
+Ethernet and USB Adapter' and may be used as a component of other devices
+in future. Tested and working with the r8152 driver.
 
-This also fixes the following oops :-
+Update the cdc_ether blacklist due to the RTL8153 'network jam on suspend'
+issue which this device will cause (personally confirmed).
 
-null_blk: changed the number of conventional zones to 4294967295
-BUG: kernel NULL pointer dereference, address: 0000000000000010
-PGD 7d76c5067 P4D 7d76c5067 PUD 7d240c067 PMD 0
-Oops: 0002 [#1] SMP NOPTI
-CPU: 4 PID: 5508 Comm: nullbtests.sh Tainted: G OE 5.7.0-rc4lblk-fnext0
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e4
-RIP: 0010:null_init_zoned_dev+0x17a/0x27f [null_blk]
-RSP: 0018:ffffc90007007e00 EFLAGS: 00010246
-RAX: 0000000000000020 RBX: ffff8887fb3f3c00 RCX: 0000000000000007
-RDX: 0000000000000000 RSI: ffff8887ca09d688 RDI: ffff888810fea510
-RBP: 0000000000000010 R08: ffff8887ca09d688 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8887c26e8000
-R13: ffffffffa05e9390 R14: 0000000000000000 R15: 0000000000000001
-FS:  00007fcb5256f740(0000) GS:ffff888810e00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000010 CR3: 000000081e8fe000 CR4: 00000000003406e0
-Call Trace:
- null_add_dev+0x534/0x71b [null_blk]
- nullb_device_power_store.cold.41+0x8/0x2e [null_blk]
- configfs_write_file+0xe6/0x150
- vfs_write+0xba/0x1e0
- ksys_write+0x5f/0xe0
- do_syscall_64+0x60/0x250
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
-RIP: 0033:0x7fcb51c71840
-
-Signed-off-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Marc Payne <marc.payne@mdpsys.co.uk>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/null_blk_zoned.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/usb/cdc_ether.c | 11 +++++++++--
+ drivers/net/usb/r8152.c     |  1 +
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
-index 3d7fdea872f8..2553e05e0725 100644
---- a/drivers/block/null_blk_zoned.c
-+++ b/drivers/block/null_blk_zoned.c
-@@ -20,6 +20,10 @@ int null_zone_init(struct nullb_device *dev)
- 		pr_err("zone_size must be power-of-two\n");
- 		return -EINVAL;
- 	}
-+	if (dev->zone_size > dev->size) {
-+		pr_err("Zone size larger than device capacity\n");
-+		return -EINVAL;
-+	}
+diff --git a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+index fe630438f67b..9bb37ac99a10 100644
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -808,14 +808,21 @@ static const struct usb_device_id	products[] = {
+ 	.driver_info = 0,
+ },
  
- 	dev->zone_size_sects = dev->zone_size << ZONE_SIZE_SHIFT;
- 	dev->nr_zones = dev_size >>
+-/* Microsoft Surface 3 dock (based on Realtek RTL8153) */
++/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x07c6, USB_CLASS_COMM,
+ 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+ 	.driver_info = 0,
+ },
+ 
+-	/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
++/* Microsoft Surface Ethernet Adapter (based on Realtek RTL8153B) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(MICROSOFT_VENDOR_ID, 0x0927, USB_CLASS_COMM,
++			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = 0,
++},
++
++/* TP-LINK UE300 USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(TPLINK_VENDOR_ID, 0x0601, USB_CLASS_COMM,
+ 			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 44ea5dcc43fd..cd1a07175e11 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -5837,6 +5837,7 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_REALTEK, 0x8153)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07ab)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x07c6)},
++	{REALTEK_USB_DEVICE(VENDOR_ID_MICROSOFT, 0x0927)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_SAMSUNG, 0xa101)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
 -- 
 2.25.1
 
