@@ -2,160 +2,86 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9F952075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B775208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 19:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590693026;
-	bh=dAS4DXwHNeuhzpvWEgC5d100yXjW+kGcXfbxsRlTvG4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DSmvcq5YxKBFJEvOMzMIp6fHjQYRt0phmHA0QXERjlc6Sy0Z12h31e2/238Vhv3Ej
-	 /UvlOulezjlTQX3jm/7Pt9OM3CMox+UWpQAmgilEQEebChb65GzWJKIR2BKJ8EWj1J
-	 bH8VSNvo+22tLy0D5pM30SpNSL6MPzf3DlM6Eks8=
+	s=default; t=1590693060;
+	bh=McL+fVFL7VEwzes5MBT2HIhkPQz4yeJG/DEEGLug2z0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DgihuXLBDfeXHHdGXxgZ5O4QTaQtuWgII6AcXgauKXJvl1bS44FAXyVukp2M43trn
+	 envi85wxX4UCyY7vhrBcajqWtyIugoIW3TOsOesWcOx5Dip1s0q5EfI3cRizvMnRUG
+	 cf8uYK26rWu7YRI6ZXniebX4AFfnG/ihVRvXqLSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406221AbgE1TK0 (ORCPT
+        id S2406172AbgE1TK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 15:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406096AbgE1TKW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 15:10:22 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF95C08C5C6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:22 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f7so857511ejq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xmGmOOl5gLGli7OvUQS4McOy7NB6xPaIApbCKtCeXYk=;
-        b=f8/b3x4fYWIUj58vxbwcT1zj5CSOCsV5h++6plCNXoHkOlz5+HIWFBcJy1hj9Iocmy
-         Q6KvNGUaf7Ktx8T3H3MKSb0yiSTTXPOtIV4i3w5okfxXhRQn9jfimGy2D5TlehUTq6Ly
-         3gZ8euFDfy2U4nl63gvxc9icwAuOlc7jkm8dM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xmGmOOl5gLGli7OvUQS4McOy7NB6xPaIApbCKtCeXYk=;
-        b=WQVzgg+j/z+VXFHUgpu3S5QrWttkYT7XAvoTQmtZPdwP2FSm5B5/J9azyFsaoJVvRe
-         e9wbWIdgoMhhztOv5o4mOaIOkaqM0My7INUng0+DGFjeLbbnLckCDFIsynYjA9GPJxxN
-         2HUqyxhvedpPkwRHkRva5q222D+zCeUgMFYerHPyNrEza6+OVbti1kNYbCNQolKvsePR
-         Vi7MSGRDaux5TysLziR3kXLRNj+NzpZrbi3QLyp/p7vIZXZLdp3zOJ7GyF3ZoMb/hxs7
-         3EIbWuXryy3RAXSczmwzdlf4mHCKhLLT4K8Y8hG2jMElPYgMJ41ovFkgA8SFwQYjozSc
-         9Zhg==
-X-Gm-Message-State: AOAM530eJKbizmHcq0L8K/tSmQ+XhsBqYmtAKHsgPJTnIIxP8augj6vn
-        XHqUroJOcI1FVKym7dkrSP4fh4hGkd4=
-X-Google-Smtp-Source: ABdhPJynhJZhvhH5QoDSQ/+1tCm0BEYdLBHKSGdvphUrVfnh7T9sQdPU90FSaDrdmqn9j/9a3nmUSQ==
-X-Received: by 2002:a17:906:c7d1:: with SMTP id dc17mr4822181ejb.166.1590693020264;
-        Thu, 28 May 2020 12:10:20 -0700 (PDT)
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
-        by smtp.gmail.com with ESMTPSA id b16sm5242438edu.89.2020.05.28.12.10.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 12:10:20 -0700 (PDT)
-Received: by mail-ed1-f42.google.com with SMTP id d24so935356eds.11
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 12:10:19 -0700 (PDT)
-X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr2405859lfn.10.1590692668401;
- Thu, 28 May 2020 12:04:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <87h7wujhmz.fsf@x220.int.ebiederm.org> <87sgga6ze4.fsf@x220.int.ebiederm.org>
- <87v9l4zyla.fsf_-_@x220.int.ebiederm.org> <877dx822er.fsf_-_@x220.int.ebiederm.org>
- <87k10wysqz.fsf_-_@x220.int.ebiederm.org> <87eer4ysm5.fsf_-_@x220.int.ebiederm.org>
-In-Reply-To: <87eer4ysm5.fsf_-_@x220.int.ebiederm.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 28 May 2020 12:04:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgQAgKnEX3V_vep3Ah392tjiekDspnu+y6kkx2oFZBV=g@mail.gmail.com>
-Message-ID: <CAHk-=wgQAgKnEX3V_vep3Ah392tjiekDspnu+y6kkx2oFZBV=g@mail.gmail.com>
-Subject: Re: [PATCH 01/11] exec: Reduce bprm->per_clear to a single bit
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Rob Landley <rob@landley.net>,
-        Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Andy Lutomirski <luto@amacapital.net>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 28 May 2020 15:10:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406096AbgE1TK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 15:10:58 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E9122075A;
+        Thu, 28 May 2020 19:10:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590693057;
+        bh=McL+fVFL7VEwzes5MBT2HIhkPQz4yeJG/DEEGLug2z0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hDypazUDM3h5eepOjW5JZ/+I4UObiA44nyq+DaXGct/jyfhNeJpNT+l5yOQERP/46
+         mYHyrxau90uzB+7IPVW15Cp0ihC5nwvVDjuT7d2EEYdumOdTDvWf5t1KmA7EyUyghb
+         y6SHBK1qeZcpcC1YbdAP+KiEqUBp0khzjby11rOw=
+Date:   Thu, 28 May 2020 12:10:57 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2] twist: allow converting pr_devel()/pr_debug() into
+ snprintf()
+Message-Id: <20200528121057.d47c47c67d5f7419f7557b84@linux-foundation.org>
+In-Reply-To: <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+References: <e3b30905-4497-29b4-4636-a313283dbc56@i-love.sakura.ne.jp>
+        <20200528065603.3596-1-penguin-kernel@I-love.SAKURA.ne.jp>
+        <20200528110646.GC11286@linux-b0ei>
+        <e0d6c04f-7601-51e7-c969-300e938dedc0@i-love.sakura.ne.jp>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 8:45 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> -       me->personality &= ~bprm->per_clear;
-> +       if (bprm->per_clear)
-> +               me->personality &= ~PER_CLEAR_ON_SETID;\
+On Fri, 29 May 2020 00:16:22 +0900 Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> wrote:
 
-My only problem with this patch is that I find that 'per_clear' thing
-to be a horrid horrid name,
+> On 2020/05/28 20:06, Petr Mladek wrote:
+> > Now, it requires lib/Kconfig.twist that is added by a patch in
+> > Andrew's tree. One approach is to push this into linux-next
+> > via Andrew's -mm tree.
+> > 
+> > Another possibility would be to remove lib/Kconfig.twist
+> > changes from this patch and replace
+> > CONFIG_TWIST_ALWAYS_EVALUATE_PRINTK_ARGUMENTS with
+> > CONFIG_TWIST_FOR_SYZKALLER_TESTING.
+> > Then I could push it into linux-next via printk/linux.git tree.
+> 
+> CONFIG_TWIST_FOR_SYZKALLER_TESTING is meant for linux-next only.
+> But CONFIG_TWIST_KERNEL_BEHAVIOR is meant for Linus's tree.
+> 
+> That is, lib/Kconfig.twist will be there in printk/linux.git tree
+> after 5.8-rc1. But maybe twist related patches should be gathered
+> into one tree for easier management.
 
-Obviously the name didn't change, but the use *did* change, and as
-such the name got worse. It used do do things like
-
-               bprm->per_clear |= PER_CLEAR_ON_SETID;
-
-and now it does
-
-               bprm->per_clear = 1;
-
-and honestly, there's a lot more semantic context in the old code that
-is now missing entirely. At least you used to be able to grep for
-PER_CLEAR_ON_SETID and it would make you go "Ahh.."
-
-Put another way, I can kind of see what a line like
-
-               bprm->per_clear |= PER_CLEAR_ON_SETID;
-
-does, simply because now it kind of hints at what is up.
-
-But what the heck does
-
-               bprm->per_clear = 1;
-
-mean? Nothing. You have to really know the code. "per_clear" makes no
-sense, and now it's a short line that doesn't need to be that short.
-
-I think "bprm->clear_personality_bits" would maybe describe what the
-_effect_ of that field is. It doesn't explain _why_, but it at least
-explains "what" much better than "per_clear", which just makes me go
-"per what?".
-
-Alternatively, "bprm->creds_changed" would describe what the bit
-conceptually is about, and code like
-
-          if (bprm->creds_changed)
-                  me->personality &= ~PER_CLEAR_ON_SETID;\
-
-looks sensible to me and kind of matches the comment about the
-PER_CLEAR_ON_SETID bits are.
-
-So I think that using a bitfield is fine, but I'd really like it to be
-named something much better.
-
-Plus changing the name means that you can't have any code that now
-mistakenly uses the new semantics but expects the old bitmask.
-Generally when something changes semantics that radically, you want to
-make sure the type changes sufficiently that any out-of-tree patch
-that hasn't been merged yet will get a clear warning or error if
-people don't realize.
-
-Please?
-
-           Linus
+Yup.  I'll drop the twist patches from -mm.
