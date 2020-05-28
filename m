@@ -2,303 +2,119 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7348BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76530C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50EB221527
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6C0208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 01:49:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="sdVgaQBI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gkEaaK+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgE1Bs4 (ORCPT
+        id S1726792AbgE1BtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 27 May 2020 21:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37172 "EHLO
+        Wed, 27 May 2020 21:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgE1Bs4 (ORCPT
+        with ESMTP id S1725294AbgE1BtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 27 May 2020 21:48:56 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0213C05BD1E;
-        Wed, 27 May 2020 18:48:55 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id C59812A3;
-        Thu, 28 May 2020 03:48:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1590630532;
-        bh=U4kq/jSbwNGuKVGeEHlzWvc3R7NEee14LdRS0610D+0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sdVgaQBICro/JkQEixC7dLVChef2a3hJuZPkokvJZsnUfJam/kJl/yhEOuU6HqF5K
-         sACsXGtsSlhkcr+GTq6mlcw04pdgZ2qXhQD+yzwVIMRr3ocYdxVDKbzxfGkKOlXm/+
-         rnuP7/X2gLmOLmoMh33OLsGIZh49vnc5EbSVBmvc=
-Date:   Thu, 28 May 2020 04:48:37 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: Add documentation for
- LT9611
-Message-ID: <20200528014837.GD4670@pendragon.ideasonboard.com>
-References: <20200513100533.42996-1-vkoul@kernel.org>
- <20200513100533.42996-3-vkoul@kernel.org>
+        Wed, 27 May 2020 21:49:25 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D42AC05BD1E
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:49:24 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id cx22so2380729pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 27 May 2020 18:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=96mpkTGIh5O+UhFhsZdg+qMWj6+2k5Ul5jGV+bLnnek=;
+        b=gkEaaK+mzjRx+bD6cc68JEGvfpTM3rvOHmlG4Bnihe+uU/pUiP9UwNk19rHnCA1olu
+         kNauOY3GmkNcZ/R9YuuewHA2/YJk6qI0DzkVsLdVyFqzj/bvCjDeCpJ3JbTbDpGopnn/
+         LmcOcI+o6qHREUzxG/p89YipTrWC82xyuu828=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=96mpkTGIh5O+UhFhsZdg+qMWj6+2k5Ul5jGV+bLnnek=;
+        b=PQziOGIgNIj6Z8aVxFf9zvDhmN8TY24XLx9p43AfhjFyeJlW7ToyR7MUMoFpsgOnrg
+         qLap2RNiCXNyI7zb0s8rm97GQTbHAeVS4il5WTjfkWSdwtfpVpMu94LqH/gmNcmmLRMN
+         ogthG5wEm+JsQUtIWlJSsu7ytEfaPFvmC4dnYJpUMrzYwOcZf2HfXt0/lxepX/Bbp9Oy
+         Fz2ybRpAmBm6MoJf5qoyaDjGOmGp6cSF4ExwzYEIRKmT+qle1+DqaOoO/HB/AtKDBkQT
+         +KkK/JbspJPT8NzpXvN7shr4COfhCQs9dlXl5fc2D/ULrJfj/SrD1zTSVif693VPAvth
+         eLtg==
+X-Gm-Message-State: AOAM531N+dWac4vlMhdM67zT6g9jcEz0OI1Z7CHoflA3VmVc7Dp8IS9U
+        2hqyqBCEwicR9NBoHnPUII1SbqERhUsL1g==
+X-Google-Smtp-Source: ABdhPJyYTOKEF0F/ft64x5o+RPpNjPsThjLEcZwqLphp+nYDzEhBHXTc5ufdDmZyz5fygyY5IReKww==
+X-Received: by 2002:a17:90a:8d16:: with SMTP id c22mr1170872pjo.16.1590630563876;
+        Wed, 27 May 2020 18:49:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n19sm54816pfu.194.2020.05.27.18.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 May 2020 18:49:23 -0700 (PDT)
+Date:   Wed, 27 May 2020 18:49:21 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Matt Denton <mpdenton@google.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jann Horn <jannh@google.com>, Chris Palmer <palmer@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Robert Sesek <rsesek@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Linux Containers <containers@lists.linux-foundation.org>
+Subject: Re: [PATCH 1/2] seccomp: notify user trap about unused filter
+Message-ID: <202005271846.80FC6F3@keescook>
+References: <20200527111902.163213-1-christian.brauner@ubuntu.com>
+ <202005271408.58F806514@keescook>
+ <20200527220532.jplypougn3qzwrms@wittgenstein>
+ <202005271537.75548B6@keescook>
+ <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200513100533.42996-3-vkoul@kernel.org>
+In-Reply-To: <20200527224501.jddwcmvtvjtjsmsx@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-Thank you for the patch.
-
-On Wed, May 13, 2020 at 03:35:32PM +0530, Vinod Koul wrote:
-> Lontium LT9611 is a DSI to HDMI bridge which supports 2 DSI ports
-> and I2S port as input and one HDMI port as output
+On Thu, May 28, 2020 at 12:45:01AM +0200, Christian Brauner wrote:
+> On Wed, May 27, 2020 at 03:37:58PM -0700, Kees Cook wrote:
+> > But there's a mapping between pidfd and task struct that is separate
+> > from task struct itself, yes? I.e. keeping a pidfd open doesn't pin
+> > struct task in memory forever, right?
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../display/bridge/lontium,lt9611.yaml        | 178 ++++++++++++++++++
->  1 file changed, 178 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
+> No, but that's an implementation detail and we discussed that. It pins
+> struct pid instead of task_struct. Once the process is fully gone you
+> just get ESRCH.
+
+Oh right! struct pid, yes. Okay, that's quite a bit smaller.
+
+> For example, fds to /proc/<pid>/<tid>/ fds aren't just closed once the
+> task has gone away, userspace will just get ESRCH when it tries to open
+> files under there but the fd remains valid until close() is called.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-> new file mode 100644
-> index 000000000000..77ee8cc35cd8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-> @@ -0,0 +1,178 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Lontium LT9611 2 Port MIPI to HDMI Bridge
-> +
-> +maintainers:
-> +  - Vinod Koul <vkoul@kernel.org>
-> +
-> +description: |
-> +  The LT9611 is a bridge device which converts DSI to HDMI
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - lontium,lt9611
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: base I2C address of the device.
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: interrupt line for the chip
+> In addition, of all the anon inode fds, none of them have the "close the
+> file behind userspace back" behavior: io_uring, signalfd, timerfd, btf,
+> perf_event, bpf-prog, bpf-link, bpf-map, pidfd, userfaultfd, fanotify,
+> inotify, eventpoll, fscontext, eventfd. These are just core kernel ones.
+> I'm pretty sure that it'd be very odd behavior if we did that. I'd
+> rather just notify userspace and leave the close to them. But maybe I'm
+> missing something.
 
-I think you could drop the descriptions for the reg and interrupt
-properties, they don't add much.
+Well, they have a "you are now disconnected" state, which I was thinking
+could be done entirely entirely on the VFS side of things, but it looks
+like it's not.
 
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO connected to active high RESET pin.
-> +
-> +  vdd-supply:
-> +    description: Regulator for 1.8V MIPI phy power.
-> +
-> +  vcc-supply:
-> +    description: Regulator for 3.3V IO power.
-> +
-> +  ports:
-> +    type: object
-> +
-> +    properties:
-> +      "#address-cells":
-> +        const: 1
-> +
-> +      "#size-cells":
-> +        const: 0
-> +
-> +      port@0:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description: |
-> +          HDMI port for HDMI output
-
-The usual practice is to have the input ports first, followed by the
-output ports. Is there a reason not to follow that rule ?
-
-> +
-> +        properties:
-> +          reg:
-> +            const: 0
-> +
-> +        patternProperties:
-> +          endpoint:
-
-If you want to use patternProperties, this should be
-
-          "^endpoint@[0-9]+$":
-
-(including the quotes). Same below.
-
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-
-How about
-
-              remote-endpoint:
-                $ref: /schemas/types.yaml#/definitions/phandle
-
-and the same below ?
-
-You also need a reg property if multiple endpoints are present.
-
-> +
-> +        required:
-> +          - reg
-> +
-> +      port@1:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description: |
-> +          MIPI port-1 for MIPI input
-> +
-> +        properties:
-> +          reg:
-> +            const: 1
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +      port@2:
-> +        type: object
-> +        additionalProperties: false
-> +
-> +        description: |
-> +          MIPI port-2 for MIPI input
-
-A description of how the two MIPI inputs differ would be useful. In
-particular, are both mandatory, or is it valid to connect only one of
-the two ? If using a single input is supported, can it be either, or
-does it have to be the first one ? When using both inputs, what should
-be connected to them ?
-
-> +
-> +        properties:
-> +          reg:
-> +            const: 2
-> +
-> +        patternProperties:
-> +          endpoint:
-> +            type: object
-> +            additionalProperties: false
-> +
-> +            properties:
-> +              remote-endpoint: true
-> +
-> +        required:
-> +          - reg
-> +
-> +    required:
-> +      - "#address-cells"
-> +      - "#size-cells"
-> +      - port@0
-> +      - port@1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - vdd-supply
-> +  - vcc-supply
-> +  - ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c10 {
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      lt9611_codec: hdmi-bridge@3b {
-
-Please drop unused labels.
-
-> +        compatible = "lontium,lt9611";
-> +        reg = <0x3b>;
-> +
-> +        reset-gpios = <&tlmm 128 GPIO_ACTIVE_HIGH>;
-> +        interrupts-extended = <&tlmm 84 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +        vdd-supply = <&lt9611_1v8>;
-> +        vcc-supply = <&lt9611_3v3>;
-> +
-> +        ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          port@0 {
-> +            reg = <0>;
-> +            lt9611_out: endpoint {
-> +              remote-endpoint = <&hdmi_con>;
-> +            };
-> +          };
-> +
-> +          port@1 {
-> +            reg = <1>;
-> +            lt9611_a: endpoint {
-> +              remote-endpoint = <&dsi0_out>;
-> +            };
-> +          };
-> +
-> +          port@2 {
-> +            reg = <2>;
-> +            lt9611_b: endpoint {
-> +              remote-endpoint = <&dsi1_out>;
-> +            };
-> +          };
-> +        };
-> +      };
-> +    };
-
-It's customary to end YAML schema files with ... on a separate line.
+So, yes, okay, thank you for walking me through all that. I still want
+to take a closer look at all the notify calls in here. It seems strange
+that seccomp has to do all the wakeups (but I guess there are no
+"generic" poll helpers?)
 
 -- 
-Regards,
-
-Laurent Pinchart
+Kees Cook
