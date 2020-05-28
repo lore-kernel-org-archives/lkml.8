@@ -2,167 +2,216 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E29B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CCAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFF992145D
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:04:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LcGOHsKA"
+	by mail.kernel.org (Postfix) with ESMTP id 33EC42089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:05:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590642315;
+	bh=NDC24e39Iao1s0J6oxpl6QrqSQ/FN9yD5O8bl+XbuW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JD5Y8D0ITxjEB7yM9IgSV3BuaJjBUTPO66fB9TRxzU9xswERyj3UC2EChAWBDTjVf
+	 yM7NyrQGJDTzNqu3N5sf1s16UPhSTXlLdNFhP6+jyGNm2zRoYfd46t8Ww3NeqPCH78
+	 Lro7DbTVf1/hgDQmiX3zTR/xdKtNUqDwHlt7X9FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgE1FEm (ORCPT
+        id S1727102AbgE1FFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:04:42 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:41796 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725298AbgE1FEl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:04:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1590642281; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=F/YkHIoGTRVe20hlMQi6nd837QqDHegA5W6Ur6tUtDU=; b=LcGOHsKAYLm9xnjo07PODs+ZBpnmdmrgERnsKKBNAZJ38IZws/TPIo+cEF7kmuyWDcAFKxnI
- qgMZQ9/I2p0Ba8KWxFL8ob6LR+gPBqHyLM1pKy3zO7lWxPJxwNNP9BEeKOe+nfjdpvZEHPGY
- 3VJuQH6SP8X12aD1lRgBwj27+qk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5ecf465ebf0e32d254f19f85 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 28 May 2020 05:04:30
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8DC82C433C9; Thu, 28 May 2020 05:04:29 +0000 (UTC)
-Received: from [10.253.38.28] (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 28 May 2020 01:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbgE1FFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 01:05:12 -0400
+Received: from kernel.org (unknown [87.71.78.142])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: zijuhu)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37DA9C433C6;
-        Thu, 28 May 2020 05:04:27 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37DA9C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=zijuhu@codeaurora.org
-Subject: Re: [PATCH v3] bluetooth: hci_qca: Fix qca6390 enable failure after
- warm reboot
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org,
-        rjliao@codeaurora.org
-References: <1590546759-27387-1-git-send-email-zijuhu@codeaurora.org>
- <20200527164832.GH4525@google.com>
-From:   Zijun Hu <zijuhu@codeaurora.org>
-Message-ID: <4c5c9fd8-e90c-c7e2-8f21-edad3c3ca7ff@codeaurora.org>
-Date:   Thu, 28 May 2020 13:04:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        by mail.kernel.org (Postfix) with ESMTPSA id C20EE2084C;
+        Thu, 28 May 2020 05:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1590642311;
+        bh=NDC24e39Iao1s0J6oxpl6QrqSQ/FN9yD5O8bl+XbuW8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HBBn9BXczLkH33zORKEbOys0PDe0i4iZez9bsYJ24D87n/mCI9onGbTfxk6pBZmgO
+         u1CThBkweL+W+opoTXfssFQwyEADsZ792kBGprZqlImMvXpvQyKkXCUZvnXQN3jdhG
+         7kBpSZYMeenCReBOEku6BK9gKo5rqyVC9OIvY99M=
+Date:   Thu, 28 May 2020 08:05:04 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     x86@kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86: drop deprecated DISCONTIGMEM support for 32-bit
+Message-ID: <20200528050504.GI48741@kernel.org>
+References: <20200223094322.15206-1-rppt@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200527164832.GH4525@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200223094322.15206-1-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Gentle ping...
 
-
-On 5/28/2020 12:48 AM, Matthias Kaehlcke wrote:
-> Hi Zijun,
+On Sun, Feb 23, 2020 at 11:43:22AM +0200, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> On Wed, May 27, 2020 at 10:32:39AM +0800, Zijun Hu wrote:
->> Warm reboot can not restore qca6390 controller baudrate
->> to default due to lack of controllable BT_EN pin or power
->> supply, so fails to download firmware after warm reboot.
->>
->> Fixed by sending EDL_SOC_RESET VSC to reset controller
->> within added device shutdown implementation.
->>
->> Signed-off-by: Zijun Hu <zijuhu@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 29 +++++++++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index e4a6823..4b6f8b6 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -1975,6 +1975,34 @@ static void qca_serdev_remove(struct serdev_device *serdev)
->>  	hci_uart_unregister_device(&qcadev->serdev_hu);
->>  }
->>  
->> +static void qca_serdev_shutdown(struct device *dev)
->> +{
->> +	int ret;
->> +	int timeout = msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS);
->> +	struct serdev_device *serdev = to_serdev_device(dev);
->> +	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
->> +	const u8 ibs_wake_cmd[] = { 0xFD };
->> +	const u8 edl_reset_soc_cmd[] = { 0x01, 0x00, 0xFC, 0x01, 0x05 };
->> +
->> +	if (qcadev->btsoc_type == QCA_QCA6390) {
->> +		serdev_device_write_flush(serdev);
->> +		serdev_device_write_buf(serdev,
->> +				ibs_wake_cmd, sizeof(ibs_wake_cmd));
->> +		serdev_device_wait_until_sent(serdev, timeout);
+> The DISCONTIGMEM support was marked as deprecated in v5.2 and since there
+> were no complaints about it for almost 5 releases it can be completely
+> removed.
 > 
-> Why no check of the return value of serdev_device_write_buf() here,
-> does it make sense to continue if sending the wakeup command failed?
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/x86/Kconfig                  |  9 -------
+>  arch/x86/include/asm/mmzone_32.h  | 39 -------------------------------
+>  arch/x86/include/asm/pgtable_32.h |  3 +--
+>  arch/x86/mm/numa_32.c             | 34 ---------------------------
+>  4 files changed, 1 insertion(+), 84 deletions(-)
 > 
-i will correct it at v4 patch
-> Couldn't serdev_device_write() be used instead of the _write_buf() +
-> _wait_until_sent() combo?
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index beea77046f9b..e3fc3aa80f97 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1613,19 +1613,10 @@ config NODES_SHIFT
+>  	  Specify the maximum number of NUMA Nodes available on the target
+>  	  system.  Increases memory reserved to accommodate various tables.
+>  
+> -config ARCH_HAVE_MEMORY_PRESENT
+> -	def_bool y
+> -	depends on X86_32 && DISCONTIGMEM
+> -
+>  config ARCH_FLATMEM_ENABLE
+>  	def_bool y
+>  	depends on X86_32 && !NUMA
+>  
+> -config ARCH_DISCONTIGMEM_ENABLE
+> -	def_bool n
+> -	depends on NUMA && X86_32
+> -	depends on BROKEN
+> -
+>  config ARCH_SPARSEMEM_ENABLE
+>  	def_bool y
+>  	depends on X86_64 || NUMA || X86_32 || X86_32_NON_STANDARD
+> diff --git a/arch/x86/include/asm/mmzone_32.h b/arch/x86/include/asm/mmzone_32.h
+> index 73d8dd14dda2..2d4515e8b7df 100644
+> --- a/arch/x86/include/asm/mmzone_32.h
+> +++ b/arch/x86/include/asm/mmzone_32.h
+> @@ -14,43 +14,4 @@ extern struct pglist_data *node_data[];
+>  #define NODE_DATA(nid)	(node_data[nid])
+>  #endif /* CONFIG_NUMA */
+>  
+> -#ifdef CONFIG_DISCONTIGMEM
+> -
+> -/*
+> - * generic node memory support, the following assumptions apply:
+> - *
+> - * 1) memory comes in 64Mb contiguous chunks which are either present or not
+> - * 2) we will not have more than 64Gb in total
+> - *
+> - * for now assume that 64Gb is max amount of RAM for whole system
+> - *    64Gb / 4096bytes/page = 16777216 pages
+> - */
+> -#define MAX_NR_PAGES 16777216
+> -#define MAX_SECTIONS 1024
+> -#define PAGES_PER_SECTION (MAX_NR_PAGES/MAX_SECTIONS)
+> -
+> -extern s8 physnode_map[];
+> -
+> -static inline int pfn_to_nid(unsigned long pfn)
+> -{
+> -#ifdef CONFIG_NUMA
+> -	return((int) physnode_map[(pfn) / PAGES_PER_SECTION]);
+> -#else
+> -	return 0;
+> -#endif
+> -}
+> -
+> -static inline int pfn_valid(int pfn)
+> -{
+> -	int nid = pfn_to_nid(pfn);
+> -
+> -	if (nid >= 0)
+> -		return (pfn < node_end_pfn(nid));
+> -	return 0;
+> -}
+> -
+> -#define early_pfn_valid(pfn)	pfn_valid((pfn))
+> -
+> -#endif /* CONFIG_DISCONTIGMEM */
+> -
+>  #endif /* _ASM_X86_MMZONE_32_H */
+> diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
+> index 0dca7f7aeff2..be7b19646897 100644
+> --- a/arch/x86/include/asm/pgtable_32.h
+> +++ b/arch/x86/include/asm/pgtable_32.h
+> @@ -66,8 +66,7 @@ do {						\
+>  #endif /* !__ASSEMBLY__ */
+>  
+>  /*
+> - * kern_addr_valid() is (1) for FLATMEM and (0) for
+> - * SPARSEMEM and DISCONTIGMEM
+> + * kern_addr_valid() is (1) for FLATMEM and (0) for SPARSEMEM
+>   */
+>  #ifdef CONFIG_FLATMEM
+>  #define kern_addr_valid(addr)	(1)
+> diff --git a/arch/x86/mm/numa_32.c b/arch/x86/mm/numa_32.c
+> index f2bd3d61e16b..104544359d69 100644
+> --- a/arch/x86/mm/numa_32.c
+> +++ b/arch/x86/mm/numa_32.c
+> @@ -27,40 +27,6 @@
+>  
+>  #include "numa_internal.h"
+>  
+> -#ifdef CONFIG_DISCONTIGMEM
+> -/*
+> - * 4) physnode_map     - the mapping between a pfn and owning node
+> - * physnode_map keeps track of the physical memory layout of a generic
+> - * numa node on a 64Mb break (each element of the array will
+> - * represent 64Mb of memory and will be marked by the node id.  so,
+> - * if the first gig is on node 0, and the second gig is on node 1
+> - * physnode_map will contain:
+> - *
+> - *     physnode_map[0-15] = 0;
+> - *     physnode_map[16-31] = 1;
+> - *     physnode_map[32- ] = -1;
+> - */
+> -s8 physnode_map[MAX_SECTIONS] __read_mostly = { [0 ... (MAX_SECTIONS - 1)] = -1};
+> -EXPORT_SYMBOL(physnode_map);
+> -
+> -void memory_present(int nid, unsigned long start, unsigned long end)
+> -{
+> -	unsigned long pfn;
+> -
+> -	printk(KERN_INFO "Node: %d, start_pfn: %lx, end_pfn: %lx\n",
+> -			nid, start, end);
+> -	printk(KERN_DEBUG "  Setting physnode_map array to node %d for pfns:\n", nid);
+> -	printk(KERN_DEBUG "  ");
+> -	start = round_down(start, PAGES_PER_SECTION);
+> -	end = round_up(end, PAGES_PER_SECTION);
+> -	for (pfn = start; pfn < end; pfn += PAGES_PER_SECTION) {
+> -		physnode_map[pfn / PAGES_PER_SECTION] = nid;
+> -		printk(KERN_CONT "%lx ", pfn);
+> -	}
+> -	printk(KERN_CONT "\n");
+> -}
+> -#endif
+> -
+>  extern unsigned long highend_pfn, highstart_pfn;
+>  
+>  void __init initmem_init(void)
+> -- 
+> 2.24.0
 > 
-i don't think so, serdev_device_write() is not appropriate at here.
-serdev_device_write_wakeup() should be used to release completion hold
-by serdev_device_write(), however @hci_serdev_client_ops doesn't use
-serdev_device_write_wakeup() to implement its write_wakeup operation.
-we don't want to touch common hci_serdev.c code.
-
->> +		usleep_range(8000, 10000);
->> +
->> +		serdev_device_write_flush(serdev);
-> 
-> I suppose the flush is done because _wait_until_sent() could have timed out.
-> Another reason to use _device_write() (if suitable), since it returns
-> -ETIMEDOUT in that case?
->
-flush is prefixed at write operation to speed up
-shutdown procedure in case of unexpected data injected
-during waiting for controller wakeup.
-the combo have been used and i just follow it>> +		ret = serdev_device_write_buf(serdev,
->> +				edl_reset_soc_cmd, sizeof(edl_reset_soc_cmd));
->> +		if (ret < 0) {
->> +			BT_ERR("QCA send EDL_RESET_REQ error: %d", ret);
->> +			return;
->> +		}
->> +		serdev_device_wait_until_sent(serdev, timeout);
->> +		usleep_range(8000, 10000);
->> +	}
->> +}
->> +
->>  static int __maybe_unused qca_suspend(struct device *dev)
->>  {
->>  	struct hci_dev *hdev = container_of(dev, struct hci_dev, dev);
->> @@ -2100,6 +2128,7 @@ static struct serdev_device_driver qca_serdev_driver = {
->>  		.name = "hci_uart_qca",
->>  		.of_match_table = of_match_ptr(qca_bluetooth_of_match),
->>  		.acpi_match_table = ACPI_PTR(qca_bluetooth_acpi_match),
->> +		.shutdown = qca_serdev_shutdown,
->>  		.pm = &qca_pm_ops,
->>  	},
->>  };
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
->>
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+Sincerely yours,
+Mike.
