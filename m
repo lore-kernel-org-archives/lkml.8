@@ -2,86 +2,147 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65370C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 383D6206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F85220707
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OTstkbly"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SztyNKVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389804AbgE1MjN (ORCPT
+        id S2389838AbgE1Mje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:39:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389734AbgE1Mit (ORCPT
+        Thu, 28 May 2020 08:39:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51020 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389746AbgE1Mj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:38:49 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9669C05BD1E;
-        Thu, 28 May 2020 05:38:49 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0be200b0299b2dfed8209e.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:e200:b029:9b2d:fed8:209e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 076D81EC02CF;
-        Thu, 28 May 2020 14:38:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1590669528;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0opdngyx2K/yyYLMUGP93EKBwY9KCD9g0UxDDXfrvcQ=;
-        b=OTstkblyMvF224WY8T7jjseB4wM38dKW4H4F/RPxzwKpxlwqaUV8iXiCvcpbsYrOZlNn7p
-        063TkMHt3P+ev+xJU6BTFKFiV7r5lABDEarM088hPKFm2ruuj0wHKLlSV/6wSVcYKcB6nw
-        0T4+F+gnvXWLVPJcyikeGbz1M+l6ZTU=
-Date:   Thu, 28 May 2020 14:38:42 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Doug Covelli <dcovelli@vmware.com>
-Subject: Re: [PATCH v3 67/75] x86/vmware: Add VMware specific handling for
- VMMCALL under SEV-ES
-Message-ID: <20200528123842.GA382@zn.tnic>
-References: <20200428151725.31091-1-joro@8bytes.org>
- <20200428151725.31091-68-joro@8bytes.org>
+        Thu, 28 May 2020 08:39:29 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SCbnF5188151;
+        Thu, 28 May 2020 12:39:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=IIP/iRFuFJXn63SSiQWJJZ5VnKvJC0mGleXmKDbIZIo=;
+ b=SztyNKVZhx7riaDGqRWBbBcLIrwKlv4g8RVPs9g4b7YC8d0L48Tp00q1hizFUuGHRc89
+ jzZt+/9dTODJ3p5UIoUofTS4Ct6/IIy99OYSQP0IRzOsnDtnqsjtXTmiaFT58C3ePtf5
+ Eh1XdZI2phQRxIBeHvJYlJTxyRgMGc1DDACFGrRtzmt1tukhPKTLcqleS8j4FPiI4KPy
+ W5uFws+h1g8bkinIyf9PznGBTkWMZ9FM2OW4XFkR5m62csyMSvk5bR1rUe1UNY+NgfA5
+ 1VWxO96iG+p+oKcPowVW89IePaMEOm3VD6Q/jOETdBEU6b5vQeGLqRv3kwZHH0g9cKwS Og== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 318xbk4rwp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 12:39:12 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SCHdZ7115474;
+        Thu, 28 May 2020 12:37:11 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 317j5v696y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 May 2020 12:37:11 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04SCb9Iw014640;
+        Thu, 28 May 2020 12:37:09 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 28 May 2020 05:37:08 -0700
+Date:   Thu, 28 May 2020 15:37:03 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Zhou Wang <wangzhou1@hisilicon.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] crypto: hisilicon/qm - allow smaller reads in debugfs
+Message-ID: <20200528123703.GA1219412@mwanda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200428151725.31091-68-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2005280086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
+ suspectscore=0 bulkscore=0 clxscore=1011 impostorscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2005280087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 28, 2020 at 05:17:17PM +0200, Joerg Roedel wrote:
-> From: Doug Covelli <dcovelli@vmware.com>
-> 
-> This change adds VMware specific handling for #VC faults caused by
+Originally this code rejected any read less than 256 bytes.  There
+is no need for this artificial limit.
 
-s/This change adds/Add/
+Also I have changed the snprintf() functions to scnprintf().  The
+difference is that snprintf() returns the number of bytes which would
+have been copied if there were enough space and scnprintf() returns the
+number of bytes which were actually copied.  It doesn't matter here
+because the strings are very short so they can't go over 256 bytes.
 
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/crypto/hisilicon/qm.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index a781c02251980..9c0c9f500d91d 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -1076,16 +1076,15 @@ static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
+ 	if (*pos)
+ 		return 0;
+ 
+-	if (count < QM_DBG_READ_LEN)
+-		return -ENOSPC;
+-
+-	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n",
++	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n",
+ 		       "Please echo help to cmd to get help information");
+ 
++	len = min_t(size_t, len, count);
+ 	if (copy_to_user(buffer, buf, len))
+ 		return -EFAULT;
+ 
+-	return (*pos = len);
++	*pos = len;
++	return len;
+ }
+ 
+ static void *qm_ctx_alloc(struct hisi_qm *qm, size_t ctx_size,
+@@ -2710,19 +2709,18 @@ static ssize_t qm_status_read(struct file *filp, char __user *buffer,
+ 	if (*pos)
+ 		return 0;
+ 
+-	if (count < QM_DBG_READ_LEN)
+-		return -ENOSPC;
+-
+ 	val = atomic_read(&qm->status.flags);
+-	len = snprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
++	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
+ 	if (!len)
+ 		return -EFAULT;
+ 
++	len = min_t(size_t, len, count);
+ 	cp_len = copy_to_user(buffer, buf, len);
+ 	if (cp_len)
+ 		return -EFAULT;
+ 
+-	return (*pos = len);
++	*pos = len;
++	return len;
+ }
+ 
+ static const struct file_operations qm_status_fops = {
 -- 
-Regards/Gruss,
-    Boris.
+2.26.2
 
-https://people.kernel.org/tglx/notes-about-netiquette
