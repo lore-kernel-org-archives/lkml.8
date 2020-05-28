@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA28C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91919206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A546920707
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389924AbgE1MrG (ORCPT
+        id S2389932AbgE1MrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:47:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5365 "EHLO huawei.com"
+        Thu, 28 May 2020 08:47:13 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5366 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389864AbgE1Mqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:46:49 -0400
+        id S2389867AbgE1Mqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:46:48 -0400
 Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 39562BCE9ACB898CEFC3;
+        by Forcepoint Email with ESMTP id 4772AE3E6C0E7E932B2E;
         Thu, 28 May 2020 20:46:43 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 28 May 2020 20:46:36 +0800
+ 14.3.487.0; Thu, 28 May 2020 20:46:35 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 03/11] net: hns3: refactor hclge_query_bd_num_cmd_send()
-Date:   Thu, 28 May 2020 20:45:04 +0800
-Message-ID: <1590669912-21867-4-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 01/11] net: hns3: add a missing mutex destroy in hclge_init_ad_dev()
+Date:   Thu, 28 May 2020 20:45:02 +0800
+Message-ID: <1590669912-21867-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590669912-21867-1-git-send-email-tanhuazhong@huawei.com>
 References: <1590669912-21867-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,47 +47,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to improve code maintainability and readability, rewrite
-the process of BDs' initialization in hclge_query_bd_num_cmd_send().
+Add a mutex destroy call in hclge_init_ae_dev() when fails.
 
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 21ad23e..6c84413 100644
+index 7c9f2ba..ff8ad4b 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -10725,16 +10725,19 @@ static int hclge_get_64_bit_regs(struct hclge_dev *hdev, u32 regs_num,
- 
- int hclge_query_bd_num_cmd_send(struct hclge_dev *hdev, struct hclge_desc *desc)
- {
--	/*prepare 4 commands to query DFX BD number*/
--	hclge_cmd_setup_basic_desc(&desc[0], HCLGE_OPC_DFX_BD_NUM, true);
--	desc[0].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
--	hclge_cmd_setup_basic_desc(&desc[1], HCLGE_OPC_DFX_BD_NUM, true);
--	desc[1].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
--	hclge_cmd_setup_basic_desc(&desc[2], HCLGE_OPC_DFX_BD_NUM, true);
--	desc[2].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
--	hclge_cmd_setup_basic_desc(&desc[3], HCLGE_OPC_DFX_BD_NUM, true);
-+	int i;
-+
-+	/* initialize command BD except the last one */
-+	for (i = 0; i < HCLGE_GET_DFX_REG_TYPE_CNT - 1; i++) {
-+		hclge_cmd_setup_basic_desc(&desc[i], HCLGE_OPC_DFX_BD_NUM,
-+					   true);
-+		desc[i].flag |= cpu_to_le16(HCLGE_CMD_FLAG_NEXT);
-+	}
-+
-+	/* initialize the last command BD */
-+	hclge_cmd_setup_basic_desc(&desc[i], HCLGE_OPC_DFX_BD_NUM, true);
- 
--	return hclge_cmd_send(&hdev->hw, desc, 4);
-+	return hclge_cmd_send(&hdev->hw, desc, HCLGE_GET_DFX_REG_TYPE_CNT);
+@@ -10110,6 +10110,7 @@ static int hclge_init_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
+ out:
++	mutex_destroy(&hdev->vport_lock);
+ 	return ret;
  }
  
- static int hclge_get_dfx_reg_bd_num(struct hclge_dev *hdev,
 -- 
 2.7.4
 
