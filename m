@@ -2,157 +2,116 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8819C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B313C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2932206F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4E5206F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DqxdiboI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQ+SjXBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389985AbgE1Mxn (ORCPT
+        id S2390006AbgE1Myy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:53:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38181 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389899AbgE1Mxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:53:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49Xngk1GHNz9sSF;
-        Thu, 28 May 2020 22:53:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1590670420;
-        bh=if7jQmZfG6lRcbOj6WB0TjZbqpX42ichS7+r4E0q2xY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DqxdiboIX52vd97+6EWS/vyv8TKyyXlXZPWj5X5qnIZyVM9tTT57M1RvOF+jEa8lF
-         3hiJilNIBE4cfDtLRGIFQ0/6dDxWHUL/2Wy2B1AaZXwhYIgBHsv7K671iaveDpp0+E
-         Q9oOcErGQR4g2LD8yhd97sWHkMFfQLoV4H9woytdX/revyNjP1k4q50QPnGCELsaRJ
-         6CXgfeDxC6Jj5TtOArxrtF02i+d/pk/CihuQdxQ6YXxC/VnSE9jSVhThVDZjiCosIB
-         QPmpSiM9A0gXvPugJOjbt8G/WzMd5TQnOnYtd4i8GLHVZON4yJDQ7d3UfkWqkOFoOu
-         GOtrbhAVc/9HQ==
-Date:   Thu, 28 May 2020 22:53:36 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH -tip v3 09/11] data_race: Avoid nested statement
- expression
-Message-ID: <20200528225336.2defab20@canb.auug.org.au>
-In-Reply-To: <CAK8P3a1BH5nXDK2VS7jWc_u2B1kztr4u9JMXhWF9-iZdrsb-7Q@mail.gmail.com>
-References: <20200521142047.169334-1-elver@google.com>
-        <20200521142047.169334-10-elver@google.com>
-        <CAKwvOdnR7BXw_jYS5PFTuUamcwprEnZ358qhOxSu6wSSSJhxOA@mail.gmail.com>
-        <CAK8P3a0RJtbVi1JMsfik=jkHCNFv+DJn_FeDg-YLW+ueQW3tNg@mail.gmail.com>
-        <20200526120245.GB27166@willie-the-truck>
-        <CAK8P3a29BNwvdN1YNzoN966BF4z1QiSxdRXTP+BzhM9H07LoYQ@mail.gmail.com>
-        <CANpmjNOUdr2UG3F45=JaDa0zLwJ5ukPc1MMKujQtmYSmQnjcXg@mail.gmail.com>
-        <20200526173312.GA30240@google.com>
-        <CAK8P3a3ZawPnzmzx4q58--M1h=v4X-1GtQLiwL1=G6rDK8=Wpg@mail.gmail.com>
-        <CAK8P3a3UYQeXhiufUevz=rwe09WM_vSTCd9W+KvJHJcOeQyWVA@mail.gmail.com>
-        <20200527072248.GA9887@willie-the-truck>
-        <CANpmjNO2A39XRQ9OstwKGKpZ6wQ4ebVcBNfH_ZhCTi8RG6WqYw@mail.gmail.com>
-        <CAK8P3a1BH5nXDK2VS7jWc_u2B1kztr4u9JMXhWF9-iZdrsb-7Q@mail.gmail.com>
+        Thu, 28 May 2020 08:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389899AbgE1Myx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:54:53 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247A0C05BD1E;
+        Thu, 28 May 2020 05:54:53 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id p21so13430268pgm.13;
+        Thu, 28 May 2020 05:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=mVodxXDgXuSh5nuG79Fm5YEjLeD1kZZwfX36BHBYFQk=;
+        b=VQ+SjXBYZQ1CFul5nfQHFBuKJLFtpANs1Uk+d1bljglbbGfuff0X6SRaN0pN0XVKVX
+         +tkEKqAJZecksEPHCrOZwqG75fJrWWifJISIsXnuc/cBSRjC7AcQqcXYlWJ7HRRx0J9b
+         oBN/y04FMXGsmg3yCEIDCMSeRrdPXqRxcLj21SvFuNdGtG/BnyHBz3pDRXThyOVvebgT
+         iwiovgcCp3Ot1nweFWOR7qHUOUyy6m6IRYjwPsOr0f5yd8fGWU4fbO7gT3hix8/mtqni
+         pCUY8La7/xWMMVv3bwj1uuO4eTLp6q3qNbbPR1d5YvummhXXPnELvPP57zpiXv2MCLLP
+         JfTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=mVodxXDgXuSh5nuG79Fm5YEjLeD1kZZwfX36BHBYFQk=;
+        b=Dbo9g/b17a6H7uKITlrc6ddL1ynqMPPG1xFDTSEmQuEjpX3TOe9aRi8YnELl/Cpowp
+         TF973UJSAyhv5NQgkThZjO+KMx161zJ+esz+9kBJuX8Bi0bJ5XNXqoP2XBnR+05J+bT4
+         OKvRX2M2bN9FhB75eeNDCMndOc0B87GFe7uS8407xgDvfjwZ2Bljbx7/yrJqxUlD6LF/
+         GdxF6Szx0nVNn0OcaQP+gOZlnrZebhTzFt1k5ENTckLLwjNe2kZtqoTBytFwmPQtCjPO
+         2iy2Zi5Lqm6RjEiSo9mNHvDU/8+GMO/d6RQVYwJtDUCqxHq2g7oynmjD/JNAVrFQlx5O
+         0ODA==
+X-Gm-Message-State: AOAM531sFkhyWsuv3oRB2ulEytDyKm1HBvwZwHLQcL0fn50d3pHyIgL2
+        PcCqe+8KBT+3TCsSerzda6U=
+X-Google-Smtp-Source: ABdhPJyR1nvk7v4YL0toZCvxXtDHuRZamAs3zZ2j8VvJTJ9RzDvI/8CPL82qjvs5AwhoHfARyOwaJg==
+X-Received: by 2002:a62:1d4c:: with SMTP id d73mr2863848pfd.226.1590670492671;
+        Thu, 28 May 2020 05:54:52 -0700 (PDT)
+Received: from [100.78.168.153] ([106.198.22.96])
+        by smtp.gmail.com with ESMTPSA id h21sm5402460pjz.6.2020.05.28.05.54.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 May 2020 05:54:52 -0700 (PDT)
+Date:   Thu, 28 May 2020 18:24:45 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <xmqqa71tmika.fsf@gitster.c.googlers.com>
+References: <xmqqtv02mt2m.fsf@gitster.c.googlers.com> <e66ea483-5e7f-4ebd-5ba8-91227efa454a@gmail.com> <xmqqa71tmika.fsf@gitster.c.googlers.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/=gXnD5Mwv9r7w5Lq6vJ+mEE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [ANNOUNCE] Git v2.27.0-rc2
+To:     Junio C Hamano <gitster@pobox.com>
+CC:     git@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+From:   Kaartic Sivaraam <kaartic.sivaraam@gmail.com>
+Message-ID: <DA3387FB-670A-4A36-9017-6D1372F9DBC2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=gXnD5Mwv9r7w5Lq6vJ+mEE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd,
 
-On Wed, 27 May 2020 11:26:51 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+On 27 May 2020 22:17:01 GMT+05:30, Junio C Hamano <gitster@pobox=2Ecom> wr=
+ote:
+>Kaartic Sivaraam <kaartic=2Esivaraam@gmail=2Ecom> writes:
 >
-> Right. I think there is still room for optimization around here, but
-> for v5.8 I'm happy enough with Marco's__unqual_scalar_typeof()
-> change. Stephen Rothwell is probably the one who's most affected
-> by compile speed, so it would be good to get an Ack/Nak from him
-> on whether this brings speed and memory usage back to normal
-> for him as well.
+>> Hi Junio,
+>>
+>> On 27-05-2020 00:17, Junio C Hamano wrote:
+>>> Shourya Shukla (4):
+>>>        submodule--helper=2Ec: Rename 'cb_foreach' to 'foreach_cb'
+>>>        gitfaq: files in =2Egitignore are tracked
+>>>        gitfaq: fetching and pulling a repository
+>>>        submodule: port subcommand 'set-url' from shell to C
+>>
+>> This is the only place where the `set-url` conversion from Shell to C
+>> is mentioned=2E I wonder if it's enough or if it needs a little bit
+>more
+>> attention may be in the "Performance, Internal Implementation,
+>> Development Support etc=2E" as it is a conversion of a submodule
+>> sub-command?
+>
+>I'm not sure if it is worth the bits=2E  It may matter _only_ if/when
+>new implementaiton of set-url hurts the end-users by being buggy ;-)
 
-Assuming you meant "[PATCH -tip] compiler_types.h: Optimize
-__unqual_scalar_typeof  compilation time"
-https://lore.kernel.org/lkml/20200527103236.148700-1-elver@google.com/
-
-I did some x86_64 allmodconfig builds (as I do all day):
-
-Linus' tree:
-
-36884.15user 1439.31system 9:05.46elapsed 7025%CPU (0avgtext+0avgdata 50041=
-6maxresident)k
-0inputs+128outputs (0major+64821256minor)pagefaults 0swaps
-36878.19user 1436.60system 9:05.37elapsed 7025%CPU (0avgtext+0avgdata 49465=
-6maxresident)k
-0inputs+128outputs (0major+64771097minor)pagefaults 0swaps
-
-linux-next:
-
-42378.58user 1513.34system 9:59.33elapsed 7323%CPU (0avgtext+0avgdata 53792=
-0maxresident)k
-0inputs+384outputs (0major+65102976minor)pagefaults 0swaps
-42378.38user 1509.52system 9:59.12elapsed 7325%CPU (0avgtext+0avgdata 53536=
-0maxresident)k
-0inputs+384outputs (0major+65102513minor)pagefaults 0swaps
-
-linux-next+patch:
-
-39090.54user 1464.71system 9:17.36elapsed 7276%CPU (0avgtext+0avgdata 52057=
-6maxresident)k
-0inputs+384outputs (0major+62226026minor)pagefaults 0swaps
-39101.66user 1471.55system 9:18.13elapsed 7269%CPU (0avgtext+0avgdata 51385=
-6maxresident)k
-0inputs+384outputs (0major+62243972minor)pagefaults 0swaps
-
-So, it is a bit better than current linux-next, but not quita back to
-Linus' tree (but that is not unexpected as there are over 12000 new
-commits in -next).
-
-$ x86_64-linux-gnu-gcc --version
-x86_64-linux-gnu-gcc (Debian 9.3.0-8) 9.3.0
-
-80 thread Power8 using -j100
+OK=2E That makes sense=2E The converted version has gone through reviews a=
+nd presumably it does pass our CI test cases=2E I think I was just trying t=
+o overcautious to ensure we're not bitten by a worst case scenario wherein =
+a bug slipped through the reviews and the tests=2E I believe it's pretty un=
+likely, though :-)
 
 --=20
-Cheers,
-Stephen Rothwell
+Sivaraam
 
---Sig_/=gXnD5Mwv9r7w5Lq6vJ+mEE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl7PtFAACgkQAVBC80lX
-0GwShgf/WE8dBTWi5LGlN07/ZZepqF0bEYhRDibb43csv7ZTlkh/o57GpSMNFz5P
-WTFPsP/oiD6mNhZVkuu5vZfNTocZo/r4f5n4CsIF5Tn9PSHVXw8nSYmC9GmLV/+K
-LCSNsc6d/TQQRBPY7fSMlSh12NxhQ2nE1LbbxRZpnZT852NnCncBfFsKMGEb1ue0
-AVzcq4+iModfjf2dqRJKUgBwpD8VxfBPgV9zjmH3U4BW9NgYVTndW5E/ceXCM6Yd
-cOQCADKJP4qWLETMrC4oTiXMwRP5pHjZ7oXOccD7XsKnPWrHLFET8G5KAySIiA9e
-Xz7rs85KHwGG5zkogSTDHVkNUkg0vA==
-=YOpz
------END PGP SIGNATURE-----
-
---Sig_/=gXnD5Mwv9r7w5Lq6vJ+mEE--
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity and =
+possible "typso"=2E
