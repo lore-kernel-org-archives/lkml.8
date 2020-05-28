@@ -2,455 +2,149 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC547C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99480C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98E3820814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727D020814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:37:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Og8PbWQw";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="r/Lyv/sJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405976AbgE1Sgq (ORCPT
+        id S2405980AbgE1Shg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:36:46 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:26976 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405890AbgE1Sga (ORCPT
+        Thu, 28 May 2020 14:37:36 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:1449 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405787AbgE1Shb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:36:30 -0400
-Received: from sc9-mailhost2.vmware.com (10.113.161.72) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Thu, 28 May 2020 11:36:20 -0700
-Received: from ubuntu.eng.vmware.com (unknown [10.20.113.240])
-        by sc9-mailhost2.vmware.com (Postfix) with ESMTP id BA765B2232;
-        Thu, 28 May 2020 14:36:23 -0400 (EDT)
-From:   Ronak Doshi <doshir@vmware.com>
-To:     <netdev@vger.kernel.org>
-CC:     Ronak Doshi <doshir@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 net-next 3/4] vmxnet3: add geneve and vxlan tunnel offload support
-Date:   Thu, 28 May 2020 11:36:14 -0700
-Message-ID: <20200528183615.27212-4-doshir@vmware.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200528183615.27212-1-doshir@vmware.com>
-References: <20200528183615.27212-1-doshir@vmware.com>
+        Thu, 28 May 2020 14:37:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1590691052; x=1622227052;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ZC+4PF417J+7ZXy9R0MrjLQuKiZGnap3XzD84XPhR14=;
+  b=Og8PbWQwQq2/ekm8dnOsl+NMfWsQLsCjoFtdCU1x0ZUa7MhEfqwMcPOr
+   BzNGgncxGJfoHxrqqSsHjE6otMVfbKVok6LXDaqXvo62r1xKZ4X+kMRwH
+   HwQtMa1SDIUpIX3X7Fpt7R0OMHUEAwX2VyQoJgPm9av10U7yB6mOUaksX
+   zxwgM/jgcXjaSV4dIjiFWdsdVKbkX7KvTVy/pFTfakyHWdeZ6RN+7p8jL
+   9tCsvZBlFN/Oe8z7C4iqhQCfLURhuCtzk9J8GJeRt6bx4Gzky2MC5iuf1
+   PkjJ33bmhHuks47ImEVM7mIF5YBRD/BDtCP9326Ix078Bz86teoTzb8Mg
+   w==;
+IronPort-SDR: H+9o4FzTPSLEoc3HfnF68+fARoZEyywEjMwf+6FqlmfVwDZ5/PGD5a1fjISOeiI6Uwv4Kj+XJB
+ l39S4bH1LTy4IxCedFi65GimWPd7/Izen6wxFOmddycTdF5CWu7kH5DOWnAqb+4Cg75T3bsac2
+ 9K+FEpBFU0jwN7yeGJQ2ko/DX5sZ5QTfRre4ouTFpYOGJuULHafVIIMRqXQJOBHQzq4rguM+6W
+ 61/pbmGbQldBJBmP437UB4OT6oiOa69bEX2jeDPfI0IVwBKomyBVmm75HgUdsAWTRcUYNaLhpF
+ G1k=
+X-IronPort-AV: E=Sophos;i="5.73,445,1583218800"; 
+   d="scan'208";a="77413573"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 May 2020 11:37:31 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 28 May 2020 11:37:22 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 28 May 2020 11:37:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KgLBHxYrop/woSzkA+S056WTjkMdLwdq1XoQBzZmTnJBtS7PGXPGl27VaeYX4KPP5CX2BOCR9tkzPCAkRAM7TYRHCiBeBKpuS40gkJYPZyDE4f55UoCkURtZcrcXlpJrf6ebT2Ks8e0twEOQ8wfcVxXNcsc6SNs5mu3Rk3XuSBgFmQ1gDr3URJa9hcmxz21CXO5yXEKAbJFEESxn1HlYuQGkZ2IYT69Aud/cdcYoXeuNAtQeBb4xpPNgie6wzAaNPEukyBRmHwJF0feUzNOq+nOTA9kTVHbw5WWh6gR1okAmp1Q0wbq9Nftxdah4+9zZOxbdlAdjc2YU8wufQP8f7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N/40cNo5Ei2pzFNRIVeQ6QVzkm3FJKwflvU8kuosvgo=;
+ b=FAZvMClD5ssM+2dfzYsAaHeGOF0pK1ACKL93CRI79+sldSLs87OSnJ247mD7X6ztSKCg349jzYIvyQxOliHXkAScZFA+Ea2wz1PnYwIGOA/EwKc7TF43y7u0GIvH7hS6WoQl88jjnouEqd4H3UozmNBbtJix1owqr1qaC2A1TC6luzGKpVzJPMTe43zvVmFdAxZGPauxuui7Ou0/RHN2EGCmXQ9vN3BZjhCW3yaQAzfzTuv9mMCpdn0O8UF8x7bvVN9zK7wBCMDUSWLxf0gYnzFdHXQbU3w6oRbm2sKkGlrSP6Quk5IvU+tVZk5jwA+5VvDNlHWYEq+HIsxVhkE/7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N/40cNo5Ei2pzFNRIVeQ6QVzkm3FJKwflvU8kuosvgo=;
+ b=r/Lyv/sJg+65BWvN46rXAglxHiJI3rPWKgENY+a4irSuYvcUt189Xa01mX5TBld3Bx5yYOkbZYYBVdQUPjKfk3Vg8nbQG2Yq96cW1Lll8IIuPcxhu97nc0PjqAkVk2BD2dfsyXB2hMPYZRCXwyEAnKf8JL5TG5zR0ja2NT4E7U8=
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
+ by BY5PR11MB4386.namprd11.prod.outlook.com (2603:10b6:a03:1bc::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
+ 2020 18:37:28 +0000
+Received: from BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
+ ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 18:37:28 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <vigneshr@ti.com>
+CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
+        <dinguyen@kernel.org>, <marex@denx.de>
+Subject: Re: [PATCH 2/6] mtd: spi-nor: cadence-quadspi: Provide a way to
+ disable DAC mode
+Thread-Topic: [PATCH 2/6] mtd: spi-nor: cadence-quadspi: Provide a way to
+ disable DAC mode
+Thread-Index: AQHWNR8J45vtEFmIPE2fbETkM911ng==
+Date:   Thu, 28 May 2020 18:37:28 +0000
+Message-ID: <2963748.sPVSOTQjie@192.168.0.120>
+References: <20200508185411.487-1-vigneshr@ti.com>
+ <20200508185411.487-3-vigneshr@ti.com>
+In-Reply-To: <20200508185411.487-3-vigneshr@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: ti.com; dkim=none (message not signed)
+ header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f8c94d8-41d3-49cd-4136-08d803362c93
+x-ms-traffictypediagnostic: BY5PR11MB4386:
+x-microsoft-antispam-prvs: <BY5PR11MB43868A42DE70E2745752B695F08E0@BY5PR11MB4386.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ISXlBzeW5wXykNHpJv8tPnoFN/mK2v5ojGwaEA0I4N8kBpPoo4+49lMg8HO//Bpae0sEQ6V846iE55Gd6OnqWod1lxcw8rIeUNV1H9xbqjhbkTIyPiPqLu06Qw2U7XEH2IuGntnjC06N8qPz2c5Ugn3+IawRlL4VTchPk3+mhyxG2Tmbb4pqFE4YmMSuUqVb/QXk6QauhJtMSBNZ6mKDAHfAgIbjVwTSfCbNXifi35O7mkAmfyKiOuqwKzvRl+XbduyzaMNgQKEV6K1cbCDrKyv9cLNjlKpHiHaMkCbkNt1BbGSeW8DCQeVy4htSufQVNPAsS8Yh/Qeu1no2BtkhpgCgD76+yEUmCyDaol/0E8G6ejGJ5Dv8mm7r4muBSOiF
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(396003)(366004)(136003)(39860400002)(14286002)(6486002)(66946007)(91956017)(76116006)(8936002)(316002)(54906003)(26005)(83380400001)(53546011)(6506007)(8676002)(66556008)(6512007)(64756008)(66476007)(4326008)(2906002)(71200400001)(9686003)(66446008)(7416002)(86362001)(5660300002)(478600001)(6916009)(186003)(4744005)(43043002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: u3c3VOAgoP1ZpS4fsEz06sq0TiLZ3sT6zCZfZ+ATreeUXg4sZpbNBcHl7el2n/5Ss7IzOsPr7S1YVySdmydtnU9B0Ljcr0urssxclyI8Txg4/DoTXTlrkjScZ0sureHZWChNIsuDow4OLKWgIeCulY+uAiVK/uyXuzdVVkEYj7cEqBVXRVbtK15kymIy8qTYtshFI/jJ3uqRVIiekvkGH2GeqWyMaZsmfuRlualhAfESq4kfKhb+fQJKGr9UdmK2QDJmxMPR0FY6SXjWTCdsrRxo+vdH/hFfGnJDwmTem+o3BhtR5HMiEWf4qB+B92VZzzwo75K7ecwiJ1VH8tIdmQIjmdc5ho0HIvN3TptgzYP2nqCF6bjWIn1dCBWFhzkmLJVddS1125Kymy4/+Jsw0aJfMGBsB7pG7hf003pts8vhOnxYbFSaFfCynq8EtvqdYWpWiq9RZm5HR5avbyWpvmRAVzsfP7QFoPxp6/uibKY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <99577D8AD56E33429E5FFF694D09518E@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: doshir@vmware.com does not
- designate permitted sender hosts)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f8c94d8-41d3-49cd-4136-08d803362c93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 18:37:28.2261
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Nj8WRC3OiwCzQsmN46Or5FcWdWEn9C96WDCXc+PUcPe7DB/IHyfaca5sjhXgUkzU6ZHaskkFrI4flqvaiMNHU7dxfBBTbRA/vzY2f/wIIsU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4386
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vmxnet3 version 3 device supports checksum/TSO offload. Thus, vNIC to
-pNIC traffic can leverage hardware checksum/TSO offloads. However,
-vmxnet3 does not support checksum/TSO offload for Geneve/VXLAN
-encapsulated packets. Thus, for a vNIC configured with an overlay, the
-guest stack must first segment the inner packet, compute the inner
-checksum for each segment and encapsulate each segment before
-transmitting the packet via the vNIC. This results in significant
-performance penalty.
+On Friday, May 8, 2020 9:54:07 PM EEST Vignesh Raghavendra wrote:
+> Currently direct access mode is used on platforms that have AHB window
+> (memory mapped window) larger than flash size. This feature is limited
+> to TI platforms as non TI platforms have < 1MB of AHB window.
+> Therefore introduce a driver quirk to disable DAC mode and set it for
+> non TI compatibles. This is in preparation to move to spi-mem framework
+> where flash geometry cannot be known.
+>=20
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  drivers/mtd/spi-nor/controllers/cadence-quadspi.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-This patch will enhance vmxnet3 to support Geneve/VXLAN TSO as well as
-checksum offload.
-
-Signed-off-by: Ronak Doshi <doshir@vmware.com>
----
- drivers/net/vmxnet3/upt1_defs.h       |   3 +
- drivers/net/vmxnet3/vmxnet3_defs.h    |  17 +++--
- drivers/net/vmxnet3/vmxnet3_drv.c     | 120 +++++++++++++++++++++++++++-------
- drivers/net/vmxnet3/vmxnet3_ethtool.c |  42 +++++++++++-
- drivers/net/vmxnet3/vmxnet3_int.h     |  12 +++-
- 5 files changed, 161 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/net/vmxnet3/upt1_defs.h b/drivers/net/vmxnet3/upt1_defs.h
-index 65a203c842b2..8c014c98471c 100644
---- a/drivers/net/vmxnet3/upt1_defs.h
-+++ b/drivers/net/vmxnet3/upt1_defs.h
-@@ -92,5 +92,8 @@ enum {
- 	UPT1_F_RSS		= cpu_to_le64(0x0002),
- 	UPT1_F_RXVLAN		= cpu_to_le64(0x0004),   /* VLAN tag stripping */
- 	UPT1_F_LRO		= cpu_to_le64(0x0008),
-+	UPT1_F_RXINNEROFLD      = cpu_to_le64(0x00010),  /* Geneve/Vxlan rx csum
-+							  * offloading
-+							  */
- };
- #endif
-diff --git a/drivers/net/vmxnet3/vmxnet3_defs.h b/drivers/net/vmxnet3/vmxnet3_defs.h
-index aac97fac1186..a8d5ebd47c71 100644
---- a/drivers/net/vmxnet3/vmxnet3_defs.h
-+++ b/drivers/net/vmxnet3/vmxnet3_defs.h
-@@ -103,14 +103,14 @@ enum {
- /*
-  *	Little Endian layout of bitfields -
-  *	Byte 0 :	7.....len.....0
-- *	Byte 1 :	rsvd gen 13.len.8
-+ *	Byte 1 :	oco gen 13.len.8
-  *	Byte 2 : 	5.msscof.0 ext1  dtype
-  *	Byte 3 : 	13...msscof...6
-  *
-  *	Big Endian layout of bitfields -
-  *	Byte 0:		13...msscof...6
-  *	Byte 1 : 	5.msscof.0 ext1  dtype
-- *	Byte 2 :	rsvd gen 13.len.8
-+ *	Byte 2 :	oco gen 13.len.8
-  *	Byte 3 :	7.....len.....0
-  *
-  *	Thus, le32_to_cpu on the dword will allow the big endian driver to read
-@@ -125,13 +125,13 @@ struct Vmxnet3_TxDesc {
- 	u32 msscof:14;  /* MSS, checksum offset, flags */
- 	u32 ext1:1;
- 	u32 dtype:1;    /* descriptor type */
--	u32 rsvd:1;
-+	u32 oco:1;
- 	u32 gen:1;      /* generation bit */
- 	u32 len:14;
- #else
- 	u32 len:14;
- 	u32 gen:1;      /* generation bit */
--	u32 rsvd:1;
-+	u32 oco:1;
- 	u32 dtype:1;    /* descriptor type */
- 	u32 ext1:1;
- 	u32 msscof:14;  /* MSS, checksum offset, flags */
-@@ -157,9 +157,10 @@ struct Vmxnet3_TxDesc {
- };
- 
- /* TxDesc.OM values */
--#define VMXNET3_OM_NONE		0
--#define VMXNET3_OM_CSUM		2
--#define VMXNET3_OM_TSO		3
-+#define VMXNET3_OM_NONE         0
-+#define VMXNET3_OM_ENCAP        1
-+#define VMXNET3_OM_CSUM         2
-+#define VMXNET3_OM_TSO          3
- 
- /* fields in TxDesc we access w/o using bit fields */
- #define VMXNET3_TXD_EOP_SHIFT	12
-@@ -226,6 +227,8 @@ struct Vmxnet3_RxDesc {
- #define VMXNET3_RXD_BTYPE_SHIFT  14
- #define VMXNET3_RXD_GEN_SHIFT    31
- 
-+#define VMXNET3_RCD_HDR_INNER_SHIFT  13
-+
- struct Vmxnet3_RxCompDesc {
- #ifdef __BIG_ENDIAN_BITFIELD
- 	u32		ext2:1;
-diff --git a/drivers/net/vmxnet3/vmxnet3_drv.c b/drivers/net/vmxnet3/vmxnet3_drv.c
-index 4ea7a40ada88..b764f24b646b 100644
---- a/drivers/net/vmxnet3/vmxnet3_drv.c
-+++ b/drivers/net/vmxnet3/vmxnet3_drv.c
-@@ -842,12 +842,22 @@ vmxnet3_parse_hdr(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- 	u8 protocol = 0;
- 
- 	if (ctx->mss) {	/* TSO */
--		ctx->eth_ip_hdr_size = skb_transport_offset(skb);
--		ctx->l4_hdr_size = tcp_hdrlen(skb);
--		ctx->copy_size = ctx->eth_ip_hdr_size + ctx->l4_hdr_size;
-+		if (VMXNET3_VERSION_GE_4(adapter) && skb->encapsulation) {
-+			ctx->l4_offset = skb_inner_transport_offset(skb);
-+			ctx->l4_hdr_size = inner_tcp_hdrlen(skb);
-+			ctx->copy_size = ctx->l4_offset + ctx->l4_hdr_size;
-+		} else {
-+			ctx->l4_offset = skb_transport_offset(skb);
-+			ctx->l4_hdr_size = tcp_hdrlen(skb);
-+			ctx->copy_size = ctx->l4_offset + ctx->l4_hdr_size;
-+		}
- 	} else {
- 		if (skb->ip_summed == CHECKSUM_PARTIAL) {
--			ctx->eth_ip_hdr_size = skb_checksum_start_offset(skb);
-+			/* For encap packets, skb_checksum_start_offset refers
-+			 * to inner L4 offset. Thus, below works for encap as
-+			 * well as non-encap case
-+			 */
-+			ctx->l4_offset = skb_checksum_start_offset(skb);
- 
- 			if (ctx->ipv4) {
- 				const struct iphdr *iph = ip_hdr(skb);
-@@ -871,10 +881,10 @@ vmxnet3_parse_hdr(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- 				break;
- 			}
- 
--			ctx->copy_size = min(ctx->eth_ip_hdr_size +
-+			ctx->copy_size = min(ctx->l4_offset +
- 					 ctx->l4_hdr_size, skb->len);
- 		} else {
--			ctx->eth_ip_hdr_size = 0;
-+			ctx->l4_offset = 0;
- 			ctx->l4_hdr_size = 0;
- 			/* copy as much as allowed */
- 			ctx->copy_size = min_t(unsigned int,
-@@ -930,6 +940,25 @@ vmxnet3_copy_hdr(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- 
- 
- static void
-+vmxnet3_prepare_inner_tso(struct sk_buff *skb,
-+			  struct vmxnet3_tx_ctx *ctx)
-+{
-+	struct tcphdr *tcph = inner_tcp_hdr(skb);
-+	struct iphdr *iph = inner_ip_hdr(skb);
-+
-+	if (ctx->ipv4) {
-+		iph->check = 0;
-+		tcph->check = ~csum_tcpudp_magic(iph->saddr, iph->daddr, 0,
-+						 IPPROTO_TCP, 0);
-+	} else if (ctx->ipv6) {
-+		struct ipv6hdr *iph = inner_ipv6_hdr(skb);
-+
-+		tcph->check = ~csum_ipv6_magic(&iph->saddr, &iph->daddr, 0,
-+					       IPPROTO_TCP, 0);
-+	}
-+}
-+
-+static void
- vmxnet3_prepare_tso(struct sk_buff *skb,
- 		    struct vmxnet3_tx_ctx *ctx)
- {
-@@ -987,6 +1016,7 @@ vmxnet3_tq_xmit(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- 	/* Use temporary descriptor to avoid touching bits multiple times */
- 	union Vmxnet3_GenericDesc tempTxDesc;
- #endif
-+	struct udphdr *udph;
- 
- 	count = txd_estimate(skb);
- 
-@@ -1003,7 +1033,11 @@ vmxnet3_tq_xmit(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- 			}
- 			tq->stats.copy_skb_header++;
- 		}
--		vmxnet3_prepare_tso(skb, &ctx);
-+		if (skb->encapsulation) {
-+			vmxnet3_prepare_inner_tso(skb, &ctx);
-+		} else {
-+			vmxnet3_prepare_tso(skb, &ctx);
-+		}
- 	} else {
- 		if (unlikely(count > VMXNET3_MAX_TXD_PER_PKT)) {
- 
-@@ -1026,14 +1060,14 @@ vmxnet3_tq_xmit(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- 		BUG_ON(ret <= 0 && ctx.copy_size != 0);
- 		/* hdrs parsed, check against other limits */
- 		if (ctx.mss) {
--			if (unlikely(ctx.eth_ip_hdr_size + ctx.l4_hdr_size >
-+			if (unlikely(ctx.l4_offset + ctx.l4_hdr_size >
- 				     VMXNET3_MAX_TX_BUF_SIZE)) {
- 				tq->stats.drop_oversized_hdr++;
- 				goto drop_pkt;
- 			}
- 		} else {
- 			if (skb->ip_summed == CHECKSUM_PARTIAL) {
--				if (unlikely(ctx.eth_ip_hdr_size +
-+				if (unlikely(ctx.l4_offset +
- 					     skb->csum_offset >
- 					     VMXNET3_MAX_CSUM_OFFSET)) {
- 					tq->stats.drop_oversized_hdr++;
-@@ -1080,16 +1114,34 @@ vmxnet3_tq_xmit(struct sk_buff *skb, struct vmxnet3_tx_queue *tq,
- #endif
- 	tx_num_deferred = le32_to_cpu(tq->shared->txNumDeferred);
- 	if (ctx.mss) {
--		gdesc->txd.hlen = ctx.eth_ip_hdr_size + ctx.l4_hdr_size;
--		gdesc->txd.om = VMXNET3_OM_TSO;
--		gdesc->txd.msscof = ctx.mss;
-+		if (VMXNET3_VERSION_GE_4(adapter) && skb->encapsulation) {
-+			gdesc->txd.hlen = ctx.l4_offset + ctx.l4_hdr_size;
-+			gdesc->txd.om = VMXNET3_OM_ENCAP;
-+			gdesc->txd.msscof = ctx.mss;
-+
-+			udph = udp_hdr(skb);
-+			if (udph->check)
-+				gdesc->txd.oco = 1;
-+		} else {
-+			gdesc->txd.hlen = ctx.l4_offset + ctx.l4_hdr_size;
-+			gdesc->txd.om = VMXNET3_OM_TSO;
-+			gdesc->txd.msscof = ctx.mss;
-+		}
- 		num_pkts = (skb->len - gdesc->txd.hlen + ctx.mss - 1) / ctx.mss;
- 	} else {
- 		if (skb->ip_summed == CHECKSUM_PARTIAL) {
--			gdesc->txd.hlen = ctx.eth_ip_hdr_size;
--			gdesc->txd.om = VMXNET3_OM_CSUM;
--			gdesc->txd.msscof = ctx.eth_ip_hdr_size +
--					    skb->csum_offset;
-+			if (VMXNET3_VERSION_GE_4(adapter) &&
-+			    skb->encapsulation) {
-+				gdesc->txd.hlen = ctx.l4_offset +
-+						  ctx.l4_hdr_size;
-+				gdesc->txd.om = VMXNET3_OM_ENCAP;
-+				gdesc->txd.msscof = 0;		/* Reserved */
-+			} else {
-+				gdesc->txd.hlen = ctx.l4_offset;
-+				gdesc->txd.om = VMXNET3_OM_CSUM;
-+				gdesc->txd.msscof = ctx.l4_offset +
-+						    skb->csum_offset;
-+			}
- 		} else {
- 			gdesc->txd.om = 0;
- 			gdesc->txd.msscof = 0;
-@@ -1168,13 +1220,21 @@ vmxnet3_rx_csum(struct vmxnet3_adapter *adapter,
- 		    (le32_to_cpu(gdesc->dword[3]) &
- 		     VMXNET3_RCD_CSUM_OK) == VMXNET3_RCD_CSUM_OK) {
- 			skb->ip_summed = CHECKSUM_UNNECESSARY;
--			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp));
--			BUG_ON(gdesc->rcd.frg);
-+			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
-+			       !(le32_to_cpu(gdesc->dword[0]) &
-+				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
-+			BUG_ON(gdesc->rcd.frg &&
-+			       !(le32_to_cpu(gdesc->dword[0]) &
-+				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
- 		} else if (gdesc->rcd.v6 && (le32_to_cpu(gdesc->dword[3]) &
- 					     (1 << VMXNET3_RCD_TUC_SHIFT))) {
- 			skb->ip_summed = CHECKSUM_UNNECESSARY;
--			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp));
--			BUG_ON(gdesc->rcd.frg);
-+			BUG_ON(!(gdesc->rcd.tcp || gdesc->rcd.udp) &&
-+			       !(le32_to_cpu(gdesc->dword[0]) &
-+				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
-+			BUG_ON(gdesc->rcd.frg &&
-+			       !(le32_to_cpu(gdesc->dword[0]) &
-+				 (1UL << VMXNET3_RCD_HDR_INNER_SHIFT)));
- 		} else {
- 			if (gdesc->rcd.csum) {
- 				skb->csum = htons(gdesc->rcd.csum);
-@@ -2429,6 +2489,10 @@ vmxnet3_setup_driver_shared(struct vmxnet3_adapter *adapter)
- 	if (adapter->netdev->features & NETIF_F_HW_VLAN_CTAG_RX)
- 		devRead->misc.uptFeatures |= UPT1_F_RXVLAN;
- 
-+	if (adapter->netdev->features & (NETIF_F_GSO_UDP_TUNNEL |
-+					 NETIF_F_GSO_UDP_TUNNEL_CSUM))
-+		devRead->misc.uptFeatures |= UPT1_F_RXINNEROFLD;
-+
- 	devRead->misc.mtu = cpu_to_le32(adapter->netdev->mtu);
- 	devRead->misc.queueDescPA = cpu_to_le64(adapter->queue_desc_pa);
- 	devRead->misc.queueDescLen = cpu_to_le32(
-@@ -2561,8 +2625,8 @@ vmxnet3_init_rssfields(struct vmxnet3_adapter *adapter)
- 	union Vmxnet3_CmdInfo *cmdInfo = &shared->cu.cmdInfo;
- 	unsigned long flags;
- 
--		if (!VMXNET3_VERSION_GE_4(adapter))
--			return;
-+	if (!VMXNET3_VERSION_GE_4(adapter))
-+		return;
- 
- 	spin_lock_irqsave(&adapter->cmd_lock, flags);
- 
-@@ -3073,6 +3137,18 @@ vmxnet3_declare_features(struct vmxnet3_adapter *adapter, bool dma64)
- 		NETIF_F_HW_CSUM | NETIF_F_HW_VLAN_CTAG_TX |
- 		NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_TSO | NETIF_F_TSO6 |
- 		NETIF_F_LRO;
-+
-+	if (VMXNET3_VERSION_GE_4(adapter)) {
-+		netdev->hw_features |= NETIF_F_GSO_UDP_TUNNEL |
-+				NETIF_F_GSO_UDP_TUNNEL_CSUM;
-+
-+		netdev->hw_enc_features = NETIF_F_SG | NETIF_F_RXCSUM |
-+			NETIF_F_HW_CSUM | NETIF_F_HW_VLAN_CTAG_TX |
-+			NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_TSO | NETIF_F_TSO6 |
-+			NETIF_F_LRO | NETIF_F_GSO_UDP_TUNNEL |
-+			NETIF_F_GSO_UDP_TUNNEL_CSUM;
-+	}
-+
- 	if (dma64)
- 		netdev->hw_features |= NETIF_F_HIGHDMA;
- 	netdev->vlan_features = netdev->hw_features &
-diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-index 83cec9946466..6b32dc81647e 100644
---- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
-+++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
-@@ -267,14 +267,43 @@ netdev_features_t vmxnet3_fix_features(struct net_device *netdev,
- 	return features;
- }
- 
-+static void vmxnet3_enable_encap_offloads(struct net_device *netdev)
-+{
-+	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
-+
-+	if (VMXNET3_VERSION_GE_4(adapter)) {
-+		netdev->hw_enc_features |= NETIF_F_SG | NETIF_F_RXCSUM |
-+			NETIF_F_HW_CSUM | NETIF_F_HW_VLAN_CTAG_TX |
-+			NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_TSO | NETIF_F_TSO6 |
-+			NETIF_F_LRO | NETIF_F_GSO_UDP_TUNNEL |
-+			NETIF_F_GSO_UDP_TUNNEL_CSUM;
-+	}
-+}
-+
-+static void vmxnet3_disable_encap_offloads(struct net_device *netdev)
-+{
-+	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
-+
-+	if (VMXNET3_VERSION_GE_4(adapter)) {
-+		netdev->hw_enc_features &= ~(NETIF_F_SG | NETIF_F_RXCSUM |
-+			NETIF_F_HW_CSUM | NETIF_F_HW_VLAN_CTAG_TX |
-+			NETIF_F_HW_VLAN_CTAG_RX | NETIF_F_TSO | NETIF_F_TSO6 |
-+			NETIF_F_LRO | NETIF_F_GSO_UDP_TUNNEL |
-+			NETIF_F_GSO_UDP_TUNNEL_CSUM);
-+	}
-+}
-+
- int vmxnet3_set_features(struct net_device *netdev, netdev_features_t features)
- {
- 	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
- 	unsigned long flags;
- 	netdev_features_t changed = features ^ netdev->features;
-+	netdev_features_t tun_offload_mask = NETIF_F_GSO_UDP_TUNNEL |
-+					     NETIF_F_GSO_UDP_TUNNEL_CSUM;
-+	u8 udp_tun_enabled = (netdev->features & tun_offload_mask) != 0;
- 
- 	if (changed & (NETIF_F_RXCSUM | NETIF_F_LRO |
--		       NETIF_F_HW_VLAN_CTAG_RX)) {
-+		       NETIF_F_HW_VLAN_CTAG_RX | tun_offload_mask)) {
- 		if (features & NETIF_F_RXCSUM)
- 			adapter->shared->devRead.misc.uptFeatures |=
- 			UPT1_F_RXCSUM;
-@@ -297,6 +326,17 @@ int vmxnet3_set_features(struct net_device *netdev, netdev_features_t features)
- 			adapter->shared->devRead.misc.uptFeatures &=
- 			~UPT1_F_RXVLAN;
- 
-+		if ((features & tun_offload_mask) != 0 && !udp_tun_enabled) {
-+			vmxnet3_enable_encap_offloads(netdev);
-+			adapter->shared->devRead.misc.uptFeatures |=
-+			UPT1_F_RXINNEROFLD;
-+		} else if ((features & tun_offload_mask) == 0 &&
-+			   udp_tun_enabled) {
-+			vmxnet3_disable_encap_offloads(netdev);
-+			adapter->shared->devRead.misc.uptFeatures &=
-+			~UPT1_F_RXINNEROFLD;
-+		}
-+
- 		spin_lock_irqsave(&adapter->cmd_lock, flags);
- 		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
- 				       VMXNET3_CMD_UPDATE_FEATURE);
-diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
-index d52ccc3eeba2..86db809c7592 100644
---- a/drivers/net/vmxnet3/vmxnet3_int.h
-+++ b/drivers/net/vmxnet3/vmxnet3_int.h
-@@ -219,10 +219,16 @@ struct vmxnet3_tx_ctx {
- 	bool   ipv4;
- 	bool   ipv6;
- 	u16 mss;
--	u32 eth_ip_hdr_size; /* only valid for pkts requesting tso or csum
--				 * offloading
-+	u32    l4_offset;	/* only valid for pkts requesting tso or csum
-+				 * offloading. For encap offload, it refers to
-+				 * inner L4 offset i.e. it includes outer header
-+				 * encap header and inner eth and ip header size
-+				 */
-+
-+	u32	l4_hdr_size;	/* only valid if mss != 0
-+				 * Refers to inner L4 hdr size for encap
-+				 * offload
- 				 */
--	u32 l4_hdr_size;     /* only valid if mss != 0 */
- 	u32 copy_size;       /* # of bytes copied into the data ring */
- 	union Vmxnet3_GenericDesc *sop_txd;
- 	union Vmxnet3_GenericDesc *eop_txd;
--- 
-2.11.0
+Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
