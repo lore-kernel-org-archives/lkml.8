@@ -7,21 +7,21 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92807C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEE9620814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B7A20814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390754AbgE1Nwh (ORCPT
+        id S2390772AbgE1Nwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:52:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5380 "EHLO huawei.com"
+        Thu, 28 May 2020 09:52:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5379 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390607AbgE1NvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 09:51:07 -0400
+        id S2390612AbgE1NvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 09:51:05 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 51C68FE7BEAB693B427D;
+        by Forcepoint Email with ESMTP id 4D979DEE3C8A0E03DD1D;
         Thu, 28 May 2020 21:50:59 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
@@ -32,9 +32,9 @@ CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 10/12] net: hns3: remove two duplicated register macros in hclgevf_main.h
-Date:   Thu, 28 May 2020 21:48:17 +0800
-Message-ID: <1590673699-63819-11-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 12/12] net: hns3: print out speed info when parsing speed fails
+Date:   Thu, 28 May 2020 21:48:19 +0800
+Message-ID: <1590673699-63819-13-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590673699-63819-1-git-send-email-tanhuazhong@huawei.com>
 References: <1590673699-63819-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,71 +47,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HCLGEVF_CMDQ_INTR_SRC_REG and HCLGEVF_CMDQ_INTR_STS_REG are same
-as HCLGEVF_VECTOR0_CMDQ_SRC_REG and HCLGEVF_VECTOR0_CMDQ_STAT_REG,
-replace the former with the latter, and rename macro
-HCLGEVF_VECTOR0_CMDQ_STAT_REG since 'stat' is not abbreviation of
-'state'.
+When calling hclge_parse_speed() fails, printing out the speed is
+helpful for debugging.
 
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 6 +++---
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h | 4 +---
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index be5789b..a8c0e79 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -46,7 +46,7 @@ static const u32 cmdq_reg_addr_list[] = {HCLGEVF_CMDQ_TX_ADDR_L_REG,
- 					 HCLGEVF_CMDQ_RX_TAIL_REG,
- 					 HCLGEVF_CMDQ_RX_HEAD_REG,
- 					 HCLGEVF_VECTOR0_CMDQ_SRC_REG,
--					 HCLGEVF_CMDQ_INTR_STS_REG,
-+					 HCLGEVF_VECTOR0_CMDQ_STATE_REG,
- 					 HCLGEVF_CMDQ_INTR_EN_REG,
- 					 HCLGEVF_CMDQ_INTR_GEN_REG};
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 1e4f285..96bfad5 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -1387,7 +1387,8 @@ static int hclge_configure(struct hclge_dev *hdev)
  
-@@ -1826,7 +1826,7 @@ static void hclgevf_dump_rst_info(struct hclgevf_dev *hdev)
- 	dev_info(&hdev->pdev->dev, "vector0 interrupt enable status: 0x%x\n",
- 		 hclgevf_read_dev(&hdev->hw, HCLGEVF_MISC_VECTOR_REG_BASE));
- 	dev_info(&hdev->pdev->dev, "vector0 interrupt status: 0x%x\n",
--		 hclgevf_read_dev(&hdev->hw, HCLGEVF_VECTOR0_CMDQ_STAT_REG));
-+		 hclgevf_read_dev(&hdev->hw, HCLGEVF_VECTOR0_CMDQ_STATE_REG));
- 	dev_info(&hdev->pdev->dev, "handshake status: 0x%x\n",
- 		 hclgevf_read_dev(&hdev->hw, HCLGEVF_CMDQ_TX_DEPTH_REG));
- 	dev_info(&hdev->pdev->dev, "function reset status: 0x%x\n",
-@@ -2250,7 +2250,7 @@ static enum hclgevf_evt_cause hclgevf_check_evt_cause(struct hclgevf_dev *hdev,
+ 	ret = hclge_parse_speed(cfg.default_speed, &hdev->hw.mac.speed);
+ 	if (ret) {
+-		dev_err(&hdev->pdev->dev, "Get wrong speed ret=%d.\n", ret);
++		dev_err(&hdev->pdev->dev, "failed to parse speed %u, ret = %d\n",
++			cfg.default_speed, ret);
+ 		return ret;
+ 	}
  
- 	/* fetch the events from their corresponding regs */
- 	cmdq_stat_reg = hclgevf_read_dev(&hdev->hw,
--					 HCLGEVF_VECTOR0_CMDQ_STAT_REG);
-+					 HCLGEVF_VECTOR0_CMDQ_STATE_REG);
- 
- 	if (BIT(HCLGEVF_VECTOR0_RST_INT_B) & cmdq_stat_reg) {
- 		rst_ing_reg = hclgevf_read_dev(&hdev->hw, HCLGEVF_RST_ING);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-index f19583c..738de12 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h
-@@ -42,8 +42,6 @@
- #define HCLGEVF_CMDQ_RX_DEPTH_REG		0x27020
- #define HCLGEVF_CMDQ_RX_TAIL_REG		0x27024
- #define HCLGEVF_CMDQ_RX_HEAD_REG		0x27028
--#define HCLGEVF_CMDQ_INTR_SRC_REG		0x27100
--#define HCLGEVF_CMDQ_INTR_STS_REG		0x27104
- #define HCLGEVF_CMDQ_INTR_EN_REG		0x27108
- #define HCLGEVF_CMDQ_INTR_GEN_REG		0x2710C
- 
-@@ -88,7 +86,7 @@
- /* Vector0 interrupt CMDQ event source register(RW) */
- #define HCLGEVF_VECTOR0_CMDQ_SRC_REG	0x27100
- /* Vector0 interrupt CMDQ event status register(RO) */
--#define HCLGEVF_VECTOR0_CMDQ_STAT_REG	0x27104
-+#define HCLGEVF_VECTOR0_CMDQ_STATE_REG	0x27104
- /* CMDQ register bits for RX event(=MBX event) */
- #define HCLGEVF_VECTOR0_RX_CMDQ_INT_B	1
- /* RST register bits for RESET event */
 -- 
 2.7.4
 
