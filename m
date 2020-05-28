@@ -2,39 +2,38 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92807C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A666C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70B7A20814
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CF521532
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 13:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390772AbgE1Nwq (ORCPT
+        id S2390781AbgE1Nwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 09:52:46 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5379 "EHLO huawei.com"
+        Thu, 28 May 2020 09:52:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5382 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390612AbgE1NvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390608AbgE1NvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 09:51:05 -0400
 Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4D979DEE3C8A0E03DD1D;
+        by Forcepoint Email with ESMTP id 5F3486E316487660269;
         Thu, 28 May 2020 21:50:59 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 28 May 2020 21:50:52 +0800
+ 14.3.487.0; Thu, 28 May 2020 21:50:49 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 12/12] net: hns3: print out speed info when parsing speed fails
-Date:   Thu, 28 May 2020 21:48:19 +0800
-Message-ID: <1590673699-63819-13-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 03/12] net: hns3: refactor hclge_config_tso()
+Date:   Thu, 28 May 2020 21:48:10 +0800
+Message-ID: <1590673699-63819-4-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1590673699-63819-1-git-send-email-tanhuazhong@huawei.com>
 References: <1590673699-63819-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,28 +46,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling hclge_parse_speed() fails, printing out the speed is
-helpful for debugging.
+Since parameters 'tso_mss_min' and 'tso_mss_max' only indicate
+the minimum and maximum MSS, the hnae3_set_field() calls are
+meaningless, remove them and change the type of these two
+parameters to u16.
 
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 1e4f285..96bfad5 100644
+index 7d5c304..35e5cb8 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -1387,7 +1387,8 @@ static int hclge_configure(struct hclge_dev *hdev)
+@@ -1429,26 +1429,17 @@ static int hclge_configure(struct hclge_dev *hdev)
+ 	return ret;
+ }
  
- 	ret = hclge_parse_speed(cfg.default_speed, &hdev->hw.mac.speed);
- 	if (ret) {
--		dev_err(&hdev->pdev->dev, "Get wrong speed ret=%d.\n", ret);
-+		dev_err(&hdev->pdev->dev, "failed to parse speed %u, ret = %d\n",
-+			cfg.default_speed, ret);
- 		return ret;
- 	}
+-static int hclge_config_tso(struct hclge_dev *hdev, unsigned int tso_mss_min,
+-			    unsigned int tso_mss_max)
++static int hclge_config_tso(struct hclge_dev *hdev, u16 tso_mss_min,
++			    u16 tso_mss_max)
+ {
+ 	struct hclge_cfg_tso_status_cmd *req;
+ 	struct hclge_desc desc;
+-	u16 tso_mss;
  
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_TSO_GENERIC_CONFIG, false);
+ 
+ 	req = (struct hclge_cfg_tso_status_cmd *)desc.data;
+-
+-	tso_mss = 0;
+-	hnae3_set_field(tso_mss, HCLGE_TSO_MSS_MIN_M,
+-			HCLGE_TSO_MSS_MIN_S, tso_mss_min);
+-	req->tso_mss_min = cpu_to_le16(tso_mss);
+-
+-	tso_mss = 0;
+-	hnae3_set_field(tso_mss, HCLGE_TSO_MSS_MIN_M,
+-			HCLGE_TSO_MSS_MIN_S, tso_mss_max);
+-	req->tso_mss_max = cpu_to_le16(tso_mss);
++	req->tso_mss_min = cpu_to_le16(tso_mss_min);
++	req->tso_mss_max = cpu_to_le16(tso_mss_max);
+ 
+ 	return hclge_cmd_send(&hdev->hw, &desc, 1);
+ }
 -- 
 2.7.4
 
