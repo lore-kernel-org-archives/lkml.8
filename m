@@ -2,86 +2,84 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8834C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 284E82075F
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B607E2075F
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 14:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwLfe/3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391374AbgE1Oxl (ORCPT
+        id S2391397AbgE1OzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 10:53:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44109 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391244AbgE1Oxi (ORCPT
+        Thu, 28 May 2020 10:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391243AbgE1OzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 10:53:38 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p30so13561852pgl.11;
-        Thu, 28 May 2020 07:53:37 -0700 (PDT)
+        Thu, 28 May 2020 10:55:12 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C954C08C5C6;
+        Thu, 28 May 2020 07:55:11 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id x12so237622qts.9;
+        Thu, 28 May 2020 07:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8fDtT8fxoWMZKuCE4A3ueXu/4+g3beNQHT10KDX2tp4=;
+        b=XwLfe/3ameHGyYmFJctvjYyZ/Hrqqdv/LhlnNE9jH36lB9bMhIDDazYPJys17C9F95
+         mpws0ttpYW4c+5zkXfs9Eqd1izrUC0d2khJXFbRnuz7QkJ6bSCpGYIyGzDXQm31ohIEY
+         ip50hxZattFBxScSoD2C86SrbNS+GqtJt0kiKaaVPI0l4KKLUT217Juam32wKJvdxHLS
+         /uU+ARFwalWJnWeglc/lrNy6M6WCjV6w4VeUdNoFpyfByS38Agq6Y+0glXExDy7RCK0o
+         zItr5c34ysJAhDgsi+QZD/xwIshd/8Fhs1HCEMjZMtg7tYMHpZBvB/GRXoHAkJhnmjpP
+         5C8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=cfzDVeenpvj+BZqV0/UhApIa8t7msOrP7Mg4fGDJbms=;
-        b=aFu4DGMAKjLdV5kkQZKqVi9PDjp8s1ze+gdYXwwyva8l6MlIrnQ8kWtkrE4qW8jb3G
-         NkD5d6Y+TR/Igxv3Ysb7xcLy30lSkALRDZRx2aCVcxWM2GBXpWd/mu4PUBFOFKIQzDnc
-         tm2EbVUyZpBcT8Agpler1bsVaPgObiaM7wfixvlEkVuXEHJdiOz84HP5TqwmLfFmPq3e
-         PXKCL1fQtmjZ4tH8YQ5GjvuLmMKYKYS4tjHax+6n1EB/Rzc56KyzC7iqim8VPDga67FB
-         KE+0PQYloLcbyVT7x+6vmo9rkrUOGmT/2fzZVU3j/pbQ6jt6yRVb71cpnMXDABWXU/sh
-         sY0w==
-X-Gm-Message-State: AOAM5300UDoUA1zGlnvTwIAMwoeQD8Qt5q0ZFvasL2HTDZPKAg+0AksQ
-        doa8vfebl3vnvZWOwz/nhrYnaHSoU/8=
-X-Google-Smtp-Source: ABdhPJyww5SkYlCpB6JqMj2ap2uap5OXF3S8N+mAl26zik/nUI7r5eyXEVIv/1IC8TYkgg7xy4bQBg==
-X-Received: by 2002:a63:40a:: with SMTP id 10mr3383814pge.310.1590677616663;
-        Thu, 28 May 2020 07:53:36 -0700 (PDT)
-Received: from ?IPv6:2601:647:4000:d7:40e6:aa88:9c03:e0b4? ([2601:647:4000:d7:40e6:aa88:9c03:e0b4])
-        by smtp.gmail.com with ESMTPSA id k92sm5799676pjh.2.2020.05.28.07.53.35
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8fDtT8fxoWMZKuCE4A3ueXu/4+g3beNQHT10KDX2tp4=;
+        b=E/06O7YvpIKA3Q4Dh0x/WqF5NdfxebrFLw2jUTNixWIJalV+mXwnyuVkUf3RpzOh+a
+         CU5nL8Hhbli6m0dsh2ZylJthlybZME74XhZSajQ8LRdYM+aaqgPIz1oHUw8ErhTEnlDI
+         UwNX2SiyW6/thsTjkPo0lHxJ2yG0Iw5TnOZm9gi0WlFR/qEytthSOWkIz0kZOdoFHBuh
+         Mw4z4khuj6KzNF5iAaUjw48OjBcER47+QATN+oc0B83nGGxT9Smyn7Rx6emSm5IJlKGt
+         aq40wVUBgX8fEeZJIq23CLrd5XBhB9GNz9+uMzZbPS/Mmq3OzElTCs6jbFfCG7+REUw4
+         wHGg==
+X-Gm-Message-State: AOAM531jEup6HPxCoo909g2MKBFixfbw4UwsNGsxTSHugazKu0MTP/iA
+        wlsjrVwknep6f/ipz9su0BhwNhRcOHY=
+X-Google-Smtp-Source: ABdhPJzd+miIG7j3zJsRi4acaIMp0KEZ79MrrFoqs2EUvHOu+NFhJhZeq3D0AgiZcleoNKvhzDUz5Q==
+X-Received: by 2002:ac8:754c:: with SMTP id b12mr3514774qtr.282.1590677710647;
+        Thu, 28 May 2020 07:55:10 -0700 (PDT)
+Received: from ?IPv6:2601:282:803:7700:2840:9137:669d:d1e7? ([2601:282:803:7700:2840:9137:669d:d1e7])
+        by smtp.googlemail.com with ESMTPSA id g47sm3253687qtk.53.2020.05.28.07.55.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 07:53:35 -0700 (PDT)
-Subject: Re: [PATCH] sbp-target: add the missed kfree() in an error path
-To:     Chris Boot <bootc@bootc.net>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20200528102056.911825-1-hslester96@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <475e4f50-6d20-d653-8288-0676bc708bcc@acm.org>
-Date:   Thu, 28 May 2020 07:53:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 28 May 2020 07:55:09 -0700 (PDT)
+Subject: Re: [PATCH][net-next] nexthop: fix incorrect allocation failure on
+ nhg->spare
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Colin King <colin.king@canonical.com>,
+        David Ahern <dsahern@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200528145114.420100-1-colin.king@canonical.com>
+ <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <c557d49d-b3ab-be82-d879-39f2e2098c47@gmail.com>
+Date:   Thu, 28 May 2020 08:55:08 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.8.1
 MIME-Version: 1.0
-In-Reply-To: <20200528102056.911825-1-hslester96@gmail.com>
+In-Reply-To: <8b73e872-c05e-e93f-1d2d-3466da4ddbcc@cumulusnetworks.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -90,17 +88,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-05-28 03:20, Chuhong Yuan wrote:
-> sbp_fetch_command() forgets to call kfree() in an error path.
-> Add the missed call to fix it.
+On 5/28/20 8:53 AM, Nikolay Aleksandrov wrote:
+> On 28/05/2020 17:51, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> The allocation failure check for nhg->spare is currently checking
+>> the pointer nhg rather than nhg->spare which is never false. Fix
+>> this by checking nhg->spare instead.
+>>
+>> Addresses-Coverity: ("Logically dead code")
+>> Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+>> ---
+>>  net/ipv4/nexthop.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/net/ipv4/nexthop.c b/net/ipv4/nexthop.c
+>> index ebafa5ed91ac..97423d6f2de9 100644
+>> --- a/net/ipv4/nexthop.c
+>> +++ b/net/ipv4/nexthop.c
+>> @@ -1185,7 +1185,7 @@ static struct nexthop *nexthop_create_group(struct net *net,
+>>  
+>>  	/* spare group used for removals */
+>>  	nhg->spare = nexthop_grp_alloc(num_nh);
+>> -	if (!nhg) {
+>> +	if (!nhg->spare) {
+>>  		kfree(nhg);
+>>  		kfree(nh);
+>>  		return NULL;
+>>
+> 
+> Good catch, embarrassing copy paste error :-/
+> Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+> 
 
-Hi Chris,
+I missed that as well.
 
-The changelog of the code under drivers/target/sbp makes we wonder
-whether this driver has ever had any other users than its original
-author. Do you agree with this? If so, do you want to keep this driver
-in the kernel tree?
+Reviewed-by: David Ahern <dsahern@gmail.com>
 
-Thanks,
-
-Bart.
+Patch needs to go to -net
