@@ -2,108 +2,134 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92304C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC6021475
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD9021501
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 08:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1590655174;
+	bh=OceXoFi/Vqq9D3jyfIwMzr+A0iT0gKvY/9/b3w7u9aw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=N6Xhxy3fK7cTMKT0CIrf6FUhknj08ArRUGV7hV4gL81htuBFHMOdBQPx8JsOamHgu
+	 L6WBR66bEBfXR+BIWgf9DXibMymSwLpp5h3rfQUS1E0yz2CRmYzq4Y+kehRUxC35Xz
+	 PP/NsxtUxr32EwsHiLaftakAmJk2ruKQliri/j/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgE1Ij3 (ORCPT
+        id S1727897AbgE1Ijd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 04:39:29 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:40208 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726955AbgE1Ij2 (ORCPT
+        Thu, 28 May 2020 04:39:33 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38919 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbgE1Ij3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 04:39:28 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 6C2CF80307C0;
-        Thu, 28 May 2020 08:39:25 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ionmEv71tfBL; Thu, 28 May 2020 11:39:24 +0300 (MSK)
-Date:   Thu, 28 May 2020 11:39:23 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <linux-mips@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 02/11] dt-bindings: i2c: Discard i2c-slave flag from
- the DW I2C example
-Message-ID: <20200528083923.yjlm5ur7cslgxdau@mobilestation>
-References: <20200527120111.5781-1-Sergey.Semin@baikalelectronics.ru>
- <20200527120111.5781-3-Sergey.Semin@baikalelectronics.ru>
- <20200527171204.GA2348490@bogus>
- <20200527171841.am2iaynff243xoep@mobilestation>
- <20200527175624.GT1634618@smile.fi.intel.com>
+        Thu, 28 May 2020 04:39:29 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z206so12455390lfc.6;
+        Thu, 28 May 2020 01:39:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=E7GhMIypOFt2CbhLCZT1C6Uvs9N17uL6PbNxv1EBNg4=;
+        b=cx2l6J6RnKRqu+T5lSaLeBaInU+bbEPTSg1koDT6TNbIm6YT1ZnXZqWR4gsb53pCX2
+         Utk8XAVWG1dG7QNlGzUyXCeRd9Etn2t1AKuQT4iNB9S1Z+3d4PAo9bLhqIzB6Jsr6r+V
+         pP2ChDRvZxBl5utLAAx5OOJq+fI/nluut23j4CPHkpVXLqLp6NVlZ4RwyiyCN7H4izrT
+         f2ohmc1cseOWG6kzVz3MqQqB9GDtP8IPfLe/Mn4llItnrSJNYu/cQ6q4UsJ7DkH71y+m
+         WzqtQMOI0il1tqzQX8/g9re19XHN1KT9w9ymZE+JvCu83MvIif4pD0EIomVNovYHjLZ+
+         cmuA==
+X-Gm-Message-State: AOAM533WsNBEIS5E9ijPTVys0kyyCHNVxD4dohJvWFoWZFWS6lTTI+0j
+        8yeOExxuyMxygqRBMP5XBPMHg4Pe
+X-Google-Smtp-Source: ABdhPJyiRSrWuGDgDCFtRdhsn8NanQj8YASn1UumVYA0gWYwHjM8SjpdQX0SmD4NTAEvvKAj22xkFA==
+X-Received: by 2002:a05:6512:682:: with SMTP id t2mr1120938lfe.101.1590655166384;
+        Thu, 28 May 2020 01:39:26 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id a8sm1299087ljp.102.2020.05.28.01.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 28 May 2020 01:39:25 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jeE4M-00038Z-Fu; Thu, 28 May 2020 10:39:18 +0200
+Date:   Thu, 28 May 2020 10:39:18 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Lee Jones <lee.jones@linaro.org>, Jiri Slaby <jslaby@suse.cz>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv8 0/6] n_gsm serdev support and GNSS driver for droid4
+Message-ID: <20200528083918.GB10358@localhost>
+References: <20200512214713.40501-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200527175624.GT1634618@smile.fi.intel.com>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+In-Reply-To: <20200512214713.40501-1-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 27, 2020 at 08:56:24PM +0300, Andy Shevchenko wrote:
-> On Wed, May 27, 2020 at 08:18:41PM +0300, Serge Semin wrote:
-> > On Wed, May 27, 2020 at 11:12:04AM -0600, Rob Herring wrote:
-> > > On Wed, May 27, 2020 at 03:01:02PM +0300, Serge Semin wrote:
-> > > > dtc currently doesn't support I2C_OWN_SLAVE_ADDRESS flag set in the
-> > > > i2c "reg" property. If it is the compiler will print a warning:
-> > > > 
-> > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64: I2C bus unit address format error, expected "40000064"
-> > > > Warning (i2c_bus_reg): /example-2/i2c@1120000/eeprom@64:reg: I2C address must be less than 10-bits, got "0x40000064"
-> > > > 
-> > > > In order to silence dtc up let's discard the flag from the DW I2C DT
-> > > > binding example for now. Just revert this commit when dtc is fixed.
+On Tue, May 12, 2020 at 02:47:07PM -0700, Tony Lindgren wrote:
+> Hi all,
 > 
-> > > >        eeprom@64 {
-> > > >          compatible = "linux,slave-24c02";
-> > > > -        reg = <0x40000064>;
-> > > > +        reg = <0x64>;
-> > > 
-> > > But the compatible is a slave, so you need an example with a different 
-> > > device.
-> > 
+> Here's the updated set of these patches fixed up for Johan's and
+> Pavel's earlier comments.
 > 
-> > Ok. I'll replace the sub-node with just "atmel,24c02" compatible string then.
+> This series does the following:
 > 
-> But how it will be different to the another slave connected to the master?
+> 1. Adds functions to n_gsm.c for serdev-ngsm.c driver to use
 > 
-> This example is specifically to show that DesingWare I²C controller may be
-> switched to slave mode.
+> 2. Adds a generic serdev-ngsm.c driver that brings up the TS 27.010
+>    TTY ports configured in devicetree with help of n_gsm.c
+> 
+> 3. Allows the use of standard Linux device drivers for dedicated
+>    TS 27.010 channels for devices like GNSS and ALSA found on some
+>    modems for example
 
-Well, dtc doesn't support it and prints warning that the address is invalid.
-Though I do understand you concern and is mostly agree with it. Let's do this in
-the next way. I'll resend the series with eeprom@64 sub-node replaced with just
-a normal eeprom-device. The message log will have an info why this has been
-done. In the non-mergeable section of the patch I'll suggest to Rob reconsider
-the patch acking, since we can leave the slave-marked sub-node and just live
-with the dtc warning until it's fixed in there.
+Unfortunately that does not seem to be the case just yet. Your gnss
+driver is still aware that it's using n_gsm for the transport and calls
+into the "parent" serdev-ngsm driver instead of using the serdev
+interface (e.g. as if this was still and MFD driver).
 
--Sergey
+If you model this right, the GNSS driver should work equally well
+regardless of whether you use the serial interface (with n_gsm) or USB
+(e.g. cdc-acm or usb-serial).
 
+> 4. Adds a gnss-motmdm consumer driver for the GNSS device found on
+>    the Motorola Mapphone MDM6600 modem on devices like droid4
 > 
-> > > >        };
-> > > >      };
-> > > >    - |
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+> I've placed the serdev-ngsm.c under drivers/tty/serdev as it still
+> seems to make most sense with no better places available. It's no
+> longer an MFD driver as it really does not need to care what channel
+> specific consumer drivers might be configured for the generic driver.
+> Now serdev-ngsm just uses of_platform_populate() to probe whatever
+> child nodes it might find.
+>
+> I'm not attached having the driver in drivers/tty/serdev. I just
+> don't have any better locations in mind. So using Johan's earlier
+> i2c example, the drivers/tty/serdev/serdev-ngsm.c driver is now a
+> generic protocol and bus driver, so it's getting closer to the
+> the drivers/i2c/busses analogy maybe :) Please do suggest better
+> locations other than MFD and misc if you have better ideas.
+
+Please move it up one level to drivers/tty where the n_gsm line
+discipline lives. This is (supposed to be) a tty driver exposing tty
+devices.
+
+> Now without the chardev support, the /dev/gsmtty* using apps need
+> to use "U1234AT+CFUN?" format for the packets. The advantage is
+> less kernel code, and we keep the existing /dev/gsmtty* interface.
+
+Would it not be possible to deal with this in a plugin sort of way,
+again, similar to how the hci ldisc work with an additional "protocol"
+ioctl?
+
+Johan
