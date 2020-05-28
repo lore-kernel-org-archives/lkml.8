@@ -2,168 +2,266 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC633C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADD20207D3
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590683064;
-	bh=lFBOXtEf4az0uWcqM9/GnMGqczDOkEymCmybdYbCk5g=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=zfW4ugCiKlWIw16lW18bcRtBwWab1Q1ZEjfOgjoTFX1QFrDVjB1JO9q9TIxms1DIs
-	 Jh4Ze7SXOd6j+SxcufKHYTh20KJrEDSFZIYoFFPBS/jReg2zRm/ApI70oqeSeDNjJn
-	 sRsHXnzHfOqDSozxcH6QBJfUpAevSCBk42LoSG4s=
+	by mail.kernel.org (Postfix) with ESMTP id 5C5732071A
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 16:25:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ygUyqtem"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404962AbgE1QYY (ORCPT
+        id S2404998AbgE1QZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 12:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60074 "EHLO
+        Thu, 28 May 2020 12:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404897AbgE1QYW (ORCPT
+        with ESMTP id S2404861AbgE1QZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 12:24:22 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CF4C08C5C7
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:24:22 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id z9so555100oid.2
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:24:22 -0700 (PDT)
+        Thu, 28 May 2020 12:25:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03880C08C5C6
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:25:46 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id x6so15039072wrm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 09:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lNE5zhFi30q9WwsA8BI91uOqjeUOdLA24NbPUP4RY6U=;
-        b=f8zB+CQ9fKWIaBHJ3pRbSgQc/OvlY8b4ouWU1n9vC4OCtflD7zxXTJDkmVBl+33vDn
-         iWeZHsQkp5lcYaKK6OERajrqZ3NfdOZpj5uNzjN1ur9TcdcH2MoplDaNGt7zN9W4dCos
-         N+RFMJn2m8sXhZ0jlBMrWIYOV87q9p6Qq4LWw=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=upen+1gLdYl5sl1SEbs2cmY9Gfz3t0VKucJOtqijRN8=;
+        b=ygUyqtem8IQGxDaFwRWGbuSrFwL2VWgYvj0Hjt6w/jywMj/jyFwQLCAYqYILcjCQb4
+         UKlCsN6c9sUWcT/SNrMlFTX1iQDy9rB4vlKrzLOhzP9rVXddezOgMh1bHHSJWa6n/gPi
+         z++9p81bJVivDgFmodJUn8IWP7zUgpNwzJ8qLZ604nWA14HD9uMT7ItPU+oE14uxGheD
+         RDXy98ZDO6Icic4RNN9LpJjP6OxEZdHOx9n+K72/G4T4kJxtlBHSBfTNPkMi4xbSnCfH
+         Jwa/HrV2YewIVhybN/SbwnKxv8NHtdgw4gmDG2aLBdQ9oY/GHUEaoUO9c1CY5eQxpqqu
+         uESQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=lNE5zhFi30q9WwsA8BI91uOqjeUOdLA24NbPUP4RY6U=;
-        b=gZLpuQv7hR/6yFebzVA0GGEkgrnmOfMG7gRIxCjJnilluwG5JxWtg8drbltJGP46Y4
-         MsEspEEmB6EW/RGMX5OoQKFi7GJp0W3XkTm9Z2mUDXsoQVryrOIb9AMppFwtmn5j5s/K
-         Z/tvbbmc/Yxx5HM9G0PGqIYke2NnRFaVyv5DkmrCqiYkWImZzHxw0U9D63RH15e/3TGv
-         ZkATHsu4aAJdHqZKZbRbDtf0ra/EdhdoJRvRNbzzgHB1Nd8+Aw13pgnOZF5qRcTokKXr
-         fmSSssKztdcB0fSqu62c+F5Q1/0a5UtHAxqAINyyI3e4eVRMAvC3NfQ58FrNzMffGpdO
-         Hlcg==
-X-Gm-Message-State: AOAM532JN1E/AkeyzznCY4IMv1jGZ2Ceugza1LS560hP8rdHGQLozaTw
-        ezG3hVxpcJEYjCTiTLYoheKe9A==
-X-Google-Smtp-Source: ABdhPJwtSYjyMNr1fHEm0+dCoWqlHRseFAIIRs8jo5Jrenwz+++/FVXju5yw2uBEMWhXby7HhbCNyw==
-X-Received: by 2002:aca:af55:: with SMTP id y82mr2624443oie.178.1590683060534;
-        Thu, 28 May 2020 09:24:20 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id x3sm1839339ooc.22.2020.05.28.09.24.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 28 May 2020 09:24:19 -0700 (PDT)
-Subject: Re: [PATCH v2] selftests/ftrace: Use printf for backslash included
- command
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Li Philip <philip.li@intel.com>,
-        Liu Yiding <yidingx.liu@intel.com>,
-        Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Andreas Schwab <schwab@linux-m68k.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        skhan@linuxfoundation.org
-References: <87imh21x6f.fsf@igel.home>
- <158920418730.16156.8299185499520876735.stgit@devnote2>
- <20200525185905.5fecd8073e686001712dfdf9@kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <02fbbc09-a52a-5e54-43a5-3de93c698072@linuxfoundation.org>
-Date:   Thu, 28 May 2020 10:24:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        bh=upen+1gLdYl5sl1SEbs2cmY9Gfz3t0VKucJOtqijRN8=;
+        b=NEUfu0JwDi5BOatyq87LgbT6kdKHGJl0ujFEH8iKESZDMkF3whZK9KLkTg5X0S/dJT
+         SlE88Xeyq9xekMwfkF8UaQalDwWvV5iDFdY75FiYYz1cZ0DOtec/iY+TqWeHkeZh7EON
+         vsswb6C8hY/fbVUQc9GsTqBnNW/KyGMuAHT2f5XxTMgNatM6nAJ/okCHCH4fYiujl1E8
+         54h5FWZZ91vMA/cG2bkudnCXyfMBj9K+1KJvQyoSOoHEcHIoebEsp1MSNe+NC2r6IrqV
+         IF9dK21pSLm7s2QgEfHddOXHsgLCrsOBXwkBrwlVlBIeECv9IvhKpBFnmo3p0SYnz9o0
+         WzrA==
+X-Gm-Message-State: AOAM531n9NM979QZe7CwLZ96KEgturyzEo+SQ4YYoo6A/Cu5gXdGhscb
+        PL2DhNFY0UAmw3bhBmaMzC8xzQ==
+X-Google-Smtp-Source: ABdhPJz6dToxV0ZGkU4AscFPjiCysK6RYqbWEXFKx+wGOrhiaHgJvbxmLM/TJpNcaxW/5Zf7NvFI3w==
+X-Received: by 2002:adf:93a3:: with SMTP id 32mr4273513wrp.344.1590683144665;
+        Thu, 28 May 2020 09:25:44 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id u13sm6357214wrp.53.2020.05.28.09.25.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 28 May 2020 09:25:43 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     bjorn.andersson@linaro.org, evgreen@chromium.org,
+        akashast@codeaurora.org, mka@chromium.org,
+        linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
+Subject: [PATCH] interconnect: Add bulk API helpers
+Date:   Thu, 28 May 2020 19:25:42 +0300
+Message-Id: <20200528162542.30158-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200525185905.5fecd8073e686001712dfdf9@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/25/20 3:59 AM, Masami Hiramatsu wrote:
-> Hi Shuah,
-> 
-> Could you pick this to kselftest-next?
-> 
-> Thank you,
-> 
-> On Mon, 11 May 2020 22:36:27 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
->> Since the built-in echo has different behavior in POSIX shell
->> (dash) and bash, kprobe_syntax_errors.tc can fail on dash which
->> interpret backslash escape automatically.
->>
->> To fix this issue, we explicitly use printf "%s" (not interpret
->> backslash escapes) if the command string can include backslash.
->>
->> Reported-by: Liu Yiding <yidingx.liu@intel.com>
->> Suggested-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
->> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
->> ---
->>   tools/testing/selftests/ftrace/test.d/functions    |    8 +++++---
->>   .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |    4 +++-
->>   2 files changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/testing/selftests/ftrace/test.d/functions b/tools/testing/selftests/ftrace/test.d/functions
->> index 61a3c7e2634d..697c77ef2e2b 100644
->> --- a/tools/testing/selftests/ftrace/test.d/functions
->> +++ b/tools/testing/selftests/ftrace/test.d/functions
->> @@ -119,12 +119,14 @@ yield() {
->>       ping $LOCALHOST -c 1 || sleep .001 || usleep 1 || sleep 1
->>   }
->>   
->> +# Since probe event command may include backslash, explicitly use printf "%s"
->> +# to NOT interpret it.
->>   ftrace_errlog_check() { # err-prefix command-with-error-pos-by-^ command-file
->> -    pos=$(echo -n "${2%^*}" | wc -c) # error position
->> -    command=$(echo "$2" | tr -d ^)
->> +    pos=$(printf "%s" "${2%^*}" | wc -c) # error position
->> +    command=$(printf "%s" "$2" | tr -d ^)
->>       echo "Test command: $command"
->>       echo > error_log
->> -    (! echo "$command" >> "$3" ) 2> /dev/null
->> +    (! printf "%s" "$command" >> "$3" ) 2> /dev/null
->>       grep "$1: error:" -A 3 error_log
->>       N=$(tail -n 1 error_log | wc -c)
->>       # "  Command: " and "^\n" => 13
->> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
->> index ef1e9bafb098..eb0f4ab4e070 100644
->> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
->> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
->> @@ -91,7 +91,9 @@ esac
->>   if grep -q "Create/append/" README && grep -q "imm-value" README; then
->>   echo 'p:kprobes/testevent _do_fork' > kprobe_events
->>   check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
->> -echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
->> +
->> +# Explicitly use printf "%s" to not interpret \1
->> +printf "%s" 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
->>   check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
->>   check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
->>   check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
->>
-> 
-> 
+There are drivers which just need to get multiple interconnect paths,
+request some predefined amounts of bandwidth and then just toggle the
+paths between enabled/disabled state.
 
-Applied to
+The aim of this patch is simplify the above and to allow drivers to put
+all the path names and bandwidth data into a single static icc_bulk_data
+table and call the icc_bulk_* functions on that table in order to scale
+all the interconnect paths in parallel.
 
-git.kernel.org/pub/scm/linux/kernel/git/shuah/linux kselftest.git/ next
-branch for Linux 5.8-rc1
+Suggested-by: Evan Green <evgreen@chromium.org>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/Makefile |   2 +-
+ drivers/interconnect/bulk.c   | 119 ++++++++++++++++++++++++++++++++++
+ include/linux/interconnect.h  |  22 +++++++
+ 3 files changed, 142 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/interconnect/bulk.c
 
-thanks,
--- Shuah
+diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+index 4825c287ca13..d203520b0a56 100644
+--- a/drivers/interconnect/Makefile
++++ b/drivers/interconnect/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ CFLAGS_core.o				:= -I$(src)
+-icc-core-objs				:= core.o
++icc-core-objs				:= core.o bulk.o
+ 
+ obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+ obj-$(CONFIG_INTERCONNECT_IMX)		+= imx/
+diff --git a/drivers/interconnect/bulk.c b/drivers/interconnect/bulk.c
+new file mode 100644
+index 000000000000..9bd418594665
+--- /dev/null
++++ b/drivers/interconnect/bulk.c
+@@ -0,0 +1,119 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/interconnect-provider.h>
++#include <linux/device.h>
++#include <linux/export.h>
++
++/**
++ * of_icc_bulk_get - get interconnect paths
++ * @dev: the device requesting the path
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the table with the paths we want to get
++ *
++ * Returns 0 on success or -EERROR otherwise.
++ */
++int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
++				 struct icc_bulk_data *paths)
++{
++	int ret, i;
++
++	for (i = 0; i < num_paths; i++) {
++		paths[i].path = of_icc_get(dev, paths[i].name);
++		if (IS_ERR(paths[i].path)) {
++			ret = PTR_ERR(paths[i].path);
++			dev_err(dev, "of_icc_get() failed on path %s (%d)\n",
++				paths[i].name, ret);
++			paths[i].path = NULL;
++			goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	icc_bulk_put(i, paths);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_icc_bulk_get);
++
++/**
++ * icc_bulk_put - put a list of interconnect paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table with the paths being put
++ */
++void icc_bulk_put(int num_paths, struct icc_bulk_data *paths)
++{
++	while (--num_paths >= 0) {
++		icc_put(paths[num_paths].path);
++		paths[num_paths].path = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(icc_bulk_put);
++
++/**
++ * icc_bulk_set - set bandwidth to a set of paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table containing the paths and bandwidth
++ *
++ * Returns 0 on success or -EERROR otherwise.
++ */
++int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths)
++{
++	int ret = 0;
++	int i;
++
++	for (i = 0; i < num_paths; i++) {
++		ret = icc_set_bw(paths[i].path, paths[i].avg_bw,
++				 paths[i].peak_bw);
++		if (ret) {
++			pr_err("icc_set_bw() failed on path %s (%d)\n",
++			       paths[i].name, ret);
++			return ret;
++		}
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(icc_bulk_set_bw);
++
++/**
++ * icc_bulk_enable - enable a previously disabled set of paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table containing the paths and bandwidth
++ *
++ * Returns 0 on success or -EERROR otherwise.
++ */
++int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths)
++{
++	int ret, i;
++
++	for (i = 0; i < num_paths; i++) {
++		ret = icc_enable(paths[i].path);
++		if (ret) {
++			pr_err("icc_enable() failed on path %s (%d)\n",
++			       paths[i].name, ret);
++			goto err;
++		}
++	}
++
++	return 0;
++
++err:
++	icc_bulk_disable(i, paths);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(icc_bulk_enable);
++
++/**
++ * icc_bulk_disable - disable a set of interconnect paths
++ * @num_paths: the number of icc_bulk_data
++ * @paths: the icc_bulk_data table containing the paths and bandwidth
++ */
++void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths)
++{
++	while (--num_paths >= 0)
++		icc_disable(paths[num_paths].path);
++}
++EXPORT_SYMBOL_GPL(icc_bulk_disable);
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index d8c29049f066..7cf022176209 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -23,6 +23,28 @@
+ struct icc_path;
+ struct device;
+ 
++/**
++ * struct icc_bulk_data - Data used for bulk icc operations.
++ *
++ * @path: reference to the interconnect path (internal use)
++ * @name: the name from the "interconnect-names" DT property
++ * @avg_bw: average bandwidth in icc units
++ * @peak_bw: peak bandwidth in icc units
++ */
++struct icc_bulk_data {
++	struct icc_path	*path;
++	const char *name;
++	u32 avg_bw;
++	u32 peak_bw;
++};
++
++int __must_check of_icc_bulk_get(struct device *dev, int num_paths,
++				 struct icc_bulk_data *paths);
++void icc_bulk_put(int num_paths, struct icc_bulk_data *paths);
++int icc_bulk_set_bw(int num_paths, const struct icc_bulk_data *paths);
++int icc_bulk_enable(int num_paths, const struct icc_bulk_data *paths);
++void icc_bulk_disable(int num_paths, const struct icc_bulk_data *paths);
++
+ #if IS_ENABLED(CONFIG_INTERCONNECT)
+ 
+ struct icc_path *icc_get(struct device *dev, const int src_id,
