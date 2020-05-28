@@ -2,100 +2,194 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8023C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8098F206A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE321206A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:34:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SojDiFWa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1fosZG8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405852AbgE1Sar (ORCPT
+        id S2405830AbgE1Sef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:30:47 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:60406 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2405835AbgE1Sak (ORCPT
+        Thu, 28 May 2020 14:34:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47150 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2405775AbgE1Sed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:30:40 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 2476B30D739;
-        Thu, 28 May 2020 11:20:30 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 2476B30D739
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1590690030;
-        bh=/wzEsGsZX3oj///RlV8+bfcA1u7yygbmy2y0Yml+keA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SojDiFWas3ner6nC5UWQYjADQd3hA+iUokOuq2TDm6bgGjE02VZFDS8oX+IEExpBi
-         StWhIbmhgPYpZo19CXx6OqaOiZzbDxymSH8m47jEUy8IbKe2vZQNbnNB/mecLuJt8b
-         hZUFlOCuyCZ+nYXREms5r4qIMSO2vGf7iv+MdxAU=
-Received: from lbrmn-mmayer.ric.broadcom.net (lbrmn-mmayer.ric.broadcom.net [10.136.28.150])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 6AA7014008B;
-        Thu, 28 May 2020 11:20:29 -0700 (PDT)
-From:   Markus Mayer <markus.mayer@broadcom.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Markus Mayer <markus.mayer@broadcom.com>,
-        Linux Power Management List <linux-pm@vger.kernel.org>,
-        Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>,
-        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH 3/3] cpufreq: brcmstb-avs-cpufreq: send S2_ENTER / S2_EXIT commands to AVS
-Date:   Thu, 28 May 2020 11:20:14 -0700
-Message-Id: <20200528182014.20021-3-mmayer@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200528182014.20021-1-mmayer@broadcom.com>
-References: <20200528182014.20021-1-mmayer@broadcom.com>
+        Thu, 28 May 2020 14:34:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590690871;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YNkxNQgU0Bvr5BvVxj5dKt6vrXoZ9dGRx/rhFTl7OMQ=;
+        b=Q1fosZG8a+kGRfpNConCIzwkTJjlze9Ik/CkeLfNkRSjTOQJvMHovZIORXrDdLh85YA0rO
+        BkaSKag9x0LGjQFRcm8j2GSwAd+VgP7zyjoyqzdXAqP2qcyDC+NrlKpL/i260vYEsH6lN/
+        2kWST9eiX8Jo1wRrUYDmneD9k/gkfrM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-93-762b9mjwMgekqrZ8HlQw0g-1; Thu, 28 May 2020 14:34:28 -0400
+X-MC-Unique: 762b9mjwMgekqrZ8HlQw0g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 84E3F1005510;
+        Thu, 28 May 2020 18:34:25 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-114-31.phx2.redhat.com [10.3.114.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 907ECA1031;
+        Thu, 28 May 2020 18:34:23 +0000 (UTC)
+Date:   Thu, 28 May 2020 14:34:21 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH RFC] sched: Add a per-thread core scheduling interface
+Message-ID: <20200528183421.GD26442@lorien.usersys.redhat.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <20200520222642.70679-1-joel@joelfernandes.org>
+ <20200521085122.GF325280@hirez.programming.kicks-ass.net>
+ <20200521134705.GA140701@google.com>
+ <20200522125905.GM325280@hirez.programming.kicks-ass.net>
+ <20200522213524.GD213825@google.com>
+ <20200524140046.GA5598@lorien.usersys.redhat.com>
+ <20200528170128.GN2483@worktop.programming.kicks-ass.net>
+ <20200528181715.GC26442@lorien.usersys.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528181715.GC26442@lorien.usersys.redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On suspend we send AVS_CMD_S2_ENTER and on resume AVS_CMD_S2_EXIT.
-These are best effort calls, so we don't check the return code or take
-any action if either of the calls fails.
+On Thu, May 28, 2020 at 02:17:19PM -0400 Phil Auld wrote:
+> On Thu, May 28, 2020 at 07:01:28PM +0200 Peter Zijlstra wrote:
+> > On Sun, May 24, 2020 at 10:00:46AM -0400, Phil Auld wrote:
+> > > On Fri, May 22, 2020 at 05:35:24PM -0400 Joel Fernandes wrote:
+> > > > On Fri, May 22, 2020 at 02:59:05PM +0200, Peter Zijlstra wrote:
+> > > > [..]
+> > > > > > > It doens't allow tasks for form their own groups (by for example setting
+> > > > > > > the key to that of another task).
+> > > > > > 
+> > > > > > So for this, I was thinking of making the prctl pass in an integer. And 0
+> > > > > > would mean untagged. Does that sound good to you?
+> > > > > 
+> > > > > A TID, I think. If you pass your own TID, you tag yourself as
+> > > > > not-sharing. If you tag yourself with another tasks's TID, you can do
+> > > > > ptrace tests to see if you're allowed to observe their junk.
+> > > > 
+> > > > But that would require a bunch of tasks agreeing on which TID to tag with.
+> > > > For example, if 2 tasks tag with each other's TID, then they would have
+> > > > different tags and not share.
+> > 
+> > Well, don't do that then ;-)
+> >
+> 
+> That was a poorly worded example :)
+>
 
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
----
- drivers/cpufreq/brcmstb-avs-cpufreq.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+Heh, sorry, I thought that was my statement. I do not mean to belittle Joel's
+example...  That's a fine example of a totally different problem than I
+was thinking of :)
 
-diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-index 79a0538a531a..3e31e5d28b79 100644
---- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-+++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-@@ -506,7 +506,14 @@ static int brcm_avs_suspend(struct cpufreq_policy *policy)
- 	 * AVS co-processor, not necessarily the P-state we are running at now.
- 	 * So, we get the current P-state explicitly.
- 	 */
--	return brcm_avs_get_pstate(priv, &priv->pmap.state);
-+	ret = brcm_avs_get_pstate(priv, &priv->pmap.state);
-+	if (ret)
-+		return ret;
-+
-+	/* This is best effort. Nothing to do if it fails. */
-+	(void)__issue_avs_command(priv, AVS_CMD_S2_ENTER, 0, 0, NULL);
-+
-+	return 0;
- }
- 
- static int brcm_avs_resume(struct cpufreq_policy *policy)
-@@ -514,6 +521,9 @@ static int brcm_avs_resume(struct cpufreq_policy *policy)
- 	struct private_data *priv = policy->driver_data;
- 	int ret;
- 
-+	/* This is best effort. Nothing to do if it fails. */
-+	(void)__issue_avs_command(priv, AVS_CMD_S2_EXIT, 0, 0, NULL);
-+
- 	ret = brcm_avs_set_pmap(priv, &priv->pmap);
- 	if (ret == -EEXIST) {
- 		struct platform_device *pdev  = cpufreq_get_driver_data();
+
+Cheers,
+Phil
+
+> The point I was trying to make was more that one TID of a group (not cgroup!)
+> of tasks is just an arbitrary value.
+> 
+> At a single process (or pair rather) level, sure, you can see it as an
+> identifier of whom you want to share with, but even then you have to tag
+> both processes with this. And it has less meaning when the whom you want to
+> share with is mutltiple tasks.
+> 
+> > > > What's wrong with passing in an integer instead? In any case, we would do the
+> > > > CAP_SYS_ADMIN check to limit who can do it.
+> > 
+> > So the actual permission model can be different depending on how broken
+> > the hardware is.
+> > 
+> > > > Also, one thing CGroup interface allows is an external process to set the
+> > > > cookie, so I am wondering if we should use sched_setattr(2) instead of, or in
+> > > > addition to, the prctl(2). That way, we can drop the CGroup interface
+> > > > completely. How do you feel about that?
+> > > >
+> > > 
+> > > I think it should be an arbitrary 64bit value, in both interfaces to avoid
+> > > any potential reuse security issues.
+> > > 
+> > > I think the cgroup interface could be extended not to be a boolean but take
+> > > the value. With 0 being untagged as now.
+> > 
+> > How do you avoid reuse in such a huge space? That just creates yet
+> > another problem for the kernel to keep track of who is who.
+> >
+> 
+> The kernel doesn't care or have to track anything.  The admin does.
+> At the kernel level it's just matching cookies. 
+> 
+> Tasks A,B,C all can share core so you give them each A's TID as a cookie.
+> Task A then exits. Now B and C are using essentially a random value.
+> Task D comes along and want to share with B and C. You have to tag it
+> with A's old TID, which has no meaning at this point.
+> 
+> And if A's TID ever gets reused. The new A` gets to share too. At some
+> level aren't those still 32bits? 
+> 
+> > With random u64 numbers, it even becomes hard to determine if you're
+> > sharing at all or not.
+> > 
+> > Now, with the current SMT+MDS trainwreck, any sharing is bad because it
+> > allows leaking kernel privates. But under a less severe thread scenario,
+> > say where only user data would be at risk, the ptrace() tests make
+> > sense, but those become really hard with random u64 numbers too.
+> > 
+> > What would the purpose of random u64 values be for cgroups? That only
+> > replicates the problem of determining uniqueness there. Then you can get
+> > two cgroups unintentionally sharing because you got lucky.
+> >
+> 
+> Seems that would be more flexible for the admin. 
+> 
+> What if you had two cgroups you wanted to allow to run together?  Or a
+> cgroup and a few processes from a different one (say with different
+> quotas or something).
+> 
+> I don't have such use cases so I don't feel that strongly but it seemed
+> more flexible and followed the mechanism-in-kernel/policy-in-userspace
+> dictum rather than basing the functionality on the implementation details.
+> 
+> 
+> Cheers,
+> Phil
+> 
+> 
+> > Also, fundamentally, we cannot have more threads than TID space, it's a
+> > natural identifier.
+> > 
+> 
+> -- 
+
 -- 
-2.17.1
 
