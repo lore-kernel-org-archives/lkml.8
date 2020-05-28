@@ -2,248 +2,149 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7368DC433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E436215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667479;
-	bh=ZhZPSssN0l0R0iPEyKYkxGNrxu4H7TAb2zwRX4z54t8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ST6XcZj69dn9YMBvWhXIHV5Br4bLdaN99rD588+ekx07/GCz7UZjHOPSqtozuLOJy
-	 UqDLc1J/ihQGtPNk/uELln/yQos+fCNoXQdzXBHLw5ZvWMw2WxyJysyQkc1ELQPi2M
-	 Js8HeNahg5LOdjRjBcYZiUQXvPAOxIe9dDKgfd20=
+	by mail.kernel.org (Postfix) with ESMTP id E45EC21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="WWXXNE3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbgE1MEi (ORCPT
+        id S2389609AbgE1MEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388946AbgE1L5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:11 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0EF221532;
-        Thu, 28 May 2020 11:57:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667030;
-        bh=ZhZPSssN0l0R0iPEyKYkxGNrxu4H7TAb2zwRX4z54t8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpSkLybSz45nAM8d4DXPG+sTSr6dEa9UoZBFQQVCyBO3ikgiLCuP55NcdiLRb5XzJ
-         2iaPozkjVYtO2RiN05/liV3t+R71Epgjcq3JSbVcYv9vFpo19S/GINbVN0SUvPbvuT
-         Rsx5QkTDRVMyBJxFhgZq3GoOQqyRvZsF3JTn+jhs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Matteo Croce <mcroce@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/26] net: mvpp2: fix RX hashing for non-10G ports
-Date:   Thu, 28 May 2020 07:56:42 -0400
-Message-Id: <20200528115654.1406165-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200528115654.1406165-1-sashal@kernel.org>
-References: <20200528115654.1406165-1-sashal@kernel.org>
+        Thu, 28 May 2020 08:04:41 -0400
+Received: from mail-eopbgr80091.outbound.protection.outlook.com ([40.107.8.91]:39982
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389600AbgE1MEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:04:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OywMn7no3ei3ZGvcyEnf8YyG0XDw2oHr8q3e6wIQ+GB6IikX1xN2Tc3pKeInpwswt5gsbGu3/1LUtcI2AQeBT0QJlV6XplCIbPB+uGnWTgrKzDu9hZ540x7SUBhF+gyaibKFyQ3SArqsDIdAnXbphvSPJxBVpPXTerxpwY17Kqk1rIEc6X3S+IWSgSYaDN56IJPBua3JlnM9EEJbBRodOLFiwzeglW9YFqZsHznwRdrVJ5dQFTVdIucT0/dvEns2HMlTdXvxINOv8qLNz2/KOkt52V7cnT+EQ8oacOx8SHd+AyBLjWbkxNpwhdnFU0GSAT2siYgCIylzXb3vK5ajkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qyp80nWGNhTxdOV9Ra19mezZ3fzPGpoOoTrkT5bdT0o=;
+ b=VUwmRyIVdODGnRDB7aPcSjjRJa9CLQNcmNhdh3oY2jTa3xreK+mS+4PwAJvf9Dxbrv1w4OvD9KtAhd6xRRVmz8diMAtDZspDBiX0oMoa7j1F0cFrztKArdXVEKMaUo5bOyqlI2RaicTRRGC9+nLstUPqPCrlo6NOvhQcXoP2kJJEUQlPm3l62X7E6R6kyrwYEJWOalnjgURfkGqWNFIuAvFFeKnqHPo2H5wKIUPOQRbGw9b0LGBSvGlWpUt9qn5OMpbgydm0SMJJ9O8wyyc4EStCqdMTy46BBeye5frZ7EFl5p6ilteOZwN5n749QzOhUXep9mCtjbg/+dkA63DVaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qyp80nWGNhTxdOV9Ra19mezZ3fzPGpoOoTrkT5bdT0o=;
+ b=WWXXNE3lRxk6pu77uCRXN7+steuJldvQ+tno8ubye0glae9zFuBldlHbiMvc1C1o6rmdAowectoZjtFCuLpFBKKSjHdDVmiFU3w+Jhg379KK+TIHwYtTwIF3BMRPx43tFmP5vLGz/mX/aSGG2hCgsettJJBdF8BWSSfNAqqcVL4=
+Received: from AM0P193MB0596.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:169::22)
+ by AM0P193MB0627.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:168::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
+ 2020 12:04:32 +0000
+Received: from AM0P193MB0596.EURP193.PROD.OUTLOOK.COM
+ ([fe80::49f2:e189:1b3a:85c8]) by AM0P193MB0596.EURP193.PROD.OUTLOOK.COM
+ ([fe80::49f2:e189:1b3a:85c8%3]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 12:04:32 +0000
+From:   "Enderborg, Peter" <Peter.Enderborg@sony.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] debugfs: Add mount restriction option
+Thread-Topic: [PATCH] debugfs: Add mount restriction option
+Thread-Index: AQHWNMYbZWEseia5ik2nhGfub1cbHai9KjaAgAADHYCAAA2ggIAAK7sA
+Date:   Thu, 28 May 2020 12:04:32 +0000
+Message-ID: <1611bed3-8c55-3ba0-af59-c75ad8eeedcc@sony.com>
+References: <20200528080031.24149-1-peter.enderborg@sony.com>
+ <20200528082753.GA2920930@kroah.com>
+ <3e1be4dc-01d4-7fc5-1c82-1c792d3fbc11@sony.com>
+ <20200528092747.GA3007208@kroah.com>
+In-Reply-To: <20200528092747.GA3007208@kroah.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=sony.com;
+x-originating-ip: [37.139.156.40]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 26c9d5db-f332-406c-5eec-08d802ff4855
+x-ms-traffictypediagnostic: AM0P193MB0627:
+x-microsoft-antispam-prvs: <AM0P193MB06273619012A937E37467B4C868E0@AM0P193MB0627.EURP193.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YWIwpwyeIPzFXiJfEJXXZNteaWD5pV1k/Wm52H6ECqJxsyTCoHNp3rGGS/impxZAYiuwIapXPp8xApYJZvNG2EgoW7zqO2ZamKD/24dIvJ/ffG/WHd1zAEU+/Y3TAM0/R6qlrhXQa8y0yPPB4Cpxm93tndAzkeUgeAtA7ynuu2h8NcOIPsQWOIHe5zYEkN/kslfMkbeh12Vy9iNgRDTTz3pV2qJMdihzDSyTzDz0ZwpWi/tPCL92vNmzkckc/ikSCviDHuKlscEm1DnvAaFwb7VAPDcywDAuM5FXFnxa9ciKTXDVs+eOsQakR7ijY5OLYA0MuKDTDXMJzs8yMBC/H3ydDZ2Uq0qNc/pQHm7SH8dnK4NuHbPoCfqOCNv3o1AG
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0P193MB0596.EURP193.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(76116006)(66946007)(66556008)(316002)(66476007)(8936002)(71200400001)(54906003)(4326008)(2616005)(6916009)(6512007)(83380400001)(2906002)(31686004)(6486002)(26005)(8676002)(5660300002)(36756003)(186003)(86362001)(31696002)(66446008)(64756008)(478600001)(53546011)(6506007)(43740500002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: hU8yHLtqTRRCn4g9nQ3VNvfUVf/qCeVltaPzvNEQu1iggz0P2IXzFgvnYpsrTv/fV9gM24uNYENqyYCoauS21KKYmfwJlFVMGMevQhSMcWaY/zF8FLHUWmmAjlwb+81yoRXv61bc6arcN1hvDY5u8EbUj93qQMragaSKenpXAIvxxmueUcvhpPcfKMy5EvTopIU9p2vS6MSG3yT7fuRYIxSyuXwdbwZrqfYPxzHa3llvHBRnE134v9usDCu7oZlqxSsg/QuR/xdOYQYrg7i9bqlkKTb0KzjCC8eTbHDtRDs6ZN2y9StJIsJYRUTxlh86vbFgZEUQoY4eKABhs7tGooWRUha01Turnstth2rMLSEDavUuCuxvTRQtOG1ycUlE4WXuzKmHMEb4tw8HLjc8hhxqlyjKdkPkgQdvKsxn9q7ot6pfv4Bcn9AQ7Vgxkd/na5IUM6EBv0ZZDekhJ9wJw/8CdO8L/7ygW/GdoB0LS78=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0CDDDC3B66FCBD4ABF4306ACE0544965@EURP193.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26c9d5db-f332-406c-5eec-08d802ff4855
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 12:04:32.5997
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wVyOUCRczxF8tp4uPpeQHTLKvW2AFcAzY/J0A7q8NjUqr1or5sIXry8pNHV/zHU3Q5bK/+eabcibyTDYEogbOli2TigCd+3PjsS8SJaupXQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0P193MB0627
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
-
-[ Upstream commit 3138a07ce219acde4c0d7ea0b6d54ba64153328b ]
-
-When rxhash is enabled on any ethernet port except the first in each CP
-block, traffic flow is prevented.  The analysis is below:
-
-I've been investigating this afternoon, and what I've found, comparing
-a kernel without 895586d5dc32 and with 895586d5dc32 applied is:
-
-- The table programmed into the hardware via mvpp22_rss_fill_table()
-  appears to be identical with or without the commit.
-
-- When rxhash is enabled on eth2, mvpp2_rss_port_c2_enable() reports
-  that c2.attr[0] and c2.attr[2] are written back containing:
-
-   - with 895586d5dc32, failing:    00200000 40000000
-   - without 895586d5dc32, working: 04000000 40000000
-
-- When disabling rxhash, c2.attr[0] and c2.attr[2] are written back as:
-
-   04000000 00000000
-
-The second value represents the MVPP22_CLS_C2_ATTR2_RSS_EN bit, the
-first value is the queue number, which comprises two fields. The high
-5 bits are 24:29 and the low three are 21:23 inclusive. This comes
-from:
-
-       c2.attr[0] = MVPP22_CLS_C2_ATTR0_QHIGH(qh) |
-                     MVPP22_CLS_C2_ATTR0_QLOW(ql);
-
-So, the working case gives eth2 a queue id of 4.0, or 32 as per
-port->first_rxq, and the non-working case a queue id of 0.1, or 1.
-The allocation of queue IDs seems to be in mvpp2_port_probe():
-
-        if (priv->hw_version == MVPP21)
-                port->first_rxq = port->id * port->nrxqs;
-        else
-                port->first_rxq = port->id * priv->max_port_rxqs;
-
-Where:
-
-        if (priv->hw_version == MVPP21)
-                priv->max_port_rxqs = 8;
-        else
-                priv->max_port_rxqs = 32;
-
-Making the port 0 (eth0 / eth1) have port->first_rxq = 0, and port 1
-(eth2) be 32. It seems the idea is that the first 32 queues belong to
-port 0, the second 32 queues belong to port 1, etc.
-
-mvpp2_rss_port_c2_enable() gets the queue number from it's parameter,
-'ctx', which comes from mvpp22_rss_ctx(port, 0). This returns
-port->rss_ctx[0].
-
-mvpp22_rss_context_create() is responsible for allocating that, which
-it does by looking for an unallocated priv->rss_tables[] pointer. This
-table is shared amongst all ports on the CP silicon.
-
-When we write the tables in mvpp22_rss_fill_table(), the RSS table
-entry is defined by:
-
-                u32 sel = MVPP22_RSS_INDEX_TABLE(rss_ctx) |
-                          MVPP22_RSS_INDEX_TABLE_ENTRY(i);
-
-where rss_ctx is the context ID (queue number) and i is the index in
-the table.
-
-If we look at what is written:
-
-- The first table to be written has "sel" values of 00000000..0000001f,
-  containing values 0..3. This appears to be for eth1. This is table 0,
-  RX queue number 0.
-- The second table has "sel" values of 00000100..0000011f, and appears
-  to be for eth2.  These contain values 0x20..0x23. This is table 1,
-  RX queue number 0.
-- The third table has "sel" values of 00000200..0000021f, and appears
-  to be for eth3.  These contain values 0x40..0x43. This is table 2,
-  RX queue number 0.
-
-How do queue numbers translate to the RSS table?  There is another
-table - the RXQ2RSS table, indexed by the MVPP22_RSS_INDEX_QUEUE field
-of MVPP22_RSS_INDEX and accessed through the MVPP22_RXQ2RSS_TABLE
-register. Before 895586d5dc32, it was:
-
-       mvpp2_write(priv, MVPP22_RSS_INDEX,
-                   MVPP22_RSS_INDEX_QUEUE(port->first_rxq));
-       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE,
-                   MVPP22_RSS_TABLE_POINTER(port->id));
-
-and after:
-
-       mvpp2_write(priv, MVPP22_RSS_INDEX, MVPP22_RSS_INDEX_QUEUE(ctx));
-       mvpp2_write(priv, MVPP22_RXQ2RSS_TABLE, MVPP22_RSS_TABLE_POINTER(ctx));
-
-Before the commit, for eth2, that would've contained '32' for the
-index and '1' for the table pointer - mapping queue 32 to table 1.
-Remember that this is queue-high.queue-low of 4.0.
-
-After the commit, we appear to map queue 1 to table 1. That again
-looks fine on the face of it.
-
-Section 9.3.1 of the A8040 manual seems indicate the reason that the
-queue number is separated. queue-low seems to always come from the
-classifier, whereas queue-high can be from the ingress physical port
-number or the classifier depending on the MVPP2_CLS_SWFWD_PCTRL_REG.
-
-We set the port bit in MVPP2_CLS_SWFWD_PCTRL_REG, meaning that queue-high
-comes from the MVPP2_CLS_SWFWD_P2HQ_REG() register... and this seems to
-be where our bug comes from.
-
-mvpp2_cls_oversize_rxq_set() sets this up as:
-
-        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_P2HQ_REG(port->id),
-                    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
-
-        val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
-        val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
-        mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
-
-Setting the MVPP2_CLS_SWFWD_PCTRL_MASK bit means that the queue-high
-for eth2 is _always_ 4, so only queues 32 through 39 inclusive are
-available to eth2. Yet, we're trying to tell the classifier to set
-queue-high, which will be ignored, to zero. Hence, the queue-high
-field (MVPP22_CLS_C2_ATTR0_QHIGH()) from the classifier will be
-ignored.
-
-This means we end up directing traffic from eth2 not to queue 1, but
-to queue 33, and then we tell it to look up queue 33 in the RSS table.
-However, RSS table has not been programmed for queue 33, and so it ends
-up (presumably) dropping the packets.
-
-It seems that mvpp22_rss_context_create() doesn't take account of the
-fact that the upper 5 bits of the queue ID can't actually be changed
-due to the settings in mvpp2_cls_oversize_rxq_set(), _or_ it seems that
-mvpp2_cls_oversize_rxq_set() has been missed in this commit. Either
-way, these two functions mutually disagree with what queue number
-should be used.
-
-Looking deeper into what mvpp2_cls_oversize_rxq_set() and the MTU
-validation is doing, it seems that MVPP2_CLS_SWFWD_P2HQ_REG() is used
-for over-sized packets attempting to egress through this port. With
-the classifier having had RSS enabled and directing eth2 traffic to
-queue 1, we may still have packets appearing on queue 32 for this port.
-
-However, the only way we may end up with over-sized packets attempting
-to egress through eth2 - is if the A8040 forwards frames between its
-ports. From what I can see, we don't support that feature, and the
-kernel restricts the egress packet size to the MTU. In any case, if we
-were to attempt to transmit an oversized packet, we have no support in
-the kernel to deal with that appearing in the port's receive queue.
-
-So, this patch attempts to solve the issue by clearing the
-MVPP2_CLS_SWFWD_PCTRL_MASK() bit, allowing MVPP22_CLS_C2_ATTR0_QHIGH()
-from the classifier to define the queue-high field of the queue number.
-
-My testing seems to confirm my findings above - clearing this bit
-means that if I enable rxhash on eth2, the interface can then pass
-traffic, as we are now directing traffic to RX queue 1 rather than
-queue 33. Traffic still seems to work with rxhash off as well.
-
-Reported-by: Matteo Croce <mcroce@redhat.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Fixes: 895586d5dc32 ("net: mvpp2: cls: Use RSS contexts to handle RSS tables")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index 4344a59c823f..6122057d60c0 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -1070,7 +1070,7 @@ void mvpp2_cls_oversize_rxq_set(struct mvpp2_port *port)
- 		    (port->first_rxq >> MVPP2_CLS_OVERSIZE_RXQ_LOW_BITS));
- 
- 	val = mvpp2_read(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG);
--	val |= MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
-+	val &= ~MVPP2_CLS_SWFWD_PCTRL_MASK(port->id);
- 	mvpp2_write(port->priv, MVPP2_CLS_SWFWD_PCTRL_REG, val);
- }
- 
--- 
-2.25.1
-
+T24gNS8yOC8yMCAxMToyNyBBTSwgR3JlZyBLcm9haC1IYXJ0bWFuIHdyb3RlOg0KPiBPbiBUaHUs
+IE1heSAyOCwgMjAyMCBhdCAwODozOTowMkFNICswMDAwLCBFbmRlcmJvcmcsIFBldGVyIHdyb3Rl
+Og0KPj4gT24gNS8yOC8yMCAxMDoyNyBBTSwgR3JlZyBLcm9haC1IYXJ0bWFuIHdyb3RlOg0KPj4+
+IE9uIFRodSwgTWF5IDI4LCAyMDIwIGF0IDEwOjAwOjMxQU0gKzAyMDAsIFBldGVyIEVuZGVyYm9y
+ZyB3cm90ZToNCj4+Pj4gU2luY2UgZGVidWdmcyBpbmNsdWRlIHNlbnNpdGl2ZSBpbmZvcm1hdGlv
+biBpdCBuZWVkIHRvIGJlIHRyZWF0ZWQNCj4+Pj4gY2FyZWZ1bGx5LiBCdXQgaXQgYWxzbyBoYXMg
+bWFueSB2ZXJ5IHVzZWZ1bCBkZWJ1ZyBmdW5jdGlvbnMgZm9yIHVzZXJzcGFjZS4NCj4+Pj4gV2l0
+aCB0aGlzIG9wdGlvbiB3ZSBjYW4gaGF2ZSBzYW1lIGNvbmZpZ3VyYXRpb24gZm9yIHN5c3RlbSB3
+aXRoDQo+Pj4+IG5lZWQgb2YgZGVidWdmcyBhbmQgYSB3YXkgdG8gdHVybiBpdCBvZmYuIEl0IGlz
+IG5lZWRlZCBuZXcNCj4+Pj4ga2VybmVsIGNvbW1hbmQgbGluZSBwYXJhbWV0ZXIgdG8gYmUgYWN0
+aXZhdGVkLg0KPj4+IEJ5ICJjb25maWd1cmF0aW9uIiBkbyB5b3UgbWVhbiAia2VybmVsIGNvbmZp
+Z3VyYXRpb24iPyAgV2hhdCBpcyB3cm9uZw0KPj4+IHdpdGggcmVseWluZyBvbiB0aGUgYnVpbGQg
+b3B0aW9uIGxpa2Ugd2UgZG8gdG9kYXk/DQo+Pj4NCj4+PiBZb3UgbWlnaHQgd2FudCB0byByZXdv
+cmQgYWxsIG9mIHRoaXMgdG8gbWFrZSBtb3JlIHNlbnNlIGFib3V0IHRoZQ0KPj4+ICJwcm9ibGVt
+IiB5b3UgYXJlIHRyeWluZyB0byBzb2x2ZSBoZXJlLCBhcyBJIGRvbid0IHJlYWxseSB1bmRlcnN0
+YW5kIGl0LA0KPj4+IHNvcnJ5Lg0KPj4+DQo+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIg
+RW5kZXJib3JnIDxwZXRlci5lbmRlcmJvcmdAc29ueS5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgZnMv
+ZGVidWdmcy9pbm9kZS5jIHwgMTcgKysrKysrKysrKysrKysrKy0NCj4+Pj4gIGxpYi9LY29uZmln
+LmRlYnVnICB8IDEwICsrKysrKysrKysNCj4+Pj4gIDIgZmlsZXMgY2hhbmdlZCwgMjYgaW5zZXJ0
+aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4+IE5vIGRvY3VtZW50YXRpb24gdXBkYXRlPyAgVGhh
+dCdzIG5vdCBnb29kIDooDQo+Pj4NCj4+Pg0KPj4+PiBkaWZmIC0tZ2l0IGEvZnMvZGVidWdmcy9p
+bm9kZS5jIGIvZnMvZGVidWdmcy9pbm9kZS5jDQo+Pj4+IGluZGV4IGI3ZjJlOTcxZWNiYy4uYmRl
+MzdkYWI3N2UwIDEwMDY0NA0KPj4+PiAtLS0gYS9mcy9kZWJ1Z2ZzL2lub2RlLmMNCj4+Pj4gKysr
+IGIvZnMvZGVidWdmcy9pbm9kZS5jDQo+Pj4+IEBAIC03ODYsMTAgKzc4NiwyNSBAQCBib29sIGRl
+YnVnZnNfaW5pdGlhbGl6ZWQodm9pZCkNCj4+Pj4gIH0NCj4+Pj4gIEVYUE9SVF9TWU1CT0xfR1BM
+KGRlYnVnZnNfaW5pdGlhbGl6ZWQpOw0KPj4+PiAgDQo+Pj4+ICtzdGF0aWMgaW50IGFsbG93X2Rl
+YnVnZnM7DQo+Pj4+ICsNCj4+Pj4gK3N0YXRpYyBpbnQgX19pbml0IGRlYnVnZnNfa2VybmVsKGNo
+YXIgKnN0cikNCj4+Pj4gK3sNCj4+Pj4gKwlpZiAoc3RyICYmICFzdHJjbXAoc3RyLCAidHJ1ZSIp
+KQ0KPj4+PiArCQlhbGxvd19kZWJ1Z2ZzID0gdHJ1ZTsNCj4+Pj4gKw0KPj4+PiArCXJldHVybiAw
+Ow0KPj4+PiArDQo+Pj4+ICt9DQo+Pj4+ICtlYXJseV9wYXJhbSgiZGVidWdmcyIsIGRlYnVnZnNf
+a2VybmVsKTsNCj4+Pj4gKw0KPj4+PiAgc3RhdGljIGludCBfX2luaXQgZGVidWdmc19pbml0KHZv
+aWQpDQo+Pj4+ICB7DQo+Pj4+ICAJaW50IHJldHZhbDsNCj4+Pj4gLQ0KPj4+PiArI2lmZGVmIENP
+TkZJR19ERUJVR19GU19NT1VOVF9SRVNUUklDVEVEDQo+Pj4+ICsJaWYgKCFhbGxvd19kZWJ1Z2Zz
+KQ0KPj4+PiArCQlyZXR1cm4gLUVQRVJNOw0KPj4+PiArI2VuZGlmDQo+Pj4gQnV0IHlvdSBhcmUg
+bm90IHJlc3RyaWN0aW5nIHRoZSBhYmlsaXR5IHRvIG1vdW50IGl0IGhlcmUsIHlvdSBhcmUNCj4+
+PiByZW1vdmluZyB0aGUgYWJpbGl0eSBmb3IgaXQgdG8gZXZlbiBzdGFydCB1cCBhdCBhbGwuICBX
+aGF0IGRvZXMgdGhpcw0KPj4+IGJyZWFrIGZvciBjb2RlIHRoYXQgdGhpbmtzIHRoZSBmaWxlc3lz
+dGVtIGlzIHJlZ2lzdGVyZWQgKGkuZS4gdGhlIGNhbGwNCj4+PiB0byBzaW1wbGVfcGluX2ZzKCkg
+aW4gc3RhcnRfY3JlYXRpbmcoKSBpbiBmcy9kZWJ1Z2ZzL2lub2RlLmM/DQo+Pj4NCj4+IElmIGl0
+IGRvZXMsIHRoZSBsaW5lcyBiZWxvdyBpcyBhbHNvIGNhdXNlIHRoZSBzYW1lIHByb2JsZW0uDQo+
+IEluIGEgd29ya2luZyBzeXN0ZW0sIGVycm9ycyBpbiB0aGUgbGluZXMgYmVsb3cgd2lsbCBuZXZl
+ciBoYXBwZW4gOikNCg0KSSB0aGluayBpdCBpcyBub3QgdW5yZWFzb25hYmxlIHRvIGV4cGVjdCB0
+aGF0IGRlYnVnIGZ1bmN0aW9uYWxpdHkgYXJlIHJvYnVzdCBlbm91Z2ggdG8gaGFuZGxlDQpzeXN0
+ZW0gd2hlcmUgbm90IGV2ZXJ5dGhpbmcgaXMgd29ya2luZyBzbW9vdGhseS4NCg0KDQo+IHRoYW5r
+cywNCj4NCj4gZ3JlZyBrLWgNCg0K
