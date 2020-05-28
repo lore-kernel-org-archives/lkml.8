@@ -2,334 +2,495 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E43C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53007C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B446207BC
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27A8B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 07:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SCgSfzMT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gzzRRRew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgE1HZW (ORCPT
+        id S1726518AbgE1HZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 28 May 2020 03:25:24 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:35989 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726111AbgE1HZW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 28 May 2020 03:25:22 -0400
-Received: from mail-bn8nam11on2045.outbound.protection.outlook.com ([40.107.236.45]:54624
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725747AbgE1HZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 03:25:19 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=my39ibxLLpXGWuCQv0HlLpVjhkK1pWCHSUb6Ya0ZN2dr64uBIelBnF71tVWrvF3YcEBiMkfAao/LvW5wUOQUPR7ShnqUpY0CedpTKB4wRJGoXMV2hi7Khqlr/hZJUG9x3Jq/54T4Z3xEKsF9DUmnOFyA5YIN/ESZFmenyYLpZQldUxH7iqamz9BbwFHmOMwSkyWy+inDl1efMp8vzvCjDbo63umnaQ8WStLpgu/AfhuxAuOvWWnHECaTpJXUaLlXTArIBDkmIjeDmBDYlN0LuHp5vpG7yQhEw6ASdaaQlSOcO92Uno84txXnyOj5rpAfZeMY0OuCoIZ2uUW0NN/gng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yTpVFWJF87WYRRgtMa/eAkGFcOWyC1ag5+t5M6WUBts=;
- b=hqp9EotXAwUiKcM3/lcVItYqEs8jHLDvJtW9twyLGj0otYW6Gn+etVZDC3ZW6+PLp4AuyluULdCiJb7jjN5KNWn+BZtDDCtycl3I4dtcMtnhi34apJ/QOEOeIvA93QtwPWFEGvzqB31Rnsd0nFq+xdo7kH5wWENdzYnQXPAAq4rrQNqMKJMhQ3dDUqTC+CJfGCdpvHGXt2BHYKSM02ZfOR11at80D4lBUQsqcEuJ/T+AeBE39LVwhjWy56tLUAE4uCmRzWE14ZB/2y3wH8rPUx5X/PU3MVLorYMNo1hEXyawfL6VWCmuqdKugRmjuEAKRamjiTvEeK7PG5HeWOgocw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yTpVFWJF87WYRRgtMa/eAkGFcOWyC1ag5+t5M6WUBts=;
- b=SCgSfzMTTLswMWAkQuARpfoeV1R70+RtdcIi2s9c9szsw1A+Mg2ZoJHSjjerZIbmx9yzsozyxoqG7pGdt2o949s4hTdQTJ4o/22m+6w16++Gejgmgjzg9lMfVXg5uDgBFBakmJQTksUHuxYiIEYChZ8h9Y+jLg62XiVhnd4maqw=
-Received: from DM6PR02MB6876.namprd02.prod.outlook.com (2603:10b6:5:22c::11)
- by DM6PR02MB4396.namprd02.prod.outlook.com (2603:10b6:5:21::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 07:25:12 +0000
-Received: from DM6PR02MB6876.namprd02.prod.outlook.com
- ([fe80::ad68:d392:e519:f671]) by DM6PR02MB6876.namprd02.prod.outlook.com
- ([fe80::ad68:d392:e519:f671%9]) with mapi id 15.20.3021.029; Thu, 28 May 2020
- 07:25:12 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Hyun Kwon <hyunk@xilinx.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: RE: [PATCH v14 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Thread-Topic: [PATCH v14 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Thread-Index: AQHWNC7SPjgdVRRG3EKpmIv0XtK+wqi8GqQAgAD9xKA=
-Date:   Thu, 28 May 2020 07:25:12 +0000
-Message-ID: <DM6PR02MB6876427592203524D810D338A78E0@DM6PR02MB6876.namprd02.prod.outlook.com>
-References: <1590587839-129558-1-git-send-email-vishal.sagar@xilinx.com>
- <1590587839-129558-2-git-send-email-vishal.sagar@xilinx.com>
- <20200527161140.GF6171@pendragon.ideasonboard.com>
-In-Reply-To: <20200527161140.GF6171@pendragon.ideasonboard.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: ideasonboard.com; dkim=none (message not signed)
- header.d=none;ideasonboard.com; dmarc=none action=none
- header.from=xilinx.com;
-x-originating-ip: [122.170.225.235]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 667e0551-e6d6-43e8-447a-08d802d84254
-x-ms-traffictypediagnostic: DM6PR02MB4396:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR02MB43964F8E24040583F4E3D615A78E0@DM6PR02MB4396.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: F7PttgPpqiySZZIB7zWERLy8bVvddrQwK98b6eh/m/aOvahx8wFaZrqkkP8eWDtSiji65o8XrUR516tJQUcbgsHzVk9au/B+D6jAG/+coRnyDzL+LgMzlAK+cykVVmi+7bq+Uxcufkq+LV2raLCU/KBXGOMaXbwNIwCZ8XRbPwoDNcyJ+G+XfaPugqm5OFW3vOFTj7MS6OjJeimaLlFzT/fOKRAsBDkQHVnC7X/vTWEUdqPjmI4zsknI13icDDZ4X0asC0iSOY32DJWfJVq9+A4RWe0bMOqMXzPtzaYLDwgEGVVf2p732zYjWujUKGVu+xbQ7eiy70ctpCvPnBFfNe1iBJ9nsnJ8Vjw/wdIdjZ+33YIdIbmkSaf3Vs/72vzM/e9rwEXPFjEtpEn6KsCVpA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR02MB6876.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(366004)(376002)(396003)(346002)(53546011)(71200400001)(55016002)(9686003)(6506007)(4326008)(26005)(316002)(30864003)(7416002)(5660300002)(52536014)(186003)(66476007)(966005)(54906003)(76116006)(66446008)(66556008)(64756008)(55236004)(7696005)(66946007)(33656002)(6916009)(83380400001)(86362001)(8676002)(2906002)(478600001)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 0HYE2T5RzWl6JMhQXvrnwS28pdnEr/2rP8BtZ2tAMax8ruLCj6Dc8iwJneEG8c7ZelOf5inLCJ7Ss9jqIohK9czpiU4chO0Sbtuei9LIjMUu1yU2CSt4gksJUVt0MCRCYxTKTIK24XAGRvriDulcTO4DQ+bO9sOcDcAQgrL90UaRJCD2+1gqX4uefCns2uTPglX/JDSJZXRKvsWm4efsp52a/gVKslunOeAYmp1nUil1qprOqW8xTk5NqofQWQ/S1jMFnvvLuE+bOyuj5iFfYnV+W60f3rrzgKtplrAS/i3X1XBo8f5A11GUyuCeuvFS6C4P0lrG7AypyhF83S2v/xwYWxYD4vX/CKcUUWz9v0TNZIC9fqOl8j6PjPhpqUnT7tdz72KbD7l/M/9TtDUb97c5+T/y0u2BqjPTeGZSJFEUBpvX+O5wPkWoC0U8zbx38AX4M2hEsiBvZhGvR9YAN5/QCrB7lt/AM3zxdAEOGLKNtxMjVTeqfqQPfUNN252n
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200528072517epoutp015cc0ff9dcc03a49ed692de942f3a656f~TIGZJN0Yq2803128031epoutp01b
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 07:25:17 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200528072517epoutp015cc0ff9dcc03a49ed692de942f3a656f~TIGZJN0Yq2803128031epoutp01b
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1590650717;
+        bh=63sggEwMXFg5//iy9mkhqyXY/p5ye2eUye4JI3aTFNA=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=gzzRRRewTL8AIphaaUgjbLkvqTt87CD7NN3eScUgUUcfC7a2JYDYTRzlW6sO6N5Ah
+         1OXDJf5fsWVnPVAUujo57rjLzqtD/UbDAXSGrgVtz6ouFYx8CY1EKtMxZ3u76t5rS2
+         v7HBLV80AYDTI43JklQ/xza8d4rDg8cYqujRJSPs=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200528072516epcas1p38cb7bc241406202fa3d3619e1e3f5f7b~TIGYoNgOh0411404114epcas1p35;
+        Thu, 28 May 2020 07:25:16 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.156]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 49XfNm60qLzMqYkk; Thu, 28 May
+        2020 07:25:12 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F4.A2.04388.8576FCE5; Thu, 28 May 2020 16:25:12 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528072512epcas1p14d1270ffbc287a95423f195c2cd7c163~TIGU9DDpf0387903879epcas1p1a;
+        Thu, 28 May 2020 07:25:12 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200528072512epsmtrp240f422f53f859ac2b0ef15a9fc0e2169~TIGU7c6-L0618806188epsmtrp2u;
+        Thu, 28 May 2020 07:25:12 +0000 (GMT)
+X-AuditID: b6c32a35-77bff70000001124-27-5ecf67586260
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        96.05.08382.8576FCE5; Thu, 28 May 2020 16:25:12 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200528072512epsmtip1a21d95c302e8e9fe3f4f911374c2d3fa~TIGUj993O3158331583epsmtip1j;
+        Thu, 28 May 2020 07:25:12 +0000 (GMT)
+Subject: Re: [PATCH 09/12] devfreq: add mediatek cci devfreq
+To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <c39e4f30-805a-78c4-b1c4-e55a03e2408e@samsung.com>
+Date:   Thu, 28 May 2020 16:35:33 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 667e0551-e6d6-43e8-447a-08d802d84254
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 07:25:12.1238
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ephLQ5hgqSIONNGzIpz+UXmy5fcFBkbc7RFbqycJ7U7Qfx/ygt3LZN6CuHgOE3z5o4a89PVHNerupVmXEbPoMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4396
+In-Reply-To: <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Tf0wTZxjed3c9DrLq5yHzG384OPUPidUete5zAbNNslwyF4lOYsxCd6G3
+        Quiv9FodW1QERgHnInNO6ajMTKcii1KZ/JiViE0MUUBAEMcYgkSZQxbp2jRbsq3HYcZ/z/u+
+        z/O+7/P9YEh2jk5liuxuyWUXrRydRF29uVan223py9ef6+Fx66VpDT4+MUXjhlCvBveUzSTg
+        6L0qAgceDWvwYEc9jQfL+wEOHwkBfPZ+P4HLKgx49NB5Gs/Eegh85/aABn8WDCXgf4abKXxi
+        jMXNEeFNVmg61QSEdt9YghBorKaFX4av0cKVMweFiu5OSmgZ8lLCFy2NQLg10koI4cDK3KQ9
+        xVmFkmiWXGmSvcBhLrJbsrl3d5q2moyb9LyO34xf59Lsok3K5nK25ereKbLGLXFpe0WrJ57K
+        FWWZ27Aly+XwuKW0QofszuYkp9nq3OxcL4s22WO3rC9w2N7g9fpMY5z4YXHh94cjlDOc+3Hv
+        QBsoBT+9VQMSGQQ3ov6yy3QNSGJY2AZQXcBPqcEcQF9f8y9UogDFaseoF5LJ4acLrCBAZx78
+        ANTgD4DOx+7RCisZZqFzp8s0Cl4OR0l09Jv3FRIJbwB0YqCfUAo0zECd0yPzgqUwHQ3FHsU7
+        MYwWbkHRqKSkKbgGzU6MzvdJgXmo+2oFULAWLkPddVPzGyXCrcjbd5xUMAlXoJ+nGggVv4Za
+        n9WTylwEjyUi74h/wUIOuvjgrwQVJ6Ont1oWcCoKzwZpFX+KLnSHaFVcBVBL512NWjCgzrPH
+        CGVREq5Flzo2qOl01P63H6iDl6DZyOcahYKgFlVVsiplFRp8OEao+FX0nbeaPgo43yI7vkUW
+        fIss+P4f9i2gGsErklO2WSSZd/KLrzsA5t97hrENfNW7rQtABnAva/VCbz6rEffKJbYugBiS
+        W659u+d2Pqs1iyWfSC6HyeWxSnIXMMZPu5ZMTSlwxH+P3W3ijZkGgwFv5DcZeZ5boW2I3cln
+        oUV0S8WS5JRcL3QEk5haClLy/OM/vrQrZ7VQ2rjdQFeXm8HO9sx/O2qT3frLhDUaHK8JXtFN
+        nHJOTz6vFFfaTOvC79U1GT9Y8/jArv0371fsYJ88WZ23e11waZGPf5ZezlX6m8cf18/9KV/v
+        azI3DJ3ct6NyJmDcH/FMHvGeLjnwW3PKR78uOfS7GIocJq/LX3KUXCjyGaRLFv8DR32ctQUE
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsWy7bCSnG5E+vk4g6Y7Ehbb179gtZj68Amb
+        xfwj51gtzja9Ybf4dqWDyWLT42usFpd3zWGzuNx8kdHic+8RRoul1y8yWTS1GFvcblzBZvHm
+        x1kmizOnL7FatO49wm7x79pGFovpd4UsNn71cBDyWDNvDaPHzll32T02repk87hzbQ+bx+Yl
+        9R4tJ/ezeGy52s7i0bdlFaPH8RvbmTw+b5IL4IrisklJzcksSy3St0vgyljW/ZWl4HNAxblL
+        OxgbGHc7djFyckgImEg8uvaKpYuRi0NIYDejxNru2ywQCUmJaRePMncxcgDZwhKHDxdD1Lxl
+        lDg26y9YjbCAjcTyhU2sIAkRgfvMEsvvXmUDcZgFDjJKPOv+ww7Rco5R4v2eDYwgLWwCWhL7
+        X9xgA7H5BRQlrv54zAiyglfATuLbt1SQMIuAqsS7h7dZQWxRgTCJnUseM4HYvAKCEidnPgHb
+        zCngLNF+fioziM0soC7xZ94lKFtc4taT+UwQtrzE9rdzmCcwCs9C0j4LScssJC2zkLQsYGRZ
+        xSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHOlamjsYt6/6oHeIkYmD8RCjBAezkgiv
+        09nTcUK8KYmVValF+fFFpTmpxYcYpTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJMnFwSjUwTVzC
+        fO3kTnfBwh+3/NLeWqrdTn3jNiFrW5IPc+SX/0H72Gs2lFzZHfJwc1L35OT1ixctyDm9zLAt
+        pE4sluF+Xsc1qy5Z//+/J1f8TmB7mqjtpHuKV8JHPW2q2nvRZ0HVCcfV+2Kvsx/dJhZ1yTtC
+        V+K16MEzC9/VX0y4FnF6g2vKwhdqp974vuT5z9jIc8js9B0OkwPhpyOMPnyd9uL40namgN4M
+        DiXHs8sX32LcZ/FESrJApkzZVLrmAC/f51kvPa5EvMkM+zEz8fuPe98/vlWf9qfom0Y2m+D+
+        6++O/4zVkYrSDKx7O0840aDYKFoyUlzIKbK3/pF9aRTj5K6Zd/QPMyv3vL9kY2Q35bSwEktx
+        RqKhFnNRcSIAxBSLJGMDAAA=
+X-CMS-MailID: 20200528072512epcas1p14d1270ffbc287a95423f195c2cd7c163
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200520034338epcas1p1b3c7eb91a37dfd1d9cfc150a2310f120
+References: <20200520034307.20435-1-andrew-sh.cheng@mediatek.com>
+        <CGME20200520034338epcas1p1b3c7eb91a37dfd1d9cfc150a2310f120@epcas1p1.samsung.com>
+        <20200520034307.20435-10-andrew-sh.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMYXVy
-ZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+IFNlbnQ6
-IFdlZG5lc2RheSwgTWF5IDI3LCAyMDIwIDk6NDIgUE0NCj4gVG86IFZpc2hhbCBTYWdhciA8dnNh
-Z2FyQHhpbGlueC5jb20+DQo+IENjOiBIeXVuIEt3b24gPGh5dW5rQHhpbGlueC5jb20+OyBtY2hl
-aGFiQGtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5j
-b207IE1pY2hhbCBTaW1law0KPiA8bWljaGFsc0B4aWxpbnguY29tPjsgbGludXgtbWVkaWFAdmdl
-ci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgaGFucy52ZXJrdWls
-QGNpc2NvLmNvbTsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgRGluZXNoIEt1bWFyDQo+IDxkaW5lc2hrQHhpbGlu
-eC5jb20+OyBTYW5kaXAgS290aGFyaSA8c2FuZGlwa0B4aWxpbnguY29tPjsgTHVjYSBDZXJlc29s
-aQ0KPiA8bHVjYUBsdWNhY2VyZXNvbGkubmV0PjsgSmFjb3BvIE1vbmRpIDxqYWNvcG9Aam1vbmRp
-Lm9yZz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MTQgMS8yXSBtZWRpYTogZHQtYmluZGluZ3M6
-IG1lZGlhOiB4aWxpbng6IEFkZCBYaWxpbnggTUlQSQ0KPiBDU0ktMiBSeCBTdWJzeXN0ZW0NCj4g
-DQo+IEhpIFZpc2hhbCwNCj4gDQo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLg0KPiANCj4gT24g
-V2VkLCBNYXkgMjcsIDIwMjAgYXQgMDc6Mjc6MThQTSArMDUzMCwgVmlzaGFsIFNhZ2FyIHdyb3Rl
-Og0KPiA+IEFkZCBiaW5kaW5ncyBkb2N1bWVudGF0aW9uIGZvciBYaWxpbnggTUlQSSBDU0ktMiBS
-eCBTdWJzeXN0ZW0uDQo+ID4NCj4gPiBUaGUgWGlsaW54IE1JUEkgQ1NJLTIgUnggU3Vic3lzdGVt
-IGNvbnNpc3RzIG9mIGEgQ1NJLTIgUnggY29udHJvbGxlciwNCj4gPiBhIEQtUEhZIGluIFJ4IG1v
-ZGUgYW5kIGEgVmlkZW8gRm9ybWF0IEJyaWRnZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFZp
-c2hhbCBTYWdhciA8dmlzaGFsLnNhZ2FyQHhpbGlueC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IEh5
-dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+ID4gUmV2aWV3ZWQtYnk6IEx1Y2EgQ2VyZXNvbGkgPGx1
-Y2FAbHVjYWNlcmVzb2xpLm5ldD4NCj4gPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8
-bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPg0KPiA+IC0tLQ0KPiA+IHYxNA0KPiA+
-IC0gUmVtb3ZlZCB4bG54LGNzaS1weGwtZm9ybWF0IGZyb20gcmVxdWlyZWQgcHJvcGVydGllcw0K
-PiA+IC0gQWRkZWQgZGVwZW5kZW5jeSBvZiB4bG54LGNzaS1weGwtZm9ybWF0IG9uIHhsbngsdmZi
-DQo+ID4gLSBFbmQgdGhlIHlhbWwgZmlsZSB3aXRoIC4uLg0KPiA+IC0gQWRkZWQgUmV2aWV3ZWQg
-YnkgTGF1cmVudA0KPiA+DQo+ID4gdjEzDQo+ID4gLSBCYXNlZCBvbiBMYXVyZW50J3Mgc3VnZ2Vz
-dGlvbnMNCj4gPiAtIEZpeGVkIHRoZSBkYXRhdHlwZXMgdmFsdWVzIGFzIG1pbmltdW0gYW5kIG1h
-eGltdW0NCj4gPiAtIGNvbmRpdGlvbiBhZGRlZCBmb3IgZW4tdmN4IHByb3BlcnR5DQo+ID4NCj4g
-PiB2MTINCj4gPiAtIE1vdmVkIHRvIHlhbWwgZm9ybWF0DQo+ID4gLSBVcGRhdGUgQ1NJLTIgYW5k
-IEQtUEhZDQo+ID4gLSBNZW50aW9uIHRoYXQgYmluZGluZ3MgZm9yIEQtUEhZIG5vdCBoZXJlDQo+
-ID4gLSByZXNldCAtPiB2aWRlby1yZXNldA0KPiA+DQo+ID4gdjExDQo+ID4gLSBNb2RpZnkgY29t
-cGF0aWJsZSBzdHJpbmcgZnJvbSA0LjAgdG8gNS4wDQo+ID4NCj4gPiB2MTANCj4gPiAtIE5vIGNo
-YW5nZXMNCj4gPg0KPiA+IHY5DQo+ID4gLSBGaXggeGxueCx2ZmIgZGVzY3JpcHRpb24uDQo+ID4g
-LSBzL09wdGlvbmFsL1JlcXVpcmVkIGVuZHBvaW50IHByb3BlcnR5Lg0KPiA+IC0gTW92ZSBkYXRh
-LWxhbmVzIGRlc2NyaXB0aW9uIGZyb20gUG9ydHMgdG8gZW5kcG9pbnQgcHJvcGVydHkgc2VjdGlv
-bi4NCj4gPg0KPiA+IHY4DQo+ID4gLSBBZGRlZCByZXNldC1ncGlvcyBvcHRpb25hbCBwcm9wZXJ0
-eSB0byBhc3NlcnQgdmlkZW9fYXJlc2V0bg0KPiA+DQo+ID4gdjcNCj4gPiAtIFJlbW92ZWQgdGhl
-IGNvbnRyb2wgbmFtZSBmcm9tIGR0IGJpbmRpbmdzDQo+ID4gLSBVcGRhdGVkIHRoZSBleGFtcGxl
-IGR0IG5vZGUgbmFtZSB0byBjc2kycngNCj4gPg0KPiA+IHY2DQo+ID4gLSBBZGRlZCAiY29udHJv
-bCIgYWZ0ZXIgVjRMMl9DSURfWElMSU5YX01JUElDU0lTU19BQ1RfTEFORVMgYXMNCj4gPiBzdWdn
-ZXN0ZWQgYnkgTHVjYQ0KPiA+IC0gQWRkZWQgcmV2aWV3ZWQgYnkgUm9iIEhlcnJpbmcNCj4gPg0K
-PiA+IHY1DQo+ID4gLSBJbmNvcnBvcmF0ZWQgY29tbWVudHMgYnkgTHVjYSBDZXJzb2xpDQo+ID4g
-LSBSZW1vdmVkIERQSFkgY2xvY2sgZnJvbSBkZXNjcmlwdGlvbiBhbmQgZXhhbXBsZQ0KPiA+IC0g
-UmVtb3ZlZCBiYXllciBwYXR0ZXJuIGZyb20gZGV2aWNlIHRyZWUgTUlQSSBDU0kgSVANCj4gPiAg
-IGRvZXNuJ3QgZGVhbCB3aXRoIGJheWVyIHBhdHRlcm4uDQo+ID4NCj4gPiB2NA0KPiA+IC0gQWRk
-ZWQgcmV2aWV3ZWQgYnkgSHl1biBLd29uDQo+ID4NCj4gPiB2Mw0KPiA+IC0gcmVtb3ZlZCBpbnRl
-cnJ1cHQgcGFyZW50IGFzIHN1Z2dlc3RlZCBieSBSb2INCj4gPiAtIHJlbW92ZWQgZHBoeSBjbG9j
-aw0KPiA+IC0gbW92ZWQgdmZiIHRvIG9wdGlvbmFsIHByb3BlcnRpZXMNCj4gPiAtIEFkZGVkIHJl
-cXVpcmVkIGFuZCBvcHRpb25hbCBwb3J0IHByb3BlcnRpZXMgc2VjdGlvbg0KPiA+IC0gQWRkZWQg
-ZW5kcG9pbnQgcHJvcGVydHkgc2VjdGlvbg0KPiA+DQo+ID4gdjINCj4gPiAtIHVwZGF0ZWQgdGhl
-IGNvbXBhdGlibGUgc3RyaW5nIHRvIGxhdGVzdCB2ZXJzaW9uIHN1cHBvcnRlZA0KPiA+IC0gcmVt
-b3ZlZCBEUEhZIHJlbGF0ZWQgcGFyYW1ldGVycw0KPiA+IC0gYWRkZWQgQ1NJIHYyLjAgcmVsYXRl
-ZCBwcm9wZXJ0eSAoaW5jbHVkaW5nIFZDWCBmb3Igc3VwcG9ydGluZyB1cHRvIDE2DQo+ID4gICB2
-aXJ0dWFsIGNoYW5uZWxzKS4NCj4gPiAtIG1vZGlmaWVkIGNzaS1weGwtZm9ybWF0IGZyb20gc3Ry
-aW5nIHRvIHVuc2lnbmVkIGludCB0eXBlIHdoZXJlIHRoZSB2YWx1ZQ0KPiA+ICAgaXMgYXMgcGVy
-IHRoZSBDU0kgc3BlY2lmaWNhdGlvbg0KPiA+IC0gRGVmaW5lZCBwb3J0IDAgYW5kIHBvcnQgMSBh
-cyBzaW5rIGFuZCBzb3VyY2UgcG9ydHMuDQo+ID4gLSBSZW1vdmVkIG1heC1sYW5lcyBwcm9wZXJ0
-eSBhcyBzdWdnZXN0ZWQgYnkgUm9iIGFuZCBTYWthcmkNCj4gPg0KPiA+ICAuLi4vYmluZGluZ3Mv
-bWVkaWEveGlsaW54L3hsbngsY3NpMnJ4c3MueWFtbCAgICAgICB8IDIzNw0KPiArKysrKysrKysr
-KysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIzNyBpbnNlcnRpb25zKCspDQo+ID4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZWRpYS94aWxpbngveGxueCxjc2kycnhzcy55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+
-ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngs
-Y3NpMnJ4c3MueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL3hpbGlueC94bG54LGNzaTJyeHNzLnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0K
-PiA+IGluZGV4IDAwMDAwMDAuLjIyODIyMzENCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3hpbGlueC94bG54LGNzaTJy
-eHNzLnlhbQ0KPiA+ICsrKyBsDQo+ID4gQEAgLTAsMCArMSwyMzcgQEANCj4gPiArIyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpICVZQU1MIDEu
-Mg0KPiA+ICstLS0NCj4gPiArJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9tZWRp
-YS94aWxpbngveGxueCxjc2kycnhzcy55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNl
-dHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBYaWxp
-bnggTUlQSSBDU0ktMiBSZWNlaXZlciBTdWJzeXN0ZW0NCj4gPiArDQo+ID4gK21haW50YWluZXJz
-Og0KPiA+ICsgIC0gVmlzaGFsIFNhZ2FyIDx2aXNoYWwuc2FnYXJAeGlsaW54LmNvbT4NCj4gPiAr
-DQo+ID4gK2Rlc2NyaXB0aW9uOiB8DQo+ID4gKyAgVGhlIFhpbGlueCBNSVBJIENTSS0yIFJlY2Vp
-dmVyIFN1YnN5c3RlbSBpcyB1c2VkIHRvIGNhcHR1cmUgTUlQSQ0KPiA+ICtDU0ktMg0KPiA+ICsg
-IHRyYWZmaWMgZnJvbSBjb21wbGlhbnQgY2FtZXJhIHNlbnNvcnMgYW5kIHNlbmQgdGhlIG91dHB1
-dCBhcyBBWEk0DQo+ID4gK1N0cmVhbQ0KPiA+ICsgIHZpZGVvIGRhdGEgZm9yIGltYWdlIHByb2Nl
-c3NpbmcuDQo+ID4gKyAgVGhlIHN1YnN5c3RlbSBjb25zaXN0cyBvZiBhIE1JUEkgRC1QSFkgaW4g
-c2xhdmUgbW9kZSB3aGljaCBjYXB0dXJlcw0KPiA+ICt0aGUNCj4gPiArICBkYXRhIHBhY2tldHMu
-IFRoaXMgaXMgcGFzc2VkIGFsb25nIHRoZSBNSVBJIENTSS0yIFJ4IElQIHdoaWNoDQo+ID4gK2V4
-dHJhY3RzIHRoZQ0KPiA+ICsgIHBhY2tldCBkYXRhLiBUaGUgb3B0aW9uYWwgVmlkZW8gRm9ybWF0
-IEJyaWRnZSAoVkZCKSBjb252ZXJ0cyB0aGlzDQo+ID4gK2RhdGEgdG8NCj4gPiArICBBWEk0IFN0
-cmVhbSB2aWRlbyBkYXRhLg0KPiA+ICsgIEZvciBtb3JlIGRldGFpbHMsIHBsZWFzZSByZWZlciB0
-byBQRzIzMiBYaWxpbnggTUlQSSBDU0ktMiBSZWNlaXZlcg0KPiBTdWJzeXN0ZW0uDQo+ID4gKyAg
-UGxlYXNlIG5vdGUgdGhhdCB0aGlzIGJpbmRpbmdzIGluY2x1ZGVzIG9ubHkgdGhlIE1JUEkgQ1NJ
-LTIgUngNCj4gPiArY29udHJvbGxlcg0KPiA+ICsgIGFuZCBWaWRlbyBGb3JtYXQgQnJpZGdlIGFu
-ZCBub3QgRC1QSFkuDQo+ID4gKw0KPiA+ICtwcm9wZXJ0aWVzOg0KPiA+ICsgIGNvbXBhdGlibGU6
-DQo+ID4gKyAgICBpdGVtczoNCj4gPiArICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgIC0geGxu
-eCxtaXBpLWNzaTItcngtc3Vic3lzdGVtLTUuMA0KPiA+ICsNCj4gPiArICByZWc6DQo+ID4gKyAg
-ICBtYXhJdGVtczogMQ0KPiA+ICsNCj4gPiArICBpbnRlcnJ1cHRzOg0KPiA+ICsgICAgbWF4SXRl
-bXM6IDENCj4gPiArDQo+ID4gKyAgY2xvY2tzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IExpc3Qg
-b2YgY2xvY2sgc3BlY2lmaWVycw0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAgICAgIC0gZGVzY3Jp
-cHRpb246IEFYSSBMaXRlIGNsb2NrDQo+ID4gKyAgICAgIC0gZGVzY3JpcHRpb246IFZpZGVvIGNs
-b2NrDQo+ID4gKw0KPiA+ICsgIGNsb2NrLW5hbWVzOg0KPiA+ICsgICAgaXRlbXM6DQo+ID4gKyAg
-ICAgIC0gY29uc3Q6IGxpdGVfYWNsaw0KPiA+ICsgICAgICAtIGNvbnN0OiB2aWRlb19hY2xrDQo+
-ID4gKw0KPiA+ICsgIHhsbngsY3NpLXB4bC1mb3JtYXQ6DQo+ID4gKyAgICBkZXNjcmlwdGlvbjog
-fA0KPiA+ICsgICAgICBUaGlzIGRlbm90ZXMgdGhlIENTSSBEYXRhIHR5cGUgc2VsZWN0ZWQgaW4g
-aHcgZGVzaWduLg0KPiA+ICsgICAgICBQYWNrZXRzIG90aGVyIHRoYW4gdGhpcyBkYXRhIHR5cGUg
-KGV4Y2VwdCBmb3IgUkFXOCBhbmQNCj4gPiArICAgICAgVXNlciBkZWZpbmVkIGRhdGEgdHlwZXMp
-IHdpbGwgYmUgZmlsdGVyZWQgb3V0Lg0KPiA+ICsgICAgICBQb3NzaWJsZSB2YWx1ZXMgYXJlIGFz
-IGJlbG93IC0NCj4gPiArICAgICAgMHgxZSAtIFlVVjQyMjhCDQo+ID4gKyAgICAgIDB4MWYgLSBZ
-VVY0MjIxMEINCj4gPiArICAgICAgMHgyMCAtIFJHQjQ0NA0KPiA+ICsgICAgICAweDIxIC0gUkdC
-NTU1DQo+ID4gKyAgICAgIDB4MjIgLSBSR0I1NjUNCj4gPiArICAgICAgMHgyMyAtIFJHQjY2Ng0K
-PiA+ICsgICAgICAweDI0IC0gUkdCODg4DQo+ID4gKyAgICAgIDB4MjggLSBSQVc2DQo+ID4gKyAg
-ICAgIDB4MjkgLSBSQVc3DQo+ID4gKyAgICAgIDB4MmEgLSBSQVc4DQo+ID4gKyAgICAgIDB4MmIg
-LSBSQVcxMA0KPiA+ICsgICAgICAweDJjIC0gUkFXMTINCj4gPiArICAgICAgMHgyZCAtIFJBVzE0
-DQo+ID4gKyAgICAgIDB4MmUgLSBSQVcxNg0KPiA+ICsgICAgICAweDJmIC0gUkFXMjANCj4gPiAr
-ICAgIGFsbE9mOg0KPiA+ICsgICAgICAtICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmlu
-aXRpb25zL3VpbnQzMg0KPiA+ICsgICAgICAtIGFueU9mOg0KPiA+ICsgICAgICAgIC0gbWluaW11
-bTogMHgxZQ0KPiA+ICsgICAgICAgIC0gbWF4aW11bTogMHgyNA0KPiA+ICsgICAgICAgIC0gbWlu
-aW11bTogMHgyOA0KPiA+ICsgICAgICAgIC0gbWF4aW11bTogMHgyZg0KPiA+ICsNCj4gPiArICB4
-bG54LHZmYjoNCj4gPiArICAgIHR5cGU6IGJvb2xlYW4NCj4gPiArICAgIGRlc2NyaXB0aW9uOiBQ
-cmVzZW50IHdoZW4gVmlkZW8gRm9ybWF0IEJyaWRnZSBpcyBlbmFibGVkIGluIElQDQo+ID4gKyBj
-b25maWd1cmF0aW9uDQo+ID4gKw0KPiA+ICsgIHhsbngsZW4tY3NpLXYyLTA6DQo+ID4gKyAgICB0
-eXBlOiBib29sZWFuDQo+ID4gKyAgICBkZXNjcmlwdGlvbjogUHJlc2VudCBpZiBDU0kgdjIgaXMg
-ZW5hYmxlZCBpbiBJUCBjb25maWd1cmF0aW9uLg0KPiA+ICsNCj4gPiArICB4bG54LGVuLXZjeDoN
-Cj4gPiArICAgIHR5cGU6IGJvb2xlYW4NCj4gPiArICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4gKyAg
-ICAgIFdoZW4gcHJlc2VudCwgdGhlcmUgYXJlIG1heGltdW0gMTYgdmlydHVhbCBjaGFubmVscywg
-ZWxzZSBvbmx5IDQuDQo+ID4gKw0KPiA+ICsgIHhsbngsZW4tYWN0aXZlLWxhbmVzOg0KPiA+ICsg
-ICAgdHlwZTogYm9vbGVhbg0KPiA+ICsgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgUHJl
-c2VudCBpZiB0aGUgbnVtYmVyIG9mIGFjdGl2ZSBsYW5lcyBjYW4gYmUgcmUtY29uZmlndXJlZCBh
-dA0KPiA+ICsgICAgICBydW50aW1lIGluIHRoZSBQcm90b2NvbCBDb25maWd1cmF0aW9uIFJlZ2lz
-dGVyLiBPdGhlcndpc2UgYWxsIGxhbmVzLA0KPiA+ICsgICAgICBhcyBzZXQgaW4gSVAgY29uZmln
-dXJhdGlvbiwgYXJlIGFsd2F5cyBhY3RpdmUuDQo+ID4gKw0KPiA+ICsgIHZpZGVvLXJlc2V0LWdw
-aW9zOg0KPiA+ICsgICAgZGVzY3JpcHRpb246IE9wdGlvbmFsIHNwZWNpZmllciBmb3IgYSBHUElP
-IHRoYXQgYXNzZXJ0cyB2aWRlb19hcmVzZXRuLg0KPiA+ICsgICAgbWF4SXRlbXM6IDENCj4gPiAr
-DQo+ID4gKyAgcG9ydHM6DQo+ID4gKyAgICB0eXBlOiBvYmplY3QNCj4gPiArDQo+ID4gKyAgICBw
-cm9wZXJ0aWVzOg0KPiA+ICsgICAgICBwb3J0QDA6DQo+ID4gKyAgICAgICAgdHlwZTogb2JqZWN0
-DQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246IHwNCj4gPiArICAgICAgICAgIElucHV0IC8gc2lu
-ayBwb3J0IG5vZGUsIHNpbmdsZSBlbmRwb2ludCBkZXNjcmliaW5nIHRoZQ0KPiA+ICsgICAgICAg
-ICAgQ1NJLTIgdHJhbnNtaXR0ZXIuDQo+ID4gKw0KPiA+ICsgICAgICAgIHByb3BlcnRpZXM6DQo+
-ID4gKyAgICAgICAgICByZWc6DQo+ID4gKyAgICAgICAgICAgIGNvbnN0OiAwDQo+ID4gKw0KPiA+
-ICsgICAgICAgICAgZW5kcG9pbnQ6DQo+ID4gKyAgICAgICAgICAgIHR5cGU6IG9iamVjdA0KPiA+
-ICsNCj4gPiArICAgICAgICAgICAgcHJvcGVydGllczoNCj4gPiArDQo+ID4gKyAgICAgICAgICAg
-ICAgZGF0YS1sYW5lczoNCj4gPiArICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOiB8DQo+ID4g
-KyAgICAgICAgICAgICAgICAgIFRoaXMgaXMgcmVxdWlyZWQgb25seSBpbiB0aGUgc2luayBwb3J0
-IDAgZW5kcG9pbnQgd2hpY2gNCj4gPiArICAgICAgICAgICAgICAgICAgY29ubmVjdHMgdG8gTUlQ
-SSBDU0ktMiBzb3VyY2UgbGlrZSBzZW5zb3IuDQo+ID4gKyAgICAgICAgICAgICAgICAgIFRoZSBw
-b3NzaWJsZSB2YWx1ZXMgYXJlIC0NCj4gPiArICAgICAgICAgICAgICAgICAgMSAgICAgICAtIEZv
-ciAxIGxhbmUgZW5hYmxlZCBpbiBJUC4NCj4gPiArICAgICAgICAgICAgICAgICAgMSAyICAgICAt
-IEZvciAyIGxhbmVzIGVuYWJsZWQgaW4gSVAuDQo+ID4gKyAgICAgICAgICAgICAgICAgIDEgMiAz
-ICAgLSBGb3IgMyBsYW5lcyBlbmFibGVkIGluIElQLg0KPiA+ICsgICAgICAgICAgICAgICAgICAx
-IDIgMyA0IC0gRm9yIDQgbGFuZXMgZW5hYmxlZCBpbiBJUC4NCj4gPiArICAgICAgICAgICAgICAg
-IGl0ZW1zOg0KPiA+ICsgICAgICAgICAgICAgICAgICAtIGNvbnN0OiAxDQo+ID4gKyAgICAgICAg
-ICAgICAgICAgIC0gY29uc3Q6IDINCj4gPiArICAgICAgICAgICAgICAgICAgLSBjb25zdDogMw0K
-PiA+ICsgICAgICAgICAgICAgICAgICAtIGNvbnN0OiA0DQo+ID4gKw0KPiA+ICsgICAgICAgICAg
-ICAgIHJlbW90ZS1lbmRwb2ludDogdHJ1ZQ0KPiA+ICsNCj4gPiArICAgICAgICAgICAgcmVxdWly
-ZWQ6DQo+ID4gKyAgICAgICAgICAgICAgLSBkYXRhLWxhbmVzDQo+ID4gKyAgICAgICAgICAgICAg
-LSByZW1vdGUtZW5kcG9pbnQNCj4gPiArDQo+ID4gKyAgICAgICAgICAgIGFkZGl0aW9uYWxQcm9w
-ZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArICAgICAgICBhZGRpdGlvbmFsUHJvcGVydGllczog
-ZmFsc2UNCj4gPiArDQo+ID4gKyAgICAgIHBvcnRAMToNCj4gPiArICAgICAgICB0eXBlOiBvYmpl
-Y3QNCj4gPiArICAgICAgICBkZXNjcmlwdGlvbjogfA0KPiA+ICsgICAgICAgICAgT3V0cHV0IC8g
-c291cmNlIHBvcnQgbm9kZSwgZW5kcG9pbnQgZGVzY3JpYmluZyBtb2R1bGVzDQo+ID4gKyAgICAg
-ICAgICBjb25uZWN0ZWQgdGhlIENTSS0yIHJlY2VpdmVyLg0KPiA+ICsNCj4gPiArICAgICAgICBw
-cm9wZXJ0aWVzOg0KPiA+ICsNCj4gPiArICAgICAgICAgIHJlZzoNCj4gPiArICAgICAgICAgICAg
-Y29uc3Q6IDENCj4gPiArDQo+ID4gKyAgICAgICAgICBlbmRwb2ludDoNCj4gPiArICAgICAgICAg
-ICAgdHlwZTogb2JqZWN0DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICBwcm9wZXJ0aWVzOg0KPiA+
-ICsNCj4gPiArICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQ6IHRydWUNCj4gPiArDQo+ID4g
-KyAgICAgICAgICAgIHJlcXVpcmVkOg0KPiA+ICsgICAgICAgICAgICAgIC0gcmVtb3RlLWVuZHBv
-aW50DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UN
-Cj4gPiArDQo+ID4gKyAgICAgICAgYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ID4gKw0K
-PiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBhdGlibGUNCj4gPiArICAtIHJlZw0KPiA+ICsg
-IC0gaW50ZXJydXB0cw0KPiA+ICsgIC0gY2xvY2tzDQo+ID4gKyAgLSBjbG9jay1uYW1lcw0KPiA+
-ICsgIC0gcG9ydHMNCj4gPiArDQo+ID4gK2FsbE9mOg0KPiA+ICsgIC0gaWY6DQo+ID4gKyAgICBy
-ZXF1aXJlZDoNCj4gPiArICAgICAgLSB4bG54LHZmYg0KPiA+ICsgICAgdGhlbjoNCj4gPiArICAg
-ICAgcmVxdWlyZWQ6DQo+ID4gKyAgICAgICAgLSB4bG54LGNzaS1weGwtZm9ybWF0DQo+ID4gKyAg
-ICBlbHNlOg0KPiA+ICsgICAgICBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgICAgIHhsbngsY3NpLXB4
-bC1mb3JtYXQ6IGZhbHNlDQo+ID4gKw0KPiA+ICsgIC0gaWY6DQo+ID4gKyAgICBub3Q6DQo+ID4g
-KyAgICAgIHJlcXVpcmVkOg0KPiA+ICsgICAgICAgIC0geGxueCxlbi1jc2ktdjItMA0KPiA+ICsg
-ICAgdGhlbjoNCj4gPiArICAgICAgcHJvcGVydGllczoNCj4gPiArICAgICAgICB4bG54LGVuLXZj
-eDogZmFsc2UNCj4gDQo+IFRoZXJlJ3MgYW4gaW5kZW50YXRpb24gcHJvYmxlbSBoZXJlLCBpdCBz
-aG91bGQgYmUNCj4gDQo+IGFsbE9mOg0KPiAgIC0gaWY6DQo+ICAgICAgIHJlcXVpcmVkOg0KPiAg
-ICAgICAgIC0geGxueCx2ZmINCj4gICAgIHRoZW46DQo+ICAgICAgIHJlcXVpcmVkOg0KPiAgICAg
-ICAgIC0geGxueCxjc2ktcHhsLWZvcm1hdA0KPiAgICAgZWxzZToNCj4gICAgICAgcHJvcGVydGll
-czoNCj4gICAgICAgICB4bG54LGNzaS1weGwtZm9ybWF0OiBmYWxzZQ0KPiANCj4gICAtIGlmOg0K
-PiAgICAgICBub3Q6DQo+ICAgICAgICAgcmVxdWlyZWQ6DQo+ICAgICAgICAgICAtIHhsbngsZW4t
-Y3NpLXYyLTANCj4gICAgIHRoZW46DQo+ICAgICAgIHByb3BlcnRpZXM6DQo+ICAgICAgICAgeGxu
-eCxlbi12Y3g6IGZhbHNlDQo+IA0KPiBIYXZlIHlvdSBydW4gdGhlIGJpbmRpbmdzIGNoZWNrcyA/
-DQo+IA0KPiBtYWtlDQo+IERUX1NDSEVNQV9GSUxFUz1Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWVkaWEveGlsaW54L3hsbngsY3NpDQo+IDJyeHNzLnlhbWwgZHRfYmluZGluZ19j
-aGVjaw0KPiANCj4gSXQgd291bGQgaGF2ZSBjYXVnaHQgdGhlIGlzc3VlLg0KPiANCg0KQnkgbWlz
-dGFrZSB0aGUgaW5jb3JyZWN0IHBhdGNoIHdhcyBzZW50LiBBcG9sb2dpZXMgZm9yIHRoaXMuDQoN
-Cj4gPiArDQo+ID4gK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQ0KPiA+ICsNCj4gPiArZXhh
-bXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4gKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9n
-cGlvLmg+DQo+ID4gKyAgICB4Y3NpMnJ4c3NfMTogY3NpMnJ4QGEwMDIwMDAwIHsNCj4gPiArICAg
-ICAgICBjb21wYXRpYmxlID0gInhsbngsbWlwaS1jc2kyLXJ4LXN1YnN5c3RlbS01LjAiOw0KPiA+
-ICsgICAgICAgIHJlZyA9IDwweDAgMHhhMDAyMDAwMCAweDAgMHgxMDAwMD47DQo+IA0KPiBJIHRo
-aW5rIEkgbWVudGlvbmVkIGluIGEgcHJldmlvdXMgcmV2aWV3IHRoYXQgdGhpcyBzaG91bGQgYmUN
-Cj4gDQo+ICAgICAgICAgcmVnID0gPDB4YTAwMjAwMDAgMHgxMDAwMD47DQo+IA0KPiBldmVuIGlm
-IGl0IGRvZXNuJ3QgbWF0Y2ggd2hhdCB0aGUgcmVhbCB2YWx1ZXMsIGFzIGR0X2JpbmRpbmdfY2hl
-Y2sgY29tcGlsZXMNCj4gdGhlIGV4YW1wbGVzIGluIHRoZSBjb250ZXh0IG9mIGEgYnVzIHRoYXQg
-aGFzICNhZGRyZXNzLWNlbGxzID0gPDE+IGFuZCAjc2l6ZS0NCj4gY2VsbHMgPSA8MT4uDQo+IA0K
-PiBJIGNhbiBmaXggdGhlc2Ugd2hlbiBhcHBseWluZyB0aGUgcGF0Y2hlcyB0byBteSB0cmVlIGlm
-IHRoYXQncyBPSyB3aXRoIHlvdSwgYW5kDQo+IHNlbmQgYSBwdWxsIHJlcXVlc3QuDQo+IA0KDQpZ
-ZXMgdGhhdCBpcyBmaW5lLiBUaGFua3MhDQoNCj4gPiArICAgICAgICBpbnRlcnJ1cHQtcGFyZW50
-ID0gPCZnaWM+Ow0KPiA+ICsgICAgICAgIGludGVycnVwdHMgPSA8MCA5NSA0PjsNCj4gPiArICAg
-ICAgICB4bG54LGNzaS1weGwtZm9ybWF0ID0gPDB4MmE+Ow0KPiA+ICsgICAgICAgIHhsbngsdmZi
-Ow0KPiA+ICsgICAgICAgIHhsbngsZW4tYWN0aXZlLWxhbmVzOw0KPiA+ICsgICAgICAgIHhsbngs
-ZW4tY3NpLXYyLTA7DQo+ID4gKyAgICAgICAgeGxueCxlbi12Y3g7DQo+ID4gKyAgICAgICAgY2xv
-Y2stbmFtZXMgPSAibGl0ZV9hY2xrIiwgInZpZGVvX2FjbGsiOw0KPiA+ICsgICAgICAgIGNsb2Nr
-cyA9IDwmbWlzY19jbGtfMD4sIDwmbWlzY19jbGtfMT47DQo+ID4gKyAgICAgICAgdmlkZW8tcmVz
-ZXQtZ3Bpb3MgPSA8JmdwaW8gODYgR1BJT19BQ1RJVkVfTE9XPjsNCj4gPiArDQo+ID4gKyAgICAg
-ICAgcG9ydHMgew0KPiA+ICsgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiAr
-ICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICBw
-b3J0QDAgew0KPiA+ICsgICAgICAgICAgICAgICAgLyogU2luayBwb3J0ICovDQo+ID4gKyAgICAg
-ICAgICAgICAgICByZWcgPSA8MD47DQo+ID4gKyAgICAgICAgICAgICAgICBjc2lzc19pbjogZW5k
-cG9pbnQgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgIGRhdGEtbGFuZXMgPSA8MSAyIDMgND47
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgLyogTUlQSSBDU0ktMiBDYW1lcmEgaGFuZGxlICov
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZjYW1lcmFfb3V0
-PjsNCj4gPiArICAgICAgICAgICAgICAgIH07DQo+ID4gKyAgICAgICAgICAgIH07DQo+ID4gKyAg
-ICAgICAgICAgIHBvcnRAMSB7DQo+ID4gKyAgICAgICAgICAgICAgICAvKiBTb3VyY2UgcG9ydCAq
-Lw0KPiA+ICsgICAgICAgICAgICAgICAgcmVnID0gPDE+Ow0KPiA+ICsgICAgICAgICAgICAgICAg
-Y3Npc3Nfb3V0OiBlbmRwb2ludCB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVu
-ZHBvaW50ID0gPCZ2cHJvY19pbj47DQo+ID4gKyAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAg
-ICAgICAgICB9Ow0KPiA+ICsgICAgICAgIH07DQo+ID4gKyAgICB9Ow0KPiA+ICsuLi4NCj4gDQo+
-IC0tDQo+IFJlZ2FyZHMsDQo+IA0KPiBMYXVyZW50IFBpbmNoYXJ0DQoNClJlZ2FyZHMNClZpc2hh
-bCBTYWdhcg0KDQo=
+Hi Andrew-sh.Cheng,
+
+On 5/20/20 12:43 PM, Andrew-sh.Cheng wrote:
+> This adds a devfreq driver for the Cache Coherent Interconnect (CCI)
+> of the Mediatek MT8183.
+> 
+> On the MT8183 the CCI is supplied by the same regulator as the LITTLE
+> cores. The driver is notified when the regulator voltage changes
+> (driven by cpufreq) and adjusts the CCI frequency to the maximum
+> possible value.
+> 
+> Signed-off-by: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> ---
+>  drivers/devfreq/Kconfig              |  10 ++
+>  drivers/devfreq/Makefile             |   1 +
+>  drivers/devfreq/mt8183-cci-devfreq.c | 206 +++++++++++++++++++++++++++++++++++
+
+The mt8183-cci.c is enough for driver name.
+
+>  3 files changed, 217 insertions(+)
+>  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
+> 
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index d9067950af6a..4ed7116271ee 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -103,6 +103,16 @@ config ARM_IMX8M_DDRC_DEVFREQ
+>  	  This adds the DEVFREQ driver for the i.MX8M DDR Controller. It allows
+>  	  adjusting DRAM frequency.
+>  
+> +config ARM_MT8183_CCI_DEVFREQ
+> +	tristate "MT8183 CCI DEVFREQ Driver"
+> +	depends on ARM_MEDIATEK_CPUFREQ
+> +	help
+> +		This adds a devfreq driver for Cache Coherent Interconnect
+> +		of Mediatek MT8183, which is shared the same regulator
+> +		with cpu cluster.
+> +		It can track buck voltage and update a proper cci frequency.
+
+s/cci/CCI
+
+> +		Use notification to get regulator status.
+> +
+>  config ARM_TEGRA_DEVFREQ
+>  	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
+>  	depends on ARCH_TEGRA_3x_SOC || ARCH_TEGRA_114_SOC || \
+> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+> index 3eb4d5e6635c..5b1b670c954d 100644
+> --- a/drivers/devfreq/Makefile
+> +++ b/drivers/devfreq/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
+>  # DEVFREQ Drivers
+>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+>  obj-$(CONFIG_ARM_IMX8M_DDRC_DEVFREQ)	+= imx8m-ddrc.o
+> +obj-$(CONFIG_ARM_MT8183_CCI_DEVFREQ)	+= mt8183-cci-devfreq.o
+>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
+>  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
+>  obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
+> diff --git a/drivers/devfreq/mt8183-cci-devfreq.c b/drivers/devfreq/mt8183-cci-devfreq.c
+> new file mode 100644
+> index 000000000000..cd7929a83bf8
+> --- /dev/null
+> +++ b/drivers/devfreq/mt8183-cci-devfreq.c
+> @@ -0,0 +1,206 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+
+s/2019/2020
+
+> +
+> + * Author: Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/devfreq.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/time.h>
+> +
+> +#include "governor.h"
+
+It is not needed. Please remove it.
+
+> +
+> +#define MAX_VOLT_LIMIT		(1150000)
+> +
+> +struct cci_devfreq {
+> +	struct devfreq *devfreq;
+> +	struct regulator *proc_reg;
+
+'proc' means the 'processor'?
+Instead of 'proc_reg', you better to use 'cpu_reg'.
+
+> +	struct clk *cci_clk;
+> +	int old_vproc;
+> +	unsigned long old_freq;
+> +};
+> +
+> +static int mtk_cci_set_voltage(struct cci_devfreq *cci_df, int vproc)
+> +{
+> +	int ret;
+> +
+> +	ret = regulator_set_voltage(cci_df->proc_reg, vproc,
+> +				    MAX_VOLT_LIMIT);
+> +	if (!ret)
+> +		cci_df->old_vproc = vproc;
+> +	return ret;
+> +}
+> +
+> +static int mtk_cci_devfreq_target(struct device *dev, unsigned long *freq,
+> +				  u32 flags)
+> +{
+> +	int ret;
+> +	struct cci_devfreq *cci_df = dev_get_drvdata(dev);
+> +	struct dev_pm_opp *opp;
+> +	unsigned long opp_rate, opp_voltage, old_voltage;
+> +
+> +	if (!cci_df)
+> +		return -EINVAL;
+> +
+> +	if (cci_df->old_freq == *freq)
+> +		return 0;
+> +
+> +	opp_rate = *freq;
+> +	opp = dev_pm_opp_find_freq_floor(dev, &opp_rate);
+> +	opp_voltage = dev_pm_opp_get_voltage(opp);
+> +	dev_pm_opp_put(opp);
+
+
+You can use the helper function for getting the rate 
+with devfreq_recommended_opp(). You can refer the following code
+in drivers/devfreq/exynos-bus.c
+
+	opp = devfreq_recommended_opp(dev, freq, flags);
+	if (IS_ERR(opp)) {
+		dev_err(dev, "failed to get recommended opp instance\n");
+		return PTR_ERR(opp);
+	}
+	dev_pm_opp_put(opp);
+
+> +
+> +	old_voltage = cci_df->old_vproc;
+> +	if (old_voltage == 0)
+> +		old_voltage = regulator_get_voltage(cci_df->proc_reg);
+> +
+> +	// scale up: set voltage first then freq
+> +	if (opp_voltage > old_voltage) {
+> +		ret = mtk_cci_set_voltage(cci_df, opp_voltage);
+> +		if (ret) {
+> +			pr_err("cci: failed to scale up voltage\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = clk_set_rate(cci_df->cci_clk, *freq);
+> +	if (ret) {
+> +		pr_err("%s: failed cci to set rate: %d\n", __func__,
+> +		       ret);
+> +		mtk_cci_set_voltage(cci_df, old_voltage);
+> +		return ret;
+> +	}
+> +
+> +	// scale down: set freq first then voltage
+> +	if (opp_voltage < old_voltage) {
+> +		ret = mtk_cci_set_voltage(cci_df, opp_voltage);
+> +		if (ret) {
+> +			pr_err("cci: failed to scale down voltage\n");
+> +			clk_set_rate(cci_df->cci_clk, cci_df->old_freq);
+> +			return ret;
+> +		}
+> +	}
+
+
+I recommend that dev_pm_opp_set_rate() and dev_pm_opp_set_regulator()
+instead of 'clk_set_rate' and 'regulator_set_voltage'.
+In the dev_pm_opp_set_rate(), handle the these sequence.
+You can refer the merged patch[1].
+
+[1] commit 4294a779bd8dff6c65e7e85ffe7a1ea236e92a68
+- PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()
+
+
+> +
+> +	cci_df->old_freq = *freq;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct devfreq_dev_profile cci_devfreq_profile = {
+> +	.target = mtk_cci_devfreq_target,
+
+Need to add '.exit' for calling dev_pm_opp_of_remove_table().
+You can refer the merged devfreq patches like exynos_bus.c, imx-bus.c.
+
+> +};
+> +
+> +static int mtk_cci_devfreq_probe(struct platform_device *pdev)
+> +{
+> +	struct device *cci_dev = &pdev->dev;
+> +	struct cci_devfreq *cci_df;
+> +	struct devfreq_passive_data *passive_data;
+> +	int ret;
+> +
+> +	cci_df = devm_kzalloc(cci_dev, sizeof(*cci_df), GFP_KERNEL);
+> +	if (!cci_df)
+> +		return -ENOMEM;
+> +
+> +	cci_df->cci_clk = devm_clk_get(cci_dev, "cci_clock");
+> +	ret = PTR_ERR_OR_ZERO(cci_df->cci_clk);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(cci_dev, "failed to get clock for CCI: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +	cci_df->proc_reg = devm_regulator_get_optional(cci_dev, "proc");
+> +	ret = PTR_ERR_OR_ZERO(cci_df->proc_reg);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(cci_dev, "failed to get regulator for CCI: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+
+I recommend that use dev_pm_opp_set_regulators.
+You can refer the merged patch[1].
+
+[1] commit 4294a779bd8dff6c65e7e85ffe7a1ea236e92a68
+- PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()
+
+
+> +	ret = regulator_enable(cci_df->proc_reg);
+> +	if (ret) {
+> +		pr_warn("enable buck for cci fail\n");
+
+Use dev_err instead of 'pr_warn'.
+
+> +		return ret;
+> +	}
+> +
+> +	ret = dev_pm_opp_of_add_table(cci_dev);
+> +	if (ret) {
+> +		dev_err(cci_dev, "Fail to init CCI OPP table: %d\n", ret);
+
+How about changing the error log as following
+because in this driver, use the 'failed to' sentence for error handling?
+
+	failed to get OPP table for CCI:L %d
+
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, cci_df);
+> +
+> +	passive_data = devm_kzalloc(cci_dev, sizeof(*passive_data), GFP_KERNEL);
+> +	if (!passive_data)
+> +		return -ENOMEM;
+
+On this error case, you have to call dev_pm_opp_of_remove_table().
+You better to make the 'err_opp' jump lable and then add 'goto err_opp'.
+
+> +
+> +	passive_data->parent_type = CPUFREQ_PARENT_DEV;
+> +
+> +	cci_df->devfreq = devm_devfreq_add_device(cci_dev,
+> +						  &cci_devfreq_profile,
+> +						  DEVFREQ_GOV_PASSIVE,
+> +						  passive_data);
+> +	if (IS_ERR(cci_df->devfreq)) {
+> +		ret = PTR_ERR(cci_df->devfreq);
+> +		dev_err(cci_dev, "cannot create cci devfreq device:%d\n", ret);
+> +		dev_pm_opp_of_remove_table(cci_dev);
+
+Instead of direct call, use 'goto err_opp'.
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_cci_devfreq_remove(struct platform_device *pdev)
+> +{
+> +	struct device *cci_dev = &pdev->dev;
+> +	struct cci_devfreq *cci_df;
+> +	struct notifier_block *opp_nb;
+> +
+> +	cci_df = platform_get_drvdata(pdev);
+> +	opp_nb = &cci_df->opp_nb;
+> +
+> +	dev_pm_opp_unregister_notifier(cci_dev, opp_nb);
+
+This patch doesn't call the dev_pm_opp_register_notifier.
+Please remove it.
+
+> +	devm_devfreq_remove_device(cci_dev, cci_df->devfreq);
+
+Don't need to call this function because you used devm_devfreq_add_device().
+
+> +	dev_pm_opp_of_remove_table(cci_dev)> +	regulator_disable(cci_df->proc_reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static const __maybe_unused struct of_device_id
+> +	mediatek_cci_devfreq_of_match[] = {
+
+Make it on one line and remove '__maybe_unused' keyword.
+- mediatek_cci_devfreq_of_match-> mediatek_cci_of_match
+
+> +	{ .compatible = "mediatek,mt8183-cci" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, mediatek_cci_devfreq_of_match);
+
+ditto.
+
+> +
+> +static struct platform_driver cci_devfreq_driver = {
+> +	.probe	= mtk_cci_devfreq_probe,
+> +	.remove	= mtk_cci_devfreq_remove,
+> +	.driver = {
+> +		.name = "mediatek-cci-devfreq",
+> +		.of_match_table = of_match_ptr(mediatek_cci_devfreq_of_match),
+
+ditto.
+
+> +	},
+> +};
+> +
+> +static int __init mtk_cci_devfreq_init(void)
+> +{
+> +	return platform_driver_register(&cci_devfreq_driver);
+> +}
+> +module_init(mtk_cci_devfreq_init)
+> +
+> +static void __exit mtk_cci_devfreq_exit(void)
+> +{
+> +	platform_driver_unregister(&cci_devfreq_driver);
+> +}
+> +module_exit(mtk_cci_devfreq_exit)
+
+Use 'module_platform_driver' instead of module_init and module_exit.
+
+> +
+> +MODULE_DESCRIPTION("Mediatek CCI devfreq driver");
+> +MODULE_AUTHOR("Andrew-sh.Cheng <andrew-sh.cheng@mediatek.com>");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
