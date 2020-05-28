@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC6A215A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE6821702
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1590667122;
-	bh=PLNJeXxTBPc66RzOoR4Z0fys6oMg6bP2vmEK7g3T1FI=;
+	s=default; t=1590667124;
+	bh=qkGNjMmm+S4irgDGtCS4ZXNDosUQ/t/lZmeoUOkqREY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nckx03I0bFdLeRjpoThTxEi1KxZ/GsDYXh1UkrKLNwx/H3M1Tcyg3JuDEo1I0E5bp
-	 4KrBmKtRkTo9VLnI/UOlJklzthtDI9/3BSrUOvJh38EstlPyA478F5s7CFjdDQzqsd
-	 rwCJ3rTCdGVVSoLV9DCP+v9XKX/YnPupMMv91lXE=
+	b=IXxZRwHDvPez4HUXExYs1JMd1oNKPLCD5DKwgNpX5POqipDCOhz050mp9Ppzt9XJF
+	 rfUrZmOR3bT9LKtWLPCeWksiTKto4Y8FXpY3dHms/Rr5nQfpap93JUvw+ZY6TdtCdY
+	 TCn1U8m8PwJAyBN6jaMEQclXGQbZe+YYLhY5LsnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388514AbgE1L6k (ORCPT
+        id S2389267AbgE1L6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50418 "EHLO mail.kernel.org"
+        Thu, 28 May 2020 07:58:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389093AbgE1L5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:57:48 -0400
+        id S2389102AbgE1L5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 07:57:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F13C4216C4;
-        Thu, 28 May 2020 11:57:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E6121655;
+        Thu, 28 May 2020 11:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1590667067;
-        bh=PLNJeXxTBPc66RzOoR4Z0fys6oMg6bP2vmEK7g3T1FI=;
+        s=default; t=1590667069;
+        bh=qkGNjMmm+S4irgDGtCS4ZXNDosUQ/t/lZmeoUOkqREY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nIsZYTqXjMgwGr8CqJ/GAgShtF0Cns+kgEsiElK+pSglW+4es7SI8v8CSge0McTmk
-         ++FgMFezFd3H15kwPQpWqZ0Y7IcDnn8IV18onEr0cJ7mM3Wn13SsnyL1Qd/KqSwks9
-         443fMMjh121eNWGOzft2ptxbLrx/DTEB5IKQ3XC4=
+        b=Fws11Nhxb2WkRMvG6CbxwrG92SWYUf7aF6zoh6gw6nmw9YZxv2CzDQSZF6ToPgGUg
+         6gGZnoCjHuMdYUI4D7QfX3ptOrq1CDFYxXr6aNnPLYVhT8zegKh3BCojIglsa9xJH4
+         YLZeGmfiHCf8uGjHxzOpzhOUFQVnVZ79rKUlfOZQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        kbuild test robot <lkp@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 02/13] ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT
-Date:   Thu, 28 May 2020 07:57:33 -0400
-Message-Id: <20200528115744.1406533-2-sashal@kernel.org>
+Cc:     Roman Mashak <mrv@mojatatu.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/13] net sched: fix reporting the first-time use timestamp
+Date:   Thu, 28 May 2020 07:57:35 -0400
+Message-Id: <20200528115744.1406533-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200528115744.1406533-1-sashal@kernel.org>
 References: <20200528115744.1406533-1-sashal@kernel.org>
@@ -60,36 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Roman Mashak <mrv@mojatatu.com>
 
-[ Upstream commit 799587d5731db9dcdafaac4002463aa7d9cd6cf7 ]
+[ Upstream commit b15e62631c5f19fea9895f7632dae9c1b27fe0cd ]
 
-Elide invalid configuration EZNPS + ARCv2, triggered by a
-make allyesconfig build.
+When a new action is installed, firstuse field of 'tcf_t' is explicitly set
+to 0. Value of zero means "new action, not yet used"; as a packet hits the
+action, 'firstuse' is stamped with the current jiffies value.
 
-Granted the root cause is in source code (asm/barrier.h) where we check
-for ARCv2 before PLAT_EZNPS, but it is better to avoid such combinations
-at onset rather then baking subtle nuances into code.
+tcf_tm_dump() should return 0 for firstuse if action has not yet been hit.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Fixes: 48d8ee1694dd ("net sched actions: aggregate dumping of actions timeinfo")
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: Roman Mashak <mrv@mojatatu.com>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/plat-eznps/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/act_api.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/plat-eznps/Kconfig b/arch/arc/plat-eznps/Kconfig
-index ce908e2c5282..71378bfec8d0 100644
---- a/arch/arc/plat-eznps/Kconfig
-+++ b/arch/arc/plat-eznps/Kconfig
-@@ -6,6 +6,7 @@
+diff --git a/include/net/act_api.h b/include/net/act_api.h
+index 775387d6ca95..ff268bb0c60f 100644
+--- a/include/net/act_api.h
++++ b/include/net/act_api.h
+@@ -69,7 +69,8 @@ static inline void tcf_tm_dump(struct tcf_t *dtm, const struct tcf_t *stm)
+ {
+ 	dtm->install = jiffies_to_clock_t(jiffies - stm->install);
+ 	dtm->lastuse = jiffies_to_clock_t(jiffies - stm->lastuse);
+-	dtm->firstuse = jiffies_to_clock_t(jiffies - stm->firstuse);
++	dtm->firstuse = stm->firstuse ?
++		jiffies_to_clock_t(jiffies - stm->firstuse) : 0;
+ 	dtm->expires = jiffies_to_clock_t(stm->expires);
+ }
  
- menuconfig ARC_PLAT_EZNPS
- 	bool "\"EZchip\" ARC dev platform"
-+	depends on ISA_ARCOMPACT
- 	select CPU_BIG_ENDIAN
- 	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
- 	select EZNPS_GIC
 -- 
 2.25.1
 
