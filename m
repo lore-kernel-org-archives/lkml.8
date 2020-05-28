@@ -2,206 +2,357 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3227D20899
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OwJKqfjI"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF002084C
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 05:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbgE1FsZ (ORCPT
+        id S1727799AbgE1Fuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 01:48:25 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53739 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgE1FsY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 01:48:24 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200528054820euoutp0192594c7bae135384b1db2fc407d67203~TGxwZNFyb2841428414euoutp01X
-        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 05:48:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200528054820euoutp0192594c7bae135384b1db2fc407d67203~TGxwZNFyb2841428414euoutp01X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1590644900;
-        bh=78X7uugzjo3ajXjuTCkqQ21KH/n1p0CM9o55Qz0W+jo=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=OwJKqfjIrGLbo91YC6Kh2lLAEbJeal1O9X6Ev3DdV8CGcqvQny7OdfCV7/PO4+fk9
-         zq4IeuBgBODXzfoGDEXnqatQJ2xC9E0TzMaNQ42diXr58zWZ0/vZM1va0p2DlvxmBI
-         cklEXdqlDkNtfNp2D9jgU1YuZ9Np7LHzc3Epko2s=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200528054820eucas1p135642804c96f7a3dbddfc5e0decf9461~TGxwG1TSa2257322573eucas1p1n;
-        Thu, 28 May 2020 05:48:20 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C4.86.60698.4A05FCE5; Thu, 28
-        May 2020 06:48:20 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200528054820eucas1p16ab6bc1dc0db7b4cff5698724329afeb~TGxvxD0dX2443224432eucas1p16;
-        Thu, 28 May 2020 05:48:20 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200528054820eusmtrp27f442029bed074ca16d7926eec6d86ac~TGxvwddo10571605716eusmtrp2C;
-        Thu, 28 May 2020 05:48:20 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-27-5ecf50a4c999
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CC.E5.07950.4A05FCE5; Thu, 28
-        May 2020 06:48:20 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200528054819eusmtip2b1a5039cfe8ffd4ea5f1ffa327f7e9e1~TGxvYFCdr0579205792eusmtip2k;
-        Thu, 28 May 2020 05:48:19 +0000 (GMT)
-Subject: Re: [PATCHv2] media: videobuf2-dma-contig: fix bad kfree in
- vb2_dma_contig_clear_max_seg_size
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <8b53b12f-2971-8b92-9617-a73d0b9d312f@samsung.com>
-Date:   Thu, 28 May 2020 07:48:20 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.8.1
+        Thu, 28 May 2020 01:50:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60170 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725789AbgE1Fub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 01:50:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3A63DAF92;
+        Thu, 28 May 2020 05:50:32 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id 9E91D60489; Thu, 28 May 2020 07:50:28 +0200 (CEST)
+Date:   Thu, 28 May 2020 07:50:28 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Ronak Doshi <doshir@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/4] vmxnet3: add support to get/set rx flow hash
+Message-ID: <20200528055028.yagr6r3rrjb3qrlc@lion.mk-sys.cz>
+References: <20200528020707.10036-1-doshir@vmware.com>
+ <20200528020707.10036-3-doshir@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <20200527082334.20774-1-tomi.valkeinen@ti.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHeXa3u7vR1uNceZiiNbVISJNJDCyt6MOoiL4FkauVl01yUzZf
-        g0AUQ4eKFlkNYWv5UtZ8meVbr450lKSZI+acmCaB2jC0TEsyrzfLb7/z///Pc86BhyIkNp6M
-        SjNk0UaDJl1OCrntfcuDe2tPDar3NU6GKYe7a0hlWctjnrLeucJR2lonkbLZ6iOVbsfpQ6TK
-        2VhKqvwfnpIqt7eDo1pwhp/inhEeSKXT03JoY1zSeaGuv+gOJ7MsIm9+tZdTgKplZiSgACeA
-        tXCRYFiC7yF4MZpgRsI1/oZgdKyRzxYLCF6NtXI2OoqGx7ms0YCga6iEZIs5BHX3n5BMKhjr
-        wNn7lWAMKe5EMFbahxiDwMmwODvNZ5jE8WAOmNcbRDgJWsq71piiuDgaflVqGXkbToGy8RmC
-        jQTB69tTXIYFOBG87gaSfTICOgI1BMsh4Juycpi5gO18mPe/Idm1j8Jd+ycey8Ew437EZzkM
-        Vrs2GooQTAw4+GxRhmC48BZiU4ngH/i5vh2B90BzdxwrH4bi6w0EIwMWgzcQxC4hhmvtN//K
-        Iii5KmHTu8Dibvo3tufde6ISyS2bTrNsOsey6RzL/7k2xG1EIXS2Sa+lTQoDnRtr0uhN2QZt
-        7MUMvROt/Zv+3+7vnej5ygUXwhSSbxGVHBtQS3iaHFO+3oWAIuRS0ZG3/WqJKFWTf5k2Zpwz
-        ZqfTJhcKpbjyEJHCPp0iwVpNFn2JpjNp44bLoQSyAhQa+Ojz+HqTFdYH0h0xx5d9VS7e6ta6
-        2r60BVXokl188kt7nrxO+5IMd2y3itWS/VlXomlF0wh5EN/wCnQ2xZyt3DOCPT+iIvPqBZ+t
-        8+7cCttQfo94Ke5EW/nEw53FOLJiYnb22Vl/VG0K7Wj2J0zGVi1JZW3TtdWduz1yrkmniY8h
-        jCbNHwjM73kzAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsVy+t/xe7pLAs7HGWzby2VxedccNoueDVtZ
-        LZZt+sNksWDjI0aL9fNvsVkcXxvuwOaxaVUnm8eda3vYPI7f2M7k8XmTXABLlJ5NUX5pSapC
-        Rn5xia1StKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7G6eaFTAU98hWf/h9l
-        amCcJtXFyMkhIWAi0Xz5PksXIxeHkMBSRon5F/8zQSRkJE5Oa2CFsIUl/lzrYoMoessocaXh
-        LliRsECGxKajH5hBEiICuxglFt2+yAaSYBawl/j2+iU7REcfo8TOO5/BEmwChhJdb7vAbF4B
-        O4kNvTuBbA4OFgFVid8T0kHCogKxEt2Lf7BDlAhKnJz5hAXE5hSwlrhxfDnUfDOJeZsfMkPY
-        8hLb386BssUlbj2ZzzSBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTcYiO94sTc4tK8dL3k
-        /NxNjMAI23bs55YdjF3vgg8xCnAwKvHwGnicixNiTSwrrsw9xCjBwawkwut09nScEG9KYmVV
-        alF+fFFpTmrxIUZToN8mMkuJJucDoz+vJN7Q1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZq
-        akFqEUwfEwenVANjXfziLRsk7CM/nv6stDHaJF9yZfI3I8ErtW7TmpKm+c/SW9o2M97gVICZ
-        ttKPbWnxvAbv9d9LWr+KLI6qvD1PPfzE9Iz9XEsesH/c3DJXZE6zgGJ/9aljhZM/B062abN/
-        /nH/r6e86SV6nzp6wjJ9K/tWVOjz6OsciDkX/Oj80d3Vjto3V7YosRRnJBpqMRcVJwIAjnmF
-        TcYCAAA=
-X-CMS-MailID: 20200528054820eucas1p16ab6bc1dc0db7b4cff5698724329afeb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200527082349eucas1p1ecf28f85e6b57f5eb30f8de419cf8a0a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200527082349eucas1p1ecf28f85e6b57f5eb30f8de419cf8a0a
-References: <CGME20200527082349eucas1p1ecf28f85e6b57f5eb30f8de419cf8a0a@eucas1p1.samsung.com>
-        <20200527082334.20774-1-tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200528020707.10036-3-doshir@vmware.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27.05.2020 10:23, Tomi Valkeinen wrote:
-> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
-> Initialize dma_parms for platform devices") in v5.7-rc5 causes
-> vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
-> allocated by vb2_dma_contig_set_max_seg_size().
->
-> The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
-> dev->dma_parms is always NULL when the driver is probed, and the case
-> where dev->dma_parms has bee initialized by someone else than the driver
-> (by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
->
-> All the current users of these functions are platform devices, which now
-> always have dma_parms set by the driver core. To fix the issue for v5.7,
-> make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
-> NULL to be on the safe side, and remove the kfree code from
-> vb2_dma_contig_clear_max_seg_size().
->
-> For v5.8 we should remove the two functions and move the
-> dma_set_max_seg_size() calls into the drivers.
->
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
-> Cc: stable@vger.kernel.org
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On Wed, May 27, 2020 at 07:07:04PM -0700, Ronak Doshi wrote:
+> With vmxnet3 version 4, the emulation supports multiqueue(RSS) for
+> UDP and ESP traffic. A guest can enable/disable RSS for UDP/ESP over
+> IPv4/IPv6 by issuing commands introduced in this patch. ESP ipv6 is
+> not yet supported in this patch.
+> 
+> This patch implements get_rss_hash_opts and set_rss_hash_opts
+> methods to allow querying and configuring different Rx flow hash
+> configurations.
+> 
+> Signed-off-by: Ronak Doshi <doshir@vmware.com>
 > ---
->
-> Changes in v2:
-> * vb2_dma_contig_clear_max_seg_size to empty static inline
-> * Added cc: stable and fixes tag
->
->   .../common/videobuf2/videobuf2-dma-contig.c   | 20 ++-----------------
->   include/media/videobuf2-dma-contig.h          |  2 +-
->   2 files changed, 3 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> index d3a3ee5b597b..f4b4a7c135eb 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> @@ -726,9 +726,8 @@ EXPORT_SYMBOL_GPL(vb2_dma_contig_memops);
->   int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
->   {
->   	if (!dev->dma_parms) {
-> -		dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
-> -		if (!dev->dma_parms)
-> -			return -ENOMEM;
-> +		dev_err(dev, "Failed to set max_seg_size: dma_parms is NULL\n");
-> +		return -ENODEV;
->   	}
->   	if (dma_get_max_seg_size(dev) < size)
->   		return dma_set_max_seg_size(dev, size);
-> @@ -737,21 +736,6 @@ int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size)
->   }
->   EXPORT_SYMBOL_GPL(vb2_dma_contig_set_max_seg_size);
->   
-> -/*
-> - * vb2_dma_contig_clear_max_seg_size() - release resources for DMA parameters
-> - * @dev:	device for configuring DMA parameters
-> - *
-> - * This function releases resources allocated to configure DMA parameters
-> - * (see vb2_dma_contig_set_max_seg_size() function). It should be called from
-> - * device drivers on driver remove.
-> - */
-> -void vb2_dma_contig_clear_max_seg_size(struct device *dev)
-> -{
-> -	kfree(dev->dma_parms);
-> -	dev->dma_parms = NULL;
-> -}
-> -EXPORT_SYMBOL_GPL(vb2_dma_contig_clear_max_seg_size);
-> -
->   MODULE_DESCRIPTION("DMA-contig memory handling routines for videobuf2");
->   MODULE_AUTHOR("Pawel Osciak <pawel@osciak.com>");
->   MODULE_LICENSE("GPL");
-> diff --git a/include/media/videobuf2-dma-contig.h b/include/media/videobuf2-dma-contig.h
-> index 5604818d137e..5be313cbf7d7 100644
-> --- a/include/media/videobuf2-dma-contig.h
-> +++ b/include/media/videobuf2-dma-contig.h
-> @@ -25,7 +25,7 @@ vb2_dma_contig_plane_dma_addr(struct vb2_buffer *vb, unsigned int plane_no)
->   }
->   
->   int vb2_dma_contig_set_max_seg_size(struct device *dev, unsigned int size);
-> -void vb2_dma_contig_clear_max_seg_size(struct device *dev);
-> +static inline void vb2_dma_contig_clear_max_seg_size(struct device *dev) { }
->   
->   extern const struct vb2_mem_ops vb2_dma_contig_memops;
->   
+[...]
+> diff --git a/drivers/net/vmxnet3/vmxnet3_ethtool.c b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+> index 1163eca7aba5..ceedf63020cb 100644
+> --- a/drivers/net/vmxnet3/vmxnet3_ethtool.c
+> +++ b/drivers/net/vmxnet3/vmxnet3_ethtool.c
+> @@ -665,18 +665,236 @@ vmxnet3_set_ringparam(struct net_device *netdev,
+>  	return err;
+>  }
+>  
+> +static int
+> +vmxnet3_get_rss_hash_opts(struct vmxnet3_adapter *adapter,
+> +			  struct ethtool_rxnfc *info)
+> +{
+> +	enum Vmxnet3_RSSField rss_fields;
+> +
+> +	if (netif_running(adapter->netdev)) {
+> +		unsigned long flags;
+> +
+> +		spin_lock_irqsave(&adapter->cmd_lock, flags);
+> +
+> +		VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
+> +				       VMXNET3_CMD_GET_RSS_FIELDS);
+> +		rss_fields = VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
+> +		spin_unlock_irqrestore(&adapter->cmd_lock, flags);
+> +	} else {
+> +		rss_fields = adapter->rss_fields;
+> +	}
+> +
+> +	info->data = 0;
+> +
+> +	/* Report default options for RSS on vmxnet3 */
+> +	switch (info->flow_type) {
+> +	case TCP_V4_FLOW:
+> +		if (rss_fields & VMXNET3_RSS_FIELDS_TCPIP4)
+> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
+> +				      RXH_IP_SRC | RXH_IP_DST;
+> +		break;
+> +	case UDP_V4_FLOW:
+> +		if (rss_fields & VMXNET3_RSS_FIELDS_UDPIP4)
+> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
+> +				      RXH_IP_SRC | RXH_IP_DST;
+> +		break;
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+In both cases above (and also in the two for IPv6 below) you set
+info->data to either 0 or all four bits, depending on the value of
+corresponding flag in rss_fields. But in vmxnet3_set_rss_hash_opt()
+you have different mapping:
 
+  - for TCP, you only accept all four bits (no other value) and don't
+    touch rss_fields at all
+  - for UDP, you allow either all four bits (and set the flag) or the
+    two IP related bits (and clear the flag)
+
+The UDPv4/UDPv6 behaviour of vmxnet3_set_rss_hash_opt() seems to be the
+correct one but you should be consistent between get and set handlers.
+
+> +	case AH_ESP_V4_FLOW:
+> +	case AH_V4_FLOW:
+> +	case ESP_V4_FLOW:
+> +		if (rss_fields & VMXNET3_RSS_FIELDS_ESPIP4)
+> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
+
+If this fallthrough is intentional (it seems to be), it should be
+marked.
+
+Michal
+
+> +	case SCTP_V4_FLOW:
+> +	case IPV4_FLOW:
+> +		info->data |= RXH_IP_SRC | RXH_IP_DST;
+> +		break;
+> +	case TCP_V6_FLOW:
+> +		if (rss_fields & VMXNET3_RSS_FIELDS_TCPIP6)
+> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
+> +				      RXH_IP_SRC | RXH_IP_DST;
+> +		break;
+> +	case UDP_V6_FLOW:
+> +		if (rss_fields & VMXNET3_RSS_FIELDS_UDPIP6)
+> +			info->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3 |
+> +				      RXH_IP_SRC | RXH_IP_DST;
+> +		break;
+> +	case AH_ESP_V6_FLOW:
+> +	case AH_V6_FLOW:
+> +	case ESP_V6_FLOW:
+> +	case SCTP_V6_FLOW:
+> +	case IPV6_FLOW:
+> +		info->data |= RXH_IP_SRC | RXH_IP_DST;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +vmxnet3_set_rss_hash_opt(struct net_device *netdev,
+> +			 struct vmxnet3_adapter *adapter,
+> +			 struct ethtool_rxnfc *nfc)
+> +{
+> +	enum Vmxnet3_RSSField rss_fields = adapter->rss_fields;
+> +
+> +	/* RSS does not support anything other than hashing
+> +	 * to queues on src and dst IPs and ports
+> +	 */
+> +	if (nfc->data & ~(RXH_IP_SRC | RXH_IP_DST |
+> +			  RXH_L4_B_0_1 | RXH_L4_B_2_3))
+> +		return -EINVAL;
+> +
+> +	switch (nfc->flow_type) {
+> +	case TCP_V4_FLOW:
+> +	case TCP_V6_FLOW:
+> +		if (!(nfc->data & RXH_IP_SRC) ||
+> +		    !(nfc->data & RXH_IP_DST) ||
+> +		    !(nfc->data & RXH_L4_B_0_1) ||
+> +		    !(nfc->data & RXH_L4_B_2_3))
+> +			return -EINVAL;
+> +		break;
+> +	case UDP_V4_FLOW:
+> +		if (!(nfc->data & RXH_IP_SRC) ||
+> +		    !(nfc->data & RXH_IP_DST))
+> +			return -EINVAL;
+> +		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
+> +		case 0:
+> +			rss_fields &= ~VMXNET3_RSS_FIELDS_UDPIP4;
+> +			break;
+> +		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
+> +			rss_fields |= VMXNET3_RSS_FIELDS_UDPIP4;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	case UDP_V6_FLOW:
+> +		if (!(nfc->data & RXH_IP_SRC) ||
+> +		    !(nfc->data & RXH_IP_DST))
+> +			return -EINVAL;
+> +		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
+> +		case 0:
+> +			rss_fields &= ~VMXNET3_RSS_FIELDS_UDPIP6;
+> +			break;
+> +		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
+> +			rss_fields |= VMXNET3_RSS_FIELDS_UDPIP6;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	case ESP_V4_FLOW:
+> +	case AH_V4_FLOW:
+> +	case AH_ESP_V4_FLOW:
+> +		if (!(nfc->data & RXH_IP_SRC) ||
+> +		    !(nfc->data & RXH_IP_DST))
+> +			return -EINVAL;
+> +		switch (nfc->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
+> +		case 0:
+> +			rss_fields &= ~VMXNET3_RSS_FIELDS_ESPIP4;
+> +			break;
+> +		case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
+> +			rss_fields |= VMXNET3_RSS_FIELDS_ESPIP4;
+> +		break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +		break;
+> +	case ESP_V6_FLOW:
+> +	case AH_V6_FLOW:
+> +	case AH_ESP_V6_FLOW:
+> +	case SCTP_V4_FLOW:
+> +	case SCTP_V6_FLOW:
+> +		if (!(nfc->data & RXH_IP_SRC) ||
+> +		    !(nfc->data & RXH_IP_DST) ||
+> +		    (nfc->data & RXH_L4_B_0_1) ||
+> +		    (nfc->data & RXH_L4_B_2_3))
+> +			return -EINVAL;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* if we changed something we need to update flags */
+> +	if (rss_fields != adapter->rss_fields) {
+> +		adapter->default_rss_fields = false;
+> +		if (netif_running(netdev)) {
+> +			struct Vmxnet3_DriverShared *shared = adapter->shared;
+> +			union Vmxnet3_CmdInfo *cmdInfo = &shared->cu.cmdInfo;
+> +			unsigned long flags;
+> +
+> +			spin_lock_irqsave(&adapter->cmd_lock, flags);
+> +			cmdInfo->setRssFields = rss_fields;
+> +			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
+> +					       VMXNET3_CMD_SET_RSS_FIELDS);
+> +
+> +			/* Not all requested RSS may get applied, so get and
+> +			 * cache what was actually applied.
+> +			 */
+> +			VMXNET3_WRITE_BAR1_REG(adapter, VMXNET3_REG_CMD,
+> +					       VMXNET3_CMD_GET_RSS_FIELDS);
+> +			adapter->rss_fields =
+> +				VMXNET3_READ_BAR1_REG(adapter, VMXNET3_REG_CMD);
+> +			spin_unlock_irqrestore(&adapter->cmd_lock, flags);
+> +		} else {
+> +			/* When the device is activated, we will try to apply
+> +			 * these rules and cache the applied value later.
+> +			 */
+> +			adapter->rss_fields = rss_fields;
+> +		}
+> +	}
+> +	return 0;
+> +}
+>  
+>  static int
+>  vmxnet3_get_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *info,
+>  		  u32 *rules)
+>  {
+>  	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
+> +	int err = 0;
+> +
+>  	switch (info->cmd) {
+>  	case ETHTOOL_GRXRINGS:
+>  		info->data = adapter->num_rx_queues;
+> -		return 0;
+> +		break;
+> +	case ETHTOOL_GRXFH:
+> +		if (!VMXNET3_VERSION_GE_4(adapter)) {
+> +			err = -EOPNOTSUPP;
+> +			break;
+> +		}
+> +		err = vmxnet3_get_rss_hash_opts(adapter, info);
+> +		break;
+> +	default:
+> +		err = -EOPNOTSUPP;
+> +		break;
+>  	}
+> -	return -EOPNOTSUPP;
+> +
+> +	return err;
+> +}
+> +
+> +static int
+> +vmxnet3_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *info)
+> +{
+> +	struct vmxnet3_adapter *adapter = netdev_priv(netdev);
+> +	int err = 0;
+> +
+> +	if (!VMXNET3_VERSION_GE_4(adapter)) {
+> +		err = -EOPNOTSUPP;
+> +		goto done;
+> +	}
+> +
+> +	switch (info->cmd) {
+> +	case ETHTOOL_SRXFH:
+> +		err = vmxnet3_set_rss_hash_opt(netdev, adapter, info);
+> +		break;
+> +	default:
+> +		err = -EOPNOTSUPP;
+> +		break;
+> +	}
+> +
+> +done:
+> +	return err;
+>  }
+>  
+>  #ifdef VMXNET3_RSS
+> @@ -887,6 +1105,7 @@ static const struct ethtool_ops vmxnet3_ethtool_ops = {
+>  	.get_ringparam     = vmxnet3_get_ringparam,
+>  	.set_ringparam     = vmxnet3_set_ringparam,
+>  	.get_rxnfc         = vmxnet3_get_rxnfc,
+> +	.set_rxnfc         = vmxnet3_set_rxnfc,
+>  #ifdef VMXNET3_RSS
+>  	.get_rxfh_indir_size = vmxnet3_get_rss_indir_size,
+>  	.get_rxfh          = vmxnet3_get_rss,
+> diff --git a/drivers/net/vmxnet3/vmxnet3_int.h b/drivers/net/vmxnet3/vmxnet3_int.h
+> index e803ffad75d6..d52ccc3eeba2 100644
+> --- a/drivers/net/vmxnet3/vmxnet3_int.h
+> +++ b/drivers/net/vmxnet3/vmxnet3_int.h
+> @@ -377,6 +377,8 @@ struct vmxnet3_adapter {
+>  	u16 rxdata_desc_size;
+>  
+>  	bool rxdataring_enabled;
+> +	bool default_rss_fields;
+> +	enum Vmxnet3_RSSField rss_fields;
+>  
+>  	struct work_struct work;
+>  
+> @@ -438,6 +440,8 @@ struct vmxnet3_adapter {
+>  
+>  #define VMXNET3_COAL_RBC_RATE(usecs) (1000000 / usecs)
+>  #define VMXNET3_COAL_RBC_USECS(rbc_rate) (1000000 / rbc_rate)
+> +#define VMXNET3_RSS_FIELDS_DEFAULT (VMXNET3_RSS_FIELDS_TCPIP4 | \
+> +				    VMXNET3_RSS_FIELDS_TCPIP6)
+>  
+>  int
+>  vmxnet3_quiesce_dev(struct vmxnet3_adapter *adapter);
+> -- 
+> 2.11.0
+> 
