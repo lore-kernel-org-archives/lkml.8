@@ -2,142 +2,114 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6E5C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1D7B20888
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED2920888
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 12:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xx3rm++D"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L7xsA4H1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389724AbgE1M2A (ORCPT
+        id S2389742AbgE1M2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 08:28:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46340 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389675AbgE1M15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 08:27:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SCHg4j105579;
-        Thu, 28 May 2020 12:27:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=qj7TwkNy6GSpmtn4DBIaqHpZf2eLD34oVXAXPSaBBmQ=;
- b=Xx3rm++DGiMaFVjj14hvg1DHV0Gv3osjoM8m7skZUmFXKMyHg/WIoEyoMpsFRwxGUCP6
- OOCrXZpU4UyDdeEUAUF1BoD26XWnJ6IAUxAfdefJSTk25VOEHvkzj8OP01Y7oSu/CFsy
- FTyGRqKdc5lJUkLo8KFwe+4y6k2G5qf/I8Z6gro7WH3lBF3Sl+WYscQ5IrWeXX9HR+b3
- /jjcqQ4yHtPahf0szuM3UVkhJwNxG1N05gi/34nHX/fR0y6BPfyEXLd/m4BTlQpU5OPu
- SIUxIoqZcZv5/X54tNS3vEdtRKdWB9eVFcbpF7EOFx8Zo0VgAxvozxaXYIUd3XW2jQsR Tg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 316u8r4pat-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 12:27:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SCHcF4115358;
-        Thu, 28 May 2020 12:25:54 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 317j5v5eef-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 12:25:54 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04SCPqLF025280;
-        Thu, 28 May 2020 12:25:52 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 May 2020 05:25:51 -0700
-Date:   Thu, 28 May 2020 15:25:45 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Lai Jiangshan <jiangshanlai@gmail.com>
-Cc:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
-        Markus Elfring <markus.elfring@web.de>,
-        Tejun Heo <tj@kernel.org>,
+        Thu, 28 May 2020 08:28:09 -0400
+Received: from mail-eopbgr00053.outbound.protection.outlook.com ([40.107.0.53]:64583
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2389675AbgE1M2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 08:28:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CZJOBhsSD7G97hU6jHwRMUk36yf0G6ENxvyZ7+nvgABCq2/e+q+OWD/ZJsRUccDcuxUHCbbJYUpXfj8DP9ThzrguxCM2nc7zbec1qt0P1+VlggSggnSscIUXKb0y2MUYohLCQwgcalT9Mt1EPi09FsYoVxSRH3aQEiXdwiqpBlwECYrkWrl7OgCbjRPfWDH4raYyth0gpulQ9OlUJO9WFq8Q6158rwxtdeBGToDQDxLzKWpHKqGFs0cloqQQkHvvXLvnckibdgOI8i8DyjXK/GpCJYUhbCqEmLMja56J5fEfuBZk9alR8uM4yVyfp0si1ApmzeLzUoat+OLSxL+wDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sxUhPFjBba9j9NTmmRFl38ADoehkBBskOCr6VfVPWeA=;
+ b=c4inaiMmU9aePCPr3U0CEyChGqRw6o9EDkU/5Vo5wgevLW6JSQYkYRuQn4baB5VOTMT7WsZFoAQ4v48SZ0Il65hA6qDm085yRckZxE2OJrA4dcArqELAxLwP5Lp61vPymabE60nOZLxZ6i/zWboNjcUOagxXRyU8CgZBjgD+6cV4JznkKiS4DWoeHdq6QVVvapif2HEsQQYs2OMSWQuRlAIDKUWRcnmPdn2cqKCFRC8DBAip6ZTkxYFHwK6Bja4lCTZdHD6CeFl0VYZhZFi3gKP4g/GhiZMiymeMQ2BCETl2PCXzZYdlxXRU7WBeQJD+8k64lvx6myIfB31zPct8Ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sxUhPFjBba9j9NTmmRFl38ADoehkBBskOCr6VfVPWeA=;
+ b=L7xsA4H12ldOsLrFMhBAuzqnVTURUoqnr+gknjVeYntsH/x/nbd6gOJM6nfWqYVbauhDYo5qwm2aeKMldgSfYZgrrhex+m8VtgRAH4q5flf8rUFp7k/O7/MGrbJrZw6ml/Qy+GQQSOwQ8oyYrgS+amEYvEUPPTykUIHo2DlU4WQ=
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com (2603:10a6:803:3d::27)
+ by VI1PR04MB6095.eurprd04.prod.outlook.com (2603:10a6:803:f7::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.26; Thu, 28 May
+ 2020 12:27:59 +0000
+Received: from VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09]) by VI1PR04MB4366.eurprd04.prod.outlook.com
+ ([fe80::8102:b59d:36b:4d09%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
+ 12:27:59 +0000
+From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
+To:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjU=?= =?utf-8?Q?=5D?= workqueue:
- Remove unnecessary kfree() call in rcu_free_wq()
-Message-ID: <20200528122545.GP22511@kadam>
-References: <20200527075715.36849-1-qiang.zhang@windriver.com>
- <284c7851-4e89-a00f-a2e6-aa8e2e1f3fce@web.de>
- <DM6PR11MB32573F3884A864ECD586235EFF8E0@DM6PR11MB3257.namprd11.prod.outlook.com>
- <DM6PR11MB3257D6E7E93A518392502809FF8E0@DM6PR11MB3257.namprd11.prod.outlook.com>
- <20200528095703.GH30374@kadam>
- <CAJhGHyD1nV=M=ccycqCMt86GMuZGkO9trbJ=4ti4EzP9kta6iA@mail.gmail.com>
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "b43-dev@lists.infradead.org" <b43-dev@lists.infradead.org>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        "brcm80211-dev-list@cypress.com" <brcm80211-dev-list@cypress.com>,
+        "libertas-dev@lists.infradead.org" <libertas-dev@lists.infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        =?utf-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>
+Subject: RE: [EXT] [PATCH 04/11] mmc: sdio: Move SDIO IDs from btmrvl driver
+ to common include file
+Thread-Topic: [EXT] [PATCH 04/11] mmc: sdio: Move SDIO IDs from btmrvl driver
+ to common include file
+Thread-Index: AQHWMEeyh682z/ig0kGzv14HIh2QU6i9deIQ
+Date:   Thu, 28 May 2020 12:27:59 +0000
+Message-ID: <VI1PR04MB4366DC81FF6F107CDA1A658B8F8E0@VI1PR04MB4366.eurprd04.prod.outlook.com>
+References: <20200522144412.19712-1-pali@kernel.org>
+ <20200522144412.19712-5-pali@kernel.org>
+In-Reply-To: <20200522144412.19712-5-pali@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [103.54.18.180]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 230124b8-4ca4-4d1a-0da0-08d803028f1c
+x-ms-traffictypediagnostic: VI1PR04MB6095:
+x-microsoft-antispam-prvs: <VI1PR04MB6095F3D40CC36660FA73A7848F8E0@VI1PR04MB6095.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0417A3FFD2
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: v5gYnGTpkDezkHfd0x7wrYWPe5b9jgVoDH7lHXnjLDXAg8WSZ4I/rBYy9KpD2O55MgD1YwaOehYwTdDI/6E6Eq185spaq17qhQLFVMzLwD+P1xCuVyNEDxOf6FfMTVHFNZ5108sgk3ttvCkqqrteBNjw+S9EW00mUgX/emlUkuYfXTK+o9Z6jwcc0Nji2TBXVJxrIh7yoyiGY/jmAQQoiwdArJZn0edK/ujyK+q1jIGK3hs2h0VyuAWpW+6zjA34DCOO89AsqRAgiZe8//mXQBNr07XCIQ0S2nrtWU+EJyQMBnIRRcfrGInKiaTSrTmb9ZZlCgC2lCF7NTRdPquEl48sxbY5arJdOX9zqXGwae8dNGvHDeN68CD8HJleQmMB
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4366.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(44832011)(33656002)(316002)(55016002)(110136005)(558084003)(7416002)(8676002)(9686003)(4326008)(2906002)(8936002)(186003)(26005)(66946007)(86362001)(5660300002)(52536014)(6506007)(76116006)(66446008)(66556008)(66476007)(54906003)(478600001)(71200400001)(64756008)(7696005)(40753002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: pMsDcOYGepsi9ye1X4VLuFQcUp6AwMHjvDkLIw+NVcs3SVhhCnuB2hyMFGgcCsoevvVq68aZWzrQ7xBXyERHTnhPsv1lltA9LxcsgMMV65eommKY1NZdmwHXtBVAwfa7saaF8fCdDH6qhGlfoWqV6EalTymzPzpDQQM0qe3cKGKqnRR7npjQnEM2xFX5XPMZW5yy/pyBig9y4r0G/8ZzllysIzz3Ij7a4tlIwQJ58MonP4HmdWcX1YV95t/L3ScsxjUJn/A/Ijhj9nibWKVZOl0nGaGbqDhtvvI9gFuN0YQDjUYMohfL5I+PYOskuqWwZXlOSKlqkIhAJIQIOC34WRSXIYb+uKsQQA5r+AjNsI5uiunbo+0HmbntqZeEDQJLC78pQ83QWBuOfUilGOD9HSpMjTfGqApGHEnFPNpePadEZtRJ+B6XyqhZIM8AnqWsf5xMf2bJyW/Qfmn6LR4DHRKC811W+LqB3ShqghYAZxI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJhGHyD1nV=M=ccycqCMt86GMuZGkO9trbJ=4ti4EzP9kta6iA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=2
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 spamscore=0 cotscore=-2147483648 suspectscore=2
- phishscore=0 clxscore=1015 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2005280086
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 230124b8-4ca4-4d1a-0da0-08d803028f1c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 12:27:59.7334
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a5IZeovv3ghdmaaRezjp5Od7sctFpha2SfibEXlAmbqERQyE5R1ccYIrW3KZ1F9h/GmJgCO42oY1hD0GDLYxUA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6095
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 08:08:06PM +0800, Lai Jiangshan wrote:
-> On Thu, May 28, 2020 at 5:57 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> >
-> > Guys, the patch is wrong.  The kfree is harmless when this is called
-> > from destroy_workqueue() and required when it's called from
-> > pwq_unbound_release_workfn().  Lai Jiangshan already explained this
-> > already.  Why are we still discussing this?
-> >
-> 
-> I'm also confused why they have been debating about the changelog
-> after the patch was queued. My statement was about "the patch is
-> a correct cleanup, but the changelog is totally misleading".
-> 
-> destroy_workqueue(percpu_wq) -> rcu_free_wq()
-> or
-> destroy_workqueue(unbound_wq) -> put_pwq() ->
-> pwq_unbound_release_workfn() -> rcu_free_wq()
-> 
-> So the patch is correct to me. Only can destroy_workqueue()
-> lead to rcu_free_wq().
-
-It looks like there are lots of paths which call put_pwq() and
-put_pwq_unlocked().
-
-  1168  static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, int color)
-  1169  {
-  1170          /* uncolored work items don't participate in flushing or nr_active */
-  1171          if (color == WORK_NO_COLOR)
-  1172                  goto out_put;
-  1173  
-
-We don't take an extra reference in this function.
-
-  1200  out_put:
-  1201          put_pwq(pwq);
-  1202  }
-
-I don't know this code well, so I will defer to your expertise if you
-say it is correct.
-
-> 
-> Still, the kfree(NULL) is harmless. But it is cleaner
-> to have the patch. But the changelog is wrong, even after
-> the lengthened debating, and English is not my mother tongue,
-> so I just looked on.
-
-We have tried to tell Markus not to advise people about commit messages
-but he doesn't listen.  He has discouraged some contributors.  :/
-
-regards,
-dan carpenter
+SGkgUGFsaSwNCg0KPiBEZWZpbmUgYXBwcm9wcmlhdGUgbWFjcm8gbmFtZXMgZm9yIGNvbnNpc3Rl
+bmN5IHdpdGggb3RoZXIgTWFydmVsbCBtYWNyb3MuDQo+IA0KVGhhbmtzIGZvciB0aGUgY2hhbmdl
+Ow0KDQpBY2tlZC1ieTogR2FuYXBhdGhpIEJoYXQgPGdhbmFwYXRoaS5iaGF0QG54cC5jb20+DQo=
