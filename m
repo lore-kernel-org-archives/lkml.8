@@ -2,145 +2,138 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5201C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122762078C
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Wi2cdPUM";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="qdVbeUUL"
+	by mail.kernel.org (Postfix) with ESMTP id C30B920814
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 18:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405938AbgE1SqT (ORCPT
+        id S2405958AbgE1Sqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 14:46:19 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:32099 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2405901AbgE1SqR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 14:46:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1590691577; x=1622227577;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=+C+43in+nstY/Hzl1lKr37mT2d8V9YiDaG6vh/XSggk=;
-  b=Wi2cdPUMl58MfDEFDUL0AqFKTdMxsViARXp8/REVNWR38fEa5CIaa+dG
-   W1RJPnht7ASzEg1IzxIQtk9nmQ6DRPB8RpicdOd/BsFPM8DNzvbMm5ROR
-   PlPSrd2xYRA7+uQ4it/sgCmlSXBDToLoqkXHA0wdSvUO4+MEqFy7OaQXA
-   E+ACJzpn+ebDPlC1GA8UA70bjXUz9AFinnKtTiuuT31td8GPYOPlvKnPF
-   COxC+eNzmEmO7MHE7Iwc2fh5fPmH+wx9OiUPeYbTvWMf1rY+vjGh/Wa6L
-   x9/1zN/aLih+iHvEo+ajvdQkfs5mcz1Ui9Jr+iAYrRFRzWU48EzwTYdUE
-   Q==;
-IronPort-SDR: 4lrbINtVatUjMIrxR49tGU8OYIMM0+dbqZUpwka1NbftX0I2rd/k4ZrwMll/5Z3c7SaOk/9nfL
- K0GdobyFH6XM77XyY3KGRG/M+8dsMhR4t7HSXzykstrApno8CucGaCrV0CZ2Yy0BJlKObYx8Te
- c6e6kilRCbzOtoLlo/JM3ueekcS47Pk6cEqR15gGMN6dc+JErRhyicmvCuzCwQhBXXeQbC7Otd
- ZpCtx1JTtDhu/uZNht6A/fJ5e1EvYm/MqZjyMD1jw08gGSZDNm0TfsLH6dgkiNZxsIgyGQaOZw
- rm0=
-X-IronPort-AV: E=Sophos;i="5.73,445,1583218800"; 
-   d="scan'208";a="76673755"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 28 May 2020 11:46:16 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 28 May 2020 11:46:16 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
- Transport; Thu, 28 May 2020 11:46:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JC1RLZNlm3TOnFcDpu6CrJZ0kg5YYDHeZlc6AZqWsKe21atbsc8HhP7a1dhAhkW3vbnXftUshTV4f52FJpKeQxQYBwO2RDvG78ZGMc+sH78MByDJ/ubLGkqQ8srbbRuzaVgdcP5SFjhPhDtG+fhNbRvrpIruV7ROkkWkJB8G1C0Ee1GALrgEkQFWjWHkJ9e0TDXTMZZhCkgDEuSlt9s4RJEuWjYX17beHIfuxpBvc7+g2eTrP7glBuH0K/q3uMUY80ocLgXEEUQoS58nU7UzqBonOEifEmDPzUKOcEGdv4mo3u71XTOmNvIqoCi6iS05mSL2DmNR7/IwxcTspRxr4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTgZ7US08+MZhteKfq6gN8h5MqiKIQiQ8GtxMP5G5pw=;
- b=Wg7DE2b3Y1fLDlbvmCs75RLqiat+JmveN4uOzG1EM1iKyoFRoOTSru5qYvhJHR+8MVvJHb46RRs2j6zZsQltJFvUOYLYXS0kecXr+Hm7fYNsrZeF/k5+ULvlVuFiw9LwpWydE07VLXgSJfE4i6uGx+OaRPLFcOyflIn5LpCo4bLrIM8j5HtN4VTlZsZ6VDnCBXCK3cWJsF2fRPq5GQoaf23yk4hihtZclCg2dxR+MaSvxy7YPLQgFGyAfFCfeN/oRpZea8qFZ+pChK4OQ+04f3jSBcMdlYvGGXotebnkQd4XCVZMS28cGzLNqWEoTPvuJ6iZLqaRG0Ljj7Mt/+j8rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TTgZ7US08+MZhteKfq6gN8h5MqiKIQiQ8GtxMP5G5pw=;
- b=qdVbeUULQEhvD/EUR0a8gmJXtOMr6lY7b7fCXy59g79yzkhVs0wWnBRHsGUjQhBDRik7/gitIIve5XEx2Y27sxy5GmIIW/F8+ELVAFMrkVCY1hzqaSZUR5CuGu4eKThTr6kE6GZk+SXHQLthCxChMf9bL79zUSBHZh4claGaR/g=
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com (2603:10b6:a03:1c8::13)
- by BY5PR11MB3973.namprd11.prod.outlook.com (2603:10b6:a03:185::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Thu, 28 May
- 2020 18:46:14 +0000
-Received: from BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536]) by BY5PR11MB4419.namprd11.prod.outlook.com
- ([fe80::d847:5d58:5325:c536%7]) with mapi id 15.20.3045.018; Thu, 28 May 2020
- 18:46:14 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>
-CC:     <broonie@kernel.org>, <bbrezillon@kernel.org>,
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <simon.k.r.goldschmidt@gmail.com>,
-        <dinguyen@kernel.org>, <marex@denx.de>
-Subject: Re: [PATCH v2 4/6] mtd: spi-nor: cadence-quadspi: Fix error path on
- failure to acquire reset lines
-Thread-Topic: [PATCH v2 4/6] mtd: spi-nor: cadence-quadspi: Fix error path on
- failure to acquire reset lines
-Thread-Index: AQHWM0FVAkV2DAVl1U2To3n9pTAOnKi92gKA
-Date:   Thu, 28 May 2020 18:46:14 +0000
-Message-ID: <10731710.Xgm1DyDOGa@192.168.0.120>
-References: <20200526093604.11846-1-vigneshr@ti.com>
- <20200526093604.11846-5-vigneshr@ti.com>
-In-Reply-To: <20200526093604.11846-5-vigneshr@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 388d2d31-ce31-49ba-1d2a-08d80337666e
-x-ms-traffictypediagnostic: BY5PR11MB3973:
-x-microsoft-antispam-prvs: <BY5PR11MB3973EBB8A6CE6DDF427E9261F08E0@BY5PR11MB3973.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:1303;
-x-forefront-prvs: 0417A3FFD2
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PfESslQTVlqeDE8iCNcONCgdm8mdj6RtMf+OJKqv3GqPAMcPWMKpyTB71gZkin0FyljaOFSjEM1DzFHNToUnUuSUozJErSQgbAHd2lsNz63771pYE6+Vlkb0mG/VASdEW65lRfV6k0AnDackG99Viv+wlAigL/1JOqNT0czcuqxCAByV5hlRmkBd0l2L7i0PWjv0Mqwhsx3QB3xJhB13jNPe9j6Kqs/5xt8hdCSpXj/b04mTsF4KgY01WqIsuZF/Q7zTcH+ImVQV604LLVSMd08XZghMQgB2DWWIE8xQLpXWXTI2Blgcl7ImdfrwklPs/n2WjOdf6VO92W4gQqMHSV6XuCMMe6hLpEWHle/jNUqtMeoFXMwUWPqjDV8yY6NY
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4419.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(396003)(376002)(136003)(366004)(39860400002)(4326008)(66556008)(91956017)(54906003)(76116006)(64756008)(66446008)(6506007)(8936002)(316002)(6512007)(9686003)(6916009)(8676002)(83380400001)(66946007)(7416002)(186003)(66476007)(14286002)(478600001)(26005)(5660300002)(2906002)(6486002)(86362001)(71200400001)(53546011)(4744005)(39026012);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: wPAB7BXHUutYvwnE1G3m1ak9ws4leRIlknsIu2uVW5mtShGO1qyDD+WDsYCx8SjoaB12q8vLJboREJFp8114jCSzwGBiqrW1QlEWvVxv0gv2hCzNJqD0KGYnr5s9Quhk2EYPgqh3S2invr8LsbuQWM4UEiQwoWSbZDfF2670dLh80Vs+HXQGiRh2dmMCZ3tG2jDUwlGpP/Cof48P3if4Kp0rk/1rQwZU06w5I0Hk6GHq4jukWRCQxQPNJ895JuBf4cQFlOHgcLVNx7DaAdNIHW+mV9VTO4ZtUjn+2spXqX81W2/48cF4UYKuzX8suiuyb0gjsaETskF8s8hQc3SkHCwL4rjU1SpmE2vHpa8eq7v/VtnxgUGnFVw6/cXAWH5I+haRFNclyBYOIkkWk5Ah71nwwUueV3CuAWpItQI0nDoZQpkwSwQKp2tBqjxrbWYVD7d7iHdYiQciBvGp7pu2nBAXkYC5SxP5M6jH2ajH/hg=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0129F021C9F9074583D562AE24687F18@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 28 May 2020 14:46:30 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49491 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2405901AbgE1Sq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 14:46:28 -0400
+IronPort-SDR: ugP8DY17GIWoUQ94zsvGRMmbDmzzusr2+4uEaF8fndC81k6ckZPrNBrv6vFRaLQ9rsFBWvv7ba
+ /CLyLYGEfaHA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2020 11:46:27 -0700
+IronPort-SDR: x9hFq4CaKByj5b+UNBLppyjZw6vF0xYhQMH8mXwb2Dg3bCdhuKQaFb02Ic4S+hekwVV/QLt3Vh
+ wDNBIei/GfJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.73,445,1583222400"; 
+   d="scan'208";a="302570748"
+Received: from jorycorx-mobl.amr.corp.intel.com (HELO [10.254.102.46]) ([10.254.102.46])
+  by fmsmga002.fm.intel.com with ESMTP; 28 May 2020 11:46:27 -0700
+Subject: Re: [PATCH v6 2/3] gpio: add a reusable generic gpio_chip using
+ regmap
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20200528145845.31436-1-michael@walle.cc>
+ <20200528145845.31436-3-michael@walle.cc>
+ <adb4eba6-c6c4-a403-dead-1951050eec26@linux.intel.com>
+ <7d281a1e30ea40837ab1a156c561ca6b@walle.cc>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <6cec4ed5-3a4a-62d8-5209-da3b0863dcd1@linux.intel.com>
+Date:   Thu, 28 May 2020 13:15:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 388d2d31-ce31-49ba-1d2a-08d80337666e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 May 2020 18:46:14.7593
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EUyD4Fx1JtKNQbxWlKmIhl2tuU0Ip2jXIK8EHIX9vBiuz69Gjbw8JTnB0Ij4xQKgqXGEcR+p8np5sRn5Oyc56p/YPmA77UEKOfKvFcov11Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3973
+In-Reply-To: <7d281a1e30ea40837ab1a156c561ca6b@walle.cc>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, May 26, 2020 12:36:02 PM EEST Vignesh Raghavendra wrote:
-> Make sure to undo the prior changes done by the driver when exiting due
-> to failure to acquire reset lines.
->=20
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  drivers/mtd/spi-nor/controllers/cadence-quadspi.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+>>> +    /* if we have a direction register we need both input and
+>>> output */
+>>> +    if ((config->reg_dir_out_base || config->reg_dir_in_base) &&
+>>> +        (!config->reg_dat_base || !config->reg_set_base))
+>>> +        return ERR_PTR(-EINVAL);
+>>  This failed for me since I didn't have the 'dat' base assigned. I
+>> still can't figure out what 'dat' stands for...I just assigned it to
+>> the same offset as the 'set' base but really don't understand what
+>> this is supposed to do.
+> 
+> DAT is the data register, aka input register, if the GPIO is in input
+> mode.
+> 
+> If I read the datasheet correctly you should use the following:
+> 
+> PCM512x_GPIO_EN should be reg_dir_out_base
+> PCM512x_GPIO_CONTROL_1 should be reg_set_base
+> PCM512x_GPIN should be reg_dat_base
+> 
+> no custom xlate necessary. GPIN looks a bit fishy in that datasheet:
+>   http://www.ti.com/lit/ds/symlink/pcm5121.pdf?ts=1590684141147
+
+ok, I updated that part - can't test it though with the boards I have, 
+only output is supported.
+
+> PCM512x_GPIO_OUTPUT_1..6 is pinmux control and shouldn't be part of
+> the gpio-regmap. Your driver needs to take care of that.
+
+yes, that's what I did.
+
+>>> +
+>>> +    /* we don't support having both registers simultaneously for
+>>> now */
+>>> +    if (config->reg_dir_out_base && config->reg_dir_in_base)
+>>> +        return ERR_PTR(-EINVAL);
+>>
+>> and this second test seems to contradict the notion of 'both input and
+>> output' above?
+> 
+> dir_out_base is used if the register is high active to select an output.
+> dir_in_base is used for a low active register. Thus both bases are used
+> to switch a GPIO between input and output.
+
+ok, makes sense now, thanks for the explanations.
+
+>> re-adding comment from previous series:
+>>  >> I still have a series of odd warnings I didn't have before: >> >>
+>> [  101.400263] WARNING: CPU: 3 PID: 1129 at >>
+>> drivers/gpio/gpiolib.c:4084 gpiod_set_value+0x3f/0x50 >> >> This seems
+>> to come from >>     /* Should be using gpiod_set_value_cansleep() */
+>>>>     WARN_ON(desc->gdev->chip->can_sleep); > > Right now,
+>> gpio-regmap hardcodes can_sleep to true. But the only regmap > which
+>> don't sleep is regmap-mmio. The PCM512x seems to be either I2C or >
+>> SPI, which can both sleep. So this warning is actually correct and >
+>> wherever this gpio is set should do it by calling the _cansleep() >
+>> version.
+>>
+>> I still have the warnings with this version, not sure if you wanted to
+>> fix it in the v6 or is this needs to be fixed in another piece of
+>> code/patch. How would we go about removing this warning?
+> 
+> There is no fix in gpio-regmap. wherever this GPIO is connected to must
+> not call gpiod_set_value() but have to use gpiod_set_value_cansleep().
+
+yes, I figured this out and corrected the drivers, works just fine now. 
+My cleaned-up code is at 
+https://github.com/thesofproject/linux/pull/1945, I'll resubmit the v2 
+based on these patches when they are merged and available in Mark 
+Brown's tree (and I need to address the clock-related feedback).
+
+Thanks for your work Michael, really nice and useful, feel free to add 
+the following tag:
+
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
 
