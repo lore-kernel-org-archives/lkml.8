@@ -2,88 +2,117 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F21EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D63C433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 708FC21501
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024452145D
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 09:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WXdtZJBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbgE1JWt (ORCPT
+        id S1728311AbgE1JWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 05:22:49 -0400
-Received: from mail.itouring.de ([188.40.134.68]:57880 "EHLO mail.itouring.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728161AbgE1JWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 05:22:48 -0400
-X-Greylist: delayed 456 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 May 2020 05:22:47 EDT
-Received: from tux.applied-asynchrony.com (p5b07e2b3.dip0.t-ipconnect.de [91.7.226.179])
-        by mail.itouring.de (Postfix) with ESMTPSA id E0EF54160EC1;
-        Thu, 28 May 2020 11:15:10 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.applied-asynchrony.com (Postfix) with ESMTP id 4B903F01600;
-        Thu, 28 May 2020 11:15:10 +0200 (CEST)
-Subject: Re: [PATCH v5] mm: Proactive compaction
-To:     Nitin Gupta <nigupta@nvidia.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Nitin Gupta <ngupta@nitingupta.dev>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>
-References: <20200518181446.25759-1-nigupta@nvidia.com>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <27b39956-2a21-8eef-8ebb-cb3a93a41a36@applied-asynchrony.com>
-Date:   Thu, 28 May 2020 11:15:10 +0200
+        Thu, 28 May 2020 05:22:55 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54718 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbgE1JWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 28 May 2020 05:22:54 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04S9MmsX130695;
+        Thu, 28 May 2020 04:22:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1590657768;
+        bh=/Wdo0if7NVPAlofWxugu+NvYgar4E2L7mukGEI+7YkA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=WXdtZJBV1eqGnMZaIRytmy8jZXYyuT1gaWy/IN+RuWc7/ylU2HKeyTpMb28wziMF9
+         tywXTeptrDPyFOvJIA++2kjjW2nW+EC52mylyNx1XteJdbkAN+UFKjy+zQa0k9PXSV
+         1+J0zOP53GfHov1eVqh9nOrpvArsB21InxiVnd8E=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 04S9MmIO001252
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 28 May 2020 04:22:48 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 28
+ May 2020 04:22:48 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 28 May 2020 04:22:48 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04S9MeUk095917;
+        Thu, 28 May 2020 04:22:41 -0500
+Subject: Re: [PATCHv2] media: videobuf2-dma-contig: fix bad kfree in
+ vb2_dma_contig_clear_max_seg_size
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>
+References: <20200527082334.20774-1-tomi.valkeinen@ti.com>
+ <CAPDyKFqRa81q9EYFKB52kr6+EPJBK5u+4_hC0+ZnxU_axbxAZQ@mail.gmail.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <77572269-ca18-acd4-89c6-ca4145ed29db@ti.com>
+Date:   Thu, 28 May 2020 12:22:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200518181446.25759-1-nigupta@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAPDyKFqRa81q9EYFKB52kr6+EPJBK5u+4_hC0+ZnxU_axbxAZQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 28/05/2020 12:14, Ulf Hansson wrote:
+> On Wed, 27 May 2020 at 10:23, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+>>
+>> Commit 9495b7e92f716ab2bd6814fab5e97ab4a39adfdd ("driver core: platform:
+>> Initialize dma_parms for platform devices") in v5.7-rc5 causes
+>> vb2_dma_contig_clear_max_seg_size() to kfree memory that was not
+>> allocated by vb2_dma_contig_set_max_seg_size().
+>>
+>> The assumption in vb2_dma_contig_set_max_seg_size() seems to be that
+>> dev->dma_parms is always NULL when the driver is probed, and the case
+>> where dev->dma_parms has bee initialized by someone else than the driver
+>> (by calling vb2_dma_contig_set_max_seg_size) will cause a failure.
+>>
+>> All the current users of these functions are platform devices, which now
+>> always have dma_parms set by the driver core. To fix the issue for v5.7,
+>> make vb2_dma_contig_set_max_seg_size() return an error if dma_parms is
+>> NULL to be on the safe side, and remove the kfree code from
+>> vb2_dma_contig_clear_max_seg_size().
+>>
+>> For v5.8 we should remove the two functions and move the
+>> dma_set_max_seg_size() calls into the drivers.
+>>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>> Fixes: 9495b7e92f71 ("driver core: platform: Initialize dma_parms for platform devices")
+>> Cc: stable@vger.kernel.org
+> 
+> Thanks for fixing this!
+> 
+> However, as I tried to point out in v1, don't you need to care about
+> drivers/media/platform/s5p-mfc/s5p_mfc.c, which allocates its own type
+> of struct device (non-platform). No?
 
-On 5/18/20 8:14 PM, Nitin Gupta wrote:
-[patch v5 :)]
+Oh my bad. I thought Marek posted a patch for it, but now that I look, Marek's patch was for 
+ExynosDRM. Somehow I managed to mix up that with the s5p in my head.
 
-I've been successfully using this in my tree and it works great, but a friend
-who also uses my tree just found a bug (actually an improvement ;) due to the
-change from HUGETLB_PAGE_ORDER to HPAGE_PMD_ORDER in v5.
+I'll try to find time to look at s5p too, but if anyone gets there first, feel free to fix it.
 
-When building with CONFIG_TRANSPARENT_HUGEPAGE=n (for some reason it was off)
-HPAGE_PMD_SHIFT expands to BUILD_BUG() and compilation fails like this:
+  Tomi
 
-...
-./include/linux/huge_mm.h:284:28: note: in expansion of macro ‘BUILD_BUG’
-   284 | #define HPAGE_PMD_SHIFT ({ BUILD_BUG(); 0; })
-       |                            ^~~~~~~~~
-./include/linux/huge_mm.h:78:26: note: in expansion of macro ‘HPAGE_PMD_SHIFT’
-    78 | #define HPAGE_PMD_ORDER (HPAGE_PMD_SHIFT-PAGE_SHIFT)
-       |                          ^~~~~~~~~~~~~~~
-mm/compaction.c:1874:28: note: in expansion of macro ‘HPAGE_PMD_ORDER’
-  1874 |    extfrag_for_order(zone, HPAGE_PMD_ORDER);
-       |                            ^~~~~~~~~~~~~~~
-...
-
-It would be great if the whole thing would compile without THP; the only
-occurrence is in fragmentation_score_zone(). Unfortunately I'm not familiar
-enough with how to properly check for THP and properly calculate whatever
-you're doing there, otherwise I would ifdef this away myself. ;)
-
-Thanks for an otherwise great patch!
-
-cheers,
-Holger
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
