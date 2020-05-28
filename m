@@ -8,70 +8,71 @@ X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA545C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE25208A7
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A52F208A7
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 10:22:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FocExwZg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HERijm1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387823AbgE1KWG (ORCPT
+        id S2387738AbgE1KWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 06:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
+        Thu, 28 May 2020 06:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387717AbgE1KUc (ORCPT
+        with ESMTP id S2387824AbgE1KUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 06:20:32 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A9D4C05BD1E;
-        Thu, 28 May 2020 03:20:32 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nu7so2990778pjb.0;
-        Thu, 28 May 2020 03:20:32 -0700 (PDT)
+        Thu, 28 May 2020 06:20:48 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A14CC05BD1E;
+        Thu, 28 May 2020 03:20:48 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id fs4so2981649pjb.5;
+        Thu, 28 May 2020 03:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n8iipgJAi/NQyT9g10+jXpAAhQUJmCgX3ykzxFLrLKM=;
-        b=FocExwZgEGs3gT0g8mnUyvPa6RpF30FXKarH1WH9tVM3Qfk2UMDFsUGGktPrgs6eG8
-         oWa6KQ3j+BOpYt1wNostFfpItGTf7Nia2InQUTO4w8rOcch2k+RjAUsNbvmSK/nxbgDp
-         HOSdd++QHNr67yGxv/1ozdj8+NQjB7FB8qxJMmDpuAv0IP2tidoiPkWbNp4AAileJdUN
-         QdUH88+CtMfwJs0OtDlUNxQ4KSfvGtRsAtsXTTE9PD0sEuaBlzkpIWj9IJNujmvNiVNe
-         Dr9VGxowiAhoIecs4k25fXf/tzGz9WKaUTZ5NiqHo5NEQkJnHkq98nLVkPhtXHFA+mMw
-         +hTQ==
+        bh=um3Qhq7FPm3pIrTiMtJYWGUD76JNI3D8F0QN7947rKw=;
+        b=HERijm1Aj9kxFWBlKgf+0qEZIKlAMQq8MMmgBPSVHTKA5EA3DkgyN9Wz5B/lxkx0nn
+         fyFb9B3kJ2P2jB2NVgGsHky7T7FykGT0FmRgcgm1at4sEopmk3Y8c+HcC3abaY1+aU/R
+         LPFfsDzvrUIC8GD3xZ6+wLQn4NBuBzc0zwIwFtHThW3CAl910oGrth8AfX7MnwW+D40B
+         1t41FZGGwb3pwnOzx8p0f3wqtAAsa7cLHb5mo5OTx5V0+PgR92TdHXxGCEpZVVOYGQ8G
+         1fGu6JKrxZvHuTpxM3I8zdi8lC533YMwu6lhflGCR34yuzHly3sViS9NLzeERmAYlSiO
+         SeUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=n8iipgJAi/NQyT9g10+jXpAAhQUJmCgX3ykzxFLrLKM=;
-        b=YklP6LXx4oECV0SSYmXgiqZbepkwFWyP8xO6sqMNDl87aFiDnqQ93A4+5OBV9Kboxy
-         vguPffM0h5oI1ETxtnEtQDsGzjlGJn4HsWTzHoSNwDl5oMHI8yaS8AiI6FTk2HwX90jI
-         7kRNOpJUw/PzOH9oriqlJK7s93em9wObm5HF0TJlf8r9JdpamWYgvF7ft4SZImV84zGZ
-         jNPrg/KN5EuVEoVeluQFwoptesN6dlcqZgJtGmisyrSh3MwWkmt4hli79seck2Zr5coh
-         eM7Y5qVEN5xWljone/2hUTIEmq2+BZkiTly3ROqEyyGqiFH4veYnNULMDfTAs1IEOyGr
-         gfEw==
-X-Gm-Message-State: AOAM531HDHOMXT5yQOujRrIZ8e5sXn80ap6zg6yoLXjIXOrKpSfDKxH+
-        /wi/JwUhetq2UuRcJRv6zNc=
-X-Google-Smtp-Source: ABdhPJywCGzsdw5guspTvAxKu+Juxq4ii0vQsLONLmhQYEB+Q72DtYuN3e5AP5ezkwffsfJqoQc9hQ==
-X-Received: by 2002:a17:90a:1485:: with SMTP id k5mr2995699pja.108.1590661231748;
-        Thu, 28 May 2020 03:20:31 -0700 (PDT)
+        bh=um3Qhq7FPm3pIrTiMtJYWGUD76JNI3D8F0QN7947rKw=;
+        b=kVw8jc+USux0pYqj9lrz0tW1OQzdHd9vMaQbcyMrW8VoFGBrTh9fCTnFhKL3EICNCP
+         X/hgiP9DGOnXsi5yuj08ZXMhP76e2N/+hRDNN1574VpGdA753q6azLx54J2/Boy3EEsz
+         Cb+0DT3YWFnmlk67CkmEQEppPg8bwsD/MOGXcGN86lPmYGIXLw/rMfJW3Y2jUaH2PS9b
+         6JpexoMeQH8hdsZXneVakGwK+8bmB0FYOn+uL8sm9Uu+z3PxXrZTjys8t35gs2fijMh0
+         VnQQ1BYXuzje/tum6lIJvJ0iBt2kcQYO8RiTV07iGxV4g0rBGvrD194MuObtw+9b22hJ
+         bvJg==
+X-Gm-Message-State: AOAM533StG8MTtdmjdvJQNHQy82NwO+mViaOYXs3FBUyg5yX7neqkq2K
+        UL1p54LtOnehZWMORLmFpwg=
+X-Google-Smtp-Source: ABdhPJxBlgwmLNKVsM03ksShfQegKt9EPrGs8huX9dt0ljfQMQ9uXBkCriVD+nbKxtbvHEz3TcuaeQ==
+X-Received: by 2002:a17:90a:dc10:: with SMTP id i16mr2989191pjv.137.1590661247707;
+        Thu, 28 May 2020 03:20:47 -0700 (PDT)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id e16sm4193122pgg.8.2020.05.28.03.20.26
+        by smtp.gmail.com with ESMTPSA id x6sm4430039pfn.90.2020.05.28.03.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 03:20:30 -0700 (PDT)
+        Thu, 28 May 2020 03:20:47 -0700 (PDT)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Sean Wang <sean.wang@mediatek.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-bluetooth@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc:     "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Christophe Ricard <christophe.ricard@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] Bluetooth: btmtkuart: add missed functions in the error paths of btmtuart_probe()
-Date:   Thu, 28 May 2020 18:20:21 +0800
-Message-Id: <20200528102021.911709-1-hslester96@gmail.com>
+Subject: [PATCH] NFC: st21nfca: add missed kfree_skb() in an error path
+Date:   Thu, 28 May 2020 18:20:37 +0800
+Message-Id: <20200528102037.911766-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,62 +82,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-btmtuart_probe() misses several function calls in its error paths,
-including hci_free_dev() and clk_disable_unprepare().
-Refactor the code and call correct undo functions to fix the error
-paths.
+st21nfca_tm_send_atr_res() misses to call kfree_skb() in an error path.
+Add the missed function call to fix it.
 
+Fixes: 1892bf844ea0 ("NFC: st21nfca: Adding P2P support to st21nfca in Initiator & Target mode")
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/bluetooth/btmtkuart.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/nfc/st21nfca/dep.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/btmtkuart.c b/drivers/bluetooth/btmtkuart.c
-index e11169ad8247..8a81fbca5c9d 100644
---- a/drivers/bluetooth/btmtkuart.c
-+++ b/drivers/bluetooth/btmtkuart.c
-@@ -1015,7 +1015,7 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 	if (btmtkuart_is_standalone(bdev)) {
- 		err = clk_prepare_enable(bdev->osc);
- 		if (err < 0)
--			return err;
-+			goto err_hci_free_dev;
- 
- 		if (bdev->boot) {
- 			gpiod_set_value_cansleep(bdev->boot, 1);
-@@ -1028,10 +1028,8 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 
- 		/* Power on */
- 		err = regulator_enable(bdev->vcc);
--		if (err < 0) {
--			clk_disable_unprepare(bdev->osc);
--			return err;
--		}
-+		if (err < 0)
-+			goto err_clk_disable_unprepare;
- 
- 		/* Reset if the reset-gpios is available otherwise the board
- 		 * -level design should be guaranteed.
-@@ -1063,7 +1061,6 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- 	err = hci_register_dev(hdev);
- 	if (err < 0) {
- 		dev_err(&serdev->dev, "Can't register HCI device\n");
--		hci_free_dev(hdev);
- 		goto err_regulator_disable;
+diff --git a/drivers/nfc/st21nfca/dep.c b/drivers/nfc/st21nfca/dep.c
+index a1d69f9b2d4a..0b9ca6d20ffa 100644
+--- a/drivers/nfc/st21nfca/dep.c
++++ b/drivers/nfc/st21nfca/dep.c
+@@ -173,8 +173,10 @@ static int st21nfca_tm_send_atr_res(struct nfc_hci_dev *hdev,
+ 		memcpy(atr_res->gbi, atr_req->gbi, gb_len);
+ 		r = nfc_set_remote_general_bytes(hdev->ndev, atr_res->gbi,
+ 						  gb_len);
+-		if (r < 0)
++		if (r < 0) {
++			kfree_skb(skb);
+ 			return r;
++		}
  	}
  
-@@ -1072,6 +1069,11 @@ static int btmtkuart_probe(struct serdev_device *serdev)
- err_regulator_disable:
- 	if (btmtkuart_is_standalone(bdev))
- 		regulator_disable(bdev->vcc);
-+err_clk_disable_unprepare:
-+	if (btmtkuart_is_standalone(bdev))
-+		clk_disable_unprepare(bdev->osc);
-+err_hci_free_dev:
-+	hci_free_dev(hdev);
- 
- 	return err;
- }
+ 	info->dep_info.curr_nfc_dep_pni = 0;
 -- 
 2.26.2
 
