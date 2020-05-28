@@ -6,83 +6,75 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF14C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A5FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E78A2088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBE7207D3
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 20:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407113AbgE1USh (ORCPT
+        id S2407123AbgE1UTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 16:18:37 -0400
-Received: from smtprelay0203.hostedemail.com ([216.40.44.203]:35514 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2406935AbgE1USf (ORCPT
+        Thu, 28 May 2020 16:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406991AbgE1UTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 16:18:35 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id DC94B18000C0E;
-        Thu, 28 May 2020 20:18:32 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: burn98_22177ce26d5d
-X-Filterd-Recvd-Size: 2530
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 28 May 2020 20:18:30 +0000 (UTC)
-Message-ID: <499cba4e00172867850b13df26670ed80d41d7a6.camel@perches.com>
-Subject: Re: clean up kernel_{read,write} & friends v2
-From:   Joe Perches <joe@perches.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, Ian Kent <raven@themaw.net>,
-        David Howells <dhowells@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>
-Date:   Thu, 28 May 2020 13:18:29 -0700
-In-Reply-To: <20200528194441.GQ17206@bombadil.infradead.org>
-References: <20200528054043.621510-1-hch@lst.de>
-         <CAHk-=wj3iGQqjpvc+gf6+C29Jo4COj6OQQFzdY0h5qvYKTdCow@mail.gmail.com>
-         <f68b7797aa73452d99508bdaf2801b3d141e7a69.camel@perches.com>
-         <20200528193340.GR23230@ZenIV.linux.org.uk>
-         <20200528194441.GQ17206@bombadil.infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Thu, 28 May 2020 16:19:10 -0400
+Received: from Galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2138C08C5C7
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 13:19:09 -0700 (PDT)
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jeOzY-0008GM-KY; Thu, 28 May 2020 22:19:04 +0200
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A2E86100D01; Thu, 28 May 2020 22:19:02 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     paulmck@kernel.org
+Cc:     syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, bp@alien8.de,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, luto@kernel.org,
+        mingo@kernel.org, syzkaller-bugs@googlegroups.com, x86@kernel.org
+Subject: Re: WARNING: suspicious RCU usage in idtentry_exit
+In-Reply-To: <20200528161143.GF2869@paulmck-ThinkPad-P72>
+References: <000000000000840d4d05a6850c73@google.com> <87wo4wnpzb.fsf@nanos.tec.linutronix.de> <20200528161143.GF2869@paulmck-ThinkPad-P72>
+Date:   Thu, 28 May 2020 22:19:02 +0200
+Message-ID: <878shbols9.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-05-28 at 12:44 -0700, Matthew Wilcox wrote:
-> On Thu, May 28, 2020 at 08:33:40PM +0100, Al Viro wrote:
-> > On Thu, May 28, 2020 at 12:22:08PM -0700, Joe Perches wrote:
-> > 
-> > > Hard limits at 80 really don't work well, especially with
-> > > some of the 25+ character length identifiers used today.
-> > 
-> > IMO any such identifier is a good reason for a warning.
-> > 
-> > The litmus test is actually very simple: how unpleasant would it be
-> > to mention the identifiers while discussing the code over the phone?
-> 
-> Here's a good example of a function which should be taken out and shot:
-> 
-> int amdgpu_atombios_get_leakage_vddc_based_on_leakage_params(struct amdgpu_devic
-> e *adev,
+Paul,
 
-Ick.
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+> On Thu, May 28, 2020 at 03:33:44PM +0200, Thomas Gleixner wrote:
+>> syzbot <syzbot+3ae5eaae0809ee311e75@syzkaller.appspotmail.com> writes:
+>> Weird. I have no idea how that thing is an EQS here.
+>
+> No argument on the "Weird" part!  ;-)
+>
+> Is this a NO_HZ_FULL=y kernel?
 
-Seems simple enough as it doesn't appear to be used...
+No, it has only NO_HZ_IDLE.
 
-$ git grep amdgpu_atombios_get_leakage_vddc_based_on_leakage_params
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.c:int amdgpu_atombios_get_leakage_vddc_based_on_leakage_params(struct amdgpu_device *adev,
-drivers/gpu/drm/amd/amdgpu/amdgpu_atombios.h:int amdgpu_atombios_get_leakage_vddc_based_on_leakage_params(struct amdgpu_device *adev,
+  https://syzkaller.appspot.com/x/.config?x=47b0740d89299c10
 
+> If so, one possibility is that the call
+> to rcu_user_exit() went missing somehow.  If not, then RCU should have
+> been watching userspace execution.
+>
+> Again, the only thing I can think of (should this prove to be
+> reproducible) is the rcu_dyntick trace event.
 
+:)
+
+Thanks,
+
+        tglx
