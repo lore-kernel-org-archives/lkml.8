@@ -2,135 +2,120 @@ Return-Path: <SRS0=f73W=7K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F169DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8611CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB8F02088E
-	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:04:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF84208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 28 May 2020 11:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uJk/WRun"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VeH6enC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388355AbgE1LE2 (ORCPT
+        id S2388128AbgE1LFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 28 May 2020 07:04:28 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:45614 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388111AbgE1LE1 (ORCPT
+        Thu, 28 May 2020 07:05:08 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40562 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388045AbgE1LFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 28 May 2020 07:04:27 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SB22cU028448;
-        Thu, 28 May 2020 11:04:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=GykrKRB4Fq3/oXzt2FlGK/Xcf5q/CGtXruZ1Dyeo9Co=;
- b=uJk/WRunkFjD92KjBkp+I2oOHn393wz31ZYFvQRNDXM3yxtC5hXlh+vx1ao1P58QuzlX
- C9k4P7++ed+FALKes3iRhZPFDsrB98V3YNMUcazWIOohs7OX+uuc41hYS/w+wNdYhBDt
- kz5zw/VLiGJfHe9XLj+n6kDPaLj6y1G8Ct7eujhPW3kB+xRsqgPV6O+cc8A3h07Tay7J
- JX7HLI1RoRiYvER2LxtnvvtTvTIRhvK2tEjm5XkjyGN5hqx71s67qSKxpCmZ/HQxAy61
- L7NtE9YDfclMgyRCirg+DHRGnxkO2yiQ9WlpFQt0XovE+AXXUegNjT/BmCsqHN/87bh+ uA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 318xbk4cq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 28 May 2020 11:04:18 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 04SB3e42131652;
-        Thu, 28 May 2020 11:04:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 317j5uy09m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 May 2020 11:04:17 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 04SB4Frw025386;
-        Thu, 28 May 2020 11:04:15 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 28 May 2020 04:04:15 -0700
-Date:   Thu, 28 May 2020 14:04:08 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Souptick Joarder <jrdr.linux@gmail.com>
-Cc:     rspringer@google.com, toddpoynor@google.com, benchan@chromium.org,
-        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        John Hubbard <jhubbard@nvidia.com>,
+        Thu, 28 May 2020 07:05:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1590663903;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vz/KNQwtqPzPwwJ5/E8xlfolO32T1hV075nXyScUoSE=;
+        b=VeH6enC26B3Ko3r6u0TN+QceYnguswzLVPDMHgH6jcpetRfqfZrw3ewEchamBMnH6Zcwb0
+        9TdsRmLH2KJvyIjuDtQT6rKBqPkkiK7ZLedomwE1Phf0ZwYv0l2q2E0Wu91Q1P2CaHWbJX
+        uzGpYh6YzCkibVgUUDdLVlDzsePyT6M=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-s8nIGjpDP-qW12TYZUVXQA-1; Thu, 28 May 2020 07:05:00 -0400
+X-MC-Unique: s8nIGjpDP-qW12TYZUVXQA-1
+Received: by mail-ej1-f72.google.com with SMTP id i19so417756ejk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 28 May 2020 04:05:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vz/KNQwtqPzPwwJ5/E8xlfolO32T1hV075nXyScUoSE=;
+        b=Kwqg8cojwjzbgLSzHSGhthpaf0wvK9Lq5g4lYKEa7KRfIfxuJ+8Eqapf+xy5+JLG3I
+         VTZuVYbMWUPV9SMAn/TyiBFvcbEhLCmPokuNXXQO0rjb0t502DTR0MdLIVNiP6UHDFWh
+         +xvypl12tRalf5WB41uXo4M9TqTM1FFy6rVleBTUQVPj+I+AbYoMUbZTr/6pgykaBVT3
+         QNtHzounYW7nAV/w2qCcTTxF58HGo1qruzlBEDawX91C365fJV060jn3GJRjdCC4d42k
+         ev/5e5bo0C4rjZWZA2bQn/0XH3wr1BCiq0TVwQMn7Rv8xjj4lGe3SuTKjY9xV4XoHR32
+         41jg==
+X-Gm-Message-State: AOAM532OcQlW3YMZBQnLouS/avoGOEQXzD2rhfPhsRYKnSJRiMRDlZSk
+        bfFo3NS2YEfnurId/k3zneqiko/EPhFKkYMmbZTFglPZ4TFjbozKJTuGQjDwG+59Bp41VvRWo66
+        duybwzDJYh2BmZPLPJ1iaXANB
+X-Received: by 2002:a50:b2e1:: with SMTP id p88mr2514351edd.198.1590663899271;
+        Thu, 28 May 2020 04:04:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzUxazYv/MMjFOoYXGoUSI8TzWHBa76vBlUwJk+N2FMgBjee032aatw377n1MJf50x2veTsRA==
+X-Received: by 2002:a50:b2e1:: with SMTP id p88mr2514320edd.198.1590663899011;
+        Thu, 28 May 2020 04:04:59 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:3c1c:ffba:c624:29b8? ([2001:b07:6468:f312:3c1c:ffba:c624:29b8])
+        by smtp.gmail.com with ESMTPSA id g20sm5181115ejx.85.2020.05.28.04.04.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 May 2020 04:04:57 -0700 (PDT)
+Subject: Re: [PATCH v2 00/10] KVM: x86: Interrupt-based mechanism for async_pf
+ 'page present' notifications
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Vivek Goyal <vgoyal@redhat.com>, Gavin Shan <gshan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gasket: Convert get_user_pages*() -->
- pin_user_pages*()
-Message-ID: <20200528110408.GJ30374@kadam>
-References: <1590613362-27495-1-git-send-email-jrdr.linux@gmail.com>
+References: <20200525144125.143875-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3be1df67-2e39-c7b7-b666-66cd4fe61406@redhat.com>
+Date:   Thu, 28 May 2020 13:04:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1590613362-27495-1-git-send-email-jrdr.linux@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2005280075
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9634 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 cotscore=-2147483648
- suspectscore=0 bulkscore=0 clxscore=1011 impostorscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2005280075
+In-Reply-To: <20200525144125.143875-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 28, 2020 at 02:32:42AM +0530, Souptick Joarder wrote:
-> This code was using get_user_pages_fast(), in a "Case 2" scenario
-> (DMA/RDMA), using the categorization from [1]. That means that it's
-> time to convert the get_user_pages_fast() + put_page() calls to
-> pin_user_pages_fast() + unpin_user_page() calls.
-
-You are saying that the page is used for DIO and not DMA, but it sure
-looks to me like it is used for DMA.
-
-   503                          /* Map the page into DMA space. */
-   504                          ptes[i].dma_addr =
-   505                                  dma_map_page(pg_tbl->device, page, 0, PAGE_SIZE,
-   506                                               DMA_BIDIRECTIONAL);
-
-To be honest, that starting paragraph was confusing.  At first I thought
-you were saying gasket was an RDMA driver. :P  I shouldn't have to read
-a different document to understand the commit message.  It should be
-summarized enough and the other documentation is supplemental.
-
-"In 2019 we introduced pin_user_pages() and now we are converting
-get_user_pages() to the new API as appropriate".
-
+On 25/05/20 16:41, Vitaly Kuznetsov wrote:
+> Concerns were expressed around (ab)using #PF for KVM's async_pf mechanism,
+> it seems that re-using #PF exception for a PV mechanism wasn't a great
+> idea after all. The Grand Plan is to switch to using e.g. #VE for 'page
+> not present' events and normal APIC interrupts for 'page ready' events.
+> This series does the later.
 > 
-> There is some helpful background in [2]: basically, this is a small
-> part of fixing a long-standing disconnect between pinning pages, and
-> file systems' use of those pages.
+> Changes since v1:
+> - struct kvm_vcpu_pv_apf_data's fields renamed to 'flags' and 'token',
+>   comments added [Vivek Goyal]
+> - 'type1/2' names for APF events dropped from everywhere [Vivek Goyal]
+> - kvm_arch_can_inject_async_page_present() renamed to 
+>   kvm_arch_can_dequeue_async_page_present [Vivek Goyal]
+> - 'KVM: x86: deprecate KVM_ASYNC_PF_SEND_ALWAYS' patch added.
+> 
+> v1: https://lore.kernel.org/kvm/20200511164752.2158645-1-vkuznets@redhat.com/
+> QEMU patches for testing: https://github.com/vittyvk/qemu.git (async_pf2_v2 branch)
 
-What is the impact of this patch on runtime?
+I'll do another round of review and queue patches 1-7; 8-9 will be
+queued later and separately due to the conflicts with the interrupt
+entry rework, but it's my job and you don't need to do anything else.
 
-> 
-> [1] Documentation/core-api/pin_user_pages.rst
-> 
-> [2] "Explicit pinning of user-space pages":
-> 	https://lwn.net/Articles/807108/
-> 
-> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> 
-> Hi,
-> 
-> I'm compile tested this, but unable to run-time test, so any testing
-> help is much appriciated.
-> ---
+Thanks,
 
-The "Hi" part of patch should have been under the "---" cut off line so
-this will definitely need to be resent.
-
-regards,
-dan carpenter
+Paolo
 
